@@ -666,7 +666,7 @@ function DisplaySearchResultsMap ( $in_http_vars,	/**< The various HTTP GET and 
 		}
 	else
 		{
-		$ret = "";
+		$ret = '<div class="c_comdef_search_no_results_div">'.$localized_strings['comdef_search_results_strings']['Search_Form']['lookup_failed_alert'].'</div>';
 		}
 	return $ret;
 }

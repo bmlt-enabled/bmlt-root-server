@@ -4,7 +4,7 @@
 	<div style="height:24px"></div>
 	<div style="height:80px;background-color: #0013d2;background-image:url(../images/DocHeader.gif);background-position:center top;background-repeat:no-repeat"></div>
 
-	\version 1.8.29 (Main Root Server)
+	\version 1.8.30 (Main Root Server)
 
 	\license This code is completely open and free. You may access it by
 	<a href="http://magshare.org/bmlt-the-basic-meeting-list-toolbox/">visiting the BMLT Project Site</a>.
@@ -295,6 +295,9 @@
 	- Our ears are wide open. Please contact us at webmaster -at- magnaws.com if you find any vulnerabilities.
 	
 	<h2 id="docs_release_notes">RELEASE NOTES:</h2>
+	- June 5, 2011 - 1.8.30 Release
+        - Fixed a fairly minor bug, in which failed geocode lookups would result in a blank screen. They now result in a message.
+        
 	- June 4, 2011 - 1.8.29 Release
 	    - Moved the entire Root Server project to <a href="https://github.com/MAGSHARE/BMLT-Root-Server">GitHub</a>. The history will be restarted. If you want to access all the previous versions, they will be forever available on <a href="https://sourceforge.net/projects/comdef/">SourceForge</a>.
 		
