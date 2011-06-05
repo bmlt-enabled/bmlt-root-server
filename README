@@ -1,4 +1,5 @@
-== ABOUT ==
+DESCRIPTION
+-----------
 
 The Basic Meeting List Toolbox (BMLT, hereafter) is a very powerful client/server system
 that has been written for a very specific purpose, for a very specific clientele.
@@ -14,11 +15,15 @@ You can find out way too much about the BMLT here: http://magshare.org/bmlt
 This project is the "root" server for the BMLT. It is the "server" part of the BMLT
 "client/server" architecture.
 
-You set up a root server as the central database and administration area for a BMLT
-implementation, but most people access it through what we call "satellite servers." These
-satellites comprise the "client" part of the BMLT "client/server" architecture.
+The project is actually several years old. To see the pre-GitHub history, visit the
+original SourceForge page at: https://sourceforge.net/projects/comdef/
 
-== DETAILS ==
+I decided to start new on GitHub, as opposed to bringing over the SourceForge project,
+in order to reduce disk space usage, and because it's a pain to rearrange a standard
+SVN structure to Git.
+
+REQUIREMENTS
+------------
 
 The entire system is written in PHP, JavaScript, XHTML and CSS. Most of the code is PHP.
 
@@ -27,21 +32,21 @@ PHP 5.1 or above is required to establish a root server, and 5.0 or above for a 
 For more information about server requirements, see this page:
 
     http://magshare.org/blog/is-your-server-set-up-correctly/
+ 
+INSTALLATION
+------------
+
+You set up a root server as the central database and administration area for a BMLT
+implementation, but most people access it through what we call "satellite servers." These
+satellites comprise the "client" part of the BMLT "client/server" architecture.
 
 For instructions on installing the root server, see this page:
 
     http://magshare.org/blog/installing-the-root-server/
-    
-== CHANGELOG ==
+
+CHANGELIST
+----------
 
 = Version 1.8.29 =
 * June 4, 2011
 * Initial check-in of GitHub project
-
-== MORE ==
-The project is actually several years old. To see the pre-GitHub history, visit the
-original SourceForge page at: https://sourceforge.net/projects/comdef/
-
-I decided to start new on GitHub, as opposed to bringing over the SourceForge project,
-in order to reduce disk space usage, and because it's a pain to rearrange a standard
-SVN structure to Git.
