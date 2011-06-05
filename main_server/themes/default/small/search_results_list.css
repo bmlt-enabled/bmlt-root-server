@@ -1,0 +1,517 @@
+/***********************************************************************/
+/** 	\file	search_results_list.css
+
+	\brief	This file defines default, low-specificity CSS for the listing
+	display of meetings. It is also used in the "big map" geographic display.
+    
+    This file is part of the Basic Meeting List Toolbox (BMLT).
+    
+    Find out more at: http://magshare.org/bmlt
+
+    BMLT is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    BMLT is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this code.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+	Hidden (admin-only) fields are shown grayed out a bit, an italic.
+*/
+.visibility_none
+{
+	font-style: italic;
+	color: #555;
+}
+
+/**
+	We don't display print only in regular pages.
+*/
+.print_only_inline,
+.print_only
+{
+	display: none;
+}
+
+/**
+	This is the style to be applied to the header area of the search results.
+*/
+.comdef_style_result_count_header,
+.comdef_style_result_nav_header,
+.filter_message_div_list_container
+{
+	overflow: hidden;
+	margin: 0;
+	padding: 4px;
+	border:none;
+	outline: none;
+	line-height: 1.25em;
+	font-weight: bold;
+	background-color: #555;
+	color: white;
+}
+
+/**
+	This contains the entire list.
+*/
+.comdef_list_results_container
+{
+	width: 100%;
+	font-family: Helvetica, Arial, Sans-Serif;
+	font-size:small;
+}
+
+/**
+	This is the style to be applied to the header area of the search results.
+*/
+.comdef_style_result_nav_header
+{
+	text-align: center;
+}
+
+.filter_message_div_list
+{
+	width: 43em;
+	white-space: normal;
+	margin-left:auto;
+	margin-right:auto;
+	text-align: left;
+}
+
+/**
+	This is the way that links in the header area look "at rest."
+*/
+.comdef_style_result_count_header a.c_comdef_map_link_header_a,
+.comdef_style_result_count_header a.c_comdef_map_link_header_a:visited,
+.comdef_style_result_nav_header a,
+.comdef_style_result_nav_header a:visited
+{
+	outline: none;
+	color: #99f;
+	text-decoration: underline;
+}
+
+/**
+	This is how the links look when they are being rolled over.
+*/
+.comdef_style_result_count_header a.c_comdef_map_link_header_a:hover,
+.comdef_style_result_count_header a.c_comdef_map_link_header_a:active,
+.comdef_style_result_nav_header a:hover,
+.comdef_style_result_nav_header a:active
+{
+	outline: none;
+	color: #f96;
+	text-decoration: none;
+}
+
+/**
+	The list results are displayed within a <table>.
+*/
+.c_comdef_search_results_table
+{
+	clear: both;
+	float: none;
+	width: 100%;
+	text-align: left;
+}
+
+/**
+	The <thead> of the <table> contains the column headers and sort links.
+*/
+.c_comdef_search_results_table thead
+{
+	background-color: #555;
+	color: white;
+	font-weight: bold;
+	text-align: center;
+}
+
+/**
+	The <tbody> of the <table> contains the meeting data itself.
+*/
+.c_comdef_search_results_table tbody
+{
+	background-color: white;
+}
+
+/**
+	This covers every <td> in the <table>
+*/
+.c_comdef_search_results_table td
+{
+	vertical-align: top;
+	margin: 0;
+	border: none;
+	padding: 0;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+
+/**
+	We alternate rows the odd-numbered rows (including the first one) get
+	this class assigned to their <td> elements.
+*/
+.c_comdef_search_results_alt1 td
+{
+	background-color: #9fc;
+}
+
+/**
+	The even-numbered rows get this class assigned.
+*/
+.c_comdef_search_results_alt2 td
+{
+	background-color: white;
+}
+
+/**
+	The formats display has a bunch of <span> elements with this class.
+*/
+.c_comdef_search_results_single_format
+{
+	margin: 0;
+}
+
+/**
+	This is the <abbr> tag that surrounds each format.
+*/
+.c_comdef_search_results_single_format abbr
+{
+	cursor: help;
+}
+
+/**
+	The column headers that can be clicked have this class on the <a> elements that
+	are selected. They have an extra 16 pixels to the right, for the arrow.
+*/
+.c_comdef_search_results_dir_a_asc,
+.c_comdef_search_results_dir_a_desc
+{
+	padding-right: 16px;
+	background-position: bottom right;
+	background-repeat: no-repeat;
+}
+
+/**
+	The selected column has a sort direction indicator. This is what is assigned to
+	the ascending order link. It has a triangle, facing up, displayed to the right.
+*/
+.c_comdef_search_results_dir_a_asc,
+.c_comdef_search_results_dir_a_asc:visited
+{
+	background-image: url(images/asc_arrow.gif);
+}
+
+/**
+	The selected column has a sort direction indicator. This is what is assigned to
+	the ascending order link. It has a triangle, facing down, displayed to the right.
+*/
+.c_comdef_search_results_dir_a_desc,
+.c_comdef_search_results_dir_a_desc:visited
+{
+	background-image: url(images/desc_arrow.gif);
+}
+
+/**
+	The ascending one switches the blue triangle for a red one.
+*/
+.c_comdef_search_results_dir_a_asc:active,
+.c_comdef_search_results_dir_a_asc:hover
+{
+	background-image: url(images/asc_arrow_mouseover.gif);
+}
+
+/**
+	The descending one switches the blue triangle for a red one.
+*/
+.c_comdef_search_results_dir_a_desc:active,
+.c_comdef_search_results_dir_a_desc:hover
+{
+	background-image: url(images/desc_arrow_mouseover.gif);
+}
+
+/**
+	The <thead> column headers are separated from the main <tbody> by this much.
+*/
+.c_comdef_search_results_table thead td
+{
+	padding-bottom: 4px;
+}
+
+/**
+	The links in the header have this color "at rest."
+*/
+span.c_comdef_meeting_search_unselected_page a,
+span.c_comdef_meeting_search_unselected_page a:visited,
+.c_comdef_search_results_table thead a,
+.c_comdef_search_results_table thead a:visited
+{
+	outline: none;
+	color: #99f;
+	text-decoration: underline;
+}
+
+/**
+	Rollover changes the color to a salmon red, and removes the underline.
+*/
+span.c_comdef_meeting_search_unselected_page a:active,
+span.c_comdef_meeting_search_unselected_page a:hover,
+.c_comdef_search_results_table thead a:active,
+.c_comdef_search_results_table thead a:hover
+{
+	outline: none;
+	color: #f96;
+	text-decoration: none;
+}
+
+/**
+	This is the style for the "page" indicators in the <thead>.
+*/
+.c_comdef_meeting_search_unselected_page,
+.c_comdef_meeting_search_selected_page
+{
+	margin: 0;
+	border:none;
+	outline: none;
+	padding: 2px;
+	padding-left: 6px;
+	padding-right: 6px;
+}
+
+/**
+	The selected page is simply displayed as white (no link).
+*/
+.c_comdef_meeting_search_selected_page
+{
+	background-color: #555;
+	color: white;
+}
+
+/**
+	Links in the meeting text look like this "at rest."
+*/
+.c_comdef_search_results_table tbody .c_comdef_search_results_meeting_list_a,
+.c_comdef_search_results_table tbody .c_comdef_search_results_meeting_list_a:visited
+{
+	outline: none;
+	border: none;
+	display: block;
+	width: 100%;
+	height: 100%;
+	padding: 2px;
+	color: #339;
+	text-decoration: underline;
+}
+
+/**
+	When moused over, they look like this.
+*/
+.c_comdef_search_results_table tbody .c_comdef_search_results_meeting_list_a:active,
+.c_comdef_search_results_table tbody .c_comdef_search_results_meeting_list_a:hover
+{
+	outline: none;
+	background-color: #555;
+	color: white;
+	text-decoration: none;
+}
+
+/**
+	The neighborhood <span> element needs a little space on the left.
+*/
+.c_comdef_search_results_neighborhood
+{
+	padding-left: 0.2em;
+}
+
+/**
+	This is the style for the surrounding <div> of a single meeting detail display if
+	the browser can handle AJAX, and the single meeting details will be displayed over
+	the list, as opposed to going to a separate page (which is done for non-AJAX browsers).
+*/
+.c_comdef_search_results_single_ajax_div
+{
+	position: absolute;
+	z-index: 6001;
+	width: 600px;
+	left: 50%;
+	margin-left: -300px;
+	text-align: center;
+}
+
+/**
+	We display a "throbber" for when the AJAX call is being made. This is the <div>
+	element that contains the throbber image.
+*/
+.c_comdef_search_results_single_ajax_throbber_div
+{
+	position: absolute;
+	z-index: 6002;
+	background-color: #555;
+	width: 100px;
+	height: 100px;
+	top: 50%;
+	left: 50%;
+	margin-top:-50px;
+	margin-left: -50px;
+}
+
+/**
+	This is the animated GIF image that we display.
+*/
+.c_comdef_search_results_single_ajax_throbber_div img
+{
+	width: 80px;;
+	height: 80px;
+	margin: 10px;
+}
+
+/**
+	This is the div with the delete and submit buttons in it.
+*/
+.edit_meeting_buttons_div
+{
+	clear: both;
+	margin-top: 4px;
+	border-top: 1px solid #555;
+	padding-top: 4px;
+}
+
+/**
+	This is the link for the GPS download link.
+*/
+a.c_comdef_search_results_poi_a,
+a.c_comdef_search_results_poi_a:visited
+{
+	display: block;
+	width: 100%;
+	height: 18px;
+	background-image: url(images/globe.gif);
+	background-repeat: no-repeat;
+	background-position: center center;
+	outline: none;
+}
+
+/**
+	This is the rollover for the GPS download link.
+*/
+a.c_comdef_search_results_poi_a:hover,
+a.c_comdef_search_results_poi_a:active
+{
+	background-image: url(images/globe_mouseover.gif);
+	outline: none;
+}
+
+/**
+*/
+.c_comdef_search_no_results_div
+{
+	font-size:large;
+	font-weight:bold;
+	line-height: 4em;
+	text-align:center;
+}
+
+/**
+	We alternate rows the odd-numbered rows (including the first one) get
+	this class assigned to their <td> elements.
+	These are special ones for unpublished meetings.
+*/
+.c_comdef_search_results_unpub_alt1 td
+{
+	background-color: #f96;
+}
+
+/**
+	The even-numbered rows get this class assigned.
+*/
+.c_comdef_search_results_unpub_alt2 td
+{
+	background-color: #fc9;
+}
+
+/**
+	We alternate rows the odd-numbered rows (including the first one) get
+	this class assigned to their <td> elements.
+	These are special ones for copies of meetings.
+*/
+.c_comdef_search_results_copy_alt1 td
+{
+	background-color: #f6f;
+}
+
+/**
+	The even-numbered rows get this class assigned.
+*/
+.c_comdef_search_results_copy_alt2 td
+{
+	background-color: #f9f;
+}
+
+/**
+*/
+.c_comdef_search_results_list_footer
+{
+	text-align: center;
+	padding-top:4px;
+	padding-bottom: 4px;
+}
+
+/**
+*/
+.c_comdef_search_results_list_footer label
+{
+	font-weight: bold;
+	color: white;
+	padding-right: 4px;
+}
+
+/**
+*/
+.c_comdef_search_results_poi
+{
+	display:none;
+}
+
+/**
+*/
+div.c_comdef_search_results_single_ajax_div
+{
+	position:static;
+	margin:0;
+	width:100%;
+	font-family: Helvetica, Arial, Sans-Serif;
+	font-size:small;
+}
+
+/**
+*/
+div.c_comdef_search_results_single_close_box_div
+{
+	position:relative;
+	left:100%;
+	margin-left:-18px;
+}
+
+/**
+*/
+div#bmlt_contact_us_form_div
+{
+	position:static;
+	width:auto;
+	margin:0;
+}
+
+/**
+*/
+div.embedded_map_div
+{
+	height: 200px;
+	width:80%;
+}

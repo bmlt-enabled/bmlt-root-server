@@ -1,0 +1,242 @@
+/* 
+    This file is part of the Basic Meeting List Toolbox (BMLT).
+    
+    Find out more at: http://magshare.org/bmlt
+
+    BMLT is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    BMLT is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this code.  If not, see <http://www.gnu.org/licenses/>.*/
+*
+{
+	margin: 0;
+	padding: 0;
+}
+
+html,
+body,
+.bmlt_installer_page_div
+{
+	width: 100%;
+	height: 100%;
+}
+
+body
+{
+	text-align:center;
+	background-color: #ffc;
+	font-family:Verdana,San-Serif;
+}
+
+a,
+a:visited
+{
+	color:#3300CC;
+	text-decoration:underline;
+}
+
+a:hover,
+a:active
+{
+	color:#c00 !important;
+	text-decoration:none;
+}
+
+.bmlt_installer_page_div
+{
+	position: absolute;
+	top: 80px;
+	left: 10px;
+	bottom: 10px;
+	right: 10px;
+	width: auto;
+	height: auto;
+	border: 1px solid #063;
+	padding: 4px;
+	background-color: #efefef;
+	font-size: medium;
+	overflow: auto;
+}
+
+.bmlt_installer_header_div
+{
+	color: #063;
+}
+
+p,
+.intro,
+.guide,
+.req_list
+{
+	text-align: left;
+	margin-left:auto;
+	margin-right: auto;
+}
+
+p
+{
+	clear:both;
+	text-indent: 1em;
+	width: 90%;
+}
+
+.req_list
+{
+	margin-top: 8px;
+	margin-left:15%;
+}
+
+.req_list dt,
+.req_list dd,
+.req_list li,
+.text_input
+{
+	clear:both;
+	float:none;
+	height: 40px;
+	vertical-align: middle;
+}
+
+p.first
+{
+	margin-top: 8px;
+	text-indent: 0em;
+}
+
+.guide
+{
+	margin-top: 12px;
+}
+
+.li_item,
+.li_item_ans,
+.li_item_sel_prompt,
+.db_select,
+.form_prompt,
+.form_text_item
+{
+	display:block;
+	float:left;
+	height: 40px;
+}
+
+.li_item_sel_prompt,
+.form_prompt
+{
+	text-align:right;
+	padding-right:8px;
+}
+
+.form_prompt
+{
+	width: 250px;
+	text-align:right;
+	padding-right:8px;
+}
+
+.li_item_sel_prompt
+{
+	width: 150px;
+	text-align:right;
+	padding-right:8px;
+}
+
+.checkbox_label
+{
+	text-align: left;
+	padding-left: 8px;
+}
+
+.li_item
+{
+	width: 300px;
+}
+
+.li_item_ans
+{
+	width: 40px;
+	text-align: right;
+}
+
+.text_input,
+.submit_button
+{
+	clear:both;
+	text-indent: 0em;
+}
+
+.centered
+{
+	text-align: center;
+}
+
+.smalltext
+{
+	font-size: small;
+	font-weight: bold;
+}
+
+.submit_button
+{
+	margin-top: 20px;
+	text-align:center;
+}
+
+.error_disp
+{
+	clear:both;
+	color:#900;
+	text-indent: 0em;
+	margin-left:auto;
+	width:70%;
+	margin-right:auto;
+}
+
+h1
+{
+	font-size: large;
+}
+
+.bmlt_installer_menu_div
+{
+	width: 70%;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.bmlt_installer_menu_div div
+{
+	width: 20%;
+	height: 20px;
+	float:left;
+	text-align: center;
+}
+
+#meeting_map_container,
+#meeting_map
+{
+	width:100%;
+}
+
+#meeting_map
+{
+	margin-top: 8px;
+	border-top: 1px solid #063;
+	border-left: 1px solid #063;
+	border-right: 1px solid #063;
+	height: 700px;
+}
+
+.side_note
+{
+	font-style: italic;
+	margin-left:8px;
+}

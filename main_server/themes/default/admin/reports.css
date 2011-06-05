@@ -1,0 +1,258 @@
+/***********************************************************************/
+/** 	\file	reports.css
+
+	\brief
+    
+    This file is part of the Basic Meeting List Toolbox (BMLT).
+    
+    Find out more at: http://magshare.org/bmlt
+
+    BMLT is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    BMLT is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this code.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+	These are the disclosure divs for the reports.
+*/
+
+/**
+*/
+.reports_div_closed,
+.reports_div_open,
+.meeting_reports_div_closed,
+.meeting_reports_div_open,
+.deleted_meeting_reports_div_closed,
+.deleted_meeting_reports_div_open,
+.changed_meeting_reports_div_closed,
+.changed_meeting_reports_div_open,
+.new_meeting_reports_div_closed,
+.new_meeting_reports_div_open
+{
+	padding: 4px;
+	font-weight: bold;
+	line-height: 1.5em;
+	vertical-align: top;
+}
+
+.changed_meeting_reports_div_closed  a.changed_desc_reports_a,
+.changed_meeting_reports_div_open  a.changed_desc_reports_a
+{
+	font-weight: normal;
+}
+
+/**
+*/
+.reports_div_closed a.reports_a,
+.reports_div_open a.reports_a,
+.meeting_reports_div_closed a.meeting_reports_a,
+.meeting_reports_div_open a.meeting_reports_a,
+.deleted_meeting_reports_div_closed a.deleted_meeting_reports_a,
+.deleted_meeting_reports_div_open a.deleted_meeting_reports_a,
+.changed_meeting_reports_div_closed a.changed_meeting_reports_a,
+.changed_meeting_reports_div_open a.changed_meeting_reports_a,
+.changed_desc_reports_div_closed a.changed_desc_reports_a,
+.changed_desc_reports_div_open a.changed_desc_reports_a,
+.new_meeting_reports_div_closed a.new_desc_reports_a,
+.new_meeting_reports_div_open a.new_desc_reports_a
+{
+	display: block;
+	padding-left: 16px;
+	outline: none;
+	color: #99f;
+	text-decoration: underline;
+	background-position: 2px 5px;
+	background-repeat: no-repeat;
+}
+
+/**
+*/
+.reports_div_closed a.reports_a:hover,
+.reports_div_closed a.reports_a:active,
+.reports_div_open a.reports_a:active,
+.reports_div_open a.reports_a:hover,
+.meeting_reports_div_closed a.meeting_reports_a:hover,
+.meeting_reports_div_closed a.meeting_reports_a:active,
+.meeting_reports_div_open a.meeting_reports_a:hover,
+.meeting_reports_div_open a.meeting_reports_a:active,
+.deleted_meeting_reports_div_closed a.deleted_meeting_reports_a:hover,
+.deleted_meeting_reports_div_closed a.deleted_meeting_reports_a:active,
+.deleted_meeting_reports_div_open a.deleted_meeting_reports_a:hover,
+.deleted_meeting_reports_div_open a.deleted_meeting_reports_a:active,
+.changed_meeting_reports_div_closed a.changed_meeting_reports_a:hover,
+.changed_meeting_reports_div_closed a.changed_meeting_reports_a:active,
+.changed_meeting_reports_div_open a.changed_meeting_reports_a:hover,
+.changed_meeting_reports_div_open a.changed_meeting_reports_a:active,
+.changed_desc_reports_div_closed a.changed_desc_reports_a:hover,
+.changed_desc_reports_div_closed a.changed_desc_reports_a:active,
+.changed_desc_reports_div_open a.changed_desc_reports_a:hover,
+.changed_desc_reports_div_open a.changed_desc_reports_a:active,
+.new_meeting_reports_div_closed a.new_desc_reports_a:hover,
+.new_meeting_reports_div_closed a.new_desc_reports_a:active,
+.new_meeting_reports_div_open a.new_desc_reports_a:hover,
+.new_meeting_reports_div_open a.new_desc_reports_a:active
+{
+	outline: none;
+	color: #f96;
+	text-decoration: none;
+}
+
+/**
+*/
+.reports_div_closed a.reports_a,
+.reports_div_closed a.reports_a:visited,
+.meeting_reports_div_closed a.meeting_reports_a,
+.meeting_reports_div_closed a.meeting_reports_a:visited,
+.deleted_meeting_reports_div_closed a.deleted_meeting_reports_a,
+.deleted_meeting_reports_div_closed a.deleted_meeting_reports_a:visited,
+.changed_meeting_reports_div_closed a.changed_meeting_reports_a,
+.changed_meeting_reports_div_closed a.changed_meeting_reports_a:visited,
+.changed_desc_reports_div_closed a.changed_desc_reports_a,
+.changed_desc_reports_div_closed a.changed_desc_reports_a:visited,
+.new_meeting_reports_div_closed a.new_desc_reports_a,
+.new_meeting_reports_div_closed a.new_desc_reports_a:visited
+{
+	background-image: url(images/closed_arrow.gif);
+}
+
+/**
+*/
+.reports_div_closed a.reports_a:hover,
+.reports_div_closed a.reports_a:active,
+.meeting_reports_div_closed a.meeting_reports_a:hover,
+.meeting_reports_div_closed a.meeting_reports_a:active,
+.deleted_meeting_reports_div_closed a.deleted_meeting_reports_a:hover,
+.deleted_meeting_reports_div_closed a.deleted_meeting_reports_a:active,
+.changed_meeting_reports_div_closed a.changed_meeting_reports_a:hover,
+.changed_meeting_reports_div_closed a.changed_meeting_reports_a:active,
+.changed_desc_reports_div_closed a.changed_desc_reports_a:hover,
+.changed_desc_reports_div_closed a.changed_desc_reports_a:active,
+.new_meeting_reports_div_closed a.new_desc_reports_a:hover,
+.new_meeting_reports_div_closed a.new_desc_reports_a:active
+{
+	background-image: url(images/closed_arrow_mouseover.gif);
+}
+
+.reports_div_open a.reports_a,
+.reports_div_open a.reports_a:visited,
+.meeting_reports_div_open a.meeting_reports_a,
+.meeting_reports_div_open a.meeting_reports_a:visited,
+.deleted_meeting_reports_div_open a.deleted_meeting_reports_a,
+.deleted_meeting_reports_div_open a.deleted_meeting_reports_a:visited,
+.changed_meeting_reports_div_open a.changed_meeting_reports_a,
+.changed_meeting_reports_div_open a.changed_meeting_reports_a:visited,
+.changed_desc_reports_div_open a.changed_desc_reports_a,
+.changed_desc_reports_div_open a.changed_desc_reports_a:visited,
+.new_meeting_reports_div_open a.new_desc_reports_a,
+.new_meeting_reports_div_open a.new_desc_reports_a:visited
+{
+	background-image: url(../html/images/desc_arrow.gif);
+}
+
+.reports_div_open a.reports_a:hover,
+.reports_div_open a.reports_a:active,
+.meeting_reports_div_open a.meeting_reports_a:hover,
+.meeting_reports_div_open a.meeting_reports_a:active,
+.deleted_meeting_reports_div_open a.deleted_meeting_reports_a:hover,
+.deleted_meeting_reports_div_open a.deleted_meeting_reports_a:active,
+.changed_meeting_reports_div_open a.changed_meeting_reports_a:hover,
+.changed_meeting_reports_div_open a.changed_meeting_reports_a:active,
+.changed_desc_reports_div_open a.changed_desc_reports_a:hover,
+.changed_desc_reports_div_open a.changed_desc_reports_a:active,
+.new_meeting_reports_div_open a.new_desc_reports_a:hover,
+.new_meeting_reports_div_open a.new_desc_reports_a:active
+{
+	background-image: url(../html/images/desc_arrow_mouseover.gif);
+}
+
+.reports_div,
+.meeting_reports_div,
+.deleted_meeting_reports_div,
+.changed_meeting_reports_div
+{
+	margin:4px;
+	padding-left:8px;
+}
+
+.deleted_meeting_reports_div,
+.changed_meeting_reports_div,
+.changed_desc_reports_div
+{
+	margin-left:8px;
+}
+
+.deleted_meeting_reports_div,
+.deleted_meeting_reports_div dl
+{
+	padding: 0;
+}
+
+.deleted_meeting_reports_div,
+.detailed_change_div,
+.new_desc_dl
+{
+	border:1px solid black;
+	background-color:#fff;
+	margin-left:8px;
+}
+
+.detailed_change_div,
+.new_desc_dl
+{
+	font-weight: normal;
+}
+
+.detailed_change_div,
+.new_desc_reports_div
+{
+	padding: 4px;
+	padding-left: 8px;
+}
+
+.deleted_desc_div
+{
+	padding:4px;
+	padding-left: 8px;
+}
+
+.individual_detail_line_div,
+.new_line_div
+{
+	margin-left: 1em;
+	font-style: italic;
+}
+
+.new_desc_dl a,
+.new_desc_dl a:visited,
+.detailed_change_div a,
+.detailed_change_div a:visited
+{
+	background:none;
+	margin:0;
+	padding:0;
+	color: #009;
+}
+.new_desc_dl a:hover,
+.new_desc_dl a:active,
+.detailed_change_div a:hover,
+.detailed_change_div a:active
+{
+	background:none;
+	color: #900;
+}
+
+.changed_desc_reports_no_link
+{
+	padding-left:16px;
+	padding-top: 4px;
+	color:white;
+}

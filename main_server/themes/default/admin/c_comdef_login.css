@@ -1,0 +1,159 @@
+/***********************************************************************/
+/** 	\file	c_comdef_login.css
+
+	\brief	This contains the CSS for the login form.
+    
+    This file is part of the Basic Meeting List Toolbox (BMLT).
+    
+    Find out more at: http://magshare.org/bmlt
+
+    BMLT is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    BMLT is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this code.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+*/
+.c_comdef_admin_login_form_container_div
+{
+	text-align:center;
+}
+
+/**
+*/
+.c_comdef_admin_login_form
+{
+}
+
+/**
+*/
+.c_comdef_admin_login_form_inner_container_div
+{
+	margin: 0;
+	position: absolute;
+	width: 400px;
+	height: 200px;
+	top: 50%;
+	left: 50%;
+	margin-top: -100px;
+	margin-left: -200px;
+	border: 1px solid #333;
+	background-color: #efefef;
+}
+
+/**
+*/
+.c_comdef_admin_login_form_prompt
+{
+	text-align:center;
+	font-size:large;
+	font-weight:bold;
+	padding-bottom: 8px;
+}
+
+/**
+*/
+.c_comdef_admin_login_form_line_div
+{
+	text-align:left;
+	clear:both;
+	padding: 4px;
+}
+
+.c_comdef_admin_login_form_submit_div
+{
+	text-align:center;
+	clear:both;
+	padding: 8px;
+}
+
+/**
+*/
+.c_comdef_admin_login_form_line_div label
+{
+	display:block;
+	text-align: right;
+	font-weight: bold;
+	width: 150px;
+	float:left;
+	padding-right: 4px;
+}
+
+/**
+*/
+.c_comdef_not_auth_container_div
+{
+	text-align: center;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	bottom: 0px;
+	right: 0px;
+	margin: 0;
+	padding: 0;
+}
+
+/**
+*/
+.c_comdef_not_auth_div
+{
+	margin: 0;
+	position: absolute;
+	width: 400px;
+	height: 200px;
+	top: 50%;
+	left: 50%;
+	margin-top: -100px;
+	margin-left: -200px;
+	border: 4px solid red;
+	background-color: yellow;
+}
+
+/**
+*/
+.c_comdef_not_auth_3
+{
+	text-align:center;
+	padding-top:2em;
+}
+
+/**
+*/
+.c_comdef_not_auth_3,
+.c_comdef_not_auth_1
+{
+	color: red;
+}
+
+/**
+*/
+.c_comdef_not_auth_2
+{
+	padding: 4px;
+	text-align: left;
+}
+
+/**
+*/
+.bmlt_login_banner
+{
+	position:absolute;
+	width: 100%;
+	top: 0px;
+	padding-top: 8px;
+	left: 0px;
+	color: white;
+	z-index:10000;
+	text-align: center;
+	font-size: large;
+	font-weight: bold;
+}

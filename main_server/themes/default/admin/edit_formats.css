@@ -1,0 +1,191 @@
+/***********************************************************************/
+/** 	\file	edit_formats.css
+
+	\brief
+    
+    This file is part of the Basic Meeting List Toolbox (BMLT).
+    
+    Find out more at: http://magshare.org/bmlt
+
+    BMLT is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    BMLT is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this code.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+*/
+.edit_format_div
+{
+	text-align:center;
+	padding: 0;
+}
+
+/**
+*/
+.edit_format_lang_fieldset
+{
+	background-color: #efefef;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: left;
+}
+
+.c_comdef_edit_format_format_list
+{
+	margin: 0;
+	padding-top: 20px;
+	clear:both;
+	float: none;
+	text-align: center;
+	width: 95%;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+/**
+*/
+.edit_one_format_fieldset
+{
+	clear:both;
+	float: none;
+	margin: 0;
+	margin-bottom: 4px;
+	margin-top:8px;
+	text-indent: 0em;
+	padding: 4px;
+	text-align: left;
+}
+
+/**
+*/
+.edit_one_format_fieldset label
+{
+	font-weight: bold;
+}
+
+/**
+*/
+.edit_one_format_fieldset legend
+{
+	font-weight: bold;
+	color: #333;
+}
+
+/**
+*/
+.edit_format_value_div
+{
+	clear: both;
+	margin-top:4px;
+	font-size: smaller;
+}
+
+/**
+*/
+.edit_format_value_div label
+{
+	font-weight: bold;
+	display: block;
+	float: left;
+	width: 100px;
+	text-align: right;
+	margin-right: 4px;
+}
+
+/**
+*/
+.edit_one_format_description_textarea
+{
+	padding:2px;
+}
+
+/**
+*/
+.enabled_option
+{
+	font-weight: bold;
+	color:black;
+}
+
+/**
+*/
+.disabled_option
+{
+	color:#999;
+}
+
+/**
+*/
+.native_lang_format_fieldset
+{
+	background-color: white;
+}
+
+/**
+*/
+.inherited_lang_format_fieldset
+{
+	background-color: #ffc;
+}
+
+/**
+*/
+.new_format_fieldset
+{
+	background-color: #fcc;
+}
+
+/**
+*/
+.edit_format_fields_div
+{
+	width:80%;
+	float:left;
+}
+
+/**
+*/
+.edit_format_buttons_div
+{
+	width:19%;
+	float:right;
+}
+
+/**
+*/
+.edit_format_buttons_div .edit_format_button_div
+{
+	padding:8px;
+	text-align: right;
+}
+
+/**
+*/
+.clear_both
+{
+	clear: both !important;
+	float: none !important;
+}
+
+/**
+*/
+.format_sort_div
+{
+}
+
+/**
+*/
+.format_sort_div label
+{
+	color: white;
+	padding-right:4px;
+}

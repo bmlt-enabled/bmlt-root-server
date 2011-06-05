@@ -1,0 +1,588 @@
+/***********************************************************************/
+/** 	\file	search_results_single_meeting.css
+
+	\brief	This file defines default, low-specificity CSS for the single
+	meeting details HTML that appears when a meeting link is clicked in
+	a listing.
+    
+    This file is part of the Basic Meeting List Toolbox (BMLT).
+    
+    Find out more at: http://magshare.org/bmlt
+
+    BMLT is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    BMLT is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this code.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+*/
+div.c_comdef_search_results_single_data_div
+{
+	text-align: center;
+}
+
+/**
+*/
+div.c_comdef_search_results_div a,
+div.c_comdef_search_results_div a:visited
+{
+	outline: none;
+	color: #33f;
+	text-decoration: underline;
+}
+
+/**
+*/
+div.c_comdef_search_results_div a:active,
+div.c_comdef_search_results_div a:hover
+{
+	outline: none;
+	color: #933;
+	text-decoration: none;
+}
+
+/**
+*/
+div.c_comdef_search_results_single_div
+{
+	width: 600px;
+	height: 100%;
+	margin-left: auto;
+	margin-right: auto;
+	padding:2px;
+	border: 1px solid #efefef;
+	text-align: left;
+	background-color: #555;
+}
+
+/**
+*/
+div.c_comdef_search_results_single_div div.c_comdef_search_results_single_header_div,
+div.c_comdef_search_results_single_div div.c_comdef_search_results_single_header_div h1,
+div.c_comdef_search_results_single_div div.c_comdef_search_results_single_header_div h2,
+div.c_comdef_search_results_single_div div.c_comdef_search_results_single_header_div h3,
+div.c_comdef_search_results_single_div div.c_comdef_search_results_single_header_div h4
+{
+	background-color: #555;
+	color: white;
+}
+
+/**
+*/
+div.c_comdef_search_results_single_div div.c_comdef_search_results_single_header_div
+{
+	padding:2px;
+}
+
+/**
+*/
+div.c_comdef_search_results_single_div div.c_comdef_search_results_single_header_div h1
+{
+	padding-top: 0.25em;
+	padding-bottom: 8px;
+}
+
+/**
+*/
+.c_comdef_single_container
+{
+	background-color: white;
+}
+
+/**
+*/
+div.c_comdef_search_results_single_div div.c_comdef_search_results_single_header_div h1,
+div.c_comdef_search_results_single_div div.c_comdef_search_results_single_header_div h2,
+div.c_comdef_search_results_single_div div.c_comdef_search_results_single_header_div h3,
+div.c_comdef_search_results_single_div div.c_comdef_search_results_single_header_div h4
+{
+	text-align: center;
+	margin-top: 0;
+}
+
+/**
+*/
+.c_comdef_search_results_single_data_div
+{
+	clear: both;
+	float: none;
+}
+
+/**
+*/
+.c_comdef_search_results_formats_dl
+{
+	clear: both;
+	float: none;
+	margin: 0;
+	padding: 0;
+	margin: 0;
+}
+
+/**
+*/
+.format_key_span,
+.format_name_span
+{
+	padding-left: 4px;
+}
+
+/**
+*/
+.format_term_dt
+{
+	margin-top: 1px;
+	height: 1.5em;
+	font-weight: bold;
+	background-color: #555;
+	color: white;
+}
+
+/**
+*/
+.format_desc_dd
+{
+	background-color: #eee;
+	padding: 8px;
+	margin: 0;
+	margin-left: 0em;
+}
+
+/**
+*/
+.c_comdef_search_results_single_map_link_div
+{
+	margin: 8px;
+	text-align: left;
+}
+
+/**
+*/
+.value_prompt
+{
+	display: block;
+	clear: both;
+	float: left;
+	width: 11em;
+	font-weight: bold;
+	text-align: right;
+	padding-right: 2px;
+}
+
+/**
+*/
+.value_value
+{
+	padding-left: 2px;
+	padding-right: 2px;
+	display: block;
+	float: left;
+	text-align: left;
+}
+
+/**
+*/
+.c_comdef_search_results_formats_div
+{
+	margin: 0;
+	padding: 0;
+	margin-top: 8px;
+	text-align: left;
+}
+
+.c_comdef_search_results_formats_div_no_spec
+{
+	border: 2px solid #555;
+	margin-left: -2px;
+	margin-right: -2px;
+}
+
+/**
+*/
+.c_comdef_search_results_formats_div .label_div
+{
+	font-weight: bold;
+	text-align: center;
+	color: white;
+	background-color: #555;
+	width: 100%;
+	font-size: large;
+}
+
+/**
+*/
+.embedded_map_div
+{
+	clear: both;
+	float: none;
+	margin: 0;
+	margin-top: 8px;
+	margin-right:auto;
+	margin-left: auto;
+	width: 572px;
+	height: 572px;
+	border: 1px solid #555;
+}
+
+/**
+*/
+.c_comdef_search_results_single_static_map_img,
+.main_map_div
+{
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+}
+
+/**
+*/
+.clear_both
+{
+	float: none;
+	clear: both;
+}
+
+/**
+*/
+.c_comdef_search_results_edit_div,
+.close_div
+{
+	background-color: #555;
+	text-align:center;
+	font-weight: bold;
+	padding: 4px;
+}
+
+/**
+*/
+.c_comdef_search_results_edit_div
+{
+	border-bottom: 1px solid #efefef;
+}
+
+/**
+*/
+.c_comdef_search_results_edit_div_noclose
+{
+	border-bottom: none;
+}
+
+/**
+*/
+a.single_header_link,
+a.single_header_link:visited,
+.c_comdef_search_results_edit_div a,
+.c_comdef_search_results_edit_div a:visited,
+.close_div a,
+.close_div a:visited
+{
+	display:inline;
+	outline: none;
+	color: #99f;
+	text-decoration: underline;
+}
+
+/**
+*/
+a.single_header_link:hover,
+a.single_header_link:active,
+.c_comdef_search_results_edit_div a:active,
+.c_comdef_search_results_edit_div a:hover,
+.close_div a:active,
+.close_div a:hover
+{
+	outline: none;
+	color: #f96;
+	text-decoration: none;
+}
+
+/**
+*/
+.c_comdef_search_results_single_close_box_div
+{
+	position: absolute;
+	height: 16px;
+	width: 16px;
+	top: 2px;
+	right: 2px;
+}
+
+/**
+*/
+.c_comdef_search_results_single_close_box_div a,
+.c_comdef_search_results_single_close_box_div a:visited
+{
+	display:block;
+	line-height: 16px;
+	height: 16px;
+	width: 16px;
+	color: white;
+	background-color: red;
+	text-align: center;
+	font-weight: bold;
+	font-size: 12px;
+	font-family: Helvetica, Arial, San Serif;
+	text-decoration: underline;
+}
+
+/**
+*/
+.c_comdef_search_results_single_close_box_div a:hover,
+.c_comdef_search_results_single_close_box_div a:active
+{
+	color: red;
+	background-color: white;
+	text-decoration: none;
+}
+
+/**
+	\brief These all apply to the contact us form.
+*/
+
+/**
+	\brief This is the line with the link.
+*/
+
+.contact_us_line
+{
+	text-align:center;
+}
+
+/**
+	\brief This is the div that is filled with the form when the link is clicked.
+*/
+.bmlt_contact_us_form_div
+{
+	text-align: left;
+	background-color:#555;
+	position:absolute;
+	z-index: 2000;
+	width: 596px;
+	top: 3.25em;
+	left: 50%;
+	margin-left: -297px;
+	border: 2px solid #555;
+	border-bottom: 4px solid #555;
+}
+
+.bmlt_contact_us_form_div_single
+{
+	margin-left: -300px;
+}
+
+/**
+	\brief This is the internal div.
+*/
+.bmlt_contact_admin_form,
+.bmlt_contact_admin_form_contents_div
+{
+	width: 100%;
+	height: 100%;
+}
+
+.bmlt_contact_admin_form_contents_div
+{
+	padding: 4px;
+	margin-left: -4px;
+}
+
+/**
+	\brief This is each line of the contact form.
+*/
+.bmlt_contact_form_one_line_div
+{
+	clear:both;
+	float:none;
+	margin-top:4px;
+}
+
+/**
+	\brief This is the main title for the contact form.
+*/
+.bmlt_contact_form_header_h2
+{
+	text-align:center;
+	background-color: #555;
+	color: white;
+}
+
+/**
+	\brief Standard labels on the main lines.
+*/
+.bmlt_contact_form_one_line_middle_label,
+.bmlt_contact_form_one_line_left_label
+{
+	display:block;
+	font-weight:bold;
+	float: left;
+	color: white;
+}
+
+/**
+	\brief Standard labels on the main lines.
+*/
+.bmlt_contact_form_one_line_left_label
+{
+	width: 200px;
+	text-align: right;
+	padding-right: 4px;
+}
+
+/**
+	\brief The main message body field label.
+*/
+.bmlt_contact_form_one_line_middle_label
+{
+	width: 100%;
+	text-align: center;
+}
+
+/**
+	\brief One text item.
+*/
+.bmlt_contact_form_one_line_text_item
+{
+	width: 350px;
+	float:left;
+}
+
+/**
+	\brief The line containing the message box. Have to be a bit specific here.
+*/
+#bmlt_contact_form_one_line_div_message_line
+{
+	text-align: center;
+}
+	
+/**
+	\brief The textarea for the main message.
+*/
+.bmlt_contact_form_message_textarea
+{
+	width: 540px;
+	height: 20em;
+	margin-left:auto;
+	margin-right:auto;
+	text-align:left;
+}
+
+/**
+	\brief Left button.
+*/
+.bmlt_contact_form_left_button_div
+{
+	width:49%;
+	float:left;
+	text-align:center;
+}
+
+/**
+	\brief Right button.
+*/
+.bmlt_contact_form_right_button_div
+{
+	width:49%;
+	float:right;
+	text-align:center;
+}
+
+/**
+	\brief The messages reporting success/failure look like this.
+*/
+.contact_form_success,
+.contact_form_error
+{
+	color: red;
+	text-align:center;
+	background-color: white;
+	font-size: large;
+	line-height: 1.5em;
+}
+
+/**
+	\brief The error message is displayed in this
+*/
+.contact_form_error
+{
+	color: red;
+	margin-right:8px;
+}
+	
+/**
+	\brief The success message is displayed in this
+*/
+.contact_form_success
+{
+	color: green;
+}
+
+/**
+	\brief This is the OK button for a successful message send.
+*/
+.bmlt_contact_form_one_line_OK_div
+{
+	text-align: center;
+	margin-top:8px;
+	float:none;
+	clear:both;
+	padding-bottom: 8px;
+}
+
+/**
+	\brief This is displayed when the contact form is doing something.
+*/
+.bmlt_contact_form_wait
+{
+	width: 100%;
+	height: 300px;
+}
+
+/**
+	\brief This is applied to the mail form throbber. It is designed to keep it centered.
+*/
+.bmlt_contact_form_generic_throbber
+{
+	width: 32px;
+	height: 32px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -16px;
+	margin-left: -16px;
+}
+
+/**
+*/
+.c_comdef_search_results_duplicate_line,
+.c_comdef_search_results_unpub_line
+{
+	float:none;
+	clear:both;
+	text-align: left;
+	padding:8px;
+	font-weight:bold;
+}
+
+/**
+*/
+.c_comdef_search_results_duplicate_line
+{
+	color: #606;
+}
+
+/**
+*/
+.c_comdef_search_results_unpub_line
+{
+	color: #c60;
+}

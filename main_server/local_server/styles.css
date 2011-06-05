@@ -1,0 +1,221 @@
+/*
+    This file is part of the Basic Meeting List Toolbox (BMLT).
+    
+    Find out more at: http://magshare.org/bmlt
+
+    BMLT is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    BMLT is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this code.  If not, see <http://www.gnu.org/licenses/>.
+*/
+*
+{
+	margin: 0;
+	padding: 0;
+}
+
+html,
+body
+{
+	width: 100%;
+	height: 100%;
+}
+
+body.admin_body
+{
+	background-color: #555;
+}
+
+fieldset
+{
+	margin: 8px;
+	padding: 4px;
+}
+
+.link_to_fill {
+	float:left;
+}
+
+.attributions {
+	font-size: x-small;
+	text-align:left;
+	background: white;
+	border: 1px solid #555;
+	padding: 4px;
+	margin:1px;
+	margin-top: 8px;
+}
+
+.attributions ul {
+	width: 90%;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.one_format_div,
+.one_service_div,
+.one_weekday_div,
+.one_lang_div
+{
+	border:1px solid #555;
+	float: left;
+	font-size: small;
+}
+
+.one_weekday_div .weekday_checkbox,
+.one_service_div .service_checkbox,
+.one_format_div .format_checkbox
+{
+	padding-top: 4px;
+	padding-right: 4px;
+	height: 1.5em;
+	line-height: 1.5em;
+}
+
+.one_lang_div .lang_checkbox
+{
+	padding-top: 4px;
+	width: 10em;
+	height: 1.5em;
+}
+
+.one_format_div input,
+.one_service_div input,
+.one_weekday_div input,
+.one_lang_div input
+{
+	float: left;
+}
+
+.one_format_div label,
+.one_service_div label,
+.one_weekday_div label,
+.one_lang_div label
+{
+	vertical-align: top;
+}
+
+.comdef_select,
+.comdef_checkbox_array
+{
+	margin-top: 4px;
+	clear: both;
+}
+
+.comdef_select_geo
+{
+	margin-top: 4px;
+	margin-bottom: 8px;
+	margin-left:auto;
+	margin-right:auto;
+	clear: both;
+}
+
+.user_display_fieldset,
+.meeting_div
+{
+	vertical-align: top;
+	margin-top:8px;
+	margin-left: 8px;
+	border-top: 1px solid black;
+}
+
+.user_display_fieldset label
+{
+	display:block;
+	float:left;
+	width: 250px;
+	font-weight: bold;
+	text-align: right;
+}
+
+.user_edit_div,
+.meeting_value_div,
+.data_field_div,
+.meeting_value_fieldset,
+.checkbox_div
+{
+	clear: both;
+	margin-top:8px;
+	margin-left: 8px;
+}
+
+.user_edit_div select,
+.meeting_value_div select,
+.meeting_value_fieldset select
+{
+	vertical-align: top;
+	margin-left: 4px;
+}
+
+.user_edit_div textarea,
+.meeting_value_div textarea,
+.meeting_value_fieldset textarea
+{
+	vertical-align: top;
+}
+
+.meeting_value_format_div
+{
+	margin-left: 16px;
+}
+
+.delete_div
+{
+	float:left;
+}
+
+.submit_div
+{
+	float:right;
+}
+
+.success_div,
+.fail_div
+{
+	font-weight: bold;
+	font-size: large;
+}
+
+.success_div
+{
+	color: green;
+}
+
+.fail_div
+{
+	color: red;
+}
+
+.root_decl
+{
+	text-align:center;
+	font-weight:bold;
+	height: 40px;
+	line-height: 40px;
+	width: 100%;
+	background-color: #555;
+	color:white;
+}
+
+.root_decl
+{
+	position:absolute;
+	left:0px;
+	top: 50px;
+}
+
+/**
+*/
+.admin_body .c_comdef_search_no_results_div
+{
+	color: white;
+}

@@ -1,0 +1,128 @@
+/***********************************************************************/
+/** \file	styles.css
+
+	\brief	This contains general BMLT styles.
+    
+    This file is part of the Basic Meeting List Toolbox (BMLT).
+    
+    Find out more at: http://magshare.org/bmlt
+
+    BMLT is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    BMLT is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this code.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+	If the user is logged in as an admin, this header is displayed along the top.
+*/
+.bmlt_admin_strip
+{
+	position:absolute;
+	z-index:6000;
+	top:0px;
+	left:0px;
+	width:100%;
+	height: 50px;
+	text-align:center;
+	background-color: #555;
+}
+
+/**
+	This is the "info blurb" that is displayed there.
+*/
+.bmlt_admin_info_div
+{
+	color: #fff;
+}
+
+/**
+	These are the links that are displayed in the strip.
+*/
+.bmlt_admin_links_div
+{
+	margin-left:auto;
+	margin-right:auto;
+	width:600px;
+}
+
+/**
+	These are the individual links that are displayed in the strip.
+*/
+.bmlt_admin_one_link_div
+{
+	float:left;
+	width:200px;
+}
+
+/**
+	These are the individual links that are displayed in the strip.
+*/
+.bmlt_admin_one_link_div a,
+.bmlt_admin_one_link_div a:visited
+{
+	display:block;
+	width:200px;
+	outline: none;
+	color: #99f;
+	text-decoration: underline;
+}
+
+/**
+	These are the individual links that are displayed in the strip (hovered).
+*/
+.bmlt_admin_one_link_div a:hover,
+.bmlt_admin_one_link_div a:active
+{
+	outline: none;
+	color: #f96;
+	text-decoration: none;
+}
+
+/**
+	When we are logged in as an admin, this happens.
+*/
+.bmlt_admin_container .c_comdef_search_results_div,
+.bmlt_admin_container .bmlt_control_panel
+{
+	position:absolute;
+	top: 50px;
+}
+
+.bmlt_admin_container .c_comdef_search_specification_form_container_div
+{
+	position:absolute;
+	top: 90px;
+}
+/**
+*/
+.bmlt_admin_container
+{
+	width: 100%;
+	height: 100%;
+	background-color: #555;
+}
+/**
+	When we are logged in as an admin, this happens.
+*/
+.bmlt_admin_container .bmlt_control_panel
+{
+	width: 100%;
+}
+
+/**
+	When we are logged in as an admin, this happens.
+*/
+.bmlt_admin_container .c_comdef_search_specification_form_container_div
+{
+	left: 50%;
+	margin-left:-320px;
+}

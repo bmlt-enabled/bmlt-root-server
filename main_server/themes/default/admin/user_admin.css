@@ -1,0 +1,86 @@
+/*    
+    This file is part of the Basic Meeting List Toolbox (BMLT).
+    
+    Find out more at: http://magshare.org/bmlt
+
+    BMLT is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    BMLT is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this code.  If not, see <http://www.gnu.org/licenses/>.
+*/
+.user_editor_main_div
+{
+	background-color: #efefef;
+	border: 1px solid black;
+}
+
+.user_edit_fieldset
+{
+	background: white;
+}
+
+.user_edit_fieldset_new
+{
+	margin: 4px;
+	background-color: #fcc;
+	border: 1px solid black;
+	padding: 4px;
+}
+
+.user_editor_line_div_user_pw,
+.user_editor_line_div
+{
+	clear:both;
+	float:none;
+	margin-top:4px;
+	margin-bottom:4px;
+}
+
+.user_editor_line_div_user_pw label,
+.user_editor_line_div label
+{
+	float:left;
+	width: 200px;
+	text-align:right;
+	font-weight:bold;
+	padding-right: 4px;
+}
+
+.user_editor_line_div_user_pw input,
+.user_editor_line_div input,
+.user_editor_line_div textarea,
+.user_editor_line_div select
+{
+	float:left;
+}
+
+.user_editor_line_div_user_pw,
+.user_editor_line_div_buttons
+{
+	margin-top:8px;
+	border-top: 1px solid #555;
+	padding-top:4px;
+}
+
+.pw_warning
+{
+	display: block;
+	float:left;
+	padding-left: 4px;
+	font-weight: normal;
+	font-style: italic;
+}
+
+.user_level_select_label,
+.user_editor_line_div select
+{
+	margin-top: 8px;
+}

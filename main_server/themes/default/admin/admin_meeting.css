@@ -1,0 +1,976 @@
+/***********************************************************************/
+/** 	\file	admin_meeting.css
+
+	\brief These are the styl;es for the admin screens (more than just the meeting editor).
+*/
+
+/**
+*/
+#geocoder_browser_edit_meeting_map_div
+{
+	position: absolute;
+	z-index: 5000;
+}
+
+/**
+*/
+.goo_map_workplace_container_div {
+	position: absolute;
+	top:50px;
+	width: 100%;
+	text-align:center;
+}
+
+/**
+*/
+.goo_map_workplace_container_div a,
+.goo_map_workplace_container_div a:visited {
+	color: #00c;
+	text-decoration:underline;
+}
+
+/**
+*/
+.goo_map_workplace_container_div a:active,
+.goo_map_workplace_container_div a:hover {
+	color: #900;
+	text-decoration:none;
+}
+
+/**
+*/
+.goo_map_workplace_container_div .clear_all {
+	float: none;
+	clear: both;
+}
+
+/**
+*/
+.goo_map_workplace_container_div .result_header,
+.goo_map_workplace_container_div .centered {
+	clear: both;
+	text-align:center;
+	width: 100%;
+}
+
+/**
+*/
+.goo_map_workplace_container_div .result_header {
+	font-size: medium;
+	font-weight: bold;
+	text-align:center;
+}
+
+/**
+*/
+.goo_map_workplace_container_div div {
+	vertical-align: top;
+}
+
+/**
+*/
+.goo_map_workplace_container_div .map_work_div {
+	width: 90%;
+	background-color:#999;
+	border:1px solid #333;
+	margin-right:auto;
+	margin-left:auto;
+	text-align:center;
+	padding:8px;
+}
+
+/**
+*/
+.goo_map_workplace_container_div .map_square {
+	width: 100%;
+	height: 612px;
+	border:1px solid #333;
+	margin-right:auto;
+	margin-left:auto;
+}
+
+/**
+*/
+.goo_map_workplace_container_div .form_container_div {
+	margin-top:8px;
+	margin-right:auto;
+	margin-left:auto;
+	border: 1px solid #333;
+	padding-left: 6px;
+	padding-right: 6px;
+	padding-top: 8px;
+	padding-bottom: 0;
+	width:600px;
+	background-color: white;
+}
+
+/**
+*/
+.goo_map_workplace_container_div .address_form,
+.goo_map_workplace_container_div .address_form input {
+	font-size: small;
+	line-height:1.8em;
+}
+
+/**
+*/
+.goo_map_workplace_container_div .discrete_label,
+.goo_map_workplace_container_div .address_form label {
+	clear:left;
+	float:left;
+	display:block;
+	text-align: right;
+	padding-right:6px;
+	font-weight:bold;
+	width: 118px;
+}
+
+/**
+*/
+.goo_map_workplace_container_div .address_form input,
+.goo_map_workplace_container_div .state_address,
+.goo_map_workplace_container_div .zip_address,
+.goo_map_workplace_container_div .discrete_value {
+	float:left;
+	width: 450px;
+	text-align: left;
+}
+
+/**
+*/
+.goo_map_workplace_container_div .main_addr_div label,
+.goo_map_workplace_container_div .desc_container label {
+	margin-left: 8px;
+}
+
+/**
+*/
+.goo_map_workplace_container_div .main_addr_div input,
+.goo_map_workplace_container_div .desc_container input {
+	width: 460px;
+}
+
+/**
+*/
+.goo_map_workplace_container_div .goo_map_button_div,
+.goo_map_workplace_container_div .or_div,
+.goo_map_workplace_container_div .desc_container,
+.goo_map_workplace_container_div .separator_div {
+	margin-bottom:8px;
+}
+
+/**
+*/
+.goo_map_workplace_container_div .main_link_enclosing_div {
+	width: 100%;
+	text-align:center;
+}
+
+/**
+*/
+.goo_map_workplace_container_div .main_link_div_class {
+	float: none;
+	width: auto;
+}
+
+/**
+*/
+.goo_map_workplace_container_div .html_display_div {
+	display: inline;
+	width: auto;
+	text-align:center;
+	padding-right: 8px;
+}
+
+/**
+*/
+.goo_map_workplace_container_div .goo_map_button_div {
+	text-align:center;
+	clear: both;
+}
+
+/**
+*/
+.goo_map_workplace_container_div input.inline_button {
+	float: none;
+	font-size: small;
+	font-weight:bold;
+	padding: 0;
+	padding-right: 6px;
+	padding-left: 6px;
+	margin: 0;
+	outline: none;
+	border: 1px solid #555;
+	background-color: #ddd;
+	display: inline;
+	width: auto;
+	text-align:center;
+	cursor: pointer;
+	height: 2em;
+	line-height:.75em;
+	vertical-align:middle;
+}
+
+/**
+*/
+.goo_map_workplace_container_div input.inline_button:hover {
+	background-color: #efefef;
+	outline: none;
+}
+
+/**
+*/
+.goo_map_workplace_container_div .goo_map_button_div div {
+	text-align:center;
+	width: 33%;
+	margin: 0;
+	padding: 0;
+}
+
+/**
+*/
+.goo_map_workplace_container_div .inline_button_left {
+	float: left;
+}
+
+/**
+*/
+.goo_map_workplace_container_div .inline_centered {
+	float: none;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/**
+*/
+.goo_map_workplace_container_div .inline_button_right {
+	float: right;
+	margin-right:4px;
+}
+
+/**
+*/
+.goo_map_workplace_container_div .goo_map_button_2_div input {
+	border: 2px solid #33c;
+}
+
+/**
+*/
+.goo_map_workplace_container_div .goo_map_button_2_div input:hover {
+	border: 2px solid #c33;
+}
+
+/**
+*/
+.goo_map_workplace_container_div .outlined_div {
+	border: 2px solid #555;
+	background-color: #eee;
+	padding: 4px;
+	margin-left: 4px;
+	margin-right: 4px;
+	margin-top: 8px;
+}
+
+/**
+*/
+.goo_map_workplace_container_div .or_div {
+	font-size: large;
+	font-weight: bold;
+}
+
+/**
+*/
+.goo_map_workplace_container_div .error_return {
+	font-size: large;
+	color: red;
+	font-weight: bold;
+}
+
+/**
+*/
+.geocoder_browser_edit_meeting_hidden
+{
+	display: none;
+}
+
+/**
+*/
+.c_comdef_edit_close_div
+{
+	text-align: center;
+}
+
+/**
+*/
+.bmlt_control_panel
+{
+	width: 100%;
+}
+
+/**
+	This is used to display editor pages.
+*/
+.c_comdef_search_results_edit_hidden_div
+{
+	position:absolute;
+	width: 600px;
+	top:50px;
+	left:50%;
+	margin-left: -300px;
+	padding: 4px;
+	z-index: 2000;
+	border: 1px solid #efefef;
+	background-color: #555;
+}
+
+/**
+*/
+.c_comdef_search_results_edit_hidden_div a,
+.c_comdef_search_results_edit_hidden_div a:visited
+{
+	outline: none;
+	color: #339;
+	text-decoration: underline;
+}
+
+/**
+*/
+.c_comdef_search_results_edit_hidden_div a:hover,
+.c_comdef_search_results_edit_hidden_div a:active
+{
+	outline: none;
+	color: #933;
+	text-decoration: none;
+}
+
+/**
+*/
+.c_comdef_search_results_edit_hidden_div .c_comdef_meeting_edit_div
+{
+	margin: 0;
+	padding: 4px;
+	background-color: #efefef;
+	border:2px solid #555;
+}
+
+/**
+	Links in the meeting text look like this "at rest."
+*/
+.c_comdef_search_results_one_meeting_row .c_comdef_search_results_edit_td a,
+.c_comdef_search_results_one_meeting_row .c_comdef_search_results_edit_td a:visited
+{
+	text-align: center; 
+	outline: none;
+	border: none;
+	display: block;
+	width: 100%;
+	padding: 2px;
+	color: #339;
+	text-decoration: underline;
+}
+
+/**
+	When moused over, they look like this.
+*/
+.c_comdef_search_results_one_meeting_row .c_comdef_search_results_edit_td a:active,
+.c_comdef_search_results_one_meeting_row .c_comdef_search_results_edit_td a:hover
+{
+	outline: none;
+	background-color: #555;
+	color: white;
+	text-decoration: none;
+}
+
+/**
+	The changes are displayed in a dt list.
+*/
+.change_desc_dl
+{
+	font-weight: bold;
+}
+
+/**
+
+*/
+.change_desc_dt
+{
+	margin-top: 4px;
+	font-weight: normal;
+	margin-left: 8px;
+	margin-right: 8px;
+	font-style: italic;
+}
+
+/**
+
+*/
+.change_desc_revert_dd,
+.change_desc_dd
+{
+	font-weight: normal;
+	margin-left: 16px;
+	margin-right: 8px;
+}
+
+.change_detail_dl .change_desc_detail_dd
+{
+	font-weight: normal;
+	margin-left: 16px;
+	padding-left: 8px !important;
+	margin-right: 8px;
+}
+
+/**
+*/
+.c_comdef_edit_close_div
+{
+	background-color: #555;
+	text-align:center;
+	font-weight: bold;
+	padding: 4px;
+	margin: -4px;
+}
+
+/**
+*/
+.top_close_div
+{
+	margin-bottom: 4px;
+}
+
+/**
+*/
+.bottom_close_div
+{
+	margin-top: 4px;
+}
+
+/**
+*/
+.c_comdef_edit_close_div a,
+.c_comdef_edit_close_div a:visited
+{
+	display:block;
+	outline: none;
+	color: #99f;
+	text-decoration: underline;
+}
+
+/**
+*/
+.c_comdef_edit_close_div a:hover,
+.c_comdef_edit_close_div a:active
+{
+	outline: none;
+	color: #f96;
+	text-decoration: none;
+}
+
+/**
+*/
+.meeting_value_div
+{
+	clear: both;
+}
+
+/**
+*/
+.meeting_value_div label
+{
+	width: 200px;
+	font-weight: bold;
+	text-align: right;
+	display: block;
+	float: left;
+}
+
+/**
+*/
+.checkbox_label
+{
+	display: inline;
+	font-weight: bold;
+	text-align: left;
+	float: none;
+	padding-left: 8px;
+}
+
+/**
+*/
+.centered_check
+{
+	padding-left:200px;
+	border-bottom: 1px solid #555;
+	padding-bottom:8px;
+}
+
+/**
+*/
+.format_header
+{
+	font-weight: bold;
+	margin-bottom: 4px;
+}
+
+/**
+*/
+.meeting_value_fieldset legend
+{
+	font-weight: bold;
+}
+
+/**
+*/
+.meeting_value_fieldset textarea
+{
+	width: 90%;
+}
+
+/**
+*/
+.data_button_div
+{
+	clear: both;
+	margin: 4px;
+	text-align:center;
+}
+
+/**
+*/
+.data_button_div_left
+{
+	width: 200px;
+	float:left;
+	text-align:center;
+}
+
+/**
+*/
+.data_button_div_right
+{
+	width: 200px;
+	float:right;
+	text-align:center;
+}
+
+/**
+*/
+.new_meeting_div
+{
+	margin: 4px;
+	background-color: #fcc;
+	border: 1px solid black;
+	padding: 4px;
+}
+
+/**
+*/
+.del_meeting_div_closed,
+.del_meeting_div_open,
+.formats_div_closed,
+.formats_div_open,
+.new_meeting_div_closed,
+.new_meeting_div_open,
+.change_desc_dl_closed,
+.change_desc_dl_open,
+.edit_user_div_open,
+.edit_user_div_closed,
+.edit_user_div_open .edit_one_user_div_open,
+.edit_user_div_open .edit_one_user_div_closed,
+.edit_user_div_open .sb_nesting .edit_one_user_div_open,
+.edit_user_div_open .sb_nesting .edit_one_user_div_closed
+{
+	padding: 4px;
+	font-weight: bold;
+	background-color: #555;
+	line-height: 1.5em;
+	vertical-align: top;
+}
+
+/**
+*/
+.c_comdef_meeting_edit_div .change_desc_dl_closed,
+.c_comdef_meeting_edit_div .change_desc_dl_open
+{
+	margin-top: 8px;
+}
+
+/**
+*/
+.edit_user_div_open .edit_one_user_div_open,
+.edit_user_div_open .edit_one_user_div_closed,
+.edit_user_div_open .sb_nesting .edit_one_user_div_open,
+.edit_user_div_open .sb_nesting .edit_one_user_div_closed
+{
+	padding-left:20px;
+}
+
+/**
+*/
+.del_meeting_div_closed a,
+.del_meeting_div_closed a:visited,
+.del_meeting_div_open a,
+.del_meeting_div_open a:visited,
+.formats_div_closed a,
+.formats_div_closed a:visited,
+.formats_div_open a,
+.formats_div_open a:visited,
+.new_meeting_div_closed a,
+.new_meeting_div_closed a:visited,
+.new_meeting_div_open a,
+.new_meeting_div_open a:visited,
+.change_desc_dl_closed a,
+.change_desc_dl_closed a:visited,
+.change_desc_dl_open a,
+.change_desc_dl_open a:visited,
+.edit_user_div_open a,
+.edit_user_div_open a:visited,
+.edit_user_div_closed a,
+.edit_user_div_closed a:visited,
+.edit_user_div_open .edit_one_user_div_open a,
+.edit_user_div_open .edit_one_user_div_open a:visited,
+.edit_user_div_open .edit_one_user_div_closed a,
+.edit_user_div_open .edit_one_user_div_closed a:visited,
+.edit_user_div_open .sb_nesting .edit_one_user_div_open a,
+.edit_user_div_open .sb_nesting .edit_one_user_div_closed a:visited
+{
+	display: block;
+	padding-left: 16px;
+	outline: none;
+	color: #99f;
+	text-decoration: underline;
+	background-position: 2px 5px;
+	background-repeat: no-repeat;
+}
+
+/**
+*/
+.del_meeting_div_closed a:active,
+.del_meeting_div_closed a:hover,
+.del_meeting_div_open a:active,
+.del_meeting_div_open a:hover,
+.formats_div_closed a:active,
+.formats_div_closed a:hover,
+.formats_div_open a:active,
+.formats_div_open a:hover,
+.new_meeting_div_closed a:hover,
+.new_meeting_div_closed a:active,
+.new_meeting_div_open a:hover,
+.new_meeting_div_open a:active,
+.change_desc_dl_closed a:hover,
+.change_desc_dl_closed a:active,
+.change_desc_dl_open a:hover,
+.change_desc_dl_open a:active,
+.edit_user_div_closed a:hover,
+.edit_user_div_closed a:active,
+.edit_user_div_open a:hover,
+.edit_user_div_open a:active,
+.edit_user_div_open .edit_one_user_div_closed a:hover,
+.edit_user_div_open .edit_one_user_div_closed a:active,
+.edit_user_div_open .edit_one_user_div_open a:hover,
+.edit_user_div_open .edit_one_user_div_open a:active,
+.edit_user_div_open .sb_nesting .edit_one_user_div_open a:active,
+.edit_user_div_open .sb_nesting .edit_one_user_div_closed a:active
+{
+	outline: none;
+	color: #f96;
+	text-decoration: none;
+}
+
+/**
+*/
+.del_meeting_div_closed a,
+.del_meeting_div_closed a:visited,
+.formats_div_closed a,
+.formats_div_closed a:visited,
+.new_meeting_div_closed a,
+.new_meeting_div_closed a:visited,
+.change_desc_dl_closed a,
+.change_desc_dl_closed a:visited,
+.edit_user_div_closed a,
+.edit_user_div_closed a:visited,
+.edit_user_div_open .edit_one_user_div_closed a,
+.edit_user_div_open .edit_one_user_div_closed a:visited
+{
+	background-image: url(images/closed_arrow.gif);
+}
+
+/**
+*/
+.del_meeting_div_closed a:active,
+.del_meeting_div_closed a:hover,
+.formats_div_closed a:hover,
+.formats_div_closed a:active,
+.new_meeting_div_closed a:hover,
+.new_meeting_div_closed a:active,
+.change_desc_dl_closed a:hover,
+.change_desc_dl_closed a:active,
+.edit_user_div_closed a:hover,
+.edit_user_div_closed a:active,
+.edit_user_div_open .edit_one_user_div_closed a:hover,
+.edit_user_div_open .edit_one_user_div_closed a:active
+{
+	background-image: url(images/closed_arrow_mouseover.gif);
+}
+
+/**
+*/
+.del_meeting_div_open a,
+.del_meeting_div_open a:visited,
+.formats_div_open a,
+.formats_div_open a:visited,
+.new_meeting_div_open a,
+.new_meeting_div_open a:visited,
+.change_desc_dl_open a,
+.change_desc_dl_open a:visited,
+.edit_user_div_open a,
+.edit_user_div_open a:visited,
+.edit_user_div_open .edit_one_user_div_open a,
+.edit_user_div_open .edit_one_user_div_open a:visited
+{
+	background-image: url(../html/images/desc_arrow.gif);
+}
+
+/**
+*/
+.del_meeting_div_open a:hover,
+.del_meeting_div_open a:active,
+.formats_div_open a:hover,
+.formats_div_open a:active,
+.new_meeting_div_open a:hover,
+.new_meeting_div_open a:active,
+.change_desc_dl_open a:hover,
+.change_desc_dl_open a:active,
+.edit_user_div_open a:hover,
+.edit_user_div_open a:active,
+.edit_user_div_open .edit_one_user_div_open a:hover,
+.edit_user_div_open .edit_one_user_div_open a:active
+{
+	background-image: url(../html/images/desc_arrow_mouseover.gif);
+}
+
+/**
+*/
+.edit_user_div_open .edit_one_user_div_open fieldset legend
+{
+	background-color: white;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+
+/**
+*/
+.edit_user_div_open .edit_one_user_div_open,
+.edit_user_div_open .edit_one_user_div_closed
+{
+	margin-top: 0;
+	padding-left:20px;
+}
+
+/**
+*/
+.change_desc_dl_closed dl,
+.change_desc_dl_closed dt,
+.change_desc_dl_closed dd
+{
+	display: none;
+}
+
+/**
+*/
+.change_desc_dl_open dl,
+.change_desc_dl_open dt,
+.change_desc_dl_open dd
+{
+	margin: 0;
+	display: inherit;
+	font-weight: normal;
+}
+
+/**
+*/
+.change_desc_dl_open dt
+{
+	padding-left: 25px;
+}
+
+/**
+*/
+.change_desc_dl_open dd
+{
+	padding-left: 30px;
+}
+
+/**
+*/
+.change_desc_dl_open dt a,
+.change_desc_dl_open dt a:visited,
+.change_desc_dl_open dd a,
+.change_desc_dl_open dd a:visited
+{
+	outline: none;
+	color: #339;
+	text-decoration: underline;
+	background: none;
+}
+
+/**
+*/
+.change_desc_dl_open dt a:hover,
+.change_desc_dl_open dt a:active,
+.change_desc_dl_open dd a:hover,
+.change_desc_dl_open dd a:active
+{
+	outline: none;
+	color: #933;
+	text-decoration: none;
+	background: none;
+}
+
+/**
+*/
+.change_d_alt_1
+{
+	background-color: #efefef;
+}
+
+/**
+*/
+.change_d_alt_2
+{
+	background-color: white;
+}
+
+/**
+*/
+.new_meeting_left
+{
+	float: left;
+}
+
+/**
+*/
+.new_meeting_right
+{
+	float: right;
+}
+
+/**
+*/
+.new_meeting_breaker
+{
+	float: none;
+	clear: both;
+}
+
+/**
+*/
+.format_sort_legend label
+{
+	font-weight: bold;
+	padding-right: 4px;
+}
+
+/**
+*/
+.formats_fieldset .default_format
+{
+	color: red;
+}
+
+/**
+    This file is part of the Basic Meeting List Toolbox (BMLT).
+    
+    Find out more at: http://magshare.org/bmlt
+
+    BMLT is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    BMLT is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this code.  If not, see <http://www.gnu.org/licenses/>.
+*/
+.admin_center_throbber_div
+{
+	height:64px;
+	text-align: center;
+	vertical-align: middle;
+}
+
+/**
+*/
+.admin_center_throbber_div img
+{
+	height:32px;
+	width:32px;
+	margin-right:auto;
+	margin-left:auto;
+}
+
+/**
+*/
+.format_type_legend
+{
+	font-weight: bold;
+}
+
+/**
+*/
+.long_lat_link_div
+{
+	text-align: center;
+}
+
+/**
+*/
+.c_comdef_search_results_edit_hidden_div .meeting_unpub
+{
+	background-color: #fc9;
+}
+
+/**
+*/
+.c_comdef_search_results_edit_hidden_div .meeting_copy
+{
+	background-color: #fcf;
+}
+
+/**
+*/
+.duplicate_text_div
+{
+	font-weight: bold;
+	color: #606;
+}
+
+/**
+*/
+.edit_data_item_fieldset
+{
+	width: 500px;
+	margin-right:auto;
+	margin-left:auto;
+}
+
+/**
+*/
+.edit_data_item_value_textarea
+{
+	height:200px;
+	width:100%;
+}
+
+/**
+*/
+.edit_data_item_buttons_div div
+{
+	text-align: center;
+	float:left;
+	width: 49.5%;
+}

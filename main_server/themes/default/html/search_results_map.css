@@ -1,0 +1,218 @@
+/***********************************************************************/
+/** 	\file	search_results_map.css
+
+	\brief	This file defines default, low-specificity CSS for the "big map"
+	geographic display.
+    
+    This file is part of the Basic Meeting List Toolbox (BMLT).
+    
+    Find out more at: http://magshare.org/bmlt
+
+    BMLT is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    BMLT is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this code.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+	This describes the Big Map, which is a <div> that fills the entire container.
+	The Z-index is so that it will be under the single meeting <div>.
+*/
+.c_comdef_search_results_map_container_div
+{
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	bottom: 0px;
+	right: 0px;
+	height: 100%;
+	width: 100%;
+}
+
+/**
+	The map itself is actually placed into a <div> contained within the full-page <div>.
+	This adds a bit of flexibility.
+*/
+.c_comdef_search_results_map_div
+{
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	width: 100%;
+	top: 0px;
+	left: 0px;
+}
+
+/** These classes describe the popup window HTML when you click on a meeting marker. */
+
+/** This is for the special window in the main marker. */
+.marker_main_info_window_div
+{
+	font-size: small;
+	white-space: nowrap;
+	clear: both;
+	float: none;
+	padding: 4px;
+	margin: 0;
+	margin-right: 10px;
+	text-align:center;
+	background-color: #555;
+	color: white;
+}
+
+/** This is the label for the radius selection popup. */
+.marker_main_info_window_div label
+{
+	font-weight: bold;
+}
+
+/** This is the radius selection popup. */
+.marker_main_info_window_div select
+{
+	margin-left: 4px;
+	color: black;
+}
+
+/** This is the surrounding <div>. */
+.marker_info_window_div
+{
+	clear: both;
+	float: none;
+	margin: 12px;
+	border: 2px solid #555;
+	background-color:white;
+	line-height:normal;
+	font-size:small;
+}
+
+/** This is one line of text. */
+.marker_info_window_div .marker_line
+{
+	clear: left;
+	vertical-align: top;
+}
+
+/** This is the text span, describing the value. */
+.marker_info_window_div .marker_line .marker_prompt
+{
+	display: block;
+	width: 150px;
+	text-align: right;
+	font-weight: bold;
+	float: left;
+}
+
+/** This is the text span, denoting the value. */
+.marker_info_window_div .marker_line .marker_value
+{
+	text-align:left;
+	display: block;
+	width: 245px;
+	margin-left: 4px;
+	white-space: normal;
+	float: left;
+}
+
+/**
+	The name has a gap under it.
+*/
+.marker_info_window_div .marker_line_name
+{
+	margin-bottom: 4px;
+}
+
+/**
+	The prompt for this value is hidden in the default implementation.
+*/
+.marker_info_window_div .marker_line_name .marker_prompt
+{
+	display: none;
+}
+
+/**
+	This is what the info looks like inside the marker info window.
+*/
+.marker_info_window_div .marker_line_name .marker_value
+{
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	background-color: #555;
+	color: white;
+	text-align: center;
+	font-weight: bold;
+	font-size: large;
+}
+
+/**
+	This is the links inside the marker info window.
+*/
+.marker_info_window_div .marker_more_info_a,
+.marker_info_window_div .marker_more_info_a:visited
+{
+	padding: 4px;
+	margin-top: 4px;
+	text-align: center;
+	display:block;
+	background-color: #555;
+	outline: none;
+	color: #99f;
+	text-decoration: underline;
+}
+
+/**
+	and hovered.
+*/
+.marker_info_window_div .marker_more_info_a:hover,
+.marker_info_window_div .marker_more_info_a:active
+{
+	outline: none;
+	color: #f96;
+	text-decoration: none;
+}
+
+/**
+	This is the way that links in the header area look "at rest."
+*/
+.marker_main_info_window_inner_div a,
+.marker_main_info_window_inner_div a:visited
+{
+	display: block;
+	font-weight: bold;
+	margin-top: 4px;
+	border-top: 1px solid white;
+	padding: 4px;
+	outline: none;
+	color: #99f;
+	text-decoration: underline;
+}
+
+/**
+	This is how the links look when they are being rolled over.
+*/
+.marker_main_info_window_inner_div a:hover,
+.marker_main_info_window_inner_div a:active
+{
+	outline: none;
+	color: #f96;
+	text-decoration: none;
+}
+
+/**
+	If there is a message about a filtered search, it is displayed in one of these.
+*/
+div.marker_main_info_window_inner_div .filter_message_div
+{
+	text-align: left;
+	padding-bottom: 4px;
+}

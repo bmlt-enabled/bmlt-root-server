@@ -1,0 +1,473 @@
+/***********************************************************************/
+/** \file	search_specification.css
+
+	\brief	This contains the styles for the search specification pages.
+    
+    This file is part of the Basic Meeting List Toolbox (BMLT).
+    
+    Find out more at: http://magshare.org/bmlt
+
+    BMLT is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    BMLT is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this code.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+	This is the header for the basic search form.
+	It is displayed above both the string and map searches.
+*/
+.c_comdef_search_specification_form_header_div
+{
+	padding-top: 8px;
+}
+
+/**
+*/
+.bmlt_search_spec_table
+{
+	margin-left:auto;
+	margin-right: auto;
+	font-family: Helvetica, Arial, Sans-Serif;
+}
+
+/**
+*/
+div.c_comdef_search_specification_form_header_div a.bmlt_spec_tab,
+div.c_comdef_search_specification_form_header_div a.bmlt_spec_tab_selected,
+div.c_comdef_search_specification_form_header_div a.bmlt_spec_tab:visited,
+div.c_comdef_search_specification_form_header_div a.bmlt_spec_tab_selected:visited
+{
+	outline: none;
+	display: block;
+	width:49.8%;
+	text-align:center;
+	float:left;
+	font-weight:bold;
+	font-size:large;
+	line-height:2em;
+}
+
+div.c_comdef_search_specification_form_header_div a.bmlt_spec_tab,
+div.c_comdef_search_specification_form_header_div a.bmlt_spec_tab:visited
+{
+	background-color: #555;
+	color: #99f;
+	border-top:1px solid #eee;
+	border-bottom: 1px solid black;
+	text-decoration: underline;
+}
+
+div.c_comdef_search_specification_form_header_div a.bmlt_spec_tab:hover,
+div.c_comdef_search_specification_form_header_div a.bmlt_spec_tab:active
+{
+	outline: none;
+	background-color: #999;
+	color: #933;
+	text-decoration: none;
+}
+
+div.c_comdef_search_specification_form_header_div a.bmlt_spec_tab_selected,
+div.c_comdef_search_specification_form_header_div a.bmlt_spec_tab_selected:visited,
+div.c_comdef_search_specification_form_header_div a.bmlt_spec_tab_selected:hover,
+div.c_comdef_search_specification_form_header_div a.bmlt_spec_tab_selected:active
+{
+	outline: none;
+	border-top: 1px solid black;
+	border-left: 1px solid black;
+	border-right: 1px solid black;
+	background-color: #eee;
+	color: black;
+	cursor:default;
+	text-decoration:none;
+}
+
+/**
+	This is a div that contains the map search.
+*/
+.c_comdef_search_specification_map_check_div
+{
+	margin: 4px;
+}
+
+/**
+	This is the text input.
+*/
+.c_comdef_search_specification_search_string_text
+{
+	width: 400px;
+}
+
+/**
+	This is the label for the output format select.
+*/
+.c_comdef_search_specification_map_check_div label
+{
+	margin-right: 4px;
+}
+
+/**
+	This is the line with the string search entry.
+*/
+.search_string_line
+{
+	margin-bottom: 8px;
+	text-align: center;
+}
+
+/**
+	This is the label for the search string.
+*/
+.search_string_line label
+{
+	font-weight: bold;
+	padding-right: 4px;
+}
+
+/**
+	This is the search string "go" button.
+*/
+.c_comdef_search_specification_search_string_submit
+{
+	margin-left: 8px;
+}
+
+/**
+	We center the text in both divs.
+*/
+.c_comdef_search_specification_map_container_div,
+.c_comdef_search_specification_container_div,
+.c_comdef_search_specification_one_line
+{
+	clear:both;
+	text-align: center;
+	padding-top: 8px;
+}
+
+/**
+	This is the overall container for the form.
+*/
+.c_comdef_search_specification_form_container_div
+{
+	margin-left: auto;
+	margin-right: auto;
+	padding: 4px;
+	border: 2px solid #555;
+	background-color: #eee;
+	width: 640px;
+}
+
+/**
+	This is the div in which the map is displayed.
+*/
+.c_comdef_search_specification_map_div
+{
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 8px;
+	width: 100%;
+	height: 500px;
+	border: 1px solid black;
+}
+
+/**
+	These are all the various links.
+*/
+.c_comdef_search_specification_map_vis_a,
+.c_comdef_search_specification_map_vis_a:visited,
+.c_comdef_search_specification_map_invis_a,
+.c_comdef_search_specification_map_invis_a:visited,
+.c_comdef_search_specification_map_vis_a:active,
+.c_comdef_search_specification_map_vis_a:hover,
+.c_comdef_search_specification_map_invis_a:active,
+.c_comdef_search_specification_map_invis_a:hover
+{
+	outline: none;
+	background-position: left center;
+	background-repeat: no-repeat;
+}
+
+/**
+	This is what the links in the map (not string) look like.
+	This is just the disclosure link.
+*/
+.c_comdef_search_specification_map_vis_a,
+.c_comdef_search_specification_map_vis_a:visited,
+.c_comdef_search_specification_map_invis_a,
+.c_comdef_search_specification_map_invis_a:visited
+{
+	display: block;
+	height: 16px;
+	font-weight: bold;
+	font-size: large;
+	color: #00c;
+	text-decoration: underline;
+}
+
+/**
+	This is what the disclosure link looks like hovered.
+*/
+.c_comdef_search_specification_map_vis_a:active,
+.c_comdef_search_specification_map_vis_a:hover,
+.c_comdef_search_specification_map_invis_a:active,
+.c_comdef_search_specification_map_invis_a:hover
+{
+	color: #c03;
+	text-decoration: none;
+}
+
+/**
+	The disclosure link has a triangle to show disclosure state.
+	This is what it looks like when the map is shown.
+*/
+.c_comdef_search_specification_map_vis_a,
+.c_comdef_search_specification_map_vis_a:visited
+{
+	background-image: url(images/DisclosureTriangle_vis.gif);
+}
+
+/**
+	and hovered.
+*/
+.c_comdef_search_specification_map_vis_a:active,
+.c_comdef_search_specification_map_vis_a:hover
+{
+	background-image: url(images/DisclosureTriangle_vis_mouseover.gif);
+}
+
+/**
+	This is what it looks like when the map is hidden, and the string search is shown.
+*/
+.c_comdef_search_specification_map_invis_a,
+.c_comdef_search_specification_map_invis_a:visited
+{
+	background-image: url(images/DisclosureTriangle_invis.gif);
+}
+
+/**
+	and hovered.
+*/
+.c_comdef_search_specification_map_invis_a:active,
+.c_comdef_search_specification_map_invis_a:hover
+{
+	background-image: url(images/DisclosureTriangle_invis_mouseover.gif);
+}
+
+/**
+	This is the div containing the "This is an address" checkbox.
+*/
+.search_check_div
+{
+	padding-top: 4px;
+}
+
+/**
+	This is the label for that checkbox.
+*/
+.search_check_div label
+{
+	padding-left: 4px;
+}
+
+/**
+*/
+.one_line_advanced_spec_fieldset
+{
+	clear:both;
+	padding: 4px;
+}
+
+/**
+*/
+.one_line_advanced_spec_fieldset legend
+{
+	text-align: left;
+	padding-left: 4px;
+	padding-right: 4px;
+	font-weight: bold;
+}
+
+/**
+*/
+.bmlt_search_one_weekday_div,
+.bmlt_search_one_format_div
+{
+	float:left;
+	text-align: left;
+	padding-right:4px;
+	padding-bottom:4px;
+	padding-top:4px;
+}
+
+/**
+*/
+.bmlt_search_one_format_div
+{
+	width: 4em;
+}
+
+/**
+*/
+.bmlt_search_one_weekday_div
+{
+	width: 9em;
+}
+
+/**
+*/
+.bmlt_search_one_service_body_dl
+{
+	text-align: left;
+	padding-right:4px;
+	padding-bottom:4px;
+	padding-top:4px;
+	margin-left:24px;
+}
+
+/**
+*/
+.bmlt_search_one_weekday_div label,
+.bmlt_search_one_service_body_dl label,
+.bmlt_search_one_format_div label
+{
+	text-align: left;
+	font-weight:bold;
+	padding-left:4px;
+}
+
+/**
+*/
+.bmlt_search_one_service_body_dl label,
+.bmlt_search_one_format_div label
+{
+	cursor: help;
+}
+
+/**
+*/
+.bmlt_corner_version
+{
+	position:absolute;
+	bottom: 0px;
+	right: 4px;
+	color: white;
+	z-index:10000;
+}
+
+/**
+*/
+.search_radius_div
+{
+	margin-top: 4px;
+}
+
+/**
+*/
+.result_type_advanced_label,
+.bmlt_result_type_label,
+.bmlt_advanced_radius_label
+{
+	font-weight: bold;
+}
+
+/**
+*/
+.result_type_advanced_select
+{
+	margin-left: 4px;
+}
+
+/**
+*/
+.bmlt_hover_message
+{
+	clear:both;
+	font-size:small;
+	text-align:center;
+	font-style:italic;
+}
+
+/**
+*/
+.c_comdef_search_specification_search_string_submit,
+.c_comdef_search_specification_search_string_submit_top
+{
+	font-size:medium;
+	font-weight:bold;
+	width: 60px;
+}
+
+/**
+*/
+.c_comdef_search_specification_search_string_submit_top
+{
+	float: right;
+}
+
+/**
+*/
+.where_am_i_fieldset
+{
+	text-align:center;
+	padding:4px;
+	margin-top:8px;
+	font-weight:bold;
+}
+
+/**
+*/
+.where_am_i_fieldset legend
+{
+	text-align:center;
+	padding-left:4px;
+	padding-right:4px;
+	font-weight:bold;
+}
+
+/**
+*/
+.throbber_div
+{
+	display: block;
+	position: absolute;
+	z-index: 6000;
+	background-color: #555;
+	top:50%;
+	left:50%;
+	width:100px;
+	height:100px;
+	margin-top:-50px;
+	margin-left:-50px;
+}
+/**
+*/
+.throbber_div img
+{
+	margin:10px;
+	width:80px;
+	height:80px;
+}
+
+/**
+*/
+.bmlt_search_one_service_body_dd
+{
+    margin-left:16px;
+    font-size:small;
+    font-style:italic;
+}
+/**
+    Override or uncomment this to hide the advanced/basic selector (Make it display:none).
+.hidden_element_mode
+{
+    display:none;
+}
+*/

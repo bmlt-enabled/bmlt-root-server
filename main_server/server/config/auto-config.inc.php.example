@@ -1,0 +1,57 @@
+<?php
+	defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
+
+// ##BEGIN_PAGE_1## Install Wizard Page One Items:
+	$dbType = "mysql <USUALLY>";
+	$dbName = "<YOUR DB NAME>";
+	$dbServer = "localhost <USUALLY>";
+	$dbUser = "<YOUR DB USER NAME>";
+	$dbPassword = '<YOUR DB USER PASSWORD>';
+	$dbPrefix = "na";
+	$bmlt_title = "Basic Meeting List Toolbox Root Server";
+// ##END_PAGE_1##
+
+// ##BEGIN_PAGE_2## Install Wizard Page Two Items:
+	$theme = 'default';
+	$comdef_global_language = "en";
+	$min_pw_len = 6;
+	$any_service_body_admin_can_edit_formats = false;
+	$any_service_body_admin_can_create_service_bodies = false;
+// ##END_PAGE_2##
+	
+// ##BEGIN_PAGE_3## Install Wizard Page Three Items:
+	$gkey = "ABQIAAAABCC8PsaKPPEsC3k649kYPRRbaXL1ek5ixmK3SPbne69xsQMD3xQBVlDFbaiMVMvm6escOnPWLJGthQ";
+	$search_spec_map_center = array ( 'longitude' => -73.18, 'latitude' => 41.37, 'zoom' => 8 );
+// ##END_PAGE_3##
+	
+// ##BEGIN_PAGE_4## Various Items:
+	$results_per_page = 30;
+	$number_of_meetings_for_auto = 10;
+	$default_basic_search = "map";
+	$default_sort_key = "weekday";
+	$default_sort_dir = "asc";
+	$static_map_size = array ( 'width' => 600, 'height'=> 600 );
+	$time_format = "g:i A";
+	$change_date_format = "$time_format, n/j/Y";
+	$change_depth_for_meetings = 5;
+	$allow_contact_form = false;
+	$recursive_contact_form = false;
+	$allow_pdf_downloads = false;
+	$banner_text = null;
+	$default_sorts = array ('weekday' => array('weekday_tinyint','location_municipality','location_city_subsection','start_time','location_neighborhood'),'time' => array('weekday_tinyint','start_time','location_municipality','location_city_subsection','location_neighborhood'),'town' => array('location_municipality','location_city_subsection','location_neighborhood','weekday_tinyint','start_time'));
+	$page_display_size = 11;
+	$disable_zoom_in_clicks = false;	// Set this to true if you want the first click to always result in a search, even if the map is zoomed far out.
+	$sort_depth = 8;
+	$root_server = null;
+	$comdef_native_service_body = 1;
+	$serverNamespace = null;
+	$admin_session_name = 'BMLT_Admin';
+	$client_session_name = 'BMLT_Satellite';
+	$comdef_distance_units = 'mi'; ///< This should either be 'km' (Kilometers), or 'mi' (Miles).
+    $comdef_show_sb_desc = false;   ///< This is true if you want textual descriptions to be shown under Service body listings in the advanced pane.
+	define ( "_DEFAULT_DURATION", "N.A. Meetings are usually 90 minutes long (an hour and a half), unless otherwise indicated." );
+	define ( 'WC_FORMAT', '33' );		// These are used for the NAWS format translation. They are the shared IDs of the wheelchair, open and closed formats.
+	define ( 'O_FORMAT', '17' );
+	define ( 'C_FORMAT', '4' );
+// ##END_PAGE_4##
+?>

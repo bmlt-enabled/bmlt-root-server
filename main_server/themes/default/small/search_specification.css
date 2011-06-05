@@ -1,0 +1,104 @@
+/***********************************************************************/
+/** \file	search_specification.css
+
+	\brief	This contains the styles for the search specification pages.
+    
+    This file is part of the Basic Meeting List Toolbox (BMLT).
+    
+    Find out more at: http://magshare.org/bmlt
+
+    BMLT is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    BMLT is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this code.  If not, see <http://www.gnu.org/licenses/>.
+*/
+body
+{
+	background-color:#555;
+}
+
+.c_comdef_search_specification_form_div
+{
+	text-align: center;
+	font-family: Helvetica, Arial, Sans-Serif;
+}
+
+.c_comdef_search_specification_form_div fieldset
+{
+	padding: 4px;
+	margin-top:8px;
+}
+
+.address_lookup_fieldset,
+.string_lookup_fieldset,
+.weekday_fieldset,
+.where_am_i_fieldset
+{
+	color: white;
+}
+
+.weekday_fieldset
+{
+	text-align: left;
+}
+
+.weekday_fieldset label
+{
+	padding-left: 4px;
+}
+
+.address_lookup_fieldset legend,
+.string_lookup_fieldset legend,
+.where_am_i_fieldset legend,
+.weekday_fieldset legend
+{
+	text-align: left;
+	padding: 4px;
+	font-size: small;
+}
+
+.where_am_i_fieldset input
+{
+	color:black;
+}
+
+.address_lookup_fieldset input,
+.string_lookup_fieldset input
+{
+	color: black;
+	margin-left: 4px;
+}
+
+.address_lookup_fieldset .entered_address,
+.string_lookup_fieldset .entered_string
+{
+	width: 80%;
+	font-size: medium;
+}
+
+.address_lookup_fieldset label,
+.string_lookup_fieldset label,
+.weekday_fieldset label
+{
+	font-weight:bold;
+}
+
+.throbber_div img
+{
+	display: block;
+	position: absolute;
+	top:50%;
+	left:50%;
+	width:80px;
+	height:80px;
+	margin-top:-40px;
+	margin-left:-40px;
+}

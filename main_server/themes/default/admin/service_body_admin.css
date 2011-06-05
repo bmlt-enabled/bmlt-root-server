@@ -1,0 +1,235 @@
+/**
+    This file is part of the Basic Meeting List Toolbox (BMLT).
+    
+    Find out more at: http://magshare.org/bmlt
+
+    BMLT is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    BMLT is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this code.  If not, see <http://www.gnu.org/licenses/>.
+*/
+.edit_service_div_closed,
+.edit_service_div_open,
+.edit_service_div_open .edit_one_sb_div_open,
+.edit_service_div_open .edit_one_sb_div_closed
+{
+	padding: 4px;
+	font-weight: bold;
+	background-color: #555;
+	line-height: 1.5em;
+	vertical-align: top;
+}
+
+.edit_service_div_open .edit_one_sb_div_open,
+.edit_service_div_open .edit_one_sb_div_closed
+{
+	margin-top: 0;
+	padding-left:20px;
+}
+
+/**
+*/
+a.edit_service_div_a,
+a.edit_service_div_a:visited,
+.sb_nesting a,
+.sb_nesting a:visited
+{
+	display: block;
+	padding-left: 16px;
+	outline: none;
+	color: #99f;
+	text-decoration: underline;
+	background-position: 2px 5px;
+	background-repeat: no-repeat;
+}
+
+/**
+*/
+.edit_service_div_open a:active,
+.edit_service_div_open a:hover,
+.edit_service_div_closed a:hover,
+.edit_service_div_closed a:active,
+.sb_nesting a.edit_one_sb_a_open:active,
+.sb_nesting a.edit_one_sb_a_open:hover,
+.sb_nesting a.edit_one_sb_a_closed:active,
+.sb_nesting a.edit_one_sb_a_closed:hover
+{
+	outline: none;
+	color: #f96;
+	text-decoration: none;
+}
+
+/**
+*/
+.edit_service_div_closed a,
+.edit_service_div_closed a:visited,
+.sb_nesting a.edit_one_sb_a_closed,
+.sb_nesting a.edit_one_sb_a_closed:visited
+{
+	background-image: url(images/closed_arrow.gif);
+}
+
+/**
+*/
+.edit_service_div_closed a:hover,
+.edit_service_div_closed a:active,
+.sb_nesting a.edit_one_sb_a_closed:active,
+.sb_nesting a.edit_one_sb_a_closed:hover
+{
+	background-image: url(images/closed_arrow_mouseover.gif);
+}
+
+.edit_service_div_open a,
+.edit_service_div_open a:visited,
+.sb_nesting a.edit_one_sb_a_open,
+.sb_nesting a.edit_one_sb_a_open:visited
+{
+	background-image: url(../html/images/desc_arrow.gif);
+}
+
+.edit_service_div_open a:hover,
+.edit_service_div_open a:active,
+.sb_nesting a.edit_one_sb_a_open:active,
+.sb_nesting a.edit_one_sb_a_open:hover
+{
+	background-image: url(../html/images/desc_arrow_mouseover.gif);
+}
+
+.service_body_display_fieldset legend
+{
+	background-color: white;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+
+
+.sb_editor_check_label
+{
+	vertical-align: top;
+	display:block;
+	float:left;
+	width: 200px;
+	font-weight: bold;
+	text-align: right;
+	margin-right: 4px;
+}
+
+.sb_checkbox_array_div
+{
+	float:left;
+}
+
+.sb_user_check_div label
+{
+	text-align: left;
+	padding-left: 4px;
+	font-weight: normal;
+}
+
+.sb_check_div
+{
+	clear: left;
+	height: 24px;
+	float: left;
+	text-align: right;
+}
+
+.sb_check_div input
+{
+	margin-top:3px;
+}
+
+.sb_check_title_div
+{
+	vertical-align: top;
+	float: left;
+	white-space: nowrap;
+}
+
+.sb_edit_div
+{
+	clear: both;
+	margin-top:8px;
+	margin-left: 8px;
+}
+
+.sb_edit_div label
+{
+	margin-right: 4px;
+}
+
+.sb_edit_div select
+{
+	vertical-align: top;
+	margin-left: 4px;
+}
+
+.sb_edit_div textarea
+{
+	vertical-align: top;
+}
+
+.sb_submit_wrapper,
+.sb_clear_both
+{
+	clear:both;
+}
+
+.sb_clear_both
+{
+	height: 8px;
+}
+
+.sb_button_div
+{
+	clear: both;
+	margin-top: 8px;
+	margin-bottom: 8px;
+	border-top: 1px solid #555;
+	padding: 8px;
+}
+
+/**
+*/
+.service_body_editor_div
+{
+	background-color: #efefef;
+}
+
+/**
+*/
+.service_body_display_fieldset
+{
+	background-color: white;
+}
+
+.service_body_display_fieldset_new
+{
+	margin: 4px;
+	background-color: #fcc;
+	border: 1px solid black;
+	padding: 4px;
+}
+
+.new_submit_div
+{
+	text-align:center;
+}
+
+label.service_body_admin_label
+{
+	font-weight: bold;
+}
+
+label.meeting_list_editor_label
+{
+	font-style: italic;
+}
