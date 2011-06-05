@@ -295,9 +295,9 @@
 	- Our ears are wide open. Please contact us at webmaster -at- magnaws.com if you find any vulnerabilities.
 	
 	<h2 id="docs_release_notes">RELEASE NOTES:</h2>
-	- - 1.8.29 Release
-	    
-	
+	- June 4, 2011 - 1.8.29 Release
+	    - Moved the entire Root Server project to <a href="https://github.com/MAGSHARE/BMLT-Root-Server">GitHub</a>. The history will be restarted. If you want to access all the previous versions, they will be forever available on <a href="https://sourceforge.net/projects/comdef/">SourceForge</a>.
+		
 	- June 2, 2011 - 1.8.28 Release
 	    - Fixed a bug, in which the start time was not being displayed in single meetings..
 
