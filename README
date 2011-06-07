@@ -47,6 +47,10 @@ For instructions on installing the root server, see this page:
 CHANGELIST
 ----------
 
+= Version 1.8.31 =
+* June 7, 2011
+* Added additional capability to the CSV, JSON and XML outputs, so that the Satellite Driver can extract more relevant information.
+
 = Version 1.8.30 =
 * June 5, 2011
 * Fixed a fairly minor bug, in which failed geocode lookups would result in a blank screen. They now result in a message.

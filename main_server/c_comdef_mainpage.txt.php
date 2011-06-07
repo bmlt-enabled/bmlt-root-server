@@ -295,7 +295,7 @@
 	- Our ears are wide open. Please contact us at webmaster -at- magnaws.com if you find any vulnerabilities.
 	
 	<h2 id="docs_release_notes">RELEASE NOTES:</h2>
-	- - 1.8.31 Release
+	- June 7, 2011 - 1.8.31 Release
 	    - Added additional capability to the <a href="http://magshare.org/blog/welcome-to-magshare/bmlt-the-basic-meeting-list-toolbox/bmlt-in-depth/implementing-the-bmlt/high-geek-factor-stuff/export-options/">CSV, JSON and XML</a> outputs, so that <a href="http://magshare.org/blog/welcome-to-magshare/bmlt-the-basic-meeting-list-toolbox/bmlt-in-depth/implementing-the-bmlt/high-geek-factor-stuff/the-satellite-driver-class/">the Satellite Driver</a> can extract more relevant information.
 	
 	- June 5, 2011 - 1.8.30 Release
