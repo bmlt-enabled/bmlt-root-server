@@ -49,7 +49,11 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"; ?>
 				<xs:element minOccurs="0" maxOccurs="unbounded" ref="xsn:serviceBody"/>
 			</xs:sequence>
 			<xs:attribute name="id" use="required" type="xs:integer"/>
-			<xs:attribute name="sb_name" use="required"/>
+			<xs:attribute name="sb_name" use="required" type="xs:string"/>
+			<xs:attribute name="sb_type" use="required" type="xs:string"/>
+			<xs:attribute name="sb_desc" type="xs:string"/>
+			<xs:attribute name="sb_uri" type="xs:string"/>
+			<xs:attribute name="sb_kmluri" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 </xs:schema>

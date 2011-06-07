@@ -80,7 +80,25 @@ function OutputServiceBody (	$in_service_body_array	///< An array of c_comdef_se
 		{
 		if ( isset ( $service_body_ar['object'] ) && ($service_body_ar['object'] instanceof c_comdef_service_body) )
 			{
-			echo '<serviceBody id="'.intval ( $service_body_ar['object']->GetID() ).'" sb_name="'.htmlspecialchars ( $service_body_ar['object']->GetLocalName() ).'"';
+			echo '<serviceBody id="'.intval ( $service_body_ar['object']->GetID() ).'"';
+			echo ' sb_name="'.htmlspecialchars ( $service_body_ar['object']->GetLocalName() ).'"';
+			echo ' sb_type="'.htmlspecialchars ( $service_body_ar['object']->GetSBType() ).'"';
+			
+			if ( $service_body_ar['object']->GetLocalDescription() )
+			    {
+			    echo ' sb_desc="'.htmlspecialchars ( $service_body_ar['object']->GetLocalDescription() ).'"';
+			    }
+			
+			if ( $service_body_ar['object']->GetURI() )
+			    {
+			    echo ' sb_uri="'.htmlspecialchars ( $service_body_ar['object']->GetURI() ).'"';
+			    }
+			
+			if ( $service_body_ar['object']->GetKMLURI() )
+			    {
+			    echo ' sb_kmluri="'.htmlspecialchars ( $service_body_ar['object']->GetKMLURI() ).'"';
+			    }
+			
 			if ( isset ( $service_body_ar['dependents'] ) )
 				{
 				echo ">";
