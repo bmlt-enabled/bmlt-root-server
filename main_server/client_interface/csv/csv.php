@@ -1,6 +1,6 @@
 <?php
 /***********************************************************************/
-/** 	\file	client_interface/csv/index.php
+/**		\file	client_interface/csv/index.php
 
 	\brief	This file is a very simple interface that is designed to return
 	a basic CSV (Comma-Separated Values) string, in response to a search.
@@ -10,22 +10,22 @@
 	
 	This file can be called from other servers.
 
-    This file is part of the Basic Meeting List Toolbox (BMLT).
-    
-    Find out more at: http://magshare.org/bmlt
+	This file is part of the Basic Meeting List Toolbox (BMLT).
+	
+	Find out more at: http://magshare.org/bmlt
 
-    BMLT is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+	BMLT is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
 
-    BMLT is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+	BMLT is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this code.  If not, see <http://www.gnu.org/licenses/>.
+	You should have received a copy of the GNU General Public License
+	along with this code.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 require_once ( dirname ( __FILE__ ).'/../../server/shared/classes/comdef_utilityclasses.inc.php');
@@ -113,6 +113,7 @@ function parse_redirect (
 		case 'GetChanges':
 			$start_date = null;
 			$end_date = null;
+			$meeting_id = null;
 			
 			if ( isset ( $http_vars['start_date'] ) )
 				{
@@ -123,7 +124,13 @@ function parse_redirect (
 				{
 				$end_date = strtotime ( trim($http_vars['end_date']) );
 				}
-			$result2 = GetChanges ( $start_date, $end_date );
+			
+			if ( isset ( $http_vars['meeting_id'] ) )
+				{
+				$meeting_id = intval ( $http_vars['meeting_id'] );
+				}
+			
+			$result2 = GetChanges ( $start_date, $end_date, $meeting_id );
 			
 			if ( isset ( $http_vars['xml_data'] ) )
 				{
@@ -161,7 +168,7 @@ function GetSearchResults (
 							$in_http_vars	///< The HTTP GET and POST parameters.
 							)
 	{
-	if ( !( isset ( $in_http_vars['geo_width'] ) && $in_http_vars['geo_width'] ) && isset ( $in_http_vars['bmlt_search_type'] ) && ($in_http_vars['bmlt_search_type'] == 'advanced') && isset ( $in_http_vars['advanced_radius'] ) && isset ( $in_http_vars['advanced_mapmode'] ) && $in_http_vars['advanced_mapmode'] && ( floatval ( $in_http_vars['advanced_radius'] != 0.0 ) ) && isset ( $in_http_vars['lat_val'] ) &&  isset ( $in_http_vars['long_val'] ) && ( (floatval ( $in_http_vars['lat_val'] ) != 0.0) || (floatval ( $in_http_vars['long_val'] ) != 0.0) ) )
+	if ( !( isset ( $in_http_vars['geo_width'] ) && $in_http_vars['geo_width'] ) && isset ( $in_http_vars['bmlt_search_type'] ) && ($in_http_vars['bmlt_search_type'] == 'advanced') && isset ( $in_http_vars['advanced_radius'] ) && isset ( $in_http_vars['advanced_mapmode'] ) && $in_http_vars['advanced_mapmode'] && ( floatval ( $in_http_vars['advanced_radius'] != 0.0 ) ) && isset ( $in_http_vars['lat_val'] ) &&	 isset ( $in_http_vars['long_val'] ) && ( (floatval ( $in_http_vars['lat_val'] ) != 0.0) || (floatval ( $in_http_vars['long_val'] ) != 0.0) ) )
 		{
 		$in_http_vars['geo_width'] = $in_http_vars['advanced_radius'];
 		}
@@ -224,9 +231,9 @@ function GetSearchResults (
 	
 	\returns CSV data, with the first row a key header.
 */	
-function GetFormats ( 	
+function GetFormats (	
 					&$server,		///< A reference to an instance of c_comdef_server
-					$in_lang = null	///< The language of the formats to be returned.
+					$in_lang = null ///< The language of the formats to be returned.
 					)
 	{
 	$my_keys = array (	'key_string',
@@ -264,7 +271,7 @@ function GetFormats (
 		$ret .= '"'.join ( '","', $my_keys )."\"\n";
 		foreach ( $langs as $key => $value )
 			{
-			$format_array =  $formats_obj->GetFormatsByLanguage ( $key );
+			$format_array =	 $formats_obj->GetFormatsByLanguage ( $key );
 			
 			if ( is_array ( $format_array ) && count ( $format_array ) )
 				{
@@ -323,9 +330,10 @@ function GetFormats (
 	
 	\returns CSV data, with the first row a key header.
 */	
-function GetChanges ( 	
+function GetChanges (	
 					$in_start_date = null,	///< Optional. A start date (In PHP time() format). If supplied, then only changes on, or after this date will be returned.
-					$in_end_date = null		///< Optional. An end date (In PHP time() format). If supplied, then only changes that occurred on, or before this date will be returned.
+					$in_end_date = null,	///< Optional. An end date (In PHP time() format). If supplied, then only changes that occurred on, or before this date will be returned.
+					$in_meeting_id = null	///< If supplied, an ID for a particular meeting. Only changes for that meeting will be returned.
 					)
 	{
 	$ret = null;
@@ -354,115 +362,118 @@ function GetChanges (
 						{
 						$meeting_id = intval ( $change->GetAfterObjectID() );
 						}
-				
-					$b_obj = $change->GetBeforeObject();
-					$a_obj = $change->GetAfterObject();
-					
-					$meeting_name = '';
-					$user_name = '';
-
-					if ( $b_obj instanceof c_comdef_meeting )
-						{
-						$meeting_name = str_replace ( '"', "'", preg_replace ( "/[\n\r]/", " ", $b_obj->GetMeetingDataValue ( 'meeting_name' )) );
-						}
-					elseif ( $a_obj instanceof c_comdef_meeting )
-						{
-						$meeting_name = str_replace ( '"', "'", preg_replace ( "/[\n\r]/", " ", $a_obj->GetMeetingDataValue ( 'meeting_name' )) );
-						}
-					$user_id = intval ( $change->GetUserID() );
-					
-					$user = c_comdef_server::GetUserByIDObj ( $user_id );
-					
-					if ( $user instanceof c_comdef_user )
-						{
-						$user_name = str_replace ( '"', "'", preg_replace ( "/[\n\r]/", " ", $user->GetLocalName()));
-						}
-
-					$details = '';
-					$desc = $change->DetailedChangeDescription();
-					
-					if ( $desc && isset ( $desc['details'] ) && is_array ( $desc['details'] ) )
-						{
-						// We need to prevent double-quotes, as they are the string delimiters, so we replace them with single-quotes.
-						$details = str_replace ( '"', "'", html_entity_decode ( preg_replace ( "/[\n\r]/", " ", join ( " ", $desc['details'] ) ) ) );
-						}
-					
-					$change_line = array();
-
-					if ( $date_int )
-						{
-						$change_line['date_int'] = $date_int;
-						}
-					else
-						{
-						$change_line['date_int'] = 0;
-						}
-					
-					if ( $date_string )
-						{
-						$change_line['date_string'] = $date_string;
-						}
-					else
-						{
-						$change_line['date_string'] = '';
-						}
-					
-					if ( $change_type )
-						{
-						$change_line['change_type'] = $change_type;
-						}
-					else
-						{
-						$change_line['change_type'] = '';
-						}
-					
-					if ( $meeting_id )
-						{
-						$change_line['meeting_id'] = $meeting_id;
-						}
-					else
-						{
-						$change_line['meeting_id'] = 0;
-						}
-					
-					if ( $meeting_name )
-						{
-						$change_line['meeting_name'] = $meeting_name;
-						}
-					else
-						{
-						$change_line['meeting_name'] = '';
-						}
-					
-					if ( $user_id )
-						{
-						$change_line['user_id'] = $user_id;
-						}
-					else
-						{
-						$change_line['user_id'] = 0;
-						}
-					
-					if ( $user_name )
-						{
-						$change_line['user_name'] = $user_name;
-						}
-					else
-						{
-						$change_line['user_name'] = '';
-						}
-					
-					if ( $details )
-						{
-						$change_line['details'] = $details;
-						}
-					else
-						{
-						$change_line['details'] = '';
-						}
-					
-					$line = '"'.join('","',$change_line).'"';
-					$ret .= "$line\n";
+				    
+				    if ( !$in_meeting_id || ($in_meeting_id && ($in_meeting_id == $meeting_id)) )
+				        {
+                        $b_obj = $change->GetBeforeObject();
+                        $a_obj = $change->GetAfterObject();
+                        
+                        $meeting_name = '';
+                        $user_name = '';
+    
+                        if ( $b_obj instanceof c_comdef_meeting )
+                            {
+                            $meeting_name = str_replace ( '"', "'", preg_replace ( "/[\n\r]/", " ", $b_obj->GetMeetingDataValue ( 'meeting_name' )) );
+                            }
+                        elseif ( $a_obj instanceof c_comdef_meeting )
+                            {
+                            $meeting_name = str_replace ( '"', "'", preg_replace ( "/[\n\r]/", " ", $a_obj->GetMeetingDataValue ( 'meeting_name' )) );
+                            }
+                        $user_id = intval ( $change->GetUserID() );
+                        
+                        $user = c_comdef_server::GetUserByIDObj ( $user_id );
+                        
+                        if ( $user instanceof c_comdef_user )
+                            {
+                            $user_name = str_replace ( '"', "'", preg_replace ( "/[\n\r]/", " ", $user->GetLocalName()));
+                            }
+    
+                        $details = '';
+                        $desc = $change->DetailedChangeDescription();
+                        
+                        if ( $desc && isset ( $desc['details'] ) && is_array ( $desc['details'] ) )
+                            {
+                            // We need to prevent double-quotes, as they are the string delimiters, so we replace them with single-quotes.
+                            $details = str_replace ( '"', "'", html_entity_decode ( preg_replace ( "/[\n\r]/", " ", join ( " ", $desc['details'] ) ) ) );
+                            }
+                        
+                        $change_line = array();
+    
+                        if ( $date_int )
+                            {
+                            $change_line['date_int'] = $date_int;
+                            }
+                        else
+                            {
+                            $change_line['date_int'] = 0;
+                            }
+                        
+                        if ( $date_string )
+                            {
+                            $change_line['date_string'] = $date_string;
+                            }
+                        else
+                            {
+                            $change_line['date_string'] = '';
+                            }
+                        
+                        if ( $change_type )
+                            {
+                            $change_line['change_type'] = $change_type;
+                            }
+                        else
+                            {
+                            $change_line['change_type'] = '';
+                            }
+                        
+                        if ( $meeting_id )
+                            {
+                            $change_line['meeting_id'] = $meeting_id;
+                            }
+                        else
+                            {
+                            $change_line['meeting_id'] = 0;
+                            }
+                        
+                        if ( $meeting_name )
+                            {
+                            $change_line['meeting_name'] = $meeting_name;
+                            }
+                        else
+                            {
+                            $change_line['meeting_name'] = '';
+                            }
+                        
+                        if ( $user_id )
+                            {
+                            $change_line['user_id'] = $user_id;
+                            }
+                        else
+                            {
+                            $change_line['user_id'] = 0;
+                            }
+                        
+                        if ( $user_name )
+                            {
+                            $change_line['user_name'] = $user_name;
+                            }
+                        else
+                            {
+                            $change_line['user_name'] = '';
+                            }
+                        
+                        if ( $details )
+                            {
+                            $change_line['details'] = $details;
+                            }
+                        else
+                            {
+                            $change_line['details'] = '';
+                            }
+                        
+                        $line = '"'.join('","',$change_line).'"';
+                        $ret .= "$line\n";
+                        }
 					}
 				}
 			}
@@ -504,10 +515,10 @@ function HandleNoServer ( )
 	
 	\returns a JSON string, with all the data in the CSV.
 */	
-function TranslateToJSON ( $in_csv_data	///< An array of CSV data, with the first element being the field names.
+function TranslateToJSON ( $in_csv_data ///< An array of CSV data, with the first element being the field names.
 						)
 	{
-	$out_json_data;	///< The Output JSON data (a string).
+	$out_json_data; ///< The Output JSON data (a string).
 	$temp_keyed_array = array();
 	$in_csv_data = explode ( "\n", $in_csv_data );
 	$keys = array_shift ( $in_csv_data );
@@ -542,7 +553,7 @@ function TranslateToJSON ( $in_csv_data	///< An array of CSV data, with the firs
 	
 	\returns an XML string, with all the data in the CSV.
 */	
-function TranslateToXML ( 	$in_csv_data	///< An array of CSV data, with the first element being the field names.
+function TranslateToXML (	$in_csv_data	///< An array of CSV data, with the first element being the field names.
 						)
 	{
 	$out_xml_data;	///< The Output JSON data (a string).
