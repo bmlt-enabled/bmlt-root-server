@@ -615,25 +615,15 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 	{
 		$ret - null;
 		
-		global	$comdef_global_more_details_address,	///< This is a format string for the way the address line is displayed in the "more details" screen.
-				$comdef_global_list_address;			///< The same, but for the list.
-		
-		// Make sure we get any overrides they may have set.
-		if ( file_exists ( dirname ( __FILE__ )."/../config/auto-config.inc.php" ) )
-			{
-			require_once ( dirname ( __FILE__ )."/../config/auto-config.inc.php" );
-			}
-		else
-			{
-			throw ( new Exception ( "No auto-config.inc.php file!" ) );
-			}
+		$local_strings = c_comdef_server::GetLocalStrings();
 		
 		// At this point, we have the format strings. We mow parse them to get the keys used for address display.
 		// The data item keys are surrounded by sets of double percent signs (%%_key_%%).
-		$string_to_parse = $comdef_global_more_details_address;
+		$string_to_parse = $local_strings['comdef_global_more_details_address'];
+		
 		if ( $in_list )
 			{
-			$string_to_parse = $comdef_global_list_address;
+		    $string_to_parse = $local_strings['comdef_global_list_address'];
 			}
 		
 		$matches = array();
@@ -670,25 +660,15 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 	{
 		$ret - null;
 		
-		global	$comdef_global_more_details_address,	///< This is a format string for the way the address line is displayed in the "more details" screen.
-				$comdef_global_list_address;			///< The same, but for the list.
-		
-		// Make sure we get any overrides they may have set.
-		if ( file_exists ( dirname ( __FILE__ )."/../config/auto-config.inc.php" ) )
-			{
-			require_once ( dirname ( __FILE__ )."/../config/auto-config.inc.php" );
-			}
-		else
-			{
-			throw ( new Exception ( "No auto-config.inc.php file!" ) );
-			}
+		$local_strings = c_comdef_server::GetLocalStrings();
 		
 		// At this point, we have the format strings. We mow parse them to get the keys used for address display.
 		// The data item keys are surrounded by sets of double percent signs (%%_key_%%).
-		$string_to_parse = $comdef_global_more_details_address;
+		$string_to_parse = $local_strings['comdef_global_more_details_address'];
+		
 		if ( $in_list )
 			{
-			$string_to_parse = $comdef_global_list_address;
+			$string_to_parse = $local_strings['comdef_global_list_address'];
 			}
 
 		$matches = array();

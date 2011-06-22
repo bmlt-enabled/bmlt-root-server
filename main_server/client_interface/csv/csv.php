@@ -114,6 +114,8 @@ function parse_redirect (
 			$start_date = null;
 			$end_date = null;
 			$meeting_id = null;
+			$service_body_id = null;
+			$meetings_only = true;
 			
 			if ( isset ( $http_vars['start_date'] ) )
 				{
@@ -130,7 +132,12 @@ function parse_redirect (
 				$meeting_id = intval ( $http_vars['meeting_id'] );
 				}
 			
-			$result2 = GetChanges ( $start_date, $end_date, $meeting_id );
+			if ( isset ( $http_vars['service_body_id'] ) )
+				{
+				$service_body_id = intval ( $http_vars['service_body_id'] );
+				}
+			
+			$result2 = GetChanges ( $start_date, $end_date, $meeting_id, $service_body_id );
 			
 			if ( isset ( $http_vars['xml_data'] ) )
 				{
@@ -333,7 +340,8 @@ function GetFormats (
 function GetChanges (	
 					$in_start_date = null,	///< Optional. A start date (In PHP time() format). If supplied, then only changes on, or after this date will be returned.
 					$in_end_date = null,	///< Optional. An end date (In PHP time() format). If supplied, then only changes that occurred on, or before this date will be returned.
-					$in_meeting_id = null	///< If supplied, an ID for a particular meeting. Only changes for that meeting will be returned.
+					$in_meeting_id = null,	///< Optional. If supplied, an ID for a particular meeting. Only changes for that meeting will be returned.
+					$in_sb_id = null	    ///< Optional. If supplied, an ID for a particular Service body. Only changes for that Service body will be returned.
 					)
 	{
 	$ret = null;
@@ -357,13 +365,20 @@ function GetChanges (
 					$date_int = intval($change->GetChangeDate());
 					$date_string = date ($change_date_format, $date_int );
 					$meeting_id = intval ( $change->GetBeforeObjectID() );
-					
+					$sb_id = intval ( $change->GetServiceBodyID() );
+                    
+                    // We get rid of any non-meeting changes.
+                    if ( 'c_comdef_meeting' != $change->GetObjectClass() )
+                        {
+                        $change = null;
+                        }
+                    
 					if ( !$meeting_id )
 						{
 						$meeting_id = intval ( $change->GetAfterObjectID() );
 						}
 				    
-				    if ( !$in_meeting_id || ($in_meeting_id && ($in_meeting_id == $meeting_id)) )
+				    if ( $change && (!$in_meeting_id && !$in_sb_id) || ($in_meeting_id && ($in_meeting_id == $meeting_id)) || ($in_sb_id && ($in_sb_id == $sb_id)) )
 				        {
                         $b_obj = $change->GetBeforeObject();
                         $a_obj = $change->GetAfterObject();

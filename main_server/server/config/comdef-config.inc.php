@@ -41,7 +41,7 @@
 			}
 		}
 	
-	$comdef_global_more_details_address = '@@%%location_text%%@@, %%location_street%%@@ (%%location_info%%)@@, %%location_city_subsection%%@@, %%location_municipality%%@@ (%%location_neighborhood%%)@@, %%location_province%%@@ %%location_postal_code_1%%';
+	$comdef_global_more_details_address = '@@%%location_text%%, @@%%location_street%%@@ (%%location_info%%)@@, %%location_city_subsection%%@@, %%location_municipality%%@@ (%%location_neighborhood%%)@@, %%location_province%%@@ %%location_postal_code_1%%';
 	$comdef_global_list_address =  '@@%%location_text%%, @@%%location_street%% @@%%location_info%%';
 	
 	/// Include the automatically generated configuration.

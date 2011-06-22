@@ -292,6 +292,16 @@ class c_comdef_change extends t_comdef_local_type implements i_comdef_db_stored
 	}
 	
 	/*******************************************************************/
+	/**	\brief Accessor. Get the Object Class of this change record.
+		
+		\returns a string. The object classname.
+	*/
+	function GetObjectClass()
+	{
+		return $this->object_class_string;
+	}
+	
+	/*******************************************************************/
 	/**	\brief Accessor. Get the ID of this change record.
 		
 		\returns an integer. The ID of the change record.

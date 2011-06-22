@@ -2342,6 +2342,9 @@ class c_comdef_server
             include ( dirname ( __FILE__ ).'/config/lang/'.$lang_enum.'/change_desc.inc.php' );
             include ( dirname ( __FILE__ ).'/config/lang/'.$lang_enum.'/format_codes.inc.php' );
 
+            global	$comdef_global_more_details_address,	///< This is a format string for the way the address line is displayed in the "more details" screen.
+                    $comdef_global_list_address;			///< The same, but for the list.
+		
             c_comdef_server::$server_local_strings['name'] = file_get_contents ( dirname ( __FILE__ ).'/config/lang/'.$lang_enum.'/name.txt' );
             c_comdef_server::$server_local_strings['enum'] = $lang_enum;
             c_comdef_server::$server_local_strings['theme'] = $theme;
@@ -2368,7 +2371,9 @@ class c_comdef_server
             c_comdef_server::$server_local_strings['sort_depth'] = $sort_depth;
             c_comdef_server::$server_local_strings['default_sorts'] = $default_sorts;
             c_comdef_server::$server_local_strings['number_of_meetings_for_auto'] = $number_of_meetings_for_auto;
-
+            c_comdef_server::$server_local_strings['comdef_global_more_details_address'] = $comdef_global_more_details_address;
+            c_comdef_server::$server_local_strings['comdef_global_list_address'] = $comdef_global_list_address;
+            
             if ( trim($comdef_distance_units) )
                 {
                 c_comdef_server::$server_local_strings['dist_units'] = strtolower(trim($comdef_distance_units));
