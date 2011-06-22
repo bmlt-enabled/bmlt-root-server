@@ -46,6 +46,11 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 1.8.32 =
+* June 22, 2011
+* Added the ability to filter by Service body, when looking for changes, and now only return meeting changes (previously, some Service body and user changes could also be supplied).
+* Made a minor fix in the default details address string, so that meeting locations with no name won't show an empty comma.
+* Added the address format strings to the shared local strings, which should help performance, and decouple the linking to global variables.
 
 = Version 1.8.31 =
 * June 7, 2011

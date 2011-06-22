@@ -295,7 +295,7 @@
 	- Our ears are wide open. Please contact us at webmaster -at- magnaws.com if you find any vulnerabilities.
 	
 	<h2 id="docs_release_notes">RELEASE NOTES:</h2>
-	- - 1.8.32 Release
+	- June 22, 2011 - 1.8.32 Release
 	    - Added the ability to filter by Service body, when looking for changes, and now only return meeting changes (previously, some Service body and user changes could also be supplied).
         - Made a minor fix in the default details address string, so that meeting locations with no name won't show an empty comma.
         - Added the address format strings to the shared local strings, which should help performance, and decouple the linking to global variables.
