@@ -4,7 +4,7 @@
 	<div style="height:24px"></div>
 	<div style="height:80px;background-color: #0013d2;background-image:url(../images/DocHeader.gif);background-position:center top;background-repeat:no-repeat"></div>
 
-	\version 1.8.31 (Main Root Server)
+	\version 1.8.32 (Main Root Server)
 
 	\license This code is completely open and free. You may access it by
 	<a href="http://magshare.org/bmlt-the-basic-meeting-list-toolbox/">visiting the BMLT Project Site</a>.
@@ -295,6 +295,8 @@
 	- Our ears are wide open. Please contact us at webmaster -at- magnaws.com if you find any vulnerabilities.
 	
 	<h2 id="docs_release_notes">RELEASE NOTES:</h2>
+	- - 1.8.32 Release
+
 	- June 7, 2011 - 1.8.31 Release
 	    - Added additional capability to the <a href="http://magshare.org/blog/welcome-to-magshare/bmlt-the-basic-meeting-list-toolbox/bmlt-in-depth/implementing-the-bmlt/high-geek-factor-stuff/export-options/">CSV, JSON and XML</a> outputs, so that <a href="http://magshare.org/blog/welcome-to-magshare/bmlt-the-basic-meeting-list-toolbox/bmlt-in-depth/implementing-the-bmlt/high-geek-factor-stuff/the-satellite-driver-class/">the Satellite Driver</a> can extract more relevant information.
 	
