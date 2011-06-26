@@ -387,174 +387,183 @@ function GetChanges (
                     
                     array_walk_recursive ( c_comdef_server::GetServer()->GetNestedServiceBodyArray ( $in_sb_id ), bmlt_at_at );
                     
-                    $in_sb_id = $bmlt_array_gather;
+                    if ( is_array ( $bmlt_array_gather ) && count ( $bmlt_array_gather ) )
+                        {
+                        $in_sb_id = $bmlt_array_gather;
+                        }
+                    else
+                        {
+                        $in_sb_id = array ( $in_sb_id );
+                        }
                     }
-
 				foreach ( $obj_array as $change )
 					{
 					$change_type = $change->GetChangeType();
 					$date_int = intval($change->GetChangeDate());
 					$date_string = date ($change_date_format, $date_int );
-					$meeting_id = intval ( $change->GetBeforeObjectID() );
-					$sb_id = intval ( $change->GetServiceBodyID() );
-
-                    
-                    // We get rid of any non-meeting changes.
-                    if ( 'c_comdef_meeting' != $change->GetObjectClass() )
-                        {
-                        $change = null;
-                        }
-                    
-					if ( !$meeting_id )
-						{
-						$meeting_id = intval ( $change->GetAfterObjectID() );
-						}
 				    
-				    if ( $change && (!$in_meeting_id && !is_array ( $in_sb_id )) || ($in_meeting_id && ($in_meeting_id == $meeting_id)) || (is_array ( $in_sb_id ) && count ( $in_sb_id ) && in_array ( $sb_id, $in_sb_id )) )
+				    if ( $change instanceof c_comdef_change )
 				        {
                         $b_obj = $change->GetBeforeObject();
                         $a_obj = $change->GetAfterObject();
+                        $meeting_id = intval ( $change->GetBeforeObjectID() );
+                        $sb_a = intval ( ($a_obj instanceof c_comdef_meeting) ? $a_obj->GetServiceBodyID() : 0 );
+                        $sb_b = intval ( ($b_obj instanceof c_comdef_meeting) ? $b_obj->GetServiceBodyID() : 0 );
+                        $sb_c = intval ( $change->GetServiceBodyID() );
                         
-                        $meeting_name = '';
-                        $user_name = '';
-                        
-                        // Using str_replace, because preg_replace is pretty expensive. However, I don't think this buys us much.
-                        if ( $b_obj instanceof c_comdef_meeting )
+                        if ( !$meeting_id )
                             {
-                            $meeting_name = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $b_obj->GetMeetingDataValue ( 'meeting_name' ))) );
-                            }
-                        elseif ( $a_obj instanceof c_comdef_meeting )
-                            {
-                            $meeting_name = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $a_obj->GetMeetingDataValue ( 'meeting_name' ))) );
+                            $meeting_id = intval ( $change->GetAfterObjectID() );
                             }
                         
-                        $user_id = intval ( $change->GetUserID() );
-                        
-                        $user = c_comdef_server::GetUserByIDObj ( $user_id );
-                        
-                        if ( $user instanceof c_comdef_user )
+                        if ( (intval ( $in_meeting_id ) && intval ( $in_meeting_id ) == intval ( $meeting_id )) || !intval ( $in_meeting_id ) )
                             {
-                            $user_name = htmlspecialchars ( $user->GetLocalName() );
+                            $meeting_name = '';
+                            $user_name = '';
+					        
+					        if ( !is_array ( $in_sb_id ) || !count ( $in_sb_id ) || in_array ( $sb_a, $in_sb_id ) || in_array ( $sb_b, $in_sb_id ) || in_array ( $sb_c, $in_sb_id ) )
+					            {
+					            $sb_id = (intval ( $sb_c ) ? $sb_c : (intval ( $sb_b ) ? $sb_b : $sb_a));
+					            
+                                // Using str_replace, because preg_replace is pretty expensive. However, I don't think this buys us much.
+                                if ( $b_obj instanceof c_comdef_meeting )
+                                    {
+                                    $meeting_name = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $b_obj->GetMeetingDataValue ( 'meeting_name' ))) );
+                                    }
+                                elseif ( $a_obj instanceof c_comdef_meeting )
+                                    {
+                                    $meeting_name = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $a_obj->GetMeetingDataValue ( 'meeting_name' ))) );
+                                    }
+                                
+                                $user_id = intval ( $change->GetUserID() );
+                                
+                                $user = c_comdef_server::GetUserByIDObj ( $user_id );
+                                
+                                if ( $user instanceof c_comdef_user )
+                                    {
+                                    $user_name = htmlspecialchars ( $user->GetLocalName() );
+                                    }
+            
+                                $sb = c_comdef_server::GetServiceBodyByIDObj ( $sb_id );
+                                
+                                if ( $sb instanceof c_comdef_service_body )
+                                    {
+                                    $sb_name = htmlspecialchars ( $sb->GetLocalName() );
+                                    }
+                                
+                                $meeting_exists = 0;
+                                
+                                if ( c_comdef_server::GetOneMeeting ( $meeting_id, true ) )
+                                    {
+                                    $meeting_exists = 1;
+                                    }
+            
+                                $details = '';
+                                $desc = $change->DetailedChangeDescription();
+                                
+                                if ( $desc && isset ( $desc['details'] ) && is_array ( $desc['details'] ) )
+                                    {
+                                    // We need to prevent double-quotes, as they are the string delimiters, so we replace them with single-quotes.
+                                    $details = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", implode ( " ", $desc['details'] ))) );
+                                    }
+                                
+                                $change_line = array();
+            
+                                if ( $date_int )
+                                    {
+                                    $change_line['date_int'] = $date_int;
+                                    }
+                                else
+                                    {
+                                    $change_line['date_int'] = 0;
+                                    }
+                                
+                                if ( $date_string )
+                                    {
+                                    $change_line['date_string'] = $date_string;
+                                    }
+                                else
+                                    {
+                                    $change_line['date_string'] = '';
+                                    }
+                                
+                                if ( $change_type )
+                                    {
+                                    $change_line['change_type'] = $change_type;
+                                    }
+                                else
+                                    {
+                                    $change_line['change_type'] = '';
+                                    }
+                                
+                                if ( $meeting_id )
+                                    {
+                                    $change_line['meeting_id'] = $meeting_id;
+                                    }
+                                else
+                                    {
+                                    $change_line['meeting_id'] = 0;
+                                    }
+                                
+                                if ( $meeting_name )
+                                    {
+                                    $change_line['meeting_name'] = $meeting_name;
+                                    }
+                                else
+                                    {
+                                    $change_line['meeting_name'] = '';
+                                    }
+                                
+                                if ( $user_id )
+                                    {
+                                    $change_line['user_id'] = $user_id;
+                                    }
+                                else
+                                    {
+                                    $change_line['user_id'] = 0;
+                                    }
+                                
+                                if ( $user_name )
+                                    {
+                                    $change_line['user_name'] = $user_name;
+                                    }
+                                else
+                                    {
+                                    $change_line['user_name'] = '';
+                                    }
+                                
+                                if ( $sb_id )
+                                    {
+                                    $change_line['service_body_id'] = $sb_id;
+                                    }
+                                else
+                                    {
+                                    $change_line['service_body_id'] = '';
+                                    }
+                                
+                                if ( $sb_name )
+                                    {
+                                    $change_line['service_body_name'] = $sb_name;
+                                    }
+                                else
+                                    {
+                                    $change_line['service_body_name'] = '';
+                                    }
+                                
+                                $change_line['meeting_exists'] = $meeting_exists;
+                                
+                                if ( $details )
+                                    {
+                                    $change_line['details'] = $details;
+                                    }
+                                else
+                                    {
+                                    $change_line['details'] = '';
+                                    }
+                                
+                                $ret .= '"'.implode ( '","', $change_line ).'"'."\n";
+                                }
                             }
-    
-                        $sb = c_comdef_server::GetServiceBodyByIDObj ( $sb_id );
-                        
-                        if ( $sb instanceof c_comdef_service_body )
-                            {
-                            $sb_name = htmlspecialchars ( $sb->GetLocalName() );
-                            }
-                        
-                        $meeting_exists = 0;
-                        
-                        if ( c_comdef_server::GetOneMeeting ( $meeting_id, true ) )
-                            {
-                            $meeting_exists = 1;
-                            }
-    
-                        $details = '';
-                        $desc = $change->DetailedChangeDescription();
-                        
-                        if ( $desc && isset ( $desc['details'] ) && is_array ( $desc['details'] ) )
-                            {
-                            // We need to prevent double-quotes, as they are the string delimiters, so we replace them with single-quotes.
-                            $details = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", implode ( " ", $desc['details'] ))) );
-                            }
-                        
-                        $change_line = array();
-    
-                        if ( $date_int )
-                            {
-                            $change_line['date_int'] = $date_int;
-                            }
-                        else
-                            {
-                            $change_line['date_int'] = 0;
-                            }
-                        
-                        if ( $date_string )
-                            {
-                            $change_line['date_string'] = $date_string;
-                            }
-                        else
-                            {
-                            $change_line['date_string'] = '';
-                            }
-                        
-                        if ( $change_type )
-                            {
-                            $change_line['change_type'] = $change_type;
-                            }
-                        else
-                            {
-                            $change_line['change_type'] = '';
-                            }
-                        
-                        if ( $meeting_id )
-                            {
-                            $change_line['meeting_id'] = $meeting_id;
-                            }
-                        else
-                            {
-                            $change_line['meeting_id'] = 0;
-                            }
-                        
-                        if ( $meeting_name )
-                            {
-                            $change_line['meeting_name'] = $meeting_name;
-                            }
-                        else
-                            {
-                            $change_line['meeting_name'] = '';
-                            }
-                        
-                        if ( $user_id )
-                            {
-                            $change_line['user_id'] = $user_id;
-                            }
-                        else
-                            {
-                            $change_line['user_id'] = 0;
-                            }
-                        
-                        if ( $user_name )
-                            {
-                            $change_line['user_name'] = $user_name;
-                            }
-                        else
-                            {
-                            $change_line['user_name'] = '';
-                            }
-                        
-                        if ( $sb_id )
-                            {
-                            $change_line['service_body_id'] = $sb_id;
-                            }
-                        else
-                            {
-                            $change_line['service_body_id'] = '';
-                            }
-                        
-                        if ( $sb_name )
-                            {
-                            $change_line['service_body_name'] = $sb_name;
-                            }
-                        else
-                            {
-                            $change_line['service_body_name'] = '';
-                            }
-                        
-                        $change_line['meeting_exists'] = $meeting_exists;
-                        
-                        if ( $details )
-                            {
-                            $change_line['details'] = $details;
-                            }
-                        else
-                            {
-                            $change_line['details'] = '';
-                            }
-                        
-                        $ret .= '"'.implode ( '","', $change_line ).'"'."\n";
                         }
 					}
 				}
