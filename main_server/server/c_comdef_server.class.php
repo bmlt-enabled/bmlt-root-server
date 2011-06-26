@@ -1251,7 +1251,8 @@ class c_comdef_server
 		\throws an exception if the SQL query fails.
 	*/
 	static function GetOneMeeting(
-								$in_id_bigint	///< The ID of the meeting (An integer)
+								$in_id_bigint,	    ///< The ID of the meeting (An integer)
+								$test_only = false  ///< If true, then this function will only return Boolean true or false (true if the meeting exists)
 								)
 	{
 		$sql = "SELECT * FROM `".self::GetMeetingTableName_obj()."_main` WHERE ".self::GetMeetingTableName_obj()."_main.id_bigint=? LIMIT 1"; 
@@ -1259,6 +1260,11 @@ class c_comdef_server
 		$rows = c_comdef_dbsingleton::preparedQuery( $sql, array ( $in_id_bigint ) );
 		if ( is_array ( $rows ) && count ( $rows ) )
 			{
+			if ( $test_only )
+			    {
+			    return true;
+			    }
+			
 			foreach ( $rows as $row )
 				{
 				// We use the static function in the c_comdef_meeting class to process the data for the meeting.
@@ -1267,6 +1273,11 @@ class c_comdef_server
 				return new c_comdef_meeting ( self::GetServer(), $meeting_row );
 				}
 			}
+		
+        if ( $test_only )
+            {
+            return false;
+            }
 		
 		return null;
 	}

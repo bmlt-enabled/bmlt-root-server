@@ -221,12 +221,12 @@ function GetSearchResults (
 							}
 						}
 					}
-				$result2[$row[0]] = '"'.join ( '","', $row_columns ).'"';
+				$result2[$row[0]] = '"'.implode ( '","', $row_columns ).'"';
 				}
 			}
 
 		$the_keys = array_intersect ( $keys, $the_keys );
-		$result = '"'.join ( '","', $the_keys )."\"\n".join ( "\n", $result2 );
+		$result = '"'.implode ( '","', $the_keys )."\"\n".implode ( "\n", $result2 );
 		}
 	
 	return $result;
@@ -275,7 +275,7 @@ function GetFormats (
 			$langs = array ( $in_lang => $langs[$in_lang] );
 			}
 	
-		$ret .= '"'.join ( '","', $my_keys )."\"\n";
+		$ret .= '"'.implode ( '","', $my_keys )."\"\n";
 		foreach ( $langs as $key => $value )
 			{
 			$format_array =	 $formats_obj->GetFormatsByLanguage ( $key );
@@ -355,9 +355,10 @@ function GetChanges (
 			
 			if ( is_array ( $obj_array ) && count ( $obj_array ) )
 				{
+	            set_time_limit ( max ( 30, intval ( count ( $obj_array ) / 20 ) ) ); // Change requests can take a loooong time...
 				$localized_strings = c_comdef_server::GetLocalStrings();
 				include ( dirname ( __FILE__ ).'/../../server/config/auto-config.inc.php' );
-				$ret = '"date_int","date_string","change_type","meeting_id","meeting_name","user_id","user_name","details"'."\n";
+				$ret = '"date_int","date_string","change_type","meeting_id","meeting_name","user_id","user_name","service_body_id","service_body_name","meeting_exists","details"'."\n";
 
 				foreach ( $obj_array as $change )
 					{
@@ -385,22 +386,38 @@ function GetChanges (
                         
                         $meeting_name = '';
                         $user_name = '';
-    
+                        
+                        // Using str_replace, because preg_replace is pretty expensive. However, I don't think this buys us much.
                         if ( $b_obj instanceof c_comdef_meeting )
                             {
-                            $meeting_name = str_replace ( '"', "'", preg_replace ( "/[\n\r]/", " ", $b_obj->GetMeetingDataValue ( 'meeting_name' )) );
+                            $meeting_name = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $b_obj->GetMeetingDataValue ( 'meeting_name' ))) );
                             }
                         elseif ( $a_obj instanceof c_comdef_meeting )
                             {
-                            $meeting_name = str_replace ( '"', "'", preg_replace ( "/[\n\r]/", " ", $a_obj->GetMeetingDataValue ( 'meeting_name' )) );
+                            $meeting_name = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $a_obj->GetMeetingDataValue ( 'meeting_name' ))) );
                             }
+                        
                         $user_id = intval ( $change->GetUserID() );
                         
                         $user = c_comdef_server::GetUserByIDObj ( $user_id );
                         
                         if ( $user instanceof c_comdef_user )
                             {
-                            $user_name = str_replace ( '"', "'", preg_replace ( "/[\n\r]/", " ", $user->GetLocalName()));
+                            $user_name = htmlspecialchars ( $user->GetLocalName() );
+                            }
+    
+                        $sb = c_comdef_server::GetServiceBodyByIDObj ( $sb_id );
+                        
+                        if ( $sb instanceof c_comdef_service_body )
+                            {
+                            $sb_name = htmlspecialchars ( $sb->GetLocalName() );
+                            }
+                        
+                        $meeting_exists = 0;
+                        
+                        if ( c_comdef_server::GetOneMeeting ( $meeting_id, true ) )
+                            {
+                            $meeting_exists = 1;
                             }
     
                         $details = '';
@@ -409,7 +426,7 @@ function GetChanges (
                         if ( $desc && isset ( $desc['details'] ) && is_array ( $desc['details'] ) )
                             {
                             // We need to prevent double-quotes, as they are the string delimiters, so we replace them with single-quotes.
-                            $details = str_replace ( '"', "'", html_entity_decode ( preg_replace ( "/[\n\r]/", " ", join ( " ", $desc['details'] ) ) ) );
+                            $details = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", implode ( " ", $desc['details'] ))) );
                             }
                         
                         $change_line = array();
@@ -477,6 +494,26 @@ function GetChanges (
                             $change_line['user_name'] = '';
                             }
                         
+                        if ( $sb_id )
+                            {
+                            $change_line['service_body_id'] = $sb_id;
+                            }
+                        else
+                            {
+                            $change_line['service_body_id'] = '';
+                            }
+                        
+                        if ( $sb_name )
+                            {
+                            $change_line['service_body_name'] = $sb_name;
+                            }
+                        else
+                            {
+                            $change_line['service_body_name'] = '';
+                            }
+                        
+                        $change_line['meeting_exists'] = $meeting_exists;
+                        
                         if ( $details )
                             {
                             $change_line['details'] = $details;
@@ -486,8 +523,7 @@ function GetChanges (
                             $change_line['details'] = '';
                             }
                         
-                        $line = '"'.join('","',$change_line).'"';
-                        $ret .= "$line\n";
+                        $ret .= '"'.implode ( '","', $change_line ).'"'."\n";
                         }
 					}
 				}

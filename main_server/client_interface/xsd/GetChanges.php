@@ -49,6 +49,16 @@ echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">"; ?>
 							<xs:element minOccurs="0" maxOccurs="1" name="meeting_name" type="xs:string"/>
 							<xs:element minOccurs="0" maxOccurs="1" name="user_id" type="xs:integer"/>
 							<xs:element minOccurs="0" maxOccurs="1" name="user_name" type="xs:string"/>
+							<xs:element minOccurs="0" maxOccurs="1" name="service_body_id" type="xs:integer"/>
+							<xs:element minOccurs="0" maxOccurs="1" name="service_body_name" type="xs:string"/>
+                            <xs:element name="meeting_exists" minOccurs="0" maxOccurs="1">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:integer">
+                                        <xs:enumeration value="0"/>
+                                        <xs:enumeration value="1"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
 							<xs:element minOccurs="0" maxOccurs="1" name="details" type="xs:string"/>
 						</xs:sequence>
 						<xs:attribute name="id" use="required" type="xs:integer"/>
