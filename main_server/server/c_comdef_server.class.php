@@ -411,7 +411,7 @@ class c_comdef_server
 					and the 'dependents' element (if it exists), reflects the
 					Service bodies that are "owned" by this one.
 	*/
-	function GetNestedServiceBodyArray ( $in_id
+	function GetNestedServiceBodyArray ( $in_id = 0 ///< The ID of the "top" Service body. If not supplied, we start at the top.
 										)
 	{
 		$ret_array = null;

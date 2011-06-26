@@ -359,6 +359,36 @@ function GetChanges (
 				$localized_strings = c_comdef_server::GetLocalStrings();
 				include ( dirname ( __FILE__ ).'/../../server/config/auto-config.inc.php' );
 				$ret = '"date_int","date_string","change_type","meeting_id","meeting_name","user_id","user_name","service_body_id","service_body_name","meeting_exists","details"'."\n";
+                
+                // If they specify a Service body, we also look in "child" Service bodies, so we need to produce a flat array of IDs.
+                if ( isset ( $in_sb_id ) && $in_sb_id )
+                    {
+                    global $bmlt_array_gather;
+                    
+                    $bmlt_array_gather = array();
+                    
+                    /************************************************//**
+                    * This little internal function will simply fill    *
+                    * the $bmlt_array_gather array with a linear set of *
+                    * Service body IDs that can be used for a quick     *
+                    * comparison, later on. It is a callback function.  *
+                    ****************************************************/
+                    function bmlt_at_at ( $in_value,
+                                          $in_key
+                                        )
+                        {
+                        global $bmlt_array_gather;
+                        
+                        if ( $in_value instanceof c_comdef_service_body )
+                            {
+                            array_push ( $bmlt_array_gather, $in_value->GetID() );
+                            }
+                        }
+                    
+                    array_walk_recursive ( c_comdef_server::GetServer()->GetNestedServiceBodyArray ( $in_sb_id ), bmlt_at_at );
+                    
+                    $in_sb_id = $bmlt_array_gather;
+                    }
 
 				foreach ( $obj_array as $change )
 					{
@@ -367,6 +397,7 @@ function GetChanges (
 					$date_string = date ($change_date_format, $date_int );
 					$meeting_id = intval ( $change->GetBeforeObjectID() );
 					$sb_id = intval ( $change->GetServiceBodyID() );
+
                     
                     // We get rid of any non-meeting changes.
                     if ( 'c_comdef_meeting' != $change->GetObjectClass() )
@@ -379,7 +410,7 @@ function GetChanges (
 						$meeting_id = intval ( $change->GetAfterObjectID() );
 						}
 				    
-				    if ( $change && (!$in_meeting_id && !$in_sb_id) || ($in_meeting_id && ($in_meeting_id == $meeting_id)) || ($in_sb_id && ($in_sb_id == $sb_id)) )
+				    if ( $change && (!$in_meeting_id && !is_array ( $in_sb_id )) || ($in_meeting_id && ($in_meeting_id == $meeting_id)) || (is_array ( $in_sb_id ) && count ( $in_sb_id ) && in_array ( $sb_id, $in_sb_id )) )
 				        {
                         $b_obj = $change->GetBeforeObject();
                         $a_obj = $change->GetAfterObject();

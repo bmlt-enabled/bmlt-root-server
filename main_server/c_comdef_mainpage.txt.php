@@ -297,6 +297,8 @@
 	<h2 id="docs_release_notes">RELEASE NOTES:</h2>
 	- June 26, 2011 - 1.8.33 Release
 	    - Added new fields to the CSV/JSON/XML Change response.
+	    - There was a minor security issue that could have occurred with the email_contact field. It may have been displayed in some change records. This has been addressed.
+	    - Made the changes response dig into a hierarchy of Service bodies, if a "parent" Service body ID is presented in service_body_id=
 	    
 	- June 22, 2011 - 1.8.32 Release
 	    - Added the ability to filter by Service body, when looking for changes, and now only return meeting changes (previously, some Service body and user changes could also be supplied).

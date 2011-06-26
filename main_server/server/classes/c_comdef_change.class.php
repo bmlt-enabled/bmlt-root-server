@@ -733,6 +733,10 @@ class c_comdef_change extends t_comdef_local_type implements i_comdef_db_stored
 												{
 												switch ( $array_key )
 													{
+													case	'email_contact':    // For security reasons, we don't display email conact changes as anything but "changed."
+														$change_string = c_comdef_htmlspecialchars ( $prompt ).' '.c_comdef_htmlspecialchars ( $localized_strings['detailed_change_strings']['was_changed'] ).$localized_strings['end_change_report'];
+													break;
+													
 													case	'published':
 														if ( intval($after_value) != 0 )
 															{
@@ -803,6 +807,10 @@ class c_comdef_change extends t_comdef_local_type implements i_comdef_db_stored
 														{
 														switch ( $array_key )
 															{
+                                                            case	'email_contact':    // For security reasons, we don't display email conact changes as anything but "changed."
+                                                                $change_string = c_comdef_htmlspecialchars ( $prompt ).' '.c_comdef_htmlspecialchars ( $localized_strings['detailed_change_strings']['was_changed'] ).$localized_strings['end_change_report'];
+                                                            break;
+													
 															case	'published':
 																if ( intval ( $before_value ) != intval ( $after_value ) )
 																	{
