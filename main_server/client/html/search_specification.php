@@ -323,7 +323,7 @@ function DisplayAdvancedSearchDiv ( $in_http_vars ///< The $_GET and $_POST para
 		$ret .= '<input type="hidden" name="advanced_search_mode" value="" id="advanced_search_mode" />';
 		$ret .= '<input type="hidden" name="lat_val" value="" id="lat_val_hidden" />';
 		$ret .= '<input type="hidden" name="long_val" value="" id="long_val_hidden" />';
-		$ret .= '<input type="hidden" name="zoom" value="" id="long_val_hidden" />';
+//		$ret .= '<input type="hidden" name="zoom" value="" id="zoom_val_hidden" />';    // Commented out, because this was never used.
 		$ret .= '<input type="hidden" name="advanced_mapmode" value="" id="advanced_mapmode" />';
 		$ret .= '<input type="hidden" id="aggregate_sb_checks" name="aggregate_sb_checks" value="" />';
 

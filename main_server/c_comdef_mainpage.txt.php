@@ -4,7 +4,7 @@
 	<div style="height:24px"></div>
 	<div style="height:80px;background-color: #0013d2;background-image:url(../images/DocHeader.gif);background-position:center top;background-repeat:no-repeat"></div>
 
-	\version 1.8.33 (Main Root Server)
+	\version 1.8.34 (Main Root Server)
 
 	\license This code is completely open and free. You may access it by
 	<a href="http://magshare.org/bmlt-the-basic-meeting-list-toolbox/">visiting the BMLT Project Site</a>.
@@ -295,6 +295,9 @@
 	- Our ears are wide open. Please contact us at webmaster -at- magnaws.com if you find any vulnerabilities.
 	
 	<h2 id="docs_release_notes">RELEASE NOTES:</h2>
+	- July 4, 2011 - 1.8.34 Release
+	    - Fixed a validation issue with the displayed search form (not a big deal at all).
+	    
 	- June 26, 2011 - 1.8.33 Release
 	    - Added new fields to the CSV/JSON/XML Change response.
 	    - There was a minor security issue that could have occurred with the email_contact field. It may have been displayed in some change records. This has been addressed.
