@@ -46,6 +46,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 1.8.35 =
+* July 11, 2011
+* Fixed a couple of minor bugs in the installer wizard.
+
 = Version 1.8.34 =
 * July 4, 2011
 * Fixed a validation issue with the search form.

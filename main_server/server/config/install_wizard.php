@@ -688,7 +688,7 @@ function SetPageFour ( )
                     }
                 else
                     {
-                    $auto_file .= "\t\$comdef_show_sb_desc = fale;\n";
+                    $auto_file .= "\t\$comdef_show_sb_desc = false;\n";
                     }
 
 				$auto_file .= "\t".'if ( !defined ( \'_DEFAULT_DURATION\' ) ) define ( \'_DEFAULT_DURATION\', \'N.A. Meetings are usually 90 minutes long (an hour and a half), unless otherwise indicated.\' );
@@ -1409,8 +1409,8 @@ function PageFour ( )
 						    <option value="km">Kilometers</option>
 						</select>
 					</p>
-					<p class="text_input">
-						<label class="form_prompt" for="comdef_show_sb_desc">Show Service Body Descriptions As Text In Advanced Search:</label>
+					<p class="text_input" title="If you select this, then the descriptions for Service bodies will be displayed all the time. If not, they will be displayed as tooltip text (rollover text).">
+						<label class="form_prompt" for="comdef_show_sb_desc">Show Service Body Text in Search:</label>
 						<select name="comdef_show_sb_desc" id="comdef_show_sb_desc">
 						    <option value="" selected="selected">Show Only On MouseOver (Abbreviation)</option>
 						    <option value="true">Show All the Time, as text, under the Service Body Name.</option>

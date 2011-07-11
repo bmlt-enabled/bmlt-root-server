@@ -4,7 +4,7 @@
 	<div style="height:24px"></div>
 	<div style="height:80px;background-color: #0013d2;background-image:url(../images/DocHeader.gif);background-position:center top;background-repeat:no-repeat"></div>
 
-	\version 1.8.34 (Main Root Server)
+	\version 1.8.35 (Main Root Server)
 
 	\license This code is completely open and free. You may access it by
 	<a href="http://magshare.org/bmlt-the-basic-meeting-list-toolbox/">visiting the BMLT Project Site</a>.
