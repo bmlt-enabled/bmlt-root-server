@@ -91,8 +91,6 @@ function DisplayMeetingSearchForm ( $in_http_vars ///< The $_GET and $_POST para
 	$ret .= '<div id="c_comdef_search_specification_container_div" class="c_comdef_search_specification_container_div">';
 	// This contains everything, and allows a smaller box than 100%, as well as styling.
 	$ret .= '<div id="c_comdef_search_specification_form_container_div" class="c_comdef_search_specification_form_container_div">';
-	// This is the throbber that will be shown if we submit.
-	$ret .= '<div id="bmlt_throbber_div" class="throbber_div" style="display:none"><img src="'.c_comdef_htmlspecialchars ( $location_of_throbber ).'" alt="throbber" /></div>';
 	// This is the label, at the top of the form.
 	$ret .= '<div id="c_comdef_search_specification_form_header_div" class="c_comdef_search_specification_form_header_div';
 
@@ -289,6 +287,8 @@ function DisplayMeetingSearchForm ( $in_http_vars ///< The $_GET and $_POST para
 		{
 		$ret .= DisplayAdvancedSearchDiv ( $in_http_vars );
 		}
+	// This is the throbber that will be shown if we submit.
+	$ret .= '<div id="bmlt_throbber_div" class="throbber_div" style="display:none"><img src="'.c_comdef_htmlspecialchars ( $location_of_throbber ).'" alt="throbber" /></div>';
 	$ret .= '</form><div class="clear_both"></div>';
 	$ret .= '</div>';
 	if ( isset ( $in_http_vars['start_view'] ) && ( $in_http_vars['start_view'] == 'advanced' ) && isset ( $in_http_vars['supports_ajax'] ) && ($in_http_vars['supports_ajax'] == 'yes') )

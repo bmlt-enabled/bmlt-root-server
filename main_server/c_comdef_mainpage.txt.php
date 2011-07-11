@@ -297,6 +297,7 @@
 	<h2 id="docs_release_notes">RELEASE NOTES:</h2>
 	- July 4, 2011 - 1.8.34 Release
 	    - Fixed a validation issue with the displayed search form (not a big deal at all).
+	    - Also added a change to the search spec. throbber location that should make it appear in the correct place, now.
 	    
 	- June 26, 2011 - 1.8.33 Release
 	    - Added new fields to the CSV/JSON/XML Change response.

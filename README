@@ -49,6 +49,7 @@ CHANGELIST
 = Version 1.8.35 =
 * July 11, 2011
 * Fixed a couple of minor bugs in the installer wizard.
+* Also added a change to the search spec. throbber location that should make it appear in the correct place, now.
 
 = Version 1.8.34 =
 * July 4, 2011
