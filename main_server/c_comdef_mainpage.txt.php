@@ -295,6 +295,10 @@
 	- Our ears are wide open. Please contact us at webmaster -at- magnaws.com if you find any vulnerabilities.
 	
 	<h2 id="docs_release_notes">RELEASE NOTES:</h2>
+	- July 11, 2011 - 1.8.35 Release
+        - Fixed a couple of minor bugs in the installer wizard.
+        - Also added a change to the search spec. throbber location that should make it appear in the correct place, now.
+	    
 	- July 4, 2011 - 1.8.34 Release
 	    - Fixed a validation issue with the displayed search form (not a big deal at all).
 	    - Also added a change to the search spec. throbber location that should make it appear in the correct place, now.
