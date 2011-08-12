@@ -600,6 +600,7 @@ function DisplayPageData (	&$in_ar,		///< A reference to an array of c_comdef_me
 	if ( $in_radius && ($in_radius != 0.0) )
 		{
 		$rd = $in_radius;
+
 		if ( $localized_strings['dist_units'] == 'km' )
 			{
 		    $in_query .= '&amp;geo_width_km='.$rd;
@@ -1121,13 +1122,14 @@ function DisplayResultCount (	$in_num_results,	///< An integer. The number of me
 	if ( $in_radius && ($in_radius != 0.0) )
 		{
 		$rd = $in_radius;
+
 		if ( $localized_strings['dist_units'] == 'km' )
 			{
-		    $in_script_name .= '&amp;geo_width_km='.$rd;
+		    $in_script_name .= '&amp;geo_width_km='.$rd.'&amp;';
 			}
 		else
 		    {
-		    $in_script_name .= '&amp;geo_width='.$rd;
+		    $in_script_name .= '&amp;geo_width='.$rd.'&amp;';
 		    }
 		
 		$in_script_name .= '&amp;long_val='.$in_long;
@@ -1183,13 +1185,14 @@ function DisplayResultNav (	$in_page_no,			///< The page selected.
 	if ( $in_radius && ($in_radius != 0.0) )
 		{
 		$rd = $in_radius;
+            
 		if ( $localized_strings['dist_units'] == 'km' )
 			{
-		    $in_script_name .= '&amp;geo_width_km='.$rd;
+		    $in_query .= '&amp;geo_width_km='.$rd;
 			}
 		else
 		    {
-		    $in_script_name .= '&amp;geo_width='.$rd;
+		    $in_query .= '&amp;geo_width='.$rd;
 		    }
 
 		$in_query .= '&amp;long_val='.$in_long;

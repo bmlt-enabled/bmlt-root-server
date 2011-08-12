@@ -46,6 +46,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 1.8.36 =
+* August 12, 2011
+* Fixed a bug discovered by UKNA, in which subsequent pages of a multi-page location result woul have bad links.
+
 = Version 1.8.35 =
 * July 11, 2011
 * Fixed a couple of minor bugs in the installer wizard.
