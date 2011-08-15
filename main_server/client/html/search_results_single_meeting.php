@@ -595,7 +595,8 @@ function DisplayOneMeeting ( &$in_http_vars	/**< The various HTTP GET and POST p
 		$ret .= "</div>";
 		$ret .= $ret_temp;
 		$ret .= '<div class="clear_both"></div>';
-		if ( isset ( $localized_strings['allow_contact_form'] ) && $localized_strings['allow_contact_form'] && $meeting_obj->GetContactEmail($recursive_contact_form) && isset ( $in_http_vars['supports_ajax'] ) )
+
+		if ( isset ( $localized_strings['allow_contact_form'] ) && $localized_strings['allow_contact_form'] && $meeting_obj->GetContactEmail($localized_strings['recursive_contact_form']) && isset ( $in_http_vars['supports_ajax'] ) && ($in_http_vars['supports_ajax'] == 'yes') )
 			{
 			$ret .= '<div class="contact_us_line no_print"><a href="javascript:ContactUsLink('.$meeting_obj->GetID().',\''.c_comdef_htmlspecialchars($single_meeting_for_contact).'\')" title="'.c_comdef_htmlspecialchars ( $localized_strings['comdef_search_results_strings']['Contact_Form']['contact_form_link_title'] ).'">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_search_results_strings']['Contact_Form']['contact_form_link_title'] ).'</a></div>';
 			}
