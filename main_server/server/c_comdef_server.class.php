@@ -37,7 +37,6 @@ require_once ( dirname ( __FILE__ )."/classes/c_comdef_changes.class.php" );
 require_once ( dirname ( __FILE__ )."/classes/c_comdef_users.class.php" );
 require_once ( dirname ( __FILE__ )."/classes/c_comdef_service_bodies.class.php" );
 require_once ( dirname ( __FILE__ )."/shared/classes/base_templates.inc.php" );
-require ( dirname ( __FILE__ )."/config/comdef-config.inc.php" );
 
 /******************************************************************/
 
@@ -2347,6 +2346,7 @@ class c_comdef_server
                 {
                 $lang_enum = $in_lang_enum;
                 }
+			include ( dirname ( __FILE__ )."/config/comdef-config.inc.php" );
 			include ( dirname ( __FILE__ )."/config/auto-config.inc.php" );
             include ( dirname ( __FILE__ ).'/config/lang/'.$lang_enum.'/search_results_strings.inc.php' );
             include ( dirname ( __FILE__ ).'/config/lang/'.$lang_enum.'/search_admin_strings.inc.php' );
