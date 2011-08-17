@@ -47,7 +47,7 @@
 	/// Include the automatically generated configuration.
 	if ( file_exists ( dirname ( __FILE__ )."/auto-config.inc.php" ) )
 		{
-		require_once ( dirname ( __FILE__ )."/auto-config.inc.php" );
+		include ( dirname ( __FILE__ )."/auto-config.inc.php" );
 		}
 	else
 		{

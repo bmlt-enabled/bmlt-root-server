@@ -25,6 +25,7 @@
 */
 
 defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
+//define ( '__DEBUG_MODE__', 1 ); // Uncomment to make the JavaScript easier to trace (and less efficient).
 
 /*******************************************************************/
 /** \brief This function is called in order to construct the HTML
@@ -261,13 +262,17 @@ function DisplayMeetingSearchForm ( $in_http_vars ///< The $_GET and $_POST para
 			}
 			
 		$script = str_replace( "##SCRIPT_URL##", $script_name.$query.'supports_ajax=yes&do_search=yes&geo_width=-'.intval ( $localized_strings['number_of_meetings_for_auto'] ), $script );
-		$script = preg_replace( "|\/\*.*?\*\/|s", "", $script );
-		$script = preg_replace( '#http:\/\/#', "http:@@", $script );
-		$script = preg_replace( '#\/\/.*?[\n\r]#', "", $script );
-		$script = preg_replace( '#http:@@#', "http://", $script );
-		$script = preg_replace( "|\t+|s", " ", $script );
-		$script = preg_replace( "| +|s", " ", $script );
-		$script = preg_replace( "|[\n\r]+|s", "", $script );
+        if ( !defined ( '__DEBUG_MODE__' ) )
+            {
+            $script = preg_replace( "|\/\*.*?\*\/|s", "", $script );
+            $script = preg_replace( '#http:\/\/#', "http:@@", $script );
+            $script = preg_replace( '#\/\/.*?[\n\r]#', "", $script );
+            $script = preg_replace( '#http:@@#', "http://", $script );
+            $script = preg_replace( "|\t+|s", " ", $script );
+            $script = preg_replace( "| +|s", " ", $script );
+            $script = preg_replace( "|[\n\r]+|s", "", $script );
+            }
+        
 		if ( isset ( $in_http_vars['search_spec_map_center'] ) && $in_http_vars['search_spec_map_center'] )
 			{
 			list ( $latval, $lngval, $zoom ) = explode ( ',', $in_http_vars['search_spec_map_center'] );
@@ -280,7 +285,7 @@ function DisplayMeetingSearchForm ( $in_http_vars ///< The $_GET and $_POST para
 			$localized_strings['search_spec_map_center']['longitude'] = floatval ( $lngval );
 			$localized_strings['search_spec_map_center']['zoom'] = intval ( $zoom );
 			}
-		$ret .= '<script type="text/javascript">'.$script.'if ( document.getElementById(\'c_comdef_search_specification_search_string_line\').style.display!=\'none\'){document.getElementById(\'c_comdef_search_specification_search_string\').focus()};window.onload=function(){document.getElementById ( \'advanced_mapmode\' ).value=\'\';MakeSmallMap('.htmlspecialchars ( $localized_strings['search_spec_map_center']['latitude'] ).','.htmlspecialchars ( $localized_strings['search_spec_map_center']['longitude'] ).','.htmlspecialchars ( $localized_strings['search_spec_map_center']['zoom'] ).','.(($disable_zoom_in_clicks == true) ? 'true': 'false').');}</script>';
+		$ret .= '<script type="text/javascript">'.$script.'if ( document.getElementById(\'c_comdef_search_specification_search_string_line\').style.display!=\'none\'){document.getElementById(\'c_comdef_search_specification_search_string\').focus()};window.onload=function(){document.getElementById ( \'advanced_mapmode\' ).value=\'\';MakeSmallMap('.floatval ( $localized_strings['search_spec_map_center']['latitude'] ).','.floatval ( $localized_strings['search_spec_map_center']['longitude'] ).','.intval ( $localized_strings['search_spec_map_center']['zoom'] ).','.(($disable_zoom_in_clicks == true) ? 'true': 'false').');}</script>';
 		$ret .= '</div>';
 		}
 	if ( isset ( $in_http_vars['supports_ajax'] ) && ($in_http_vars['supports_ajax'] == 'yes') )

@@ -19,6 +19,7 @@
 */
 $http_vars = array_merge_recursive ( $_GET, $_POST );
 define ( 'BMLT_EXEC', true );	// This is a security verifier. Keeps files from being executed outside of the context
+//define ( '__DEBUG_MODE__', 1 ); // Uncomment to make the CSS and JavaScript easier to trace (and less efficient).
 if ( (isset ( $http_vars['disp_format'] ) && ($http_vars['disp_format'] == 'csv'))
 	|| (($http_vars['bmlt_search_type'] == 'advanced') && isset ( $http_vars['result_type_advanced'] ) && ($http_vars['result_type_advanced'] == 'csv'))
 	|| (($http_vars['bmlt_search_type'] == 'advanced') && isset ( $http_vars['result_type_advanced'] ) && ($http_vars['result_type_advanced'] == 'csv_naws')) )
@@ -603,18 +604,25 @@ function special_small_site ( $in_http_vars = null	///< The HTTP GET and POST va
 function optimizeReturn ( $in_data
 						)
 	{
-	$script_head = '<script type="text/javascript">/* <![CDATA[ */';
-	$script_foot = '/* ]]> */</script>';
-	$style_head = '<style type="text/css">/* <![CDATA[ */';
-	$style_foot = '/* ]]> */</style>';
-	$ret = preg_replace('/\<\?php.*?\?\>/', '', $in_data);
-	$ret = preg_replace('/<!--(.|\s)*?-->/', '', $ret);
-	$ret = preg_replace('/\/\*(.|\s)*?\*\//', '', $ret);
-	$ret = preg_replace( "|\s+\/\/.*|", " ", $ret );
-	$ret = preg_replace( "/\s+/", " ", $ret );
-	$ret = preg_replace( "|\<script type=\"text\/javascript\"\>(.*?)\<\/script\>|", "$script_head$1$script_foot", $ret );
-	$ret = preg_replace( "|\<style type=\"text\/css\"\>(.*?)\<\/style\>|", "$style_head$1$style_foot", $ret );
-	
-	return $ret;
+    if ( !defined ( '__DEBUG_MODE__' ) )
+        {
+        $script_head = '<script type="text/javascript">/* <![CDATA[ */';
+        $script_foot = '/* ]]> */</script>';
+        $style_head = '<style type="text/css">/* <![CDATA[ */';
+        $style_foot = '/* ]]> */</style>';
+        $ret = preg_replace('/\<\?php.*?\?\>/', '', $in_data);
+        $ret = preg_replace('/<!--(.|\s)*?-->/', '', $ret);
+        $ret = preg_replace('/\/\*(.|\s)*?\*\//', '', $ret);
+        $ret = preg_replace( "|\s+\/\/.*|", " ", $ret );
+        $ret = preg_replace( "/\s+/", " ", $ret );
+        $ret = preg_replace( "|\<script type=\"text\/javascript\"\>(.*?)\<\/script\>|", "$script_head$1$script_foot", $ret );
+        $ret = preg_replace( "|\<style type=\"text\/css\"\>(.*?)\<\/style\>|", "$style_head$1$style_foot", $ret );
+        
+        return $ret;
+        }
+    else
+        {
+        return $in_data;
+        }
 	}
 ?>

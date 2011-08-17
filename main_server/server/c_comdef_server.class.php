@@ -2347,7 +2347,6 @@ class c_comdef_server
                 $lang_enum = $in_lang_enum;
                 }
 			include ( dirname ( __FILE__ )."/config/comdef-config.inc.php" );
-			include ( dirname ( __FILE__ )."/config/auto-config.inc.php" );
             include ( dirname ( __FILE__ ).'/config/lang/'.$lang_enum.'/search_results_strings.inc.php' );
             include ( dirname ( __FILE__ ).'/config/lang/'.$lang_enum.'/search_admin_strings.inc.php' );
             include ( dirname ( __FILE__ ).'/config/lang/'.$lang_enum.'/change_desc.inc.php' );

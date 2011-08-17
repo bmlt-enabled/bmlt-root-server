@@ -4,7 +4,7 @@
 	<div style="height:24px"></div>
 	<div style="height:80px;background-color: #0013d2;background-image:url(../images/DocHeader.gif);background-position:center top;background-repeat:no-repeat"></div>
 
-	\version 1.8.37 (Main Root Server)
+	\version 1.8.38 (Main Root Server)
 
 	\license This code is completely open and free. You may access it by
 	<a href="http://magshare.org/bmlt-the-basic-meeting-list-toolbox/">visiting the BMLT Project Site</a>.
@@ -295,6 +295,9 @@
 	- Our ears are wide open. Please contact us at webmaster -at- magnaws.com if you find any vulnerabilities.
 	
 	<h2 id="docs_release_notes">RELEASE NOTES:</h2>
+	- August 17, 2011 - 1.8.38 Release
+	    - Addressed an error, where overrides of the address format strings were being ignored. This should also slightly speed up page loads.
+
 	- August 15, 2011 - 1.8.37 Release
         - Fixed a bug that prevented the "Contact Us About This Meeting" link from appearing in "More Details."
         

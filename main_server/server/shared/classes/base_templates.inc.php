@@ -11,7 +11,7 @@
 
 defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
-require_once ( dirname ( __FILE__ )."/../../config/comdef-config.inc.php" );
+//require_once ( dirname ( __FILE__ )."/../../config/comdef-config.inc.php" );
 require_once ( dirname ( __FILE__ )."/comdef_utilityclasses.inc.php" );
 
 /*******************************************************************/
