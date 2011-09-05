@@ -174,7 +174,14 @@ function FullCrypt (
 			}
 		}
 	
-	return crypt ( $in_string, $in_salt );
+	$ret = crypt ( $in_string, $in_salt );
+	
+	if ( !$ret )    // Fallback as a last resort.
+	    {
+	    $ret = crypt ( $in_string, $in_string );
+	    }
+	    
+	return $ret;
 }
 
 /*******************************************************************/
