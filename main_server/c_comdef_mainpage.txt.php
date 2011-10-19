@@ -4,7 +4,7 @@
 	<div style="height:24px"></div>
 	<div style="height:80px;background-color: #0013d2;background-image:url(../images/DocHeader.gif);background-position:center top;background-repeat:no-repeat"></div>
 
-	\version 1.8.39 (Main Root Server)
+	\version 1.8.40 (Main Root Server)
 
 	\license This code is completely open and free. You may access it by
 	<a href="http://magshare.org/bmlt-the-basic-meeting-list-toolbox/">visiting the BMLT Project Site</a>.
@@ -295,6 +295,10 @@
 	- Our ears are wide open. Please contact us at webmaster -at- magnaws.com if you find any vulnerabilities.
 	
 	<h2 id="docs_release_notes">RELEASE NOTES:</h2>
+	- October 19, 2011 - 1.8.40 Release
+	    - Swedish localization added.
+	    - There was a minor error in the XML schema for formats that interfered with operation on the iPhone app. This has been fixed.
+	    
 	- September 5, 2011 - 1.8.39 Release
 	    - NA Sweden had an error, in which their server reports that it has all the various crypt() methodologies, but can't actually deliver. This broke the FullCrypt() function. I addressed it by adding a fallback to the most primitive crypt() function.
 
