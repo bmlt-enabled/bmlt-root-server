@@ -47,7 +47,7 @@ function array2xml(	$array,				///< The input array
 	
 	if ($beginning)
 	{
-		$output = '<' . $name . '>';
+		$output = '<' . htmlspecialchars($name) . '>';
 		$nested = 0;
 	}
 	
@@ -58,24 +58,24 @@ function array2xml(	$array,				///< The input array
 		{
 		if (is_array($child))
 			{
-			$output .= '<' . (is_string($root) ? $root : $ArrayNumberPrefix .' id="' . $root . '"') . '>';
+			$output .= '<' . (is_string($root) ? htmlspecialchars($root) : $ArrayNumberPrefix .' id="' . $root . '"') . '>';
 			$nested++;
 			$output .= array2xml($child, null, null, false);
 			$nested--;
-			$output .= '</' . (is_string($root) ? $root : $ArrayNumberPrefix) . '>';
+			$output .= '</' . (is_string($root) ? htmlspecialchars($root) : $ArrayNumberPrefix) . '>';
 			}
 		elseif ( isset ( $child ) && $child )
 			{
-			$output .= '<' . (is_string($root) ? $root : $ArrayNumberPrefix . $root) . '>' . htmlspecialchars($child) . '</' . (is_string($root) ? $root : $ArrayNumberPrefix) . '>';
+			$output .= '<' . (is_string($root) ? htmlspecialchars($root) : $ArrayNumberPrefix . htmlspecialchars($root)) . '>' . htmlspecialchars($child) . '</' . (is_string($root) ? htmlspecialchars($root) : $ArrayNumberPrefix) . '>';
 			}
 		else
 			{
 // Commented out, because we will simply not add empty elements (for now). This is to save bandwidth.
-//			$output .= '<' . (is_string($root) ? $root : $ArrayNumberPrefix . $root) . '/>';
+//			$output .= '<' . (is_string($root) ? htmlspecialchars($root) : $ArrayNumberPrefix . htmlspecialchars($root)) . '/>';
 			}
 		}
 	
-	if ($beginning) $output .= '</' . $name . '>';
+	if ($beginning) $output .= '</' . htmlspecialchars($name) . '>';
 	
 	return $output;
 }

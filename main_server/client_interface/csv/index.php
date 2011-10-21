@@ -47,6 +47,7 @@ try
 				}
 			else
 				{
+			    header ( 'Content-Type:text/csv' );
 				ob_start();
 				}
 			}

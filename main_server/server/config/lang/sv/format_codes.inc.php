@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /***********************************************************************/
 /** \file	format_codes.inc.php
 	\brief	The format codes for this language (English)

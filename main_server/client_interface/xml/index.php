@@ -49,13 +49,13 @@ try
 				}
 			else
 				{
-		        header ( 'Content-Type:application/xml' );
+		        header ( 'Content-Type:application/xml; charset=UTF-8' );
 				ob_start();
 				}
 			}
 		else
 			{
-		    header ( 'Content-Type:application/xml' );
+		    header ( 'Content-Type:application/xml; charset=UTF-8' );
 			ob_start();
 			}
 		

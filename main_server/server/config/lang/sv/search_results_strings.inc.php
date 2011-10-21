@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /***********************************************************************/
 /** \file	search_results_strings.inc.php
 	\brief	The strings displayed in the search results for this language (English)

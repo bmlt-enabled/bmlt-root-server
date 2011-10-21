@@ -24,11 +24,19 @@
 // The caller can request compression. Not all clients can deal with compressed replies.
 if ( isset ( $_GET['compress_xml'] ) || isset ( $_POST['compress_xml'] ) )
 	{
-	ob_start('ob_gzhandler');
+    if ( zlib_get_coding_type() === false )
+        {
+        ob_start("ob_gzhandler");
+        }
+    else
+        {
+        header ( 'Content-Type:application/xml; charset=UTF-8' );
+        ob_start();
+        }
 	}
 else
 	{
-	header ( 'Content-Type:application/xml' );
+	header ( 'Content-Type:application/xml; charset=UTF-8' );
 	ob_start();
 	}
 echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">"; ?>

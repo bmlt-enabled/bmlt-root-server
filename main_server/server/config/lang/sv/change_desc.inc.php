@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /***********************************************************************/
 /** \file	change_desc.inc.php
 	\brief	The change description phrases for this language (English)

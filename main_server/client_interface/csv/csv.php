@@ -66,7 +66,7 @@ function parse_redirect (
 			
 			if ( isset ( $http_vars['xml_data'] ) )
 				{
-				$result = '<'.'?'.'xml version="1.0" encoding="UTF-8"'.'?'.'>';
+                $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 				$xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', $_SERVER['SERVER_NAME'].dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetSearchResults.php' ) );
 				$result .= "<meetings xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
 				$result .= TranslateToXML ( $result2 );
@@ -94,7 +94,7 @@ function parse_redirect (
 			
 			if ( isset ( $http_vars['xml_data'] ) )
 				{
-				$result = '<'.'?'.'xml version="1.0" encoding="UTF-8"'.'?'.'>';
+                $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 				$xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', $_SERVER['SERVER_NAME'].dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetFormats.php' ) );
 				$result .= "<formats xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
 				$result .= TranslateToXML ( $result2 );
@@ -141,7 +141,7 @@ function parse_redirect (
 			
 			if ( isset ( $http_vars['xml_data'] ) )
 				{
-				$result = '<'.'?'.'xml version="1.0" encoding="UTF-8"'.'?'.'>';
+                $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 				$xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', $_SERVER['SERVER_NAME'].dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetChanges.php' ) );
 				$result .= "<changes xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
 				$result .= TranslateToXML ( $result2 );
@@ -609,7 +609,6 @@ function HandleNoServer ( )
 function TranslateToJSON ( $in_csv_data ///< An array of CSV data, with the first element being the field names.
 						)
 	{
-	$out_json_data; ///< The Output JSON data (a string).
 	$temp_keyed_array = array();
 	$in_csv_data = explode ( "\n", $in_csv_data );
 	$keys = array_shift ( $in_csv_data );
@@ -647,7 +646,6 @@ function TranslateToJSON ( $in_csv_data ///< An array of CSV data, with the firs
 function TranslateToXML (	$in_csv_data	///< An array of CSV data, with the first element being the field names.
 						)
 	{
-	$out_xml_data;	///< The Output JSON data (a string).
 	$temp_keyed_array = array();
 	$in_csv_data = explode ( "\n", $in_csv_data );
 	$keys = array_shift ( $in_csv_data );

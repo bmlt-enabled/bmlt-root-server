@@ -37,16 +37,24 @@ if ( $server instanceof c_comdef_server )
 		if ( is_array ( $service_body_array ) && count ( $service_body_array ) )
 			{
 			// The caller can request compression. Not all clients can deal with compressed replies.
-			if ( isset ( $_GET['compress_xml'] ) || isset ( $_POST['compress_xml'] ) )
-				{
-				ob_start('ob_gzhandler');
-				}
-			else
-				{
-				header ( 'Content-Type:application/xml' );
-				ob_start();
-				}
-			echo '<'.'?'.'xml version="1.0" encoding="UTF-8"'.'?'.">";
+            if ( isset ( $_GET['compress_xml'] ) || isset ( $_POST['compress_xml'] ) )
+                {
+                if ( zlib_get_coding_type() === false )
+                    {
+                    ob_start("ob_gzhandler");
+                    }
+                else
+                    {
+                    header ( 'Content-Type:application/xml; charset=UTF-8' );
+                    ob_start();
+                    }
+                }
+            else
+                {
+                header ( 'Content-Type:application/xml; charset=UTF-8' );
+                ob_start();
+                }
+            echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 			$xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', $_SERVER['SERVER_NAME'].dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetServiceBodies.php' ) );
 			echo "<serviceBodies xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsn=\"http://www.w3.org/2001/XMLSchema-instance\" xsn:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
 			OutputServiceBody ( $service_body_array );

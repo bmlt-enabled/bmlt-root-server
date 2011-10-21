@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /***********************************************************************/
 /** \file	search_admin_strings.inc.php
 	\brief	The strings displayed in the search admin for this language (English)

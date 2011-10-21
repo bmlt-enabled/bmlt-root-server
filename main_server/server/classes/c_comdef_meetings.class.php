@@ -172,7 +172,7 @@ class c_comdef_meetings implements i_comdef_has_parent
 			$cos2SigmaM = $cosSigma - 2.0*$sinU1*$sinU2/$cosSqAlpha;
 // 			if (isNaN(cos2SigmaM))
 // 				{
-// 				cos2SigmaM = 0;  // equatorial line: cosSqAlpha=0 (ค6)
+// 				cos2SigmaM = 0;  // equatorial line: cosSqAlpha=0 (ยง6)
 // 				}
 			$C = $f/(16.0*$cosSqAlpha*(4.0+$f*(4.0-3.0*$cosSqAlpha)));
 			$lambdaP = $lambda;

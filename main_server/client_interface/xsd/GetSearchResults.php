@@ -31,16 +31,24 @@ $ret = null;
 if ( $server instanceof c_comdef_server )
 	{
 	// The caller can request compression. Not all clients can deal with compressed replies.
-	if ( isset ( $_GET['compress_xml'] ) || isset ( $_POST['compress_xml'] ) )
-		{
-		ob_start('ob_gzhandler');
-		}
-	else
-		{
-		header ( 'Content-Type:application/xml' );
-		ob_start();
-		}
-	echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"; ?>
+if ( isset ( $_GET['compress_xml'] ) || isset ( $_POST['compress_xml'] ) )
+	{
+    if ( zlib_get_coding_type() === false )
+        {
+        ob_start("ob_gzhandler");
+        }
+    else
+        {
+        header ( 'Content-Type:application/xml; charset=UTF-8' );
+        ob_start();
+        }
+	}
+else
+	{
+	header ( 'Content-Type:application/xml; charset=UTF-8' );
+	ob_start();
+	}
+echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"; ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:xsn="http://<?php echo $_SERVER['SERVER_NAME'] ?>"
 	targetNamespace="http://<?php echo $_SERVER['SERVER_NAME'] ?>"
