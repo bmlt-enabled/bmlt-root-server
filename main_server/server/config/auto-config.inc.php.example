@@ -49,6 +49,7 @@
 	$client_session_name = 'BMLT_Satellite';
 	$comdef_distance_units = 'mi'; ///< This should either be 'km' (Kilometers), or 'mi' (Miles).
     $comdef_show_sb_desc = false;   ///< This is true if you want textual descriptions to be shown under Service body listings in the advanced pane.
+    $default_timezone = NULL;   ///< Set this to a value to change the server's calculated timezone. It should be one of these: http://www.php.net/manual/en/timezones.php
 	define ( "_DEFAULT_DURATION", "N.A. Meetings are usually 90 minutes long (an hour and a half), unless otherwise indicated." );
 	define ( 'WC_FORMAT', '33' );		// These are used for the NAWS format translation. They are the shared IDs of the wheelchair, open and closed formats.
 	define ( 'O_FORMAT', '17' );

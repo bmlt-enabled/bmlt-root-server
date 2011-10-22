@@ -2393,6 +2393,11 @@ class c_comdef_server
                 c_comdef_server::$server_local_strings['dist_units'] = 'mi';
                 }
             
+            if ( isset ( $default_timezone ) && $default_timezone )
+                {
+                date_default_timezone_set( $default_timezone );
+                }
+            
             ini_set ( 'default_charset', '' );
             }
         }
