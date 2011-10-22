@@ -46,6 +46,15 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 1.8.40 =
+* October 21, 2011
+* Swedish localization added.
+* There was a minor error in the XML schema for formats that interfered with operation on the iPhone app. This has been fixed.
+	    
+= Version 1.8.39 =
+* September 5, 2011
+* NA Sweden had an error, in which their server reports that it has all the various crypt() methodologies, but can't actually deliver. This broke the FullCrypt() function. I addressed it by adding a fallback to the most primitive crypt() function.
+
 = Version 1.8.38 =
 * August 17, 2011
 * This addresses an issue where overrides of the address format strings were being ignored. It may also give a slight improvement to page load times.
