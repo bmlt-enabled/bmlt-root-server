@@ -295,7 +295,7 @@
 	- Our ears are wide open. Please contact us at webmaster -at- magnaws.com if you find any vulnerabilities.
 	
 	<h2 id="docs_release_notes">RELEASE NOTES:</h2>
-	- - 1.8.40 Release
+	- October 21, 2011 - 1.8.40 Release
 	    - Swedish localization added.
 	    - There was a minor error in the XML schema for formats that interfered with operation on the iPhone app. This has been fixed.
 	    
