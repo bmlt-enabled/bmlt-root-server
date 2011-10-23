@@ -295,8 +295,9 @@
 	- Our ears are wide open. Please contact us at webmaster -at- magnaws.com if you find any vulnerabilities.
 	
 	<h2 id="docs_release_notes">RELEASE NOTES:</h2>
-	- October 22, 2011 - 1.8.41 Release
-	    - Addressed a bug, in which the wrong timezone was being specified.
+	- October 23, 2011 - 1.8.41 Release
+	    - Addressed a bug, in which the wrong timezone was possibly being specified. The auto-config file will now allow a timezone to be specified in a variable called $default_timezone.
+	    - Somehow or another, some junk characters got into the AJAX Thread Driver file. That has been fixed.
 	    
 	- October 21, 2011 - 1.8.40 Release
 	    - Swedish localization added.

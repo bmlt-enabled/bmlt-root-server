@@ -46,6 +46,11 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 1.8.41 =
+* October 22, 2011
+* Addressed a bug, in which the wrong timezone was possibly being specified. The auto-config file will now allow a timezone to be specified in a variable called $default_timezone.
+* Somehow or another, some junk characters got into the AJAX Thread Driver file. That has been fixed.
+	    
 = Version 1.8.40 =
 * October 21, 2011
 * Swedish localization added.
