@@ -48,13 +48,11 @@ class c_comdef_changes implements i_comdef_has_parent
 			$count = 0;
 			foreach ( $in_change_data as $row )
 				{
-//				$this->_changes_objects[$row['id_bigint']] = null;
 				$this->_changes_objects[$count] = null;
 				$date_ar = explode ( " ", $row['change_date']);
 				$date_a = explode ( "-", $date_ar[0] );
 				$date_b = explode ( ":", $date_ar[1] );
 				$date = mktime ( $date_b[0], $date_b[1], $date_b[2], $date_a[1], $date_a[2], $date_a[0] );
-//				$this->_changes_objects[$row['id_bigint']] = new c_comdef_change ( $this, $row['change_type_enum'], $row['user_id_bigint'], $row['service_body_id_bigint'], $row['before_object'], $row['after_object'], $row['object_class_string'], $row['before_id_bigint'], $row['after_id_bigint'], $row['before_lang_enum'], $row['after_lang_enum'], $row['id_bigint'], $row['change_name_string'], $row['change_description_text'], $row['lang_enum'], $date );
 				$this->_changes_objects[$count++] = new c_comdef_change ( $this, $row['change_type_enum'], $row['user_id_bigint'], $row['service_body_id_bigint'], $row['before_object'], $row['after_object'], $row['object_class_string'], $row['before_id_bigint'], $row['after_id_bigint'], $row['before_lang_enum'], $row['after_lang_enum'], $row['id_bigint'], $row['change_name_string'], $row['change_description_text'], $row['lang_enum'], $date );
 				}
 			}

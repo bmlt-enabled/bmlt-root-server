@@ -4,7 +4,7 @@
 	<div style="height:24px"></div>
 	<div style="height:80px;background-color: #0013d2;background-image:url(../images/DocHeader.gif);background-position:center top;background-repeat:no-repeat"></div>
 
-	\version 1.8.41 (Main Root Server)
+	\version 1.8.42 (Main Root Server)
 
 	\license This code is completely open and free. You may access it by
 	<a href="http://magshare.org/bmlt-the-basic-meeting-list-toolbox/">visiting the BMLT Project Site</a>.
@@ -295,6 +295,9 @@
 	- Our ears are wide open. Please contact us at webmaster -at- magnaws.com if you find any vulnerabilities.
 	
 	<h2 id="docs_release_notes">RELEASE NOTES:</h2>
+	- - 1.8.42 Release
+	    - Fixed a bug in which day/time searches were being offset improperly on some servers.
+	    
 	- October 23, 2011 - 1.8.41 Release
 	    - Addressed a bug, in which the wrong timezone was possibly being specified. The auto-config file will now allow a timezone to be specified in a variable called $default_timezone.
 	    - Somehow or another, some junk characters got into the AJAX Thread Driver file. That has been fixed.
