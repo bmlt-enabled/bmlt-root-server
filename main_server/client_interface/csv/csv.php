@@ -193,7 +193,8 @@ function GetSearchResults (
 		}
 
 	require_once ( dirname ( __FILE__ ).'/../../client/html/search_results_csv.php' );
-	$result = DisplaySearchResultsCSV ( $in_http_vars );
+	$geocode_results = null;
+	$result = DisplaySearchResultsCSV ( $in_http_vars, null, $geocode_results );
 	if ( isset ( $in_http_vars['data_field_key'] ) && $in_http_vars['data_field_key'] )
 		{
 		// At this point, we have everything in a CSV. We separate out just the field we want.

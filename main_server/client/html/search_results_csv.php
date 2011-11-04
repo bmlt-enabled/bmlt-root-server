@@ -242,7 +242,13 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 														 		An array of positive integers. Each integer is an ID of an individual meeting. If this is set, all other
 														 		search criteria are ignored.
 													*/
-									&$return_array = null	///< If this is supplied, then the result will be saved in this as an array. It must be an empty array, supplied by reference.
+									&$return_array = null,	///< If this is supplied, then the result will be saved in this as an array. It must be an empty array, supplied by reference.
+								    &$return_geocode = null /**< If this is supplied, the response will be an associative array, with the search center and radius.
+								                                    It will return:
+								                                        - 'radius' The radius of the search, in Km
+								                                        - 'longitude' The longitude of the search center
+								                                        - 'latitude' Th latitude of the search center
+								                            */
 								)
 {
 	$ret = null;
@@ -316,6 +322,18 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 			{
 			$my_radius = $search_manager->GetRadius ( $localized_strings['dist_units'] == 'mi' );
 			}
+		
+		if ( isset ( $return_geocode ) )
+		    {
+		    $return_geocode = nil;
+		    
+		    if ( $search_manager->GetRadius ( false ) )
+		        {
+                $return_geocode['radius'] = $search_manager->GetRadius ( false );
+                $return_geocode['longitude'] = $search_manager->GetLongitude();
+                $return_geocode['latitude'] = $search_manager->GetLatitude();
+                }
+		    }
 		
 		$num_pages = $search_manager->GetNumberOfPages();
 		$num_results = $search_manager->GetNumberOfResults();
