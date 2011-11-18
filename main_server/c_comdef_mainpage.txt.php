@@ -295,8 +295,9 @@
 	- Our ears are wide open. Please contact us at webmaster -at- magnaws.com if you find any vulnerabilities.
 	
 	<h2 id="docs_release_notes">RELEASE NOTES:</h2>
-	- - 1.8.42 Release
+	- November 17, 2011 - 1.8.42 Release
 	    - Fixed a bug in which day/time searches were being offset improperly on some servers.
+	    - Fixed a bug, in which the CSV response could cause a crash.
 	    
 	- October 23, 2011 - 1.8.41 Release
 	    - Addressed a bug, in which the wrong timezone was possibly being specified. The auto-config file will now allow a timezone to be specified in a variable called $default_timezone.
