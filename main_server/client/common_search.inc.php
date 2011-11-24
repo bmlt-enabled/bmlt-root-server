@@ -368,7 +368,7 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 			{
 			$start_hour = min ( 23, max ( 0, intval ( $in_http_vars['StartsAfterH'] ) ) );
 			$start_minute = min ( 59, max ( 0, intval ( $in_http_vars['StartsAfterM'] ) ) );
-			$start_time = gmmktime ( $start_hour, $start_minute );
+			$start_time = mktime ( $start_hour, $start_minute );
 			}
 		
 		// Next, the maximum start time..
@@ -376,7 +376,7 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 			{
 			$end_hour = min ( 23, max ( 0, intval ( $in_http_vars['StartsBeforeH'] ) ) );
 			$end_minute = min ( 59, max ( 0, intval ( $in_http_vars['StartsBeforeM'] ) ) );
-			$end_time = gmmktime ( $end_hour, $end_minute );
+			$end_time = mktime ( $end_hour, $end_minute );
 			}
 		
 		$in_search_manager->SetStartTime ( $start_time, $end_time );
@@ -390,7 +390,7 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 			{
 			$max_duration_hour = min ( 23, max ( 0, intval ( $in_http_vars['MaxDurationH'] ) ) );
 			$max_duration_minute = min ( 59, max ( 0, intval ( $in_http_vars['MaxDurationM'] ) ) );
-			$max_duration_time = gmmktime ( $max_duration_hour, $max_duration_minute );
+			$max_duration_time = mktime ( $max_duration_hour, $max_duration_minute );
 			}
 		
 		// Next, the maximum start time..
@@ -398,7 +398,7 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 			{
 			$min_duration_hour = min ( 23, max ( 0, intval ( $in_http_vars['MinDurationH'] ) ) );
 			$min_duration_minute = min ( 59, max ( 0, intval ( $in_http_vars['MinDurationM'] ) ) );
-			$min_duration_time = gmmktime ( $min_duration_hour, $min_duration_minute );
+			$min_duration_time = mktime ( $min_duration_hour, $min_duration_minute );
 			}
 		
 		$in_search_manager->SetDuration ( $max_duration_time, $min_duration_time );

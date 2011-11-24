@@ -46,6 +46,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 1.8.43 =
+* November 24, 2011
+* Undid the date bug fix, as it caused problems on some servers, by reporting the wrong times.
+
 = Version 1.8.42 =
 * November 17, 2011
 * Fixed a bug in which day/time searches were being offset improperly on some servers.

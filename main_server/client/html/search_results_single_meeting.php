@@ -213,7 +213,7 @@ function DisplayOneMeeting ( &$in_http_vars	/**< The various HTTP GET and POST p
 					
 					case	'start_time':	// We will format the start time.
 						$value = explode ( ":", $value );
-						$starts = gmmktime ( $value[0], $value[1] );
+						$starts = mktime ( $value[0], $value[1] );
 					break;
 					
 					case	'duration_time':	// We will format the duration.
