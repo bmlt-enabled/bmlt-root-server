@@ -46,6 +46,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 1.8.44 =
+* TBD
+* Fixed a bug that did not apply localizations to PDF generation.
+
 = Version 1.8.43 =
 * November 24, 2011
 * Undid the date bug fix, as it caused problems on some servers, by reporting the wrong times.

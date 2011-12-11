@@ -62,10 +62,10 @@ class printableList
 									 $in_lang_search = null	///< An array of language enums, used to extract the correct format codes.
 									)
 	{
-		$this->napdf_instance =& napdf::MakeNAPDF ( $this->page_x, $this->page_y, $this->out_http_vars, $this->units, $this->orientation, $this->sort_keys, $in_lang_search );
-		if ( !($this->napdf_instance instanceof napdf) )
+		$napdf_instance = napdf::MakeNAPDF ( $this->page_x, $this->page_y, $this->out_http_vars, $this->units, $this->orientation, $this->sort_keys, $in_lang_search );
+		if ( $napdf_instance instanceof napdf )
 			{
-			$this->napdf_instance = null;
+            $this->napdf_instance =& $napdf_instance;
 			}
 	}
 };

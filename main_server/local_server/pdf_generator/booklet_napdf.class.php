@@ -80,7 +80,7 @@ class booklet_napdf extends printableList implements IPrintableList
 									'StringSearchIsAnAddress' => $in_http_vars['StringSearchIsAnAddress']
 									);
 
-		$this->lang_search = array ( 'en' );
+		$this->lang_search = array ( $lang_enum );
 		
 		napdf::$sort_callback = 'booklet_napdf::sort_meeting_data_callback';
 		

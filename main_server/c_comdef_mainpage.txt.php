@@ -4,7 +4,7 @@
 	<div style="height:24px"></div>
 	<div style="height:80px;background-color: #0013d2;background-image:url(../images/DocHeader.gif);background-position:center top;background-repeat:no-repeat"></div>
 
-	\version 1.8.43 (Main Root Server)
+	\version 1.8.44 (Main Root Server)
 
 	\license This code is completely open and free. You may access it by
 	<a href="http://magshare.org/bmlt-the-basic-meeting-list-toolbox/">visiting the BMLT Project Site</a>.
@@ -295,6 +295,9 @@
 	- Our ears are wide open. Please contact us at webmaster -at- magnaws.com if you find any vulnerabilities.
 	
 	<h2 id="docs_release_notes">RELEASE NOTES:</h2>
+	- - 1.8.44 Release
+	    - Fixed a bug that did not apply localizations to PDF generation.
+	    
 	- November 24, 2011 - 1.8.43 Release
 	    - Backed out the fix for the time. It caused problems in other servers.
 	    
