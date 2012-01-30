@@ -34,7 +34,7 @@ function SplitIntoMetaphone (
 	/// If no language is given, we use the server's native language.
 	if ( null == $in_lang_enum )
 		{
-		$in_lang_enum = $this->GetParentObj()->GetLocalLang();
+		$in_lang_enum = c_comdef_server::GetServer()->GetLocalLang();
 		}
 	
 	$ar = preg_split ( "|\s+|", $in_string );

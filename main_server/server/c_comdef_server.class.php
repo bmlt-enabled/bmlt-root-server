@@ -96,7 +96,6 @@ class c_comdef_server
 	*/
 	static function GetServer()
 	{
-
 		return self::$server_instance;
 	}
 	
@@ -1921,6 +1920,54 @@ class c_comdef_server
 	}
 	
 	/*******************************************************************/
+	/**	\brief Returns a c_comdef_meetings_object, containing all the meetings (Published and unpublished).
+		
+		\returns a new c_comdef_meetings object, containing the meetings.
+		Null if it failed.
+		
+		\throws an exception if the SQL query fails.
+	*/
+	static function GetAllMeetings (    &$in_out_numResults,    ///< This must be supplied. It is a pass-by-reference that indicates how many meetings are being returned.
+	                                    $in_numResults = null,  ///< This is how many results we want in this call.
+	                                    $in_startIndex = null   ///< This is the 0-based starting index
+	                                )
+	{
+	    $in_out_numResults = 0;
+	    
+	    if ( !isset ( $in_startIndex ) )
+	        {
+	        $in_startIndex = 0;
+	        }
+	    
+	    if ( isset ( $in_numResults ) )
+	        {
+	        $in_numResults += $in_startIndex;
+	        }
+	    else
+	        {
+	        $in_startIndex = null;
+	        }
+	    
+		$sql = "SELECT * FROM `".self::GetMeetingTableName_obj()."_main`";
+		
+		if ( $in_startIndex || $in_numResults )
+		    {
+		    $sql .= ' LIMIT ';
+		    
+            $sql .= $in_startIndex.', '.$in_numResults;
+		    }
+
+		$ret = self::GetMeetingsFromSQL ( $sql );
+	 
+		if ( $ret instanceof c_comdef_meetings )
+		    {
+		    $in_out_numResults = $ret->GetNumMeetings();
+		    }
+		    
+		return $ret;
+	}
+	
+	/*******************************************************************/
 	/**	\brief This is an alternative to the MySQL REGEXP test. It will
 		go through all the meetings returned by a broad query, and remove
 		any that do not contain all of the given formats.
@@ -1983,6 +2030,7 @@ class c_comdef_server
 				// Add this to our aggregator array.
 				$meeting_data[$row['id_bigint']] = $meeting_row;
 				}
+		
 			// We now instantiate a c_comdef_meetings object, and create our c_comdef_meeting objects.
 			$this_meetings_object = new c_comdef_meetings ( self::GetServer(), $meeting_data );
 			}
