@@ -46,9 +46,13 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
-= Version 1.8.44 =
-* TBD
+= Version 1.9 =
+* March 24, 2012
 * Fixed a bug that did not apply localizations to PDF generation.
+* Fixed a bug in the Metaphone splitter (It was in rarely used code, and had been there forever).
+* Added some functionality to aid in syncing with the NAWS system.
+* Changed the base "primer" DB to include the new standard set of formats to be used to sync with NAWS.
+* Changed the way the "install wizard" works, in order to make it easier to "prime" the database.
 
 = Version 1.8.43 =
 * November 24, 2011

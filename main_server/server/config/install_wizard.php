@@ -779,57 +779,24 @@ function SetPageFive ( )
 		{
 		include ( $config_file_path );
 		
-		$structure_sql = file ( 'server/config/Structure.txt' );
-		$data_sql = file ( 'server/config/DataCommand.txt' );
-		$data_values = file ( 'server/config/Data.txt' );
-		
-		include_once ( 'server/classes/c_comdef_dbsingleton.class.php' );
-		
-		c_comdef_dbsingleton::init ( $dbType, $dbServer, $dbName, $dbUser, $dbPassword );
+		$sql = file_get_contents ( 'server/config/StandardDBTemplate.sql' );
+		$sql = str_replace ( '%ADMIN-LOGIN%', $login, trim ( $sql ) );
+		$sql = str_replace ( '%SB-ADMIN-PW%', $password, trim ( $sql ) );
+		$sql = str_replace ( '%ADMIN-PW%', $password, trim ( $sql ) );
 		
 		try
-			{
-			c_comdef_dbsingleton::connect();
-			
-			try
-				{
-				foreach ( $structure_sql as $sql )
-					{
-					$sql = str_replace ( '##PREFIX##', $dbPrefix, trim ( $sql ) );
-					c_comdef_dbsingleton::preparedExec ( $sql );
-					}
-				try
-					{
-					for ( $c = 0; $c < count ( $data_sql ); $c++ )
-						{
-						$sql = str_replace ( '##PREFIX##', $dbPrefix, trim ( $data_sql[$c] ) );
-						$values = trim ( $data_values[$c] );
-						$values = str_replace ( '##login_string##', $login, $values );
-						$values = str_replace ( '##password_string##', $password, $values );
-						$values = str_replace ( '##lang_enum##', $comdef_global_language, $values );
-						$val_ar = explode ( "\t", $values );
-						c_comdef_dbsingleton::preparedExec ( $sql, $val_ar );
-						}
-					}
-				catch ( Exception $e )
-					{
-					$ret = false;
-					echo '<div style="clear:both;position:absolute;background-color:white;z-index:6000;top:0;left:0;text-align:left">'.$sql."<pre>";
-					var_dump ( $e );
-					echo "</pre></div>";
-					$err = "The database data initialization failed! Please make sure that the database is set up, the user is created, and has full permissions.";
-					}
-				}
-			catch ( Exception $e )
-				{
-				$ret = false;
-				$err = "The database structure setup failed! Please make sure that the database is set up, the user is created, and has full permissions.";
-				}
+		    {
+    		include_once ( 'server/classes/c_comdef_dbsingleton.class.php' );
+		    c_comdef_dbsingleton::init ( $dbType, $dbServer, $dbName, $dbUser, $dbPassword );
+		    c_comdef_dbsingleton::preparedExec ( $sql, array() );
 			}
 		catch ( Exception $e )
 			{
 			$ret = false;
-			$err = "The database connection failed! Please make sure that the database is set up, the user is created, and has full permissions.";
+echo '<pre>';
+echo htmlspecialchars(print_r($e));
+die ('</pre>');
+//			$err = "The database connection failed! Please make sure that the database is set up, the user is created, and has full permissions.";
 			}
 		}
 	else

@@ -295,10 +295,12 @@
 	- Our ears are wide open. Please contact us at webmaster -at- magnaws.com if you find any vulnerabilities.
 	
 	<h2 id="docs_release_notes">RELEASE NOTES:</h2>
-	- - 1.9 Release
+	- March 24, 2012 - 1.9 Release
 	    - Fixed a bug that did not apply localizations to PDF generation.
 	    - Fixed a bug in the Metaphone splitter (It was in rarely used code, and had been there forever).
 	    - Added some functionality to aid in syncing with the NAWS system.
+	    - Changed the base "primer" DB to include the new standard set of formats to be used to sync with NAWS.
+	    - Changed the way the "install wizard" works, in order to make it easier to "prime" the database.
 	    
 	- November 24, 2011 - 1.8.43 Release
 	    - Backed out the fix for the time. It caused problems in other servers.
