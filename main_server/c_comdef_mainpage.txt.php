@@ -4,7 +4,7 @@
 	<div style="height:24px"></div>
 	<div style="height:80px;background-color: #0013d2;background-image:url(../images/DocHeader.gif);background-position:center top;background-repeat:no-repeat"></div>
 
-	\version 1.9.1 (Main Root Server)
+	\version 1.9 (Main Root Server)
 
 	\license This code is completely open and free. You may access it by
 	<a href="http://magshare.org/bmlt-the-basic-meeting-list-toolbox/">visiting the BMLT Project Site</a>.
@@ -295,9 +295,6 @@
 	- Our ears are wide open. Please contact us at webmaster -at- magnaws.com if you find any vulnerabilities.
 	
 	<h2 id="docs_release_notes">RELEASE NOTES:</h2>
-	- April 2, 2012 - 1.9.1 Release
-	    - Fixed a non-bug on most systems. Seems that newer flavors of MySQL insist on having absolute dates and times in quotes ("08:00:00", as opposed to 08:00:00).
-	
 	- March 24, 2012 - 1.9 Release
 	    - Fixed a bug that did not apply localizations to PDF generation.
 	    - Fixed a bug in the Metaphone splitter (It was in rarely used code, and had been there forever).

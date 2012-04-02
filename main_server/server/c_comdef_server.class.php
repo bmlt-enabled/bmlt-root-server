@@ -1612,41 +1612,41 @@ class c_comdef_server
 		// We explicitly set null entries, because we've seen problems with using nulls.
 		if ( null != $in_start_after )
 			{
-			$in_start_after = '"'.date ( "H:i:00", intval ( $in_start_after ) ).'"';
+			$in_start_after = date ( "H:i:00", intval ( $in_start_after ) );
 			}
 		else
 			{
-			$in_start_after = '"00:00:00"';
+			$in_start_after = "00:00:00";
 			}
 		
 		if ( null != $in_start_before )
 			{
-			$in_start_before = '"'.date ( "H:i:00", intval ( $in_start_before ) ).'"';
+			$in_start_before = date ( "H:i:00", intval ( $in_start_before ) );
 			}
 		else
 			{
-			$in_start_before = '"00:00:00"';
+			$in_start_before = "00:00:00";
 			}
 		
 		if ( null != $in_min_duration )
 			{
-			$in_min_duration = '"'.date ( "H:i:00", intval ( $in_min_duration ) ).'"';
+			$in_min_duration = date ( "H:i:00", intval ( $in_min_duration ) );
 			}
 		else
 			{
-			$in_min_duration = '"00:00:00"';
+			$in_min_duration = "00:00:00";
 			}
 		
 		if ( null != $in_max_duration )
 			{
-			$in_max_duration = '"'.date ( "H:i:00", intval ( $in_max_duration ) ).'"';
+			$in_max_duration = date ( "H:i:00", intval ( $in_max_duration ) );
 			}
 		else
 			{
-			$in_max_duration = '"00:00:00"';
+			$in_max_duration = "00:00:00";
 			}
 
-		if ( $in_start_after != '"00:00:00"' )
+		if ( $in_start_after != "00:00:00" )
 			{
 			if ( $previous )
 				{
@@ -1662,7 +1662,7 @@ class c_comdef_server
 			array_push ( $ar, $in_start_after );
 			}
 		
-		if ( $in_start_before != '"00:00:00"' )
+		if ( $in_start_before != "00:00:00" )
 			{
 			if ( $previous )
 				{
@@ -1678,7 +1678,7 @@ class c_comdef_server
 			array_push ( $ar, $in_start_before );
 			}
 		
-		if ( $in_min_duration != '"00:00:00"' )
+		if ( $in_min_duration != "00:00:00" )
 			{
 			if ( $previous )
 				{
@@ -1694,7 +1694,7 @@ class c_comdef_server
 			array_push ( $ar, $in_min_duration );
 			}
 		
-		if ( $in_max_duration != '"00:00:00"' )
+		if ( $in_max_duration != "00:00:00" )
 			{
 			if ( $previous )
 				{

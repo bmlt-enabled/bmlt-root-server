@@ -46,10 +46,6 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
-= Version 1.9.1 =
-* April 2, 2012 - 
-* Fixed a non-bug on most systems. Seems that newer flavors of MySQL insist on having absolute dates and times in quotes ("08:00:00", as opposed to 08:00:00).
-
 = Version 1.9 =
 * March 24, 2012
 * Fixed a bug that did not apply localizations to PDF generation.
