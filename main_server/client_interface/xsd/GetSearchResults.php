@@ -95,6 +95,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"; ?>
 								}
 ?>
 						</xs:sequence>
+                        <xs:attribute name="id" use="required" type="xs:integer"/>
 					</xs:complexType>
 				</xs:element>
                 <xs:element name="formats" minOccurs="0">
@@ -109,6 +110,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"; ?>
                                         <xs:element name="lang" type="xs:NCName"/>
                                         <xs:element name="id" type="xs:integer"/>
                                     </xs:sequence>
+                                    <xs:attribute name="id" use="required" type="xs:integer"/>
                                 </xs:complexType>
                             </xs:element>
                         </xs:sequence>

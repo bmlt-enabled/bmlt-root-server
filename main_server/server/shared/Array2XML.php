@@ -36,18 +36,20 @@
     You should have received a copy of the GNU General Public License
     along with this code.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 function array2xml(	$array,				///< The input array
 					$name='array',		///< The name that you want as the root element for the XML output
 					$beginning = true	///< Used for the recursive parser. Not for external use.
 					)
 {
-	global $nested;
+	global $nested, $s_array2xml_index;
 	
 	$output = '';
 	
 	if ($beginning)
 	{
 		$output = '<' . htmlspecialchars($name) . '>';
+		$s_array2xml_index = 0;
 		$nested = 0;
 	}
 	
@@ -58,7 +60,7 @@ function array2xml(	$array,				///< The input array
 		{
 		if (is_array($child))
 			{
-			$output .= '<' . (is_string($root) ? htmlspecialchars($root) : $ArrayNumberPrefix) . '>';
+			$output .= '<' . (is_string($root) ? htmlspecialchars($root) : $ArrayNumberPrefix) . ' id="'.strval ( intval ($s_array2xml_index++) ).'">';
 			$nested++;
 			$output .= array2xml($child, null, null, false);
 			$nested--;
