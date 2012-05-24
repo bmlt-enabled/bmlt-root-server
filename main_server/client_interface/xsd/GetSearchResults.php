@@ -97,9 +97,9 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"; ?>
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
-                <xs:element name="formats">
+                <xs:element name="formats" minOccurs="0">
                     <xs:complexType>
-                        <xs:sequence minOccurs="0">
+                        <xs:sequence>
                             <xs:element name="row" maxOccurs="unbounded">
                                 <xs:complexType>
                                     <xs:sequence>
