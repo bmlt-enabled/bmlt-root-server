@@ -243,12 +243,13 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 														 		search criteria are ignored.
 													*/
 									&$return_array = null,	///< If this is supplied, then the result will be saved in this as an array. It must be an empty array, supplied by reference.
-								    &$return_geocode = null /**< If this is supplied, the response will be an associative array, with the search center and radius.
+								    &$return_geocode = null,    /**< If this is supplied, the response will be an associative array, with the search center and radius.
 								                                    It will return:
 								                                        - 'radius' The radius of the search, in Km
 								                                        - 'longitude' The longitude of the search center
 								                                        - 'latitude' Th latitude of the search center
-								                            */
+								                                */
+								    &$return_results = null ///< If supplied, should point to an array that will be filled with the actual meeting objects that comprise the result.
 								)
 {
 	$ret = null;
@@ -389,6 +390,11 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 		
 			$ret .= ',"'.join ( '","', $formats_keys_header ).'"'."\n";
 			$in_ar =& $page_data->GetSearchResultsAsArray ( );
+			
+			if ( isset ( $return_results ) && is_array ( $return_results ) )
+			    {
+			    $return_results = $in_ar;
+			    }
 			
 			foreach ( $in_ar as &$mtg_obj )
 				{

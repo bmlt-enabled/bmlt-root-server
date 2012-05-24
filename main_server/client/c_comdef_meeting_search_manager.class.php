@@ -1019,13 +1019,11 @@ class c_comdef_meeting_search_manager
 		// See if we need to make a new search. Only the root can do a new search.
 		if ( (null == $this->_my_root) && (true == $in_new_search) || (null == $this->_search_results) )
 			{
-			$this->ClearSearch();
-			
+			$this->_search_results = null;
+
 			// Basic error checking.
 			if ( $this->_my_server instanceof c_comdef_server )
 				{
-				$this->_search_results = null;
-				
 				// If we have an ID array, then we skip everything else, and just search for those IDs.
 				if ( is_array ( $this->_meeting_id_array ) && count ( $this->_meeting_id_array ) )
 					{
@@ -1111,7 +1109,6 @@ class c_comdef_meeting_search_manager
 					$search_rect = $this->GetSquareForRadius($weekdays);
 					
 					// Do the main database search first.
-					$this->_search_results = null;
 					$null_me = null;
 
 					$this->_search_results = c_comdef_server::GetMeetings (	$service_bodies,

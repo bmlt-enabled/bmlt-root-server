@@ -62,7 +62,8 @@ function parse_redirect (
 	switch ( $http_vars['switcher'] )
 		{
 		case 'GetSearchResults':
-			$result2 = GetSearchResults ( $http_vars );
+		    $formats_ar = array();
+			$result2 = GetSearchResults ( $http_vars, $formats_ar );
 			
 			if ( isset ( $http_vars['xml_data'] ) )
 				{
@@ -70,6 +71,20 @@ function parse_redirect (
 				$xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', $_SERVER['SERVER_NAME'].dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetSearchResults.php' ) );
 				$result .= "<meetings xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
 				$result .= TranslateToXML ( $result2 );
+				if ( $formats_ar && is_array ( $formats_ar ) && count ( $formats_ar ) )
+				    {
+                    $xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', $_SERVER['SERVER_NAME'].dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetFormats.php' ) );
+                    $result .= "<formats>";
+                    $lang = null;
+                    
+                    if ( isset ( $http_vars['lang_enum'] ) )
+                        {
+                        $lang = $http_vars['lang_enum'];
+                        }
+			        $result3 = GetFormats ( $server, $lang, $formats_ar );
+				    $result .= TranslateToXML ( $result3 );
+                    $result .= "</formats>";
+                    }
 				$result .= "</meetings>";
 				}
 			elseif ( isset ( $http_vars['json_data'] ) )
@@ -172,7 +187,8 @@ function parse_redirect (
 	\returns CSV data, with the first row a key header.
 */	
 function GetSearchResults ( 
-							$in_http_vars	///< The HTTP GET and POST parameters.
+							$in_http_vars,	///< The HTTP GET and POST parameters.
+							&$formats_ar    ///< This will return the formats used in this search.
 							)
 	{
 	if ( !( isset ( $in_http_vars['geo_width'] ) && $in_http_vars['geo_width'] ) && isset ( $in_http_vars['bmlt_search_type'] ) && ($in_http_vars['bmlt_search_type'] == 'advanced') && isset ( $in_http_vars['advanced_radius'] ) && isset ( $in_http_vars['advanced_mapmode'] ) && $in_http_vars['advanced_mapmode'] && ( floatval ( $in_http_vars['advanced_radius'] != 0.0 ) ) && isset ( $in_http_vars['lat_val'] ) &&	 isset ( $in_http_vars['long_val'] ) && ( (floatval ( $in_http_vars['lat_val'] ) != 0.0) || (floatval ( $in_http_vars['long_val'] ) != 0.0) ) )
@@ -195,7 +211,25 @@ function GetSearchResults (
 	require_once ( dirname ( __FILE__ ).'/../../client/html/search_results_csv.php' );
 	$geocode_results = null;
 	$ignore_me = null;
-	$result = DisplaySearchResultsCSV ( $in_http_vars, $ignore_me, $geocode_results );
+	$meeting_objects = array();
+	$result = DisplaySearchResultsCSV ( $in_http_vars, $ignore_me, $geocode_results, $meeting_objects );
+
+    if ( is_array ( $meeting_objects ) && count ( $meeting_objects ) && is_array ( $formats_ar ) )
+        {
+		foreach ( $meeting_objects as $one_meeting )
+		    {
+		    $formats = $one_meeting->GetMeetingDataValue('formats');
+		    
+            foreach ( $formats as $format )
+                {
+                if ( $format )
+                    {
+                    $formats_ar[$format->GetSharedID()] = $format;
+                    }
+                }
+		    }
+		}
+	
 	if ( isset ( $in_http_vars['data_field_key'] ) && $in_http_vars['data_field_key'] )
 		{
 		// At this point, we have everything in a CSV. We separate out just the field we want.
@@ -241,8 +275,9 @@ function GetSearchResults (
 	\returns CSV data, with the first row a key header.
 */	
 function GetFormats (	
-					&$server,		///< A reference to an instance of c_comdef_server
-					$in_lang = null ///< The language of the formats to be returned.
+					&$server,		    ///< A reference to an instance of c_comdef_server
+					$in_lang = null,    ///< The language of the formats to be returned.
+					$in_formats = null  //< If supplied, an already-fetched array of formats.
 					)
 	{
 	$my_keys = array (	'key_string',
@@ -280,7 +315,14 @@ function GetFormats (
 		$ret .= '"'.implode ( '","', $my_keys )."\"\n";
 		foreach ( $langs as $key => $value )
 			{
-			$format_array =	 $formats_obj->GetFormatsByLanguage ( $key );
+			if ( $in_formats )
+			    {
+			    $format_array =	 $formats_obj->GetFormatsByLanguage ( $key );
+			    }
+			else
+			    {
+			    $format_array = $in_formats;
+			    }
 			
 			if ( is_array ( $format_array ) && count ( $format_array ) )
 				{
