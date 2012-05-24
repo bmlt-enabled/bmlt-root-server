@@ -95,12 +95,28 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"; ?>
 								}
 ?>
 						</xs:sequence>
-						<xs:attribute name="id" use="required" type="xs:integer"/>
 					</xs:complexType>
 				</xs:element>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
+    <xs:element name="formats" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="row" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="key_string" type="xs:NCName"/>
+                            <xs:element name="name_string" type="xs:string"/>
+                            <xs:element name="description_string" type="xs:string"/>
+                            <xs:element name="lang" type="xs:NCName"/>
+                            <xs:element name="id" type="xs:integer"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 </xs:schema><?php
 	ob_end_flush();
 	}

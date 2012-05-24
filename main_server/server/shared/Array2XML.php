@@ -58,7 +58,7 @@ function array2xml(	$array,				///< The input array
 		{
 		if (is_array($child))
 			{
-			$output .= '<' . (is_string($root) ? htmlspecialchars($root) : $ArrayNumberPrefix .' id="' . $root . '"') . '>';
+			$output .= '<' . (is_string($root) ? htmlspecialchars($root) : $ArrayNumberPrefix) . '>';
 			$nested++;
 			$output .= array2xml($child, null, null, false);
 			$nested--;
