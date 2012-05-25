@@ -71,10 +71,19 @@ function parse_redirect (
 				$xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', $_SERVER['SERVER_NAME'].dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetSearchResults.php' ) );
 				$result .= "<meetings xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
 				$result .= TranslateToXML ( $result2 );
-				if ( isset ( $http_vars['get_used_formats'] ) && $formats_ar && is_array ( $formats_ar ) && count ( $formats_ar ) )
+				if ( (isset ( $http_vars['get_used_formats'] ) || isset ( $http_vars['get_formats_only'] )) && $formats_ar && is_array ( $formats_ar ) && count ( $formats_ar ) )
 				    {
-                    $xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', $_SERVER['SERVER_NAME'].dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetFormats.php' ) );
-                    $result .= "<formats>";
+                    if ( isset ( $http_vars['get_formats_only'] ) )
+                        {
+                        $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+                        $xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', $_SERVER['SERVER_NAME'].dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetFormats.php' ) );
+                        $result .= "<formats xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
+                        }
+                    else
+                        {
+                        $result .= "<formats>";
+                        }
+                    
                     $lang = null;
                     
                     if ( isset ( $http_vars['lang_enum'] ) )
@@ -90,7 +99,7 @@ function parse_redirect (
 			elseif ( isset ( $http_vars['json_data'] ) )
 				{
 				$result = TranslateToJSON ( $result2 );
-				if ( isset ( $http_vars['get_used_formats'] ) && $formats_ar && is_array ( $formats_ar ) && count ( $formats_ar ) )
+				if ( (isset ( $http_vars['get_used_formats'] ) || isset ( $http_vars['get_formats_only'] )) && $formats_ar && is_array ( $formats_ar ) && count ( $formats_ar ) )
 				    {
                     $lang = null;
                     
@@ -100,11 +109,23 @@ function parse_redirect (
                         }
                         
 			        $result2 = GetFormats ( $server, $lang, $formats_ar );
-				    $result = "{\"meetings\":$result,\"formats\":".TranslateToJSON ( $result2 )."}";
+				    $result = isset ( $http_vars['get_formats_only'] ) ? TranslateToJSON ( $result2 ) : "{\"meetings\":$result,\"formats\":".TranslateToJSON ( $result2 )."}";
                     }
 				}
 			else
 				{
+				if ( isset ( $http_vars['get_formats_only'] ) )
+				    {
+                    $lang = null;
+                    
+                    if ( isset ( $http_vars['lang_enum'] ) )
+                        {
+                        $lang = $http_vars['lang_enum'];
+                        }
+
+			        $result2 = GetFormats ( $server, $lang, $formats_ar );
+				    }
+				
 				$result = $result2;
 				}
 		break;
