@@ -3,10 +3,27 @@
 		\file napdf.class.php
 		
 		\brief This is the structural implementation of a PDF-printable list. It is meant to be a base for focused lists.
+        
+        This file is part of the Basic Meeting List Toolbox (BMLT).
+    
+        Find out more at: http://magshare.org/bmlt
+    
+        BMLT is free software: you can redistribute it and/or modify
+        it under the terms of the GNU General Public License as published by
+        the Free Software Foundation, either version 3 of the License, or
+        (at your option) any later version.
+    
+        BMLT is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU General Public License for more details.
+    
+        You should have received a copy of the GNU General Public License
+        along with this code.  If not, see <http://www.gnu.org/licenses/>.
 	*/
 
 	require_once ( dirname ( __FILE__ ).'/fpdf16/fpdf.php' );							///< This is the FPDF class, used to create the PDF.
-	require_once ( dirname ( __FILE__ ).'/../standalone/BMLT_Satellite.class.php' );	///< This is the class we use to communicate with the root server.
+	require_once ( dirname ( __FILE__ ).'/BMLT_Satellite_local.class.php' );	///< This is the class we use to communicate with the root server.
 	
 	/**
 		\brief This class sets up a boilerplate FPDF instance to be used to generate the PDF.
@@ -33,9 +50,9 @@
 			This loads the internal $meeting_data nested array, in which each meeting is one row, then an associative array of meeting data values.
 		*/
 		private function FetchCSV ( $in_http_vars = null	///< These contain alternatives to the $_GET and/or $_POST parameters. Default is null.
-						)
+									)
 			{
-			if ( $this->bmlt_instance instanceof BMLT_Satellite )
+			if ( $this->bmlt_instance instanceof BMLT_Satellite_local )
 				{
 				// First, we get the formats.
 				
@@ -52,9 +69,12 @@
 				$format_params['get_formats_only'] = 1;
 				
 				$format_data = $this->bmlt_instance->Execute ( 'csv', $format_params );
+				// First, we get the formats.
+
 				if ( $format_data )
 					{
 					$format_data_ar = explode ( "\n", $format_data );
+				
 					if ( is_array ( $format_data_ar ) && (count ( $format_data_ar ) > 1) )
 						{
 						$this->format_data = array();
@@ -88,6 +108,7 @@
 					}
 				// Next, we get the meetings.
 				$meeting_data = $this->bmlt_instance->Execute ( 'csv', $in_http_vars );
+				
 				if ( $meeting_data )
 					{
 					$meeting_data_ar = explode ( "\n", $meeting_data );
@@ -161,7 +182,7 @@
 			
 			if ( self::$fpdf_instance instanceof napdf )
 				{
-				if ( (self::$fpdf_instance->bmlt_instance instanceof BMLT_Satellite) && is_array ( self::$fpdf_instance->meeting_data ) )
+				if ( (self::$fpdf_instance->bmlt_instance instanceof BMLT_Satellite_local) && is_array ( self::$fpdf_instance->meeting_data ) )
 					{
 					if ( is_array ( $in_keys ) )
 						{
@@ -207,7 +228,9 @@
 				
 				self::$sort_order_keys = $in_keys;
 				
-				return usort ( $this->meeting_data, self::$sort_callback );
+				$callback_func = explode ( "::", self::$sort_callback );
+				
+				return usort ( $this->meeting_data, $callback_func );
 			}
 		
 		/**
@@ -337,10 +360,10 @@
 				$this->lang_search = $in_lang_search;
 				}
 			/* We use the static function to create the SINGLETON. */
-			$this->bmlt_instance = BMLT_Satellite::MakeBMLT ( true );	// Make a special CSV object.
+			$this->bmlt_instance = BMLT_Satellite_local::MakeBMLT ( true );	// Make a special CSV object.
 			
 			/* Quick sanity check. */
-			if ( !($this->bmlt_instance instanceof BMLT_Satellite) )
+			if ( !($this->bmlt_instance instanceof BMLT_Satellite_local) )
 				{
 				throw new Exception ( 'The BMLT object could not be created' );
 				}
