@@ -4,12 +4,6 @@
 	<div style="height:24px"></div>
 	<div style="height:80px;background-color: #0013d2;background-image:url(../images/DocHeader.gif);background-position:center top;background-repeat:no-repeat"></div>
 
-	\version 1.10 (Main Root Server)
-
-	\license This code is completely open and free. You may access it by
-	<a href="http://magshare.org/bmlt-the-basic-meeting-list-toolbox/">visiting the BMLT Project Site</a>.
-	It is not sold, and no money will come back to the original creator. It is a gift.
-
 	<h2>INTRODUCTION</h2>
 	
 	The Basic Meeting List Toolbox is a PHP framework that is designed to be the
