@@ -94,7 +94,7 @@ function parse_redirect (
 				    $result .= TranslateToXML ( $result3 );
                     $result .= "</formats>";
                     }
-				$result .= "</meetings>";
+				$result .= isset ( $http_vars['get_formats_only'] ) ? "" : "</meetings>";
 				}
 			elseif ( isset ( $http_vars['json_data'] ) )
 				{
