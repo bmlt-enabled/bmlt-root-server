@@ -297,7 +297,8 @@
 	<h2 id="docs_release_notes">RELEASE NOTES:</h2>
 	- - 1.10 Release
 	    - Removed the "Ag" code from the "primer" database, because it is a somewhat controversial format. However, it can easily be replaced by Service bodies that install the server.
-	
+	    - Created the ability for XML and JSON responses to return only the formats used in the meeting search.
+	    
 	- March 24, 2012 - 1.9 Release
 	    - Fixed a bug that did not apply localizations to PDF generation.
 	    - Fixed a bug in the Metaphone splitter (It was in rarely used code, and had been there forever).

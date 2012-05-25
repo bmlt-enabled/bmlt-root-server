@@ -71,7 +71,7 @@ function parse_redirect (
 				$xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', $_SERVER['SERVER_NAME'].dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetSearchResults.php' ) );
 				$result .= "<meetings xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
 				$result .= TranslateToXML ( $result2 );
-				if ( $formats_ar && is_array ( $formats_ar ) && count ( $formats_ar ) )
+				if ( isset ( $http_vars['get_used_formats'] ) && $formats_ar && is_array ( $formats_ar ) && count ( $formats_ar ) )
 				    {
                     $xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', $_SERVER['SERVER_NAME'].dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetFormats.php' ) );
                     $result .= "<formats>";
@@ -90,6 +90,18 @@ function parse_redirect (
 			elseif ( isset ( $http_vars['json_data'] ) )
 				{
 				$result = TranslateToJSON ( $result2 );
+				if ( isset ( $http_vars['get_used_formats'] ) && $formats_ar && is_array ( $formats_ar ) && count ( $formats_ar ) )
+				    {
+                    $lang = null;
+                    
+                    if ( isset ( $http_vars['lang_enum'] ) )
+                        {
+                        $lang = $http_vars['lang_enum'];
+                        }
+                        
+			        $result2 = GetFormats ( $server, $lang, $formats_ar );
+				    $result = "{\"meetings\":$result,\"formats\":".TranslateToJSON ( $result2 )."}";
+                    }
 				}
 			else
 				{
@@ -222,7 +234,7 @@ function GetSearchResults (
 		    
             foreach ( $formats as $format )
                 {
-                if ( $format )
+                if ( $format && ($format instanceof c_comdef_format) )
                     {
                     $formats_ar[$format->GetSharedID()] = $format;
                     }
@@ -317,11 +329,11 @@ function GetFormats (
 			{
 			if ( $in_formats )
 			    {
-			    $format_array =	 $formats_obj->GetFormatsByLanguage ( $key );
+			    $format_array = $in_formats;
 			    }
 			else
 			    {
-			    $format_array = $in_formats;
+			    $format_array =	 $formats_obj->GetFormatsByLanguage ( $key );
 			    }
 			
 			if ( is_array ( $format_array ) && count ( $format_array ) )
