@@ -51,14 +51,16 @@ function parse_redirect (
 	$result = null;
 	$http_vars = array_merge_recursive ( $_GET, $_POST );
 	
-	if ( !isset ( $http_vars['lang_enum'] ) || !$http_vars['lang_enum'] )
-		{
-		$http_vars['lang_enum'] = $server->GetLocalLang();
-		}
-	
 	// Just to be safe, we override any root passed in. We know where our root is, and we don't need to be told.
 	$http_vars['bmlt_root'] = 'http://'.$_SERVER['SERVER_NAME'].dirname ( $_SERVER['SCRIPT_NAME'] )."/../../";
 	
+    $langs = array ( $server->GetLocalLang() );
+    
+    if ( isset ( $http_vars['lang_enum'] ) && is_array ( $http_vars['lang_enum'] ) && count ( $http_vars['lang_enum'] ) )
+        {
+        $langs = $http_vars['lang_enum'];
+        }
+
 	switch ( $http_vars['switcher'] )
 		{
 		case 'GetSearchResults':
@@ -83,17 +85,12 @@ function parse_redirect (
                         {
                         $result .= "<formats>";
                         }
-                    
-                    $lang = null;
-                    
-                    if ( isset ( $http_vars['lang_enum'] ) )
-                        {
-                        $lang = $http_vars['lang_enum'];
-                        }
-			        $result3 = GetFormats ( $server, $lang, $formats_ar );
-				    $result .= TranslateToXML ( $result3 );
+                    $result3 = GetFormats ( $server, $langs, $formats_ar );
+                    $result .= TranslateToXML ( $result3 );
+				    
                     $result .= "</formats>";
                     }
+                
 				$result .= isset ( $http_vars['get_formats_only'] ) ? "" : "</meetings>";
 				}
 			elseif ( isset ( $http_vars['json_data'] ) )
@@ -101,13 +98,6 @@ function parse_redirect (
 				$result = TranslateToJSON ( $result2 );
 				if ( (isset ( $http_vars['get_used_formats'] ) || isset ( $http_vars['get_formats_only'] )) && $formats_ar && is_array ( $formats_ar ) && count ( $formats_ar ) )
 				    {
-                    $lang = null;
-                    
-                    if ( isset ( $http_vars['lang_enum'] ) )
-                        {
-                        $lang = $http_vars['lang_enum'];
-                        }
-                        
 			        $result2 = GetFormats ( $server, $lang, $formats_ar );
 				    $result = isset ( $http_vars['get_formats_only'] ) ? TranslateToJSON ( $result2 ) : "{\"meetings\":$result,\"formats\":".TranslateToJSON ( $result2 )."}";
                     }
@@ -116,14 +106,7 @@ function parse_redirect (
 				{
 				if ( isset ( $http_vars['get_formats_only'] ) )
 				    {
-                    $lang = null;
-                    
-                    if ( isset ( $http_vars['lang_enum'] ) )
-                        {
-                        $lang = $http_vars['lang_enum'];
-                        }
-
-			        $result2 = GetFormats ( $server, $lang, $formats_ar );
+			        $result2 = GetFormats ( $server, $langs, $formats_ar );
 				    }
 				
 				$result = $result2;
@@ -131,14 +114,7 @@ function parse_redirect (
 		break;
 		
 		case 'GetFormats':
-			$lang = null;
-			
-			if ( isset ( $http_vars['lang_enum'] ) )
-				{
-				$lang = $http_vars['lang_enum'];
-				}
-
-			$result2 = GetFormats ( $server, $lang );
+			$result2 = GetFormats ( $server, $langs );
 			
 			if ( isset ( $http_vars['xml_data'] ) )
 				{
@@ -252,12 +228,13 @@ function GetSearchResults (
 		foreach ( $meeting_objects as $one_meeting )
 		    {
 		    $formats = $one_meeting->GetMeetingDataValue('formats');
-		    
+
             foreach ( $formats as $format )
                 {
                 if ( $format && ($format instanceof c_comdef_format) )
                     {
-                    $formats_ar[$format->GetSharedID()] = $format;
+                    $format_shared_id = $format->GetSharedID();
+                    $formats_ar[$format_shared_id] = $format;
                     }
                 }
 		    }
@@ -327,7 +304,7 @@ function GetFormats (
 		{
 		$langs = $server->GetServerLangs();
 		
-		if ( is_array ( $in_lang ) && count ( $in_lang ) )
+		if ( isset ( $in_lang ) && is_array ( $in_lang ) && count ( $in_lang ) )
 			{
 			$langs2 = array();
 			foreach ( $in_lang as $key )
@@ -344,7 +321,7 @@ function GetFormats (
 			{
 			$langs = array ( $in_lang => $langs[$in_lang] );
 			}
-	
+
 		$ret .= '"'.implode ( '","', $my_keys )."\"\n";
 		foreach ( $langs as $key => $value )
 			{
@@ -363,42 +340,46 @@ function GetFormats (
 					{
 					if ( $format instanceof c_comdef_format )
 						{
-						$line = '';
-						foreach ( $my_keys as $ky )
-							{
-							if ( $line )
-								{
-								$line .= ',';
-								}
-							
-							$val = '';
-							
-							switch ( $ky )
-								{
-								case	'lang':
-									$val = $key;
-								break;
-								
-								case	'id':
-									$val = $format->GetSharedID();
-								break;
-								
-								case	'key_string':
-									$val = $format->GetKey();
-								break;
-								
-								case	'name_string':
-									$val = $format->GetLocalName();
-								break;
-								
-								case	'description_string':
-									$val = $format->GetLocalDescription();
-								break;
-								}
-							
-							$line .= '"'.str_replace ( '"', '\"', trim ( $val ) ).'"';
-							}
-						$ret .= "$line\n";
+						$localized_format = $server->GetOneFormat ( $format->GetSharedID(), $key );
+                        if ( $localized_format instanceof c_comdef_format )
+                            {
+                            $line = '';
+                            foreach ( $my_keys as $ky )
+                                {
+                                if ( $line )
+                                    {
+                                    $line .= ',';
+                                    }
+                                
+                                $val = '';
+                                
+                                switch ( $ky )
+                                    {
+                                    case	'lang':
+                                        $val = $key;
+                                    break;
+                                    
+                                    case	'id':
+                                        $val = $localized_format->GetSharedID();
+                                    break;
+                                    
+                                    case	'key_string':
+                                        $val = $localized_format->GetKey();
+                                    break;
+                                    
+                                    case	'name_string':
+                                        $val = $localized_format->GetLocalName();
+                                    break;
+                                    
+                                    case	'description_string':
+                                        $val = $localized_format->GetLocalDescription();
+                                    break;
+                                    }
+                                
+                                $line .= '"'.str_replace ( '"', '\"', trim ( $val ) ).'"';
+                                }
+                            $ret .= "$line\n";
+                            }
 						}
 					}
 				}
