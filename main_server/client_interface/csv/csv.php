@@ -98,7 +98,7 @@ function parse_redirect (
 				$result = TranslateToJSON ( $result2 );
 				if ( (isset ( $http_vars['get_used_formats'] ) || isset ( $http_vars['get_formats_only'] )) && $formats_ar && is_array ( $formats_ar ) && count ( $formats_ar ) )
 				    {
-			        $result2 = GetFormats ( $server, $lang, $formats_ar );
+			        $result2 = GetFormats ( $server, $langs, $formats_ar );
 				    $result = isset ( $http_vars['get_formats_only'] ) ? TranslateToJSON ( $result2 ) : "{\"meetings\":$result,\"formats\":".TranslateToJSON ( $result2 )."}";
                     }
 				}
