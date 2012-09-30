@@ -31,7 +31,7 @@ PHP 5.1 or above is required to establish a root server, and 5.0 or above for a 
 
 For more information about server requirements, see this page:
 
-    http://magshare.org/blog/is-your-server-set-up-correctly/
+    http://bmlt.magshare.net/advanced-topics/server-requirements/
  
 INSTALLATION
 ------------
@@ -42,10 +42,13 @@ satellites comprise the "client" part of the BMLT "client/server" architecture.
 
 For instructions on installing the root server, see this page:
 
-    http://magshare.org/blog/installing-the-root-server/
+    http://bmlt.magshare.net/root-server/
 
 CHANGELIST
 ----------
+= Version 1.10.1
+* The main change in this version is that the formats can be exported so that only the ones actually used in the search are given.
+
 = Version 1.9 =
 * March 24, 2012
 * Fixed a bug that did not apply localizations to PDF generation.
