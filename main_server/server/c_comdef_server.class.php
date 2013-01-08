@@ -1891,7 +1891,7 @@ class c_comdef_server
 					{
 					$dist = c_comdef_meetings::GetDistance ( $center_lat, $center_long, $meeting->GetMeetingDataValue('latitude'), $meeting->GetMeetingDataValue('longitude') );
 					$meeting->_distance_in_km = $dist;
-					$meeting->_distance_in_miles = $dist * 1.609344;
+					$meeting->_distance_in_miles = $dist / 1.609344;
 					$meeting->AddDataField ( 'distance_in_km', 'distance_in_km', $meeting->_distance_in_km );
 					$meeting->AddDataField ( 'distance_in_miles', 'distance_in_miles', $meeting->_distance_in_miles );
 					}

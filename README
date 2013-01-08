@@ -46,6 +46,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 1.10.2
+* January 8, 2013
+* The miles from search center value was incorrect (improper conversion from Km). This has been fixed.
+
 = Version 1.10.1
 * The main change in this version is that the formats can be exported so that only the ones actually used in the search are given.
 
