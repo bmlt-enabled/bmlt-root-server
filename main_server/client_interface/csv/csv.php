@@ -140,7 +140,7 @@ function parse_redirect (
 			if ( isset ( $http_vars['xml_data'] ) )
 				{
                 $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-				$xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', $_SERVER['SERVER_NAME'].dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetFormats.php' ) );
+				$xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', $_SERVER['SERVER_NAME'].dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetServiceBodies.php' ) );
 				$result .= "<formats xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
 				$result .= TranslateToXML ( $result2 );
 				$result .= "</formats>";
@@ -449,7 +449,7 @@ function GetServiceBodies   (
 		{
 		}
 
-	return implode ( "\r", $ret );
+	return implode ( "\n", $ret );
     }
 
 /*******************************************************************/
