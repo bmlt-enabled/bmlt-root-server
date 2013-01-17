@@ -707,7 +707,7 @@ function HandleDefault (
 						$in_http_vars	///< The HTTP GET and POST parameters.
 						)
 	{
-	return "You must supply one of the following: 'switcher=GetSearchResults', 'switcher=GetFormats' or 'switcher=GetChanges'";
+	return "You must supply one of the following: 'switcher=GetSearchResults', 'switcher=GetFormats', 'switcher=GetChanges' or 'switcher=GetServiceBodies'.";
 	}
 
 /*******************************************************************/
