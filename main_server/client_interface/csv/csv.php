@@ -134,6 +134,27 @@ function parse_redirect (
 				}
 		break;
 		
+		case 'GetServiceBodies':
+			$result2 = GetServiceBodies ( $server, $langs );
+			
+			if ( isset ( $http_vars['xml_data'] ) )
+				{
+                $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+				$xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', $_SERVER['SERVER_NAME'].dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetFormats.php' ) );
+				$result .= "<formats xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
+				$result .= TranslateToXML ( $result2 );
+				$result .= "</formats>";
+				}
+			elseif ( isset ( $http_vars['json_data'] ) )
+				{
+				$result = TranslateToJSON ( $result2 );
+				}
+			else
+				{
+				$result = $result2;
+				}
+		break;
+		
 		case 'GetChanges':
 			$start_date = null;
 			$end_date = null;
@@ -388,6 +409,48 @@ function GetFormats (
 	
 	return $ret;
 	}
+
+/*******************************************************************/
+/**
+	\brief	This returns the complete Service bodies table.
+	
+	\returns CSV data, with the first row a key header.
+*/	
+function GetServiceBodies   (	
+					        &$server		    ///< A reference to an instance of c_comdef_server
+					        )
+    {
+	$ret = array ();
+	$ret[0] = '"id","parent_id","name","description","url","world_id"';
+	
+	try
+		{
+        $array_obj =& $server->GetServiceBodyArray();
+        if ( is_array ( $array_obj ) && count ( $array_obj ) )
+            {
+            foreach ( $array_obj as &$sb )
+                {
+                if ( $sb instanceof c_comdef_service_body )
+                    {
+                    $row = array();
+                    $row[] = $sb->GetID();
+                    $row[] = $sb->GetOwnerID();
+                    $row[] = $sb->GetLocalName();
+                    $row[] = $sb->GetLocalDescription();
+                    $row[] = $sb->GetURI();
+                    $row[] = $sb->GetWorldID();
+                    $row = '"'.implode ('","', $row).'"';
+                    $ret[] = $row;
+                    }
+                }
+            }
+		}
+	catch ( Exception $e )
+		{
+		}
+
+	return implode ( "\r", $ret );
+    }
 
 /*******************************************************************/
 /**

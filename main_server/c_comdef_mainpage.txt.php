@@ -289,6 +289,9 @@
 	- Our ears are wide open. Please contact us at webmaster -at- magnaws.com if you find any vulnerabilities.
 	
 	<h2 id="docs_release_notes">RELEASE NOTES:</h2>
+	- January 16, 2013 - 1.10.3 Release
+	    - Added a "GetServiceBodies" variant to the semantic export.
+	    
 	- January 8, 2013 - 1.10.2 Release
 	    - The distance in miles was not being calculated correctly, which affected a couple of satellites. This has been fixed.
 	    
