@@ -231,7 +231,7 @@ CREATE TABLE IF NOT EXISTS `na_comdef_service_bodies` (
   KEY `sb_meeting_email` (`sb_meeting_email`),
   FULLTEXT KEY `name_string` (`name_string`),
   FULLTEXT KEY `description_string` (`description_string`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 INSERT INTO `na_comdef_service_bodies` (`id_bigint`, `name_string`, `description_string`, `lang_enum`, `worldid_mixed`, `kml_file_uri_string`, `principal_user_bigint`, `editors_string`, `uri_string`, `sb_type`, `sb_owner`, `sb_owner_2`, `sb_meeting_email`) VALUES
 (1, 'Initial Service Body', '', 'en', '', '', 2, '0', '', 'RS', 0, 0, '');
 CREATE TABLE IF NOT EXISTS `na_comdef_users` (
@@ -252,7 +252,7 @@ CREATE TABLE IF NOT EXISTS `na_comdef_users` (
   KEY `lang_enum` (`lang_enum`),
   FULLTEXT KEY `name_string` (`name_string`),
   FULLTEXT KEY `description_string` (`description_string`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 INSERT INTO `na_comdef_users` (`id_bigint`, `user_level_tinyint`, `name_string`, `description_string`, `email_address_string`, `login_string`, `password_string`, `last_access_datetime`, `lang_enum`) VALUES
 (1, 1, 'Server Administrator', '', '', '%ADMIN-LOGIN%', '%ADMIN-PW%', '0000-00-00 00:00:00', 'en'),
 (2, 2, 'First Service Body Admin', '', '', 'sb_admin', '%SB-ADMIN-PW%', '0000-00-00 00:00:00', 'en');
