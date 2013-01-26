@@ -17,6 +17,6 @@
     You should have received a copy of the GNU General Public License
     along with this code.  If not, see <http://www.gnu.org/licenses/>.
 */
-define ( 'BMLT_EXEC', 1 );
-include ( dirname ( __FILE__ ).'/local_server/index.php' );
+defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
+require_once ( dirname ( __FILE__ ).'/c_comdef_main_console.class.php' );
 ?>
