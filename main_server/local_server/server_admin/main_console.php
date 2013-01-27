@@ -18,5 +18,16 @@
     along with this code.  If not, see <http://www.gnu.org/licenses/>.
 */
 defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
-require_once ( dirname ( __FILE__ ).'/c_comdef_main_console.class.php' );
+require_once ( dirname ( __FILE__ ).'/c_comdef_admin_main_console.class.php' );
+
+$console_object = new c_comdef_admin_main_console($http_vars);
+
+$ret = 'ERROR';
+
+if ( $console_object instanceof c_comdef_admin_main_console )
+    {
+    $ret = $console_object->return_main_console_html();
+    }
+
+echo $ret;
 ?>

@@ -17,10 +17,15 @@
     You should have received a copy of the GNU General Public License
     along with this code.  If not, see <http://www.gnu.org/licenses/>.
 */
-global $http_vars;
 $http_vars = array_merge_recursive ( $_GET, $_POST );
 defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
-define ( '__DEBUG_MODE__', 1 ); // Uncomment to make the CSS and JavaScript easier to trace (and less efficient).
+
+if ( isset ( $http_vars ['bmlt_ajax_callback'] ) )
+    {
+    require_once ( dirname ( __FILE__ ).'/server_admin/c_comdef_admin_ajax_handler.class.php');
+    }
+else
+    {
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -37,27 +42,18 @@ define ( '__DEBUG_MODE__', 1 ); // Uncomment to make the CSS and JavaScript easi
                 include ( $config_file_path );
                 }
 
-            if ( !isset ( $theme ) || ! $theme )
-                {
-                $theme = 'default';
-                }
-
-            $shortcut_icon = "$url_path/themes/$theme/html/images/shortcut.png";
+            $shortcut_icon = "$url_path/local_server/server_admin/style/images/shortcut.png";
+            $stylesheet = "$url_path/local_server/server_admin/style".( defined( '__DEBUG_MODE__' ) ? '/' : '/style_stripper.php?filename=' )."styles.css";
             
             require_once ( dirname ( __FILE__ ).'/../server/shared/classes/comdef_utilityclasses.inc.php');
-
             require_once ( dirname ( __FILE__ ).'/../server/c_comdef_server.class.php');
+            
             DB_Connect_and_Upgrade ( );
 
             $server = c_comdef_server::MakeServer();
-
-            if ( $server instanceof c_comdef_server )
-                {
-                $localized_strings = c_comdef_server::GetLocalStrings();
-                }
 ?>
-		<link rel="SHORTCUT ICON" href="<?php echo c_comdef_htmlspecialchars ( $shortcut_icon ) ?>" />
-		<link rel="ICON" href="<?php echo c_comdef_htmlspecialchars ( $shortcut_icon ) ?>" />
+		<link rel="stylesheet" href="<?php echo c_comdef_htmlspecialchars ( $stylesheet ) ?>" />
+		<link rel="icon" href="<?php echo c_comdef_htmlspecialchars ( $shortcut_icon ) ?>" />
 		<title>Basic Meeting List Toolbox Administration Console</title>
 	</head>
 	<body class="admin_body">
@@ -85,6 +81,7 @@ define ( '__DEBUG_MODE__', 1 ); // Uncomment to make the CSS and JavaScript easi
 	</body>
 </html>
 <?php
+    }
 /**
 	\brief This function checks to make sure the database is correct for the current version.
 */

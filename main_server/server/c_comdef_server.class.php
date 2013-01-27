@@ -2395,6 +2395,7 @@ class c_comdef_server
                 $lang_enum = $in_lang_enum;
                 }
 			include ( dirname ( __FILE__ )."/config/comdef-config.inc.php" );
+            include ( dirname ( __FILE__ ).'/config/lang/'.$lang_enum.'/server_admin_strings.inc.php' );
             include ( dirname ( __FILE__ ).'/config/lang/'.$lang_enum.'/search_results_strings.inc.php' );
             include ( dirname ( __FILE__ ).'/config/lang/'.$lang_enum.'/search_admin_strings.inc.php' );
             include ( dirname ( __FILE__ ).'/config/lang/'.$lang_enum.'/change_desc.inc.php' );
@@ -2431,6 +2432,7 @@ class c_comdef_server
             c_comdef_server::$server_local_strings['number_of_meetings_for_auto'] = $number_of_meetings_for_auto;
             c_comdef_server::$server_local_strings['comdef_global_more_details_address'] = $comdef_global_more_details_address;
             c_comdef_server::$server_local_strings['comdef_global_list_address'] = $comdef_global_list_address;
+            c_comdef_server::$server_local_strings['comdef_server_admin_strings'] = $comdef_server_admin_strings;
             
             if ( trim($comdef_distance_units) )
                 {

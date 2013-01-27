@@ -1,0 +1,285 @@
+/*
+    This file is part of the Basic Meeting List Toolbox (BMLT).
+    
+    Find out more at: http://bmlt.magshare.org
+
+    BMLT is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    BMLT is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this code.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/* Generic Stuff */
+
+*
+{
+    margin:0;
+    padding: 0;
+}
+
+html,
+body
+{
+    width: 100%;
+    height: 100%;
+}
+
+body
+{
+    background-color:#009;
+}
+
+div.clear_both
+{
+    clear:both;
+    float:none;
+}
+
+.item_hidden
+{
+    display:none !important;
+}
+
+/* Used throughout */
+
+.bmlt_admin_med_label_left,
+.bmlt_admin_med_label_right,
+span.single_checkbox_span
+{
+    white-space:nowrap;
+    float:left;
+    margin-left:4px;
+    display:block;
+}
+
+div.bmlt_admin_one_line_in_a_form
+{
+    color: #009;
+    padding:2px;
+}
+
+.bmlt_admin_med_label_left,
+.bmlt_admin_med_label_right
+{
+    display:block;
+    font-weight:bold;
+}
+
+.bmlt_admin_med_checkbox_label_left
+{
+    font-weight:bold;
+    padding-left:0.25em;
+    padding-right:1em;
+}
+
+.bmlt_admin_med_label_right
+{
+    width:20em;
+    text-align:right;
+}
+
+.bmlt_admin_value_left,
+.bmlt_admin_med_label_left
+{
+    margin-left:0.25em;
+    text-align:left;
+}
+
+.bmlt_admin_value_left_div,
+.bmlt_admin_value_left
+{
+    display:block;
+    float:left;
+}
+
+.bmlt_admin_value_left
+{
+    font-style:italic;
+}
+
+input.bmlt_text_item
+{
+    width:32em;
+    color: #009;
+}
+
+textarea.bmlt_text_item
+{
+    width:32em;
+    height: 10em;
+    color: #009;
+}
+
+input.bmlt_text_item_dimmed,
+textarea.bmlt_text_item_dimmed
+{
+    color: #777;
+    font-style:italic;
+}
+
+/* These are buttons */
+
+a.bmlt_admin_ajax_button,
+a.bmlt_admin_ajax_button:visited
+{
+    display:block;
+    padding:2px;
+    padding-left:20px;
+    padding-right:20px;
+    border: 1px solid #009;
+    color: #009;
+    font-weight:bold;
+    font-style:normal;
+    font-size:large;
+    text-decoration:none;
+    background-color:white;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    cursor:default;
+}
+
+a.bmlt_admin_ajax_button:hover,
+a.bmlt_admin_ajax_button:active
+{
+    background-color:#009;
+    color:white;
+}
+
+a.button_disabled,
+a.button_disabled:visited,
+a.button_disabled:hover,
+a.button_disabled:active
+{
+    font-style:italic;
+    background-color:#999;
+    color:#ccc;
+}
+
+/* My Account and Meeting Editor Stuff */
+
+div.bmlt_admin_meeting_editor_banner_div,
+div.bmlt_admin_user_account_banner_div
+{
+    height: 1.8em;
+    padding:4px;
+    margin-bottom:4px;
+    border: 1px solid white;
+    background-color:white;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+}
+
+div.bmlt_admin_fader_div
+{
+    font-size:x-large;
+    font-weight:bold;
+    text-align:center;
+}
+
+span.success_text_span
+{
+    color:green;
+}
+
+span.failure_text_span
+{
+    color:red;
+}
+
+div.bmlt_admin_meeting_editor_disclosure_div,
+div.bmlt_admin_user_account_disclosure_div
+{
+    background-color: #009;
+    font-size: medium;
+    font-weight:bold;
+    padding:2px;
+}
+
+a.bmlt_admin_meeting_editor_disclosure_a,
+a.bmlt_admin_meeting_editor_disclosure_a:visited,
+a.bmlt_admin_user_account_disclosure_a,
+a.bmlt_admin_user_account_disclosure_a:visited
+{
+    display:block;
+    padding:2px;
+    padding-left:24px;
+    color:#99f;
+    text-decoration:underline;
+    background-repeat:no-repeat;
+    background-position:left;
+}
+
+a.bmlt_admin_meeting_editor_disclosure_a:hover,
+a.bmlt_admin_meeting_editor_disclosure_a:active,
+a.bmlt_admin_user_account_disclosure_a:hover,
+a.bmlt_admin_user_account_disclosure_a:active
+{
+    color:#f96;
+    text-decoration:none;
+}
+
+div.bmlt_admin_meeting_editor_disclosure_div_closed a,
+div.bmlt_admin_meeting_editor_disclosure_div_closed a:visited,
+div.bmlt_admin_user_account_disclosure_div_closed a,
+div.bmlt_admin_user_account_disclosure_div_closed a:visited
+{
+    background-image:url(images/invisible_disclosure.gif);
+}
+
+div.bmlt_admin_meeting_editor_disclosure_div_closed a:hover,
+div.bmlt_admin_meeting_editor_disclosure_div_closed a:active,
+div.bmlt_admin_user_account_disclosure_div_closed a:hover,
+div.bmlt_admin_user_account_disclosure_div_closed a:active
+{
+    background-image:url(images/invisible_disclosure_mouseover.gif);
+}
+
+div.bmlt_admin_meeting_editor_disclosure_div_open a,
+div.bmlt_admin_meeting_editor_disclosure_div_open a:visited,
+div.bmlt_admin_user_account_disclosure_div_open a,
+div.bmlt_admin_user_account_disclosure_div_open a:visited
+{
+    background-image:url(images/visible_disclosure.gif);
+}
+
+div.bmlt_admin_meeting_editor_disclosure_div_open a:hover,
+div.bmlt_admin_meeting_editor_disclosure_div_open a:active,
+div.bmlt_admin_user_account_disclosure_div_open a:hover,
+div.bmlt_admin_user_account_disclosure_div_open a:active
+{
+    background-image:url(images/visible_disclosure_mouseover.gif);
+}
+
+div.bmlt_admin_meeting_editor_wrapper_div,
+div.bmlt_admin_user_account_wrapper_div
+{
+    background-color: #009;
+    padding:4px;
+}
+
+div.bmlt_admin_meeting_editor_form_inner_div,
+div.bmlt_admin_user_account_edit_form_inner_div
+{
+    border: 1px solid white;
+    background-color:white;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+}
+
+div.bmlt_admin_meeting_editor_wrapper_div_hidden,
+div.bmlt_admin_user_account_wrapper_div_hidden
+{
+    display:none;
+}
+
