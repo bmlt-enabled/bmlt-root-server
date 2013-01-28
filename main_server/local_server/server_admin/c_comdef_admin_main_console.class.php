@@ -170,14 +170,82 @@ class c_comdef_admin_main_console
                     $ret .= $this->return_meeting_results_panel();
                 $ret .= '</div>';
             
-                if ( count ( $this->my_service_bodies ) > 1 )
-                    {
-                    $ret .= $this->return_meeting_service_body_selection_panel ();
-                    }
                 $ret .= '<div class="clear_both"></div>';
             $ret .= '</div>';
             }
         
+        return $ret;
+    }
+
+    /********************************************************************************************************//**
+    \brief This constructs the meeting search specification panel of the meeting editor.
+    \returns The HTML and JavaScript for the Edit Meetings Search Specifier section.
+    ************************************************************************************************************/
+    function return_meeting_specification_panel ()
+    {
+        $ret = '<div id="bmlt_admin_meeting_editor_form_specifier_div" class="bmlt_admin_meeting_editor_form_specifier_div">';
+            $ret .='<form class="bmlt_admin_meeting_editor_specifier_form" action="">';
+                $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                    $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_text_input_label'] ).'</span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input name="bmlt_admin_text_specifier_input" id="bmlt_admin_text_specifier_input" type="text" value="'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_text_input_default_text'] ).'" onkeyup="admin_handler_object.handleTextInputChange(this);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
+                    $ret .= '<script type="text/javascript">admin_handler_object.handleTextInputLoad(document.getElementById(\'bmlt_admin_text_specifier_input\'),\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_text_input_default_text'] ).'\');</script>';
+                $ret .= '</div>';
+                $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                    $ret .= '<span class="bmlt_admin_med_label_right"><input type="checkbox" id="bmlt_admin_meeting_search_text_is_a_location_checkbox" /></span>';
+                    $ret .= '<label class="bmlt_admin_med_label_left" for="bmlt_admin_meeting_search_text_is_a_location_checkbox">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_text_location_label'] ).'</label>';
+                $ret .= '</div>';
+                $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                    $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_search_weekdays_label'] ).'</span>';
+                    $ret .= '<div class="bmlt_admin_value_left_div">';
+                        for ( $c = 0; $c < 8; $c++ )
+                            {
+                            $ret .= '<span class="single_checkbox_span">';
+                                $ret .= '<input checked="checked" type="checkbox"'.($c == 0 ? ' checked="checked"' : '').' id="bmlt_admin_meeting_search_weekday_checkbox_'.$c.'" onchange="admin_handler_object.handleWeekdayCheckBoxChanges('.$c.')" />';
+                                $ret .= '<label class="bmlt_admin_med_checkbox_label_left" for="bmlt_admin_meeting_search_weekday_checkbox_'.$c.'">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_search_weekdays_names'][$c] ).'</label>';
+                            $ret .= '</span>';
+                            }
+                    $ret .= '</div>';
+                $ret .= '</div>';
+                $ret .= $this->return_meeting_start_time_selection_panel ();
+                if ( count ( $this->my_service_bodies ) > 1 )
+                    {
+                    $ret .= $this->return_meeting_service_body_selection_panel ();
+                    }
+            $ret .= '</form>';
+            $ret .= '<div class="clear_both"></div>';
+        $ret .= '</div>';
+        
+        return $ret;
+    }
+    
+    /********************************************************************************************************//**
+    \brief This constructs a panel that displays a choice of Service bodies for the user to choose.
+    \returns The HTML and JavaScript for the Edit Meetings Search Specifier section.
+    ************************************************************************************************************/
+    function return_meeting_start_time_selection_panel ()
+    {
+        $ret = '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+            $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_search_start_time_label'] ).'</span>';
+            $ret .= '<div class="bmlt_admin_value_left_div">';
+                $ret .= '<span class="single_checkbox_span">';
+                    $ret .= '<input type="radio" name="bmlt_admin_meeting_search_start_time_radiogroup" checked="checked" id="bmlt_admin_meeting_search_start_time_all_checkbox" />';
+                    $ret .= '<label class="bmlt_admin_med_checkbox_label_left" for="bmlt_admin_meeting_search_start_time_all_checkbox">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_search_start_time_all_label'] ).'</label>';
+                $ret .= '</span>';
+                $ret .= '<span class="single_checkbox_span">';
+                    $ret .= '<input type="radio" name="bmlt_admin_meeting_search_start_time_radiogroup" id="bmlt_admin_meeting_search_start_time_morn_checkbox" />';
+                    $ret .= '<label class="bmlt_admin_med_checkbox_label_left" for="bmlt_admin_meeting_search_start_time_morn_checkbox">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_search_start_time_morn_label'] ).'</label>';
+                $ret .= '</span>';
+                $ret .= '<span class="single_checkbox_span">';
+                    $ret .= '<input type="radio" name="bmlt_admin_meeting_search_start_time_radiogroup" id="bmlt_admin_meeting_search_start_time_aft_checkbox" />';
+                    $ret .= '<label class="bmlt_admin_med_checkbox_label_left" for="bmlt_admin_meeting_search_start_time_aft_checkbox">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_search_start_time_aft_label'] ).'</label>';
+                $ret .= '</span>';
+                $ret .= '<span class="single_checkbox_span">';
+                    $ret .= '<input type="radio" name="bmlt_admin_meeting_search_start_time_radiogroup" id="bmlt_admin_meeting_search_start_time_eve_checkbox" />';
+                    $ret .= '<label class="bmlt_admin_med_checkbox_label_left" for="bmlt_admin_meeting_search_start_time_eve_checkbox">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_search_start_time_eve_label'] ).'</label>';
+                $ret .= '</span>';
+            $ret .= '</div>';
+        $ret .= '</div>';
+
         return $ret;
     }
     
@@ -191,9 +259,12 @@ class c_comdef_admin_main_console
         
         if ( count ( $this->my_service_bodies ) )
             {
-            $ret = '<div id="bmlt_admin_meeting_editor_service_div" class="bmlt_admin_meeting_editor_service_div">';
-                $ret .= $this->populate_service_bodies(0);
-                $ret .= '<div class="clear_both"></div>';
+            $ret = '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_search_service_bodies_label'] ).'</span>';
+                $ret .= '<div id="bmlt_admin_meeting_editor_service_div" class="bmlt_admin_meeting_editor_service_div">';
+                    $ret .= $this->populate_service_bodies(0);
+                    $ret .= '<div class="clear_both"></div>';
+                $ret .= '</div>';
             $ret .= '</div>';
             }
         
@@ -229,7 +300,7 @@ class c_comdef_admin_main_console
                 
                 $ret .= '<dt class="service_body_dt'.($r != '' ? ' service_body_parent_dt' : '').'">';
                     $ret .= '<span class="single_checkbox_span">';
-                        $ret .= '<input type="checkbox" id="bmlt_admin_meeting_search_service_body_checkbox_'.$id.'" onchange="admin_handler_object.handleServiceCheckBoxChanges('.$id.')" />';
+                        $ret .= '<input type="checkbox" checked="checked" id="bmlt_admin_meeting_search_service_body_checkbox_'.$id.'" onchange="admin_handler_object.handleServiceCheckBoxChanges('.$id.')" />';
                         $ret .= '<label class="bmlt_admin_med_checkbox_label_left" for="bmlt_admin_meeting_search_service_body_checkbox_'.$id.'">'.htmlspecialchars ( $service_body->GetLocalName() ).'</label>';
                     $ret .= '</span>';
                 $ret .= '</dt>';
@@ -262,42 +333,6 @@ class c_comdef_admin_main_console
             {
             $ret = '';
             }
-        
-        return $ret;
-    }
-
-    /********************************************************************************************************//**
-    \brief This constructs the meeting search specification panel of the meeting editor.
-    \returns The HTML and JavaScript for the Edit Meetings Search Specifier section.
-    ************************************************************************************************************/
-    function return_meeting_specification_panel ()
-    {
-        $ret = '<div id="bmlt_admin_meeting_editor_form_specifier_div" class="bmlt_admin_meeting_editor_form_specifier_div">';
-            $ret .='<form class="bmlt_admin_meeting_editor_specifier_form" action="">';
-                $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
-                    $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_text_input_label'] ).'</span>';
-                    $ret .= '<span class="bmlt_admin_value_left"><input name="bmlt_admin_text_specifier_input" id="bmlt_admin_text_specifier_input" type="text" value="'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_text_input_default_text'] ).'" onkeyup="admin_handler_object.handleTextInputChange(this);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
-                    $ret .= '<script type="text/javascript">admin_handler_object.handleTextInputLoad(document.getElementById(\'bmlt_admin_text_specifier_input\'),\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_text_input_default_text'] ).'\');</script>';
-                $ret .= '</div>';
-                $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
-                    $ret .= '<span class="bmlt_admin_med_label_right"><input type="checkbox" id="bmlt_admin_meeting_search_text_is_a_location_checkbox" /></span>';
-                    $ret .= '<label class="bmlt_admin_med_label_left" for="bmlt_admin_meeting_search_text_is_a_location_checkbox">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_text_location_label'] ).'</label>';
-                $ret .= '</div>';
-                $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
-                    $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_search_weekdays_label'] ).'</span>';
-                    $ret .= '<div class="bmlt_admin_value_left_div">';
-                        for ( $c = 0; $c < 8; $c++ )
-                            {
-                            $ret .= '<span class="single_checkbox_span">';
-                                $ret .= '<input type="checkbox"'.($c == 0 ? ' checked="checked"' : '').' id="bmlt_admin_meeting_search_weekday_checkbox_'.$c.'" onchange="admin_handler_object.handleWeekdayCheckBoxChanges('.$c.')" />';
-                                $ret .= '<label class="bmlt_admin_med_checkbox_label_left" for="bmlt_admin_meeting_search_weekday_checkbox_'.$c.'">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_search_weekdays_names'][$c] ).'</label>';
-                            $ret .= '</span>';
-                            }
-                    $ret .= '</div>';
-                $ret .= '</div>';
-            $ret .= '</form>';
-            $ret .= '<div class="clear_both"></div>';
-        $ret .= '</div>';
         
         return $ret;
     }
@@ -352,6 +387,20 @@ class c_comdef_admin_main_console
                     $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                         $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['account_type_label'] ).'</span>';
                         $ret .= '<span class="bmlt_admin_value_left">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['account_type_'.$this->my_user->GetUserLevel()] ).'</span>';
+                    $ret .= '</div>';
+                    $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                        $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['access_service_body_label'] ).'</span>';
+                        $ret .= '<span class="bmlt_admin_value_left">';
+                            for ( $c = 0; $c < count ( $this->my_service_bodies ); $c++ )
+                                {
+                                $ret .= htmlspecialchars ( $this->my_service_bodies[$c]->GetLocalName() );
+                                
+                                if ( $c < (count ( $this->my_service_bodies ) - 1) )
+                                    {
+                                    $ret .= ',<br />';
+                                    }
+                                }
+                        $ret .= '</span>';
                     $ret .= '</div>';
                     $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                         $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['account_email_label'] ).'</span>';

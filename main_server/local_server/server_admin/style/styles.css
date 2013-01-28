@@ -270,8 +270,7 @@ div.bmlt_admin_user_account_wrapper_div
 }
 
 div.bmlt_admin_meeting_editor_form_inner_div,
-div.bmlt_admin_user_account_edit_form_inner_div,
-div.bmlt_admin_meeting_editor_service_div
+div.bmlt_admin_user_account_edit_form_inner_div
 {
     border: 1px solid white;
     background-color:white;
@@ -286,6 +285,16 @@ div.bmlt_admin_user_account_wrapper_div_hidden
     display:none;
 }
 
+div.bmlt_admin_meeting_editor_service_div
+{
+    float:left;
+}
+
+dl.service_body_dl
+{
+    color: #009;
+}
+
 dl.service_body_dl,
 dt.service_body_dt,
 dd.bmlt_admin_service_body_child_dd
@@ -294,7 +303,6 @@ dd.bmlt_admin_service_body_child_dd
     clear:both;
 }
 
-dl.service_body_dl,
 dd.bmlt_admin_service_body_child_dd
 {
     margin-left:2em;
@@ -302,10 +310,10 @@ dd.bmlt_admin_service_body_child_dd
 
 dt.service_body_dt label.bmlt_admin_med_checkbox_label_left
 {
-    font-weight:medium;
+    font-weight:normal;
 }
 
-dt.service_body_parent_dt
+dt.service_body_parent_dt label.bmlt_admin_med_checkbox_label_left
 {
     font-weight:bold;
 }

@@ -366,6 +366,14 @@ function BMLT_Server_Admin ()
                 weekday_checkboxes[c].checked = false;
                 };
             };
+            
+        if ( all_checkbox.checked )
+            {
+            for ( var c = 0; c < 7; c++ )
+                {
+                weekday_checkboxes[c].checked = true;
+                };
+            };
     };
     
     /************************************************************************************//**
