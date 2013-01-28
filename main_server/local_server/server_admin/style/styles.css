@@ -169,8 +169,7 @@ a.button_disabled:active
 /* My Account and Meeting Editor Stuff */
 
 div.bmlt_admin_meeting_editor_banner_div,
-div.bmlt_admin_user_account_banner_div,
-div.bmlt_admin_meeting_editor_service_div
+div.bmlt_admin_user_account_banner_div
 {
     height: 1.8em;
     padding:4px;
@@ -271,7 +270,8 @@ div.bmlt_admin_user_account_wrapper_div
 }
 
 div.bmlt_admin_meeting_editor_form_inner_div,
-div.bmlt_admin_user_account_edit_form_inner_div
+div.bmlt_admin_user_account_edit_form_inner_div,
+div.bmlt_admin_meeting_editor_service_div
 {
     border: 1px solid white;
     background-color:white;
@@ -292,5 +292,20 @@ dd.bmlt_admin_service_body_child_dd
 {
     float:none;
     clear:both;
+}
+
+dl.service_body_dl,
+dd.bmlt_admin_service_body_child_dd
+{
     margin-left:2em;
+}
+
+dt.service_body_dt label.bmlt_admin_med_checkbox_label_left
+{
+    font-weight:medium;
+}
+
+dt.service_body_parent_dt
+{
+    font-weight:bold;
 }

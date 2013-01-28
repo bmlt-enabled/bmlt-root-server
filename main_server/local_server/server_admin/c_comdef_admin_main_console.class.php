@@ -74,7 +74,38 @@ class c_comdef_admin_main_console
             // We actually include the JS directly into the HTML. This gives us a lot more flexibility as to how we deploy and gatekeep this file.
             $ret .= '<script type="text/javascript">';
                 $ret .= 'var g_ajax_callback_uri = \''.htmlspecialchars ( $this->my_ajax_uri ).'\';';
+                if ( defined ( '__DEBUG_MODE__' ) )
+                    {
+                    $ret .= "\n";
+                    }
                 $ret .= 'var g_current_user_id = \''.htmlspecialchars ( $this->my_user->GetID() ).'\';';
+                if ( defined ( '__DEBUG_MODE__' ) )
+                    {
+                    $ret .= "\n";
+                    }
+                $ret .= 'var g_service_bodies_array = [';
+                    for ( $c = 0; $c < count ( $this->my_service_bodies ); $c++ )
+                        {
+                        $ret .= '[';
+                        $service_body = $this->my_service_bodies[$c];
+                        $ret .= $service_body->GetID().',';
+                        $ret .= $service_body->GetOwnerID().',';
+                        $ret .= '\''.htmlspecialchars ( $service_body->GetLocalName() ).'\'';
+                        $ret .=']';
+                        if ( $c < (count ( $this->my_service_bodies ) - 1) )
+                            {
+                            $ret .= ',';
+                            }
+                        if ( defined ( '__DEBUG_MODE__' ) )
+                            {
+                            $ret .= "\n";
+                            }
+                        }
+                $ret .= '];';
+                if ( defined ( '__DEBUG_MODE__' ) )
+                    {
+                    $ret .= "\n";
+                    }
                 $ret .= file_get_contents ( dirname ( __FILE__ ).(defined('__DEBUG_MODE__') ? '/' : '/js_stripper.php?filename=' ).'server_admin_javascript.js' );
             
             if ( defined('__DEBUG_MODE__') )
@@ -175,38 +206,61 @@ class c_comdef_admin_main_console
     function populate_service_bodies (  $in_owner_id    ///< The ID of the "owner" Service body.
                                       )
     {
-        $ret = '';
+        $has_content = false;
+        
+        $ret = '<dl class="service_body_dl">';
+        
+        if ( defined ( '__DEBUG_MODE__' ) )
+            {
+            $ret .= "\n";
+            }
         
         for ( $c = 0; $c < count ( $this->my_service_bodies ); $c++ )
             {
-            if ( $in_owner_id == $this->my_service_bodies[$c]->GetOwnerID() )
+            $service_body = $this->my_service_bodies[$c];
+            
+            if ( $in_owner_id == $service_body->GetOwnerID() )
                 {
-                if ( !$ret )
-                    {
-                    $ret = '<dl class="service_body_dl">';
-                    }
+                $id = $service_body->GetID();
                 
-                $r = $this->populate_service_bodies($this->my_service_bodies[$c]->GetID());
+                $has_content = true;
                 
-                $ret .= '<dt class="service_body_dt">';
+                $r = $this->populate_service_bodies($id);
+                
+                $ret .= '<dt class="service_body_dt'.($r != '' ? ' service_body_parent_dt' : '').'">';
                     $ret .= '<span class="single_checkbox_span">';
-                        $ret .= '<input type="checkbox" id="bmlt_admin_meeting_search_service_body_checkbox_'.$this->my_service_bodies[$c]->GetID().'" onchange="admin_handler_object.handleServiceCheckBoxChanges('.$this->my_service_bodies[$c]->GetID().')" />';
-                        $ret .= '<label class="bmlt_admin_med_checkbox_label_left'.($r != '' ? ' service_body_parent_dt' : '').'" for="bmlt_admin_meeting_search_weekday_checkbox_'.$this->my_service_bodies[$c]->GetID().'">'.htmlspecialchars ( $this->my_service_bodies[$c]->GetLocalName() ).'</label>';
+                        $ret .= '<input type="checkbox" id="bmlt_admin_meeting_search_service_body_checkbox_'.$id.'" onchange="admin_handler_object.handleServiceCheckBoxChanges('.$id.')" />';
+                        $ret .= '<label class="bmlt_admin_med_checkbox_label_left" for="bmlt_admin_meeting_search_service_body_checkbox_'.$id.'">'.htmlspecialchars ( $service_body->GetLocalName() ).'</label>';
                     $ret .= '</span>';
-                    $ret .= '<div class="clear_both"></div>';
                 $ret .= '</dt>';
                 
-                if ( $r )
+                if ( defined ( '__DEBUG_MODE__' ) )
                     {
-                    $ret .= '<dd class="bmlt_admin_service_body_child_dd>'.$r.'</dd>';
+                    $ret .= "\n";
+                    }
+                
+                if ( $r != '' )
+                    {
+                    $ret .= '<dd class="bmlt_admin_service_body_child_dd">'.$r.'</dd>';
+                    if ( defined ( '__DEBUG_MODE__' ) )
+                        {
+                        $ret .= "\n";
+                        }
                     }
                 }
             }
         
-        if ( $ret )
+        if ( $has_content )
             {
-            $ret .= '<div class="clear_both"></div>';
             $ret .= '</dl>';
+            if ( defined ( '__DEBUG_MODE__' ) )
+                {
+                $ret .= "\n";
+                }
+            }
+        else
+            {
+            $ret = '';
             }
         
         return $ret;

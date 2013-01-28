@@ -369,6 +369,95 @@ function BMLT_Server_Admin ()
     };
     
     /************************************************************************************//**
+    *   \brief  This handles Service body checkboxes.                                       *
+    ****************************************************************************************/
+    this.handleServiceCheckBoxChanges = function(   in_service_body_id ///< The checkbox that triggered the call.
+                                                )
+    {
+        var the_checkbox = document.getElementById ( 'bmlt_admin_meeting_search_service_body_checkbox_' + in_service_body_id );
+        
+        if ( the_checkbox )
+            {
+            var my_children = this.getServiceBodyChildren(in_service_body_id);
+        
+            for ( var c = 0; my_children && (c < my_children.length); c++ )
+                {
+                var child_id = my_children[c][0];
+                var child_checkbox = document.getElementById ( 'bmlt_admin_meeting_search_service_body_checkbox_' + child_id );
+                if ( child_checkbox )
+                    {
+                    child_checkbox.checked = the_checkbox.checked;
+                    this.handleServiceCheckBoxChanges ( child_id );
+                    };
+                };
+            };
+    };
+    
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.getServiceBodyParentID = function( in_service_body_id 
+                                            )
+    {
+        var the_object = null;
+        
+        for ( var c = 0; c < g_service_bodies_array.length; c++ )
+            {
+            if ( g_service_bodies_array[c][0] == in_service_body_id )
+                {
+                the_object = g_service_bodies_array[c];
+                break;
+                };
+            };
+        
+        return the_object[1];
+    };
+    
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.getServiceBodyChildren = function( in_service_body_id 
+                                            )
+    {
+        var ret_array = null;
+        
+        for ( var c = 0; c < g_service_bodies_array.length; c++ )
+            {
+            if ( this.getServiceBodyParentID(g_service_bodies_array[c][0]) == in_service_body_id )
+                {
+                if ( ! ret_array )
+                    {
+                    ret_array = new Array();
+                    };
+                
+                ret_array[ret_array.length] = g_service_bodies_array[c];
+                };
+            };
+        
+        return ret_array;
+    };
+    
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.getServiceBodyName = function( in_service_body_id 
+                                        )
+    {
+        var the_object = null;
+        
+        for ( var c = 0; c < g_service_bodies_array.length; c++ )
+            {
+            if ( g_service_bodies_array[c][0] == in_service_body_id )
+                {
+                the_object = g_service_bodies_array[c];
+                break;
+                };
+            };
+        
+        return the_object[2];
+    };
+    
+    /************************************************************************************//**
     *   \brief  Displays the Search Specifier, and hides any search results.                *
     ****************************************************************************************/
     this.showSearchSpecifier = function()
