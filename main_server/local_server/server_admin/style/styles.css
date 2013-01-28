@@ -37,6 +37,8 @@ body
     background-color:#009;
 }
 
+dt.service_body_dt,
+dd.bmlt_admin_service_body_child_dd,
 div.clear_both
 {
     clear:both;
@@ -167,7 +169,8 @@ a.button_disabled:active
 /* My Account and Meeting Editor Stuff */
 
 div.bmlt_admin_meeting_editor_banner_div,
-div.bmlt_admin_user_account_banner_div
+div.bmlt_admin_user_account_banner_div,
+div.bmlt_admin_meeting_editor_service_div
 {
     height: 1.8em;
     padding:4px;
@@ -283,3 +286,11 @@ div.bmlt_admin_user_account_wrapper_div_hidden
     display:none;
 }
 
+dl.service_body_dl,
+dt.service_body_dt,
+dd.bmlt_admin_service_body_child_dd
+{
+    float:none;
+    clear:both;
+    margin-left:2em;
+}

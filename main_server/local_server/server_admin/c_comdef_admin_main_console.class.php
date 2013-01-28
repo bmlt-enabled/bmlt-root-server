@@ -137,13 +137,13 @@ class c_comdef_admin_main_console
                 $ret .='<div class="bmlt_admin_meeting_editor_form_inner_div" action="">';
                     $ret .= $this->return_meeting_specification_panel();
                     $ret .= $this->return_meeting_results_panel();
-                    $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
             
                 if ( count ( $this->my_service_bodies ) > 1 )
                     {
                     $ret .= $this->return_meeting_service_body_selection_panel ();
                     }
+                $ret .= '<div class="clear_both"></div>';
             $ret .= '</div>';
             }
         
@@ -161,12 +161,57 @@ class c_comdef_admin_main_console
         if ( count ( $this->my_service_bodies ) )
             {
             $ret = '<div id="bmlt_admin_meeting_editor_service_div" class="bmlt_admin_meeting_editor_service_div">';
+                $ret .= $this->populate_service_bodies(0);
+                $ret .= '<div class="clear_both"></div>';
             $ret .= '</div>';
             }
         
         return $ret;
     }
-    
+        
+    /************************************************************************************//**
+    *	\brief Build the content for the Advanced Service Bodies section.                   *
+    ****************************************************************************************/
+    function populate_service_bodies (  $in_owner_id    ///< The ID of the "owner" Service body.
+                                      )
+    {
+        $ret = '';
+        
+        for ( $c = 0; $c < count ( $this->my_service_bodies ); $c++ )
+            {
+            if ( $in_owner_id == $this->my_service_bodies[$c]->GetOwnerID() )
+                {
+                if ( !$ret )
+                    {
+                    $ret = '<dl class="service_body_dl">';
+                    }
+                
+                $r = $this->populate_service_bodies($this->my_service_bodies[$c]->GetID());
+                
+                $ret .= '<dt class="service_body_dt">';
+                    $ret .= '<span class="single_checkbox_span">';
+                        $ret .= '<input type="checkbox" id="bmlt_admin_meeting_search_service_body_checkbox_'.$this->my_service_bodies[$c]->GetID().'" onchange="admin_handler_object.handleServiceCheckBoxChanges('.$this->my_service_bodies[$c]->GetID().')" />';
+                        $ret .= '<label class="bmlt_admin_med_checkbox_label_left'.($r != '' ? ' service_body_parent_dt' : '').'" for="bmlt_admin_meeting_search_weekday_checkbox_'.$this->my_service_bodies[$c]->GetID().'">'.htmlspecialchars ( $this->my_service_bodies[$c]->GetLocalName() ).'</label>';
+                    $ret .= '</span>';
+                    $ret .= '<div class="clear_both"></div>';
+                $ret .= '</dt>';
+                
+                if ( $r )
+                    {
+                    $ret .= '<dd class="bmlt_admin_service_body_child_dd>'.$r.'</dd>';
+                    }
+                }
+            }
+        
+        if ( $ret )
+            {
+            $ret .= '<div class="clear_both"></div>';
+            $ret .= '</dl>';
+            }
+        
+        return $ret;
+    }
+
     /********************************************************************************************************//**
     \brief This constructs the meeting search specification panel of the meeting editor.
     \returns The HTML and JavaScript for the Edit Meetings Search Specifier section.
@@ -197,6 +242,7 @@ class c_comdef_admin_main_console
                     $ret .= '</div>';
                 $ret .= '</div>';
             $ret .= '</form>';
+            $ret .= '<div class="clear_both"></div>';
         $ret .= '</div>';
         
         return $ret;
