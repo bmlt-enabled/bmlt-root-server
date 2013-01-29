@@ -624,36 +624,8 @@ function BMLT_Admin_StartFader( in_eid,         ///< The element ID to be faded.
         {
         in_element.className = 'bmlt_admin_fader_div';
         in_element.FadeTimeTotal = in_fade_time;
-        if ( in_element.FadeState == null )
-            {
-            if ( in_element.style.opacity == null 
-                || in_element.style.opacity == '' 
-                || in_element.style.opacity == '1' )
-                {
-                in_element.FadeState = 2;
-                }
-            else
-                {
-                in_element.FadeState = -2;
-                };
-            };
-        
-        if ( in_element.FadeState == 1 || in_element.FadeState == -1 )
-            {
-            in_element.FadeState = element.FadeState == 1 ? -1 : 1;
-            in_element.FadeTimeLeft = in_element.FadeTimeTotal - in_element.FadeTimeLeft;
-            }
-        else
-            {
-            in_element.FadeState = in_element.FadeState == 2 ? -1 : 1;
-            in_element.FadeTimeLeft = in_element.FadeTimeTotal;
-            setTimeout ( "BMLT_Admin_animateFade(" + new Date().getTime() + ",'" + in_eid + "')", 33);
-            };
-            
-        if ( in_element.FadeTimeLeft <= 0.0 )
-            {
-            in_element.className = 'bmlt_admin_fader_div item_hidden';
-            };
+        in_element.FadeTimeLeft = in_element.FadeTimeTotal;
+        setTimeout ( "BMLT_Admin_animateFade(" + new Date().getTime() + ",'" + in_eid + "')", 33);
         };
 };
 
@@ -675,20 +647,18 @@ function BMLT_Admin_animateFade (   lastTick,       ///< The time of the last ti
     
         if ( in_element.FadeTimeLeft <= elapsedTicks )
             {
-            in_element.style.opacity = in_element.FadeState == 1 ? '1' : '0';
-            in_element.style.filter = 'alpha(opacity = ' + (in_element.FadeState == 1 ? '100' : '0') + ')';
-            in_element.FadeState = in_element.FadeState == 1 ? 2 : -2;
+            in_element.className = 'bmlt_admin_fader_div item_hidden';
+            in_element.FadeTimeTotal = null;
+            in_element.FadeTimeLeft = null;
+            in_element.FadeState = null;
+            in_element.style.opacity = null;
+            in_element.style.filter = null;
             return;
             };
     
         in_element.FadeTimeLeft -= elapsedTicks;
     
         var newOpVal = in_element.FadeTimeLeft/in_element.FadeTimeTotal;
-    
-        if ( in_element.FadeState == 1 )
-            {
-            newOpVal = 1 - newOpVal;
-            };
     
         in_element.style.opacity = newOpVal;
         in_element.style.filter = 'alpha(opacity = ' + (newOpVal*100) + ')';

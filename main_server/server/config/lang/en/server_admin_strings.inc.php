@@ -48,7 +48,7 @@
 	                                        'meeting_text_location_label'           =>  'This is a Location or PostCode',
 	                                        'meeting_search_weekdays_label'         =>  'Search For Selected Weekdays:',
 	                                        'meeting_search_weekdays_names'         =>  array ( 'All', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ),
-	                                        'meeting_search_service_bodies_label'   =>  'Search For Selected Service Bodies:',
+	                                        'meeting_search_service_bodies_label'   =>  'Search In Selected Service Bodies:',
 	                                        'meeting_search_start_time_label'       =>  'Search By Meeting Start Time:',
 	                                        'meeting_search_start_time_all_label'   =>  'Any Time',
 	                                        'meeting_search_start_time_morn_label'  =>  'Morning',
