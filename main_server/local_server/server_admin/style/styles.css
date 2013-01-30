@@ -276,7 +276,80 @@ div.bmlt_admin_user_account_wrapper_div
     padding:4px;
 }
 
-div.bmlt_admin_meeting_editor_form_inner_div,
+div.bmlt_admin_meeting_editor_tab_div
+{
+    height:24px;
+    margin-top:8px;
+    margin-bottom:4px;
+    width:100%;
+    background-color:#009;
+}
+
+div.bmlt_admin_tab_div_selected,
+div.bmlt_admin_tab_div_not_selected
+{
+    height:20px;
+    text-align:center;
+    font-size:large;
+    font-weight:bold;
+    width:49%;
+    margin:0;
+    padding:0;
+    padding-top:4px;
+    padding-bottom:8px;
+}
+
+div.bmlt_admin_tab_div_left
+{
+    float:left;
+}
+
+div.bmlt_admin_tab_div_right
+{
+    float:right;
+}
+
+div.bmlt_admin_tab_div_selected
+{
+    background-color:white;
+    color: #009;
+    border: 1px solid white;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+div.bmlt_admin_tab_div_not_selected
+{
+    height: 16px;
+    color:white;
+    margin-bottom:8px;
+}
+
+div.bmlt_admin_tab_div_selected a,
+div.bmlt_admin_tab_div_selected a:visited,
+div.bmlt_admin_tab_div_selected a:hover,
+div.bmlt_admin_tab_div_selected a:active
+{
+    color:#009;
+    text-decoration:none;
+}
+
+div.bmlt_admin_tab_div_not_selected a,
+div.bmlt_admin_tab_div_not_selected a:visited
+{
+    color:#99f;
+    text-decoration:underline;
+}
+
+div.bmlt_admin_tab_div_not_selected a:hover,
+div.bmlt_admin_tab_div_not_selected a:active
+{
+    color:#f96;
+    text-decoration:none;
+}
+
+div.bmlt_admin_meeting_editor_form_specifier_div,
 div.bmlt_admin_user_account_edit_form_inner_div
 {
     border: 1px solid white;

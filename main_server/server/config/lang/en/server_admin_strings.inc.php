@@ -53,6 +53,8 @@
 	                                        'meeting_search_start_time_all_label'   =>  'Any Time',
 	                                        'meeting_search_start_time_morn_label'  =>  'Morning',
 	                                        'meeting_search_start_time_aft_label'   =>  'Afternoon',
-	                                        'meeting_search_start_time_eve_label'   =>  'Evening'
+	                                        'meeting_search_start_time_eve_label'   =>  'Evening',
+	                                        'meeting_editor_tab_specifier_text'     =>  'Search For Meetings',
+	                                        'meeting_editor_tab_editor_text'        =>  'Edit Meetings'
 	                                    );
 ?>

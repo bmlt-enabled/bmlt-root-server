@@ -165,9 +165,12 @@ class c_comdef_admin_main_console
                         $ret .= '<span class="failure_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_change_fader_failure_text'] ).'</span>';
                     $ret .= '</div>';
                 $ret .= '</div>';
-                $ret .='<div class="bmlt_admin_meeting_editor_form_inner_div" action="">';
+                $ret .='<div class="bmlt_admin_meeting_editor_tab_div">';
+                    $ret .= $this->return_meeting_editor_tab_div();
+                $ret .= '</div>';
+                $ret .='<div class="bmlt_admin_meeting_editor_inner_div">';
                     $ret .= $this->return_meeting_specification_panel();
-                    $ret .= $this->return_meeting_results_panel();
+                    $ret .= $this->return_meeting_editor_meetings_panel();
                 $ret .= '</div>';
             
                 $ret .= '<div class="clear_both"></div>';
@@ -177,6 +180,26 @@ class c_comdef_admin_main_console
         return $ret;
     }
 
+    /********************************************************************************************************//**
+    \brief This constructs the tab div that allows the user to select between a search and results.
+    \returns The HTML and JavaScript for the Meeting Editor Tabs
+    ************************************************************************************************************/
+    function return_meeting_editor_tab_div()
+    {
+        $ret ='<div id="bmlt_admin_meeting_editor_tab_specifier_div" class="bmlt_admin_tab_div_left bmlt_admin_tab_div_selected">';  // The link for the search specifier.
+            $ret .= '<a id="bmlt_admin_meeting_editor_tab_specifier_a">';
+                $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_tab_specifier_text'] );
+            $ret .= '</a>';
+        $ret .= '</div>';
+        $ret .='<div id="bmlt_admin_meeting_editor_tab_results_div" class="bmlt_admin_tab_div_right bmlt_admin_tab_div_not_selected">';   // The link for the results/editor.
+            $ret .= '<a id="bmlt_admin_meeting_editor_tab_results_a" href="javascript:admin_handler_object.selectMeetingEditorTab()">';
+                $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_tab_editor_text'] );
+            $ret .= '</a>';
+        $ret .= '</div>';
+        $ret .= '<div class="clear_both"></div>';
+        return $ret;
+    }
+    
     /********************************************************************************************************//**
     \brief This constructs the meeting search specification panel of the meeting editor.
     \returns The HTML and JavaScript for the Edit Meetings Search Specifier section.
@@ -342,8 +365,40 @@ class c_comdef_admin_main_console
     }
     
     /********************************************************************************************************//**
-    \brief This constructs the meeting search results panel of the meeting editor.
+    \brief This constructs the combined new meetings/search results panel.
     \returns The HTML and JavaScript for the Edit Meetings Search Results section.
+    ************************************************************************************************************/
+    function return_meeting_editor_meetings_panel ()
+    {
+        $ret = '<div id="bmlt_admin_meeting_editor_form_div" class="bmlt_admin_meeting_editor_form_div item_hidden">';
+            $ret .= '<div class="bmlt_admin_meeting_editor_form_inner_div">';
+                $ret .= $this->return_new_meeting_panel();
+                $ret .= $this->return_meeting_results_panel();
+            $ret .= '</div>';
+        $ret .= '</div>';
+
+        return $ret;
+    }
+    
+    /********************************************************************************************************//**
+    \brief This constructs a panel for creating new meetings that goes above the results.
+    \returns The HTML and JavaScript for the New Meetings section.
+    ************************************************************************************************************/
+    function return_new_meeting_panel ()
+    {
+        $ret = '<div id="bmlt_admin_meeting_editor_form_new_meetings_div" class="bmlt_admin_meeting_editor_form_new_meetings_div">';
+            $ret .='<form class="bmlt_admin_meeting_editor_new_meetings_form" action="">';
+                $ret .= '<div class="bmlt_admin_meeting_editor_form_new_meetings_inner_div">';
+                $ret .= '</div>';
+            $ret .= '</form>';
+        $ret .= '</div>';
+
+        return $ret;
+    }
+    
+    /********************************************************************************************************//**
+    \brief This constructs the meeting search results panel of the meeting editor.
+    \returns The HTML and JavaScript for the Search Results section.
     ************************************************************************************************************/
     function return_meeting_results_panel ()
     {

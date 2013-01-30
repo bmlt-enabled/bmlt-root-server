@@ -330,6 +330,50 @@ function BMLT_Server_Admin ()
     };
     
     /************************************************************************************//**
+    *   \brief  Selecte the search specifier tab.                                           *
+    ****************************************************************************************/
+    this.selectSearchSpecifierTab = function()
+    {
+        var tab_specifier_element = document.getElementById ( 'bmlt_admin_meeting_editor_tab_specifier_div' );
+        var tab_editor_element = document.getElementById ( 'bmlt_admin_meeting_editor_tab_results_div' );
+        var tab_specifier_link = document.getElementById ( 'bmlt_admin_meeting_editor_tab_specifier_a' );
+        var tab_editor_link = document.getElementById ( 'bmlt_admin_meeting_editor_tab_results_a' );
+        var search_specifier_element = document.getElementById ( 'bmlt_admin_meeting_editor_form_specifier_div' );
+        var meeting_editor_element = document.getElementById ( 'bmlt_admin_meeting_editor_form_div' );
+        
+        tab_specifier_element.className = 'bmlt_admin_tab_div_left bmlt_admin_tab_div_selected';
+        tab_editor_element.className = 'bmlt_admin_tab_div_right bmlt_admin_tab_div_not_selected';
+        
+        tab_specifier_link.href = null;
+        tab_editor_link.href = 'javascript:admin_handler_object.selectMeetingEditorTab()';
+        
+        search_specifier_element.className = 'bmlt_admin_meeting_editor_form_specifier_div';
+        meeting_editor_element = 'bmlt_admin_meeting_editor_form_div item_hidden';
+    }
+    
+    /************************************************************************************//**
+    *   \brief  Selecte the meeting editor tab.                                             *
+    ****************************************************************************************/
+    this.selectMeetingEditorTab = function()
+    {
+        var tab_specifier_element = document.getElementById ( 'bmlt_admin_meeting_editor_tab_specifier_div' );
+        var tab_editor_element = document.getElementById ( 'bmlt_admin_meeting_editor_tab_results_div' );
+        var tab_specifier_link = document.getElementById ( 'bmlt_admin_meeting_editor_tab_specifier_a' );
+        var tab_editor_link = document.getElementById ( 'bmlt_admin_meeting_editor_tab_results_a' );
+        var search_specifier_element = document.getElementById ( 'bmlt_admin_meeting_editor_form_specifier_div' );
+        var meeting_editor_element = document.getElementById ( 'bmlt_admin_meeting_editor_form_div' );
+        
+        tab_specifier_element.className = 'bmlt_admin_tab_div_left bmlt_admin_tab_div_not_selected';
+        tab_editor_element.className = 'bmlt_admin_tab_div_right bmlt_admin_tab_div_selected';
+        
+        tab_specifier_link.href = 'javascript:admin_handler_object.selectSearchSpecifierTab()';
+        tab_editor_link.href = null;
+        
+        search_specifier_element.className = 'bmlt_admin_meeting_editor_form_specifier_div item_hidden';
+        meeting_editor_element = 'bmlt_admin_meeting_editor_form_div';
+    }
+    
+    /************************************************************************************//**
     *   \brief  This makes sure that the "All" checkbox syncs with the weekdays.            *
     ****************************************************************************************/
     this.handleWeekdayCheckBoxChanges = function(   in_checkbox_index ///< The checkbox that triggered the call.
