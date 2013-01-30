@@ -348,7 +348,7 @@ function BMLT_Server_Admin ()
         tab_editor_link.href = 'javascript:admin_handler_object.selectMeetingEditorTab()';
         
         search_specifier_element.className = 'bmlt_admin_meeting_editor_form_specifier_div';
-        meeting_editor_element = 'bmlt_admin_meeting_editor_form_div item_hidden';
+        meeting_editor_element.className = 'bmlt_admin_meeting_editor_form_div item_hidden';
     }
     
     /************************************************************************************//**
@@ -370,7 +370,7 @@ function BMLT_Server_Admin ()
         tab_editor_link.href = null;
         
         search_specifier_element.className = 'bmlt_admin_meeting_editor_form_specifier_div item_hidden';
-        meeting_editor_element = 'bmlt_admin_meeting_editor_form_div';
+        meeting_editor_element.className = 'bmlt_admin_meeting_editor_form_div';
     }
     
     /************************************************************************************//**

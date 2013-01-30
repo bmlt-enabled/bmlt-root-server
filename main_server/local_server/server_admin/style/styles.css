@@ -292,7 +292,7 @@ div.bmlt_admin_tab_div_not_selected
     text-align:center;
     font-size:large;
     font-weight:bold;
-    width:49%;
+    width:49.5%;
     margin:0;
     padding:0;
     padding-top:4px;
@@ -314,16 +314,9 @@ div.bmlt_admin_tab_div_selected
     background-color:white;
     color: #009;
     border: 1px solid white;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-}
-
-div.bmlt_admin_tab_div_not_selected
-{
-    height: 16px;
-    color:white;
-    margin-bottom:8px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
 }
 
 div.bmlt_admin_tab_div_selected a,
@@ -338,6 +331,9 @@ div.bmlt_admin_tab_div_selected a:active
 div.bmlt_admin_tab_div_not_selected a,
 div.bmlt_admin_tab_div_not_selected a:visited
 {
+    display:block;
+    height: 18px;
+    margin-bottom:8px;
     color:#99f;
     text-decoration:underline;
 }
@@ -397,4 +393,23 @@ dt.service_body_dt label.bmlt_admin_med_checkbox_label_left
 dt.service_body_parent_dt label.bmlt_admin_med_checkbox_label_left
 {
     font-weight:bold;
+}
+
+div.bmlt_admin_meeting_editor_form_div
+{
+    border: 1px solid white;
+    background-color:white;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+}
+
+div.bmlt_admin_meeting_editor_form_new_meetings_inner_div
+{
+    height:40px;
+}
+
+div.bmlt_admin_meeting_editor_form_results_inner_div
+{
+    height:40px;
 }
