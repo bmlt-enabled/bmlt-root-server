@@ -78,6 +78,7 @@
 	                                        'meeting_editor_screen_meeting_nation_prompt'           =>  'Enter The Nation Name',
 	                                        'meeting_editor_screen_meeting_create_button'           =>  'Create A New Meeting',
 	                                        'meeting_editor_screen_cancel_button'                   =>  'Cancel',
-	                                        'meeting_editor_screen_cancel_confirm'                  =>  'Are you sure that you want to cancel editing this meeting, and lose all changes?'
+	                                        'meeting_editor_screen_cancel_confirm'                  =>  'Are you sure that you want to cancel editing this meeting, and lose all changes?',
+	                                        'meeting_lookup_failed'                                 =>  'The address lookup failed.'
 	                                    );
 ?>

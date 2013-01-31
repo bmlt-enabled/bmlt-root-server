@@ -385,10 +385,9 @@ function BMLT_Server_Admin ()
     /************************************************************************************//**
     *   \brief  
     ****************************************************************************************/
-    this.handleNewAddressInfo = function( in_meeting_id       ///< The BMLT ID of the meeting that will be edited. If null, then it is a new meeting.
+    this.handleNewAddressInfo = function( in_meeting_id       ///< The BMLT ID of the meeting being edited.
                                         )
     {
-        var editor_object = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
         var meeting_street_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_street_text_input' );
         var meeting_borough_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_borough_text_input' );
         var meeting_city_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_city_text_input' );
@@ -402,12 +401,96 @@ function BMLT_Server_Admin ()
         var state_text = meeting_state_text_item.value;
         var zip_text = meeting_zip_text_item.value;
         var nation_text = meeting_nation_text_item.value;
+
+        if ( zip_text || borough_text || city_text || state_text || nation_text )
+            {
+            this.lookupLocation ( in_meeting_id );
+            };
+    };
+        
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.lookupLocation = function( in_meeting_id       ///< The BMLT ID of the meeting that being edited.
+                                    )
+    {
+        var the_meeting_object = this.getMeetingObjectById ( in_meeting_id );
+
+        var editor_object = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+        var meeting_street_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_street_text_input' );
+        var meeting_borough_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_borough_text_input' );
+        var meeting_city_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_city_text_input' );
+        var meeting_state_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_state_text_input' );
+        var meeting_zip_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_zip_text_input' );
+        var meeting_nation_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_nation_text_input' );
+
+        var street_text = (meeting_street_text_item.value != meeting_street_text_item.defaultValue) ? meeting_street_text_item.value : '';
+        var borough_text = (meeting_borough_text_item.value != meeting_borough_text_item.defaultValue) ? meeting_borough_text_item.value : '';
+        var city_text = (meeting_city_text_item.value != meeting_city_text_item.defaultValue) ? meeting_city_text_item.value : '';
+        var state_text = (meeting_state_text_item.value != meeting_state_text_item.defaultValue) ? meeting_state_text_item.value : '';
+        var zip_text = (meeting_zip_text_item.value != meeting_zip_text_item.defaultValue) ? meeting_zip_text_item.value : '';
+        var nation_text = (meeting_nation_text_item.value != meeting_nation_text_item.defaultValue) ? meeting_nation_text_item.value : '';
         
         // What we do here, is try to create a readable address line to be sent off for geocoding. We just try to clean it up as much as possible.
         var address_line = sprintf ( '%s,%s,%s,%s,%s,%s', street_text, borough_text, city_text, state_text, zip_text, nation_text );
         
-        address_line = address_line.replace ( /,+/, ', ' );
+        address_line = address_line.replace ( /,+/g, ', ' );
+        address_line = address_line.replace ( /^, /g, '' );
+        address_line = address_line.replace ( /, $/g, '' );
+        
+        if ( address_line != ', ' )
+            {
+            if ( the_meeting_object.m_geocoder )
+                {
+                google.maps.event.removeListener ( the_meeting_object.m_geocoder );
+                the_meeting_object.m_geocoder = null;
+                };
+        
+            the_meeting_object.m_geocoder = new google.maps.Geocoder;
+        
+            if ( the_meeting_object.m_geocoder )
+                {
+                var status = the_meeting_object.m_geocoder.geocode ( { 'address' : address_line }, function ( in_geocode_response ) { admin_handler_object.sGeoCallback ( in_geocode_response, in_meeting_id ); } );
+                if ( google.maps.OK != status )
+                    {
+                    alert ( g_meeting_lookup_failed );
+                    }
+                else
+                    {
+                    };
+                }
+            else
+                {
+                alert ( g_meeting_lookup_failed );
+                };
+            };
     };
+    /****************************************************************************************//**
+    *   \brief This catches the AJAX response, and fills in the response form.                  *
+    ********************************************************************************************/
+    
+    this.sGeoCallback = function (  in_geocode_response,    ///< The JSON object.
+                                    in_meeting_id           ///< The ID of the meeting.
+                                    )
+        {
+        var meeting_editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id ) + '_div' );
+
+        if ( meeting_editor && meeting_editor.main_map )
+            {
+            var the_meeting_object = meeting_editor.meeting_object;
+
+            google.maps.event.removeListener ( the_meeting_object.m_geocoder );
+            the_meeting_object.m_geocoder = null;
+            if ( in_geocode_response && in_geocode_response.length && (google.maps.OK == in_geocode_response[0].status) )
+                {
+                the_meeting_object.longitude = in_geocode_response[0].geometry.location.lng();
+                the_meeting_object.latitude = in_geocode_response[0].geometry.location.lat();
+        
+                var map_center = new google.maps.LatLng ( the_meeting_object.latitude, the_meeting_object.longitude );
+                meeting_editor.main_map.panTo ( map_center );
+                };
+            };
+        };
     
     /************************************************************************************//**
     *   \brief  This creates a new meeting details editor screen.                           *
@@ -418,8 +501,7 @@ function BMLT_Server_Admin ()
                                                 )
     {
         // We first see if one already exists.
-        var new_editor_id = 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id ) + '_div';
-        var new_editor = document.getElementById ( new_editor_id );
+        var new_editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id ) + '_div' );
         
         if ( !new_editor )
             {
@@ -466,13 +548,13 @@ function BMLT_Server_Admin ()
     };
     
     /************************************************************************************//**
-    *	\brief This creates the map for the editor.                                         *
+    *   \brief This creates the map for the editor.                                         *
     *   \returns the map object.                                                            *
     ****************************************************************************************/
-	this.createEditorMap = function(    in_editor_parent,   ///< The main editor div object.
-	                                    in_meeting_id       ///< The meeting ID of the editor that gets this map.
-	                                )
-	    {
+    this.createEditorMap = function(    in_editor_parent,   ///< The main editor div object.
+                                        in_meeting_id       ///< The meeting ID of the editor that gets this map.
+                                    )
+        {
             var meeting_map_holder = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_map_div' );
             var map_center = new google.maps.LatLng ( in_editor_parent.meeting_object.latitude, in_editor_parent.meeting_object.longitude );
 
@@ -496,7 +578,9 @@ function BMLT_Server_Admin ()
                 {
                 in_editor_parent.m_main_map.setOptions({'scrollwheel': false});   // For some reason, it ignores setting this in the options.
                 };
-	    };
+                
+            return ( in_editor_parent.m_main_map );
+        };
     
     /************************************************************************************//**
     *   \brief  Selecte the search specifier tab.                                           *
@@ -738,12 +822,20 @@ function BMLT_Server_Admin ()
                 };
             };
         
-        if ( !ret )
+        if ( !ret ) // If we did not find the meeting, we create a placeholder for it.
             {
             ret = new Object;
             ret.longitude = g_default_longitude;
             ret.latitude = g_default_latitude;
             ret.zoom = g_default_zoom;
+            ret.id_bigint = parseInt ( in_meeting_id ); // Just to make sure it is a number (0 is a number. null is NaN).
+            
+            if ( !this.m_meeting_objects )  // We make a meeting objects array, if none previously existed.
+                {
+                this.m_meeting_objects = new Array;
+                };
+                
+            this.m_meeting_objects[this.m_meeting_objects.length] = ret;
             };
             
         return ret;
@@ -837,7 +929,7 @@ function BMLT_AjaxRequest ( url,        ///< The URI to be called
         req.extra_data = extra_data;
         };
     req.open ( method, url, true );
-	if ( method == "POST" )
+    if ( method == "POST" )
         {
         req.setRequestHeader("Method", "POST "+url+" HTTP/1.1");
         req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
