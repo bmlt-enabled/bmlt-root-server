@@ -47,7 +47,8 @@ function BMLT_Server_Admin ()
     *          text item is considered to be the default.                                   *
     ****************************************************************************************/
     this.handleTextInputLoad = function(    in_text_item,
-                                            in_default_value
+                                            in_default_value,
+                                            in_small
                                         )
     {
         if ( in_text_item )
@@ -67,11 +68,11 @@ function BMLT_Server_Admin ()
 
             if ( !in_text_item.value || (in_text_item.value == in_text_item.defaultValue) )
                 {
-                in_text_item.className = 'bmlt_text_item bmlt_text_item_dimmed';
+                in_text_item.className = 'bmlt_text_item' + (in_small ? '_small' : '') + ' bmlt_text_item_dimmed';
                 }
             else
                 {
-                in_text_item.className = 'bmlt_text_item';
+                in_text_item.className = 'bmlt_text_item' + (in_small ? '_small' : '');
                 };
             };
     };
@@ -79,7 +80,7 @@ function BMLT_Server_Admin ()
     /************************************************************************************//**
     *   \brief When a text item receives focus, we clear any default text.                  *
     ****************************************************************************************/
-    this.handleTextInputFocus = function(    in_text_item
+    this.handleTextInputFocus = function(   in_text_item
                                         )
     {
         if ( in_text_item )
@@ -97,7 +98,8 @@ function BMLT_Server_Admin ()
     *   \brief When a text item loses focus, we restore any default text, if the item was   *
     *          left empty.                                                                  *
     ****************************************************************************************/
-    this.handleTextInputBlur = function(    in_text_item
+    this.handleTextInputBlur = function(    in_text_item,
+                                            in_small
                                         )
     {
         if ( in_text_item )
@@ -105,11 +107,11 @@ function BMLT_Server_Admin ()
             if ( !in_text_item.value || (in_text_item.value == in_text_item.defaultValue) )
                 {
                 in_text_item.value = in_text_item.defaultValue;
-                in_text_item.className = 'bmlt_text_item bmlt_text_item_dimmed';
+                in_text_item.className = 'bmlt_text_item' + (in_small ? '_small' : '') + ' bmlt_text_item_dimmed';
                 }
             else
                 {
-                in_text_item.className = 'bmlt_text_item';
+                in_text_item.className = 'bmlt_text_item' + (in_small ? '_small' : '');
                 };
             
             this.validateAccountGoButton();
@@ -121,18 +123,19 @@ function BMLT_Server_Admin ()
     *          its classname changed to the default (usually won't make a difference, as    *
     *          the text item will be in focus, anyway).                                     *
     ****************************************************************************************/
-    this.handleTextInputChange = function(  in_text_item
+    this.handleTextInputChange = function(  in_text_item,
+                                            in_small
                                         )
     {
         if ( in_text_item )
             {
             if ( !in_text_item.value || (in_text_item.value == in_text_item.defaultValue) )
                 {
-                in_text_item.className = 'bmlt_text_item bmlt_text_item_dimmed';
+                in_text_item.className = 'bmlt_text_item' + (in_small ? '_small' : '') + ' bmlt_text_item_dimmed';
                 }
             else
                 {
-                in_text_item.className = 'bmlt_text_item';
+                in_text_item.className = 'bmlt_text_item' + (in_small ? '_small' : '');
                 };
             
             this.validateAccountGoButton();
@@ -431,6 +434,7 @@ function BMLT_Server_Admin ()
             var meeting_state_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_state_text_input';
             var meeting_zip_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_zip_text_input';
             var meeting_nation_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_nation_text_input';
+            
             if ( template_dom_list )    // This makes an exact copy of the template (including IDs, so we'll need to change those).
                 {
                 new_editor = template_dom_list.cloneNode ( true );
@@ -443,7 +447,7 @@ function BMLT_Server_Admin ()
                 
                 in_parent_element.appendChild ( new_editor );
                 
-                new_editor.main_map = this.createEditorMap ( in_meeting_id );
+                new_editor.main_map = this.createEditorMap ( new_editor, in_meeting_id );
                 
                 this.handleTextInputLoad(document.getElementById(meeting_name_text_item_id));
                 this.handleTextInputLoad(document.getElementById(meeting_location_text_item_id));
@@ -453,7 +457,7 @@ function BMLT_Server_Admin ()
                 this.handleTextInputLoad(document.getElementById(meeting_city_text_item_id));
                 this.handleTextInputLoad(document.getElementById(meeting_county_text_item_id));
                 this.handleTextInputLoad(document.getElementById(meeting_state_text_item_id));
-                this.handleTextInputLoad(document.getElementById(meeting_zip_text_item_id));
+                this.handleTextInputLoad(document.getElementById(meeting_zip_text_item_id), null, true);
                 this.handleTextInputLoad(document.getElementById(meeting_nation_text_item_id));
                 };
             };
@@ -465,15 +469,16 @@ function BMLT_Server_Admin ()
     *	\brief This creates the map for the editor.                                         *
     *   \returns the map object.                                                            *
     ****************************************************************************************/
-	this.createEditorMap = function(    in_meeting_id   ///< The meeting ID of the editor that gets this map.
+	this.createEditorMap = function(    in_editor_parent,   ///< The main editor div object.
+	                                    in_meeting_id       ///< The meeting ID of the editor that gets this map.
 	                                )
 	    {
-            var meeting_map_parent = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
             var meeting_map_holder = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_map_div' );
+            var map_center = new google.maps.LatLng ( in_editor_parent.meeting_object.latitude, in_editor_parent.meeting_object.longitude );
 
             var myOptions = {
-                            'center': new google.maps.LatLng ( meeting_map_parent.latitude, meeting_map_parent.longitude ),
-                            'zoom': meeting_map_parent.zoom,
+                            'center': map_center,
+                            'zoom': in_editor_parent.meeting_object.zoom,
                             'mapTypeId': google.maps.MapTypeId.ROADMAP,
                             'mapTypeControlOptions': { 'style': google.maps.MapTypeControlStyle.DROPDOWN_MENU },
                             'zoomControl': true,
@@ -485,14 +490,11 @@ function BMLT_Server_Admin ()
 
             myOptions.zoomControlOptions = { 'style': google.maps.ZoomControlStyle.LARGE };
 
-            meeting_map_parent.m_main_map = new google.maps.Map ( meeting_map_holder, myOptions );
+            in_editor_parent.m_main_map = new google.maps.Map ( meeting_map_holder, myOptions );
         
-            if ( meeting_map_parent.m_main_map )
+            if ( in_editor_parent.m_main_map )
                 {
-                meeting_map_parent.m_main_map.setOptions({'scrollwheel': false});   // For some reason, it ignores setting this in the options.
-                meeting_map_parent.m_main_map.map_marker = null;
-                meeting_map_parent.m_main_map.geo_width = null;
-                meeting_map_parent.m_main_map._circle_overlay = null;
+                in_editor_parent.m_main_map.setOptions({'scrollwheel': false});   // For some reason, it ignores setting this in the options.
                 };
 	    };
     

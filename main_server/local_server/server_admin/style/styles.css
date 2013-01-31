@@ -114,9 +114,9 @@ div.bmlt_admin_one_line_in_a_form_no_margin
     font-style:italic;
 }
 
+input.bmlt_text_item_small,
 input.bmlt_text_item
 {
-    width:50em;
     padding:2px;
     background-color:white;
     color: #009;
@@ -126,12 +126,33 @@ input.bmlt_text_item
     border-radius: 3px;
 }
 
+input.bmlt_text_item
+{
+    width:50em;
+}
+
+input.bmlt_text_item_small
+{
+    width:20em;
+}
+
+textarea.bmlt_text_item_small,
 textarea.bmlt_text_item
 {
     background-color:white;
+    color: #009;
+}
+
+textarea.bmlt_text_item
+{
     width:50em;
     height: 10em;
-    color: #009;
+}
+
+textarea.bmlt_text_item_small
+{
+    width:20em;
+    height: 4em;
 }
 
 input.bmlt_text_item_dimmed,

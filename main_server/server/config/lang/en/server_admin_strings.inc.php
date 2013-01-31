@@ -73,7 +73,7 @@
 	                                        'meeting_editor_screen_meeting_state_label'             =>  'State/Province:',
 	                                        'meeting_editor_screen_meeting_state_prompt'            =>  'Enter A State or Province Name',
 	                                        'meeting_editor_screen_meeting_zip_label'               =>  'Zip Code/Postal Code:',
-	                                        'meeting_editor_screen_meeting_zip_prompt'              =>  'Enter A Zip or Postal Code',
+	                                        'meeting_editor_screen_meeting_zip_prompt'              =>  'Enter A Postal Code',
 	                                        'meeting_editor_screen_meeting_nation_label'            =>  'Nation:',
 	                                        'meeting_editor_screen_meeting_nation_prompt'           =>  'Enter The Nation Name',
 	                                        'meeting_editor_screen_meeting_create_button'           =>  'Create A New Meeting',
