@@ -32,6 +32,7 @@ function BMLT_Server_Admin ()
     var m_success_fade_duration = null;         ///< Number of milliseconds for a success fader.
     var m_failure_fade_duration = null;         ///< Number of milliseconds for a failure fader.
     var m_search_results = null;                ///< This will contain any meeting search results.
+    var m_meeting_objects = null;               ///< This will hold a list of meetings that we are working on.
     
     /************************************************************************************//**
     *                                       METHODS                                         *
@@ -330,6 +331,172 @@ function BMLT_Server_Admin ()
     };
     
     /************************************************************************************//**
+    *   \brief  Brings up a new meeting screen.                                             *
+    ****************************************************************************************/
+    this.createANewMeetingButtonHit = function()
+    {
+        var display_parent = document.getElementById ( 'bmlt_admin_meeting_editor_new_meeting_editor_display' );
+        var new_meeting_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_new_meeting_button' );
+        var cancel_new_meeting_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_cancel_new_meeting_button' );
+        
+        display_parent.innerHTML = null;
+        
+        this.createNewMeetingEditorScreen ( display_parent, 0 );
+        
+        new_meeting_button.className = 'bmlt_admin_ajax_button button_disabled';
+        new_meeting_button.href = null;
+        cancel_new_meeting_button.className = 'bmlt_admin_ajax_button button';
+        cancel_new_meeting_button.href = 'javascript:admin_handler_object.cancelANewMeetingButtonHit()';
+        display_parent.className = 'bmlt_admin_meeting_editor_new_meeting_editor_display';
+    };
+    
+    /************************************************************************************//**
+    *   \brief  Brings up a new meeting screen.                                             *
+    ****************************************************************************************/
+    this.cancelANewMeetingButtonHit = function()
+    {
+        var display_parent = document.getElementById ( 'bmlt_admin_meeting_editor_new_meeting_editor_display' );
+        var new_meeting_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_new_meeting_button' );
+        var cancel_new_meeting_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_cancel_new_meeting_button' );
+        var editor_object = document.getElementById ( 'bmlt_admin_single_meeting_editor_0_div' );
+        
+        if ( !editor_object.dirty_flag || (editor_object.dirty_flag && confirm ( g_meeting_closure_confirm_text )) )
+            {
+            display_parent.innerHTML = null;
+            new_meeting_button.className = 'bmlt_admin_ajax_button button';
+            new_meeting_button.href = 'javascript:admin_handler_object.createANewMeetingButtonHit()';
+            cancel_new_meeting_button.className = 'bmlt_admin_ajax_button button_disabled';
+            cancel_new_meeting_button.href = null;
+            display_parent.className = 'bmlt_admin_meeting_editor_new_meeting_editor_display item_hidden';
+            };
+    };
+        
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.dirtifyMeeting = function (in_meeting_id       ///< The BMLT ID of the meeting that will be edited. If null, then it is a new meeting.
+                                    )
+    {
+    };
+        
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.handleNewAddressInfo = function( in_meeting_id       ///< The BMLT ID of the meeting that will be edited. If null, then it is a new meeting.
+                                        )
+    {
+        var editor_object = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+        var meeting_street_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_street_text_input' );
+        var meeting_borough_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_borough_text_input' );
+        var meeting_city_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_city_text_input' );
+        var meeting_state_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_state_text_input' );
+        var meeting_zip_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_zip_text_input' );
+        var meeting_nation_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_nation_text_input' );
+
+        var street_text = meeting_street_text_item.value;
+        var borough_text = meeting_borough_text_item.value;
+        var city_text = meeting_city_text_item.value;
+        var state_text = meeting_state_text_item.value;
+        var zip_text = meeting_zip_text_item.value;
+        var nation_text = meeting_nation_text_item.value;
+        
+        // What we do here, is try to create a readable address line to be sent off for geocoding. We just try to clean it up as much as possible.
+        var address_line = sprintf ( '%s,%s,%s,%s,%s,%s', street_text, borough_text, city_text, state_text, zip_text, nation_text );
+        
+        address_line = address_line.replace ( /,+/, ', ' );
+    };
+    
+    /************************************************************************************//**
+    *   \brief  This creates a new meeting details editor screen.                           *
+    *   \returns    A new DOM hierarchy with the initialized editor.                        *
+    ****************************************************************************************/
+    this.createNewMeetingEditorScreen = function(   in_parent_element,  ///< The parent element of the new instance.
+                                                    in_meeting_id       ///< The BMLT ID of the meeting that will be edited. If null, then it is a new meeting.
+                                                )
+    {
+        // We first see if one already exists.
+        var new_editor_id = 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id ) + '_div';
+        var new_editor = document.getElementById ( new_editor_id );
+        
+        if ( !new_editor )
+            {
+            var template_dom_list = document.getElementById ( 'bmlt_admin_single_meeting_editor_template_div' );
+            var meeting_name_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_name_text_input';
+            var meeting_location_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_location_text_input';
+            var meeting_street_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_street_text_input';
+            var meeting_neighborhood_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_neighborhood_text_input';
+            var meeting_borough_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_borough_text_input';
+            var meeting_city_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_city_text_input';
+            var meeting_county_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_county_text_input';
+            var meeting_state_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_state_text_input';
+            var meeting_zip_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_zip_text_input';
+            var meeting_nation_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_nation_text_input';
+            if ( template_dom_list )    // This makes an exact copy of the template (including IDs, so we'll need to change those).
+                {
+                new_editor = template_dom_list.cloneNode ( true );
+                // This function replaces all of the spots that say "template" with the given ID. That gives us unique IDs.
+                BMLT_Admin_changeTemplateIDToUseThisID ( new_editor, in_meeting_id );
+                new_editor.meeting_object = this.getMeetingObjectById ( in_meeting_id );
+                new_editor.dirty_flag = false;
+                
+                new_editor.className = 'bmlt_admin_single_meeting_editor_div';
+                
+                in_parent_element.appendChild ( new_editor );
+                
+                new_editor.main_map = this.createEditorMap ( in_meeting_id );
+                
+                this.handleTextInputLoad(document.getElementById(meeting_name_text_item_id));
+                this.handleTextInputLoad(document.getElementById(meeting_location_text_item_id));
+                this.handleTextInputLoad(document.getElementById(meeting_street_text_item_id));
+                this.handleTextInputLoad(document.getElementById(meeting_neighborhood_text_item_id));
+                this.handleTextInputLoad(document.getElementById(meeting_borough_text_item_id));
+                this.handleTextInputLoad(document.getElementById(meeting_city_text_item_id));
+                this.handleTextInputLoad(document.getElementById(meeting_county_text_item_id));
+                this.handleTextInputLoad(document.getElementById(meeting_state_text_item_id));
+                this.handleTextInputLoad(document.getElementById(meeting_zip_text_item_id));
+                this.handleTextInputLoad(document.getElementById(meeting_nation_text_item_id));
+                };
+            };
+        
+        return new_editor;
+    };
+    
+    /************************************************************************************//**
+    *	\brief This creates the map for the editor.                                         *
+    *   \returns the map object.                                                            *
+    ****************************************************************************************/
+	this.createEditorMap = function(    in_meeting_id   ///< The meeting ID of the editor that gets this map.
+	                                )
+	    {
+            var meeting_map_parent = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+            var meeting_map_holder = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_map_div' );
+
+            var myOptions = {
+                            'center': new google.maps.LatLng ( meeting_map_parent.latitude, meeting_map_parent.longitude ),
+                            'zoom': meeting_map_parent.zoom,
+                            'mapTypeId': google.maps.MapTypeId.ROADMAP,
+                            'mapTypeControlOptions': { 'style': google.maps.MapTypeControlStyle.DROPDOWN_MENU },
+                            'zoomControl': true,
+                            'mapTypeControl': true,
+                            'disableDoubleClickZoom' : true,
+                            'draggableCursor': "crosshair",
+                            'scaleControl' : true
+                            };
+
+            myOptions.zoomControlOptions = { 'style': google.maps.ZoomControlStyle.LARGE };
+
+            meeting_map_parent.m_main_map = new google.maps.Map ( meeting_map_holder, myOptions );
+        
+            if ( meeting_map_parent.m_main_map )
+                {
+                meeting_map_parent.m_main_map.setOptions({'scrollwheel': false});   // For some reason, it ignores setting this in the options.
+                meeting_map_parent.m_main_map.map_marker = null;
+                meeting_map_parent.m_main_map.geo_width = null;
+                meeting_map_parent.m_main_map._circle_overlay = null;
+                };
+	    };
+    
+    /************************************************************************************//**
     *   \brief  Selecte the search specifier tab.                                           *
     ****************************************************************************************/
     this.selectSearchSpecifierTab = function()
@@ -547,6 +714,38 @@ function BMLT_Server_Admin ()
             search_results_div.className = 'bmlt_admin_meeting_editor_form_results_div';
             };
     };
+    
+    /************************************************************************************//**
+    *   \brief  Returns an object with the meeting data for the meeting ID passed in.       *
+    *   \returns a meeting object. Null if none found, or invalid ID.                       *
+    ****************************************************************************************/
+    this.getMeetingObjectById = function ( in_meeting_id    ///< The ID of the meeting to fetch
+                                            )
+    {
+        var ret = null;
+        
+        if ( in_meeting_id && this.m_meeting_objects && this.m_meeting_objects.length )
+            {
+            for ( var c = 0; c < this.m_meeting_objects.length; c++ )
+                {
+                if ( in_meeting_id == this.m_meeting_objects[c].id_bigint )
+                    {
+                    ret = this.m_meeting_objects[c];
+                    break;
+                    };
+                };
+            };
+        
+        if ( !ret )
+            {
+            ret = new Object;
+            ret.longitude = g_default_longitude;
+            ret.latitude = g_default_latitude;
+            ret.zoom = g_default_zoom;
+            };
+            
+        return ret;
+    };
 
     /************************************************************************************//**
     *                                     CONSTRUCTOR                                       *
@@ -653,6 +852,10 @@ function BMLT_AjaxRequest ( url,        ///< The URI to be called
     return req;
 };
 
+/********************************************************************************************
+*#################################### UTILITY FUNCTIONS ####################################*
+********************************************************************************************/
+
 /****************************************************************************************//**
 *   \brief Starts the message "fader."                                                      *
 *                                                                                           *
@@ -709,6 +912,99 @@ function BMLT_Admin_animateFade (   lastTick,       ///< The time of the last ti
     
         setTimeout ( "BMLT_Admin_animateFade(" + curTick + ",'" + in_eid + "')", 33 );
         };
+};
+
+/****************************************************************************************//**
+*   \brief This allows you to get objects within a DOM node hierarchy that have a certain   *
+*          element name (type, such as 'div' or 'a'), and a className.                      *
+*          This can be used to "drill into" a DOM hierarchy that doesn't have IDs.          *
+*   \returns an array of DOM elements that meet the criteria.                               *
+********************************************************************************************/
+function BMLT_Admin_getChildElementsByClassName (   in_container_element,   ///< The DOM node that contains the hierarchy
+                                                    in_element_type,        ///< The type of node that you are seeking.
+                                                    in_element_className    ///< The className for that element.
+                                                    )
+{
+    var starting_pool = in_container_element.getElementsByTagName ( in_element_type );
+    var ret = [];
+    for ( c = 0; c < starting_pool.length; c++)
+        {
+        if ( starting_pool[c].className == in_element_className )
+            {
+            ret.append ( starting_pool[c] );
+            };
+        
+        var ret2 = BMLT_Admin_getChildElementsByClassName ( starting_pool[c], in_element_type, in_element_className );
+        
+        if ( ret2 && ret2.length )
+            {
+            ret = ret.concat ( ret2 );
+            };
+        };
+
+    return ret;
+};
+
+/****************************************************************************************//**
+*   \brief This allows you to search a particular DOM hierarchy for an element with an ID.  *
+*          This is useful for changing Node IDs in the case of cloneNode().                 *
+*   \returns a single DOM element, with the given ID.                                       *
+********************************************************************************************/
+function BMLT_Admin_getChildElementById (   in_container_element,   ///< The DOM node that contains the hierarchy
+                                            in_element_id           ///< The ID you are looking for.
+                                            )
+{
+    var ret = null;
+    
+    if ( in_container_element && in_container_element.id == in_element_id ) // Low-hanging fruit.
+        {
+        ret = in_container_element;
+        }
+    else
+        {
+        // If we have kids, we check each of them for the ID.
+        if ( in_container_element && in_container_element.childNodes && in_container_element.childNodes.length )
+            {
+            for ( var c = 0; c < in_container_element.childNodes.length; c++ )
+                {
+                ret = BMLT_Admin_getChildElementsById ( in_container_element.childNodes[c], in_element_id );
+                
+                if ( ret )
+                    {
+                    break;
+                    };
+                };
+            };
+        };
+    
+    return ret;
+};
+
+/****************************************************************************************//**
+*   \brief This replaces every instance of 'template' in a hierarchy's element ids with the *
+*          the given ID.                                                                    *
+********************************************************************************************/
+function BMLT_Admin_changeTemplateIDToUseThisID (   in_container_element,   ///< The DOM node that contains the hierarchy
+                                                    in_element_id           ///< The ID you are replacing with.
+                                                    )
+{
+    var ret = null;
+    
+    if ( in_container_element && in_container_element.id )
+        {
+        in_container_element.id = in_container_element.id.replace( 'template', in_element_id );
+        };
+        
+    // If we have kids, we check each of them for the ID.
+    if ( in_container_element && in_container_element.childNodes && in_container_element.childNodes.length )
+        {
+        for ( var c = 0; c < in_container_element.childNodes.length; c++ )
+            {
+            BMLT_Admin_changeTemplateIDToUseThisID ( in_container_element.childNodes[c], in_element_id );
+            };
+        };
+    
+    return ret;
 };
 
 /********************************************************************************************

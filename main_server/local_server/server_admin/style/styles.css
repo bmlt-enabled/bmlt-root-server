@@ -116,13 +116,20 @@ div.bmlt_admin_one_line_in_a_form_no_margin
 
 input.bmlt_text_item
 {
-    width:32em;
+    width:50em;
+    padding:2px;
+    background-color:white;
     color: #009;
+    border: 1px solid #009;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
 }
 
 textarea.bmlt_text_item
 {
-    width:32em;
+    background-color:white;
+    width:50em;
     height: 10em;
     color: #009;
 }
@@ -132,6 +139,7 @@ textarea.bmlt_text_item_dimmed
 {
     color: #777;
     font-style:italic;
+    background-color:#efefef;
 }
 
 /* These are buttons */
@@ -395,6 +403,32 @@ dt.service_body_parent_dt label.bmlt_admin_med_checkbox_label_left
     font-weight:bold;
 }
 
+div.bmlt_admin_meeting_editor_form_new_meeting_button_div
+{
+    margin-top:8px;
+    margin-bottom:8px;
+}
+
+span.bmlt_admin_meeting_editor_form_new_meeting_button_left_span,
+span.bmlt_admin_meeting_editor_form_new_meeting_button_right_span
+{
+    display:block;
+    width:49.5%;
+    text-align:center;
+    margin-top:4px;
+    margin-bottom:4px;
+}
+
+span.bmlt_admin_meeting_editor_form_new_meeting_button_left_span
+{
+    float:left;
+}
+
+span.bmlt_admin_meeting_editor_form_new_meeting_button_right_span
+{
+    float:right;
+}
+
 div.bmlt_admin_meeting_editor_form_div
 {
     border: 1px solid white;
@@ -406,7 +440,18 @@ div.bmlt_admin_meeting_editor_form_div
 
 div.bmlt_admin_meeting_editor_form_new_meetings_inner_div
 {
-    height:40px;
+}
+
+div.bmlt_admin_single_meeting_map_div
+{
+    clear:both;
+    height:400px;
+    padding:4px;
+    background-color:#009;
+    border: 1px solid #009;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
 }
 
 div.bmlt_admin_meeting_editor_form_results_inner_div
