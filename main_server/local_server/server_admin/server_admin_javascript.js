@@ -54,6 +54,7 @@ function BMLT_Server_Admin ()
         if ( in_text_item )
             {
             in_text_item.original_value = in_text_item.value;
+            in_text_item.small = in_small;
             
             if ( in_default_value )
                 {
@@ -68,11 +69,11 @@ function BMLT_Server_Admin ()
 
             if ( !in_text_item.value || (in_text_item.value == in_text_item.defaultValue) )
                 {
-                in_text_item.className = 'bmlt_text_item' + (in_small ? '_small' : '') + ' bmlt_text_item_dimmed';
+                in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : '') + ' bmlt_text_item_dimmed';
                 }
             else
                 {
-                in_text_item.className = 'bmlt_text_item' + (in_small ? '_small' : '');
+                in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : '');
                 };
             };
     };
@@ -98,8 +99,7 @@ function BMLT_Server_Admin ()
     *   \brief When a text item loses focus, we restore any default text, if the item was   *
     *          left empty.                                                                  *
     ****************************************************************************************/
-    this.handleTextInputBlur = function(    in_text_item,
-                                            in_small
+    this.handleTextInputBlur = function(    in_text_item
                                         )
     {
         if ( in_text_item )
@@ -107,11 +107,11 @@ function BMLT_Server_Admin ()
             if ( !in_text_item.value || (in_text_item.value == in_text_item.defaultValue) )
                 {
                 in_text_item.value = in_text_item.defaultValue;
-                in_text_item.className = 'bmlt_text_item' + (in_small ? '_small' : '') + ' bmlt_text_item_dimmed';
+                in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : '') + ' bmlt_text_item_dimmed';
                 }
             else
                 {
-                in_text_item.className = 'bmlt_text_item' + (in_small ? '_small' : '');
+                in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : '');
                 };
             
             this.validateAccountGoButton();
@@ -124,21 +124,26 @@ function BMLT_Server_Admin ()
     *          the text item will be in focus, anyway).                                     *
     ****************************************************************************************/
     this.handleTextInputChange = function(  in_text_item,
-                                            in_small
+                                            in_meeting_id
                                         )
     {
         if ( in_text_item )
             {
             if ( !in_text_item.value || (in_text_item.value == in_text_item.defaultValue) )
                 {
-                in_text_item.className = 'bmlt_text_item' + (in_small ? '_small' : '') + ' bmlt_text_item_dimmed';
+                in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : '') + ' bmlt_text_item_dimmed';
                 }
             else
                 {
-                in_text_item.className = 'bmlt_text_item' + (in_small ? '_small' : '');
+                in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : '');
                 };
             
             this.validateAccountGoButton();
+            
+            if ( in_meeting_id != null )
+                {
+                this.dirtifyMeeting ( in_meeting_id );
+                };
             };
     };
     
@@ -338,9 +343,9 @@ function BMLT_Server_Admin ()
     ****************************************************************************************/
     this.createANewMeetingButtonHit = function()
     {
-        var display_parent = document.getElementById ( 'bmlt_admin_meeting_editor_new_meeting_editor_display' );
-        var new_meeting_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_new_meeting_button' );
-        var cancel_new_meeting_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_cancel_new_meeting_button' );
+        var display_parent = document.getElementById ( 'bmlt_admin_meeting_editor_new_meeting_0_editor_display' );
+        var new_meeting_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_button' );
+        var cancel_new_meeting_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_cancel_meeting_button' );
         
         display_parent.innerHTML = null;
         
@@ -350,7 +355,7 @@ function BMLT_Server_Admin ()
         new_meeting_button.href = null;
         cancel_new_meeting_button.className = 'bmlt_admin_ajax_button button';
         cancel_new_meeting_button.href = 'javascript:admin_handler_object.cancelANewMeetingButtonHit()';
-        display_parent.className = 'bmlt_admin_meeting_editor_new_meeting_editor_display';
+        display_parent.className = 'bmlt_admin_meeting_editor_meeting_editor_display';
     };
     
     /************************************************************************************//**
@@ -358,9 +363,9 @@ function BMLT_Server_Admin ()
     ****************************************************************************************/
     this.cancelANewMeetingButtonHit = function()
     {
-        var display_parent = document.getElementById ( 'bmlt_admin_meeting_editor_new_meeting_editor_display' );
-        var new_meeting_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_new_meeting_button' );
-        var cancel_new_meeting_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_cancel_new_meeting_button' );
+        var display_parent = document.getElementById ( 'bmlt_admin_meeting_editor_new_meeting_0_editor_display' );
+        var new_meeting_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_button' );
+        var cancel_new_meeting_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_cancel_meeting_button' );
         var editor_object = document.getElementById ( 'bmlt_admin_single_meeting_editor_0_div' );
         
         if ( !editor_object.dirty_flag || (editor_object.dirty_flag && confirm ( g_meeting_closure_confirm_text )) )
@@ -382,7 +387,7 @@ function BMLT_Server_Admin ()
             new_meeting_button.href = 'javascript:admin_handler_object.createANewMeetingButtonHit()';
             cancel_new_meeting_button.className = 'bmlt_admin_ajax_button button_disabled';
             cancel_new_meeting_button.href = null;
-            display_parent.className = 'bmlt_admin_meeting_editor_new_meeting_editor_display item_hidden';
+            display_parent.className = 'bmlt_admin_meeting_editor_meeting_editor_display item_hidden';
             };
     };
         
@@ -392,6 +397,12 @@ function BMLT_Server_Admin ()
     this.dirtifyMeeting = function (in_meeting_id       ///< The BMLT ID of the meeting that will be edited. If null, then it is a new meeting.
                                     )
     {
+        var editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id ) + '_div' );
+    
+        if ( editor )
+            {
+            editor.dirty_flag = true;
+            };
     };
         
     /************************************************************************************//**
@@ -619,6 +630,10 @@ function BMLT_Server_Admin ()
         var time_pm_radio = document.getElementById ( 'bmlt_admin_' + in_meeting_id + '_pm_radio' );
         
         time_hour_select.onchange = function() { admin_handler_object.reactToTimeSelect ( in_meeting_id ); };
+        
+        time_hour_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_duration_hour_select' );
+        
+        time_hour_select.onchange = function() { admin_handler_object.reactToDurationSelect ( in_meeting_id ); };
     };
     
     /************************************************************************************//**
@@ -631,6 +646,18 @@ function BMLT_Server_Admin ()
         var time_items = document.getElementById ( 'bmlt_admin_' + in_meeting_id + '_time_span' );
 
         time_items.className = 'bmlt_admin_time_span' + (( (time_hour_select.value == 0) || (time_hour_select.value == 12) ) ? ' item_hidden' : '');
+    };
+    
+    /************************************************************************************//**
+    *   \brief 
+    ****************************************************************************************/
+    this.reactToDurationSelect = function(  in_meeting_id   ///< The meeting ID of the editor that gets this map.
+                                    )
+    {
+        var time_hour_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_duration_hour_select' );
+        var time_items = document.getElementById ( 'bmlt_admin_' + in_meeting_id + '_duration_span' );
+
+        time_items.className = 'bmlt_admin_time_span' + ((time_hour_select.value == 24) ? ' item_hidden' : '');
     };
     
     /************************************************************************************//**
@@ -742,14 +769,14 @@ function BMLT_Server_Admin ()
                 root_element.main_map.main_marker = null;
                 };
             
-            m_icon_image = new google.maps.MarkerImage ( g_style_dir + "/images/google_map_images/NACenterMarker.png", new google.maps.Size(21, 36), new google.maps.Point(0,0), new google.maps.Point(11, 36) );
-            m_icon_shadow = new google.maps.MarkerImage( g_style_dir + "/images/google_map_images/NACenterMarkerS.png", new google.maps.Size(43, 36), new google.maps.Point(0,0), new google.maps.Point(11, 36) );
+            m_icon_image = new google.maps.MarkerImage ( g_style_dir + "/images/NACenterMarker.png", new google.maps.Size(21, 36), new google.maps.Point(0,0), new google.maps.Point(11, 36) );
+            m_icon_shadow = new google.maps.MarkerImage( g_style_dir + "/images/NACenterMarkerS.png", new google.maps.Size(43, 36), new google.maps.Point(0,0), new google.maps.Point(11, 36) );
 
             root_element.main_map.main_marker = new google.maps.Marker ({
                                                                         'position':     root_element.main_map.getCenter(),
                                                                         'map':		    root_element.main_map,
-                                                                        'shadow':		m_icon_image,
-                                                                        'icon':			m_icon_shadow,
+                                                                        'icon':		    m_icon_image,
+                                                                        'shadow':		m_icon_shadow,
                                                                         'clickable':	false,
                                                                         'cursor':		'pointer',
                                                                         'draggable':    true
@@ -1266,10 +1293,7 @@ function BMLT_Admin_changeTemplateIDToUseThisID (   in_container_element,   ///<
             {
             for ( var c = 0; c < in_container_element.attributes.length; c++ )
                 {
-                if ( (in_container_element.attributes[c].name == 'name') || (in_container_element.attributes[c].name == 'for') )
-                    {
-                    in_container_element.attributes[c].value = in_container_element.attributes[c].value.replace( 'template', in_element_id );
-                    };
+                in_container_element.attributes[c].value = in_container_element.attributes[c].value.replace( 'template', in_element_id );
                 };
             };
         

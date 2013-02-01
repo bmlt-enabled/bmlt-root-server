@@ -59,12 +59,16 @@
 	                                        'meeting_editor_location_map_link'                      =>  'Location Map',
 	                                        'meeting_editor_screen_match_map_button'                =>  'Set Map to Address',
 	                                        'meeting_editor_screen_meeting_name_label'              =>  'Meeting Name:',
+	                                        'meeting_saved_as_a_copy'                               =>  'Save This Meeting As A Copy (Creates A New Meeting)',
+	                                        'meeting_is_published'                                  =>  'Meeting is Published',
 	                                        'meeting_editor_screen_meeting_name_prompt'             =>  'Enter A Meeting Name',
 	                                        'meeting_editor_screen_meeting_start_label'             =>  'Meeting Start Time:',
 	                                        'meeting_editor_screen_meeting_am_label'                =>  'AM',
 	                                        'meeting_editor_screen_meeting_pm_label'                =>  'PM',
 	                                        'meeting_editor_screen_meeting_noon_label'              =>  'Noon',
 	                                        'meeting_editor_screen_meeting_midnight_label'          =>  'Midnight',
+	                                        'meeting_editor_screen_meeting_duration_label'          =>  'Duration:',
+	                                        'meeting_editor_screen_meeting_oe_label'                =>  'Open-Ended',
 	                                        'meeting_editor_screen_meeting_cc_label'                =>  'World Committee Code:',
 	                                        'meeting_editor_screen_meeting_cc_prompt'               =>  'Enter A World Committee Code',
 	                                        'meeting_editor_screen_meeting_location_label'          =>  'Location:',
@@ -88,6 +92,8 @@
 	                                        'meeting_editor_screen_meeting_create_button'           =>  'Create A New Meeting',
 	                                        'meeting_editor_screen_cancel_button'                   =>  'Cancel',
 	                                        'meeting_editor_screen_cancel_confirm'                  =>  'Are you sure that you want to cancel editing this meeting, and lose all changes?',
-	                                        'meeting_lookup_failed'                                 =>  'The address lookup failed.'
+	                                        'meeting_lookup_failed'                                 =>  'The address lookup failed.',
+	                                        'meeting_create_button_name'                            =>  'Save This As A New Meeting',
+	                                        'meeting_save_buttonName'                               =>  'Save the Changes to This Meeting'
 	                                    );
 ?>

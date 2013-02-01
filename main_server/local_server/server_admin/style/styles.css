@@ -52,6 +52,11 @@ div.clear_both
 
 /* Used throughout */
 
+div.bmlt_admin_meeting_editor_form_new_meetings_div .hide_in_new_meeting
+{
+    display:none;
+}
+
 .bmlt_admin_med_label_left,
 .bmlt_admin_med_label_right,
 span.single_checkbox_span
@@ -341,6 +346,25 @@ div.bmlt_admin_user_account_wrapper_div
     padding:4px;
 }
 
+span.bmlt_admin_time_span
+{
+    font-weight:bold;
+    font-style: normal;
+}
+
+span.bmlt_admin_time_span input,
+span.bmlt_admin_time_span select
+{
+    margin-left:4px;
+    margin-right:4px;
+}
+
+span.bmlt_admin_time_span span,
+span.bmlt_admin_time_span label
+{
+    margin-right:8px;
+}
+
 div.bmlt_admin_meeting_editor_tab_div
 {
     height:24px;
@@ -466,28 +490,28 @@ dt.service_body_parent_dt label.bmlt_admin_med_checkbox_label_left
     font-weight:bold;
 }
 
-div.bmlt_admin_meeting_editor_form_new_meeting_button_div
+div.bmlt_admin_meeting_editor_form_meeting_button_div
 {
     margin-top:8px;
     margin-bottom:8px;
 }
 
-span.bmlt_admin_meeting_editor_form_new_meeting_button_left_span,
-span.bmlt_admin_meeting_editor_form_new_meeting_button_right_span
+span.bmlt_admin_meeting_editor_form_meeting_button_left_span,
+span.bmlt_admin_meeting_editor_form_meeting_button_right_span
 {
     display:block;
-    width:49.5%;
+    width:33%;
     text-align:center;
     margin-top:4px;
     margin-bottom:4px;
 }
 
-span.bmlt_admin_meeting_editor_form_new_meeting_button_left_span
+span.bmlt_admin_meeting_editor_form_meeting_button_left_span
 {
     float:left;
 }
 
-span.bmlt_admin_meeting_editor_form_new_meeting_button_right_span
+span.bmlt_admin_meeting_editor_form_meeting_button_right_span
 {
     float:right;
 }
@@ -499,10 +523,6 @@ div.bmlt_admin_meeting_editor_form_div
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
     border-radius: 4px;
-}
-
-div.bmlt_admin_meeting_editor_form_new_meetings_inner_div
-{
 }
 
 div.bmlt_admin_single_meeting_disclosure_map_div_closed,
