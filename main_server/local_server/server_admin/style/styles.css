@@ -168,7 +168,10 @@ textarea.bmlt_text_item_dimmed
 a.bmlt_admin_ajax_button,
 a.bmlt_admin_ajax_button:visited
 {
-    display:block;
+    text-align:center;
+    margin-left:auto;
+    margin-right:auto;
+    display:table;
     padding:2px;
     padding-left:20px;
     padding-right:20px;
@@ -192,6 +195,14 @@ a.bmlt_admin_ajax_button:active
     color:white;
 }
 
+div.bmlt_admin_single_meeting_editor_template_map_button_bar_div a.bmlt_admin_ajax_button:hover,
+div.bmlt_admin_single_meeting_editor_template_map_button_bar_diva.bmlt_admin_ajax_button:active
+{
+    background-color:#009;
+    color:white;
+    border: 1px solid white;
+}
+
 a.button_disabled,
 a.button_disabled:visited,
 a.button_disabled:hover,
@@ -203,6 +214,18 @@ a.button_disabled:active
 }
 
 /* My Account and Meeting Editor Stuff */
+
+div.bmlt_admin_meeting_editor_form_new_meetings_div
+{
+    margin:4px;
+    margin-top:8px;
+    padding:4px;
+    border: 1px solid #009;
+    background-color:#efffef;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+}
 
 div.bmlt_admin_meeting_editor_banner_div,
 div.bmlt_admin_user_account_banner_div
@@ -243,11 +266,14 @@ div.bmlt_admin_user_account_disclosure_div
     padding:2px;
 }
 
+a.bmlt_admin_single_meeting_editor_map_disclosure_a,
+a.bmlt_admin_single_meeting_editor_map_disclosure_a:visited,
 a.bmlt_admin_meeting_editor_disclosure_a,
 a.bmlt_admin_meeting_editor_disclosure_a:visited,
 a.bmlt_admin_user_account_disclosure_a,
 a.bmlt_admin_user_account_disclosure_a:visited
 {
+    height:14px;
     display:block;
     padding:2px;
     padding-left:24px;
@@ -257,6 +283,8 @@ a.bmlt_admin_user_account_disclosure_a:visited
     background-position:left;
 }
 
+a.bmlt_admin_single_meeting_editor_map_disclosure_a:hover,
+a.bmlt_admin_single_meeting_editor_map_disclosure_a:active,
 a.bmlt_admin_meeting_editor_disclosure_a:hover,
 a.bmlt_admin_meeting_editor_disclosure_a:active,
 a.bmlt_admin_user_account_disclosure_a:hover,
@@ -266,6 +294,8 @@ a.bmlt_admin_user_account_disclosure_a:active
     text-decoration:none;
 }
 
+div.bmlt_admin_single_meeting_disclosure_map_div_closed a,
+div.bmlt_admin_single_meeting_disclosure_map_div_closed a:visited,
 div.bmlt_admin_meeting_editor_disclosure_div_closed a,
 div.bmlt_admin_meeting_editor_disclosure_div_closed a:visited,
 div.bmlt_admin_user_account_disclosure_div_closed a,
@@ -274,6 +304,8 @@ div.bmlt_admin_user_account_disclosure_div_closed a:visited
     background-image:url(images/invisible_disclosure.gif);
 }
 
+div.bmlt_admin_single_meeting_disclosure_map_div_closed a:hover,
+div.bmlt_admin_single_meeting_disclosure_map_div_closed a:active,
 div.bmlt_admin_meeting_editor_disclosure_div_closed a:hover,
 div.bmlt_admin_meeting_editor_disclosure_div_closed a:active,
 div.bmlt_admin_user_account_disclosure_div_closed a:hover,
@@ -282,6 +314,8 @@ div.bmlt_admin_user_account_disclosure_div_closed a:active
     background-image:url(images/invisible_disclosure_mouseover.gif);
 }
 
+div.bmlt_admin_single_meeting_disclosure_map_div_open a,
+div.bmlt_admin_single_meeting_disclosure_map_div_open a:visited,
 div.bmlt_admin_meeting_editor_disclosure_div_open a,
 div.bmlt_admin_meeting_editor_disclosure_div_open a:visited,
 div.bmlt_admin_user_account_disclosure_div_open a,
@@ -290,6 +324,8 @@ div.bmlt_admin_user_account_disclosure_div_open a:visited
     background-image:url(images/visible_disclosure.gif);
 }
 
+div.bmlt_admin_single_meeting_disclosure_map_div_open a:hover,
+div.bmlt_admin_single_meeting_disclosure_map_div_open a:active,
 div.bmlt_admin_meeting_editor_disclosure_div_open a:hover,
 div.bmlt_admin_meeting_editor_disclosure_div_open a:active,
 div.bmlt_admin_user_account_disclosure_div_open a:hover,
@@ -390,6 +426,12 @@ div.bmlt_admin_user_account_wrapper_div_hidden
     display:none;
 }
 
+div.bmlt_admin_single_meeting_editor_template_map_button_bar_div
+{
+    text-align:center;
+    padding:4px;
+}
+
 div.bmlt_admin_meeting_editor_service_div
 {
     float:left;
@@ -463,16 +505,27 @@ div.bmlt_admin_meeting_editor_form_new_meetings_inner_div
 {
 }
 
+div.bmlt_admin_single_meeting_disclosure_map_div_closed,
+div.bmlt_admin_single_meeting_disclosure_map_div_open,
 div.bmlt_admin_single_meeting_map_div
 {
     clear:both;
-    height:400px;
-    padding:4px;
     background-color:#009;
     border: 1px solid #009;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
     border-radius: 4px;
+}
+
+div.bmlt_admin_single_meeting_disclosure_map_div_open
+{
+    margin-bottom: -5px;
+}
+
+div.bmlt_admin_single_meeting_editor_inner_map_div
+{
+    height:400px;
+    margin:4px;
 }
 
 div.bmlt_admin_meeting_editor_form_results_inner_div

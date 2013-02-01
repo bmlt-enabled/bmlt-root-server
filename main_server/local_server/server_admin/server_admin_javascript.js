@@ -365,6 +365,18 @@ function BMLT_Server_Admin ()
         
         if ( !editor_object.dirty_flag || (editor_object.dirty_flag && confirm ( g_meeting_closure_confirm_text )) )
             {
+            if ( editor_object && editor_object.main_map )
+                {
+                if ( editor_object.main_map.main_marker )
+                    {
+                    editor_object.main_map.main_marker.setMap ( null );
+                    editor_object.main_map.main_marker = null;
+                    };
+                editor_object.main_map = null;
+                };
+            
+            display_parent.removeChild ( editor_object );
+            editor_object.innerHTML = null;
             display_parent.innerHTML = null;
             new_meeting_button.className = 'bmlt_admin_ajax_button button';
             new_meeting_button.href = 'javascript:admin_handler_object.createANewMeetingButtonHit()';
@@ -386,6 +398,40 @@ function BMLT_Server_Admin ()
     *   \brief  
     ****************************************************************************************/
     this.handleNewAddressInfo = function( in_meeting_id       ///< The BMLT ID of the meeting being edited.
+                                        )
+    {
+        var meeting_street_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_street_text_input' );
+        var meeting_borough_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_borough_text_input' );
+        var meeting_city_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_city_text_input' );
+        var meeting_state_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_state_text_input' );
+        var meeting_zip_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_zip_text_input' );
+        var meeting_nation_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_nation_text_input' );
+
+        var street_text = meeting_street_text_item.value;
+        var borough_text = meeting_borough_text_item.value;
+        var city_text = meeting_city_text_item.value;
+        var state_text = meeting_state_text_item.value;
+        var zip_text = meeting_zip_text_item.value;
+        var nation_text = meeting_nation_text_item.value;
+
+        var set_map_to_address_button = document.getElementById ( 'bmlt_admin_meeting_map_' + in_meeting_id + '_button_a' );
+
+        if ( zip_text || borough_text || city_text || state_text || nation_text )
+            {
+            set_map_to_address_button.href = 'javascript:admin_handler_object.setMapToAddress(' + in_meeting_id + ')';
+            set_map_to_address_button.className = 'bmlt_admin_ajax_button';
+            }
+        else
+            {
+            set_map_to_address_button.href = null;
+            set_map_to_address_button.className = 'bmlt_admin_ajax_button button_disabled';
+            }
+    };
+        
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.setMapToAddress = function( in_meeting_id       ///< The BMLT ID of the meeting being edited.
                                         )
     {
         var meeting_street_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_street_text_input' );
@@ -431,6 +477,11 @@ function BMLT_Server_Admin ()
         var zip_text = (meeting_zip_text_item.value != meeting_zip_text_item.defaultValue) ? meeting_zip_text_item.value : '';
         var nation_text = (meeting_nation_text_item.value != meeting_nation_text_item.defaultValue) ? meeting_nation_text_item.value : '';
         
+        if ( !nation_text )
+            {
+            nation_text = g_region_bias;
+            };
+        
         // What we do here, is try to create a readable address line to be sent off for geocoding. We just try to clean it up as much as possible.
         var address_line = sprintf ( '%s,%s,%s,%s,%s,%s', street_text, borough_text, city_text, state_text, zip_text, nation_text );
         
@@ -472,7 +523,7 @@ function BMLT_Server_Admin ()
     this.sGeoCallback = function (  in_geocode_response,    ///< The JSON object.
                                     in_meeting_id           ///< The ID of the meeting.
                                     )
-        {
+    {
         var meeting_editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id ) + '_div' );
 
         if ( meeting_editor && meeting_editor.main_map )
@@ -488,9 +539,10 @@ function BMLT_Server_Admin ()
         
                 var map_center = new google.maps.LatLng ( the_meeting_object.latitude, the_meeting_object.longitude );
                 meeting_editor.main_map.panTo ( map_center );
+                this.displayMainMarkerInMap ( in_meeting_id );
                 };
             };
-        };
+    };
     
     /************************************************************************************//**
     *   \brief  This creates a new meeting details editor screen.                           *
@@ -502,11 +554,14 @@ function BMLT_Server_Admin ()
     {
         // We first see if one already exists.
         var new_editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id ) + '_div' );
-        
+    
         if ( !new_editor )
             {
             var template_dom_list = document.getElementById ( 'bmlt_admin_single_meeting_editor_template_div' );
+            
             var meeting_name_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_name_text_input';
+            var meeting_cc_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_cc_text_input';
+            
             var meeting_location_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_location_text_input';
             var meeting_street_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_street_text_input';
             var meeting_neighborhood_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_neighborhood_text_input';
@@ -516,7 +571,7 @@ function BMLT_Server_Admin ()
             var meeting_state_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_state_text_input';
             var meeting_zip_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_zip_text_input';
             var meeting_nation_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_nation_text_input';
-            
+        
             if ( template_dom_list )    // This makes an exact copy of the template (including IDs, so we'll need to change those).
                 {
                 new_editor = template_dom_list.cloneNode ( true );
@@ -524,14 +579,14 @@ function BMLT_Server_Admin ()
                 BMLT_Admin_changeTemplateIDToUseThisID ( new_editor, in_meeting_id );
                 new_editor.meeting_object = this.getMeetingObjectById ( in_meeting_id );
                 new_editor.dirty_flag = false;
-                
+                new_editor.map_disclosed = false;
+            
                 new_editor.className = 'bmlt_admin_single_meeting_editor_div';
-                
+            
                 in_parent_element.appendChild ( new_editor );
-                
-                new_editor.main_map = this.createEditorMap ( new_editor, in_meeting_id );
-                
+                            
                 this.handleTextInputLoad(document.getElementById(meeting_name_text_item_id));
+                this.handleTextInputLoad(document.getElementById(meeting_cc_text_item_id), null, true);
                 this.handleTextInputLoad(document.getElementById(meeting_location_text_item_id));
                 this.handleTextInputLoad(document.getElementById(meeting_street_text_item_id));
                 this.handleTextInputLoad(document.getElementById(meeting_neighborhood_text_item_id));
@@ -541,10 +596,38 @@ function BMLT_Server_Admin ()
                 this.handleTextInputLoad(document.getElementById(meeting_state_text_item_id));
                 this.handleTextInputLoad(document.getElementById(meeting_zip_text_item_id), null, true);
                 this.handleTextInputLoad(document.getElementById(meeting_nation_text_item_id));
+
+                var meeting_am_radio_id = 'bmlt_admin_' + in_meeting_id + '_time_am_radio';
+                var meeting_pm_radio_id = 'bmlt_admin_' + in_meeting_id + '_time_pm_radio';
+            
+
+                var map_disclosure_a = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_map_disclosure_a' );
+                map_disclosure_a.href = 'javascript:admin_handler_object.toggleMeetingMapDisclosure(' + in_meeting_id + ')';
                 };
             };
-        
+    
         return new_editor;
+    };
+    
+    /************************************************************************************//**
+    *   \brief This toggles the map disclosure.                                             *
+    ****************************************************************************************/
+    this.toggleMeetingMapDisclosure = function( in_meeting_id       ///< The meeting ID of the editor that gets this map.
+                                                )
+    {
+        var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+        var map_disclosure_div = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_map_disclosure_div' );
+        var map_div = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_map_div' );
+        
+        root_element.map_disclosed = !root_element.map_disclosed;
+
+        map_disclosure_div.className = 'bmlt_admin_single_meeting_disclosure_map_div' + (root_element.map_disclosed ? '_open' : '_closed');
+        map_div.className = 'bmlt_admin_single_meeting_map_div' + (root_element.map_disclosed ? '' : ' item_hidden');
+        
+        if ( root_element.map_disclosed && !root_element.main_map )
+            {
+            root_element.main_map = this.createEditorMap ( root_element, in_meeting_id );
+            };
     };
     
     /************************************************************************************//**
@@ -554,33 +637,103 @@ function BMLT_Server_Admin ()
     this.createEditorMap = function(    in_editor_parent,   ///< The main editor div object.
                                         in_meeting_id       ///< The meeting ID of the editor that gets this map.
                                     )
-        {
-            var meeting_map_holder = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_map_div' );
-            var map_center = new google.maps.LatLng ( in_editor_parent.meeting_object.latitude, in_editor_parent.meeting_object.longitude );
+    {
+        var meeting_map_holder = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_inner_map_div' );
+        var map_center = new google.maps.LatLng ( in_editor_parent.meeting_object.latitude, in_editor_parent.meeting_object.longitude );
 
-            var myOptions = {
-                            'center': map_center,
-                            'zoom': in_editor_parent.meeting_object.zoom,
-                            'mapTypeId': google.maps.MapTypeId.ROADMAP,
-                            'mapTypeControlOptions': { 'style': google.maps.MapTypeControlStyle.DROPDOWN_MENU },
-                            'zoomControl': true,
-                            'mapTypeControl': true,
-                            'disableDoubleClickZoom' : true,
-                            'draggableCursor': "crosshair",
-                            'scaleControl' : true
-                            };
+        var myOptions = {
+                        'center': map_center,
+                        'zoom': in_editor_parent.meeting_object.zoom,
+                        'mapTypeId': google.maps.MapTypeId.ROADMAP,
+                        'mapTypeControlOptions': { 'style': google.maps.MapTypeControlStyle.DROPDOWN_MENU },
+                        'zoomControl': true,
+                        'mapTypeControl': true,
+                        'disableDoubleClickZoom' : true,
+                        'draggableCursor': "crosshair",
+                        'scaleControl' : true
+                        };
 
-            myOptions.zoomControlOptions = { 'style': google.maps.ZoomControlStyle.LARGE };
+        myOptions.zoomControlOptions = { 'style': google.maps.ZoomControlStyle.LARGE };
 
-            in_editor_parent.m_main_map = new google.maps.Map ( meeting_map_holder, myOptions );
-        
-            if ( in_editor_parent.m_main_map )
+        in_editor_parent.m_main_map = new google.maps.Map ( meeting_map_holder, myOptions );
+    
+        if ( in_editor_parent.m_main_map )
+            {
+            in_editor_parent.m_main_map.setOptions({'scrollwheel': false});   // For some reason, it ignores setting this in the options.
+            google.maps.event.addListener ( in_editor_parent.m_main_map, 'click', function(in_event) { admin_handler_object.respondToMapClick( in_event, in_meeting_id ); } );
+            google.maps.event.addListener ( in_editor_parent.m_main_map, 'tilesloaded', function(in_event) { admin_handler_object.tilesLoaded( in_meeting_id ); } );
+            this.displayMainMarkerInMap ( in_meeting_id );
+            };
+            
+        return ( in_editor_parent.m_main_map );
+    };
+    
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.tilesLoaded = function(in_meeting_id   ///< The meeting this map is associated with.
+                                )
+    {
+        this.displayMainMarkerInMap ( in_meeting_id );
+    };
+    
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.respondToMapClick = function(  in_event,       ///< The Google Maps event
+                                        in_meeting_id   ///< The meeting this map is associated with.
+                                    )
+    {
+        var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+        var map_center = in_event.latLng;
+        root_element.main_map.panTo ( map_center );
+        this.displayMainMarkerInMap ( in_meeting_id );
+    };
+    
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.respondToMarkerDragEnd = function( in_event,       ///< The Google Maps event
+                                            in_meeting_id   ///< The meeting this map is associated with.
+                                            )
+    {
+        var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+        var map_center = in_event.latLng;
+        root_element.main_map.panTo ( map_center );
+    };
+
+    /************************************************************************************//**
+    *	\brief This displays the "Your Position" marker in the results map.                 *
+    ****************************************************************************************/
+    this.displayMainMarkerInMap = function (    in_meeting_id   ///< The meeting this map is associated with.
+                                            )
+    {
+        var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+
+        if ( root_element && root_element.main_map )
+            {
+            if ( root_element.main_map.main_marker )
                 {
-                in_editor_parent.m_main_map.setOptions({'scrollwheel': false});   // For some reason, it ignores setting this in the options.
+                root_element.main_map.main_marker.setMap ( null );
+                root_element.main_map.main_marker = null;
                 };
-                
-            return ( in_editor_parent.m_main_map );
-        };
+            
+	        m_icon_image_selected = new google.maps.MarkerImage ( g_style_dir + "/images/google_map_images/NAMarkerSel.png", new google.maps.Size(34, 38), new google.maps.Point(0,0), new google.maps.Point(18, 38) );
+	        m_icon_shadow = new google.maps.MarkerImage( g_style_dir + "/images/google_map_images/NAMarkerS.png", new google.maps.Size(43, 32), new google.maps.Point(0,0), new google.maps.Point(12, 32) );
+
+            root_element.main_map.main_marker = new google.maps.Marker ({
+                                                                        'position':     root_element.main_map.getCenter(),
+                                                                        'map':		    root_element.main_map,
+                                                                        'shadow':		m_icon_image_selected,
+                                                                        'icon':			m_icon_shadow,
+                                                                        'clickable':	false,
+                                                                        'cursor':		'pointer',
+                                                                        'draggable':    true,
+                                                                        'raiseOnDrag':  false
+                                                                        } );
+            google.maps.event.addListener ( root_element.main_map.main_marker, 'dragend', function(in_event) { admin_handler_object.respondToMarkerDragEnd( in_event, in_meeting_id ); } );
+            };
+    };
     
     /************************************************************************************//**
     *   \brief  Selecte the search specifier tab.                                           *
@@ -1084,9 +1237,23 @@ function BMLT_Admin_changeTemplateIDToUseThisID (   in_container_element,   ///<
 {
     var ret = null;
     
-    if ( in_container_element && in_container_element.id )
+    if ( in_container_element )
         {
-        in_container_element.id = in_container_element.id.replace( 'template', in_element_id );
+        if ( in_container_element.attributes && in_container_element.attributes.length )
+            {
+            for ( var c = 0; c < in_container_element.attributes.length; c++ )
+                {
+                if ( (in_container_element.attributes[c].name == 'name') || (in_container_element.attributes[c].name == 'for') )
+                    {
+                    in_container_element.attributes[c].value = in_container_element.attributes[c].value.replace( 'template', in_element_id );
+                    };
+                };
+            };
+        
+        if ( in_container_element.id )
+            {
+            in_container_element.id = in_container_element.id.replace( 'template', in_element_id );
+            };
         };
         
     // If we have kids, we check each of them for the ID.
