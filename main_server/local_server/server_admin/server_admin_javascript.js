@@ -597,16 +597,40 @@ function BMLT_Server_Admin ()
                 this.handleTextInputLoad(document.getElementById(meeting_zip_text_item_id), null, true);
                 this.handleTextInputLoad(document.getElementById(meeting_nation_text_item_id));
 
-                var meeting_am_radio_id = 'bmlt_admin_' + in_meeting_id + '_time_am_radio';
-                var meeting_pm_radio_id = 'bmlt_admin_' + in_meeting_id + '_time_pm_radio';
-            
-
+                this.setMeetingStartTime ( in_meeting_id );
+                
                 var map_disclosure_a = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_map_disclosure_a' );
                 map_disclosure_a.href = 'javascript:admin_handler_object.toggleMeetingMapDisclosure(' + in_meeting_id + ')';
                 };
             };
     
         return new_editor;
+    };
+    
+    /************************************************************************************//**
+    *   \brief 
+    ****************************************************************************************/
+    this.setMeetingStartTime = function(  in_meeting_id   ///< The meeting ID of the editor that gets this map.
+                                        )
+    {
+        var time_hour_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_start_hour_select' );
+        var time_minute_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_start_minute_select' );
+        var time_am_radio = document.getElementById ( 'bmlt_admin_' + in_meeting_id + '_am_radio' );
+        var time_pm_radio = document.getElementById ( 'bmlt_admin_' + in_meeting_id + '_pm_radio' );
+        
+        time_hour_select.onchange = function() { admin_handler_object.reactToTimeSelect ( in_meeting_id ); };
+    };
+    
+    /************************************************************************************//**
+    *   \brief 
+    ****************************************************************************************/
+    this.reactToTimeSelect = function(  in_meeting_id   ///< The meeting ID of the editor that gets this map.
+                                    )
+    {
+        var time_hour_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_start_hour_select' );
+        var time_items = document.getElementById ( 'bmlt_admin_' + in_meeting_id + '_time_span' );
+
+        time_items.className = 'bmlt_admin_time_span' + (( (time_hour_select.value == 0) || (time_hour_select.value == 12) ) ? ' item_hidden' : '');
     };
     
     /************************************************************************************//**
@@ -718,18 +742,17 @@ function BMLT_Server_Admin ()
                 root_element.main_map.main_marker = null;
                 };
             
-	        m_icon_image_selected = new google.maps.MarkerImage ( g_style_dir + "/images/google_map_images/NAMarkerSel.png", new google.maps.Size(34, 38), new google.maps.Point(0,0), new google.maps.Point(18, 38) );
-	        m_icon_shadow = new google.maps.MarkerImage( g_style_dir + "/images/google_map_images/NAMarkerS.png", new google.maps.Size(43, 32), new google.maps.Point(0,0), new google.maps.Point(12, 32) );
+            m_icon_image = new google.maps.MarkerImage ( g_style_dir + "/images/google_map_images/NACenterMarker.png", new google.maps.Size(21, 36), new google.maps.Point(0,0), new google.maps.Point(11, 36) );
+            m_icon_shadow = new google.maps.MarkerImage( g_style_dir + "/images/google_map_images/NACenterMarkerS.png", new google.maps.Size(43, 36), new google.maps.Point(0,0), new google.maps.Point(11, 36) );
 
             root_element.main_map.main_marker = new google.maps.Marker ({
                                                                         'position':     root_element.main_map.getCenter(),
                                                                         'map':		    root_element.main_map,
-                                                                        'shadow':		m_icon_image_selected,
+                                                                        'shadow':		m_icon_image,
                                                                         'icon':			m_icon_shadow,
                                                                         'clickable':	false,
                                                                         'cursor':		'pointer',
-                                                                        'draggable':    true,
-                                                                        'raiseOnDrag':  false
+                                                                        'draggable':    true
                                                                         } );
             google.maps.event.addListener ( root_element.main_map.main_marker, 'dragend', function(in_event) { admin_handler_object.respondToMarkerDragEnd( in_event, in_meeting_id ); } );
             };
