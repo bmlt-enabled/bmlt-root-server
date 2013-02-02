@@ -341,60 +341,86 @@ function BMLT_Server_Admin ()
     /************************************************************************************//**
     *   \brief  Brings up a new meeting screen.                                             *
     ****************************************************************************************/
-    this.createANewMeetingButtonHit = function()
+    this.createANewMeetingButtonHit = function( in_button_object
+                                            )
     {
         var display_parent = document.getElementById ( 'bmlt_admin_meeting_editor_new_meeting_0_editor_display' );
         var new_meeting_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_button' );
-        var cancel_new_meeting_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_cancel_meeting_button' );
         
         display_parent.innerHTML = null;
         
         this.createNewMeetingEditorScreen ( display_parent, 0 );
         
-        new_meeting_button.className = 'bmlt_admin_ajax_button button_disabled';
-        new_meeting_button.href = null;
-        cancel_new_meeting_button.className = 'bmlt_admin_ajax_button button';
-        cancel_new_meeting_button.href = 'javascript:admin_handler_object.cancelANewMeetingButtonHit()';
+        new_meeting_button.className = 'bmlt_admin_ajax_button button item_hidden';
         display_parent.className = 'bmlt_admin_meeting_editor_meeting_editor_display';
+        this.changeSaveMeetingButtonToCopy(0);
     };
     
     /************************************************************************************//**
-    *   \brief  Brings up a new meeting screen.                                             *
+    *   \brief  
+    ****************************************************************************************/
+    this.changeSaveMeetingButtonToCopy = function( in_meeting_id   ///< The BMLT ID of the meeting that is being edited.
+                                                )
+    {
+        var save_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_' + in_meeting_id +'_save_button' );
+        save_button.innerHTML = g_Create_new_meeting_button_name;
+    };
+    
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.changeCopyMeetingButtonToSave = function( in_meeting_id   ///< The BMLT ID of the meeting that is being edited.
+                                                )
+    {
+        var save_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_' + in_meeting_id +'_save_button' );
+        save_button.innerHTML = g_Save_meeting_button_name;
+    };
+    
+    /************************************************************************************//**
+    *   \brief  
     ****************************************************************************************/
     this.cancelANewMeetingButtonHit = function()
     {
-        var display_parent = document.getElementById ( 'bmlt_admin_meeting_editor_new_meeting_0_editor_display' );
-        var new_meeting_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_button' );
-        var cancel_new_meeting_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_cancel_meeting_button' );
-        var editor_object = document.getElementById ( 'bmlt_admin_single_meeting_editor_0_div' );
-        
-        if ( !editor_object.dirty_flag || (editor_object.dirty_flag && confirm ( g_meeting_closure_confirm_text )) )
-            {
-            if ( editor_object && editor_object.main_map )
-                {
-                if ( editor_object.main_map.main_marker )
-                    {
-                    editor_object.main_map.main_marker.setMap ( null );
-                    editor_object.main_map.main_marker = null;
-                    };
-                editor_object.main_map = null;
-                };
-            
-            display_parent.removeChild ( editor_object );
-            editor_object.innerHTML = null;
-            display_parent.innerHTML = null;
-            new_meeting_button.className = 'bmlt_admin_ajax_button button';
-            new_meeting_button.href = 'javascript:admin_handler_object.createANewMeetingButtonHit()';
-            cancel_new_meeting_button.className = 'bmlt_admin_ajax_button button_disabled';
-            cancel_new_meeting_button.href = null;
-            display_parent.className = 'bmlt_admin_meeting_editor_meeting_editor_display item_hidden';
-            };
     };
         
     /************************************************************************************//**
     *   \brief  
     ****************************************************************************************/
-    this.dirtifyMeeting = function (in_meeting_id       ///< The BMLT ID of the meeting that will be edited. If null, then it is a new meeting.
+    this.respondToBasicTabSelection = function (in_meeting_id   ///< The BMLT ID of the meeting that is being edited.
+                                                )
+    {
+        var basic_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_basic_sheet_div' );
+        var location_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_location_sheet_div' );
+        var basic_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_basic_a' );
+        var location_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_location_a' );
+        
+        basic_options_sheet.className = 'bmlt_admin_meeting_option_sheet_div';
+        basic_tab.className = 'bmlt_admin_meeting_editor_tab_item_a_selected';
+        location_options_sheet.className = 'bmlt_admin_meeting_option_sheet_div item_hidden';
+        location_tab.className = 'bmlt_admin_meeting_editor_tab_item_a_unselected';
+    };
+        
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.respondToLocationTabSelection = function ( in_meeting_id   ///< The BMLT ID of the meeting that is being edited.
+                                                    )
+    {
+        var basic_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_basic_sheet_div' );
+        var location_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_location_sheet_div' );
+        var basic_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_basic_a' );
+        var location_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_location_a' );
+        
+        basic_options_sheet.className = 'bmlt_admin_meeting_option_sheet_div item_hidden';
+        basic_tab.className = 'bmlt_admin_meeting_editor_tab_item_a_unselected';
+        location_options_sheet.className = 'bmlt_admin_meeting_option_sheet_div';
+        location_tab.className = 'bmlt_admin_meeting_editor_tab_item_a_selected';
+    };
+        
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.dirtifyMeeting = function (in_meeting_id       ///< The BMLT ID of the meeting that will be dirtified.
                                     )
     {
         var editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id ) + '_div' );
@@ -612,6 +638,18 @@ function BMLT_Server_Admin ()
                 
                 var map_disclosure_a = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_map_disclosure_a' );
                 map_disclosure_a.href = 'javascript:admin_handler_object.toggleMeetingMapDisclosure(' + in_meeting_id + ')';
+                
+                var select_duplicate_checkbox = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_duplicate_checkbox' );
+                select_duplicate_checkbox.onchange = function (){   var save_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_' + in_meeting_id + '_save_button' );
+                                                                    if ( this.checked )
+                                                                        {
+                                                                        save_button.innerHTML = g_Create_new_meeting_button_name;
+                                                                        }
+                                                                    else
+                                                                        {
+                                                                        save_button.innerHTML = g_Save_meeting_button_name;
+                                                                        };
+                                                                };
                 };
             };
     
@@ -782,6 +820,47 @@ function BMLT_Server_Admin ()
                                                                         'draggable':    true
                                                                         } );
             google.maps.event.addListener ( root_element.main_map.main_marker, 'dragend', function(in_event) { admin_handler_object.respondToMarkerDragEnd( in_event, in_meeting_id ); } );
+            };
+    };
+    
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.saveMeeting = function ( in_meeting_id
+                                )
+    {
+        var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+        var new_meeting_id = in_meeting_id;
+        var copy_checkbox = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_duplicate_checkbox' );
+        
+        if ( copy_checkbox.checked )   // If we are creating a new meeting, we set the ID to 0. That saves the meeting as a new one.
+            {
+            new_meeting_id = 0;
+            };
+            
+        root_element.dirty_flag = false;
+        this.cancelMeetingEdit ( in_meeting_id );
+    };
+    
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.cancelMeetingEdit = function ( in_meeting_id
+                                )
+    {
+        var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+        var display_parent = document.getElementById ( 'bmlt_admin_meeting_editor_new_meeting_' + in_meeting_id + '_editor_display' );
+
+        if ( !root_element.dirty_flag || ( root_element.dirty_flag && confirm ( g_meeting_closure_confirm_text ) ) )
+            {
+            display_parent.innerHTML = null;
+            display_parent.className = 'item_hidden';
+            
+            if ( in_meeting_id == 0 )
+                {
+                var new_meeting_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_button' );
+                new_meeting_button.className = 'bmlt_admin_ajax_button button';
+                };
             };
     };
     
