@@ -73,6 +73,10 @@
 	                                        'meeting_editor_screen_meeting_cc_label'                =>  'World Committee Code:',
 	                                        'meeting_editor_screen_meeting_cc_prompt'               =>  'Enter A World Committee Code',
 	                                        'meeting_editor_screen_meeting_sb_label'                =>  'Service Body:',
+	                                        'meeting_editor_screen_meeting_longitude_label'         =>  'Longitude:',
+	                                        'meeting_editor_screen_meeting_longitude_prompt'        =>  'Enter A Longitude',
+	                                        'meeting_editor_screen_meeting_latitude_label'          =>  'Latitude:',
+	                                        'meeting_editor_screen_meeting_latitude_prompt'         =>  'Enter A Latitude',
 	                                        'meeting_editor_screen_meeting_location_label'          =>  'Location:',
 	                                        'meeting_editor_screen_meeting_location_prompt'         =>  'Enter A Location Name (Like a Building Name)',
 	                                        'meeting_editor_screen_meeting_street_label'            =>  'Street Address:',
@@ -98,6 +102,10 @@
 	                                        'meeting_create_button_name'                            =>  'Save This As A New Meeting',
 	                                        'meeting_save_buttonName'                               =>  'Save the Changes to This Meeting',
 	                                        'meeting_editor_tab_bar_basic_tab_text'                 =>  'Basic',
-	                                        'meeting_editor_tab_bar_location_tab_text'              =>  'Location'
+	                                        'meeting_editor_tab_bar_location_tab_text'              =>  'Location',
+	                                        'meeting_editor_default_zoom'                           =>  '11',
+	                                        'meeting_editor_default_weekday'                        =>  '2',
+	                                        'meeting_editor_default_start_time'                     =>  '20:30:00',
+	                                        'meeting_editor_default_duration'                       =>  '1:30:00'
 	                                    );
 ?>

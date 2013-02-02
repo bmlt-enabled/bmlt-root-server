@@ -56,7 +56,7 @@ function BMLT_Server_Admin ()
             in_text_item.original_value = in_text_item.value;
             in_text_item.small = in_small;
             
-            if ( in_default_value )
+            if ( in_default_value != null )
                 {
                 in_text_item.defaultValue = in_default_value;
                 }
@@ -67,7 +67,7 @@ function BMLT_Server_Admin ()
             
             in_text_item.value = in_text_item.original_value;
 
-            if ( !in_text_item.value || (in_text_item.value == in_text_item.defaultValue) )
+            if ( (in_text_item.value == null) || (in_text_item.value == in_text_item.defaultValue) )
                 {
                 in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : '') + ' bmlt_text_item_dimmed';
                 }
@@ -608,6 +608,8 @@ function BMLT_Server_Admin ()
             var meeting_state_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_state_text_input';
             var meeting_zip_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_zip_text_input';
             var meeting_nation_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_nation_text_input';
+            var meeting_longitude_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_longitude_text_input';
+            var meeting_latitude_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_latitude_text_input';
         
             if ( template_dom_list )    // This makes an exact copy of the template (including IDs, so we'll need to change those).
                 {
@@ -632,9 +634,9 @@ function BMLT_Server_Admin ()
                 this.handleTextInputLoad(document.getElementById(meeting_county_text_item_id));
                 this.handleTextInputLoad(document.getElementById(meeting_state_text_item_id));
                 this.handleTextInputLoad(document.getElementById(meeting_zip_text_item_id), null, true);
-                this.handleTextInputLoad(document.getElementById(meeting_nation_text_item_id));
-
-                this.setMeetingStartTime ( in_meeting_id );
+                this.handleTextInputLoad(document.getElementById(meeting_nation_text_item_id), null, true);
+                this.handleTextInputLoad(document.getElementById(meeting_longitude_text_item_id), 0, true);
+                this.handleTextInputLoad(document.getElementById(meeting_latitude_text_item_id), 0, true);
                 
                 var map_disclosure_a = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_map_disclosure_a' );
                 map_disclosure_a.href = 'javascript:admin_handler_object.toggleMeetingMapDisclosure(' + in_meeting_id + ')';
@@ -652,28 +654,253 @@ function BMLT_Server_Admin ()
                                                                 };
                 };
             };
-    
+        
+        this.populateMeetingEditorForm ( new_editor, in_meeting_id );
+        
         return new_editor;
     };
     
     /************************************************************************************//**
     *   \brief 
     ****************************************************************************************/
-    this.setMeetingStartTime = function(  in_meeting_id   ///< The meeting ID of the editor that gets this map.
-                                        )
+    this.populateMeetingEditorForm = function(  in_meeting_editor   ///< This is the meeting editor object that will be set up for this meeting.
+                                                )
     {
-        var time_hour_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_start_hour_select' );
-        var time_minute_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_start_minute_select' );
-        var time_am_radio = document.getElementById ( 'bmlt_admin_' + in_meeting_id + '_am_radio' );
-        var time_pm_radio = document.getElementById ( 'bmlt_admin_' + in_meeting_id + '_pm_radio' );
+        var meeting_object = in_meeting_editor.meeting_object;
         
-        time_hour_select.onchange = function() { admin_handler_object.reactToTimeSelect ( in_meeting_id ); };
+        var meeting_id = meeting_object.id_bigint;
         
-        time_hour_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_duration_hour_select' );
+        var meeting_name_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_name_text_input' );
+        var meeting_cc_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_cc_text_input' );
+        var meeting_location_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_location_text_input' );
+        var meeting_street_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_street_text_input' );
+        var meeting_neighborhood_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_neighborhood_text_input' );
+        var meeting_borough_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_borough_text_input' );
+        var meeting_city_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_city_text_input' );
+        var meeting_county_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_county_text_input' );
+        var meeting_state_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_state_text_input' );
+        var meeting_zip_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_zip_text_input' );
+        var meeting_nation_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_nation_text_input' );
+        var meeting_longitude_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_longitude_text_input' );
+        var meeting_latitude_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_latitude_text_input' );
+
+        meeting_name_text_item.value = in_meeting_editor.meeting_object.meeting_name ? in_meeting_editor.meeting_object.meeting_name : meeting_name_text_item.value;
+        meeting_cc_text_item.value = in_meeting_editor.meeting_object.world_id ? in_meeting_editor.meeting_object.world_id : meeting_cc_text_item.value;
+        meeting_location_text_item.value = in_meeting_editor.meeting_object.location_text ? in_meeting_editor.meeting_object.location_text : meeting_location_text_item.value;
+        meeting_street_text_item.value = in_meeting_editor.meeting_object.location_street ? in_meeting_editor.meeting_object.location_street : meeting_street_text_item.value;
+        meeting_neighborhood_text_item.value = in_meeting_editor.meeting_object.location_neighborhood ? in_meeting_editor.meeting_object.location_neighborhood : meeting_neighborhood_text_item.value;
+        meeting_borough_text_item.value = in_meeting_editor.meeting_object.location_city_subsection ? in_meeting_editor.meeting_object.location_city_subsection : meeting_borough_text_item.value;
+        meeting_city_text_item.value = in_meeting_editor.meeting_object.location_municipality ? in_meeting_editor.meeting_object.location_municipality : meeting_city_text_item.value;
+        meeting_county_text_item.value = in_meeting_editor.meeting_object.location_sub_province ? in_meeting_editor.meeting_object.location_sub_province : meeting_county_text_item.value;
+        meeting_state_text_item.value = in_meeting_editor.meeting_object.location_province ? in_meeting_editor.meeting_object.location_province : meeting_state_text_item.value;
+        meeting_zip_text_item.value = in_meeting_editor.meeting_object.location_postal_code_1 ? in_meeting_editor.meeting_object.location_postal_code_1 : meeting_zip_text_item.value;
+        meeting_nation_text_item.value = in_meeting_editor.meeting_object.location_nation ? in_meeting_editor.meeting_object.location_nation : meeting_nation_text_item.value;
+        meeting_longitude_text_item.value = in_meeting_editor.meeting_object.longitude ? in_meeting_editor.meeting_object.longitude : meeting_longitude_text_item.value;
+        meeting_latitude_text_item.value = in_meeting_editor.meeting_object.latitude ? in_meeting_editor.meeting_object.latitude : meeting_latitude_text_item.value;
         
-        time_hour_select.onchange = function() { admin_handler_object.reactToDurationSelect ( in_meeting_id ); };
+        var weekday_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_weekday_select' );
+
+        this.setSelectByValue ( weekday_select, in_meeting_editor.meeting_object.weekday_tinyint );
+        this.setMeetingStartTime ( in_meeting_editor.meeting_object );
+        this.setMeetingDuration ( in_meeting_editor.meeting_object );
     };
     
+    /************************************************************************************//**
+    *   \brief 
+    ****************************************************************************************/
+    this.setMeetingStartTime = function(in_meeting_object
+                                        )
+    {
+        var meeting_id = in_meeting_object.id_bigint;
+        
+        var time_hour_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_start_hour_select' );
+        var time_minute_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_start_minute_select' );
+        var time_am_radio = document.getElementById ( 'bmlt_admin_' + meeting_id + '_time_am_radio' );
+        var time_pm_radio = document.getElementById ( 'bmlt_admin_' + meeting_id + '_time_pm_radio' );
+        
+        var start_time = in_meeting_object.start_time.toString().split ( ':' );
+
+        if ( start_time && (start_time.length > 1) )
+            {
+            var hours = parseInt ( start_time[0] );
+            var minutes = parseInt ( start_time[1] );
+            var midnight = false;
+            var noon = false;
+            var pm = false;
+            
+            if ( (hours == 23) && (minutes > 55) )
+                {
+                midnight = true;
+                }
+            else
+                {
+                if ( (hours == 12) && (minutes == 0) )
+                    {
+                    noon = true;
+                    }
+                else
+                    {
+                    if ( hours > 23 )
+                        {
+                        hours = 23;
+                        };
+            
+                    if ( hours < 0 )
+                        {
+                        hours = 0;
+                        };
+
+                    if ( minutes > 59 )
+                        {
+                        minutes = 59;
+                        };
+            
+                    if ( minutes < 0 )
+                        {
+                        minutes = 0;
+                        };
+
+                    if ( minutes % 5 )
+                        {
+                        minutes += 5;
+                
+                        if ( minutes >= 60 )
+                            {
+                            hours++;
+                            minutes -= 60;
+                            };
+                        };
+                    };
+                };
+                
+            if ( hours > 12 )
+                {
+                hours -= 12;
+                pm = true;
+                }
+            else if ( (hours == 12) && (minutes > 0) )
+                {
+                pm = true;
+                };
+            };
+        
+        if ( midnight )
+            {
+            this.setSelectByValue ( time_hour_select, 0 );
+            this.setSelectByValue ( time_minute_select, 0 );
+            }
+        else if ( noon )
+            {
+            this.setSelectByValue ( time_hour_select, 13 );
+            this.setSelectByValue ( time_minute_select, 0 );
+            }
+        else
+            {
+            this.setSelectByValue ( time_hour_select, hours );
+            this.setSelectByValue ( time_minute_select, minutes );
+            };
+        
+        if ( pm )
+            {
+            time_am_radio.checked = false;
+            time_pm_radio.checked = true;
+            }
+        else
+            {
+            time_pm_radio.checked = false;
+            time_am_radio.checked = true;
+            };
+        
+        this.reactToTimeSelect ( meeting_id );
+        
+        time_hour_select.onchange = function() { admin_handler_object.reactToTimeSelect ( meeting_id ); };
+    };
+    
+    /************************************************************************************//**
+    *   \brief 
+    ****************************************************************************************/
+    this.setMeetingDuration = function( in_meeting_object
+                                        )
+    {
+        var meeting_id = in_meeting_object.id_bigint;
+        
+        var time_hour_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_duration_hour_select' );
+        var time_minute_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_duration_minute_select' );
+        
+        var duration_time = in_meeting_object.duration_time.split ( ':' );
+        
+        if ( duration_time && (duration_time.length > 1) )
+            {
+            var hours = parseInt ( duration_time[0] );
+            var minutes = parseInt ( duration_time[1] );
+            var oe = false;
+            
+            if ( hours == 24 )
+                {
+                oe = true;
+                }
+            else
+                {
+                if ( minutes % 5 )
+                    {
+                    minutes += 5;
+                
+                    if ( minutes >= 60 )
+                        {
+                        hours++;
+                        minutes -= 60;
+                        };
+                    };
+            
+                if ( hours > 23 )
+                    {
+                    hours = 23;
+                    };
+            
+                if ( hours < 1 )
+                    {
+                    hours = 1;
+                    };
+                };
+            };
+        
+        if ( oe )
+            {
+            this.setSelectByValue ( time_hour_select, 24 );
+            this.setSelectByValue ( time_minute_select, 0 );
+            }
+        else
+            {
+            this.setSelectByValue ( time_hour_select, hours );
+            this.setSelectByValue ( time_minute_select, minutes );
+            };
+        
+        this.reactToDurationSelect ( meeting_id );
+        
+        time_hour_select.onchange = function() { admin_handler_object.reactToDurationSelect ( meeting_id ); };
+    };
+        
+    /************************************************************************************//**
+    *   \brief 
+    ****************************************************************************************/
+    this.setSelectByValue = function(   in_select_object,
+                                        in_value
+                                    )
+    {
+        var setIndex = 0;
+        
+        for ( var c = 0; c < in_select_object.options.length; c ++ )
+            {
+            if ( parseInt ( in_select_object.options[c].value ) == parseInt ( in_value ) )
+                {
+                setIndex = c;
+                break;
+                };
+            };
+            
+        in_select_object.selectedIndex = setIndex;
+    };
+        
     /************************************************************************************//**
     *   \brief 
     ****************************************************************************************/
@@ -707,11 +934,13 @@ function BMLT_Server_Admin ()
         var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
         var map_disclosure_div = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_map_disclosure_div' );
         var map_div = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_map_div' );
+        var longlat_div = document.getElementById ( 'bmlt_admin_single_location_' + in_meeting_id + '_long_lat_div' );
         
         root_element.map_disclosed = !root_element.map_disclosed;
 
         map_disclosure_div.className = 'bmlt_admin_single_meeting_disclosure_map_div' + (root_element.map_disclosed ? '_open' : '_closed');
         map_div.className = 'bmlt_admin_single_meeting_map_div' + (root_element.map_disclosed ? '' : ' item_hidden');
+        longlat_div.className = root_element.map_disclosed ? 'item_hidden' : '';
         
         if ( root_element.map_disclosed && !root_element.main_map )
             {
@@ -776,6 +1005,7 @@ function BMLT_Server_Admin ()
         var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
         var map_center = in_event.latLng;
         root_element.main_map.panTo ( map_center );
+        this.setMeetingLongLat ( map_center, in_meeting_id );
         this.displayMainMarkerInMap ( in_meeting_id );
     };
     
@@ -789,6 +1019,7 @@ function BMLT_Server_Admin ()
         var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
         var map_center = in_event.latLng;
         root_element.main_map.panTo ( map_center );
+        this.setMeetingLongLat ( map_center, in_meeting_id );
     };
 
     /************************************************************************************//**
@@ -821,6 +1052,25 @@ function BMLT_Server_Admin ()
                                                                         } );
             google.maps.event.addListener ( root_element.main_map.main_marker, 'dragend', function(in_event) { admin_handler_object.respondToMarkerDragEnd( in_event, in_meeting_id ); } );
             };
+    };
+    
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.setMeetingLongLat = function ( in_longLat,
+                                        in_meeting_id
+                                        )
+    {
+        var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+        var meeting_object = root_element.meeting_object;
+        var meeting_longitude_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_longitude_text_input' );
+        var meeting_latitude_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_latitude_text_input' );
+        
+        meeting_object.longitude = in_longLat.lng();
+        meeting_object.latitude = in_longLat.lat();
+        
+        meeting_longitude_text_item.value = meeting_object.longitude;
+        meeting_latitude_text_item.value = meeting_object.latitude;
     };
     
     /************************************************************************************//**
@@ -1110,16 +1360,12 @@ function BMLT_Server_Admin ()
             ret.longitude = g_default_longitude;
             ret.latitude = g_default_latitude;
             ret.zoom = g_default_zoom;
-            ret.id_bigint = parseInt ( in_meeting_id ); // Just to make sure it is a number (0 is a number. null is NaN).
-            
-            if ( !this.m_meeting_objects )  // We make a meeting objects array, if none previously existed.
-                {
-                this.m_meeting_objects = new Array;
-                };
-                
-            this.m_meeting_objects[this.m_meeting_objects.length] = ret;
+            ret.start_time = g_default_meeting_start_time;
+            ret.duration_time = g_default_meeting_duration;
+            ret.weekday_tinyint = g_default_meeting_weekday;
+            ret.id_bigint = 0;  // All new meetings are ID 0.
             };
-            
+        
         return ret;
     };
 
