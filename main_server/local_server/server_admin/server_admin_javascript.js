@@ -159,6 +159,7 @@ function BMLT_Server_Admin ()
                 };
             
             this.validateAccountGoButton();
+            this.validateMeetingEditorButton(in_meeting_id);
             
             if ( in_meeting_id != null )
                 {
@@ -843,6 +844,7 @@ function BMLT_Server_Admin ()
     {
         var save_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_' + in_meeting_id +'_save_button' );
         save_button.innerHTML = g_Create_new_meeting_button_name;
+        this.validateMeetingEditorButton(in_meeting_id);
     };
     
     /************************************************************************************//**
@@ -853,6 +855,7 @@ function BMLT_Server_Admin ()
     {
         var save_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_' + in_meeting_id +'_save_button' );
         save_button.innerHTML = g_Save_meeting_button_name;
+        this.validateMeetingEditorButton(in_meeting_id);
     };
     
     /************************************************************************************//**
@@ -914,6 +917,29 @@ function BMLT_Server_Admin ()
         if ( editor )
             {
             editor.dirty_flag = true;
+            };
+    };
+    
+    /************************************************************************************//**
+    *   \brief 
+    ****************************************************************************************/
+    this.validateMeetingEditorButton = function(in_meeting_id
+                                                )
+    {
+        var save_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_' + in_meeting_id + '_save_button' );
+        var dup_checkbox = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_duplicate_checkbox' );
+        
+        if ( save_button )
+            {
+            var enable = (in_meeting_id == 0) || (dup_checkbox && dup_checkbox.checked);
+            if ( enable )
+                {
+                save_button.className = 'bmlt_admin_ajax_button button';
+                }
+            else
+                {
+                save_button.className = 'bmlt_admin_ajax_button button_disabled';
+                };
             };
     };
     
@@ -995,6 +1021,8 @@ function BMLT_Server_Admin ()
                                                                         {
                                                                         save_button.innerHTML = g_Save_meeting_button_name;
                                                                         };
+                                                                    
+                                                                    admin_handler_object.validateMeetingEditorButton(in_meeting_id);
                                                                 };
                 };
             };
@@ -1013,6 +1041,12 @@ function BMLT_Server_Admin ()
         var meeting_object = in_meeting_editor.meeting_object;
         var meeting_id = meeting_object.id_bigint;
         
+        if ( !meeting_id )  // We add a header for the new meeting form.
+            {
+            var template_header = document.getElementById ( 'bmlt_admin_meeting_editor_' + meeting_id + '_meeting_header' );
+            template_header.innerHTML = g_new_meeting_header_text;
+            };
+
         var meeting_name_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_name_text_input' );
         var meeting_cc_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_cc_text_input' );
         var meeting_location_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_location_text_input' );
@@ -1075,6 +1109,7 @@ function BMLT_Server_Admin ()
         BMLT_Admin_setSelectByValue ( weekday_select, in_meeting_editor.meeting_object.weekday_tinyint );
         this.setMeetingStartTime ( in_meeting_editor.meeting_object );
         this.setMeetingDuration ( in_meeting_editor.meeting_object );
+        this.validateMeetingEditorButton(meeting_id);
     };
     
     /************************************************************************************//**
@@ -1425,7 +1460,6 @@ function BMLT_Server_Admin ()
         address_line = address_line.replace ( /,+/g, ', ' );
         address_line = address_line.replace ( /^, /g, '' );
         address_line = address_line.replace ( /, $/g, '' );
-        
         if ( address_line != ', ' )
             {
             if ( the_meeting_object.m_geocoder )
@@ -1443,9 +1477,6 @@ function BMLT_Server_Admin ()
                     {
                     alert ( g_meeting_lookup_failed );
                     }
-                else
-                    {
-                    };
                 }
             else
                 {
@@ -1467,8 +1498,6 @@ function BMLT_Server_Admin ()
             {
             var the_meeting_object = meeting_editor.meeting_object;
 
-            google.maps.event.removeListener ( the_meeting_object.m_geocoder );
-            the_meeting_object.m_geocoder = null;
             if ( in_geocode_response && in_geocode_response.length && (google.maps.OK == in_geocode_response[0].status) )
                 {
                 the_meeting_object.longitude = in_geocode_response[0].geometry.location.lng();
@@ -1477,7 +1506,18 @@ function BMLT_Server_Admin ()
                 var map_center = new google.maps.LatLng ( the_meeting_object.latitude, the_meeting_object.longitude );
                 meeting_editor.main_map.panTo ( map_center );
                 this.displayMainMarkerInMap ( in_meeting_id );
+                }
+            else
+                {
+                alert ( in_geocode_response[0].status.toString() );
                 };
+            
+            google.maps.event.removeListener ( the_meeting_object.m_geocoder );
+            the_meeting_object.m_geocoder = null;
+            }
+        else
+            {
+            alert ( g_meeting_lookup_failed );
             };
     };
     

@@ -57,6 +57,7 @@
 	                                        'meeting_search_no_results_text'                        =>  'No Meetings Found',
 	                                        'meeting_editor_tab_specifier_text'                     =>  'Search For Meetings',
 	                                        'meeting_editor_tab_editor_text'                        =>  'Edit Meetings',
+	                                        'meeting_editor_create_new_text'                        =>  'Create A New Meeting',
 	                                        'meeting_editor_location_map_link'                      =>  'Location Map',
 	                                        'meeting_editor_screen_match_map_button'                =>  'Set Map to Address',
 	                                        'meeting_is_published'                                  =>  'Meeting is Published',

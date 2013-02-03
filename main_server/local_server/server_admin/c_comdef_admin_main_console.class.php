@@ -187,6 +187,11 @@ class c_comdef_admin_main_console
                     {
                     $ret .= "\n";
                     }
+                $ret .= 'var g_new_meeting_header_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_create_new_text'] ).'\';';
+                if ( defined ( '__DEBUG_MODE__' ) )
+                    {
+                    $ret .= "\n";
+                    }
                 $ret .= file_get_contents ( dirname ( __FILE__ ).(defined('__DEBUG_MODE__') ? '/' : '/js_stripper.php?filename=' ).'server_admin_javascript.js' );
                 if ( defined('__DEBUG_MODE__') )
                     {
@@ -522,6 +527,7 @@ class c_comdef_admin_main_console
     {
         $ret = '<div id="bmlt_admin_single_meeting_editor_template_div" class="bmlt_admin_single_meeting_editor_div item_hidden">';
             $ret .= '<div class="bmlt_admin_single_meeting_outer_div">';
+                $ret .= '<div id="bmlt_admin_meeting_editor_template_meeting_header" class="bmlt_admin_meeting_editor_meeting_header"></div>';
                 $ret .= '<div class="bmlt_admin_meeting_inner_div">';
                     $ret .= '<div class="bmlt_admin_meeting_editor_tab_bar">';
                         $ret .= '<a href="javascript:admin_handler_object.respondToBasicTabSelection(template)" id="bmlt_admin_meeting_editor_template_tab_item_basic_a" class="bmlt_admin_meeting_editor_tab_item_a_selected">';
@@ -731,42 +737,42 @@ class c_comdef_admin_main_console
                 $ret .= '</div>';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_street_label'] ).'</span>';
-                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_street_text_input" type="text" value="'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_street_prompt'] ).'" onkeyup="admin_handler_object.handleTextInputChange(this, 0);admin_handler_object.handleNewAddressInfo(0);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_street_text_input" type="text" value="'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_street_prompt'] ).'" onkeyup="admin_handler_object.handleTextInputChange(this, 0);admin_handler_object.handleNewAddressInfo(template);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_neighborhood_label'] ).'</span>';
-                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_neighborhood_text_input" type="text" value="'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_neighborhood_prompt'] ).'" onkeyup="admin_handler_object.handleTextInputChange(this, 0);admin_handler_object.handleNewAddressInfo(0);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_neighborhood_text_input" type="text" value="'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_neighborhood_prompt'] ).'" onkeyup="admin_handler_object.handleTextInputChange(this, 0);admin_handler_object.handleNewAddressInfo(template);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_borough_label'] ).'</span>';
-                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_borough_text_input" type="text" value="'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_borough_prompt'] ).'" onkeyup="admin_handler_object.handleTextInputChange(this, 0);admin_handler_object.handleNewAddressInfo(0);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_borough_text_input" type="text" value="'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_borough_prompt'] ).'" onkeyup="admin_handler_object.handleTextInputChange(this, 0);admin_handler_object.handleNewAddressInfo(template);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_city_label'] ).'</span>';
-                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_city_text_input" type="text" value="'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_city_prompt'] ).'" onkeyup="admin_handler_object.handleTextInputChange(this, 0);admin_handler_object.handleNewAddressInfo(0);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_city_text_input" type="text" value="'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_city_prompt'] ).'" onkeyup="admin_handler_object.handleTextInputChange(this, 0);admin_handler_object.handleNewAddressInfo(template);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_county_label'] ).'</span>';
-                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_county_text_input" type="text" value="'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_county_prompt'] ).'" onkeyup="admin_handler_object.handleTextInputChange(this, 0);admin_handler_object.handleNewAddressInfo(0);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_county_text_input" type="text" value="'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_county_prompt'] ).'" onkeyup="admin_handler_object.handleTextInputChange(this, 0);admin_handler_object.handleNewAddressInfo(template);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_state_label'] ).'</span>';
-                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_state_text_input" type="text" value="'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_state_prompt'] ).'" onkeyup="admin_handler_object.handleTextInputChange(this, 0);admin_handler_object.handleNewAddressInfo(0);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_state_text_input" type="text" value="'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_state_prompt'] ).'" onkeyup="admin_handler_object.handleTextInputChange(this, 0);admin_handler_object.handleNewAddressInfo(template);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_zip_label'] ).'</span>';
-                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_zip_text_input" type="text" value="'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_zip_prompt'] ).'" onkeyup="admin_handler_object.handleTextInputChange(this, 0);admin_handler_object.handleNewAddressInfo(0);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this, true);" /></span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_zip_text_input" type="text" value="'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_zip_prompt'] ).'" onkeyup="admin_handler_object.handleTextInputChange(this, 0);admin_handler_object.handleNewAddressInfo(template);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this, true);" /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_nation_label'] ).'</span>';
-                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_nation_text_input" type="text" value="'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_nation_prompt'] ).'" onkeyup="admin_handler_object.handleTextInputChange(this, 0);admin_handler_object.handleNewAddressInfo(0);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_nation_text_input" type="text" value="'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_nation_prompt'] ).'" onkeyup="admin_handler_object.handleTextInputChange(this, 0);admin_handler_object.handleNewAddressInfo(template);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
             $ret .= '</div>';

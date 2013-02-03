@@ -645,3 +645,11 @@ div.meeting_line_even
 {
     background-color:#efefff;
 }
+
+div.bmlt_admin_meeting_editor_meeting_header
+{
+    text-align:center;
+    font-size: large;
+    font-weight:bold;
+    color:#009;
+}
