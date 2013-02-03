@@ -31,7 +31,7 @@
 
 defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
-require_once ( dirname ( __FILE__ ).'/../../client/common_search.inc.php' );
+require_once ( dirname ( __FILE__ ).'/common_search.inc.php' );
 require ( dirname ( __FILE__ ).'/../../server/config/auto-config.inc.php' );	// Just to make sure we have an early copy.
 
 /// These are the default formats for wheelchair, open and closed (used for the NAWS format). They can be overridden in the auto-config.inc.php file.
@@ -253,7 +253,7 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 								)
 {
 	$ret = null;
-	require_once ( dirname ( __FILE__ ).'/../../client/c_comdef_meeting_search_manager.class.php' );
+	require_once ( dirname ( __FILE__ ).'/c_comdef_meeting_search_manager.class.php' );
 
 	$search_manager = new c_comdef_meeting_search_manager;
 	

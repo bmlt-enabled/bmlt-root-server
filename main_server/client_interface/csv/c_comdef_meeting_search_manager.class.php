@@ -52,7 +52,7 @@
 
 defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
-require_once ( dirname ( __FILE__ )."/../server/c_comdef_server.class.php" );
+require_once ( dirname ( __FILE__ )."/../../server/c_comdef_server.class.php" );
 
 /// A class to control the basic common functionality of all meeting searches.
 class c_comdef_meeting_search_manager
