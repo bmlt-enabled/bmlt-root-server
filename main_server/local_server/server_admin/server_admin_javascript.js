@@ -22,6 +22,10 @@
 
 function BMLT_Server_Admin ()
 {
+    // #mark - 
+    // #mark Class Declaration
+    // #mark -
+    
     /************************************************************************************//**
     *                                     DATA MEMBERS                                      *
     ****************************************************************************************/
@@ -37,9 +41,11 @@ function BMLT_Server_Admin ()
     /************************************************************************************//**
     *                                       METHODS                                         *
     ****************************************************************************************/
-    /************************************************************************************//**
-    *                                   USED THROUGHOUT                                     *
-    ****************************************************************************************/
+    
+    // #mark - 
+    // #mark Text Item Handlers
+    // #mark -
+    
     /************************************************************************************//**
     *   \brief When a text input (either <input> or <textarea> is initialized, we can set   *
     *          up a default text value that is displayed when the item is empty and not in  *
@@ -147,9 +153,10 @@ function BMLT_Server_Admin ()
             };
     };
     
-    /************************************************************************************//**
-    *                                 MY ACCOUNT SECTION                                    *
-    ****************************************************************************************/
+    // #mark - 
+    // #mark Account Info Section
+    // #mark -
+    
     /************************************************************************************//**
     *   \brief  Toggles the visibility of the account info section.                         *
     ****************************************************************************************/
@@ -313,9 +320,10 @@ function BMLT_Server_Admin ()
         button_span.className = 'bmlt_admin_value_left' + (in_shown ? ' item_hidden' : '');
     };
     
-    /************************************************************************************//**
-    *                               MEETING EDITOR SECTION                                  *
-    ****************************************************************************************/
+    // #mark - 
+    // #mark Meeting Editor Section
+    // #mark -
+        
     /************************************************************************************//**
     *   \brief  Toggles the visibility of the meeting editor section.                       *
     ****************************************************************************************/
@@ -339,780 +347,44 @@ function BMLT_Server_Admin ()
     };
     
     /************************************************************************************//**
-    *   \brief  Brings up a new meeting screen.                                             *
+    *   \brief  Returns an object with the meeting data for the meeting ID passed in.       *
+    *   \returns a meeting object. Null if none found, or invalid ID.                       *
     ****************************************************************************************/
-    this.createANewMeetingButtonHit = function( in_button_object
+    this.getMeetingObjectById = function ( in_meeting_id    ///< The ID of the meeting to fetch
                                             )
     {
-        var display_parent = document.getElementById ( 'bmlt_admin_meeting_editor_new_meeting_0_editor_display' );
-        var new_meeting_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_button' );
+        var ret = null;
         
-        display_parent.innerHTML = null;
-        
-        this.createNewMeetingEditorScreen ( display_parent, 0 );
-        
-        new_meeting_button.className = 'bmlt_admin_ajax_button button item_hidden';
-        display_parent.className = 'bmlt_admin_meeting_editor_meeting_editor_display';
-        this.changeSaveMeetingButtonToCopy(0);
-    };
-    
-    /************************************************************************************//**
-    *   \brief  
-    ****************************************************************************************/
-    this.changeSaveMeetingButtonToCopy = function( in_meeting_id   ///< The BMLT ID of the meeting that is being edited.
-                                                )
-    {
-        var save_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_' + in_meeting_id +'_save_button' );
-        save_button.innerHTML = g_Create_new_meeting_button_name;
-    };
-    
-    /************************************************************************************//**
-    *   \brief  
-    ****************************************************************************************/
-    this.changeCopyMeetingButtonToSave = function( in_meeting_id   ///< The BMLT ID of the meeting that is being edited.
-                                                )
-    {
-        var save_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_' + in_meeting_id +'_save_button' );
-        save_button.innerHTML = g_Save_meeting_button_name;
-    };
-    
-    /************************************************************************************//**
-    *   \brief  
-    ****************************************************************************************/
-    this.cancelANewMeetingButtonHit = function()
-    {
-    };
-        
-    /************************************************************************************//**
-    *   \brief  
-    ****************************************************************************************/
-    this.respondToBasicTabSelection = function (in_meeting_id   ///< The BMLT ID of the meeting that is being edited.
-                                                )
-    {
-        var basic_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_basic_sheet_div' );
-        var location_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_location_sheet_div' );
-        var basic_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_basic_a' );
-        var location_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_location_a' );
-        
-        basic_options_sheet.className = 'bmlt_admin_meeting_option_sheet_div';
-        basic_tab.className = 'bmlt_admin_meeting_editor_tab_item_a_selected';
-        location_options_sheet.className = 'bmlt_admin_meeting_option_sheet_div item_hidden';
-        location_tab.className = 'bmlt_admin_meeting_editor_tab_item_a_unselected';
-    };
-        
-    /************************************************************************************//**
-    *   \brief  
-    ****************************************************************************************/
-    this.respondToLocationTabSelection = function ( in_meeting_id   ///< The BMLT ID of the meeting that is being edited.
-                                                    )
-    {
-        var basic_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_basic_sheet_div' );
-        var location_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_location_sheet_div' );
-        var basic_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_basic_a' );
-        var location_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_location_a' );
-        
-        basic_options_sheet.className = 'bmlt_admin_meeting_option_sheet_div item_hidden';
-        basic_tab.className = 'bmlt_admin_meeting_editor_tab_item_a_unselected';
-        location_options_sheet.className = 'bmlt_admin_meeting_option_sheet_div';
-        location_tab.className = 'bmlt_admin_meeting_editor_tab_item_a_selected';
-    };
-        
-    /************************************************************************************//**
-    *   \brief  
-    ****************************************************************************************/
-    this.dirtifyMeeting = function (in_meeting_id       ///< The BMLT ID of the meeting that will be dirtified.
-                                    )
-    {
-        var editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id ) + '_div' );
-    
-        if ( editor )
+        if ( in_meeting_id && this.m_meeting_objects && this.m_meeting_objects.length )
             {
-            editor.dirty_flag = true;
-            };
-    };
-        
-    /************************************************************************************//**
-    *   \brief  
-    ****************************************************************************************/
-    this.handleNewAddressInfo = function( in_meeting_id       ///< The BMLT ID of the meeting being edited.
-                                        )
-    {
-        var meeting_street_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_street_text_input' );
-        var meeting_borough_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_borough_text_input' );
-        var meeting_city_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_city_text_input' );
-        var meeting_state_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_state_text_input' );
-        var meeting_zip_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_zip_text_input' );
-        var meeting_nation_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_nation_text_input' );
-
-        var street_text = meeting_street_text_item.value;
-        var borough_text = meeting_borough_text_item.value;
-        var city_text = meeting_city_text_item.value;
-        var state_text = meeting_state_text_item.value;
-        var zip_text = meeting_zip_text_item.value;
-        var nation_text = meeting_nation_text_item.value;
-
-        var set_map_to_address_button = document.getElementById ( 'bmlt_admin_meeting_map_' + in_meeting_id + '_button_a' );
-
-        if ( zip_text || borough_text || city_text || state_text || nation_text )
-            {
-            set_map_to_address_button.href = 'javascript:admin_handler_object.setMapToAddress(' + in_meeting_id + ')';
-            set_map_to_address_button.className = 'bmlt_admin_ajax_button';
-            }
-        else
-            {
-            set_map_to_address_button.href = null;
-            set_map_to_address_button.className = 'bmlt_admin_ajax_button button_disabled';
-            }
-    };
-        
-    /************************************************************************************//**
-    *   \brief  
-    ****************************************************************************************/
-    this.setMapToAddress = function( in_meeting_id       ///< The BMLT ID of the meeting being edited.
-                                        )
-    {
-        var meeting_street_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_street_text_input' );
-        var meeting_borough_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_borough_text_input' );
-        var meeting_city_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_city_text_input' );
-        var meeting_state_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_state_text_input' );
-        var meeting_zip_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_zip_text_input' );
-        var meeting_nation_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_nation_text_input' );
-
-        var street_text = meeting_street_text_item.value;
-        var borough_text = meeting_borough_text_item.value;
-        var city_text = meeting_city_text_item.value;
-        var state_text = meeting_state_text_item.value;
-        var zip_text = meeting_zip_text_item.value;
-        var nation_text = meeting_nation_text_item.value;
-
-        if ( zip_text || borough_text || city_text || state_text || nation_text )
-            {
-            this.lookupLocation ( in_meeting_id );
-            };
-    };
-        
-    /************************************************************************************//**
-    *   \brief  
-    ****************************************************************************************/
-    this.lookupLocation = function( in_meeting_id       ///< The BMLT ID of the meeting that being edited.
-                                    )
-    {
-        var the_meeting_object = this.getMeetingObjectById ( in_meeting_id );
-
-        var editor_object = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
-        var meeting_street_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_street_text_input' );
-        var meeting_borough_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_borough_text_input' );
-        var meeting_city_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_city_text_input' );
-        var meeting_state_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_state_text_input' );
-        var meeting_zip_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_zip_text_input' );
-        var meeting_nation_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_nation_text_input' );
-
-        var street_text = (meeting_street_text_item.value != meeting_street_text_item.defaultValue) ? meeting_street_text_item.value : '';
-        var borough_text = (meeting_borough_text_item.value != meeting_borough_text_item.defaultValue) ? meeting_borough_text_item.value : '';
-        var city_text = (meeting_city_text_item.value != meeting_city_text_item.defaultValue) ? meeting_city_text_item.value : '';
-        var state_text = (meeting_state_text_item.value != meeting_state_text_item.defaultValue) ? meeting_state_text_item.value : '';
-        var zip_text = (meeting_zip_text_item.value != meeting_zip_text_item.defaultValue) ? meeting_zip_text_item.value : '';
-        var nation_text = (meeting_nation_text_item.value != meeting_nation_text_item.defaultValue) ? meeting_nation_text_item.value : '';
-        
-        if ( !nation_text )
-            {
-            nation_text = g_region_bias;
-            };
-        
-        // What we do here, is try to create a readable address line to be sent off for geocoding. We just try to clean it up as much as possible.
-        var address_line = sprintf ( '%s,%s,%s,%s,%s,%s', street_text, borough_text, city_text, state_text, zip_text, nation_text );
-        
-        address_line = address_line.replace ( /,+/g, ', ' );
-        address_line = address_line.replace ( /^, /g, '' );
-        address_line = address_line.replace ( /, $/g, '' );
-        
-        if ( address_line != ', ' )
-            {
-            if ( the_meeting_object.m_geocoder )
+            for ( var c = 0; c < this.m_meeting_objects.length; c++ )
                 {
-                google.maps.event.removeListener ( the_meeting_object.m_geocoder );
-                the_meeting_object.m_geocoder = null;
-                };
-        
-            the_meeting_object.m_geocoder = new google.maps.Geocoder;
-        
-            if ( the_meeting_object.m_geocoder )
-                {
-                var status = the_meeting_object.m_geocoder.geocode ( { 'address' : address_line }, function ( in_geocode_response ) { admin_handler_object.sGeoCallback ( in_geocode_response, in_meeting_id ); } );
-                if ( google.maps.OK != status )
+                if ( in_meeting_id == this.m_meeting_objects[c].id_bigint )
                     {
-                    alert ( g_meeting_lookup_failed );
-                    }
-                else
-                    {
-                    };
-                }
-            else
-                {
-                alert ( g_meeting_lookup_failed );
-                };
-            };
-    };
-    /****************************************************************************************//**
-    *   \brief This catches the AJAX response, and fills in the response form.                  *
-    ********************************************************************************************/
-    
-    this.sGeoCallback = function (  in_geocode_response,    ///< The JSON object.
-                                    in_meeting_id           ///< The ID of the meeting.
-                                    )
-    {
-        var meeting_editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id ) + '_div' );
-
-        if ( meeting_editor && meeting_editor.main_map )
-            {
-            var the_meeting_object = meeting_editor.meeting_object;
-
-            google.maps.event.removeListener ( the_meeting_object.m_geocoder );
-            the_meeting_object.m_geocoder = null;
-            if ( in_geocode_response && in_geocode_response.length && (google.maps.OK == in_geocode_response[0].status) )
-                {
-                the_meeting_object.longitude = in_geocode_response[0].geometry.location.lng();
-                the_meeting_object.latitude = in_geocode_response[0].geometry.location.lat();
-        
-                var map_center = new google.maps.LatLng ( the_meeting_object.latitude, the_meeting_object.longitude );
-                meeting_editor.main_map.panTo ( map_center );
-                this.displayMainMarkerInMap ( in_meeting_id );
-                };
-            };
-    };
-    
-    /************************************************************************************//**
-    *   \brief  This creates a new meeting details editor screen.                           *
-    *   \returns    A new DOM hierarchy with the initialized editor.                        *
-    ****************************************************************************************/
-    this.createNewMeetingEditorScreen = function(   in_parent_element,  ///< The parent element of the new instance.
-                                                    in_meeting_id       ///< The BMLT ID of the meeting that will be edited. If null, then it is a new meeting.
-                                                )
-    {
-        // We first see if one already exists.
-        var new_editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id ) + '_div' );
-    
-        if ( !new_editor )
-            {
-            var template_dom_list = document.getElementById ( 'bmlt_admin_single_meeting_editor_template_div' );
-            
-            var meeting_name_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_name_text_input';
-            var meeting_cc_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_cc_text_input';
-            
-            var meeting_location_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_location_text_input';
-            var meeting_street_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_street_text_input';
-            var meeting_neighborhood_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_neighborhood_text_input';
-            var meeting_borough_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_borough_text_input';
-            var meeting_city_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_city_text_input';
-            var meeting_county_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_county_text_input';
-            var meeting_state_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_state_text_input';
-            var meeting_zip_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_zip_text_input';
-            var meeting_nation_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_nation_text_input';
-            var meeting_longitude_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_longitude_text_input';
-            var meeting_latitude_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_latitude_text_input';
-        
-            if ( template_dom_list )    // This makes an exact copy of the template (including IDs, so we'll need to change those).
-                {
-                new_editor = template_dom_list.cloneNode ( true );
-                // This function replaces all of the spots that say "template" with the given ID. That gives us unique IDs.
-                BMLT_Admin_changeTemplateIDToUseThisID ( new_editor, in_meeting_id );
-                new_editor.meeting_object = this.getMeetingObjectById ( in_meeting_id );
-                new_editor.dirty_flag = false;
-                new_editor.map_disclosed = false;
-            
-                new_editor.className = 'bmlt_admin_single_meeting_editor_div';
-            
-                in_parent_element.appendChild ( new_editor );
-                            
-                this.handleTextInputLoad(document.getElementById(meeting_name_text_item_id));
-                this.handleTextInputLoad(document.getElementById(meeting_cc_text_item_id), null, true);
-                this.handleTextInputLoad(document.getElementById(meeting_location_text_item_id));
-                this.handleTextInputLoad(document.getElementById(meeting_street_text_item_id));
-                this.handleTextInputLoad(document.getElementById(meeting_neighborhood_text_item_id));
-                this.handleTextInputLoad(document.getElementById(meeting_borough_text_item_id));
-                this.handleTextInputLoad(document.getElementById(meeting_city_text_item_id));
-                this.handleTextInputLoad(document.getElementById(meeting_county_text_item_id));
-                this.handleTextInputLoad(document.getElementById(meeting_state_text_item_id));
-                this.handleTextInputLoad(document.getElementById(meeting_zip_text_item_id), null, true);
-                this.handleTextInputLoad(document.getElementById(meeting_nation_text_item_id), null, true);
-                this.handleTextInputLoad(document.getElementById(meeting_longitude_text_item_id), 0, true);
-                this.handleTextInputLoad(document.getElementById(meeting_latitude_text_item_id), 0, true);
-                
-                var map_disclosure_a = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_map_disclosure_a' );
-                map_disclosure_a.href = 'javascript:admin_handler_object.toggleMeetingMapDisclosure(' + in_meeting_id + ')';
-                
-                var select_duplicate_checkbox = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_duplicate_checkbox' );
-                select_duplicate_checkbox.onchange = function (){   var save_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_' + in_meeting_id + '_save_button' );
-                                                                    if ( this.checked )
-                                                                        {
-                                                                        save_button.innerHTML = g_Create_new_meeting_button_name;
-                                                                        }
-                                                                    else
-                                                                        {
-                                                                        save_button.innerHTML = g_Save_meeting_button_name;
-                                                                        };
-                                                                };
-                };
-            };
-        
-        this.populateMeetingEditorForm ( new_editor, in_meeting_id );
-        
-        return new_editor;
-    };
-    
-    /************************************************************************************//**
-    *   \brief 
-    ****************************************************************************************/
-    this.populateMeetingEditorForm = function(  in_meeting_editor   ///< This is the meeting editor object that will be set up for this meeting.
-                                                )
-    {
-        var meeting_object = in_meeting_editor.meeting_object;
-        
-        var meeting_id = meeting_object.id_bigint;
-        
-        var meeting_name_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_name_text_input' );
-        var meeting_cc_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_cc_text_input' );
-        var meeting_location_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_location_text_input' );
-        var meeting_street_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_street_text_input' );
-        var meeting_neighborhood_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_neighborhood_text_input' );
-        var meeting_borough_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_borough_text_input' );
-        var meeting_city_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_city_text_input' );
-        var meeting_county_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_county_text_input' );
-        var meeting_state_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_state_text_input' );
-        var meeting_zip_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_zip_text_input' );
-        var meeting_nation_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_nation_text_input' );
-        var meeting_longitude_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_longitude_text_input' );
-        var meeting_latitude_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_latitude_text_input' );
-
-        meeting_name_text_item.value = in_meeting_editor.meeting_object.meeting_name ? in_meeting_editor.meeting_object.meeting_name : meeting_name_text_item.value;
-        meeting_cc_text_item.value = in_meeting_editor.meeting_object.world_id ? in_meeting_editor.meeting_object.world_id : meeting_cc_text_item.value;
-        meeting_location_text_item.value = in_meeting_editor.meeting_object.location_text ? in_meeting_editor.meeting_object.location_text : meeting_location_text_item.value;
-        meeting_street_text_item.value = in_meeting_editor.meeting_object.location_street ? in_meeting_editor.meeting_object.location_street : meeting_street_text_item.value;
-        meeting_neighborhood_text_item.value = in_meeting_editor.meeting_object.location_neighborhood ? in_meeting_editor.meeting_object.location_neighborhood : meeting_neighborhood_text_item.value;
-        meeting_borough_text_item.value = in_meeting_editor.meeting_object.location_city_subsection ? in_meeting_editor.meeting_object.location_city_subsection : meeting_borough_text_item.value;
-        meeting_city_text_item.value = in_meeting_editor.meeting_object.location_municipality ? in_meeting_editor.meeting_object.location_municipality : meeting_city_text_item.value;
-        meeting_county_text_item.value = in_meeting_editor.meeting_object.location_sub_province ? in_meeting_editor.meeting_object.location_sub_province : meeting_county_text_item.value;
-        meeting_state_text_item.value = in_meeting_editor.meeting_object.location_province ? in_meeting_editor.meeting_object.location_province : meeting_state_text_item.value;
-        meeting_zip_text_item.value = in_meeting_editor.meeting_object.location_postal_code_1 ? in_meeting_editor.meeting_object.location_postal_code_1 : meeting_zip_text_item.value;
-        meeting_nation_text_item.value = in_meeting_editor.meeting_object.location_nation ? in_meeting_editor.meeting_object.location_nation : meeting_nation_text_item.value;
-        meeting_longitude_text_item.value = in_meeting_editor.meeting_object.longitude ? in_meeting_editor.meeting_object.longitude : meeting_longitude_text_item.value;
-        meeting_latitude_text_item.value = in_meeting_editor.meeting_object.latitude ? in_meeting_editor.meeting_object.latitude : meeting_latitude_text_item.value;
-        
-        var weekday_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_weekday_select' );
-
-        this.setSelectByValue ( weekday_select, in_meeting_editor.meeting_object.weekday_tinyint );
-        this.setMeetingStartTime ( in_meeting_editor.meeting_object );
-        this.setMeetingDuration ( in_meeting_editor.meeting_object );
-    };
-    
-    /************************************************************************************//**
-    *   \brief 
-    ****************************************************************************************/
-    this.setMeetingStartTime = function(in_meeting_object
-                                        )
-    {
-        var meeting_id = in_meeting_object.id_bigint;
-        
-        var time_hour_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_start_hour_select' );
-        var time_minute_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_start_minute_select' );
-        var time_am_radio = document.getElementById ( 'bmlt_admin_' + meeting_id + '_time_am_radio' );
-        var time_pm_radio = document.getElementById ( 'bmlt_admin_' + meeting_id + '_time_pm_radio' );
-        
-        var start_time = in_meeting_object.start_time.toString().split ( ':' );
-
-        if ( start_time && (start_time.length > 1) )
-            {
-            var hours = parseInt ( start_time[0] );
-            var minutes = parseInt ( start_time[1] );
-            var midnight = false;
-            var noon = false;
-            var pm = false;
-            
-            if ( (hours == 23) && (minutes > 55) )
-                {
-                midnight = true;
-                }
-            else
-                {
-                if ( (hours == 12) && (minutes == 0) )
-                    {
-                    noon = true;
-                    }
-                else
-                    {
-                    if ( hours > 23 )
-                        {
-                        hours = 23;
-                        };
-            
-                    if ( hours < 0 )
-                        {
-                        hours = 0;
-                        };
-
-                    if ( minutes > 59 )
-                        {
-                        minutes = 59;
-                        };
-            
-                    if ( minutes < 0 )
-                        {
-                        minutes = 0;
-                        };
-
-                    if ( minutes % 5 )
-                        {
-                        minutes += 5;
-                
-                        if ( minutes >= 60 )
-                            {
-                            hours++;
-                            minutes -= 60;
-                            };
-                        };
-                    };
-                };
-                
-            if ( hours > 12 )
-                {
-                hours -= 12;
-                pm = true;
-                }
-            else if ( (hours == 12) && (minutes > 0) )
-                {
-                pm = true;
-                };
-            };
-        
-        if ( midnight )
-            {
-            this.setSelectByValue ( time_hour_select, 0 );
-            this.setSelectByValue ( time_minute_select, 0 );
-            }
-        else if ( noon )
-            {
-            this.setSelectByValue ( time_hour_select, 13 );
-            this.setSelectByValue ( time_minute_select, 0 );
-            }
-        else
-            {
-            this.setSelectByValue ( time_hour_select, hours );
-            this.setSelectByValue ( time_minute_select, minutes );
-            };
-        
-        if ( pm )
-            {
-            time_am_radio.checked = false;
-            time_pm_radio.checked = true;
-            }
-        else
-            {
-            time_pm_radio.checked = false;
-            time_am_radio.checked = true;
-            };
-        
-        this.reactToTimeSelect ( meeting_id );
-        
-        time_hour_select.onchange = function() { admin_handler_object.reactToTimeSelect ( meeting_id ); };
-    };
-    
-    /************************************************************************************//**
-    *   \brief 
-    ****************************************************************************************/
-    this.setMeetingDuration = function( in_meeting_object
-                                        )
-    {
-        var meeting_id = in_meeting_object.id_bigint;
-        
-        var time_hour_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_duration_hour_select' );
-        var time_minute_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_duration_minute_select' );
-        
-        var duration_time = in_meeting_object.duration_time.split ( ':' );
-        
-        if ( duration_time && (duration_time.length > 1) )
-            {
-            var hours = parseInt ( duration_time[0] );
-            var minutes = parseInt ( duration_time[1] );
-            var oe = false;
-            
-            if ( hours == 24 )
-                {
-                oe = true;
-                }
-            else
-                {
-                if ( minutes % 5 )
-                    {
-                    minutes += 5;
-                
-                    if ( minutes >= 60 )
-                        {
-                        hours++;
-                        minutes -= 60;
-                        };
-                    };
-            
-                if ( hours > 23 )
-                    {
-                    hours = 23;
-                    };
-            
-                if ( hours < 1 )
-                    {
-                    hours = 1;
+                    ret = this.m_meeting_objects[c];
+                    break;
                     };
                 };
             };
         
-        if ( oe )
+        if ( !ret ) // If we did not find the meeting, we create a placeholder for it.
             {
-            this.setSelectByValue ( time_hour_select, 24 );
-            this.setSelectByValue ( time_minute_select, 0 );
-            }
-        else
-            {
-            this.setSelectByValue ( time_hour_select, hours );
-            this.setSelectByValue ( time_minute_select, minutes );
+            ret = new Object;
+            ret.longitude = g_default_longitude;
+            ret.latitude = g_default_latitude;
+            ret.zoom = g_default_zoom;
+            ret.start_time = g_default_meeting_start_time;
+            ret.duration_time = g_default_meeting_duration;
+            ret.weekday_tinyint = g_default_meeting_weekday;
+            ret.id_bigint = 0;  // All new meetings are ID 0.
             };
         
-        this.reactToDurationSelect ( meeting_id );
-        
-        time_hour_select.onchange = function() { admin_handler_object.reactToDurationSelect ( meeting_id ); };
-    };
-        
-    /************************************************************************************//**
-    *   \brief 
-    ****************************************************************************************/
-    this.setSelectByValue = function(   in_select_object,
-                                        in_value
-                                    )
-    {
-        var setIndex = 0;
-        
-        for ( var c = 0; c < in_select_object.options.length; c ++ )
-            {
-            if ( parseInt ( in_select_object.options[c].value ) == parseInt ( in_value ) )
-                {
-                setIndex = c;
-                break;
-                };
-            };
-            
-        in_select_object.selectedIndex = setIndex;
-    };
-        
-    /************************************************************************************//**
-    *   \brief 
-    ****************************************************************************************/
-    this.reactToTimeSelect = function(  in_meeting_id   ///< The meeting ID of the editor that gets this map.
-                                    )
-    {
-        var time_hour_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_start_hour_select' );
-        var time_items = document.getElementById ( 'bmlt_admin_' + in_meeting_id + '_time_span' );
-
-        time_items.className = 'bmlt_admin_time_span' + (( (time_hour_select.value == 0) || (time_hour_select.value == 12) ) ? ' item_hidden' : '');
+        return ret;
     };
     
-    /************************************************************************************//**
-    *   \brief 
-    ****************************************************************************************/
-    this.reactToDurationSelect = function(  in_meeting_id   ///< The meeting ID of the editor that gets this map.
-                                    )
-    {
-        var time_hour_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_duration_hour_select' );
-        var time_items = document.getElementById ( 'bmlt_admin_' + in_meeting_id + '_duration_span' );
-
-        time_items.className = 'bmlt_admin_time_span' + ((time_hour_select.value == 24) ? ' item_hidden' : '');
-    };
-    
-    /************************************************************************************//**
-    *   \brief This toggles the map disclosure.                                             *
-    ****************************************************************************************/
-    this.toggleMeetingMapDisclosure = function( in_meeting_id       ///< The meeting ID of the editor that gets this map.
-                                                )
-    {
-        var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
-        var map_disclosure_div = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_map_disclosure_div' );
-        var map_div = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_map_div' );
-        var longlat_div = document.getElementById ( 'bmlt_admin_single_location_' + in_meeting_id + '_long_lat_div' );
-        
-        root_element.map_disclosed = !root_element.map_disclosed;
-
-        map_disclosure_div.className = 'bmlt_admin_single_meeting_disclosure_map_div' + (root_element.map_disclosed ? '_open' : '_closed');
-        map_div.className = 'bmlt_admin_single_meeting_map_div' + (root_element.map_disclosed ? '' : ' item_hidden');
-        longlat_div.className = root_element.map_disclosed ? 'item_hidden' : '';
-        
-        if ( root_element.map_disclosed && !root_element.main_map )
-            {
-            root_element.main_map = this.createEditorMap ( root_element, in_meeting_id );
-            };
-    };
-    
-    /************************************************************************************//**
-    *   \brief This creates the map for the editor.                                         *
-    *   \returns the map object.                                                            *
-    ****************************************************************************************/
-    this.createEditorMap = function(    in_editor_parent,   ///< The main editor div object.
-                                        in_meeting_id       ///< The meeting ID of the editor that gets this map.
-                                    )
-    {
-        var meeting_map_holder = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_inner_map_div' );
-        var map_center = new google.maps.LatLng ( in_editor_parent.meeting_object.latitude, in_editor_parent.meeting_object.longitude );
-
-        var myOptions = {
-                        'center': map_center,
-                        'zoom': in_editor_parent.meeting_object.zoom,
-                        'mapTypeId': google.maps.MapTypeId.ROADMAP,
-                        'mapTypeControlOptions': { 'style': google.maps.MapTypeControlStyle.DROPDOWN_MENU },
-                        'zoomControl': true,
-                        'mapTypeControl': true,
-                        'disableDoubleClickZoom' : true,
-                        'draggableCursor': "crosshair",
-                        'scaleControl' : true
-                        };
-
-        myOptions.zoomControlOptions = { 'style': google.maps.ZoomControlStyle.LARGE };
-
-        in_editor_parent.m_main_map = new google.maps.Map ( meeting_map_holder, myOptions );
-    
-        if ( in_editor_parent.m_main_map )
-            {
-            in_editor_parent.m_main_map.setOptions({'scrollwheel': false});   // For some reason, it ignores setting this in the options.
-            google.maps.event.addListener ( in_editor_parent.m_main_map, 'click', function(in_event) { admin_handler_object.respondToMapClick( in_event, in_meeting_id ); } );
-            google.maps.event.addListener ( in_editor_parent.m_main_map, 'tilesloaded', function(in_event) { admin_handler_object.tilesLoaded( in_meeting_id ); } );
-            this.displayMainMarkerInMap ( in_meeting_id );
-            };
-            
-        return ( in_editor_parent.m_main_map );
-    };
-    
-    /************************************************************************************//**
-    *   \brief  
-    ****************************************************************************************/
-    this.tilesLoaded = function(in_meeting_id   ///< The meeting this map is associated with.
-                                )
-    {
-        this.displayMainMarkerInMap ( in_meeting_id );
-    };
-    
-    /************************************************************************************//**
-    *   \brief  
-    ****************************************************************************************/
-    this.respondToMapClick = function(  in_event,       ///< The Google Maps event
-                                        in_meeting_id   ///< The meeting this map is associated with.
-                                    )
-    {
-        var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
-        var map_center = in_event.latLng;
-        root_element.main_map.panTo ( map_center );
-        this.setMeetingLongLat ( map_center, in_meeting_id );
-        this.displayMainMarkerInMap ( in_meeting_id );
-    };
-    
-    /************************************************************************************//**
-    *   \brief  
-    ****************************************************************************************/
-    this.respondToMarkerDragEnd = function( in_event,       ///< The Google Maps event
-                                            in_meeting_id   ///< The meeting this map is associated with.
-                                            )
-    {
-        var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
-        var map_center = in_event.latLng;
-        root_element.main_map.panTo ( map_center );
-        this.setMeetingLongLat ( map_center, in_meeting_id );
-    };
-
-    /************************************************************************************//**
-    *	\brief This displays the "Your Position" marker in the results map.                 *
-    ****************************************************************************************/
-    this.displayMainMarkerInMap = function (    in_meeting_id   ///< The meeting this map is associated with.
-                                            )
-    {
-        var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
-
-        if ( root_element && root_element.main_map )
-            {
-            if ( root_element.main_map.main_marker )
-                {
-                root_element.main_map.main_marker.setMap ( null );
-                root_element.main_map.main_marker = null;
-                };
-            
-            m_icon_image = new google.maps.MarkerImage ( g_style_dir + "/images/NACenterMarker.png", new google.maps.Size(21, 36), new google.maps.Point(0,0), new google.maps.Point(11, 36) );
-            m_icon_shadow = new google.maps.MarkerImage( g_style_dir + "/images/NACenterMarkerS.png", new google.maps.Size(43, 36), new google.maps.Point(0,0), new google.maps.Point(11, 36) );
-
-            root_element.main_map.main_marker = new google.maps.Marker ({
-                                                                        'position':     root_element.main_map.getCenter(),
-                                                                        'map':		    root_element.main_map,
-                                                                        'icon':		    m_icon_image,
-                                                                        'shadow':		m_icon_shadow,
-                                                                        'clickable':	false,
-                                                                        'cursor':		'pointer',
-                                                                        'draggable':    true
-                                                                        } );
-            google.maps.event.addListener ( root_element.main_map.main_marker, 'dragend', function(in_event) { admin_handler_object.respondToMarkerDragEnd( in_event, in_meeting_id ); } );
-            };
-    };
-    
-    /************************************************************************************//**
-    *   \brief  
-    ****************************************************************************************/
-    this.setMeetingLongLat = function ( in_longLat,
-                                        in_meeting_id
-                                        )
-    {
-        var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
-        var meeting_object = root_element.meeting_object;
-        var meeting_longitude_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_longitude_text_input' );
-        var meeting_latitude_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_latitude_text_input' );
-        
-        meeting_object.longitude = in_longLat.lng();
-        meeting_object.latitude = in_longLat.lat();
-        
-        meeting_longitude_text_item.value = meeting_object.longitude;
-        meeting_latitude_text_item.value = meeting_object.latitude;
-    };
-    
-    /************************************************************************************//**
-    *   \brief  
-    ****************************************************************************************/
-    this.saveMeeting = function ( in_meeting_id
-                                )
-    {
-        var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
-        var new_meeting_id = in_meeting_id;
-        var copy_checkbox = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_duplicate_checkbox' );
-        
-        if ( copy_checkbox.checked )   // If we are creating a new meeting, we set the ID to 0. That saves the meeting as a new one.
-            {
-            new_meeting_id = 0;
-            };
-            
-        root_element.dirty_flag = false;
-        this.cancelMeetingEdit ( in_meeting_id );
-    };
-    
-    /************************************************************************************//**
-    *   \brief  
-    ****************************************************************************************/
-    this.cancelMeetingEdit = function ( in_meeting_id
-                                )
-    {
-        var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
-        var display_parent = document.getElementById ( 'bmlt_admin_meeting_editor_new_meeting_' + in_meeting_id + '_editor_display' );
-
-        if ( !root_element.dirty_flag || ( root_element.dirty_flag && confirm ( g_meeting_closure_confirm_text ) ) )
-            {
-            display_parent.innerHTML = null;
-            display_parent.className = 'item_hidden';
-            
-            if ( in_meeting_id == 0 )
-                {
-                var new_meeting_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_button' );
-                new_meeting_button.className = 'bmlt_admin_ajax_button button';
-                };
-            };
-    };
+    // #mark - 
+    // #mark Search For Meetings Tab
+    // #mark -
     
     /************************************************************************************//**
     *   \brief  Selecte the search specifier tab.                                           *
@@ -1134,28 +406,6 @@ function BMLT_Server_Admin ()
         
         search_specifier_element.className = 'bmlt_admin_meeting_editor_form_specifier_div';
         meeting_editor_element.className = 'bmlt_admin_meeting_editor_form_div item_hidden';
-    }
-    
-    /************************************************************************************//**
-    *   \brief  Selecte the meeting editor tab.                                             *
-    ****************************************************************************************/
-    this.selectMeetingEditorTab = function()
-    {
-        var tab_specifier_element = document.getElementById ( 'bmlt_admin_meeting_editor_tab_specifier_div' );
-        var tab_editor_element = document.getElementById ( 'bmlt_admin_meeting_editor_tab_results_div' );
-        var tab_specifier_link = document.getElementById ( 'bmlt_admin_meeting_editor_tab_specifier_a' );
-        var tab_editor_link = document.getElementById ( 'bmlt_admin_meeting_editor_tab_results_a' );
-        var search_specifier_element = document.getElementById ( 'bmlt_admin_meeting_editor_form_specifier_div' );
-        var meeting_editor_element = document.getElementById ( 'bmlt_admin_meeting_editor_form_div' );
-        
-        tab_specifier_element.className = 'bmlt_admin_tab_div_left bmlt_admin_tab_div_not_selected';
-        tab_editor_element.className = 'bmlt_admin_tab_div_right bmlt_admin_tab_div_selected';
-        
-        tab_specifier_link.href = 'javascript:admin_handler_object.selectSearchSpecifierTab()';
-        tab_editor_link.href = null;
-        
-        search_specifier_element.className = 'bmlt_admin_meeting_editor_form_specifier_div item_hidden';
-        meeting_editor_element.className = 'bmlt_admin_meeting_editor_form_div';
     }
     
     /************************************************************************************//**
@@ -1333,41 +583,810 @@ function BMLT_Server_Admin ()
             };
     };
     
+    // #mark - 
+    // #mark Edit Meetings Tab
+    // #mark -
+
     /************************************************************************************//**
-    *   \brief  Returns an object with the meeting data for the meeting ID passed in.       *
-    *   \returns a meeting object. Null if none found, or invalid ID.                       *
+    *   \brief  Selects the meeting editor tab.                                             *
     ****************************************************************************************/
-    this.getMeetingObjectById = function ( in_meeting_id    ///< The ID of the meeting to fetch
+    this.selectMeetingEditorTab = function()
+    {
+        var tab_specifier_element = document.getElementById ( 'bmlt_admin_meeting_editor_tab_specifier_div' );
+        var tab_editor_element = document.getElementById ( 'bmlt_admin_meeting_editor_tab_results_div' );
+        var tab_specifier_link = document.getElementById ( 'bmlt_admin_meeting_editor_tab_specifier_a' );
+        var tab_editor_link = document.getElementById ( 'bmlt_admin_meeting_editor_tab_results_a' );
+        var search_specifier_element = document.getElementById ( 'bmlt_admin_meeting_editor_form_specifier_div' );
+        var meeting_editor_element = document.getElementById ( 'bmlt_admin_meeting_editor_form_div' );
+        
+        tab_specifier_element.className = 'bmlt_admin_tab_div_left bmlt_admin_tab_div_not_selected';
+        tab_editor_element.className = 'bmlt_admin_tab_div_right bmlt_admin_tab_div_selected';
+        
+        tab_specifier_link.href = 'javascript:admin_handler_object.selectSearchSpecifierTab()';
+        tab_editor_link.href = null;
+        
+        search_specifier_element.className = 'bmlt_admin_meeting_editor_form_specifier_div item_hidden';
+        meeting_editor_element.className = 'bmlt_admin_meeting_editor_form_div';
+    }
+    
+    /************************************************************************************//**
+    *   \brief  Brings up a new meeting screen.                                             *
+    ****************************************************************************************/
+    this.createANewMeetingButtonHit = function( in_button_object
                                             )
     {
-        var ret = null;
+        var display_parent = document.getElementById ( 'bmlt_admin_meeting_editor_new_meeting_0_editor_display' );
+        var new_meeting_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_button' );
         
-        if ( in_meeting_id && this.m_meeting_objects && this.m_meeting_objects.length )
+        display_parent.innerHTML = null;
+        
+        this.createNewMeetingEditorScreen ( display_parent, 0 );
+        
+        new_meeting_button.className = 'bmlt_admin_ajax_button button item_hidden';
+        display_parent.className = 'bmlt_admin_meeting_editor_meeting_editor_display';
+        this.changeSaveMeetingButtonToCopy(0);
+    };
+    
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.changeSaveMeetingButtonToCopy = function( in_meeting_id   ///< The BMLT ID of the meeting that is being edited.
+                                                )
+    {
+        var save_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_' + in_meeting_id +'_save_button' );
+        save_button.innerHTML = g_Create_new_meeting_button_name;
+    };
+    
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.changeCopyMeetingButtonToSave = function( in_meeting_id   ///< The BMLT ID of the meeting that is being edited.
+                                                )
+    {
+        var save_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_' + in_meeting_id +'_save_button' );
+        save_button.innerHTML = g_Save_meeting_button_name;
+    };
+    
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.saveMeeting = function ( in_meeting_id
+                                )
+    {
+        var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+        var new_meeting_id = in_meeting_id;
+        var copy_checkbox = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_duplicate_checkbox' );
+        
+        if ( copy_checkbox.checked )   // If we are creating a new meeting, we set the ID to 0. That saves the meeting as a new one.
             {
-            for ( var c = 0; c < this.m_meeting_objects.length; c++ )
+            new_meeting_id = 0;
+            };
+            
+        root_element.dirty_flag = false;
+        this.cancelMeetingEdit ( in_meeting_id );
+    };
+    
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.cancelMeetingEdit = function ( in_meeting_id
+                                )
+    {
+        var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+        var display_parent = document.getElementById ( 'bmlt_admin_meeting_editor_new_meeting_' + in_meeting_id + '_editor_display' );
+
+        if ( !root_element.dirty_flag || ( root_element.dirty_flag && confirm ( g_meeting_closure_confirm_text ) ) )
+            {
+            display_parent.innerHTML = null;
+            display_parent.className = 'item_hidden';
+            
+            if ( in_meeting_id == 0 )
                 {
-                if ( in_meeting_id == this.m_meeting_objects[c].id_bigint )
+                var new_meeting_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_button' );
+                new_meeting_button.className = 'bmlt_admin_ajax_button button';
+                };
+            };
+    };
+        
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.dirtifyMeeting = function (in_meeting_id       ///< The BMLT ID of the meeting that will be dirtified.
+                                    )
+    {
+        var editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id ) + '_div' );
+    
+        if ( editor )
+            {
+            editor.dirty_flag = true;
+            };
+    };
+    
+    // #mark - 
+    // #mark Creating A New Meeting Editor
+    // #mark -
+    
+    /************************************************************************************//**
+    *   \brief  This creates a new meeting details editor screen.                           *
+    *   \returns    A new DOM hierarchy with the initialized editor.                        *
+    ****************************************************************************************/
+    this.createNewMeetingEditorScreen = function(   in_parent_element,  ///< The parent element of the new instance.
+                                                    in_meeting_id       ///< The BMLT ID of the meeting that will be edited. If null, then it is a new meeting.
+                                                )
+    {
+        // We first see if one already exists.
+        var new_editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id ) + '_div' );
+    
+        if ( !new_editor )
+            {
+            var template_dom_list = document.getElementById ( 'bmlt_admin_single_meeting_editor_template_div' );
+            
+            var meeting_name_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_name_text_input';
+            var meeting_cc_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_cc_text_input';
+            
+            var meeting_location_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_location_text_input';
+            var meeting_info_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_info_text_input';
+            var meeting_street_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_street_text_input';
+            var meeting_neighborhood_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_neighborhood_text_input';
+            var meeting_borough_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_borough_text_input';
+            var meeting_city_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_city_text_input';
+            var meeting_county_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_county_text_input';
+            var meeting_state_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_state_text_input';
+            var meeting_zip_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_zip_text_input';
+            var meeting_nation_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_nation_text_input';
+            var meeting_longitude_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_longitude_text_input';
+            var meeting_latitude_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_latitude_text_input';
+        
+            if ( template_dom_list )    // This makes an exact copy of the template (including IDs, so we'll need to change those).
+                {
+                new_editor = template_dom_list.cloneNode ( true );
+                // This function replaces all of the spots that say "template" with the given ID. That gives us unique IDs.
+                BMLT_Admin_changeTemplateIDToUseThisID ( new_editor, in_meeting_id );
+                new_editor.meeting_object = this.getMeetingObjectById ( in_meeting_id );
+                new_editor.dirty_flag = false;
+                new_editor.map_disclosed = false;
+            
+                new_editor.className = 'bmlt_admin_single_meeting_editor_div';
+            
+                in_parent_element.appendChild ( new_editor );
+                            
+                this.handleTextInputLoad(document.getElementById(meeting_name_text_item_id));
+                this.handleTextInputLoad(document.getElementById(meeting_cc_text_item_id), null, true);
+                this.handleTextInputLoad(document.getElementById(meeting_location_text_item_id));
+                this.handleTextInputLoad(document.getElementById(meeting_info_text_item_id));
+                this.handleTextInputLoad(document.getElementById(meeting_street_text_item_id));
+                this.handleTextInputLoad(document.getElementById(meeting_neighborhood_text_item_id));
+                this.handleTextInputLoad(document.getElementById(meeting_borough_text_item_id));
+                this.handleTextInputLoad(document.getElementById(meeting_city_text_item_id));
+                this.handleTextInputLoad(document.getElementById(meeting_county_text_item_id));
+                this.handleTextInputLoad(document.getElementById(meeting_state_text_item_id));
+                this.handleTextInputLoad(document.getElementById(meeting_zip_text_item_id), null, true);
+                this.handleTextInputLoad(document.getElementById(meeting_nation_text_item_id), null, true);
+                this.handleTextInputLoad(document.getElementById(meeting_longitude_text_item_id), 0, true);
+                this.handleTextInputLoad(document.getElementById(meeting_latitude_text_item_id), 0, true);
+                
+                var map_disclosure_a = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_map_disclosure_a' );
+                map_disclosure_a.href = 'javascript:admin_handler_object.toggleMeetingMapDisclosure(' + in_meeting_id + ')';
+                
+                var select_duplicate_checkbox = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_duplicate_checkbox' );
+                select_duplicate_checkbox.onchange = function (){   var save_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_' + in_meeting_id + '_save_button' );
+                                                                    if ( this.checked )
+                                                                        {
+                                                                        save_button.innerHTML = g_Create_new_meeting_button_name;
+                                                                        }
+                                                                    else
+                                                                        {
+                                                                        save_button.innerHTML = g_Save_meeting_button_name;
+                                                                        };
+                                                                };
+                };
+            };
+        
+        this.populateMeetingEditorForm ( new_editor, in_meeting_id );
+        
+        return new_editor;
+    };
+    
+    /************************************************************************************//**
+    *   \brief 
+    ****************************************************************************************/
+    this.populateMeetingEditorForm = function(  in_meeting_editor   ///< This is the meeting editor object that will be set up for this meeting.
+                                                )
+    {
+        var meeting_object = in_meeting_editor.meeting_object;
+        
+        var meeting_id = meeting_object.id_bigint;
+        
+        var meeting_name_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_name_text_input' );
+        var meeting_cc_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_cc_text_input' );
+        var meeting_location_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_location_text_input' );
+        var meeting_info_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_info_text_input' );
+        var meeting_street_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_street_text_input' );
+        var meeting_neighborhood_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_neighborhood_text_input' );
+        var meeting_borough_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_borough_text_input' );
+        var meeting_city_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_city_text_input' );
+        var meeting_county_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_county_text_input' );
+        var meeting_state_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_state_text_input' );
+        var meeting_zip_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_zip_text_input' );
+        var meeting_nation_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_nation_text_input' );
+        var meeting_longitude_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_longitude_text_input' );
+        var meeting_latitude_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_latitude_text_input' );
+
+        meeting_name_text_item.value = in_meeting_editor.meeting_object.meeting_name ? in_meeting_editor.meeting_object.meeting_name : meeting_name_text_item.value;
+        meeting_cc_text_item.value = in_meeting_editor.meeting_object.world_id ? in_meeting_editor.meeting_object.world_id : meeting_cc_text_item.value;
+        meeting_location_text_item.value = in_meeting_editor.meeting_object.location_text ? in_meeting_editor.meeting_object.location_text : meeting_location_text_item.value;
+        meeting_info_text_item.value = in_meeting_editor.meeting_object.location_info ? in_meeting_editor.meeting_object.location_info : meeting_info_text_item.value;
+        meeting_street_text_item.value = in_meeting_editor.meeting_object.location_street ? in_meeting_editor.meeting_object.location_street : meeting_street_text_item.value;
+        meeting_neighborhood_text_item.value = in_meeting_editor.meeting_object.location_neighborhood ? in_meeting_editor.meeting_object.location_neighborhood : meeting_neighborhood_text_item.value;
+        meeting_borough_text_item.value = in_meeting_editor.meeting_object.location_city_subsection ? in_meeting_editor.meeting_object.location_city_subsection : meeting_borough_text_item.value;
+        meeting_city_text_item.value = in_meeting_editor.meeting_object.location_municipality ? in_meeting_editor.meeting_object.location_municipality : meeting_city_text_item.value;
+        meeting_county_text_item.value = in_meeting_editor.meeting_object.location_sub_province ? in_meeting_editor.meeting_object.location_sub_province : meeting_county_text_item.value;
+        meeting_state_text_item.value = in_meeting_editor.meeting_object.location_province ? in_meeting_editor.meeting_object.location_province : meeting_state_text_item.value;
+        meeting_zip_text_item.value = in_meeting_editor.meeting_object.location_postal_code_1 ? in_meeting_editor.meeting_object.location_postal_code_1 : meeting_zip_text_item.value;
+        meeting_nation_text_item.value = in_meeting_editor.meeting_object.location_nation ? in_meeting_editor.meeting_object.location_nation : meeting_nation_text_item.value;
+        meeting_longitude_text_item.value = in_meeting_editor.meeting_object.longitude ? in_meeting_editor.meeting_object.longitude : meeting_longitude_text_item.value;
+        meeting_latitude_text_item.value = in_meeting_editor.meeting_object.latitude ? in_meeting_editor.meeting_object.latitude : meeting_latitude_text_item.value;
+        
+        var weekday_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_weekday_select' );
+
+        BMLT_Admin_setSelectByValue ( weekday_select, in_meeting_editor.meeting_object.weekday_tinyint );
+        this.setMeetingStartTime ( in_meeting_editor.meeting_object );
+        this.setMeetingDuration ( in_meeting_editor.meeting_object );
+    };
+    
+    /************************************************************************************//**
+    *   \brief 
+    ****************************************************************************************/
+    this.setMeetingStartTime = function(in_meeting_object
+                                        )
+    {
+        var meeting_id = in_meeting_object.id_bigint;
+        
+        var time_hour_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_start_hour_select' );
+        var time_minute_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_start_minute_select' );
+        var time_am_radio = document.getElementById ( 'bmlt_admin_' + meeting_id + '_time_am_radio' );
+        var time_pm_radio = document.getElementById ( 'bmlt_admin_' + meeting_id + '_time_pm_radio' );
+        
+        var start_time = in_meeting_object.start_time.toString().split ( ':' );
+
+        if ( start_time && (start_time.length > 1) )
+            {
+            var hours = parseInt ( start_time[0] );
+            var minutes = parseInt ( start_time[1] );
+            var midnight = false;
+            var noon = false;
+            var pm = false;
+            
+            if ( (hours == 23) && (minutes > 55) )
+                {
+                midnight = true;
+                }
+            else
+                {
+                if ( (hours == 12) && (minutes == 0) )
                     {
-                    ret = this.m_meeting_objects[c];
-                    break;
+                    noon = true;
+                    }
+                else
+                    {
+                    if ( hours > 23 )
+                        {
+                        hours = 23;
+                        };
+            
+                    if ( hours < 0 )
+                        {
+                        hours = 0;
+                        };
+
+                    if ( minutes > 59 )
+                        {
+                        minutes = 59;
+                        };
+            
+                    if ( minutes < 0 )
+                        {
+                        minutes = 0;
+                        };
+
+                    if ( minutes % 5 )
+                        {
+                        minutes += 5;
+                
+                        if ( minutes >= 60 )
+                            {
+                            hours++;
+                            minutes -= 60;
+                            };
+                        };
+                    };
+                };
+                
+            if ( hours > 12 )
+                {
+                hours -= 12;
+                pm = true;
+                }
+            else if ( (hours == 12) && (minutes > 0) )
+                {
+                pm = true;
+                };
+            };
+        
+        if ( midnight )
+            {
+            BMLT_Admin_setSelectByValue ( time_hour_select, 0 );
+            BMLT_Admin_setSelectByValue ( time_minute_select, 0 );
+            }
+        else if ( noon )
+            {
+            BMLT_Admin_setSelectByValue ( time_hour_select, 13 );
+            BMLT_Admin_setSelectByValue ( time_minute_select, 0 );
+            }
+        else
+            {
+            BMLT_Admin_setSelectByValue ( time_hour_select, hours );
+            BMLT_Admin_setSelectByValue ( time_minute_select, minutes );
+            };
+        
+        if ( pm )
+            {
+            time_am_radio.checked = false;
+            time_pm_radio.checked = true;
+            }
+        else
+            {
+            time_pm_radio.checked = false;
+            time_am_radio.checked = true;
+            };
+        
+        this.reactToTimeSelect ( meeting_id );
+        
+        time_hour_select.onchange = function() { admin_handler_object.reactToTimeSelect ( meeting_id ); };
+    };
+    
+    /************************************************************************************//**
+    *   \brief 
+    ****************************************************************************************/
+    this.setMeetingDuration = function( in_meeting_object
+                                        )
+    {
+        var meeting_id = in_meeting_object.id_bigint;
+        
+        var time_hour_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_duration_hour_select' );
+        var time_minute_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_duration_minute_select' );
+        
+        var duration_time = in_meeting_object.duration_time.split ( ':' );
+        
+        if ( duration_time && (duration_time.length > 1) )
+            {
+            var hours = parseInt ( duration_time[0] );
+            var minutes = parseInt ( duration_time[1] );
+            var oe = false;
+            
+            if ( hours == 24 )
+                {
+                oe = true;
+                }
+            else
+                {
+                if ( minutes % 5 )
+                    {
+                    minutes += 5;
+                
+                    if ( minutes >= 60 )
+                        {
+                        hours++;
+                        minutes -= 60;
+                        };
+                    };
+            
+                if ( hours > 23 )
+                    {
+                    hours = 23;
+                    };
+            
+                if ( hours < 1 )
+                    {
+                    hours = 1;
                     };
                 };
             };
         
-        if ( !ret ) // If we did not find the meeting, we create a placeholder for it.
+        if ( oe )
             {
-            ret = new Object;
-            ret.longitude = g_default_longitude;
-            ret.latitude = g_default_latitude;
-            ret.zoom = g_default_zoom;
-            ret.start_time = g_default_meeting_start_time;
-            ret.duration_time = g_default_meeting_duration;
-            ret.weekday_tinyint = g_default_meeting_weekday;
-            ret.id_bigint = 0;  // All new meetings are ID 0.
+            BMLT_Admin_setSelectByValue ( time_hour_select, 24 );
+            BMLT_Admin_setSelectByValue ( time_minute_select, 0 );
+            }
+        else
+            {
+            BMLT_Admin_setSelectByValue ( time_hour_select, hours );
+            BMLT_Admin_setSelectByValue ( time_minute_select, minutes );
             };
         
-        return ret;
+        this.reactToDurationSelect ( meeting_id );
+        
+        time_hour_select.onchange = function() { admin_handler_object.reactToDurationSelect ( meeting_id ); };
     };
+        
+    // #mark - 
+    // #mark Meeting Editor Internal Tabs
+    // #mark -
+        
+    // #mark - 
+    // #mark Basic Tab
+    // #mark -
+        
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.respondToBasicTabSelection = function (in_meeting_id   ///< The BMLT ID of the meeting that is being edited.
+                                                )
+    {
+        var basic_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_basic_sheet_div' );
+        var location_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_location_sheet_div' );
+        var basic_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_basic_a' );
+        var location_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_location_a' );
+        
+        basic_options_sheet.className = 'bmlt_admin_meeting_option_sheet_div';
+        basic_tab.className = 'bmlt_admin_meeting_editor_tab_item_a_selected';
+        location_options_sheet.className = 'bmlt_admin_meeting_option_sheet_div item_hidden';
+        location_tab.className = 'bmlt_admin_meeting_editor_tab_item_a_unselected';
+    };
+        
+    /************************************************************************************//**
+    *   \brief 
+    ****************************************************************************************/
+    this.reactToTimeSelect = function(  in_meeting_id   ///< The meeting ID of the editor that gets this map.
+                                    )
+    {
+        var time_hour_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_start_hour_select' );
+        var time_items = document.getElementById ( 'bmlt_admin_' + in_meeting_id + '_time_span' );
+
+        time_items.className = 'bmlt_admin_time_span' + (( (time_hour_select.value == 0) || (time_hour_select.value == 12) ) ? ' item_hidden' : '');
+    };
+    
+    /************************************************************************************//**
+    *   \brief 
+    ****************************************************************************************/
+    this.reactToDurationSelect = function(  in_meeting_id   ///< The meeting ID of the editor that gets this map.
+                                    )
+    {
+        var time_hour_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_duration_hour_select' );
+        var time_items = document.getElementById ( 'bmlt_admin_' + in_meeting_id + '_duration_span' );
+
+        time_items.className = 'bmlt_admin_time_span' + ((time_hour_select.value == 24) ? ' item_hidden' : '');
+    };
+        
+    // #mark - 
+    // #mark Location Tab
+    // #mark -
+        
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.respondToLocationTabSelection = function ( in_meeting_id   ///< The BMLT ID of the meeting that is being edited.
+                                                    )
+    {
+        var basic_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_basic_sheet_div' );
+        var location_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_location_sheet_div' );
+        var basic_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_basic_a' );
+        var location_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_location_a' );
+        
+        basic_options_sheet.className = 'bmlt_admin_meeting_option_sheet_div item_hidden';
+        basic_tab.className = 'bmlt_admin_meeting_editor_tab_item_a_unselected';
+        location_options_sheet.className = 'bmlt_admin_meeting_option_sheet_div';
+        location_tab.className = 'bmlt_admin_meeting_editor_tab_item_a_selected';
+        
+        var editor_object = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+
+        if ( (in_meeting_id == 0) && !editor_object.main_map )
+            {
+            this.toggleMeetingMapDisclosure(in_meeting_id);
+            };
+    };
+    
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.handleNewAddressInfo = function( in_meeting_id       ///< The BMLT ID of the meeting being edited.
+                                        )
+    {
+        var meeting_street_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_street_text_input' );
+        var meeting_borough_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_borough_text_input' );
+        var meeting_city_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_city_text_input' );
+        var meeting_state_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_state_text_input' );
+        var meeting_zip_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_zip_text_input' );
+        var meeting_nation_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_nation_text_input' );
+
+        var street_text = meeting_street_text_item.value;
+        var borough_text = meeting_borough_text_item.value;
+        var city_text = meeting_city_text_item.value;
+        var state_text = meeting_state_text_item.value;
+        var zip_text = meeting_zip_text_item.value;
+        var nation_text = meeting_nation_text_item.value;
+
+        var set_map_to_address_button = document.getElementById ( 'bmlt_admin_meeting_map_' + in_meeting_id + '_button_a' );
+
+        if ( zip_text || borough_text || city_text || state_text || nation_text )
+            {
+            set_map_to_address_button.href = 'javascript:admin_handler_object.setMapToAddress(' + in_meeting_id + ')';
+            set_map_to_address_button.className = 'bmlt_admin_ajax_button';
+            }
+        else
+            {
+            set_map_to_address_button.href = null;
+            set_map_to_address_button.className = 'bmlt_admin_ajax_button button_disabled';
+            }
+    };
+        
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.setMapToAddress = function( in_meeting_id       ///< The BMLT ID of the meeting being edited.
+                                        )
+    {
+        var meeting_street_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_street_text_input' );
+        var meeting_borough_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_borough_text_input' );
+        var meeting_city_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_city_text_input' );
+        var meeting_state_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_state_text_input' );
+        var meeting_zip_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_zip_text_input' );
+        var meeting_nation_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_nation_text_input' );
+
+        var street_text = meeting_street_text_item.value;
+        var borough_text = meeting_borough_text_item.value;
+        var city_text = meeting_city_text_item.value;
+        var state_text = meeting_state_text_item.value;
+        var zip_text = meeting_zip_text_item.value;
+        var nation_text = meeting_nation_text_item.value;
+
+        if ( zip_text || borough_text || city_text || state_text || nation_text )
+            {
+            this.lookupLocation ( in_meeting_id );
+            };
+    };
+        
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.lookupLocation = function( in_meeting_id       ///< The BMLT ID of the meeting that being edited.
+                                    )
+    {
+        var the_meeting_object = this.getMeetingObjectById ( in_meeting_id );
+
+        var editor_object = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+        var meeting_street_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_street_text_input' );
+        var meeting_borough_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_borough_text_input' );
+        var meeting_city_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_city_text_input' );
+        var meeting_state_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_state_text_input' );
+        var meeting_zip_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_zip_text_input' );
+        var meeting_nation_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_nation_text_input' );
+
+        var street_text = (meeting_street_text_item.value != meeting_street_text_item.defaultValue) ? meeting_street_text_item.value : '';
+        var borough_text = (meeting_borough_text_item.value != meeting_borough_text_item.defaultValue) ? meeting_borough_text_item.value : '';
+        var city_text = (meeting_city_text_item.value != meeting_city_text_item.defaultValue) ? meeting_city_text_item.value : '';
+        var state_text = (meeting_state_text_item.value != meeting_state_text_item.defaultValue) ? meeting_state_text_item.value : '';
+        var zip_text = (meeting_zip_text_item.value != meeting_zip_text_item.defaultValue) ? meeting_zip_text_item.value : '';
+        var nation_text = (meeting_nation_text_item.value != meeting_nation_text_item.defaultValue) ? meeting_nation_text_item.value : '';
+        
+        if ( !nation_text )
+            {
+            nation_text = g_region_bias;
+            };
+        
+        // What we do here, is try to create a readable address line to be sent off for geocoding. We just try to clean it up as much as possible.
+        var address_line = sprintf ( '%s,%s,%s,%s,%s,%s', street_text, borough_text, city_text, state_text, zip_text, nation_text );
+        
+        address_line = address_line.replace ( /,+/g, ', ' );
+        address_line = address_line.replace ( /^, /g, '' );
+        address_line = address_line.replace ( /, $/g, '' );
+        
+        if ( address_line != ', ' )
+            {
+            if ( the_meeting_object.m_geocoder )
+                {
+                google.maps.event.removeListener ( the_meeting_object.m_geocoder );
+                the_meeting_object.m_geocoder = null;
+                };
+        
+            the_meeting_object.m_geocoder = new google.maps.Geocoder;
+        
+            if ( the_meeting_object.m_geocoder )
+                {
+                var status = the_meeting_object.m_geocoder.geocode ( { 'address' : address_line }, function ( in_geocode_response ) { admin_handler_object.sGeoCallback ( in_geocode_response, in_meeting_id ); } );
+                if ( google.maps.OK != status )
+                    {
+                    alert ( g_meeting_lookup_failed );
+                    }
+                else
+                    {
+                    };
+                }
+            else
+                {
+                alert ( g_meeting_lookup_failed );
+                };
+            };
+    };
+    /****************************************************************************************//**
+    *   \brief This catches the AJAX response, and fills in the response form.                  *
+    ********************************************************************************************/
+    
+    this.sGeoCallback = function (  in_geocode_response,    ///< The JSON object.
+                                    in_meeting_id           ///< The ID of the meeting.
+                                    )
+    {
+        var meeting_editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id ) + '_div' );
+
+        if ( meeting_editor && meeting_editor.main_map )
+            {
+            var the_meeting_object = meeting_editor.meeting_object;
+
+            google.maps.event.removeListener ( the_meeting_object.m_geocoder );
+            the_meeting_object.m_geocoder = null;
+            if ( in_geocode_response && in_geocode_response.length && (google.maps.OK == in_geocode_response[0].status) )
+                {
+                the_meeting_object.longitude = in_geocode_response[0].geometry.location.lng();
+                the_meeting_object.latitude = in_geocode_response[0].geometry.location.lat();
+        
+                var map_center = new google.maps.LatLng ( the_meeting_object.latitude, the_meeting_object.longitude );
+                meeting_editor.main_map.panTo ( map_center );
+                this.displayMainMarkerInMap ( in_meeting_id );
+                };
+            };
+    };
+    
+    /************************************************************************************//**
+    *   \brief This toggles the map disclosure.                                             *
+    ****************************************************************************************/
+    this.toggleMeetingMapDisclosure = function( in_meeting_id       ///< The meeting ID of the editor that gets this map.
+                                                )
+    {
+        var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+        var map_disclosure_div = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_map_disclosure_div' );
+        var map_div = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_map_div' );
+        var longlat_div = document.getElementById ( 'bmlt_admin_single_location_' + in_meeting_id + '_long_lat_div' );
+        
+        root_element.map_disclosed = !root_element.map_disclosed;
+
+        map_disclosure_div.className = 'bmlt_admin_single_meeting_disclosure_map_div' + (root_element.map_disclosed ? '_open' : '_closed');
+        map_div.className = 'bmlt_admin_single_meeting_map_div' + (root_element.map_disclosed ? '' : ' item_hidden');
+        longlat_div.className = root_element.map_disclosed ? 'item_hidden' : '';
+        
+        if ( root_element.map_disclosed && !root_element.main_map )
+            {
+            root_element.main_map = this.createEditorMap ( root_element, in_meeting_id );
+            };
+    };
+    
+    /************************************************************************************//**
+    *   \brief This creates the map for the editor.                                         *
+    *   \returns the map object.                                                            *
+    ****************************************************************************************/
+    this.createEditorMap = function(    in_editor_parent,   ///< The main editor div object.
+                                        in_meeting_id       ///< The meeting ID of the editor that gets this map.
+                                    )
+    {
+        var meeting_map_holder = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_inner_map_div' );
+        var map_center = new google.maps.LatLng ( in_editor_parent.meeting_object.latitude, in_editor_parent.meeting_object.longitude );
+
+        var myOptions = {
+                        'center': map_center,
+                        'zoom': in_editor_parent.meeting_object.zoom,
+                        'mapTypeId': google.maps.MapTypeId.ROADMAP,
+                        'mapTypeControlOptions': { 'style': google.maps.MapTypeControlStyle.DROPDOWN_MENU },
+                        'zoomControl': true,
+                        'mapTypeControl': true,
+                        'disableDoubleClickZoom' : true,
+                        'draggableCursor': "crosshair",
+                        'scaleControl' : true
+                        };
+
+        myOptions.zoomControlOptions = { 'style': google.maps.ZoomControlStyle.LARGE };
+
+        in_editor_parent.m_main_map = new google.maps.Map ( meeting_map_holder, myOptions );
+    
+        if ( in_editor_parent.m_main_map )
+            {
+            in_editor_parent.m_main_map.setOptions({'scrollwheel': false});   // For some reason, it ignores setting this in the options.
+            google.maps.event.addListener ( in_editor_parent.m_main_map, 'click', function(in_event) { admin_handler_object.respondToMapClick( in_event, in_meeting_id ); } );
+            google.maps.event.addListener ( in_editor_parent.m_main_map, 'tilesloaded', function(in_event) { admin_handler_object.tilesLoaded( in_meeting_id ); } );
+            this.displayMainMarkerInMap ( in_meeting_id );
+            };
+            
+        return ( in_editor_parent.m_main_map );
+    };
+    
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.tilesLoaded = function(in_meeting_id   ///< The meeting this map is associated with.
+                                )
+    {
+        this.displayMainMarkerInMap ( in_meeting_id );
+    };
+    
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.respondToMapClick = function(  in_event,       ///< The Google Maps event
+                                        in_meeting_id   ///< The meeting this map is associated with.
+                                    )
+    {
+        var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+        var map_center = in_event.latLng;
+        root_element.main_map.panTo ( map_center );
+        this.setMeetingLongLat ( map_center, in_meeting_id );
+        this.displayMainMarkerInMap ( in_meeting_id );
+    };
+    
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.respondToMarkerDragEnd = function( in_event,       ///< The Google Maps event
+                                            in_meeting_id   ///< The meeting this map is associated with.
+                                            )
+    {
+        var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+        var map_center = in_event.latLng;
+        root_element.main_map.panTo ( map_center );
+        this.setMeetingLongLat ( map_center, in_meeting_id );
+    };
+
+    /************************************************************************************//**
+    *	\brief This displays the "Your Position" marker in the results map.                 *
+    ****************************************************************************************/
+    this.displayMainMarkerInMap = function (    in_meeting_id   ///< The meeting this map is associated with.
+                                            )
+    {
+        var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+
+        if ( root_element && root_element.main_map )
+            {
+            if ( root_element.main_map.main_marker )
+                {
+                root_element.main_map.main_marker.setMap ( null );
+                root_element.main_map.main_marker = null;
+                };
+            
+            m_icon_image = new google.maps.MarkerImage ( g_style_dir + "/images/NACenterMarker.png", new google.maps.Size(21, 36), new google.maps.Point(0,0), new google.maps.Point(11, 36) );
+            m_icon_shadow = new google.maps.MarkerImage( g_style_dir + "/images/NACenterMarkerS.png", new google.maps.Size(43, 36), new google.maps.Point(0,0), new google.maps.Point(11, 36) );
+
+            root_element.main_map.main_marker = new google.maps.Marker ({
+                                                                        'position':     root_element.main_map.getCenter(),
+                                                                        'map':		    root_element.main_map,
+                                                                        'icon':		    m_icon_image,
+                                                                        'shadow':		m_icon_shadow,
+                                                                        'clickable':	false,
+                                                                        'cursor':		'pointer',
+                                                                        'draggable':    true
+                                                                        } );
+            google.maps.event.addListener ( root_element.main_map.main_marker, 'dragend', function(in_event) { admin_handler_object.respondToMarkerDragEnd( in_event, in_meeting_id ); } );
+            };
+    };
+    
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.setMeetingLongLat = function ( in_longLat,
+                                        in_meeting_id
+                                        )
+    {
+        var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+        var meeting_object = root_element.meeting_object;
+        var meeting_longitude_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_longitude_text_input' );
+        var meeting_latitude_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_latitude_text_input' );
+        
+        meeting_object.longitude = in_longLat.lng();
+        meeting_object.latitude = in_longLat.lat();
+        
+        meeting_longitude_text_item.value = meeting_object.longitude;
+        meeting_latitude_text_item.value = meeting_object.latitude;
+    };
+
+    // #mark - 
+    // #mark Constructor
+    // #mark -
 
     /************************************************************************************//**
     *                                     CONSTRUCTOR                                       *
@@ -1381,9 +1400,9 @@ function BMLT_Server_Admin ()
 
 var admin_handler_object = new BMLT_Server_Admin;
 
-/********************************************************************************************
-*###################################### AJAX HANDLER #######################################*
-********************************************************************************************/
+// #mark - 
+// #mark Global -AJAX Handler
+// #mark -
 
 /****************************************************************************************//**
 *   \brief A simple, generic AJAX request function.                                         *
@@ -1474,9 +1493,9 @@ function BMLT_AjaxRequest ( url,        ///< The URI to be called
     return req;
 };
 
-/********************************************************************************************
-*#################################### UTILITY FUNCTIONS ####################################*
-********************************************************************************************/
+// #mark - 
+// #mark Global -Utility Functions
+// #mark -
 
 /****************************************************************************************//**
 *   \brief Starts the message "fader."                                                      *
@@ -1639,10 +1658,32 @@ function BMLT_Admin_changeTemplateIDToUseThisID (   in_container_element,   ///<
     
     return ret;
 };
+        
+/************************************************************************************//**
+*   \brief 
+****************************************************************************************/
+function BMLT_Admin_setSelectByValue (  in_select_object,
+                                        in_value
+                                        )
+{
+    var setIndex = 0;
+    
+    for ( var c = 0; c < in_select_object.options.length; c ++ )
+        {
+        if ( parseInt ( in_select_object.options[c].value ) == parseInt ( in_value ) )
+            {
+            setIndex = c;
+            break;
+            };
+        };
+        
+    in_select_object.selectedIndex = setIndex;
+};
 
-/********************************************************************************************
-*###################################### THIRD-PARTY CODE ###################################*
-********************************************************************************************/
+// #mark - 
+// #mark Global -Third-Party Code
+// #mark -
+
 /**
 sprintf() for JavaScript 0.6
 

@@ -321,7 +321,7 @@ if ( $server instanceof c_comdef_server )
 					case	'search_csv':
 					 	if ( !special_small_site ( $http_vars ) )
 					 		{
-							require_once ( dirname ( __FILE__ ).'/../client/html/search_results_csv.php' );
+							require_once ( dirname ( __FILE__ ).'/../client_interface/csv/search_results_csv.php' );
 							if ( isset ( $http_vars ['result_type_advanced'] ) && ($http_vars ['result_type_advanced'] == 'csv_naws') )
 								{
 								echo ReturnNAWSFormatCSV ( $http_vars, $server );

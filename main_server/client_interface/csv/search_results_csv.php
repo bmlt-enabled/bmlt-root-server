@@ -31,7 +31,7 @@
 
 defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
-require_once ( dirname ( __FILE__ ).'/../common_search.inc.php' );
+require_once ( dirname ( __FILE__ ).'/../../client/common_search.inc.php' );
 require ( dirname ( __FILE__ ).'/../../server/config/auto-config.inc.php' );	// Just to make sure we have an early copy.
 
 /// These are the default formats for wheelchair, open and closed (used for the NAWS format). They can be overridden in the auto-config.inc.php file.
@@ -574,7 +574,7 @@ function ReturnNAWSFormatCSV (
 			}
 		}
 
-	require_once ( dirname ( __FILE__ ).'/../../client/html/search_results_csv.php' );
+// 	require_once ( dirname ( __FILE__ ).'/search_results_csv.php' );
 	$ret_array = array ();	// If we supply an array as a second parameter, we will get the dump returned in a two-dimensional array.
 	DisplaySearchResultsCSV ( $in_http_vars, $ret_array );	// Start off by getting the CSV dump in the same manner as the normal CSV dump.
 

@@ -238,7 +238,7 @@ function GetSearchResults (
 			}
 		}
 
-	require_once ( dirname ( __FILE__ ).'/../../client/html/search_results_csv.php' );
+	require_once ( dirname ( __FILE__ ).'/search_results_csv.php' );
 	$geocode_results = null;
 	$ignore_me = null;
 	$meeting_objects = array();

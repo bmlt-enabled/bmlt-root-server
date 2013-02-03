@@ -118,7 +118,7 @@ if ( $server instanceof c_comdef_server )
 				}
 			}
 
-		require_once ( dirname ( __FILE__ ).'/../../client/html/search_results_csv.php' );
+		require_once ( dirname ( __FILE__ ).'/../csv/search_results_csv.php' );
 		$results = DisplaySearchResultsCSV ( $in_http_vars );
 		
 		$ret = '';

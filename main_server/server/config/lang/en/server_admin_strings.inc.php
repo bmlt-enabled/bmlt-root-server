@@ -79,6 +79,8 @@
 	                                        'meeting_editor_screen_meeting_latitude_prompt'         =>  'Enter A Latitude',
 	                                        'meeting_editor_screen_meeting_location_label'          =>  'Location:',
 	                                        'meeting_editor_screen_meeting_location_prompt'         =>  'Enter A Location Name (Like a Building Name)',
+	                                        'meeting_editor_screen_meeting_info_label'              =>  'Extra Info:',
+	                                        'meeting_editor_screen_meeting_info_prompt'             =>  'Enter Any Additional Location Information',
 	                                        'meeting_editor_screen_meeting_street_label'            =>  'Street Address:',
 	                                        'meeting_editor_screen_meeting_street_prompt'           =>  'Enter A Street Address',
 	                                        'meeting_editor_screen_meeting_neighborhood_label'      =>  'Neighborhood:',
