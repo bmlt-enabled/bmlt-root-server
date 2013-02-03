@@ -182,11 +182,16 @@ class c_comdef_admin_main_console
                     {
                     $ret .= "\n";
                     }
+                $ret .= 'var g_no_search_results_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_search_no_results_text'] ).'\';';
+                if ( defined ( '__DEBUG_MODE__' ) )
+                    {
+                    $ret .= "\n";
+                    }
                 $ret .= file_get_contents ( dirname ( __FILE__ ).(defined('__DEBUG_MODE__') ? '/' : '/js_stripper.php?filename=' ).'server_admin_javascript.js' );
                 if ( defined('__DEBUG_MODE__') )
                     {
                     $ret .= "\n";
-                    };
+                    }
             $ret .= '</script>';
             // Belt and suspenders. Just make sure the user is legit.
             if ( ($this->my_user instanceof c_comdef_user) && ($this->my_user->GetUserLevel() != _USER_LEVEL_DISABLED) )
@@ -312,6 +317,14 @@ class c_comdef_admin_main_console
                     {
                     $ret .= $this->return_meeting_service_body_selection_panel ();
                     }
+                    $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                        $ret .= '<span class="bmlt_admin_med_label_right">&nbsp;</span>';
+                            $ret .= '<span id="bmlt_admin_meeting_search_ajax_button_span" class="bmlt_admin_value_left">';
+                                $ret .= '<a id="bmlt_admin_meeting_search_ajax_button_a" href="javascript:admin_handler_object.searchForMeetings()" class="bmlt_admin_ajax_button button">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_tab_specifier_text'] ).'</a>';
+                            $ret .= '</span>';
+                        $ret .= '<span id="bmlt_admin_meeting_search_ajax_button_throbber_span" class="bmlt_admin_value_left item_hidden"><img src="local_server/server_admin/style/images/ajax-loader.gif" alt="AJAX Throbber" /></span>';
+                        $ret .= '<div class="clear_both"></div>';
+                    $ret .= '</div>';
             $ret .= '</form>';
             $ret .= '<div class="clear_both"></div>';
         $ret .= '</div>';
@@ -493,7 +506,7 @@ class c_comdef_admin_main_console
     {
         $ret = '<div id="bmlt_admin_meeting_editor_form_results_div" class="bmlt_admin_meeting_editor_form_results_div item_hidden">';
             $ret .='<form class="bmlt_admin_meeting_editor_results_form" action="">';
-                $ret .= '<div class="bmlt_admin_meeting_editor_form_results_inner_div">';
+                $ret .= '<div id="bmlt_admin_meeting_editor_form_results_inner_div" class="bmlt_admin_meeting_editor_form_results_inner_div">';
                 $ret .= '</div>';
             $ret .= '</form>';
         $ret .= '</div>';
@@ -659,6 +672,11 @@ class c_comdef_admin_main_console
                             $ret .= '</select>';
                             }
                     $ret .= '</span>';
+                    $ret .= '<div class="clear_both"></div>';
+                $ret .= '</div>';
+                $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                    $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_contact_label'] ).'</span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_contact_text_input" type="text" value="'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_contact_prompt'] ).'" onkeyup="admin_handler_object.handleTextInputChange(this, 0);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
             $ret .= '</div>';
@@ -832,7 +850,7 @@ class c_comdef_admin_main_console
                     $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                         $ret .= '<span class="bmlt_admin_med_label_right">&nbsp;</span>';
                         $ret .= '<span id="bmlt_admin_account_change_ajax_button_span" class="bmlt_admin_value_left"><a id="bmlt_admin_account_change_ajax_button" href="javascript:admin_handler_object.handleAccountChange()" class="bmlt_admin_ajax_button button_disabled">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['account_change_button_text'] ).'</a></span>';
-                        $ret .= '<span id="bmlt_admin_account_change_ajax_button_throbber_span" class="bmlt_admin_value_left item_hidden"><img src="local_server/server_admin/style/images/button-throbber.gif" alt="AJAX Throbber" /></span>';
+                        $ret .= '<span id="bmlt_admin_account_change_ajax_button_throbber_span" class="bmlt_admin_value_left item_hidden"><img src="local_server/server_admin/style/images/ajax-loader.gif" alt="AJAX Throbber" /></span>';
                         $ret .= '<div class="clear_both"></div>';
                     $ret .= '</div>';
                 $ret .= '</div>';

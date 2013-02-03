@@ -634,5 +634,14 @@ div.bmlt_admin_single_meeting_editor_inner_map_div
 
 div.bmlt_admin_meeting_editor_form_results_inner_div
 {
-    height:40px;
+}
+
+div.meeting_line_odd
+{
+    background-color:white;
+}
+
+div.meeting_line_even
+{
+    background-color:#efefff;
 }

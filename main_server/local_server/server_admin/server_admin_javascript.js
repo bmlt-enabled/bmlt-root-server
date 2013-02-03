@@ -23,7 +23,7 @@
 function BMLT_Server_Admin ()
 {
     // #mark - 
-    // #mark Class Declaration
+    // #mark ########## Class Declaration ##########
     // #mark -
     
     /************************************************************************************//**
@@ -36,7 +36,7 @@ function BMLT_Server_Admin ()
     var m_success_fade_duration = null;         ///< Number of milliseconds for a success fader.
     var m_failure_fade_duration = null;         ///< Number of milliseconds for a failure fader.
     var m_search_results = null;                ///< This will contain any meeting search results.
-    var m_meeting_objects = null;               ///< This will hold a list of meetings that we are working on.
+    var m_meeting_results_container_div = null; ///< This will hold any search result display elements (allows easy disposal)
     
     /************************************************************************************//**
     *                                       METHODS                                         *
@@ -73,6 +73,18 @@ function BMLT_Server_Admin ()
             
             in_text_item.value = in_text_item.original_value;
 
+            this.setTextItemClass ( in_text_item );
+            };
+    };
+    
+    /************************************************************************************//**
+    *   \brief This just makes sure that the className is correct.                          *
+    ****************************************************************************************/
+    this.setTextItemClass = function(   in_text_item    ///< This is the text item to check.
+                                        )
+    {
+        if ( in_text_item )
+            {
             if ( (in_text_item.value == null) || (in_text_item.value == in_text_item.defaultValue) )
                 {
                 in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : '') + ' bmlt_text_item_dimmed';
@@ -97,6 +109,7 @@ function BMLT_Server_Admin ()
                 in_text_item.value = '';
                 };
             
+            this.setTextItemClass ( in_text_item );
             this.validateAccountGoButton();
             };
     };
@@ -120,6 +133,7 @@ function BMLT_Server_Admin ()
                 in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : '');
                 };
             
+            this.setTextItemClass ( in_text_item );
             this.validateAccountGoButton();
             };
     };
@@ -150,11 +164,13 @@ function BMLT_Server_Admin ()
                 {
                 this.dirtifyMeeting ( in_meeting_id );
                 };
+            
+            this.setTextItemClass ( in_text_item );
             };
     };
     
     // #mark - 
-    // #mark Account Info Section
+    // #mark ########## Account Info Section ##########
     // #mark -
     
     /************************************************************************************//**
@@ -319,9 +335,9 @@ function BMLT_Server_Admin ()
         throbber_span.className = 'bmlt_admin_value_left' + (in_shown ? '' : ' item_hidden');
         button_span.className = 'bmlt_admin_value_left' + (in_shown ? ' item_hidden' : '');
     };
-    
+        
     // #mark - 
-    // #mark Meeting Editor Section
+    // #mark ########## Meeting Editor Section ##########
     // #mark -
         
     /************************************************************************************//**
@@ -350,18 +366,28 @@ function BMLT_Server_Admin ()
     *   \brief  Returns an object with the meeting data for the meeting ID passed in.       *
     *   \returns a meeting object. Null if none found, or invalid ID.                       *
     ****************************************************************************************/
-    this.getMeetingObjectById = function ( in_meeting_id    ///< The ID of the meeting to fetch
+    this.getMeetingObjectById = function (  in_meeting_id,  ///< The ID of the meeting to fetch
+                                            in_as_a_copy    ///< If true, then the returned meeting object will be a clone (new object).
                                             )
     {
         var ret = null;
         
-        if ( in_meeting_id && this.m_meeting_objects && this.m_meeting_objects.length )
+        if ( in_meeting_id && this.m_search_results && this.m_search_results.length )
             {
-            for ( var c = 0; c < this.m_meeting_objects.length; c++ )
+            for ( var c = 0; c < this.m_search_results.length; c++ )
                 {
-                if ( in_meeting_id == this.m_meeting_objects[c].id_bigint )
+                if ( in_meeting_id == this.m_search_results[c].id_bigint )
                     {
-                    ret = this.m_meeting_objects[c];
+                    var obj = this.m_search_results[c];
+                    
+                    if ( in_as_a_copy )
+                        {
+                        ret = JSON.parse ( JSON.stringify ( obj ) );
+                        }
+                    else
+                        {
+                        ret = obj;
+                        };
                     break;
                     };
                 };
@@ -372,12 +398,13 @@ function BMLT_Server_Admin ()
             ret = new Object;
             ret.longitude = g_default_longitude;
             ret.latitude = g_default_latitude;
-            ret.zoom = g_default_zoom;
             ret.start_time = g_default_meeting_start_time;
             ret.duration_time = g_default_meeting_duration;
             ret.weekday_tinyint = g_default_meeting_weekday;
             ret.id_bigint = 0;  // All new meetings are ID 0.
             };
+        
+        ret.zoom = g_default_zoom;
         
         return ret;
     };
@@ -481,7 +508,8 @@ function BMLT_Server_Admin ()
     };
     
     /************************************************************************************//**
-    *   \brief  
+    *   \brief  This returns the Service body ID of the given Service body ID.              *
+    *   \returns an integer that is the ID of the parent Service body.                      *
     ****************************************************************************************/
     this.getServiceBodyParentID = function( in_service_body_id 
                                             )
@@ -501,7 +529,9 @@ function BMLT_Server_Admin ()
     };
     
     /************************************************************************************//**
-    *   \brief  
+    *   \brief  Returns an array of Service body objects that are direct descendants of the *
+    *           given Service body, as specified by ID.                                     *
+    *   \returns an array of Service body objects.                                          *
     ****************************************************************************************/
     this.getServiceBodyChildren = function( in_service_body_id 
                                             )
@@ -525,7 +555,8 @@ function BMLT_Server_Admin ()
     };
     
     /************************************************************************************//**
-    *   \brief  
+    *   \brief  Returns the name of the given Service body, by ID.                          *
+    *   \returns a string.                                                                  *
     ****************************************************************************************/
     this.getServiceBodyName = function( in_service_body_id 
                                         )
@@ -542,25 +573,6 @@ function BMLT_Server_Admin ()
             };
         
         return the_object[2];
-    };
-    
-    /************************************************************************************//**
-    *   \brief  Displays the Search Specifier, and hides any search results.                *
-    ****************************************************************************************/
-    this.showSearchSpecifier = function()
-    {
-        this.m_search_specifier_shown = true;
-        this.setSearchResultsVisibility();
-    };
-    
-    /************************************************************************************//**
-    *   \brief  Displays the Search Specifier, and hides any search results.                *
-    ****************************************************************************************/
-    this.showSearchResults = function()
-    {
-        // No search results, no visible results div.
-        this.m_search_specifier_shown = (this.m_search_results ? false : true);
-        this.setSearchResultsVisibility();
     };
     
     /************************************************************************************//**
@@ -581,6 +593,176 @@ function BMLT_Server_Admin ()
             search_specifier_div.className = 'bmlt_admin_meeting_editor_form_specifier_div item_hidden';
             search_results_div.className = 'bmlt_admin_meeting_editor_form_results_div';
             };
+    };
+    
+    // #mark - 
+    // #mark Do A Meeting Search
+    // #mark -
+    
+    /************************************************************************************//**
+    *   \brief  Reacts to the "Search For Meetings" button being hit.                       *
+    ****************************************************************************************/
+    this.searchForMeetings = function(  in_button_object
+                                    )
+    {
+        var button_span = document.getElementById ( 'bmlt_admin_meeting_search_ajax_button_span' );
+        var throbber_span = document.getElementById ( 'bmlt_admin_meeting_search_ajax_button_throbber_span' );
+        
+        var uri = this.createSearchURI();
+        
+        button_span.className = 'bmlt_admin_value_left item_hidden';
+        throbber_span.className = 'bmlt_admin_value_left';
+        
+        this.clearSearchResults();
+        this.callRootServerForMeetingSearch ( uri );
+    };
+    
+    
+    /************************************************************************************//**
+    *	\brief Clears any previous search results.                                          *
+    ****************************************************************************************/
+    this.clearSearchResults = function ()
+    {
+        var the_outer_container = document.getElementById ( 'bmlt_admin_meeting_editor_form_results_inner_div' );
+        var the_main_results_display = document.getElementById ( 'bmlt_admin_meeting_editor_form_results_div' );
+        
+        if ( this.m_meeting_results_container_div ) // Make sure we're starting from scratch.
+            {
+            this.m_meeting_results_container_div.innerHTML = '';
+            this.m_meeting_results_container_div = null;
+            };
+        
+        the_outer_container.innerHTML = '';
+        the_main_results_display.className = 'bmlt_admin_meeting_editor_form_results_div item_hidden"';
+        
+        this.m_search_results = null;
+    };
+
+    /************************************************************************************//**
+    *	\brief This function constructs a URI to the root server that reflects the search   *
+    *          parameters, as specified by the search specification section.                *
+    *   \returns a string, containing the complete URI.                                     *
+    ****************************************************************************************/
+    this.createSearchURI = function ()
+    {
+        var uri = g_ajax_callback_uri + '&do_meeting_search=1';
+        
+        return uri;
+    };
+	
+	/************************************************************************************//**
+	*	\brief  Does an AJAX call for a JSON response, based on the given criteria and      *
+	*           callback function.                                                          *
+	*           The callback will be a function in the following format:                    *
+	*               function ajax_callback ( in_json_obj )                                  *
+	*           where "in_json_obj" is the response, converted to a JSON object.            *
+	*           it will be null if the function failed.                                     *
+	****************************************************************************************/
+	this.callRootServerForMeetingSearch = function (in_uri  ///< The URI to call (with all the parameters).
+	                                                )
+	{
+        if ( this.m_ajax_request_in_progress )
+            {
+            this.m_ajax_request_in_progress.abort();
+            this.m_ajax_request_in_progress = null;
+            };
+        this.m_ajax_request_in_progress = BMLT_AjaxRequest ( in_uri, function(in_req,in_data) { admin_handler_object.meetingSearchResultsCallback(in_req); }, 'post' );
+	};
+    
+    /************************************************************************************//**
+    *	\brief This is the meeting search results callback.                                 *
+    ****************************************************************************************/
+    this.meetingSearchResultsCallback = function (  in_response_object  ///< The HTTPRequest response object.
+                                                )
+    {
+        var button_span = document.getElementById ( 'bmlt_admin_meeting_search_ajax_button_span' );
+        var throbber_span = document.getElementById ( 'bmlt_admin_meeting_search_ajax_button_throbber_span' );
+        var text_reply = in_response_object.responseText;
+        
+        throbber_span.className = 'bmlt_admin_value_left item_hidden';
+        button_span.className = 'bmlt_admin_value_left';
+    
+        if ( text_reply )
+            {
+            var json_builder = 'var response_object = ' + text_reply + ';';
+        
+            // This is how you create JSON objects.
+            eval ( json_builder );
+        
+            if ( response_object.length )
+                {
+                this.processSearchResults ( response_object );
+                }
+            else
+                {
+                alert ( g_no_search_results_text );
+                };
+            }
+        else
+            {
+            alert ( g_no_search_results_text );
+            };
+    };
+    
+    /************************************************************************************//**
+    *	\brief This creates the meeting search results.                                     *
+    ****************************************************************************************/
+    this.processSearchResults = function( in_search_results_json_object ///< The search results, as a JSON object.
+                                        )
+    {
+        var the_outer_container = document.getElementById ( 'bmlt_admin_meeting_editor_form_results_inner_div' );
+        var the_main_results_display = document.getElementById ( 'bmlt_admin_meeting_editor_form_results_div' );
+        
+        if ( this.m_meeting_results_container_div ) // Make sure we're starting from scratch.
+            {
+            this.m_meeting_results_container_div.innerHTML = '';
+            this.m_meeting_results_container_div = null;
+            };
+        
+        the_outer_container.innerHTML = '';
+        the_main_results_display.className = 'bmlt_admin_meeting_editor_form_results_div item_hidden"';
+        
+        this.m_meeting_results_container_div = document.createElement ( 'div' );   // Create the container element.
+        this.m_meeting_results_container_div.className = 'bmlt_admin_meeting_search_results_container_div';
+        
+        this.m_search_results = in_search_results_json_object;
+        
+        for ( var c = 0; c < this.m_search_results.length; c++ )    
+            {
+            var single_meeting_div = document.createElement ( 'div' );   // Create the container element.
+            single_meeting_div.meeting_id = this.m_search_results[c].id_bigint;
+            single_meeting_div.className = 'bmlt_admin_meeting_search_results_single_meeting_container_div' + ((c % 2) ? ' meeting_line_odd' : ' meeting_line_even');
+            single_meeting_div.id = 'bmlt_admin_meeting_search_results_single_meeting_' + single_meeting_div.meeting_id +'_div';
+
+            this.createOneMeetingNode ( single_meeting_div, this.m_search_results[c] );
+            
+            this.m_meeting_results_container_div.appendChild ( single_meeting_div );
+            };
+        
+        the_outer_container.appendChild ( this.m_meeting_results_container_div );
+        the_main_results_display.className = 'bmlt_admin_meeting_editor_form_results_div"';
+        
+        this.selectMeetingEditorTab();
+    };
+    
+    /************************************************************************************//**
+    *	\brief 
+    ****************************************************************************************/
+    this.createOneMeetingNode = function(   in_single_meeting_div,  ///< The containing div element.
+                                            in_meeting_object       ///< The meeting object.
+                                        )
+    {
+        var meeting_name_div = document.createElement ( 'div' );   // Create the container element.
+        meeting_name_div.className = 'bmlt_admin_meeting_search_results_single_meeting_name_div';
+        meeting_name_div.id = 'bmlt_admin_meeting_search_results_single_meeting_' + in_meeting_object.id_bigint +'_name_div';
+        var meeting_name_text_node = document.createTextNode ( in_meeting_object.meeting_name );
+        
+        var meeting_editorLink = document.createElement ( 'a' );
+        meeting_editorLink.href = 'javascript:admin_handler_object.toggleMeetingSingleEditor(' + in_meeting_object.id_bigint + ')';
+        meeting_editorLink.appendChild ( meeting_name_text_node );
+        meeting_name_div.appendChild ( meeting_editorLink );
+        
+        in_single_meeting_div.appendChild ( meeting_name_div );
     };
     
     // #mark - 
@@ -608,6 +790,32 @@ function BMLT_Server_Admin ()
         search_specifier_element.className = 'bmlt_admin_meeting_editor_form_specifier_div item_hidden';
         meeting_editor_element.className = 'bmlt_admin_meeting_editor_form_div';
     }
+    
+    /************************************************************************************//**
+    *   \brief  Brings up a new meeting screen.                                             *
+    ****************************************************************************************/
+    this.toggleMeetingSingleEditor = function( in_meeting_id
+                                                )
+    {
+        var display_parent = document.getElementById ( 'bmlt_admin_meeting_search_results_single_meeting_' + in_meeting_id + '_div' );
+        
+        if ( display_parent )
+            {
+            if ( !display_parent.meeting_editor_object )
+                {
+                display_parent.meeting_editor_object = document.createElement ( 'div' );   // Create the container element.
+                display_parent.meeting_editor_object.className = 'bmlt_admin_meeting_search_results_editor_container_div';
+                display_parent.appendChild ( display_parent.meeting_editor_object );
+
+                this.createNewMeetingEditorScreen ( display_parent.meeting_editor_object, in_meeting_id );
+                }
+            else
+                {
+                display_parent.removeChild ( display_parent.meeting_editor_object );
+                display_parent.meeting_editor_object = null;
+                };
+            };
+    };
     
     /************************************************************************************//**
     *   \brief  Brings up a new meeting screen.                                             *
@@ -677,13 +885,20 @@ function BMLT_Server_Admin ()
 
         if ( !root_element.dirty_flag || ( root_element.dirty_flag && confirm ( g_meeting_closure_confirm_text ) ) )
             {
-            display_parent.innerHTML = null;
-            display_parent.className = 'item_hidden';
-            
-            if ( in_meeting_id == 0 )
+            if ( display_parent )
                 {
-                var new_meeting_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_button' );
-                new_meeting_button.className = 'bmlt_admin_ajax_button button';
+                display_parent.innerHTML = null;
+                display_parent.className = 'item_hidden';
+            
+                if ( in_meeting_id == 0 )
+                    {
+                    var new_meeting_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_button' );
+                    new_meeting_button.className = 'bmlt_admin_ajax_button button';
+                    };
+                }
+            else
+                {
+                this.toggleMeetingSingleEditor ( in_meeting_id );
                 };
             };
     };
@@ -723,6 +938,7 @@ function BMLT_Server_Admin ()
             
             var meeting_name_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_name_text_input';
             var meeting_cc_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_cc_text_input';
+            var meeting_contact_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_contact_text_input';
             
             var meeting_location_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_location_text_input';
             var meeting_info_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_info_text_input';
@@ -742,7 +958,7 @@ function BMLT_Server_Admin ()
                 new_editor = template_dom_list.cloneNode ( true );
                 // This function replaces all of the spots that say "template" with the given ID. That gives us unique IDs.
                 BMLT_Admin_changeTemplateIDToUseThisID ( new_editor, in_meeting_id );
-                new_editor.meeting_object = this.getMeetingObjectById ( in_meeting_id );
+                new_editor.meeting_object = this.getMeetingObjectById ( in_meeting_id, true );
                 new_editor.dirty_flag = false;
                 new_editor.map_disclosed = false;
             
@@ -752,6 +968,7 @@ function BMLT_Server_Admin ()
                             
                 this.handleTextInputLoad(document.getElementById(meeting_name_text_item_id));
                 this.handleTextInputLoad(document.getElementById(meeting_cc_text_item_id), null, true);
+                this.handleTextInputLoad(document.getElementById(meeting_contact_text_item_id));
                 this.handleTextInputLoad(document.getElementById(meeting_location_text_item_id));
                 this.handleTextInputLoad(document.getElementById(meeting_info_text_item_id));
                 this.handleTextInputLoad(document.getElementById(meeting_street_text_item_id));
@@ -794,7 +1011,6 @@ function BMLT_Server_Admin ()
                                                 )
     {
         var meeting_object = in_meeting_editor.meeting_object;
-        
         var meeting_id = meeting_object.id_bigint;
         
         var meeting_name_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_name_text_input' );
@@ -813,19 +1029,46 @@ function BMLT_Server_Admin ()
         var meeting_latitude_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_latitude_text_input' );
 
         meeting_name_text_item.value = in_meeting_editor.meeting_object.meeting_name ? in_meeting_editor.meeting_object.meeting_name : meeting_name_text_item.value;
+        this.setTextItemClass ( meeting_name_text_item );
+        
         meeting_cc_text_item.value = in_meeting_editor.meeting_object.world_id ? in_meeting_editor.meeting_object.world_id : meeting_cc_text_item.value;
+        this.setTextItemClass ( meeting_cc_text_item );
+        
         meeting_location_text_item.value = in_meeting_editor.meeting_object.location_text ? in_meeting_editor.meeting_object.location_text : meeting_location_text_item.value;
+        this.setTextItemClass ( meeting_location_text_item );
+        
         meeting_info_text_item.value = in_meeting_editor.meeting_object.location_info ? in_meeting_editor.meeting_object.location_info : meeting_info_text_item.value;
+        this.setTextItemClass ( meeting_info_text_item );
+        
         meeting_street_text_item.value = in_meeting_editor.meeting_object.location_street ? in_meeting_editor.meeting_object.location_street : meeting_street_text_item.value;
+        this.setTextItemClass ( meeting_street_text_item );
+        
         meeting_neighborhood_text_item.value = in_meeting_editor.meeting_object.location_neighborhood ? in_meeting_editor.meeting_object.location_neighborhood : meeting_neighborhood_text_item.value;
+        this.setTextItemClass ( meeting_neighborhood_text_item );
+        
         meeting_borough_text_item.value = in_meeting_editor.meeting_object.location_city_subsection ? in_meeting_editor.meeting_object.location_city_subsection : meeting_borough_text_item.value;
+        this.setTextItemClass ( meeting_borough_text_item );
+        
         meeting_city_text_item.value = in_meeting_editor.meeting_object.location_municipality ? in_meeting_editor.meeting_object.location_municipality : meeting_city_text_item.value;
+        this.setTextItemClass ( meeting_city_text_item );
+        
         meeting_county_text_item.value = in_meeting_editor.meeting_object.location_sub_province ? in_meeting_editor.meeting_object.location_sub_province : meeting_county_text_item.value;
+        this.setTextItemClass ( meeting_county_text_item );
+        
         meeting_state_text_item.value = in_meeting_editor.meeting_object.location_province ? in_meeting_editor.meeting_object.location_province : meeting_state_text_item.value;
+        this.setTextItemClass ( meeting_state_text_item );
+        
         meeting_zip_text_item.value = in_meeting_editor.meeting_object.location_postal_code_1 ? in_meeting_editor.meeting_object.location_postal_code_1 : meeting_zip_text_item.value;
+        this.setTextItemClass ( meeting_zip_text_item );
+        
         meeting_nation_text_item.value = in_meeting_editor.meeting_object.location_nation ? in_meeting_editor.meeting_object.location_nation : meeting_nation_text_item.value;
+        this.setTextItemClass ( meeting_nation_text_item );
+        
         meeting_longitude_text_item.value = in_meeting_editor.meeting_object.longitude ? in_meeting_editor.meeting_object.longitude : meeting_longitude_text_item.value;
+        this.setTextItemClass ( meeting_longitude_text_item );
+        
         meeting_latitude_text_item.value = in_meeting_editor.meeting_object.latitude ? in_meeting_editor.meeting_object.latitude : meeting_latitude_text_item.value;
+        this.setTextItemClass ( meeting_latitude_text_item );
         
         var weekday_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_weekday_select' );
 
@@ -1010,7 +1253,7 @@ function BMLT_Server_Admin ()
     };
         
     // #mark - 
-    // #mark Meeting Editor Internal Tabs
+    // #mark ########## Meeting Editor Internal Tabs ##########
     // #mark -
         
     // #mark - 
@@ -1152,7 +1395,9 @@ function BMLT_Server_Admin ()
     this.lookupLocation = function( in_meeting_id       ///< The BMLT ID of the meeting that being edited.
                                     )
     {
-        var the_meeting_object = this.getMeetingObjectById ( in_meeting_id );
+        var editor_object = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+
+        var the_meeting_object = editor_object.meeting_object;
 
         var editor_object = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
         var meeting_street_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_street_text_input' );
@@ -1290,7 +1535,7 @@ function BMLT_Server_Admin ()
             {
             in_editor_parent.m_main_map.setOptions({'scrollwheel': false});   // For some reason, it ignores setting this in the options.
             google.maps.event.addListener ( in_editor_parent.m_main_map, 'click', function(in_event) { admin_handler_object.respondToMapClick( in_event, in_meeting_id ); } );
-            google.maps.event.addListener ( in_editor_parent.m_main_map, 'tilesloaded', function(in_event) { admin_handler_object.tilesLoaded( in_meeting_id ); } );
+            in_editor_parent.m_main_map.initialcall = google.maps.event.addListener ( in_editor_parent.m_main_map, 'tilesloaded', function(in_event) { admin_handler_object.tilesLoaded( in_meeting_id ); } );
             this.displayMainMarkerInMap ( in_meeting_id );
             };
             
@@ -1303,6 +1548,14 @@ function BMLT_Server_Admin ()
     this.tilesLoaded = function(in_meeting_id   ///< The meeting this map is associated with.
                                 )
     {
+        var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+
+        if ( root_element && root_element.main_map && root_element.m_main_map.initialcall )
+            {
+            google.maps.event.removeListener ( root_element.m_main_map.initialcall );
+            root_element.m_main_map.initialcall = null;
+            };
+        
         this.displayMainMarkerInMap ( in_meeting_id );
     };
     
@@ -1385,7 +1638,7 @@ function BMLT_Server_Admin ()
     };
 
     // #mark - 
-    // #mark Constructor
+    // #mark ########## Constructor ##########
     // #mark -
 
     /************************************************************************************//**
@@ -1397,11 +1650,15 @@ function BMLT_Server_Admin ()
     this.m_success_fade_duration = 2000;        ///< 2 seconds for a success fader.
     this.m_failure_fade_duration = 5000;        ///< 5 seconds for a success fader.
 };
+    
+// #mark - 
+// #mark ########## Global Functions ##########
+// #mark -
 
 var admin_handler_object = new BMLT_Server_Admin;
 
 // #mark - 
-// #mark Global -AJAX Handler
+// #mark AJAX Handler
 // #mark -
 
 /****************************************************************************************//**
@@ -1494,7 +1751,7 @@ function BMLT_AjaxRequest ( url,        ///< The URI to be called
 };
 
 // #mark - 
-// #mark Global -Utility Functions
+// #mark Utility Functions
 // #mark -
 
 /****************************************************************************************//**
@@ -1681,7 +1938,7 @@ function BMLT_Admin_setSelectByValue (  in_select_object,
 };
 
 // #mark - 
-// #mark Global -Third-Party Code
+// #mark ########## Third-Party Code ##########
 // #mark -
 
 /**
