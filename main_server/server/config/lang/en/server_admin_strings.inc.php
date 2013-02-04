@@ -104,6 +104,7 @@
 	                                        'meeting_editor_screen_cancel_button'                   =>  'Cancel',
 	                                        'meeting_editor_screen_cancel_confirm'                  =>  'Are you sure that you want to cancel editing this meeting, and lose all changes?',
 	                                        'meeting_lookup_failed'                                 =>  'The address lookup failed.',
+	                                        'meeting_lookup_failed_not_enough_address_info'         =>  'There is not enough valid address information to do a lookup.',
 	                                        'meeting_create_button_name'                            =>  'Save This As A New Meeting',
 	                                        'meeting_saved_as_a_copy'                               =>  'Save This Meeting As A Copy (Creates A New Meeting)',
 	                                        'meeting_save_buttonName'                               =>  'Save the Changes to This Meeting',

@@ -192,6 +192,11 @@ class c_comdef_admin_main_console
                     {
                     $ret .= "\n";
                     }
+                $ret .= 'var g_meeting_lookup_failed_not_enough_address_info = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_lookup_failed_not_enough_address_info'] ).'\';';
+                if ( defined ( '__DEBUG_MODE__' ) )
+                    {
+                    $ret .= "\n";
+                    }
                 $ret .= file_get_contents ( dirname ( __FILE__ ).(defined('__DEBUG_MODE__') ? '/' : '/js_stripper.php?filename=' ).'server_admin_javascript.js' );
                 if ( defined('__DEBUG_MODE__') )
                     {
@@ -292,7 +297,7 @@ class c_comdef_admin_main_console
     function return_meeting_specification_panel ()
     {
         $ret = '<div id="bmlt_admin_meeting_editor_form_specifier_div" class="bmlt_admin_meeting_editor_form_specifier_div">';
-            $ret .='<form class="bmlt_admin_meeting_editor_specifier_form" action="">';
+            $ret .='<form class="bmlt_admin_meeting_editor_specifier_form" action="" onsubmit="function() { admin_handler_object.searchForMeetings(); }">';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_text_input_label'] ).'</span>';
                     $ret .= '<span class="bmlt_admin_value_left"><input name="bmlt_admin_text_specifier_input" id="bmlt_admin_text_specifier_input" type="text" value="'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_text_input_default_text'] ).'" onkeyup="admin_handler_object.handleTextInputChange(this);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';

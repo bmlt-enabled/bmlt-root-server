@@ -65,7 +65,7 @@ class c_comdef_admin_ajax_handler
         
         if ( isset ( $this->my_http_vars['do_meeting_search'] ) )
             {
-            $returned_text = $this->TranslateToJSON ( $this->GetSearchResults ( $http_vars ) );
+            $returned_text = $this->TranslateToJSON ( $this->GetSearchResults ( $this->my_http_vars ) );
             }
         else
             {
