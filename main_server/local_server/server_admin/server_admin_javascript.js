@@ -1129,7 +1129,7 @@ function BMLT_Server_Admin ()
         meeting_name_text_item.value = in_meeting_editor.meeting_object.meeting_name ? in_meeting_editor.meeting_object.meeting_name : meeting_name_text_item.value;
         this.setTextItemClass ( meeting_name_text_item );
         
-        meeting_cc_text_item.value = in_meeting_editor.meeting_object.world_id ? in_meeting_editor.meeting_object.world_id : meeting_cc_text_item.value;
+        meeting_cc_text_item.value = in_meeting_editor.meeting_object.worldid_mixed ? in_meeting_editor.meeting_object.worldid_mixed : meeting_cc_text_item.value;
         this.setTextItemClass ( meeting_cc_text_item );
         
         meeting_location_text_item.value = in_meeting_editor.meeting_object.location_text ? in_meeting_editor.meeting_object.location_text : meeting_location_text_item.value;
@@ -1171,9 +1171,22 @@ function BMLT_Server_Admin ()
         var weekday_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_weekday_select' );
 
         BMLT_Admin_setSelectByValue ( weekday_select, in_meeting_editor.meeting_object.weekday_tinyint );
+        
+        var service_body_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_sb_select' );
+
+        BMLT_Admin_setSelectByValue ( service_body_select, in_meeting_editor.meeting_object.service_body_bigint );
+
         this.setMeetingStartTime ( in_meeting_editor.meeting_object );
         this.setMeetingDuration ( in_meeting_editor.meeting_object );
         this.validateMeetingEditorButton(meeting_id);
+    };
+    
+    /************************************************************************************//**
+    *   \brief 
+    ****************************************************************************************/
+    this.setServiceBody = function( in_meeting_object
+                                    )
+    {
     };
     
     /************************************************************************************//**

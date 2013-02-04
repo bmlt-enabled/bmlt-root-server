@@ -675,7 +675,7 @@ class c_comdef_admin_main_console
                     $ret .= '<span class="bmlt_admin_value_left">';
                         if ( count ( $this->my_service_bodies ) > 1 )
                             {
-                            $ret .= '<select id="bmlt_admin_single_meeting_editor_template_meeting_weekday_select">';
+                            $ret .= '<select id="bmlt_admin_single_meeting_editor_template_meeting_sb_select">';
                                 for ( $m = 0; $m < count ( $this->my_service_bodies ); $m++ )
                                     {
                                     $ret .= '<option value="'.$this->my_service_bodies[$m]->GetID().'">'.htmlspecialchars ( $this->my_service_bodies[$m]->GetLocalName() ).'</option>';
