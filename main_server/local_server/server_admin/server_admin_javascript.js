@@ -668,6 +668,17 @@ function BMLT_Server_Admin ()
                 };
             };
             
+        var service_bodies = new Array();
+        
+        for ( var c = 0; c < g_service_bodies_array.length; c++ )
+            {
+            var service_body_id = g_service_bodies_array[c][0];
+            if ( document.getElementById ( 'bmlt_admin_meeting_search_service_body_checkbox_' + service_body_id ).checked )
+                {
+                service_bodies[service_bodies.length] = service_body_id;
+                };
+            };
+        
         var starts_after = new Array();
         var starts_before = new Array();
         
@@ -699,6 +710,14 @@ function BMLT_Server_Admin ()
                 uri += '&weekdays[]=' + parseInt ( weekdays[c] );
                 };
             };
+        
+        if ( service_bodies.length )
+            {
+            for ( var c = 0; c < service_bodies.length; c++ )
+                {
+                uri += '&services[]=' + parseInt ( service_bodies[c] );
+                };
+            };
 
         if ( starts_after.length )
             {
@@ -711,7 +730,7 @@ function BMLT_Server_Admin ()
             uri += '&StartsBeforeH=' + starts_before[0];
             uri += '&StartsBeforeM=' + starts_before[1];
             };
-        
+            
         return uri;
     };
 	
