@@ -110,6 +110,7 @@
 	                                        'meeting_save_buttonName'                               =>  'Save the Changes to This Meeting',
 	                                        'meeting_editor_tab_bar_basic_tab_text'                 =>  'Basic',
 	                                        'meeting_editor_tab_bar_location_tab_text'              =>  'Location',
+	                                        'meeting_editor_result_count_format'                    =>  '%d Meetings Found',
 	                                        'meeting_editor_default_zoom'                           =>  '11',
 	                                        'meeting_editor_default_weekday'                        =>  '2',
 	                                        'meeting_editor_default_start_time'                     =>  '20:30:00',

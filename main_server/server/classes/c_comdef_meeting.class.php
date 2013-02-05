@@ -315,6 +315,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 				// We now set up values for the three tables: The main one, the extra data one, and the long data one.
 				list ( $main_table_values, $data_table_values, $longdata_table_values ) = $this->ReduceToArrays();
 				// Okay, we have our three rows. Time to send them to the database.
+
 				
 				if ( is_array ( $main_table_values )  && count ( $main_table_values ) )
 					{
@@ -1211,11 +1212,14 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 				$in_lang_enum = $this->_my_meeting_data['lang_enum'];
 				}
 			$this->_my_meeting_data[$in_key_enum]['key'] = strval ( $in_key_enum );
-			$this->_my_meeting_data[$in_key_enum]['prompt'] = $in_field_prompt_string;
+			if ( $in_field_prompt_string !== null )
+			    {
+			    $this->_my_meeting_data[$in_key_enum]['prompt'] = $in_field_prompt_string;
+			    }
 			$this->_my_meeting_data[$in_key_enum]['value'] = null;	// Just in case of memory leaks.
 			$this->_my_meeting_data[$in_key_enum]['value'] = $in_value_mixed;
 			$this->_my_meeting_data[$in_key_enum]['lang_enum'] = $in_lang_enum;
-			$this->_my_meeting_data[$in_key_enum]['visibility'] = intval ( $in_visibility );
+			$this->_my_meeting_data[$in_key_enum]['visibility'] = ( $in_visibility === null ) ? $this->_my_meeting_data[$in_key_enum]['visibility'] : intval ( $in_visibility );
 			return true;
 			}
 		

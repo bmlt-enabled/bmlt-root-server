@@ -653,3 +653,18 @@ div.bmlt_admin_meeting_editor_meeting_header
     font-weight:bold;
     color:#009;
 }
+
+div.bmlt_admin_meeting_editor_form_results_banner_div
+{
+    text-align:center;
+    font-size: large;
+    font-weight:bold;
+    background-color:#009;
+    color:white;
+    padding:2px;
+    margin-bottom: 4px;
+    margin-top:4px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}

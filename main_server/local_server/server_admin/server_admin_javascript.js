@@ -160,13 +160,44 @@ function BMLT_Server_Admin ()
             
             this.validateAccountGoButton();
             this.validateMeetingEditorButton(in_meeting_id);
-            
-            if ( in_meeting_id != null )
-                {
-                this.dirtifyMeeting ( in_meeting_id );
-                };
-            
             this.setTextItemClass ( in_text_item );
+            };
+    };
+    
+    /************************************************************************************//**
+    *   \brief When a text item has its text changed, we check to see if it needs to have   *
+    *          its classname changed to the default (usually won't make a difference, as    *
+    *          the text item will be in focus, anyway).                                     *
+    ****************************************************************************************/
+    this.setItemValue = function (  in_item,
+                                    in_meeting_id,
+                                    in_value_field
+                                    )
+    {
+        var eval_str = '';
+        
+        var editor_object = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+        
+        if ( (in_item.type == 'text') || (in_item.name == 'textarea') )
+            {
+            if ( in_item.value != in_item.defaultValue )
+                {
+                eval_str = 'editor_object.meeting_object.' + in_value_field + ' = in_item.value;';
+                };
+            }
+        else if ( (in_item.type == 'checkbox') || (in_item.type == 'radio') )
+            {
+            eval_str = 'editor_object.meeting_object.' + in_value_field + ' = in_item.checked;';
+            }
+        else if ( in_item.value || (in_item.value == 0) )
+            {
+            eval_str = 'editor_object.meeting_object.' + in_value_field + ' = in_item.value;';
+            };
+            
+        if ( eval_str )
+            {
+            eval ( eval_str );
+            this.validateMeetingEditorButton ( in_meeting_id );
             };
     };
     
@@ -257,15 +288,14 @@ function BMLT_Server_Admin ()
                 this.m_ajax_request_in_progress.abort();
                 this.m_ajax_request_in_progress = null;
                 };
-            this.m_ajax_request_in_progress = BMLT_AjaxRequest ( uri, function(in_req,in_data) { admin_handler_object.handleAccountChangeAJAXCallback(in_req,in_data); }, 'post', this );
+            this.m_ajax_request_in_progress = BMLT_AjaxRequest ( uri, function(in_req) { admin_handler_object.handleAccountChangeAJAXCallback(in_req); }, 'post' );
             };
     };
     
     /************************************************************************************//**
     *   \brief This is called to initiate an AJAX process to change the account settings.   *
     ****************************************************************************************/
-    this.handleAccountChangeAJAXCallback = function(    in_http_request,
-                                                        in_context
+    this.handleAccountChangeAJAXCallback = function(in_http_request
                                                     )
     {
         var email_field = document.getElementById ( 'bmlt_admin_user_email_input' );
@@ -750,7 +780,7 @@ function BMLT_Server_Admin ()
             this.m_ajax_request_in_progress.abort();
             this.m_ajax_request_in_progress = null;
             };
-        this.m_ajax_request_in_progress = BMLT_AjaxRequest ( in_uri, function(in_req,in_data) { admin_handler_object.meetingSearchResultsCallback(in_req); }, 'post' );
+        this.m_ajax_request_in_progress = BMLT_AjaxRequest ( in_uri, function(in_req) { admin_handler_object.meetingSearchResultsCallback(in_req); }, 'post' );
 	};
     
     /************************************************************************************//**
@@ -795,6 +825,7 @@ function BMLT_Server_Admin ()
                                         )
     {
         var the_outer_container = document.getElementById ( 'bmlt_admin_meeting_editor_form_results_inner_div' );
+        var the_results_header = document.getElementById ( 'bmlt_admin_meeting_editor_form_results_banner_div' );
         var the_main_results_display = document.getElementById ( 'bmlt_admin_meeting_editor_form_results_div' );
         
         if ( this.m_meeting_results_container_div ) // Make sure we're starting from scratch.
@@ -825,6 +856,8 @@ function BMLT_Server_Admin ()
         
         the_outer_container.appendChild ( this.m_meeting_results_container_div );
         the_main_results_display.className = 'bmlt_admin_meeting_editor_form_results_div"';
+        
+        the_results_header.innerHTML = (this.m_search_results.length > 1) ? sprintf ( g_meeting_editor_result_count_format, this.m_search_results.length ) : '';
         
         this.selectMeetingEditorTab();
     };
@@ -955,8 +988,19 @@ function BMLT_Server_Admin ()
             {
             new_meeting_id = 0;
             };
-            
-        root_element.dirty_flag = false;
+        
+        if ( new_meeting_id && this.m_search_results && this.m_search_results.length )
+            {
+            for ( var c = 0; c < this.m_search_results.length; c++ )
+                {
+                if ( new_meeting_id == this.m_search_results[c].id_bigint )
+                    {
+                    this.m_search_results[c] = root_element.meeting_object;
+                    this.sendMeetingToServer ( in_meeting_id );
+                    };
+                };
+            };
+        
         this.cancelMeetingEdit ( in_meeting_id );
     };
     
@@ -969,7 +1013,7 @@ function BMLT_Server_Admin ()
         var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
         var display_parent = document.getElementById ( 'bmlt_admin_meeting_editor_new_meeting_' + in_meeting_id + '_editor_display' );
 
-        if ( !root_element.dirty_flag || ( root_element.dirty_flag && confirm ( g_meeting_closure_confirm_text ) ) )
+        if ( !this.isMeetingDirty ( in_meeting_id ) || ( this.isMeetingDirty ( in_meeting_id ) && confirm ( g_meeting_closure_confirm_text ) ) )
             {
             if ( display_parent )
                 {
@@ -992,15 +1036,15 @@ function BMLT_Server_Admin ()
     /************************************************************************************//**
     *   \brief  
     ****************************************************************************************/
-    this.dirtifyMeeting = function (in_meeting_id       ///< The BMLT ID of the meeting that will be dirtified.
+    this.isMeetingDirty = function (in_meeting_id       ///< The BMLT ID of the meeting that will be dirtified.
                                     )
     {
         var editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id ) + '_div' );
-    
-        if ( editor )
-            {
-            editor.dirty_flag = true;
-            };
+        
+        var editor_object = JSON.stringify ( editor.meeting_object );
+        var original_object = JSON.stringify ( this.getMeetingObjectById ( in_meeting_id, false ) );
+
+        return (editor_object != original_object);
     };
     
     /************************************************************************************//**
@@ -1014,7 +1058,7 @@ function BMLT_Server_Admin ()
         
         if ( save_button )
             {
-            var enable = (in_meeting_id == 0) || (dup_checkbox && dup_checkbox.checked);
+            var enable = this.isMeetingDirty ( in_meeting_id ) || ((in_meeting_id > 0) && dup_checkbox && dup_checkbox.checked);
             if ( enable )
                 {
                 save_button.className = 'bmlt_admin_ajax_button button';
@@ -1023,6 +1067,56 @@ function BMLT_Server_Admin ()
                 {
                 save_button.className = 'bmlt_admin_ajax_button button_disabled';
                 };
+            };
+    };
+    
+    /************************************************************************************//**
+    *   \brief This is called to initiate an AJAX process to change the account settings.   *
+    ****************************************************************************************/
+    this.sendMeetingToServer = function(in_meeting_id
+                                        )
+    {
+        var new_editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id ) + '_div' );
+        
+        var serialized_meeting_object = JSON.stringify ( new_editor.meeting_object );
+
+        var uri = g_ajax_callback_uri + '&set_meeting_change=' + encodeURIComponent ( serialized_meeting_object );
+
+        if ( this.m_ajax_request_in_progress )
+            {
+            this.m_ajax_request_in_progress.abort();
+            this.m_ajax_request_in_progress = null;
+            };
+        this.m_ajax_request_in_progress = BMLT_AjaxRequest ( uri, function(in_req) { admin_handler_object.handleMeetingChangeAJAXCallback(in_req); }, 'post' );
+    };
+    
+    /************************************************************************************//**
+    *   \brief This is called to initiate an AJAX process to change the account settings.   *
+    ****************************************************************************************/
+    this.handleMeetingChangeAJAXCallback = function(in_http_request
+                                                    )
+    {
+        if ( in_http_request.responseText )
+            {
+            eval ( 'var json_object = ' + in_http_request.responseText + ';' );
+            }
+            
+        if ( json_object )
+            {
+            var success = true;
+            
+            if ( success )
+                {
+                BMLT_Admin_StartFader ( 'bmlt_admin_fader_meeting_editor_success_div', this.m_success_fade_duration );
+                }
+            else
+                {
+                BMLT_Admin_StartFader ( 'bmlt_admin_fader_meeting_editor_fail_div', this.m_failure_fade_duration );
+                };
+            }
+        else
+            {
+            BMLT_Admin_StartFader ( 'bmlt_admin_fader_meeting_editor_fail_div', this.m_failure_fade_duration );
             };
     };
     
@@ -1068,7 +1162,6 @@ function BMLT_Server_Admin ()
                 // This function replaces all of the spots that say "template" with the given ID. That gives us unique IDs.
                 BMLT_Admin_changeTemplateIDToUseThisID ( new_editor, in_meeting_id );
                 new_editor.meeting_object = this.getMeetingObjectById ( in_meeting_id, true );
-                new_editor.dirty_flag = false;
                 new_editor.map_disclosed = false;
             
                 new_editor.className = 'bmlt_admin_single_meeting_editor_div';
@@ -1144,6 +1237,7 @@ function BMLT_Server_Admin ()
         var meeting_nation_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_nation_text_input' );
         var meeting_longitude_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_longitude_text_input' );
         var meeting_latitude_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_latitude_text_input' );
+        var meeting_contact_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_contact_text_input' );
 
         meeting_name_text_item.value = in_meeting_editor.meeting_object.meeting_name ? in_meeting_editor.meeting_object.meeting_name : meeting_name_text_item.value;
         this.setTextItemClass ( meeting_name_text_item );
@@ -1187,6 +1281,9 @@ function BMLT_Server_Admin ()
         meeting_latitude_text_item.value = in_meeting_editor.meeting_object.latitude ? in_meeting_editor.meeting_object.latitude : meeting_latitude_text_item.value;
         this.setTextItemClass ( meeting_latitude_text_item );
         
+        meeting_contact_text_item.value = in_meeting_editor.meeting_object.email_contact ? in_meeting_editor.meeting_object.email_contact : meeting_contact_text_item.value;
+        this.setTextItemClass ( meeting_contact_text_item );
+        
         var weekday_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_weekday_select' );
 
         BMLT_Admin_setSelectByValue ( weekday_select, in_meeting_editor.meeting_object.weekday_tinyint );
@@ -1198,14 +1295,6 @@ function BMLT_Server_Admin ()
         this.setMeetingStartTime ( in_meeting_editor.meeting_object );
         this.setMeetingDuration ( in_meeting_editor.meeting_object );
         this.validateMeetingEditorButton(meeting_id);
-    };
-    
-    /************************************************************************************//**
-    *   \brief 
-    ****************************************************************************************/
-    this.setServiceBody = function( in_meeting_object
-                                    )
-    {
     };
     
     /************************************************************************************//**
@@ -1417,7 +1506,30 @@ function BMLT_Server_Admin ()
         var time_hour_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_start_hour_select' );
         var time_items = document.getElementById ( 'bmlt_admin_' + in_meeting_id + '_time_span' );
 
-        time_items.className = 'bmlt_admin_time_span' + (( (time_hour_select.value == 0) || (time_hour_select.value == 12) ) ? ' item_hidden' : '');
+        time_items.className = 'bmlt_admin_time_span' + (( (time_hour_select.value == 0) || (time_hour_select.value == 13) ) ? ' item_hidden' : '');
+        
+        var time_pm_radio = document.getElementById ( 'bmlt_admin_' + in_meeting_id + '_time_pm_radio' );
+        var time_minute_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_start_minute_select' );
+        var editor_object = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+        var the_meeting_object = editor_object.meeting_object;
+        var timeval = '';
+        
+        if ( time_hour_select.value == 0 )
+            {
+            timeval = '23:59:00';
+            }
+        else if ( time_hour_select.value == 13 )
+            {
+            timeval = '12:00:00';
+            }
+        else
+            {
+            hour = parseInt ( time_hour_select.value ) + (time_pm_radio.checked ? 12 : 0);
+            timeval = sprintf ( '%02d:%02d:00', parseInt ( hour ), parseInt ( time_minute_select.value ) );
+            };
+            
+        the_meeting_object.start_time = timeval;
+        this.validateMeetingEditorButton ( in_meeting_id );
     };
     
     /************************************************************************************//**
@@ -1430,6 +1542,23 @@ function BMLT_Server_Admin ()
         var time_items = document.getElementById ( 'bmlt_admin_' + in_meeting_id + '_duration_span' );
 
         time_items.className = 'bmlt_admin_time_span' + ((time_hour_select.value == 24) ? ' item_hidden' : '');
+        
+        var time_minute_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_duration_minute_select' );
+        var editor_object = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+        var the_meeting_object = editor_object.meeting_object;
+        var timeval = '';
+        
+        if ( time_hour_select.value == 24 )
+            {
+            timeval = '24:00:00';
+            }
+        else
+            {
+            timeval = sprintf ( '%02d:%02d:00', parseInt ( time_hour_select.value ), parseInt ( time_minute_select.value ) );
+            };
+            
+        the_meeting_object.duration_time = timeval;
+        this.validateMeetingEditorButton ( in_meeting_id );
     };
         
     // #mark - 
@@ -1565,7 +1694,7 @@ function BMLT_Server_Admin ()
             
             if ( the_meeting_object.m_geocoder )
                 {
-                var status = the_meeting_object.m_geocoder.geocode ( { 'address' : address_line }, function ( in_geocode_response ) { admin_handler_object.sGeoCallback ( in_geocode_response, in_meeting_id, this ); } );
+                var status = the_meeting_object.m_geocoder.geocode ( { 'address' : address_line }, function ( in_geocode_response ) { admin_handler_object.sGeoCallback ( in_geocode_response, in_meeting_id ); } );
                 if ( google.maps.OK != status )
                     {
                     alert ( g_meeting_lookup_failed );
@@ -1586,8 +1715,7 @@ function BMLT_Server_Admin ()
     ********************************************************************************************/
     
     this.sGeoCallback = function (  in_geocode_response,    ///< The JSON object.
-                                    in_meeting_id,          ///< The ID of the meeting.
-                                    in_context
+                                    in_meeting_id           ///< The ID of the meeting.
                                     )
     {
         var meeting_editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id ) + '_div' );
@@ -1772,6 +1900,9 @@ function BMLT_Server_Admin ()
         
         meeting_longitude_text_item.value = meeting_object.longitude;
         meeting_latitude_text_item.value = meeting_object.latitude;
+        
+        this.setItemValue(meeting_longitude_text_item, in_meeting_id, 'longitude');
+        this.setItemValue(meeting_latitude_text_item, in_meeting_id, 'latitude');
     };
 
     // #mark - 
