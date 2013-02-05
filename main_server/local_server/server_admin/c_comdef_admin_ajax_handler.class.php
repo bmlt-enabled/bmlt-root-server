@@ -23,6 +23,7 @@ require_once ( dirname ( __FILE__ ).'/../../server/shared/classes/comdef_utility
 require_once ( dirname ( __FILE__ ).'/../../server/shared/Array2Json.php');
 require_once ( dirname ( __FILE__ ).'/../../server/shared/Array2XML.php');
 require_once ( dirname ( __FILE__ ).'/../../client_interface/csv/search_results_csv.php' );
+require_once ( dirname ( __FILE__ ).'/PhpJsonXmlArrayStringInterchanger.inc.php' );
 
 /***********************************************************************************************************//**
     \class c_comdef_admin_main_console
@@ -193,21 +194,24 @@ class c_comdef_admin_ajax_handler
                                 $visibility = intval ( $template_data[$key]['visibility'] );
                                 }
                         
-                            if ( $key == 'formats' )
-                                {
-                                $vals = array();
-                                $value = explode ( ",", $value );
-                                $lang = $this->my_server->GetLocalLang();
-                                foreach ( $value as $id )
-                                    {
-                                    $vals[$id] = c_comdef_server::GetServer()->GetFormatsObj()->GetFormatBySharedIDCodeAndLanguage ( $id, $lang );
-                                    }
-                                uksort ( $vals, array ( 'c_comdef_meeting','format_sorter_simple' ) );
-                                $value = $vals;
-                                }
+//                             if ( $key == 'formats' )
+//                                 {
+//                                 $vals = array();
+//                                 $value = explode ( ",", $value );
+//                                 $lang = $this->my_server->GetLocalLang();
+//                                 foreach ( $value as $id )
+//                                     {
+//                                     $vals[$id] = c_comdef_server::GetServer()->GetFormatsObj()->GetFormatBySharedIDCodeAndLanguage ( $id, $lang );
+//                                     }
+//                                 uksort ( $vals, array ( 'c_comdef_meeting','format_sorter_simple' ) );
+//                                 $value = $vals;
+//                                 }
                         
                             switch ( $key )
                                 {
+case 'formats':
+break;
+
                                 case	'distance_in_km':		// These are ignored.
                                 case	'distance_in_miles':
                                 break;
@@ -259,7 +263,7 @@ class c_comdef_admin_ajax_handler
 
                                 // This one is special. The editor sends in one less than it should be.
                                 case	'weekday_tinyint':
-                                    $data[$key] = intval ( $value ) + 1;
+                                    $data[$key] = intval ( $value );
                                 break;
                             
                                 // These are the various "optional" fields.
