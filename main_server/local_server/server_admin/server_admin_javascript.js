@@ -885,7 +885,7 @@ function BMLT_Server_Admin ()
             var a_time = (parseInt ( in_object_a.weekday_tinyint ) * 100000) + (parseInt ( a_start[0] ) * 100) + parseInt ( a_start[1] );
             var b_time = (parseInt ( in_object_b.weekday_tinyint ) * 100000) + (parseInt ( b_start[0] ) * 100) + parseInt ( b_start[1] );
             
-            return (a_time > b_time) ? 1 : ((a_time > b_time) ? -1 : 0);
+            return (a_time > b_time) ? 1 : ((a_time < b_time) ? -1 : 0);
             }
         else if ( in_object_a && !in_object_b )
             {
@@ -1308,6 +1308,8 @@ function BMLT_Server_Admin ()
             template_header.innerHTML = g_new_meeting_header_text;
             };
 
+        var meeting_published_checkbox = document.getElementById ( 'bmlt_admin_meeting_' + meeting_id + '_published_checkbox' );
+        
         var meeting_name_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_name_text_input' );
         var meeting_cc_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_cc_text_input' );
         var meeting_location_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_location_text_input' );
@@ -1368,6 +1370,8 @@ function BMLT_Server_Admin ()
         
         meeting_contact_text_item.value = in_meeting_editor.meeting_object.email_contact ? in_meeting_editor.meeting_object.email_contact : meeting_contact_text_item.value;
         this.setTextItemClass ( meeting_contact_text_item );
+        
+        meeting_published_checkbox.checked = (in_meeting_editor.meeting_object ? true : false);
         
         this.setWeekday ( in_meeting_editor.meeting_object );
         this.setMeetingStartTime ( in_meeting_editor.meeting_object );
