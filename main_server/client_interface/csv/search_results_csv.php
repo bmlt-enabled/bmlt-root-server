@@ -361,6 +361,7 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 		if ( $page_data instanceof c_comdef_meeting_search_manager )
 			{
 			$keys = c_comdef_meeting::GetAllMeetingKeys ( );
+			
 			$ret = '"'.join ( '","', $keys ).'"';
 
 			$formats = c_comdef_server::GetServer()->GetFormatsObj ();
@@ -387,6 +388,11 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 						}
 					}
 				}
+			
+            if ( c_comdef_server::GetCurrentUserObj() instanceof c_comdef_user )
+                {
+                $formats_keys_header[] = "published";
+                }
 		
 			$ret .= ',"'.join ( '","', $formats_keys_header ).'"'."\n";
 			$in_ar =& $page_data->GetSearchResultsAsArray ( );
@@ -405,61 +411,66 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 					$first = true;
 					foreach ( $keys as $key )
 						{
-						$val = $mtg_obj->GetMeetingDataValue ( $key );
-						
-						if ( $key == 'email_contact' )
-							{
-							if ( !$mtg_obj->UserCanObserve() )
-								{
-								$val = null;
-								}
-							}
-						
-						if ( isset ( $val ) )
-							{
-							if ( ($key == 'formats') )
-								{
-								if ( ($key == 'formats') && is_array ( $val ) && count ( $val ) )
-									{
-									$v_ar = array();
-									foreach ( $val as $format )
-										{
-										if ( $format instanceof c_comdef_format )
-											{
-											array_push ( $v_ar, $format->GetKey() );
-											}
-										}
-									$val = join ( ',', $v_ar );
-									$val = preg_replace ( '|"|', '\\"', preg_replace ( '|[\r\n\t]+|', ' ', $val ) );
-									}
-								elseif ( is_string ( $val ) )
-									{
-									$val = preg_replace ( '|"|', '\\"', preg_replace ( '|[\r\n\t]+|', ' ', $val ) );
-									}
-								}
-							
-							if ( ($key == 'formats') && $val )
-								{
-								$f_list = explode ( ',', $val );
-								
-								if ( is_array ( $f_list ) && count ( $f_list ) )
-									{
-									foreach ( $f_list as $format )
-										{
-										$formats_ar[$format] = 1;
-										}
-									}
-								}
-							}
-						else
-							{
-							$val = '';
-							}
-						
-						$val = trim ( preg_replace ( "|[\n\r]+|", "; ", $val ) );
+                        $val = $mtg_obj->GetMeetingDataValue ( $key );
+                    
+                        if ( $key == 'email_contact' )
+                            {
+                            if ( !$mtg_obj->UserCanObserve() )
+                                {
+                                $val = null;
+                                }
+                            }
+                    
+                        if ( isset ( $val ) )
+                            {
+                            if ( ($key == 'formats') )
+                                {
+                                if ( ($key == 'formats') && is_array ( $val ) && count ( $val ) )
+                                    {
+                                    $v_ar = array();
+                                    foreach ( $val as $format )
+                                        {
+                                        if ( $format instanceof c_comdef_format )
+                                            {
+                                            array_push ( $v_ar, $format->GetKey() );
+                                            }
+                                        }
+                                    $val = join ( ',', $v_ar );
+                                    $val = preg_replace ( '|"|', '\\"', preg_replace ( '|[\r\n\t]+|', ' ', $val ) );
+                                    }
+                                elseif ( is_string ( $val ) )
+                                    {
+                                    $val = preg_replace ( '|"|', '\\"', preg_replace ( '|[\r\n\t]+|', ' ', $val ) );
+                                    }
+                                }
+                        
+                            if ( ($key == 'formats') && $val )
+                                {
+                                $f_list = explode ( ',', $val );
+                            
+                                if ( is_array ( $f_list ) && count ( $f_list ) )
+                                    {
+                                    foreach ( $f_list as $format )
+                                        {
+                                        $formats_ar[$format] = 1;
+                                        }
+                                    }
+                                }
+                            }
+                        else
+                            {
+                            $val = '';
+                            }
+                    
+                        $val = trim ( preg_replace ( "|[\n\r]+|", "; ", $val ) );
 						
 						$line[$key] = $val;
 						}
+					
+                    if ( c_comdef_server::GetCurrentUserObj() instanceof c_comdef_user )
+                        {
+                        $line['published'] = $mtg_obj->IsPublished();
+                        }
 						
 					if ( is_array ( $return_array ) )
 						{

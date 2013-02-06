@@ -515,7 +515,7 @@ class c_comdef_admin_main_console
                 if ( $this->my_user->GetUserLevel() != _USER_LEVEL_EDITOR )
                     {
                     $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
-                        $ret .= '<span class="bmlt_admin_med_label_right"><input type="checkbox" id="bmlt_admin_meeting_template_published_checkbox" onchange="admin_handler_object.setItemValue(this, template, \'published\')" /></span>';
+                        $ret .= '<span class="bmlt_admin_med_label_right"><input type="checkbox" id="bmlt_admin_meeting_template_published_checkbox" /></span>';
                         $ret .= '<label class="bmlt_admin_med_label_left" for="bmlt_admin_meeting_template_published_checkbox">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_is_published'] ).'</label>';
                         $ret .= '<div class="clear_both"></div>';
                     $ret .= '</div>';

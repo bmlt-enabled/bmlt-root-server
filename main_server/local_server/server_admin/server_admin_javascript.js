@@ -1373,6 +1373,7 @@ function BMLT_Server_Admin ()
         
         meeting_published_checkbox.checked = (in_meeting_editor.meeting_object ? true : false);
         
+        this.setPublished ( in_meeting_editor.meeting_object );
         this.setWeekday ( in_meeting_editor.meeting_object );
         this.setMeetingStartTime ( in_meeting_editor.meeting_object );
         this.setMeetingDuration ( in_meeting_editor.meeting_object );
@@ -1591,6 +1592,23 @@ function BMLT_Server_Admin ()
         
         weekday_select.onchange = function() { admin_handler_object.reactToWeekdaySelect ( meeting_id ); };
     };
+    
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.setPublished = function (  in_meeting_object
+                                )
+    {
+        var meeting_id = in_meeting_object.id_bigint;
+        
+        var published_checkbox = document.getElementById ( 'bmlt_admin_meeting_' + meeting_id + '_published_checkbox' );
+        
+        published_checkbox.checked = in_meeting_object.published == '1';
+        
+        this.reactToPublishedCheck ( meeting_id );
+        
+        published_checkbox.onchange = function() { admin_handler_object.reactToPublishedCheck ( meeting_id ); };
+    };
         
     // #mark - 
     // #mark ########## Meeting Editor Internal Tabs ##########
@@ -1620,7 +1638,7 @@ function BMLT_Server_Admin ()
     /************************************************************************************//**
     *   \brief 
     ****************************************************************************************/
-    this.reactToTimeSelect = function(  in_meeting_id   ///< The meeting ID of the editor that gets this map.
+    this.reactToTimeSelect = function(  in_meeting_id   ///< The meeting ID
                                     )
     {
         var time_hour_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_start_hour_select' );
@@ -1656,7 +1674,7 @@ function BMLT_Server_Admin ()
     /************************************************************************************//**
     *   \brief 
     ****************************************************************************************/
-    this.reactToDurationSelect = function(  in_meeting_id   ///< The meeting ID of the editor that gets this map.
+    this.reactToDurationSelect = function(  in_meeting_id   ///< The meeting ID
                                     )
     {
         var time_hour_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_duration_hour_select' );
@@ -1685,7 +1703,7 @@ function BMLT_Server_Admin ()
     /************************************************************************************//**
     *   \brief 
     ****************************************************************************************/
-    this.reactToSBSelect = function(in_meeting_id   ///< The meeting ID of the editor that gets this map.
+    this.reactToSBSelect = function(in_meeting_id   ///< The meeting ID
                                     )
     {
         var service_body_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_sb_select' );
@@ -1694,12 +1712,28 @@ function BMLT_Server_Admin ()
         var the_meeting_object = editor_object.meeting_object;
         
         the_meeting_object.service_body_bigint = service_body_select.value;
+        this.validateMeetingEditorButton ( in_meeting_id );
     };
     
     /************************************************************************************//**
     *   \brief 
     ****************************************************************************************/
-    this.reactToWeekdaySelect = function (  in_meeting_id   ///< The meeting ID of the editor that gets this map.
+    this.reactToPublishedCheck = function(  in_meeting_id   ///< The meeting ID
+                                            )
+    {
+        var published_checkbox = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_published_checkbox' );
+        
+        var editor_object = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+        var the_meeting_object = editor_object.meeting_object;
+        
+        the_meeting_object.published = published_checkbox.checked ? '1' : '0';
+        this.validateMeetingEditorButton ( in_meeting_id );
+    };
+    
+    /************************************************************************************//**
+    *   \brief 
+    ****************************************************************************************/
+    this.reactToWeekdaySelect = function (  in_meeting_id   ///< The meeting ID
                                             )
     {
         var weekday_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_weekday_select' );
