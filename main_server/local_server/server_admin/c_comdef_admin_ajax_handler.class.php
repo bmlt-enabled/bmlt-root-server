@@ -126,7 +126,9 @@ class c_comdef_admin_ajax_handler
     function HandleMeetingUpdate (  $in_meeting_data    ///< A JSON object, containing the new meeting data.
                                 )
     {
-        $the_new_meeting = json_decode ( $in_meeting_data, true );
+        $json_tool = new PhpJsonXmlArrayStringInterchanger;
+        
+        $the_new_meeting = $json_tool->convertJsonToArray ( $in_meeting_data, true );
         
         if ( is_array ( $the_new_meeting ) && count ( $the_new_meeting ) )
             {
@@ -149,9 +151,10 @@ class c_comdef_admin_ajax_handler
                 }
             else
                 {
-                $data = array ( 'service_body_bigint' => intval ( $the_new_meeting['service_body_bigint'] ),
-                                'weekday_tinyint' => intval ( $the_new_meeting['weekday_tinyint'] ),
-                                'start_time' => $the_new_meeting['start_time'],
+                $data = array ( 'service_body_bigint' => intval ( $in_meeting_data['service_body_bigint'] ),
+                                'weekday_tinyint' => intval ( $in_meeting_data['weekday_tinyint'] ),
+                                'start_time' => $in_meeting_data['start_time'],
+                                'lang_enum' => (isset ( $in_meeting_data['lang_enum'] ) && $in_meeting_data['lang_enum']) ? $in_meeting_data['lang_enum'] : $this->my_server->GetLocalLang()
                                 );
                 $meeting = new c_comdef_meeting ( $this->my_server, $data );
                 }
@@ -176,146 +179,101 @@ class c_comdef_admin_ajax_handler
                         $template_data = array_merge ( $template_data, $template_longdata );
                         }
                 
-                    foreach ( $the_new_meeting as $key => $value )
+                    foreach ( $in_meeting_data as $key => $value )
                         {
-                        // Skip the visibility flags.
-                        if ( !preg_match ( '|_visibility$|', $key ) )
+                            if ( $key == 'formats' )
+                                {
+                                $vals = array();
+                                $value = explode ( ",", $value );
+                                $lang = $this->my_server->GetLocalLang();
+                                foreach ( $value as $fkey )
+                                    {
+                                    $vals[$id] = c_comdef_server::GetServer()->GetFormatsObj()->GetFormatByKeyAndLanguage ( $fkey, $lang );
+                                    }
+                                uksort ( $vals, array ( 'c_comdef_meeting','format_sorter_simple' ) );
+                                $value = $vals;
+                                }
+                
+                        switch ( $key )
                             {
-                            if ( isset ( $the_new_meeting[$key."_visibility"] ) && c_comdef_server::IsUserServerAdmin() )	// Only server admins can override the visibility.
-                                {
-                                $visibility = intval ( $the_new_meeting[$key."_visibility"] );
-                                }
-                            elseif ( isset ( $data[$key] ) && is_array ( $data[$key] ) )	// existing value
-                                {
-                                $visibility = intval ( $data[$key]['visibility'] );
-                                }
-                            else	// New field gets the template value.
-                                {
-                                $visibility = intval ( $template_data[$key]['visibility'] );
-                                }
-                        
-//                             if ( $key == 'formats' )
-//                                 {
-//                                 $vals = array();
-//                                 $value = explode ( ",", $value );
-//                                 $lang = $this->my_server->GetLocalLang();
-//                                 foreach ( $value as $id )
-//                                     {
-//                                     $vals[$id] = c_comdef_server::GetServer()->GetFormatsObj()->GetFormatBySharedIDCodeAndLanguage ( $id, $lang );
-//                                     }
-//                                 uksort ( $vals, array ( 'c_comdef_meeting','format_sorter_simple' ) );
-//                                 $value = $vals;
-//                                 }
-                        
-                            switch ( $key )
-                                {
-case 'formats':
-break;
-
-                                case	'distance_in_km':		// These are ignored.
-                                case	'distance_in_miles':
-                                break;
+                            case    'zoom':
+                            case	'distance_in_km':		// These are ignored.
+                            case	'distance_in_miles':
+                            break;
+                
+                            // These are the "fixed" or "core" data values.
+                            case	'worldid_mixed':
+                            case	'start_time':
+                            case	'lang_enum':
+                            case	'duration_time':
+                            case	'formats':
+                                $data[$key] = $value;
+                            break;
                             
-                                // These are the "fixed" or "core" data values.
-                                case	'id_bigint':
-                                case	'worldid_mixed':
-                                case	'service_body_bigint':
-                                case	'start_time':
-                                case	'lang_enum':
-                                case	'duration_time':
-                                case	'formats':
-                                case	'longitude':
-                                case	'latitude':
-                                case	'latitude':
-                                    $data[$key] = $value;
-                                break;
-                            
-                                case	'email_contact':
-                                    $value = trim ( $value );
-                                    if ( $value )
-                                        {
-                                        if ( c_comdef_vet_email_address ( $value ) )
-                                            {
-                                            $data[$key] = $value;
-                                            }
-                                        else
-                                            {
-                                            $info = json_prepare ( $localized_strings['comdef_search_admin_strings']['Edit_Meeting']['meeting_id'] ).$in_meeting_data['id_bigint'];
-                                            $err_string = json_prepare ( $localized_strings['comdef_search_admin_strings']['Edit_Meeting']['email_format_bad'] );
-                                            header ( 'Content-type: application/json' );
-                                            die ( "{'error':true,'type':'email_format_bad','report':'$err_string','id':'".$in_meeting_data['id_bigint']."',info:'$info'}" );
-                                            }
-                                        }
-                                    else
+                            case	'longitude':
+                            case	'latitude':
+                                $data[$key] = floatval ( $value );
+                            break;
+                
+                            case	'id_bigint':
+                            case	'service_body_bigint':
+                            case	'weekday_tinyint':
+                                $data[$key] = intval ( $value );
+                            break;
+                
+                            case	'email_contact':
+                                $value = trim ( $value );
+                                if ( $value )
+                                    {
+                                    if ( c_comdef_vet_email_address ( $value ) )
                                         {
                                         $data[$key] = $value;
                                         }
-                                break;
-                            
-                                // We only accept a 1 or a 0.
-                                case	'published':
-                                    // Meeting list editors can't publish meetings.
-                                    if ( c_comdef_server::GetCurrentUserObj(true)->GetUserLevel() != _USER_LEVEL_EDITOR )
-                                        {
-                                        $data[$key] = (intval ( $value ) != 0) ? 1 : 0;
-                                        }
-                                break;
-
-                                // This one is special. The editor sends in one less than it should be.
-                                case	'weekday_tinyint':
-                                    $data[$key] = intval ( $value );
-                                break;
-                            
-                                // These are the various "optional" fields.
-                                default:
-                                    if ( isset ( $data[$key] ) )
-                                        {
-                                        $data[$key]['meetingid_bigint'] = $in_meeting_data['id_bigint'];
-                                        $data[$key]['value'] = $value;
-                                        $data[$key]['visibility'] = $visibility;
-                                        }
                                     else
                                         {
-                                        if ( !preg_match ( "/_deleted_input$/", $key ) )
-                                            {
-                                            if ( isset ( $the_new_meeting["new_visibility"] ) && c_comdef_server::IsUserServerAdmin() )	// Only server admins can override the visibility.
-                                                {
-                                                $visibility = intval ( $the_new_meeting["new_visibility"] );
-                                                }
-                                            $result_data['new_data']['key'] = $key;
-                                            $result_data['new_data']['field_prompt'] = $template_data[$key]['field_prompt'];
-                                            $result_data['new_data']['value'] = $value;
-                                            $meeting->AddDataField ( $key, $template_data[$key]['field_prompt'], $value, null, $visibility );
-                                            }
+                                        $info = json_prepare ( $localized_strings['comdef_search_admin_strings']['Edit_Meeting']['meeting_id'] ).$in_meeting_data['id_bigint'];
+                                        $err_string = json_prepare ( $localized_strings['comdef_search_admin_strings']['Edit_Meeting']['email_format_bad'] );
+                                        header ( 'Content-type: application/json' );
+                                        die ( "{'error':true,'type':'email_format_bad','report':'$err_string','id':'".$in_meeting_data['id_bigint']."',info:'$info'}" );
                                         }
-                                break;
-                                }
+                                    }
+                                else
+                                    {
+                                    $data[$key] = $value;
+                                    }
+                            break;
+                
+                            // We only accept a 1 or a 0.
+                            case	'published':
+                                // Meeting list editors can't publish meetings.
+                                if ( c_comdef_server::GetCurrentUserObj(true)->GetUserLevel() != _USER_LEVEL_EDITOR )
+                                    {
+                                    $data[$key] = $value ? 1 : 0;
+                                    }
+                            break;
+                
+                            // These are the various "optional" fields.
+                            default:
+                                if ( isset ( $data[$key] ) )
+                                    {
+                                    $data[$key]['meetingid_bigint'] = $in_meeting_data['id_bigint'];
+                                    $data[$key]['value'] = $value;
+                                    }
+                                else
+                                    {
+                                    $result_data['new_data']['key'] = $key;
+                                    $result_data['new_data']['field_prompt'] = $template_data[$key]['field_prompt'];
+                                    $result_data['new_data']['value'] = $value;
+                                    $meeting->AddDataField ( $key, $template_data[$key]['field_prompt'], $value, null, intval ( $template_data[$key]['visibility'] ) );
+                                    }
+                            break;
                             }
                         }
-                
-                    foreach ( $the_new_meeting as $key => $value )
-                        {
-                        if ( preg_match ( "/_deleted_input$/", $key ) && ($value == "1") )
-                            {
-                            $key = preg_replace ( "/_deleted_input$/", "", $key );
-                            $result_data['deleted_data'][$key]['key'] = $key;
-                            $result_data['deleted_data'][$key]['prompt'] = $template_data[$key]['field_prompt'];
-                            $meeting->DeleteDataField ( $key );
-                            }
-                        }
-                
+                    
                     if ( $meeting->UpdateToDB() )
                         {
-                        $result_data['meeting_published'] = $meeting->IsPublished();
-                        $result_data['meeting_id'] = $meeting->GetID();
-                        $result_data['town_html'] = BuildTown ( $meeting );
-                        $result_data['name_html'] = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting->GetMeetingDataValue('meeting_name') ) ) );
-                        $result_data['weekday_html'] = c_comdef_htmlspecialchars ( trim ( stripslashes ( $localized_strings['weekdays'][$meeting->GetMeetingDataValue('weekday_tinyint') - 1] ) ) );
-                        $result_data['time_html'] = BuildTime ( $meeting->GetMeetingDataValue('start_time') );
-                        $result_data['location_html'] = BuildLocation ( $meeting );
-                        $result_data['format_html'] = BuildFormats ( $meeting );
                         header ( 'Content-type: application/json' );
-                        echo array2json ( json_prepare ( $result_data ) );
+                        echo $this->TranslateToJSON ( $this->GetSearchResults ( array ( 'meeting_ids' => array ( $meeting->GetID() ) ) ) );
                         }
                     else
                         {
@@ -381,6 +339,7 @@ break;
         $geocode_results = null;
         $ignore_me = null;
         $meeting_objects = array();
+
         $result = DisplaySearchResultsCSV ( $in_http_vars, $ignore_me, $geocode_results, $meeting_objects );
 
         if ( is_array ( $meeting_objects ) && count ( $meeting_objects ) && is_array ( $formats_ar ) )

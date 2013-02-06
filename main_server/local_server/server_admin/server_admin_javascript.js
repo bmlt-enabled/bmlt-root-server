@@ -824,11 +824,25 @@ function BMLT_Server_Admin ()
     this.processSearchResults = function( in_search_results_json_object ///< The search results, as a JSON object.
                                         )
     {
+        this.m_search_results = in_search_results_json_object;
+        
+        this.createMeetingList();
+        
+        this.selectMeetingEditorTab();
+    };
+    
+    /************************************************************************************//**
+    *	\brief This creates the DOM tree of the meeting list.
+    ****************************************************************************************/
+    this.createMeetingList = function()
+    {
+        this.m_search_results.sort ( admin_handler_object.sortSearchResultsCallback );
+        
         var the_outer_container = document.getElementById ( 'bmlt_admin_meeting_editor_form_results_inner_div' );
         var the_results_header = document.getElementById ( 'bmlt_admin_meeting_editor_form_results_banner_div' );
         var the_main_results_display = document.getElementById ( 'bmlt_admin_meeting_editor_form_results_div' );
         
-        if ( this.m_meeting_results_container_div ) // Make sure we're starting from scratch.
+        if ( this.m_meeting_results_container_div )
             {
             this.m_meeting_results_container_div.innerHTML = '';
             this.m_meeting_results_container_div = null;
@@ -836,11 +850,8 @@ function BMLT_Server_Admin ()
         
         the_outer_container.innerHTML = '';
         the_main_results_display.className = 'bmlt_admin_meeting_editor_form_results_div item_hidden"';
-        
         this.m_meeting_results_container_div = document.createElement ( 'div' );   // Create the container element.
         this.m_meeting_results_container_div.className = 'bmlt_admin_meeting_search_results_container_div';
-        
-        this.m_search_results = in_search_results_json_object;
         
         for ( var c = 0; c < this.m_search_results.length; c++ )    
             {
@@ -858,8 +869,34 @@ function BMLT_Server_Admin ()
         the_main_results_display.className = 'bmlt_admin_meeting_editor_form_results_div"';
         
         the_results_header.innerHTML = (this.m_search_results.length > 1) ? sprintf ( g_meeting_editor_result_count_format, this.m_search_results.length ) : '';
+    };
+    
+    /************************************************************************************//**
+    *	\brief Sorts the search results by weekday, then time.
+    ****************************************************************************************/
+    this.sortSearchResultsCallback = function(  in_object_a,
+                                                in_object_b
+                                                )
+    {
+        if ( in_object_a && in_object_b )
+            {
+            var a_start = in_object_a.start_time.toString().split ( ':' );
+            var b_start = in_object_b.start_time.toString().split ( ':' );
+            var a_time = (parseInt ( in_object_a.weekday_tinyint ) * 100000) + (parseInt ( a_start[0] ) * 100) + parseInt ( a_start[1] );
+            var b_time = (parseInt ( in_object_b.weekday_tinyint ) * 100000) + (parseInt ( b_start[0] ) * 100) + parseInt ( b_start[1] );
+            
+            return (a_time > b_time) ? 1 : ((a_time > b_time) ? -1 : 0);
+            }
+        else if ( in_object_a && !in_object_b )
+            {
+            return -1;
+            }
+        else if ( in_object_b && !in_object_a )
+            {
+            return 1;
+            };
         
-        this.selectMeetingEditorTab();
+        return 0;
     };
     
     /************************************************************************************//**
@@ -928,7 +965,11 @@ function BMLT_Server_Admin ()
                 }
             else
                 {
-                display_parent.removeChild ( display_parent.meeting_editor_object );
+                if ( display_parent.meeting_editor_object && (display_parent.meeting_editor_object.parentNode == display_parent) )
+                    {
+                    display_parent.removeChild ( display_parent.meeting_editor_object );
+                    };
+                
                 display_parent.meeting_editor_object = null;
                 };
             };
@@ -988,6 +1029,8 @@ function BMLT_Server_Admin ()
             {
             new_meeting_id = 0;
             };
+            
+        var meeting_sent = false;
         
         if ( new_meeting_id && this.m_search_results && this.m_search_results.length )
             {
@@ -995,28 +1038,38 @@ function BMLT_Server_Admin ()
                 {
                 if ( new_meeting_id == this.m_search_results[c].id_bigint )
                     {
-                    this.m_search_results[c] = root_element.meeting_object;
                     this.sendMeetingToServer ( in_meeting_id );
+                    meeting_sent = true;
                     };
                 };
             };
         
-        this.cancelMeetingEdit ( in_meeting_id );
+        if ( !meeting_sent )
+            {
+            this.sendMeetingToServer ( 0 );
+            };
     };
     
     /************************************************************************************//**
     *   \brief  
     ****************************************************************************************/
-    this.cancelMeetingEdit = function ( in_meeting_id
+    this.cancelMeetingEdit = function ( in_meeting_id,
+                                        in_no_confirm
                                 )
     {
         var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
         var display_parent = document.getElementById ( 'bmlt_admin_meeting_editor_new_meeting_' + in_meeting_id + '_editor_display' );
 
-        if ( !this.isMeetingDirty ( in_meeting_id ) || ( this.isMeetingDirty ( in_meeting_id ) && confirm ( g_meeting_closure_confirm_text ) ) )
+        if ( !this.isMeetingDirty ( in_meeting_id ) || ( this.isMeetingDirty ( in_meeting_id ) && (in_no_confirm || confirm ( g_meeting_closure_confirm_text ) )) )
             {
             if ( display_parent )
                 {
+                if ( display_parent.m_ajax_request_in_progress )
+                    {
+                    display_parent.m_ajax_request_in_progress.abort();
+                    display_parent.m_ajax_request_in_progress = null;
+                    };
+                
                 display_parent.innerHTML = null;
                 display_parent.className = 'item_hidden';
             
@@ -1041,10 +1094,14 @@ function BMLT_Server_Admin ()
     {
         var editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id ) + '_div' );
         
-        var editor_object = JSON.stringify ( editor.meeting_object );
-        var original_object = JSON.stringify ( this.getMeetingObjectById ( in_meeting_id, false ) );
-
-        return (editor_object != original_object);
+        if ( editor && editor.meeting_object )
+            {
+            var editor_object = JSON.stringify ( editor.meeting_object );
+            var original_object = JSON.stringify ( this.getMeetingObjectById ( in_meeting_id, false ) );
+            return (editor_object != original_object);
+            }
+        
+        return false;
     };
     
     /************************************************************************************//**
@@ -1082,12 +1139,13 @@ function BMLT_Server_Admin ()
 
         var uri = g_ajax_callback_uri + '&set_meeting_change=' + encodeURIComponent ( serialized_meeting_object );
 
-        if ( this.m_ajax_request_in_progress )
+        if ( new_editor.m_ajax_request_in_progress )
             {
-            this.m_ajax_request_in_progress.abort();
-            this.m_ajax_request_in_progress = null;
+            new_editor.m_ajax_request_in_progress.abort();
+            new_editor.m_ajax_request_in_progress = null;
             };
-        this.m_ajax_request_in_progress = BMLT_AjaxRequest ( uri, function(in_req) { admin_handler_object.handleMeetingChangeAJAXCallback(in_req); }, 'post' );
+        
+        new_editor.m_ajax_request_in_progress = BMLT_AjaxRequest ( uri, function(in_req) { admin_handler_object.handleMeetingChangeAJAXCallback(in_req); }, 'post' );
     };
     
     /************************************************************************************//**
@@ -1108,6 +1166,33 @@ function BMLT_Server_Admin ()
             if ( success )
                 {
                 BMLT_Admin_StartFader ( 'bmlt_admin_fader_meeting_editor_success_div', this.m_success_fade_duration );
+                
+                var meeting_changed = false;
+                for ( var c = 0; c < this.m_search_results.length; c++ )    
+                    {
+                    if ( this.m_search_results[c].id_bigint == json_object[0].id_bigint )
+                        {
+                        this.m_search_results[c] = json_object[0];
+                        single_meeting_div_id = 'bmlt_admin_meeting_search_results_single_meeting_' + json_object[0].id_bigint +'_div';
+                        
+                        var single_meeting_div = document.getElementById ( single_meeting_div_id );
+                        
+                        if ( single_meeting_div )
+                            {
+                            single_meeting_div.innerHTML = '';
+                            this.createOneMeetingNode ( single_meeting_div, this.m_search_results[c] );
+                            meeting_changed = true;
+                            };
+                        };
+                    };
+                
+                if ( !meeting_changed )
+                    {
+                    this.m_search_results[this.m_search_results.length] = json_object;
+                    };
+        
+                this.cancelMeetingEdit ( json_object[0].id_bigint, true );
+                this.createMeetingList();
                 }
             else
                 {
@@ -1284,16 +1369,10 @@ function BMLT_Server_Admin ()
         meeting_contact_text_item.value = in_meeting_editor.meeting_object.email_contact ? in_meeting_editor.meeting_object.email_contact : meeting_contact_text_item.value;
         this.setTextItemClass ( meeting_contact_text_item );
         
-        var weekday_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_weekday_select' );
-
-        BMLT_Admin_setSelectByValue ( weekday_select, in_meeting_editor.meeting_object.weekday_tinyint );
-        
-        var service_body_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_sb_select' );
-
-        BMLT_Admin_setSelectByValue ( service_body_select, in_meeting_editor.meeting_object.service_body_bigint );
-
+        this.setWeekday ( in_meeting_editor.meeting_object );
         this.setMeetingStartTime ( in_meeting_editor.meeting_object );
         this.setMeetingDuration ( in_meeting_editor.meeting_object );
+        this.setServiceBody ( in_meeting_editor.meeting_object );
         this.validateMeetingEditorButton(meeting_id);
     };
     
@@ -1406,6 +1485,9 @@ function BMLT_Server_Admin ()
         this.reactToTimeSelect ( meeting_id );
         
         time_hour_select.onchange = function() { admin_handler_object.reactToTimeSelect ( meeting_id ); };
+        time_minute_select.onchange = function() { admin_handler_object.reactToTimeSelect ( meeting_id ); };
+        time_am_radio.onchange = function() { admin_handler_object.reactToTimeSelect ( meeting_id ); };
+        time_pm_radio.onchange = function() { admin_handler_object.reactToTimeSelect ( meeting_id ); };
     };
     
     /************************************************************************************//**
@@ -1471,6 +1553,40 @@ function BMLT_Server_Admin ()
         
         time_hour_select.onchange = function() { admin_handler_object.reactToDurationSelect ( meeting_id ); };
     };
+    
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.setServiceBody = function (in_meeting_object
+                                    )
+    {
+        var meeting_id = in_meeting_object.id_bigint;
+        
+        var service_body_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_sb_select' );
+        
+        BMLT_Admin_setSelectByValue ( service_body_select, in_meeting_object.service_body_bigint );
+            
+        this.reactToSBSelect ( meeting_id );
+        
+        service_body_select.onchange = function() { admin_handler_object.reactToSBSelect ( meeting_id ); };
+    };
+    
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.setWeekday = function (in_meeting_object
+                                )
+    {
+        var meeting_id = in_meeting_object.id_bigint;
+        
+        var weekday_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_weekday_select' );
+        
+        BMLT_Admin_setSelectByValue ( weekday_select, in_meeting_object.weekday_tinyint );
+            
+        this.reactToWeekdaySelect ( meeting_id );
+        
+        weekday_select.onchange = function() { admin_handler_object.reactToWeekdaySelect ( meeting_id ); };
+    };
         
     // #mark - 
     // #mark ########## Meeting Editor Internal Tabs ##########
@@ -1505,13 +1621,14 @@ function BMLT_Server_Admin ()
     {
         var time_hour_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_start_hour_select' );
         var time_items = document.getElementById ( 'bmlt_admin_' + in_meeting_id + '_time_span' );
+        var time_pm_radio = document.getElementById ( 'bmlt_admin_' + in_meeting_id + '_time_pm_radio' );
+        var time_minute_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_start_minute_select' );
 
         time_items.className = 'bmlt_admin_time_span' + (( (time_hour_select.value == 0) || (time_hour_select.value == 13) ) ? ' item_hidden' : '');
         
-        var time_pm_radio = document.getElementById ( 'bmlt_admin_' + in_meeting_id + '_time_pm_radio' );
-        var time_minute_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_start_minute_select' );
         var editor_object = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
         var the_meeting_object = editor_object.meeting_object;
+        
         var timeval = '';
         
         if ( time_hour_select.value == 0 )
@@ -1560,7 +1677,35 @@ function BMLT_Server_Admin ()
         the_meeting_object.duration_time = timeval;
         this.validateMeetingEditorButton ( in_meeting_id );
     };
+    
+    /************************************************************************************//**
+    *   \brief 
+    ****************************************************************************************/
+    this.reactToSBSelect = function(in_meeting_id   ///< The meeting ID of the editor that gets this map.
+                                    )
+    {
+        var service_body_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_sb_select' );
         
+        var editor_object = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+        var the_meeting_object = editor_object.meeting_object;
+        
+        the_meeting_object.service_body_bigint = service_body_select.value;
+    };
+    
+    /************************************************************************************//**
+    *   \brief 
+    ****************************************************************************************/
+    this.reactToWeekdaySelect = function (  in_meeting_id   ///< The meeting ID of the editor that gets this map.
+                                            )
+    {
+        var weekday_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_weekday_select' );
+        
+        var editor_object = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+        var the_meeting_object = editor_object.meeting_object;
+        
+        the_meeting_object.weekday_tinyint = weekday_select.value;
+    };
+
     // #mark - 
     // #mark Location Tab
     // #mark -

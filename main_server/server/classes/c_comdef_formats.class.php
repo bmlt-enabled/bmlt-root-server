@@ -81,6 +81,51 @@ class c_comdef_formats implements i_comdef_has_parent
 	}
 	
 	/*******************************************************************/
+	/** \brief Return a reference to a single object, by format key and
+		language.
+		
+		You do not need to provide a language, in which case, the server's
+		local language is used.
+	
+		\returns A reference to the single selected object.
+	*/
+	function GetFormatByKeyAndLanguage (
+                                        $in_format_key,	        ///< This is the shared ID code.
+                                        $in_lang_enum = null	///< This is the code for the desired language. If not given, the server localization will be used.
+                                        )
+	{
+		/// If no language is given, we use the server's native language.
+		if ( null == $in_lang_enum )
+			{
+			$in_lang_enum = $this->GetParentObj()->GetLocalLang();
+			}
+		
+		if ( !$in_lang_enum )
+			{
+			$in_lang_enum = c_comdef_server::GetServer()->GetLocalLang();
+			}
+		
+		// Should never happen.
+		if ( !$in_lang_enum )
+			{
+			$in_lang_enum = "en";
+			}
+		
+		if ( isset ( $this->_local_copy_of_array[$in_lang_enum] ) && is_array ( $this->_local_copy_of_array[$in_lang_enum] ) && count ( $this->_local_copy_of_array[$in_lang_enum] ) )
+			{
+			foreach ( $this->_local_copy_of_array[$in_lang_enum] as &$format )
+			    {
+			    if ( $in_format_key == $format->GetKey() )
+			        {
+			        return $format;
+			        };
+			    }
+			}
+		
+		return null;
+	}
+	
+	/*******************************************************************/
 	/** \brief Return a reference to a single object, by shared ID and
 		language.
 		
