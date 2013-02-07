@@ -68,6 +68,10 @@ class c_comdef_admin_ajax_handler
             {
             $this->HandleMeetingUpdate ( $this->my_http_vars['set_meeting_change'] );
             }
+        else if ( isset ( $this->my_http_vars['delete_meeting'] ) && $this->my_http_vars['delete_meeting'] )
+            {
+            $returned_text = $this->HandleDeleteMeeting ( $this->my_http_vars['delete_meeting'], isset ( $this->my_http_vars['permanently'] ) );
+            }
         else if ( isset ( $this->my_http_vars['do_meeting_search'] ) )
             {
             $returned_text = $this->TranslateToJSON ( $this->GetSearchResults ( $this->my_http_vars ) );
@@ -117,6 +121,86 @@ class c_comdef_admin_ajax_handler
             }
         
         return  $returned_text;
+    }
+    
+    /*******************************************************************/
+    /**
+        \brief
+    */	
+    function HandleDeleteMeeting (  $in_meeting_id,
+                                    $in_delete_permanently = false
+                                    )
+    {
+		try
+			{
+			$meeting =& $this->my_server->GetOneMeeting($in_meeting_id);
+			
+			if ( $meeting instanceof c_comdef_meeting )
+				{
+				if ( $meeting->UserCanEdit() )
+					{
+					if ( $meeting->DeleteFromDB() )
+						{
+						if ( $in_delete_permanently )
+						    {
+						    $this->DeleteMeetingChanges ( $in_meeting_id );
+						    }
+						
+	                    header ( 'Content-type: application/json' );
+						echo "{'success':true,'report':'$in_meeting_id'}";
+						}
+					else
+						{
+	                    header ( 'Content-type: application/json' );
+						echo "{'success':false,'report':'$in_meeting_id'}";
+						}
+					}
+				else
+					{
+                    header ( 'Content-type: application/json' );
+                    echo "{'success':false,'report':'$in_meeting_id'}";
+					}
+				}
+			else
+				{
+                header ( 'Content-type: application/json' );
+                echo "{'success':false,'report':'$in_meeting_id'}";
+				}
+			}
+		catch ( Exception $e )
+			{
+            header ( 'Content-type: application/json' );
+            echo "{'success':false,'report':'$in_meeting_id'}";
+			}
+    }
+
+    /*******************************************************************/
+    /**
+    */
+    function DeleteMeetingChanges (	$in_meeting_id
+                                    )
+    {
+        $ret = '';
+
+        if ( c_comdef_server::IsUserServerAdmin(null,true) )
+            {
+            $changes = $this->my_server->GetChangesFromIDAndType ( 'c_comdef_meeting', $in_meeting_id );
+        
+            if ( $changes instanceof c_comdef_changes )
+                {
+                $obj_array =& $changes->GetChangesObjects();
+            
+                if ( is_array ( $obj_array ) && count ( $obj_array ) )
+                    {
+                    foreach ( $obj_array as $change )
+                        {
+                        $change->DeleteFromDB();
+                        }
+                    }
+                }
+            }
+    
+        return $ret;
     }
 
     /*******************************************************************/

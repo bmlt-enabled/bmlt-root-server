@@ -37,6 +37,7 @@ function BMLT_Server_Admin ()
     var m_failure_fade_duration = null;         ///< Number of milliseconds for a failure fader.
     var m_search_results = null;                ///< This will contain any meeting search results.
     var m_meeting_results_container_div = null; ///< This will hold any search result display elements (allows easy disposal)
+    var m_editing_window_open = null;           ///< If there is a meeting editor open, it is recorded here. There can only be one...
     
     /************************************************************************************//**
     *                                       METHODS                                         *
@@ -423,8 +424,10 @@ function BMLT_Server_Admin ()
             ret.latitude = g_default_latitude;
             ret.start_time = g_default_meeting_start_time;
             ret.duration_time = g_default_meeting_duration;
-            ret.weekday_tinyint = g_default_meeting_weekday;
+            ret.weekday_tinyint = parseInt ( g_default_meeting_weekday );
             ret.id_bigint = 0;  // All new meetings are ID 0.
+            ret.published = '0';
+            ret.service_body_bigint = 0;
             };
         
         ret.zoom = g_default_zoom;
@@ -950,16 +953,31 @@ function BMLT_Server_Admin ()
                                                 )
     {
         var display_parent = document.getElementById ( 'bmlt_admin_meeting_search_results_single_meeting_' + in_meeting_id + '_div' );
-        
+    
         if ( display_parent )
             {
             if ( !display_parent.meeting_editor_object )
                 {
-                display_parent.meeting_editor_object = document.createElement ( 'div' );   // Create the container element.
-                display_parent.meeting_editor_object.className = 'bmlt_admin_meeting_search_results_editor_container_div';
-                display_parent.appendChild ( display_parent.meeting_editor_object );
+                var proceed = true;
+                if ( (this.m_editing_window_open != null) && this.isMeetingDirty ( this.m_editing_window_open ) )
+                    {
+                    proceed = confirm ( g_meeting_editor_already_editing_confirm );
+                    };
+        
+                if ( proceed )
+                    {
+                    if ( this.m_editing_window_open != null )
+                        {
+                        this.cancelMeetingEdit ( this.m_editing_window_open, true );
+                        };
+                        
+                    display_parent.meeting_editor_object = document.createElement ( 'div' );   // Create the container element.
+                    display_parent.meeting_editor_object.className = 'bmlt_admin_meeting_search_results_editor_container_div';
+                    display_parent.appendChild ( display_parent.meeting_editor_object );
 
-                this.createNewMeetingEditorScreen ( display_parent.meeting_editor_object, in_meeting_id );
+                    this.createNewMeetingEditorScreen ( display_parent.meeting_editor_object, in_meeting_id );
+                    this.m_editing_window_open = in_meeting_id;
+                    };
                 }
             else
                 {
@@ -967,7 +985,7 @@ function BMLT_Server_Admin ()
                     {
                     display_parent.removeChild ( display_parent.meeting_editor_object );
                     };
-                
+            
                 display_parent.meeting_editor_object = null;
                 };
             };
@@ -984,11 +1002,26 @@ function BMLT_Server_Admin ()
         
         display_parent.innerHTML = null;
         
-        this.createNewMeetingEditorScreen ( display_parent, 0 );
+        var proceed = true;
+        if ( (this.m_editing_window_open != null) && this.isMeetingDirty ( this.m_editing_window_open ) )
+            {
+            proceed = confirm ( g_meeting_editor_already_editing_confirm );
+            };
+
+        if ( proceed )
+            {
+            if ( this.m_editing_window_open != null )
+                {
+                this.cancelMeetingEdit ( this.m_editing_window_open, true );
+                };
+                        
+            this.createNewMeetingEditorScreen ( display_parent, 0 );
         
-        new_meeting_button.className = 'bmlt_admin_ajax_button button item_hidden';
-        display_parent.className = 'bmlt_admin_meeting_editor_meeting_editor_display';
-        this.changeSaveMeetingButtonToCopy(0);
+            new_meeting_button.className = 'bmlt_admin_ajax_button button item_hidden';
+            display_parent.className = 'bmlt_admin_meeting_editor_meeting_editor_display';
+            this.changeSaveMeetingButtonToCopy(0);
+            this.m_editing_window_open = 0;
+            };
     };
     
     /************************************************************************************//**
@@ -1071,6 +1104,8 @@ function BMLT_Server_Admin ()
                     var new_meeting_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_button' );
                     new_meeting_button.className = 'bmlt_admin_ajax_button button';
                     };
+                
+                this.m_editing_window_open = null;
                 }
             else
                 {
@@ -1082,11 +1117,64 @@ function BMLT_Server_Admin ()
     /************************************************************************************//**
     *   \brief  
     ****************************************************************************************/
-    this.deleteMeeting = function ( deleteMeeting
+    this.deleteMeeting = function ( in_meeting_id
                                     )
     {
-        if ( confirm ( g_meeting_editor_screen_delete_button_confirm ) )
+        var perm_check = document.getElementById ( 'bmlt_admin_meeting_' + parseInt ( in_meeting_id ) + '_delete_perm_checkbox' );
+        var confirm_str = g_meeting_editor_screen_delete_button_confirm + (( perm_check && perm_check.checked ) ? ("\n" + g_meeting_editor_screen_delete_button_confirm_perm) : '');
+        
+        if ( confirm ( confirm_str ) )
             {
+            var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+            
+            if ( root_element.m_ajax_request_in_progress )
+                {
+                root_element.m_ajax_request_in_progress.abort();
+                root_element.m_ajax_request_in_progress = null;
+                };
+        
+            var uri = g_ajax_callback_uri + '&delete_meeting=' + in_meeting_id + (( perm_check && perm_check.checked ) ? '&permanently=1' : '');
+
+            root_element.m_ajax_request_in_progress = BMLT_AjaxRequest ( uri, function(in_req) { admin_handler_object.handleDeleteMeetingAJAXCallback(in_req); }, 'get' );
+            };
+    };
+    
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.handleDeleteMeetingAJAXCallback = function(in_http_request
+                                                    )
+    {
+        if ( in_http_request.responseText )
+            {
+            eval ( 'var json_object = ' + in_http_request.responseText + ';' );
+            }
+            
+        if ( json_object )
+            {
+            if ( json_object.success )
+                {
+                for ( var c = 0; c < this.m_search_results.length; c++ )    
+                    {
+                    if ( this.m_search_results[c].id_bigint == json_object.report )
+                        {
+                        this.m_search_results[c] = null;
+                        this.m_search_results.splice ( c, 1 );
+                        break;
+                        };
+                    };
+                this.cancelMeetingEdit ( json_object.report, true );
+                this.createMeetingList();
+                BMLT_Admin_StartFader ( 'bmlt_admin_fader_meeting_editor_delete_success_div', this.m_success_fade_duration );
+                }
+            else
+                {
+                BMLT_Admin_StartFader ( 'bmlt_admin_fader_meeting_editor_delete_fail_div', this.m_failure_fade_duration );
+                };
+            }
+        else
+            {
+            BMLT_Admin_StartFader ( 'bmlt_admin_fader_meeting_editor_delete_fail_div', this.m_failure_fade_duration );
             };
     };
     
@@ -1177,56 +1265,57 @@ function BMLT_Server_Admin ()
             
         if ( json_object )
             {
-            var success = true;
+            var meeting_changed = false;
             
-            if ( success )
+            if ( this.m_search_results )
                 {
-                BMLT_Admin_StartFader ( 'bmlt_admin_fader_meeting_editor_success_div', this.m_success_fade_duration );
-                
-                var meeting_changed = false;
-                
-                if ( this.m_search_results )
+                for ( var c = 0; c < this.m_search_results.length; c++ )    
                     {
-                    for ( var c = 0; c < this.m_search_results.length; c++ )    
+                    if ( this.m_search_results[c].id_bigint == json_object[0].id_bigint )
                         {
-                        if ( this.m_search_results[c].id_bigint == json_object[0].id_bigint )
+                        this.m_search_results[c] = json_object[0];
+                        single_meeting_div_id = 'bmlt_admin_meeting_search_results_single_meeting_' + json_object[0].id_bigint +'_div';
+                    
+                        var single_meeting_div = document.getElementById ( single_meeting_div_id );
+                    
+                        if ( single_meeting_div )
                             {
-                            this.m_search_results[c] = json_object[0];
-                            single_meeting_div_id = 'bmlt_admin_meeting_search_results_single_meeting_' + json_object[0].id_bigint +'_div';
-                        
-                            var single_meeting_div = document.getElementById ( single_meeting_div_id );
-                        
-                            if ( single_meeting_div )
-                                {
-                                single_meeting_div.innerHTML = '';
-                                this.createOneMeetingNode ( single_meeting_div, this.m_search_results[c] );
-                                meeting_changed = true;
-                                };
+                            single_meeting_div.innerHTML = '';
+                            this.createOneMeetingNode ( single_meeting_div, this.m_search_results[c] );
+                            meeting_changed = true;
                             };
                         };
                     };
-                
-                if ( !meeting_changed )
+                };
+            
+            if ( !meeting_changed )
+                {
+                if ( !this.m_search_results )
                     {
-                    if ( !this.m_search_results )
-                        {
-                        this.m_search_results = new Array;
-                        };
-                    
-                    this.m_search_results[this.m_search_results.length] = json_object[0];
+                    this.m_search_results = new Array;
                     };
-        
-                this.cancelMeetingEdit ( in_orig_meeting_id, true );
-                this.createMeetingList();
+                
+                this.m_search_results[this.m_search_results.length] = json_object[0];
+                BMLT_Admin_StartFader ( 'bmlt_admin_fader_meeting_editor_add_success_div', this.m_success_fade_duration );
                 }
             else
                 {
-                BMLT_Admin_StartFader ( 'bmlt_admin_fader_meeting_editor_fail_div', this.m_failure_fade_duration );
+                BMLT_Admin_StartFader ( 'bmlt_admin_fader_meeting_editor_success_div', this.m_success_fade_duration );
                 };
+            
+            this.cancelMeetingEdit ( in_orig_meeting_id, true );
+            this.createMeetingList();
             }
         else
             {
-            BMLT_Admin_StartFader ( 'bmlt_admin_fader_meeting_editor_fail_div', this.m_failure_fade_duration );
+            if ( in_orig_meeting_id )
+                {
+                BMLT_Admin_StartFader ( 'bmlt_admin_fader_meeting_editor_fail_div', this.m_failure_fade_duration );
+                }
+            else
+                {
+                BMLT_Admin_StartFader ( 'bmlt_admin_fader_meeting_editor_add_fail_div', this.m_failure_fade_duration );
+                };
             };
     };
     
@@ -1405,7 +1494,6 @@ function BMLT_Server_Admin ()
         this.setMeetingStartTime ( in_meeting_editor.meeting_object );
         this.setMeetingDuration ( in_meeting_editor.meeting_object );
         this.setServiceBody ( in_meeting_editor.meeting_object );
-        this.validateMeetingEditorButton(meeting_id);
     };
     
     /************************************************************************************//**
@@ -1720,7 +1808,7 @@ function BMLT_Server_Admin ()
             }
         else
             {
-            timeval = sprintf ( '%02d:%02d:00', parseInt ( time_hour_select.value ), parseInt ( time_minute_select.value ) );
+            timeval = sprintf ( '%d:%02d:00', parseInt ( time_hour_select.value ), parseInt ( time_minute_select.value ) );
             };
             
         the_meeting_object.duration_time = timeval;
@@ -1738,7 +1826,7 @@ function BMLT_Server_Admin ()
         var editor_object = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
         var the_meeting_object = editor_object.meeting_object;
         
-        the_meeting_object.service_body_bigint = service_body_select.value;
+        the_meeting_object.service_body_bigint = parseInt ( service_body_select.value );
         this.validateMeetingEditorButton ( in_meeting_id );
     };
     
@@ -1768,7 +1856,8 @@ function BMLT_Server_Admin ()
         var editor_object = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
         var the_meeting_object = editor_object.meeting_object;
         
-        the_meeting_object.weekday_tinyint = weekday_select.value;
+        the_meeting_object.weekday_tinyint = parseInt ( weekday_select.value );
+        this.validateMeetingEditorButton ( in_meeting_id );
     };
 
     // #mark - 
@@ -2206,7 +2295,7 @@ function BMLT_AjaxRequest ( url,        ///< The URI to be called
             sVars = rmatch_kludge[2];
             };
         };
-    if ( extra_data )
+    if ( extra_data != null )
         {
         req.extra_data = extra_data;
         };
