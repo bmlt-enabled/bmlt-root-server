@@ -60,18 +60,21 @@ div.bmlt_admin_meeting_editor_form_new_meetings_div .hide_in_new_meeting
 .bmlt_admin_med_label_left,
 .bmlt_admin_med_label_right,
 span.single_checkbox_span,
-.duplicate_checkbox_span
+.duplicate_checkbox_span,
+.perm_checkbox_span
 {
     white-space:nowrap;
     margin-left:4px;
     display:block;
 }
 
+.perm_checkbox_span,
 .duplicate_checkbox_span
 {
     margin-top:4px;
 }
 
+.perm_checkbox_span label,
 .duplicate_checkbox_span label
 {
     padding-left:4px;
@@ -189,6 +192,8 @@ textarea.bmlt_text_item_dimmed
 
 /* These are buttons */
 
+span.bmlt_admin_delete_button_span a.button_disabled,
+span.bmlt_admin_delete_button_span a.button_disabled:visited,
 a.bmlt_admin_ajax_button,
 a.bmlt_admin_ajax_button:visited
 {
@@ -212,11 +217,27 @@ a.bmlt_admin_ajax_button:visited
     cursor:default;
 }
 
+span.bmlt_admin_delete_button_span a.bmlt_admin_ajax_button,
+span.bmlt_admin_delete_button_span a.bmlt_admin_ajax_button:visited
+{
+    color:red;
+    border: 1px solid red;
+}
+
+span.bmlt_admin_delete_button_span a.bmlt_admin_ajax_button:hover,
+span.bmlt_admin_delete_button_span a.bmlt_admin_ajax_button:active
+{
+    background-color:red;
+    color:white;
+    border: 1px solid white;
+}
+
 a.bmlt_admin_ajax_button:hover,
 a.bmlt_admin_ajax_button:active
 {
     background-color:#009;
     color:white;
+    border: 1px solid white;
 }
 
 div.bmlt_admin_single_meeting_editor_map_button_bar_div a.bmlt_admin_ajax_button:hover,
@@ -227,6 +248,10 @@ div.bmlt_admin_single_meeting_editor_map_button_bar_diva.bmlt_admin_ajax_button:
     border: 1px solid white;
 }
 
+span.bmlt_admin_delete_button_span a.button_disabled,
+span.bmlt_admin_delete_button_span a.button_disabled:visited,
+span.bmlt_admin_delete_button_span a.button_disabled:hover,
+span.bmlt_admin_delete_button_span a.button_disabled:active,
 a.button_disabled,
 a.button_disabled:visited,
 a.button_disabled:hover,
@@ -583,8 +608,10 @@ div.bmlt_admin_meeting_editor_form_meeting_button_div
 
 span.bmlt_admin_meeting_editor_form_meeting_button_left_span,
 span.bmlt_admin_meeting_editor_form_meeting_button_right_span,
-span.bmlt_admin_meeting_editor_form_meeting_button_single_span
+span.bmlt_admin_meeting_editor_form_meeting_button_single_span,
+span.bmlt_admin_meeting_editor_form_middle_button_single_span
 {
+    clear:none;
     display:block;
     text-align:center;
     margin:auto;
@@ -593,6 +620,7 @@ span.bmlt_admin_meeting_editor_form_meeting_button_single_span
     width:33%;
 }
 
+span.bmlt_admin_meeting_editor_form_middle_button_single_span,
 span.bmlt_admin_meeting_editor_form_meeting_button_left_span
 {
     float:left;
@@ -646,6 +674,18 @@ div.meeting_line_even
     background-color:#efefff;
 }
 
+div.bmlt_admin_meeting_search_results_single_meeting_outer_container_unpublished_div
+    div.meeting_line_odd
+{
+    background-color:#ffdd77;
+}
+
+div.bmlt_admin_meeting_search_results_single_meeting_outer_container_unpublished_div
+    div.meeting_line_even
+{
+    background-color:#ffcc55;
+}
+
 div.bmlt_admin_meeting_editor_meeting_header
 {
     text-align:center;
@@ -668,3 +708,4 @@ div.bmlt_admin_meeting_editor_form_results_banner_div
     -webkit-border-radius: 3px;
     border-radius: 3px;
 }
+

@@ -1023,20 +1023,15 @@ function BMLT_Server_Admin ()
         var new_meeting_id = in_meeting_id;
         var copy_checkbox = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_duplicate_checkbox' );
         
-        if ( copy_checkbox.checked )   // If we are creating a new meeting, we set the ID to 0. That saves the meeting as a new one.
-            {
-            new_meeting_id = 0;
-            };
-            
         var meeting_sent = false;
         
-        if ( new_meeting_id && this.m_search_results && this.m_search_results.length )
+        if ( !copy_checkbox.checked && new_meeting_id && this.m_search_results && this.m_search_results.length )
             {
             for ( var c = 0; c < this.m_search_results.length; c++ )
                 {
                 if ( new_meeting_id == this.m_search_results[c].id_bigint )
                     {
-                    this.sendMeetingToServer ( in_meeting_id );
+                    this.sendMeetingToServer ( in_meeting_id, false );
                     meeting_sent = true;
                     };
                 };
@@ -1044,7 +1039,7 @@ function BMLT_Server_Admin ()
         
         if ( !meeting_sent )
             {
-            this.sendMeetingToServer ( 0 );
+            this.sendMeetingToServer ( in_meeting_id, true );
             };
     };
     
@@ -1083,7 +1078,18 @@ function BMLT_Server_Admin ()
                 };
             };
     };
-        
+    
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.deleteMeeting = function ( deleteMeeting
+                                    )
+    {
+        if ( confirm ( g_meeting_editor_screen_delete_button_confirm ) )
+            {
+            };
+    };
+    
     /************************************************************************************//**
     *   \brief  
     ****************************************************************************************/
@@ -1128,13 +1134,24 @@ function BMLT_Server_Admin ()
     /************************************************************************************//**
     *   \brief This is called to initiate an AJAX process to change the account settings.   *
     ****************************************************************************************/
-    this.sendMeetingToServer = function(in_meeting_id
+    this.sendMeetingToServer = function(in_meeting_id,
+                                        is_new_meeting
                                         )
     {
         var new_editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id ) + '_div' );
+
+        if ( is_new_meeting )
+            {
+            new_editor.meeting_object.id_bigint = 0;
+            };
         
         var serialized_meeting_object = JSON.stringify ( new_editor.meeting_object );
 
+        if ( is_new_meeting )
+            {
+            new_editor.meeting_object.id_bigint = in_meeting_id;
+            };
+        
         var uri = g_ajax_callback_uri + '&set_meeting_change=' + encodeURIComponent ( serialized_meeting_object );
 
         if ( new_editor.m_ajax_request_in_progress )
@@ -1143,13 +1160,14 @@ function BMLT_Server_Admin ()
             new_editor.m_ajax_request_in_progress = null;
             };
         
-        new_editor.m_ajax_request_in_progress = BMLT_AjaxRequest ( uri, function(in_req) { admin_handler_object.handleMeetingChangeAJAXCallback(in_req); }, 'post' );
+        new_editor.m_ajax_request_in_progress = BMLT_AjaxRequest ( uri, function(in_req,in_orig_meeting_id) { admin_handler_object.handleMeetingChangeAJAXCallback(in_req,in_orig_meeting_id); }, 'post', in_meeting_id );
     };
     
     /************************************************************************************//**
     *   \brief This is called to initiate an AJAX process to change the account settings.   *
     ****************************************************************************************/
-    this.handleMeetingChangeAJAXCallback = function(in_http_request
+    this.handleMeetingChangeAJAXCallback = function(in_http_request,
+                                                    in_orig_meeting_id
                                                     )
     {
         if ( in_http_request.responseText )
@@ -1195,10 +1213,10 @@ function BMLT_Server_Admin ()
                         this.m_search_results = new Array;
                         };
                     
-                    this.m_search_results[this.m_search_results.length] = json_object;
+                    this.m_search_results[this.m_search_results.length] = json_object[0];
                     };
         
-                this.cancelMeetingEdit ( json_object[0].id_bigint, true );
+                this.cancelMeetingEdit ( in_orig_meeting_id, true );
                 this.createMeetingList();
                 }
             else
@@ -1379,6 +1397,8 @@ function BMLT_Server_Admin ()
         this.setTextItemClass ( meeting_contact_text_item );
         
         meeting_published_checkbox.checked = (in_meeting_editor.meeting_object ? true : false);
+        
+        document.getElementById ( 'bmlt_admin_meeting_id_' + meeting_id +'_display' ).innerHTML = meeting_id;
         
         this.setPublished ( in_meeting_editor.meeting_object );
         this.setWeekday ( in_meeting_editor.meeting_object );
