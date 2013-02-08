@@ -278,7 +278,7 @@ class c_comdef_admin_main_console
                         $ret .= '<span id="bmlt_admin_meeting_search_ajax_button_span" class="bmlt_admin_value_left">';
                             $ret .= '<a id="bmlt_admin_meeting_search_ajax_button_a" href="javascript:admin_handler_object.searchForMeetings()" class="bmlt_admin_ajax_button button">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_tab_specifier_text'] ).'</a>';
                         $ret .= '</span>';
-                    $ret .= '<span id="bmlt_admin_meeting_search_ajax_button_throbber_span" class="bmlt_admin_value_left item_hidden"><img src="local_server/server_admin/style/images/ajax-loader.gif" alt="AJAX Throbber" /></span>';
+                    $ret .= '<span id="bmlt_admin_meeting_search_ajax_button_throbber_span" class="bmlt_admin_value_left item_hidden"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
             $ret .= '<div class="clear_both"></div>';
@@ -483,10 +483,22 @@ class c_comdef_admin_main_console
                         $ret .= '<a href="javascript:admin_handler_object.respondToLocationTabSelection(template)" id="bmlt_admin_meeting_editor_template_tab_item_location_a" class="bmlt_admin_meeting_editor_tab_item_a_unselected">';
                             $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_tab_bar_location_tab_text'] );
                         $ret .= '</a>';
+                        $ret .= '<a href="javascript:admin_handler_object.respondToFormatTabSelection(template)" id="bmlt_admin_meeting_editor_template_tab_item_format_a" class="bmlt_admin_meeting_editor_tab_item_a_unselected">';
+                            $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_tab_bar_format_tab_text'] );
+                        $ret .= '</a>';
+                        $ret .= '<a href="javascript:admin_handler_object.respondToOtherTabSelection(template)" id="bmlt_admin_meeting_editor_template_tab_item_other_a" class="bmlt_admin_meeting_editor_tab_item_a_unselected">';
+                            $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_tab_bar_other_tab_text'] );
+                        $ret .= '</a>';
+                        $ret .= '<a href="javascript:admin_handler_object.respondToHistoryTabSelection(template)" id="bmlt_admin_meeting_editor_template_tab_item_history_a" class="bmlt_admin_meeting_editor_tab_item_a_unselected">';
+                            $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_tab_bar_history_tab_text'] );
+                        $ret .= '</a>';
                         $ret .= '<div class="clear_both"></div>';
                     $ret .= '</div>';
                     $ret .= $this->return_single_meeting_basic_template();
                     $ret .= $this->return_single_meeting_location_template();
+                    $ret .= $this->return_single_meeting_format_template();
+                    $ret .= $this->return_single_meeting_other_template();
+                    $ret .= $this->return_single_meeting_history_template();
                 $ret .= '</div>';
                 $ret .= $this->return_meeting_editor_button_panel();
             $ret .= '</div>';
@@ -535,7 +547,7 @@ class c_comdef_admin_main_console
     {
         if ( ($this->my_user->GetUserLevel() == _USER_LEVEL_EDITOR) || ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) || ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) )
             {
-            $ret .= '<div id="bmlt_admin_meeting_template_basic_sheet_div" class="bmlt_admin_meeting_option_sheet_div">';
+            $ret = '<div id="bmlt_admin_meeting_template_basic_sheet_div" class="bmlt_admin_meeting_option_sheet_div">';
         
                 if ( $this->my_user->GetUserLevel() != _USER_LEVEL_EDITOR )
                     {
@@ -665,7 +677,7 @@ class c_comdef_admin_main_console
     ************************************************************************************************************/
     function return_single_meeting_location_template()
     {
-        $ret .= '<div id="bmlt_admin_meeting_template_location_sheet_div" class="bmlt_admin_meeting_option_sheet_div item_hidden">';
+        $ret = '<div id="bmlt_admin_meeting_template_location_sheet_div" class="bmlt_admin_meeting_option_sheet_div item_hidden">';
             $ret .= '<div id="bmlt_admin_single_meeting_editor_template_map_disclosure_div" class="bmlt_admin_single_meeting_disclosure_map_div_closed">';
                 $ret .= '<a class="bmlt_admin_single_meeting_editor_map_disclosure_a" id="bmlt_admin_single_meeting_editor_template_map_disclosure_a">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_location_map_link'] ).'</a>';
             $ret .= '</div>';
@@ -746,6 +758,42 @@ class c_comdef_admin_main_console
     }
     
     /********************************************************************************************************//**
+    \brief 
+    \returns The HTML and JavaScript for the option sheet.
+    ************************************************************************************************************/
+    function return_single_meeting_format_template()
+    {
+        $ret = '<div id="bmlt_admin_meeting_template_format_sheet_div" class="bmlt_admin_meeting_option_sheet_div item_hidden">';
+        $ret .= '</div>';
+
+        return $ret;
+    }
+    
+    /********************************************************************************************************//**
+    \brief 
+    \returns The HTML and JavaScript for the option sheet.
+    ************************************************************************************************************/
+    function return_single_meeting_other_template()
+    {
+        $ret = '<div id="bmlt_admin_meeting_template_other_sheet_div" class="bmlt_admin_meeting_option_sheet_div item_hidden">';
+        $ret .= '</div>';
+
+        return $ret;
+    }
+    
+    /********************************************************************************************************//**
+    \brief 
+    \returns The HTML and JavaScript for the option sheet.
+    ************************************************************************************************************/
+    function return_single_meeting_history_template()
+    {
+        $ret = '<div id="bmlt_admin_meeting_template_history_sheet_div" class="bmlt_admin_meeting_option_sheet_div item_hidden">';
+        $ret .= '</div>';
+
+        return $ret;
+    }
+    
+    /********************************************************************************************************//**
     \brief This constructs the "My Account" section of the console. All user levels will have this.
     \returns The HTML and JavaScript for the "My Account" section.
     ************************************************************************************************************/
@@ -819,7 +867,7 @@ class c_comdef_admin_main_console
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">&nbsp;</span>';
                     $ret .= '<span id="bmlt_admin_account_change_ajax_button_span" class="bmlt_admin_value_left"><a id="bmlt_admin_account_change_ajax_button" href="javascript:admin_handler_object.handleAccountChange()" class="bmlt_admin_ajax_button button_disabled">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['account_change_button_text'] ).'</a></span>';
-                    $ret .= '<span id="bmlt_admin_account_change_ajax_button_throbber_span" class="bmlt_admin_value_left item_hidden"><img src="local_server/server_admin/style/images/ajax-loader.gif" alt="AJAX Throbber" /></span>';
+                    $ret .= '<span id="bmlt_admin_account_change_ajax_button_throbber_span" class="bmlt_admin_value_left item_hidden"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
             $ret .= '</div>';

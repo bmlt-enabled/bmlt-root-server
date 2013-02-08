@@ -1755,8 +1755,14 @@ function BMLT_Server_Admin ()
     {
         var basic_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_basic_sheet_div' );
         var location_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_location_sheet_div' );
+        var format_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_format_sheet_div' );
+        var other_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_other_sheet_div' );
+        var history_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_history_sheet_div' );
         var basic_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_basic_a' );
         var location_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_location_a' );
+        var format_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_format_a' );
+        var other_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_other_a' );
+        var history_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_history_a' );
         
         basic_options_sheet.className = 'bmlt_admin_meeting_option_sheet_div';
         basic_tab.className = 'bmlt_admin_meeting_editor_tab_item_a_selected';
@@ -1886,8 +1892,14 @@ function BMLT_Server_Admin ()
     {
         var basic_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_basic_sheet_div' );
         var location_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_location_sheet_div' );
+        var format_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_format_sheet_div' );
+        var other_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_other_sheet_div' );
+        var history_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_history_sheet_div' );
         var basic_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_basic_a' );
         var location_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_location_a' );
+        var format_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_format_a' );
+        var other_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_other_a' );
+        var history_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_history_a' );
         
         basic_options_sheet.className = 'bmlt_admin_meeting_option_sheet_div item_hidden';
         basic_tab.className = 'bmlt_admin_meeting_editor_tab_item_a_unselected';
@@ -2216,6 +2228,72 @@ function BMLT_Server_Admin ()
         
         this.setItemValue(meeting_longitude_text_item, in_meeting_id, 'longitude');
         this.setItemValue(meeting_latitude_text_item, in_meeting_id, 'latitude');
+    };
+        
+    // #mark - 
+    // #mark Format Tab
+    // #mark -
+        
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.respondToFormatTabSelection = function ( in_meeting_id   ///< The BMLT ID of the meeting that is being edited.
+                                                    )
+    {
+        var basic_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_basic_sheet_div' );
+        var location_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_location_sheet_div' );
+        var format_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_format_sheet_div' );
+        var other_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_other_sheet_div' );
+        var history_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_history_sheet_div' );
+        var basic_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_basic_a' );
+        var location_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_location_a' );
+        var format_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_format_a' );
+        var other_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_other_a' );
+        var history_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_history_a' );
+    };
+        
+    // #mark - 
+    // #mark Other Tab
+    // #mark -
+        
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.respondToOtherTabSelection = function ( in_meeting_id   ///< The BMLT ID of the meeting that is being edited.
+                                                    )
+    {
+        var basic_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_basic_sheet_div' );
+        var location_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_location_sheet_div' );
+        var format_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_format_sheet_div' );
+        var other_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_other_sheet_div' );
+        var history_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_history_sheet_div' );
+        var basic_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_basic_a' );
+        var location_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_location_a' );
+        var format_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_format_a' );
+        var other_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_other_a' );
+        var history_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_history_a' );
+    };
+        
+    // #mark - 
+    // #mark History Tab
+    // #mark -
+        
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.respondToHistoryTabSelection = function ( in_meeting_id   ///< The BMLT ID of the meeting that is being edited.
+                                                    )
+    {
+        var basic_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_basic_sheet_div' );
+        var location_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_location_sheet_div' );
+        var format_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_format_sheet_div' );
+        var other_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_other_sheet_div' );
+        var history_options_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_history_sheet_div' );
+        var basic_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_basic_a' );
+        var location_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_location_a' );
+        var format_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_format_a' );
+        var other_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_other_a' );
+        var history_tab = document.getElementById ( 'bmlt_admin_meeting_editor_' + in_meeting_id + '_tab_item_history_a' );
     };
 
     // #mark - 
