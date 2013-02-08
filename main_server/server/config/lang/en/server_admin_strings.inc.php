@@ -125,6 +125,17 @@
 	                                        'meeting_editor_default_zoom'                           =>  '11',
 	                                        'meeting_editor_default_weekday'                        =>  '2',
 	                                        'meeting_editor_default_start_time'                     =>  '20:30:00',
-	                                        'meeting_editor_default_duration'                       =>  '01:30:00'
+	                                        'meeting_editor_default_duration'                       =>  '01:30:00',
+	                                        'login_banner'                                          =>  'Basic Meeting List Toolbox',
+	                                        'login_underbanner'                                     =>  'Root Server Administration Console',
+											'login'                                                 =>  'Login ID',
+                                            'password'                                              =>  'Password',
+                                            'button'                                                =>  'Log In',
+                                            'cookie'                                                =>  'You must enable cookies in order to administer this server.',
+                                            'noscript'                                              =>  'You cannot administer this site without JavaScript.',
+                                            'title'                                                 =>  'Please log in to administer the server.',
+                                            'not_auth_1'                                            =>  'NOT AUTHORIZED',
+                                            'not_auth_2'                                            =>  'You are not authorized to administer this server.',
+                                            'not_auth_3'                                            =>  'There was a problem with the user name or password that you entered.'
 	                                    );
 ?>

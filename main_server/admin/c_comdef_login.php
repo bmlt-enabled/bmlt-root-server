@@ -85,7 +85,7 @@ if ( isset ( $_GET['admin_action'] ) && ($_GET['admin_action'] == 'login') )
 		
 		c_comdef_LogoutUser();
 		
-		die ( '<div class="c_comdef_not_auth_container_div"><div class="c_comdef_not_auth_div"><h1 class="c_comdef_not_auth_1">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_search_admin_strings']['Login_Form']['cookie'] ).'</h1></div></div></body></html>' );
+		die ( '<div class="c_comdef_not_auth_container_div"><div class="c_comdef_not_auth_div"><h1 class="c_comdef_not_auth_1">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['cookie'] ).'</h1></div></div></body></html>' );
 		}
 	
 	$login = isset ( $_POST['c_comdef_admin_login'] ) ? $_POST['c_comdef_admin_login'] : null;
@@ -108,7 +108,7 @@ if ( isset ( $_GET['admin_action'] ) && ($_GET['admin_action'] == 'login') )
 			c_comdef_LogoutUser();
 
 			// If the login is invalid, we terminate the whole kit and kaboodle, and inform the user they are persona non grata.
-			die ( '<h2 class="c_comdef_not_auth_3">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_search_admin_strings']['Login_Form']['not_auth_3'] ).'</h2>'.c_comdef_LoginForm($server).'</body></html>' );
+			die ( '<h2 class="c_comdef_not_auth_3">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['not_auth_3'] ).'</h2>'.c_comdef_LoginForm($server).'</body></html>' );
 			}
 		}
 	
@@ -140,7 +140,7 @@ if ( isset ( $_SESSION[$admin_session_name] ) )
 		$localized_strings = c_comdef_server::GetLocalStrings();
 
 		// If the login is invalid, we terminate the whole kit and kaboodle, and inform the user they are persona non grata.
-		die ( '<div class="c_comdef_not_auth_container_div"><div class="c_comdef_not_auth_div"><h1 class="c_comdef_not_auth_1">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_search_admin_strings']['Login_Form']['not_auth_1'] ).'</h1><h2 class="c_comdef_not_auth_2">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_search_admin_strings']['Login_Form']['not_auth_2'] ).'</h2></div></div></body></html>' );
+		die ( '<div class="c_comdef_not_auth_container_div"><div class="c_comdef_not_auth_div"><h1 class="c_comdef_not_auth_1">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['not_auth_1'] ).'</h1><h2 class="c_comdef_not_auth_2">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['not_auth_2'] ).'</h2></div></div></body></html>' );
 		}
 	}
 else
@@ -168,7 +168,9 @@ function c_comdef_LoginForm(	&$in_server	///< A reference to an instance of c_co
 
 	$ret = '<div class="c_comdef_admin_login_form_container_div">';
 		// If there is no JavaScript, then this message is displayed, and the form will not be revealed.
-		$ret .= '<noscript><h1>'.c_comdef_htmlspecialchars ( $localized_strings['comdef_search_admin_strings']['Login_Form']['noscript'] ).'</h1></noscript>';
+		$ret .= '<noscript><h1>'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['noscript'] ).'</h1></noscript>';
+        $ret .= '<h1 class="lohgin_form_main_banner_h1">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['login_banner']  ).'</h1>';
+        $ret .= '<h2 class="lohgin_form_secondary_banner_h2">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['login_underbanner']  ).'</h2>';
 		$ret .= '<form method="post" class="c_comdef_admin_login_form" id="c_comdef_admin_login_form" action="'.c_comdef_htmlspecialchars ( $_SERVER['SCRIPT_NAME'] ).'?supports_ajax=yes&amp;admin_action=login';
 			foreach ( $http_vars as $key => $value )
 				{
@@ -196,16 +198,16 @@ function c_comdef_LoginForm(	&$in_server	///< A reference to an instance of c_co
 		$ret .= '">';	// Only the login will go through post.
 			$ret .= '<div style="display:none" id="c_comdef_admin_login_form_inner_container_div" class="c_comdef_admin_login_form_inner_container_div">';
 				$ret .= '<div class="c_comdef_admin_login_form_line_div">';
-				$ret .= '<div class="c_comdef_admin_login_form_prompt">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_search_admin_strings']['Login_Form']['title'] ).'</div>';
-					$ret .= '<label for="c_comdef_admin_login">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_search_admin_strings']['Login_Form']['login'] ).$localized_strings['prompt_delimiter'].'</label>';
+				$ret .= '<div class="c_comdef_admin_login_form_prompt">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['title'] ).'</div>';
+					$ret .= '<label for="c_comdef_admin_login">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['login'] ).$localized_strings['prompt_delimiter'].'</label>';
 					$ret .= '<input id="c_comdef_admin_login" type="text" name="c_comdef_admin_login" value="" />';
 				$ret .= '</div>';
 				$ret .= '<div class="c_comdef_admin_login_form_line_div">';
-					$ret .= '<label for="c_comdef_admin_password">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_search_admin_strings']['Login_Form']['password'] ).$localized_strings['prompt_delimiter'].'</label>';
+					$ret .= '<label for="c_comdef_admin_password">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['password'] ).$localized_strings['prompt_delimiter'].'</label>';
 					$ret .= '<input type="password" id="c_comdef_admin_password" name="c_comdef_admin_password" value="" />';
 				$ret .= '</div>';
 				$ret .= '<div class="c_comdef_admin_login_form_submit_div">';
-					$ret .= '<input type="submit" value="'.c_comdef_htmlspecialchars ( $localized_strings['comdef_search_admin_strings']['Login_Form']['button'] ).'" />';
+					$ret .= '<input type="submit" value="'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['button'] ).'" />';
 				$ret .= '</div>';
 			$ret .= '</div>';
 		// This is how we check for JavaScript availability and enabled cookies (Cookies are required for sessions).

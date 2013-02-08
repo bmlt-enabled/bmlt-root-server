@@ -35,6 +35,63 @@ body
 body
 {
     background-color:#009;
+    font-family:Verdana,Helvetica,Arial,Sans-Serif
+}
+
+div.c_comdef_admin_login_form_container_div
+{
+    color:white;
+    text-align:center;
+}
+
+div.c_comdef_admin_login_form_inner_container_div
+{
+    margin-left:auto;
+    margin-right:auto;
+    width:400px;
+}
+
+h1.lohgin_form_main_banner_h1
+{
+    font-size:3em;
+    border-bottom:2px solid white;
+    padding-bottom:0.1em;
+    margin-bottom:0.25em;
+}
+
+h2.lohgin_form_secondary_banner_h2
+{
+    font-size:2em;
+    margin-bottom:0.5em;
+}
+
+div.c_comdef_admin_login_form_prompt
+{
+    font-size:1em;
+    font-weight:bold;
+    margin-bottom:0.2em;
+}
+
+div.c_comdef_admin_login_form_line_div
+{
+    float:none;
+    clear:both;
+}
+
+div.c_comdef_admin_login_form_line_div label
+{
+    clear:both;
+    display:block;
+    float:left;
+    width:200px;
+    text-align:right;
+    font-weight:bold;
+}
+
+div.c_comdef_admin_login_form_line_div label
+{
+    float:left;
+    width:200px;
 }
 
 dt.service_body_dt,
