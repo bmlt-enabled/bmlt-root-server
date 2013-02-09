@@ -453,6 +453,16 @@ class c_comdef_server
 	}
 	
 	/*******************************************************************/
+	/**	\brief Simply returns an array of the format objects.
+		
+		\returns A reference to the formats container object.
+	*/
+	function GetFormatsArray()
+	{
+		return $this->GetFormatsObj()->GetFormatsArray();
+	}
+	
+	/*******************************************************************/
 	/**	\brief Simply returns the stored service IDs.
 		
 		\returns a reference to the array containing all the Service entity IDs.

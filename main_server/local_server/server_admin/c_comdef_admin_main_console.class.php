@@ -32,6 +32,7 @@ class c_comdef_admin_main_console
     var $my_ajax_uri;                   ///< This will be the URI for AJAX calls.
     var $my_http_vars;                  ///< Contains the HTTP vars sent in.
     var $my_service_bodies;             ///< This will be an array that contains all the Service bodies this user can edit.
+    var $my_formats;                    ///< The format objects that are available for meetings.
     var $my_data_field_templates;       ///< This holds the keys for all the possible data fields for this server.
     
     /********************************************************************************************************//**
@@ -51,6 +52,8 @@ class c_comdef_admin_main_console
             {
             die ( 'NOT AUTHORIZED' );
             }
+        
+        $this->my_formats = $this->my_server->GetFormatsArray();
             
         $service_bodies = $this->my_server->GetServiceBodyArray();
         $this->my_service_bodies = array();
@@ -116,6 +119,30 @@ class c_comdef_admin_main_console
                             }
                         }
                 $ret .= '];'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_format_object_array = [';
+                    $first = true;
+                    foreach ( $this->my_formats[$this->my_server->GetLocalLang()] as $format )
+                        {
+                        if ( $format instanceof c_comdef_format )
+                            {
+                            if ( !$first )
+                                {
+                                $ret .= ',';
+                                }
+                            else
+                                {
+                                $first = false;
+                                }
+                            
+                            $ret .= '{';
+                                $ret .= '"id":'.$format->GetSharedID();
+                                $ret .= ',"key":"'.$format->GetKey().'"';
+                                $ret .= ',"name":"'.$format->GetLocalName().'"';
+                                $ret .= ',"description":"'.$format->GetLocalDescription().'"';
+                            $ret .= '}';
+                            }
+                        }
+                $ret .= '];'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_meeting_closure_confirm_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_cancel_confirm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_default_longitude = '.floatval ( $this->my_localized_strings['search_spec_map_center']['longitude'] ).';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_default_latitude = '.floatval ( $this->my_localized_strings['search_spec_map_center']['latitude'] ).';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
@@ -136,6 +163,7 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_meeting_editor_screen_delete_button_confirm_perm = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_delete_button_confirm_perm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_meeting_editor_already_editing_confirm = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_already_editing_confirm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 
+                $ret .= file_get_contents ( dirname ( __FILE__ ).(defined('__DEBUG_MODE__') ? '/' : '/js_stripper.php?filename=' ).'JSON-js/json2.js' ).(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= file_get_contents ( dirname ( __FILE__ ).(defined('__DEBUG_MODE__') ? '/' : '/js_stripper.php?filename=' ).'server_admin_javascript.js' ).(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
             $ret .= '</script>';
             // Belt and suspenders. Just make sure the user is legit.
@@ -261,7 +289,7 @@ class c_comdef_admin_main_console
                     for ( $c = 0; $c < 8; $c++ )
                         {
                         $ret .= '<span class="single_checkbox_span">';
-                            $ret .= '<input checked="checked" type="checkbox"'.($c == 0 ? ' checked="checked"' : '').' id="bmlt_admin_meeting_search_weekday_checkbox_'.$c.'" onchange="admin_handler_object.handleWeekdayCheckBoxChanges('.$c.')" />';
+                            $ret .= '<input checked="checked" type="checkbox"'.($c == 0 ? ' checked="checked"' : '').' id="bmlt_admin_meeting_search_weekday_checkbox_'.$c.'" onclick="admin_handler_object.handleWeekdayCheckBoxChanges('.$c.')" onchange="admin_handler_object.handleWeekdayCheckBoxChanges('.$c.')" />';
                             $ret .= '<label class="bmlt_admin_med_checkbox_label_left" for="bmlt_admin_meeting_search_weekday_checkbox_'.$c.'">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_search_weekdays_names'][$c] ).'</label>';
                         $ret .= '</span>';
                         }
@@ -273,14 +301,25 @@ class c_comdef_admin_main_console
                 {
                 $ret .= $this->return_meeting_service_body_selection_panel ();
                 }
-                $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
-                    $ret .= '<span class="bmlt_admin_med_label_right">&nbsp;</span>';
-                        $ret .= '<span id="bmlt_admin_meeting_search_ajax_button_span" class="bmlt_admin_value_left">';
-                            $ret .= '<a id="bmlt_admin_meeting_search_ajax_button_a" href="javascript:admin_handler_object.searchForMeetings()" class="bmlt_admin_ajax_button button">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_tab_specifier_text'] ).'</a>';
-                        $ret .= '</span>';
-                    $ret .= '<span id="bmlt_admin_meeting_search_ajax_button_throbber_span" class="bmlt_admin_value_left item_hidden"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></span>';
-                    $ret .= '<div class="clear_both"></div>';
+            $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_publish_search_prompt'] ).'</span>';
+                $ret .= '<div class="bmlt_admin_value_left_div">';
+                    $ret .= '<select id="bmlt_admin_single_meeting_editor_template_meeting_publish_search_select">';
+                        $ret .= '<option value ="-1">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_publish_search_unpub'] ).'</option>';
+                        $ret .= '<option value ="0" selected="selected">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_publish_search_all'] ).'</option>';
+                        $ret .= '<option value ="1">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_publish_search_pub'] ).'</option>';
+                    $ret .= '</select>';
                 $ret .= '</div>';
+                $ret .= '<div class="clear_both"></div>';
+            $ret .= '</div>';
+            $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                $ret .= '<span class="bmlt_admin_med_label_right">&nbsp;</span>';
+                    $ret .= '<span id="bmlt_admin_meeting_search_ajax_button_span" class="bmlt_admin_value_left">';
+                        $ret .= '<a id="bmlt_admin_meeting_search_ajax_button_a" href="javascript:admin_handler_object.searchForMeetings()" class="bmlt_admin_ajax_button button">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_tab_specifier_text'] ).'</a>';
+                    $ret .= '</span>';
+                $ret .= '<span id="bmlt_admin_meeting_search_ajax_button_throbber_span" class="bmlt_admin_value_left item_hidden"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></span>';
+                $ret .= '<div class="clear_both"></div>';
+            $ret .= '</div>';
             $ret .= '<div class="clear_both"></div>';
         $ret .= '</div>';
         
@@ -370,7 +409,7 @@ class c_comdef_admin_main_console
                 
                 $ret .= '<dt class="service_body_dt'.($r != '' ? ' service_body_parent_dt' : '').'">';
                     $ret .= '<span class="single_checkbox_span">';
-                        $ret .= '<input type="checkbox" checked="checked" id="bmlt_admin_meeting_search_service_body_checkbox_'.$id.'" onchange="admin_handler_object.handleServiceCheckBoxChanges('.$id.')" />';
+                        $ret .= '<input type="checkbox" checked="checked" id="bmlt_admin_meeting_search_service_body_checkbox_'.$id.'" onclick="admin_handler_object.handleServiceCheckBoxChanges('.$id.')" onchange="admin_handler_object.handleServiceCheckBoxChanges('.$id.')" />';
                         $ret .= '<label class="bmlt_admin_med_checkbox_label_left" for="bmlt_admin_meeting_search_service_body_checkbox_'.$id.'">'.htmlspecialchars ( $service_body->GetLocalName() ).'</label>';
                     $ret .= '</span>';
                 $ret .= '</dt>';
@@ -477,19 +516,19 @@ class c_comdef_admin_main_console
                 $ret .= '<div id="bmlt_admin_meeting_editor_template_meeting_header" class="bmlt_admin_meeting_editor_meeting_header"></div>';
                 $ret .= '<div class="bmlt_admin_meeting_inner_div">';
                     $ret .= '<div class="bmlt_admin_meeting_editor_tab_bar">';
-                        $ret .= '<a href="javascript:admin_handler_object.respondToBasicTabSelection(template)" id="bmlt_admin_meeting_editor_template_tab_item_basic_a" class="bmlt_admin_meeting_editor_tab_item_a_selected">';
+                        $ret .= '<a href="javascript:admin_handler_object.selectAnEditorTab (0, template)" id="bmlt_admin_meeting_editor_template_tab_item_basic_a" class="bmlt_admin_meeting_editor_tab_item_a_selected">';
                             $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_tab_bar_basic_tab_text'] );
                         $ret .= '</a>';
-                        $ret .= '<a href="javascript:admin_handler_object.respondToLocationTabSelection(template)" id="bmlt_admin_meeting_editor_template_tab_item_location_a" class="bmlt_admin_meeting_editor_tab_item_a_unselected">';
+                        $ret .= '<a href="javascript:admin_handler_object.selectAnEditorTab (1, template)" id="bmlt_admin_meeting_editor_template_tab_item_location_a" class="bmlt_admin_meeting_editor_tab_item_a_unselected">';
                             $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_tab_bar_location_tab_text'] );
                         $ret .= '</a>';
-                        $ret .= '<a href="javascript:admin_handler_object.respondToFormatTabSelection(template)" id="bmlt_admin_meeting_editor_template_tab_item_format_a" class="bmlt_admin_meeting_editor_tab_item_a_unselected">';
+                        $ret .= '<a href="javascript:admin_handler_object.selectAnEditorTab (2, template)" id="bmlt_admin_meeting_editor_template_tab_item_format_a" class="bmlt_admin_meeting_editor_tab_item_a_unselected">';
                             $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_tab_bar_format_tab_text'] );
                         $ret .= '</a>';
-                        $ret .= '<a href="javascript:admin_handler_object.respondToOtherTabSelection(template)" id="bmlt_admin_meeting_editor_template_tab_item_other_a" class="bmlt_admin_meeting_editor_tab_item_a_unselected">';
+                        $ret .= '<a href="javascript:admin_handler_object.selectAnEditorTab (3, template)" id="bmlt_admin_meeting_editor_template_tab_item_other_a" class="bmlt_admin_meeting_editor_tab_item_a_unselected">';
                             $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_tab_bar_other_tab_text'] );
                         $ret .= '</a>';
-                        $ret .= '<a href="javascript:admin_handler_object.respondToHistoryTabSelection(template)" id="bmlt_admin_meeting_editor_template_tab_item_history_a" class="bmlt_admin_meeting_editor_tab_item_a_unselected">';
+                        $ret .= '<a href="javascript:admin_handler_object.selectAnEditorTab (4, template)" id="bmlt_admin_meeting_editor_template_tab_item_history_a" class="bmlt_admin_meeting_editor_tab_item_a_unselected">';
                             $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_tab_bar_history_tab_text'] );
                         $ret .= '</a>';
                         $ret .= '<div class="clear_both"></div>';
@@ -517,6 +556,7 @@ class c_comdef_admin_main_console
         $ret = '<div class="bmlt_admin_meeting_editor_form_meeting_button_div">';
             $ret .= '<span class="bmlt_admin_meeting_editor_form_meeting_button_left_span">';
                 $ret .= '<a id="bmlt_admin_meeting_editor_form_meeting_template_save_button" href="javascript:admin_handler_object.saveMeeting(template)" class="bmlt_admin_ajax_button button_disabled">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_save_buttonName'] ).'</a>';
+                $ret .= '<span id="bmlt_admin_template_save_ajax_button_throbber_span" class="bmlt_admin_value_left item_hidden"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></span>';
                 $ret .= '<span class="duplicate_checkbox_span hide_in_new_meeting">';
                     $ret .= '<input type="checkbox" id="bmlt_admin_meeting_template_duplicate_checkbox" />';
                     $ret .= '<label for="bmlt_admin_meeting_template_duplicate_checkbox">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_saved_as_a_copy'] ).'</label>';
@@ -524,6 +564,7 @@ class c_comdef_admin_main_console
             $ret .= '</span>';
             $ret .= '<span class="bmlt_admin_meeting_editor_form_middle_button_single_span bmlt_admin_delete_button_span hide_in_new_meeting">';
                 $ret .= '<a id="bmlt_admin_meeting_editor_form_meeting_template_delete_button" href="javascript:admin_handler_object.deleteMeeting(template)" class="bmlt_admin_ajax_button button">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_delete_button'] ).'</a>';
+                $ret .= '<span id="bmlt_admin_template_delete_ajax_button_throbber_span" class="bmlt_admin_value_left item_hidden"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></span>';
                 if ( $this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN )
                     {
                     $ret .= '<span class="perm_checkbox_span">';
@@ -764,6 +805,18 @@ class c_comdef_admin_main_console
     function return_single_meeting_format_template()
     {
         $ret = '<div id="bmlt_admin_meeting_template_format_sheet_div" class="bmlt_admin_meeting_option_sheet_div item_hidden">';
+            foreach ( $this->my_formats[$this->my_server->GetLocalLang()] as $format )
+                {
+                if ( $format instanceof c_comdef_format )
+                    {
+                    $ret .= '<div class="bmlt_admin_meeting_one_format_div">';
+                        $ret .= '<label class="left_label" for="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox">'.htmlspecialchars ( $format->GetKey() ).'</label>';
+                        $ret .= '<span><input type="checkbox" value="'.$format->GetKey().'" id="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox" onchange="admin_handler_object.reactToFormatCheckbox(this, template)" onclick="admin_handler_object.reactToFormatCheckbox(this, template)" /></span>';
+                        $ret .= '<label class="right_label" for="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox">'.htmlspecialchars ( $format->GetLocalName() ).'</label>';
+                    $ret .= '</div>';
+                    }
+                }
+            $ret .= '<div class="clear_both"></div>';
         $ret .= '</div>';
 
         return $ret;

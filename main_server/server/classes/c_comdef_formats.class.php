@@ -75,7 +75,7 @@ class c_comdef_formats implements i_comdef_has_parent
 	
 		\returns a reference to an array of c_comdef_format objects.
 	*/
-	function &GetFormatsArray()
+	function GetFormatsArray()
 	{
 		return $this->_local_copy_of_array;
 	}

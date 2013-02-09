@@ -766,3 +766,46 @@ div.bmlt_admin_meeting_editor_form_results_banner_div
     border-radius: 3px;
 }
 
+div.bmlt_admin_meeting_one_format_div
+{
+    width: 33%;
+    float:left;
+    margin-right:0.25%;
+}
+
+div.bmlt_admin_meeting_one_format_div span
+{
+    display:block;
+    float:left;
+    margin-top:0.25em;
+    margin-bottom:0.25em;
+    white-space:nowrap;
+}
+
+div.bmlt_admin_meeting_one_format_div label
+{
+    display:block;
+    color:#009;
+    float:left;
+    padding-top:0.25em;
+    white-space:normal;
+}
+
+div.bmlt_admin_meeting_one_format_div label.left_label
+{
+    width: 2em;
+    text-align:right;
+    margin-right:0.1em;
+    font-weight:bold;
+}
+
+div.bmlt_admin_meeting_one_format_div label.right_label
+{
+    margin-left:0.1em;
+    font-style:italic;
+}
+
+div.bmlt_admin_meeting_one_format_div input
+{
+    margin:0.1em;
+}
