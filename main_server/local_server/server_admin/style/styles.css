@@ -809,3 +809,10 @@ div.bmlt_admin_meeting_one_format_div input
 {
     margin:0.1em;
 }
+
+span.bmlt_admin_visibility_advice_span
+{
+    padding-left:0.1em;
+    font-style:italic;
+    color:#009;
+}

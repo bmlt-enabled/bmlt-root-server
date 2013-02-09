@@ -143,6 +143,51 @@ class c_comdef_admin_main_console
                             }
                         }
                 $ret .= '];'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_other_field_ids = [';
+                    $first = true;
+                    foreach ( $this->my_data_field_templates as $data_field )
+                        {
+                        $key = $data_field['key'];
+                        switch ( $key )
+                            {
+                            case    'id_bigint':                // All of these are ignored, as they are taken care of in other option sheets.
+                            case    'worldid_mixed':
+                            case    'shared_group_id_bigint':
+                            case    'service_body_bigint':
+                            case    'weekday_tinyint':
+                            case    'start_time':
+                            case    'formats':
+                            case    'lang_enum':
+                            case    'longitude':
+                            case    'latitude':
+                            case    'email_contact':
+                            case    'meeting_name':
+                            case    'location_text':
+                            case    'location_info':
+                            case    'location_street':
+                            case    'location_neighborhood':
+                            case    'location_city_subsection':
+                            case    'location_municipality':
+                            case    'location_sub_province':
+                            case    'location_province':
+                            case    'location_postal_code_1':
+                            case    'location_nation':
+                            break;
+                
+                            default:    // We display these ones.
+                                if ( !$first )
+                                    {
+                                    $ret .= ',';
+                                    }
+                                else
+                                    {
+                                    $first = false;
+                                    }
+                                $ret .= "'".htmlspecialchars ( $key )."'";
+                            break;
+                            }
+                        }
+                $ret .= '];'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_meeting_closure_confirm_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_cancel_confirm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_default_longitude = '.floatval ( $this->my_localized_strings['search_spec_map_center']['longitude'] ).';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_default_latitude = '.floatval ( $this->my_localized_strings['search_spec_map_center']['latitude'] ).';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
@@ -700,6 +745,7 @@ class c_comdef_admin_main_console
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_contact_label'] ).'</span>';
                     $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_contact_text_input" type="text" value="'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_contact_prompt'] ).'" onkeyup="admin_handler_object.handleTextInputChange(this, 0);admin_handler_object.setItemValue(this, template, \'email_contact\');" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
+                    $ret .= '<span class="bmlt_admin_visibility_advice_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_visibility_advice'] ).'</span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
             $ret .= '</div>';
@@ -829,6 +875,49 @@ class c_comdef_admin_main_console
     function return_single_meeting_other_template()
     {
         $ret = '<div id="bmlt_admin_meeting_template_other_sheet_div" class="bmlt_admin_meeting_option_sheet_div item_hidden">';
+            foreach ( $this->my_data_field_templates as $data_field )
+                {
+                $key = $data_field['key'];
+                $prompt = $data_field['field_prompt'];
+                switch ( $key )
+                    {
+                    case    'id_bigint':                // All of these are ignored, as they are taken care of in other option sheets.
+                    case    'worldid_mixed':
+                    case    'shared_group_id_bigint':
+                    case    'service_body_bigint':
+                    case    'weekday_tinyint':
+                    case    'start_time':
+                    case    'formats':
+                    case    'lang_enum':
+                    case    'longitude':
+                    case    'latitude':
+                    case    'email_contact':
+                    case    'meeting_name':
+                    case    'location_text':
+                    case    'location_info':
+                    case    'location_street':
+                    case    'location_neighborhood':
+                    case    'location_city_subsection':
+                    case    'location_municipality':
+                    case    'location_sub_province':
+                    case    'location_province':
+                    case    'location_postal_code_1':
+                    case    'location_nation':
+                    break;
+                
+                    default:    // We display these ones.
+                        $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                            $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $prompt ).'</span>';
+                            $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_'.htmlspecialchars ( $key ).'_text_input" type="text" value="'.htmlspecialchars ( htmlspecialchars ( $prompt ) ).'" onkeyup="admin_handler_object.handleTextInputChange(this, 0);admin_handler_object.setItemValue(this, template, \''.htmlspecialchars ( $key ).'\')" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this, true);" /></span>';
+                            if ( $data_field['visibility'] == _VISIBILITY_NONE_ )
+                                {
+                                $ret .= '<span class="bmlt_admin_visibility_advice_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_visibility_advice'] ).'</span>';
+                                }
+                            $ret .= '<div class="clear_both"></div>';
+                        $ret .= '</div>';
+                    break;
+                    }
+                }
         $ret .= '</div>';
 
         return $ret;

@@ -109,6 +109,7 @@
 	                                        'meeting_editor_screen_meeting_publish_search_prompt'   =>  'Look For:',
 	                                        'meeting_editor_screen_meeting_publish_search_pub'      =>  'Published Meetings Only',
 	                                        'meeting_editor_screen_meeting_publish_search_unpub'    =>  'Unpublished Meetings Only',
+	                                        'meeting_editor_screen_meeting_visibility_advice'       =>  'This is never displayed in normal meeting searches.',
 	                                        'meeting_editor_screen_meeting_publish_search_all'      =>  'All Meetings',
 	                                        'meeting_editor_screen_meeting_create_button'           =>  'Create A New Meeting',
 	                                        'meeting_editor_screen_delete_button'                   =>  'Delete This Meeting',

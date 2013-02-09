@@ -1452,6 +1452,13 @@ function BMLT_Server_Admin ()
             template_header.innerHTML = g_new_meeting_header_text;
             };
 
+        this.setFormatCheckboxes ( meeting_object );
+        this.setWeekday ( meeting_object );
+        this.setMeetingStartTime ( meeting_object );
+        this.setMeetingDuration ( meeting_object );
+        this.setServiceBody ( meeting_object );
+        this.setUpOtherTab ( meeting_object );
+
         var meeting_published_checkbox = document.getElementById ( 'bmlt_admin_meeting_' + meeting_id + '_published_checkbox' );
         
         var meeting_name_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_name_text_input' );
@@ -1470,61 +1477,55 @@ function BMLT_Server_Admin ()
         var meeting_latitude_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_latitude_text_input' );
         var meeting_contact_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_contact_text_input' );
 
-        meeting_name_text_item.value = in_meeting_editor.meeting_object.meeting_name ? in_meeting_editor.meeting_object.meeting_name : meeting_name_text_item.value;
+        meeting_name_text_item.value = meeting_object.meeting_name ? meeting_object.meeting_name : meeting_name_text_item.value;
         this.setTextItemClass ( meeting_name_text_item );
         
-        meeting_cc_text_item.value = in_meeting_editor.meeting_object.worldid_mixed ? in_meeting_editor.meeting_object.worldid_mixed : meeting_cc_text_item.value;
+        meeting_cc_text_item.value = meeting_object.worldid_mixed ? meeting_object.worldid_mixed : meeting_cc_text_item.value;
         this.setTextItemClass ( meeting_cc_text_item );
         
-        meeting_location_text_item.value = in_meeting_editor.meeting_object.location_text ? in_meeting_editor.meeting_object.location_text : meeting_location_text_item.value;
+        meeting_location_text_item.value = meeting_object.location_text ? meeting_object.location_text : meeting_location_text_item.value;
         this.setTextItemClass ( meeting_location_text_item );
         
-        meeting_info_text_item.value = in_meeting_editor.meeting_object.location_info ? in_meeting_editor.meeting_object.location_info : meeting_info_text_item.value;
+        meeting_info_text_item.value = meeting_object.location_info ? meeting_object.location_info : meeting_info_text_item.value;
         this.setTextItemClass ( meeting_info_text_item );
         
-        meeting_street_text_item.value = in_meeting_editor.meeting_object.location_street ? in_meeting_editor.meeting_object.location_street : meeting_street_text_item.value;
+        meeting_street_text_item.value = meeting_object.location_street ? meeting_object.location_street : meeting_street_text_item.value;
         this.setTextItemClass ( meeting_street_text_item );
         
-        meeting_neighborhood_text_item.value = in_meeting_editor.meeting_object.location_neighborhood ? in_meeting_editor.meeting_object.location_neighborhood : meeting_neighborhood_text_item.value;
+        meeting_neighborhood_text_item.value = meeting_object.location_neighborhood ? meeting_object.location_neighborhood : meeting_neighborhood_text_item.value;
         this.setTextItemClass ( meeting_neighborhood_text_item );
         
-        meeting_borough_text_item.value = in_meeting_editor.meeting_object.location_city_subsection ? in_meeting_editor.meeting_object.location_city_subsection : meeting_borough_text_item.value;
+        meeting_borough_text_item.value = meeting_object.location_city_subsection ? meeting_object.location_city_subsection : meeting_borough_text_item.value;
         this.setTextItemClass ( meeting_borough_text_item );
         
-        meeting_city_text_item.value = in_meeting_editor.meeting_object.location_municipality ? in_meeting_editor.meeting_object.location_municipality : meeting_city_text_item.value;
+        meeting_city_text_item.value = meeting_object.location_municipality ? meeting_object.location_municipality : meeting_city_text_item.value;
         this.setTextItemClass ( meeting_city_text_item );
         
-        meeting_county_text_item.value = in_meeting_editor.meeting_object.location_sub_province ? in_meeting_editor.meeting_object.location_sub_province : meeting_county_text_item.value;
+        meeting_county_text_item.value = meeting_object.location_sub_province ? meeting_object.location_sub_province : meeting_county_text_item.value;
         this.setTextItemClass ( meeting_county_text_item );
         
-        meeting_state_text_item.value = in_meeting_editor.meeting_object.location_province ? in_meeting_editor.meeting_object.location_province : meeting_state_text_item.value;
+        meeting_state_text_item.value = meeting_object.location_province ? meeting_object.location_province : meeting_state_text_item.value;
         this.setTextItemClass ( meeting_state_text_item );
         
-        meeting_zip_text_item.value = in_meeting_editor.meeting_object.location_postal_code_1 ? in_meeting_editor.meeting_object.location_postal_code_1 : meeting_zip_text_item.value;
+        meeting_zip_text_item.value = meeting_object.location_postal_code_1 ? meeting_object.location_postal_code_1 : meeting_zip_text_item.value;
         this.setTextItemClass ( meeting_zip_text_item );
         
-        meeting_nation_text_item.value = in_meeting_editor.meeting_object.location_nation ? in_meeting_editor.meeting_object.location_nation : meeting_nation_text_item.value;
+        meeting_nation_text_item.value = meeting_object.location_nation ? meeting_object.location_nation : meeting_nation_text_item.value;
         this.setTextItemClass ( meeting_nation_text_item );
         
-        meeting_longitude_text_item.value = in_meeting_editor.meeting_object.longitude ? in_meeting_editor.meeting_object.longitude : meeting_longitude_text_item.value;
+        meeting_longitude_text_item.value = meeting_object.longitude ? meeting_object.longitude : meeting_longitude_text_item.value;
         this.setTextItemClass ( meeting_longitude_text_item );
         
-        meeting_latitude_text_item.value = in_meeting_editor.meeting_object.latitude ? in_meeting_editor.meeting_object.latitude : meeting_latitude_text_item.value;
+        meeting_latitude_text_item.value = meeting_object.latitude ? meeting_object.latitude : meeting_latitude_text_item.value;
         this.setTextItemClass ( meeting_latitude_text_item );
         
-        meeting_contact_text_item.value = in_meeting_editor.meeting_object.email_contact ? in_meeting_editor.meeting_object.email_contact : meeting_contact_text_item.value;
+        meeting_contact_text_item.value = meeting_object.email_contact ? meeting_object.email_contact : meeting_contact_text_item.value;
         this.setTextItemClass ( meeting_contact_text_item );
         
-        meeting_published_checkbox.checked = (in_meeting_editor.meeting_object ? true : false);
+        meeting_published_checkbox.checked = (meeting_object ? true : false);
         
         document.getElementById ( 'bmlt_admin_meeting_id_' + meeting_id +'_display' ).innerHTML = meeting_id;
-        
-        this.setPublished ( in_meeting_editor.meeting_object );
-        this.setWeekday ( in_meeting_editor.meeting_object );
-        this.setMeetingStartTime ( in_meeting_editor.meeting_object );
-        this.setMeetingDuration ( in_meeting_editor.meeting_object );
-        this.setServiceBody ( in_meeting_editor.meeting_object );
-        this.setFormatCheckboxes ( in_meeting_editor.meeting_object );
+        this.setPublished ( meeting_object );
     };
     
     /************************************************************************************//**
@@ -2284,7 +2285,7 @@ function BMLT_Server_Admin ()
                 {
                 if ( in_meeting_object.id_bigint == this.m_search_results[c].id_bigint )
                     {
-                    this.m_search_results[c] = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_object.id_bigint + '_div' ).meeting_object;
+                    this.m_search_results[c].formats = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_object.id_bigint + '_div' ).meeting_object.formats;
                     break;
                     };
                 };
@@ -2321,7 +2322,20 @@ function BMLT_Server_Admin ()
     // #mark - 
     // #mark Other Tab
     // #mark -
-        
+    
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.setUpOtherTab = function ( in_meeting_object
+                                    )
+    {
+        for ( var c = 0; c < g_other_field_ids.length; c++ )
+            {
+            var text_field = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_object.id_bigint + '_meeting_' + g_other_field_ids[c] + '_text_input' );
+            this.setTextItemClass ( text_field );
+            };
+    };
+    
     // #mark - 
     // #mark History Tab
     // #mark -
