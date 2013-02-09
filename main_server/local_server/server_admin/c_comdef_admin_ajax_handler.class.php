@@ -265,18 +265,19 @@ class c_comdef_admin_ajax_handler
                 
                     foreach ( $in_meeting_data as $key => $value )
                         {
-                            if ( $key == 'formats' )
+                        if ( $key == 'formats' )
+                            {
+                            $vals = array();
+                            $value = explode ( ",", $value );
+                            $lang = $this->my_server->GetLocalLang();
+                            foreach ( $value as $fkey )
                                 {
-                                $vals = array();
-                                $value = explode ( ",", $value );
-                                $lang = $this->my_server->GetLocalLang();
-                                foreach ( $value as $fkey )
-                                    {
-                                    $vals[$id] = c_comdef_server::GetServer()->GetFormatsObj()->GetFormatByKeyAndLanguage ( $fkey, $lang );
-                                    }
-                                uksort ( $vals, array ( 'c_comdef_meeting','format_sorter_simple' ) );
-                                $value = $vals;
+                                $object = c_comdef_server::GetServer()->GetFormatsObj()->GetFormatByKeyAndLanguage ( $fkey, $lang );
+                                $vals[$object->GetSharedID()] = $object;
                                 }
+                            uksort ( $vals, array ( 'c_comdef_meeting','format_sorter_simple' ) );
+                            $value = $vals;
+                            }
                 
                         switch ( $key )
                             {
@@ -315,10 +316,9 @@ class c_comdef_admin_ajax_handler
                                         }
                                     else
                                         {
-                                        $info = json_prepare ( $localized_strings['comdef_search_admin_strings']['Edit_Meeting']['meeting_id'] ).$in_meeting_data['id_bigint'];
-                                        $err_string = json_prepare ( $localized_strings['comdef_search_admin_strings']['Edit_Meeting']['email_format_bad'] );
+                                        $err_string = json_prepare ( $localized_strings['comdef_server_admin_strings']['email_format_bad'] );
                                         header ( 'Content-type: application/json' );
-                                        die ( "{'error':true,'type':'email_format_bad','report':'$err_string','id':'".$in_meeting_data['id_bigint']."',info:'$info'}" );
+                                        die ( "{'error':true,'type':'email_format_bad','report':'$err_string','id':'".$in_meeting_data['id_bigint']."'}" );
                                         }
                                     }
                                 else

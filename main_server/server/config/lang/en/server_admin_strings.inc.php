@@ -145,6 +145,7 @@
                                             'title'                                                 =>  'Please log in to administer the server.',
                                             'not_auth_1'                                            =>  'NOT AUTHORIZED',
                                             'not_auth_2'                                            =>  'You are not authorized to administer this server.',
-                                            'not_auth_3'                                            =>  'There was a problem with the user name or password that you entered.'
+                                            'not_auth_3'                                            =>  'There was a problem with the user name or password that you entered.',
+											'email_format_bad'                                      => 'The email address that you entered was not formatted correctly.'
 	                                    );
 ?>
