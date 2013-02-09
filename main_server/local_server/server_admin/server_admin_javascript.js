@@ -2457,7 +2457,16 @@ function BMLT_Server_Admin ()
         for ( var c = 0; c < g_other_field_ids.length; c++ )
             {
             var text_field = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_object.id_bigint + '_meeting_' + g_other_field_ids[c] + '_text_input' );
-            this.handleTextInputLoad ( text_field );
+            var val = in_meeting_object[g_other_field_ids[c]];
+            
+            var def_val = text_field.value;
+
+            if ( val )
+                {
+                text_field.value = val;
+                };
+            
+            this.handleTextInputLoad ( text_field, def_val );
             };
     };
     
