@@ -877,6 +877,10 @@ function BMLT_Server_Admin ()
             this.m_meeting_results_container_div.appendChild ( outer_meeting_div );
             };
         
+        var breaker_breaker_rubber_duck = document.createElement ( 'div' );   // This is a break element.
+        breaker_breaker_rubber_duck.className = 'clear_both';
+        this.m_meeting_results_container_div.appendChild ( breaker_breaker_rubber_duck );
+        
         the_outer_container.appendChild ( this.m_meeting_results_container_div );
         the_main_results_display.className = 'bmlt_admin_meeting_editor_form_results_div"';
         
@@ -918,17 +922,117 @@ function BMLT_Server_Admin ()
                                             in_meeting_object       ///< The meeting object.
                                         )
     {
-        var meeting_name_div = document.createElement ( 'div' );   // Create the container element.
-        meeting_name_div.className = 'bmlt_admin_meeting_search_results_single_meeting_name_div';
-        meeting_name_div.id = 'bmlt_admin_meeting_search_results_single_meeting_' + in_meeting_object.id_bigint +'_name_div';
-        var meeting_name_text_node = document.createTextNode ( in_meeting_object.meeting_name );
-        
         var meeting_editorLink = document.createElement ( 'a' );
         meeting_editorLink.href = 'javascript:admin_handler_object.toggleMeetingSingleEditor(' + in_meeting_object.id_bigint + ')';
-        meeting_editorLink.appendChild ( meeting_name_text_node );
-        meeting_name_div.appendChild ( meeting_editorLink );
+        meeting_editorLink.className = 'bmlt_admin_meeting_search_results_single_meeting_a';
+
+        var element_span = document.createElement ( 'span' );   // Create the container element.
+        element_span.className = 'bmlt_admin_meeting_search_results_single_meeting_weekday_span';
+        var text_node = document.createTextNode ( g_weekday_name_array[in_meeting_object.weekday_tinyint - 1] );
+        element_span.appendChild ( text_node );
+        meeting_editorLink.appendChild ( element_span );
+
+        element_span = document.createElement ( 'span' );   // Create the container element.
+        element_span.className = 'bmlt_admin_meeting_search_results_single_meeting_start_time_span';
+        var start_time = in_meeting_object.start_time;
+        var start_time = in_meeting_object.start_time.toString().split ( ':' );
+        var hours = 0;
+        var minutes = 0;
+        var midnight = false;
+        var noon = false;
+        var pm = false;
+
+        if ( start_time && (start_time.length > 1) )
+            {
+            var hours = parseInt ( start_time[0] );
+            var minutes = parseInt ( start_time[1] );
+            var midnight = false;
+            var noon = false;
+            var pm = false;
+            
+            if ( (hours == 23) && (minutes > 55) )
+                {
+                midnight = true;
+                }
+            else
+                {
+                if ( (hours == 12) && (minutes == 0) )
+                    {
+                    noon = true;
+                    }
+                else
+                    {
+                    if ( hours > 23 )
+                        {
+                        hours = 23;
+                        };
+            
+                    if ( hours < 0 )
+                        {
+                        hours = 0;
+                        };
+
+                    if ( minutes > 59 )
+                        {
+                        minutes = 59;
+                        };
+            
+                    if ( minutes < 0 )
+                        {
+                        minutes = 0;
+                        };
+
+                    if ( minutes % 5 )
+                        {
+                        minutes += 5;
+                
+                        if ( minutes >= 60 )
+                            {
+                            hours++;
+                            minutes -= 60;
+                            };
+                        };
+                    };
+                };
+                
+            if ( hours > 12 )
+                {
+                hours -= 12;
+                pm = true;
+                }
+            else if ( (hours == 12) && (minutes > 0) )
+                {
+                pm = true;
+                };
+            };
         
-        in_single_meeting_div.appendChild ( meeting_name_div );
+        if ( midnight )
+            {
+            start_time = g_time_values[3];
+            }
+        else if ( noon )
+            {
+            start_time = g_time_values[2];
+            }
+        else
+            {
+            start_time = sprintf ( '%d:%02d %s', hours, minutes, (pm ? g_time_values[1] : g_time_values[0]) );
+            };
+        
+        text_node = document.createTextNode ( start_time );
+        element_span.appendChild ( text_node );
+        meeting_editorLink.appendChild ( element_span );
+
+        element_span = document.createElement ( 'span' );   // Create the container element.
+        element_span.className = 'bmlt_admin_meeting_search_results_single_meeting_meeting_name_span';
+        text_node = document.createTextNode ( in_meeting_object.meeting_name );
+        element_span.appendChild ( text_node );
+        meeting_editorLink.appendChild ( element_span );
+
+        in_single_meeting_div.appendChild ( meeting_editorLink );
+        var breaker_breaker_rubber_duck = document.createElement ( 'div' );   // This is a break element.
+        breaker_breaker_rubber_duck.className = 'clear_both';
+        in_single_meeting_div.appendChild ( breaker_breaker_rubber_duck );
     };
     
     // #mark - 
@@ -1461,6 +1565,8 @@ function BMLT_Server_Admin ()
             template_header.innerHTML = g_new_meeting_header_text;
             };
 
+        document.getElementById ( 'bmlt_admin_meeting_id_' + meeting_id +'_display' ).innerHTML = meeting_id;
+
         this.setFormatCheckboxes ( meeting_object );
         this.setWeekday ( meeting_object );
         this.setMeetingStartTime ( meeting_object );
@@ -1533,7 +1639,6 @@ function BMLT_Server_Admin ()
         
         meeting_published_checkbox.checked = (meeting_object ? true : false);
         
-        document.getElementById ( 'bmlt_admin_meeting_id_' + meeting_id +'_display' ).innerHTML = meeting_id;
         this.setPublished ( meeting_object );
     };
     

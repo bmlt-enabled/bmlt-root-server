@@ -721,6 +721,13 @@ div.bmlt_admin_meeting_editor_form_results_inner_div
 {
 }
 
+div.meeting_line_odd,
+div.meeting_line_even
+{
+    padding:2px;
+    font-weight:bold;
+}
+
 div.meeting_line_odd
 {
     background-color:white;
@@ -816,3 +823,32 @@ span.bmlt_admin_visibility_advice_span
     font-style:italic;
     color:#009;
 }
+
+div.bmlt_admin_meeting_search_results_single_meeting_container_div
+{
+    clear:both;
+    float:none;
+}
+
+div.bmlt_admin_meeting_search_results_single_meeting_container_div a.bmlt_admin_meeting_search_results_single_meeting_a,
+div.bmlt_admin_meeting_search_results_single_meeting_container_div a.bmlt_admin_meeting_search_results_single_meeting_a span
+{
+    display:block;
+}
+
+div.bmlt_admin_meeting_search_results_single_meeting_container_div a.bmlt_admin_meeting_search_results_single_meeting_a span
+{
+    float:left;
+    padding-right:0.1em;
+}
+
+span.bmlt_admin_meeting_search_results_single_meeting_weekday_span
+{
+    width: 6em;
+}
+
+span.bmlt_admin_meeting_search_results_single_meeting_start_time_span
+{
+    width: 6em;
+}
+
