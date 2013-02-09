@@ -1797,6 +1797,12 @@ function BMLT_Server_Admin ()
                 {
                 tab_class = 'bmlt_admin_meeting_editor_tab_item_a_selected';
                 sheet_class = 'bmlt_admin_meeting_option_sheet_div';
+                
+                if ( (c == 1) && (in_meeting_id == 0) )
+                    {
+                    this.toggleMeetingMapDisclosure(0);
+                    };
+
                 }
             else
                 {
