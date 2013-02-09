@@ -65,6 +65,7 @@
 	                                        'meeting_editor_create_new_text'                        =>  'Create A New Meeting',
 	                                        'meeting_editor_location_map_link'                      =>  'Location Map',
 	                                        'meeting_editor_screen_match_map_button'                =>  'Set Map to Address',
+	                                        'meeting_editor_screen_default_text_prompt'             =>  'Enter Some Text or a Number',
 	                                        'meeting_is_published'                                  =>  'Meeting is Published',
 	                                        'meeting_editor_screen_meeting_name_label'              =>  'Meeting Name:',
 	                                        'meeting_editor_screen_meeting_name_prompt'             =>  'Enter A Meeting Name',

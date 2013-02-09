@@ -181,11 +181,15 @@ function BMLT_Server_Admin ()
         
         if ( (in_item.type == 'text') || (in_item.name == 'textarea') )
             {
-            if ( in_item.value != in_item.defaultValue )
+            if ( in_item.value && (in_item.value != in_item.defaultValue) )
                 {
-                eval_str = 'editor_object.meeting_object.' + in_value_field + ' = in_item.value;';
+                eval_str = 'editor_object.meeting_object.' + in_value_field + ' = \'' + in_item.value.toString() + '\';';
+                }
+            else
+                {
+                eval_str = 'delete editor_object.meeting_object.' + in_value_field + ';';
                 };
-            }
+            };
             
         if ( eval_str )
             {
@@ -2343,7 +2347,7 @@ function BMLT_Server_Admin ()
         for ( var c = 0; c < g_other_field_ids.length; c++ )
             {
             var text_field = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_object.id_bigint + '_meeting_' + g_other_field_ids[c] + '_text_input' );
-            this.setTextItemClass ( text_field );
+            this.handleTextInputLoad ( text_field );
             };
     };
     
