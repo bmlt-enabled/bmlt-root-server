@@ -1073,32 +1073,37 @@ function BMLT_Server_Admin ()
     this.saveMeeting = function ( in_meeting_id
                                 )
     {
-        var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
-        var new_meeting_id = in_meeting_id;
-        var copy_checkbox = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_duplicate_checkbox' );
-        var throbber_span = document.getElementById ( 'bmlt_admin_' + in_meeting_id + '_save_ajax_button_throbber_span' );
-        var save_a = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_' + in_meeting_id + '_save_button' );
-        var meeting_sent = false;
+        var save_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_' + in_meeting_id + '_save_button' );
         
-        if ( !copy_checkbox.checked && new_meeting_id && this.m_search_results && this.m_search_results.length )
+        if ( save_button.className == 'bmlt_admin_ajax_button button' )
             {
-            for ( var c = 0; c < this.m_search_results.length; c++ )
+            var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+            var new_meeting_id = in_meeting_id;
+            var copy_checkbox = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_duplicate_checkbox' );
+            var throbber_span = document.getElementById ( 'bmlt_admin_' + in_meeting_id + '_save_ajax_button_throbber_span' );
+            var save_a = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_' + in_meeting_id + '_save_button' );
+            var meeting_sent = false;
+        
+            if ( !copy_checkbox.checked && new_meeting_id && this.m_search_results && this.m_search_results.length )
                 {
-                if ( new_meeting_id == this.m_search_results[c].id_bigint )
+                for ( var c = 0; c < this.m_search_results.length; c++ )
                     {
-                    save_a.className = 'item_hidden';
-                    throbber_span.className = 'bmlt_admin_value_left';
-                    this.sendMeetingToServer ( in_meeting_id, false );
-                    meeting_sent = true;
+                    if ( new_meeting_id == this.m_search_results[c].id_bigint )
+                        {
+                        save_a.className = 'item_hidden';
+                        throbber_span.className = 'bmlt_admin_value_left';
+                        this.sendMeetingToServer ( in_meeting_id, false );
+                        meeting_sent = true;
+                        };
                     };
                 };
-            };
         
-        if ( !meeting_sent )
-            {
-            save_a.className = 'item_hidden';
-            throbber_span.className = 'bmlt_admin_value_left';
-            this.sendMeetingToServer ( in_meeting_id, true );
+            if ( !meeting_sent )
+                {
+                save_a.className = 'item_hidden';
+                throbber_span.className = 'bmlt_admin_value_left';
+                this.sendMeetingToServer ( in_meeting_id, true );
+                };
             };
     };
     
