@@ -852,3 +852,14 @@ span.bmlt_admin_meeting_search_results_single_meeting_start_time_span
     width: 6em;
 }
 
+div.bmlt_admin_meeting_history_list_item_description_div
+{
+    margin-left:1em;
+    font-weight:normal;
+    font-style:italic;
+}
+
+div.bmlt_admin_meeting_history_list_item_description_line_div
+{
+    margin-bottom:0.1em;
+}

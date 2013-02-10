@@ -72,6 +72,10 @@ class c_comdef_admin_ajax_handler
             {
             $returned_text = $this->HandleDeleteMeeting ( $this->my_http_vars['delete_meeting'], isset ( $this->my_http_vars['permanently'] ) );
             }
+        else if ( isset ( $this->my_http_vars['get_meeting_history'] ) && $this->my_http_vars['get_meeting_history'] )
+            {
+            $returned_text = $this->GetMeetingHistory ( $this->my_http_vars['get_meeting_history'] );
+            }
         else if ( isset ( $this->my_http_vars['do_meeting_search'] ) )
             {
             $returned_text = $this->TranslateToJSON ( $this->GetSearchResults ( $this->my_http_vars ) );
@@ -121,6 +125,57 @@ class c_comdef_admin_ajax_handler
             }
         
         return  $returned_text;
+    }
+    
+    /*******************************************************************/
+    /**
+        \brief
+    */	
+    function GetMeetingHistory (    $in_meeting_id
+                                )
+    {
+        $ret = '[';
+        
+        $changes = $this->my_server->GetChangesFromIDAndType ( 'c_comdef_meeting', $in_meeting_id );
+    
+        if ( $changes instanceof c_comdef_changes )
+            {
+            $obj_array =& $changes->GetChangesObjects();
+        
+            if ( is_array ( $obj_array ) && count ( $obj_array ) )
+                {
+                $first = true;
+                
+                foreach ( $obj_array as $change )
+                    {
+                    if ( !$first )
+                        {
+                        $ret .= ',';
+                        }
+                    else
+                        {
+                        $first = false;
+                        }
+                    
+                    $ret .= '{';
+                        $change_id = $change->GetID();
+                        $user_name = json_prepare ( $this->my_server->GetUserByIDObj ( $change->GetUserID() )->GetLocalName() );
+                        $change_description = json_prepare ( $change->DetailedChangeDescription() );
+                        $change_date = json_prepare ( date ( 'g:i A, F j Y', $change->GetChangeDate() ) );
+                        
+                        $ret .= '"id":'.$change_id.',';
+                        $ret .= '"user":"'.$user_name.'",';
+                        $ret .= '"description":["'.implode ( '","', $change_description['details'] ).'"],';
+                        $ret .= '"date":"'.$change_date.'"';
+                        
+                    $ret .= '}';
+                    }
+                }
+            }
+            
+        $ret .= ']';
+        
+        return $ret;
     }
     
     /*******************************************************************/
