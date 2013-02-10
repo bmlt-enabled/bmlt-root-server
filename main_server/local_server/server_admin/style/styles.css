@@ -466,6 +466,18 @@ a.bmlt_admin_user_account_disclosure_a:active
     text-decoration:none;
 }
 
+div.bmlt_admin_single_meeting_disclosure_map_div_closed,
+div.bmlt_admin_single_meeting_disclosure_map_div_open
+{
+    padding:4px;
+}
+
+div.bmlt_admin_single_meeting_disclosure_map_div_closed a,
+div.bmlt_admin_single_meeting_disclosure_map_div_open a
+{
+    padding-bottom:8px;
+}
+
 div.bmlt_admin_single_meeting_disclosure_map_div_closed a,
 div.bmlt_admin_single_meeting_disclosure_map_div_closed a:visited,
 div.bmlt_admin_meeting_editor_disclosure_div_closed a,
