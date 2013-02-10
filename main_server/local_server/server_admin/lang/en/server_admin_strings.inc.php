@@ -39,7 +39,7 @@
 	                                        'account_change_button_text'                            =>  'Change My Account Settings',
 	                                        'account_change_fader_success_text'                     =>  'The Account Information Was Successfully Changed',
 	                                        'account_change_fader_failure_text'                     =>  'The Account Information Was Not Changed',
-	                                        'meeting_editor_disclosure'                             =>  'Edit Meetings',
+	                                        'meeting_editor_disclosure'                             =>  'Meeting Editor',
 	                                        'meeting_editor_already_editing_confirm'                =>  'You are currently editing another meeting. Do you want to lose all changes in that meeting?',
 	                                        'meeting_change_fader_success_text'                     =>  'The Meeting Was Successfully Changed',
 	                                        'meeting_change_fader_failure_text'                     =>  'The Meeting Was Not Changed',
