@@ -487,32 +487,22 @@ function BMLT_Server_Admin ()
         
         if ( in_checkbox_index )
             {
-            var weekday_selected = false;
+            var weekday_selected = true;
             for ( var c = 0; c < 7; c++ )
                 {
-                if ( weekday_checkboxes[c].checked )
+                if ( !weekday_checkboxes[c].checked )
                     {
-                    weekday_selected = true;
+                    weekday_selected = false;
                     };
                 };
             
-            all_checkbox.checked = !weekday_selected;
+            all_checkbox.checked = weekday_selected;
             }
         else
             {
-            all_checkbox.checked = true;
-            
             for ( var c = 0; c < 7; c++ )
                 {
-                weekday_checkboxes[c].checked = false;
-                };
-            };
-            
-        if ( all_checkbox.checked )
-            {
-            for ( var c = 0; c < 7; c++ )
-                {
-                weekday_checkboxes[c].checked = true;
+                weekday_checkboxes[c].checked = all_checkbox.checked;
                 };
             };
     };
@@ -2555,6 +2545,7 @@ function BMLT_Server_Admin ()
                 }
             else
                 {
+                document.getElementById ( 'bmlt_admin_history_ajax_button_' + in_meeting_id + '_throbber_div' ).className = 'bmlt_admin_history_ajax_button_throbber_div item_hidden';
                 var option_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_history_sheet_div' );
                 var history_list = document.createElement ( 'div' );
                 history_list.id = 'bmlt_admin_meeting_' + in_meeting_id + '_history_list_div';
@@ -2573,7 +2564,7 @@ function BMLT_Server_Admin ()
                     
                         if ( json_object[c].description.length )
                             {
-                            item = document.createElement ( 'div' );
+                            var item = document.createElement ( 'div' );
                             item.className = 'bmlt_admin_meeting_history_list_item_line_div bmlt_admin_meeting_history_list_item_description_div';
                             for ( var i = 0; i < json_object[c].description.length; i++ )
                                 {

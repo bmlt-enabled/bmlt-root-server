@@ -216,7 +216,7 @@ class c_comdef_admin_main_console
                     $ret .= '\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_midnight_label'] ).'\'';
                 $ret .= '];';
                 
-                $ret .= file_get_contents ( dirname ( __FILE__ ).(defined('__DEBUG_MODE__') ? '/' : '/js_stripper.php?filename=' ).'JSON-js/json2.js' ).(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= file_get_contents ( dirname ( __FILE__ ).(defined('__DEBUG_MODE__') ? '/' : '/js_stripper.php?filename=' ).'json2.js' ).(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= file_get_contents ( dirname ( __FILE__ ).(defined('__DEBUG_MODE__') ? '/' : '/js_stripper.php?filename=' ).'server_admin_javascript.js' ).(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
             $ret .= '</script>';
             // Belt and suspenders. Just make sure the user is legit.
@@ -938,6 +938,7 @@ class c_comdef_admin_main_console
     function return_single_meeting_history_template()
     {
         $ret = '<div id="bmlt_admin_meeting_template_history_sheet_div" class="bmlt_admin_meeting_option_sheet_div item_hidden">';
+            $ret .= '<div id="bmlt_admin_history_ajax_button_template_throbber_div" class="bmlt_admin_history_ajax_button_throbber_div"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></div>';
         $ret .= '</div>';
 
         return $ret;
