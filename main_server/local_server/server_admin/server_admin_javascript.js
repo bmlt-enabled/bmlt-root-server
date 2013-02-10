@@ -285,6 +285,10 @@ function BMLT_Server_Admin ()
                 this.m_ajax_request_in_progress.abort();
                 this.m_ajax_request_in_progress = null;
                 };
+            
+            var salt = new Date();
+            uri += '&salt=' + salt.getTime();
+            
             this.m_ajax_request_in_progress = BMLT_AjaxRequest ( uri, function(in_req) { admin_handler_object.handleAccountChangeAJAXCallback(in_req); }, 'post' );
             };
     };
@@ -786,6 +790,10 @@ function BMLT_Server_Admin ()
             this.m_ajax_request_in_progress.abort();
             this.m_ajax_request_in_progress = null;
             };
+        
+        var salt = new Date();
+        in_uri += '&salt=' + salt.getTime();
+        
         this.m_ajax_request_in_progress = BMLT_AjaxRequest ( in_uri, function(in_req) { admin_handler_object.meetingSearchResultsCallback(in_req); }, 'post' );
 	};
     
@@ -1278,6 +1286,10 @@ function BMLT_Server_Admin ()
             var delete_a = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_' + in_meeting_id + '_delete_button' );
             delete_a.className = 'item_hidden';
             throbber_span.className = 'bmlt_admin_value_left';
+            
+            var salt = new Date();
+            uri += '&salt=' + salt.getTime();
+            
             root_element.m_ajax_request_in_progress = BMLT_AjaxRequest ( uri, function(in_req) { admin_handler_object.handleDeleteMeetingAJAXCallback(in_req); }, 'get' );
             };
     };
@@ -1390,6 +1402,9 @@ function BMLT_Server_Admin ()
             new_editor.m_ajax_request_in_progress.abort();
             new_editor.m_ajax_request_in_progress = null;
             };
+            
+        var salt = new Date();
+        uri += '&salt=' + salt.getTime();
         
         new_editor.m_ajax_request_in_progress = BMLT_AjaxRequest ( uri, function(in_req,in_orig_meeting_id) { admin_handler_object.handleMeetingChangeAJAXCallback(in_req,in_orig_meeting_id); }, 'post', in_meeting_id );
     };
@@ -2512,6 +2527,9 @@ function BMLT_Server_Admin ()
             new_editor.m_ajax_request_in_progress = null;
             };
         
+        var salt = new Date();
+        uri += '&salt=' + salt.getTime();
+        
         new_editor.m_ajax_request_in_progress = BMLT_AjaxRequest ( uri, function(in_req,in_id) { admin_handler_object.fetchMeetingHistoryAJAXCallback(in_req,in_id); }, 'get', in_meeting_id );
     };
     
@@ -2535,45 +2553,48 @@ function BMLT_Server_Admin ()
                 {
                 alert ( json_object.report );
                 }
-            else if ( json_object.length )
+            else
                 {
                 var option_sheet = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_history_sheet_div' );
                 var history_list = document.createElement ( 'div' );
                 history_list.id = 'bmlt_admin_meeting_' + in_meeting_id + '_history_list_div';
                 history_list.className = 'bmlt_admin_meeting_history_list_div';
                 
-                for ( var c = 0; c < json_object.length; c++ )
+                if ( json_object.length )
                     {
-                    var history_item = document.createElement ( 'div' );
-                    history_item.id = 'bmlt_admin_meeting_' + in_meeting_id + '_history_' + json_object[c].id + '_list_item_div';
-                    history_item.className = 'bmlt_admin_meeting_history_list_item_div';
-                    
-                    var header_items = sprintf ( g_history_header_format, json_object[c].date, json_object[c].user );
-                    history_item.innerHTML = header_items;
-                    
-                    if ( json_object[c].description.length )
+                    for ( var c = 0; c < json_object.length; c++ )
                         {
-                        item = document.createElement ( 'div' );
-                        item.className = 'bmlt_admin_meeting_history_list_item_line_div bmlt_admin_meeting_history_list_item_description_div';
-                        for ( var i = 0; i < json_object[c].description.length; i++ )
-                            {
-                            var inner_item = document.createElement ( 'div' );
-                            inner_item.className = 'bmlt_admin_meeting_history_list_item_description_line_div';
-                            inner_item.appendChild ( document.createTextNode ( json_object[c].description[i].toString().replace(/&quot;/g, '"') ) );
-                            item.appendChild ( inner_item );
-                            };
-                            
-                        history_item.appendChild ( item );
-                        };
+                        var history_item = document.createElement ( 'div' );
+                        history_item.id = 'bmlt_admin_meeting_' + in_meeting_id + '_history_' + json_object[c].id + '_list_item_div';
+                        history_item.className = 'bmlt_admin_meeting_history_list_item_div';
                     
-                    history_list.appendChild ( history_item );
+                        var header_items = sprintf ( g_history_header_format, json_object[c].date, json_object[c].user );
+                        history_item.innerHTML = header_items;
+                    
+                        if ( json_object[c].description.length )
+                            {
+                            item = document.createElement ( 'div' );
+                            item.className = 'bmlt_admin_meeting_history_list_item_line_div bmlt_admin_meeting_history_list_item_description_div';
+                            for ( var i = 0; i < json_object[c].description.length; i++ )
+                                {
+                                var inner_item = document.createElement ( 'div' );
+                                inner_item.className = 'bmlt_admin_meeting_history_list_item_description_line_div';
+                                inner_item.appendChild ( document.createTextNode ( json_object[c].description[i].toString().replace(/&quot;/g, '"') ) );
+                                item.appendChild ( inner_item );
+                                };
+                            
+                            history_item.appendChild ( item );
+                            };
+                    
+                        history_list.appendChild ( history_item );
+                        };
+                    }
+                else
+                    {
+                    history_list.innerHTML = g_history_no_history_available_text;
                     };
                 
                 option_sheet.appendChild ( history_list );
-                }
-            else
-                {
-                history_list.innerHTML = g_history_no_history_available_text;
                 };
             };
     };

@@ -897,6 +897,11 @@ div.bmlt_admin_meeting_history_list_item_description_line_div
 
 h3.bmlt_admin_no_history_available_h3
 {
+    text-align:center;
+    vertical-align:middle;
+    color:#009;
+    font-size:x-large;
+    padding: 20px;
 }
 
 span.bmlt_admin_history_list_header_user_span
@@ -907,4 +912,9 @@ span.bmlt_admin_history_list_header_user_span
 div.history_item_header_div
 {
     font-weight:bold;
+}
+
+div.bmlt_admin_meeting_editor_form_meeting_button_div
+{
+    text-align:center;
 }
