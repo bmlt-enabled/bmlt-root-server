@@ -1975,7 +1975,12 @@ function BMLT_Server_Admin ()
             }
         else
             {
-            hour = parseInt ( time_hour_select.value ) + (time_pm_radio.checked ? 12 : 0);
+            var hour = parseInt ( time_hour_select.value );
+            if ( (time_pm_radio.checked) && (hour > 12) )
+                {
+                hour += 12;
+                };
+            
             timeval = sprintf ( '%02d:%02d:00', parseInt ( hour ), parseInt ( time_minute_select.value ) );
             };
             
