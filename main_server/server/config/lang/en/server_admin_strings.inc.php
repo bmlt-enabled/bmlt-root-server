@@ -146,6 +146,8 @@
                                             'not_auth_1'                                            =>  'NOT AUTHORIZED',
                                             'not_auth_2'                                            =>  'You are not authorized to administer this server.',
                                             'not_auth_3'                                            =>  'There was a problem with the user name or password that you entered.',
-											'email_format_bad'                                      => 'The email address that you entered was not formatted correctly.'
+											'email_format_bad'                                      =>  'The email address that you entered was not formatted correctly.',
+											'history_header_format'                                 =>  '<div class="bmlt_admin_meeting_history_list_item_line_div history_item_header_div"><span class="bmlt_admin_history_list_header_date_span">%s</span><span class="bmlt_admin_history_list_header_user_span">by %s</span></div>',
+											'history_no_history_available_text'                     =>  '<h3 class="bmlt_admin_no_history_available_h3">No History Available For This Meeting</h3>'
 	                                    );
 ?>

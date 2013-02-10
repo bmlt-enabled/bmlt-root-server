@@ -842,6 +842,24 @@ div.bmlt_admin_meeting_search_results_single_meeting_container_div a.bmlt_admin_
     padding-right:0.1em;
 }
 
+div.bmlt_admin_meeting_history_list_div
+{
+    font-weight:normal;
+    margin-bottom:0.25em;
+}
+
+div.bmlt_admin_meeting_history_list_item_div
+{
+    margin-top:0.25em;
+}
+
+div.bmlt_admin_meeting_history_list_item_line_div
+{
+    font-weight:normal;
+    clear:both;
+    float:none;
+}
+
 span.bmlt_admin_meeting_search_results_single_meeting_weekday_span
 {
     width: 6em;
@@ -854,12 +872,27 @@ span.bmlt_admin_meeting_search_results_single_meeting_start_time_span
 
 div.bmlt_admin_meeting_history_list_item_description_div
 {
+    clear:both;
+    float:none;
     margin-left:1em;
-    font-weight:normal;
     font-style:italic;
 }
 
 div.bmlt_admin_meeting_history_list_item_description_line_div
 {
     margin-bottom:0.1em;
+}
+
+h3.bmlt_admin_no_history_available_h3
+{
+}
+
+span.bmlt_admin_history_list_header_user_span
+{
+    padding-left:0.5em;
+}
+
+div.history_item_header_div
+{
+    font-weight:bold;
 }

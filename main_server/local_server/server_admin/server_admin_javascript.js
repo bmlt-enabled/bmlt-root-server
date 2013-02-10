@@ -1976,7 +1976,7 @@ function BMLT_Server_Admin ()
         else
             {
             var hour = parseInt ( time_hour_select.value );
-            if ( (time_pm_radio.checked) && (hour > 12) )
+            if ( (time_pm_radio.checked) && (hour != 12) )
                 {
                 hour += 12;
                 };
@@ -2548,20 +2548,13 @@ function BMLT_Server_Admin ()
                     history_item.id = 'bmlt_admin_meeting_' + in_meeting_id + '_history_' + json_object[c].id + '_list_item_div';
                     history_item.className = 'bmlt_admin_meeting_history_list_item_div';
                     
-                    var item = document.createElement ( 'div' );
-                    item.className = 'bmlt_admin_meeting_history_list_item_line_div';
-                    item.appendChild ( document.createTextNode ( json_object[c].date ) );
-                    history_item.appendChild ( item );
-                    
-                    item = document.createElement ( 'div' );
-                    item.className = 'bmlt_admin_meeting_history_list_item_line_div';
-                    item.appendChild ( document.createTextNode ( json_object[c].user ) );
-                    history_item.appendChild ( item );
+                    var header_items = sprintf ( g_history_header_format, json_object[c].date, json_object[c].user );
+                    history_item.innerHTML = header_items;
                     
                     if ( json_object[c].description.length )
                         {
                         item = document.createElement ( 'div' );
-                        item.className = 'bmlt_admin_meeting_history_list_item_description_div';
+                        item.className = 'bmlt_admin_meeting_history_list_item_line_div bmlt_admin_meeting_history_list_item_description_div';
                         for ( var i = 0; i < json_object[c].description.length; i++ )
                             {
                             var inner_item = document.createElement ( 'div' );
@@ -2580,6 +2573,7 @@ function BMLT_Server_Admin ()
                 }
             else
                 {
+                history_list.innerHTML = g_history_no_history_available_text;
                 };
             };
     };
