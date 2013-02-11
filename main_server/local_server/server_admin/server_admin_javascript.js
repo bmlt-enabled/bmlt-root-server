@@ -1239,9 +1239,20 @@ function BMLT_Server_Admin ()
         if ( !this.isMeetingDirty ( in_meeting_id ) || ( this.isMeetingDirty ( in_meeting_id ) && (in_no_confirm || confirm ( g_meeting_closure_confirm_text ) )) )
             {
             var display_parent = document.getElementById ( 'bmlt_admin_meeting_editor_new_meeting_' + in_meeting_id + '_editor_display' );
-
-            document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' ).main_map = null;
-            document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_map_div' ).innerHTML = null;
+            
+            var editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+            
+            if ( editor && editor.main_map )
+                {
+                editor.main_map = null;
+                };
+            
+            var map_div = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_map_div' );
+            
+            if ( map_div )
+                {
+                map_div.innerHTML = null;
+                };
             
             if ( display_parent )
                 {
@@ -1260,6 +1271,10 @@ function BMLT_Server_Admin ()
                     new_meeting_button.className = 'bmlt_admin_ajax_button button';
                     };
                 
+                var mtg_window = document.getElementById ( 'bmlt_admin_meeting_search_results_single_meeting_' + in_meeting_id + '_div' );
+                mtg_window.removeChild ( mtg_window.meeting_editor_object );
+                mtg_window.meeting_editor_object = null;
+
                 this.m_editing_window_open = null;
                 }
             else
