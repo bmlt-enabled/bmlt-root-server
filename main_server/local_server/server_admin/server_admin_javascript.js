@@ -1213,7 +1213,7 @@ function BMLT_Server_Admin ()
                     if ( new_meeting_id == this.m_search_results[c].id_bigint )
                         {
                         save_a.className = 'item_hidden';
-                        throbber_span.className = 'bmlt_admin_value_left';
+                        throbber_span.className = 'bmlt_admin_ajax_button_throbber_span';
                         this.sendMeetingToServer ( in_meeting_id, false );
                         meeting_sent = true;
                         };
@@ -1308,7 +1308,7 @@ function BMLT_Server_Admin ()
             var throbber_span = document.getElementById ( 'bmlt_admin_' + in_meeting_id + '_delete_ajax_button_throbber_span' );
             var delete_a = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_' + in_meeting_id + '_delete_button' );
             delete_a.className = 'item_hidden';
-            throbber_span.className = 'bmlt_admin_value_left';
+            throbber_span.className = 'bmlt_admin_ajax_button_throbber_span';
             
             var salt = new Date();
             uri += '&salt=' + salt.getTime();

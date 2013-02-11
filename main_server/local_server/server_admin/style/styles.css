@@ -907,6 +907,12 @@ div.bmlt_admin_history_ajax_button_throbber_div
     padding: 20px;
 }
 
+span.bmlt_admin_ajax_button_throbber_span
+{
+    display:block;
+    text-align:center;
+}
+
 div.bmlt_admin_history_ajax_button_throbber_div img
 {
     display:block;
