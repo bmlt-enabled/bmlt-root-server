@@ -693,13 +693,21 @@ function BMLT_Server_Admin ()
             
         var service_bodies = new Array();
         
-        for ( var c = 0; c < g_service_bodies_array.length; c++ )
+        if ( g_service_bodies_array.length > 1 )
             {
-            var service_body_id = g_service_bodies_array[c][0];
-            if ( document.getElementById ( 'bmlt_admin_meeting_search_service_body_checkbox_' + service_body_id ).checked )
+            for ( var c = 0; c < g_service_bodies_array.length; c++ )
                 {
-                service_bodies[service_bodies.length] = service_body_id;
+                var service_body_id = g_service_bodies_array[c][0];
+                var sb_checkbox = document.getElementById ( 'bmlt_admin_meeting_search_service_body_checkbox_' + service_body_id );
+                if ( sb_checkbox && sb_checkbox.checked )
+                    {
+                    service_bodies[service_bodies.length] = service_body_id;
+                    };
                 };
+            }
+        else
+            {
+            service_bodies[0] = g_service_bodies_array[0][0];
             };
         
         var starts_after = new Array();
