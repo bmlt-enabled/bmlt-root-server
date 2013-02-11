@@ -820,14 +820,6 @@ div.bmlt_admin_meeting_one_format_div input
     margin:0.1em;
 }
 
-span.bmlt_admin_visibility_advice_span
-{
-    text-align: left;
-    padding-left:0.1em;
-    font-style:italic;
-    color:#009;
-}
-
 div.bmlt_admin_meeting_search_results_single_meeting_container_div
 {
     clear:both;
@@ -928,4 +920,33 @@ div.history_item_header_div
 div.bmlt_admin_meeting_editor_form_meeting_button_div
 {
     text-align:center;
+}
+
+div.admin_page_wrapper
+{
+    position:absolute;
+    top:2em;
+    width:100%;
+}
+
+div.bmlt_admin_logout_bar
+{
+    padding:0.1em;
+    height:2em;
+    position:fixed;
+    top:0px;
+    left:0px;
+    width:100%;
+    background-color:white;
+    text-align:center;
+}
+
+div.bmlt_admin_meeting_editor_form_meeting_button_div
+    span.bmlt_admin_visibility_advice_span
+{
+    display:block;
+    text-align:left;
+    padding-left:0.5em;
+    font-style:italic;
+    color:#009;
 }

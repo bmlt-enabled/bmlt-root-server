@@ -49,10 +49,10 @@
 */
 defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
-require_once ( dirname ( __FILE__ )."/../server/c_comdef_server.class.php" );
-require_once ( dirname ( __FILE__ )."/../server/shared/classes/comdef_utilityclasses.inc.php" );
+require_once ( dirname ( __FILE__ )."/../../server/c_comdef_server.class.php" );
+require_once ( dirname ( __FILE__ )."/../../server/shared/classes/comdef_utilityclasses.inc.php" );
 
-include ( dirname ( __FILE__ ).'/../server/config/auto-config.inc.php' );
+include ( dirname ( __FILE__ ).'/../../server/config/auto-config.inc.php' );
 
 $t_server = c_comdef_server::MakeServer();	// We initialize the server.
 
@@ -73,44 +73,48 @@ if ( !isset ( $_SESSION ) )
 	session_start();
 	}
 // See if we are logging in
-if ( isset ( $_GET['admin_action'] ) && ($_GET['admin_action'] == 'login') )
+if ( isset ( $_GET['admin_action'] ) && (($_GET['admin_action'] == 'login') || ($_GET['admin_action'] == 'logout')) )
 	{
 	// Belt and suspenders -nuke the stored login.
 	$_SESSION[$admin_session_name] = null;
 	unset ( $_SESSION[$admin_session_name] );
-	// Check to see if the temporary cookie set by the form is there.
-	if ( !isset ( $_COOKIE['comdef_test']) ||  !$_COOKIE['comdef_test'] )
-		{	
-		$localized_strings = c_comdef_server::GetLocalStrings();
-		
-		c_comdef_LogoutUser();
-		
-		die ( '<div class="c_comdef_not_auth_container_div"><div class="c_comdef_not_auth_div"><h1 class="c_comdef_not_auth_1">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['cookie'] ).'</h1></div></div></body></html>' );
-		}
 	
-	$login = isset ( $_POST['c_comdef_admin_login'] ) ? $_POST['c_comdef_admin_login'] : null;
-	
-	// If this is a valid login, we'll get an encrypted password back.
-	$enc_password = isset ( $_POST['c_comdef_admin_password'] ) ? $t_server->GetEncryptedPW ( $login, trim ( $_POST['c_comdef_admin_password'] ) ) : null;
-	if ( null != $enc_password )
-		{
-		$_SESSION[$admin_session_name] = "$login\t$enc_password";
-		}
-	else
-		{
-		// Otherwise, we just check to make sure this is a kosher user.
-		$user_obj = $t_server->GetCurrentUserObj();
-		if ( !($user_obj instanceof c_comdef_user) || ($user_obj->GetUserLevel() == _USER_LEVEL_DISABLED) )
-			{
-			// Get the display strings.
-			$localized_strings = c_comdef_server::GetLocalStrings();
-		
-			c_comdef_LogoutUser();
+	if ( $_GET['admin_action'] == 'login' )
+	    {
+        // Check to see if the temporary cookie set by the form is there.
+        if ( !isset ( $_COOKIE['comdef_test']) ||  !$_COOKIE['comdef_test'] )
+            {	
+            $localized_strings = c_comdef_server::GetLocalStrings();
+        
+            c_comdef_LogoutUser();
+        
+            die ( '<div class="c_comdef_not_auth_container_div"><div class="c_comdef_not_auth_div"><h1 class="c_comdef_not_auth_1">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['cookie'] ).'</h1></div></div></body></html>' );
+            }
+    
+        $login = isset ( $_POST['c_comdef_admin_login'] ) ? $_POST['c_comdef_admin_login'] : null;
+    
+        // If this is a valid login, we'll get an encrypted password back.
+        $enc_password = isset ( $_POST['c_comdef_admin_password'] ) ? $t_server->GetEncryptedPW ( $login, trim ( $_POST['c_comdef_admin_password'] ) ) : null;
+        if ( null != $enc_password )
+            {
+            $_SESSION[$admin_session_name] = "$login\t$enc_password";
+            }
+        else
+            {
+            // Otherwise, we just check to make sure this is a kosher user.
+            $user_obj = $t_server->GetCurrentUserObj();
+            if ( !($user_obj instanceof c_comdef_user) || ($user_obj->GetUserLevel() == _USER_LEVEL_DISABLED) )
+                {
+                // Get the display strings.
+                $localized_strings = c_comdef_server::GetLocalStrings();
+        
+                c_comdef_LogoutUser();
 
-			// If the login is invalid, we terminate the whole kit and kaboodle, and inform the user they are persona non grata.
-			die ( '<h2 class="c_comdef_not_auth_3">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['not_auth_3'] ).'</h2>'.c_comdef_LoginForm($server).'</body></html>' );
-			}
-		}
+                // If the login is invalid, we terminate the whole kit and kaboodle, and inform the user they are persona non grata.
+                die ( '<h2 class="c_comdef_not_auth_3">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['not_auth_3'] ).'</h2>'.c_comdef_LoginForm($server).'</body></html>' );
+                }
+            }
+        }
 	
 	// Make sure these get wiped and deleted.
 	$_POST['admin_action'] = null;
@@ -128,20 +132,22 @@ if ( isset ( $_GET['admin_action'] ) && ($_GET['admin_action'] == 'login') )
 	unset ( $_GET['c_comdef_admin_login'] );
 	unset ( $_GET['c_comdef_admin_password'] );
 	}
-	
+
 // See if a session has been started, or a login was attempted.
 if ( isset ( $_SESSION[$admin_session_name] ) )
 	{
+    // Get the display strings.
+    $localized_strings = c_comdef_server::GetLocalStrings();
+
 	// We double-check, and see if the user is valid.
 	$user_obj = $t_server->GetCurrentUserObj();
 	if ( !($user_obj instanceof c_comdef_user) || ($user_obj->GetUserLevel() == _USER_LEVEL_DISABLED) )
 		{
-		// Get the display strings.
-		$localized_strings = c_comdef_server::GetLocalStrings();
-
 		// If the login is invalid, we terminate the whole kit and kaboodle, and inform the user they are persona non grata.
 		die ( '<div class="c_comdef_not_auth_container_div"><div class="c_comdef_not_auth_div"><h1 class="c_comdef_not_auth_1">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['not_auth_1'] ).'</h1><h2 class="c_comdef_not_auth_2">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['not_auth_2'] ).'</h2></div></div></body></html>' );
 		}
+	
+	echo '<div class="bmlt_admin_logout_bar"><h4><a href="'.$_SERVER['PHP_SELF'].'?admin_action=logout">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['logout'] ).'</a></h4></div>';
 	}
 else
 	{

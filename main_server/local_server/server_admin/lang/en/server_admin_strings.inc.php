@@ -118,6 +118,7 @@
 	                                        'meeting_editor_screen_delete_button_confirm'           =>  'Are you sure that you want to delete this meeting?',
 	                                        'meeting_editor_screen_delete_button_confirm_perm'      =>  'This meeting will be deleted permanently!',
 	                                        'meeting_editor_screen_cancel_button'                   =>  'Cancel',
+	                                        'logout'                                                =>  'Sign Out',
 	                                        'meeting_editor_screen_cancel_confirm'                  =>  'Are you sure that you want to cancel editing this meeting, and lose all changes?',
 	                                        'meeting_lookup_failed'                                 =>  'The address lookup failed.',
 	                                        'meeting_lookup_failed_not_enough_address_info'         =>  'There is not enough valid address information to do a lookup.',

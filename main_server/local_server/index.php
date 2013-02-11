@@ -61,14 +61,16 @@ else
         if ( $server instanceof c_comdef_server )
             {
             // This throws up a tackle if someone wants to just barge in.
-            require_once ( dirname ( __FILE__ ).'/../admin/c_comdef_login.php');
+            require_once ( dirname ( __FILE__ ).'/server_admin/c_comdef_login.php');
             
             // We can only go past here is we are a logged-in user.
             $user_obj = $server->GetCurrentUserObj();
             if ( ($user_obj instanceof c_comdef_user) && ($user_obj->GetUserLevel() != _USER_LEVEL_DISABLED) )
                 {
+                echo '<div class="admin_page_wrapper">';
                 // OK. If they make it in here, it means they are legit, so display the logged-in console.
                 require_once ( dirname ( __FILE__ ).'/server_admin/main_console.php');
+                echo '</div>';
                 }
 	        }
 	    else
