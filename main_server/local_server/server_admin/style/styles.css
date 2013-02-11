@@ -822,6 +822,7 @@ div.bmlt_admin_meeting_one_format_div input
 
 span.bmlt_admin_visibility_advice_span
 {
+    text-align: left;
     padding-left:0.1em;
     font-style:italic;
     color:#009;
