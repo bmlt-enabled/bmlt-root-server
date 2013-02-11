@@ -214,6 +214,14 @@ function BMLT_Server_Admin ()
         
         if ( this.m_account_panel_shown)
             {
+            var email_field = document.getElementById ( 'bmlt_admin_user_email_input' );
+            var description_field = document.getElementById ( 'bmlt_admin_user_description_textarea' );
+            var password_field = document.getElementById ( 'bmlt_admin_user_account_password_input' );
+            
+            this.handleTextInputBlur ( email_field );
+            this.handleTextInputBlur ( description_field );
+            this.handleTextInputBlur ( password_field );
+            
             the_disclosure_div.className = 'bmlt_admin_user_account_disclosure_div bmlt_admin_user_account_disclosure_div_open';
             the_account_info_div.className = 'bmlt_admin_user_account_wrapper_div';
             }
@@ -1228,11 +1236,13 @@ function BMLT_Server_Admin ()
                                         in_no_confirm
                                 )
     {
-        var root_element = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
-        var display_parent = document.getElementById ( 'bmlt_admin_meeting_editor_new_meeting_' + in_meeting_id + '_editor_display' );
-
         if ( !this.isMeetingDirty ( in_meeting_id ) || ( this.isMeetingDirty ( in_meeting_id ) && (in_no_confirm || confirm ( g_meeting_closure_confirm_text ) )) )
             {
+            var display_parent = document.getElementById ( 'bmlt_admin_meeting_editor_new_meeting_' + in_meeting_id + '_editor_display' );
+
+            document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' ).main_map = null;
+            document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_map_div' ).innerHTML = null;
+            
             if ( display_parent )
                 {
                 if ( display_parent.m_ajax_request_in_progress )
@@ -1850,11 +1860,14 @@ function BMLT_Server_Admin ()
         
         var service_body_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_sb_select' );
         
-        BMLT_Admin_setSelectByValue ( service_body_select, in_meeting_object.service_body_bigint );
+        if ( service_body_select )
+            {
+            BMLT_Admin_setSelectByValue ( service_body_select, in_meeting_object.service_body_bigint );
             
-        this.reactToSBSelect ( meeting_id );
+            this.reactToSBSelect ( meeting_id );
         
-        service_body_select.onchange = function() { admin_handler_object.reactToSBSelect ( meeting_id ); };
+            service_body_select.onchange = function() { admin_handler_object.reactToSBSelect ( meeting_id ); };
+            };
     };
     
     /************************************************************************************//**
@@ -1926,12 +1939,7 @@ function BMLT_Server_Admin ()
                 {
                 tab_class = 'bmlt_admin_meeting_editor_tab_item_a_selected';
                 sheet_class = 'bmlt_admin_meeting_option_sheet_div';
-                
-                if ( (c == 1) && (in_meeting_id == 0) )
-                    {
-                    this.toggleMeetingMapDisclosure(0);
-                    }
-                else if ( c == 4 )
+                if ( c == 4 )
                     {
                     this.openHistoryTab ( in_meeting_id );
                     };
@@ -1939,6 +1947,10 @@ function BMLT_Server_Admin ()
             else
                 {
                 tab_class = 'bmlt_admin_meeting_editor_tab_item_a_unselected';
+                if ( c == 4 )
+                    {
+                    tab_class += ' hide_in_new_meeting';
+                    };
                 sheet_class = 'bmlt_admin_meeting_option_sheet_div item_hidden';
                 };
                 

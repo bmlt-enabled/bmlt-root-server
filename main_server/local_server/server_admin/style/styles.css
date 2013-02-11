@@ -445,6 +445,7 @@ a.bmlt_admin_meeting_editor_disclosure_a:visited,
 a.bmlt_admin_user_account_disclosure_a,
 a.bmlt_admin_user_account_disclosure_a:visited
 {
+    text-align:left;
     height:14px;
     display:block;
     padding:2px;

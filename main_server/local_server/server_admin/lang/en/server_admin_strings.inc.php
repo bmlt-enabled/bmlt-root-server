@@ -48,7 +48,7 @@
 	                                        'meeting_change_fader_success_add_text'                 =>  'The New Meeting Was Successfully Added',
 	                                        'meeting_change_fader_fail_add_text'                    =>  'The New Meeting Was Not Added',
 	                                        'meeting_text_input_label'                              =>  'Search For Text:',
-	                                        'access_service_body_label'                             =>  'I Have Access to These Service Bodies:',
+	                                        'access_service_body_label'                             =>  'I Have Access to:',
 	                                        'meeting_text_input_default_text'                       =>  'Enter Some Search Text',
 	                                        'meeting_text_location_label'                           =>  'This is a Location or PostCode',
 	                                        'meeting_search_weekdays_label'                         =>  'Search For Selected Weekdays:',
