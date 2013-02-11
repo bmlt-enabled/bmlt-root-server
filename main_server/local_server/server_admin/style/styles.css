@@ -199,7 +199,9 @@ div.bmlt_admin_one_line_in_a_form_no_margin
 }
 
 input.bmlt_text_item_small,
-input.bmlt_text_item
+input.bmlt_text_item,
+textarea.bmlt_text_item_small,
+textarea.bmlt_text_item
 {
     padding:2px;
     background-color:white;
@@ -218,13 +220,6 @@ input.bmlt_text_item
 input.bmlt_text_item_small
 {
     width:20em;
-}
-
-textarea.bmlt_text_item_small,
-textarea.bmlt_text_item
-{
-    background-color:white;
-    color: #009;
 }
 
 textarea.bmlt_text_item

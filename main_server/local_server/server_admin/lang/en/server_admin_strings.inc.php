@@ -131,7 +131,7 @@
 	                                        'meeting_editor_tab_bar_history_tab_text'               =>  'History',
 	                                        'meeting_editor_result_count_format'                    =>  '%d Meetings Found',
 	                                        'meeting_id_label'                                      =>  'Meeting ID:',
-	                                        'meeting_editor_default_zoom'                           =>  '11',
+	                                        'meeting_editor_default_zoom'                           =>  '13',
 	                                        'meeting_editor_default_weekday'                        =>  '2',
 	                                        'meeting_editor_default_start_time'                     =>  '20:30:00',
 	                                        'meeting_editor_default_duration'                       =>  '01:30:00',
