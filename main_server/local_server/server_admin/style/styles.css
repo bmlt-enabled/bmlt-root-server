@@ -950,3 +950,10 @@ div.bmlt_admin_meeting_editor_form_meeting_button_div
     font-style:italic;
     color:#009;
 }
+
+div.bmlt_admin_meeting_option_sheet_div,
+div.format_tab_inner_div,
+div.bmlt_admin_meeting_one_format_div
+{
+    background-color:white;
+}

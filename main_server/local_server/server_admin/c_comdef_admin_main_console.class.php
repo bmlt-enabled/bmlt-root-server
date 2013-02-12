@@ -859,18 +859,21 @@ class c_comdef_admin_main_console
     function return_single_meeting_format_template()
     {
         $ret = '<div id="bmlt_admin_meeting_template_format_sheet_div" class="bmlt_admin_meeting_option_sheet_div item_hidden">';
-            foreach ( $this->my_formats[$this->my_server->GetLocalLang()] as $format )
-                {
-                if ( $format instanceof c_comdef_format )
+            $ret .= '<div class="format_tab_inner_div">';
+                $ret .= '<div class="clear_both"></div>';
+                foreach ( $this->my_formats[$this->my_server->GetLocalLang()] as $format )
                     {
-                    $ret .= '<div class="bmlt_admin_meeting_one_format_div">';
-                        $ret .= '<label class="left_label" for="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox">'.htmlspecialchars ( $format->GetKey() ).'</label>';
-                        $ret .= '<span><input type="checkbox" value="'.$format->GetKey().'" id="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox" onchange="admin_handler_object.reactToFormatCheckbox(this, template)" onclick="admin_handler_object.reactToFormatCheckbox(this, template)" /></span>';
-                        $ret .= '<label class="right_label" for="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox">'.htmlspecialchars ( $format->GetLocalName() ).'</label>';
-                    $ret .= '</div>';
+                    if ( $format instanceof c_comdef_format )
+                        {
+                        $ret .= '<div class="bmlt_admin_meeting_one_format_div">';
+                            $ret .= '<label class="left_label" for="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox">'.htmlspecialchars ( $format->GetKey() ).'</label>';
+                            $ret .= '<span><input type="checkbox" value="'.$format->GetKey().'" id="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox" onchange="admin_handler_object.reactToFormatCheckbox(this, template)" onclick="admin_handler_object.reactToFormatCheckbox(this, template)" /></span>';
+                            $ret .= '<label class="right_label" for="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox">'.htmlspecialchars ( $format->GetLocalName() ).'</label>';
+                        $ret .= '</div>';
+                        }
                     }
-                }
-            $ret .= '<div class="clear_both"></div>';
+                $ret .= '<div class="clear_both"></div>';
+            $ret .= '</div>';
         $ret .= '</div>';
 
         return $ret;
@@ -912,11 +915,13 @@ class c_comdef_admin_main_console
                     case    'location_postal_code_1':
                     case    'location_nation':
                     break;
-                
+            
                     default:    // We display these ones.
                         $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                             $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $prompt ).'</span>';
-                            $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_'.htmlspecialchars ( $key ).'_text_input" type="text" onkeyup="admin_handler_object.handleTextInputChange(this, 0);admin_handler_object.setItemValue(this, template, \''.htmlspecialchars ( $key ).'\')" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this, true);" value="'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_default_text_prompt'] ).'" /></span>';
+                            $ret .= '<span class="bmlt_admin_value_left">';
+                                $ret .= '<input id="bmlt_admin_single_meeting_editor_template_meeting_'.htmlspecialchars ( $key ).'_text_input" type="text" onkeyup="admin_handler_object.handleTextInputChange(this, 0);admin_handler_object.setItemValue(this, template, \''.htmlspecialchars ( $key ).'\')" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this, true);" value="'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_default_text_prompt'] ).'" />';
+                            $ret .= '</span>';
                             if ( $data_field['visibility'] == _VISIBILITY_NONE_ )
                                 {
                                 $ret .= '<span class="bmlt_admin_visibility_advice_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_visibility_advice'] ).'</span>';
