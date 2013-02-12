@@ -1297,13 +1297,7 @@ function BMLT_Server_Admin ()
                 {
                 this.toggleMeetingSingleEditor ( in_meeting_id );
                 };
-            }
-        else
-            {
-            return !this.isMeetingDirty ( in_meeting_id );
             };
-        
-        return true;
     };
     
     /************************************************************************************//**
@@ -2300,7 +2294,7 @@ function BMLT_Server_Admin ()
 
         map_disclosure_div.className = 'bmlt_admin_single_meeting_disclosure_map_div' + (root_element.map_disclosed ? '_open' : '_closed');
         map_div.className = 'bmlt_admin_single_meeting_map_div' + (root_element.map_disclosed ? '' : ' item_hidden');
-        longlat_div.className = root_element.map_disclosed ? 'item_hidden' : '';
+        longlat_div.className = root_element.map_disclosed ? 'bmlt_admin_single_location_long_lat_div item_hidden' : 'bmlt_admin_single_location_long_lat_div';
         
         if ( root_element.map_disclosed && !root_element.main_map )
             {

@@ -249,6 +249,7 @@ span.bmlt_admin_delete_button_span a.button_disabled:visited,
 a.bmlt_admin_ajax_button,
 a.bmlt_admin_ajax_button:visited
 {
+    outline:none;
     text-align:center;
     margin-left:auto;
     margin-right:auto;
@@ -272,6 +273,7 @@ a.bmlt_admin_ajax_button:visited
 span.bmlt_admin_delete_button_span a.bmlt_admin_ajax_button,
 span.bmlt_admin_delete_button_span a.bmlt_admin_ajax_button:visited
 {
+    outline:none;
     color:red;
     border: 1px solid red;
 }
@@ -279,6 +281,7 @@ span.bmlt_admin_delete_button_span a.bmlt_admin_ajax_button:visited
 span.bmlt_admin_delete_button_span a.bmlt_admin_ajax_button:hover,
 span.bmlt_admin_delete_button_span a.bmlt_admin_ajax_button:active
 {
+    outline:none;
     background-color:red;
     color:white;
     border: 1px solid white;
@@ -287,6 +290,7 @@ span.bmlt_admin_delete_button_span a.bmlt_admin_ajax_button:active
 a.bmlt_admin_ajax_button:hover,
 a.bmlt_admin_ajax_button:active
 {
+    outline:none;
     background-color:#009;
     color:white;
     border: 1px solid white;
@@ -295,6 +299,7 @@ a.bmlt_admin_ajax_button:active
 div.bmlt_admin_single_meeting_editor_map_button_bar_div a.bmlt_admin_ajax_button:hover,
 div.bmlt_admin_single_meeting_editor_map_button_bar_diva.bmlt_admin_ajax_button:active
 {
+    outline:none;
     background-color:#009;
     color:white;
     border: 1px solid white;
@@ -309,6 +314,7 @@ a.button_disabled:visited,
 a.button_disabled:hover,
 a.button_disabled:active
 {
+    outline:none;
     font-style:italic;
     background-color:#999;
     color:#ccc;
@@ -348,10 +354,10 @@ div.bmlt_admin_meeting_inner_div
     background-color:white;
 }
 
-div.bmlt_admin_meeting_inner_div
-    div.bmlt_admin_meeting_editor_tab_bar
+div.bmlt_admin_meeting_editor_tab_bar
 {
     background-color:#009;
+    height: 30px;
 }
 
 a.bmlt_admin_meeting_editor_tab_item_a_unselected,
@@ -359,6 +365,8 @@ a.bmlt_admin_meeting_editor_tab_item_a_unselected:visited,
 a.bmlt_admin_meeting_editor_tab_item_a_selected,
 a.bmlt_admin_meeting_editor_tab_item_a_selected:visited
 {
+    height:100%;
+    outline:none;
     display:table;
     padding:4px;
     padding-left:8px;
@@ -372,6 +380,7 @@ a.bmlt_admin_meeting_editor_tab_item_a_selected:visited
 a.bmlt_admin_meeting_editor_tab_item_a_unselected,
 a.bmlt_admin_meeting_editor_tab_item_a_unselected:visited
 {
+    outline:none;
     color:#99f;
     text-decoration:underline;
 }
@@ -379,6 +388,7 @@ a.bmlt_admin_meeting_editor_tab_item_a_unselected:visited
 a.bmlt_admin_meeting_editor_tab_item_a_unselected:hover,
 a.bmlt_admin_meeting_editor_tab_item_a_unselected:active
 {
+    outline:none;
     color:#f96;
     text-decoration:none;
 }
@@ -388,6 +398,7 @@ a.bmlt_admin_meeting_editor_tab_item_a_selected:visited,
 a.bmlt_admin_meeting_editor_tab_item_a_selected:hover,
 a.bmlt_admin_meeting_editor_tab_item_a_selected:active
 {
+    outline:none;
     color:#009;
     text-decoration:none;
     cursor:default;
@@ -440,6 +451,7 @@ a.bmlt_admin_meeting_editor_disclosure_a:visited,
 a.bmlt_admin_user_account_disclosure_a,
 a.bmlt_admin_user_account_disclosure_a:visited
 {
+    outline:none;
     text-align:left;
     height:14px;
     display:block;
@@ -458,6 +470,7 @@ a.bmlt_admin_meeting_editor_disclosure_a:active,
 a.bmlt_admin_user_account_disclosure_a:hover,
 a.bmlt_admin_user_account_disclosure_a:active
 {
+    outline:none;
     color:#f96;
     text-decoration:none;
 }
@@ -594,6 +607,7 @@ div.bmlt_admin_tab_div_selected a:active
 div.bmlt_admin_tab_div_not_selected a,
 div.bmlt_admin_tab_div_not_selected a:visited
 {
+    outline:none;
     display:block;
     height: 18px;
     margin-bottom:8px;
@@ -710,12 +724,12 @@ div.bmlt_admin_single_meeting_map_div
 {
     clear:both;
     background-color:#009;
-    margin-top:4px;
+    margin-top:8px;
 }
 
 div.bmlt_admin_single_meeting_disclosure_map_div_open
 {
-    margin-bottom: -5px;
+    margin-bottom: -8px;
 }
 
 div.bmlt_admin_single_meeting_editor_inner_map_div
@@ -941,14 +955,20 @@ div.bmlt_admin_logout_bar
     text-align:center;
 }
 
-div.bmlt_admin_meeting_editor_form_meeting_button_div
-    span.bmlt_admin_visibility_advice_span
+span.bmlt_admin_visibility_advice_span
 {
+    float:left;
     display:block;
     text-align:left;
     padding-left:0.5em;
     font-style:italic;
+    font-weight:normal;
     color:#009;
+}
+
+div.format_tab_inner_div
+{
+    padding-left:2%;
 }
 
 div.bmlt_admin_meeting_option_sheet_div,
@@ -956,4 +976,11 @@ div.format_tab_inner_div,
 div.bmlt_admin_meeting_one_format_div
 {
     background-color:white;
+    overflow:auto;
+}
+
+div.bmlt_admin_meeting_option_sheet_div,
+div.bmlt_admin_single_location_long_lat_div
+{
+    padding-top:4px;
 }
