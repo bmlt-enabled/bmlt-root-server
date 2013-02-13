@@ -149,6 +149,9 @@
                                             'not_auth_3'                                            =>  'There was a problem with the user name or password that you entered.',
 											'email_format_bad'                                      =>  'The email address that you entered was not formatted correctly.',
 											'history_header_format'                                 =>  '<div class="bmlt_admin_meeting_history_list_item_line_div history_item_header_div"><span class="bmlt_admin_history_list_header_date_span">%s</span><span class="bmlt_admin_history_list_header_user_span">by %s</span></div>',
-											'history_no_history_available_text'                     =>  '<h3 class="bmlt_admin_no_history_available_h3">No History Available For This Meeting</h3>'
+											'history_no_history_available_text'                     =>  '<h3 class="bmlt_admin_no_history_available_h3">No History Available For This Meeting</h3>',
+											'service_body_editor_disclosure'                        =>  'Service Body Administration',
+	                                        'service_body_change_fader_success_text'                =>  'The Service Body Was Successfully Changed',
+	                                        'service_body_change_fader_fail_text'                   =>  'The Service Body Change Failed'
 	                                    );
 ?>

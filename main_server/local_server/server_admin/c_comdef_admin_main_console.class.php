@@ -227,6 +227,7 @@ class c_comdef_admin_main_console
                     case    _USER_LEVEL_SERVER_ADMIN:
                 
                     case    _USER_LEVEL_SERVICE_BODY_ADMIN:
+                        $ret .= $this->return_service_body_admin_panel();
                 
                     case    _USER_LEVEL_EDITOR:
                         $ret .= $this->return_meeting_editor_panel();
@@ -244,6 +245,36 @@ class c_comdef_admin_main_console
         $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
         
         return  $ret;
+    }
+    
+    /********************************************************************************************************//**
+    \brief This constructs the Service body editor panel. Only Server Admins and Service Body Admins get this one.
+    \returns The HTML and JavaScript for the "Edit Meetings" section.
+    ************************************************************************************************************/
+    function return_service_body_admin_panel()
+    {
+        $ret = 'NOT AUTHORIZED';
+        
+        if ( count ( $this->my_service_bodies ) )
+            {
+            $ret = '<div id="bmlt_admin_service_body_editor_disclosure_div" class="bmlt_admin_service_body_editor_disclosure_div bmlt_admin_service_body_editor_disclosure_div_closed">';
+                $ret .= '<a class="bmlt_admin_service_body_editor_disclosure_a" href="javascript:admin_handler_object.toggleServiceBodyEditor()">';
+                    $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_disclosure'] );
+                $ret .= '</a>';
+            $ret .= '</div>';
+            $ret .= '<div id="bmlt_admin_service_body_editor_wrapper_div" class="bmlt_admin_service_body_editor_wrapper_div bmlt_admin_service_body_editor_wrapper_div_hidden">';
+                $ret .= '<div class="bmlt_admin_service_body_editor_banner_div">';
+                    $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_service_body_editor_success_div">';
+                        $ret .= '<span class="success_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_success_text'] ).'</span>';
+                    $ret .= '</div>';
+                    $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_service_body_editor_add_fail_div">';
+                        $ret .= '<span class="failure_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_fail_text'] ).'</span>';
+                    $ret .= '</div>';
+                $ret .= '</div>';
+            $ret .= '</div>';
+            }
+        
+        return $ret;
     }
     
     /********************************************************************************************************//**
@@ -583,8 +614,8 @@ class c_comdef_admin_main_console
                         $ret .= '<a href="javascript:admin_handler_object.selectAnEditorTab(4,template)" id="bmlt_admin_meeting_editor_template_tab_item_history_a" class="bmlt_admin_meeting_editor_tab_item_a_unselected hide_in_new_meeting">';
                             $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_tab_bar_history_tab_text'] );
                         $ret .= '</a>';
-                        $ret .= '<div class="clear_both"></div>';
                     $ret .= '</div>';
+                    $ret .= '<div class="clear_both"></div>';
                     $ret .= $this->return_single_meeting_basic_template();
                     $ret .= $this->return_single_meeting_location_template();
                     $ret .= $this->return_single_meeting_format_template();
@@ -859,7 +890,6 @@ class c_comdef_admin_main_console
     {
         $ret = '<div id="bmlt_admin_meeting_template_format_sheet_div" class="bmlt_admin_meeting_option_sheet_div item_hidden">';
             $ret .= '<div class="format_tab_inner_div">';
-                $ret .= '<div class="clear_both"></div>';
                 foreach ( $this->my_formats[$this->my_server->GetLocalLang()] as $format )
                     {
                     if ( $format instanceof c_comdef_format )

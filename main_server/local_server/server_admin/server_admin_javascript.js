@@ -32,6 +32,7 @@ function BMLT_Server_Admin ()
     var m_account_panel_shown = null;           ///< This will be true if the "My Account" panel is exposed.
     var m_search_specifier_shown = null;        ///< This is true, if the meeting search specifier form is shown.
     var m_meeting_editor_panel_shown = null;    ///< This will be true if the "Edit Meetings" panel is exposed.
+    var m_service_body_editor_panel_shown = null;   ///< This is true, if the Service Body Editor is shown.
     var m_ajax_request_in_progress = null;      ///< This is any AJAX request currently under way.
     var m_success_fade_duration = null;         ///< Number of milliseconds for a success fader.
     var m_failure_fade_duration = null;         ///< Number of milliseconds for a failure fader.
@@ -1144,7 +1145,7 @@ function BMLT_Server_Admin ()
         var display_parent = document.getElementById ( 'bmlt_admin_meeting_editor_new_meeting_0_editor_display' );
         var new_meeting_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_button' );
         
-        display_parent.innerHTML = null;
+        display_parent.innerHTML = '';
         
         var proceed = true;
         if ( (this.m_editing_window_open != null) && this.isMeetingDirty ( this.m_editing_window_open.meeting_id ) )
@@ -1259,7 +1260,7 @@ function BMLT_Server_Admin ()
             
             if ( map_div )
                 {
-                map_div.innerHTML = null;
+                map_div.innerHTML = '';
                 };
             
             if ( display_parent )
@@ -1270,7 +1271,7 @@ function BMLT_Server_Admin ()
                     display_parent.m_ajax_request_in_progress = null;
                     };
                 
-                display_parent.innerHTML = null;
+                display_parent.innerHTML = '';
                 display_parent.className = 'item_hidden';
             
                 if ( in_meeting_id == 0 )
@@ -2638,6 +2639,32 @@ function BMLT_Server_Admin ()
                 
                 option_sheet.appendChild ( history_list );
                 };
+            };
+    };
+        
+    // #mark - 
+    // #mark ########## Service Body Editor Section ##########
+    // #mark -
+        
+    /************************************************************************************//**
+    *   \brief  Toggles the visibility of the Service body editor section.                  *
+    ****************************************************************************************/
+    this.toggleServiceBodyEditor = function()
+    {
+        this.m_service_body_editor_panel_shown = !this.m_service_body_editor_panel_shown;
+        
+        var the_disclosure_div = document.getElementById ( 'bmlt_admin_service_body_editor_disclosure_div' );
+        var the_editor_div = document.getElementById ( 'bmlt_admin_service_body_editor_wrapper_div' );
+        
+        if ( this.m_service_body_editor_panel_shown )
+            {
+            the_disclosure_div.className = 'bmlt_admin_service_body_editor_disclosure_div bmlt_admin_service_body_editor_disclosure_div_open';
+            the_editor_div.className = 'bmlt_admin_service_body_editor_wrapper_div';
+            }
+        else
+            {
+            the_disclosure_div.className = 'bmlt_admin_service_body_editor_disclosure_div bmlt_admin_meeting_editor_disclosure_div_closed';
+            the_editor_div.className = 'bmlt_admin_service_body_editor_wrapper_div bmlt_admin_service_body_editor_wrapper_div_hidden';
             };
     };
 
