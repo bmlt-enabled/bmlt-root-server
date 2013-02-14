@@ -827,6 +827,7 @@ function BMLT_Server_Admin ()
             if ( response_object.length )
                 {
                 this.processSearchResults ( response_object );
+                location.hash = '#bmlt_admin_meeting_editor_form_results_banner_div';
                 }
             else
                 {
@@ -1122,6 +1123,8 @@ function BMLT_Server_Admin ()
                     
                     this.m_editing_window_open = display_parent;
                     this.createNewMeetingEditorScreen ( display_parent.meeting_editor_object, in_meeting_id );
+                    location.hash = '#bmlt_admin_meeting_search_results_single_meeting_' + parseInt ( in_meeting_id ) + '_div';
+
                     };
                 }
             else
