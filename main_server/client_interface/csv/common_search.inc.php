@@ -191,6 +191,13 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 												*/
 						)
 {
+    $search_string = isset ( $in_http_vars['SearchString'] ) ? trim ( $in_http_vars['SearchString'] ) : '';
+    
+	if ( $search_string && !(isset ( $in_http_vars['StringSearchIsAnAddress'] ) && $in_http_vars['StringSearchIsAnAddress']) && intval ( $search_string ) && preg_match ( '|\d+|', $search_string ) )
+        {
+        $in_http_vars['meeting_ids'] = array ( intval ( $search_string ) );
+        }
+    
 	// If we have a meeting ID array, then that defines the entire search. We ignore everything else
 	if ( isset ( $in_http_vars['meeting_ids'] ) && is_array ( $in_http_vars['meeting_ids'] ) && count ( $in_http_vars['meeting_ids'] ) )
 		{
@@ -204,55 +211,50 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 			}
 		
 		// The first thing we do is try to resolve any address lookups.
-		if ( isset ( $in_http_vars['SearchString'] ) && isset ( $in_http_vars['StringSearchIsAnAddress'] )
-			&& trim ( $in_http_vars['SearchString'] ) && $in_http_vars['StringSearchIsAnAddress'] )
-			{
-			$search_string = trim ( $in_http_vars['SearchString'] );
-			if ( $search_string )
-				{
-				$geo_search = (isset ( $in_http_vars['geo_width'] ) && $in_http_vars['geo_width']) ? true : ((isset ( $in_http_vars['geo_width_km'] ) && $in_http_vars['geo_width_km']) ? true : false);
+		if ( $search_string && isset ( $in_http_vars['StringSearchIsAnAddress'] ) && $in_http_vars['StringSearchIsAnAddress'] )
+            {
+            $geo_search = (isset ( $in_http_vars['geo_width'] ) && $in_http_vars['geo_width']) ? true : ((isset ( $in_http_vars['geo_width_km'] ) && $in_http_vars['geo_width_km']) ? true : false);
 
-				// We do a geocode to find out if this is an address.
-				if ( !$geo_search )
-					{
-					$geo = GetGeocodeFromString ( $search_string, $in_http_vars['advanced_weekdays'] );
-					if ( is_array ( $geo ) && count ( $geo ) )
-						{
-						$localized_strings = c_comdef_server::GetLocalStrings();
+            // We do a geocode to find out if this is an address.
+            if ( !$geo_search )
+                {
+                $geo = GetGeocodeFromString ( $search_string, $in_http_vars['advanced_weekdays'] );
+                if ( is_array ( $geo ) && count ( $geo ) )
+                    {
+                    $localized_strings = c_comdef_server::GetLocalStrings();
 
-						$in_http_vars['long_val'] = $geo['longitude'];
-						$in_http_vars['lat_val'] = $geo['latitude'];
-						
-						if ( isset ( $in_http_vars['SearchStringRadius'] ) && floatval ( $in_http_vars['SearchStringRadius'] ) != 0.0 )
-							{
-							if ( intval ( $in_http_vars['SearchStringRadius'] ) < 0 )
-								{
-								$geo['radius'] = intval ( $in_http_vars['SearchStringRadius'] );
-								}
-							else
-								{
-								$geo['radius'] = floatval ( $in_http_vars['SearchStringRadius'] );
-								}
-							}
-						
-						if ( $localized_strings['dist_units'] == 'mi' )
-							{
-							unset ( $in_http_vars['geo_width_km'] );
-							$in_http_vars['geo_width'] = $geo['radius'];
-							}
-						else
-							{
-							unset ( $in_http_vars['geo_width'] );
-							$in_http_vars['geo_width_km'] = $geo['radius'];
-							}
-						
-						/* We need to undef these, because they can step on the long/lat. */
-						unset ( $in_http_vars['SearchString'] );
-						unset ( $in_http_vars['StringSearchIsAnAddress'] );
-						unset ( $in_http_vars['SearchStringRadius'] );
-						}
-					}
-				}
+                    $in_http_vars['long_val'] = $geo['longitude'];
+                    $in_http_vars['lat_val'] = $geo['latitude'];
+                    
+                    if ( isset ( $in_http_vars['SearchStringRadius'] ) && floatval ( $in_http_vars['SearchStringRadius'] ) != 0.0 )
+                        {
+                        if ( intval ( $in_http_vars['SearchStringRadius'] ) < 0 )
+                            {
+                            $geo['radius'] = intval ( $in_http_vars['SearchStringRadius'] );
+                            }
+                        else
+                            {
+                            $geo['radius'] = floatval ( $in_http_vars['SearchStringRadius'] );
+                            }
+                        }
+                    
+                    if ( $localized_strings['dist_units'] == 'mi' )
+                        {
+                        unset ( $in_http_vars['geo_width_km'] );
+                        $in_http_vars['geo_width'] = $geo['radius'];
+                        }
+                    else
+                        {
+                        unset ( $in_http_vars['geo_width'] );
+                        $in_http_vars['geo_width_km'] = $geo['radius'];
+                        }
+                    
+                    /* We need to undef these, because they can step on the long/lat. */
+                    unset ( $search_string );
+                    unset ( $in_http_vars['StringSearchIsAnAddress'] );
+                    unset ( $in_http_vars['SearchStringRadius'] );
+                    }
+                }
 			}
 
 		// First, set up the services.
@@ -451,16 +453,12 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 				}
 			}
 			
-		if ( !(is_array ( $in_http_vars['meeting_key'] ) && count ( $in_http_vars['meeting_key'] )) )
+		if ( $search_string && !(is_array ( $in_http_vars['meeting_key'] ) && count ( $in_http_vars['meeting_key'] )) )
 			{
 			// And last, but not least, a string search:
-			$search_string = $in_http_vars['SearchString'];
-			if ( $search_string )
-				{
-				$find_all = (isset ( $in_http_vars['SearchStringAll'] ) && $in_http_vars['SearchStringAll']) ? true :false;
-				$literal = (isset ( $in_http_vars['SearchStringExact'] ) && $in_http_vars['SearchStringExact']) ? true :false;				
-				$in_search_manager->SetSearchString ( $search_string, $find_all, $literal );
-				}
+            $find_all = (isset ( $in_http_vars['SearchStringAll'] ) && $in_http_vars['SearchStringAll']) ? true :false;
+            $literal = (isset ( $in_http_vars['SearchStringExact'] ) && $in_http_vars['SearchStringExact']) ? true :false;				
+            $in_search_manager->SetSearchString ( $search_string, $find_all, $literal );
 			}
 			
 		if ( isset ( $in_http_vars['meeting_key'] ) && $in_http_vars['meeting_key'] )
