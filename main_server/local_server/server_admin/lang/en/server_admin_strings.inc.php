@@ -152,6 +152,22 @@
 											'history_no_history_available_text'                     =>  '<h3 class="bmlt_admin_no_history_available_h3">No History Available For This Meeting</h3>',
 											'service_body_editor_disclosure'                        =>  'Service Body Administration',
 	                                        'service_body_change_fader_success_text'                =>  'The Service Body Was Successfully Changed',
-	                                        'service_body_change_fader_fail_text'                   =>  'The Service Body Change Failed'
+	                                        'service_body_change_fader_fail_text'                   =>  'The Service Body Change Failed',
+	                                        'service_body_editor_screen_sb_id_label'                =>  'ID:',
+	                                        'service_body_editor_screen_sb_name_label'              =>  'Name:',
+	                                        'service_body_name_default_prompt_text'                 =>  'Enter the Name of This Service Body',
+	                                        'service_body_editor_screen_sb_admin_user_label'        =>  'Primary Admin:',
+	                                        'service_body_editor_screen_sb_admin_description_label' =>  'Description:',
+	                                        'service_body_description_default_prompt_text'          =>  'Enter A Description of This Service Body',
+	                                        'service_body_editor_screen_sb_admin_email_label'       =>  'Contact Email:',
+	                                        'service_body_email_default_prompt_text'                =>  'Enter A Contact Email Address for This Service Body',
+	                                        'service_body_editor_screen_sb_admin_uri_label'         =>  'Web Site URL:',
+	                                        'service_body_uri_default_prompt_text'                  =>  'Enter A Web Site URL for This Service Body',
+	                                        'service_body_editor_screen_sb_admin_full_editor_label' =>  'Full Meeting List Editors:',
+	                                        'service_body_editor_screen_sb_admin_full_editor_desc'  =>  'These Users Can Edit Any Meetings In This Service Body.',
+	                                        'service_body_editor_screen_sb_admin_editor_label'      =>  'Basic Meeting List Editors:',
+	                                        'service_body_editor_screen_sb_admin_editor_desc'       =>  'These Users Can Edit Any Meetings In This Service Body, But Only If They Are Unpublished.',
+	                                        'service_body_editor_screen_sb_admin_observer_label'    =>  'Observers:',
+	                                        'service_body_editor_screen_sb_admin_observer_desc'     =>  'These Users Can See Hidden Info (Like Email Addresses), But Cannot Edit Anything.',
 	                                    );
 ?>

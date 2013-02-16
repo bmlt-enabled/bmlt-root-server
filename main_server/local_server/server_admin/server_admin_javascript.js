@@ -74,8 +74,16 @@ function BMLT_Server_Admin ()
                 };
             
             in_text_item.value = in_text_item.original_value;
-
-            this.setTextItemClass ( in_text_item );
+            
+            if ( !in_text_item.value || (in_text_item.value == in_text_item.defaultValue) )
+                {
+                in_text_item.value = in_text_item.defaultValue;
+                in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : '') + ' bmlt_text_item_dimmed';
+                }
+            else
+                {
+                in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : '');
+                };
             };
     };
     
@@ -2671,6 +2679,132 @@ function BMLT_Server_Admin ()
             };
     };
 
+    /************************************************************************************//**
+    *   \brief  This sets up the Service Body Editor for the selected Service body.         *
+    ****************************************************************************************/
+    this.populateServiceBodyEditor = function()
+    {
+        var main_service_body_editor = document.getElementById ( 'bmlt_admin_single_service_body_editor_div' );
+        
+        var service_body_select = document.getElementById ( 'bmlt_admin_single_service_body_editor_sb_select' );
+        var index = 0;
+        
+        if ( service_body_select )  // If we are able to switch between multiple Service bodies, we can do so here.
+            {
+            index = service_body_select.value;
+            }
+        
+        // This makes a copy of the Service body object, so we can modify it.
+        var selected_service_body_object = JSON.parse ( JSON.stringify ( g_service_bodies_array[index] ) );
+        
+        main_service_body_editor.service_body_object = selected_service_body_object;
+        
+        var id_display = document.getElementById ( 'service_body_admin_id_display' );
+        id_display.innerHTML = selected_service_body_object[0];
+        
+        this.setServiceBodyUser ( selected_service_body_object );
+            
+        var name_text_input = document.getElementById ( 'bmlt_admin_service_body_editor_sb_name_text_input' );
+        
+        name_text_input.value = selected_service_body_object[2];
+        this.handleTextInputLoad ( name_text_input, g_service_body_name_default_prompt_text );
+        
+        var description_textarea = document.getElementById ( 'bmlt_admin_sb_description_textarea' );
+        
+        description_textarea.value = selected_service_body_object[3];
+        this.handleTextInputLoad ( description_textarea, g_service_body_description_default_prompt_text );
+
+        var email_text_input = document.getElementById ( 'bmlt_admin_service_body_editor_sb_email_text_input' );
+        
+        email_text_input.value = selected_service_body_object[6];
+        this.handleTextInputLoad ( email_text_input, g_service_body_email_default_prompt_text );
+
+        var uri_text_input = document.getElementById ( 'bmlt_admin_service_body_editor_sb_uri_text_input' );
+        
+        uri_text_input.value = selected_service_body_object[7];
+        this.handleTextInputLoad ( uri_text_input, g_service_body_uri_default_prompt_text );
+        
+        this.setServiceBodyEditorCheckboxes();
+    };
+
+    /************************************************************************************//**
+    *   \brief  This handles display of the Service body user.                              *
+    ****************************************************************************************/
+    this.setServiceBodyUser = function( in_selected_service_body    ///< The selected Service body array element (which is an array)
+                                        )
+    {
+        // One of these will be available -they are mutually exclusive.
+        var user_single_display = document.getElementById ( 'single_user_service_body_admin_span' );
+        var user_select_element = document.getElementById ( 'bmlt_admin_single_service_body_editor_principal_user_select' );
+        var sb_primary_user = null;
+        var user_index = 0; // This will be used to correlate the user to the position in the menu.
+        
+        // Get the user info that corresponds to this Service body's primary user.
+        for ( ; user_index < g_users.length; user_index++ )
+            {
+            if ( g_users[user_index][0] == in_selected_service_body[4] )
+                {
+                sb_primary_user = g_users[user_index];
+                break;
+                };
+            };
+        
+        // OK. We now have the primary user object that corresponds to the Service body's principal owner.
+        if ( sb_primary_user )
+            {
+            if ( user_single_display )
+                {
+                user_single_display.innerHTML = sb_primary_user[2];
+                }
+            else if ( user_select_element )
+                {
+                user_select_element.selectedIndex = user_index;
+                };
+            };
+    };
+
+    /************************************************************************************//**
+    *   \brief  This is called when a Service Body Editor checkbox is clicked.              *
+    ****************************************************************************************/
+    this.setServiceBodyEditorCheckboxes = function()
+    {
+        var main_service_body_editor = document.getElementById ( 'bmlt_admin_single_service_body_editor_div' );
+        
+        var users = main_service_body_editor.service_body_object[5].toString().split(',');
+        
+        if ( users && users.length && g_users && g_users.length )
+            {
+            for ( var c = 0; c < g_users.length; c++ )
+                {
+                var checkbox = document.getElementById ( 'service_body_admin_editor_user_' + g_users[c][0] +'_div' );
+                if ( checkbox )
+                    {
+                    checkbox.checked = false;
+                    
+                    for ( var i = 0; i < users.length; i++ )
+                        {
+                        if ( users[i] == g_users[c][0] )
+                            {
+                            checkbox.checked = true;
+                            break;
+                            };
+                        };
+                    };
+                };
+            };
+    };
+
+    /************************************************************************************//**
+    *   \brief  This is called when a Service Body Editor checkbox is clicked.              *
+    ****************************************************************************************/
+    this.serviceBodyUserChecboxHandler = function(  in_user_id,         ///< The ID of the user.
+                                                    in_checkbox_object  ///< The Checkbox DOM object
+                                                )
+    {
+        var main_service_body_editor = document.getElementById ( 'bmlt_admin_single_service_body_editor_div' );
+        
+    };
+    
     // #mark - 
     // #mark ########## Constructor ##########
     // #mark -
