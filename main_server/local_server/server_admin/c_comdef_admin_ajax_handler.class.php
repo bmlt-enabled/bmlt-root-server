@@ -64,7 +64,11 @@ class c_comdef_admin_ajax_handler
         
         $account_changed = false;
         
-        if ( isset ( $this->my_http_vars['set_meeting_change'] ) && $this->my_http_vars['set_meeting_change'] )
+        if ( isset ( $this->my_http_vars['set_service_body_change'] ) && $this->my_http_vars['set_service_body_change'] )
+            {
+            $returned_text = $this->HandleServiceBodyChange ( $this->my_http_vars['set_service_body_change'] );
+            }
+        else if ( isset ( $this->my_http_vars['set_meeting_change'] ) && $this->my_http_vars['set_meeting_change'] )
             {
             $this->HandleMeetingUpdate ( $this->my_http_vars['set_meeting_change'] );
             }
@@ -125,6 +129,56 @@ class c_comdef_admin_ajax_handler
             }
         
         return  $returned_text;
+    }
+
+    /*******************************************************************/
+    /**
+        \brief	This handles updating an existing Service body.
+    */	
+    function HandleServiceBodyChange (  $in_service_body_data    ///< A JSON object, containing the new Service Body data.
+                                        )
+    {
+        $returned_text = '';
+        
+        $json_tool = new PhpJsonXmlArrayStringInterchanger;
+        
+        $the_new_service_body = $json_tool->convertJsonToArray ( $in_service_body_data, true );
+        
+        if ( is_array ( $the_new_service_body ) && count ( $the_new_service_body ) )
+            {
+            $id = $the_new_service_body[0];
+            $parent_service_body_id = $the_new_service_body[1];
+            $name = $the_new_service_body[2];
+            $description = $the_new_service_body[3];
+            $main_user_id = $the_new_service_body[4];
+            $editor_ids = explode ( ',', $the_new_service_body[5] );
+            $email = $the_new_service_body[6];
+            $uri = $the_new_service_body[7];
+            $kml_uri = $the_new_service_body[8];
+            $type = $the_new_service_body[9];
+            
+            $sb_to_change = $this->my_server->GetServiceBodyByIDObj ( $id );
+            
+            if ( $sb_to_change instanceof c_comdef_service_body )
+                {
+                $sb_to_change->SetOwnerID ( $parent_service_body_id );
+                $sb_to_change->SetLocalName ( $name );
+                $sb_to_change->SetLocalDescription ( $description );
+                $sb_to_change->SetPrincipalUserID ( $main_user_id );
+                $sb_to_change->SetEditors ( $editor_ids );
+                $sb_to_change->SetContactEmail ( $email );
+                $sb_to_change->SetURI ( $uri );
+                $sb_to_change->SetKMLURI ( $kml_uri );
+                $sb_to_change->SetSBType ( $type );
+                
+                if ( $sb_to_change->UpdateToDB() )
+                    {
+                    $returned_text = array2json ( $the_new_service_body );
+                    }
+                }
+            }
+            
+        return $returned_text;
     }
     
     /*******************************************************************/

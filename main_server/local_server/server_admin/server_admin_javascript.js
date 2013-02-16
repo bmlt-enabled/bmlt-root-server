@@ -2685,8 +2685,17 @@ function BMLT_Server_Admin ()
     this.populateServiceBodyEditor = function()
     {
         var main_service_body_editor = document.getElementById ( 'bmlt_admin_single_service_body_editor_div' );
-        
         var service_body_select = document.getElementById ( 'bmlt_admin_single_service_body_editor_sb_select' );
+        
+        if ( main_service_body_editor.service_body_object && (this.isServiceBodyDirty() != null) )
+            {
+            if ( !confirm ( g_service_body_dirty_confirm_text ) )
+                {
+                service_body_select.selectedIndex = this.isServiceBodyDirty();
+                return;
+                };
+            };
+        
         var index = 0;
         
         if ( service_body_select )  // If we are able to switch between multiple Service bodies, we can do so here.
@@ -2725,6 +2734,8 @@ function BMLT_Server_Admin ()
         this.handleTextInputLoad ( uri_text_input, g_service_body_uri_default_prompt_text );
         
         this.setServiceBodyEditorCheckboxes();
+        
+        this.validateServiceBodyEditorButtons();
     };
 
     /************************************************************************************//**
@@ -2776,7 +2787,7 @@ function BMLT_Server_Admin ()
             {
             for ( var c = 0; c < g_users.length; c++ )
                 {
-                var checkbox = document.getElementById ( 'service_body_admin_editor_user_' + g_users[c][0] +'_div' );
+                var checkbox = document.getElementById ( 'service_body_admin_editor_user_' + g_users[c][0] +'_checkbox' );
                 if ( checkbox )
                     {
                     checkbox.checked = false;
@@ -2803,6 +2814,197 @@ function BMLT_Server_Admin ()
     {
         var main_service_body_editor = document.getElementById ( 'bmlt_admin_single_service_body_editor_div' );
         
+        var new_users = new Array;
+        
+        if ( g_users && g_users.length )
+            {
+            for ( var c = 0; c < g_users.length; c++ )
+                {
+                var checkbox = document.getElementById ( 'service_body_admin_editor_user_' + g_users[c][0] +'_checkbox' );
+                if ( checkbox && checkbox.checked )
+                    {
+                    new_users[new_users.length] = g_users[c][0];
+                    };
+                };
+            };
+        
+        if ( new_users.length )
+            {
+            main_service_body_editor.service_body_object[5] = new_users.join(',').toString();
+            }
+        else
+            {
+            main_service_body_editor.service_body_object[5] = '0';
+            };
+        
+        this.validateServiceBodyEditorButtons();
+    };
+    
+    /************************************************************************************//**
+    *   \brief  This sets the state of the Service body editor save button.                 *
+    ****************************************************************************************/
+    this.validateServiceBodyEditorButtons = function()
+    {
+        var save_button = document.getElementById ( 'bmlt_admin_service_body_editor_form_service_body_save_button' );
+        var cancel_button = document.getElementById ( 'bmlt_admin_service_body_editor_form_meeting_template_cancel_button' );
+        
+        if ( this.isServiceBodyDirty() != null )
+            {
+            save_button.className = 'bmlt_admin_ajax_button button';
+            cancel_button.className = 'bmlt_admin_ajax_button button';
+            }
+        else
+            {
+            save_button.className = 'bmlt_admin_ajax_button button_disabled';
+            cancel_button.className = 'bmlt_admin_ajax_button button_disabled';
+            };
+    };
+
+    /************************************************************************************//**
+    *   \brief  See if changes have been made to the Service body.                          *
+    *   \returns the service body index (if changed). Null, otherwise (Check for null)      *
+    ****************************************************************************************/
+    this.isServiceBodyDirty = function()
+    {
+        var main_service_body_editor = document.getElementById ( 'bmlt_admin_single_service_body_editor_div' );
+        var edited_service_body_object = main_service_body_editor.service_body_object;
+        var original_service_body = null;
+        var index = 0;
+        
+        for ( ; index < g_service_bodies_array.length; index++ )
+            {
+            if ( g_service_bodies_array[index][0] == edited_service_body_object[0] )
+                {
+                original_service_body = g_service_bodies_array[index];
+                break;
+                };
+            };
+        
+        var current = JSON.stringify ( edited_service_body_object );
+        var orig = JSON.stringify ( original_service_body );
+        var ret = ( (current != orig) ? index : null );
+        
+        return ret;
+    };
+
+    /************************************************************************************//**
+    *   \brief  This cancels the Service body editing session.                              *
+    ****************************************************************************************/
+    this.cancelServiceBodyEdit = function()
+    {
+        var main_service_body_editor = document.getElementById ( 'bmlt_admin_single_service_body_editor_div' );
+        var edited_service_body_object = main_service_body_editor.service_body_object;
+        
+        for ( var index = 0; index < g_service_bodies_array.length; index++ )
+            {
+            if ( g_service_bodies_array[index][0] == edited_service_body_object[0] )
+                {
+                original_service_body = g_service_bodies_array[index];
+                break;
+                };
+            };
+        
+        if ( main_service_body_editor.service_body_object && (this.isServiceBodyDirty() != null) )
+            {
+            if ( confirm ( g_service_body_dirty_confirm_text ) )
+                {
+                main_service_body_editor.service_body_object = null;
+                this.populateServiceBodyEditor();
+                };
+            };
+    };
+    
+    // These functions will trigger AJAX transactions.
+    
+    /************************************************************************************//**
+    *   \brief  This saves the current Service body.                                        *
+    ****************************************************************************************/
+    this.saveServiceBody = function()
+    {
+        if ( this.isServiceBodyDirty() != null )
+            {
+            var main_service_body_editor = document.getElementById ( 'bmlt_admin_single_service_body_editor_div' );
+            var button_object = document.getElementById ( 'bmlt_admin_service_body_editor_form_service_body_save_button' );
+            var throbber_object = document.getElementById ( 'bmlt_admin_service_body_save_ajax_button_throbber_span' );
+
+            var serialized_object = JSON.stringify ( main_service_body_editor.service_body_object );
+        
+            var uri = g_ajax_callback_uri + '&set_service_body_change=' + encodeURIComponent ( serialized_object );
+
+            if ( main_service_body_editor.m_ajax_request_in_progress )
+                {
+                main_service_body_editor.m_ajax_request_in_progress.abort();
+                main_service_body_editor.m_ajax_request_in_progress = null;
+                };
+            
+            var salt = new Date();
+            uri += '&salt=' + salt.getTime();
+            
+            button_object.className = 'item_hidden';
+            throbber_object.className = 'bmlt_admin_ajax_button_throbber_span';
+            
+            main_service_body_editor.m_ajax_request_in_progress = BMLT_AjaxRequest ( uri, function(in_req) { admin_handler_object.saveServiceBodyAJAXCallback(in_req); }, 'post' );
+            };
+    };
+    
+    /************************************************************************************//**
+    *   \brief  This is the AJAX callback handler for the save operation.                   *
+    ****************************************************************************************/
+    this.saveServiceBodyAJAXCallback = function(in_http_request ///< The HTTPRequest object
+                                                )
+    {
+        if ( in_http_request.responseText )
+            {
+            eval ( 'var json_object = ' + in_http_request.responseText + ';' );
+            
+            if ( json_object )
+                {
+                if ( json_object.error )
+                    {
+                    alert ( json_object.report );
+                    BMLT_Admin_StartFader ( 'bmlt_admin_fader_service_body_editor_fail_div', this.m_failure_fade_duration );
+                    }
+                else
+                    {
+                    for ( var index = 0; index < g_service_bodies_array.length; index++ )
+                        {
+                        if ( g_service_bodies_array[index][0] == json_object[0] )
+                            {
+                            g_service_bodies_array[index] = json_object;
+                            break;
+                            };
+                        };
+                        
+                    BMLT_Admin_StartFader ( 'bmlt_admin_fader_service_body_editor_success_div', this.m_success_fade_duration );
+                    };
+                }
+            else
+                {
+                BMLT_Admin_StartFader ( 'bmlt_admin_fader_service_body_editor_fail_div', this.m_failure_fade_duration );
+                };
+            }
+        else
+            {
+            BMLT_Admin_StartFader ( 'bmlt_admin_fader_service_body_editor_fail_div', this.m_failure_fade_duration );
+            };
+        
+        document.getElementById ( 'bmlt_admin_service_body_save_ajax_button_throbber_span' ).className = 'item_hidden';
+        this.validateServiceBodyEditorButtons();
+    };
+
+    /************************************************************************************//**
+    *   \brief  This deletes the current Service body.                                      *
+    ****************************************************************************************/
+    this.deleteServiceBody = function()
+    {
+    };
+    
+    /************************************************************************************//**
+    *   \brief  This is the AJAX callback handler for the delete operation.                 *
+    ****************************************************************************************/
+    this.deleteServiceBodyAJAXCallback = function(  in_http_request ///< The HTTPRequest object
+                                                )
+    {
     };
     
     // #mark - 

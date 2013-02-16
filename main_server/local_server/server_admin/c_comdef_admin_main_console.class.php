@@ -241,6 +241,7 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_service_body_description_default_prompt_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_description_default_prompt_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_service_body_email_default_prompt_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_email_default_prompt_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_service_body_uri_default_prompt_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_uri_default_prompt_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_service_body_dirty_confirm_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_dirty_confirm_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_time_values = [';
                     $ret .= '\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_am_label'] ).'\',';
                     $ret .= '\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_pm_label'] ).'\',';
@@ -299,13 +300,12 @@ class c_comdef_admin_main_console
                     $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_service_body_editor_success_div">';
                         $ret .= '<span class="success_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_success_text'] ).'</span>';
                     $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                    $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_service_body_editor_add_fail_div">';
+                    $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_service_body_editor_fail_div">';
                         $ret .= '<span class="failure_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_fail_text'] ).'</span>';
                     $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= '</div>';
                 
                 $ret .= $this->return_single_service_body_editor_panel();
-                    
             $ret .= '</div>';
             $ret .= '<script type="text/javascript">admin_handler_object.populateServiceBodyEditor()</script>';
             }
@@ -387,8 +387,8 @@ class c_comdef_admin_main_console
                         
                         foreach ( $full_editors as $user )
                             {
-                            $ret .= '<span class="bmlt_admin_med_label_right"><input type="checkbox" id="service_body_admin_editor_user_'.$user->GetID().'_div" onchange="admin_handler_object.serviceBodyUserChecboxHandler('.$user->GetID().',this)" onclick="admin_handler_object.serviceBodyUserChecboxHandler('.$user->GetID().',this)" /></span>';
-                            $ret .= '<label class="bmlt_admin_med_label_left" for="service_body_admin_editor_user_'.$user->GetID().'_div">'.htmlspecialchars ( $user->GetLocalName() ).'</label>';
+                            $ret .= '<span class="bmlt_admin_med_label_right"><input type="checkbox" id="service_body_admin_editor_user_'.$user->GetID().'_checkbox" onchange="admin_handler_object.serviceBodyUserChecboxHandler('.$user->GetID().',this)" onclick="admin_handler_object.serviceBodyUserChecboxHandler('.$user->GetID().',this)" /></span>';
+                            $ret .= '<label class="bmlt_admin_med_label_left" for="service_body_admin_editor_user_'.$user->GetID().'_checkbox">'.htmlspecialchars ( $user->GetLocalName() ).'</label>';
                             $ret .= '<div class="clear_both"></div>';
                             }
                         
@@ -405,8 +405,8 @@ class c_comdef_admin_main_console
                         
                         foreach ( $basic_editors as $user )
                             {
-                            $ret .= '<span class="bmlt_admin_med_label_right"><input type="checkbox" id="service_body_admin_editor_user_'.$user->GetID().'_div" onchange="admin_handler_object.serviceBodyUserChecboxHandler('.$user->GetID().',this)" onclick="admin_handler_object.serviceBodyUserChecboxHandler('.$user->GetID().',this)" /></span>';
-                            $ret .= '<label class="bmlt_admin_med_label_left" for="service_body_admin_editor_user_'.$user->GetID().'_div">'.htmlspecialchars ( $user->GetLocalName() ).'</label>';
+                            $ret .= '<span class="bmlt_admin_med_label_right"><input type="checkbox" id="service_body_admin_editor_user_'.$user->GetID().'_checkbox" onchange="admin_handler_object.serviceBodyUserChecboxHandler('.$user->GetID().',this)" onclick="admin_handler_object.serviceBodyUserChecboxHandler('.$user->GetID().',this)" /></span>';
+                            $ret .= '<label class="bmlt_admin_med_label_left" for="service_body_admin_editor_user_'.$user->GetID().'_checkbox">'.htmlspecialchars ( $user->GetLocalName() ).'</label>';
                             $ret .= '<div class="clear_both"></div>';
                             }
                     $ret .= '</div>';
@@ -422,8 +422,8 @@ class c_comdef_admin_main_console
                         
                         foreach ( $observers as $user )
                             {
-                            $ret .= '<span class="bmlt_admin_med_label_right"><input type="checkbox" id="service_body_admin_editor_user_'.$user->GetID().'_div" onchange="admin_handler_object.serviceBodyUserChecboxHandler('.$user->GetID().',this)" onclick="admin_handler_object.serviceBodyUserChecboxHandler('.$user->GetID().',this)" /></span>';
-                            $ret .= '<label class="bmlt_admin_med_label_left" for="service_body_admin_editor_user_'.$user->GetID().'_div">'.htmlspecialchars ( $user->GetLocalName() ).'</label>';
+                            $ret .= '<span class="bmlt_admin_med_label_right"><input type="checkbox" id="service_body_admin_editor_user_'.$user->GetID().'_checkbox" onchange="admin_handler_object.serviceBodyUserChecboxHandler('.$user->GetID().',this)" onclick="admin_handler_object.serviceBodyUserChecboxHandler('.$user->GetID().',this)" /></span>';
+                            $ret .= '<label class="bmlt_admin_med_label_left" for="service_body_admin_editor_user_'.$user->GetID().'_checkbox">'.htmlspecialchars ( $user->GetLocalName() ).'</label>';
                             $ret .= '<div class="clear_both"></div>';
                             }
                     $ret .= '</div>';
@@ -431,6 +431,7 @@ class c_comdef_admin_main_console
                     }
                 
                 $ret .= '<div class="clear_both"></div>';
+                $ret .= $this->return_service_body_editor_button_panel ();
             $ret .= '</fieldset>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
         $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
         
@@ -559,6 +560,36 @@ class c_comdef_admin_main_console
                 }
         $ret .= '</select>';
         
+        return $ret;
+    }
+    
+    /********************************************************************************************************//**
+    \brief This constructs the Service body editor buttons as a div.
+    \returns The HTML and JavaScript for the button panel.
+    ************************************************************************************************************/
+    function return_service_body_editor_button_panel ()
+    {
+        $main_button_text = $this->my_localized_strings['comdef_server_admin_strings']['meeting_save_buttonName'];
+        $ret = '<div class="bmlt_admin_service_body_editor_button_div">';
+            $ret .= '<span class="bmlt_admin_meeting_editor_form_meeting_button_left_span">';
+                $ret .= '<a id="bmlt_admin_service_body_editor_form_service_body_save_button" href="javascript:admin_handler_object.saveServiceBody()" class="bmlt_admin_ajax_button button_disabled">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_save_button'] ).'</a>';
+                $ret .= '<span id="bmlt_admin_service_body_save_ajax_button_throbber_span" class="bmlt_admin_ajax_button_throbber_span item_hidden"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></span>';
+            $ret .= '</span>';
+            if ( $this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN )
+                {
+                $ret .= '<span class="bmlt_admin_meeting_editor_form_middle_button_single_span bmlt_admin_delete_button_span hide_in_new_meeting">';
+                    $ret .= '<a id="bmlt_admin_meeting_editor_form_service_body_delete_button" href="javascript:admin_handler_object.deleteServiceBody()" class="bmlt_admin_ajax_button button">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_delete_button'] ).'</a>';
+                    $ret .= '<span id="bmlt_admin_template_delete_ajax_button_throbber_span" class="bmlt_admin_ajax_button_throbber_span item_hidden"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></span>';
+                    $ret .= '<span class="perm_checkbox_span">';
+                        $ret .= '<input type="checkbox" id="bmlt_admin_service_body_delete_perm_checkbox" />';
+                        $ret .= '<label for="bmlt_admin_service_body_delete_perm_checkbox">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_delete_perm_checkbox'] ).'</label>';
+                    $ret .= '</span>';
+                $ret .= '</span>';
+                }
+            $ret .= '<span class="bmlt_admin_meeting_editor_form_meeting_button_right_span"><a id="bmlt_admin_service_body_editor_form_meeting_template_cancel_button" href="javascript:admin_handler_object.cancelServiceBodyEdit()" class="bmlt_admin_ajax_button button_disabled">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_cancel_button'] ).'</a></span>';
+            $ret .= '<div class="clear_both"></div>';
+        $ret .= '</div>';
+                    
         return $ret;
     }
     
@@ -915,8 +946,8 @@ class c_comdef_admin_main_console
     }
     
     /********************************************************************************************************//**
-    \brief This constructs the "My Account" section of the console. All user levels will have this.
-    \returns The HTML and JavaScript for the "My Account" section.
+    \brief This constructs the meeting editor buttons as a div.
+    \returns The HTML and JavaScript for the button panel.
     ************************************************************************************************************/
     function return_meeting_editor_button_panel ()
     {

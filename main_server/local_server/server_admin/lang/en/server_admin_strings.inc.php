@@ -169,5 +169,12 @@
 	                                        'service_body_editor_screen_sb_admin_editor_desc'       =>  'These Users Can Edit Any Meetings In This Service Body, But Only If They Are Unpublished.',
 	                                        'service_body_editor_screen_sb_admin_observer_label'    =>  'Observers:',
 	                                        'service_body_editor_screen_sb_admin_observer_desc'     =>  'These Users Can See Hidden Info (Like Email Addresses), But Cannot Edit Anything.',
+	                                        'service_body_dirty_confirm_text'                       =>  'You have made changes to this Service Body. Do you want to lose your changes?',
+	                                        'service_body_save_button'                              =>  'Save The Changes To This Service Body',
+	                                        'service_body_delete_button'                            =>  'Delete This Service Body',
+	                                        'service_body_delete_perm_checkbox'                     =>  'Delete This Service Body Permanently',
+	                                        'service_body_delete_button_confirm'                    =>  'Are you sure that you want to delete this Service body?',
+	                                        'service_body_delete_button_confirm_perm'               =>  'This Service body will be deleted permanently!',
+	                                        'service_body_cancel_button'                            =>  'Restore To Original',
 	                                    );
 ?>

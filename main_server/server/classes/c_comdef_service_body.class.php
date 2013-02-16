@@ -916,14 +916,15 @@ class c_comdef_service_body extends t_comdef_world_type implements i_comdef_db_s
 				
 				if ( $current_obj instanceof c_comdef_service_body )
 					{
+// NOTE: As of version 2.0, only the server admin or the principal user can edit a Service body.
 					if ( intval ( $current_obj->GetPrincipalUserID() ) == intval ( $in_user_object->GetID() ) )
 						{
 						$ret = true;
 						}
-					else
-						{
-						$ret = $this->IsUserInServiceBodyHierarchy($in_user_object );
-						}
+// 					else
+// 						{
+// 						$ret = $this->IsUserInServiceBodyHierarchy($in_user_object );
+// 						}
 					}
 				}
 			elseif ( c_comdef_server::IsUserServerAdmin() )	// The server admin can edit anything.
