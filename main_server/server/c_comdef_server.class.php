@@ -335,6 +335,27 @@ class c_comdef_server
 																					)
 							);
 				}
+			
+			// What we do here, is look for orphans, and assign them a parent ID of 0.
+			for ( $c = 0; $c < count ( $this->_service_obj_array ); $c++ )
+			    {
+			    $parent_id = $this->_service_obj_array[$c]->GetOwnerID();
+			    $found = false;
+                for ( $i = 0; $i < count ( $this->_service_obj_array ); $i++ )
+                    {
+                    $id = $this->_service_obj_array[$i]->GetID();
+                    if ( $id == $parent_id )
+                        {
+                        $found = true;
+                        break;
+                        }
+                    }
+                
+                if ( !$found )
+                    {
+                    $this->_service_obj_array[$c]->SetOwnerID(0);
+                    }
+			    }
 			}
 	}
 	

@@ -889,26 +889,31 @@ class c_comdef_service_body extends t_comdef_world_type implements i_comdef_db_s
                 $in_user_object = c_comdef_server::GetCurrentUserObj();
                 }
 		
-	        $editors = $this->GetEditors ();
-	        
-	        foreach ( $editors as $id )
-	            {
-	            if ( $in_user_object->GetID () == $id )
-	                {
-	                $ret = true;
-	                break;
-	                }
-	            }
-	            
-	        if ( !$ret )
-	            {
-                if ( $this->GetOwnerID() )
+            if ( $in_user_object instanceof c_comdef_user )
+                {
+                $in_user_object->RestoreFromDB();	// The reason you do this, is to ensure that the user wasn't modified "live." It's a security precaution.
+
+                $editors = $this->GetEditors ();
+            
+                foreach ( $editors as $id )
                     {
-                    $parent = c_comdef_server::GetServiceBodyByIDObj ( $this->GetOwnerID() );
-                    
-                    if ( $parent instanceof c_comdef_service_body )
+                    if ( $in_user_object->GetID () == $id )
                         {
-                        $ret = $parent->UserCanEditMeetings ( $in_user_object );
+                        $ret = true;
+                        break;
+                        }
+                    }
+                
+                if ( !$ret )
+                    {
+                    if ( $this->GetOwnerID() )
+                        {
+                        $parent = c_comdef_server::GetServiceBodyByIDObj ( $this->GetOwnerID() );
+                    
+                        if ( $parent instanceof c_comdef_service_body )
+                            {
+                            $ret = $parent->UserCanEditMeetings ( $in_user_object );
+                            }
                         }
                     }
                 }

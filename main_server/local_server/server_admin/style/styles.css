@@ -674,12 +674,14 @@ div.bmlt_admin_meeting_editor_service_div
 
 dl.service_body_dl,
 dt.service_body_dt,
+dd.bmlt_admin_service_body_dd,
 dd.bmlt_admin_service_body_child_dd
 {
     float:none;
     clear:both;
 }
 
+dd.bmlt_admin_service_body_dd,
 dd.bmlt_admin_service_body_child_dd,
 dl.service_body_dl
 {

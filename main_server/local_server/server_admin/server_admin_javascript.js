@@ -3198,7 +3198,48 @@ function BMLT_Server_Admin ()
                             break;
                             };
                         };
+                    
+                    // If we leave any orphans, we clean them up, here.
+                    for ( var index = 0; index < g_editable_service_bodies_array.length; index++ )
+                        {
+                        var whosMyDaddy = false;
                         
+                        var parent_id = g_editable_service_bodies_array[index][1];
+                        for ( var c = 0; c < g_editable_service_bodies_array.length; c++ )
+                            {
+                            if ( g_editable_service_bodies_array[c][0] == parent_id )
+                                {
+                                whosMyDaddy = true;
+                                break;
+                                };
+                            };
+                        
+                        if ( !whosMyDaddy )
+                            {
+                            g_editable_service_bodies_array[index][1] = 0;
+                            };
+                        };
+                        
+                    for ( var index = 0; index < g_editable_service_bodies_array.length; index++ )
+                        {
+                        var whosMyDaddy = false;
+                        
+                        var parent_id = g_service_bodies_array[index][1];
+                        for ( var c = 0; c < g_service_bodies_array.length; c++ )
+                            {
+                            if ( g_service_bodies_array[c][0] == parent_id )
+                                {
+                                whosMyDaddy = true;
+                                break;
+                                };
+                            };
+                        
+                        if ( !whosMyDaddy )
+                            {
+                            g_service_bodies_array[index][1] = 0;
+                            };
+                        };
+                    
                     var main_service_body_editor = document.getElementById ( 'bmlt_admin_single_service_body_editor_div' );
                     main_service_body_editor.m_ajax_request_in_progress = null;
                     main_service_body_editor.service_body_object = null;
