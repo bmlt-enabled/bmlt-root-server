@@ -175,6 +175,15 @@
 	                                        'service_body_delete_perm_checkbox'                     =>  'Delete This Service Body Permanently',
 	                                        'service_body_delete_button_confirm'                    =>  'Are you sure that you want to delete this Service body?',
 	                                        'service_body_delete_button_confirm_perm'               =>  'This Service body will be deleted permanently!',
+	                                        'service_body_change_fader_delete_success_text'         =>  'The Service Body Was Successfully Deleted',
+	                                        'service_body_change_fader_delete_fail_text'            =>  'The Service Body Delete Failed',
 	                                        'service_body_cancel_button'                            =>  'Restore To Original',
+	                                        'service_body_editor_type_label'                        =>  'Service Body Type:',
+	                                        'service_body_editor_type_c_comdef_service_body__GRP__' =>  'Group',
+	                                        'service_body_editor_type_c_comdef_service_body__ASC__' =>  'Area Service Committee',
+	                                        'service_body_editor_type_c_comdef_service_body__RSC__' =>  'Regional Service Conference',
+	                                        'service_body_editor_type_c_comdef_service_body__WSC__' =>  'World Service Conference',
+	                                        'service_body_editor_type_c_comdef_service_body__MAS__' =>  'Metro Area',
+	                                        'service_body_editor_type_c_comdef_service_body__ZFM__' =>  'Zonal Forum',
 	                                    );
 ?>

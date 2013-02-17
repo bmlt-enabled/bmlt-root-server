@@ -2733,6 +2733,24 @@ function BMLT_Server_Admin ()
         uri_text_input.value = selected_service_body_object[7];
         this.handleTextInputLoad ( uri_text_input, g_service_body_uri_default_prompt_text );
         
+        var type_select = document.getElementById ( 'bmlt_admin_single_service_body_editor_type_select' );
+        
+        if ( type_select )
+            {
+            var setIndex = 0;
+    
+            for ( var c = 0; c < type_select.options.length; c ++ )
+                {
+                if ( type_select.options[c].value == selected_service_body_object[9] )
+                    {
+                    setIndex = c;
+                    break;
+                    };
+                };
+        
+            type_select.selectedIndex = setIndex;
+            };
+        
         this.setServiceBodyEditorCheckboxes();
         
         this.validateServiceBodyEditorButtons();
@@ -2847,6 +2865,7 @@ function BMLT_Server_Admin ()
     {
         var save_button = document.getElementById ( 'bmlt_admin_service_body_editor_form_service_body_save_button' );
         var cancel_button = document.getElementById ( 'bmlt_admin_service_body_editor_form_meeting_template_cancel_button' );
+        var delete_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_service_body_delete_button' );
         
         if ( this.isServiceBodyDirty() != null )
             {
@@ -2857,6 +2876,11 @@ function BMLT_Server_Admin ()
             {
             save_button.className = 'bmlt_admin_ajax_button button_disabled';
             cancel_button.className = 'bmlt_admin_ajax_button button_disabled';
+            };
+        
+        if ( delete_button )
+            {
+            delete_button.className = 'bmlt_admin_ajax_button button';
             };
     };
 
@@ -2887,6 +2911,104 @@ function BMLT_Server_Admin ()
         return ret;
     };
 
+    /************************************************************************************//**
+    *   \brief  This goes through the Service body (except the checkboxes) and recalculates *
+    *           the state of the edited object.                                             *
+    ****************************************************************************************/
+    this.recalculateServiceBody = function()
+    {
+        var main_service_body_editor = document.getElementById ( 'bmlt_admin_single_service_body_editor_div' );
+
+        var name_text_input = document.getElementById ( 'bmlt_admin_service_body_editor_sb_name_text_input' );
+        
+        if ( name_text_input && name_text_input.value && (name_text_input.value != name_text_input.defaultValue) )
+            {
+            main_service_body_editor.service_body_object[2] = name_text_input.value;
+            }
+        else
+            {
+            main_service_body_editor.service_body_object[2] = '';
+            };
+        
+        var description_textarea = document.getElementById ( 'bmlt_admin_sb_description_textarea' );
+        
+        if ( description_textarea && description_textarea.value && (description_textarea.value != description_textarea.defaultValue) )
+            {
+            main_service_body_editor.service_body_object[3] = description_textarea.value;
+            }
+        else
+            {
+            main_service_body_editor.service_body_object[3] = '';
+            };
+
+        var email_text_input = document.getElementById ( 'bmlt_admin_service_body_editor_sb_email_text_input' );
+        
+        if ( email_text_input && email_text_input.value && (email_text_input.value != email_text_input.defaultValue) )
+            {
+            main_service_body_editor.service_body_object[6] = email_text_input.value;
+            }
+        else
+            {
+            main_service_body_editor.service_body_object[6] = '';
+            };
+
+        var uri_text_input = document.getElementById ( 'bmlt_admin_service_body_editor_sb_uri_text_input' );
+        
+        if ( uri_text_input && uri_text_input.value && (uri_text_input.value != uri_text_input.defaultValue) )
+            {
+            main_service_body_editor.service_body_object[7] = uri_text_input.value;
+            }
+        else
+            {
+            main_service_body_editor.service_body_object[7] = '';
+            };
+
+        var user_select = document.getElementById ( 'bmlt_admin_single_service_body_editor_principal_user_select' );
+        
+        if ( user_select && user_select.value )
+            {
+            main_service_body_editor.service_body_object[4] = user_select.value;
+            };
+
+        var type_select = document.getElementById ( 'bmlt_admin_single_service_body_editor_type_select' );
+        
+        if ( type_select && type_select.value )
+            {
+            main_service_body_editor.service_body_object[9] = type_select.value;
+            };
+        
+        this.validateServiceBodyEditorButtons();
+    };
+    
+    /************************************************************************************//**
+    *   \brief 
+    ****************************************************************************************/
+    this.handleTextInputServiceBodyChange = function(   in_text_item,
+                                                        in_value_index
+                                                        )
+    {
+        var val = '';
+        
+        if ( in_text_item )
+            {
+            if ( !in_text_item.value || (in_text_item.value == in_text_item.defaultValue) )
+                {
+                in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : '') + ' bmlt_text_item_dimmed';
+                }
+            else
+                {
+                val = in_text_item.value;
+                in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : '');
+                };
+            };
+            
+        var main_service_body_editor = document.getElementById ( 'bmlt_admin_single_service_body_editor_div' );
+        main_service_body_editor.service_body_object[in_value_index] = val;
+        
+        this.recalculateServiceBody();
+        this.validateServiceBodyEditorButtons();
+    };
+    
     /************************************************************************************//**
     *   \brief  This cancels the Service body editing session.                              *
     ****************************************************************************************/
@@ -2975,6 +3097,8 @@ function BMLT_Server_Admin ()
                             };
                         };
                         
+                    var main_service_body_editor = document.getElementById ( 'bmlt_admin_single_service_body_editor_div' );
+                    main_service_body_editor.m_ajax_request_in_progress = null;
                     BMLT_Admin_StartFader ( 'bmlt_admin_fader_service_body_editor_success_div', this.m_success_fade_duration );
                     };
                 }
@@ -2997,6 +3121,30 @@ function BMLT_Server_Admin ()
     ****************************************************************************************/
     this.deleteServiceBody = function()
     {
+        var perm_check = document.getElementById ( 'bmlt_admin_service_body_delete_perm_checkbox' );
+        var confirm_str = g_service_body_delete_button_confirm + (( perm_check && perm_check.checked ) ? ("\n" + g_service_body_delete_button_confirm_perm) : '');
+        
+        if ( confirm ( confirm_str ) )
+            {
+            var main_service_body_editor = document.getElementById ( 'bmlt_admin_single_service_body_editor_div' );
+            
+            if ( main_service_body_editor.m_ajax_request_in_progress )
+                {
+                main_service_body_editor.m_ajax_request_in_progress.abort();
+                main_service_body_editor.m_ajax_request_in_progress = null;
+                };
+            
+            var id = main_service_body_editor.service_body_object[0];
+            var uri = g_ajax_callback_uri + '&delete_service_body=' + id + (( perm_check && perm_check.checked ) ? '&permanently=1' : '');
+
+            var throbber_span = document.getElementById ( 'bmlt_admin_template_delete_ajax_button_throbber_span' ).className = 'bmlt_admin_ajax_button_throbber_span';
+            var delete_a = document.getElementById ( 'bmlt_admin_meeting_editor_form_service_body_delete_button' ).className = 'item_hidden';
+            
+            var salt = new Date();
+            uri += '&salt=' + salt.getTime();
+            
+            main_service_body_editor.m_ajax_request_in_progress = BMLT_AjaxRequest ( uri, function(in_req) { admin_handler_object.deleteServiceBodyAJAXCallback(in_req); }, 'get' );
+            };
     };
     
     /************************************************************************************//**
@@ -3005,6 +3153,52 @@ function BMLT_Server_Admin ()
     this.deleteServiceBodyAJAXCallback = function(  in_http_request ///< The HTTPRequest object
                                                 )
     {
+        if ( in_http_request.responseText )
+            {
+            eval ( 'var json_object = ' + in_http_request.responseText + ';' );
+            
+            if ( json_object )
+                {
+                if ( json_object.error )
+                    {
+                    alert ( json_object.report );
+                    BMLT_Admin_StartFader ( 'bmlt_admin_fader_service_body_editor_delete_fail_div', this.m_failure_fade_duration );
+                    }
+                else
+                    {
+                    var service_body_select = document.getElementById ( 'bmlt_admin_single_service_body_editor_sb_select' );
+                    for ( var index = 0; index < g_service_bodies_array.length; index++ )
+                        {
+                        if ( g_service_bodies_array[index][0] == parseInt(json_object.report) )
+                            {
+                            g_service_bodies_array[index] = null;
+                            g_service_bodies_array.splice ( index, 1 );
+                            service_body_select.remove ( index, 1 );
+                            break;
+                            };
+                        };
+                        
+                    var main_service_body_editor = document.getElementById ( 'bmlt_admin_single_service_body_editor_div' );
+                    main_service_body_editor.m_ajax_request_in_progress = null;
+                    main_service_body_editor.service_body_object = null;
+                    service_body_select.selectedIndex = 0;
+                    this.populateServiceBodyEditor();
+
+                    BMLT_Admin_StartFader ( 'bmlt_admin_fader_service_body_editor_delete_success_div', this.m_success_fade_duration );
+                    };
+                }
+            else
+                {
+                BMLT_Admin_StartFader ( 'bmlt_admin_fader_service_body_editor_delete_fail_div', this.m_failure_fade_duration );
+                };
+            }
+        else
+            {
+            BMLT_Admin_StartFader ( 'bmlt_admin_fader_service_body_editor_delete_fail_div', this.m_failure_fade_duration );
+            };
+        
+        document.getElementById ( 'bmlt_admin_template_delete_ajax_button_throbber_span' ).className = 'item_hidden';
+        this.validateServiceBodyEditorButtons();
     };
     
     // #mark - 

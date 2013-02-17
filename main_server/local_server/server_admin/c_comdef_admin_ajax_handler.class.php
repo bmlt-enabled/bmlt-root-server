@@ -68,6 +68,10 @@ class c_comdef_admin_ajax_handler
             {
             $returned_text = $this->HandleServiceBodyChange ( $this->my_http_vars['set_service_body_change'] );
             }
+        else if ( isset ( $this->my_http_vars['delete_service_body'] ) && $this->my_http_vars['delete_service_body'] )
+            {
+            $returned_text = $this->HandleDeleteServiceBody ( $this->my_http_vars['delete_service_body'], isset ( $this->my_http_vars['permanently'] ) );
+            }
         else if ( isset ( $this->my_http_vars['set_meeting_change'] ) && $this->my_http_vars['set_meeting_change'] )
             {
             $this->HandleMeetingUpdate ( $this->my_http_vars['set_meeting_change'] );
@@ -282,6 +286,56 @@ class c_comdef_admin_ajax_handler
             echo "{'success':false,'report':'$in_meeting_id'}";
 			}
     }
+    
+    /*******************************************************************/
+    /**
+        \brief
+    */	
+    function HandleDeleteServiceBody (  $in_sb_id,
+                                        $in_delete_permanently = false
+                                    )
+    {
+        if ( c_comdef_server::IsUserServerAdmin(null,true) )
+            {
+            try
+                {
+                $service_body =& $this->my_server->GetServiceBodyByIDObj($in_sb_id);
+            
+                if ( $service_body instanceof c_comdef_service_body )
+                    {
+                    if ( $service_body->DeleteFromDB() )
+                        {
+                        if ( $in_delete_permanently )
+                            {
+                            $this->DeleteServiceBodyChanges ( $in_sb_id );
+                            }
+                    
+                        header ( 'Content-type: application/json' );
+                        echo "{'success':true,'report':'$in_sb_id'}";
+                        }
+                    else
+                        {
+                        header ( 'Content-type: application/json' );
+                        echo "{'success':false,'report':'$in_sb_id'}";
+                        }
+                    }
+                else
+                    {
+                    header ( 'Content-type: application/json' );
+                    echo "{'success':false,'report':'$in_sb_id'}";
+                    }
+                }
+            catch ( Exception $e )
+                {
+                header ( 'Content-type: application/json' );
+                echo "{'success':false,'report':'$in_sb_id'}";
+                }
+            }
+        else
+            {
+            echo 'NOT AUTHORIZED';
+            }
+    }
 
     /*******************************************************************/
     /**
@@ -289,8 +343,6 @@ class c_comdef_admin_ajax_handler
     function DeleteMeetingChanges (	$in_meeting_id
                                     )
     {
-        $ret = '';
-
         if ( c_comdef_server::IsUserServerAdmin(null,true) )
             {
             $changes = $this->my_server->GetChangesFromIDAndType ( 'c_comdef_meeting', $in_meeting_id );
@@ -308,8 +360,31 @@ class c_comdef_admin_ajax_handler
                     }
                 }
             }
-    
-        return $ret;
+    }
+
+    /*******************************************************************/
+    /**
+    */
+    function DeleteServiceBodyChanges (	$in_sb_id
+                                        )
+    {
+        if ( c_comdef_server::IsUserServerAdmin(null,true) )
+            {
+            $changes = $this->my_server->GetChangesFromIDAndType ( 'c_comdef_service_body', $in_sb_id );
+        
+            if ( $changes instanceof c_comdef_changes )
+                {
+                $obj_array =& $changes->GetChangesObjects();
+            
+                if ( is_array ( $obj_array ) && count ( $obj_array ) )
+                    {
+                    foreach ( $obj_array as $change )
+                        {
+                        $change->DeleteFromDB();
+                        }
+                    }
+                }
+            }
     }
 
     /*******************************************************************/

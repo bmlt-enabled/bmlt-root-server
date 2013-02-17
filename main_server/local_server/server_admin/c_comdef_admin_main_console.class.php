@@ -235,13 +235,15 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_meeting_editor_screen_delete_button_confirm = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_delete_button_confirm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_meeting_editor_screen_delete_button_confirm_perm = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_delete_button_confirm_perm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_meeting_editor_already_editing_confirm = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_already_editing_confirm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_history_header_format = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['history_header_format'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_history_header_format = \''.$this->my_localized_strings['comdef_server_admin_strings']['history_header_format'].'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_history_no_history_available_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['history_no_history_available_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_service_body_name_default_prompt_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_name_default_prompt_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_service_body_description_default_prompt_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_description_default_prompt_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_service_body_email_default_prompt_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_email_default_prompt_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_service_body_uri_default_prompt_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_uri_default_prompt_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_service_body_dirty_confirm_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_dirty_confirm_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_service_body_delete_button_confirm = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_delete_button_confirm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_service_body_delete_button_confirm_perm = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_delete_button_confirm_perm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_time_values = [';
                     $ret .= '\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_am_label'] ).'\',';
                     $ret .= '\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_pm_label'] ).'\',';
@@ -303,6 +305,12 @@ class c_comdef_admin_main_console
                     $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_service_body_editor_fail_div">';
                         $ret .= '<span class="failure_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_fail_text'] ).'</span>';
                     $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                    $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_service_body_editor_delete_success_div">';
+                        $ret .= '<span class="success_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_delete_success_text'] ).'</span>';
+                    $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                    $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_service_body_editor_delete_fail_div">';
+                        $ret .= '<span class="failure_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_delete_fail_text'] ).'</span>';
+                    $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= '</div>';
                 
                 $ret .= $this->return_single_service_body_editor_panel();
@@ -353,24 +361,34 @@ class c_comdef_admin_main_console
                         }
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
+                if ( $this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN )
+                    {
+                    $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                        $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_type_label'] ).'</span>';
+                        $ret .= '<span class="bmlt_admin_value_left">';
+                            $ret .= $this->create_service_body_type_popup();
+                        $ret .= '</span>';
+                        $ret .= '<div class="clear_both"></div>';
+                    $ret .= '</div>';
+                    }
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_sb_name_label'] ).'</span>';
-                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_service_body_editor_sb_name_text_input" type="text" value="" onkeyup="admin_handler_object.handleTextInputChange(this, 0);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_service_body_editor_sb_name_text_input" type="text" value="" onkeyup="admin_handler_object.handleTextInputServiceBodyChange(this, 2);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';                
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_sb_admin_description_label'] ).'</span>';
-                    $ret .= '<span class="bmlt_admin_value_left"><textarea cols="40" rows="10" name="bmlt_admin_sb_description_textarea" id="bmlt_admin_sb_description_textarea" class="bmlt_text_item" onkeyup="admin_handler_object.handleTextInputChange(this);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);"></textarea></span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><textarea cols="40" rows="10" name="bmlt_admin_sb_description_textarea" id="bmlt_admin_sb_description_textarea" class="bmlt_text_item" onkeyup="admin_handler_object.handleTextInputServiceBodyChange(this, 3);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);"></textarea></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_sb_admin_email_label'] ).'</span>';
-                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_service_body_editor_sb_email_text_input" type="text" value="" onkeyup="admin_handler_object.handleTextInputChange(this, 0);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_service_body_editor_sb_email_text_input" type="text" value="" onkeyup="admin_handler_object.handleTextInputServiceBodyChange(this, 6);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';                
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_sb_admin_uri_label'] ).'</span>';
-                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_service_body_editor_sb_uri_text_input" type="text" value="" onkeyup="admin_handler_object.handleTextInputChange(this, 0);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_service_body_editor_sb_uri_text_input" type="text" value="" onkeyup="admin_handler_object.handleTextInputServiceBodyChange(this, 7);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
                 
@@ -524,6 +542,36 @@ class c_comdef_admin_main_console
     }
     
     /********************************************************************************************************//**
+    \brief This creates the HTML for a Service body selection popup menu.
+    \returns The HTML and JavaScript for the popup menu (select element).
+    ************************************************************************************************************/
+    function create_service_body_type_popup ()
+    {
+        $ret = '<select id="bmlt_admin_single_service_body_editor_type_select" class="bmlt_admin_single_service_body_editor_type_select" onchange="admin_handler_object.recalculateServiceBody()">';
+            $ret .= '<option value="GR">';
+                $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_type_c_comdef_service_body__GRP__'] );
+            $ret .= '</option>';
+            $ret .= '<option value="AS">';
+                $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_type_c_comdef_service_body__ASC__'] );
+            $ret .= '</option>';
+            $ret .= '<option value="RS">';
+                $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_type_c_comdef_service_body__RSC__'] );
+            $ret .= '</option>';
+            $ret .= '<option value="WS">';
+                $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_type_c_comdef_service_body__WSC__'] );
+            $ret .= '</option>';
+            $ret .= '<option value="MA">';
+                $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_type_c_comdef_service_body__MAS__'] );
+            $ret .= '</option>';
+            $ret .= '<option value="ZF">';
+                $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_type_c_comdef_service_body__ZFM__'] );
+            $ret .= '</option>';
+        $ret .= '</select>';
+        
+        return $ret;
+    }
+    
+    /********************************************************************************************************//**
     \brief This returns the user name for a given user ID.
     \returns a string, containing the name.
     ************************************************************************************************************/
@@ -551,7 +599,7 @@ class c_comdef_admin_main_console
     ************************************************************************************************************/
     function create_service_body_user_popup ()
     {
-        $ret = '<select id="bmlt_admin_single_service_body_editor_principal_user_select" class="bmlt_admin_single_service_body_editor_principal_user_select"">';
+        $ret = '<select id="bmlt_admin_single_service_body_editor_principal_user_select" class="bmlt_admin_single_service_body_editor_principal_user_select" onchange="admin_handler_object.recalculateServiceBody()">';
 
             for ( $index = 0; $index  < count ( $this->my_users ); $index++ )
                 {
