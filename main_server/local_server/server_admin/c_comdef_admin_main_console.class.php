@@ -916,7 +916,7 @@ class c_comdef_admin_main_console
                 $ret .= "\n";
                 }
             }
-        else
+        else if ( $in_owner_id == 0 )
             {
             for ( $c = 0; $c < count ( $this->my_service_bodies ); $c++ )
                 {
