@@ -2865,7 +2865,6 @@ function BMLT_Server_Admin ()
     {
         var save_button = document.getElementById ( 'bmlt_admin_service_body_editor_form_service_body_save_button' );
         var cancel_button = document.getElementById ( 'bmlt_admin_service_body_editor_form_meeting_template_cancel_button' );
-        var delete_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_service_body_delete_button' );
         
         if ( this.isServiceBodyDirty() != null )
             {
@@ -2878,9 +2877,18 @@ function BMLT_Server_Admin ()
             cancel_button.className = 'bmlt_admin_ajax_button button_disabled';
             };
         
+        var delete_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_service_body_delete_button' );
+
         if ( delete_button )
             {
-            delete_button.className = 'bmlt_admin_ajax_button button';
+            if ( g_service_bodies_array.length > 1 )
+                {
+                delete_button.className = 'bmlt_admin_ajax_button button';
+                }
+            else
+                {
+                delete_button.className = 'bmlt_admin_ajax_button button_disabled';
+                };
             };
     };
 
@@ -3121,29 +3129,32 @@ function BMLT_Server_Admin ()
     ****************************************************************************************/
     this.deleteServiceBody = function()
     {
-        var perm_check = document.getElementById ( 'bmlt_admin_service_body_delete_perm_checkbox' );
-        var confirm_str = g_service_body_delete_button_confirm + (( perm_check && perm_check.checked ) ? ("\n" + g_service_body_delete_button_confirm_perm) : '');
-        
-        if ( confirm ( confirm_str ) )
+        if ( g_service_bodies_array.length > 1 )
             {
-            var main_service_body_editor = document.getElementById ( 'bmlt_admin_single_service_body_editor_div' );
-            
-            if ( main_service_body_editor.m_ajax_request_in_progress )
+            var perm_check = document.getElementById ( 'bmlt_admin_service_body_delete_perm_checkbox' );
+            var confirm_str = g_service_body_delete_button_confirm + (( perm_check && perm_check.checked ) ? ("\n" + g_service_body_delete_button_confirm_perm) : '');
+        
+            if ( confirm ( confirm_str ) )
                 {
-                main_service_body_editor.m_ajax_request_in_progress.abort();
-                main_service_body_editor.m_ajax_request_in_progress = null;
-                };
+                var main_service_body_editor = document.getElementById ( 'bmlt_admin_single_service_body_editor_div' );
             
-            var id = main_service_body_editor.service_body_object[0];
-            var uri = g_ajax_callback_uri + '&delete_service_body=' + id + (( perm_check && perm_check.checked ) ? '&permanently=1' : '');
+                if ( main_service_body_editor.m_ajax_request_in_progress )
+                    {
+                    main_service_body_editor.m_ajax_request_in_progress.abort();
+                    main_service_body_editor.m_ajax_request_in_progress = null;
+                    };
+            
+                var id = main_service_body_editor.service_body_object[0];
+                var uri = g_ajax_callback_uri + '&delete_service_body=' + id + (( perm_check && perm_check.checked ) ? '&permanently=1' : '');
 
-            var throbber_span = document.getElementById ( 'bmlt_admin_template_delete_ajax_button_throbber_span' ).className = 'bmlt_admin_ajax_button_throbber_span';
-            var delete_a = document.getElementById ( 'bmlt_admin_meeting_editor_form_service_body_delete_button' ).className = 'item_hidden';
+                var throbber_span = document.getElementById ( 'bmlt_admin_template_delete_ajax_button_throbber_span' ).className = 'bmlt_admin_ajax_button_throbber_span';
+                var delete_a = document.getElementById ( 'bmlt_admin_meeting_editor_form_service_body_delete_button' ).className = 'item_hidden';
             
-            var salt = new Date();
-            uri += '&salt=' + salt.getTime();
+                var salt = new Date();
+                uri += '&salt=' + salt.getTime();
             
-            main_service_body_editor.m_ajax_request_in_progress = BMLT_AjaxRequest ( uri, function(in_req) { admin_handler_object.deleteServiceBodyAJAXCallback(in_req); }, 'get' );
+                main_service_body_editor.m_ajax_request_in_progress = BMLT_AjaxRequest ( uri, function(in_req) { admin_handler_object.deleteServiceBodyAJAXCallback(in_req); }, 'get' );
+                };
             };
     };
     
