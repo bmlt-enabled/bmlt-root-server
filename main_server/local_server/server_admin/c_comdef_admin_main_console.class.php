@@ -35,6 +35,7 @@ class c_comdef_admin_main_console
     var $my_users;                      ///< This will be an array of all the user objects.
     var $my_formats;                    ///< The format objects that are available for meetings.
     var $my_data_field_templates;       ///< This holds the keys for all the possible data fields for this server.
+    var $my_editable_service_bodies;    ///< This will contain all the Service bodies that we can actually directly edit.
     
     /********************************************************************************************************//**
     \brief
@@ -59,13 +60,19 @@ class c_comdef_admin_main_console
             
         $service_bodies = $this->my_server->GetServiceBodyArray();
         $this->my_service_bodies = array();
+        $this->my_editable_service_bodies = array();
         
         for ( $c = 0; $c < count ( $service_bodies ); $c++ )
             {
             $service_body = $service_bodies[$c];
-            if ( $service_body->UserCanEdit() )
+            if ( $service_body->UserCanEditMeetings() )
                 {
                 array_push ( $this->my_service_bodies, $service_body );
+                }
+            
+            if ( $service_body->UserCanEdit() )
+                {
+                array_push ( $this->my_editable_service_bodies, $service_body );
                 }
             }
         
@@ -110,7 +117,31 @@ class c_comdef_admin_main_console
  /* Contact Email:6 */  $ret .= '\''.htmlspecialchars ( $service_body->GetContactEmail() ).'\',';
            /* URI:7 */  $ret .= '\''.htmlspecialchars ( $service_body->GetURI() ).'\',';
        /* KML URI:8 */  $ret .= '\''.htmlspecialchars ( $service_body->GetKMLURI() ).'\',';
-       /* SB Type:9 */  $ret .= '\''.$service_body->GetSBType().'\'';
+       /* SB Type:9 */  $ret .= '\''.$service_body->GetSBType().'\',';
+/* User Can Edit:10 */  $ret .= ($service_body->UserCanEdit() ? 'true' : 'false');
+                        $ret .=']';
+                        if ( $c < (count ( $this->my_service_bodies ) - 1) )
+                            {
+                            $ret .= ',';
+                            }
+                        }
+                $ret .= '];'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_editable_service_bodies_array = [';
+                    for ( $c = 0; $c < count ( $this->my_editable_service_bodies ); $c++ )
+                        {
+                        $service_body = $this->my_editable_service_bodies[$c];
+                        $ret .= '[';
+            /* ID:0 */  $ret .= $service_body->GetID().',';
+      /* Owner ID:1 */  $ret .= $service_body->GetOwnerID().',';
+          /* Name:2 */  $ret .= '\''.htmlspecialchars ( $service_body->GetLocalName() ).'\',';
+   /* Description:3 */  $ret .= '\''.htmlspecialchars ( $service_body->GetLocalDescription() ).'\',';
+  /* Main User ID:4 */  $ret .= $service_body->GetPrincipalUserID().',';
+    /* Editor IDs:5 */  $ret .= '\''.implode ( ',', $service_body->GetEditors() ).'\',';
+ /* Contact Email:6 */  $ret .= '\''.htmlspecialchars ( $service_body->GetContactEmail() ).'\',';
+           /* URI:7 */  $ret .= '\''.htmlspecialchars ( $service_body->GetURI() ).'\',';
+       /* KML URI:8 */  $ret .= '\''.htmlspecialchars ( $service_body->GetKMLURI() ).'\',';
+       /* SB Type:9 */  $ret .= '\''.$service_body->GetSBType().'\',';
+/* User Can Edit:10 */  $ret .= 'true';
                         $ret .=']';
                         if ( $c < (count ( $this->my_service_bodies ) - 1) )
                             {
@@ -290,7 +321,7 @@ class c_comdef_admin_main_console
     {
         $ret = 'NOT AUTHORIZED';
         
-        if ( count ( $this->my_service_bodies ) )
+        if ( count ( $this->my_editable_service_bodies ) )
             {
             $ret = '<div id="bmlt_admin_service_body_editor_disclosure_div" class="bmlt_admin_service_body_editor_disclosure_div bmlt_admin_service_body_editor_disclosure_div_closed">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= '<a class="bmlt_admin_service_body_editor_disclosure_a" href="javascript:admin_handler_object.toggleServiceBodyEditor()">';
@@ -330,10 +361,10 @@ class c_comdef_admin_main_console
         $ret = '<div id="bmlt_admin_single_service_body_editor_div" class="bmlt_admin_single_service_body_editor_div">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
             $ret .= '<fieldset id="bmlt_admin_single_service_body_editor_fieldset" class="bmlt_admin_single_service_body_editor_fieldset">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= '<legend id="bmlt_admin_single_service_body_editor_fieldset_legend" class="bmlt_admin_single_service_body_editor_fieldset_legend">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                
-                    if ( count ( $this->my_service_bodies ) == 1 )
+
+                    if ( count ( $this->my_editable_service_bodies ) == 1 )
                         {
-                        $ret .= '<span class="service_body_title_span">'.htmlspecialchars ( $this->my_service_bodies[0]->GetLocalName() ).'</span>';
+                        $ret .= '<span class="service_body_title_span">'.htmlspecialchars ( $this->my_editable_service_bodies[0]->GetLocalName() ).'</span>';
                         }
                     else
                         {
@@ -524,9 +555,9 @@ class c_comdef_admin_main_console
     {
         $ret = '<select id="bmlt_admin_single_service_body_editor_sb_select" class="bmlt_admin_single_service_body_editor_sb_select" onchange="admin_handler_object.populateServiceBodyEditor()">';
             $first = true;
-            for ( $index = 0; $index  < count ( $this->my_service_bodies ); $index++ )
+            for ( $index = 0; $index  < count ( $this->my_editable_service_bodies ); $index++ )
                 {
-                $service_body = $this->my_service_bodies[$index];
+                $service_body = $this->my_editable_service_bodies[$index];
                 $ret .= '<option value="'.$index.'"';
                 if ( $first )
                     {
@@ -869,6 +900,41 @@ class c_comdef_admin_main_console
                 if ( $r != '' )
                     {
                     $ret .= '<dd class="bmlt_admin_service_body_child_dd">'.$r.'</dd>';
+                    if ( defined ( '__DEBUG_MODE__' ) )
+                        {
+                        $ret .= "\n";
+                        }
+                    }
+                }
+            }
+        
+        if ( $has_content )
+            {
+            $ret .= '</dl>';
+            if ( defined ( '__DEBUG_MODE__' ) )
+                {
+                $ret .= "\n";
+                }
+            }
+        else
+            {
+            for ( $c = 0; $c < count ( $this->my_service_bodies ); $c++ )
+                {
+                $service_body = $this->my_service_bodies[$c];
+            
+                if ( $service_body->UserCanEditMeetings() )
+                    {
+                    $id = $service_body->GetID();
+                
+                    $has_content = true;
+                
+                    $ret .= '<dt class="service_body_dt'.($r != '' ? ' service_body_parent_dt' : '').'">';
+                        $ret .= '<span class="single_checkbox_span">';
+                            $ret .= '<input type="checkbox" checked="checked" id="bmlt_admin_meeting_search_service_body_checkbox_'.$id.'" onclick="admin_handler_object.handleServiceCheckBoxChanges('.$id.')" onchange="admin_handler_object.handleServiceCheckBoxChanges('.$id.')" />';
+                            $ret .= '<label class="bmlt_admin_med_checkbox_label_left" for="bmlt_admin_meeting_search_service_body_checkbox_'.$id.'">'.htmlspecialchars ( $service_body->GetLocalName() ).'</label>';
+                        $ret .= '</span>';
+                    $ret .= '</dt>';
+                
                     if ( defined ( '__DEBUG_MODE__' ) )
                         {
                         $ret .= "\n";

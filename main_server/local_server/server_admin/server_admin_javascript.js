@@ -3089,7 +3089,7 @@ function BMLT_Server_Admin ()
             
             if ( json_object )
                 {
-                if ( json_object.error )
+                if ( !json_object.success )
                     {
                     alert ( json_object.report );
                     BMLT_Admin_StartFader ( 'bmlt_admin_fader_service_body_editor_fail_div', this.m_failure_fade_duration );
@@ -3170,7 +3170,7 @@ function BMLT_Server_Admin ()
             
             if ( json_object )
                 {
-                if ( json_object.error )
+                if ( !json_object.success )
                     {
                     alert ( json_object.report );
                     BMLT_Admin_StartFader ( 'bmlt_admin_fader_service_body_editor_delete_fail_div', this.m_failure_fade_duration );
@@ -3178,13 +3178,23 @@ function BMLT_Server_Admin ()
                 else
                     {
                     var service_body_select = document.getElementById ( 'bmlt_admin_single_service_body_editor_sb_select' );
+                    for ( var index = 0; index < g_editable_service_bodies_array.length; index++ )
+                        {
+                        if ( g_editable_service_bodies_array[index][0] == parseInt(json_object.report) )
+                            {
+                            g_editable_service_bodies_array[index] = null;
+                            g_editable_service_bodies_array.splice ( index, 1 );
+                            service_body_select.remove ( index, 1 );
+                            break;
+                            };
+                        };
+                        
                     for ( var index = 0; index < g_service_bodies_array.length; index++ )
                         {
                         if ( g_service_bodies_array[index][0] == parseInt(json_object.report) )
                             {
                             g_service_bodies_array[index] = null;
                             g_service_bodies_array.splice ( index, 1 );
-                            service_body_select.remove ( index, 1 );
                             break;
                             };
                         };

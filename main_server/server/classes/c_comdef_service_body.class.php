@@ -871,6 +871,53 @@ class c_comdef_service_body extends t_comdef_world_type implements i_comdef_db_s
 	}
 	
 	/*******************************************************************/
+	/** \brief Test to see if a user is allowed to edit meetings in this
+	           Service body.
+	
+		\returns true, if the user is allowed to edit, false, otherwise.
+	*/
+	function UserCanEditMeetings (
+							    $in_user_object = null	///< A reference to a c_comdef_user object, for the user to be validated. If null, or not supplied, the server current user is tested.
+							    )
+	{
+	    $ret = $this->UserCanEdit ( $in_user_object );  // First, see if we are able to edit this Service body. If so, then we're golden.
+	    
+	    if ( !$ret )    // If not, then see if we are able to edit as a "guest."
+	        {
+            if ( null == $in_user_object )
+                {
+                $in_user_object = c_comdef_server::GetCurrentUserObj();
+                }
+		
+	        $editors = $this->GetEditors ();
+	        
+	        foreach ( $editors as $id )
+	            {
+	            if ( $in_user_object->GetID () == $id )
+	                {
+	                $ret = true;
+	                break;
+	                }
+	            }
+	            
+	        if ( !$ret )
+	            {
+                if ( $this->GetOwnerID() )
+                    {
+                    $parent = c_comdef_server::GetServiceBodyByIDObj ( $this->GetOwnerID() );
+                    
+                    if ( $parent instanceof c_comdef_service_body )
+                        {
+                        $ret = $parent->UserCanEditMeetings ( $in_user_object );
+                        }
+                    }
+                }
+	        }
+	    
+	    return $ret;
+	}
+	
+	/*******************************************************************/
 	/** \brief Test to see if a user is allowed to edit an instance (change the data).
 		Service Body Administrators that are Editors in parent, or secondary parent
 		Service bodies can edit the Service body.
@@ -916,15 +963,19 @@ class c_comdef_service_body extends t_comdef_world_type implements i_comdef_db_s
 				
 				if ( $current_obj instanceof c_comdef_service_body )
 					{
-// NOTE: As of version 2.0, only the server admin or the principal user can edit a Service body.
 					if ( intval ( $current_obj->GetPrincipalUserID() ) == intval ( $in_user_object->GetID() ) )
 						{
 						$ret = true;
 						}
-// 					else
-// 						{
-// 						$ret = $this->IsUserInServiceBodyHierarchy($in_user_object );
-// 						}
+					else if ( $this->GetOwnerID() )
+						{
+						$parent = c_comdef_server::GetServiceBodyByIDObj ( $this->GetOwnerID() );
+						
+						if ( $parent instanceof c_comdef_service_body )
+						    {
+						    $ret = $parent->UserCanEdit ( $in_user_object );
+						    }
+						}
 					}
 				}
 			elseif ( c_comdef_server::IsUserServerAdmin() )	// The server admin can edit anything.

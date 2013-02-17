@@ -66,11 +66,11 @@ class c_comdef_admin_ajax_handler
         
         if ( isset ( $this->my_http_vars['set_service_body_change'] ) && $this->my_http_vars['set_service_body_change'] )
             {
-            $returned_text = $this->HandleServiceBodyChange ( $this->my_http_vars['set_service_body_change'] );
+            $this->HandleServiceBodyChange ( $this->my_http_vars['set_service_body_change'] );
             }
         else if ( isset ( $this->my_http_vars['delete_service_body'] ) && $this->my_http_vars['delete_service_body'] )
             {
-            $returned_text = $this->HandleDeleteServiceBody ( $this->my_http_vars['delete_service_body'], isset ( $this->my_http_vars['permanently'] ) );
+            $this->HandleDeleteServiceBody ( $this->my_http_vars['delete_service_body'], isset ( $this->my_http_vars['permanently'] ) );
             }
         else if ( isset ( $this->my_http_vars['set_meeting_change'] ) && $this->my_http_vars['set_meeting_change'] )
             {
@@ -142,8 +142,6 @@ class c_comdef_admin_ajax_handler
     function HandleServiceBodyChange (  $in_service_body_data    ///< A JSON object, containing the new Service Body data.
                                         )
     {
-        $returned_text = '';
-        
         $json_tool = new PhpJsonXmlArrayStringInterchanger;
         
         $the_new_service_body = $json_tool->convertJsonToArray ( $in_service_body_data, true );
@@ -177,12 +175,29 @@ class c_comdef_admin_ajax_handler
                 
                 if ( $sb_to_change->UpdateToDB() )
                     {
-                    $returned_text = array2json ( $the_new_service_body );
+                    header ( 'Content-type: application/json' );
+                    echo array2json ( $the_new_service_body );
+                    }
+                else
+                    {
+                    $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_fail_cant_update_text'] );
+                    header ( 'Content-type: application/json' );
+                    echo "{'success':false,'report':'$err_string'}";
                     }
                 }
+            else
+                {
+                $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_fail_cant_find_sb_text'] );
+                header ( 'Content-type: application/json' );
+                echo "{'success':false,'report':'$err_string'}";
+                }
             }
-            
-        return $returned_text;
+        else
+            {
+            $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_fail_no_data_text'] );
+            header ( 'Content-type: application/json' );
+            echo "{'success':false,'report':'$err_string'}";
+            }
     }
     
     /*******************************************************************/
