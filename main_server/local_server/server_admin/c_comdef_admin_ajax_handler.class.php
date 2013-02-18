@@ -176,7 +176,7 @@ class c_comdef_admin_ajax_handler
                 if ( $sb_to_change->UpdateToDB() )
                     {
                     header ( 'Content-type: application/json' );
-                    echo array2json ( $the_new_service_body );
+                    echo "{'success':true,'service_body':".array2json ( $the_new_service_body )."}";
                     }
                 else
                     {
@@ -563,32 +563,32 @@ class c_comdef_admin_ajax_handler
                         }
                     else
                         {
-                        $in_meeting_data['id_bigint'] = json_prepare ( $this->my_localized_strings['comdef_search_admin_strings']['Edit_Meeting']['meeting_id'] ).$in_meeting_data['id_bigint'];
-                        $err_string = json_prepare ( $this->my_localized_strings['comdef_search_admin_strings']['Edit_Meeting']['auth_failure'] );
+                        $in_meeting_data['id_bigint'] = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_meeting_id'] ).$in_meeting_data['id_bigint'];
+                        $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_auth_failure'] );
                         header ( 'Content-type: application/json' );
                         echo "{'error':true,'type':'auth_failure','report':'$err_string','info':'".$in_meeting_data['id_bigint']."'}";
                         }
                     }
                 else
                     {
-                    $in_meeting_data['id_bigint'] = json_prepare ( $this->my_localized_strings['comdef_search_admin_strings']['Edit_Meeting']['meeting_id'] ).$in_meeting_data['id_bigint'];
-                    $err_string = json_prepare ( $this->my_localized_strings['comdef_search_admin_strings']['Edit_Meeting']['auth_failure'] );
+                    $in_meeting_data['id_bigint'] = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_meeting_id'] ).$in_meeting_data['id_bigint'];
+                    $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_auth_failure'] );
                     header ( 'Content-type: application/json' );
                     echo "{'error':true,'type':'auth_failure','report':'$err_string','info':'".$in_meeting_data['id_bigint']."'}";
                     }
                 }
             else
                 {
-                $in_meeting_data['id_bigint'] = json_prepare ( $this->my_localized_strings['comdef_search_admin_strings']['Edit_Meeting']['meeting_id'] ).$in_meeting_data['id_bigint'];
-                $err_string = json_prepare ( $this->my_localized_strings['comdef_search_admin_strings']['Edit_Meeting']['object_not_found'] );
+                $in_meeting_data['id_bigint'] = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_meeting_id'] ).$in_meeting_data['id_bigint'];
+                $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_object_not_found'] );
                 header ( 'Content-type: application/json' );
                 echo "{'error':true,'type':'object_not_found','report':'$err_string','info':'".$in_meeting_data['id_bigint']."'}";
                 }
             }
         catch ( Exception $e )
             {
-            $in_meeting_data['id_bigint'] = json_prepare ( $this->my_localized_strings['comdef_search_admin_strings']['Edit_Meeting']['meeting_id'] ).$in_meeting_data['id_bigint'];
-            $err_string = json_prepare ( $this->my_localized_strings['comdef_search_admin_strings']['Edit_Meeting']['object_not_changed'] );
+            $in_meeting_data['id_bigint'] = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_meeting_id'] ).$in_meeting_data['id_bigint'];
+            $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_object_not_changed'] );
             header ( 'Content-type: application/json' );
             echo "{'error':true,'type':'object_not_changed','report':'$err_string','info':'".$in_meeting_data['id_bigint']."'}";
             }

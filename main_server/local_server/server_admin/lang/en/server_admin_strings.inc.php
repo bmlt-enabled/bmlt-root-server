@@ -144,6 +144,9 @@
                                             'cookie'                                                =>  'You must enable cookies in order to administer this server.',
                                             'noscript'                                              =>  'You cannot administer this site without JavaScript.',
                                             'title'                                                 =>  'Please log in to administer the server.',
+											'edit_Meeting_object_not_found'                         =>  'ERROR: The meeting was not found.',
+ 											'edit_Meeting_object_not_changed'                       =>  'ERROR: The meeting was not changed.',
+ 											'edit_Meeting_auth_failure'                             =>  'You are not authorized to edit this meeting.',
                                             'not_auth_1'                                            =>  'NOT AUTHORIZED',
                                             'not_auth_2'                                            =>  'You are not authorized to administer this server.',
                                             'not_auth_3'                                            =>  'There was a problem with the user name or password that you entered.',
@@ -188,5 +191,7 @@
 	                                        'service_body_editor_type_c_comdef_service_body__WSC__' =>  'World Service Conference',
 	                                        'service_body_editor_type_c_comdef_service_body__MAS__' =>  'Metro Area',
 	                                        'service_body_editor_type_c_comdef_service_body__ZFM__' =>  'Zonal Forum',
+	                                        'edit_Meeting_meeting_id'                               =>  'Meeting ID:',
+
 	                                    );
 ?>

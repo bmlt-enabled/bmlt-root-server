@@ -3098,9 +3098,18 @@ function BMLT_Server_Admin ()
                     {
                     for ( var index = 0; index < g_service_bodies_array.length; index++ )
                         {
-                        if ( g_service_bodies_array[index][0] == json_object[0] )
+                        if ( g_service_bodies_array[index][0] == json_object.service_body[0] )
                             {
-                            g_service_bodies_array[index] = json_object;
+                            g_service_bodies_array[index] = json_object.service_body;
+                            break;
+                            };
+                        };
+                        
+                    for ( var index = 0; index < g_editable_service_bodies_array.length; index++ )
+                        {
+                        if ( g_editable_service_bodies_array[index][0] == json_object.service_body[0] )
+                            {
+                            g_editable_service_bodies_array[index] = json_object.service_body;
                             break;
                             };
                         };
