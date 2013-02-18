@@ -189,9 +189,22 @@ function GetServerInfo()
     if ( file_exists ( $config_file_path ) )
         {
         include ( $config_file_path );
+	    $localized_strings = c_comdef_server::GetLocalStrings();
+        if ( isset ( $bmlt_title ) && trim ( $bmlt_title ) )
+            {
+            $ret['title'] = trim ( $bmlt_title );
+            }
+        else
+            {
+            $ret['title'] = $localized_strings['comdef_server_admin_strings']['login_banner'];
+            }
         if ( isset ( $banner_text ) && trim ( $banner_text ) )
             {
             $ret['banner_text'] = trim ( $banner_text );
+            }
+        else
+            {
+            $ret['banner_text'] = $localized_strings['comdef_server_admin_strings']['login_underbanner'];
             }
         }
 
@@ -213,12 +226,13 @@ function c_comdef_LoginForm(	&$in_server	///< A reference to an instance of c_co
 	$http_vars = array_merge ( $_GET, $_POST );
 	
 	$localized_strings = c_comdef_server::GetLocalStrings();
+    $server_info = GetServerInfo();
 
 	$ret = '<div class="c_comdef_admin_login_form_container_div">';
 		// If there is no JavaScript, then this message is displayed, and the form will not be revealed.
 		$ret .= '<noscript><h1>'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['noscript'] ).'</h1></noscript>';
-        $ret .= '<h1 class="lohgin_form_main_banner_h1">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['login_banner']  ).'</h1>';
-        $ret .= '<h2 class="lohgin_form_secondary_banner_h2">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['login_underbanner']  ).'</h2>';
+        $ret .= '<h1 class="lohgin_form_main_banner_h1">'.c_comdef_htmlspecialchars ( $server_info['title']  ).'</h1>';
+        $ret .= '<h2 class="lohgin_form_secondary_banner_h2">'.c_comdef_htmlspecialchars ( $server_info['banner_text']  ).'</h2>';
 		$ret .= '<form method="post" class="c_comdef_admin_login_form" id="c_comdef_admin_login_form" action="'.c_comdef_htmlspecialchars ( $_SERVER['SCRIPT_NAME'] ).'?supports_ajax=yes&amp;admin_action=login';
 			foreach ( $http_vars as $key => $value )
 				{
