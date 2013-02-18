@@ -147,7 +147,10 @@ if ( isset ( $_SESSION[$admin_session_name] ) )
 		die ( '<div class="c_comdef_not_auth_container_div"><div class="c_comdef_not_auth_div"><h1 class="c_comdef_not_auth_1">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['not_auth_1'] ).'</h1><h2 class="c_comdef_not_auth_2">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['not_auth_2'] ).'</h2></div></div></body></html>' );
 		}
 	
-	echo '<div class="bmlt_admin_logout_bar"><h4><a href="'.$_SERVER['PHP_SELF'].'?admin_action=logout">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['logout'] ).'</a></h4></div>';
+	echo '<div class="bmlt_admin_logout_bar"><h4><a href="'.$_SERVER['PHP_SELF'].'?admin_action=logout">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['logout'] ).'</a></h4>';
+        $server_info = GetServerInfo();
+        echo '<div class="server_version_display_div">'.htmlspecialchars ( $server_info['version'] ).'</div>';
+    echo '</div>';
 	}
 else
 	{
@@ -155,6 +158,45 @@ else
 	}
 
 $t_server = null;
+
+/********************************************************************************************************//**
+\brief This function parses the main server version from the XML file.
+\returns a string, containing the version info and banner.
+************************************************************************************************************/
+function GetServerInfo()
+{
+    $ret = null;
+
+    if ( file_exists ( dirname ( __FILE__ ).'/../../client_interface/serverInfo.xml' ) )
+        {
+        $info_file = new DOMDocument;
+        if ( $info_file instanceof DOMDocument )
+            {
+            if ( @$info_file->load ( dirname ( __FILE__ ).'/../../client_interface/serverInfo.xml' ) )
+                {
+                $has_info = $info_file->getElementsByTagName ( "bmltInfo" );
+            
+                if ( ($has_info instanceof domnodelist) && $has_info->length )
+                    {
+                    $ret['version'] = $has_info->item(0)->nodeValue;
+                    }
+                }
+            }
+        }
+
+    $config_file_path = dirname ( __FILE__ ).'/../../server/config/auto-config.inc.php';
+
+    if ( file_exists ( $config_file_path ) )
+        {
+        include ( $config_file_path );
+        if ( isset ( $banner_text ) && trim ( $banner_text ) )
+            {
+            $ret['banner_text'] = trim ( $banner_text );
+            }
+        }
+
+    return $ret;
+}
 		
 /*******************************************************************/
 /** \brief	Returns HTML for the login form. If the user is not logged

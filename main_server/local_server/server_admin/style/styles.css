@@ -1046,6 +1046,12 @@ fieldset.bmlt_admin_single_service_body_editor_fieldset legend
     margin-right:1em;
 }
 
-span.service_body_title_span
+div.server_version_display_div
 {
+    position:absolute;
+    right:8px;
+    top:4px;
+    color:#009;
+    font-weight:normal;
+    font-style:italic;
 }

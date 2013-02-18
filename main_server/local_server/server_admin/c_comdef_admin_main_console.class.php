@@ -437,7 +437,7 @@ class c_comdef_admin_main_console
                     {
                     $ret .= '<div id="service_body_admin_full_editor_list_div" class="bmlt_admin_one_line_in_a_form clear_both">';
                         $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_sb_admin_full_editor_label'] ).'</span>';
-                        $ret .= '<span class="bmlt_admin_value_left light_italic_display" id="service_body_admin_id_display">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_sb_admin_full_editor_desc'] ).'</span>';
+                        $ret .= '<span class="bmlt_admin_value_left light_italic_display">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_sb_admin_full_editor_desc'] ).'</span>';
                         $ret .= '<div class="clear_both"></div>';
                         
                         foreach ( $full_editors as $user )
@@ -455,7 +455,7 @@ class c_comdef_admin_main_console
                     {
                     $ret .= '<div id="service_body_admin_editor_list_div" class="bmlt_admin_one_line_in_a_form clear_both">';
                         $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_sb_admin_editor_label'] ).'</span>';
-                        $ret .= '<span class="bmlt_admin_value_left light_italic_display" id="service_body_admin_id_display">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_sb_admin_editor_desc'] ).'</span>';
+                        $ret .= '<span class="bmlt_admin_value_left light_italic_display">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_sb_admin_editor_desc'] ).'</span>';
                         $ret .= '<div class="clear_both"></div>';
                         
                         foreach ( $basic_editors as $user )
@@ -472,7 +472,7 @@ class c_comdef_admin_main_console
                     {
                     $ret .= '<div id="service_body_admin_observer_list_div" class="bmlt_admin_one_line_in_a_form clear_both">';
                         $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_sb_admin_observer_label'] ).'</span>';
-                        $ret .= '<span class="bmlt_admin_value_left light_italic_display" id="service_body_admin_id_display">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_sb_admin_observer_desc'] ).'</span>';
+                        $ret .= '<span class="bmlt_admin_value_left light_italic_display">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_sb_admin_observer_desc'] ).'</span>';
                         $ret .= '<div class="clear_both"></div>';
                         
                         foreach ( $observers as $user )
@@ -664,7 +664,7 @@ class c_comdef_admin_main_console
                 {
                 $ret .= '<span class="bmlt_admin_meeting_editor_form_middle_button_single_span bmlt_admin_delete_button_span hide_in_new_meeting">';
                     $ret .= '<a id="bmlt_admin_meeting_editor_form_service_body_delete_button" href="javascript:admin_handler_object.deleteServiceBody()" class="bmlt_admin_ajax_button button">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_delete_button'] ).'</a>';
-                    $ret .= '<span id="bmlt_admin_template_delete_ajax_button_throbber_span" class="bmlt_admin_ajax_button_throbber_span item_hidden"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></span>';
+                    $ret .= '<span id="bmlt_admin_service_body_delete_ajax_button_throbber_span" class="bmlt_admin_ajax_button_throbber_span item_hidden"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></span>';
                     $ret .= '<span class="perm_checkbox_span">';
                         $ret .= '<input type="checkbox" id="bmlt_admin_service_body_delete_perm_checkbox" />';
                         $ret .= '<label for="bmlt_admin_service_body_delete_perm_checkbox">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_delete_perm_checkbox'] ).'</label>';

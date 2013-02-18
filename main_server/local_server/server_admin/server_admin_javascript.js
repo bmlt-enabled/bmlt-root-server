@@ -3156,7 +3156,7 @@ function BMLT_Server_Admin ()
                 var id = main_service_body_editor.service_body_object[0];
                 var uri = g_ajax_callback_uri + '&delete_service_body=' + id + (( perm_check && perm_check.checked ) ? '&permanently=1' : '');
 
-                var throbber_span = document.getElementById ( 'bmlt_admin_template_delete_ajax_button_throbber_span' ).className = 'bmlt_admin_ajax_button_throbber_span';
+                var throbber_span = document.getElementById ( 'bmlt_admin_service_body_delete_ajax_button_throbber_span' ).className = 'bmlt_admin_ajax_button_throbber_span';
                 var delete_a = document.getElementById ( 'bmlt_admin_meeting_editor_form_service_body_delete_button' ).className = 'item_hidden';
             
                 var salt = new Date();
@@ -3269,7 +3269,7 @@ function BMLT_Server_Admin ()
             BMLT_Admin_StartFader ( 'bmlt_admin_fader_service_body_editor_delete_fail_div', this.m_failure_fade_duration );
             };
         
-        document.getElementById ( 'bmlt_admin_template_delete_ajax_button_throbber_span' ).className = 'item_hidden';
+        document.getElementById ( 'bmlt_admin_service_body_delete_ajax_button_throbber_span' ).className = 'item_hidden';
         this.validateServiceBodyEditorButtons();
     };
     
