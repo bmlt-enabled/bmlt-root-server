@@ -64,7 +64,11 @@ class c_comdef_admin_ajax_handler
         
         $account_changed = false;
         
-        if ( isset ( $this->my_http_vars['set_service_body_change'] ) && $this->my_http_vars['set_service_body_change'] )
+        if ( isset ( $this->my_http_vars['create_new_service_body'] ) && $this->my_http_vars['create_new_service_body'] )
+            {
+            $this->HandleServiceBodyCreate ( $this->my_http_vars['create_new_service_body'] );
+            }
+        elseif ( isset ( $this->my_http_vars['set_service_body_change'] ) && $this->my_http_vars['set_service_body_change'] )
             {
             $this->HandleServiceBodyChange ( $this->my_http_vars['set_service_body_change'] );
             }
@@ -197,6 +201,80 @@ class c_comdef_admin_ajax_handler
             $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_fail_no_data_text'] );
             header ( 'Content-type: application/json' );
             echo "{'success':false,'report':'$err_string'}";
+            }
+    }
+
+    /*******************************************************************/
+    /**
+        \brief	This handles creating a new Service body.
+    */	
+    function HandleServiceBodyCreate (  $in_service_body_data    ///< A JSON object, containing the new Service Body data.
+                                        )
+    {
+        if ( c_comdef_server::IsUserServerAdmin(null,true) )
+            {
+            $json_tool = new PhpJsonXmlArrayStringInterchanger;
+        
+            $the_new_service_body = $json_tool->convertJsonToArray ( $in_service_body_data, true );
+        
+            if ( is_array ( $the_new_service_body ) && count ( $the_new_service_body ) )
+                {
+                $id = $the_new_service_body[0];
+                $parent_service_body_id = $the_new_service_body[1];
+                $name = $the_new_service_body[2];
+                $description = $the_new_service_body[3];
+                $main_user_id = $the_new_service_body[4];
+                $editor_ids = explode ( ',', $the_new_service_body[5] );
+                $email = $the_new_service_body[6];
+                $uri = $the_new_service_body[7];
+                $kml_uri = $the_new_service_body[8];
+                $type = $the_new_service_body[9];
+            
+                $sb_to_create = new c_comdef_service_body;
+            
+                if ( $sb_to_create instanceof c_comdef_service_body )
+                    {
+                    $sb_to_create->SetOwnerID ( $parent_service_body_id );
+                    $sb_to_create->SetLocalName ( $name );
+                    $sb_to_create->SetLocalDescription ( $description );
+                    $sb_to_create->SetPrincipalUserID ( $main_user_id );
+                    $sb_to_create->SetEditors ( $editor_ids );
+                    $sb_to_create->SetContactEmail ( $email );
+                    $sb_to_create->SetURI ( $uri );
+                    $sb_to_create->SetKMLURI ( $kml_uri );
+                    $sb_to_create->SetSBType ( $type );
+                
+                    if ( $sb_to_create->UpdateToDB() )
+                        {
+                        // Get whatever ID was assigned to this Service Body.
+                        $the_new_service_body[0] = $sb_to_create->GetID();
+                        header ( 'Content-type: application/json' );
+                        echo "{'success':true,'service_body':".array2json ( $the_new_service_body )."}";
+                        }
+                    else
+                        {
+                        $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_fail_cant_update_text'] );
+                        header ( 'Content-type: application/json' );
+                        echo "{'success':false,'report':'$err_string'}";
+                        }
+                    }
+                else
+                    {
+                    $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_fail_cant_find_sb_text'] );
+                    header ( 'Content-type: application/json' );
+                    echo "{'success':false,'report':'$err_string'}";
+                    }
+                }
+            else
+                {
+                $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_fail_no_data_text'] );
+                header ( 'Content-type: application/json' );
+                echo "{'success':false,'report':'$err_string'}";
+                }
+            }
+        else
+            {
+            echo 'NOT AUTHORIZED';
             }
     }
     

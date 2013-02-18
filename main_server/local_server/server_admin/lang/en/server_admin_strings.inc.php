@@ -179,6 +179,8 @@
 	                                        'service_body_delete_perm_checkbox'                     =>  'Delete This Service Body Permanently',
 	                                        'service_body_delete_button_confirm'                    =>  'Are you sure that you want to delete this Service body?',
 	                                        'service_body_delete_button_confirm_perm'               =>  'This Service body will be deleted permanently!',
+	                                        'service_body_change_fader_create_success_text'         =>  'The Service Body Was Successfully Created',
+	                                        'service_body_change_fader_create_fail_text'            =>  'The Service Body Create Failed',
 	                                        'service_body_change_fader_delete_success_text'         =>  'The Service Body Was Successfully Deleted',
 	                                        'service_body_change_fader_delete_fail_text'            =>  'The Service Body Delete Failed',
 	                                        'service_body_change_fader_fail_no_data_text'           =>  'The Service Body Change Failed, Because There Was No Data Supplied',

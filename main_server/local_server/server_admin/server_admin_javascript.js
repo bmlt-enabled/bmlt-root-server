@@ -3113,29 +3113,37 @@ function BMLT_Server_Admin ()
     ****************************************************************************************/
     this.saveServiceBody = function()
     {
-        if ( this.isServiceBodyDirty() != null )
-            {
-            var main_service_body_editor = document.getElementById ( 'bmlt_admin_single_service_body_editor_div' );
-            var button_object = document.getElementById ( 'bmlt_admin_service_body_editor_form_service_body_save_button' );
-            var throbber_object = document.getElementById ( 'bmlt_admin_service_body_save_ajax_button_throbber_span' );
-
-            var serialized_object = JSON.stringify ( main_service_body_editor.service_body_object );
+        var main_service_body_editor = document.getElementById ( 'bmlt_admin_single_service_body_editor_div' );
         
-            var uri = g_ajax_callback_uri + '&set_service_body_change=' + encodeURIComponent ( serialized_object );
-
-            if ( main_service_body_editor.m_ajax_request_in_progress )
+        if ( main_service_body_editor.service_body_object[0] == 0 )
+            {
+            this.createServiceBody();
+            }
+        else
+            {
+            if ( this.isServiceBodyDirty() != null )
                 {
-                main_service_body_editor.m_ajax_request_in_progress.abort();
-                main_service_body_editor.m_ajax_request_in_progress = null;
+                var button_object = document.getElementById ( 'bmlt_admin_service_body_editor_form_service_body_save_button' );
+                var throbber_object = document.getElementById ( 'bmlt_admin_service_body_save_ajax_button_throbber_span' );
+
+                var serialized_object = JSON.stringify ( main_service_body_editor.service_body_object );
+        
+                var uri = g_ajax_callback_uri + '&set_service_body_change=' + encodeURIComponent ( serialized_object );
+
+                if ( main_service_body_editor.m_ajax_request_in_progress )
+                    {
+                    main_service_body_editor.m_ajax_request_in_progress.abort();
+                    main_service_body_editor.m_ajax_request_in_progress = null;
+                    };
+            
+                var salt = new Date();
+                uri += '&salt=' + salt.getTime();
+            
+                button_object.className = 'item_hidden';
+                throbber_object.className = 'bmlt_admin_ajax_button_throbber_span';
+            
+                main_service_body_editor.m_ajax_request_in_progress = BMLT_AjaxRequest ( uri, function(in_req) { admin_handler_object.saveServiceBodyAJAXCallback(in_req); }, 'post' );
                 };
-            
-            var salt = new Date();
-            uri += '&salt=' + salt.getTime();
-            
-            button_object.className = 'item_hidden';
-            throbber_object.className = 'bmlt_admin_ajax_button_throbber_span';
-            
-            main_service_body_editor.m_ajax_request_in_progress = BMLT_AjaxRequest ( uri, function(in_req) { admin_handler_object.saveServiceBodyAJAXCallback(in_req); }, 'post' );
             };
     };
     
@@ -3189,6 +3197,95 @@ function BMLT_Server_Admin ()
         else
             {
             BMLT_Admin_StartFader ( 'bmlt_admin_fader_service_body_editor_fail_div', this.m_failure_fade_duration );
+            };
+        
+        document.getElementById ( 'bmlt_admin_service_body_save_ajax_button_throbber_span' ).className = 'item_hidden';
+        this.validateServiceBodyEditorButtons();
+    };
+    
+    /************************************************************************************//**
+    *   \brief  This creates a new Service body.                                            *
+    ****************************************************************************************/
+    this.createServiceBody = function()
+    {
+        if ( this.isServiceBodyDirty() != null )
+            {
+            var main_service_body_editor = document.getElementById ( 'bmlt_admin_single_service_body_editor_div' );
+            var button_object = document.getElementById ( 'bmlt_admin_service_body_editor_form_service_body_save_button' );
+            var throbber_object = document.getElementById ( 'bmlt_admin_service_body_save_ajax_button_throbber_span' );
+
+            var serialized_object = JSON.stringify ( main_service_body_editor.service_body_object );
+        
+            var uri = g_ajax_callback_uri + '&create_new_service_body=' + encodeURIComponent ( serialized_object );
+
+            if ( main_service_body_editor.m_ajax_request_in_progress )
+                {
+                main_service_body_editor.m_ajax_request_in_progress.abort();
+                main_service_body_editor.m_ajax_request_in_progress = null;
+                };
+            
+            var salt = new Date();
+            uri += '&salt=' + salt.getTime();
+            
+            button_object.className = 'item_hidden';
+            throbber_object.className = 'bmlt_admin_ajax_button_throbber_span';
+            
+            main_service_body_editor.m_ajax_request_in_progress = BMLT_AjaxRequest ( uri, function(in_req) { admin_handler_object.createServiceBodyAJAXCallback(in_req); }, 'post' );
+            };
+    };
+    
+    /************************************************************************************//**
+    *   \brief  This is the AJAX callback handler for the create operation.                 *
+    ****************************************************************************************/
+    this.createServiceBodyAJAXCallback = function(in_http_request ///< The HTTPRequest object
+                                                )
+    {
+        if ( in_http_request.responseText )
+            {
+            eval ( 'var json_object = ' + in_http_request.responseText + ';' );
+            
+            if ( json_object )
+                {
+                if ( !json_object.success )
+                    {
+                    alert ( json_object.report );
+                    BMLT_Admin_StartFader ( 'bmlt_admin_fader_service_body_create_fail_div', this.m_failure_fade_duration );
+                    }
+                else
+                    {
+                    BMLT_Admin_StartFader ( 'bmlt_admin_fader_service_body_create_success_div', this.m_success_fade_duration );
+                    g_service_bodies_array[g_service_bodies_array.length] = json_object.service_body;
+                    g_editable_service_bodies_array[g_editable_service_bodies_array.length] = json_object.service_body;
+                    var service_body_select = document.getElementById ( 'bmlt_admin_single_service_body_editor_sb_select' );
+                    var new_option = document.createElement ( 'option' );
+                    new_option.value = json_object.service_body[0];
+                    new_option.text = json_object.service_body[2];
+                    
+                    try
+                        {
+                        // for IE earlier than version 8
+                        service_body_select.add ( new_option, service_body_select.options[service_body_select.options.length - 2] );
+                        }
+                    catch (e)
+                        {
+                        service_body_select.add ( new_option, service_body_select.options.length - 2 );
+                        }
+                    
+                    service_body_select.selectedIndex = service_body_select.options.length - 3;
+                    var main_service_body_editor = document.getElementById ( 'bmlt_admin_single_service_body_editor_div' );
+                    main_service_body_editor.m_ajax_request_in_progress = null;
+                    main_service_body_editor.service_body_object = null;
+                    this.populateServiceBodyEditor();
+                    };
+                }
+            else
+                {
+                BMLT_Admin_StartFader ( 'bmlt_admin_fader_service_body_create_fail_div', this.m_failure_fade_duration );
+                };
+            }
+        else
+            {
+            BMLT_Admin_StartFader ( 'bmlt_admin_fader_service_body_create_fail_div', this.m_failure_fade_duration );
             };
         
         document.getElementById ( 'bmlt_admin_service_body_save_ajax_button_throbber_span' ).className = 'item_hidden';
