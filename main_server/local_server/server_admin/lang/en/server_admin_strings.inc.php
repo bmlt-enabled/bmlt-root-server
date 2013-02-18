@@ -192,6 +192,6 @@
 	                                        'service_body_editor_type_c_comdef_service_body__MAS__' =>  'Metro Area',
 	                                        'service_body_editor_type_c_comdef_service_body__ZFM__' =>  'Zonal Forum',
 	                                        'edit_Meeting_meeting_id'                               =>  'Meeting ID:',
-
+                                            'service_body_editor_create_new_sb_option'              =>  'Create A New Service Body',
 	                                    );
 ?>

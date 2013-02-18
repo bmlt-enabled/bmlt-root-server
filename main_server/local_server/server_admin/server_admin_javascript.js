@@ -2697,14 +2697,24 @@ function BMLT_Server_Admin ()
             };
         
         var index = 0;
+        var selected_service_body_object = null;
         
         if ( service_body_select )  // If we are able to switch between multiple Service bodies, we can do so here.
             {
-            index = service_body_select.selectedIndex;
+            index = service_body_select.options[service_body_select.selectedIndex].value;
             }
         
-        // This makes a copy of the Service body object, so we can modify it.
-        var selected_service_body_object = JSON.parse ( JSON.stringify ( g_service_bodies_array[index] ) );
+        if ( index == -1 )  // See if we will be creating a new one.
+            {
+            main_service_body_editor.className = 'bmlt_admin_single_service_body_editor_div bmlt_admin_new_sb_editor';
+            selected_service_body_object = this.makeANewSB();
+            }
+        else
+            {
+            main_service_body_editor.className = 'bmlt_admin_single_service_body_editor_div';
+            // This makes a copy of the Service body object, so we can modify it.
+            selected_service_body_object = JSON.parse ( JSON.stringify ( g_service_bodies_array[index] ) );
+            };
         
         main_service_body_editor.service_body_object = selected_service_body_object;
         
@@ -2756,6 +2766,29 @@ function BMLT_Server_Admin ()
         this.validateServiceBodyEditorButtons();
     };
 
+    /************************************************************************************//**
+    *   \brief  This simply creates a brand-new, unsullied Service body object.             *
+    *   \returns a new Service body object (which is really an array).                      *
+    ****************************************************************************************/
+    this.makeANewSB = function()
+    {
+        var new_service_body_object = new Array;
+        new_service_body_object[0] = 0;
+        new_service_body_object[1] = 0;
+        new_service_body_object[2] = '';
+        new_service_body_object[3] = '';
+        new_service_body_object[4] = g_users[1][0];
+        new_service_body_object[5] = '';
+        new_service_body_object[6] = '';
+        new_service_body_object[7] = '';
+        new_service_body_object[8] = '';
+        new_service_body_object[9] = 'AS';
+        new_service_body_object[10] = true;
+        new_service_body_object[11] = true;
+        
+        return new_service_body_object;
+    };
+    
     /************************************************************************************//**
     *   \brief  This handles display of the Service body user.                              *
     ****************************************************************************************/
@@ -2903,13 +2936,20 @@ function BMLT_Server_Admin ()
         var original_service_body = null;
         var index = 0;
         
-        for ( ; index < g_service_bodies_array.length; index++ )
+        if ( edited_service_body_object[0] > 0 )
             {
-            if ( g_service_bodies_array[index][0] == edited_service_body_object[0] )
+            for ( ; index < g_service_bodies_array.length; index++ )
                 {
-                original_service_body = g_service_bodies_array[index];
-                break;
+                if ( g_service_bodies_array[index][0] == edited_service_body_object[0] )
+                    {
+                    original_service_body = g_service_bodies_array[index];
+                    break;
+                    };
                 };
+            }
+        else
+            {
+            original_service_body = this.makeANewSB();
             };
         
         var current = JSON.stringify ( edited_service_body_object );

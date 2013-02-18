@@ -109,7 +109,8 @@ div.clear_both
 
 /* Used throughout */
 
-div.bmlt_admin_meeting_editor_form_new_meetings_div .hide_in_new_meeting
+div.bmlt_admin_meeting_editor_form_new_meetings_div .hide_in_new_meeting,
+div.bmlt_admin_new_sb_editor .hide_in_new_service_body_admin
 {
     display:none;
 }
