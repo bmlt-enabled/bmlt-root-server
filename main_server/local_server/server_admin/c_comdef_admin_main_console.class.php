@@ -281,6 +281,8 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_service_body_dirty_confirm_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_dirty_confirm_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_service_body_delete_button_confirm = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_delete_button_confirm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_service_body_delete_button_confirm_perm = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_delete_button_confirm_perm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_service_body_save_button = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_save_button'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_service_body_create_button = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_create_button'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_time_values = [';
                     $ret .= '\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_am_label'] ).'\',';
                     $ret .= '\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_pm_label'] ).'\',';
@@ -564,7 +566,7 @@ class c_comdef_admin_main_console
             for ( $index = 0; $index  < count ( $this->my_editable_service_bodies ); $index++ )
                 {
                 $service_body = $this->my_editable_service_bodies[$index];
-                $ret .= '<option value="'.$index.'"';
+                $ret .= '<option value="'.$this->my_editable_service_bodies[$index]->GetID().'"';
                 if ( $first )
                     {
                     $ret .= ' selected="selected"';
@@ -578,7 +580,7 @@ class c_comdef_admin_main_console
             if ( $this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN )
                 {
                 $ret .= '<option value="" disabled="disabled"></option>';
-                $ret .= '<option value="-1">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_create_new_sb_option'] ).'</option>';
+                $ret .= '<option value="0">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_create_new_sb_option'] ).'</option>';
                 }
         $ret .= '</select>';
         
@@ -648,7 +650,7 @@ class c_comdef_admin_main_console
             for ( $index = 0; $index  < count ( $this->my_users ); $index++ )
                 {
                 $user = $this->my_users[$index];
-                $ret .= '<option value="'.$index.'"';
+                $ret .= '<option value="'.$user->GetID().'"';
                 if ( $user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN )
                     {
                     $ret .= ' disabled="disabled"';
@@ -674,7 +676,7 @@ class c_comdef_admin_main_console
             $ret .= '</span>';
             if ( $this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN )
                 {
-                $ret .= '<span class="bmlt_admin_meeting_editor_form_middle_button_single_span bmlt_admin_delete_button_span hide_in_new_service_body_admin">';
+                $ret .= '<span id="service_body_editor_delete_span" class="bmlt_admin_meeting_editor_form_middle_button_single_span bmlt_admin_delete_button_span hide_in_new_service_body_admin">';
                     $ret .= '<a id="bmlt_admin_meeting_editor_form_service_body_delete_button" href="javascript:admin_handler_object.deleteServiceBody()" class="bmlt_admin_ajax_button button">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_delete_button'] ).'</a>';
                     $ret .= '<span id="bmlt_admin_service_body_delete_ajax_button_throbber_span" class="bmlt_admin_ajax_button_throbber_span item_hidden"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></span>';
                     $ret .= '<span class="perm_checkbox_span">';

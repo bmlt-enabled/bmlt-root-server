@@ -2697,23 +2697,40 @@ function BMLT_Server_Admin ()
             };
         
         var index = 0;
+        var sb_id = 0;
         var selected_service_body_object = null;
         
         if ( service_body_select )  // If we are able to switch between multiple Service bodies, we can do so here.
             {
-            index = service_body_select.options[service_body_select.selectedIndex].value;
+            index = service_body_select.selectedIndex;
+            sb_id = service_body_select.options[index].value;
             }
         
-        if ( index == -1 )  // See if we will be creating a new one.
+        var save_button_a = document.getElementById ( 'bmlt_admin_service_body_editor_form_service_body_save_button' );
+        
+        if ( sb_id == 0 )  // See if we will be creating a new one.
             {
+            save_button_a.innerHTML = g_service_body_create_button;
             main_service_body_editor.className = 'bmlt_admin_single_service_body_editor_div bmlt_admin_new_sb_editor';
             selected_service_body_object = this.makeANewSB();
             }
         else
             {
+            var sb_object = null;
+            
+            for ( var c = 0; c < g_service_bodies_array.length; c++ )
+                {
+                if ( g_service_bodies_array[c][0] == sb_id )
+                    {
+                    sb_object = g_service_bodies_array[c];
+                    break;
+                    }
+                }
+            
+            save_button_a.innerHTML = g_service_body_save_button;
             main_service_body_editor.className = 'bmlt_admin_single_service_body_editor_div';
             // This makes a copy of the Service body object, so we can modify it.
-            selected_service_body_object = JSON.parse ( JSON.stringify ( g_service_bodies_array[index] ) );
+            selected_service_body_object = JSON.parse ( JSON.stringify ( sb_object ) );
             };
         
         main_service_body_editor.service_body_object = selected_service_body_object;
@@ -2764,6 +2781,9 @@ function BMLT_Server_Admin ()
         this.setServiceBodyEditorCheckboxes();
         
         this.validateServiceBodyEditorButtons();
+        
+        var perm_checkbox = document.getElementById ( 'bmlt_admin_service_body_delete_perm_checkbox' );
+        perm_checkbox.checked = false;
     };
 
     /************************************************************************************//**
@@ -2778,7 +2798,7 @@ function BMLT_Server_Admin ()
         new_service_body_object[2] = '';
         new_service_body_object[3] = '';
         new_service_body_object[4] = g_users[1][0];
-        new_service_body_object[5] = '';
+        new_service_body_object[5] = '0';
         new_service_body_object[6] = '';
         new_service_body_object[7] = '';
         new_service_body_object[8] = '';
@@ -2910,17 +2930,19 @@ function BMLT_Server_Admin ()
             cancel_button.className = 'bmlt_admin_ajax_button button_disabled';
             };
         
+        var delete_span = document.getElementById ( 'service_body_editor_delete_span' );
         var delete_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_service_body_delete_button' );
-
-        if ( delete_button )
+        
+        if ( delete_span )
             {
             if ( g_service_bodies_array.length > 1 )
                 {
+                delete_span.className = 'bmlt_admin_meeting_editor_form_middle_button_single_span bmlt_admin_delete_button_span hide_in_new_service_body_admin';
                 delete_button.className = 'bmlt_admin_ajax_button button';
                 }
             else
                 {
-                delete_button.className = 'bmlt_admin_ajax_button button_disabled';
+                delete_span.className = 'item_hidden';
                 };
             };
     };
@@ -3013,9 +3035,9 @@ function BMLT_Server_Admin ()
 
         var user_select = document.getElementById ( 'bmlt_admin_single_service_body_editor_principal_user_select' );
         
-        if ( user_select && user_select.value )
+        if ( user_select && user_select.options[user_select.selectedIndex].value )
             {
-            main_service_body_editor.service_body_object[4] = user_select.value;
+            main_service_body_editor.service_body_object[4] = parseInt ( user_select.options[user_select.selectedIndex].value );
             };
 
         var type_select = document.getElementById ( 'bmlt_admin_single_service_body_editor_type_select' );
@@ -3219,6 +3241,9 @@ function BMLT_Server_Admin ()
             
             if ( json_object )
                 {
+                var main_service_body_editor = document.getElementById ( 'bmlt_admin_single_service_body_editor_div' );
+                main_service_body_editor.service_body_object = null;
+                    
                 if ( !json_object.success )
                     {
                     alert ( json_object.report );
@@ -3227,14 +3252,13 @@ function BMLT_Server_Admin ()
                 else
                     {
                     var service_body_select = document.getElementById ( 'bmlt_admin_single_service_body_editor_sb_select' );
+                    service_body_select.selectedIndex = 0;
                     for ( var index = 0; index < g_editable_service_bodies_array.length; index++ )
                         {
                         if ( g_editable_service_bodies_array[index][0] == parseInt(json_object.report) )
                             {
-                            g_editable_service_bodies_array[index] = null;
+                            service_body_select.remove ( index );
                             g_editable_service_bodies_array.splice ( index, 1 );
-                            service_body_select.selectedIndex = 0;
-                            service_body_select.remove ( index, 1 );
                             break;
                             };
                         };
@@ -3243,7 +3267,6 @@ function BMLT_Server_Admin ()
                         {
                         if ( g_service_bodies_array[index][0] == parseInt(json_object.report) )
                             {
-                            g_service_bodies_array[index] = null;
                             g_service_bodies_array.splice ( index, 1 );
                             break;
                             };
@@ -3290,10 +3313,7 @@ function BMLT_Server_Admin ()
                             };
                         };
                     
-                    var main_service_body_editor = document.getElementById ( 'bmlt_admin_single_service_body_editor_div' );
                     main_service_body_editor.m_ajax_request_in_progress = null;
-                    main_service_body_editor.service_body_object = null;
-                    service_body_select.selectedIndex = 0;
                     this.populateServiceBodyEditor();
 
                     BMLT_Admin_StartFader ( 'bmlt_admin_fader_service_body_editor_delete_success_div', this.m_success_fade_duration );
