@@ -2700,7 +2700,7 @@ function BMLT_Server_Admin ()
         
         if ( service_body_select )  // If we are able to switch between multiple Service bodies, we can do so here.
             {
-            index = service_body_select.value;
+            index = service_body_select.selectedIndex;
             }
         
         // This makes a copy of the Service body object, so we can modify it.
@@ -3184,6 +3184,7 @@ function BMLT_Server_Admin ()
                             {
                             g_editable_service_bodies_array[index] = null;
                             g_editable_service_bodies_array.splice ( index, 1 );
+                            service_body_select.selectedIndex = 0;
                             service_body_select.remove ( index, 1 );
                             break;
                             };
