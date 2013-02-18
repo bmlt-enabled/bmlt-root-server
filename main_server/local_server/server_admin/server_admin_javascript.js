@@ -2783,7 +2783,10 @@ function BMLT_Server_Admin ()
         this.validateServiceBodyEditorButtons();
         
         var perm_checkbox = document.getElementById ( 'bmlt_admin_service_body_delete_perm_checkbox' );
-        perm_checkbox.checked = false;
+        if ( perm_checkbox )
+            {
+            perm_checkbox.checked = false;
+            };
     };
 
     /************************************************************************************//**
