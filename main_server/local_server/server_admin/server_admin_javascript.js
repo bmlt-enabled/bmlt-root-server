@@ -2687,6 +2687,8 @@ function BMLT_Server_Admin ()
         var main_service_body_editor = document.getElementById ( 'bmlt_admin_single_service_body_editor_div' );
         var service_body_select = document.getElementById ( 'bmlt_admin_single_service_body_editor_sb_select' );
         
+        var sb_id = 0;
+
         if ( main_service_body_editor.service_body_object && (this.isServiceBodyDirty() != null) )
             {
             if ( !confirm ( g_service_body_dirty_confirm_text ) )
@@ -2697,13 +2699,16 @@ function BMLT_Server_Admin ()
             };
         
         var index = 0;
-        var sb_id = 0;
         var selected_service_body_object = null;
         
         if ( service_body_select )  // If we are able to switch between multiple Service bodies, we can do so here.
             {
             index = service_body_select.selectedIndex;
             sb_id = service_body_select.options[index].value;
+            }
+        else
+            {
+            sb_id = g_service_bodies_array[0][0];
             }
         
         var save_button_a = document.getElementById ( 'bmlt_admin_service_body_editor_form_service_body_save_button' );
@@ -2736,7 +2741,7 @@ function BMLT_Server_Admin ()
         main_service_body_editor.service_body_object = selected_service_body_object;
         
         var id_display = document.getElementById ( 'service_body_admin_id_display' );
-        id_display.innerHTML = selected_service_body_object[0];
+        id_display.innerHTML = selected_service_body_object[0].toString();
         
         this.setServiceBodyUser ( selected_service_body_object );
             
