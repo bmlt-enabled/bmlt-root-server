@@ -656,12 +656,10 @@ class c_comdef_admin_main_console
             for ( $index = 0; $index  < count ( $this->my_users ); $index++ )
                 {
                 $user = $this->my_users[$index];
-                $ret .= '<option value="'.$user->GetID().'"';
-                if ( $user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN )
+                if ( $user->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN )
                     {
-                    $ret .= ' disabled="disabled"';
-                    };
-                $ret .= '>'.htmlspecialchars ( $user->GetLocalName() ).'</option>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                    $ret .= '<option value="'.$user->GetID().'">'.htmlspecialchars ( $user->GetLocalName() ).'</option>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                    }
                 }
         $ret .= '</select>';
         

@@ -2831,7 +2831,6 @@ function BMLT_Server_Admin ()
                 };
             };
         
-        // OK. We now have the primary user object that corresponds to the Service body's principal owner.
         if ( sb_primary_user )
             {
             if ( user_single_display )
@@ -2840,7 +2839,14 @@ function BMLT_Server_Admin ()
                 }
             else if ( user_select_element )
                 {
-                user_select_element.selectedIndex = user_index;
+                for ( var c = 0; c < user_select_element.options.length; c++ )
+                    {
+                    if ( user_select_element.options[c].value == in_selected_service_body[4] )
+                        {
+                        user_select_element.selectedIndex = c;
+                        break;
+                        };
+                    }
                 };
             };
     };
