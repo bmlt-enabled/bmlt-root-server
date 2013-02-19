@@ -162,6 +162,7 @@ class c_comdef_admin_ajax_handler
             $uri = $the_new_service_body[7];
             $kml_uri = $the_new_service_body[8];
             $type = $the_new_service_body[9];
+            $worldid = $the_new_service_body[12];
             
             $sb_to_change = $this->my_server->GetServiceBodyByIDObj ( $id );
             
@@ -176,6 +177,7 @@ class c_comdef_admin_ajax_handler
                 $sb_to_change->SetURI ( $uri );
                 $sb_to_change->SetKMLURI ( $kml_uri );
                 $sb_to_change->SetSBType ( $type );
+                $sb_to_change->SetWorldID ( $worldid );
                 
                 if ( $sb_to_change->UpdateToDB() )
                     {

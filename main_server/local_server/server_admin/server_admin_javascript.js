@@ -2765,6 +2765,11 @@ function BMLT_Server_Admin ()
         uri_text_input.value = selected_service_body_object[7];
         this.handleTextInputLoad ( uri_text_input, g_service_body_uri_default_prompt_text );
         
+        var world_id_text_input = document.getElementById ( 'bmlt_admin_single_service_body_editor_world_cc_text_input' );
+
+        world_id_text_input.value = selected_service_body_object[12];
+        this.handleTextInputLoad ( world_id_text_input, g_service_body_world_cc_default_prompt_text, true );
+        
         var type_select = document.getElementById ( 'bmlt_admin_single_service_body_editor_type_select' );
         
         if ( type_select )
@@ -2813,6 +2818,7 @@ function BMLT_Server_Admin ()
         new_service_body_object[9] = 'AS';
         new_service_body_object[10] = true;
         new_service_body_object[11] = true;
+        new_service_body_object[12] = '';
         
         return new_service_body_object;
     };
@@ -3044,6 +3050,17 @@ function BMLT_Server_Admin ()
         else
             {
             main_service_body_editor.service_body_object[7] = '';
+            };
+
+        var world_id_text_input = document.getElementById ( 'bmlt_admin_single_service_body_editor_world_cc_text_input' );
+        
+        if ( world_id_text_input && world_id_text_input.value && (world_id_text_input.value != world_id_text_input.defaultValue) )
+            {
+            main_service_body_editor.service_body_object[12] = world_id_text_input.value;
+            }
+        else
+            {
+            main_service_body_editor.service_body_object[12] = '';
             };
 
         var user_select = document.getElementById ( 'bmlt_admin_single_service_body_editor_principal_user_select' );
