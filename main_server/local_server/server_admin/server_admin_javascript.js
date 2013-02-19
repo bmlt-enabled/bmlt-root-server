@@ -2945,14 +2945,13 @@ function BMLT_Server_Admin ()
             };
         
         var delete_span = document.getElementById ( 'service_body_editor_delete_span' );
-        var delete_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_service_body_delete_button' );
         
         if ( delete_span )
             {
+            document.getElementById ( 'bmlt_admin_meeting_editor_form_service_body_delete_button' ).className = 'bmlt_admin_ajax_button button';  // We set this in either case, as IE "sticks."
             if ( g_service_bodies_array.length > 1 )
                 {
                 delete_span.className = 'bmlt_admin_meeting_editor_form_middle_button_single_span bmlt_admin_delete_button_span hide_in_new_service_body_admin';
-                delete_button.className = 'bmlt_admin_ajax_button button';
                 }
             else
                 {
@@ -3290,6 +3289,7 @@ function BMLT_Server_Admin ()
                     main_service_body_editor.service_body_object = null;
                     this.populateServiceBodyEditor();
                     BMLT_Admin_StartFader ( 'bmlt_admin_fader_service_body_create_success_div', this.m_success_fade_duration );
+                    document.getElementById ( 'bmlt_admin_service_body_save_ajax_button_throbber_span' ).className = 'item_hidden';
                     alert ( g_service_body_meeting_editor_note );
                     };
                 }
@@ -3428,6 +3428,7 @@ function BMLT_Server_Admin ()
                     main_service_body_editor.m_ajax_request_in_progress = null;
                     this.populateServiceBodyEditor();
                     BMLT_Admin_StartFader ( 'bmlt_admin_fader_service_body_editor_delete_success_div', this.m_success_fade_duration );
+                    document.getElementById ( 'bmlt_admin_service_body_delete_ajax_button_throbber_span' ).className = 'item_hidden';
                     alert ( g_service_body_meeting_editor_note );
                     };
                 }
