@@ -3267,7 +3267,6 @@ function BMLT_Server_Admin ()
                     }
                 else
                     {
-                    BMLT_Admin_StartFader ( 'bmlt_admin_fader_service_body_create_success_div', this.m_success_fade_duration );
                     g_service_bodies_array[g_service_bodies_array.length] = json_object.service_body;
                     g_editable_service_bodies_array[g_editable_service_bodies_array.length] = json_object.service_body;
                     var service_body_select = document.getElementById ( 'bmlt_admin_single_service_body_editor_sb_select' );
@@ -3290,6 +3289,8 @@ function BMLT_Server_Admin ()
                     main_service_body_editor.m_ajax_request_in_progress = null;
                     main_service_body_editor.service_body_object = null;
                     this.populateServiceBodyEditor();
+                    BMLT_Admin_StartFader ( 'bmlt_admin_fader_service_body_create_success_div', this.m_success_fade_duration );
+                    alert ( g_service_body_meeting_editor_note );
                     };
                 }
             else
@@ -3426,8 +3427,8 @@ function BMLT_Server_Admin ()
                     
                     main_service_body_editor.m_ajax_request_in_progress = null;
                     this.populateServiceBodyEditor();
-
                     BMLT_Admin_StartFader ( 'bmlt_admin_fader_service_body_editor_delete_success_div', this.m_success_fade_duration );
+                    alert ( g_service_body_meeting_editor_note );
                     };
                 }
             else
