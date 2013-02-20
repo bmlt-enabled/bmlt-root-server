@@ -2622,7 +2622,7 @@ function BMLT_Server_Admin ()
                         history_item.id = 'bmlt_admin_meeting_' + in_meeting_id + '_history_' + json_object[c].id + '_list_item_div';
                         history_item.className = 'bmlt_admin_meeting_history_list_item_div';
                     
-                        var header_items = sprintf ( g_history_header_format, json_object[c].date, json_object[c].user );
+                        var header_items = sprintf ( g_history_header_format.toString().replace ( /&gt;/g, '>' ).replace ( /&lt;/g, '<' ), json_object[c].date, json_object[c].user );
                         history_item.innerHTML = header_items;
                     
                         if ( json_object[c].description.length )
@@ -2645,7 +2645,7 @@ function BMLT_Server_Admin ()
                     }
                 else
                     {
-                    history_list.innerHTML = g_history_no_history_available_text;
+                    history_list.innerHTML = g_history_no_history_available_text.toString().replace ( /&gt;/g, '>' ).replace ( /&lt;/g, '<' );
                     };
                 
                 option_sheet.appendChild ( history_list );
