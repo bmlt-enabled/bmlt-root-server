@@ -135,7 +135,7 @@ function GetHeaderXHTML (
 										*/
 						)
 	{
-	include ( dirname ( __FILE__ ).'/../../server/config/auto-config.inc.php' );
+	include ( dirname ( __FILE__ ).'/../../server/config//get-config.php' );
 	$ajax_threads = c_comdef_htmlspecialchars ( $in_http_vars['bmlt_root'] ).'server/shared/js_stripper.php?filename=ajax_threads.js';
 	if ( !isset( $in_http_vars['no_ajax_check'] ) || ($in_http_vars['no_ajax_check'] != 'yes') )
 		{

@@ -35,7 +35,7 @@ else
 		<meta http-equiv="Content-Script-Type" content="text/javascript" />
 		<meta http-equiv="Content-Style-Type" content="text/css" />
 <?php
-            $config_file_path = dirname ( __FILE__ ).'/../server/config/auto-config.inc.php';
+            $config_file_path = dirname ( __FILE__ ).'/../server/config//get-config.php';
             $url_path = 'http://'.$_SERVER['SERVER_NAME'].dirname ( $_SERVER['SCRIPT_NAME'] );
             if ( file_exists ( $config_file_path ) )
                 {
@@ -89,7 +89,7 @@ else
 */
 function DB_Connect_and_Upgrade ( )
 {
-	include ( dirname ( __FILE__ )."/../server/config/auto-config.inc.php" );
+	include ( dirname ( __FILE__ )."/../server/config//get-config.php" );
 	c_comdef_dbsingleton::init ( $dbType, $dbServer, $dbName, $dbUser, $dbPassword, 'utf8' );
 
 	try

@@ -32,9 +32,9 @@
 defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
 require_once ( dirname ( __FILE__ ).'/common_search.inc.php' );
-require ( dirname ( __FILE__ ).'/../../server/config/auto-config.inc.php' );	// Just to make sure we have an early copy.
+require ( dirname ( __FILE__ ).'/../../server/config//get-config.php' );	// Just to make sure we have an early copy.
 
-/// These are the default formats for wheelchair, open and closed (used for the NAWS format). They can be overridden in the auto-config.inc.php file.
+/// These are the default formats for wheelchair, open and closed (used for the NAWS format). They can be overridden in the /get-config.php file.
 if ( !defined('WC_FORMAT') )
 	{
 	define ( 'WC_FORMAT', '33' );
@@ -50,7 +50,7 @@ if ( !defined('C_FORMAT') )
 
 global $g_format_dictionary;	///< This is a dictionary used to translate formats to NAWS format. It uses the format shared IDs in the server's language.
 
-/// If you wish to override this, simply set this up in your auto-config.inc.php file. That will supersede this.
+/// If you wish to override this, simply set this up in your /get-config.php file. That will supersede this.
 if ( !isset ( $g_format_dictionary ) || !is_array ( $g_format_dictionary ) || !count ( $g_format_dictionary ) )
 	{
 	/// The right side is the BMLT side, and the left side is the NAWS code. The left side should not be changed.
@@ -264,7 +264,7 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 		$lang_enum = c_comdef_server::GetServer()->GetLocalLang();
 	
 		// This can be changed in the auto config.
-		include ( dirname ( __FILE__ ).'/../../server/config/auto-config.inc.php' );
+		include ( dirname ( __FILE__ ).'/../../server/config//get-config.php' );
 	
 		if ( isset ( $in_http_vars['lang_enum'] ) && $in_http_vars['lang_enum'] )
 			{

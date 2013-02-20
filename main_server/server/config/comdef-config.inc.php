@@ -45,12 +45,12 @@
 	$comdef_global_list_address =  '@@%%location_text%%, @@%%location_street%% @@%%location_info%%';
 	
 	/// Include the automatically generated configuration.
-	if ( file_exists ( dirname ( __FILE__ )."/auto-config.inc.php" ) )
+	if ( file_exists ( dirname ( __FILE__ )."//get-config.php" ) )
 		{
-		include ( dirname ( __FILE__ )."/auto-config.inc.php" );
+		include ( dirname ( __FILE__ )."//get-config.php" );
 		}
 	else
 		{
-		throw ( new Exception ( "No auto-config.inc.php file!" ) );
+		throw ( new Exception ( "No /get-config.php file!" ) );
 		}
 ?>

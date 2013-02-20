@@ -52,7 +52,7 @@ defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that 
 require_once ( dirname ( __FILE__ )."/../../server/c_comdef_server.class.php" );
 require_once ( dirname ( __FILE__ )."/../../server/shared/classes/comdef_utilityclasses.inc.php" );
 
-include ( dirname ( __FILE__ ).'/../../server/config/auto-config.inc.php' );
+include ( dirname ( __FILE__ ).'/../../server/config//get-config.php' );
 
 $t_server = c_comdef_server::MakeServer();	// We initialize the server.
 
@@ -184,7 +184,7 @@ function GetServerInfo()
             }
         }
 
-    $config_file_path = dirname ( __FILE__ ).'/../../server/config/auto-config.inc.php';
+    $config_file_path = dirname ( __FILE__ ).'/../../server/config//get-config.php';
 
     if ( file_exists ( $config_file_path ) )
         {
@@ -221,7 +221,7 @@ function GetServerInfo()
 function c_comdef_LoginForm(	&$in_server	///< A reference to an instance of c_comdef_server
 								)
 	{	
-	include ( dirname ( __FILE__ ).'/../server/config/auto-config.inc.php' );
+	include ( dirname ( __FILE__ ).'/../server/config//get-config.php' );
 
 	$http_vars = array_merge ( $_GET, $_POST );
 	

@@ -308,7 +308,7 @@ if ( $server instanceof c_comdef_server )
 			}
 		else
 			{
-			include ( dirname ( __FILE__ ).'/../../server/config/auto-config.inc.php' );
+			include ( dirname ( __FILE__ ).'/../../server/config//get-config.php' );
 	
 			$time = c_comdef_htmlspecialchars ( date( $time_format, strtotime ( $in_time ) ) );
 			}
