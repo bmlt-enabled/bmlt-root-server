@@ -1496,9 +1496,14 @@ class c_comdef_admin_main_console
                         for ( $c = 0; $c < count ( $this->my_service_bodies ); $c++ )
                             {
                             $ret .= '<p';
-                                if ( $this->my_service_bodies[$c]->GetPrincipalUserID() == $this->my_user->GetID() )
+                                if ( $this->my_service_bodies[$c]->UserCanEdit() )
                                     {
-                                    $ret .= ' class="principal_user_p"';
+                                    $ret .= ' class="service_body_can_be_edited';
+                                    if ( $this->my_service_bodies[$c]->GetPrincipalUserID() == $this->my_user->GetID() )
+                                        {
+                                        $ret .= ' principal_user_p';
+                                        }
+                                    $ret .= '"';
                                     }
                             $ret .= '>'.htmlspecialchars ( $this->my_service_bodies[$c]->GetLocalName() );
                             
