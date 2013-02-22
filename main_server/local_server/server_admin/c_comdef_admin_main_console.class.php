@@ -303,6 +303,7 @@ class c_comdef_admin_main_console
                 switch ( $this->my_user->GetUserLevel() )
                     {
                     case    _USER_LEVEL_SERVER_ADMIN:
+                        $ret .= $this->return_user_admin_panel();
                 
                     case    _USER_LEVEL_SERVICE_BODY_ADMIN:
                         $ret .= $this->return_service_body_admin_panel();
@@ -326,8 +327,67 @@ class c_comdef_admin_main_console
     }
     
     /********************************************************************************************************//**
+    \brief This constructs the User editor panel. Only Server Admins get this one.
+    \returns The HTML and JavaScript for the "Edit Users" section.
+    ************************************************************************************************************/
+    function return_user_admin_panel()
+    {
+        $ret = 'NOT AUTHORIZED TO EDIT USERS';
+        
+        if ( $this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN )
+            {
+            if ( count ( $this->my_users ) )
+                {
+                $ret = '<div id="bmlt_admin_user_editor_disclosure_div" class="bmlt_admin_user_editor_disclosure_div bmlt_admin_user_editor_disclosure_div_closed">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                    $ret .= '<a class="bmlt_admin_user_editor_disclosure_a" href="javascript:admin_handler_object.toggleUserEditor()">';
+                        $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_disclosure'] );
+                    $ret .= '</a>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= '<div id="bmlt_admin_user_editor_wrapper_div" class="bmlt_admin_user_editor_wrapper_div bmlt_admin_user_editor_wrapper_div_hidden">';
+                    $ret .= '<div class="bmlt_admin_user_editor_banner_div">';
+                        $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_user_editor_success_div">';
+                            $ret .= '<span class="success_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_success_text'] ).'</span>';
+                        $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                        $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_user_editor_fail_div">';
+                            $ret .= '<span class="failure_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_fail_text'] ).'</span>';
+                        $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                        $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_user_create_success_div">';
+                            $ret .= '<span class="success_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_create_success_text'] ).'</span>';
+                        $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                        $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_user_create_fail_div">';
+                            $ret .= '<span class="failure_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_create_fail_text'] ).'</span>';
+                        $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                        $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_user_editor_delete_success_div">';
+                            $ret .= '<span class="success_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_delete_success_text'] ).'</span>';
+                        $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                        $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_user_editor_delete_fail_div">';
+                            $ret .= '<span class="failure_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_delete_fail_text'] ).'</span>';
+                        $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                    $ret .= '</div>';
+                
+                    $ret .= $this->return_single_user_editor_panel();
+                $ret .= '</div>';
+                $ret .= '<script type="text/javascript">admin_handler_object.populateUserEditor()</script>';
+                }
+            }
+        
+        return $ret;
+    }
+    
+    /********************************************************************************************************//**
+    \brief This constructs a window for the User administrator.
+    \returns The HTML and JavaScript for the "User Administration" section.
+    ************************************************************************************************************/
+    function return_single_user_editor_panel ()
+    {
+        $ret = '';
+        
+        return $ret;
+    }
+        
+    /********************************************************************************************************//**
     \brief This constructs the Service body editor panel. Only Server Admins and Service Body Admins get this one.
-    \returns The HTML and JavaScript for the "Edit Meetings" section.
+    \returns The HTML and JavaScript for the "Service Body Administration" section.
     ************************************************************************************************************/
     function return_service_body_admin_panel()
     {
@@ -1435,7 +1495,12 @@ class c_comdef_admin_main_console
                     $ret .= '<div class="bmlt_admin_value_left">';
                         for ( $c = 0; $c < count ( $this->my_service_bodies ); $c++ )
                             {
-                            $ret .= '<p>'.htmlspecialchars ( $this->my_service_bodies[$c]->GetLocalName() );
+                            $ret .= '<p';
+                                if ( $this->my_service_bodies[$c]->GetPrincipalUserID() == $this->my_user->GetID() )
+                                    {
+                                    $ret .= ' class="principal_user_p"';
+                                    }
+                            $ret .= '>'.htmlspecialchars ( $this->my_service_bodies[$c]->GetLocalName() );
                             
                             if ( $c < (count ( $this->my_service_bodies ) - 1) )
                                 {
@@ -1446,6 +1511,7 @@ class c_comdef_admin_main_console
                     $ret .= '</div>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
+                
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['account_email_label'] ).'</span>';
                     $ret .= '<span class="bmlt_admin_value_left"><input name="bmlt_admin_user_email_input" id="bmlt_admin_user_email_input" type="text" value="'.htmlspecialchars ( $this->my_user->GetEmailAddress() ).'" onkeyup="admin_handler_object.handleTextInputChange(this);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';

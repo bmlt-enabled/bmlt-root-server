@@ -443,7 +443,8 @@ span.failure_text_span
 
 div.bmlt_admin_meeting_editor_disclosure_div,
 div.bmlt_admin_user_account_disclosure_div,
-div.bmlt_admin_service_body_editor_disclosure_div
+div.bmlt_admin_service_body_editor_disclosure_div,
+div.bmlt_admin_user_editor_disclosure_div
 {
     background-color: #009;
     font-size: medium;
@@ -458,7 +459,9 @@ a.bmlt_admin_meeting_editor_disclosure_a:visited,
 a.bmlt_admin_user_account_disclosure_a,
 a.bmlt_admin_user_account_disclosure_a:visited,
 a.bmlt_admin_service_body_editor_disclosure_a,
-a.bmlt_admin_service_body_editor_disclosure_a:visited
+a.bmlt_admin_service_body_editor_disclosure_a:visited,
+a.bmlt_admin_user_editor_disclosure_a,
+a.bmlt_admin_user_editor_disclosure_a:visited
 {
     outline:none;
     text-align:left;
@@ -479,7 +482,9 @@ a.bmlt_admin_meeting_editor_disclosure_a:active,
 a.bmlt_admin_user_account_disclosure_a:hover,
 a.bmlt_admin_user_account_disclosure_a:active,
 a.bmlt_admin_service_body_editor_disclosure_a:hover,
-a.bmlt_admin_service_body_editor_disclosure_a:active
+a.bmlt_admin_service_body_editor_disclosure_a:active,
+a.bmlt_admin_user_editor_disclosure_a:hover,
+a.bmlt_admin_user_editor_disclosure_a:active
 {
     outline:none;
     color:#f96;
@@ -493,18 +498,15 @@ div.bmlt_admin_single_meeting_disclosure_map_div_open
 }
 
 div.bmlt_admin_single_meeting_disclosure_map_div_closed a,
-div.bmlt_admin_single_meeting_disclosure_map_div_open a
-{
-}
-
-div.bmlt_admin_single_meeting_disclosure_map_div_closed a,
 div.bmlt_admin_single_meeting_disclosure_map_div_closed a:visited,
 div.bmlt_admin_meeting_editor_disclosure_div_closed a,
 div.bmlt_admin_meeting_editor_disclosure_div_closed a:visited,
 div.bmlt_admin_user_account_disclosure_div_closed a,
 div.bmlt_admin_user_account_disclosure_div_closed a:visited,
 div.bmlt_admin_service_body_editor_disclosure_div a,
-div.bmlt_admin_service_body_editor_disclosure_div a:visited
+div.bmlt_admin_service_body_editor_disclosure_div a:visited,
+div.bmlt_admin_user_editor_disclosure_div a,
+div.bmlt_admin_user_editor_disclosure_div a:visited
 {
     background-image:url(images/invisible_disclosure.gif);
 }
@@ -516,7 +518,9 @@ div.bmlt_admin_meeting_editor_disclosure_div_closed a:active,
 div.bmlt_admin_user_account_disclosure_div_closed a:hover,
 div.bmlt_admin_user_account_disclosure_div_closed a:active,
 div.bmlt_admin_service_body_editor_disclosure_div a:hover,
-div.bmlt_admin_service_body_editor_disclosure_div a:active
+div.bmlt_admin_service_body_editor_disclosure_div a:active,
+div.bmlt_admin_user_editor_disclosure_div a:hover,
+div.bmlt_admin_user_editor_disclosure_div a:active
 {
     background-image:url(images/invisible_disclosure_mouseover.gif);
 }
@@ -528,7 +532,9 @@ div.bmlt_admin_meeting_editor_disclosure_div_open a:visited,
 div.bmlt_admin_user_account_disclosure_div_open a,
 div.bmlt_admin_user_account_disclosure_div_open a:visited,
 div.bmlt_admin_service_body_editor_disclosure_div_open a,
-div.bmlt_admin_service_body_editor_disclosure_div_open a:visited
+div.bmlt_admin_service_body_editor_disclosure_div_open a:visited,
+div.bmlt_admin_user_editor_disclosure_div_open a,
+div.bmlt_admin_user_editor_disclosure_div_open a:visited
 {
     background-image:url(images/visible_disclosure.gif);
 }
@@ -540,14 +546,17 @@ div.bmlt_admin_meeting_editor_disclosure_div_open a:active,
 div.bmlt_admin_user_account_disclosure_div_open a:hover,
 div.bmlt_admin_user_account_disclosure_div_open a:active,
 div.bmlt_admin_service_body_editor_disclosure_div_open a:hover,
-div.bmlt_admin_service_body_editor_disclosure_div_open a:active
+div.bmlt_admin_service_body_editor_disclosure_div_open a:active,
+div.bmlt_admin_user_editor_disclosure_div_open a:hover,
+div.bmlt_admin_user_editor_disclosure_div_open a:active
 {
     background-image:url(images/visible_disclosure_mouseover.gif);
 }
 
 div.bmlt_admin_meeting_editor_wrapper_div,
 div.bmlt_admin_user_account_wrapper_div,
-div.bmlt_admin_service_body_editor_wrapper_div
+div.bmlt_admin_service_body_editor_wrapper_div,
+div.bmlt_admin_user_editor_wrapper_div
 {
     background-color: #009;
     padding:4px;
@@ -645,7 +654,8 @@ div.bmlt_admin_tab_div_not_selected a:active
 
 div.bmlt_admin_meeting_editor_form_specifier_div,
 div.bmlt_admin_user_account_edit_form_inner_div,
-div.bmlt_admin_service_body_edit_form_inner_div
+div.bmlt_admin_service_body_edit_form_inner_div,
+div.bmlt_admin_user_edit_form_inner_div
 {
     border: 1px solid white;
     background-color:white;
@@ -656,7 +666,8 @@ div.bmlt_admin_service_body_edit_form_inner_div
 
 div.bmlt_admin_meeting_editor_wrapper_div_hidden,
 div.bmlt_admin_user_account_wrapper_div_hidden,
-div.bmlt_admin_service_body_editor_wrapper_div_hidden
+div.bmlt_admin_service_body_editor_wrapper_div_hidden,
+div.bmlt_admin_user_editor_wrapper_div_hidden
 {
     display:none;
 }
@@ -1055,4 +1066,9 @@ div.server_version_display_div
     color:#009;
     font-weight:normal;
     font-style:italic;
+}
+
+p.principal_user_p
+{
+    font-weight:bold;
 }

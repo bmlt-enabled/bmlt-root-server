@@ -199,5 +199,13 @@
                                             'service_body_meeting_editor_note'                      =>  'If you use the meeting editor after this operation, the Service Body popup menu will not be accurate. You must sign out, then sign back in, to ensure that the meeting editor will be accurate.',
 	                                        'service_body_editor_screen_world_cc_label'             =>  'World Committee Code:',
 	                                        'service_body_editor_screen_world_cc_prompt'            =>  'Enter A World Committee Code',
+											'user_editor_disclosure'                                =>  'User Administration',
+	                                        'user_change_fader_success_text'                        =>  'The User Was Successfully Changed',
+	                                        'user_change_fader_fail_text'                           =>  'The User Change Failed',
+	                                        'user_change_fader_create_success_text'                 =>  'The User Was Successfully Created',
+	                                        'user_change_fader_create_fail_text'                    =>  'The User Create Failed',
+	                                        'user_change_fader_delete_success_text'                 =>  'The User Was Successfully Deleted',
+	                                        'user_change_fader_delete_fail_text'                    =>  'The User Delete Failed',
+
 	                                    );
 ?>

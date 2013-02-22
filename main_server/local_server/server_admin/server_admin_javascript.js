@@ -39,6 +39,7 @@ function BMLT_Server_Admin ()
     var m_search_results = null;                ///< This will contain any meeting search results.
     var m_meeting_results_container_div = null; ///< This will hold any search result display elements (allows easy disposal)
     var m_editing_window_open = null;           ///< If there is a meeting editor open, it is recorded here. There can only be one...
+    var m_user_editor_panel_shown = null;       ///< Set to true, if the user editor is open.
     
     /************************************************************************************//**
     *                                       METHODS                                         *
@@ -2674,7 +2675,7 @@ function BMLT_Server_Admin ()
             }
         else
             {
-            the_disclosure_div.className = 'bmlt_admin_service_body_editor_disclosure_div bmlt_admin_meeting_editor_disclosure_div_closed';
+            the_disclosure_div.className = 'bmlt_admin_service_body_editor_disclosure_div bmlt_admin_service_body_editor_disclosure_div_closed';
             the_editor_div.className = 'bmlt_admin_service_body_editor_wrapper_div bmlt_admin_service_body_editor_wrapper_div_hidden';
             };
     };
@@ -3461,6 +3462,39 @@ function BMLT_Server_Admin ()
         
         document.getElementById ( 'bmlt_admin_service_body_delete_ajax_button_throbber_span' ).className = 'item_hidden';
         this.validateServiceBodyEditorButtons();
+    };
+        
+    // #mark - 
+    // #mark ########## User Editor Section ##########
+    // #mark -
+        
+    /************************************************************************************//**
+    *   \brief  Toggles the visibility of the Service body editor section.                  *
+    ****************************************************************************************/
+    this.toggleUserEditor = function()
+    {
+        this.m_user_editor_panel_shown = !this.m_user_editor_panel_shown;
+        
+        var the_disclosure_div = document.getElementById ( 'bmlt_admin_user_editor_disclosure_div' );
+        var the_editor_div = document.getElementById ( 'bmlt_admin_user_editor_wrapper_div' );
+        
+        if ( this.m_user_editor_panel_shown )
+            {
+            the_disclosure_div.className = 'bmlt_admin_user_editor_disclosure_div bmlt_admin_user_editor_disclosure_div_open';
+            the_editor_div.className = 'bmlt_admin_user_editor_wrapper_div';
+            }
+        else
+            {
+            the_disclosure_div.className = 'bmlt_admin_user_editor_disclosure_div bmlt_admin_user_editor_disclosure_div_closed';
+            the_editor_div.className = 'bmlt_admin_user_editor_wrapper_div bmlt_admin_user_editor_wrapper_div_hidden';
+            };
+    };
+
+    /************************************************************************************//**
+    *   \brief  This sets up the Service Body Editor for the selected Service body.         *
+    ****************************************************************************************/
+    this.populateUserEditor = function()
+    {
     };
     
     // #mark - 
