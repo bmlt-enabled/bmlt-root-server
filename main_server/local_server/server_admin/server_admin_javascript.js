@@ -3503,7 +3503,7 @@ function BMLT_Server_Admin ()
             {
             if ( g_users[c][0] == selected_user_id )
                 {
-                selected_user_object = g_users[c];
+                selected_user_object = JSON.parse ( JSON.stringify ( g_users[c] ) );    // This ensures the user is a separate object.
                 break;
                 };
             };
