@@ -163,10 +163,10 @@ class c_comdef_admin_main_console
                     $user = $this->my_users[$c];
                     $ret .= '[';
             /* ID:0 */  $ret .= $user->GetID().',';
-         /* Login:1 */  $ret .= '\''.htmlspecialchars ( ( $this->my_user->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN ) ? $user->GetLogin() : '' ).'\',';
+         /* Login:1 */  $ret .= '\''.htmlspecialchars ( ( ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) || ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) ) ? $user->GetLogin() : '' ).'\',';
           /* Name:2 */  $ret .= '\''.htmlspecialchars ( $user->GetLocalName() ).'\',';
    /* Description:3 */  $ret .= '\''.htmlspecialchars ( $user->GetLocalDescription() ).'\',';
-         /* eMail:4 */  $ret .= '\''.htmlspecialchars ( ( ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) || ($user->GetID() == $this->my_user->GetID()) ) ? $user->GetEmailAddress() : '' ).'\',';
+         /* eMail:4 */  $ret .= '\''.htmlspecialchars ( ( ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) || ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) || ($user->GetID() == $this->my_user->GetID()) ) ? $user->GetEmailAddress() : '' ).'\',';
     /* User Level:5 */  $ret .= $user->GetUserLevel();
                     $ret .=']';
                     if ( $c < (count ( $this->my_users ) - 1) )
@@ -175,6 +175,13 @@ class c_comdef_admin_main_console
                         }
                     }
                 
+                $ret .= '];'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_user_levels = [';
+                    $ret .= '[1,\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_1'] ).'\'],';
+                    $ret .= '[2,\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_2'] ).'\'],';
+                    $ret .= '[3,\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_3'] ).'\'],';
+                    $ret .= '[4,\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_4'] ).'\'],';
+                    $ret .= '[5,\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_5'] ).'\']';
                 $ret .= '];'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_weekday_name_array = [';
                     for ( $c = 1; $c < 8; $c++ )
@@ -296,6 +303,7 @@ class c_comdef_admin_main_console
             $ret .= '</script>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
             $ret .= '<script type="text/javascript" src="'.dirname ( $_SERVER['PHP_SELF'] ).'/local_server/server_admin'.(defined('__DEBUG_MODE__') ? '/' : '/js_stripper.php?filename=' ).'json2.js"></script>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
             $ret .= '<script type="text/javascript" src="'.dirname ( $_SERVER['PHP_SELF'] ).'/local_server/server_admin'.(defined('__DEBUG_MODE__') ? '/' : '/js_stripper.php?filename=' ).'server_admin_javascript.js"></script>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+            $ret .= '<noscript class="main_noscript">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['noscript'] ).'</noscript>';
             // Belt and suspenders. Just make sure the user is legit.
             if ( ($this->my_user instanceof c_comdef_user) && ($this->my_user->GetUserLevel() != _USER_LEVEL_DISABLED) )
                 {
@@ -380,7 +388,93 @@ class c_comdef_admin_main_console
     ************************************************************************************************************/
     function return_single_user_editor_panel ()
     {
-        $ret = '';
+        $ret = '<div id="bmlt_admin_single_user_editor_div" class="bmlt_admin_single_user_editor_div">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+            $ret .= '<fieldset id="bmlt_admin_single_user_editor_fieldset" class="bmlt_admin_single_user_editor_fieldset">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= '<legend id="bmlt_admin_single_user_editor_fieldset_legend" class="bmlt_admin_single_user_editor_fieldset_legend">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                    $ret .= $this->create_user_popup();
+                $ret .= '</legend>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                    $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_screen_sb_id_label'] ).'</span>';
+                    $ret .= '<span class="bmlt_admin_value_left light_italic_display" id="user_editor_id_display"></span>';
+                    $ret .= '<div class="clear_both"></div>';
+                $ret .= '</div>';
+                $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                    $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_label'] ).'</span>';
+                    $ret .= '<span class="bmlt_admin_value_left" id="user_editor_single_non_service_body_admin_display">';
+                            $ret .= $this->create_user_level_popup();
+                    $ret .= '</span>';
+                    $ret .= '<span id="user_editor_single_service_body_admin_display" class="item_hidden">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_1'] ).'</span>';
+                    $ret .= '<div class="clear_both"></div>';
+                $ret .= '</div>';
+                $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                    $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_login_label'] ).'</span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input name="bmlt_admin_user_editor_login_input" id="bmlt_admin_user_editor_login_input" type="text" value="" onkeyup="admin_handler_object.handleTextInputChange(this);admin_handler_object.readUserEditorState()" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
+                    $ret .= '<script type="text/javascript">admin_handler_object.handleTextInputLoad(document.getElementById(\'bmlt_admin_user_editor_login_input\'),\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_login_default_text'] ).'\', true);</script>';
+                    $ret .= '<div class="clear_both"></div>';
+                $ret .= '</div>';
+                $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                    $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_name_label'] ).'</span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input name="bmlt_admin_user_editor_name_input" id="bmlt_admin_user_editor_name_input" type="text" value="" onkeyup="admin_handler_object.handleTextInputChange(this);admin_handler_object.readUserEditorState()" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
+                    $ret .= '<script type="text/javascript">admin_handler_object.handleTextInputLoad(document.getElementById(\'bmlt_admin_user_editor_name_input\'),\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_name_default_text'] ).'\');</script>';
+                    $ret .= '<div class="clear_both"></div>';
+                $ret .= '</div>';
+                $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                    $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_description_label'] ).'</span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><textarea name="bmlt_admin_user_editor_description_textarea" id="bmlt_admin_user_editor_description_textarea" onkeyup="admin_handler_object.handleTextInputChange(this);admin_handler_object.readUserEditorState()" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);"></textarea></span>';
+                    $ret .= '<script type="text/javascript">admin_handler_object.handleTextInputLoad(document.getElementById(\'bmlt_admin_user_editor_description_textarea\'),\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_description_default_text'] ).'\');</script>';
+                    $ret .= '<div class="clear_both"></div>';
+                $ret .= '</div>';
+                $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                    $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_email_label'] ).'</span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input name="bmlt_admin_user_editor_email_input" id="bmlt_admin_user_editor_email_input" type="text" value="" onkeyup="admin_handler_object.handleTextInputChange(this);admin_handler_object.readUserEditorState()" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
+                    $ret .= '<script type="text/javascript">admin_handler_object.handleTextInputLoad(document.getElementById(\'bmlt_admin_user_editor_email_input\'),\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_email_default_text'] ).'\');</script>';
+                    $ret .= '<div class="clear_both"></div>';
+                $ret .= '</div>';
+            $ret .= '</fieldset>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+        $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+        $ret .= '<script type="text/javascript">admin_handler_object.populateUserEditor()</script>';
+        
+        return $ret;
+    }
+    
+    /********************************************************************************************************//**
+    \brief This creates the HTML for a user selection popup menu.
+    \returns The HTML and JavaScript for the popup menu (select element).
+    ************************************************************************************************************/
+    function create_user_popup ()
+    {
+        $ret = '<select id="bmlt_admin_single_user_editor_user_select" class="bmlt_admin_single_user_editor_user_select" onchange="admin_handler_object.populateUserEditor()">';
+            $first = true;
+            for ( $index = 0; $index  < count ( $this->my_users ); $index++ )
+                {
+                $user = $this->my_users[$index];
+                if ( $user->GetID() != $this->my_user->GetID() )
+                    {
+                    $ret .= '<option value="'.$user->GetID().'"';
+                    $ret .= '>'.htmlspecialchars ( $user->GetLocalName() ).'</option>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                    }
+                }
+            $ret .= '<option value="" disabled="disabled"></option>';
+            $ret .= '<option value="0" selected="selected">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_create_new_user_option'] ).'</option>';
+        $ret .= '</select>';
+        
+        return $ret;
+    }
+    
+    /********************************************************************************************************//**
+    \brief This creates the HTML for a user level popup menu.
+    \returns The HTML and JavaScript for the popup menu (select element).
+    ************************************************************************************************************/
+    function create_user_level_popup ()
+    {
+        $ret = '<select id="bmlt_admin_single_user_editor_level_select" class="bmlt_admin_single_user_editor_level_select" onchange="admin_handler_object.readUserEditorState()">';
+            $first = true;
+            $ret .= '<option value="2">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_2'] ).'</option>';
+            $ret .= '<option value="3">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_3'] ).'</option>';
+            $ret .= '<option value="5">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_5'] ).'</option>';
+            $ret .= '<option value="" disabled="disabled"></option>';
+            $ret .= '<option value="4">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_4'] ).'</option>';
+        $ret .= '</select>';
         
         return $ret;
     }
@@ -641,7 +735,7 @@ class c_comdef_admin_main_console
             for ( $index = 0; $index  < count ( $this->my_editable_service_bodies ); $index++ )
                 {
                 $service_body = $this->my_editable_service_bodies[$index];
-                $ret .= '<option value="'.$this->my_editable_service_bodies[$index]->GetID().'"';
+                $ret .= '<option value="'.$service_body->GetID().'"';
                 if ( $first )
                     {
                     $ret .= ' selected="selected"';

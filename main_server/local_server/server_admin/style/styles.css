@@ -412,7 +412,8 @@ a.bmlt_admin_meeting_editor_tab_item_a_selected:active
 
 div.bmlt_admin_meeting_editor_banner_div,
 div.bmlt_admin_user_account_banner_div,
-div.bmlt_admin_service_body_editor_banner_div
+div.bmlt_admin_service_body_editor_banner_div,
+div.bmlt_admin_user_editor_banner_div
 {
     height: 1.8em;
     padding:4px;
@@ -929,7 +930,7 @@ div.bmlt_admin_meeting_history_list_item_description_line_div
     margin-bottom:0.1em;
 }
 
-h3.bmlt_admin_no_history_available_h3
+h1.bmlt_admin_no_history_available_h1
 {
     text-align:center;
     vertical-align:middle;
@@ -1035,7 +1036,8 @@ div.bmlt_admin_single_location_long_lat_div
     padding-top:4px;
 }
 
-fieldset.bmlt_admin_single_service_body_editor_fieldset
+fieldset.bmlt_admin_single_service_body_editor_fieldset,
+fieldset.bmlt_admin_single_user_editor_fieldset
 {
     background-color:white;
     color:#009;
@@ -1045,7 +1047,8 @@ fieldset.bmlt_admin_single_service_body_editor_fieldset
     border-radius: 4px;
 }
 
-fieldset.bmlt_admin_single_service_body_editor_fieldset legend
+fieldset.bmlt_admin_single_service_body_editor_fieldset legend,
+fieldset.bmlt_admin_single_user_editor_fieldset legend
 {
     padding: 0.25em;
     display:inline-block;
@@ -1071,4 +1074,11 @@ div.server_version_display_div
 p.service_body_can_be_edited
 {
     font-weight:bold;
+}
+
+noscript.main_noscript
+{
+    font-size:x-large;
+    text-align:center;
+    color:white;
 }

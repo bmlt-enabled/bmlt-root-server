@@ -134,14 +134,9 @@ function BMLT_Server_Admin ()
     {
         if ( in_text_item )
             {
-            if ( !in_text_item.value || (in_text_item.value == in_text_item.defaultValue) )
+            if ( !in_text_item.value )
                 {
                 in_text_item.value = in_text_item.defaultValue;
-                in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : '') + ' bmlt_text_item_dimmed';
-                }
-            else
-                {
-                in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : '');
                 };
             
             this.setTextItemClass ( in_text_item );
@@ -253,15 +248,18 @@ function BMLT_Server_Admin ()
         var ajax_button = document.getElementById ( 'bmlt_admin_account_change_ajax_button' );
         var description = document.getElementById ( 'bmlt_admin_user_description_textarea' );
         
-        if (    (email_field.value != email_field.original_value)
-            ||  (description.value != description.original_value)
-            ||  (password_field.value && (password_field.value != password_field.defaultValue)) )
+        if ( email_field && password_field && ajax_button && description )
             {
-            ajax_button.className = 'bmlt_admin_ajax_button';
-            }
-        else
-            {
-            ajax_button.className = 'bmlt_admin_ajax_button button_disabled';
+            if (    (email_field.value != email_field.original_value)
+                ||  (description.value != description.original_value)
+                ||  (password_field.value && (password_field.value != password_field.defaultValue)) )
+                {
+                ajax_button.className = 'bmlt_admin_ajax_button';
+                }
+            else
+                {
+                ajax_button.className = 'bmlt_admin_ajax_button button_disabled';
+                };
             };
     };
     
@@ -3495,6 +3493,130 @@ function BMLT_Server_Admin ()
     ****************************************************************************************/
     this.populateUserEditor = function()
     {
+        var main_user_editor_div = document.getElementById ( 'bmlt_admin_single_user_editor_div' );
+        var selected_user_select = document.getElementById ( 'bmlt_admin_single_user_editor_user_select' );
+        var selected_user_id = selected_user_select.options[selected_user_select.options.selectedIndex].value;
+        var selected_user_object = null;
+        
+        for ( var c = 0; c < g_users.length; c++ )
+            {
+            if ( g_users[c][0] == selected_user_id )
+                {
+                selected_user_object = g_users[c];
+                break;
+                };
+            };
+        
+        if ( !main_user_editor_div.current_user_object || (main_user_editor_div.current_user_object && this.isUserDirty() && confirm ( 'PLACEHOLDER' )) )
+            {
+            if ( !selected_user_object )
+                {
+                selected_user_object = this.makeANewUser();
+                };
+        
+            if ( selected_user_object )
+                {
+                main_user_editor_div.current_user_object = selected_user_object;
+            
+                var id_text_item = document.getElementById ( 'user_editor_id_display' );
+                id_text_item.innerHTML = selected_user_object[0];
+            
+                var login_field = document.getElementById ( 'bmlt_admin_user_editor_login_input' );
+                login_field.value = selected_user_object[1];
+                this.handleTextInputBlur ( login_field );
+            
+                var name_field = document.getElementById ( 'bmlt_admin_user_editor_name_input' );
+                name_field.value = selected_user_object[2];
+                this.handleTextInputBlur ( name_field );
+            
+                var description_textarea = document.getElementById ( 'bmlt_admin_user_editor_description_textarea' );
+                description_textarea.value = selected_user_object[3];
+                this.handleTextInputBlur ( description_textarea );
+            
+                var email_field = document.getElementById ( 'bmlt_admin_user_editor_email_input' );
+                email_field.value = selected_user_object[4];
+                this.handleTextInputBlur ( email_field );
+            
+                var user_level_popup_span = document.getElementById ( 'user_editor_single_non_service_body_admin_display' );
+                var user_level_sa_span = document.getElementById ( 'user_editor_single_service_body_admin_display' );
+            
+                if ( selected_user_object[5] != 1 )
+                    {
+                    user_level_popup_span.className = 'bmlt_admin_value_left';
+                    user_level_sa_span.className = 'item_hidden';
+                    var user_level_popup_select = document.getElementById ( 'bmlt_admin_single_user_editor_level_select' );
+                    user_level_popup_select.selectedIndex = (selected_user_object[5] == 2) ? 0
+                                                                : ((selected_user_object[5] == 3) ? 1
+                                                                    : ((selected_user_object[5] == 5) ? 2
+                                                                        : 4
+                                                                    )
+                                                                );
+                    }
+                else
+                    {
+                    user_level_popup_span.className = 'item_hidden';
+                    user_level_sa_span.className = 'bmlt_admin_value_left light_italic_display';
+                    };
+                };
+            };
+    };
+
+    /************************************************************************************//**
+    *   \brief  Reads the current user editor state, and sets the main object accordingly.  *
+    ****************************************************************************************/
+    this.readUserEditorState = function()
+    {
+    };
+
+    /************************************************************************************//**
+    *   \brief  See if changes have been made to the User.                                  *
+    *   \returns the user index (if changed). Null, otherwise (Check for null)              *
+    ****************************************************************************************/
+    this.isUserDirty = function()
+    {
+        var main_user_editor_div = document.getElementById ( 'bmlt_admin_single_user_editor_div' );
+        var edited_user_object = main_user_editor_div.current_user_object;
+        var original_user = null;
+        var index = 0;
+        
+        if ( edited_user_object[0] > 0 )
+            {
+            for ( ; index < g_users.length; index++ )
+                {
+                if ( g_users[index][0] == edited_user_object[0] )
+                    {
+                    original_user = g_users[index];
+                    break;
+                    };
+                };
+            }
+        else
+            {
+            original_user = this.makeANewUser();
+            };
+        
+        var current = JSON.stringify ( edited_user_object );
+        var orig = JSON.stringify ( original_user );
+        var ret = ( (current != orig) ? index : null );
+        
+        return ret;
+    };
+
+    /************************************************************************************//**
+    *   \brief  This simply creates a brand-new, unsullied User object.                     *
+    *   \returns a new user object (which is really an array).                              *
+    ****************************************************************************************/
+    this.makeANewUser = function()
+    {
+        var new_user_object = new Array;
+        new_user_object[0] = 0;
+        new_user_object[1] = '';
+        new_user_object[2] = '';
+        new_user_object[3] = '';
+        new_user_object[4] = '';
+        new_user_object[5] = 4;
+        
+        return new_user_object;
     };
     
     // #mark - 
