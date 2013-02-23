@@ -167,7 +167,8 @@ class c_comdef_admin_main_console
           /* Name:2 */  $ret .= '\''.htmlspecialchars ( $user->GetLocalName() ).'\',';
    /* Description:3 */  $ret .= '\''.htmlspecialchars ( $user->GetLocalDescription() ).'\',';
          /* eMail:4 */  $ret .= '\''.htmlspecialchars ( ( ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) || ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) || ($user->GetID() == $this->my_user->GetID()) ) ? $user->GetEmailAddress() : '' ).'\',';
-    /* User Level:5 */  $ret .= $user->GetUserLevel();
+    /* User Level:5 */  $ret .= $user->GetUserLevel().',';
+     /*  Password:6 */  $ret .= ''; // We do not give a password, but one can be sent in to change the current one, so we have a placeholder.
                     $ret .=']';
                     if ( $c < (count ( $this->my_users ) - 1) )
                         {
@@ -294,6 +295,12 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_service_body_save_button = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_save_button'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_service_body_create_button = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_create_button'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_service_body_meeting_editor_note = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_meeting_editor_note'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_user_save_button = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_save_button'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_user_create_button = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_create_button'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_user_password_default_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_password_default_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_user_new_password_default_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_new_password_default_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_user_password_label = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_password_label'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_user_new_password_label = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_new_password_label'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_time_values = [';
                     $ret .= '\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_am_label'] ).'\',';
                     $ret .= '\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_pm_label'] ).'\',';
@@ -430,6 +437,12 @@ class c_comdef_admin_main_console
                     $ret .= '<script type="text/javascript">admin_handler_object.handleTextInputLoad(document.getElementById(\'bmlt_admin_user_editor_email_input\'),\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_email_default_text'] ).'\');</script>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
+                $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                    $ret .= '<span id="bmlt_admin_user_editor_password_label" class="bmlt_admin_med_label_right"></span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input name="bmlt_admin_user_editor_password_input" id="bmlt_admin_user_editor_password_input" type="text" value="" onkeyup="admin_handler_object.handleTextInputChange(this);admin_handler_object.readUserEditorState()" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
+                    $ret .= '<div class="clear_both"></div>';
+                $ret .= '</div>';
+                $ret .= $this->return_user_editor_button_panel ();
             $ret .= '</fieldset>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
         $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
         $ret .= '<script type="text/javascript">admin_handler_object.populateUserEditor()</script>';
@@ -476,6 +489,35 @@ class c_comdef_admin_main_console
             $ret .= '<option value="4">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_4'] ).'</option>';
         $ret .= '</select>';
         
+        return $ret;
+    }
+    
+    /********************************************************************************************************//**
+    \brief This constructs the User editor buttons as a div.
+    \returns The HTML and JavaScript for the button panel.
+    ************************************************************************************************************/
+    function return_user_editor_button_panel ()
+    {
+        $main_button_text = $this->my_localized_strings['comdef_server_admin_strings']['meeting_save_buttonName'];
+        $ret = '<div class="bmlt_admin_user_editor_button_div">';
+            $ret .= '<span class="bmlt_admin_meeting_editor_form_meeting_button_left_span">';
+                $ret .= '<a id="bmlt_admin_user_editor_form_user_save_button" href="javascript:admin_handler_object.saveUser()" class="bmlt_admin_ajax_button button_disabled">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_save_button'] ).'</a>';
+                $ret .= '<span id="bmlt_admin_user_save_ajax_button_throbber_span" class="bmlt_admin_ajax_button_throbber_span item_hidden"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></span>';
+            $ret .= '</span>';
+            $ret .= '<span class="bmlt_admin_meeting_editor_form_middle_button_single_span bmlt_admin_delete_button_span hide_in_new_user_admin">';
+                $ret .= '<a id="bmlt_admin_meeting_editor_form_user_delete_button" href="javascript:admin_handler_object.deleteUser()" class="bmlt_admin_ajax_button button">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_delete_button'] ).'</a>';
+                $ret .= '<span id="bmlt_admin_user_delete_ajax_button_throbber_span" class="bmlt_admin_ajax_button_throbber_span item_hidden"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></span>';
+                $ret .= '<span class="perm_checkbox_span">';
+                    $ret .= '<input type="checkbox" id="bmlt_admin_user_delete_perm_checkbox" />';
+                    $ret .= '<label for="bmlt_admin_user_delete_perm_checkbox">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_delete_perm_checkbox'] ).'</label>';
+                $ret .= '</span>';
+            $ret .= '</span>';
+            $ret .= '<span class="bmlt_admin_meeting_editor_form_meeting_button_right_span">';
+                $ret .= '<a id="bmlt_admin_user_editor_form_user_editor_cancel_button" href="javascript:admin_handler_object.cancelUserEdit()" class="bmlt_admin_ajax_button button_disabled">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_cancel_button'] ).'</a>';
+            $ret .= '</span>';
+            $ret .= '<div class="clear_both"></div>';
+        $ret .= '</div>';
+                    
         return $ret;
     }
         

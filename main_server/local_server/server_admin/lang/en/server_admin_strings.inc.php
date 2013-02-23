@@ -222,5 +222,14 @@
 	                                        'user_change_fader_create_fail_text'                    =>  'The User Create Failed',
 	                                        'user_change_fader_delete_success_text'                 =>  'The User Was Successfully Deleted',
 	                                        'user_change_fader_delete_fail_text'                    =>  'The User Delete Failed',
+	                                        'user_save_button'                                      =>  'Save the Changes to This User',
+	                                        'user_create_button'                                    =>  'Create This New User',
+	                                        'user_cancel_button'                                    =>  'Reset To Original',
+	                                        'user_delete_button'                                    =>  'Delete This User',
+	                                        'user_delete_perm_checkbox'                             =>  'Delete This User Permanently',
+	                                        'user_password_label'                                   =>  'Change Password To:',
+	                                        'user_new_password_label'                               =>  'Set Password To:',
+	                                        'user_password_default_text'                            =>  'Leave This Alone, Unless You Want To Change The Password',
+	                                        'user_new_password_default_text'                        =>  'You Must Enter A Password For A new User',
 	                                    );
 ?>

@@ -110,7 +110,8 @@ div.clear_both
 /* Used throughout */
 
 div.bmlt_admin_meeting_editor_form_new_meetings_div .hide_in_new_meeting,
-div.bmlt_admin_new_sb_editor .hide_in_new_service_body_admin
+div.bmlt_admin_new_sb_editor .hide_in_new_service_body_admin,
+div.bmlt_admin_new_user_editor .hide_in_new_user_admin
 {
     display:none;
 }
@@ -716,7 +717,8 @@ dt.service_body_parent_dt label.bmlt_admin_med_checkbox_label_left
     font-weight:bold;
 }
 
-div.bmlt_admin_meeting_editor_form_meeting_button_div
+div.bmlt_admin_meeting_editor_form_meeting_button_div,
+div.bmlt_admin_user_editor_button_div
 {
     margin-top:8px;
 }
@@ -967,7 +969,8 @@ div.history_item_header_div
     font-weight:bold;
 }
 
-div.bmlt_admin_meeting_editor_form_meeting_button_div
+div.bmlt_admin_meeting_editor_form_meeting_button_div,
+div.div.bmlt_admin_user_editor_button_div
 {
     text-align:center;
 }

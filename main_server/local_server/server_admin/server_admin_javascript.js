@@ -3497,6 +3497,7 @@ function BMLT_Server_Admin ()
         var selected_user_select = document.getElementById ( 'bmlt_admin_single_user_editor_user_select' );
         var selected_user_id = selected_user_select.options[selected_user_select.options.selectedIndex].value;
         var selected_user_object = null;
+        var save_button_a = document.getElementById ( 'bmlt_admin_user_editor_form_user_save_button' );
         
         for ( var c = 0; c < g_users.length; c++ )
             {
@@ -3507,15 +3508,31 @@ function BMLT_Server_Admin ()
                 };
             };
         
-        if ( !main_user_editor_div.current_user_object || (main_user_editor_div.current_user_object && this.isUserDirty() && confirm ( 'PLACEHOLDER' )) )
+        if ( !main_user_editor_div.current_user_object || (main_user_editor_div.current_user_object && !this.isUserDirty()) || (main_user_editor_div.current_user_object && this.isUserDirty() && confirm ( 'PLACEHOLDER' )) )
             {
+            var password_label = document.getElementById ( 'bmlt_admin_user_editor_password_label' );
             if ( !selected_user_object )
                 {
                 selected_user_object = this.makeANewUser();
+
+                save_button_a.innerHTML = g_user_create_button;
+                main_user_editor_div.className = 'bmlt_admin_single_user_editor_div bmlt_admin_new_user_editor';
+                password_label.innerHTML = g_user_new_password_label;
+                }
+            else
+                {
+                save_button_a.innerHTML = g_user_save_button;
+                main_user_editor_div.className = 'bmlt_admin_single_user_editor_div';
+                password_label.innerHTML = g_user_password_label;
                 };
         
             if ( selected_user_object )
                 {
+                if ( selected_user_object[5] == 1 ) // This should never be, but just in case...
+                    {
+                    main_user_editor_div.className = 'bmlt_admin_single_user_editor_div bmlt_admin_new_user_editor';
+                    }
+                
                 main_user_editor_div.current_user_object = selected_user_object;
             
                 var id_text_item = document.getElementById ( 'user_editor_id_display' );
@@ -3537,6 +3554,10 @@ function BMLT_Server_Admin ()
                 email_field.value = selected_user_object[4];
                 this.handleTextInputBlur ( email_field );
             
+                var password_field = document.getElementById ( 'bmlt_admin_user_editor_password_input' );
+                password_field.value = selected_user_object[0] ? g_user_password_default_text : g_user_new_password_default_text;
+                this.handleTextInputLoad ( password_field );
+            
                 var user_level_popup_span = document.getElementById ( 'user_editor_single_non_service_body_admin_display' );
                 var user_level_sa_span = document.getElementById ( 'user_editor_single_service_body_admin_display' );
             
@@ -3552,13 +3573,15 @@ function BMLT_Server_Admin ()
                                                                     )
                                                                 );
                     }
-                else
+                else    // This should never be, but just in case...
                     {
                     user_level_popup_span.className = 'item_hidden';
                     user_level_sa_span.className = 'bmlt_admin_value_left light_italic_display';
                     };
                 };
             };
+        
+        this.validateUserEditorButtons();
     };
 
     /************************************************************************************//**
@@ -3566,17 +3589,58 @@ function BMLT_Server_Admin ()
     ****************************************************************************************/
     this.readUserEditorState = function()
     {
+        var main_user_editor_div = document.getElementById ( 'bmlt_admin_single_user_editor_div' );
+        
+        var login_field = document.getElementById ( 'bmlt_admin_user_editor_login_input' );
+        main_user_editor_div.current_user_object[1] = (login_field.value && (login_field.value != login_field.defaultValue)) ? login_field.value : '';
+        
+        var name_field = document.getElementById ( 'bmlt_admin_user_editor_name_input' );
+        main_user_editor_div.current_user_object[2] = (name_field.value && (name_field.value != name_field.defaultValue)) ? name_field.value : '';
+        
+        var description_textarea = document.getElementById ( 'bmlt_admin_user_editor_description_textarea' );
+        main_user_editor_div.current_user_object[3] = (description_textarea.value && (description_textarea.value != description_textarea.defaultValue)) ? description_textarea.value : '';
+        
+        var email_field = document.getElementById ( 'bmlt_admin_user_editor_email_input' );
+        main_user_editor_div.current_user_object[4] = (email_field.value && (email_field.value != email_field.defaultValue)) ? email_field.value : '';
+        
+        var user_level_select = document.getElementById ( 'bmlt_admin_single_user_editor_level_select' );
+        main_user_editor_div.current_user_object[5] = parseInt ( user_level_select.options[user_level_select.selectedIndex].value );
+        
+        var password_field = document.getElementById ( 'bmlt_admin_user_editor_password_input' );
+        main_user_editor_div.current_user_object[6] = (password_field.value && (password_field.value != password_field.defaultValue)) ? password_field.value : '';
+        
+        this.validateUserEditorButtons();
+    };
+
+    /************************************************************************************//**
+    *   \brief  Saves the user state.                                                       *
+    ****************************************************************************************/
+    this.saveUser = function()
+    {
+    };
+
+    /************************************************************************************//**
+    *   \brief  Deletes the user.                                                           *
+    ****************************************************************************************/
+    this.deleteUser = function()
+    {
+    };
+
+    /************************************************************************************//**
+    *   \brief  Resets the user to the original state.                                      *
+    ****************************************************************************************/
+    this.cancelUserEdit = function()
+    {
     };
 
     /************************************************************************************//**
     *   \brief  See if changes have been made to the User.                                  *
-    *   \returns the user index (if changed). Null, otherwise (Check for null)              *
+    *   \returns true, if the user has been changed.                                        *
     ****************************************************************************************/
     this.isUserDirty = function()
     {
-        var main_user_editor_div = document.getElementById ( 'bmlt_admin_single_user_editor_div' );
-        var edited_user_object = main_user_editor_div.current_user_object;
-        var original_user = null;
+        var edited_user_object = document.getElementById ( 'bmlt_admin_single_user_editor_div' ).current_user_object;
+        var original_user_object = null;
         var index = 0;
         
         if ( edited_user_object[0] > 0 )
@@ -3585,20 +3649,20 @@ function BMLT_Server_Admin ()
                 {
                 if ( g_users[index][0] == edited_user_object[0] )
                     {
-                    original_user = g_users[index];
+                    original_user_object = g_users[index];
                     break;
                     };
                 };
             }
         else
             {
-            original_user = this.makeANewUser();
+            original_user_object = this.makeANewUser();
             };
         
         var current = JSON.stringify ( edited_user_object );
-        var orig = JSON.stringify ( original_user );
-        var ret = ( (current != orig) ? index : null );
-        
+        var orig = JSON.stringify ( original_user_object );
+        var ret = (current != orig);
+
         return ret;
     };
 
@@ -3615,8 +3679,29 @@ function BMLT_Server_Admin ()
         new_user_object[3] = '';
         new_user_object[4] = '';
         new_user_object[5] = 4;
+        new_user_object[6] = '';
         
         return new_user_object;
+    };
+    
+    /************************************************************************************//**
+    *   \brief  This sets the state of the User editor save button.                         *
+    ****************************************************************************************/
+    this.validateUserEditorButtons = function()
+    {
+        var save_button = document.getElementById ( 'bmlt_admin_user_editor_form_user_save_button' );
+        var cancel_button = document.getElementById ( 'bmlt_admin_user_editor_form_user_editor_cancel_button' );
+        
+        if ( this.isUserDirty() )
+            {
+            save_button.className = 'bmlt_admin_ajax_button button';
+            cancel_button.className = 'bmlt_admin_ajax_button button';
+            }
+        else
+            {
+            save_button.className = 'bmlt_admin_ajax_button button_disabled';
+            cancel_button.className = 'bmlt_admin_ajax_button button_disabled';
+            };
     };
     
     // #mark - 
