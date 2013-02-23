@@ -168,7 +168,7 @@ class c_comdef_admin_main_console
    /* Description:3 */  $ret .= '\''.htmlspecialchars ( $user->GetLocalDescription() ).'\',';
          /* eMail:4 */  $ret .= '\''.htmlspecialchars ( ( ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) || ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) || ($user->GetID() == $this->my_user->GetID()) ) ? $user->GetEmailAddress() : '' ).'\',';
     /* User Level:5 */  $ret .= $user->GetUserLevel().',';
-     /*  Password:6 */  $ret .= ''; // We do not give a password, but one can be sent in to change the current one, so we have a placeholder.
+     /*  Password:6 */  $ret .= '\'\''; // We do not give a password, but one can be sent in to change the current one, so we have a placeholder.
                     $ret .=']';
                     if ( $c < (count ( $this->my_users ) - 1) )
                         {
