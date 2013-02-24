@@ -3425,6 +3425,7 @@ function BMLT_Server_Admin ()
                         };
                     
                     main_service_body_editor.m_ajax_request_in_progress = null;
+                    document.getElementById ( 'bmlt_admin_service_body_delete_ajax_button_throbber_span' ).className = 'item_hidden';
                     this.populateServiceBodyEditor();
                     BMLT_Admin_StartFader ( 'bmlt_admin_fader_service_body_editor_delete_success_div', this.m_success_fade_duration );
                     alert ( g_service_body_meeting_editor_note );
@@ -3563,6 +3564,12 @@ function BMLT_Server_Admin ()
                     user_level_sa_span.className = 'bmlt_admin_value_left light_italic_display';
                     };
                 };
+            };
+        
+        var perm_checkbox = document.getElementById ( 'bmlt_admin_user_delete_perm_checkbox' );
+        if ( perm_checkbox )
+            {
+            perm_checkbox.checked = false;
             };
         
         this.validateUserEditorButtons();
@@ -3803,8 +3810,8 @@ function BMLT_Server_Admin ()
                 var id = main_user_editor_div.current_user_object[0];
                 var uri = g_ajax_callback_uri + '&delete_user=' + id + (( perm_check && perm_check.checked ) ? '&permanently=1' : '');
 
-                var throbber_span = document.getElementById ( 'bmlt_admin_user_delete_ajax_button_throbber_span' ).className = 'bmlt_admin_ajax_button_throbber_span';
-                var delete_a = document.getElementById ( 'bmlt_admin_meeting_editor_form_user_delete_button' ).className = 'item_hidden';
+                document.getElementById ( 'bmlt_admin_user_delete_ajax_button_throbber_span' ).className = 'bmlt_admin_ajax_button_throbber_span';
+                document.getElementById ( 'bmlt_admin_meeting_editor_form_user_delete_button' ).className = 'item_hidden';
             
                 var salt = new Date();
                 uri += '&salt=' + salt.getTime();
@@ -3857,6 +3864,7 @@ function BMLT_Server_Admin ()
                         };
                     
                     main_user_editor_div.m_ajax_request_in_progress = null;
+                    document.getElementById ( 'bmlt_admin_user_delete_ajax_button_throbber_span' ).className = 'item_hidden';
                     this.populateUserEditor();
                     BMLT_Admin_StartFader ( 'bmlt_admin_fader_user_editor_delete_success_div', this.m_success_fade_duration );
                     alert ( g_user_meeting_editor_note );
@@ -3944,6 +3952,7 @@ function BMLT_Server_Admin ()
     {
         var save_button = document.getElementById ( 'bmlt_admin_user_editor_form_user_save_button' );
         var cancel_button = document.getElementById ( 'bmlt_admin_user_editor_form_user_editor_cancel_button' );
+        var delete_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_user_delete_button' );
         
         if ( this.isUserDirty() )
             {
@@ -3955,6 +3964,8 @@ function BMLT_Server_Admin ()
             save_button.className = 'bmlt_admin_ajax_button button_disabled';
             cancel_button.className = 'bmlt_admin_ajax_button button_disabled';
             };
+        
+        delete_button.className = 'bmlt_admin_ajax_button button';
     };
     
     // #mark - 

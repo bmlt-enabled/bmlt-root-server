@@ -301,6 +301,7 @@ class c_comdef_admin_ajax_handler
                                 $in_delete_permanently = false
                                 )
     {
+        $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_delete_fail_text'] );
         if ( c_comdef_server::IsUserServerAdmin(null,true) )
             {
             try
@@ -322,19 +323,19 @@ class c_comdef_admin_ajax_handler
                     else
                         {
                         header ( 'Content-type: application/json' );
-                        echo "{'success':false,'report':'$in_user_id Did not delete.'}";
+                        echo "{'success':false,'report':'$ierr_string'}";
                         }
                     }
                 else
                     {
                     header ( 'Content-type: application/json' );
-                    echo "{'success':false,'report':'$in_user_id Is not the valid type.'}";
+                    echo "{'success':false,'report':'$ierr_string'}";
                     }
                 }
             catch ( Exception $e )
                 {
                 header ( 'Content-type: application/json' );
-                echo "{'success':false,'report':'$in_user_id Threw an exception.'}";
+                echo "{'success':false,'report':'$ierr_string'}";
                 }
             }
         else
@@ -517,6 +518,8 @@ class c_comdef_admin_ajax_handler
                                         $in_delete_permanently = false
                                     )
     {
+        $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_delete_fail_text'] );
+
         if ( c_comdef_server::IsUserServerAdmin(null,true) )
             {
             try
@@ -533,24 +536,24 @@ class c_comdef_admin_ajax_handler
                             }
                     
                         header ( 'Content-type: application/json' );
-                        echo "{'success':true,'report':'$in_sb_id'}";
+                        echo "{'success':false,'report':'$ierr_string'}";
                         }
                     else
                         {
                         header ( 'Content-type: application/json' );
-                        echo "{'success':false,'report':'$in_sb_id'}";
+                        echo "{'success':false,'report':'$ierr_string'}";
                         }
                     }
                 else
                     {
                     header ( 'Content-type: application/json' );
-                    echo "{'success':false,'report':'$in_sb_id'}";
+                    echo "{'success':false,'report':'$ierr_string'}";
                     }
                 }
             catch ( Exception $e )
                 {
                 header ( 'Content-type: application/json' );
-                echo "{'success':false,'report':'$in_sb_id'}";
+                echo "{'success':false,'report':'$ierr_string'}";
                 }
             }
         else
