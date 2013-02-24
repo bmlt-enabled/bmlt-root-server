@@ -64,7 +64,19 @@ class c_comdef_admin_ajax_handler
         
         $account_changed = false;
         
-        if ( isset ( $this->my_http_vars['create_new_service_body'] ) && $this->my_http_vars['create_new_service_body'] )
+        if ( isset ( $this->my_http_vars['create_new_user'] ) && $this->my_http_vars['create_new_user'] )
+            {
+            $this->HandleUserCreate ( $this->my_http_vars['create_new_user'] );
+            }
+        elseif ( isset ( $this->my_http_vars['set_user_change'] ) && $this->my_http_vars['set_user_change'] )
+            {
+            $this->HandleUserChange ( $this->my_http_vars['set_user_change'] );
+            }
+        else if ( isset ( $this->my_http_vars['delete_user'] ) && $this->my_http_vars['delete_user'] )
+            {
+            $this->HandleDeleteUser ( $this->my_http_vars['delete_user'], isset ( $this->my_http_vars['permanently'] ) );
+            }
+        elseif ( isset ( $this->my_http_vars['create_new_service_body'] ) && $this->my_http_vars['create_new_service_body'] )
             {
             $this->HandleServiceBodyCreate ( $this->my_http_vars['create_new_service_body'] );
             }
@@ -137,6 +149,223 @@ class c_comdef_admin_ajax_handler
             }
         
         return  $returned_text;
+    }
+    
+    /*******************************************************************/
+    /**
+        \brief	
+    */	
+    function HandleUserCreate ( $in_user_data   ///< A JSON object, containing the new User data.
+                                )
+    {
+        if ( c_comdef_server::IsUserServerAdmin(null,true) )
+            {
+            $json_tool = new PhpJsonXmlArrayStringInterchanger;
+        
+            $the_new_user = $json_tool->convertJsonToArray ( $in_user_data, true );
+        
+            if ( is_array ( $the_new_user ) && count ( $the_new_user ) )
+                {
+                $id = $the_new_user[0];
+                $login = $the_new_user[1];
+                $name = $the_new_user[2];
+                $description = $the_new_user[3];
+                $email = $the_new_user[4];
+                $user_level = intval ( $the_new_user[5] );
+                $password = trim ( $the_new_user[6] );
+            
+                $user_to_create = new c_comdef_user;
+            
+                if ( $user_to_create instanceof c_comdef_user )
+                    {
+                    $user_to_create->SetLogin ( $login );
+                    $user_to_create->SetLocalName ( $name );
+                    $user_to_create->SetLocalDescription ( $description );
+                    $user_to_create->SetEmailAddress ( $email );
+                    $user_to_create->SetUserLevel ( $user_level );
+                    
+                    if ( $password )
+                        {
+                        $user_to_create->SetNewPassword ( $password );
+                        }
+                
+                    if ( $user_to_create->UpdateToDB() )
+                        {
+                        // Get whatever ID was assigned to this User.
+                        $the_new_user[0] = intval ( $user_to_create->GetID() );
+                        header ( 'Content-type: application/json' );
+                        echo "{'success':true,'user':".array2json ( $the_new_user )."}";
+                        }
+                    else
+                        {
+                        $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_create_fail_text'] );
+                        header ( 'Content-type: application/json' );
+                        echo "{'success':false,'report':'$err_string'}";
+                        }
+                    }
+                else
+                    {
+                    $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_create_fail_text'] );
+                    header ( 'Content-type: application/json' );
+                    echo "{'success':false,'report':'$err_string'}";
+                    }
+                }
+            else
+                {
+                $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_create_fail_text'] );
+                header ( 'Content-type: application/json' );
+                echo "{'success':false,'report':'$err_string'}";
+                }
+            }
+        else
+            {
+            echo 'NOT AUTHORIZED';
+            }
+    }
+    
+    /*******************************************************************/
+    /**
+        \brief	
+    */	
+    function HandleUserChange ( $in_user_data   ///< A JSON object, containing the new User data.
+                                )
+    {
+        if ( c_comdef_server::IsUserServerAdmin(null,true) )
+            {
+            $json_tool = new PhpJsonXmlArrayStringInterchanger;
+        
+            $the_changed_user = $json_tool->convertJsonToArray ( $in_user_data, true );
+        
+            if ( is_array ( $the_changed_user ) && count ( $the_changed_user ) )
+                {
+                $id = $the_changed_user[0];
+                $login = $the_changed_user[1];
+                $name = $the_changed_user[2];
+                $description = $the_changed_user[3];
+                $email = $the_changed_user[4];
+                $user_level = intval ( $the_changed_user[5] );
+                $password = trim ( $the_changed_user[6] );
+            
+                $user_to_change = $this->my_server->GetUserByIDObj ( $id );
+            
+                if ( $user_to_change instanceof c_comdef_user )
+                    {
+                    $user_to_change->SetLogin ( $login );
+                    $user_to_change->SetLocalName ( $name );
+                    $user_to_change->SetLocalDescription ( $description );
+                    $user_to_change->SetEmailAddress ( $email );
+                    $user_to_change->SetUserLevel ( $user_level );
+                    
+                    if ( $password )
+                        {
+                        $user_to_change->SetNewPassword ( $password );
+                        }
+                
+                    if ( $user_to_change->UpdateToDB() )
+                        {
+                        header ( 'Content-type: application/json' );
+                        echo "{'success':true,'user':".array2json ( $the_changed_user )."}";
+                        }
+                    else
+                        {
+                        $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_fail_cant_update_text'] );
+                        header ( 'Content-type: application/json' );
+                        echo "{'success':false,'report':'$err_string'}";
+                        }
+                    }
+                else
+                    {
+                    $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_fail_cant_find_sb_text'] );
+                    header ( 'Content-type: application/json' );
+                    echo "{'success':false,'report':'$err_string'}";
+                    }
+                }
+            else
+                {
+                $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_fail_no_data_text'] );
+                header ( 'Content-type: application/json' );
+                echo "{'success':false,'report':'$err_string'}";
+                }
+            }
+        else
+            {
+            echo 'NOT AUTHORIZED';
+            }
+    }
+    
+    /*******************************************************************/
+    /**
+        \brief	
+    */	
+    function HandleDeleteUser ( $in_user_id,    ///< The ID of the user to be deleted.
+                                $in_delete_permanently = false
+                                )
+    {
+        if ( c_comdef_server::IsUserServerAdmin(null,true) )
+            {
+            try
+                {
+                $user_to_delete = $this->my_server->GetUserByIDObj ( $in_user_id );
+            
+                if ( $user_to_delete instanceof c_comdef_user )
+                    {
+                    if ( $user_to_delete->DeleteFromDB() )
+                        {
+                        if ( $in_delete_permanently )
+                            {
+                            $this->DeleteUserChanges ( $in_user_id );
+                            }
+                    
+                        header ( 'Content-type: application/json' );
+                        echo "{'success':true,'report':'$in_user_id'}";
+                        }
+                    else
+                        {
+                        header ( 'Content-type: application/json' );
+                        echo "{'success':false,'report':'$in_user_id Did not delete.'}";
+                        }
+                    }
+                else
+                    {
+                    header ( 'Content-type: application/json' );
+                    echo "{'success':false,'report':'$in_user_id Is not the valid type.'}";
+                    }
+                }
+            catch ( Exception $e )
+                {
+                header ( 'Content-type: application/json' );
+                echo "{'success':false,'report':'$in_user_id Threw an exception.'}";
+                }
+            }
+        else
+            {
+            echo 'NOT AUTHORIZED';
+            }
+    }
+
+    /*******************************************************************/
+    /**
+    */
+    function DeleteUserChanges ($in_user_id
+                                )
+    {
+        if ( c_comdef_server::IsUserServerAdmin(null,true) )
+            {
+            $changes = $this->my_server->GetChangesFromIDAndType ( 'c_comdef_user', $in_user_id );
+        
+            if ( $changes instanceof c_comdef_changes )
+                {
+                $obj_array =& $changes->GetChangesObjects();
+            
+                if ( is_array ( $obj_array ) && count ( $obj_array ) )
+                    {
+                    foreach ( $obj_array as $change )
+                        {
+                        $change->DeleteFromDB();
+                        }
+                    }
+                }
+            }
     }
 
     /*******************************************************************/
@@ -284,6 +513,81 @@ class c_comdef_admin_ajax_handler
     /**
         \brief
     */	
+    function HandleDeleteServiceBody (  $in_sb_id,
+                                        $in_delete_permanently = false
+                                    )
+    {
+        if ( c_comdef_server::IsUserServerAdmin(null,true) )
+            {
+            try
+                {
+                $service_body =& $this->my_server->GetServiceBodyByIDObj($in_sb_id);
+            
+                if ( $service_body instanceof c_comdef_service_body )
+                    {
+                    if ( $service_body->DeleteFromDB() )
+                        {
+                        if ( $in_delete_permanently )
+                            {
+                            $this->DeleteServiceBodyChanges ( $in_sb_id );
+                            }
+                    
+                        header ( 'Content-type: application/json' );
+                        echo "{'success':true,'report':'$in_sb_id'}";
+                        }
+                    else
+                        {
+                        header ( 'Content-type: application/json' );
+                        echo "{'success':false,'report':'$in_sb_id'}";
+                        }
+                    }
+                else
+                    {
+                    header ( 'Content-type: application/json' );
+                    echo "{'success':false,'report':'$in_sb_id'}";
+                    }
+                }
+            catch ( Exception $e )
+                {
+                header ( 'Content-type: application/json' );
+                echo "{'success':false,'report':'$in_sb_id'}";
+                }
+            }
+        else
+            {
+            echo 'NOT AUTHORIZED';
+            }
+    }
+
+    /*******************************************************************/
+    /**
+    */
+    function DeleteServiceBodyChanges (	$in_sb_id
+                                        )
+    {
+        if ( c_comdef_server::IsUserServerAdmin(null,true) )
+            {
+            $changes = $this->my_server->GetChangesFromIDAndType ( 'c_comdef_service_body', $in_sb_id );
+        
+            if ( $changes instanceof c_comdef_changes )
+                {
+                $obj_array =& $changes->GetChangesObjects();
+            
+                if ( is_array ( $obj_array ) && count ( $obj_array ) )
+                    {
+                    foreach ( $obj_array as $change )
+                        {
+                        $change->DeleteFromDB();
+                        }
+                    }
+                }
+            }
+    }
+    
+    /*******************************************************************/
+    /**
+        \brief
+    */	
     function GetMeetingHistory (    $in_meeting_id
                                 )
     {
@@ -381,56 +685,6 @@ class c_comdef_admin_ajax_handler
             echo "{'success':false,'report':'$in_meeting_id'}";
 			}
     }
-    
-    /*******************************************************************/
-    /**
-        \brief
-    */	
-    function HandleDeleteServiceBody (  $in_sb_id,
-                                        $in_delete_permanently = false
-                                    )
-    {
-        if ( c_comdef_server::IsUserServerAdmin(null,true) )
-            {
-            try
-                {
-                $service_body =& $this->my_server->GetServiceBodyByIDObj($in_sb_id);
-            
-                if ( $service_body instanceof c_comdef_service_body )
-                    {
-                    if ( $service_body->DeleteFromDB() )
-                        {
-                        if ( $in_delete_permanently )
-                            {
-                            $this->DeleteServiceBodyChanges ( $in_sb_id );
-                            }
-                    
-                        header ( 'Content-type: application/json' );
-                        echo "{'success':true,'report':'$in_sb_id'}";
-                        }
-                    else
-                        {
-                        header ( 'Content-type: application/json' );
-                        echo "{'success':false,'report':'$in_sb_id'}";
-                        }
-                    }
-                else
-                    {
-                    header ( 'Content-type: application/json' );
-                    echo "{'success':false,'report':'$in_sb_id'}";
-                    }
-                }
-            catch ( Exception $e )
-                {
-                header ( 'Content-type: application/json' );
-                echo "{'success':false,'report':'$in_sb_id'}";
-                }
-            }
-        else
-            {
-            echo 'NOT AUTHORIZED';
-            }
-    }
 
     /*******************************************************************/
     /**
@@ -441,31 +695,6 @@ class c_comdef_admin_ajax_handler
         if ( c_comdef_server::IsUserServerAdmin(null,true) )
             {
             $changes = $this->my_server->GetChangesFromIDAndType ( 'c_comdef_meeting', $in_meeting_id );
-        
-            if ( $changes instanceof c_comdef_changes )
-                {
-                $obj_array =& $changes->GetChangesObjects();
-            
-                if ( is_array ( $obj_array ) && count ( $obj_array ) )
-                    {
-                    foreach ( $obj_array as $change )
-                        {
-                        $change->DeleteFromDB();
-                        }
-                    }
-                }
-            }
-    }
-
-    /*******************************************************************/
-    /**
-    */
-    function DeleteServiceBodyChanges (	$in_sb_id
-                                        )
-    {
-        if ( c_comdef_server::IsUserServerAdmin(null,true) )
-            {
-            $changes = $this->my_server->GetChangesFromIDAndType ( 'c_comdef_service_body', $in_sb_id );
         
             if ( $changes instanceof c_comdef_changes )
                 {

@@ -295,12 +295,17 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_service_body_save_button = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_save_button'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_service_body_create_button = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_create_button'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_service_body_meeting_editor_note = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_meeting_editor_note'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_user_meeting_editor_note = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_meeting_editor_note'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_user_save_button = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_save_button'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_user_create_button = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_create_button'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_user_password_default_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_password_default_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_user_new_password_default_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_new_password_default_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_user_password_label = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_password_label'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_user_new_password_label = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_new_password_label'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_user_dirty_confirm_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_dirty_confirm_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_user_delete_button_confirm = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_delete_button_confirm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_user_delete_button_confirm_perm = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_delete_button_confirm_perm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_user_create_password_alert_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_create_password_alert_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_time_values = [';
                     $ret .= '\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_am_label'] ).'\',';
                     $ret .= '\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_pm_label'] ).'\',';

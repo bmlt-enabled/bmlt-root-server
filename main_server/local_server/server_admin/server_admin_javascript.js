@@ -3114,25 +3114,8 @@ function BMLT_Server_Admin ()
     this.cancelServiceBodyEdit = function()
     {
         var main_service_body_editor = document.getElementById ( 'bmlt_admin_single_service_body_editor_div' );
-        var edited_service_body_object = main_service_body_editor.service_body_object;
-        
-        for ( var index = 0; index < g_service_bodies_array.length; index++ )
-            {
-            if ( g_service_bodies_array[index][0] == edited_service_body_object[0] )
-                {
-                original_service_body = g_service_bodies_array[index];
-                break;
-                };
-            };
-        
-        if ( main_service_body_editor.service_body_object && (this.isServiceBodyDirty() != null) )
-            {
-            if ( confirm ( g_service_body_dirty_confirm_text ) )
-                {
-                main_service_body_editor.service_body_object = null;
-                this.populateServiceBodyEditor();
-                };
-            };
+        main_service_body_editor.service_body_object = null;
+        this.populateServiceBodyEditor();
     };
     
     // These functions will trigger AJAX transactions.
@@ -3444,7 +3427,6 @@ function BMLT_Server_Admin ()
                     main_service_body_editor.m_ajax_request_in_progress = null;
                     this.populateServiceBodyEditor();
                     BMLT_Admin_StartFader ( 'bmlt_admin_fader_service_body_editor_delete_success_div', this.m_success_fade_duration );
-                    document.getElementById ( 'bmlt_admin_service_body_delete_ajax_button_throbber_span' ).className = 'item_hidden';
                     alert ( g_service_body_meeting_editor_note );
                     };
                 }
@@ -3508,7 +3490,9 @@ function BMLT_Server_Admin ()
                 };
             };
         
-        if ( !main_user_editor_div.current_user_object || (main_user_editor_div.current_user_object && !this.isUserDirty()) || (main_user_editor_div.current_user_object && this.isUserDirty() && confirm ( 'PLACEHOLDER' )) )
+        if ( !main_user_editor_div.current_user_object
+            || (main_user_editor_div.current_user_object && !this.isUserDirty())
+            || (main_user_editor_div.current_user_object && this.isUserDirty() && confirm ( g_user_dirty_confirm_text )) )
             {
             var password_label = document.getElementById ( 'bmlt_admin_user_editor_password_label' );
             if ( !selected_user_object )
@@ -3617,6 +3601,183 @@ function BMLT_Server_Admin ()
     ****************************************************************************************/
     this.saveUser = function()
     {
+        var main_user_editor_div = document.getElementById ( 'bmlt_admin_single_user_editor_div' );
+        
+        if ( main_user_editor_div.current_user_object[0] == 0 )
+            {
+            this.createUser();
+            }
+        else
+            {
+            if ( this.isUserDirty() )
+                {
+                var button_object = document.getElementById ( 'bmlt_admin_user_editor_form_user_save_button' );
+                var throbber_object = document.getElementById ( 'bmlt_admin_user_save_ajax_button_throbber_span' );
+
+                var serialized_object = JSON.stringify ( main_user_editor_div.current_user_object );
+        
+                var uri = g_ajax_callback_uri + '&set_user_change=' + encodeURIComponent ( serialized_object );
+
+                if ( main_user_editor_div.m_ajax_request_in_progress )
+                    {
+                    main_user_editor_div.m_ajax_request_in_progress.abort();
+                    main_user_editor_div.m_ajax_request_in_progress = null;
+                    };
+            
+                var salt = new Date();
+                uri += '&salt=' + salt.getTime();
+            
+                button_object.className = 'item_hidden';
+                throbber_object.className = 'bmlt_admin_ajax_button_throbber_span';
+            
+                main_user_editor_div.m_ajax_request_in_progress = BMLT_AjaxRequest ( uri, function(in_req) { admin_handler_object.saveUserAJAXCallback(in_req); }, 'post' );
+                };
+            };
+    };
+    
+    /************************************************************************************//**
+    *   \brief  This is the AJAX callback handler for the save operation.                   *
+    ****************************************************************************************/
+    this.saveUserAJAXCallback = function(in_http_request ///< The HTTPRequest object
+                                        )
+    {
+        if ( in_http_request.responseText )
+            {
+            eval ( 'var json_object = ' + in_http_request.responseText + ';' );
+            
+            if ( json_object )
+                {
+                if ( !json_object.success )
+                    {
+                    alert ( json_object.report );
+                    BMLT_Admin_StartFader ( 'bmlt_admin_fader_user_editor_fail_div', this.m_failure_fade_duration );
+                    }
+                else
+                    {
+                    for ( var index = 0; index < g_users.length; index++ )
+                        {
+                        if ( g_users[index][0] == json_object.user[0] )
+                            {
+                            g_users[index] = json_object.user;
+                            break;
+                            };
+                        };
+                        
+                    var main_user_editor_div = document.getElementById ( 'bmlt_admin_single_user_editor_div' );
+                    main_user_editor_div.m_ajax_request_in_progress = null;
+                    BMLT_Admin_StartFader ( 'bmlt_admin_fader_user_editor_success_div', this.m_success_fade_duration );
+                    };
+                }
+            else
+                {
+                BMLT_Admin_StartFader ( 'bmlt_admin_fader_user_editor_fail_div', this.m_failure_fade_duration );
+                };
+            }
+        else
+            {
+            BMLT_Admin_StartFader ( 'bmlt_admin_fader_user_editor_fail_div', this.m_failure_fade_duration );
+            };
+        
+        document.getElementById ( 'bmlt_admin_user_save_ajax_button_throbber_span' ).className = 'item_hidden';
+        this.validateUserEditorButtons();
+    };
+    
+    /************************************************************************************//**
+    *   \brief  This creates a new user.                                                    *
+    ****************************************************************************************/
+    this.createUser = function()
+    {
+        if ( this.isUserDirty() )
+            {
+            var main_user_editor_div = document.getElementById ( 'bmlt_admin_single_user_editor_div' );
+            
+            if ( main_user_editor_div.current_user_object[6] )  // New users must have a password.
+                {
+                var button_object = document.getElementById ( 'bmlt_admin_user_editor_form_user_save_button' );
+                var throbber_object = document.getElementById ( 'bmlt_admin_user_save_ajax_button_throbber_span' );
+
+                var serialized_object = JSON.stringify ( main_user_editor_div.current_user_object );
+        
+                var uri = g_ajax_callback_uri + '&create_new_user=' + encodeURIComponent ( serialized_object );
+
+                if ( main_user_editor_div.m_ajax_request_in_progress )
+                    {
+                    main_user_editor_div.m_ajax_request_in_progress.abort();
+                    main_user_editor_div.m_ajax_request_in_progress = null;
+                    };
+            
+                var salt = new Date();
+                uri += '&salt=' + salt.getTime();
+            
+                button_object.className = 'item_hidden';
+                throbber_object.className = 'bmlt_admin_ajax_button_throbber_span';
+            
+                main_user_editor_div.m_ajax_request_in_progress = BMLT_AjaxRequest ( uri, function(in_req) { admin_handler_object.createUserAJAXCallback(in_req); }, 'post' );
+                }
+            else
+                {
+                alert ( g_user_create_password_alert_text );
+                };
+            };
+    };
+    
+    /************************************************************************************//**
+    *   \brief  This is the AJAX callback handler for the create operation.                 *
+    ****************************************************************************************/
+    this.createUserAJAXCallback = function(in_http_request ///< The HTTPRequest object
+                                                )
+    {
+        if ( in_http_request.responseText )
+            {
+            eval ( 'var json_object = ' + in_http_request.responseText + ';' );
+            
+            if ( json_object )
+                {
+                if ( !json_object.success )
+                    {
+                    alert ( json_object.report );
+                    BMLT_Admin_StartFader ( 'bmlt_admin_fader_user_create_fail_div', this.m_failure_fade_duration );
+                    }
+                else
+                    {
+                    g_users[g_users.length] = json_object.user;
+                    var user_select = document.getElementById ( 'bmlt_admin_single_user_editor_user_select' );
+                    var new_option = document.createElement ( 'option' );
+                    new_option.value = json_object.user[0];
+                    new_option.text = json_object.user[2];
+                    
+                    try
+                        {
+                        // for IE earlier than version 8
+                        user_select.add ( new_option, user_select.options[user_select.options.length - 2] );
+                        }
+                    catch (e)
+                        {
+                        user_select.add ( new_option, user_select.options.length - 2 );
+                        }
+                    
+                    user_select.selectedIndex = user_select.options.length - 3;
+                    var main_user_editor_div = document.getElementById ( 'bmlt_admin_single_user_editor_div' );
+                    main_user_editor_div.m_ajax_request_in_progress = null;
+                    main_user_editor_div.current_user_object = null;
+                    this.populateUserEditor();
+                    BMLT_Admin_StartFader ( 'bmlt_admin_fader_user_create_success_div', this.m_success_fade_duration );
+                    document.getElementById ( 'bmlt_admin_user_save_ajax_button_throbber_span' ).className = 'item_hidden';
+                    alert ( g_user_meeting_editor_note );
+                    };
+                }
+            else
+                {
+                BMLT_Admin_StartFader ( 'bmlt_admin_fader_user_create_fail_div', this.m_failure_fade_duration );
+                };
+            }
+        else
+            {
+            BMLT_Admin_StartFader ( 'bmlt_admin_fader_user_create_fail_div', this.m_failure_fade_duration );
+            };
+        
+        document.getElementById ( 'bmlt_admin_user_save_ajax_button_throbber_span' ).className = 'item_hidden';
+        this.validateUserEditorButtons();
     };
 
     /************************************************************************************//**
@@ -3624,6 +3785,95 @@ function BMLT_Server_Admin ()
     ****************************************************************************************/
     this.deleteUser = function()
     {
+        if ( g_users.length > 1 )
+            {
+            var perm_check = document.getElementById ( 'bmlt_admin_user_delete_perm_checkbox' );
+            var confirm_str = g_user_delete_button_confirm + (( perm_check && perm_check.checked ) ? ("\n" + g_user_delete_button_confirm_perm) : '');
+        
+            if ( confirm ( confirm_str ) )
+                {
+                var main_user_editor_div = document.getElementById ( 'bmlt_admin_single_user_editor_div' );
+            
+                if ( main_user_editor_div.m_ajax_request_in_progress )
+                    {
+                    main_user_editor_div.m_ajax_request_in_progress.abort();
+                    main_user_editor_div.m_ajax_request_in_progress = null;
+                    };
+            
+                var id = main_user_editor_div.current_user_object[0];
+                var uri = g_ajax_callback_uri + '&delete_user=' + id + (( perm_check && perm_check.checked ) ? '&permanently=1' : '');
+
+                var throbber_span = document.getElementById ( 'bmlt_admin_user_delete_ajax_button_throbber_span' ).className = 'bmlt_admin_ajax_button_throbber_span';
+                var delete_a = document.getElementById ( 'bmlt_admin_meeting_editor_form_user_delete_button' ).className = 'item_hidden';
+            
+                var salt = new Date();
+                uri += '&salt=' + salt.getTime();
+            
+                main_user_editor_div.m_ajax_request_in_progress = BMLT_AjaxRequest ( uri, function(in_req) { admin_handler_object.deleteUserAJAXCallback(in_req); }, 'get' );
+                };
+            };
+    };
+    
+    /************************************************************************************//**
+    *   \brief  This is the AJAX callback handler for the delete operation.                 *
+    ****************************************************************************************/
+    this.deleteUserAJAXCallback = function(  in_http_request ///< The HTTPRequest object
+                                                )
+    {
+        if ( in_http_request.responseText )
+            {
+            eval ( 'var json_object = ' + in_http_request.responseText + ';' );
+            
+            if ( json_object )
+                {
+                var main_user_editor_div = document.getElementById ( 'bmlt_admin_single_user_editor_div' );
+                main_user_editor_div.current_user_object = null;
+                    
+                if ( !json_object.success )
+                    {
+                    alert ( json_object.report );
+                    BMLT_Admin_StartFader ( 'bmlt_admin_fader_user_editor_delete_fail_div', this.m_failure_fade_duration );
+                    }
+                else
+                    {
+                    var user_select = document.getElementById ( 'bmlt_admin_single_user_editor_user_select' );
+                    user_select.selectedIndex = 0;
+                    for ( var index = 0; index < user_select.options.length; index++ )
+                        {
+                        if ( parseInt ( user_select.options[index].value ) == parseInt(json_object.report) )
+                            {
+                            user_select.remove ( index );
+                            break;
+                            };
+                        };
+                        
+                    for ( var index = 0; index < g_users.length; index++ )
+                        {
+                        if ( parseInt ( g_users[index][0] ) == parseInt(json_object.report) )
+                            {
+                            g_users.splice ( index, 1 );
+                            break;
+                            };
+                        };
+                    
+                    main_user_editor_div.m_ajax_request_in_progress = null;
+                    this.populateUserEditor();
+                    BMLT_Admin_StartFader ( 'bmlt_admin_fader_user_editor_delete_success_div', this.m_success_fade_duration );
+                    alert ( g_user_meeting_editor_note );
+                    };
+                }
+            else
+                {
+                BMLT_Admin_StartFader ( 'bmlt_admin_fader_user_editor_delete_fail_div', this.m_failure_fade_duration );
+                };
+            }
+        else
+            {
+            BMLT_Admin_StartFader ( 'bmlt_admin_fader_user_editor_delete_fail_div', this.m_failure_fade_duration );
+            };
+        
+        document.getElementById ( 'bmlt_admin_user_delete_ajax_button_throbber_span' ).className = 'item_hidden';
+        this.validateUserEditorButtons();
     };
 
     /************************************************************************************//**
@@ -3631,6 +3881,9 @@ function BMLT_Server_Admin ()
     ****************************************************************************************/
     this.cancelUserEdit = function()
     {
+        var main_user_editor_div = document.getElementById ( 'bmlt_admin_single_user_editor_div' );
+        main_user_editor_div.current_user_object = null;
+        this.populateUserEditor();
     };
 
     /************************************************************************************//**
