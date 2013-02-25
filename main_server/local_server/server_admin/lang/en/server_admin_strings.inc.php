@@ -194,6 +194,7 @@
 	                                        'service_body_editor_type_c_comdef_service_body__WSC__' =>  'World Service Conference',
 	                                        'service_body_editor_type_c_comdef_service_body__MAS__' =>  'Metro Area',
 	                                        'service_body_editor_type_c_comdef_service_body__ZFM__' =>  'Zonal Forum',
+	                                        'service_body_editor_uri_naws_format_text'              =>  'Get The Meetings For This Service Body As A NAWS-Compatible File',
 	                                        'edit_Meeting_meeting_id'                               =>  'Meeting ID:',
                                             'service_body_editor_create_new_sb_option'              =>  'Create A New Service Body',
                                             'service_body_meeting_editor_note'                      =>  'If you use the meeting editor after this operation, the Service Body popup menu will not be accurate. You must sign out, then sign back in, to ensure that the meeting editor will be accurate.',

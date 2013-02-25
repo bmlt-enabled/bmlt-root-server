@@ -503,7 +503,6 @@ class c_comdef_admin_main_console
     ************************************************************************************************************/
     function return_user_editor_button_panel ()
     {
-        $main_button_text = $this->my_localized_strings['comdef_server_admin_strings']['meeting_save_buttonName'];
         $ret = '<div class="bmlt_admin_user_editor_button_div">';
             $ret .= '<span class="bmlt_admin_meeting_editor_form_meeting_button_left_span">';
                 $ret .= '<a id="bmlt_admin_user_editor_form_user_save_button" href="javascript:admin_handler_object.saveUser()" class="bmlt_admin_ajax_button button_disabled">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_save_button'] ).'</a>';
@@ -525,7 +524,7 @@ class c_comdef_admin_main_console
                     
         return $ret;
     }
-        
+    
     /********************************************************************************************************//**
     \brief This constructs the Service body editor panel. Only Server Admins and Service Body Admins get this one.
     \returns The HTML and JavaScript for the "Service Body Administration" section.
@@ -882,8 +881,12 @@ class c_comdef_admin_main_console
     ************************************************************************************************************/
     function return_service_body_editor_button_panel ()
     {
-        $main_button_text = $this->my_localized_strings['comdef_server_admin_strings']['meeting_save_buttonName'];
-        $ret = '<div class="bmlt_admin_service_body_editor_button_div">';
+        $ret = '<div class="naws_link_div" id="service_body_editor_naws_link_div">';
+            $ret .= '<a id="service_body_editor_naws_link_a" href="javascript:admin_handler_object.getNawsDump()">';
+                $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_uri_naws_format_text'] );
+            $ret .= '</a>';
+        $ret .= '</div>';
+        $ret .= '<div class="bmlt_admin_service_body_editor_button_div">';
             $ret .= '<span class="bmlt_admin_meeting_editor_form_meeting_button_left_span">';
                 $ret .= '<a id="bmlt_admin_service_body_editor_form_service_body_save_button" href="javascript:admin_handler_object.saveServiceBody()" class="bmlt_admin_ajax_button button_disabled">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_save_button'] ).'</a>';
                 $ret .= '<span id="bmlt_admin_service_body_save_ajax_button_throbber_span" class="bmlt_admin_ajax_button_throbber_span item_hidden"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></span>';
@@ -1257,7 +1260,6 @@ class c_comdef_admin_main_console
     ************************************************************************************************************/
     function return_meeting_editor_button_panel ()
     {
-        $main_button_text = $this->my_localized_strings['comdef_server_admin_strings']['meeting_save_buttonName'];
         $ret = '<div class="bmlt_admin_meeting_editor_form_meeting_button_div">';
             $ret .= '<span class="bmlt_admin_meeting_editor_form_meeting_button_left_span">';
                 $ret .= '<a id="bmlt_admin_meeting_editor_form_meeting_template_save_button" href="javascript:admin_handler_object.saveMeeting(template)" class="bmlt_admin_ajax_button button_disabled">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_save_buttonName'] ).'</a>';

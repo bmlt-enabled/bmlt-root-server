@@ -1183,6 +1183,44 @@ class c_comdef_server
 	}
 	
 	/*******************************************************************/
+	/**	\brief Return the IDs of an entire Service body hierarchy.
+		
+		\returns an array of integers. These are the Service body IDs.
+	*/
+	static function GetServiceBodyHierarchyIDs(
+											    $in_service_body_id_bigint	///< An integer, containing the service body ID.
+											    )
+	{
+		$ret = array();
+		$server =& self::GetServer();
+		if ( $server instanceof c_comdef_server )
+			{
+			$array_obj =& $server->GetServiceBodyArray();
+			if ( is_array ( $array_obj ) && count ( $array_obj ) )
+				{
+				foreach ( $array_obj as &$sb )
+					{
+					if ( $sb instanceof c_comdef_service_body )
+						{
+						$id = $sb->GetID();
+						$parent_id = $sb->GetOwnerID();
+						if ( intval ( $in_service_body_id_bigint ) == intval ( $id ) )
+							{
+							array_push ( $ret, $id );
+							}
+						elseif ( intval ( $in_service_body_id_bigint ) == intval ( $parent_id ) )
+						    {
+						    $ret = array_merge ( $ret, self::GetServiceBodyHierarchyIDs ( $id ) );
+						    }
+						}
+					}
+				}
+			}
+
+		return $ret;
+	}
+	
+	/*******************************************************************/
 	/**	\brief Given an ID and a language for a format, as well as a code,
 		returns true if the code does NOT appear in the DB.
 		

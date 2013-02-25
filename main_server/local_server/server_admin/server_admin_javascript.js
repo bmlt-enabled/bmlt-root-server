@@ -2767,6 +2767,22 @@ function BMLT_Server_Admin ()
         var world_id_text_input = document.getElementById ( 'bmlt_admin_single_service_body_editor_world_cc_text_input' );
 
         world_id_text_input.value = selected_service_body_object[12];
+        var naws_link_div = document.getElementById ( 'service_body_editor_naws_link_div' );
+        var naws_link_a = document.getElementById ( 'service_body_editor_naws_link_a' );
+        
+        if ( selected_service_body_object[12] ) // We only show the NAWS dump link if we have a World ID.
+            {
+            naws_link_div.className = 'naws_link_div';
+            var uri = g_ajax_callback_uri + '&get_naws_dump=' + selected_service_body_object[0];
+            var salt = new Date();
+            uri += '&salt=' + salt.getTime();
+            naws_link_a.href = uri;
+            }
+        else
+            {
+            naws_link_div.className = 'item_hidden';
+            };
+        
         this.handleTextInputLoad ( world_id_text_input, g_service_body_world_cc_default_prompt_text, true );
         
         var type_select = document.getElementById ( 'bmlt_admin_single_service_body_editor_type_select' );
@@ -2796,6 +2812,7 @@ function BMLT_Server_Admin ()
             {
             perm_checkbox.checked = false;
             };
+            
     };
 
     /************************************************************************************//**

@@ -1085,3 +1085,11 @@ noscript.main_noscript
     text-align:center;
     color:white;
 }
+
+div.naws_link_div
+{
+    text-align:center;
+    font-weight:bold;
+    padding: 0.1em;
+    margin-bottom: 8px;
+}
