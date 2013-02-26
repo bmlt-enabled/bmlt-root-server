@@ -4016,6 +4016,20 @@ function BMLT_Server_Admin ()
     ****************************************************************************************/
     this.populateFormatEditor = function()
     {
+        var lang_select = document.getElementById ( 'format_language_selector' );
+        var lang = lang_select.options[lang_select.selectedIndex].value;
+        var list_container = document.getElementById ( 'format_editor_list_div' );
+        
+        this.createFormatList ( lang, list_container );
+    };
+
+    /************************************************************************************//**
+    *   \brief  This populates the format display list                                      *
+    ****************************************************************************************/
+    this.createFormatList = function(   in_lang,        ///< The language to use
+                                        in_container    ///< The container div for the list
+                                    )
+    {
     };
     
     // #mark - 

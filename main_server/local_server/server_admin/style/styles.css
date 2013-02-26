@@ -216,23 +216,23 @@ textarea.bmlt_text_item
 
 input.bmlt_text_item
 {
-    width:50em;
+    width:30em;
 }
 
 input.bmlt_text_item_small
 {
-    width:20em;
+    width:15em;
 }
 
 textarea.bmlt_text_item
 {
-    width:50em;
+    width:30em;
     height: 10em;
 }
 
 textarea.bmlt_text_item_small
 {
-    width:20em;
+    width:15em;
     height: 4em;
 }
 
@@ -348,13 +348,13 @@ div.bmlt_admin_meeting_editor_form_new_meetings_div .bmlt_admin_single_meeting_e
 
 div.bmlt_admin_meeting_inner_div
 {
-    margin:8px;
     padding:4px;
     border: 1px solid #009;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
     border-radius: 4px;
     background-color:white;
+    margin:8px;
 }
 
 div.bmlt_admin_meeting_editor_tab_bar
@@ -601,7 +601,6 @@ span.bmlt_admin_time_span label
 div.bmlt_admin_meeting_editor_tab_div
 {
     height:24px;
-    margin-top:8px;
     margin-bottom:4px;
     width:100%;
     background-color:#009;
@@ -672,8 +671,7 @@ div.bmlt_admin_tab_div_not_selected a:active
 div.bmlt_admin_meeting_editor_form_specifier_div,
 div.bmlt_admin_user_account_edit_form_inner_div,
 div.bmlt_admin_service_body_edit_form_inner_div,
-div.bmlt_admin_user_edit_form_inner_div,
-div.bmlt_admin_format_edit_form_inner_div
+div.bmlt_admin_user_edit_form_inner_div
 {
     border: 1px solid white;
     background-color:white;
@@ -1075,7 +1073,8 @@ div.bmlt_admin_single_location_long_lat_div
 }
 
 fieldset.bmlt_admin_single_service_body_editor_fieldset,
-fieldset.bmlt_admin_single_user_editor_fieldset
+fieldset.bmlt_admin_single_user_editor_fieldset,
+fieldset.bmlt_admin_format_editor_fieldset
 {
     background-color:white;
     color:#009;
@@ -1086,7 +1085,8 @@ fieldset.bmlt_admin_single_user_editor_fieldset
 }
 
 fieldset.bmlt_admin_single_service_body_editor_fieldset legend,
-fieldset.bmlt_admin_single_user_editor_fieldset legend
+fieldset.bmlt_admin_single_user_editor_fieldset legend,
+fieldset.bmlt_admin_format_editor_fieldset legend
 {
     padding: 0.25em;
     display:inline-block;

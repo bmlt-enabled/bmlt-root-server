@@ -19,6 +19,7 @@
 */
 defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 require_once ( dirname ( __FILE__ ).'/../../server/c_comdef_server.class.php');
+require_once ( dirname ( __FILE__ ).'/../../server/shared/Array2Json.php');
 
 /************************************************************************************************************//**
     \class c_comdef_admin_main_console
@@ -48,17 +49,17 @@ class c_comdef_admin_main_console
         $this->my_localized_strings = c_comdef_server::GetLocalStrings();
         $this->my_server = c_comdef_server::MakeServer();
         $this->my_user = $this->my_server->GetCurrentUserObj();
-        $this->my_users = array_values ( $this->my_server->GetServerUsersObj()->GetUsersArray() );
-        $this->my_ajax_uri = $_SERVER['PHP_SELF'].'?bmlt_ajax_callback=1';
         
         // We check this every chance that we get.
         if ( !$this->my_user || ($this->my_user->GetUserLevel() == _USER_LEVEL_DISABLED) )
             {
             die ( 'NOT AUTHORIZED' );
             }
-        
+
+        $this->my_users = array_values ( $this->my_server->GetServerUsersObj()->GetUsersArray() );
+        $this->my_ajax_uri = $_SERVER['PHP_SELF'].'?bmlt_ajax_callback=1';
         $this->my_formats = $this->my_server->GetFormatsArray();
-            
+        
         $service_bodies = $this->my_server->GetServiceBodyArray();
         $this->my_service_bodies = array();
         $this->my_editable_service_bodies = array();
@@ -107,6 +108,7 @@ class c_comdef_admin_main_console
             $ret .= '<script type="text/javascript">';
                 $ret .= 'var g_ajax_callback_uri = \''.htmlspecialchars ( $this->my_ajax_uri ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_current_user_id = \''.htmlspecialchars ( $this->my_user->GetID() ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_formats_array = '.array2json ( $this->my_formats ).';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_service_bodies_array = [';
                     for ( $c = 0; $c < count ( $this->my_service_bodies ); $c++ )
                         {
@@ -383,8 +385,8 @@ class c_comdef_admin_main_console
                         $ret .= '<span class="failure_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_change_fader_delete_fail_text'] ).'</span>';
                     $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= '</div>';
-            
-                $ret .= $this->return_single_format_editor_panel();
+                $ret .= $this->return_single_format_editor_template();
+                $ret .= $this->return_format_editor_main_panel();
             $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
             $ret .= '<script type="text/javascript">admin_handler_object.populateFormatEditor()</script>';
             }
@@ -393,12 +395,53 @@ class c_comdef_admin_main_console
     }
     
     /********************************************************************************************************//**
-    \brief This constructs a window for the User administrator.
-    \returns The HTML and JavaScript for the "User Administration" section.
+    \brief This constructs a window for the Format administrator.
+    \returns The HTML and JavaScript for the "Format Administration" section.
     ************************************************************************************************************/
-    function return_single_format_editor_panel ()
+    function return_format_editor_main_panel ()
     {
-        $ret = '<div id="bmlt_admin_single_format_editor_div" class="bmlt_admin_single_format_editor_div">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+        $ret = '<div id="bmlt_admin_format_editor_inner_div" class="bmlt_admin_format_editor_inner_div">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+            $ret .= '<fieldset id="bmlt_admin_format_editor_fieldset" class="bmlt_admin_format_editor_fieldset">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= '<legend id="bmlt_admin_format_editor_fieldset_legend" class="bmlt_admin_format_editor_fieldset_legend">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                    $ret .= $this->create_format_lang_popup();
+                $ret .= '</legend>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= '<div id="format_editor_list_div"></div>';
+            $ret .= '</fieldset>';
+        $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+        
+        return $ret;
+    }
+    
+    /********************************************************************************************************//**
+    \brief This creates the popup menu to select the language in the format editor.
+    \returns The HTML and JavaScript for the language popup in the format section
+    ************************************************************************************************************/
+    function create_format_lang_popup()
+    {
+        $langs = $this->my_server->GetServerLangs();
+        
+        $ret = '<select id="format_language_selector" onchange="admin_handler_object.populateFormatEditor()">';
+            foreach ( $langs as $lang_key => $lang_name )
+                {
+                $ret .= '<option value="'.htmlspecialchars ( $lang_key ).'"';
+                if ( $lang_key == $this->my_server->GetLocalLang() )    // The default is whatever language the server is set to.
+                    {
+                    $ret .= ' selected="selected"';
+                    }
+                $ret .= '>'.htmlspecialchars ( $lang_name ).'</option>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                }
+        $ret .= '</select>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+        
+        return $ret;
+    }
+    
+    /********************************************************************************************************//**
+    \brief This constructs a template window for the detailed Format administrator.
+    \returns The HTML and JavaScript for an expanded Format Editor section.
+    ************************************************************************************************************/
+    function return_single_format_editor_template ()
+    {
+        $ret = '<div id="bmlt_admin_single_format_editor_template_div" class="bmlt_admin_single_format_editor_div">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
         $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
         
         return $ret;
