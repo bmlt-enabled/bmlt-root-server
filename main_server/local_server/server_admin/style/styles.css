@@ -1018,6 +1018,7 @@ div.bmlt_admin_logout_bar a:visited
     color: #009;
     text-decoration:underline;
     background-color:white;
+    border-bottom:1px solid white;
 }
 
 div.bmlt_admin_logout_bar a:hover,
