@@ -204,7 +204,7 @@
 											'user_editor_create_new_user_option'                    =>  'Create A New User',
 											'user_editor_screen_sb_id_label'                        =>  'ID:',
 	                                        'user_editor_account_login_label'                       =>  'User Login:',
-											'user_editor_login_default_text'                         =>  'Enter the User Login',
+											'user_editor_login_default_text'                        =>  'Enter the User Login',
 	                                        'user_editor_account_type_label'                        =>  'User Is A:',
 	                                        'user_editor_account_type_1'                            =>  'Server Administrator',
 	                                        'user_editor_account_type_2'                            =>  'Service Body Administrator',
@@ -244,5 +244,13 @@
 	                                        'user_change_fader_fail_no_data_text'                   =>  'The User Change Failed, Because There Was No Data Supplied',
 	                                        'user_change_fader_fail_cant_find_sb_text'              =>  'The User Change Failed, Because The User Was Not Found',
 	                                        'user_change_fader_fail_cant_update_text'               =>  'The User Change Failed, Because The User Was Not Updated',
+											'format_editor_disclosure'                              =>  'Format Administration',
+	                                        'format_change_fader_create_success_text'               =>  'The Format Was Successfully Created',
+	                                        'format_change_fader_create_fail_text'                  =>  'The Format Create Failed',
+	                                        'format_change_fader_delete_success_text'               =>  'The Format Was Successfully Deleted',
+	                                        'format_change_fader_delete_fail_text'                  =>  'The Format Delete Failed',
+	                                        'format_change_fader_fail_no_data_text'                 =>  'The Format Change Failed, Because There Was No Data Supplied',
+	                                        'format_change_fader_fail_cant_find_sb_text'            =>  'The Format Change Failed, Because The Format Was Not Found',
+	                                        'format_change_fader_fail_cant_update_text'             =>  'The Format Change Failed, Because The Format Was Not Updated',
 	                                    );
 ?>

@@ -323,6 +323,7 @@ class c_comdef_admin_main_console
                 switch ( $this->my_user->GetUserLevel() )
                     {
                     case    _USER_LEVEL_SERVER_ADMIN:
+                        $ret .= $this->return_format_editor_panel();
                         $ret .= $this->return_user_admin_panel();
                 
                     case    _USER_LEVEL_SERVICE_BODY_ADMIN:
@@ -344,6 +345,63 @@ class c_comdef_admin_main_console
         $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
         
         return  $ret;
+    }
+    
+    /********************************************************************************************************//**
+    \brief This constructs the User editor panel. Only Server Admins get this one.
+    \returns The HTML and JavaScript for the "Edit Users" section.
+    ************************************************************************************************************/
+    function return_format_editor_panel()
+    {
+        $ret = 'NOT AUTHORIZED TO EDIT USERS';
+        
+        if ( $this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN )
+            {
+            $ret = '<div id="bmlt_admin_format_editor_disclosure_div" class="bmlt_admin_format_editor_disclosure_div bmlt_admin_format_editor_disclosure_div_closed">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= '<a class="bmlt_admin_format_editor_disclosure_a" href="javascript:admin_handler_object.toggleFormatEditor()">';
+                    $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_disclosure'] );
+                $ret .= '</a>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+            $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+            $ret .= '<div id="bmlt_admin_format_editor_wrapper_div" class="bmlt_admin_format_editor_wrapper_div bmlt_admin_format_editor_wrapper_div_hidden">';
+                $ret .= '<div class="bmlt_admin_format_editor_banner_div">';
+                    $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_format_editor_success_div">';
+                        $ret .= '<span class="success_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_change_fader_success_text'] ).'</span>';
+                    $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                    $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_format_editor_fail_div">';
+                        $ret .= '<span class="failure_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_change_fader_fail_text'] ).'</span>';
+                    $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                    $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_format_create_success_div">';
+                        $ret .= '<span class="success_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_change_fader_create_success_text'] ).'</span>';
+                    $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                    $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_format_create_fail_div">';
+                        $ret .= '<span class="failure_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_change_fader_create_fail_text'] ).'</span>';
+                    $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                    $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_format_editor_delete_success_div">';
+                        $ret .= '<span class="success_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_change_fader_delete_success_text'] ).'</span>';
+                    $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                    $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_format_editor_delete_fail_div">';
+                        $ret .= '<span class="failure_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_change_fader_delete_fail_text'] ).'</span>';
+                    $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= '</div>';
+            
+                $ret .= $this->return_single_format_editor_panel();
+            $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+            $ret .= '<script type="text/javascript">admin_handler_object.populateFormatEditor()</script>';
+            }
+        
+        return $ret;
+    }
+    
+    /********************************************************************************************************//**
+    \brief This constructs a window for the User administrator.
+    \returns The HTML and JavaScript for the "User Administration" section.
+    ************************************************************************************************************/
+    function return_single_format_editor_panel ()
+    {
+        $ret = '<div id="bmlt_admin_single_format_editor_div" class="bmlt_admin_single_format_editor_div">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+        $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+        
+        return $ret;
     }
     
     /********************************************************************************************************//**
@@ -383,11 +441,10 @@ class c_comdef_admin_main_console
                         $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_user_editor_delete_fail_div">';
                             $ret .= '<span class="failure_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_delete_fail_text'] ).'</span>';
                         $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                    $ret .= '</div>';
-                
+                    $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                     $ret .= $this->return_single_user_editor_panel();
                 $ret .= '</div>';
-                $ret .= '<script type="text/javascript">admin_handler_object.populateUserEditor()</script>';
+                $ret .= '<script type="text/javascript">admin_handler_object.populateUserEditor()</script>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 }
             }
         
@@ -446,11 +503,11 @@ class c_comdef_admin_main_console
                     $ret .= '<span id="bmlt_admin_user_editor_password_label" class="bmlt_admin_med_label_right"></span>';
                     $ret .= '<span class="bmlt_admin_value_left"><input name="bmlt_admin_user_editor_password_input" id="bmlt_admin_user_editor_password_input" type="text" value="" onkeyup="admin_handler_object.handleTextInputChange(this);admin_handler_object.readUserEditorState()" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
                     $ret .= '<div class="clear_both"></div>';
-                $ret .= '</div>';
+                $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= $this->return_user_editor_button_panel ();
             $ret .= '</fieldset>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
         $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-        $ret .= '<script type="text/javascript">admin_handler_object.populateUserEditor()</script>';
+        $ret .= '<script type="text/javascript">admin_handler_object.populateUserEditor()</script>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
         
         return $ret;
     }
@@ -474,7 +531,7 @@ class c_comdef_admin_main_console
                 }
             $ret .= '<option value="" disabled="disabled"></option>';
             $ret .= '<option value="0" selected="selected">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_create_new_user_option'] ).'</option>';
-        $ret .= '</select>';
+        $ret .= '</select>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
         
         return $ret;
     }

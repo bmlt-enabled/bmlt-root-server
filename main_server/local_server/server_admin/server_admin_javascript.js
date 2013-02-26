@@ -3465,7 +3465,7 @@ function BMLT_Server_Admin ()
     // #mark - 
     // #mark ########## User Editor Section ##########
     // #mark -
-        
+    
     /************************************************************************************//**
     *   \brief  Toggles the visibility of the Service body editor section.                  *
     ****************************************************************************************/
@@ -3983,6 +3983,39 @@ function BMLT_Server_Admin ()
             };
         
         delete_button.className = 'bmlt_admin_ajax_button button';
+    };
+    
+    // #mark - 
+    // #mark ########## Format Editor Section ##########
+    // #mark -
+        
+    /************************************************************************************//**
+    *   \brief  Toggles the visibility of the Format editor section.                        *
+    ****************************************************************************************/
+    this.toggleFormatEditor = function()
+    {
+        this.m_user_editor_panel_shown = !this.m_user_editor_panel_shown;
+        
+        var the_disclosure_div = document.getElementById ( 'bmlt_admin_format_editor_disclosure_div' );
+        var the_editor_div = document.getElementById ( 'bmlt_admin_format_editor_wrapper_div' );
+        
+        if ( this.m_user_editor_panel_shown )
+            {
+            the_disclosure_div.className = 'bmlt_admin_format_editor_disclosure_div bmlt_admin_format_editor_disclosure_div_open';
+            the_editor_div.className = 'bmlt_admin_format_editor_wrapper_div';
+            }
+        else
+            {
+            the_disclosure_div.className = 'bmlt_admin_format_editor_disclosure_div bmlt_admin_format_editor_disclosure_div_closed';
+            the_editor_div.className = 'bmlt_admin_format_editor_wrapper_div bmlt_admin_format_editor_wrapper_div_hidden';
+            };
+    };
+
+    /************************************************************************************//**
+    *   \brief  This sets up the Format Editor for the selected Format.                     *
+    ****************************************************************************************/
+    this.populateFormatEditor = function()
+    {
     };
     
     // #mark - 
