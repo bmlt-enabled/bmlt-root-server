@@ -754,7 +754,7 @@ function BMLT_Server_Admin ()
             {
             for ( var c = 0; c < weekdays.length; c++ )
                 {
-                uri += '&weekdays[]=' + parseInt ( weekdays[c] );
+                uri += '&weekdays[]=' + parseInt ( weekdays[c], 10 );
                 };
             };
         
@@ -762,7 +762,7 @@ function BMLT_Server_Admin ()
             {
             for ( var c = 0; c < service_bodies.length; c++ )
                 {
-                uri += '&services[]=' + parseInt ( service_bodies[c] );
+                uri += '&services[]=' + parseInt ( service_bodies[c], 10 );
                 };
             };
 
@@ -924,8 +924,8 @@ function BMLT_Server_Admin ()
             {
             var a_start = in_object_a.start_time.toString().split ( ':' );
             var b_start = in_object_b.start_time.toString().split ( ':' );
-            var a_time = (parseInt ( in_object_a.weekday_tinyint ) * 100000) + (parseInt ( a_start[0] ) * 100) + parseInt ( a_start[1] );
-            var b_time = (parseInt ( in_object_b.weekday_tinyint ) * 100000) + (parseInt ( b_start[0] ) * 100) + parseInt ( b_start[1] );
+            var a_time = (parseInt ( in_object_a.weekday_tinyint, 10 ) * 100000) + (parseInt ( a_start[0], 10 ) * 100) + parseInt ( a_start[1], 10 );
+            var b_time = (parseInt ( in_object_b.weekday_tinyint, 10 ) * 100000) + (parseInt ( b_start[0], 10 ) * 100) + parseInt ( b_start[1], 10 );
             
             return (a_time > b_time) ? 1 : ((a_time < b_time) ? -1 : 0);
             }
@@ -970,8 +970,8 @@ function BMLT_Server_Admin ()
 
         if ( start_time && (start_time.length > 1) )
             {
-            var hours = parseInt ( start_time[0] );
-            var minutes = parseInt ( start_time[1] );
+            var hours = parseInt ( start_time[0], 10 );
+            var minutes = parseInt ( start_time[1], 10 );
             var midnight = false;
             var noon = false;
             var pm = false;
@@ -1130,7 +1130,7 @@ function BMLT_Server_Admin ()
                     
                     this.m_editing_window_open = display_parent;
                     this.createNewMeetingEditorScreen ( display_parent.meeting_editor_object, in_meeting_id );
-                    location.hash = '#bmlt_admin_meeting_search_results_single_meeting_' + parseInt ( in_meeting_id ) + '_div';
+                    location.hash = '#bmlt_admin_meeting_search_results_single_meeting_' + parseInt ( in_meeting_id, 10 ) + '_div';
 
                     };
                 }
@@ -1317,7 +1317,7 @@ function BMLT_Server_Admin ()
     this.deleteMeeting = function ( in_meeting_id
                                     )
     {
-        var perm_check = document.getElementById ( 'bmlt_admin_meeting_' + parseInt ( in_meeting_id ) + '_delete_perm_checkbox' );
+        var perm_check = document.getElementById ( 'bmlt_admin_meeting_' + parseInt ( in_meeting_id, 10 ) + '_delete_perm_checkbox' );
         var confirm_str = g_meeting_editor_screen_delete_button_confirm + (( perm_check && perm_check.checked ) ? ("\n" + g_meeting_editor_screen_delete_button_confirm_perm) : '');
         
         if ( confirm ( confirm_str ) )
@@ -1389,7 +1389,7 @@ function BMLT_Server_Admin ()
     this.isMeetingDirty = function (in_meeting_id       ///< The BMLT ID of the meeting that will be dirtified.
                                     )
     {
-        var editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id ) + '_div' );
+        var editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id, 10 ) + '_div' );
         
         if ( editor && editor.meeting_object )
             {
@@ -1431,7 +1431,7 @@ function BMLT_Server_Admin ()
                                         is_new_meeting
                                         )
     {
-        var new_editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id ) + '_div' );
+        var new_editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id, 10 ) + '_div' );
 
         if ( is_new_meeting )
             {
@@ -1547,7 +1547,7 @@ function BMLT_Server_Admin ()
                                                 )
     {
         // We first see if one already exists.
-        var new_editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id ) + '_div' );
+        var new_editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id, 10 ) + '_div' );
     
         if ( !new_editor )
             {
@@ -1731,8 +1731,8 @@ function BMLT_Server_Admin ()
 
         if ( start_time && (start_time.length > 1) )
             {
-            var hours = parseInt ( start_time[0] );
-            var minutes = parseInt ( start_time[1] );
+            var hours = parseInt ( start_time[0], 10 );
+            var minutes = parseInt ( start_time[1], 10 );
             var midnight = false;
             var noon = false;
             var pm = false;
@@ -1843,8 +1843,8 @@ function BMLT_Server_Admin ()
         
         if ( duration_time && (duration_time.length > 1) )
             {
-            var hours = parseInt ( duration_time[0] );
-            var minutes = parseInt ( duration_time[1] );
+            var hours = parseInt ( duration_time[0], 10 );
+            var minutes = parseInt ( duration_time[1], 10 );
             var oe = false;
             
             if ( hours == 24 )
@@ -2025,30 +2025,30 @@ function BMLT_Server_Admin ()
         var time_pm_radio = document.getElementById ( 'bmlt_admin_' + in_meeting_id + '_time_pm_radio' );
         var time_minute_select = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_start_minute_select' );
 
-        time_items.className = 'bmlt_admin_time_span' + (( (time_hour_select.value == 0) || (time_hour_select.value == 13) ) ? ' item_hidden' : '');
+        time_items.className = 'bmlt_admin_time_span' + (( (time_hour_select.options[time_hour_select.selectedIndex].value == 0) || (time_hour_select.options[time_hour_select.selectedIndex].value == 13) ) ? ' item_hidden' : '');
         
         var editor_object = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
         var the_meeting_object = editor_object.meeting_object;
         
         var timeval = '';
         
-        if ( time_hour_select.value == 0 )
+        if ( time_hour_select.options[time_hour_select.selectedIndex].value == 0 )
             {
             timeval = '23:59:00';
             }
-        else if ( time_hour_select.value == 13 )
+        else if ( time_hour_select.options[time_hour_select.selectedIndex].value == 13 )
             {
             timeval = '12:00:00';
             }
         else
             {
-            var hour = parseInt ( time_hour_select.value );
+            var hour = parseInt ( time_hour_select.options[time_hour_select.selectedIndex].value, 10 );
             if ( (time_pm_radio.checked) && (hour != 12) )
                 {
                 hour += 12;
                 };
             
-            timeval = sprintf ( '%02d:%02d:00', parseInt ( hour ), parseInt ( time_minute_select.value ) );
+            timeval = sprintf ( '%02d:%02d:00', parseInt ( hour, 10 ), parseInt ( time_minute_select.options[time_minute_select.selectedIndex].value, 10 ) );
             };
             
         the_meeting_object.start_time = timeval;
@@ -2071,13 +2071,13 @@ function BMLT_Server_Admin ()
         var the_meeting_object = editor_object.meeting_object;
         var timeval = '';
         
-        if ( time_hour_select.value == 24 )
+        if ( time_hour_select.options[time_hour_select.selectedIndex].value == 24 )
             {
             timeval = '24:00:00';
             }
         else
             {
-            timeval = sprintf ( '%02d:%02d:00', parseInt ( time_hour_select.value ), parseInt ( time_minute_select.value ) );
+            timeval = sprintf ( '%02d:%02d:00', parseInt ( time_hour_select.options[time_hour_select.selectedIndex].value, 10 ), parseInt ( time_minute_select.options[time_minute_select.selectedIndex].value, 10 ) );
             };
             
         the_meeting_object.duration_time = timeval;
@@ -2262,7 +2262,7 @@ function BMLT_Server_Admin ()
                                     in_meeting_id           ///< The ID of the meeting.
                                     )
     {
-        var meeting_editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id ) + '_div' );
+        var meeting_editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id, 10 ) + '_div' );
 
         if ( meeting_editor && meeting_editor.main_map )
             {
@@ -2570,7 +2570,7 @@ function BMLT_Server_Admin ()
     this.fetchMeetingHistory = function ( in_meeting_id
                                         )
     {
-        var new_editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id ) + '_div' );
+        var new_editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id, 10 ) + '_div' );
         var uri = g_ajax_callback_uri + '&get_meeting_history=' + in_meeting_id;
 
         if ( new_editor.m_ajax_request_in_progress )
@@ -3083,7 +3083,7 @@ function BMLT_Server_Admin ()
         
         if ( user_select && user_select.options[user_select.selectedIndex].value )
             {
-            main_service_body_editor.service_body_object[4] = parseInt ( user_select.options[user_select.selectedIndex].value );
+            main_service_body_editor.service_body_object[4] = parseInt ( user_select.options[user_select.selectedIndex].value, 10 );
             };
 
         var type_select = document.getElementById ( 'bmlt_admin_single_service_body_editor_type_select' );
@@ -3383,7 +3383,7 @@ function BMLT_Server_Admin ()
                     service_body_select.selectedIndex = 0;
                     for ( var index = 0; index < g_editable_service_bodies_array.length; index++ )
                         {
-                        if ( g_editable_service_bodies_array[index][0] == parseInt(json_object.report) )
+                        if ( g_editable_service_bodies_array[index][0] == parseInt(json_object.report, 10) )
                             {
                             service_body_select.remove ( index );
                             g_editable_service_bodies_array.splice ( index, 1 );
@@ -3393,7 +3393,7 @@ function BMLT_Server_Admin ()
                         
                     for ( var index = 0; index < g_service_bodies_array.length; index++ )
                         {
-                        if ( g_service_bodies_array[index][0] == parseInt(json_object.report) )
+                        if ( g_service_bodies_array[index][0] == parseInt(json_object.report, 10) )
                             {
                             g_service_bodies_array.splice ( index, 1 );
                             break;
@@ -3612,7 +3612,7 @@ function BMLT_Server_Admin ()
         main_user_editor_div.current_user_object[4] = (email_field.value && (email_field.value != email_field.defaultValue)) ? email_field.value : '';
         
         var user_level_select = document.getElementById ( 'bmlt_admin_single_user_editor_level_select' );
-        main_user_editor_div.current_user_object[5] = parseInt ( user_level_select.options[user_level_select.selectedIndex].value );
+        main_user_editor_div.current_user_object[5] = parseInt ( user_level_select.options[user_level_select.selectedIndex].value, 10 );
         
         var password_field = document.getElementById ( 'bmlt_admin_user_editor_password_input' );
         main_user_editor_div.current_user_object[6] = (password_field.value && (password_field.value != password_field.defaultValue)) ? password_field.value : '';
@@ -3864,7 +3864,7 @@ function BMLT_Server_Admin ()
                     user_select.selectedIndex = 0;
                     for ( var index = 0; index < user_select.options.length; index++ )
                         {
-                        if ( parseInt ( user_select.options[index].value ) == parseInt(json_object.report) )
+                        if ( parseInt ( user_select.options[index].value, 10 ) == parseInt(json_object.report, 10) )
                             {
                             user_select.remove ( index );
                             break;
@@ -3873,7 +3873,7 @@ function BMLT_Server_Admin ()
                         
                     for ( var index = 0; index < g_users.length; index++ )
                         {
-                        if ( parseInt ( g_users[index][0] ) == parseInt(json_object.report) )
+                        if ( parseInt ( g_users[index][0], 10 ) == parseInt(json_object.report, 10) )
                             {
                             g_users.splice ( index, 1 );
                             break;
@@ -4325,7 +4325,7 @@ function BMLT_Admin_setSelectByValue (  in_select_object,
     
     for ( var c = 0; c < in_select_object.options.length; c ++ )
         {
-        if ( parseInt ( in_select_object.options[c].value ) == parseInt ( in_value ) )
+        if ( parseInt ( in_select_object.options[c].value, 10 ) == parseInt ( in_value, 10 ) )
             {
             setIndex = c;
             break;
