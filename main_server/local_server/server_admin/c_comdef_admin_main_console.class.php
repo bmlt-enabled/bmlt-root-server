@@ -38,6 +38,7 @@ class c_comdef_admin_main_console
     var $my_data_field_templates;       ///< This holds the keys for all the possible data fields for this server.
     var $my_editable_service_bodies;    ///< This will contain all the Service bodies that we can actually directly edit.
     var $my_all_service_bodies;         ///< This contains all Service bodies, cleaned for orphans.
+    var $my_lang_ids;                   ///< Contains the enumerations for all the server langs.
     
     /********************************************************************************************************//**
     \brief
@@ -58,8 +59,54 @@ class c_comdef_admin_main_console
 
         $this->my_users = array_values ( $this->my_server->GetServerUsersObj()->GetUsersArray() );
         $this->my_ajax_uri = $_SERVER['PHP_SELF'].'?bmlt_ajax_callback=1';
-        $this->my_formats = $this->my_server->GetFormatsArray();
         
+        $this->my_formats = array();
+        $langs = $this->my_server->GetServerLangs();
+        $this->my_lang_ids = array_keys ( $langs );
+        $server_format_array = $this->my_server->GetFormatsArray();
+        $format_ids = array();
+        
+        // We will build an array of formats in the structure we'll need for our editor. We start by gathering all of the shared IDs.
+        foreach ( $langs as $lang_key => $lang_name )
+            {
+            $the_format_object_array = $server_format_array[$lang_key];
+            foreach ( $the_format_object_array as $format )
+                {
+                $format_ids[] = $format->GetSharedID();
+                }
+            }
+            
+        $format_ids = array_unique ( $format_ids, SORT_NUMERIC );
+            
+        // OK, we have a sorted array of unique format IDs. Now, we assign each one an array of format data per language.
+        
+        foreach ( $format_ids as $id )
+            {
+            $single_format = array();
+            // Walk through the server languages...
+            foreach ( $langs as $lang_key => $lang_name )
+                {
+                // Then through all the formats with data in each language...
+                $the_format_object_array = $server_format_array[$lang_key];
+                foreach ( $the_format_object_array as $format )
+                    {
+                    // If the format is available with data in this language, we add it to our ID.
+                    if ( $format->GetSharedID() == $id )
+                        {
+                        $single_format[$lang_key]['shared_id'] = $id;
+                        $single_format[$lang_key]['lang_key'] = $lang_key;
+                        $single_format[$lang_key]['lang_name'] = $lang_name;
+                        $single_format[$lang_key]['key'] = $format->GetKey();
+                        $single_format[$lang_key]['name'] = $format->GetLocalName();
+                        $single_format[$lang_key]['description'] = $format->GetLocalDescription();
+                        $single_format[$lang_key]['type'] = $format->GetFormatType();
+                        }
+                    }
+                }
+            
+            $this->my_formats[] = array ( 'id' => $id, 'formats' => $single_format );
+            }
+            
         $service_bodies = $this->my_server->GetServiceBodyArray();
         $this->my_service_bodies = array();
         $this->my_editable_service_bodies = array();
@@ -109,6 +156,7 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_ajax_callback_uri = \''.htmlspecialchars ( $this->my_ajax_uri ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_current_user_id = \''.htmlspecialchars ( $this->my_user->GetID() ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_formats_array = '.array2json ( $this->my_formats ).';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_langs = ["'.implode ( '","', $this->my_lang_ids ).'"];'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_service_bodies_array = [';
                     for ( $c = 0; $c < count ( $this->my_service_bodies ); $c++ )
                         {
@@ -385,64 +433,10 @@ class c_comdef_admin_main_console
                         $ret .= '<span class="failure_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_change_fader_delete_fail_text'] ).'</span>';
                     $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= '</div>';
-                $ret .= $this->return_single_format_editor_template();
-                $ret .= $this->return_format_editor_main_panel();
+                $ret .= '<div id="bmlt_admin_format_editor_inner_div" class="bmlt_admin_format_editor_inner_div"></div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
             $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
             $ret .= '<script type="text/javascript">admin_handler_object.populateFormatEditor()</script>';
             }
-        
-        return $ret;
-    }
-    
-    /********************************************************************************************************//**
-    \brief This constructs a window for the Format administrator.
-    \returns The HTML and JavaScript for the "Format Administration" section.
-    ************************************************************************************************************/
-    function return_format_editor_main_panel ()
-    {
-        $ret = '<div id="bmlt_admin_format_editor_inner_div" class="bmlt_admin_format_editor_inner_div">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-            $ret .= '<fieldset id="bmlt_admin_format_editor_fieldset" class="bmlt_admin_format_editor_fieldset">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= '<legend id="bmlt_admin_format_editor_fieldset_legend" class="bmlt_admin_format_editor_fieldset_legend">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                    $ret .= $this->create_format_lang_popup();
-                $ret .= '</legend>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= '<div id="format_editor_list_div"></div>';
-            $ret .= '</fieldset>';
-        $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-        
-        return $ret;
-    }
-    
-    /********************************************************************************************************//**
-    \brief This creates the popup menu to select the language in the format editor.
-    \returns The HTML and JavaScript for the language popup in the format section
-    ************************************************************************************************************/
-    function create_format_lang_popup()
-    {
-        $langs = $this->my_server->GetServerLangs();
-        
-        $ret = '<select id="format_language_selector" onchange="admin_handler_object.populateFormatEditor()">';
-            foreach ( $langs as $lang_key => $lang_name )
-                {
-                $ret .= '<option value="'.htmlspecialchars ( $lang_key ).'"';
-                if ( $lang_key == $this->my_server->GetLocalLang() )    // The default is whatever language the server is set to.
-                    {
-                    $ret .= ' selected="selected"';
-                    }
-                $ret .= '>'.htmlspecialchars ( $lang_name ).'</option>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                }
-        $ret .= '</select>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-        
-        return $ret;
-    }
-    
-    /********************************************************************************************************//**
-    \brief This constructs a template window for the detailed Format administrator.
-    \returns The HTML and JavaScript for an expanded Format Editor section.
-    ************************************************************************************************************/
-    function return_single_format_editor_template ()
-    {
-        $ret = '<div id="bmlt_admin_single_format_editor_template_div" class="bmlt_admin_single_format_editor_div">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-        $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
         
         return $ret;
     }

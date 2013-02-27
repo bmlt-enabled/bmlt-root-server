@@ -202,7 +202,9 @@ div.bmlt_admin_one_line_in_a_form_no_margin
 
 input.bmlt_text_item_small,
 input.bmlt_text_item,
+input.bmlt_text_item_tiny,
 textarea.bmlt_text_item_small,
+textarea.bmlt_textarea_med,
 textarea.bmlt_text_item
 {
     padding:2px;
@@ -219,6 +221,11 @@ input.bmlt_text_item
     width:30em;
 }
 
+input.bmlt_text_item_tiny
+{
+    width:3em;
+}
+
 input.bmlt_text_item_small
 {
     width:15em;
@@ -228,6 +235,12 @@ textarea.bmlt_text_item
 {
     width:30em;
     height: 10em;
+}
+
+textarea.bmlt_textarea_med
+{
+    width:30em;
+    height:3em;
 }
 
 textarea.bmlt_text_item_small
@@ -671,7 +684,8 @@ div.bmlt_admin_tab_div_not_selected a:active
 div.bmlt_admin_meeting_editor_form_specifier_div,
 div.bmlt_admin_user_account_edit_form_inner_div,
 div.bmlt_admin_service_body_edit_form_inner_div,
-div.bmlt_admin_user_edit_form_inner_div
+div.bmlt_admin_user_edit_form_inner_div,
+div.bmlt_admin_format_editor_inner_div
 {
     border: 1px solid white;
     background-color:white;
@@ -1073,8 +1087,7 @@ div.bmlt_admin_single_location_long_lat_div
 }
 
 fieldset.bmlt_admin_single_service_body_editor_fieldset,
-fieldset.bmlt_admin_single_user_editor_fieldset,
-fieldset.bmlt_admin_format_editor_fieldset
+fieldset.bmlt_admin_single_user_editor_fieldset
 {
     background-color:white;
     color:#009;
@@ -1086,7 +1099,6 @@ fieldset.bmlt_admin_format_editor_fieldset
 
 fieldset.bmlt_admin_single_service_body_editor_fieldset legend,
 fieldset.bmlt_admin_single_user_editor_fieldset legend,
-fieldset.bmlt_admin_format_editor_fieldset legend
 {
     padding: 0.25em;
     display:inline-block;
@@ -1127,4 +1139,53 @@ div.naws_link_div
     font-weight:bold;
     padding: 0.1em;
     margin-bottom: 8px;
+}
+
+table.format_editor_table
+{
+    width: 100%;
+}
+
+table.format_editor_table,
+table.format_editor_table tr,
+table.format_editor_table td
+{
+    margin: 0;
+    color:#009;
+}
+
+table.format_editor_table,
+table.format_editor_table tr
+{
+    vertical-align:top;
+    padding: 0;
+}
+
+tr.format_editor_format_line_tr td
+{
+    margin: 0;
+    border:none;
+    padding:4px;
+}
+
+tr.format_editor_format_line_even_tr td
+{
+    background-color:#efefff;
+}
+
+tr.format_editor_format_line_odd_tr td
+{
+    background-color:white;
+}
+
+td.format_editor_id_td
+{
+    font-size:large;
+    font-weight:bold;
+}
+
+td.format_editor_lang_td
+{
+    font-size:small;
+    font-style:italic;
 }
