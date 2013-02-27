@@ -4041,93 +4041,109 @@ function BMLT_Server_Admin ()
             var format_id = format_group.id;
             var format_lang_group = format_group.formats;
             
-            var format_line_tr = document.createElement ( 'tr' );
-            format_line_tr.id = 'format_editor_line_' + format_id + '_tr';
-            
-            var format_langs = new Array;
-            for ( var c = 0; c < g_langs.length; c++ )
-                {
-                eval ( 'var format = format_lang_group.' + g_langs[c] + ';' );
-                if ( format )
-                    {
-                    format_langs[format_langs.length] = format;
-                    };
-                };
-            
-            var container_row = format_line_tr;
-            var id_td = document.createElement ( 'td' );
-            id_td.id = 'format_editor_id_' + format_id + '_td';
-            id_td.className = 'format_editor_id_td';
-            id_td.appendChild ( document.createTextNode ( format_id.toString() ) );
-            id_td.setAttribute ( 'rowspan', format_langs.length );
-            container_row.appendChild ( id_td );
-            
-            for ( var c = 0; c < format_langs.length; c++ )
-                {
-                var unique_id =  format_id + '_' + format_langs[c].lang_key;
-                
-                if ( c > 0 )
-                    {
-                    container_row = document.createElement ( 'tr' );
-                    };
-                
-                container_row.className = 'format_editor_format_line_tr format_editor_format_line_' + ((index % 2) ? 'even' : 'odd') + '_tr';
-                
-                var format_lang_td = document.createElement ( 'td' );
-                format_lang_td.id = 'format_editor_lang_' + unique_id + '_td';
-                format_lang_td.className = 'format_editor_lang_td';
-                format_lang_td.appendChild ( document.createTextNode ( format_langs[c].lang_name ) );
-                
-                container_row.appendChild ( format_lang_td );
-                
-                var format_key_td = document.createElement ( 'td' );
-                format_key_td.id = 'format_editor_key_' + format_id + '_td';
-                format_key_td.className = 'format_editor_key_td';
-
-                var format_key_input = document.createElement ( 'input' );
-                format_key_input.type = 'text';
-                format_key_input.value = format_langs[c].key;
-                format_key_input.defaultValue = null;
-                format_key_input.id = 'bmlt_format_key_' + unique_id + '_text_item';
-                format_key_input.className = 'bmlt_text_item_tiny';
-                
-                format_key_td.appendChild ( format_key_input );
-                
-                container_row.appendChild ( format_key_td );
-                
-                var format_name_td = document.createElement ( 'td' );
-                format_name_td.id = 'format_editor_name_' + unique_id + '_td';
-                format_name_td.className = 'format_editor_name_td';
-
-                var format_name_input = document.createElement ( 'input' );
-                format_name_input.type = 'text';
-                format_name_input.value = format_langs[c].name;
-                format_name_input.defaultValue = null;
-                format_name_input.id = 'bmlt_format_name_' + unique_id + '_text_item';
-                format_name_input.className = 'bmlt_text_item_small';
-        
-                format_name_td.appendChild ( format_name_input );
-
-                container_row.appendChild ( format_name_td );
-                
-                var format_description_td = document.createElement ( 'td' );
-                format_description_td.id = 'format_editor_decription_' + unique_id + '_td';
-                format_description_td.className = 'format_editor_description_td';
-
-                var format_description_input = document.createElement ( 'textarea' );
-                format_description_input.value = format_langs[c].description;
-                format_description_input.id = 'bmlt_format_description_' + unique_id + '_text_item';
-                format_description_input.className = 'bmlt_textarea_med';
-                
-                format_description_td.appendChild ( format_description_input );
-                
-                container_row.appendChild ( format_description_td );
-                
-                format_table.appendChild ( container_row );
-                };
+            this.createFormatRow ( index, format_id, format_lang_group, format_table );
             };
         
         in_container.appendChild ( format_table );
+    };
+
+    /************************************************************************************//**
+    *   \brief  This populates the format display list                                      *
+    ****************************************************************************************/
+    this.createFormatRow = function(in_index,               ///< The index, for styling the row.
+                                    in_format_id,           ///< The shared ID for the format
+                                    in_format_lang_group,   ///< The format objects
+                                    in_container_table      ///< The table that will contain this row.
+                                    )
+    {
+        var format_line_tr = document.createElement ( 'tr' );
+        format_line_tr.id = 'format_editor_line_' + in_format_id + '_tr';
+        
+        var container_row = format_line_tr;
+        var id_td = document.createElement ( 'td' );
+        id_td.id = 'format_editor_id_' + in_format_id + '_td';
+        id_td.className = 'format_editor_id_td';
+        id_td.appendChild ( document.createTextNode ( in_format_id.toString() ) );
+        id_td.setAttribute ( 'rowspan', g_langs.length );
+        container_row.appendChild ( id_td );
+        
+        for ( var c = 0; c < g_langs.length; c++ )
+            {
+            var lang_key = g_langs[c];
+            var format = in_format_lang_group[lang_key];
+            
+            if ( !format )
+                {
+                format = new Object;
+                format.id = in_format_id;
+                format.lang_key = lang_key;
+                format.lang_name = g_lang_names[lang_key];
+                format.key = '';
+                format.name = '';
+                format.description = '';
+                };
+            
+            var unique_id =  in_format_id + '_' + lang_key;
+            
+            if ( c > 0 )
+                {
+                container_row = document.createElement ( 'tr' );
+                };
+            
+            container_row.className = 'format_editor_format_line_tr format_editor_format_line_' + ((in_index % 2) ? 'even' : 'odd') + '_tr';
+            
+            var format_lang_td = document.createElement ( 'td' );
+            format_lang_td.id = 'format_editor_lang_' + unique_id + '_td';
+            format_lang_td.className = 'format_editor_lang_td';
+            format_lang_td.appendChild ( document.createTextNode ( format.lang_name ) );
+            
+            container_row.appendChild ( format_lang_td );
+            
+            var format_key_td = document.createElement ( 'td' );
+            format_key_td.id = 'format_editor_key_' + in_format_id + '_td';
+            format_key_td.className = 'format_editor_key_td';
+
+            var format_key_input = document.createElement ( 'input' );
+            format_key_input.type = 'text';
+            format_key_input.value = format.key;
+            format_key_input.defaultValue = null;
+            format_key_input.id = 'bmlt_format_key_' + unique_id + '_text_item';
+            format_key_input.className = 'bmlt_text_item_tiny';
+            
+            format_key_td.appendChild ( format_key_input );
+            
+            container_row.appendChild ( format_key_td );
+            
+            var format_name_td = document.createElement ( 'td' );
+            format_name_td.id = 'format_editor_name_' + unique_id + '_td';
+            format_name_td.className = 'format_editor_name_td';
+
+            var format_name_input = document.createElement ( 'input' );
+            format_name_input.type = 'text';
+            format_name_input.value = format.name;
+            format_name_input.defaultValue = null;
+            format_name_input.id = 'bmlt_format_name_' + unique_id + '_text_item';
+            format_name_input.className = 'bmlt_text_item_small';
+    
+            format_name_td.appendChild ( format_name_input );
+
+            container_row.appendChild ( format_name_td );
+            
+            var format_description_td = document.createElement ( 'td' );
+            format_description_td.id = 'format_editor_decription_' + unique_id + '_td';
+            format_description_td.className = 'format_editor_description_td';
+
+            var format_description_input = document.createElement ( 'textarea' );
+            format_description_input.value = format.description;
+            format_description_input.id = 'bmlt_format_description_' + unique_id + '_text_item';
+            format_description_input.className = 'bmlt_textarea_med';
+            
+            format_description_td.appendChild ( format_description_input );
+            
+            container_row.appendChild ( format_description_td );
+            
+            in_container_table.appendChild ( container_row );
+            };
     };
     
     // #mark - 
