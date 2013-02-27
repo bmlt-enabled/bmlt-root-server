@@ -252,5 +252,7 @@
 	                                        'format_change_fader_fail_no_data_text'                 =>  'The Format Change Failed, Because There Was No Data Supplied',
 	                                        'format_change_fader_fail_cant_find_sb_text'            =>  'The Format Change Failed, Because The Format Was Not Found',
 	                                        'format_change_fader_fail_cant_update_text'             =>  'The Format Change Failed, Because The Format Was Not Updated',
+	                                        'format_editor_name_default_text'                       =>  'Enter A Very Short Description',
+	                                        'format_editor_description_default_text'                =>  'Enter A More Detailed Description',
 	                                    );
 ?>

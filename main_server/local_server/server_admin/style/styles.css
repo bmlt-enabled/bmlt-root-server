@@ -204,7 +204,7 @@ input.bmlt_text_item_small,
 input.bmlt_text_item,
 input.bmlt_text_item_tiny,
 textarea.bmlt_text_item_small,
-textarea.bmlt_textarea_med,
+textarea.bmlt_text_item_med,
 textarea.bmlt_text_item
 {
     padding:2px;
@@ -237,7 +237,7 @@ textarea.bmlt_text_item
     height: 10em;
 }
 
-textarea.bmlt_textarea_med
+textarea.bmlt_text_item_med
 {
     width:30em;
     height:3em;

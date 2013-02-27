@@ -63,7 +63,17 @@ function BMLT_Server_Admin ()
         if ( in_text_item )
             {
             in_text_item.original_value = in_text_item.value;
-            in_text_item.small = in_small;
+            if ( !in_text_item.small )
+                {
+                in_text_item.small = false;
+                };
+            
+            if ( !in_text_item.tiny )
+                {
+                in_text_item.tiny = false;
+                };
+            
+            in_text_item.small = in_text_item.small || in_small;
             
             if ( in_default_value != null )
                 {
@@ -79,11 +89,11 @@ function BMLT_Server_Admin ()
             if ( !in_text_item.value || (in_text_item.value == in_text_item.defaultValue) )
                 {
                 in_text_item.value = in_text_item.defaultValue;
-                in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : '') + ' bmlt_text_item_dimmed';
+                in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : (in_text_item.med ? '_med' : (in_text_item.tiny ? '_tiny' : ''))) + ' bmlt_text_item_dimmed';
                 }
             else
                 {
-                in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : '');
+                in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : (in_text_item.med ? '_med' : (in_text_item.tiny ? '_tiny' : '')));
                 };
             };
     };
@@ -98,11 +108,11 @@ function BMLT_Server_Admin ()
             {
             if ( (in_text_item.value == null) || (in_text_item.value == in_text_item.defaultValue) )
                 {
-                in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : '') + ' bmlt_text_item_dimmed';
+                in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : (in_text_item.med ? '_med' : (in_text_item.tiny ? '_tiny' : ''))) + ' bmlt_text_item_dimmed';
                 }
             else
                 {
-                in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : '');
+                in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : (in_text_item.med ? '_med' : (in_text_item.tiny ? '_tiny' : '')));
                 };
             };
     };
@@ -157,11 +167,11 @@ function BMLT_Server_Admin ()
             {
             if ( !in_text_item.value || (in_text_item.value == in_text_item.defaultValue) )
                 {
-                in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : '') + ' bmlt_text_item_dimmed';
+                in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : (in_text_item.med ? '_med' : (in_text_item.tiny ? '_tiny' : ''))) + ' bmlt_text_item_dimmed';
                 }
             else
                 {
-                in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : '');
+                in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : (in_text_item.med ? '_med' : (in_text_item.tiny ? '_tiny' : '')));
                 };
             
             this.validateAccountGoButton();
@@ -3109,12 +3119,12 @@ function BMLT_Server_Admin ()
             {
             if ( !in_text_item.value || (in_text_item.value == in_text_item.defaultValue) )
                 {
-                in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : '') + ' bmlt_text_item_dimmed';
+                in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : (in_text_item.med ? '_med' : (in_text_item.tiny ? '_tiny' : ''))) + ' bmlt_text_item_dimmed';
                 }
             else
                 {
                 val = in_text_item.value;
-                in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : '');
+                in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : (in_text_item.med ? '_med' : (in_text_item.tiny ? '_tiny' : '')));
                 };
             };
             
@@ -4105,11 +4115,13 @@ function BMLT_Server_Admin ()
 
             var format_key_input = document.createElement ( 'input' );
             format_key_input.type = 'text';
+            format_key_input.tiny = true;
             format_key_input.value = format.key;
             format_key_input.defaultValue = null;
             format_key_input.id = 'bmlt_format_key_' + unique_id + '_text_item';
-            format_key_input.className = 'bmlt_text_item_tiny';
-            
+            format_key_input.onfocus= function () { admin_handler_object.handleTextInputFocus(this) };
+            format_key_input.onblur= function () { admin_handler_object.handleTextInputFocus(this) };
+
             format_key_td.appendChild ( format_key_input );
             
             container_row.appendChild ( format_key_td );
@@ -4120,10 +4132,12 @@ function BMLT_Server_Admin ()
 
             var format_name_input = document.createElement ( 'input' );
             format_name_input.type = 'text';
+            format_name_input.small = true;
             format_name_input.value = format.name;
             format_name_input.defaultValue = null;
             format_name_input.id = 'bmlt_format_name_' + unique_id + '_text_item';
-            format_name_input.className = 'bmlt_text_item_small';
+            format_name_input.onfocus= function () { admin_handler_object.handleTextInputFocus(this) };
+            format_name_input.onblur= function () { admin_handler_object.handleTextInputFocus(this) };
     
             format_name_td.appendChild ( format_name_input );
 
@@ -4136,13 +4150,19 @@ function BMLT_Server_Admin ()
             var format_description_input = document.createElement ( 'textarea' );
             format_description_input.value = format.description;
             format_description_input.id = 'bmlt_format_description_' + unique_id + '_text_item';
-            format_description_input.className = 'bmlt_textarea_med';
+            format_description_input.med = true;
+            format_description_input.onfocus= function () { admin_handler_object.handleTextInputFocus(this) };
+            format_description_input.onblur= function () { admin_handler_object.handleTextInputFocus(this) };
             
             format_description_td.appendChild ( format_description_input );
             
             container_row.appendChild ( format_description_td );
             
             in_container_table.appendChild ( container_row );
+            
+            this.handleTextInputLoad ( format_key_input, '' );
+            this.handleTextInputLoad ( format_name_input, g_format_editor_name_default_text );
+            this.handleTextInputLoad ( format_description_input, g_format_editor_description_default_text );
             };
     };
     
