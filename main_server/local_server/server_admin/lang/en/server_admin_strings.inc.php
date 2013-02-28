@@ -254,5 +254,9 @@
 	                                        'format_change_fader_fail_cant_update_text'             =>  'The Format Change Failed, Because The Format Was Not Updated',
 	                                        'format_editor_name_default_text'                       =>  'Enter A Very Short Description',
 	                                        'format_editor_description_default_text'                =>  'Enter A More Detailed Description',
+	                                        'format_editor_change_format_button_text'               =>  'Change This Format',
+	                                        'format_editor_delete_format_button_text'               =>  'Delete This Format',
+	                                        'format_editor_reset_format_button_text'                =>  'Restore To Original',
+	                                        'format_editor_create_format_button_text'               =>  'Create A new Format',
 	                                    );
 ?>

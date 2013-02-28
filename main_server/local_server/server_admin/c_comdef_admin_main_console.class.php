@@ -359,6 +359,9 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_user_create_password_alert_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_create_password_alert_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_format_editor_name_default_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_name_default_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_format_editor_description_default_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_description_default_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_format_editor_change_format_button_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_change_format_button_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_format_editor_delete_format_button_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_delete_format_button_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_format_editor_reset_format_button_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_reset_format_button_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_time_values = [';
                     $ret .= '\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_am_label'] ).'\',';
                     $ret .= '\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_pm_label'] ).'\',';

@@ -4158,6 +4158,42 @@ function BMLT_Server_Admin ()
             
             container_row.appendChild ( format_description_td );
             
+            if ( c == 0 )
+                {
+                var format_buttons_td = document.createElement ( 'td' );
+                format_buttons_td.id = 'format_editor_buttons_' + in_format_id + '_td';
+                format_buttons_td.className = 'format_editor_buttons_td';
+                format_buttons_td.setAttribute ( 'rowspan', g_langs.length );
+            
+                var format_change_div = document.createElement ( 'div' );
+                format_change_div.id = 'format_editor_change_' + in_format_id + '_div';
+                format_change_div.className = 'format_editor_change_div';
+            
+                var format_change_a = document.createElement ( 'a' );
+                format_change_a.id = 'format_editor_change_' + in_format_id + '_a';
+                format_change_a.format_object = format;
+                format_change_a.className = 'bmlt_admin_ajax_button';
+                format_change_a.appendChild ( document.createTextNode ( g_format_editor_change_format_button_text ) );
+            
+                format_change_div.appendChild ( format_change_a );
+                format_buttons_td.appendChild ( format_change_div );
+            
+                var format_delete_div = document.createElement ( 'div' );
+                format_delete_div.id = 'format_editor_delete_' + in_format_id + '_div';
+                format_delete_div.className = 'format_editor_delete_div';
+            
+                var format_delete_a = document.createElement ( 'a' );
+                format_delete_a.id = 'format_editor_delete_' + in_format_id + '_a';
+                format_delete_a.format_object = format;
+                format_delete_a.className = 'bmlt_admin_ajax_button';
+                format_delete_a.appendChild ( document.createTextNode ( g_format_editor_delete_format_button_text ) );
+            
+                format_delete_div.appendChild ( format_delete_a );
+                format_buttons_td.appendChild ( format_delete_div );
+            
+                container_row.appendChild ( format_buttons_td );
+                };
+            
             in_container_table.appendChild ( container_row );
             
             this.handleTextInputLoad ( format_key_input, '' );
