@@ -247,9 +247,10 @@ class c_comdef_admin_main_console
                 $ret .= '];'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_format_object_array = [';
                     $first = true;
-                    foreach ( $this->my_formats[$this->my_server->GetLocalLang()] as $format )
+                    foreach ( $this->my_formats as $formats )
                         {
-                        if ( $format instanceof c_comdef_format )
+                        $format = $formats['formats'][$this->my_server->GetLocalLang()];
+                        if ( $format )
                             {
                             if ( !$first )
                                 {
@@ -261,10 +262,10 @@ class c_comdef_admin_main_console
                                 }
                             
                             $ret .= '{';
-                                $ret .= '"id":'.$format->GetSharedID();
-                                $ret .= ',"key":"'.$format->GetKey().'"';
-                                $ret .= ',"name":"'.$format->GetLocalName().'"';
-                                $ret .= ',"description":"'.$format->GetLocalDescription().'"';
+                                $ret .= '"id":'.$format['shared_id'];
+                                $ret .= ',"key":"'.$format['key'].'"';
+                                $ret .= ',"name":"'.$format['name'].'"';
+                                $ret .= ',"description":"'.$format['description'].'"';
                             $ret .= '}';
                             }
                         }
@@ -1608,7 +1609,9 @@ class c_comdef_admin_main_console
     {
         $ret = '<div id="bmlt_admin_meeting_template_format_sheet_div" class="bmlt_admin_meeting_option_sheet_div item_hidden">';
             $ret .= '<div class="format_tab_inner_div">';
-                foreach ( $this->my_formats[$this->my_server->GetLocalLang()] as $format )
+                $f_array = $this->my_server->GetFormatsArray();
+                $f_array = $f_array[$this->my_server->GetLocalLang()];
+                foreach ( $f_array as $format )
                     {
                     if ( $format instanceof c_comdef_format )
                         {

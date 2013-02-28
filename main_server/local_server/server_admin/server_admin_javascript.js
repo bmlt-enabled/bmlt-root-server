@@ -101,12 +101,13 @@ function BMLT_Server_Admin ()
     /************************************************************************************//**
     *   \brief This just makes sure that the className is correct.                          *
     ****************************************************************************************/
-    this.setTextItemClass = function(   in_text_item    ///< This is the text item to check.
+    this.setTextItemClass = function(   in_text_item,   ///< This is the text item to check.
+                                        is_focused      ///< true, if the item is in focus
                                         )
     {
         if ( in_text_item )
             {
-            if ( (in_text_item.value == null) || (in_text_item.value == in_text_item.defaultValue) )
+            if ( !is_focused && ((in_text_item.value == null) || (in_text_item.value == in_text_item.defaultValue)) )
                 {
                 in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : (in_text_item.med ? '_med' : (in_text_item.tiny ? '_tiny' : ''))) + ' bmlt_text_item_dimmed';
                 }
@@ -130,7 +131,7 @@ function BMLT_Server_Admin ()
                 in_text_item.value = '';
                 };
             
-            this.setTextItemClass ( in_text_item );
+            this.setTextItemClass ( in_text_item, true );
             this.validateAccountGoButton();
             };
     };
@@ -149,7 +150,7 @@ function BMLT_Server_Admin ()
                 in_text_item.value = in_text_item.defaultValue;
                 };
             
-            this.setTextItemClass ( in_text_item );
+            this.setTextItemClass ( in_text_item, false );
             this.validateAccountGoButton();
             };
     };
@@ -165,18 +166,8 @@ function BMLT_Server_Admin ()
     {
         if ( in_text_item )
             {
-            if ( !in_text_item.value || (in_text_item.value == in_text_item.defaultValue) )
-                {
-                in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : (in_text_item.med ? '_med' : (in_text_item.tiny ? '_tiny' : ''))) + ' bmlt_text_item_dimmed';
-                }
-            else
-                {
-                in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : (in_text_item.med ? '_med' : (in_text_item.tiny ? '_tiny' : '')));
-                };
-            
             this.validateAccountGoButton();
             this.validateMeetingEditorButton(in_meeting_id);
-            this.setTextItemClass ( in_text_item );
             };
     };
     
@@ -2470,10 +2461,10 @@ function BMLT_Server_Admin ()
                                         )
     {
         var format_keys = in_meeting_object.formats.split ( ',' );
-        
-        for ( var c = 0; c < g_format_object_array.length; c++ )
+        var main_formats = g_format_object_array;
+        for ( var c = 0; c < main_formats.length; c++ )
             {
-            var format_checkbox = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_object.id_bigint + '_format_' + g_format_object_array[c].id + '_checkbox' );
+            var format_checkbox = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_object.id_bigint + '_format_' + main_formats[c].id + '_checkbox' );
             
             if ( format_checkbox )
                 {
@@ -2514,10 +2505,11 @@ function BMLT_Server_Admin ()
                                             )
     {
         var format_array = new Array;
+        var main_formats = g_format_object_array;
         
-        for ( var c = 0; c < g_format_object_array.length; c++ )
+        for ( var c = 0; c < main_formats.length; c++ )
             {
-            var format_checkbox = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_format_' + g_format_object_array[c].id + '_checkbox' );
+            var format_checkbox = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_id + '_format_' + main_formats[c].id + '_checkbox' );
             
             if ( format_checkbox && format_checkbox.checked )
                 {
@@ -4049,8 +4041,8 @@ function BMLT_Server_Admin ()
             {
             var format_group = g_formats_array[index];
             var format_id = format_group.id;
-            var format_lang_group = format_group.formats;
-            
+            var format_lang_group = JSON.parse ( JSON.stringify ( format_group.formats ) );  // This will always be a copy.
+
             this.createFormatRow ( index, format_id, format_lang_group, format_table );
             };
         
@@ -4068,6 +4060,8 @@ function BMLT_Server_Admin ()
     {
         var format_line_tr = document.createElement ( 'tr' );
         format_line_tr.id = 'format_editor_line_' + in_format_id + '_tr';
+        
+        var initial_className = 'format_editor_main_tr ';
         
         var container_row = format_line_tr;
         var id_td = document.createElement ( 'td' );
@@ -4098,9 +4092,11 @@ function BMLT_Server_Admin ()
             if ( c > 0 )
                 {
                 container_row = document.createElement ( 'tr' );
+                initial_className = '';
                 };
             
-            container_row.className = 'format_editor_format_line_tr format_editor_format_line_' + ((in_index % 2) ? 'even' : 'odd') + '_tr';
+            container_row.format_group_objects = in_format_lang_group;
+            container_row.className = initial_className + 'format_editor_format_line_tr format_editor_format_line_' + ((in_index % 2) ? 'even' : 'odd') + '_tr';
             
             var format_lang_td = document.createElement ( 'td' );
             format_lang_td.id = 'format_editor_lang_' + unique_id + '_td';
@@ -4115,12 +4111,15 @@ function BMLT_Server_Admin ()
 
             var format_key_input = document.createElement ( 'input' );
             format_key_input.type = 'text';
+            format_key_input.format_object = format;
+            format_key_input.data_member_name = 'key';
             format_key_input.tiny = true;
             format_key_input.value = format.key;
             format_key_input.defaultValue = null;
             format_key_input.id = 'bmlt_format_key_' + unique_id + '_text_item';
             format_key_input.onfocus= function () { admin_handler_object.handleTextInputFocus(this) };
-            format_key_input.onblur= function () { admin_handler_object.handleTextInputFocus(this) };
+            format_key_input.onblur= function () { admin_handler_object.handleTextInputBlur(this) };
+            format_key_input.onkeyup = function () { admin_handler_object.handleFormatTextInput(this) };
 
             format_key_td.appendChild ( format_key_input );
             
@@ -4132,12 +4131,15 @@ function BMLT_Server_Admin ()
 
             var format_name_input = document.createElement ( 'input' );
             format_name_input.type = 'text';
+            format_name_input.format_object = format;
+            format_name_input.data_member_name = 'name';
             format_name_input.small = true;
             format_name_input.value = format.name;
             format_name_input.defaultValue = null;
             format_name_input.id = 'bmlt_format_name_' + unique_id + '_text_item';
             format_name_input.onfocus= function () { admin_handler_object.handleTextInputFocus(this) };
-            format_name_input.onblur= function () { admin_handler_object.handleTextInputFocus(this) };
+            format_name_input.onblur= function () { admin_handler_object.handleTextInputBlur(this) };
+            format_name_input.onkeyup = function () { admin_handler_object.handleFormatTextInput(this) };
     
             format_name_td.appendChild ( format_name_input );
 
@@ -4148,11 +4150,14 @@ function BMLT_Server_Admin ()
             format_description_td.className = 'format_editor_description_td';
 
             var format_description_input = document.createElement ( 'textarea' );
+            format_description_input.format_object = format;
+            format_description_input.data_member_name = 'description';
             format_description_input.value = format.description;
             format_description_input.id = 'bmlt_format_description_' + unique_id + '_text_item';
             format_description_input.med = true;
             format_description_input.onfocus= function () { admin_handler_object.handleTextInputFocus(this) };
-            format_description_input.onblur= function () { admin_handler_object.handleTextInputFocus(this) };
+            format_description_input.onblur= function () { admin_handler_object.handleTextInputBlur(this) };
+            format_description_input.onkeyup = function () { admin_handler_object.handleFormatTextInput(this) };
             
             format_description_td.appendChild ( format_description_input );
             
@@ -4171,7 +4176,7 @@ function BMLT_Server_Admin ()
             
                 var format_change_a = document.createElement ( 'a' );
                 format_change_a.id = 'format_editor_change_' + in_format_id + '_a';
-                format_change_a.format_object = format;
+                format_change_a.format_group_objects = in_format_lang_group;
                 format_change_a.className = 'bmlt_admin_ajax_button';
                 format_change_a.appendChild ( document.createTextNode ( g_format_editor_change_format_button_text ) );
             
@@ -4184,7 +4189,7 @@ function BMLT_Server_Admin ()
             
                 var format_delete_a = document.createElement ( 'a' );
                 format_delete_a.id = 'format_editor_delete_' + in_format_id + '_a';
-                format_delete_a.format_object = format;
+                format_change_a.format_group_objects = in_format_lang_group;
                 format_delete_a.className = 'bmlt_admin_ajax_button';
                 format_delete_a.appendChild ( document.createTextNode ( g_format_editor_delete_format_button_text ) );
             
@@ -4200,6 +4205,25 @@ function BMLT_Server_Admin ()
             this.handleTextInputLoad ( format_name_input, g_format_editor_name_default_text );
             this.handleTextInputLoad ( format_description_input, g_format_editor_description_default_text );
             };
+
+    /************************************************************************************//**
+    *   \brief  Handle data input from the text items.                                      *
+    ****************************************************************************************/
+    this.handleFormatTextInput = function ( in_text_input_object ///< This will contain the affected text input
+                                            )
+        {
+        eval ( 'in_text_input_object.format_object.' + in_text_input_object.data_member_name + ' = in_text_input_object.value;' );
+        
+        this.evaluateFormatState ( in_text_input_object.format_object );
+        };
+
+    /************************************************************************************//**
+    *   \brief  This function evaluates a changed format, and sets up the buttons.          *
+    ****************************************************************************************/
+    this.evaluateFormatState = function ( in_format     ///< The affected format object (not the original
+                                            )
+        {
+        };
     };
     
     // #mark - 

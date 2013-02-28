@@ -200,9 +200,11 @@ div.bmlt_admin_one_line_in_a_form_no_margin
     font-style:italic;
 }
 
-input.bmlt_text_item_small,
-input.bmlt_text_item,
 input.bmlt_text_item_tiny,
+input.bmlt_text_item_small,
+input.bmlt_text_item_med,
+input.bmlt_text_item,
+textarea.bmlt_text_item_tiny,
 textarea.bmlt_text_item_small,
 textarea.bmlt_text_item_med,
 textarea.bmlt_text_item
@@ -216,11 +218,6 @@ textarea.bmlt_text_item
     border-radius: 3px;
 }
 
-input.bmlt_text_item
-{
-    width:30em;
-}
-
 input.bmlt_text_item_tiny
 {
     width:3em;
@@ -231,10 +228,26 @@ input.bmlt_text_item_small
     width:15em;
 }
 
-textarea.bmlt_text_item
+input.bmlt_text_item_med
+{
+    width:20em;
+}
+
+input.bmlt_text_item
 {
     width:30em;
-    height: 10em;
+}
+
+textarea.bmlt_text_item_tiny
+{
+    width:10em;
+    height: 2em;
+}
+
+textarea.bmlt_text_item_small
+{
+    width:15em;
+    height: 4em;
 }
 
 textarea.bmlt_text_item_med
@@ -243,10 +256,10 @@ textarea.bmlt_text_item_med
     height:3em;
 }
 
-textarea.bmlt_text_item_small
+textarea.bmlt_text_item
 {
-    width:15em;
-    height: 4em;
+    width:30em;
+    height: 10em;
 }
 
 input.bmlt_text_item_dimmed,
@@ -1098,7 +1111,7 @@ fieldset.bmlt_admin_single_user_editor_fieldset
 }
 
 fieldset.bmlt_admin_single_service_body_editor_fieldset legend,
-fieldset.bmlt_admin_single_user_editor_fieldset legend,
+fieldset.bmlt_admin_single_user_editor_fieldset legend
 {
     padding: 0.25em;
     display:inline-block;
@@ -1188,4 +1201,36 @@ td.format_editor_lang_td
 {
     font-size:small;
     font-style:italic;
+}
+
+tr.format_editor_main_tr td.format_editor_buttons_td
+{
+    text-align:center;
+}
+
+td.format_editor_buttons_td div
+{
+    margin:1em;
+}
+
+td.format_editor_buttons_td div.format_editor_change_div
+{
+    vertical-align:top;
+}
+
+td.format_editor_buttons_td div.format_editor_change_div a
+{
+    margin: auto;
+    margin-top:0;
+}
+
+td.format_editor_buttons_td div.format_editor_delete_div
+{
+    vertical-align:bottom;
+}
+
+td.format_editor_buttons_td div.format_editor_delete_div a
+{
+    margin: auto;
+    margin-bottom:0;
 }
