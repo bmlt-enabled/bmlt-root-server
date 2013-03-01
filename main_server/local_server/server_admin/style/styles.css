@@ -111,7 +111,8 @@ div.clear_both
 
 div.bmlt_admin_meeting_editor_form_new_meetings_div .hide_in_new_meeting,
 div.bmlt_admin_new_sb_editor .hide_in_new_service_body_admin,
-div.bmlt_admin_new_user_editor .hide_in_new_user_admin
+div.bmlt_admin_new_user_editor .hide_in_new_user_admin,
+td.bmlt_admin_new_format_editor_td .hide_in_new_format_admin
 {
     display:none;
 }
@@ -272,6 +273,8 @@ textarea.bmlt_text_item_dimmed
 
 /* These are buttons */
 
+div.format_editor_delete_div a.button_disabled,
+div.format_editor_delete_div a.button_disabled:visited,
 span.bmlt_admin_delete_button_span a.button_disabled,
 span.bmlt_admin_delete_button_span a.button_disabled:visited,
 a.bmlt_admin_ajax_button,
@@ -298,6 +301,8 @@ a.bmlt_admin_ajax_button:visited
     cursor:default;
 }
 
+div.format_editor_delete_div a.bmlt_admin_ajax_button,
+div.format_editor_delete_div a.bmlt_admin_ajax_button:visited,
 span.bmlt_admin_delete_button_span a.bmlt_admin_ajax_button,
 span.bmlt_admin_delete_button_span a.bmlt_admin_ajax_button:visited
 {
@@ -306,6 +311,8 @@ span.bmlt_admin_delete_button_span a.bmlt_admin_ajax_button:visited
     border: 1px solid red;
 }
 
+div.format_editor_delete_div a.bmlt_admin_ajax_button:hover,
+div.format_editor_delete_div a.bmlt_admin_ajax_button:active,
 span.bmlt_admin_delete_button_span a.bmlt_admin_ajax_button:hover,
 span.bmlt_admin_delete_button_span a.bmlt_admin_ajax_button:active
 {
@@ -1218,19 +1225,7 @@ td.format_editor_buttons_td div.format_editor_change_div
     vertical-align:top;
 }
 
-td.format_editor_buttons_td div.format_editor_change_div a
+td.format_editor_buttons_td a
 {
     margin: auto;
-    margin-top:0;
-}
-
-td.format_editor_buttons_td div.format_editor_delete_div
-{
-    vertical-align:bottom;
-}
-
-td.format_editor_buttons_td div.format_editor_delete_div a
-{
-    margin: auto;
-    margin-bottom:0;
 }

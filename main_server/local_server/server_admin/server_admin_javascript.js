@@ -4167,7 +4167,7 @@ function BMLT_Server_Admin ()
                 {
                 var format_buttons_td = document.createElement ( 'td' );
                 format_buttons_td.id = 'format_editor_buttons_' + in_format_id + '_td';
-                format_buttons_td.className = 'format_editor_buttons_td';
+                format_buttons_td.className = 'format_editor_buttons_td' + ((in_format_id == 0) ? ' bmlt_admin_new_format_editor_td' : '');
                 format_buttons_td.setAttribute ( 'rowspan', g_langs.length );
             
                 var format_change_div = document.createElement ( 'div' );
@@ -4177,7 +4177,7 @@ function BMLT_Server_Admin ()
                 var format_change_a = document.createElement ( 'a' );
                 format_change_a.id = 'format_editor_change_' + in_format_id + '_a';
                 format_change_a.format_group_objects = in_format_lang_group;
-                format_change_a.className = 'bmlt_admin_ajax_button';
+                format_change_a.className = 'bmlt_admin_ajax_button button_disabled';
                 format_change_a.appendChild ( document.createTextNode ( g_format_editor_change_format_button_text ) );
             
                 format_change_div.appendChild ( format_change_a );
@@ -4185,7 +4185,7 @@ function BMLT_Server_Admin ()
             
                 var format_delete_div = document.createElement ( 'div' );
                 format_delete_div.id = 'format_editor_delete_' + in_format_id + '_div';
-                format_delete_div.className = 'format_editor_delete_div';
+                format_delete_div.className = 'format_editor_delete_div hide_in_new_format_admin';
             
                 var format_delete_a = document.createElement ( 'a' );
                 format_delete_a.id = 'format_editor_delete_' + in_format_id + '_a';
@@ -4214,15 +4214,48 @@ function BMLT_Server_Admin ()
         {
         eval ( 'in_text_input_object.format_object.' + in_text_input_object.data_member_name + ' = in_text_input_object.value;' );
         
-        this.evaluateFormatState ( in_text_input_object.format_object );
+        this.evaluateFormatState ( in_text_input_object.format_object.shared_id );
         };
 
     /************************************************************************************//**
     *   \brief  This function evaluates a changed format, and sets up the buttons.          *
     ****************************************************************************************/
-    this.evaluateFormatState = function ( in_format     ///< The affected format object (not the original
+    this.evaluateFormatState = function ( in_format_id  /// The ID of the format to check
                                             )
         {
+        var format_change_a = document.getElementById ( 'format_editor_change_' + in_format_id + '_a' );
+        
+        format_change_a.className = 'bmlt_admin_ajax_button' + (this.isFormatDirty ( in_format_id ) ? '' : ' button_disabled');
+        };
+
+    /************************************************************************************//**
+    *   \brief  This function Sees if the formats have been changed.                        *
+    *   \returns a Boolean. TRUE, if the format has been changed.
+    ****************************************************************************************/
+    this.isFormatDirty = function ( in_format_id    /// The ID of the format to check
+                                    )
+        {
+        var format_change_a = document.getElementById ( 'format_editor_change_' + in_format_id + '_a' );
+        var original_format_group_object = null;
+        var edited_format_group_object = format_change_a.format_group_objects;  // The edited format group is attached to the change button.
+        
+        for ( var index = 0; index < g_formats_array.length; index++ )
+            {
+            var format_group = g_formats_array[index];
+            if ( in_format_id == format_group.id )
+                {
+                original_format_group_object = format_group.formats;
+                break;
+                };
+            };
+        
+        // We now have the original (unmodified) format group. We now compare this group to the values of the edite format group.
+        // We compare them the simple way, by stringifying them, and comparing the strings.
+        
+        var original_strin = JSON.stringify ( original_format_group_object );
+        var new_strin = JSON.stringify ( edited_format_group_object );
+        
+        return ( original_strin != new_strin );
         };
     };
     
