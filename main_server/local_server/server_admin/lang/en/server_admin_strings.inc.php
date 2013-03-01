@@ -197,7 +197,6 @@
 	                                        'service_body_editor_uri_naws_format_text'              =>  'Get The Meetings For This Service Body As A NAWS-Compatible File',
 	                                        'edit_Meeting_meeting_id'                               =>  'Meeting ID:',
                                             'service_body_editor_create_new_sb_option'              =>  'Create A New Service Body',
-                                            'service_body_meeting_editor_note'                      =>  'If you use the meeting editor after this operation, the Service Body popup menu will not be accurate. You must sign out, then sign back in, to ensure that the meeting editor will be accurate.',
 	                                        'service_body_editor_screen_world_cc_label'             =>  'World Committee Code:',
 	                                        'service_body_editor_screen_world_cc_prompt'            =>  'Enter A World Committee Code',
 											'user_editor_disclosure'                                =>  'User Administration',
@@ -235,7 +234,6 @@
 	                                        'user_dirty_confirm_text'                               =>  'You have made changes to this User. Do you want to lose your changes?',
 	                                        'user_delete_button_confirm'                            =>  'Are you sure that you want to delete this user?',
 	                                        'user_delete_button_confirm_perm'                       =>  'This user will be deleted permanently!',
-                                            'user_meeting_editor_note'                              =>  'If you use the Service body editor after this operation, the user popup and checkboxes will not be accurate. You must sign out, then sign back in, to ensure that the Service body editor will be accurate.',
 	                                        'user_change_fader_create_success_text'                 =>  'The User Was Successfully Created',
 	                                        'user_create_password_alert_text'                       =>  'New users must have a password. You have not supplied a password for this user.',
 	                                        'user_change_fader_create_fail_text'                    =>  'The User Create Failed',
@@ -258,5 +256,7 @@
 	                                        'format_editor_delete_format_button_text'               =>  'Delete This Format',
 	                                        'format_editor_reset_format_button_text'                =>  'Restore To Original',
 	                                        'format_editor_create_format_button_text'               =>  'Create A new Format',
+	                                        'need_refresh_message_fader_text'                       =>  'You Should Refresh This Page Before Using This Section',
+	                                        'need_refresh_message_alert_text'                       =>  'Becaue you have made changes in the Service Body Administration, User Administration or Format Administration, the information displayed in this section may no longer be accurate, so the page needs to be refreshed. The easiest way to do this, is to Sign Out, then Log In again.',
 	                                    );
 ?>

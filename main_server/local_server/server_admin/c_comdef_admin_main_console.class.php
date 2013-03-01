@@ -346,8 +346,6 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_service_body_delete_button_confirm_perm = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_delete_button_confirm_perm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_service_body_save_button = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_save_button'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_service_body_create_button = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_create_button'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_service_body_meeting_editor_note = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_meeting_editor_note'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_user_meeting_editor_note = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_meeting_editor_note'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_user_save_button = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_save_button'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_user_create_button = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_create_button'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_user_password_default_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_password_default_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
@@ -363,6 +361,7 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_format_editor_change_format_button_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_change_format_button_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_format_editor_delete_format_button_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_delete_format_button_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_format_editor_reset_format_button_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_reset_format_button_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_need_refresh_message_alert_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['need_refresh_message_alert_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_time_values = [';
                     $ret .= '\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_am_label'] ).'\',';
                     $ret .= '\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_pm_label'] ).'\',';
@@ -643,6 +642,9 @@ class c_comdef_admin_main_console
             $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
             $ret .= '<div id="bmlt_admin_service_body_editor_wrapper_div" class="bmlt_admin_service_body_editor_wrapper_div bmlt_admin_service_body_editor_wrapper_div_hidden">';
                 $ret .= '<div class="bmlt_admin_service_body_editor_banner_div">';
+                    $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_service_body_editor_warn_div">';
+                        $ret .= '<span class="warn_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['need_refresh_message_fader_text'] ).'</span>';
+                    $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                     $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_service_body_editor_success_div">';
                         $ret .= '<span class="success_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_success_text'] ).'</span>';
                     $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
@@ -1037,6 +1039,9 @@ class c_comdef_admin_main_console
             $ret .= '</div>';
             $ret .= '<div id="bmlt_admin_meeting_editor_wrapper_div" class="bmlt_admin_meeting_editor_wrapper_div bmlt_admin_meeting_editor_wrapper_div_hidden">';
                 $ret .= '<div class="bmlt_admin_meeting_editor_banner_div">';
+                    $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_meeting_editor_warn_div">';
+                        $ret .= '<span class="warn_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['need_refresh_message_fader_text'] ).'</span>';
+                    $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                     $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_meeting_editor_success_div">';
                         $ret .= '<span class="success_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_change_fader_success_text'] ).'</span>';
                     $ret .= '</div>';
@@ -1712,6 +1717,9 @@ class c_comdef_admin_main_console
         $ret .= '</div>';
         $ret .= '<div id="bmlt_admin_user_account_wrapper_div" class="bmlt_admin_user_account_wrapper_div bmlt_admin_user_account_wrapper_div_hidden">';
             $ret .= '<div class="bmlt_admin_user_account_banner_div">';
+                $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_account_warn_div">';
+                    $ret .= '<span class="warn_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['need_refresh_message_fader_text'] ).'</span>';
+                $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_account_success_div">';
                     $ret .= '<span class="success_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['account_change_fader_success_text'] ).'</span>';
                 $ret .= '</div>';

@@ -477,6 +477,11 @@ span.failure_text_span
     color:red;
 }
 
+span.warn_text_span
+{
+    color:orange;
+}
+
 div.bmlt_admin_meeting_editor_disclosure_div,
 div.bmlt_admin_user_account_disclosure_div,
 div.bmlt_admin_service_body_editor_disclosure_div,

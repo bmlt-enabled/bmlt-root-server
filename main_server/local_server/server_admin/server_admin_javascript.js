@@ -40,10 +40,42 @@ function BMLT_Server_Admin ()
     var m_meeting_results_container_div = null; ///< This will hold any search result display elements (allows easy disposal)
     var m_editing_window_open = null;           ///< If there is a meeting editor open, it is recorded here. There can only be one...
     var m_user_editor_panel_shown = null;       ///< Set to true, if the user editor is open.
+    var m_warn_user_to_refresh = null;          ///< If this is true, then a warning alert will be shown to the user.
     
     /************************************************************************************//**
     *                                       METHODS                                         *
     ****************************************************************************************/
+    
+    // #mark - 
+    // #mark Affects All Sections
+    // #mark -
+    
+    /************************************************************************************//**
+    *   \brief If one of the upper sections has been edited, it can affect the Account,     *
+    *          Meeting or Service Body sections. In this case, the user needs to log out,   *
+    *          then back in again (or refresh the page, but signing out is easier to        *
+    *          explain). This sets an orange fader in each affected section, and also sets  *
+    *          the trigger for an alert that explains it.                                   *
+    ****************************************************************************************/
+    this.setWarningFaders = function()
+    {
+        document.getElementById ( 'bmlt_admin_fader_service_body_editor_warn_div' ).className = 'bmlt_admin_fader_div';
+        document.getElementById ( 'bmlt_admin_fader_meeting_editor_warn_div' ).className = 'bmlt_admin_fader_div';
+        document.getElementById ( 'bmlt_admin_fader_account_warn_div' ).className = 'bmlt_admin_fader_div';
+        
+        this.m_warn_user_to_refresh = true;
+    };
+    
+    /************************************************************************************//**
+    *   \brief This displays that alert.                                                    *
+    ****************************************************************************************/
+    this.showWarningAlert = function()
+    {
+        if ( this.m_warn_user_to_refresh )  // Only if needed.
+            {
+            alert ( g_need_refresh_message_alert_text );
+            };
+    };
     
     // #mark - 
     // #mark Text Item Handlers
@@ -230,6 +262,7 @@ function BMLT_Server_Admin ()
             
             the_disclosure_div.className = 'bmlt_admin_user_account_disclosure_div bmlt_admin_user_account_disclosure_div_open';
             the_account_info_div.className = 'bmlt_admin_user_account_wrapper_div';
+            this.showWarningAlert();
             }
         else
             {
@@ -403,6 +436,7 @@ function BMLT_Server_Admin ()
             {
             the_disclosure_div.className = 'bmlt_admin_meeting_editor_disclosure_div bmlt_admin_meeting_editor_disclosure_div_open';
             the_editor_div.className = 'bmlt_admin_meeting_editor_wrapper_div';
+            this.showWarningAlert();
             }
         else
             {
@@ -2672,6 +2706,7 @@ function BMLT_Server_Admin ()
             {
             the_disclosure_div.className = 'bmlt_admin_service_body_editor_disclosure_div bmlt_admin_service_body_editor_disclosure_div_open';
             the_editor_div.className = 'bmlt_admin_service_body_editor_wrapper_div';
+            this.showWarningAlert();
             }
         else
             {
@@ -3218,6 +3253,7 @@ function BMLT_Server_Admin ()
                     var main_service_body_editor = document.getElementById ( 'bmlt_admin_single_service_body_editor_div' );
                     main_service_body_editor.m_ajax_request_in_progress = null;
                     BMLT_Admin_StartFader ( 'bmlt_admin_fader_service_body_editor_success_div', this.m_success_fade_duration );
+                    this.setWarningFaders();
                     };
                 }
             else
@@ -3308,7 +3344,7 @@ function BMLT_Server_Admin ()
                     this.populateServiceBodyEditor();
                     BMLT_Admin_StartFader ( 'bmlt_admin_fader_service_body_create_success_div', this.m_success_fade_duration );
                     document.getElementById ( 'bmlt_admin_service_body_save_ajax_button_throbber_span' ).className = 'item_hidden';
-                    alert ( g_service_body_meeting_editor_note );
+                    this.setWarningFaders();
                     };
                 }
             else
@@ -3789,7 +3825,7 @@ function BMLT_Server_Admin ()
                     this.populateUserEditor();
                     BMLT_Admin_StartFader ( 'bmlt_admin_fader_user_create_success_div', this.m_success_fade_duration );
                     document.getElementById ( 'bmlt_admin_user_save_ajax_button_throbber_span' ).className = 'item_hidden';
-                    alert ( g_user_meeting_editor_note );
+                    this.setWarningFaders();
                     };
                 }
             else
@@ -4269,6 +4305,7 @@ function BMLT_Server_Admin ()
     this.m_account_panel_shown = false;
     this.m_search_specifier_shown = true;
     this.m_meeting_editor_panel_shown = false;
+    this.m_warn_user_to_refresh = false;
     this.m_success_fade_duration = 2000;        ///< 2 seconds for a success fader.
     this.m_failure_fade_duration = 5000;        ///< 5 seconds for a success fader.
 };
