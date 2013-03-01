@@ -995,9 +995,14 @@ h1.bmlt_admin_no_history_available_h1
     padding: 20px;
 }
 
-div.bmlt_admin_history_ajax_button_throbber_div
+div.bmlt_admin_history_ajax_button_throbber_div,
+div.bmlt_admin_general_ajax_button_throbber_div
 {
     text-align:center;
+}
+
+div.bmlt_admin_history_ajax_button_throbber_div
+{
     padding: 20px;
 }
 

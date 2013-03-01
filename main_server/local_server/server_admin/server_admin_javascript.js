@@ -4215,9 +4215,20 @@ function BMLT_Server_Admin ()
                 format_change_a.format_group_objects = in_format_lang_group;
                 format_change_a.className = 'bmlt_admin_ajax_button button_disabled';
                 format_change_a.appendChild ( document.createTextNode ( g_format_editor_change_format_button_text ) );
-                format_change_a.href = 'javascript:function () { admin_handler_object.saveFormat(this); };';
+                format_change_a.href = 'javascript:admin_handler_object.saveFormat(' + in_format_id + ')';
             
                 format_change_div.appendChild ( format_change_a );
+                
+                var new_throbber_span = document.createElement ( 'span' );
+                new_throbber_span.className = 'item_hidden';
+                new_throbber_span.id = 'format_editor_change_' + in_format_id + '_throbber_span';
+                
+                var new_throbber_img = document.createElement ( 'img' );
+                new_throbber_img.src = g_throbber_image_loc;
+                new_throbber_img.setAttribute ( 'alt', 'AJAX Throbber' );
+
+                new_throbber_span.appendChild ( new_throbber_img );
+                format_change_div.appendChild ( new_throbber_span );
                 format_buttons_td.appendChild ( format_change_div );
             
                 var format_delete_div = document.createElement ( 'div' );
@@ -4229,9 +4240,19 @@ function BMLT_Server_Admin ()
                 format_change_a.format_group_objects = in_format_lang_group;
                 format_delete_a.className = 'bmlt_admin_ajax_button';
                 format_delete_a.appendChild ( document.createTextNode ( g_format_editor_delete_format_button_text ) );
-                format_delete_a.href = 'javascript:function () { admin_handler_object.deleteFormat(this); };';
+                format_delete_a.href = 'javascript:admin_handler_object.deleteFormat(' + in_format_id + ')';
             
                 format_delete_div.appendChild ( format_delete_a );
+                var new_throbber_span = document.createElement ( 'span' );
+                new_throbber_span.className = 'item_hidden';
+                new_throbber_span.id = 'format_editor_delete_' + in_format_id + '_throbber_span';
+                
+                var new_throbber_img = document.createElement ( 'img' );
+                new_throbber_img.src = g_throbber_image_loc;
+                new_throbber_img.setAttribute ( 'alt', 'AJAX Throbber' );
+
+                new_throbber_span.appendChild ( new_throbber_img );
+                format_delete_div.appendChild ( new_throbber_span );
                 format_buttons_td.appendChild ( format_delete_div );
             
                 container_row.appendChild ( format_buttons_td );
@@ -4254,21 +4275,33 @@ function BMLT_Server_Admin ()
     /************************************************************************************//**
     *   \brief  Saves the changed format.                                                   *
     ****************************************************************************************/
-    this.saveFormat = function ( in_button_object   ///< This will contain the button (will have the format object info)
+    this.saveFormat = function (    in_format_id    ///< The shared ID of the format.
                                 )
         {
-        var edited_format_group = in_button_object.format_group_objects;    // We fetch the format from the button.
-        var json_to_send_to_server = JSON.stringify ( edited_format_group );    // We will be sending as a JSON object.
+        var the_button = document.getElementById ( 'format_editor_change_' + in_format_id + '_a' );
+
+        if ( this.isFormatDirty ( in_format_id ) )
+            {
+            var edited_format_group = the_button.format_group_objects;    // We fetch the format from the button.
+            var json_to_send_to_server = JSON.stringify ( edited_format_group );    // We will be sending as a JSON object.
+            var throbber_span = document.getElementById ( 'format_editor_change_' + in_format_id + '_throbber_span' );
+            the_button.className = 'item_hidden';
+            throbber_span.className = 'bmlt_admin_general_ajax_button_throbber_div';
+            };
         };
 
     /************************************************************************************//**
     *   \brief  Deletes the format.                                                         *
     ****************************************************************************************/
-    this.deleteFormat = function ( in_button_object   ///< This will contain the button (will have the format object info)
+    this.deleteFormat = function (  in_format_id    ///< The shared ID of the format.
                                 )
         {
-        var the_format_group = in_button_object.format_group_objects;   // We fetch the format from the button.
-        var the_shared_id = the_format_group.id;
+        var the_button = document.getElementById ( 'format_editor_delete_' + in_format_id + '_a' );
+        var the_format_group = the_button.format_group_objects;   // We fetch the format from the button.
+
+        var throbber_span = document.getElementById ( 'format_editor_delete_' + in_format_id + '_throbber_span' );
+        the_button.className = 'item_hidden';
+        throbber_span.className = 'bmlt_admin_general_ajax_button_throbber_div';
         };
 
     /************************************************************************************//**

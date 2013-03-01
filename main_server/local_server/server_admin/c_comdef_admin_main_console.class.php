@@ -362,6 +362,7 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_format_editor_delete_format_button_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_delete_format_button_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_format_editor_reset_format_button_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_reset_format_button_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_need_refresh_message_alert_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['need_refresh_message_alert_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_throbber_image_loc = \'local_server/server_admin/style/images/ajax-throbber-white.gif\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_time_values = [';
                     $ret .= '\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_am_label'] ).'\',';
                     $ret .= '\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_pm_label'] ).'\',';
