@@ -4153,9 +4153,9 @@ function BMLT_Server_Admin ()
             format_key_input.value = format.key;
             format_key_input.defaultValue = null;
             format_key_input.id = 'bmlt_format_key_' + unique_id + '_text_item';
-            format_key_input.onfocus= function () { admin_handler_object.handleTextInputFocus(this) };
-            format_key_input.onblur= function () { admin_handler_object.handleTextInputBlur(this) };
-            format_key_input.onkeyup = function () { admin_handler_object.handleFormatTextInput(this) };
+            format_key_input.onfocus= function () { admin_handler_object.handleTextInputFocus(this); };
+            format_key_input.onblur= function () { admin_handler_object.handleTextInputBlur(this); };
+            format_key_input.onkeyup = function () { admin_handler_object.handleFormatTextInput(this); };
 
             format_key_td.appendChild ( format_key_input );
             
@@ -4173,9 +4173,9 @@ function BMLT_Server_Admin ()
             format_name_input.value = format.name;
             format_name_input.defaultValue = null;
             format_name_input.id = 'bmlt_format_name_' + unique_id + '_text_item';
-            format_name_input.onfocus= function () { admin_handler_object.handleTextInputFocus(this) };
-            format_name_input.onblur= function () { admin_handler_object.handleTextInputBlur(this) };
-            format_name_input.onkeyup = function () { admin_handler_object.handleFormatTextInput(this) };
+            format_name_input.onfocus= function () { admin_handler_object.handleTextInputFocus(this); };
+            format_name_input.onblur= function () { admin_handler_object.handleTextInputBlur(this); };
+            format_name_input.onkeyup = function () { admin_handler_object.handleFormatTextInput(this); };
     
             format_name_td.appendChild ( format_name_input );
 
@@ -4191,9 +4191,9 @@ function BMLT_Server_Admin ()
             format_description_input.value = format.description;
             format_description_input.id = 'bmlt_format_description_' + unique_id + '_text_item';
             format_description_input.med = true;
-            format_description_input.onfocus= function () { admin_handler_object.handleTextInputFocus(this) };
-            format_description_input.onblur= function () { admin_handler_object.handleTextInputBlur(this) };
-            format_description_input.onkeyup = function () { admin_handler_object.handleFormatTextInput(this) };
+            format_description_input.onfocus= function () { admin_handler_object.handleTextInputFocus(this); };
+            format_description_input.onblur= function () { admin_handler_object.handleTextInputBlur(this); };
+            format_description_input.onkeyup = function () { admin_handler_object.handleFormatTextInput(this); };
             
             format_description_td.appendChild ( format_description_input );
             
@@ -4215,6 +4215,7 @@ function BMLT_Server_Admin ()
                 format_change_a.format_group_objects = in_format_lang_group;
                 format_change_a.className = 'bmlt_admin_ajax_button button_disabled';
                 format_change_a.appendChild ( document.createTextNode ( g_format_editor_change_format_button_text ) );
+                format_change_a.href = 'javascript:function () { admin_handler_object.saveFormat(this); };';
             
                 format_change_div.appendChild ( format_change_a );
                 format_buttons_td.appendChild ( format_change_div );
@@ -4228,6 +4229,7 @@ function BMLT_Server_Admin ()
                 format_change_a.format_group_objects = in_format_lang_group;
                 format_delete_a.className = 'bmlt_admin_ajax_button';
                 format_delete_a.appendChild ( document.createTextNode ( g_format_editor_delete_format_button_text ) );
+                format_delete_a.href = 'javascript:function () { admin_handler_object.deleteFormat(this); };';
             
                 format_delete_div.appendChild ( format_delete_a );
                 format_buttons_td.appendChild ( format_delete_div );
@@ -4241,6 +4243,33 @@ function BMLT_Server_Admin ()
             this.handleTextInputLoad ( format_name_input, g_format_editor_name_default_text );
             this.handleTextInputLoad ( format_description_input, g_format_editor_description_default_text );
             };
+
+    /************************************************************************************//**
+    *   \brief  Creates a new format editor row..                                           *
+    ****************************************************************************************/
+    this.createNewFormat = function ()
+        {
+        };
+
+    /************************************************************************************//**
+    *   \brief  Saves the changed format.                                                   *
+    ****************************************************************************************/
+    this.saveFormat = function ( in_button_object   ///< This will contain the button (will have the format object info)
+                                )
+        {
+        var edited_format_group = in_button_object.format_group_objects;    // We fetch the format from the button.
+        var json_to_send_to_server = JSON.stringify ( edited_format_group );    // We will be sending as a JSON object.
+        };
+
+    /************************************************************************************//**
+    *   \brief  Deletes the format.                                                         *
+    ****************************************************************************************/
+    this.deleteFormat = function ( in_button_object   ///< This will contain the button (will have the format object info)
+                                )
+        {
+        var the_format_group = in_button_object.format_group_objects;   // We fetch the format from the button.
+        var the_shared_id = the_format_group.id;
+        };
 
     /************************************************************************************//**
     *   \brief  Handle data input from the text items.                                      *
