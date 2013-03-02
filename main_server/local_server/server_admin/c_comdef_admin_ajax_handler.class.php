@@ -64,7 +64,15 @@ class c_comdef_admin_ajax_handler
         
         $account_changed = false;
         
-        if ( isset ( $this->my_http_vars['get_naws_dump'] ) && $this->my_http_vars['get_naws_dump'] )
+        if ( isset ( $this->my_http_vars['set_format_change'] ) && $this->my_http_vars['set_format_change'] )
+            {
+            $this->HandleFormatChange ( $this->my_http_vars['set_format_change'] );
+            }
+        if ( isset ( $this->my_http_vars['delete_format'] ) && $this->my_http_vars['delete_format'] )
+            {
+            $this->HandleDeleteFormat ( $this->my_http_vars['delete_format'] );
+            }
+        elseif ( isset ( $this->my_http_vars['get_naws_dump'] ) && $this->my_http_vars['get_naws_dump'] )
             {
             $this->HandleNawsDump ( $this->my_http_vars['get_naws_dump'] );
             }
@@ -153,6 +161,92 @@ class c_comdef_admin_ajax_handler
             }
         
         return  $returned_text;
+    }
+
+    /*******************************************************************/
+    /**
+        \brief	
+    */	
+    function HandleFormatChange (   $in_new_format_data     ///< A JSON string with the new format data.
+                                )
+    {
+        $json_tool = new PhpJsonXmlArrayStringInterchanger;
+    
+        $the_changed_formats = $json_tool->convertJsonToArray ( $in_new_format_data, true );
+        
+        $the_objects_to_be_changed = array();
+        
+        $ret_data = '';
+        $shared_id = '';
+        
+        foreach ( $the_changed_formats as $format_data )
+            {
+            if ( !$shared_id )
+                {
+                $shared_id = $format_data['shared_id'];
+                }
+            else
+                {
+                if ( $shared_id != $format_data['shared_id'] )  // This should never happen.
+                    {
+                    $the_objects_to_be_changed = null;
+                    break;
+                    }
+                }
+            
+            $lang_key = $format_data['lang_key'];
+        
+            $server_format = $this->my_server->GetOneFormat ( $format_data['shared_id'], $format_data['lang_key'] );
+        
+            if ( $server_format instanceof c_comdef_format )
+                {
+                $server_format->SetKey ( $format_data['key'] );
+                $server_format->SetLocalName ( $format_data['name'] );
+                $server_format->SetLocalDescription ( $format_data['description'] );
+                array_push ( $the_objects_to_be_changed, $server_format );
+                }
+            else
+                {
+                $the_objects_to_be_changed = null;
+                break;
+                }
+            }
+        
+        if ( $the_objects_to_be_changed && is_array ( $the_objects_to_be_changed ) && count ( $the_objects_to_be_changed ) )
+            {
+            foreach ( $the_objects_to_be_changed as $one_format )
+                {
+                if ( !(($one_format instanceof c_comdef_format) && $one_format->UpdateToDB()) )
+                    {
+                    $the_objects_to_be_changed = null;
+                    $ret_data = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['format_change_fader_change_fail_text'] );
+                    break;
+                    }
+                }
+            }
+        else
+            {
+            $ret_data = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['format_change_fader_change_fail_text'] );
+            }
+        
+        header ( 'Content-type: application/json' );
+        if ( $ret_data )
+            {
+            echo "{'success':false,'report':'$ret_data'}";
+            }
+        else
+            {
+            echo "{'success':true,'report':'$shared_id'}";
+            }
+    }
+    
+    /*******************************************************************/
+    /**
+        \brief	
+    */	
+    function HandleDeleteFormat (   $in_format_shared_id    ///< The shared ID of the formats to delete.
+                                )
+    {
     }
     
     /*******************************************************************/

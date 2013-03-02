@@ -422,10 +422,10 @@ class c_comdef_admin_main_console
             $ret .= '<div id="bmlt_admin_format_editor_wrapper_div" class="bmlt_admin_format_editor_wrapper_div bmlt_admin_format_editor_wrapper_div_hidden">';
                 $ret .= '<div class="bmlt_admin_format_editor_banner_div">';
                     $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_format_editor_success_div">';
-                        $ret .= '<span class="success_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_change_fader_success_text'] ).'</span>';
+                        $ret .= '<span class="success_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_change_fader_change_success_text'] ).'</span>';
                     $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                     $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_format_editor_fail_div">';
-                        $ret .= '<span class="failure_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_change_fader_fail_text'] ).'</span>';
+                        $ret .= '<span class="failure_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_change_fader_change_fail_text'] ).'</span>';
                     $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                     $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_format_create_success_div">';
                         $ret .= '<span class="success_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_change_fader_create_success_text'] ).'</span>';

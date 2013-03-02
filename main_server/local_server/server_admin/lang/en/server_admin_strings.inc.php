@@ -243,6 +243,8 @@
 	                                        'user_change_fader_fail_cant_find_sb_text'              =>  'The User Change Failed, Because The User Was Not Found',
 	                                        'user_change_fader_fail_cant_update_text'               =>  'The User Change Failed, Because The User Was Not Updated',
 											'format_editor_disclosure'                              =>  'Format Administration',
+	                                        'format_change_fader_change_success_text'               =>  'The Format Was Successfully Changed',
+	                                        'format_change_fader_change_fail_text'                  =>  'The Format Change Failed',
 	                                        'format_change_fader_create_success_text'               =>  'The Format Was Successfully Created',
 	                                        'format_change_fader_create_fail_text'                  =>  'The Format Create Failed',
 	                                        'format_change_fader_delete_success_text'               =>  'The Format Was Successfully Deleted',

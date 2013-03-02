@@ -4287,9 +4287,78 @@ function BMLT_Server_Admin ()
             var throbber_span = document.getElementById ( 'format_editor_change_' + in_format_id + '_throbber_span' );
             the_button.className = 'item_hidden';
             throbber_span.className = 'bmlt_admin_general_ajax_button_throbber_div';
+            
+            var format_line_tr = document.getElementById ( 'format_editor_line_' + in_format_id + '_tr' );
+            
+            var uri = g_ajax_callback_uri + '&set_format_change=' + encodeURIComponent ( json_to_send_to_server );
+
+            if ( format_line_tr.m_ajax_request_in_progress )
+                {
+                format_line_tr.m_ajax_request_in_progress.abort();
+                format_line_tr.m_ajax_request_in_progress = null;
+                };
+        
+            var salt = new Date();
+            uri += '&salt=' + salt.getTime();
+
+            format_line_tr.m_ajax_request_in_progress = BMLT_AjaxRequest ( uri, function(in_req,id) { admin_handler_object.saveFormatAJAXCallback(in_req,id); }, 'post',in_format_id );
             };
         };
 
+    /************************************************************************************//**
+    *   \brief  AJAX callback for the save operation.                                       *
+    ****************************************************************************************/
+    this.saveFormatAJAXCallback = function (    in_http_request,    ///< The HTTPRequest object
+                                                in_format_id
+                                                )
+    {
+        var the_button = document.getElementById ( 'format_editor_change_' + in_format_id + '_a' );
+        var throbber_span = document.getElementById ( 'format_editor_change_' + in_format_id + '_throbber_span' );
+        var edited_format_group = the_button.format_group_objects;    // We fetch the format from the button.
+        
+        throbber_span.className = 'item_hidden';
+        the_button.className = 'bmlt_admin_ajax_button';
+        
+        if ( in_http_request.responseText )
+            {
+            eval ( 'var json_object = ' + in_http_request.responseText + ';' );
+            
+            if ( json_object )
+                {
+                if ( !json_object.success )
+                    {
+                    alert ( json_object.report );
+                    BMLT_Admin_StartFader ( 'bmlt_admin_fader_format_editor_fail_div', this.m_failure_fade_duration );
+                    }
+                else
+                    {
+                    for ( var index = 0; index < g_formats_array.length; index++ )
+                        {
+                        var format_group = g_formats_array[index];
+                        if ( in_format_id == in_format_id )
+                            {
+                            format_group.formats = edited_format_group;
+                            this.setWarningFaders();
+                            BMLT_Admin_StartFader ( 'bmlt_admin_fader_format_editor_success_div', this.m_success_fade_duration );
+                            the_button.className += ' button_disabled';
+                            break;
+                            };
+                        };
+                    
+                    // If we went through without interruption, then the job was not complete.
+                    if ( index == g_formats_array.length )
+                        {
+                        BMLT_Admin_StartFader ( 'bmlt_admin_fader_format_editor_fail_div', this.m_failure_fade_duration );
+                        };
+                    };
+                };
+            }
+        else
+            {
+            BMLT_Admin_StartFader ( 'bmlt_admin_fader_format_editor_fail_div', this.m_failure_fade_duration );
+            };
+    };
+    
     /************************************************************************************//**
     *   \brief  Deletes the format.                                                         *
     ****************************************************************************************/
