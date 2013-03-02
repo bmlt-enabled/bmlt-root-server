@@ -254,10 +254,12 @@
 	                                        'format_change_fader_fail_cant_update_text'             =>  'The Format Change Failed, Because The Format Was Not Updated',
 	                                        'format_editor_name_default_text'                       =>  'Enter A Very Short Description',
 	                                        'format_editor_description_default_text'                =>  'Enter A More Detailed Description',
+	                                        'format_editor_create_format_button_text'               =>  'Create New Format',
+	                                        'format_editor_create_this_format_button_text'          =>  'Create This Format',
 	                                        'format_editor_change_format_button_text'               =>  'Change This Format',
 	                                        'format_editor_delete_format_button_text'               =>  'Delete This Format',
 	                                        'format_editor_reset_format_button_text'                =>  'Restore To Original',
-	                                        'format_editor_create_format_button_text'               =>  'Create A new Format',
+	                                        'format_editor_create_format_button_text'               =>  'Create A New Format',
 	                                        'need_refresh_message_fader_text'                       =>  'You Should Refresh This Page Before Using This Section',
 	                                        'need_refresh_message_alert_text'                       =>  'Becaue you have made changes in the Service Body Administration, User Administration or Format Administration, the information displayed in this section may no longer be accurate, so the page needs to be refreshed. The easiest way to do this, is to Sign Out, then Log In again.',
 	                                    );

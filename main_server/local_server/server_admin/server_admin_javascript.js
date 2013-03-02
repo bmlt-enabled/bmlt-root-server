@@ -4081,6 +4081,24 @@ function BMLT_Server_Admin ()
 
             this.createFormatRow ( index, format_id, format_lang_group, format_table );
             };
+            
+        var create_format_line_tr = document.createElement ( 'tr' );
+        create_format_line_tr.id = 'format_create_line_tr';
+        
+        var format_create_td = document.createElement ( 'td' );
+        format_create_td.id = 'format_create_td';
+        format_create_td.className = 'format_create_td';
+        format_create_td.setAttribute ( 'colspan', 6 );
+            
+        var format_create_a = document.createElement ( 'a' );
+        format_create_a.id = 'format_editor_create_a';
+        format_create_a.className = 'bmlt_admin_ajax_button';
+        format_create_a.appendChild ( document.createTextNode ( g_format_editor_create_format_button_text ) );
+        format_create_a.href = 'javascript:admin_handler_object.createFormatOpen()';
+
+        format_create_td.appendChild ( format_create_a );
+        create_format_line_tr.appendChild ( format_create_td );
+        format_table.appendChild ( create_format_line_tr );
         
         in_container.appendChild ( format_table );
     };
@@ -4103,14 +4121,14 @@ function BMLT_Server_Admin ()
         var id_td = document.createElement ( 'td' );
         id_td.id = 'format_editor_id_' + in_format_id + '_td';
         id_td.className = 'format_editor_id_td';
-        id_td.appendChild ( document.createTextNode ( in_format_id.toString() ) );
+        id_td.appendChild ( document.createTextNode ( (parseInt ( in_format_id, 10 ) != 0) ? in_format_id.toString() : ' ' ) );
         id_td.setAttribute ( 'rowspan', g_langs.length );
         container_row.appendChild ( id_td );
         
         for ( var c = 0; c < g_langs.length; c++ )
             {
             var lang_key = g_langs[c];
-            var format = in_format_lang_group[lang_key];
+            var format = in_format_lang_group ? (in_format_lang_group[lang_key] ? in_format_lang_group[lang_key] : null) : null;
             
             if ( !format )
                 {
@@ -4132,7 +4150,14 @@ function BMLT_Server_Admin ()
                 };
             
             container_row.format_group_objects = in_format_lang_group;
-            container_row.className = initial_className + 'format_editor_format_line_tr format_editor_format_line_' + ((in_index % 2) ? 'even' : 'odd') + '_tr';
+            if ( !in_format_id )
+                {
+                container_row.className = initial_className + ' new_format_line';
+                }
+            else
+                {
+                container_row.className = initial_className + 'format_editor_format_line_tr format_editor_format_line_' + ((in_index % 2) ? 'even' : 'odd') + '_tr';
+                };
             
             var format_lang_td = document.createElement ( 'td' );
             format_lang_td.id = 'format_editor_lang_' + unique_id + '_td';
@@ -4214,8 +4239,16 @@ function BMLT_Server_Admin ()
                 format_change_a.id = 'format_editor_change_' + in_format_id + '_a';
                 format_change_a.format_group_objects = in_format_lang_group;
                 format_change_a.className = 'bmlt_admin_ajax_button button_disabled';
-                format_change_a.appendChild ( document.createTextNode ( g_format_editor_change_format_button_text ) );
-                format_change_a.href = 'javascript:admin_handler_object.saveFormat(' + in_format_id + ')';
+                if ( in_format_id )
+                    {
+                    format_change_a.appendChild ( document.createTextNode ( g_format_editor_change_format_button_text ) );
+                    format_change_a.href = 'javascript:admin_handler_object.saveFormat(' + in_format_id + ')';
+                    }
+                else
+                    {
+                    format_change_a.appendChild ( document.createTextNode ( g_format_editor_create_this_format_button_text ) );
+                    format_change_a.href = 'javascript:admin_handler_object.createNewFormat()';
+                    };
             
                 format_change_div.appendChild ( format_change_a );
                 
@@ -4258,13 +4291,36 @@ function BMLT_Server_Admin ()
                 container_row.appendChild ( format_buttons_td );
                 };
             
-            in_container_table.appendChild ( container_row );
+            if ( !in_format_id )
+                {
+                in_container_table.insertBefore ( container_row, document.getElementById ( 'format_create_line_tr' ) );
+                }
+            else
+                {
+                in_container_table.appendChild ( container_row );
+                }
             
             this.handleTextInputLoad ( format_key_input, '' );
             this.handleTextInputLoad ( format_name_input, g_format_editor_name_default_text );
             this.handleTextInputLoad ( format_description_input, g_format_editor_description_default_text );
             };
 
+    /************************************************************************************//**
+    *   \brief  Opens a new format editor row..                                             *
+    ****************************************************************************************/
+    this.createFormatOpen = function()
+        {
+        // There can only be one...
+        var existing_new_format = document.getElementById ( 'format_editor_line_0_tr' );
+        var create_button = document.getElementById ( 'format_editor_create_a' );
+        
+        if ( !existing_new_format )
+            {
+            this.createFormatRow ( 0, 0, null, document.getElementById ( 'format_editor_table' ) );
+            create_button.className += ' button_disabled';
+            };
+        };
+    
     /************************************************************************************//**
     *   \brief  Creates a new format editor row..                                           *
     ****************************************************************************************/

@@ -1208,6 +1208,11 @@ tr.format_editor_format_line_odd_tr td
     background-color:white;
 }
 
+tr.new_format_line td
+{
+    background-color:#fee;
+}
+
 td.format_editor_id_td
 {
     font-size:large;
@@ -1238,4 +1243,16 @@ td.format_editor_buttons_td div.format_editor_change_div
 td.format_editor_buttons_td a
 {
     margin: auto;
+}
+
+td.format_create_td
+{
+    text-align:center;
+    border-top:1px solid #009;
+    padding: 4px;
+}
+
+td.format_create_td a
+{
+    margin:auto;
 }
