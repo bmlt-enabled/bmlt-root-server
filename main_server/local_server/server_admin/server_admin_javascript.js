@@ -74,6 +74,7 @@ function BMLT_Server_Admin ()
         if ( this.m_warn_user_to_refresh )  // Only if needed.
             {
             alert ( g_need_refresh_message_alert_text );
+            this.m_warn_user_to_refresh = false;
             };
     };
     
@@ -4381,7 +4382,7 @@ function BMLT_Server_Admin ()
             if ( !new_id )
                 {
                 var new_id = this.getNextFormatID();
-                for ( var c = 1; c < g_langs.length; c++ )
+                for ( var c = 0; c < g_langs.length; c++ )
                     {
                     edited_format_group[g_langs[c]].shared_id = new_id;
                     };
@@ -4437,24 +4438,25 @@ function BMLT_Server_Admin ()
                 else
                     {
                     edited_format_group = json_object.report;
-                    for ( var index = 0; index < g_formats_array.length; index++ )
+                    for ( var index = 0; index <= g_formats_array.length; index++ )
                         {
-                        var format_group = g_formats_array[index];
-                        
-                        if ( in_format_id == format_group.formats[g_langs[0]].shared_id )
+                        if ( index == g_formats_array.length )
                             {
-                            format_group.formats = edited_format_group;
+                            g_formats_array[index] = new Object;
+                            g_formats_array[index].id = edited_format_group[g_langs[0]].shared_id;
+                            this.cancelCreateNewFormat();
+                            this.createFormatRow ( index, g_formats_array[index].id, edited_format_group, document.getElementById ( 'format_editor_table' ) );
+                            };
+                        
+                        if ( edited_format_group[g_langs[0]].shared_id == g_formats_array[index].id )
+                            {
+                            g_formats_array[index].formats = edited_format_group;
                             this.setWarningFaders();
                             BMLT_Admin_StartFader ( 'bmlt_admin_fader_format_editor_success_div', this.m_success_fade_duration );
                             
                             if ( in_format_id )
                                 {
                                 the_button.className += ' button_disabled';
-                                }
-                            else
-                                {
-                                this.cancelCreateNewFormat();
-                                this.createFormatRow ( 0, 0, null, document.getElementById ( 'format_editor_table' ) );
                                 };
                             
                             break;
@@ -4551,9 +4553,10 @@ function BMLT_Server_Admin ()
         
         for ( var index = 0; index < g_formats_array.length; index++ )
             {
-            if ( g_formats_array[index].shared_id > ret )
+            var format_group = g_formats_array[index];
+            if ( parseInt ( format_group.id, 10 ) > ret )
                 {
-                ret = g_formats_array[index].shared_id;
+                ret = parseInt ( format_group.id, 10 );
                 };
             };
         
