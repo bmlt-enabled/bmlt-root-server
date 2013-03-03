@@ -46,9 +46,11 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
-= Version 2.0 =
-* TBD
+= Version 2.0a0 =
+* March 3, 2013
 * Major rewrite of the administration system.
+* Simplified the administration, and got rid of all client-side root server HTML. All clients are now required to communicate with the root via semantic interfaces (JSON/XML/CSV).
+* The server administration is now heavily AJAX-based, and is now a completely interactive Web app.
 
 = Version 1.10.3
 * January 16, 2013
