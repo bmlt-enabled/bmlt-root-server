@@ -4552,6 +4552,7 @@ function BMLT_Server_Admin ()
                                 container_row.innerHTML = '';
                                 container_row.parentNode.removeChild ( container_row );
                                 };
+                            this.setWarningFaders();
                             g_formats_array.splice ( index, 1 );
                             BMLT_Admin_StartFader ( 'bmlt_admin_fader_format_editor_delete_success_div', this.m_success_fade_duration );
                             break;
