@@ -4450,7 +4450,7 @@ function BMLT_Server_Admin ()
                         
                         if ( edited_format_group[g_langs[0]].shared_id == g_formats_array[index].id )
                             {
-                            g_formats_array[index].formats = edited_format_group;
+                            g_formats_array[index].formats = JSON.parse ( JSON.stringify ( edited_format_group ) );
                             this.setWarningFaders();
                             BMLT_Admin_StartFader ( 'bmlt_admin_fader_format_editor_success_div', this.m_success_fade_duration );
                             
@@ -4510,7 +4510,9 @@ function BMLT_Server_Admin ()
         {
         var format_change_a = document.getElementById ( 'format_editor_change_' + in_format_id + '_a' );
         
-        format_change_a.className = 'bmlt_admin_ajax_button' + (this.isFormatDirty ( in_format_id ) ? '' : ' button_disabled');
+        var className = 'bmlt_admin_ajax_button' + (this.isFormatDirty ( in_format_id ) ? '' : ' button_disabled');
+        
+        format_change_a.className = className;
         };
 
     /************************************************************************************//**
