@@ -153,6 +153,7 @@ class c_comdef_server
             $this->_local_type_lang_enum = $comdef_global_language;
             
             $dh = opendir ( dirname ( __FILE__ ).'/config/lang/' );
+            $server_lang_names = array();
             
             if ( $dh )
                 {
@@ -161,19 +162,52 @@ class c_comdef_server
                     $file_path = dirname ( __FILE__ )."/config/lang/$enum/name.txt";
                     if ( file_exists ( $file_path ) )
                         {
-                        $this->_server_lang_names[$enum] = trim ( file_get_contents ( $file_path ) );
+                        $server_lang_names[$enum] = trim ( file_get_contents ( $file_path ) );
                         }
                     }
                     
                 closedir ( $dh );
                 }
             
+            uksort ( $server_lang_names, 'c_comdef_server::ServerLangSortCallback' );
+            
+            $this->_server_lang_names = $server_lang_names;
             $this->Initialize();
             }
         catch ( Exception $err )
             {
             throw ( $err );
             }
+    }
+    
+    /*******************************************************************/
+    /** \brief This is a callback to sort the server languages.
+               The default server language will always be first, and
+               the rest will be sorted alphabetically.
+        \returns an integer. -1 if goes before b, 1 if otherwise, 0 if neither.
+    */
+    static function ServerLangSortCallback( $in_lang_a,
+                                            $in_lang_b
+                                            )
+    {
+        $server_lang = c_comdef_server::GetServer()->GetLocalLang();
+        
+        $ret = 0;
+        
+        if ( $in_lang_a == $server_lang )
+            {
+            $ret = -1;
+            }
+        elseif ( $in_lang_b == $server_lang )
+            {
+            $ret = 1;
+            }
+        else
+            {
+            $ret = strncasecmp ( $in_lang_a, $in_lang_b );
+            }
+            
+        return $ret;
     }
     
     /*******************************************************************/

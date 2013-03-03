@@ -47,8 +47,9 @@ For instructions on installing the root server, see this page:
 CHANGELIST
 ----------
 = Version 2.0a2 =
-* TBD
+* March 3, 2013
 * Reduced the size of the text in the Service Body Editor Save button.
+* Sort the languages to ensure consistency, and that the native language of the server is always first.
 
 = Version 2.0a1 =
 * March 3, 2013

@@ -4116,8 +4116,6 @@ function BMLT_Server_Admin ()
         var format_line_tr = document.createElement ( 'tr' );
         format_line_tr.id = 'format_editor_line_' + in_format_id + '_tr';
         
-        var initial_className = 'format_editor_main_tr ';
-        
         var container_row = format_line_tr;
         var id_td = document.createElement ( 'td' );
         id_td.id = 'format_editor_id_' + in_format_id + '_td';
@@ -4154,18 +4152,17 @@ function BMLT_Server_Admin ()
             if ( c > 0 )
                 {
                 container_row = document.createElement ( 'tr' );
-                initial_className = '';
                 container_row.id = 'format_editor_' + lang_key + '_line_' + in_format_id + '_tr';
                 };
             
             container_row.format_group_objects = in_format_lang_group;
             if ( !in_format_id )
                 {
-                container_row.className = initial_className + ' new_format_line';
+                container_row.className = ' new_format_line';
                 }
             else
                 {
-                container_row.className = initial_className + 'format_editor_format_line_tr format_editor_format_line_' + ((in_index % 2) ? 'even' : 'odd') + '_tr';
+                container_row.className = 'format_editor_format_line_tr format_editor_format_line_' + ((in_index % 2) ? 'even' : 'odd') + '_tr';
                 };
             
             var format_lang_td = document.createElement ( 'td' );
@@ -4317,6 +4314,37 @@ function BMLT_Server_Admin ()
             };
 
     /************************************************************************************//**
+    *   \brief  This goes through all the formats in the list, and ensures they have the    *
+    *           proper styling to them.                                                     *
+    ****************************************************************************************/
+    this.restyleFormats = function()
+        {
+        for ( var index = 0; index < g_formats_array.length; index++ )
+            {
+            var format_group = g_formats_array[index];
+            var format_id = format_group.id;
+            for ( var c = 0; c < g_langs.length; c++ )
+                {
+                var lang_key = g_langs[c];
+                var format_row = null;
+                if ( c == 0 )
+                    {
+                    format_row = document.getElementById ( 'format_editor_line_' + format_id + '_tr' );
+                    }
+                else
+                    {
+                    format_row = document.getElementById ( 'format_editor_' + lang_key + '_line_' + format_id + '_tr' );
+                    };
+                    
+                if ( format_row )
+                    {
+                    format_row.className = 'format_editor_format_line_tr format_editor_format_line_' + ((index % 2) ? 'even' : 'odd') + '_tr';
+                    };
+                };
+            };
+        };
+
+    /************************************************************************************//**
     *   \brief  Opens a new format editor row..                                             *
     ****************************************************************************************/
     this.createFormatOpen = function()
@@ -4459,6 +4487,7 @@ function BMLT_Server_Admin ()
                                 the_button.className += ' button_disabled';
                                 };
                             
+                            this.restyleFormats();
                             break;
                             };
                         };
@@ -4555,6 +4584,7 @@ function BMLT_Server_Admin ()
                             this.setWarningFaders();
                             g_formats_array.splice ( index, 1 );
                             BMLT_Admin_StartFader ( 'bmlt_admin_fader_format_editor_delete_success_div', this.m_success_fade_duration );
+                            this.restyleFormats();
                             break;
                             };
                         };

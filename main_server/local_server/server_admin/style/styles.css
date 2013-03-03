@@ -1225,7 +1225,7 @@ td.format_editor_lang_td
     font-style:italic;
 }
 
-tr.format_editor_main_tr td.format_editor_buttons_td
+td.format_editor_buttons_td
 {
     text-align:center;
 }
