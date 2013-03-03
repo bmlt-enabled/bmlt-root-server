@@ -4147,6 +4147,7 @@ function BMLT_Server_Admin ()
                 {
                 container_row = document.createElement ( 'tr' );
                 initial_className = '';
+                container_row.id = 'format_editor_' + lang_key + '_line_' + in_format_id + '_tr';
                 };
             
             container_row.format_group_objects = in_format_lang_group;
@@ -4246,7 +4247,7 @@ function BMLT_Server_Admin ()
                     }
                 else
                     {
-                    format_change_a.appendChild ( document.createTextNode ( g_format_editor_create_this_format_button_text ) );
+                    format_change_a.innerHTML = g_format_editor_create_this_format_button_text;
                     format_change_a.href = 'javascript:admin_handler_object.createNewFormat()';
                     };
             
@@ -4317,7 +4318,13 @@ function BMLT_Server_Admin ()
         if ( !existing_new_format )
             {
             this.createFormatRow ( 0, 0, null, document.getElementById ( 'format_editor_table' ) );
-            create_button.className += ' button_disabled';
+            create_button.innerHTML = g_format_editor_cancel_create_format_button_text;
+            create_button.href = 'javascript:admin_handler_object.cancelCreateNewFormat()';
+            }
+        else
+            {
+            create_button.innerHTML = g_format_editor_create_format_button_text;
+            create_button.href = 'javascript:admin_handler_object.createFormatOpen()';
             };
         };
     
@@ -4326,6 +4333,33 @@ function BMLT_Server_Admin ()
     ****************************************************************************************/
     this.createNewFormat = function ()
         {
+        };
+    
+    /************************************************************************************//**
+    *   \brief  Creates a new format editor row..                                           *
+    ****************************************************************************************/
+    this.cancelCreateNewFormat = function ()
+        {
+        var existing_new_format = document.getElementById ( 'format_editor_line_0_tr' );
+        var create_button = document.getElementById ( 'format_editor_create_a' );
+
+        if ( document.getElementById ( 'format_editor_line_0_tr' ) )
+            {
+            existing_new_format.innerHTML = '';
+            existing_new_format.parentNode.removeChild ( existing_new_format );
+
+            for ( var c = 1; c < g_langs.length; c++ )
+                {
+                var lang_key = g_langs[c];
+                var container_row = document.getElementById ( 'format_editor_' + lang_key + '_line_0_tr' );
+            
+                container_row.innerHTML = '';
+                container_row.parentNode.removeChild ( container_row );
+                };
+            
+            create_button.innerHTML = g_format_editor_create_format_button_text;
+            create_button.href = 'javascript:admin_handler_object.createFormatOpen()';
+            };
         };
 
     /************************************************************************************//**

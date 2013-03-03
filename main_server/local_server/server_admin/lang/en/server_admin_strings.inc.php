@@ -255,6 +255,7 @@
 	                                        'format_editor_name_default_text'                       =>  'Enter A Very Short Description',
 	                                        'format_editor_description_default_text'                =>  'Enter A More Detailed Description',
 	                                        'format_editor_create_format_button_text'               =>  'Create New Format',
+	                                        'format_editor_cancel_create_format_button_text'        =>  'Cancel',
 	                                        'format_editor_create_this_format_button_text'          =>  'Create This Format',
 	                                        'format_editor_change_format_button_text'               =>  'Change This Format',
 	                                        'format_editor_delete_format_button_text'               =>  'Delete This Format',
