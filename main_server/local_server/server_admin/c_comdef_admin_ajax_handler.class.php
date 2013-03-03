@@ -172,48 +172,74 @@ class c_comdef_admin_ajax_handler
     {
         $json_tool = new PhpJsonXmlArrayStringInterchanger;
     
-        $the_changed_formats = $json_tool->convertJsonToArray ( $in_new_format_data, true );
+        $the_processed_formats = $json_tool->convertJsonToArray ( $in_new_format_data, true );
+        
+        $the_changed_formats = array();
+        foreach ( $the_processed_formats as $the_format )
+            {
+            if ( trim ( $the_format['key'] ) || trim ( $the_format['name'] ) || trim ( $the_format['description'] ) )
+                {
+                $the_changed_formats[$the_format['lang_key']] = $the_format;
+                }
+            }
         
         $the_objects_to_be_changed = array();
         
         $ret_data = '';
         $shared_id = '';
+        $format_type = 'FC1';
         
+        // The first thing that we do, is go through the incoming data, and make sure that we create or modify c_comdef_format objects to match the input.
         foreach ( $the_changed_formats as $format_data )
             {
-            if ( !$shared_id )
+            if ( $format_data )
                 {
-                $shared_id = $format_data['shared_id'];
-                }
-            else
-                {
-                if ( $shared_id != $format_data['shared_id'] )  // This should never happen.
+                if ( !$shared_id )
                     {
-                    $the_objects_to_be_changed = null;
-                    break;
+                    $shared_id = intval ( $format_data['shared_id'] );
+                    $format_type = $format_data['type'];
                     }
-                }
+                else
+                    {
+                    if ( $shared_id != intval ( $format_data['shared_id'] ) )  // This should never happen.
+                        {
+                        $the_objects_to_be_changed = null;
+                        break;
+                        }
+                    }
             
-            $lang_key = $format_data['lang_key'];
+                $lang_key = $format_data['lang_key'];
         
-            $server_format = $this->my_server->GetOneFormat ( $format_data['shared_id'], $format_data['lang_key'] );
+                $server_format = null;
+                
+                if ( $format_data['shared_id'] )
+                    {
+                    $this->my_server->GetOneFormat ( $format_data['shared_id'], $format_data['lang_key'] );
+                    }
         
-            if ( $server_format instanceof c_comdef_format )
-                {
-                $server_format->SetKey ( $format_data['key'] );
-                $server_format->SetLocalName ( $format_data['name'] );
-                $server_format->SetLocalDescription ( $format_data['description'] );
+                if ( !($server_format instanceof c_comdef_format) )
+                    {
+                    $parent = null;
+                    $server_format = new c_comdef_format ( $parent, $format_data['shared_id'], $format_type, $format_data['key'], null, null, $format_data['lang_key'], $format_data['name'], $format_data['description'] );
+                    }
+                else
+                    {
+                    $server_format->SetKey ( $format_data['key'] );
+                    $server_format->SetLocalName ( $format_data['name'] );
+                    $server_format->SetLocalDescription ( $format_data['description'] );
+                    }
+                
                 array_push ( $the_objects_to_be_changed, $server_format );
-                }
-            else
-                {
-                $the_objects_to_be_changed = null;
-                break;
                 }
             }
         
+        $the_changed_objects = array();
+        
         if ( $the_objects_to_be_changed && is_array ( $the_objects_to_be_changed ) && count ( $the_objects_to_be_changed ) )
             {
+            $new_shared_id = 0;
+            $langs = $this->my_server->GetServerLangs();
+
             foreach ( $the_objects_to_be_changed as $one_format )
                 {
                 if ( !(($one_format instanceof c_comdef_format) && $one_format->UpdateToDB()) )
@@ -221,6 +247,36 @@ class c_comdef_admin_ajax_handler
                     $the_objects_to_be_changed = null;
                     $ret_data = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['format_change_fader_change_fail_text'] );
                     break;
+                    }
+                
+                if ( !$one_format->GetSharedID() )
+                    {
+                    $one_format->SetSharedID( $new_shared_id );
+                    }
+                
+                $saved_format_object = array (
+                                            'shared_id' => $one_format->GetSharedID(),
+                                            'lang_key' => $one_format->GetLocalLang(),
+                                            'lang_name' => $langs[$one_format->GetLocalLang()],
+                                            'key' => $one_format->GetKey(),
+                                            'name' => $one_format->GetLocalName(),
+                                            'description' => $one_format->GetLocalDescription(),
+                                            'type' => $one_format->GetFormatType()
+                                            );
+                
+                $new_shared_id = $saved_format_object['shared_id'];
+                
+                $the_changed_objects[$one_format->GetLocalLang()] = $saved_format_object;
+                }
+                
+            // Now, we go through the server's formats, and delete any that aren't reflected in the incoming data.        
+            foreach ( $langs as $lang_key => $lang_name )
+                {
+                $server_format = $this->my_server->GetOneFormat ( $shared_id, $lang_key );
+                
+                if ( $server_format && !$the_changed_formats[$lang_key] )
+                    {
+                    $server_format->DeleteFromDB();
                     }
                 }
             }
@@ -236,7 +292,7 @@ class c_comdef_admin_ajax_handler
             }
         else
             {
-            echo "{'success':true,'report':'$shared_id'}";
+            echo "{'success':true,'report':".array2json($the_changed_objects)."}";
             }
     }
     

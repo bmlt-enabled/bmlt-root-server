@@ -4133,12 +4133,19 @@ function BMLT_Server_Admin ()
             if ( !format )
                 {
                 format = new Object;
-                format.id = in_format_id;
+                format.shared_id = in_format_id;
                 format.lang_key = lang_key;
                 format.lang_name = g_lang_names[lang_key];
                 format.key = '';
                 format.name = '';
                 format.description = '';
+                
+                if ( !in_format_lang_group )
+                    {
+                    in_format_lang_group = new Object;
+                    };
+                
+                in_format_lang_group[lang_key] = format;
                 };
             
             var unique_id =  in_format_id + '_' + lang_key;
@@ -4243,14 +4250,14 @@ function BMLT_Server_Admin ()
                 if ( in_format_id )
                     {
                     format_change_a.appendChild ( document.createTextNode ( g_format_editor_change_format_button_text ) );
-                    format_change_a.href = 'javascript:admin_handler_object.saveFormat(' + in_format_id + ')';
                     }
                 else
                     {
                     format_change_a.innerHTML = g_format_editor_create_this_format_button_text;
-                    format_change_a.href = 'javascript:admin_handler_object.createNewFormat()';
                     };
             
+                format_change_a.href = 'javascript:admin_handler_object.saveFormat(' + in_format_id + ')';
+
                 format_change_div.appendChild ( format_change_a );
                 
                 var new_throbber_span = document.createElement ( 'span' );
@@ -4292,9 +4299,11 @@ function BMLT_Server_Admin ()
                 container_row.appendChild ( format_buttons_td );
                 };
             
-            if ( !in_format_id )
+            var create_line = document.getElementById ( 'format_create_line_tr' );
+            
+            if ( create_line )
                 {
-                in_container_table.insertBefore ( container_row, document.getElementById ( 'format_create_line_tr' ) );
+                in_container_table.insertBefore ( container_row, create_line );
                 }
             else
                 {
@@ -4331,13 +4340,6 @@ function BMLT_Server_Admin ()
     /************************************************************************************//**
     *   \brief  Creates a new format editor row..                                           *
     ****************************************************************************************/
-    this.createNewFormat = function ()
-        {
-        };
-    
-    /************************************************************************************//**
-    *   \brief  Creates a new format editor row..                                           *
-    ****************************************************************************************/
     this.cancelCreateNewFormat = function ()
         {
         var existing_new_format = document.getElementById ( 'format_editor_line_0_tr' );
@@ -4345,10 +4347,10 @@ function BMLT_Server_Admin ()
 
         if ( document.getElementById ( 'format_editor_line_0_tr' ) )
             {
-            existing_new_format.innerHTML = '';
+            existing_new_format.innerHTML = ''; // The first line is for the first language.
             existing_new_format.parentNode.removeChild ( existing_new_format );
 
-            for ( var c = 1; c < g_langs.length; c++ )
+            for ( var c = 1; c < g_langs.length; c++ )  // The format section is actually multiple lines; one for each language.
                 {
                 var lang_key = g_langs[c];
                 var container_row = document.getElementById ( 'format_editor_' + lang_key + '_line_0_tr' );
@@ -4373,6 +4375,18 @@ function BMLT_Server_Admin ()
         if ( this.isFormatDirty ( in_format_id ) )
             {
             var edited_format_group = the_button.format_group_objects;    // We fetch the format from the button.
+            
+            var new_id = in_format_id;
+            
+            if ( !new_id )
+                {
+                var new_id = this.getNextFormatID();
+                for ( var c = 1; c < g_langs.length; c++ )
+                    {
+                    edited_format_group[g_langs[c]].shared_id = new_id;
+                    };
+                };
+
             var json_to_send_to_server = JSON.stringify ( edited_format_group );    // We will be sending as a JSON object.
             var throbber_span = document.getElementById ( 'format_editor_change_' + in_format_id + '_throbber_span' );
             the_button.className = 'item_hidden';
@@ -4422,15 +4436,27 @@ function BMLT_Server_Admin ()
                     }
                 else
                     {
+                    edited_format_group = json_object.report;
                     for ( var index = 0; index < g_formats_array.length; index++ )
                         {
                         var format_group = g_formats_array[index];
-                        if ( in_format_id == in_format_id )
+                        
+                        if ( in_format_id == format_group.formats[g_langs[0]].shared_id )
                             {
                             format_group.formats = edited_format_group;
                             this.setWarningFaders();
                             BMLT_Admin_StartFader ( 'bmlt_admin_fader_format_editor_success_div', this.m_success_fade_duration );
-                            the_button.className += ' button_disabled';
+                            
+                            if ( in_format_id )
+                                {
+                                the_button.className += ' button_disabled';
+                                }
+                            else
+                                {
+                                this.cancelCreateNewFormat();
+                                this.createFormatRow ( 0, 0, null, document.getElementById ( 'format_editor_table' ) );
+                                };
+                            
                             break;
                             };
                         };
@@ -4513,6 +4539,25 @@ function BMLT_Server_Admin ()
         var new_strin = JSON.stringify ( edited_format_group_object );
         
         return ( original_strin != new_strin );
+        };
+
+    /************************************************************************************//**
+    *   \brief  This will return a new format ID that comes after all the available ones.   *
+    *   \returns an integer, containing the next format ID.                                 *
+    ****************************************************************************************/
+    this.getNextFormatID = function ()
+        {
+        var ret = 0;
+        
+        for ( var index = 0; index < g_formats_array.length; index++ )
+            {
+            if ( g_formats_array[index].shared_id > ret )
+                {
+                ret = g_formats_array[index].shared_id;
+                };
+            };
+        
+        return ( ret + 1 );
         };
     };
     
