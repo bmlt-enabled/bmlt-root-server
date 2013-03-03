@@ -694,7 +694,7 @@ function BMLT_Server_Admin ()
     
     
     /************************************************************************************//**
-    *	\brief Clears any previous search results.                                          *
+    *   \brief Clears any previous search results.                                          *
     ****************************************************************************************/
     this.clearSearchResults = function ()
     {
@@ -714,7 +714,7 @@ function BMLT_Server_Admin ()
     };
 
     /************************************************************************************//**
-    *	\brief This function constructs a URI to the root server that reflects the search   *
+    *   \brief This function constructs a URI to the root server that reflects the search   *
     *          parameters, as specified by the search specification section.                *
     *   \returns a string, containing the complete URI.                                     *
     ****************************************************************************************/
@@ -823,18 +823,18 @@ function BMLT_Server_Admin ()
         
         return uri;
     };
-	
-	/************************************************************************************//**
-	*	\brief  Does an AJAX call for a JSON response, based on the given criteria and      *
-	*           callback function.                                                          *
-	*           The callback will be a function in the following format:                    *
-	*               function ajax_callback ( in_json_obj )                                  *
-	*           where "in_json_obj" is the response, converted to a JSON object.            *
-	*           it will be null if the function failed.                                     *
-	****************************************************************************************/
-	this.callRootServerForMeetingSearch = function (in_uri  ///< The URI to call (with all the parameters).
-	                                                )
-	{
+    
+    /************************************************************************************//**
+    *   \brief  Does an AJAX call for a JSON response, based on the given criteria and      *
+    *           callback function.                                                          *
+    *           The callback will be a function in the following format:                    *
+    *               function ajax_callback ( in_json_obj )                                  *
+    *           where "in_json_obj" is the response, converted to a JSON object.            *
+    *           it will be null if the function failed.                                     *
+    ****************************************************************************************/
+    this.callRootServerForMeetingSearch = function (in_uri  ///< The URI to call (with all the parameters).
+                                                    )
+    {
         if ( this.m_ajax_request_in_progress )
             {
             this.m_ajax_request_in_progress.abort();
@@ -845,10 +845,10 @@ function BMLT_Server_Admin ()
         in_uri += '&salt=' + salt.getTime();
         
         this.m_ajax_request_in_progress = BMLT_AjaxRequest ( in_uri, function(in_req) { admin_handler_object.meetingSearchResultsCallback(in_req); }, 'post' );
-	};
+    };
     
     /************************************************************************************//**
-    *	\brief This is the meeting search results callback.                                 *
+    *   \brief This is the meeting search results callback.                                 *
     ****************************************************************************************/
     this.meetingSearchResultsCallback = function (  in_response_object  ///< The HTTPRequest response object.
                                                 )
@@ -884,7 +884,7 @@ function BMLT_Server_Admin ()
     };
     
     /************************************************************************************//**
-    *	\brief This creates the meeting search results.                                     *
+    *   \brief This creates the meeting search results.                                     *
     ****************************************************************************************/
     this.processSearchResults = function( in_search_results_json_object ///< The search results, as a JSON object.
                                         )
@@ -897,7 +897,7 @@ function BMLT_Server_Admin ()
     };
     
     /************************************************************************************//**
-    *	\brief This creates the DOM tree of the meeting list.
+    *   \brief This creates the DOM tree of the meeting list.
     ****************************************************************************************/
     this.createMeetingList = function()
     {
@@ -950,7 +950,7 @@ function BMLT_Server_Admin ()
     };
     
     /************************************************************************************//**
-    *	\brief Sorts the search results by weekday, then time.
+    *   \brief Sorts the search results by weekday, then time.
     ****************************************************************************************/
     this.sortSearchResultsCallback = function(  in_object_a,
                                                 in_object_b
@@ -978,7 +978,7 @@ function BMLT_Server_Admin ()
     };
     
     /************************************************************************************//**
-    *	\brief 
+    *   \brief 
     ****************************************************************************************/
     this.createOneMeetingNode = function(   in_single_meeting_div,  ///< The containing div element.
                                             in_meeting_object       ///< The meeting object.
@@ -2432,7 +2432,7 @@ function BMLT_Server_Admin ()
     };
 
     /************************************************************************************//**
-    *	\brief This displays the "Your Position" marker in the results map.                 *
+    *   \brief This displays the "Your Position" marker in the results map.                 *
     ****************************************************************************************/
     this.displayMainMarkerInMap = function (    in_meeting_id   ///< The meeting this map is associated with.
                                             )
@@ -2452,11 +2452,11 @@ function BMLT_Server_Admin ()
 
             root_element.main_map.main_marker = new google.maps.Marker ({
                                                                         'position':     root_element.main_map.getCenter(),
-                                                                        'map':		    root_element.main_map,
-                                                                        'icon':		    m_icon_image,
-                                                                        'shadow':		m_icon_shadow,
-                                                                        'clickable':	false,
-                                                                        'cursor':		'pointer',
+                                                                        'map':          root_element.main_map,
+                                                                        'icon':         m_icon_image,
+                                                                        'shadow':       m_icon_shadow,
+                                                                        'clickable':    false,
+                                                                        'cursor':       'pointer',
                                                                         'draggable':    true
                                                                         } );
             google.maps.event.addListener ( root_element.main_map.main_marker, 'dragend', function(in_event) { admin_handler_object.respondToMarkerDragEnd( in_event, in_meeting_id ); } );
@@ -4483,14 +4483,94 @@ function BMLT_Server_Admin ()
     this.deleteFormat = function (  in_format_id    ///< The shared ID of the format.
                                 )
         {
-        var the_button = document.getElementById ( 'format_editor_delete_' + in_format_id + '_a' );
-        var the_format_group = the_button.format_group_objects;   // We fetch the format from the button.
+        if ( confirm ( g_format_editor_delete_button_confirm ) )
+            {
+            var the_button = document.getElementById ( 'format_editor_delete_' + in_format_id + '_a' );
+            var the_format_group = the_button.format_group_objects;   // We fetch the format from the button.
+            var format_line_tr = document.getElementById ( 'format_editor_line_' + in_format_id + '_tr' );
 
-        var throbber_span = document.getElementById ( 'format_editor_delete_' + in_format_id + '_throbber_span' );
-        the_button.className = 'item_hidden';
-        throbber_span.className = 'bmlt_admin_general_ajax_button_throbber_div';
+            var throbber_span = document.getElementById ( 'format_editor_delete_' + in_format_id + '_throbber_span' );
+            the_button.className = 'item_hidden';
+            throbber_span.className = 'bmlt_admin_general_ajax_button_throbber_div';
+            
+            var uri = g_ajax_callback_uri + '&delete_format=' + in_format_id;
+
+            if ( format_line_tr.m_ajax_request_in_progress )
+                {
+                format_line_tr.m_ajax_request_in_progress.abort();
+                format_line_tr.m_ajax_request_in_progress = null;
+                };
+    
+            var salt = new Date();
+            uri += '&salt=' + salt.getTime();
+
+            format_line_tr.m_ajax_request_in_progress = BMLT_AjaxRequest ( uri, function(in_req,id) { admin_handler_object.deleteFormatAJAXCallback(in_req,id); }, 'post', in_format_id );
+            };
         };
 
+    /************************************************************************************//**
+    *   \brief  AJAX callback for the save operation.                                       *
+    ****************************************************************************************/
+    this.deleteFormatAJAXCallback = function (  in_http_request,    ///< The HTTPRequest object
+                                                in_format_id        ///< The format being deleted.
+                                                )
+    {
+        var the_button = document.getElementById ( 'format_editor_delete_' + in_format_id + '_a' );
+        var throbber_span = document.getElementById ( 'format_editor_delete_' + in_format_id + '_throbber_span' );
+        throbber_span.className = 'item_hidden';
+        the_button.className = 'bmlt_admin_ajax_button';
+
+        if ( in_http_request.responseText )
+            {
+            eval ( 'var json_object = ' + in_http_request.responseText + ';' );
+            
+            if ( json_object )
+                {
+                if ( !json_object.success )
+                    {
+                    alert ( json_object.report );
+                    BMLT_Admin_StartFader ( 'bmlt_admin_fader_format_editor_delete_fail_div', this.m_failure_fade_duration );
+                    }
+                else
+                    {
+                    var the_id = parseInt ( json_object.report, 10 );
+                    
+                    for ( var index = 0; index < g_formats_array.length; index++ )
+                        {
+                        if ( parseInt ( g_formats_array[index].id, 10 ) == the_id )
+                            {
+                            var container_row = document.getElementById ( 'format_editor_line_' + the_id + '_tr' );
+        
+                            container_row.innerHTML = '';
+                            container_row.parentNode.removeChild ( container_row );
+
+                            for ( var c = 1; c < g_langs.length; c++ )  // The format section is actually multiple lines; one for each language.
+                                {
+                                var lang_key = g_langs[c];
+                                container_row = document.getElementById ( 'format_editor_' + lang_key + '_line_' + the_id + '_tr' );
+            
+                                container_row.innerHTML = '';
+                                container_row.parentNode.removeChild ( container_row );
+                                };
+                            g_formats_array.splice ( index, 1 );
+                            BMLT_Admin_StartFader ( 'bmlt_admin_fader_format_editor_delete_success_div', this.m_success_fade_duration );
+                            break;
+                            };
+                        };
+                    
+                    if ( index == g_formats_array.length )
+                        {
+                        BMLT_Admin_StartFader ( 'bmlt_admin_fader_format_editor_delete_fail_div', this.m_failure_fade_duration );
+                        };
+                    };
+                };
+            }
+        else
+            {
+            BMLT_Admin_StartFader ( 'bmlt_admin_fader_format_editor_delete_fail_div', this.m_failure_fade_duration );
+            };
+    };
+    
     /************************************************************************************//**
     *   \brief  Handle data input from the text items.                                      *
     ****************************************************************************************/

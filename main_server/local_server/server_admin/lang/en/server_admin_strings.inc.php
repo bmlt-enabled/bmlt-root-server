@@ -263,5 +263,7 @@
 	                                        'format_editor_create_format_button_text'               =>  'Create A New Format',
 	                                        'need_refresh_message_fader_text'                       =>  'You Should Refresh This Page Before Using This Section',
 	                                        'need_refresh_message_alert_text'                       =>  'Becaue you have made changes in the Service Body Administration, User Administration or Format Administration, the information displayed in this section may no longer be accurate, so the page needs to be refreshed. The easiest way to do this, is to Sign Out, then Log In again.',
+	                                        'format_editor_delete_button_confirm'                   =>  'Are you sure that you want to delete this format?',
+	                                        'format_editor_delete_button_confirm_perm'              =>  'This format will be deleted permanently!',
 	                                    );
 ?>

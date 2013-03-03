@@ -17,7 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with this code.  If not, see <http://www.gnu.org/licenses/>.
 */
-defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
+defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );    // Makes sure that this file is in the correct context.
 require_once ( dirname ( __FILE__ ).'/../../server/c_comdef_server.class.php');
 require_once ( dirname ( __FILE__ ).'/../../server/shared/classes/comdef_utilityclasses.inc.php');
 require_once ( dirname ( __FILE__ ).'/../../server/shared/Array2Json.php');
@@ -165,157 +165,194 @@ class c_comdef_admin_ajax_handler
 
     /*******************************************************************/
     /**
-        \brief	
-    */	
+        \brief  
+    */  
     function HandleFormatChange (   $in_new_format_data     ///< A JSON string with the new format data.
                                 )
     {
-        $json_tool = new PhpJsonXmlArrayStringInterchanger;
+        if ( c_comdef_server::IsUserServerAdmin(null,true) )
+            {
+            $json_tool = new PhpJsonXmlArrayStringInterchanger;
     
-        $the_processed_formats = $json_tool->convertJsonToArray ( $in_new_format_data, true );
+            $the_processed_formats = $json_tool->convertJsonToArray ( $in_new_format_data, true );
         
-        $the_changed_formats = array();
-        foreach ( $the_processed_formats as $the_format )
-            {
-            if ( trim ( $the_format['key'] ) || trim ( $the_format['name'] ) || trim ( $the_format['description'] ) )
+            $the_changed_formats = array();
+            foreach ( $the_processed_formats as $the_format )
                 {
-                $the_changed_formats[$the_format['lang_key']] = $the_format;
-                }
-            }
-        
-        $the_objects_to_be_changed = array();
-        
-        $ret_data = '';
-        $shared_id = '';
-        $format_type = 'FC1';
-        
-        // The first thing that we do, is go through the incoming data, and make sure that we create or modify c_comdef_format objects to match the input.
-        foreach ( $the_changed_formats as $format_data )
-            {
-            if ( $format_data )
-                {
-                if ( !$shared_id )
+                if ( trim ( $the_format['key'] ) || trim ( $the_format['name'] ) || trim ( $the_format['description'] ) )
                     {
-                    $shared_id = intval ( $format_data['shared_id'] );
-                    $format_type = $format_data['type'];
+                    $the_changed_formats[$the_format['lang_key']] = $the_format;
                     }
-                else
+                }
+        
+            $the_objects_to_be_changed = array();
+        
+            $ret_data = '';
+            $shared_id = '';
+            $format_type = 'FC1';
+        
+            // The first thing that we do, is go through the incoming data, and make sure that we create or modify c_comdef_format objects to match the input.
+            foreach ( $the_changed_formats as $format_data )
+                {
+                if ( $format_data )
                     {
-                    if ( $shared_id != intval ( $format_data['shared_id'] ) )  // This should never happen.
+                    if ( !$shared_id )
+                        {
+                        $shared_id = intval ( $format_data['shared_id'] );
+                        $format_type = $format_data['type'];
+                        }
+                    else
+                        {
+                        if ( $shared_id != intval ( $format_data['shared_id'] ) )  // This should never happen.
+                            {
+                            $the_objects_to_be_changed = null;
+                            break;
+                            }
+                        }
+            
+                    $lang_key = $format_data['lang_key'];
+        
+                    $server_format = null;
+                
+                    if ( $format_data['shared_id'] )
+                        {
+                        $this->my_server->GetOneFormat ( $format_data['shared_id'], $format_data['lang_key'] );
+                        }
+        
+                    if ( !($server_format instanceof c_comdef_format) )
+                        {
+                        $parent = null;
+                        $server_format = new c_comdef_format ( $parent, $format_data['shared_id'], $format_type, $format_data['key'], null, null, $format_data['lang_key'], $format_data['name'], $format_data['description'] );
+                        }
+                    else
+                        {
+                        $server_format->SetKey ( $format_data['key'] );
+                        $server_format->SetLocalName ( $format_data['name'] );
+                        $server_format->SetLocalDescription ( $format_data['description'] );
+                        }
+                
+                    array_push ( $the_objects_to_be_changed, $server_format );
+                    }
+                }
+        
+            $the_changed_objects = array();
+        
+            if ( $the_objects_to_be_changed && is_array ( $the_objects_to_be_changed ) && count ( $the_objects_to_be_changed ) )
+                {
+                $new_shared_id = 0;
+                $langs = $this->my_server->GetServerLangs();
+
+                foreach ( $the_objects_to_be_changed as $one_format )
+                    {
+                    if ( !(($one_format instanceof c_comdef_format) && $one_format->UpdateToDB()) )
                         {
                         $the_objects_to_be_changed = null;
+                        $ret_data = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['format_change_fader_change_fail_text'] );
                         break;
                         }
-                    }
-            
-                $lang_key = $format_data['lang_key'];
-        
-                $server_format = null;
                 
-                if ( $format_data['shared_id'] )
-                    {
-                    $this->my_server->GetOneFormat ( $format_data['shared_id'], $format_data['lang_key'] );
-                    }
-        
-                if ( !($server_format instanceof c_comdef_format) )
-                    {
-                    $parent = null;
-                    $server_format = new c_comdef_format ( $parent, $format_data['shared_id'], $format_type, $format_data['key'], null, null, $format_data['lang_key'], $format_data['name'], $format_data['description'] );
-                    }
-                else
-                    {
-                    $server_format->SetKey ( $format_data['key'] );
-                    $server_format->SetLocalName ( $format_data['name'] );
-                    $server_format->SetLocalDescription ( $format_data['description'] );
+                    if ( !$one_format->GetSharedID() )
+                        {
+                        $one_format->SetSharedID( $new_shared_id );
+                        }
+                
+                    $saved_format_object = array (
+                                                'shared_id' => $one_format->GetSharedID(),
+                                                'lang_key' => $one_format->GetLocalLang(),
+                                                'lang_name' => $langs[$one_format->GetLocalLang()],
+                                                'key' => $one_format->GetKey(),
+                                                'name' => $one_format->GetLocalName(),
+                                                'description' => $one_format->GetLocalDescription(),
+                                                'type' => $one_format->GetFormatType()
+                                                );
+                
+                    $new_shared_id = $saved_format_object['shared_id'];
+                
+                    $the_changed_objects[$one_format->GetLocalLang()] = $saved_format_object;
                     }
                 
-                array_push ( $the_objects_to_be_changed, $server_format );
+                // Now, we go through the server's formats, and delete any that aren't reflected in the incoming data.        
+                foreach ( $langs as $lang_key => $lang_name )
+                    {
+                    $server_format = $this->my_server->GetOneFormat ( $shared_id, $lang_key );
+                
+                    if ( $server_format && !$the_changed_formats[$lang_key] )
+                        {
+                        $server_format->DeleteFromDB();
+                        }
+                    }
+                }
+            else
+                {
+                $ret_data = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['format_change_fader_change_fail_text'] );
+                }
+        
+            header ( 'Content-type: application/json' );
+            if ( $ret_data )
+                {
+                echo "{'success':false,'report':'$ret_data'}";
+                }
+            else
+                {
+                echo "{'success':true,'report':".array2json($the_changed_objects)."}";
                 }
             }
-        
-        $the_changed_objects = array();
-        
-        if ( $the_objects_to_be_changed && is_array ( $the_objects_to_be_changed ) && count ( $the_objects_to_be_changed ) )
+        else
             {
-            $new_shared_id = 0;
+            echo 'NOT AUTHORIZED';
+            }
+    }
+    
+    /*******************************************************************/
+    /**
+        \brief  
+    */  
+    function HandleDeleteFormat (   $in_format_shared_id    ///< The shared ID of the formats to delete.
+                                )
+    {
+        if ( c_comdef_server::IsUserServerAdmin(null,true) )
+            {
+            $ret_data = '';
+            
             $langs = $this->my_server->GetServerLangs();
 
-            foreach ( $the_objects_to_be_changed as $one_format )
-                {
-                if ( !(($one_format instanceof c_comdef_format) && $one_format->UpdateToDB()) )
-                    {
-                    $the_objects_to_be_changed = null;
-                    $ret_data = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['format_change_fader_change_fail_text'] );
-                    break;
-                    }
-                
-                if ( !$one_format->GetSharedID() )
-                    {
-                    $one_format->SetSharedID( $new_shared_id );
-                    }
-                
-                $saved_format_object = array (
-                                            'shared_id' => $one_format->GetSharedID(),
-                                            'lang_key' => $one_format->GetLocalLang(),
-                                            'lang_name' => $langs[$one_format->GetLocalLang()],
-                                            'key' => $one_format->GetKey(),
-                                            'name' => $one_format->GetLocalName(),
-                                            'description' => $one_format->GetLocalDescription(),
-                                            'type' => $one_format->GetFormatType()
-                                            );
-                
-                $new_shared_id = $saved_format_object['shared_id'];
-                
-                $the_changed_objects[$one_format->GetLocalLang()] = $saved_format_object;
-                }
-                
-            // Now, we go through the server's formats, and delete any that aren't reflected in the incoming data.        
             foreach ( $langs as $lang_key => $lang_name )
                 {
-                $server_format = $this->my_server->GetOneFormat ( $shared_id, $lang_key );
-                
-                if ( $server_format && !$the_changed_formats[$lang_key] )
+                $server_format = $this->my_server->GetOneFormat ( $in_format_shared_id, $lang_key );
+            
+                if ( $server_format instanceof c_comdef_format )
                     {
                     $server_format->DeleteFromDB();
                     }
                 }
+
+            header ( 'Content-type: application/json' );
+            if ( $ret_data )
+                {
+                echo "{'success':false,'report':'$ret_data'}";
+                }
+            else
+                {
+                echo "{'success':true,'report':$in_format_shared_id}";
+                }
             }
         else
             {
-            $ret_data = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['format_change_fader_change_fail_text'] );
-            }
-        
-        header ( 'Content-type: application/json' );
-        if ( $ret_data )
-            {
-            echo "{'success':false,'report':'$ret_data'}";
-            }
-        else
-            {
-            echo "{'success':true,'report':".array2json($the_changed_objects)."}";
+            echo 'NOT AUTHORIZED';
             }
     }
     
     /*******************************************************************/
     /**
-        \brief	
-    */	
-    function HandleDeleteFormat (   $in_format_shared_id    ///< The shared ID of the formats to delete.
-                                )
-    {
-    }
-    
-    /*******************************************************************/
-    /**
-        \brief	
-    */	
+        \brief  
+    */  
     function HandleNawsDump ( $in_sb_id ///< The ID of the Service Body to dump
                             )
     {
-		$sb = $this->my_server->GetServiceBodyByIDObj ( $in_sb_id );
-		
-		if ( $sb )
-		    {
+        $sb = $this->my_server->GetServiceBodyByIDObj ( $in_sb_id );
+        
+        if ( $sb )
+            {
             $service_bodies = array ( 'services' => c_comdef_server::GetServiceBodyHierarchyIDs ( $in_sb_id ) );
             include ( dirname ( __FILE__ ).'/../../client_interface/csv/csv.php' );
                 
@@ -349,8 +386,8 @@ class c_comdef_admin_ajax_handler
     
     /*******************************************************************/
     /**
-        \brief	
-    */	
+        \brief  
+    */  
     function HandleUserCreate ( $in_user_data   ///< A JSON object, containing the new User data.
                                 )
     {
@@ -421,8 +458,8 @@ class c_comdef_admin_ajax_handler
     
     /*******************************************************************/
     /**
-        \brief	
-    */	
+        \brief  
+    */  
     function HandleUserChange ( $in_user_data   ///< A JSON object, containing the new User data.
                                 )
     {
@@ -491,8 +528,8 @@ class c_comdef_admin_ajax_handler
     
     /*******************************************************************/
     /**
-        \brief	
-    */	
+        \brief  
+    */  
     function HandleDeleteUser ( $in_user_id,    ///< The ID of the user to be deleted.
                                 $in_delete_permanently = false
                                 )
@@ -567,8 +604,8 @@ class c_comdef_admin_ajax_handler
 
     /*******************************************************************/
     /**
-        \brief	This handles updating an existing Service body.
-    */	
+        \brief  This handles updating an existing Service body.
+    */  
     function HandleServiceBodyChange (  $in_service_body_data    ///< A JSON object, containing the new Service Body data.
                                         )
     {
@@ -634,8 +671,8 @@ class c_comdef_admin_ajax_handler
 
     /*******************************************************************/
     /**
-        \brief	This handles creating a new Service body.
-    */	
+        \brief  This handles creating a new Service body.
+    */  
     function HandleServiceBodyCreate (  $in_service_body_data    ///< A JSON object, containing the new Service Body data.
                                         )
     {
@@ -709,7 +746,7 @@ class c_comdef_admin_ajax_handler
     /*******************************************************************/
     /**
         \brief
-    */	
+    */  
     function HandleDeleteServiceBody (  $in_sb_id,
                                         $in_delete_permanently = false
                                     )
@@ -761,7 +798,7 @@ class c_comdef_admin_ajax_handler
     /*******************************************************************/
     /**
     */
-    function DeleteServiceBodyChanges (	$in_sb_id
+    function DeleteServiceBodyChanges ( $in_sb_id
                                         )
     {
         if ( c_comdef_server::IsUserServerAdmin(null,true) )
@@ -786,7 +823,7 @@ class c_comdef_admin_ajax_handler
     /*******************************************************************/
     /**
         \brief
-    */	
+    */  
     function GetMeetingHistory (    $in_meeting_id
                                 )
     {
@@ -837,58 +874,58 @@ class c_comdef_admin_ajax_handler
     /*******************************************************************/
     /**
         \brief
-    */	
+    */  
     function HandleDeleteMeeting (  $in_meeting_id,
                                     $in_delete_permanently = false
                                     )
     {
-		try
-			{
-			$meeting =& $this->my_server->GetOneMeeting($in_meeting_id);
-			
-			if ( $meeting instanceof c_comdef_meeting )
-				{
-				if ( $meeting->UserCanEdit() )
-					{
-					if ( $meeting->DeleteFromDB() )
-						{
-						if ( $in_delete_permanently )
-						    {
-						    $this->DeleteMeetingChanges ( $in_meeting_id );
-						    }
-						
-	                    header ( 'Content-type: application/json' );
-						echo "{'success':true,'report':'$in_meeting_id'}";
-						}
-					else
-						{
-	                    header ( 'Content-type: application/json' );
-						echo "{'success':false,'report':'$in_meeting_id'}";
-						}
-					}
-				else
-					{
+        try
+            {
+            $meeting =& $this->my_server->GetOneMeeting($in_meeting_id);
+            
+            if ( $meeting instanceof c_comdef_meeting )
+                {
+                if ( $meeting->UserCanEdit() )
+                    {
+                    if ( $meeting->DeleteFromDB() )
+                        {
+                        if ( $in_delete_permanently )
+                            {
+                            $this->DeleteMeetingChanges ( $in_meeting_id );
+                            }
+                        
+                        header ( 'Content-type: application/json' );
+                        echo "{'success':true,'report':'$in_meeting_id'}";
+                        }
+                    else
+                        {
+                        header ( 'Content-type: application/json' );
+                        echo "{'success':false,'report':'$in_meeting_id'}";
+                        }
+                    }
+                else
+                    {
                     header ( 'Content-type: application/json' );
                     echo "{'success':false,'report':'$in_meeting_id'}";
-					}
-				}
-			else
-				{
+                    }
+                }
+            else
+                {
                 header ( 'Content-type: application/json' );
                 echo "{'success':false,'report':'$in_meeting_id'}";
-				}
-			}
-		catch ( Exception $e )
-			{
+                }
+            }
+        catch ( Exception $e )
+            {
             header ( 'Content-type: application/json' );
             echo "{'success':false,'report':'$in_meeting_id'}";
-			}
+            }
     }
 
     /*******************************************************************/
     /**
     */
-    function DeleteMeetingChanges (	$in_meeting_id
+    function DeleteMeetingChanges ( $in_meeting_id
                                     )
     {
         if ( c_comdef_server::IsUserServerAdmin(null,true) )
@@ -912,8 +949,8 @@ class c_comdef_admin_ajax_handler
 
     /*******************************************************************/
     /**
-        \brief	This handles updating an existing meeting, or adding a new one.
-    */	
+        \brief  This handles updating an existing meeting, or adding a new one.
+    */  
     function HandleMeetingUpdate (  $in_meeting_data    ///< A JSON object, containing the new meeting data.
                                 )
     {
@@ -930,11 +967,11 @@ class c_comdef_admin_ajax_handler
     /*******************************************************************/
     /**
         \brief
-    */	
+    */  
     function SetMeetingDataValues (  $in_meeting_data    ///< A JSON object, containing the new meeting data.
                                 )
     {
-		try
+        try
             {
             if ( $in_meeting_data['id_bigint'] )
                 {
@@ -992,31 +1029,31 @@ class c_comdef_admin_ajax_handler
                         switch ( $key )
                             {
                             case    'zoom':
-                            case	'distance_in_km':		// These are ignored.
-                            case	'distance_in_miles':
+                            case    'distance_in_km':       // These are ignored.
+                            case    'distance_in_miles':
                             break;
                 
                             // These are the "fixed" or "core" data values.
-                            case	'worldid_mixed':
-                            case	'start_time':
-                            case	'lang_enum':
-                            case	'duration_time':
-                            case	'formats':
+                            case    'worldid_mixed':
+                            case    'start_time':
+                            case    'lang_enum':
+                            case    'duration_time':
+                            case    'formats':
                                 $data[$key] = $value;
                             break;
                             
-                            case	'longitude':
-                            case	'latitude':
+                            case    'longitude':
+                            case    'latitude':
                                 $data[$key] = floatval ( $value );
                             break;
                 
-                            case	'id_bigint':
-                            case	'service_body_bigint':
-                            case	'weekday_tinyint':
+                            case    'id_bigint':
+                            case    'service_body_bigint':
+                            case    'weekday_tinyint':
                                 $data[$key] = intval ( $value );
                             break;
                 
-                            case	'email_contact':
+                            case    'email_contact':
                                 $value = trim ( $value );
                                 if ( $value )
                                     {
@@ -1038,7 +1075,7 @@ class c_comdef_admin_ajax_handler
                             break;
                 
                             // We only accept a 1 or a 0.
-                            case	'published':
+                            case    'published':
                                 // Meeting list editors can't publish meetings.
                                 if ( c_comdef_server::GetCurrentUserObj(true)->GetUserLevel() != _USER_LEVEL_EDITOR )
                                     {
@@ -1104,16 +1141,16 @@ class c_comdef_admin_ajax_handler
     
     /*******************************************************************/
     /**
-        \brief	This returns the search results, in whatever form was requested.
+        \brief  This returns the search results, in whatever form was requested.
     
         \returns CSV data, with the first row a key header.
-    */	
+    */  
     function GetSearchResults ( 
-                                $in_http_vars,	///< The HTTP GET and POST parameters.
+                                $in_http_vars,  ///< The HTTP GET and POST parameters.
                                 &$formats_ar    ///< This will return the formats used in this search.
                                 )
     {
-        if ( !( isset ( $in_http_vars['geo_width'] ) && $in_http_vars['geo_width'] ) && isset ( $in_http_vars['bmlt_search_type'] ) && ($in_http_vars['bmlt_search_type'] == 'advanced') && isset ( $in_http_vars['advanced_radius'] ) && isset ( $in_http_vars['advanced_mapmode'] ) && $in_http_vars['advanced_mapmode'] && ( floatval ( $in_http_vars['advanced_radius'] != 0.0 ) ) && isset ( $in_http_vars['lat_val'] ) &&	 isset ( $in_http_vars['long_val'] ) && ( (floatval ( $in_http_vars['lat_val'] ) != 0.0) || (floatval ( $in_http_vars['long_val'] ) != 0.0) ) )
+        if ( !( isset ( $in_http_vars['geo_width'] ) && $in_http_vars['geo_width'] ) && isset ( $in_http_vars['bmlt_search_type'] ) && ($in_http_vars['bmlt_search_type'] == 'advanced') && isset ( $in_http_vars['advanced_radius'] ) && isset ( $in_http_vars['advanced_mapmode'] ) && $in_http_vars['advanced_mapmode'] && ( floatval ( $in_http_vars['advanced_radius'] != 0.0 ) ) && isset ( $in_http_vars['lat_val'] ) &&  isset ( $in_http_vars['long_val'] ) && ( (floatval ( $in_http_vars['lat_val'] ) != 0.0) || (floatval ( $in_http_vars['long_val'] ) != 0.0) ) )
             {
             $in_http_vars['geo_width'] = $in_http_vars['advanced_radius'];
             }
@@ -1196,7 +1233,7 @@ class c_comdef_admin_ajax_handler
         \brief Translates CSV to JSON.
     
         \returns a JSON string, with all the data in the CSV.
-    */	
+    */  
     function TranslateToJSON ( $in_csv_data ///< An array of CSV data, with the first element being the field names.
                             )
     {
