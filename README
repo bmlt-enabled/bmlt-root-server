@@ -46,6 +46,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0a2 =
+* TBD
+* Reduced the size of the text in the Service Body Editor Save button.
+
 = Version 2.0a1 =
 * March 3, 2013
 * Fixed a minor issue, in which the warning banners were not bing set when a format was deleted.

@@ -173,7 +173,7 @@
 	                                        'service_body_editor_screen_sb_admin_observer_label'    =>  'Observers:',
 	                                        'service_body_editor_screen_sb_admin_observer_desc'     =>  'These Users Can See Hidden Info (Like Email Addresses), But Cannot Edit Anything.',
 	                                        'service_body_dirty_confirm_text'                       =>  'You have made changes to this Service Body. Do you want to lose your changes?',
-	                                        'service_body_save_button'                              =>  'Save The Changes To This Service Body',
+	                                        'service_body_save_button'                              =>  'Save These Service Body Changes',
 	                                        'service_body_create_button'                            =>  'Create This Service Body',
 	                                        'service_body_delete_button'                            =>  'Delete This Service Body',
 	                                        'service_body_delete_perm_checkbox'                     =>  'Delete This Service Body Permanently',
