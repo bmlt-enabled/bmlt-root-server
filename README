@@ -46,6 +46,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0a3 =
+* March 4, 2013
+* Tweaked the config loader to allow the auto-config to be fetched from the old location. This will change by beta.
+
 = Version 2.0a2 =
 * March 3, 2013
 * Reduced the size of the text in the Service Body Editor Save button.

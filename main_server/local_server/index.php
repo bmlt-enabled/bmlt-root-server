@@ -35,7 +35,7 @@ else
 		<meta http-equiv="Content-Script-Type" content="text/javascript" />
 		<meta http-equiv="Content-Style-Type" content="text/css" />
 <?php
-            $config_file_path = dirname ( __FILE__ ).'/../server/config//get-config.php';
+            $config_file_path = dirname ( __FILE__ ).'/../server/config/get-config.php';
             $url_path = 'http://'.$_SERVER['SERVER_NAME'].dirname ( $_SERVER['SCRIPT_NAME'] );
             if ( file_exists ( $config_file_path ) )
                 {
