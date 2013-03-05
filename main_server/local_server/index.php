@@ -17,8 +17,12 @@
     You should have received a copy of the GNU General Public License
     along with this code.  If not, see <http://www.gnu.org/licenses/>.
 */
-$http_vars = array_merge_recursive ( $_GET, $_POST );
 defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
+
+global  $http_vars;
+$http_vars = array_merge_recursive ( $_GET, $_POST );
+
+require_once ( dirname ( __FILE__ ).'/install_wizard/index.php' );  // We test for the install wizard, first.
 
 if ( isset ( $http_vars ['bmlt_ajax_callback'] ) )
     {

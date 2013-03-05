@@ -2521,12 +2521,12 @@ class c_comdef_server
             c_comdef_server::$server_local_strings['prompt_delimiter'] =  defined('__PROMPT_DELIMITER__') ? __PROMPT_DELIMITER__ : ':';
             c_comdef_server::$server_local_strings['end_change_report'] =  defined('_END_CHANGE_REPORT') ? _END_CHANGE_REPORT : '.';
             c_comdef_server::$server_local_strings['charset'] = defined('__HTML_DISPLAY_CHARSET__') ? __HTML_DISPLAY_CHARSET__ : 'UTF-8';
-            c_comdef_server::$server_local_strings['show_sb_text'] = (isset ( $comdef_show_sb_desc ) && $comdef_show_sb_desc) ? true : false;
             c_comdef_server::$server_local_strings['default_sort_key'] = $default_sort_key;
             c_comdef_server::$server_local_strings['default_sort_dir'] = $default_sort_dir;
             c_comdef_server::$server_local_strings['page_display_size'] = $page_display_size;
             c_comdef_server::$server_local_strings['results_per_page'] = $results_per_page;
             c_comdef_server::$server_local_strings['time_format'] = $time_format;
+            c_comdef_server::$server_local_strings['min_pw_len'] = intval ( $min_pw_len );
             c_comdef_server::$server_local_strings['allow_contact_form'] = $allow_contact_form;
             c_comdef_server::$server_local_strings['recursive_contact_form'] = $recursive_contact_form;
             c_comdef_server::$server_local_strings['sort_depth'] = $sort_depth;

@@ -314,33 +314,40 @@ function BMLT_Server_Admin ()
             ||  (description.value != description.original_value)
             ||  (password_field.value && (password_field.value != password_field.defaultValue))) )
             {
-            this.setMyAccountThrobber ( true );
-            var uri = g_ajax_callback_uri + '&target_user=' + encodeURIComponent ( g_current_user_id );
-            if ( email_field.value != email_field.original_value )
+            if ( g_min_pw_len && (password_field.value && (password_field.value != password_field.defaultValue)) && (password_field.value.length < g_min_pw_len) )
                 {
-                uri += '&account_email_value=' + encodeURIComponent ( email_field.value );
-                };
-            
-            if ( description.value != description.original_value )
+                alert ( sprintf ( g_min_password_length_string, g_min_pw_len ) );
+                }
+            else
                 {
-                uri += '&account_description_value=' + encodeURIComponent ( description.value );
+                this.setMyAccountThrobber ( true );
+                var uri = g_ajax_callback_uri + '&target_user=' + encodeURIComponent ( g_current_user_id );
+                if ( email_field.value != email_field.original_value )
+                    {
+                    uri += '&account_email_value=' + encodeURIComponent ( email_field.value );
+                    };
+            
+                if ( description.value != description.original_value )
+                    {
+                    uri += '&account_description_value=' + encodeURIComponent ( description.value );
+                    };
+            
+                if ( password_field.value && (password_field.value != password_field.defaultValue) )
+                    {
+                    uri += '&account_password_value=' + encodeURIComponent ( password_field.value );
+                    };
+            
+                if ( this.m_ajax_request_in_progress )
+                    {
+                    this.m_ajax_request_in_progress.abort();
+                    this.m_ajax_request_in_progress = null;
+                    };
+            
+                var salt = new Date();
+                uri += '&salt=' + salt.getTime();
+            
+                this.m_ajax_request_in_progress = BMLT_AjaxRequest ( uri, function(in_req) { admin_handler_object.handleAccountChangeAJAXCallback(in_req); }, 'post' );
                 };
-            
-            if ( password_field.value && (password_field.value != password_field.defaultValue) )
-                {
-                uri += '&account_password_value=' + encodeURIComponent ( password_field.value );
-                };
-            
-            if ( this.m_ajax_request_in_progress )
-                {
-                this.m_ajax_request_in_progress.abort();
-                this.m_ajax_request_in_progress = null;
-                };
-            
-            var salt = new Date();
-            uri += '&salt=' + salt.getTime();
-            
-            this.m_ajax_request_in_progress = BMLT_AjaxRequest ( uri, function(in_req) { admin_handler_object.handleAccountChangeAJAXCallback(in_req); }, 'post' );
             };
     };
     
@@ -3666,34 +3673,43 @@ function BMLT_Server_Admin ()
     {
         var main_user_editor_div = document.getElementById ( 'bmlt_admin_single_user_editor_div' );
         
-        if ( main_user_editor_div.current_user_object[0] == 0 )
+        var pw = main_user_editor_div.current_user_object[6];
+        
+        if ( g_min_pw_len && pw && (pw.length < g_min_pw_len) )
             {
-            this.createUser();
+            alert ( sprintf ( g_min_password_length_string, g_min_pw_len ) );
             }
         else
             {
-            if ( this.isUserDirty() )
+            if ( main_user_editor_div.current_user_object[0] == 0 )
                 {
-                var button_object = document.getElementById ( 'bmlt_admin_user_editor_form_user_save_button' );
-                var throbber_object = document.getElementById ( 'bmlt_admin_user_save_ajax_button_throbber_span' );
-
-                var serialized_object = JSON.stringify ( main_user_editor_div.current_user_object );
-        
-                var uri = g_ajax_callback_uri + '&set_user_change=' + encodeURIComponent ( serialized_object );
-
-                if ( main_user_editor_div.m_ajax_request_in_progress )
+                this.createUser();
+                }
+            else
+                {
+                if ( this.isUserDirty() )
                     {
-                    main_user_editor_div.m_ajax_request_in_progress.abort();
-                    main_user_editor_div.m_ajax_request_in_progress = null;
+                    var button_object = document.getElementById ( 'bmlt_admin_user_editor_form_user_save_button' );
+                    var throbber_object = document.getElementById ( 'bmlt_admin_user_save_ajax_button_throbber_span' );
+
+                    var serialized_object = JSON.stringify ( main_user_editor_div.current_user_object );
+        
+                    var uri = g_ajax_callback_uri + '&set_user_change=' + encodeURIComponent ( serialized_object );
+
+                    if ( main_user_editor_div.m_ajax_request_in_progress )
+                        {
+                        main_user_editor_div.m_ajax_request_in_progress.abort();
+                        main_user_editor_div.m_ajax_request_in_progress = null;
+                        };
+            
+                    var salt = new Date();
+                    uri += '&salt=' + salt.getTime();
+            
+                    button_object.className = 'item_hidden';
+                    throbber_object.className = 'bmlt_admin_ajax_button_throbber_span';
+            
+                    main_user_editor_div.m_ajax_request_in_progress = BMLT_AjaxRequest ( uri, function(in_req) { admin_handler_object.saveUserAJAXCallback(in_req); }, 'post' );
                     };
-            
-                var salt = new Date();
-                uri += '&salt=' + salt.getTime();
-            
-                button_object.className = 'item_hidden';
-                throbber_object.className = 'bmlt_admin_ajax_button_throbber_span';
-            
-                main_user_editor_div.m_ajax_request_in_progress = BMLT_AjaxRequest ( uri, function(in_req) { admin_handler_object.saveUserAJAXCallback(in_req); }, 'post' );
                 };
             };
     };
