@@ -230,11 +230,16 @@ function BMLT_Server_Admin ()
                 eval_str = 'delete editor_object.meeting_object.' + in_value_field + ';';
                 };
             };
-            
+        
         if ( eval_str )
             {
             eval ( eval_str );
-            this.validateMeetingEditorButton ( in_meeting_id );
+            };
+        
+        if ( in_item )
+            {
+            this.validateAccountGoButton();
+            this.validateMeetingEditorButton(in_meeting_id);
             };
     };
     
@@ -1710,48 +1715,93 @@ function BMLT_Server_Admin ()
 
         meeting_name_text_item.value = meeting_object.meeting_name ? meeting_object.meeting_name : meeting_name_text_item.value;
         this.setTextItemClass ( meeting_name_text_item );
-        
+        meeting_name_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'meeting_name')};
+        meeting_name_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
+        meeting_name_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
+
         meeting_cc_text_item.value = meeting_object.worldid_mixed ? meeting_object.worldid_mixed : meeting_cc_text_item.value;
         this.setTextItemClass ( meeting_cc_text_item );
+        meeting_cc_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'world_id_mixed')};
+        meeting_cc_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
+        meeting_cc_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
         
         meeting_location_text_item.value = meeting_object.location_text ? meeting_object.location_text : meeting_location_text_item.value;
         this.setTextItemClass ( meeting_location_text_item );
+        meeting_location_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_text')};
+        meeting_location_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
+        meeting_location_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
         
         meeting_info_text_item.value = meeting_object.location_info ? meeting_object.location_info : meeting_info_text_item.value;
         this.setTextItemClass ( meeting_info_text_item );
+        meeting_info_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_info')};
+        meeting_info_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
+        meeting_info_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
         
         meeting_street_text_item.value = meeting_object.location_street ? meeting_object.location_street : meeting_street_text_item.value;
         this.setTextItemClass ( meeting_street_text_item );
+        meeting_street_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_street')};
+        meeting_street_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
+        meeting_street_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
         
         meeting_neighborhood_text_item.value = meeting_object.location_neighborhood ? meeting_object.location_neighborhood : meeting_neighborhood_text_item.value;
         this.setTextItemClass ( meeting_neighborhood_text_item );
+        meeting_neighborhood_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_neighborhood')};
+        meeting_neighborhood_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
+        meeting_neighborhood_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
         
         meeting_borough_text_item.value = meeting_object.location_city_subsection ? meeting_object.location_city_subsection : meeting_borough_text_item.value;
         this.setTextItemClass ( meeting_borough_text_item );
+        meeting_borough_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_city_subsection')};
+        meeting_borough_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
+        meeting_borough_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
         
         meeting_city_text_item.value = meeting_object.location_municipality ? meeting_object.location_municipality : meeting_city_text_item.value;
         this.setTextItemClass ( meeting_city_text_item );
+        meeting_city_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_municipality')};
+        meeting_city_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
+        meeting_city_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
         
         meeting_county_text_item.value = meeting_object.location_sub_province ? meeting_object.location_sub_province : meeting_county_text_item.value;
         this.setTextItemClass ( meeting_county_text_item );
+        meeting_county_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_sub_province')};
+        meeting_county_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
+        meeting_county_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
         
         meeting_state_text_item.value = meeting_object.location_province ? meeting_object.location_province : meeting_state_text_item.value;
         this.setTextItemClass ( meeting_state_text_item );
+        meeting_state_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_province')};
+        meeting_state_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
+        meeting_state_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
         
         meeting_zip_text_item.value = meeting_object.location_postal_code_1 ? meeting_object.location_postal_code_1 : meeting_zip_text_item.value;
         this.setTextItemClass ( meeting_zip_text_item );
+        meeting_zip_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_postal_code_1')};
+        meeting_zip_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
+        meeting_zip_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
         
         meeting_nation_text_item.value = meeting_object.location_nation ? meeting_object.location_nation : meeting_nation_text_item.value;
         this.setTextItemClass ( meeting_nation_text_item );
+        meeting_nation_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_nation')};
+        meeting_nation_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
+        meeting_nation_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
         
         meeting_longitude_text_item.value = meeting_object.longitude ? meeting_object.longitude : meeting_longitude_text_item.value;
         this.setTextItemClass ( meeting_longitude_text_item );
+        meeting_longitude_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'longitude')};
+        meeting_longitude_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
+        meeting_longitude_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
         
         meeting_latitude_text_item.value = meeting_object.latitude ? meeting_object.latitude : meeting_latitude_text_item.value;
         this.setTextItemClass ( meeting_latitude_text_item );
+        meeting_latitude_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'latitude')};
+        meeting_latitude_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
+        meeting_latitude_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
         
         meeting_contact_text_item.value = meeting_object.email_contact ? meeting_object.email_contact : meeting_contact_text_item.value;
         this.setTextItemClass ( meeting_contact_text_item );
+        meeting_contact_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'email_contact')};
+        meeting_contact_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
+        meeting_contact_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
         
         meeting_published_checkbox.checked = (meeting_object ? true : false);
         
