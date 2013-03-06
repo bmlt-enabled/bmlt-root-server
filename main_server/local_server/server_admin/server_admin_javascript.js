@@ -4080,7 +4080,7 @@ function BMLT_Server_Admin ()
             var format_id = format_group.id;
             var format_lang_group = JSON.parse ( JSON.stringify ( format_group.formats ) );  // This will always be a copy.
 
-            this.createFormatRow ( index, format_id, format_lang_group, format_table );
+            this.createFormatRow ( index, format_id, format_lang_group, format_table, 0 );
             };
             
         var create_format_line_tr = format_table.insertRow ( -1 );
@@ -4114,12 +4114,14 @@ function BMLT_Server_Admin ()
     this.createFormatRow = function(in_index,               ///< The index, for styling the row.
                                     in_format_id,           ///< The shared ID for the format
                                     in_format_lang_group,   ///< The format objects
-                                    in_container_table      ///< The table that will contain this row.
+                                    in_container_table,     ///< The table that will contain this row.
+                                    in_offset               ///< If the insertion needs to be offset, this is how much.
                                     )
     {
+        in_offset = parseInt ( in_offset, 10 ); // Just to make sure.
         var format_line_tr = null;
 
-        var insertion_point = (g_formats_array.length) * g_langs.length;
+        var insertion_point = (g_formats_array.length + in_offset) * g_langs.length;
         
         if ( document.getElementById ( 'format_create_line_tr' ) )
             {
@@ -4373,7 +4375,7 @@ function BMLT_Server_Admin ()
         if ( !existing_new_format )
             {
             var table_element = document.getElementById ( 'bmlt_admin_format_editor_table' );
-            this.createFormatRow ( 0, 0, null, table_element );
+            this.createFormatRow ( 0, 0, null, table_element, 0 );
             create_button.innerHTML = g_format_editor_cancel_create_format_button_text;
             create_button.href = 'javascript:admin_handler_object.cancelCreateNewFormat()';
             }
@@ -4491,7 +4493,8 @@ function BMLT_Server_Admin ()
                             g_formats_array[index] = new Object;
                             g_formats_array[index].id = edited_format_group[g_langs[0]].shared_id;
                             this.cancelCreateNewFormat();
-                            this.createFormatRow ( index, g_formats_array[index].id, edited_format_group, document.getElementById ( 'format_editor_table' ) );
+                            var format_table = document.getElementById ( 'bmlt_admin_format_editor_table' );
+                            this.createFormatRow ( index, g_formats_array[index].id, edited_format_group, format_table, -1 );
                             };
                         
                         if ( edited_format_group[g_langs[0]].shared_id == g_formats_array[index].id )
