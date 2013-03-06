@@ -4089,16 +4089,9 @@ function BMLT_Server_Admin ()
         var format_create_td = create_format_line_tr.insertCell ( -1 );
         format_create_td.id = 'format_create_td';
         format_create_td.className = 'format_create_td';
-        
-        if ( format_create_td.colspan )
-            {
-            format_create_td.colspan = 6;
-            }
-        else
-            {
-            format_create_td.setAttribute ( 'colspan', 6 );
-            };
-            
+                    
+        format_create_td.setAttribute ( 'colspan', 6 );
+        format_create_td.colSpan = 6;
         var format_create_a = document.createElement ( 'a' );
         format_create_a.id = 'format_editor_create_a';
         format_create_a.className = 'bmlt_admin_ajax_button';
@@ -4151,15 +4144,8 @@ function BMLT_Server_Admin ()
             id_td.innerHTML = '&nbsp;';
             };
         
-        if ( id_td.rowspan )
-            {  
-            id_td.rowspan = g_langs.length;
-            }
-        else
-            {
-            id_td.setAttribute ( 'rowspan', g_langs.length );
-            };
-        
+        id_td.setAttribute ( 'rowspan', g_langs.length );
+        id_td.rowSpan = g_langs.length;
         for ( var c = 0; c < g_langs.length; c++ )
             {
             var lang_key = g_langs[c];
@@ -4268,6 +4254,7 @@ function BMLT_Server_Admin ()
                 format_buttons_td.id = 'format_editor_buttons_' + in_format_id + '_td';
                 format_buttons_td.className = 'format_editor_buttons_td' + ((in_format_id == 0) ? ' bmlt_admin_new_format_editor_td' : '');
                 format_buttons_td.setAttribute ( 'rowspan', g_langs.length );
+                format_buttons_td.rowSpan = g_langs.length;
             
                 var format_change_div = document.createElement ( 'div' );
                 format_change_div.id = 'format_editor_change_' + in_format_id + '_div';
@@ -4396,7 +4383,6 @@ function BMLT_Server_Admin ()
 
         if ( document.getElementById ( 'format_editor_line_0_tr' ) )
             {
-            existing_new_format.innerHTML = ''; // The first line is for the first language.
             existing_new_format.parentNode.removeChild ( existing_new_format );
 
             for ( var c = 1; c < g_langs.length; c++ )  // The format section is actually multiple lines; one for each language.
@@ -4404,7 +4390,6 @@ function BMLT_Server_Admin ()
                 var lang_key = g_langs[c];
                 var container_row = document.getElementById ( 'format_editor_' + lang_key + '_line_0_tr' );
             
-                container_row.innerHTML = '';
                 container_row.parentNode.removeChild ( container_row );
                 };
             
@@ -4591,7 +4576,6 @@ function BMLT_Server_Admin ()
                             {
                             var container_row = document.getElementById ( 'format_editor_line_' + the_id + '_tr' );
         
-                            container_row.innerHTML = '';
                             container_row.parentNode.removeChild ( container_row );
 
                             for ( var c = 1; c < g_langs.length; c++ )  // The format section is actually multiple lines; one for each language.
@@ -4599,7 +4583,6 @@ function BMLT_Server_Admin ()
                                 var lang_key = g_langs[c];
                                 container_row = document.getElementById ( 'format_editor_' + lang_key + '_line_' + the_id + '_tr' );
             
-                                container_row.innerHTML = '';
                                 container_row.parentNode.removeChild ( container_row );
                                 };
                             this.setWarningFaders();
