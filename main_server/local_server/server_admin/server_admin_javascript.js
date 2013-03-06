@@ -41,6 +41,7 @@ function BMLT_Server_Admin ()
     var m_editing_window_open = null;           ///< If there is a meeting editor open, it is recorded here. There can only be one...
     var m_user_editor_panel_shown = null;       ///< Set to true, if the user editor is open.
     var m_warn_user_to_refresh = null;          ///< If this is true, then a warning alert will be shown to the user.
+    var m_format_editor_table_rows = null;      ///< This is used to track the number of rows in the format editor table.
     
     /************************************************************************************//**
     *                                       METHODS                                         *
@@ -4082,13 +4083,21 @@ function BMLT_Server_Admin ()
             this.createFormatRow ( index, format_id, format_lang_group, format_table );
             };
             
-        var create_format_line_tr = document.createElement ( 'tr' );
+        var create_format_line_tr = format_table.insertRow ( -1 );
         create_format_line_tr.id = 'format_create_line_tr';
         
-        var format_create_td = document.createElement ( 'td' );
+        var format_create_td = create_format_line_tr.insertCell ( -1 );
         format_create_td.id = 'format_create_td';
         format_create_td.className = 'format_create_td';
-        format_create_td.setAttribute ( 'colspan', 6 );
+        
+        if ( format_create_td.colspan )
+            {
+            format_create_td.colspan = 6;
+            }
+        else
+            {
+            format_create_td.setAttribute ( 'colspan', 6 );
+            };
             
         var format_create_a = document.createElement ( 'a' );
         format_create_a.id = 'format_editor_create_a';
@@ -4097,8 +4106,6 @@ function BMLT_Server_Admin ()
         format_create_a.href = 'javascript:admin_handler_object.createFormatOpen()';
 
         format_create_td.appendChild ( format_create_a );
-        create_format_line_tr.appendChild ( format_create_td );
-        format_table.appendChild ( create_format_line_tr );
     };
 
     /************************************************************************************//**
@@ -4110,16 +4117,46 @@ function BMLT_Server_Admin ()
                                     in_container_table      ///< The table that will contain this row.
                                     )
     {
-        var format_line_tr = document.createElement ( 'tr' );
+        var format_line_tr = null;
+
+        var insertion_point = (g_formats_array.length) * g_langs.length;
+        
+        if ( document.getElementById ( 'format_create_line_tr' ) )
+            {
+            format_line_tr = in_container_table.insertRow ( insertion_point );
+            insertion_point++;
+            }
+        else
+            {
+            format_line_tr = in_container_table.insertRow ( -1 );
+            insertion_point = -1;
+            }
+            
         format_line_tr.id = 'format_editor_line_' + in_format_id + '_tr';
         
         var container_row = format_line_tr;
-        var id_td = document.createElement ( 'td' );
+        var id_td = container_row.insertCell ( -1 );
         id_td.id = 'format_editor_id_' + in_format_id + '_td';
         id_td.className = 'format_editor_id_td';
-        id_td.appendChild ( document.createTextNode ( (parseInt ( in_format_id, 10 ) != 0) ? in_format_id.toString() : ' ' ) );
-        id_td.setAttribute ( 'rowspan', g_langs.length );
-        container_row.appendChild ( id_td );
+        var node_text = (parseInt ( in_format_id, 10 ) != 0) ? in_format_id.toString() : '';
+        
+        if ( node_text )
+            {
+            id_td.appendChild ( document.createTextNode ( node_text ) );
+            }
+        else
+            {
+            id_td.innerHTML = '&nbsp;';
+            };
+        
+        if ( id_td.rowspan )
+            {  
+            id_td.rowspan = g_langs.length;
+            }
+        else
+            {
+            id_td.setAttribute ( 'rowspan', g_langs.length );
+            };
         
         for ( var c = 0; c < g_langs.length; c++ )
             {
@@ -4148,7 +4185,11 @@ function BMLT_Server_Admin ()
             
             if ( c > 0 )
                 {
-                container_row = document.createElement ( 'tr' );
+                container_row = in_container_table.insertRow ( insertion_point );
+                if ( insertion_point > 0 )
+                    {
+                    insertion_point++;
+                    };
                 container_row.id = 'format_editor_' + lang_key + '_line_' + in_format_id + '_tr';
                 };
             
@@ -4162,14 +4203,12 @@ function BMLT_Server_Admin ()
                 container_row.className = 'format_editor_format_line_tr format_editor_format_line_' + ((in_index % 2) ? 'even' : 'odd') + '_tr';
                 };
             
-            var format_lang_td = document.createElement ( 'td' );
+            var format_lang_td = container_row.insertCell ( -1 );
             format_lang_td.id = 'format_editor_lang_' + unique_id + '_td';
             format_lang_td.className = 'format_editor_lang_td';
             format_lang_td.appendChild ( document.createTextNode ( format.lang_name ) );
             
-            container_row.appendChild ( format_lang_td );
-            
-            var format_key_td = document.createElement ( 'td' );
+            var format_key_td = container_row.insertCell ( -1 );
             format_key_td.id = 'format_editor_key_' + in_format_id + '_td';
             format_key_td.className = 'format_editor_key_td';
 
@@ -4187,9 +4226,7 @@ function BMLT_Server_Admin ()
 
             format_key_td.appendChild ( format_key_input );
             
-            container_row.appendChild ( format_key_td );
-            
-            var format_name_td = document.createElement ( 'td' );
+            var format_name_td = container_row.insertCell ( -1 );
             format_name_td.id = 'format_editor_name_' + unique_id + '_td';
             format_name_td.className = 'format_editor_name_td';
 
@@ -4206,10 +4243,8 @@ function BMLT_Server_Admin ()
             format_name_input.onkeyup = function () { admin_handler_object.handleFormatTextInput(this); };
     
             format_name_td.appendChild ( format_name_input );
-
-            container_row.appendChild ( format_name_td );
             
-            var format_description_td = document.createElement ( 'td' );
+            var format_description_td = container_row.insertCell ( -1 );
             format_description_td.id = 'format_editor_decription_' + unique_id + '_td';
             format_description_td.className = 'format_editor_description_td';
 
@@ -4225,11 +4260,9 @@ function BMLT_Server_Admin ()
             
             format_description_td.appendChild ( format_description_input );
             
-            container_row.appendChild ( format_description_td );
-            
             if ( c == 0 )
                 {
-                var format_buttons_td = document.createElement ( 'td' );
+                var format_buttons_td = container_row.insertCell ( -1 );
                 format_buttons_td.id = 'format_editor_buttons_' + in_format_id + '_td';
                 format_buttons_td.className = 'format_editor_buttons_td' + ((in_format_id == 0) ? ' bmlt_admin_new_format_editor_td' : '');
                 format_buttons_td.setAttribute ( 'rowspan', g_langs.length );
@@ -4290,20 +4323,7 @@ function BMLT_Server_Admin ()
                 new_throbber_span.appendChild ( new_throbber_img );
                 format_delete_div.appendChild ( new_throbber_span );
                 format_buttons_td.appendChild ( format_delete_div );
-            
-                container_row.appendChild ( format_buttons_td );
                 };
-            
-            var create_line = document.getElementById ( 'format_create_line_tr' );
-            
-            if ( create_line )
-                {
-                in_container_table.insertBefore ( container_row, create_line );
-                }
-            else
-                {
-                in_container_table.appendChild ( container_row );
-                }
             
             this.handleTextInputLoad ( format_key_input, '' );
             this.handleTextInputLoad ( format_name_input, g_format_editor_name_default_text );
@@ -4352,7 +4372,8 @@ function BMLT_Server_Admin ()
         
         if ( !existing_new_format )
             {
-            this.createFormatRow ( 0, 0, null, document.getElementById ( 'format_editor_table' ) );
+            var table_element = document.getElementById ( 'bmlt_admin_format_editor_table' );
+            this.createFormatRow ( 0, 0, null, table_element );
             create_button.innerHTML = g_format_editor_cancel_create_format_button_text;
             create_button.href = 'javascript:admin_handler_object.cancelCreateNewFormat()';
             }
@@ -4687,6 +4708,7 @@ function BMLT_Server_Admin ()
     this.m_warn_user_to_refresh = false;
     this.m_success_fade_duration = 2000;        ///< 2 seconds for a success fader.
     this.m_failure_fade_duration = 5000;        ///< 5 seconds for a success fader.
+    this.m_format_editor_table_rows = 0;
 };
     
 // #mark - 
