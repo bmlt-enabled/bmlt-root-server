@@ -46,6 +46,14 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0a5 =
+* March 6, 2013
+* Internet Explorer was displaying the wrong cursor in the meeting results list. This has been fixed.
+* There was a big issue with text fields not working properly on IE. This has been addressed. Apparently, cloning a DOM node does not properly transfer event handlers in IE.
+* Removed the now-unnecessary "supports_ajax" argument from the login.
+* Simplified the login form a bit, so that the URI will remain consistent.
+* Fixed a bug, in which changing multiple items at once in the "My Account" section triggered a JavaScript error.
+
 = Version 2.0a4 =
 * March 6, 2013
 * Fixed an issue where the format editor did not work properly on Internet Exploder.

@@ -118,49 +118,61 @@ class c_comdef_admin_ajax_handler
             }
         else
             {
-            if ( (intval ( $this->my_user->GetID() ) == intval ( $this->my_http_vars['target_user'] )) && isset ( $this->my_http_vars['account_password_value'] ) )
-                {
-                $this->my_user->SetNewPassword ( $this->my_http_vars['account_password_value'] );
-                $success = $this->my_user->UpdateToDB ( false, null, true );
-                $account_changed = true;
-                if ( $ret )
-                    {
-                    $ret .= ',';
-                    }
-                $ret .= '{\'PASSWORD_CHANGED\':'.($success ? 'true' : 'false').'}';
-                }
-        
-            if ( (intval ( $this->my_user->GetID() ) == intval ( $this->my_http_vars['target_user'] )) && isset ( $this->my_http_vars['account_email_value'] ) )
-                {
-                $this->my_user->SetEmailAddress ( $this->my_http_vars['account_email_value'] );
-                $success = $this->my_user->UpdateToDB ( );
-                $account_changed = true;
-                if ( $ret )
-                    {
-                    $ret .= ',';
-                    }
-                $ret .= '{\'EMAIL_CHANGED\':'.($success ? 'true' : 'false').'}';
-                }
-        
-            if ( (intval ( $this->my_user->GetID() ) == intval ( $this->my_http_vars['target_user'] )) && isset ( $this->my_http_vars['account_description_value'] ) )
-                {
-                $this->my_user->SetLocalDescription ( $this->my_http_vars['account_description_value'] );
-                $account_changed = true;
-                $success = $this->my_user->UpdateToDB ( );
-                if ( $ret )
-                    {
-                    $ret .= ',';
-                    }
-                $ret .= '{\'DESCRIPTION_CHANGED\':'.($success ? 'true' : 'false').'}';
-                }
-        
-            if ( $account_changed )
-                {
-                $returned_text .= '{\'ACCOUNT_CHANGED\':'.$ret.'}';
-                }
+            $this->HandleAccountChange();
             }
         
         return  $returned_text;
+    }
+
+    /*******************************************************************/
+    /**
+        \brief  
+    */  
+    function HandleAccountChange ()
+    {
+        $response_text = array();
+        
+        if ( (intval ( $this->my_user->GetID() ) == intval ( $this->my_http_vars['target_user'] )) && isset ( $this->my_http_vars['account_password_value'] ) )
+            {
+            $this->my_user->SetNewPassword ( $this->my_http_vars['account_password_value'] );
+            $success = $this->my_user->UpdateToDB ( false, null, true );
+            $account_changed = true;
+            if ( $ret )
+                {
+                $ret .= ',';
+                }
+            $response_text['PASSWORD_CHANGED'] = ($success ? true : false);
+            }
+    
+        if ( (intval ( $this->my_user->GetID() ) == intval ( $this->my_http_vars['target_user'] )) && isset ( $this->my_http_vars['account_email_value'] ) )
+            {
+            $this->my_user->SetEmailAddress ( $this->my_http_vars['account_email_value'] );
+            $success = $this->my_user->UpdateToDB ( );
+            $account_changed = true;
+            if ( $ret )
+                {
+                $ret .= ',';
+                }
+            $response_text['EMAIL_CHANGED'] = ($success ? true : false);
+            }
+    
+        if ( (intval ( $this->my_user->GetID() ) == intval ( $this->my_http_vars['target_user'] )) && isset ( $this->my_http_vars['account_description_value'] ) )
+            {
+            $this->my_user->SetLocalDescription ( $this->my_http_vars['account_description_value'] );
+            $account_changed = true;
+            $success = $this->my_user->UpdateToDB ( );
+            if ( $ret )
+                {
+                $ret .= ',';
+                }
+            $response_text['DESCRIPTION_CHANGED'] = ($success ? true : false);
+            }
+    
+        if ( $account_changed )
+            {
+            header ( 'Content-type: application/json' );
+            echo ( array2json ( array ( 'ACCOUNT_CHANGED' => $response_text )));
+            }
     }
 
     /*******************************************************************/

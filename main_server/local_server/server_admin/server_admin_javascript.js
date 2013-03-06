@@ -1721,7 +1721,7 @@ function BMLT_Server_Admin ()
 
         meeting_cc_text_item.value = meeting_object.worldid_mixed ? meeting_object.worldid_mixed : meeting_cc_text_item.value;
         this.setTextItemClass ( meeting_cc_text_item );
-        meeting_cc_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'world_id_mixed')};
+        meeting_cc_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'worldid_mixed')};
         meeting_cc_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_cc_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
         

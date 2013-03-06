@@ -73,13 +73,13 @@ if ( !isset ( $_SESSION ) )
 	session_start();
 	}
 // See if we are logging in
-if ( isset ( $_GET['admin_action'] ) && (($_GET['admin_action'] == 'login') || ($_GET['admin_action'] == 'logout')) )
+if ( (isset ( $_GET['admin_action'] ) && (($_GET['admin_action'] == 'logout'))) || (isset ( $_POST['admin_action'] ) && (($_POST['admin_action'] == 'login'))) )
 	{
 	// Belt and suspenders -nuke the stored login.
 	$_SESSION[$admin_session_name] = null;
 	unset ( $_SESSION[$admin_session_name] );
 	
-	if ( $_GET['admin_action'] == 'login' )
+	if ( isset ( $_POST['admin_action'] ) && ($_POST['admin_action'] == 'login') )
 	    {
         // Check to see if the temporary cookie set by the form is there.
         if ( !isset ( $_COOKIE['comdef_test']) ||  !$_COOKIE['comdef_test'] )
@@ -233,7 +233,7 @@ function c_comdef_LoginForm(	&$in_server	///< A reference to an instance of c_co
 		$ret .= '<noscript><h1>'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['noscript'] ).'</h1></noscript>';
         $ret .= '<h1 class="lohgin_form_main_banner_h1">'.c_comdef_htmlspecialchars ( $server_info['title']  ).'</h1>';
         $ret .= '<h2 class="lohgin_form_secondary_banner_h2">'.c_comdef_htmlspecialchars ( $server_info['banner_text']  ).'</h2>';
-		$ret .= '<form method="post" class="c_comdef_admin_login_form" id="c_comdef_admin_login_form" action="'.c_comdef_htmlspecialchars ( $_SERVER['SCRIPT_NAME'] ).'?supports_ajax=yes&amp;admin_action=login';
+		$ret .= '<form method="post" class="c_comdef_admin_login_form" id="c_comdef_admin_login_form" action="'.c_comdef_htmlspecialchars ( $_SERVER['SCRIPT_NAME'] );
 			foreach ( $http_vars as $key => $value )
 				{
 				switch ( $key )
@@ -242,7 +242,6 @@ function c_comdef_LoginForm(	&$in_server	///< A reference to an instance of c_co
 					case	'c_comdef_admin_login':
 					case	'c_comdef_admin_password':
 					case	'admin_action':
-					case	'supports_ajax':
 					case	'login':
 					break;
 					
@@ -258,6 +257,7 @@ function c_comdef_LoginForm(	&$in_server	///< A reference to an instance of c_co
 					}
 				}
 		$ret .= '">';	// Only the login will go through post.
+			$ret .= '<input id="admin_action" type="hidden" name="admin_action" value="login" />';
 			$ret .= '<div style="display:none" id="c_comdef_admin_login_form_inner_container_div" class="c_comdef_admin_login_form_inner_container_div">';
 				$ret .= '<div class="c_comdef_admin_login_form_line_div">';
 				$ret .= '<div class="c_comdef_admin_login_form_prompt">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['title'] ).'</div>';

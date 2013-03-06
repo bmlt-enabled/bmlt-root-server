@@ -937,6 +937,7 @@ div.bmlt_admin_meeting_search_results_single_meeting_container_div a.bmlt_admin_
 div.bmlt_admin_meeting_search_results_single_meeting_container_div a.bmlt_admin_meeting_search_results_single_meeting_a span
 {
     display:block;
+    cursor:pointer;
 }
 
 div.bmlt_admin_meeting_search_results_single_meeting_container_div a.bmlt_admin_meeting_search_results_single_meeting_a span
