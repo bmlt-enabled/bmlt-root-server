@@ -46,6 +46,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0a4 =
+* March 6, 2013
+* Fixed an issue where the format editor did not work properly on Internet Exploder.
+
 = Version 2.0a3 =
 * March 4, 2013
 * Tweaked the config loader to allow the auto-config to be fetched from the old location. This will change by beta.
