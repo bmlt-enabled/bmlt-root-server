@@ -1258,3 +1258,17 @@ td.format_create_td a
 {
     margin:auto;
 }
+
+div.bmlt_admin_meeting_search_results_single_meeting_container_div a.bmlt_admin_meeting_search_results_single_meeting_a span,
+div.bmlt_admin_meeting_search_results_single_meeting_container_div a.bmlt_admin_meeting_search_results_single_meeting_a:visited span
+{
+    text-decoration:underline;
+    color:#009;
+}
+
+div.bmlt_admin_meeting_search_results_single_meeting_container_div a.bmlt_admin_meeting_search_results_single_meeting_a:hover span,
+div.bmlt_admin_meeting_search_results_single_meeting_container_div a.bmlt_admin_meeting_search_results_single_meeting_a:active span
+{
+    text-decoration:none;
+    color:#900;
+}
