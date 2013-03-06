@@ -613,6 +613,7 @@ div.bmlt_admin_service_body_editor_wrapper_div,
 div.bmlt_admin_user_editor_wrapper_div,
 div.bmlt_admin_format_editor_wrapper_div
 {
+    display:block;
     background-color: #009;
     padding:4px;
 }

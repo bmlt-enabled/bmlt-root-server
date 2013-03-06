@@ -4071,24 +4071,7 @@ function BMLT_Server_Admin ()
     ****************************************************************************************/
     this.populateFormatEditor = function()
     {
-        var list_container = document.getElementById ( 'bmlt_admin_format_editor_inner_div' );
-        
-        this.createFormatList ( list_container );
-    };
-
-    /************************************************************************************//**
-    *   \brief  This populates the format display list                                      *
-    ****************************************************************************************/
-    this.createFormatList = function(   in_container    ///< The container div for the list
-                                    )
-    {
-        in_container.innerHTML = '';
-        
-        var format_table = document.createElement ( 'table' );
-        format_table.id = 'format_editor_table';
-        format_table.className = 'format_editor_table';
-        format_table.setAttribute ( 'cellpadding', '0' );
-        format_table.setAttribute ( 'cellspacing', '0' );
+        var format_table = document.getElementById ( 'bmlt_admin_format_editor_table' );
         
         for ( var index = 0; index < g_formats_array.length; index++ )
             {
@@ -4116,8 +4099,6 @@ function BMLT_Server_Admin ()
         format_create_td.appendChild ( format_create_a );
         create_format_line_tr.appendChild ( format_create_td );
         format_table.appendChild ( create_format_line_tr );
-        
-        in_container.appendChild ( format_table );
     };
 
     /************************************************************************************//**
@@ -4143,7 +4124,7 @@ function BMLT_Server_Admin ()
         for ( var c = 0; c < g_langs.length; c++ )
             {
             var lang_key = g_langs[c];
-            var format = in_format_lang_group ? (in_format_lang_group[lang_key] ? in_format_lang_group[lang_key] : null) : null;
+            var format = (in_format_lang_group != null) ? (in_format_lang_group[lang_key] ? in_format_lang_group[lang_key] : '') : '';
             
             if ( !format )
                 {
@@ -4198,7 +4179,7 @@ function BMLT_Server_Admin ()
             format_key_input.data_member_name = 'key';
             format_key_input.tiny = true;
             format_key_input.value = format.key;
-            format_key_input.defaultValue = null;
+            format_key_input.defaultValue = '';
             format_key_input.id = 'bmlt_format_key_' + unique_id + '_text_item';
             format_key_input.onfocus= function () { admin_handler_object.handleTextInputFocus(this); };
             format_key_input.onblur= function () { admin_handler_object.handleTextInputBlur(this); };
@@ -4218,7 +4199,7 @@ function BMLT_Server_Admin ()
             format_name_input.data_member_name = 'name';
             format_name_input.small = true;
             format_name_input.value = format.name;
-            format_name_input.defaultValue = null;
+            format_name_input.defaultValue = '';
             format_name_input.id = 'bmlt_format_name_' + unique_id + '_text_item';
             format_name_input.onfocus= function () { admin_handler_object.handleTextInputFocus(this); };
             format_name_input.onblur= function () { admin_handler_object.handleTextInputBlur(this); };
@@ -4267,7 +4248,7 @@ function BMLT_Server_Admin ()
                     }
                 else
                     {
-                    format_change_a.innerHTML = g_format_editor_create_this_format_button_text;
+                    format_change_a.appendChild ( document.createTextNode ( g_format_editor_create_this_format_button_text ) );
                     };
             
                 format_change_a.href = 'javascript:admin_handler_object.saveFormat(' + in_format_id + ')';

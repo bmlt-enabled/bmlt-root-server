@@ -446,10 +446,10 @@ class c_comdef_admin_main_console
                     $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_format_editor_delete_fail_div">';
                         $ret .= '<span class="failure_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_change_fader_delete_fail_text'] ).'</span>';
                     $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= '</div>';
-                $ret .= '<div id="bmlt_admin_format_editor_inner_div" class="bmlt_admin_format_editor_inner_div"></div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= '<div id="bmlt_admin_format_editor_inner_div" class="bmlt_admin_format_editor_inner_div"><table class="format_editor_table" id="bmlt_admin_format_editor_table" cellpadding="0" cellspacing="0" border="0"></table></div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
             $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-            $ret .= '<script type="text/javascript">admin_handler_object.populateFormatEditor()</script>';
+            $ret .= '<script type="text/javascript">admin_handler_object.populateFormatEditor()</script>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
             }
         
         return $ret;
@@ -494,7 +494,7 @@ class c_comdef_admin_main_console
                         $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                     $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                     $ret .= $this->return_single_user_editor_panel();
-                $ret .= '</div>';
+                $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= '<script type="text/javascript">admin_handler_object.populateUserEditor()</script>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 }
             }
