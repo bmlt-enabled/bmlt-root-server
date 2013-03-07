@@ -146,12 +146,15 @@ span.single_checkbox_span,
 .bmlt_admin_med_label_right,
 span.single_checkbox_span
 {
+    height: 1.25em;
+    clear:none;
     float:left;
 }
 
 div.bmlt_admin_one_line_in_a_form_no_margin,
 div.bmlt_admin_one_line_in_a_form
 {
+    vertical-align:top;
     color: #009;
     padding:2px;
     margin-bottom:0.5em;
@@ -193,6 +196,7 @@ div.bmlt_admin_one_line_in_a_form_no_margin
 .bmlt_admin_value_left
 {
     display:block;
+    clear:none;
     float:left;
 }
 
@@ -217,6 +221,14 @@ textarea.bmlt_text_item
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 3px;
+}
+
+input.bmlt_text_item_tiny,
+input.bmlt_text_item_small,
+input.bmlt_text_item_med,
+input.bmlt_text_item
+{
+    height:1em;
 }
 
 input.bmlt_text_item_tiny
