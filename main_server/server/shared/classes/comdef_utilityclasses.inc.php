@@ -347,7 +347,7 @@ function c_comdef_admin_bar( $in_http_vars ///< The aggregation of the $_GET and
 	if ( $server instanceof c_comdef_server )
 		{
 		$localized_strings = c_comdef_server::GetLocalStrings();
-		include ( dirname ( __FILE__ ).'/../../../server/config//get-config.php' );
+		include ( dirname ( __FILE__ ).'/../../../server/config/get-config.php' );
 			
 		$user_obj = $server->GetCurrentUserObj();
 		if ( ($user_obj instanceof c_comdef_user) && ($user_obj->GetUserLevel() != _USER_LEVEL_DISABLED) && ($user_obj->GetUserLevel() != _USER_LEVEL_OBSERVER) )

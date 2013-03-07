@@ -88,6 +88,7 @@ else
         <body>
             <h1>This Page Is Still Under Construction</h1>
             <h2>Until this install wizard is complete, you must manually place your auto-config.ing.php file at the same level as the main_server directory.</h2>
+            <?php require_once ( dirname ( __FILE__ ).'/installer_guts.php' ); ?>
         </body>
     </html>
 <?php
