@@ -1272,3 +1272,10 @@ div.bmlt_admin_meeting_search_results_single_meeting_container_div a.bmlt_admin_
     text-decoration:none;
     color:#900;
 }
+
+div.c_comdef_not_auth_container_div,
+h2.c_comdef_not_auth_3
+{
+    color:#f66;
+    text-align:center;
+}

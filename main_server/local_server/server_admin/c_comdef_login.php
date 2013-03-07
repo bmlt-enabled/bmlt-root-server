@@ -81,16 +81,6 @@ if ( (isset ( $_GET['admin_action'] ) && (($_GET['admin_action'] == 'logout'))) 
 	
 	if ( isset ( $_POST['admin_action'] ) && ($_POST['admin_action'] == 'login') )
 	    {
-        // Check to see if the temporary cookie set by the form is there.
-        if ( !isset ( $_COOKIE['comdef_test']) ||  !$_COOKIE['comdef_test'] )
-            {	
-            $localized_strings = c_comdef_server::GetLocalStrings();
-        
-            c_comdef_LogoutUser();
-        
-            die ( '<div class="c_comdef_not_auth_container_div"><div class="c_comdef_not_auth_div"><h1 class="c_comdef_not_auth_1">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['cookie'] ).'</h1></div></div></body></html>' );
-            }
-    
         $login = isset ( $_POST['c_comdef_admin_login'] ) ? $_POST['c_comdef_admin_login'] : null;
     
         // If this is a valid login, we'll get an encrypted password back.

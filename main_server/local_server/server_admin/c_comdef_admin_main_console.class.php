@@ -315,6 +315,7 @@ class c_comdef_admin_main_console
                             }
                         }
                 $ret .= '];'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_logout_uri = \''.htmlspecialchars ( $_SERVER['PHP_SELF'].'?admin_action=logout' ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_meeting_closure_confirm_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_cancel_confirm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_default_longitude = '.floatval ( $this->my_localized_strings['search_spec_map_center']['longitude'] ).';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_default_latitude = '.floatval ( $this->my_localized_strings['search_spec_map_center']['latitude'] ).';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');

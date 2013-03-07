@@ -148,8 +148,8 @@ class c_comdef_admin_ajax_handler
         
         if ( (intval ( $this->my_user->GetID() ) == intval ( $this->my_http_vars['target_user'] )) && isset ( $this->my_http_vars['account_password_value'] ) )
             {
-            $this->my_user->SetNewPassword ( $this->my_http_vars['account_password_value'] );
-            $success = $this->my_user->UpdateToDB ( false, null, true );
+            $login = $this->my_user->GetLogin();
+            $success = $this->my_user->UpdateToDB ( false, $login, $this->my_http_vars['account_password_value'] );
             $response_text['PASSWORD_CHANGED'] = ($success ? true : false);
             }
     

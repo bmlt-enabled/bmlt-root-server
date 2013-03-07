@@ -385,12 +385,21 @@ function BMLT_Server_Admin ()
                 {
                 success = false;
                 };
-                
+
             if ( json_object.ACCOUNT_CHANGED.DESCRIPTION_CHANGED == true )
                 {
                 description.original_value = description.value;
                 }
             else if ( json_object.ACCOUNT_CHANGED.DESCRIPTION_CHANGED == false )
+                {
+                success = false;
+                };
+            
+            if ( json_object.ACCOUNT_CHANGED.PASSWORD_CHANGED == true )
+                {
+                window.location.href = g_logout_uri;
+                }
+            else if ( json_object.ACCOUNT_CHANGED.PASSWORD_CHANGED == false )
                 {
                 success = false;
                 };
