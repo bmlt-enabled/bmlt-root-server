@@ -131,44 +131,29 @@ class c_comdef_admin_ajax_handler
     function HandleAccountChange ()
     {
         $response_text = array();
-        
-        if ( (intval ( $this->my_user->GetID() ) == intval ( $this->my_http_vars['target_user'] )) && isset ( $this->my_http_vars['account_password_value'] ) )
-            {
-            $this->my_user->SetNewPassword ( $this->my_http_vars['account_password_value'] );
-            $success = $this->my_user->UpdateToDB ( false, null, true );
-            $account_changed = true;
-            if ( $ret )
-                {
-                $ret .= ',';
-                }
-            $response_text['PASSWORD_CHANGED'] = ($success ? true : false);
-            }
     
         if ( (intval ( $this->my_user->GetID() ) == intval ( $this->my_http_vars['target_user'] )) && isset ( $this->my_http_vars['account_email_value'] ) )
             {
             $this->my_user->SetEmailAddress ( $this->my_http_vars['account_email_value'] );
             $success = $this->my_user->UpdateToDB ( );
-            $account_changed = true;
-            if ( $ret )
-                {
-                $ret .= ',';
-                }
             $response_text['EMAIL_CHANGED'] = ($success ? true : false);
             }
     
         if ( (intval ( $this->my_user->GetID() ) == intval ( $this->my_http_vars['target_user'] )) && isset ( $this->my_http_vars['account_description_value'] ) )
             {
             $this->my_user->SetLocalDescription ( $this->my_http_vars['account_description_value'] );
-            $account_changed = true;
             $success = $this->my_user->UpdateToDB ( );
-            if ( $ret )
-                {
-                $ret .= ',';
-                }
             $response_text['DESCRIPTION_CHANGED'] = ($success ? true : false);
             }
+        
+        if ( (intval ( $this->my_user->GetID() ) == intval ( $this->my_http_vars['target_user'] )) && isset ( $this->my_http_vars['account_password_value'] ) )
+            {
+            $this->my_user->SetNewPassword ( $this->my_http_vars['account_password_value'] );
+            $success = $this->my_user->UpdateToDB ( false, null, true );
+            $response_text['PASSWORD_CHANGED'] = ($success ? true : false);
+            }
     
-        if ( $account_changed )
+        if ( is_array ( $response_text ) && count ( $response_text ) )
             {
             header ( 'Content-type: application/json' );
             echo ( array2json ( array ( 'ACCOUNT_CHANGED' => $response_text )));
