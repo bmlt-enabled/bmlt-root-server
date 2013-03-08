@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `na_comdef_users` (
 ) AUTO_INCREMENT=1;
 
 INSERT INTO `na_comdef_users` (`id_bigint`, `user_level_tinyint`, `name_string`, `description_string`, `email_address_string`, `login_string`, `password_string`, `last_access_datetime`, `lang_enum`) VALUES
-(1, 1, 'Server Administrator', 'Main Server Admin', '', 'serveradmin', 'XCDSFEW', '', 'en');
+(1, 1, 'Server Administrator', 'Main Server Admin', '', 'serveradmin', 'XKCDNSFWROTFLMAOPMP', '', 'en');
 
 DROP TABLE IF EXISTS `na_comdef_formats`;
 CREATE TABLE IF NOT EXISTS `na_comdef_formats` (
