@@ -47,8 +47,9 @@ For instructions on installing the root server, see this page:
 CHANGELIST
 ----------
 = Version 2.0a8 =
-* TBD
+* March 8, 2013
 * More work on the installer wizard.
+* The Server Admin can now change their own login and name (Other admins cannot).
 
 = Version 2.0a7 =
 * March 7, 2013

@@ -146,11 +146,38 @@ class c_comdef_admin_ajax_handler
             $response_text['DESCRIPTION_CHANGED'] = ($success ? true : false);
             }
         
-        if ( (intval ( $this->my_user->GetID() ) == intval ( $this->my_http_vars['target_user'] )) && isset ( $this->my_http_vars['account_password_value'] ) )
+        $login = $this->my_user->GetLogin();
+        $login_changed = false;
+        $password = (isset ( $this->my_http_vars['account_password_value'] ) ? $this->my_http_vars['account_password_value'] : '');
+        
+        if ( $this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN )
             {
-            $login = $this->my_user->GetLogin();
-            $success = $this->my_user->UpdateToDB ( false, $login, $this->my_http_vars['account_password_value'] );
+            if ( (intval ( $this->my_user->GetID() ) == intval ( $this->my_http_vars['target_user'] )) && isset ( $this->my_http_vars['account_name_value'] ) )
+                {
+                $this->my_user->SetLocalName ( $this->my_http_vars['account_name_value'] );
+                $success = $this->my_user->UpdateToDB ( );
+                $response_text['NAME_CHANGED'] = ($success ? true : false);
+                }
+        
+            if ( (intval ( $this->my_user->GetID() ) == intval ( $this->my_http_vars['target_user'] )) && isset ( $this->my_http_vars['account_login_value'] ) )
+                {
+                $login = $this->my_http_vars['account_login_value'];
+                $login_changed = true;
+                }
+            }
+        else
+            {
+            unset ( $this->my_http_vars['account_login_value'] );
+            }
+        
+        if ( (intval ( $this->my_user->GetID() ) == intval ( $this->my_http_vars['target_user'] )) && (isset ( $this->my_http_vars['account_login_value'] ) || isset ( $this->my_http_vars['account_password_value'] )) )
+            {
+            $success = $this->my_user->UpdateToDB ( false, $login, $password );
             $response_text['PASSWORD_CHANGED'] = ($success ? true : false);
+            if ( $login_changed )
+                {
+                $response_text['LOGIN_CHANGED'] = ($success ? true : false);
+                }
             }
     
         if ( is_array ( $response_text ) && count ( $response_text ) )

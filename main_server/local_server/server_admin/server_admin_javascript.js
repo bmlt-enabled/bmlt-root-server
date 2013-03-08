@@ -289,11 +289,15 @@ function BMLT_Server_Admin ()
         var password_field = document.getElementById ( 'bmlt_admin_user_account_password_input' );
         var ajax_button = document.getElementById ( 'bmlt_admin_account_change_ajax_button' );
         var description = document.getElementById ( 'bmlt_admin_user_description_textarea' );
+        var name_field = document.getElementById ( 'bmlt_admin_user_name_input' );
+        var login_field = document.getElementById ( 'bmlt_admin_user_login_input' );
         
         if ( email_field && password_field && ajax_button && description )
             {
             if (    (email_field.value != email_field.original_value)
                 ||  (description.value != description.original_value)
+                ||  (name_field && (name_field.value != name_field.original_value))
+                ||  (login_field && (login_field.value != login_field.original_value))
                 ||  (password_field.value && (password_field.value != password_field.defaultValue)) )
                 {
                 ajax_button.className = 'bmlt_admin_ajax_button';
@@ -314,12 +318,17 @@ function BMLT_Server_Admin ()
         var password_field = document.getElementById ( 'bmlt_admin_user_account_password_input' );
         var description = document.getElementById ( 'bmlt_admin_user_description_textarea' );
         var affected_user_id = document.getElementById ( 'account_affected_user_id' );
-        
+        var name_field = document.getElementById ( 'bmlt_admin_user_name_input' );
+        var login_field = document.getElementById ( 'bmlt_admin_user_login_input' );
+
         // We only do something if there is a difference.
         if (    (affected_user_id.value == g_current_user_id)   // Belt and suspenders...
             &&  ((email_field.value != email_field.original_value)
             ||  (description.value != description.original_value)
-            ||  (password_field.value && (password_field.value != password_field.defaultValue))) )
+            ||  (name_field && (name_field.value != name_field.original_value))
+            ||  (login_field && (login_field.value != login_field.original_value))
+            ||  (password_field.value && (password_field.value != password_field.defaultValue)))
+            )
             {
             if ( g_min_pw_len && (password_field.value && (password_field.value != password_field.defaultValue)) && (password_field.value.length < g_min_pw_len) )
                 {
@@ -329,6 +338,16 @@ function BMLT_Server_Admin ()
                 {
                 this.setMyAccountThrobber ( true );
                 var uri = g_ajax_callback_uri + '&target_user=' + encodeURIComponent ( g_current_user_id );
+                if ( name_field && (name_field.value != name_field.original_value) )
+                    {
+                    uri += '&account_name_value=' + encodeURIComponent ( name_field.value );
+                    };
+            
+                if ( login_field && (login_field.value != login_field.original_value) )
+                    {
+                    uri += '&account_login_value=' + encodeURIComponent ( login_field.value );
+                    };
+            
                 if ( email_field.value != email_field.original_value )
                     {
                     uri += '&account_email_value=' + encodeURIComponent ( email_field.value );
@@ -396,13 +415,28 @@ function BMLT_Server_Admin ()
                 success = false;
                 };
             
+            var reload = false;
             if ( json_object.ACCOUNT_CHANGED.PASSWORD_CHANGED == true )
                 {
-                window.location.href = g_logout_uri;
+                reload = true;
                 }
             else if ( json_object.ACCOUNT_CHANGED.PASSWORD_CHANGED == false )
                 {
                 success = false;
+                };
+            
+            if ( json_object.ACCOUNT_CHANGED.PASSWORD_CHANGED == true )
+                {
+                reload = true;
+                }
+            else if ( json_object.ACCOUNT_CHANGED.PASSWORD_CHANGED == false )
+                {
+                success = false;
+                };
+            
+            if ( reload )
+                {
+                window.location.href = g_logout_uri;
                 };
             
             password_field.value = '';
