@@ -1816,6 +1816,7 @@ function BMLT_Server_Admin ()
         meeting_published_checkbox.checked = (meeting_object ? true : false);
         
         this.setPublished ( meeting_object );
+        this.handleNewAddressInfo(meeting_id);
     };
     
     /************************************************************************************//**

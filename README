@@ -46,6 +46,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0a8 =
+* March 7, 2013
+* More work on the installer wizard.
+
 = Version 2.0a7 =
 * March 7, 2013
 * Fixed a bug in which the map set button was not being properly enabled.
