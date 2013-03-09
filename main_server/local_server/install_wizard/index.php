@@ -47,7 +47,7 @@ if (   !(
 	    &&  isset ( $time_format ) && $time_format
 	    &&  isset ( $change_date_format ) && $change_date_format
 	    &&  isset ( $change_depth_for_meetings ) && $change_depth_for_meetings
-	    &&  isset ( $banner_text )
+	    &&  (isset ( $banner_text ) || null === $banner_text)
 	    &&  isset ( $admin_session_name )
 	    &&  isset ( $comdef_distance_units ) && $comdef_distance_units
         )

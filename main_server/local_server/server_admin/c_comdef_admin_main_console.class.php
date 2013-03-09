@@ -150,11 +150,11 @@ class c_comdef_admin_main_console
     {
         $ret = '<div id="bmlt_admin_main_console" class="bmlt_admin_main_console_wrapper_div">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
             // We actually include the JS directly into the HTML. This gives us a lot more flexibility as to how we deploy and gatekeep this file.
-            $ret .= '<script type="text/javascript" src="'.htmlspecialchars ( 'http://maps.google.com/maps/api/js?sensor=false' ).'"></script>';
-            $ret .= '<script type="text/javascript" src="'.htmlspecialchars ( 'http://maps.googleapis.com/maps/api/js?sensor=false&libraries=geometry' ).'"></script>';       
+            $ret .= '<script type="text/javascript" src="'.self::js_html ( 'http://maps.google.com/maps/api/js?sensor=false' ).'"></script>';
+            $ret .= '<script type="text/javascript" src="'.self::js_html ( 'http://maps.googleapis.com/maps/api/js?sensor=false&libraries=geometry' ).'"></script>';       
             $ret .= '<script type="text/javascript">';
-                $ret .= 'var g_ajax_callback_uri = \''.htmlspecialchars ( $this->my_ajax_uri ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_current_user_id = \''.htmlspecialchars ( $this->my_user->GetID() ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_ajax_callback_uri = \''.self::js_html ( $this->my_ajax_uri ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_current_user_id = \''.self::js_html ( $this->my_user->GetID() ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_formats_array = '.array2json ( $this->my_formats ).';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_langs = ["'.implode ( '","', $this->my_lang_ids ).'"];'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_lang_names = '.array2json ( $this->my_server->GetServerLangs() ).';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
@@ -165,17 +165,17 @@ class c_comdef_admin_main_console
                         $ret .= '[';
             /* ID:0 */  $ret .= $service_body->GetID().',';
       /* Owner ID:1 */  $ret .= $service_body->GetOwnerID().',';
-          /* Name:2 */  $ret .= '\''.htmlspecialchars ( $service_body->GetLocalName() ).'\',';
-   /* Description:3 */  $ret .= '\''.htmlspecialchars ( $service_body->GetLocalDescription() ).'\',';
+          /* Name:2 */  $ret .= '\''.self::js_html ( $service_body->GetLocalName() ).'\',';
+   /* Description:3 */  $ret .= '\''.self::js_html ( $service_body->GetLocalDescription() ).'\',';
   /* Main User ID:4 */  $ret .= $service_body->GetPrincipalUserID().',';
     /* Editor IDs:5 */  $ret .= '\''.implode ( ',', $service_body->GetEditors() ).'\',';
- /* Contact Email:6 */  $ret .= '\''.htmlspecialchars ( $service_body->GetContactEmail() ).'\',';
-           /* URI:7 */  $ret .= '\''.htmlspecialchars ( $service_body->GetURI() ).'\',';
-       /* KML URI:8 */  $ret .= '\''.htmlspecialchars ( $service_body->GetKMLURI() ).'\',';
+ /* Contact Email:6 */  $ret .= '\''.self::js_html ( $service_body->GetContactEmail() ).'\',';
+           /* URI:7 */  $ret .= '\''.self::js_html ( $service_body->GetURI() ).'\',';
+       /* KML URI:8 */  $ret .= '\''.self::js_html ( $service_body->GetKMLURI() ).'\',';
        /* SB Type:9 */  $ret .= '\''.$service_body->GetSBType().'\',';
 /* User Can Edit:10 */  $ret .= ($service_body->UserCanEdit() ? 'true' : 'false').',';
 /* Edit Meetings:11 */  $ret .= ($service_body->UserCanEditMeetings() ? 'true' : 'false').',';
-     /* World ID:12 */  $ret .= '\''.htmlspecialchars ( $service_body->GetWorldID() ).'\'';
+     /* World ID:12 */  $ret .= '\''.self::js_html ( $service_body->GetWorldID() ).'\'';
                         $ret .=']';
                         if ( $c < (count ( $this->my_service_bodies ) - 1) )
                             {
@@ -190,17 +190,17 @@ class c_comdef_admin_main_console
                         $ret .= '[';
             /* ID:0 */  $ret .= $service_body->GetID().',';
       /* Owner ID:1 */  $ret .= $service_body->GetOwnerID().',';
-          /* Name:2 */  $ret .= '\''.htmlspecialchars ( $service_body->GetLocalName() ).'\',';
-   /* Description:3 */  $ret .= '\''.htmlspecialchars ( $service_body->GetLocalDescription() ).'\',';
+          /* Name:2 */  $ret .= '\''.self::js_html ( $service_body->GetLocalName() ).'\',';
+   /* Description:3 */  $ret .= '\''.self::js_html ( $service_body->GetLocalDescription() ).'\',';
   /* Main User ID:4 */  $ret .= $service_body->GetPrincipalUserID().',';
     /* Editor IDs:5 */  $ret .= '\''.implode ( ',', $service_body->GetEditors() ).'\',';
- /* Contact Email:6 */  $ret .= '\''.htmlspecialchars ( $service_body->GetContactEmail() ).'\',';
-           /* URI:7 */  $ret .= '\''.htmlspecialchars ( $service_body->GetURI() ).'\',';
-       /* KML URI:8 */  $ret .= '\''.htmlspecialchars ( $service_body->GetKMLURI() ).'\',';
+ /* Contact Email:6 */  $ret .= '\''.self::js_html ( $service_body->GetContactEmail() ).'\',';
+           /* URI:7 */  $ret .= '\''.self::js_html ( $service_body->GetURI() ).'\',';
+       /* KML URI:8 */  $ret .= '\''.self::js_html ( $service_body->GetKMLURI() ).'\',';
        /* SB Type:9 */  $ret .= '\''.$service_body->GetSBType().'\',';
 /* User Can Edit:10 */  $ret .= 'true,';
 /* Edit Meetings:11 */  $ret .= 'true,';
-     /* World ID:12 */  $ret .= '\''.htmlspecialchars ( $service_body->GetWorldID() ).'\'';
+     /* World ID:12 */  $ret .= '\''.self::js_html ( $service_body->GetWorldID() ).'\'';
                         $ret .=']';
                         if ( $c < (count ( $this->my_service_bodies ) - 1) )
                             {
@@ -214,10 +214,10 @@ class c_comdef_admin_main_console
                     $user = $this->my_users[$c];
                     $ret .= '[';
             /* ID:0 */  $ret .= $user->GetID().',';
-         /* Login:1 */  $ret .= '\''.htmlspecialchars ( ( ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) || ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) ) ? $user->GetLogin() : '' ).'\',';
-          /* Name:2 */  $ret .= '\''.htmlspecialchars ( $user->GetLocalName() ).'\',';
-   /* Description:3 */  $ret .= '\''.htmlspecialchars ( $user->GetLocalDescription() ).'\',';
-         /* eMail:4 */  $ret .= '\''.htmlspecialchars ( ( ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) || ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) || ($user->GetID() == $this->my_user->GetID()) ) ? $user->GetEmailAddress() : '' ).'\',';
+         /* Login:1 */  $ret .= '\''.self::js_html ( ( ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) || ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) ) ? $user->GetLogin() : '' ).'\',';
+          /* Name:2 */  $ret .= '\''.self::js_html ( $user->GetLocalName() ).'\',';
+   /* Description:3 */  $ret .= '\''.self::js_html ( $user->GetLocalDescription() ).'\',';
+         /* eMail:4 */  $ret .= '\''.self::js_html ( ( ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) || ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) || ($user->GetID() == $this->my_user->GetID()) ) ? $user->GetEmailAddress() : '' ).'\',';
     /* User Level:5 */  $ret .= $user->GetUserLevel().',';
      /*  Password:6 */  $ret .= '\'\''; // We do not give a password, but one can be sent in to change the current one, so we have a placeholder.
                     $ret .=']';
@@ -229,16 +229,16 @@ class c_comdef_admin_main_console
                 
                 $ret .= '];'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_user_levels = [';
-                    $ret .= '[1,\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_1'] ).'\'],';
-                    $ret .= '[2,\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_2'] ).'\'],';
-                    $ret .= '[3,\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_3'] ).'\'],';
-                    $ret .= '[4,\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_4'] ).'\'],';
-                    $ret .= '[5,\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_5'] ).'\']';
+                    $ret .= '[1,\''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_1'] ).'\'],';
+                    $ret .= '[2,\''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_2'] ).'\'],';
+                    $ret .= '[3,\''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_3'] ).'\'],';
+                    $ret .= '[4,\''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_4'] ).'\'],';
+                    $ret .= '[5,\''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_5'] ).'\']';
                 $ret .= '];'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_weekday_name_array = [';
                     for ( $c = 1; $c < 8; $c++ )
                         {
-                        $ret .= '\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_search_weekdays_names'][$c] ).'\'';
+                        $ret .= '\''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_search_weekdays_names'][$c] ).'\'';
                         if ( $c < 8 )
                             {
                             $ret .= ',';
@@ -310,77 +310,77 @@ class c_comdef_admin_main_console
                                     {
                                     $first = false;
                                     }
-                                $ret .= "'".htmlspecialchars ( $key )."'";
+                                $ret .= "'".self::js_html ( $key )."'";
                             break;
                             }
                         }
                 $ret .= '];'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_logout_uri = \''.htmlspecialchars ( $_SERVER['PHP_SELF'].'?admin_action=logout' ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_meeting_closure_confirm_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_cancel_confirm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_logout_uri = \''.self::js_html ( $_SERVER['PHP_SELF'].'?admin_action=logout' ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_meeting_closure_confirm_text = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_cancel_confirm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_default_longitude = '.floatval ( $this->my_localized_strings['search_spec_map_center']['longitude'] ).';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_default_latitude = '.floatval ( $this->my_localized_strings['search_spec_map_center']['latitude'] ).';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_default_zoom = '.floatval ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_default_zoom'] ).';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_meeting_lookup_failed = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_lookup_failed'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_region_bias = \''.htmlspecialchars ( $this->my_localized_strings['region_bias'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_style_dir = \''.htmlspecialchars ( dirname ( $_SERVER['PHP_SELF'] ).'/local_server/server_admin/style' ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_Create_new_meeting_button_name = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_create_button_name'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_Save_meeting_button_name = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_save_buttonName'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_meeting_lookup_failed = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_lookup_failed'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_region_bias = \''.self::js_html ( $this->my_localized_strings['region_bias'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_style_dir = \''.self::js_html ( dirname ( $_SERVER['PHP_SELF'] ).'/local_server/server_admin/style' ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_Create_new_meeting_button_name = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_create_button_name'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_Save_meeting_button_name = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_save_buttonName'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_default_meeting_weekday = '.intVal ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_default_weekday'] ).';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_default_meeting_start_time = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_default_start_time'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_default_meeting_duration = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_default_duration'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_no_search_results_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_search_no_results_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_new_meeting_header_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_create_new_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_meeting_lookup_failed_not_enough_address_info = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_lookup_failed_not_enough_address_info'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_meeting_editor_result_count_format = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_result_count_format'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_meeting_editor_screen_delete_button_confirm = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_delete_button_confirm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_meeting_editor_screen_delete_button_confirm_perm = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_delete_button_confirm_perm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_meeting_editor_already_editing_confirm = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_already_editing_confirm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_default_meeting_start_time = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_default_start_time'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_default_meeting_duration = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_default_duration'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_no_search_results_text = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_search_no_results_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_new_meeting_header_text = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_create_new_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_meeting_lookup_failed_not_enough_address_info = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_lookup_failed_not_enough_address_info'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_meeting_editor_result_count_format = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_result_count_format'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_meeting_editor_screen_delete_button_confirm = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_delete_button_confirm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_meeting_editor_screen_delete_button_confirm_perm = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_delete_button_confirm_perm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_meeting_editor_already_editing_confirm = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_already_editing_confirm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_history_header_format = \''.str_replace ( '>', '&gt;', str_replace ( '<', '&lt;', $this->my_localized_strings['comdef_server_admin_strings']['history_header_format'] ) ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_history_no_history_available_text = \''.str_replace ( '>', '&gt;', str_replace ( '<', '&lt;', $this->my_localized_strings['comdef_server_admin_strings']['history_no_history_available_text'] ) ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_service_body_name_default_prompt_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_name_default_prompt_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_service_body_description_default_prompt_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_description_default_prompt_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_service_body_email_default_prompt_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_email_default_prompt_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_service_body_uri_default_prompt_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_uri_default_prompt_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_service_body_world_cc_default_prompt_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_world_cc_prompt'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_service_body_dirty_confirm_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_dirty_confirm_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_service_body_delete_button_confirm = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_delete_button_confirm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_service_body_delete_button_confirm_perm = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_delete_button_confirm_perm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_service_body_save_button = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_save_button'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_service_body_create_button = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_create_button'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_user_save_button = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_save_button'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_user_create_button = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_create_button'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_user_password_default_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_password_default_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_user_new_password_default_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_new_password_default_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_user_password_label = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_password_label'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_user_new_password_label = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_new_password_label'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_user_dirty_confirm_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_dirty_confirm_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_user_delete_button_confirm = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_delete_button_confirm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_user_delete_button_confirm_perm = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_delete_button_confirm_perm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_user_create_password_alert_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_create_password_alert_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_format_editor_name_default_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_name_default_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_format_editor_description_default_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_description_default_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_format_editor_create_format_button_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_create_format_button_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_format_editor_cancel_create_format_button_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_cancel_create_format_button_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_format_editor_create_this_format_button_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_create_this_format_button_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_format_editor_change_format_button_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_change_format_button_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_format_editor_delete_format_button_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_delete_format_button_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_format_editor_reset_format_button_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_reset_format_button_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_need_refresh_message_alert_text = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['need_refresh_message_alert_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_format_editor_delete_button_confirm = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_delete_button_confirm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_format_editor_delete_button_confirm_perm = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_delete_button_confirm_perm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_service_body_name_default_prompt_text = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_name_default_prompt_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_service_body_description_default_prompt_text = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_description_default_prompt_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_service_body_email_default_prompt_text = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_email_default_prompt_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_service_body_uri_default_prompt_text = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_uri_default_prompt_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_service_body_world_cc_default_prompt_text = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_world_cc_prompt'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_service_body_dirty_confirm_text = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_dirty_confirm_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_service_body_delete_button_confirm = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_delete_button_confirm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_service_body_delete_button_confirm_perm = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_delete_button_confirm_perm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_service_body_save_button = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_save_button'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_service_body_create_button = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_create_button'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_user_save_button = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['user_save_button'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_user_create_button = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['user_create_button'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_user_password_default_text = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['user_password_default_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_user_new_password_default_text = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['user_new_password_default_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_user_password_label = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['user_password_label'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_user_new_password_label = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['user_new_password_label'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_user_dirty_confirm_text = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['user_dirty_confirm_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_user_delete_button_confirm = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['user_delete_button_confirm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_user_delete_button_confirm_perm = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['user_delete_button_confirm_perm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_user_create_password_alert_text = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['user_create_password_alert_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_format_editor_name_default_text = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_name_default_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_format_editor_description_default_text = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_description_default_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_format_editor_create_format_button_text = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_create_format_button_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_format_editor_cancel_create_format_button_text = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_cancel_create_format_button_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_format_editor_create_this_format_button_text = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_create_this_format_button_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_format_editor_change_format_button_text = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_change_format_button_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_format_editor_delete_format_button_text = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_delete_format_button_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_format_editor_reset_format_button_text = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_reset_format_button_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_need_refresh_message_alert_text = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['need_refresh_message_alert_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_format_editor_delete_button_confirm = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_delete_button_confirm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_format_editor_delete_button_confirm_perm = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_delete_button_confirm_perm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_throbber_image_loc = \'local_server/server_admin/style/images/ajax-throbber-white.gif\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_min_pw_len = '.$this->my_localized_strings['min_pw_len'].';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_min_password_length_string = \''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['min_password_length_string'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_min_password_length_string = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['min_password_length_string'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_time_values = [';
-                    $ret .= '\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_am_label'] ).'\',';
-                    $ret .= '\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_pm_label'] ).'\',';
-                    $ret .= '\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_noon_label'] ).'\',';
-                    $ret .= '\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_midnight_label'] ).'\'';
+                    $ret .= '\''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_am_label'] ).'\',';
+                    $ret .= '\''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_pm_label'] ).'\',';
+                    $ret .= '\''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_noon_label'] ).'\',';
+                    $ret .= '\''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_midnight_label'] ).'\'';
                 $ret .= '];';
             $ret .= '</script>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
             $ret .= '<script type="text/javascript" src="'.dirname ( $_SERVER['PHP_SELF'] ).'/local_server/server_admin'.(defined('__DEBUG_MODE__') ? '/' : '/js_stripper.php?filename=' ).'json2.js"></script>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
             $ret .= '<script type="text/javascript" src="'.dirname ( $_SERVER['PHP_SELF'] ).'/local_server/server_admin'.(defined('__DEBUG_MODE__') ? '/' : '/js_stripper.php?filename=' ).'server_admin_javascript.js"></script>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-            $ret .= '<noscript class="main_noscript">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['noscript'] ).'</noscript>';
+            $ret .= '<noscript class="main_noscript">'.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['noscript'] ).'</noscript>';
             // Belt and suspenders. Just make sure the user is legit.
             if ( ($this->my_user instanceof c_comdef_user) && ($this->my_user->GetUserLevel() != _USER_LEVEL_DISABLED) )
                 {
@@ -410,6 +410,16 @@ class c_comdef_admin_main_console
         $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
         
         return  $ret;
+    }
+    
+    /********************************************************************************************************//**
+    \brief Does an HTML sub, and also "slashes" apostrophes.
+    \returns "Cleaned" text
+    ************************************************************************************************************/
+    static function js_html(    $in_raw_html
+                            )
+    {
+        return str_replace ( "'", "\'", htmlspecialchars ( $in_raw_html ) );
     }
     
     /********************************************************************************************************//**
