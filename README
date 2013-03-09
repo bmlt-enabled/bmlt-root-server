@@ -49,6 +49,7 @@ CHANGELIST
 = Version 2.0a9 =
 * March 9, 2013
 * Fixed a rather serious issue, in which apostrophes (') in text could cause the editor to go kablooey.
+* Fixed an issue with the wizard detector, where a null-set global was misinterpreted.
 
 = Version 2.0a8 =
 * March 8, 2013
