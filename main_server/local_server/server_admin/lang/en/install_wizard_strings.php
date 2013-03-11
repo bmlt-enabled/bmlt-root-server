@@ -21,6 +21,8 @@
 	global $comdef_install_wizard_strings;
 	
 	$comdef_install_wizard_strings = array (
-	                                        'text'                      =>  'text',
+	                                        'Database_Setup'                =>  'Database Setup',
+	                                        'Map_Setup'                     =>  'Map Setup',
+	                                        'User_Setup'                    =>  'User Setup',
 	                                        );
 ?>

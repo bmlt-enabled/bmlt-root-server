@@ -20,5 +20,30 @@
 defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );    // Makes sure that this file is in the correct context.
 // This contains the PDO database access stuff.
 require_once ( dirname ( __FILE__ ).'/../../server/classes/c_comdef_dbsingleton.class.php' );
-
 ?>
+<div id="installer_wrapper" class="page_1_wrapper">
+    <div id="bmlt_installer_tab_bar" class="bmlt_installer_tab_bar">
+        <div id="bmlt_installer_tab_1" class="bmlt_installer_tab_1">
+            <a href="javascript:g_installer_object.selectPage1()"><?php echo $comdef_install_wizard_strings['Database_Setup']; ?></a>
+        </div>
+        <div id="bmlt_installer_tab_2" class="bmlt_installer_tab_2">
+            <a href="javascript:g_installer_object.selectPage2()"><?php echo $comdef_install_wizard_strings['Map_Setup']; ?></a>
+        </div>
+        <div id="bmlt_installer_tab_3" class="bmlt_installer_tab_3">
+            <a href="javascript:g_installer_object.selectPage3()"><?php echo $comdef_install_wizard_strings['User_Setup']; ?></a>
+        </div>
+    </div>
+    <div class="page_content">
+        <div id="bmlt_installer_page_1" class="bmlt_installer_page_1">
+        </div>
+        <div id="bmlt_installer_page_2" class="bmlt_installer_page_2">
+        </div>
+        <div id="bmlt_installer_page_3" class="bmlt_installer_page_3">
+        </div>
+    </div>
+    <script type="text/javascript">
+        <?php
+        ?>
+        var g_installer_object = new BMLTInstaller;
+    </script>
+</div>

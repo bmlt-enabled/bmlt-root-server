@@ -16,3 +16,36 @@
     You should have received a copy of the GNU General Public License
     along with this code.  If not, see <http://www.gnu.org/licenses/>.
 */
+function BMLTInstaller()
+{
+    var m_installer_wrapper_object = null;
+    
+    /************************************************************************************//**
+    *   \brief Shows Page 1 of the installer wizard. It does this by setting the wrapper    *
+    *          className to the first page, which uses CSS to hide the other two pages.     *
+    ****************************************************************************************/
+    this.selectPage1 = function()
+    {
+        this.installer_wrapper_object.className = 'page_1_wrapper';
+    };
+    
+    /************************************************************************************//**
+    *   \brief Shows Page 2 of the installer wizard. It does this by setting the wrapper    *
+    *          className to the first page, which uses CSS to hide the other two pages.     *
+    ****************************************************************************************/
+    this.selectPage2 = function()
+    {
+        this.installer_wrapper_object.className = 'page_2_wrapper';
+    };
+    
+    /************************************************************************************//**
+    *   \brief Shows Page 3 of the installer wizard. It does this by setting the wrapper    *
+    *          className to the first page, which uses CSS to hide the other two pages.     *
+    ****************************************************************************************/
+    this.selectPage3 = function()
+    {
+        this.installer_wrapper_object.className = 'page_3_wrapper';
+    };
+    
+    this.installer_wrapper_object = document.getElementById ( 'installer_wrapper' );
+};

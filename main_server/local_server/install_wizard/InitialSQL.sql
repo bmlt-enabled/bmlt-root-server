@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `na_comdef_formats` (
   `lang_enum` varchar(7) NOT NULL default 'en',
   `name_string` tinytext,
   `description_string` text,
-  `format_type_enum` varchar(7) default NULL,
+  `format_type_enum` varchar(7) default 'FC1',
   KEY `shared_id_bigint` (`shared_id_bigint`),
   KEY `worldid_mixed` (`worldid_mixed`),
   KEY `format_type_enum` (`format_type_enum`),

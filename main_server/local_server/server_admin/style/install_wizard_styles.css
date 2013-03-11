@@ -38,3 +38,69 @@ body
     font-family:Verdana,Helvetica,Arial,Sans-Serif;
     color:white;
 }
+
+div.page_1_wrapper div.bmlt_installer_page_2,
+div.page_1_wrapper div.bmlt_installer_page_3,
+div.page_2_wrapper div.bmlt_installer_page_1,
+div.page_2_wrapper div.bmlt_installer_page_3,
+div.page_3_wrapper div.bmlt_installer_page_1,
+div.page_3_wrapper div.bmlt_installer_page_2
+{
+    display:none;
+}
+
+div.bmlt_installer_tab_1,
+div.bmlt_installer_tab_2,
+div.bmlt_installer_tab_3
+{
+    float:left;
+}
+
+div.bmlt_installer_tab_1 a,
+div.bmlt_installer_tab_1 a:visited,
+div.bmlt_installer_tab_2 a,
+div.bmlt_installer_tab_2 a:visited,
+div.bmlt_installer_tab_3 a,
+div.bmlt_installer_tab_3 a:visited
+{
+    display:block;
+    color: #9cf;
+    text-decoration:underline;
+    text-align:center;
+    font-size:x-large;
+    font-weight:bold;
+}
+
+div.bmlt_installer_tab_1 a:hover,
+div.bmlt_installer_tab_1 a:active,
+div.bmlt_installer_tab_2 a:hover,
+div.bmlt_installer_tab_2 a:active,
+div.bmlt_installer_tab_3 a:hover,
+div.bmlt_installer_tab_3 a:active
+{
+    color: #fc9;
+    text-decoration:none;
+}
+
+div.page_1_wrapper div.bmlt_installer_tab_1 a,
+div.page_1_wrapper div.bmlt_installer_tab_1 a:visited,
+div.page_1_wrapper div.bmlt_installer_tab_1 a:hover,
+div.page_1_wrapper div.bmlt_installer_tab_1 a:active,
+div.page_2_wrapper div.bmlt_installer_tab_2 a,
+div.page_2_wrapper div.bmlt_installer_tab_2 a:visited,
+div.page_2_wrapper div.bmlt_installer_tab_2 a:hover,
+div.page_2_wrapper div.bmlt_installer_tab_2 a:active,
+div.page_3_wrapper div.bmlt_installer_tab_3 a,
+div.page_3_wrapper div.bmlt_installer_tab_3 a:visited,
+div.page_3_wrapper div.bmlt_installer_tab_3 a:hover,
+div.page_3_wrapper div.bmlt_installer_tab_3 a:active
+{
+    background-color: white;
+    color: #009;
+    cursor: default;
+}
+
+div.page_content
+{
+    clear:both;
+}
