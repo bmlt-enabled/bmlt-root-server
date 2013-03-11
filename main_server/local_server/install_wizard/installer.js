@@ -26,7 +26,10 @@ function BMLTInstaller()
     ****************************************************************************************/
     this.selectPage1 = function()
     {
-        this.installer_wrapper_object.className = 'page_1_wrapper';
+        if ( this.installer_wrapper_object.className != 'page_1_wrapper' )
+            {
+            this.installer_wrapper_object.className = 'page_1_wrapper';
+            };
     };
     
     /************************************************************************************//**
@@ -35,7 +38,10 @@ function BMLTInstaller()
     ****************************************************************************************/
     this.selectPage2 = function()
     {
-        this.installer_wrapper_object.className = 'page_2_wrapper';
+        if ( this.installer_wrapper_object.className != 'page_2_wrapper' )
+            {
+            this.installer_wrapper_object.className = 'page_2_wrapper';
+            };
     };
     
     /************************************************************************************//**
@@ -44,7 +50,10 @@ function BMLTInstaller()
     ****************************************************************************************/
     this.selectPage3 = function()
     {
-        this.installer_wrapper_object.className = 'page_3_wrapper';
+        if ( this.installer_wrapper_object.className != 'page_3_wrapper' )
+            {
+            this.installer_wrapper_object.className = 'page_3_wrapper';
+            };
     };
     
     this.installer_wrapper_object = document.getElementById ( 'installer_wrapper' );

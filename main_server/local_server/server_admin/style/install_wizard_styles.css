@@ -49,6 +49,12 @@ div.page_3_wrapper div.bmlt_installer_page_2
     display:none;
 }
 
+div.bmlt_installer_tab_bar
+{
+    margin-left:4px;
+    margin-top:0.5em;
+}
+
 div.bmlt_installer_tab_1,
 div.bmlt_installer_tab_2,
 div.bmlt_installer_tab_3
@@ -69,6 +75,15 @@ div.bmlt_installer_tab_3 a:visited
     text-align:center;
     font-size:x-large;
     font-weight:bold;
+    padding:0.5em;
+    padding-left:1em;
+    padding-right:1em;
+    -moz-border-radius-top-left: 4px;
+    -moz-border-radius-top-right: 4px;
+    -webkit-border-radius-top-left: 4px;
+    -webkit-border-radius-top-right: 4px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
 }
 
 div.bmlt_installer_tab_1 a:hover,
@@ -96,6 +111,7 @@ div.page_3_wrapper div.bmlt_installer_tab_3 a:hover,
 div.page_3_wrapper div.bmlt_installer_tab_3 a:active
 {
     background-color: white;
+    text-decoration:none;
     color: #009;
     cursor: default;
 }
@@ -103,4 +119,9 @@ div.page_3_wrapper div.bmlt_installer_tab_3 a:active
 div.page_content
 {
     clear:both;
+    background-color:white;
+min-height:40px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
 }
