@@ -120,8 +120,40 @@ div.page_content
 {
     clear:both;
     background-color:white;
-min-height:40px;
+    color:#009;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
     border-radius: 4px;
+    text-align:left;
+}
+
+div.one_line_div
+{
+    clear:both;
+    float:none;
+    padding: 0.25em;
+}
+
+div.left_right_aligned_div
+{
+    float:left;
+    width:40%;
+    text-align:right;
+}
+
+.bold_char
+{
+    font-weight:bold;
+}
+
+.clear_both
+{
+    clear:both;
+}
+
+div.right_left_aligned_div
+{
+    float:left;
+    padding-left:0.25em;
+    text-align:left;
 }

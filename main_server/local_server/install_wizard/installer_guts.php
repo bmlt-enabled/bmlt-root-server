@@ -35,6 +35,11 @@ require_once ( dirname ( __FILE__ ).'/../../server/classes/c_comdef_dbsingleton.
     </div>
     <div class="page_content">
         <div id="bmlt_installer_page_1" class="bmlt_installer_page_1">
+            <div class="one_line_div">
+                <div class="left_right_aligned_div bold_char"><?php echo $comdef_install_wizard_strings['Database_Name']; ?></div>
+                <div class="right_left_aligned_div"><?php echo $prefs_array['dbName']; ?></div>
+            </div>
+            <div class="clear_both"></div>
         </div>
         <div id="bmlt_installer_page_2" class="bmlt_installer_page_2">
         </div>
