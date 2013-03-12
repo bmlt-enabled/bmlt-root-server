@@ -28,10 +28,16 @@
 	                                        'Database_Name'                 =>  'Database Name:',
 	                                        'Database_Name_Default_Text'    =>  'Enter A Database Name',
 	                                        'Database_Type'                 =>  'Database Type:',
+	                                        'Database_Version_Error'        =>  'ERROR: You must have PHP Version 5.1 or greater installed on this server!',
+	                                        'Database_PDO_Error'            =>  'ERROR: You do not have PHP PDO installed!',
+	                                        'Database_Type_Error'           =>  'ERROR: Even though you have PDO, you have no database drivers installed!',
 	                                        'Database_Host'                 =>  'Database Host:',
+	                                        'Database_Host_Default_Text'    =>  'Enter A Database Host',
 	                                        'Database_User'                 =>  'Database User:',
+	                                        'Database_User_Default_Text'    =>  'Enter A Database User Name',
 	                                        'Database_PW'                   =>  'Database Password:',
+	                                        'Database_PW_Default_Text'      =>  'Enter A Database Password',
 	                                        'Table_Prefix'                  =>  'Table Prefix:',
-	                                        
+	                                        'Table_Prefix_Default_Text'     =>  'Enter A Table Prefix',
 	                                        );
 ?>
