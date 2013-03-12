@@ -26,10 +26,12 @@
 	                                        'User_Setup'                    =>  'User Setup',
 	                                        
 	                                        'Database_Name'                 =>  'Database Name:',
+	                                        'Database_Name_Default_Text'    =>  'Enter A Database Name',
 	                                        'Database_Type'                 =>  'Database Type:',
 	                                        'Database_Host'                 =>  'Database Host:',
 	                                        'Database_User'                 =>  'Database User:',
 	                                        'Database_PW'                   =>  'Database Password:',
 	                                        'Table_Prefix'                  =>  'Table Prefix:',
+	                                        
 	                                        );
 ?>

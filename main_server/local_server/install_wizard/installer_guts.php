@@ -38,7 +38,7 @@ require_once ( dirname ( __FILE__ ).'/../../server/classes/c_comdef_dbsingleton.
             <div class="one_line_div">
                 <div class="left_right_aligned_div bold_char"><?php echo $comdef_install_wizard_strings['Database_Name']; ?></div>
                 <div class="right_left_aligned_div">
-                    <input type="text" value="<?php echo $prefs_array['dbName']; ?>" class="short_input" />
+                    <input type="text" id="installer_db_name_input" value="<?php echo $prefs_array['dbName']; ?>" class="bmlt_text_item_small" />
                 </div>
             </div>
             <div class="clear_both"></div>
@@ -52,5 +52,6 @@ require_once ( dirname ( __FILE__ ).'/../../server/classes/c_comdef_dbsingleton.
         <?php
         ?>
         var g_installer_object = new BMLTInstaller;
+        g_installer_object.handleTextInputLoad(document.getElementById('installer_db_name_input'),'<?php echo $comdef_install_wizard_strings['Database_Name_Default_Text']; ?>','small');
     </script>
 </div>
