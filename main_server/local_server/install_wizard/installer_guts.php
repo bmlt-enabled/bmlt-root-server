@@ -24,13 +24,13 @@ require_once ( dirname ( __FILE__ ).'/../../server/classes/c_comdef_dbsingleton.
 <div id="installer_wrapper" class="page_1_wrapper">
     <div id="bmlt_installer_tab_bar" class="bmlt_installer_tab_bar">
         <div id="bmlt_installer_tab_1" class="bmlt_installer_tab_1">
-            <a href="javascript:g_installer_object.selectPage1()"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_Setup'] ); ?></a>
+            <a href="javascript:g_installer_object.selectPage1()"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Page_1_Tab'] ); ?></a>
         </div>
         <div id="bmlt_installer_tab_2" class="bmlt_installer_tab_2">
-            <a href="javascript:g_installer_object.selectPage2()"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Map_Setup'] ); ?></a>
+            <a href="javascript:g_installer_object.selectPage2()"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Page_2_Tab'] ); ?></a>
         </div>
         <div id="bmlt_installer_tab_3" class="bmlt_installer_tab_3">
-            <a href="javascript:g_installer_object.selectPage3()"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['User_Setup'] ); ?></a>
+            <a href="javascript:g_installer_object.selectPage3()"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Page_3_Tab'] ); ?></a>
         </div>
     </div>
     <div class="page_content">
@@ -41,8 +41,13 @@ require_once ( dirname ( __FILE__ ).'/../../server/classes/c_comdef_dbsingleton.
                     {
                     if ( count ( PDO::getAvailableDrivers() ) )
                         {
-            ?>
+            ?>                <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+            <script type="text/javascript">
+                var g_installer_object = new BMLTInstaller ( <?php echo array2json ( $prefs_array['search_spec_map_center'] ); ?> );
+            </script>
             <div id="bmlt_installer_page_1" class="bmlt_installer_page_1">
+                <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_1_Heading']; ?></h1>
+                <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_1_Text']; ?></h2>
                 <div class="one_line_div">
                     <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_Type'] ); ?></div>
                     <div class="right_left_aligned_div">
@@ -50,21 +55,23 @@ require_once ( dirname ( __FILE__ ).'/../../server/classes/c_comdef_dbsingleton.
                     </div>
                 </div>
                 <div class="one_line_div">
-                    <div class="left_right_aligned_div bold_char"><?php echo $comdef_install_wizard_strings['Database_Name']; ?></div>
-                    <div class="right_left_aligned_div">
-                        <input type="text" id="installer_db_name_input" value="<?php echo $prefs_array['dbName']; ?>" class="bmlt_text_item_small" />
-                    </div>
-                </div>
-                <div class="one_line_div">
                     <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_Host'] ); ?></div>
                     <div class="right_left_aligned_div">
                         <input type="text" id="installer_db_host_input" value="<?php echo htmlspecialchars ( $prefs_array['dbServer'] ); ?>" class="bmlt_text_item_small" />
                     </div>
+                    <div class="extra_text_div"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_Host_Additional_Text'] ); ?></div>
                 </div>
                 <div class="one_line_div">
                     <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Table_Prefix'] ); ?></div>
                     <div class="right_left_aligned_div">
                         <input type="text" id="installer_db_prefix_input" value="<?php echo htmlspecialchars ( $prefs_array['dbPrefix'] ); ?>" class="bmlt_text_item_small" />
+                    </div>
+                    <div class="extra_text_div"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Table_Prefix_Additional_Text'] ); ?></div>
+                </div>
+                <div class="one_line_div">
+                    <div class="left_right_aligned_div bold_char"><?php echo $comdef_install_wizard_strings['Database_Name']; ?></div>
+                    <div class="right_left_aligned_div">
+                        <input type="text" id="installer_db_name_input" value="<?php echo $prefs_array['dbName']; ?>" class="bmlt_text_item_small" />
                     </div>
                 </div>
                 <div class="one_line_div">
@@ -82,10 +89,10 @@ require_once ( dirname ( __FILE__ ).'/../../server/classes/c_comdef_dbsingleton.
                 <div class="clear_both"></div>
             </div>
             <div id="bmlt_installer_page_2" class="bmlt_installer_page_2">
+                <div id="installer_map_display_div" class="installer_map_display_div"></div>
             </div>
             <div id="bmlt_installer_page_3" class="bmlt_installer_page_3">
-            </div>
-            <?php
+            </div><?php
                     }
                 else
                     {
@@ -104,9 +111,6 @@ require_once ( dirname ( __FILE__ ).'/../../server/classes/c_comdef_dbsingleton.
         ?>
     </div>
     <script type="text/javascript">
-        <?php
-        ?>
-        var g_installer_object = new BMLTInstaller;
         g_installer_object.handleTextInputLoad(document.getElementById('installer_db_name_input'),'<?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_Name_Default_Text'] ); ?>','small');
         g_installer_object.handleTextInputLoad(document.getElementById('installer_db_user_input'),'<?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_User_Default_Text'] ); ?>','small');
         g_installer_object.handleTextInputLoad(document.getElementById('installer_db_pw_input'),'<?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_PW_Default_Text'] ); ?>','small');

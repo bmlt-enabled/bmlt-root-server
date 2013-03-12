@@ -16,9 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this code.  If not, see <http://www.gnu.org/licenses/>.
 */
-function BMLTInstaller()
+function BMLTInstaller( in_map_center   ///< The JSON object containing the map center.
+                        )
 {
-    var m_installer_wrapper_object = null;
+    var m_installer_wrapper_object;
+    var m_map_object;
+    var m_map_center;
     
     // #mark - 
     // #mark Page Selection Handlers
@@ -30,9 +33,9 @@ function BMLTInstaller()
     ****************************************************************************************/
     this.selectPage1 = function()
     {
-        if ( this.installer_wrapper_object.className != 'page_1_wrapper' )
+        if ( this.m_installer_wrapper_object.className != 'page_1_wrapper' )
             {
-            this.installer_wrapper_object.className = 'page_1_wrapper';
+            this.m_installer_wrapper_object.className = 'page_1_wrapper';
             };
     };
     
@@ -42,9 +45,14 @@ function BMLTInstaller()
     ****************************************************************************************/
     this.selectPage2 = function()
     {
-        if ( this.installer_wrapper_object.className != 'page_2_wrapper' )
+        if ( this.m_installer_wrapper_object.className != 'page_2_wrapper' )
             {
-            this.installer_wrapper_object.className = 'page_2_wrapper';
+            this.m_installer_wrapper_object.className = 'page_2_wrapper';
+            
+            if ( !this.m_map_object )
+                {
+                this.m_map_object = this.createLocationMap ( document.getElementById ('installer_map_display_div') );
+                };
             };
     };
     
@@ -54,9 +62,9 @@ function BMLTInstaller()
     ****************************************************************************************/
     this.selectPage3 = function()
     {
-        if ( this.installer_wrapper_object.className != 'page_3_wrapper' )
+        if ( this.m_installer_wrapper_object.className != 'page_3_wrapper' )
             {
-            this.installer_wrapper_object.className = 'page_3_wrapper';
+            this.m_installer_wrapper_object.className = 'page_3_wrapper';
             };
     };
     
@@ -181,9 +189,43 @@ function BMLTInstaller()
             };
     };
     
+    /************************************************************************************//**
+    *   \brief This creates the map for the location tab.                                   *
+    *   \returns the map object.                                                            *
+    ****************************************************************************************/
+    this.createLocationMap = function(  in_parent_div   // The div element containing this map.
+                                    )
+    {
+        var map_object = null;
+        var myOptions = {
+                        'center': new google.maps.LatLng ( this.m_map_center.latitude, this.m_map_center.longitude ),
+                        'zoom': this.m_map_center.zoom,
+                        'mapTypeId': google.maps.MapTypeId.ROADMAP,
+                        'mapTypeControlOptions': { 'style': google.maps.MapTypeControlStyle.DROPDOWN_MENU },
+                        'zoomControl': true,
+                        'mapTypeControl': true,
+                        'disableDoubleClickZoom' : true,
+                        'draggableCursor': "crosshair",
+                        'scaleControl' : true
+                        };
+
+        myOptions.zoomControlOptions = { 'style': google.maps.ZoomControlStyle.LARGE };
+
+        map_object = new google.maps.Map ( in_parent_div, myOptions );
+    
+        if ( map_object )
+            {
+            map_object.setOptions({'scrollwheel': false});   // For some reason, it ignores setting this in the options.
+            google.maps.event.addListener ( map_object, 'click', function(in_event) { alert ( 'CLICK' ) } );
+            };
+            
+        return map_object;
+    };
+    
     // #mark - 
     // #mark Main Context
     // #mark -
     
-    this.installer_wrapper_object = document.getElementById ( 'installer_wrapper' );
+    this.m_map_center = in_map_center;
+    this.m_installer_wrapper_object = document.getElementById ( 'installer_wrapper' );
 };

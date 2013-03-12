@@ -243,3 +243,33 @@ textarea.bmlt_text_item_dimmed
     font-weight:bold;
     font-size:x-large;
 }
+
+div.right_left_aligned_div input
+{
+    float:left;
+    margin-right:0.5em;
+}
+
+div.extra_text_div
+{
+    font-style:italic;
+}
+
+h1.page_heading_h1
+{
+    font-size:x-large;
+    text-align:center;
+}
+
+h2.page_heading_h2
+{
+    margin-top:0.5em;
+    font-size:medium;
+    font-weight:normal;
+    margin-bottom:1em;
+}
+
+div.installer_map_display_div
+{
+    height:400px;
+}

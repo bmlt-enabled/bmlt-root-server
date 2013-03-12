@@ -47,7 +47,7 @@ if ( isset ( $http_vars['installer_ajax'] ) && isset ( $http_vars['prefs_json'] 
 else
     {
     // This is our preferences state array, and contains the hardwired defaults.
-    $prefs_array = array (  'dbName'                        =>  'bmlt',
+    $prefs_array = array (  'dbName'                        =>  '',
                             'dbUser'                        =>  '',
                             'dbPassword'                    =>  '',
                         
