@@ -60,7 +60,7 @@ else
                             'min_pw_len'                    =>  '6',
                         
                             'region_bias'                   =>  'us',
-                            'search_spec_map_center'        =>  array ( 'longitude' => -118.563659, 'latitude' => 34.235918, 'zoom' => 8 ),
+                            'search_spec_map_center'        =>  array ( 'longitude' => -118.563659, 'latitude' => 34.235918, 'zoom' => 6 ),
                         
                             'number_of_meetings_for_auto'   =>  10,
                             'time_format'                   =>  'g:i A',

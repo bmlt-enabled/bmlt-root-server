@@ -41,23 +41,30 @@ body
 
 div.page_1_wrapper div.bmlt_installer_page_2,
 div.page_1_wrapper div.bmlt_installer_page_3,
+div.page_1_wrapper div.bmlt_installer_page_4,
 div.page_2_wrapper div.bmlt_installer_page_1,
 div.page_2_wrapper div.bmlt_installer_page_3,
+div.page_2_wrapper div.bmlt_installer_page_4,
 div.page_3_wrapper div.bmlt_installer_page_1,
-div.page_3_wrapper div.bmlt_installer_page_2
+div.page_3_wrapper div.bmlt_installer_page_2,
+div.page_3_wrapper div.bmlt_installer_page_4,
+div.page_4_wrapper div.bmlt_installer_page_1,
+div.page_4_wrapper div.bmlt_installer_page_2,
+div.page_4_wrapper div.bmlt_installer_page_3
 {
     display:none;
 }
 
 div.bmlt_installer_tab_bar
 {
-    margin-left:4px;
+    margin-left:1em;
     margin-top:0.5em;
 }
 
 div.bmlt_installer_tab_1,
 div.bmlt_installer_tab_2,
-div.bmlt_installer_tab_3
+div.bmlt_installer_tab_3,
+div.bmlt_installer_tab_4
 {
     float:left;
 }
@@ -67,13 +74,15 @@ div.bmlt_installer_tab_1 a:visited,
 div.bmlt_installer_tab_2 a,
 div.bmlt_installer_tab_2 a:visited,
 div.bmlt_installer_tab_3 a,
-div.bmlt_installer_tab_3 a:visited
+div.bmlt_installer_tab_3 a:visited,
+div.bmlt_installer_tab_4 a,
+div.bmlt_installer_tab_4 a:visited
 {
     display:block;
     color: #9cf;
     text-decoration:underline;
     text-align:center;
-    font-size:x-large;
+    font-size:large;
     font-weight:bold;
     padding:0.5em;
     padding-left:1em;
@@ -91,7 +100,9 @@ div.bmlt_installer_tab_1 a:active,
 div.bmlt_installer_tab_2 a:hover,
 div.bmlt_installer_tab_2 a:active,
 div.bmlt_installer_tab_3 a:hover,
-div.bmlt_installer_tab_3 a:active
+div.bmlt_installer_tab_3 a:active,
+div.bmlt_installer_tab_4 a:hover,
+div.bmlt_installer_tab_4 a:active
 {
     color: #fc9;
     text-decoration:none;
@@ -108,7 +119,11 @@ div.page_2_wrapper div.bmlt_installer_tab_2 a:active,
 div.page_3_wrapper div.bmlt_installer_tab_3 a,
 div.page_3_wrapper div.bmlt_installer_tab_3 a:visited,
 div.page_3_wrapper div.bmlt_installer_tab_3 a:hover,
-div.page_3_wrapper div.bmlt_installer_tab_3 a:active
+div.page_3_wrapper div.bmlt_installer_tab_3 a:active,
+div.page_4_wrapper div.bmlt_installer_tab_4 a,
+div.page_4_wrapper div.bmlt_installer_tab_4 a:visited,
+div.page_4_wrapper div.bmlt_installer_tab_4 a:hover,
+div.page_4_wrapper div.bmlt_installer_tab_4 a:active
 {
     background-color: white;
     text-decoration:none;
@@ -126,6 +141,8 @@ div.page_content
     border-radius: 4px;
     text-align:left;
     padding:0.5em;
+    margin:0.25em;
+    margin-top:0em;
 }
 
 div.one_line_div
@@ -272,4 +289,60 @@ h2.page_heading_h2
 div.installer_map_display_div
 {
     height:400px;
+}
+
+div.next_prev_container_div
+{
+    clear:both;
+    margin-top:0.5em;
+    margin-bottom:0.5em;
+}
+
+div.prev_button_div
+{
+    float:left;
+    text-align:left;
+    width:40%;
+}
+
+div.next_button_div
+{
+    float:right;
+    text-align:right;
+    width:40%;
+}
+
+
+/* These are buttons */
+
+a.bmlt_admin_ajax_button,
+a.bmlt_admin_ajax_button:visited
+{
+    outline:none;
+    text-align:center;
+    margin-left:auto;
+    margin-right:auto;
+    display: inline-block;
+    padding:0.1em;
+    padding-left:1em;
+    padding-right:1em;
+    border: 1px solid #009;
+    color: #009;
+    font-weight:bold;
+    font-size:small;
+    text-decoration:none;
+    background-color:white;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    cursor:default;
+}
+
+a.bmlt_admin_ajax_button:hover,
+a.bmlt_admin_ajax_button:active
+{
+    outline:none;
+    background-color:#009;
+    color:white;
+    border: 1px solid white;
 }

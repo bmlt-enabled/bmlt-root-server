@@ -68,6 +68,18 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
             };
     };
     
+    /************************************************************************************//**
+    *   \brief Shows Page 4 of the installer wizard. It does this by setting the wrapper    *
+    *          className to the first page, which uses CSS to hide the other two pages.     *
+    ****************************************************************************************/
+    this.selectPage4 = function()
+    {
+        if ( this.m_installer_wrapper_object.className != 'page_4_wrapper' )
+            {
+            this.m_installer_wrapper_object.className = 'page_4_wrapper';
+            };
+    };
+    
     // #mark - 
     // #mark Text Item Handlers
     // #mark -
@@ -216,10 +228,36 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
         if ( map_object )
             {
             map_object.setOptions({'scrollwheel': false});   // For some reason, it ignores setting this in the options.
-            google.maps.event.addListener ( map_object, 'click', function(in_event) { alert ( 'CLICK' ) } );
+            google.maps.event.addListener ( map_object, 'click', g_installer_object.reactToMapClick );
+            
+            m_icon_image = new google.maps.MarkerImage ( "./local_server/server_admin/style/images/NACenterMarker.png", new google.maps.Size(21, 36), new google.maps.Point(0,0), new google.maps.Point(11, 36) );
+            m_icon_shadow = new google.maps.MarkerImage( "./local_server/server_admin/style/images/NACenterMarkerS.png", new google.maps.Size(43, 36), new google.maps.Point(0,0), new google.maps.Point(11, 36) );
+
+            map_object.main_marker = new google.maps.Marker ({
+                                                                'position':     map_object.getCenter(),
+                                                                'map':          map_object,
+                                                                'icon':         m_icon_image,
+                                                                'shadow':       m_icon_shadow,
+                                                                'clickable':    false,
+                                                                'cursor':       'pointer',
+                                                                'draggable':    true
+                                                                } );
+            
+            google.maps.event.addListener ( map_object.main_marker, 'dragend', g_installer_object.reactToMapClick );
             };
             
         return map_object;
+    };
+    
+    /************************************************************************************//**
+    *   \brief This is the callback for a map click or drag end.                            *
+    ****************************************************************************************/
+    this.reactToMapClick = function(  in_gMap_event ///< The Google Maps event
+                                    )
+    {
+        var map_center = in_gMap_event.latLng;
+        g_installer_object.m_map_object.panTo ( map_center );
+        g_installer_object.m_map_object.main_marker.setPosition ( map_center );
     };
     
     // #mark - 

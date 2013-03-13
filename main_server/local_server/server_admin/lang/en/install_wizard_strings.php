@@ -25,7 +25,10 @@
 	                                        'Database_PDO_Error'            =>  'ERROR: You do not have PHP PDO installed!',
 	                                        'Database_Type_Error'           =>  'ERROR: Even though you have PDO, you have no database drivers installed!',
 
-	                                        'Page_1_Tab'                    =>  'Set Database Connection',
+	                                        'Prev_Button'                   =>  'PREVIOUS',
+	                                        'Next_Button'                   =>  'NEXT',
+
+	                                        'Page_1_Tab'                    =>  'STEP 1: Database',
 	                                        'Page_1_Heading'                =>  'Database Connection Settings',
 	                                        'Page_1_Text'                   =>  'Before you can apply the settings on this page, you must set up a new empty database, and establish a database user that has full user rights on that database.',
 	                                        
@@ -37,13 +40,18 @@
 	                                        'Database_Host_Additional_Text' =>  'This is usually "localhost."',
 	                                        'Table_Prefix'                  =>  'Table Prefix:',
 	                                        'Table_Prefix_Default_Text'     =>  'Enter A Table Prefix',
-	                                        'Table_Prefix_Additional_Text'  =>  'Change this for multiple root servers using the same database.',
+	                                        'Table_Prefix_Additional_Text'  =>  'Only for multiple root servers sharing a database.',
 	                                        'Database_User'                 =>  'Database User:',
 	                                        'Database_User_Default_Text'    =>  'Enter A Database User Name',
 	                                        'Database_PW'                   =>  'Database Password:',
 	                                        'Database_PW_Default_Text'      =>  'Enter A Database Password',
 	                                        
-	                                        'Page_2_Tab'                    =>  'Set Default Location',
-	                                        'Page_3_Tab'                    =>  'Establish Other Server Settings',
+	                                        'Page_2_Tab'                    =>  'STEP 2: Default Location',
+	                                        'Page_2_Heading'                =>  'Set The Initial Location For Meetings',
+	                                        'Page_2_Text'                   =>  'When a new meeting is created, this is its initial map location, so you should choose a location that is central in your covered region.',
+
+	                                        'Page_3_Tab'                    =>  'STEP 3: Server Settings',
+
+	                                        'Page_4_Tab'                    =>  'STEP 4: Save The Settings',
 	                                        );
 ?>

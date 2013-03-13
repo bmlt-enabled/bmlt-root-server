@@ -32,6 +32,9 @@ require_once ( dirname ( __FILE__ ).'/../../server/classes/c_comdef_dbsingleton.
         <div id="bmlt_installer_tab_3" class="bmlt_installer_tab_3">
             <a href="javascript:g_installer_object.selectPage3()"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Page_3_Tab'] ); ?></a>
         </div>
+        <div id="bmlt_installer_tab_4" class="bmlt_installer_tab_4">
+            <a href="javascript:g_installer_object.selectPage4()"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Page_4_Tab'] ); ?></a>
+        </div>
     </div>
     <div class="page_content">
         <?php
@@ -46,6 +49,7 @@ require_once ( dirname ( __FILE__ ).'/../../server/classes/c_comdef_dbsingleton.
                 var g_installer_object = new BMLTInstaller ( <?php echo array2json ( $prefs_array['search_spec_map_center'] ); ?> );
             </script>
             <div id="bmlt_installer_page_1" class="bmlt_installer_page_1">
+                <?php echo bmlt_create_next_prev_buttons(1) ?>
                 <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_1_Heading']; ?></h1>
                 <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_1_Text']; ?></h2>
                 <div class="one_line_div">
@@ -86,12 +90,22 @@ require_once ( dirname ( __FILE__ ).'/../../server/classes/c_comdef_dbsingleton.
                         <input type="text" id="installer_db_pw_input" value="<?php echo htmlspecialchars ( $prefs_array['dbPassword'] ); ?>" class="bmlt_text_item_small" />
                     </div>
                 </div>
-                <div class="clear_both"></div>
+                <?php echo bmlt_create_next_prev_buttons(1) ?>
             </div>
             <div id="bmlt_installer_page_2" class="bmlt_installer_page_2">
+                <?php echo bmlt_create_next_prev_buttons(2) ?>
+                <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_2_Heading']; ?></h1>
+                <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_2_Text']; ?></h2>
                 <div id="installer_map_display_div" class="installer_map_display_div"></div>
+                <?php echo bmlt_create_next_prev_buttons(2) ?>
             </div>
             <div id="bmlt_installer_page_3" class="bmlt_installer_page_3">
+                <?php echo bmlt_create_next_prev_buttons(3) ?>
+                <?php echo bmlt_create_next_prev_buttons(3) ?>
+            </div>
+            <div id="bmlt_installer_page_4" class="bmlt_installer_page_4">
+                <?php echo bmlt_create_next_prev_buttons(4) ?>
+                <?php echo bmlt_create_next_prev_buttons(4) ?>
             </div><?php
                     }
                 else
@@ -120,6 +134,29 @@ require_once ( dirname ( __FILE__ ).'/../../server/classes/c_comdef_dbsingleton.
 </div>
 
 <?php
+function bmlt_create_next_prev_buttons( $in_section  ///< The page we are in. An integer.
+                                        )
+{
+    global  $comdef_install_wizard_strings;
+    $ret = '<div class="next_prev_container_div">';
+        if ( $in_section > 1 )
+            {
+            $ret .= '<div class="prev_button_div">';
+                $ret .= '<a class="bmlt_admin_ajax_button" href="javascript:g_installer_object.selectPage'.strval($in_section - 1).'()">'.$comdef_install_wizard_strings['Prev_Button'].'</a>';
+            $ret .= '</div>';
+            }
+        if ( $in_section < 4 )
+            {
+            $ret .= '<div class="next_button_div">';
+                $ret .= '<a class="bmlt_admin_ajax_button" href="javascript:g_installer_object.selectPage'.strval($in_section + 1).'()">'.$comdef_install_wizard_strings['Next_Button'].'</a>';
+            $ret .= '</div>';
+            }
+        $ret .= '<div class="clear_both"></div>';
+    $ret .= '</div>';
+    
+    return $ret;
+}
+
 function bmlt_create_pdo_driver_select()
 {
     global  $prefs_array, $comdef_install_wizard_strings;
