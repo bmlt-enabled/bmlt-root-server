@@ -101,10 +101,14 @@ require_once ( dirname ( __FILE__ ).'/../../server/classes/c_comdef_dbsingleton.
             </div>
             <div id="bmlt_installer_page_3" class="bmlt_installer_page_3">
                 <?php echo bmlt_create_next_prev_buttons(3) ?>
+                <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_3_Heading']; ?></h1>
+                <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_3_Text']; ?></h2>
                 <?php echo bmlt_create_next_prev_buttons(3) ?>
             </div>
             <div id="bmlt_installer_page_4" class="bmlt_installer_page_4">
                 <?php echo bmlt_create_next_prev_buttons(4) ?>
+                <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_4_Heading']; ?></h1>
+                <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_4_Text']; ?></h2>
                 <?php echo bmlt_create_next_prev_buttons(4) ?>
             </div><?php
                     }

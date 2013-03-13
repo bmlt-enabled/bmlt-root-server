@@ -51,7 +51,11 @@
 	                                        'Page_2_Text'                   =>  'When a new meeting is created, this is its initial map location, so you should choose a location that is central in your covered region.',
 
 	                                        'Page_3_Tab'                    =>  'STEP 3: Server Settings',
+	                                        'Page_3_Heading'                =>  'Set Various Global Server Settings',
+	                                        'Page_3_Text'                   =>  'These are a few settings that affect the administration and general configuration of this server. Most server settings are done in the server itself.',
 
 	                                        'Page_4_Tab'                    =>  'STEP 4: Save The Settings',
+	                                        'Page_4_Heading'                =>  'Create the Settings File',
+	                                        'Page_4_Text'                   =>  'Due to security concerns (Yeah, we\'re fairly paranoid -go figure), this program will not attempt to create or modify the settings file. Instead, we ask you to create it yourself, via FTP or a control panel file manager, name it "auto-config.inc.php", and paste the following text into the file:',
 	                                        );
 ?>
