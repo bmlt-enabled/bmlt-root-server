@@ -20,6 +20,9 @@
 defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );    // Makes sure that this file is in the correct context.
 // This contains the PDO database access stuff.
 require_once ( dirname ( __FILE__ ).'/../../server/classes/c_comdef_dbsingleton.class.php' );
+
+$basename = basename ( realpath ( dirname ( __FILE__ ).'/../../' ) );
+$realpath = realpath ( dirname ( __FILE__ ).'/../../../' );
 ?>
 <div id="installer_wrapper" class="page_1_wrapper">
     <div id="bmlt_installer_tab_bar" class="bmlt_installer_tab_bar">
@@ -129,6 +132,8 @@ require_once ( dirname ( __FILE__ ).'/../../server/classes/c_comdef_dbsingleton.
         ?>
     </div>
     <script type="text/javascript">
+        g_installer_object.m_top_dir_path = '<?php echo $realpath ?>';
+        g_installer_object.m_main_dir_basename = '<?php echo $basename ?>';
         g_installer_object.handleTextInputLoad(document.getElementById('installer_db_name_input'),'<?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_Name_Default_Text'] ); ?>','small');
         g_installer_object.handleTextInputLoad(document.getElementById('installer_db_user_input'),'<?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_User_Default_Text'] ); ?>','small');
         g_installer_object.handleTextInputLoad(document.getElementById('installer_db_pw_input'),'<?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_PW_Default_Text'] ); ?>','small');

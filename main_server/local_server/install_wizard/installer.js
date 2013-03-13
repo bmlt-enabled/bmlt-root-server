@@ -22,6 +22,8 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
     var m_installer_wrapper_object;
     var m_map_object;
     var m_map_center;
+    var m_top_dir_path;
+    var m_main_dir_basename;
     
     // #mark - 
     // #mark Page Selection Handlers
