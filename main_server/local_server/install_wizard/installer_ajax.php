@@ -20,9 +20,20 @@
 $report = '';
 
 defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );    // Makes sure that this file is in the correct context.
+
+if ( zlib_get_coding_type() === false )
+    {
+    ob_start ( "ob_gzhandler" );
+    }
+else
+    {
+    ob_start ( );
+    }
+
 // This contains the PDO database access stuff.
 require_once ( dirname ( __FILE__ ).'/../../server/classes/c_comdef_dbsingleton.class.php' );
 require_once ( dirname ( __FILE__ ).'/../../server/shared/classes/comdef_utilityclasses.inc.php' );
+require_once ( dirname ( __FILE__ ).'/../../server/shared/Array2Json.php' );
 
 // We do everything we can to ensure that the requested language file is loaded.
 if ( file_exists ( dirname ( __FILE__ ).'/../server_admin/lang/'.$lang.'/install_wizard_strings.php' ) )
@@ -31,6 +42,7 @@ if ( file_exists ( dirname ( __FILE__ ).'/../server_admin/lang/'.$lang.'/install
     }
 else
     {
+    $lang = 'en';
     require_once ( dirname ( __FILE__ ).'/../server_admin/lang/en/install_wizard_strings.php' );
     }
 
@@ -45,38 +57,49 @@ if (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'initiali
     &&  isset ( $http_vars['admin_password'] ) && $http_vars['admin_password']  // This is cleartext, but that can't be helped. This is the only place in the installer where this happens.
      )
     {
-    $sql_query = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/InitialSQL.sql' ) );
-    
-    $sql_array = array ( $http_vars['admin_login'], FullCrypt ( $http_vars['admin_password'], $http_vars['salt'], true ) );
-    
+    $sql[] = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/initialMeetingsStructure.sql' ) );
+    $sql[] = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/initialFormatsStructure.sql' ) );
+    $sql[] = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/initialChangesStructure.sql' ) );
+    $sql[] = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/initialServiceBodiesStructure.sql' ) );
+    $sql[] = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/InitialUsersStructure.sql' ) );
+    $sql[] = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/InitialFormatsData.sql' ) );
+    $sql[] = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/InitialMeetingsData.sql' ) );
+
     // Our SQL is now ready to be set to the server. We need to use PDO, as that is the abstraction mechanism used by the server.
     
-    // First, we make sure that the database does not already exist. If so, we immediately fail, as we will not overwrite an existing database.
     try
         {
         // We connect the PDO layer:
         c_comdef_dbsingleton::init ( $http_vars['dbType'], $http_vars['dbServer'], $http_vars['dbName'], $http_vars['dbUser'], $http_vars['dbPassword'] );
     
-		$result = c_comdef_dbsingleton::preparedQuery ( 'SELECT * FROM `'.$http_vars['dbPrefix'].'_comdef_users`', $sql_array );
+        // First, we make sure that the database does not already exist. If so, we immediately fail, as we will not overwrite an existing database.
+		$result = c_comdef_dbsingleton::preparedQuery ( 'SHOW TABLES LIKE \'?\'', array($http_vars['dbPrefix'].'_comdef_users') );
 		
-		$response = array ( 'status' => 'false', 'report' => '' );
+		$response = array ( 'status' => 'false', 'report' => 'AJAX_Handler_DB_Established_Error' );
 		
-		if ( isset ( $result ) && is_array ( $result ) && count ( $result ) )
-		    {
-		    $response['status'] = false;
-            $response['report'] = $comdef_install_wizard_strings['AJAX_Handler_DB_Established_Error'];
-		    }
-		else
+		if ( !isset ( $result ) || !is_array ( $result ) || !count ( $result ) )
 		    {
 		    $response['status'] = true;
-            c_comdef_dbsingleton::preparedExec ( $sql_query, array() );
+		    $response['report'] = '';
+            foreach ( $sql as $sql_statement )
+                {
+                c_comdef_dbsingleton::preparedExec ( $sql_statement, array() );
+                }
+                        
+            $sql_serveradmin = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/serverAdmin.sql' ) );
+            $max_crypt = true;
+            $sql_array = array ( $http_vars['admin_login'], FullCrypt ( $http_vars['admin_password'], $http_vars['salt'], $max_crypt ), $lang );
+    
+            c_comdef_dbsingleton::preparedExec ( $sql_serveradmin, $sql_array );
             };
         
-        echo htmlspecialchars ( array2json ( $response ) );
+        echo array2json ( $response );
         }
     catch ( Exception $e )
         {
-        $report = $comdef_install_wizard_strings['AJAX_Handler_DB_Connect_Error'];
+        $response = array ( 'status' => 'false', 'report' => $comdef_install_wizard_strings['AJAX_Handler_DB_Connect_Error'] );
+$response['report'] = print_r ( $e );
+        echo array2json ( $response );
         }
     }
 elseif (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'test')
@@ -93,7 +116,7 @@ elseif (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'test
         c_comdef_dbsingleton::init ( $http_vars['dbType'], $http_vars['dbServer'], $http_vars['dbName'], $http_vars['dbUser'], $http_vars['dbPassword'] );
     
         // If we have an existing database, we return the word "false".
-		$result = c_comdef_dbsingleton::preparedQuery ( 'SELECT * FROM `'.$http_vars['dbPrefix'].'_comdef_users`', array() );
+		$result = c_comdef_dbsingleton::preparedQuery ( 'SHOW TABLES LIKE \'?\'', array($http_vars['dbPrefix'].'_comdef_users') );
 		
 		if ( isset ( $result ) && is_array ( $result ) && count ( $result ) )
 		    {
@@ -106,9 +129,7 @@ elseif (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'test
         }
     catch ( Exception $e )
         {
-        $response = array ( 'status' => 'false', 'report' => $comdef_install_wizard_strings['AJAX_Handler_DB_Connect_Error'] );
-        
-        echo htmlspecialchars ( array2json ( $response ) );
+        echo array2json ( array ( 'status' => 'false', 'report' => $comdef_install_wizard_strings['AJAX_Handler_DB_Connect_Error'] ) );
         }
     }
 elseif ( isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'test') )
@@ -117,12 +138,12 @@ elseif ( isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'test') 
     }
 elseif ( isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'initialize_db') )
     {
-	$response = array ( 'status' => 'false', 'report' => $comdef_install_wizard_strings['AJAX_Handler_DB_Incomplete_Error'] );
-		
-    echo htmlspecialchars ( array2json ( $response ) );
+    echo array2json ( array ( 'status' => 'false', 'report' => $comdef_install_wizard_strings['AJAX_Handler_DB_Incomplete_Error'] ) );
     }
 else
     {
     echo 'ERROR';
     }
+
+ob_end_flush();
 die();  // Make sure stop here.
