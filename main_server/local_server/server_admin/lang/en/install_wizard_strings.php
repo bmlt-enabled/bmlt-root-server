@@ -27,6 +27,7 @@
 
                                             'AJAX_Handler_DB_Connect_Error' =>  'The database connection failed! Please make sure that the database exists, IS COMPLETELY EMPTY, the user is created, and that user has full permissions on the empty database.',
                                             'AJAX_Handler_DB_Established_Error' =>  'The database already esists, and has been set up! You cannot use this setup to overwrite an existing database!',
+                                            'AJAX_Handler_DB_Incomplete_Error'  =>  'There is not enough information to initialize the database!',
                                             
 	                                        'Prev_Button'                   =>  'PREVIOUS',
 	                                        'Next_Button'                   =>  'NEXT',

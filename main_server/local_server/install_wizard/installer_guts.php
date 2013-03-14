@@ -104,7 +104,7 @@ $realpath = realpath ( dirname ( __FILE__ ).'/../../../' );
                 <?php echo bmlt_create_next_prev_buttons(3) ?>
                 <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_3_Heading']; ?></h1>
                 <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_3_Text']; ?></h2>
-                <div id="admin_login_stuff_div" class="item_hidden">
+                <div id="admin_login_stuff_div">
                     <div class="one_line_div">
                         <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Admin_Login'] ); ?></div>
                         <div class="right_left_aligned_div">

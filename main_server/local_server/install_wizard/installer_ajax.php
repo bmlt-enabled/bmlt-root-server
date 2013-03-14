@@ -22,6 +22,7 @@ $report = '';
 defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );    // Makes sure that this file is in the correct context.
 // This contains the PDO database access stuff.
 require_once ( dirname ( __FILE__ ).'/../../server/classes/c_comdef_dbsingleton.class.php' );
+require_once ( dirname ( __FILE__ ).'/../../server/shared/classes/comdef_utilityclasses.inc.php' );
 
 // We do everything we can to ensure that the requested language file is loaded.
 if ( file_exists ( dirname ( __FILE__ ).'/../server_admin/lang/'.$lang.'/install_wizard_strings.php' ) )
@@ -44,22 +45,19 @@ if (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'initiali
     &&  isset ( $http_vars['admin_password'] ) && $http_vars['admin_password']  // This is cleartext, but that can't be helped. This is the only place in the installer where this happens.
      )
     {
-    $sql_query = str_replace ( '%%PREFIX%%', $http_vars['dbPrefix'], file_get_contents ( dirname ( __FILE__ ).'/InitialSQL.sql' ) );
+    $sql_query = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/InitialSQL.sql' ) );
     
-    // We now have a straight-up SQL query with the prefix resolved. Next, do the server admin login:
-    $sql_query = str_replace ( '%%admin_login%%', $http_vars['admin_login'], $sql_query );
-    $sql_query = str_replace ( '%%admin_password%%', $http_vars['admin_password'], $sql_query );
+    $sql_array = array ( $http_vars['admin_login'], FullCrypt ( $http_vars['admin_password'], $http_vars['salt'], true ) );
     
     // Our SQL is now ready to be set to the server. We need to use PDO, as that is the abstraction mechanism used by the server.
     
     // First, we make sure that the database does not already exist. If so, we immediately fail, as we will not overwrite an existing database.
-    
     try
         {
         // We connect the PDO layer:
         c_comdef_dbsingleton::init ( $http_vars['dbType'], $http_vars['dbServer'], $http_vars['dbName'], $http_vars['dbUser'], $http_vars['dbPassword'] );
     
-		$result = c_comdef_dbsingleton::preparedQuery ( 'SELECT * FROM `'.$http_vars['dbPrefix'].'_comdef_users`', array() );
+		$result = c_comdef_dbsingleton::preparedQuery ( 'SELECT * FROM `'.$http_vars['dbPrefix'].'_comdef_users`', $sql_array );
 		
 		$response = array ( 'status' => 'false', 'report' => '' );
 		
@@ -99,20 +97,32 @@ elseif (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'test
 		
 		if ( isset ( $result ) && is_array ( $result ) && count ( $result ) )
 		    {
-		    echo 'false';
+		    echo '0';
 		    }
 		else
 		    {
-		    echo 'true';
+		    echo '1';
 		    }
         }
     catch ( Exception $e )
         {
-        $report = $comdef_install_wizard_strings['AJAX_Handler_DB_Connect_Error'];
+        $response = array ( 'status' => 'false', 'report' => $comdef_install_wizard_strings['AJAX_Handler_DB_Connect_Error'] );
+        
+        echo htmlspecialchars ( array2json ( $response ) );
         }
     }
 elseif ( isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'test') )
     {
-	echo 'false';
+	echo '-1';
+    }
+elseif ( isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'initialize_db') )
+    {
+	$response = array ( 'status' => 'false', 'report' => $comdef_install_wizard_strings['AJAX_Handler_DB_Incomplete_Error'] );
+		
+    echo htmlspecialchars ( array2json ( $response ) );
+    }
+else
+    {
+    echo 'ERROR';
     }
 die();  // Make sure stop here.

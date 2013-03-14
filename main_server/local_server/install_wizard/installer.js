@@ -303,27 +303,38 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
                                                 )
     {
         this.m_ajax_request_in_progress = null;
+        
         if ( in_http_request.responseText )
             {
-            eval ( 'var ret_val = ' + in_http_request.responseText + ';' );
+            eval ( 'var ret_val = parseInt ( ' + in_http_request.responseText + ', 10 );' );
             
-            if ( ret_val )
-                {
-                document.getElementById ( 'admin_login_stuff_div' ).className = '';
-                document.getElementById ( 'database_install_stuff_div' ).className = '';
-                }
-            else
+            if ( ret_val == 0 )
                 {
                 document.getElementById ( 'admin_login_stuff_div' ).className = 'item_hidden';
                 document.getElementById ( 'database_install_stuff_div' ).className = 'item_hidden';
+                }
+            else if ( ret_val == -1 )
+                {
+                document.getElementById ( 'admin_login_stuff_div' ).className = '';
+                document.getElementById ( 'database_install_stuff_div' ).className = 'item_hidden';
+                }
+            else
+                {
+                document.getElementById ( 'admin_login_stuff_div' ).className = '';
+                document.getElementById ( 'database_install_stuff_div' ).className = '';
                 };
+            }
+        else
+            {
+            document.getElementById ( 'admin_login_stuff_div' ).className = '';
+            document.getElementById ( 'database_install_stuff_div' ).className = 'item_hidden';
             };
     };
     
     /************************************************************************************//**
     *   \brief 
     ****************************************************************************************/
-    this.initializeDatabase = function()
+    this.setUpDatabase = function()
     {
         var uri = this.m_ajax_uri;
         
@@ -342,6 +353,15 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
         uri += '&dbPassword=' + this.m_installer_state.dbPassword;
         uri += '&dbServer=' + this.m_installer_state.dbServer;
         uri += '&dbPrefix=' + this.m_installer_state.dbPrefix;
+        
+        var admin_login_object = document.getElementById('installer_admin_login_input');
+        var admin_password_object = document.getElementById('installer_admin_password_input');
+
+        var admin_login = (admin_login_object.value && (admin_login_object.value != admin_login_object.defaultValue)) ? admin_login_object.value : '';
+        var admin_password = (admin_password_object.value && (admin_password_object.value != admin_password_object.defaultValue)) ? admin_password_object.value : '';
+
+        uri += '&admin_login=' + admin_login;
+        uri += '&admin_password=' + admin_password;
         
         var salt = new Date();
         uri += '&salt=' + salt.getTime();
@@ -387,6 +407,9 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
         var db_pw_object = document.getElementById('installer_db_pw_input');
         var db_host_object = document.getElementById('installer_db_host_input');
         var db_prefix_object = document.getElementById('installer_db_prefix_input');
+        
+        var admin_login_object = document.getElementById('installer_admin_login_input');
+        var admin_password_object = document.getElementById('installer_admin_password_input');
 
         this.m_installer_state = null;
         this.m_installer_state = new Object;
@@ -398,12 +421,17 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
         this.m_installer_state.dbServer = (db_host_object.value && (db_host_object.value != db_host_object.defaultValue)) ? db_host_object.value : '';
         this.m_installer_state.dbPrefix = (db_prefix_object.value && (db_prefix_object.value != db_prefix_object.defaultValue)) ? db_prefix_object.value : '';
         
+        var admin_login = (admin_login_object.value && (admin_login_object.value != admin_login_object.defaultValue)) ? admin_login_object.value : '';
+        var admin_password = (admin_password_object.value && (admin_password_object.value != admin_password_object.defaultValue)) ? admin_password_object.value : '';
+        
         if (    !this.m_installer_state.dbType
             ||  !this.m_installer_state.dbName
             ||  !this.m_installer_state.dbUser
             ||  !this.m_installer_state.dbPassword
             ||  !this.m_installer_state.dbServer
             ||  !this.m_installer_state.dbPrefix
+            ||  !admin_login
+            ||  !admin_password
             )
             {
             document.getElementById ( 'database_install_stuff_div' ).className = 'item_hidden';
