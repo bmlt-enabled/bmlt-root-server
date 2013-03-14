@@ -19,65 +19,72 @@
 */
 defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );    // Makes sure that this file is in the correct context.
 
-require_once ( dirname ( __FILE__ ).'/../../server/shared/Array2Json.php');
-require_once ( dirname ( __FILE__ ).'/../server_admin/PhpJsonXmlArrayStringInterchanger.inc.php' );
-
-// We do everything we can to ensure that the requested language file is loaded.
-if ( file_exists ( dirname ( __FILE__ ).'/../server_admin/lang/'.$lang.'/install_wizard_strings.php' ) )
+if ( isset ( $http_vars['ajax_req'] ) && $http_vars['ajax_req'] )
     {
-    require_once ( dirname ( __FILE__ ).'/../server_admin/lang/'.$lang.'/install_wizard_strings.php' );
+    require_once ( dirname ( __FILE__ ).'/installer_ajax.php');
     }
 else
     {
-    require_once ( dirname ( __FILE__ ).'/../server_admin/lang/en/install_wizard_strings.php' );
-    }
+    require_once ( dirname ( __FILE__ ).'/../../server/shared/Array2Json.php');
+    require_once ( dirname ( __FILE__ ).'/../server_admin/PhpJsonXmlArrayStringInterchanger.inc.php' );
 
-global  $prefs_array;
+    // We do everything we can to ensure that the requested language file is loaded.
+    if ( file_exists ( dirname ( __FILE__ ).'/../server_admin/lang/'.$lang.'/install_wizard_strings.php' ) )
+        {
+        require_once ( dirname ( __FILE__ ).'/../server_admin/lang/'.$lang.'/install_wizard_strings.php' );
+        }
+    else
+        {
+        require_once ( dirname ( __FILE__ ).'/../server_admin/lang/en/install_wizard_strings.php' );
+        }
 
-// This is our preferences state array, and contains the hardwired defaults.
-$prefs_array = array (  'dbName'                        =>  '',
-                        'dbUser'                        =>  '',
-                        'dbPassword'                    =>  '',
+    global  $prefs_array;
+
+    // This is our preferences state array, and contains the hardwired defaults.
+    $prefs_array = array (  'dbName'                        =>  '',
+                            'dbUser'                        =>  '',
+                            'dbPassword'                    =>  '',
                     
-                        'dbType'                        =>  'mysql',
-                        'dbServer'                      =>  'localhost',
-                        'dbPrefix'                      =>  'na',
+                            'dbType'                        =>  'mysql',
+                            'dbServer'                      =>  'localhost',
+                            'dbPrefix'                      =>  'na',
                     
-                        'bmlt_title'                    =>  'Basic Meeting List Toolbox Administration',
-                        'comdef_global_language'        =>  'en',
-                        'min_pw_len'                    =>  '6',
+                            'bmlt_title'                    =>  'Basic Meeting List Toolbox Administration',
+                            'comdef_global_language'        =>  'en',
+                            'min_pw_len'                    =>  '6',
                     
-                        'region_bias'                   =>  'us',
-                        'search_spec_map_center'        =>  array ( 'longitude' => -118.563659, 'latitude' => 34.235918, 'zoom' => 6 ),
+                            'region_bias'                   =>  'us',
+                            'search_spec_map_center'        =>  array ( 'longitude' => -118.563659, 'latitude' => 34.235918, 'zoom' => 6 ),
                     
-                        'number_of_meetings_for_auto'   =>  10,
-                        'time_format'                   =>  'g:i A',
-                        'change_date_format'            =>  'g:i A, n/j/Y',
+                            'number_of_meetings_for_auto'   =>  10,
+                            'time_format'                   =>  'g:i A',
+                            'change_date_format'            =>  'g:i A, n/j/Y',
                     
-                        'change_depth_for_meetings'     =>  5,
+                            'change_depth_for_meetings'     =>  5,
                     
-                        'banner_text'                   =>  'Administration Login',
-                        'admin_session_name'            =>  'BMLT_Admin',
-                        'comdef_distance_units'         =>  'mi',
-                        'default_duration'              =>  'N.A. Meetings are usually 90 minutes long (an hour and a half), unless otherwise indicated.',
-                        );
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-    <head>
-        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-        <title>BMLT Installer</title>
-        <link rel="stylesheet" href="local_server/server_admin/style/install_wizard_styles.css" />
-        <script type="text/javascript">var  g_prefs_state = <?php echo array2json ( $prefs_array ) ?>;</script>
-        <script type="text/javascript" src="local_server/install_wizard/installer.js"></script>
-    </head>
-    <body>
-        <h1>This Page Is Still Under Construction</h1>
-        <h2>Until this install wizard is complete, you must manually place your auto-config.ing.php file at the same level as the main_server directory.</h2>
-        <?php require_once ( dirname ( __FILE__ ).'/installer_guts.php' ); ?>
-    </body>
-</html>
+                            'banner_text'                   =>  'Administration Login',
+                            'admin_session_name'            =>  'BMLT_Admin',
+                            'comdef_distance_units'         =>  'mi',
+                            'default_duration'              =>  'N.A. Meetings are usually 90 minutes long (an hour and a half), unless otherwise indicated.',
+                            );
+    ?>
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+        <head>
+            <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+            <title>BMLT Installer</title>
+            <link rel="stylesheet" href="local_server/server_admin/style/install_wizard_styles.css" />
+            <script type="text/javascript">var  g_prefs_state = <?php echo array2json ( $prefs_array ) ?>;</script>
+            <script type="text/javascript" src="local_server/install_wizard/installer.js"></script>
+        </head>
+        <body>
+            <h1>This Page Is Still Under Construction</h1>
+            <h2>Until this install wizard is complete, you must manually place your auto-config.ing.php file at the same level as the main_server directory.</h2>
+            <?php require_once ( dirname ( __FILE__ ).'/installer_guts.php' ); ?>
+        </body>
+    </html>
 <?php
-die();  // We stop all processing here. This prevents the script from continuing to the rest of the admin section.
+    die();  // We stop all processing here. This prevents the script from continuing to the rest of the admin section.
+    }
 ?>

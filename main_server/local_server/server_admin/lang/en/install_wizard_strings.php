@@ -25,12 +25,15 @@
 	                                        'Database_PDO_Error'            =>  'ERROR: You do not have PHP PDO installed!',
 	                                        'Database_Type_Error'           =>  'ERROR: Even though you have PDO, you have no database drivers installed!',
 
+                                            'AJAX_Handler_DB_Connect_Error' =>  'The database connection failed! Please make sure that the database exists, IS COMPLETELY EMPTY, the user is created, and that user has full permissions on the empty database.',
+                                            'AJAX_Handler_DB_Established_Error' =>  'The database already esists, and has been set up! You cannot use this setup to overwrite an existing database!',
+                                            
 	                                        'Prev_Button'                   =>  'PREVIOUS',
 	                                        'Next_Button'                   =>  'NEXT',
 
 	                                        'Page_1_Tab'                    =>  'STEP 1: Database',
 	                                        'Page_1_Heading'                =>  'Database Connection Settings',
-	                                        'Page_1_Text'                   =>  'Before you can apply the settings on this page, you must set up a new empty database, and establish a database user that has full user rights on that database.',
+	                                        'Page_1_Text'                   =>  'Before you can apply the settings on this page, you must set up a new COMPLETELY EMPTY database, and establish a database user that has full user rights on that database.',
 	                                        
 	                                        'Database_Name'                 =>  'Database Name:',
 	                                        'Database_Name_Default_Text'    =>  'Enter A Database Name',
@@ -53,8 +56,17 @@
 	                                        'Page_3_Tab'                    =>  'STEP 3: Server Settings',
 	                                        'Page_3_Heading'                =>  'Set Various Global Server Settings',
 	                                        'Page_3_Text'                   =>  'These are a few settings that affect the administration and general configuration of this server. Most server settings are done in the server itself.',
+	                                        'Admin_Login'                   =>  'Server Administrator Login:',
+	                                        'Admin_Login_Default_Text'      =>  'Enter A Server Administrator Login',
+	                                        'Admin_Login_Additional_Text'   =>  'This is the login string for the Server Administrator.',
+	                                        'Admin_Password'                =>  'Server Administrator Password:',
+	                                        'Admin_Password_Default_Text'   =>  'Enter A Server Administrator Password',
+	                                        'Admin_Password_Additional_Text'    =>  'Make sure that this is a non-trivial password! It has a great deal of power!',
 
 	                                        'Page_4_Tab'                    =>  'STEP 4: Save The Settings',
+	                                        'Page_4_DB_Setup_Heading'       =>  'Initialize A New Database',
+	                                        'Page_4_DB_Setup_Text'          =>  'The button below will create a new, initialized database with default formats, no Service bodies and a Server Administrator user.',
+	                                        'Set_Up_Database'               =>  'Initialize Database',
 	                                        'Page_4_Heading'                =>  'Create the Settings File',
 	                                        'Page_4_Text'                   =>  'Due to security concerns (Yeah, we\'re fairly paranoid -go figure), this program will not attempt to create or modify the settings file. Instead, we ask you to create it yourself, via FTP or a control panel file manager, name it "auto-config.inc.php", and paste the following text into the file:',
 	                                        );

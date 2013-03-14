@@ -24,6 +24,9 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
     var m_map_center;
     var m_top_dir_path;
     var m_main_dir_basename;
+    var m_installer_state;
+    var m_ajax_uri;
+    var m_ajax_request_in_progress;
     
     // #mark - 
     // #mark Page Selection Handlers
@@ -67,6 +70,7 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
         if ( this.m_installer_wrapper_object.className != 'page_3_wrapper' )
             {
             this.m_installer_wrapper_object.className = 'page_3_wrapper';
+            this.testForDatabaseSetup();
             };
     };
     
@@ -79,6 +83,7 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
         if ( this.m_installer_wrapper_object.className != 'page_4_wrapper' )
             {
             this.m_installer_wrapper_object.className = 'page_4_wrapper';
+            this.testForDatabaseSetup();
             };
     };
     
@@ -262,10 +267,250 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
         g_installer_object.m_map_object.main_marker.setPosition ( map_center );
     };
     
+    /************************************************************************************//**
+    *   \brief 
+    ****************************************************************************************/
+    this.testForDatabaseSetup = function()
+    {
+        var uri = this.m_ajax_uri;
+        
+        this.gatherInstallerState();
+        
+        if ( this.m_ajax_request_in_progress )
+            {
+            this.m_ajax_request_in_progress.abort();
+            this.m_ajax_request_in_progress = null;
+            };
+        
+        uri += 'test';
+        uri += '&dbType=' + this.m_installer_state.dbType;
+        uri += '&dbName=' + this.m_installer_state.dbName;
+        uri += '&dbUser=' + this.m_installer_state.dbUser;
+        uri += '&dbPassword=' + this.m_installer_state.dbPassword;
+        uri += '&dbServer=' + this.m_installer_state.dbServer;
+        uri += '&dbPrefix=' + this.m_installer_state.dbPrefix;
+        
+        var salt = new Date();
+        uri += '&salt=' + salt.getTime();
+    
+        this.m_ajax_request_in_progress = BMLT_Installer_AjaxRequest ( uri, function(in_req) { g_installer_object.testForDatabaseSetupCallback(in_req); }, 'post' );
+    };
+    
+    /************************************************************************************//**
+    *   \brief 
+    ****************************************************************************************/
+    this.testForDatabaseSetupCallback = function(   in_http_request
+                                                )
+    {
+        this.m_ajax_request_in_progress = null;
+        if ( in_http_request.responseText )
+            {
+            eval ( 'var ret_val = ' + in_http_request.responseText + ';' );
+            
+            if ( ret_val )
+                {
+                document.getElementById ( 'admin_login_stuff_div' ).className = '';
+                document.getElementById ( 'database_install_stuff_div' ).className = '';
+                }
+            else
+                {
+                document.getElementById ( 'admin_login_stuff_div' ).className = 'item_hidden';
+                document.getElementById ( 'database_install_stuff_div' ).className = 'item_hidden';
+                };
+            };
+    };
+    
+    /************************************************************************************//**
+    *   \brief 
+    ****************************************************************************************/
+    this.initializeDatabase = function()
+    {
+        var uri = this.m_ajax_uri;
+        
+        this.gatherInstallerState();
+        
+        if ( this.m_ajax_request_in_progress )
+            {
+            this.m_ajax_request_in_progress.abort();
+            this.m_ajax_request_in_progress = null;
+            };
+        
+        uri += 'initialize_db';
+        uri += '&dbType=' + this.m_installer_state.dbType;
+        uri += '&dbName=' + this.m_installer_state.dbName;
+        uri += '&dbUser=' + this.m_installer_state.dbUser;
+        uri += '&dbPassword=' + this.m_installer_state.dbPassword;
+        uri += '&dbServer=' + this.m_installer_state.dbServer;
+        uri += '&dbPrefix=' + this.m_installer_state.dbPrefix;
+        
+        var salt = new Date();
+        uri += '&salt=' + salt.getTime();
+    
+        this.m_ajax_request_in_progress = BMLT_Installer_AjaxRequest ( uri, function(in_req) { g_installer_object.initializeDatabaseCallback(in_req); }, 'post' );
+    };
+    
+    /************************************************************************************//**
+    *   \brief 
+    ****************************************************************************************/
+    this.initializeDatabaseCallback = function(   in_http_request
+                                                )
+    {
+        this.m_ajax_request_in_progress = null;
+        if ( in_http_request.responseText )
+            {
+            eval ( 'var ret_val = ' + in_http_request.responseText + ';' );
+            
+            if ( ret_val )
+                {
+                if ( ret_val.status )
+                    {
+                    }
+                else
+                    {
+                    if ( ret_val.report )
+                        {
+                        alert ( ret_val.report );
+                        };
+                    };
+                };
+            };
+    };
+    
+    /************************************************************************************//**
+    *   \brief This gathers the installer state.                                            *
+    ****************************************************************************************/
+    this.gatherInstallerState = function()
+    {
+        var db_type_object = document.getElementById('installer_db_type_select');
+        var db_name_object = document.getElementById('installer_db_name_input');
+        var db_user_object = document.getElementById('installer_db_user_input');
+        var db_pw_object = document.getElementById('installer_db_pw_input');
+        var db_host_object = document.getElementById('installer_db_host_input');
+        var db_prefix_object = document.getElementById('installer_db_prefix_input');
+
+        this.m_installer_state = null;
+        this.m_installer_state = new Object;
+        
+        this.m_installer_state.dbType = db_type_object.options[db_type_object.selectedIndex].value;
+        this.m_installer_state.dbName = (db_name_object.value && (db_name_object.value != db_name_object.defaultValue)) ? db_name_object.value : '';
+        this.m_installer_state.dbUser = (db_user_object.value && (db_user_object.value != db_user_object.defaultValue)) ? db_user_object.value : '';
+        this.m_installer_state.dbPassword = (db_pw_object.value && (db_pw_object.value != db_pw_object.defaultValue)) ? db_pw_object.value : '';
+        this.m_installer_state.dbServer = (db_host_object.value && (db_host_object.value != db_host_object.defaultValue)) ? db_host_object.value : '';
+        this.m_installer_state.dbPrefix = (db_prefix_object.value && (db_prefix_object.value != db_prefix_object.defaultValue)) ? db_prefix_object.value : '';
+        
+        if (    !this.m_installer_state.dbType
+            ||  !this.m_installer_state.dbName
+            ||  !this.m_installer_state.dbUser
+            ||  !this.m_installer_state.dbPassword
+            ||  !this.m_installer_state.dbServer
+            ||  !this.m_installer_state.dbPrefix
+            )
+            {
+            document.getElementById ( 'database_install_stuff_div' ).className = 'item_hidden';
+            }
+        else
+            {
+            document.getElementById ( 'database_install_stuff_div' ).className = '';
+            };
+    };
+    
     // #mark - 
     // #mark Main Context
     // #mark -
     
     this.m_map_center = in_map_center;
     this.m_installer_wrapper_object = document.getElementById ( 'installer_wrapper' );
+};
+
+// #mark - 
+// #mark AJAX Handler
+// #mark -
+
+/****************************************************************************************//**
+*   \brief A simple, generic AJAX request function.                                         *
+*                                                                                           *
+*   \returns a new XMLHTTPRequest object.                                                   *
+********************************************************************************************/
+    
+function BMLT_Installer_AjaxRequest (   url,        ///< The URI to be called
+                                        callback,   ///< The success callback
+                                        method,     ///< The method ('get' or 'post')
+                                        extra_data  ///< If supplied, extra data to be delivered to the callback.
+                                        )
+{
+    /************************************************************************************//**
+    *   \brief Create a generic XMLHTTPObject.                                              *
+    *                                                                                       *
+    *   This will account for the various flavors imposed by different browsers.            *
+    *                                                                                       *
+    *   \returns a new XMLHTTPRequest object.                                               *
+    ****************************************************************************************/
+    
+    function createXMLHTTPObject()
+    {
+        var XMLHttpArray = [
+            function() {return new XMLHttpRequest()},
+            function() {return new ActiveXObject("Msxml2.XMLHTTP")},
+            function() {return new ActiveXObject("Msxml2.XMLHTTP")},
+            function() {return new ActiveXObject("Microsoft.XMLHTTP")}
+            ];
+            
+        var xmlhttp = false;
+        
+        for ( var i=0; i < XMLHttpArray.length; i++ )
+            {
+            try
+                {
+                xmlhttp = XMLHttpArray[i]();
+                }
+            catch(e)
+                {
+                continue;
+                };
+            break;
+            };
+        
+        return xmlhttp;
+    };
+    
+    var req = createXMLHTTPObject();
+    req.finalCallback = callback;
+    var sVars = null;
+    method = method.toString().toUpperCase();
+    var drupal_kludge = '';
+    
+    // Split the URL up, if this is a POST.
+    if ( method == "POST" )
+        {
+        var rmatch = /^([^\?]*)\?(.*)$/.exec ( url );
+        url = rmatch[1];
+        sVars = rmatch[2];
+        // This horrible, horrible kludge, is because Drupal insists on having its q parameter in the GET list only.
+        var rmatch_kludge = /(q=admin\/settings\/bmlt)&?(.*)/.exec ( rmatch[2] );
+        if ( rmatch_kludge && rmatch_kludge[1] )
+            {
+            url += '?'+rmatch_kludge[1];
+            sVars = rmatch_kludge[2];
+            };
+        };
+    if ( extra_data != null )
+        {
+        req.extra_data = extra_data;
+        };
+    req.open ( method, url, true );
+    if ( method == "POST" )
+        {
+        req.setRequestHeader("Method", "POST "+url+" HTTP/1.1");
+        req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        };
+    req.onreadystatechange = function ( )
+        {
+        if ( req.readyState != 4 ) return;
+        if( req.status != 200 ) return;
+        callback ( req, req.extra_data );
+        req = null;
+        };
+    req.send ( sVars );
+    
+    return req;
 };

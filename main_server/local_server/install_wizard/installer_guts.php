@@ -18,8 +18,6 @@
     along with this code.  If not, see <http://www.gnu.org/licenses/>.
 */
 defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );    // Makes sure that this file is in the correct context.
-// This contains the PDO database access stuff.
-require_once ( dirname ( __FILE__ ).'/../../server/classes/c_comdef_dbsingleton.class.php' );
 
 $basename = basename ( realpath ( dirname ( __FILE__ ).'/../../' ) );
 $realpath = realpath ( dirname ( __FILE__ ).'/../../../' );
@@ -64,33 +62,33 @@ $realpath = realpath ( dirname ( __FILE__ ).'/../../../' );
                 <div class="one_line_div">
                     <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_Host'] ); ?></div>
                     <div class="right_left_aligned_div">
-                        <input type="text" id="installer_db_host_input" value="<?php echo htmlspecialchars ( $prefs_array['dbServer'] ); ?>" class="bmlt_text_item_small" />
+                        <input type="text" id="installer_db_host_input" onkeyup="g_installer_object.gatherInstallerState()" value="<?php echo htmlspecialchars ( $prefs_array['dbServer'] ); ?>" class="bmlt_text_item_small" />
                     </div>
                     <div class="extra_text_div"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_Host_Additional_Text'] ); ?></div>
                 </div>
                 <div class="one_line_div">
                     <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Table_Prefix'] ); ?></div>
                     <div class="right_left_aligned_div">
-                        <input type="text" id="installer_db_prefix_input" value="<?php echo htmlspecialchars ( $prefs_array['dbPrefix'] ); ?>" class="bmlt_text_item_small" />
+                        <input type="text" id="installer_db_prefix_input" onkeyup="g_installer_object.gatherInstallerState()" value="<?php echo htmlspecialchars ( $prefs_array['dbPrefix'] ); ?>" class="bmlt_text_item_small" />
                     </div>
                     <div class="extra_text_div"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Table_Prefix_Additional_Text'] ); ?></div>
                 </div>
                 <div class="one_line_div">
                     <div class="left_right_aligned_div bold_char"><?php echo $comdef_install_wizard_strings['Database_Name']; ?></div>
                     <div class="right_left_aligned_div">
-                        <input type="text" id="installer_db_name_input" value="<?php echo $prefs_array['dbName']; ?>" class="bmlt_text_item_small" />
+                        <input type="text" id="installer_db_name_input" onkeyup="g_installer_object.gatherInstallerState()" value="<?php echo $prefs_array['dbName']; ?>" class="bmlt_text_item_small" />
                     </div>
                 </div>
                 <div class="one_line_div">
                     <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_User'] ); ?></div>
                     <div class="right_left_aligned_div">
-                        <input type="text" id="installer_db_user_input" value="<?php echo htmlspecialchars ( $prefs_array['dbUser'] ); ?>" class="bmlt_text_item_small" />
+                        <input type="text" id="installer_db_user_input" onkeyup="g_installer_object.gatherInstallerState()" value="<?php echo htmlspecialchars ( $prefs_array['dbUser'] ); ?>" class="bmlt_text_item_small" />
                     </div>
                 </div>
                 <div class="one_line_div">
                     <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_PW'] ); ?></div>
                     <div class="right_left_aligned_div">
-                        <input type="text" id="installer_db_pw_input" value="<?php echo htmlspecialchars ( $prefs_array['dbPassword'] ); ?>" class="bmlt_text_item_small" />
+                        <input type="text" id="installer_db_pw_input" onkeyup="g_installer_object.gatherInstallerState()" value="<?php echo htmlspecialchars ( $prefs_array['dbPassword'] ); ?>" class="bmlt_text_item_small" />
                     </div>
                 </div>
                 <?php echo bmlt_create_next_prev_buttons(1) ?>
@@ -106,10 +104,33 @@ $realpath = realpath ( dirname ( __FILE__ ).'/../../../' );
                 <?php echo bmlt_create_next_prev_buttons(3) ?>
                 <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_3_Heading']; ?></h1>
                 <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_3_Text']; ?></h2>
+                <div id="admin_login_stuff_div" class="item_hidden">
+                    <div class="one_line_div">
+                        <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Admin_Login'] ); ?></div>
+                        <div class="right_left_aligned_div">
+                            <input type="text" id="installer_admin_login_input" onkeyup="g_installer_object.gatherInstallerState()" value="serveradmin" class="bmlt_text_item_small" />
+                        </div>
+                        <div class="extra_text_div"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Admin_Login_Additional_Text'] ); ?></div>
+                    </div>
+                    <div class="one_line_div">
+                        <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Admin_Password'] ); ?></div>
+                        <div class="right_left_aligned_div">
+                            <input type="text" id="installer_admin_password_input" onkeyup="g_installer_object.gatherInstallerState()" value="" class="bmlt_text_item_small" />
+                        </div>
+                        <div class="extra_text_div"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Admin_Password_Additional_Text'] ); ?></div>
+                    </div>
+                </div>
                 <?php echo bmlt_create_next_prev_buttons(3) ?>
             </div>
             <div id="bmlt_installer_page_4" class="bmlt_installer_page_4">
                 <?php echo bmlt_create_next_prev_buttons(4) ?>
+                <div id="database_install_stuff_div" class="item_hidden">
+                    <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_4_DB_Setup_Heading']; ?></h1>
+                    <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_4_DB_Setup_Text']; ?></h2>
+                    <div class="one_line_div centered_text">
+                        <a class="bmlt_admin_ajax_button" href="javascript:g_installer_object.setUpDatabase()"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Set_Up_Database'] ) ?></a>
+                    </div>
+                </div>
                 <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_4_Heading']; ?></h1>
                 <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_4_Text']; ?></h2>
                 <?php echo bmlt_create_next_prev_buttons(4) ?>
@@ -132,13 +153,18 @@ $realpath = realpath ( dirname ( __FILE__ ).'/../../../' );
         ?>
     </div>
     <script type="text/javascript">
-        g_installer_object.m_top_dir_path = '<?php echo $realpath ?>';
-        g_installer_object.m_main_dir_basename = '<?php echo $basename ?>';
+        g_installer_object.m_top_dir_path = '<?php echo $realpath; ?>';
+        g_installer_object.m_main_dir_basename = '<?php echo $basename; ?>';
+        g_installer_object.m_ajax_uri = '<?php echo htmlspecialchars ( $_SERVER['PHP_SELF'].'?ajax_req=' ); ?>';
+
         g_installer_object.handleTextInputLoad(document.getElementById('installer_db_name_input'),'<?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_Name_Default_Text'] ); ?>','small');
         g_installer_object.handleTextInputLoad(document.getElementById('installer_db_user_input'),'<?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_User_Default_Text'] ); ?>','small');
         g_installer_object.handleTextInputLoad(document.getElementById('installer_db_pw_input'),'<?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_PW_Default_Text'] ); ?>','small');
         g_installer_object.handleTextInputLoad(document.getElementById('installer_db_host_input'),'<?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_Host_Default_Text'] ); ?>','small');
         g_installer_object.handleTextInputLoad(document.getElementById('installer_db_prefix_input'),'<?php echo htmlspecialchars ( $comdef_install_wizard_strings['Table_Prefix_Default_Text'] ); ?>','small');
+
+        g_installer_object.handleTextInputLoad(document.getElementById('installer_admin_login_input'),'<?php echo htmlspecialchars ( $comdef_install_wizard_strings['Admin_Login_Default_Text'] ); ?>','small');
+        g_installer_object.handleTextInputLoad(document.getElementById('installer_admin_password_input'),'<?php echo htmlspecialchars ( $comdef_install_wizard_strings['Admin_Password_Default_Text'] ); ?>','med');
     </script>
 </div>
 

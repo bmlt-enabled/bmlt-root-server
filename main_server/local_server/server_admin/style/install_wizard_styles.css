@@ -164,6 +164,16 @@ div.left_right_aligned_div
     font-weight:bold;
 }
 
+.centered_text
+{
+    text-align:center;
+}
+
+.item_hidden
+{
+    display:none;
+}
+
 .clear_both
 {
     clear:both;
