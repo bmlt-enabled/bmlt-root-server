@@ -21,6 +21,9 @@ defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );    // Makes sure th
 
 $basename = basename ( realpath ( dirname ( __FILE__ ).'/../../' ) );
 $realpath = realpath ( dirname ( __FILE__ ).'/../../../' );
+
+global  $default_lang;
+$default_lang = $lang;
 ?>
 <div id="installer_wrapper" class="page_1_wrapper">
     <div id="bmlt_installer_tab_bar" class="bmlt_installer_tab_bar">
@@ -108,7 +111,7 @@ $realpath = realpath ( dirname ( __FILE__ ).'/../../../' );
                     <div class="one_line_div">
                         <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Admin_Login'] ); ?></div>
                         <div class="right_left_aligned_div">
-                            <input type="text" id="installer_admin_login_input" onkeyup="g_installer_object.gatherInstallerState()" value="serveradmin" class="bmlt_text_item_small" />
+                            <input type="text" id="installer_admin_login_input" onkeyup="g_installer_object.gatherInstallerState()" value="<?php echo $comdef_install_wizard_strings['serveradmin'] ?>" class="bmlt_text_item_small" />
                         </div>
                         <div class="extra_text_div"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Admin_Login_Additional_Text'] ); ?></div>
                     </div>
@@ -118,6 +121,12 @@ $realpath = realpath ( dirname ( __FILE__ ).'/../../../' );
                             <input type="text" id="installer_admin_password_input" onkeyup="g_installer_object.gatherInstallerState()" value="" class="bmlt_text_item_small" />
                         </div>
                         <div class="extra_text_div"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Admin_Password_Additional_Text'] ); ?></div>
+                    </div>
+                </div>
+                <div class="one_line_div">
+                    <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['ServerLangLabel'] ); ?></div>
+                    <div class="right_left_aligned_div">
+                        <?php echo bmlt_create_lang_select(); ?>
                     </div>
                 </div>
                 <?php echo bmlt_create_next_prev_buttons(3) ?>
@@ -195,12 +204,73 @@ function bmlt_create_next_prev_buttons( $in_section  ///< The page we are in. An
     return $ret;
 }
 
-function bmlt_create_pdo_driver_select()
+function bmlt_create_lang_select()
 {
-    global  $prefs_array, $comdef_install_wizard_strings;
     $ret = '';
     
-    $ret .= '<select id="installer_db_type_select" name="installer_db_type_select">';
+    $basedir = dirname ( __FILE__ ).'/../server_admin/lang/';
+    
+    $ret .= '<select id="installer_lang_select">';
+        $dh = opendir ( $basedir );
+        $server_lang_names = array();
+        
+        if ( $dh )
+            {
+            while ( false !== ($enum = readdir( $dh )) )
+                {
+                $file_path = "$basedir$enum/name.txt";
+                if ( file_exists ( $file_path ) )
+                    {
+                    $name = trim ( file_get_contents ( $file_path ) );
+                    $ret .= '<option value="'.htmlspecialchars ( $enum ).'">'.htmlspecialchars ( $name ).'</option>';
+                    }
+                }
+                
+            closedir ( $dh );
+            }
+        
+        uksort ( $server_lang_names, 'ServerLangSortCallback' );
+    $ret .= '</select>';
+        
+    return $ret;
+}
+    
+/*******************************************************************/
+/** \brief This is a callback to sort the server languages.
+           The default server language will always be first, and
+           the rest will be sorted alphabetically.
+    \returns an integer. -1 if goes before b, 1 if otherwise, 0 if neither.
+*/
+function ServerLangSortCallback( $in_lang_a,
+                                 $in_lang_b
+                                )
+{
+    global  $default_lang;
+    
+    $ret = 0;
+    
+    if ( $in_lang_a == $default_lang )
+        {
+        $ret = -1;
+        }
+    elseif ( $in_lang_b == $default_lang )
+        {
+        $ret = 1;
+        }
+    else
+        {
+        $ret = strncasecmp ( $in_lang_a, $in_lang_b );
+        }
+        
+    return $ret;
+}
+
+function bmlt_create_pdo_driver_select()
+{
+    global  $prefs_array;
+    $ret = '';
+    
+    $ret .= '<select id="installer_db_type_select">';
     foreach ( PDO::getAvailableDrivers() as $driver )
         {
         $ret .= '<option value="'.htmlspecialchars ( $driver ).'"';

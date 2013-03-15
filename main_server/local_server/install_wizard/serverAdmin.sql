@@ -1,1 +1,0 @@
-INSERT INTO `%%PREFIX%%_comdef_users` (`id_bigint`, `user_level_tinyint`, `name_string`, `description_string`, `email_address_string`, `login_string`, `password_string`, `lang_enum`) VALUES ( 1, 1, 'Server Administrator', 'Main Server Admin', '', ?, ?, ? );

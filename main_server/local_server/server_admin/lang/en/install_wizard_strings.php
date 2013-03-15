@@ -62,8 +62,12 @@
 	                                        'Admin_Login_Additional_Text'   =>  'This is the login string for the Server Administrator.',
 	                                        'Admin_Password'                =>  'Server Administrator Password:',
 	                                        'Admin_Password_Default_Text'   =>  'Enter A Server Administrator Password',
-	                                        'Admin_Password_Additional_Text'    =>  'Make sure that this is a non-trivial password! It has a great deal of power!',
-
+	                                        'Admin_Password_Additional_Text'    =>  'Make sure that this is a non-trivial password! It has a great deal of power! (Also, don\' forget it).',
+                                            'ServerAdminDefaultLogin'       =>  'serveradmin',
+                                            'ServerAdminName'               =>  'Server Administrator',
+                                            'ServerAdminDesc'               =>  'Main Server Administrator',
+                                            'ServerLangLabel'               =>  'Default Server Language:',
+                                            
 	                                        'Page_4_Tab'                    =>  'STEP 4: Save The Settings',
 	                                        'Page_4_DB_Setup_Heading'       =>  'Initialize A New Database',
 	                                        'Page_4_DB_Setup_Text'          =>  'The button below will create a new, initialized database with default formats, no Service bodies and a Server Administrator user.',
