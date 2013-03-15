@@ -128,7 +128,10 @@ $realpath = realpath ( dirname ( __FILE__ ).'/../../../' );
                     <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_4_DB_Setup_Heading']; ?></h1>
                     <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_4_DB_Setup_Text']; ?></h2>
                     <div class="one_line_div centered_text">
-                        <a class="bmlt_admin_ajax_button" href="javascript:g_installer_object.setUpDatabase()"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Set_Up_Database'] ) ?></a>
+                        <a id="bmlt_installer_initialize_ajax_button" class="bmlt_admin_ajax_button" href="javascript:g_installer_object.setUpDatabase()"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Set_Up_Database'] ) ?></a>
+                        <span id="bmlt_installer_initialize_ajax_button_throbber_span" class="item_hidden">
+                            <img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" />
+                        </span>
                     </div>
                 </div>
                 <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_4_Heading']; ?></h1>

@@ -336,6 +336,9 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
     ****************************************************************************************/
     this.setUpDatabase = function()
     {
+        document.getElementById ( 'bmlt_installer_initialize_ajax_button' ).className = 'item_hidden';
+        document.getElementById ( 'bmlt_installer_initialize_ajax_button_throbber_span' ).className = 'bmlt_admin_ajax_button_throbber_span';
+
         var uri = this.m_ajax_uri;
         
         this.gatherInstallerState();
@@ -365,7 +368,7 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
         
         var salt = new Date();
         uri += '&salt=' + salt.getTime();
-    
+        
         this.m_ajax_request_in_progress = BMLT_Installer_AjaxRequest ( uri, function(in_req) { g_installer_object.initializeDatabaseCallback(in_req); }, 'post' );
     };
     
@@ -382,8 +385,9 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
             
             if ( ret_val )
                 {
-                if ( ret_val.status )
+                if ( ret_val.status )   // Hide the initialize button upon success.
                     {
+                    document.getElementById ( 'database_install_stuff_div' ).className = 'item_hidden';
                     }
                 else
                     {
@@ -394,6 +398,9 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
                     };
                 };
             };
+        
+        document.getElementById ( 'bmlt_installer_initialize_ajax_button_throbber_span' ).className = 'item_hidden';
+        document.getElementById ( 'bmlt_installer_initialize_ajax_button' ).className = 'bmlt_admin_ajax_button';
     };
     
     /************************************************************************************//**

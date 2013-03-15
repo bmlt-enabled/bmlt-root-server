@@ -356,3 +356,13 @@ a.bmlt_admin_ajax_button:active
     color:white;
     border: 1px solid white;
 }
+
+span.bmlt_admin_ajax_button_throbber_span
+{
+    text-align:center;
+}
+
+span.bmlt_admin_ajax_button_throbber_span img
+{
+    margin:auto;
+}
