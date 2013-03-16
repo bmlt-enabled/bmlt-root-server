@@ -129,6 +129,12 @@ $default_lang = $lang;
                         <?php echo bmlt_create_lang_select(); ?>
                     </div>
                 </div>
+                <div class="one_line_div">
+                    <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['DistanceUnitsLabel'] ); ?></div>
+                    <div class="right_left_aligned_div">
+                        <select
+                    </div>
+                </div>
                 <?php echo bmlt_create_next_prev_buttons(3) ?>
             </div>
             <div id="bmlt_installer_page_4" class="bmlt_installer_page_4">

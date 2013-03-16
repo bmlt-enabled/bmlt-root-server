@@ -38,7 +38,7 @@ else
         require_once ( dirname ( __FILE__ ).'/../server_admin/lang/en/install_wizard_strings.php' );
         }
 
-    global  $prefs_array;
+    global  $prefs_array, $comdef_install_wizard_strings;
 
     // This is our preferences state array, and contains the hardwired defaults.
     $prefs_array = array (  'dbName'                        =>  '',
@@ -49,23 +49,22 @@ else
                             'dbServer'                      =>  'localhost',
                             'dbPrefix'                      =>  'na',
                     
-                            'bmlt_title'                    =>  'Basic Meeting List Toolbox Administration',
-                            'comdef_global_language'        =>  'en',
+                            'comdef_global_language'        =>  $lang,
                             'min_pw_len'                    =>  '6',
                     
-                            'region_bias'                   =>  'us',
-                            'search_spec_map_center'        =>  array ( 'longitude' => -118.563659, 'latitude' => 34.235918, 'zoom' => 6 ),
-                    
                             'number_of_meetings_for_auto'   =>  10,
-                            'time_format'                   =>  'g:i A',
-                            'change_date_format'            =>  'g:i A, n/j/Y',
-                    
                             'change_depth_for_meetings'     =>  5,
+                            
+                            'region_bias'                   =>  $comdef_install_wizard_strings['DefaultRegionBias'],
+                            'search_spec_map_center'        =>  $comdef_install_wizard_strings['search_spec_map_center'],
+                            'bmlt_title'                    =>  $comdef_install_wizard_strings['TitleTextInitialText'],
+                            'banner_text'                   =>  $comdef_install_wizard_strings['BannerTextInitialText'],
+                            'comdef_distance_units'         =>  $comdef_install_wizard_strings['DefaultDistanceUnits'],
+                            'default_duration'              =>  $comdef_install_wizard_strings['DurationTextInitialText'],
+                            'time_format'                   =>  $comdef_install_wizard_strings['time_format'],
+                            'change_date_format'            =>  $comdef_install_wizard_strings['change_date_format'],
                     
-                            'banner_text'                   =>  'Administration Login',
                             'admin_session_name'            =>  'BMLT_Admin',
-                            'comdef_distance_units'         =>  'mi',
-                            'default_duration'              =>  'N.A. Meetings are usually 90 minutes long (an hour and a half), unless otherwise indicated.',
                             );
     ?>
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
