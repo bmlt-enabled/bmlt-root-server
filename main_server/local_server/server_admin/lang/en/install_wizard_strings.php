@@ -87,6 +87,9 @@
 	                                        'Page_4_Heading'                =>  'Create the Settings File',
 	                                        'Page_4_Text'                   =>  'Due to security concerns (Yeah, we\'re fairly paranoid -go figure), this program will not attempt to create or modify the settings file. Instead, we ask you to create it yourself, via FTP or a control panel file manager, name it "auto-config.inc.php", and paste the following text into the file:',
                                             
+                                            'DefaultPasswordLength'         =>  6,
+                                            'DefaultMeetingCount'           =>  10,
+                                            'DefaultChangeDepth'            =>  10,
                                             'DefaultDistanceUnits'          =>  'mi',
                                             'DurationTextInitialText'       =>  'N.A. Meetings are usually 90 minutes long (an hour and a half), unless otherwise indicated.',
                                             'time_format'                   =>  'g:i A',
@@ -97,6 +100,7 @@
                                             'search_spec_map_center'        =>  array ( 'longitude' => -118.563659, 'latitude' => 34.235918, 'zoom' => 6 ),
 	                                        'DistanceChoices'               =>  array ( 2, 5, 10, 20, 50 ),
 	                                        'HistoryChoices'                =>  array ( 0, 1, 5, 10 ),
+	                                        'PW_LengthChices'               =>  array ( 6, 8, 10, 12, 16 ),
                                             'ServerAdminDefaultLogin'       =>  'serveradmin',
 	                                        );
 ?>

@@ -50,20 +50,20 @@ else
                             'dbPrefix'                      =>  'na',
                     
                             'comdef_global_language'        =>  $lang,
-                            'min_pw_len'                    =>  '6',
-                    
-                            'number_of_meetings_for_auto'   =>  10,
-                            'change_depth_for_meetings'     =>  5,
+                            'min_pw_len'                    =>  $comdef_install_wizard_strings['DefaultPasswordLength'],
+                            'number_of_meetings_for_auto'   =>  $comdef_install_wizard_strings['DefaultMeetingCount'],
+                            'change_depth_for_meetings'     =>  $comdef_install_wizard_strings['DefaultChangeDepth'],
                             
                             'region_bias'                   =>  $comdef_install_wizard_strings['DefaultRegionBias'],
                             'search_spec_map_center'        =>  $comdef_install_wizard_strings['search_spec_map_center'],
                             'bmlt_title'                    =>  $comdef_install_wizard_strings['TitleTextInitialText'],
                             'banner_text'                   =>  $comdef_install_wizard_strings['BannerTextInitialText'],
                             'comdef_distance_units'         =>  $comdef_install_wizard_strings['DefaultDistanceUnits'],
+                            
+                            /* These are "hard-coded," and can be changed later. */
                             'default_duration'              =>  $comdef_install_wizard_strings['DurationTextInitialText'],
                             'time_format'                   =>  $comdef_install_wizard_strings['time_format'],
                             'change_date_format'            =>  $comdef_install_wizard_strings['change_date_format'],
-                    
                             'admin_session_name'            =>  'BMLT_Admin',
                             );
     ?>
@@ -72,6 +72,7 @@ else
     <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
         <head>
             <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+            <meta http-equiv="Content-Script-Type" content="text/javascript" />
             <title>BMLT Installer</title>
             <link rel="stylesheet" href="local_server/server_admin/style/install_wizard_styles.css" />
             <script type="text/javascript">var  g_prefs_state = <?php echo array2json ( $prefs_array ) ?>;</script>

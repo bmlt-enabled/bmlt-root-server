@@ -40,164 +40,215 @@ $default_lang = $lang;
             <a href="javascript:g_installer_object.selectPage4()"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Page_4_Tab'] ); ?></a>
         </div>
     </div>
-    <div class="page_content">
-        <?php
-            if ( version_compare (PHP_VERSION,'5.1.0','>') )
-                {
-                if ( class_exists ( 'PDO' ) )
+    <form action="" method="post">
+        <div class="page_content">
+            <?php
+                if ( version_compare (PHP_VERSION,'5.1.0','>') )
                     {
-                    if ( count ( PDO::getAvailableDrivers() ) )
+                    if ( class_exists ( 'PDO' ) )
                         {
-            ?>                <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
-            <script type="text/javascript">
-                var g_installer_object = new BMLTInstaller ( <?php echo array2json ( $prefs_array['search_spec_map_center'] ); ?> );
-            </script>
-            <div id="bmlt_installer_page_1" class="bmlt_installer_page_1">
-                <?php echo bmlt_create_next_prev_buttons(1) ?>
-                <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_1_Heading']; ?></h1>
-                <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_1_Text']; ?></h2>
-                <div class="one_line_div">
-                    <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_Type'] ); ?></div>
-                    <div class="right_left_aligned_div">
-                        <?php echo bmlt_create_pdo_driver_select(); ?>
-                    </div>
-                </div>
-                <div class="one_line_div">
-                    <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_Host'] ); ?></div>
-                    <div class="right_left_aligned_div">
-                        <input type="text" id="installer_db_host_input" onkeyup="g_installer_object.gatherInstallerState()" value="<?php echo htmlspecialchars ( $prefs_array['dbServer'] ); ?>" class="bmlt_text_item_small" />
-                    </div>
-                    <div class="extra_text_div"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_Host_Additional_Text'] ); ?></div>
-                </div>
-                <div class="one_line_div">
-                    <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Table_Prefix'] ); ?></div>
-                    <div class="right_left_aligned_div">
-                        <input type="text" id="installer_db_prefix_input" onkeyup="g_installer_object.gatherInstallerState()" value="<?php echo htmlspecialchars ( $prefs_array['dbPrefix'] ); ?>" class="bmlt_text_item_small" />
-                    </div>
-                    <div class="extra_text_div"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Table_Prefix_Additional_Text'] ); ?></div>
-                </div>
-                <div class="one_line_div">
-                    <div class="left_right_aligned_div bold_char"><?php echo $comdef_install_wizard_strings['Database_Name']; ?></div>
-                    <div class="right_left_aligned_div">
-                        <input type="text" id="installer_db_name_input" onkeyup="g_installer_object.gatherInstallerState()" value="<?php echo $prefs_array['dbName']; ?>" class="bmlt_text_item_small" />
-                    </div>
-                </div>
-                <div class="one_line_div">
-                    <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_User'] ); ?></div>
-                    <div class="right_left_aligned_div">
-                        <input type="text" id="installer_db_user_input" onkeyup="g_installer_object.gatherInstallerState()" value="<?php echo htmlspecialchars ( $prefs_array['dbUser'] ); ?>" class="bmlt_text_item_small" />
-                    </div>
-                </div>
-                <div class="one_line_div">
-                    <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_PW'] ); ?></div>
-                    <div class="right_left_aligned_div">
-                        <input type="text" id="installer_db_pw_input" onkeyup="g_installer_object.gatherInstallerState()" value="<?php echo htmlspecialchars ( $prefs_array['dbPassword'] ); ?>" class="bmlt_text_item_small" />
-                    </div>
-                </div>
-                <div class="clear_both"></div>
-                <?php echo bmlt_create_next_prev_buttons(1) ?>
-            </div>
-            <div id="bmlt_installer_page_2" class="bmlt_installer_page_2">
-                <?php echo bmlt_create_next_prev_buttons(2) ?>
-                <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_2_Heading']; ?></h1>
-                <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_2_Text']; ?></h2>
-                <div class="one_line_div">
-                    <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['RegionBiasLabel'] ); ?></div>
-                    <div class="right_left_aligned_div">
-                        <?php echo bmlt_create_region_bias_select(); ?>
-                    </div>
-                </div>
-                <div class="clear_both"></div>
-                <div class="installer_map_wrapper_div"><div id="installer_map_display_div" class="installer_map_display_div"></div></div>
-                <div class="clear_both"></div>
-                <?php echo bmlt_create_next_prev_buttons(2) ?>
-            </div>
-            <div id="bmlt_installer_page_3" class="bmlt_installer_page_3">
-                <?php echo bmlt_create_next_prev_buttons(3) ?>
-                <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_3_Heading']; ?></h1>
-                <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_3_Text']; ?></h2>
-                <fieldset id="admin_login_stuff_fieldset">
+                        if ( count ( PDO::getAvailableDrivers() ) )
+                            {
+                ?>                <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+                <script type="text/javascript">
+                    var g_installer_object = new BMLTInstaller ( <?php echo array2json ( $prefs_array['search_spec_map_center'] ); ?> );
+                </script>
+                <div id="bmlt_installer_page_1" class="bmlt_installer_page_1">
+                    <?php echo bmlt_create_next_prev_buttons(1) ?>
+                    <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_1_Heading']; ?></h1>
+                    <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_1_Text']; ?></h2>
                     <div class="one_line_div">
-                        <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Admin_Login'] ); ?></div>
+                        <label class="left_right_aligned bold_char" for="installer_db_type_select"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_Type'] ); ?></label>
                         <div class="right_left_aligned_div">
-                            <input type="text" id="installer_admin_login_input" onkeyup="g_installer_object.gatherInstallerState()" value="<?php echo $comdef_install_wizard_strings['ServerAdminDefaultLogin'] ?>" class="bmlt_text_item_small" />
+                            <?php echo bmlt_create_pdo_driver_select(); ?>
                         </div>
-                        <div class="extra_text_div"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Admin_Login_Additional_Text'] ); ?></div>
                     </div>
                     <div class="one_line_div">
-                        <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Admin_Password'] ); ?></div>
+                        <label class="left_right_aligned bold_char" for="installer_db_host_input"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_Host'] ); ?></label>
                         <div class="right_left_aligned_div">
-                            <input type="text" id="installer_admin_password_input" onkeyup="g_installer_object.gatherInstallerState()" value="" class="bmlt_text_item_small" />
+                            <input type="text" id="installer_db_host_input" onkeyup="g_installer_object.gatherInstallerState()" value="<?php echo htmlspecialchars ( $prefs_array['dbServer'] ); ?>" class="bmlt_text_item_small" />
                         </div>
-                        <div class="extra_text_div"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Admin_Password_Additional_Text'] ); ?></div>
+                        <div class="extra_text_div"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_Host_Additional_Text'] ); ?></div>
+                    </div>
+                    <div class="one_line_div">
+                        <label class="left_right_aligned bold_char" for="installer_db_prefix_input"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Table_Prefix'] ); ?></label>
+                        <div class="right_left_aligned_div">
+                            <input type="text" id="installer_db_prefix_input" onkeyup="g_installer_object.gatherInstallerState()" value="<?php echo htmlspecialchars ( $prefs_array['dbPrefix'] ); ?>" class="bmlt_text_item_small" />
+                        </div>
+                        <div class="extra_text_div"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Table_Prefix_Additional_Text'] ); ?></div>
+                    </div>
+                    <div class="one_line_div">
+                        <label class="left_right_aligned bold_char" for="installer_db_name_input"><?php echo $comdef_install_wizard_strings['Database_Name']; ?></label>
+                        <div class="right_left_aligned_div">
+                            <input type="text" id="installer_db_name_input" onkeyup="g_installer_object.gatherInstallerState()" value="<?php echo $prefs_array['dbName']; ?>" class="bmlt_text_item_small" />
+                        </div>
+                    </div>
+                    <div class="one_line_div">
+                        <label class="left_right_aligned bold_char" for="installer_db_user_input"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_User'] ); ?></label>
+                        <div class="right_left_aligned_div">
+                            <input type="text" id="installer_db_user_input" onkeyup="g_installer_object.gatherInstallerState()" value="<?php echo htmlspecialchars ( $prefs_array['dbUser'] ); ?>" class="bmlt_text_item_small" />
+                        </div>
+                    </div>
+                    <div class="one_line_div">
+                        <label class="left_right_aligned bold_char" for="installer_db_pw_input"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_PW'] ); ?></label>
+                        <div class="right_left_aligned_div">
+                            <input type="text" id="installer_db_pw_input" onkeyup="g_installer_object.gatherInstallerState()" value="<?php echo htmlspecialchars ( $prefs_array['dbPassword'] ); ?>" class="bmlt_text_item_small" />
+                        </div>
                     </div>
                     <div class="clear_both"></div>
-                </fieldset>
-                <fieldset id="admin_settings_fieldset">
+                    <?php echo bmlt_create_next_prev_buttons(1) ?>
+                </div>
+                <div id="bmlt_installer_page_2" class="bmlt_installer_page_2">
+                    <?php echo bmlt_create_next_prev_buttons(2) ?>
+                    <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_2_Heading']; ?></h1>
+                    <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_2_Text']; ?></h2>
                     <div class="one_line_div">
-                        <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['ServerLangLabel'] ); ?></div>
-                        <div class="right_left_aligned_div"><?php echo bmlt_create_lang_select(); ?></div>
-                    </div>
-                    <div class="one_line_div">
-                        <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['DistanceUnitsLabel'] ); ?></div>
+                        <label class="left_right_aligned bold_char" for="installer_region_bias_select"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['RegionBiasLabel'] ); ?></label>
                         <div class="right_left_aligned_div">
-                            <select id="distance_units_select">
-                                <option value="mi"<?php
-                                            if ( $comdef_install_wizard_strings['DefaultDistanceUnits'] == 'mi' )
-                                                {
-                                                echo ' selected="selected"';
-                                                }
-                                            echo '>'.htmlspecialchars ( $comdef_install_wizard_strings['DistanceUnitsMiles'] );
-                                        ?></option>
-                                <option value="km"<?php
-                                            if ( $comdef_install_wizard_strings['DefaultDistanceUnits'] == 'km' )
-                                                {
-                                                echo ' selected="selected"';
-                                                }
+                            <?php echo bmlt_create_region_bias_select(); ?>
+                        </div>
+                    </div>
+                    <div class="clear_both"></div>
+                    <div class="installer_map_wrapper_div"><div id="installer_map_display_div" class="installer_map_display_div"></div></div>
+                    <div class="clear_both"></div>
+                    <?php echo bmlt_create_next_prev_buttons(2) ?>
+                </div>
+                <div id="bmlt_installer_page_3" class="bmlt_installer_page_3">
+                    <?php echo bmlt_create_next_prev_buttons(3) ?>
+                    <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_3_Heading']; ?></h1>
+                    <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_3_Text']; ?></h2>
+                    <fieldset id="admin_login_stuff_fieldset">
+                        <div class="one_line_div">
+                            <label class="left_right_aligned bold_char" for="installer_admin_login_input"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Admin_Login'] ); ?></label>
+                            <div class="right_left_aligned_div">
+                                <input type="text" id="installer_admin_login_input" onkeyup="g_installer_object.gatherInstallerState()" value="<?php echo $comdef_install_wizard_strings['ServerAdminDefaultLogin'] ?>" class="bmlt_text_item_med" />
+                            </div>
+                            <div class="extra_text_div"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Admin_Login_Additional_Text'] ); ?></div>
+                        </div>
+                        <div class="one_line_div">
+                            <label class="left_right_aligned bold_char" for="installer_admin_password_input"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Admin_Password'] ); ?></label>
+                            <div class="right_left_aligned_div">
+                                <input type="text" id="installer_admin_password_input" onkeyup="g_installer_object.gatherInstallerState()" value="" class="bmlt_text_item_med" />
+                            </div>
+                            <div class="extra_text_div"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Admin_Password_Additional_Text'] ); ?></div>
+                        </div>
+                        <div class="clear_both"></div>
+                    </fieldset>
+                    <fieldset id="admin_settings_fieldset">
+                        <div class="one_line_div">
+                            <label class="left_right_aligned bold_char" for="installer_lang_select"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['ServerLangLabel'] ); ?></label>
+                            <div class="right_left_aligned_div"><?php echo bmlt_create_lang_select(); ?></div>
+                        </div>
+                        <div class="one_line_div">
+                            <label class="left_right_aligned bold_char" for="installer_pw_length_select"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['PasswordLengthLabel'] ); ?></label>
+                            <div class="right_left_aligned_div">
+                                <select onchange="g_installer_object.gatherInstallerState()" id="installer_pw_length_select">
+                                    <?php
+                                        foreach ( $comdef_install_wizard_strings['PW_LengthChices'] as $count )
+                                            {
+                                            echo '<option';
+                                                if ( $count == $prefs_array['min_pw_len'] )
+                                                    {
+                                                    echo ' selected="selected"';
+                                                    }
+                                            echo ">$count</option>";
+                                            }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="one_line_div">
+                            <label class="left_right_aligned bold_char" for="distance_units_select"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['DistanceUnitsLabel'] ); ?></label>
+                            <div class="right_left_aligned_div">
+                                <select onchange="g_installer_object.gatherInstallerState()" id="distance_units_select">
+                                    <option value="mi"<?php
+                                                if ( $comdef_install_wizard_strings['DefaultDistanceUnits'] == 'mi' )
+                                                    {
+                                                    echo ' selected="selected"';
+                                                    }
+                                                echo '>'.htmlspecialchars ( $comdef_install_wizard_strings['DistanceUnitsMiles'] );
+                                            ?></option>
+                                    <option value="km"<?php
+                                                if ( $comdef_install_wizard_strings['DefaultDistanceUnits'] == 'km' )
+                                                    {
+                                                    echo ' selected="selected"';
+                                                    }
                                             
-                                            echo '>'.htmlspecialchars ( $comdef_install_wizard_strings['DistanceUnitsKM'] );
-                                        ?></option>
-                            </select>
+                                                echo '>'.htmlspecialchars ( $comdef_install_wizard_strings['DistanceUnitsKM'] );
+                                            ?></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="one_line_div">
+                            <label class="left_right_aligned bold_char" for="search_count_select"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['SearchDepthLabel'] ); ?></label>
+                            <div class="right_left_aligned_div">
+                                <select onchange="g_installer_object.gatherInstallerState()" id="search_count_select">
+                                    <?php
+                                        foreach ( $comdef_install_wizard_strings['DistanceChoices'] as $count )
+                                            {
+                                            echo '<option';
+                                                if ( $count == $prefs_array['number_of_meetings_for_auto'] )
+                                                    {
+                                                    echo ' selected="selected"';
+                                                    }
+                                            echo ">$count</option>";
+                                            }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="extra_text_div"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['SearchDepthText'] ); ?></div>
+                        </div>
+                        <div class="one_line_div">
+                            <label class="left_right_aligned bold_char" for="installer_title_input"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['TitleTextLabel'] ); ?></label>
+                            <div class="right_left_aligned_div">
+                                <input type="text" id="installer_title_input" onkeyup="g_installer_object.gatherInstallerState()" value="<?php echo htmlspecialchars ( $prefs_array['bmlt_title'] ); ?>" class="bmlt_text_item" />
+                            </div>
+                        </div>
+                        <div class="one_line_div">
+                            <label class="left_right_aligned bold_char" for="installer_banner_input"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['BannerTextLabel'] ); ?></label>
+                            <div class="right_left_aligned_div">
+                                <input type="text" id="installer_banner_input" onkeyup="g_installer_object.gatherInstallerState()" value="<?php echo htmlspecialchars ( $prefs_array['banner_text'] ); ?>" class="bmlt_text_item" />
+                            </div>
+                        </div>
+                        <div class="clear_both"></div>
+                    </fieldset>
+                    <?php echo bmlt_create_next_prev_buttons(3) ?>
+                </div>
+                <div id="bmlt_installer_page_4" class="bmlt_installer_page_4">
+                    <?php echo bmlt_create_next_prev_buttons(4) ?>
+                    <div id="database_install_stuff_div" class="item_hidden">
+                        <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_4_DB_Setup_Heading']; ?></h1>
+                        <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_4_DB_Setup_Text']; ?></h2>
+                        <div class="one_line_div centered_text">
+                            <a id="bmlt_installer_initialize_ajax_button" class="bmlt_admin_ajax_button" href="javascript:g_installer_object.setUpDatabase()"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Set_Up_Database'] ) ?></a>
+                            <span id="bmlt_installer_initialize_ajax_button_throbber_span" class="item_hidden">
+                                <img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" />
+                            </span>
                         </div>
                     </div>
+                    <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_4_Heading']; ?></h1>
+                    <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_4_Text']; ?></h2>
                     <div class="clear_both"></div>
-                </fieldset>
-                <?php echo bmlt_create_next_prev_buttons(3) ?>
-            </div>
-            <div id="bmlt_installer_page_4" class="bmlt_installer_page_4">
-                <?php echo bmlt_create_next_prev_buttons(4) ?>
-                <div id="database_install_stuff_div" class="item_hidden">
-                    <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_4_DB_Setup_Heading']; ?></h1>
-                    <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_4_DB_Setup_Text']; ?></h2>
-                    <div class="one_line_div centered_text">
-                        <a id="bmlt_installer_initialize_ajax_button" class="bmlt_admin_ajax_button" href="javascript:g_installer_object.setUpDatabase()"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Set_Up_Database'] ) ?></a>
-                        <span id="bmlt_installer_initialize_ajax_button_throbber_span" class="item_hidden">
-                            <img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" />
-                        </span>
-                    </div>
-                </div>
-                <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_4_Heading']; ?></h1>
-                <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_4_Text']; ?></h2>
-                <div class="clear_both"></div>
-                <?php echo bmlt_create_next_prev_buttons(4) ?>
-            </div><?php
+                    <?php echo bmlt_create_next_prev_buttons(4) ?>
+                </div><?php
+                        }
+                    else
+                        {
+                        $ret .= '<span class="installer_error_display">'.htmlspecialchars ( $comdef_install_wizard_strings['Database_Type_Error'] ).'</span></dt>';
+                        }
                     }
                 else
                     {
-                    $ret .= '<span class="installer_error_display">'.htmlspecialchars ( $comdef_install_wizard_strings['Database_Type_Error'] ).'</span></dt>';
+                    $ret .= '<span class="installer_error_display">'.htmlspecialchars ( $comdef_install_wizard_strings['Database_PDO_Error'] ).'</span></dt>';
                     }
                 }
             else
                 {
-                $ret .= '<span class="installer_error_display">'.htmlspecialchars ( $comdef_install_wizard_strings['Database_PDO_Error'] ).'</span></dt>';
+                $ret .= '<span class="installer_error_display">'.htmlspecialchars ( $comdef_install_wizard_strings['Database_Version_Error'] ).'</span></dt>';
                 }
-            }
-        else
-            {
-            $ret .= '<span class="installer_error_display">'.htmlspecialchars ( $comdef_install_wizard_strings['Database_Version_Error'] ).'</span></dt>';
-            }
-        ?>
-    </div>
+            ?>
+        </div>
+    </form>
     <script type="text/javascript">
         g_installer_object.m_top_dir_path = '<?php echo $realpath; ?>';
         g_installer_object.m_main_dir_basename = '<?php echo $basename; ?>';
@@ -209,8 +260,11 @@ $default_lang = $lang;
         g_installer_object.handleTextInputLoad(document.getElementById('installer_db_host_input'),'<?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_Host_Default_Text'] ); ?>','small');
         g_installer_object.handleTextInputLoad(document.getElementById('installer_db_prefix_input'),'<?php echo htmlspecialchars ( $comdef_install_wizard_strings['Table_Prefix_Default_Text'] ); ?>','small');
 
-        g_installer_object.handleTextInputLoad(document.getElementById('installer_admin_login_input'),'<?php echo htmlspecialchars ( $comdef_install_wizard_strings['Admin_Login_Default_Text'] ); ?>','small');
+        g_installer_object.handleTextInputLoad(document.getElementById('installer_admin_login_input'),'<?php echo htmlspecialchars ( $comdef_install_wizard_strings['Admin_Login_Default_Text'] ); ?>','med');
         g_installer_object.handleTextInputLoad(document.getElementById('installer_admin_password_input'),'<?php echo htmlspecialchars ( $comdef_install_wizard_strings['Admin_Password_Default_Text'] ); ?>','med');
+
+        g_installer_object.handleTextInputLoad(document.getElementById('installer_title_input'),'<?php echo htmlspecialchars ( $comdef_install_wizard_strings['TitleTextDefaultText'] ); ?>');
+        g_installer_object.handleTextInputLoad(document.getElementById('installer_banner_input'),'<?php echo htmlspecialchars ( $comdef_install_wizard_strings['BannerTextDefaultText'] ); ?>');
     </script>
 </div>
 
@@ -244,7 +298,7 @@ function bmlt_create_lang_select()
     
     $basedir = dirname ( __FILE__ ).'/../server_admin/lang/';
     
-    $ret .= '<select id="installer_lang_select">';
+    $ret .= '<select onchange="g_installer_object.gatherInstallerState()" id="installer_lang_select">';
         $dh = opendir ( $basedir );
         $server_lang_names = array();
         
@@ -256,7 +310,7 @@ function bmlt_create_lang_select()
                 if ( file_exists ( $file_path ) )
                     {
                     $name = trim ( file_get_contents ( $file_path ) );
-                    $ret .= '<option value="'.htmlspecialchars ( $enum ).'">'.htmlspecialchars ( $name ).'</option>';
+                    $server_lang_names[$enum] = $name;
                     }
                 }
                 
@@ -264,6 +318,12 @@ function bmlt_create_lang_select()
             }
         
         uksort ( $server_lang_names, 'ServerLangSortCallback' );
+        
+        foreach ( $server_lang_names as $enum => $name )
+            {
+            $ret .= '<option value="'.htmlspecialchars ( $enum ).'">'.htmlspecialchars ( $name ).'</option>';
+            }
+        
     $ret .= '</select>';
         
     return $ret;
@@ -307,7 +367,7 @@ function bmlt_create_region_bias_select()
     $file_path = dirname ( __FILE__ ).'/country_names_and_code_elements.txt';
     $cc_array = explode ( "\n", file_get_contents ( $file_path ) );
     
-    $ret .= '<select id="installer_region_bias_select">';
+    $ret .= '<select onchange="g_installer_object.gatherInstallerState()" id="installer_region_bias_select">';
         foreach ( $cc_array as $cc )
             {
             $cc_elem = explode ( "\t", trim ( $cc ) );
@@ -334,7 +394,7 @@ function bmlt_create_pdo_driver_select()
     global  $prefs_array;
     $ret = '';
     
-    $ret .= '<select id="installer_db_type_select">';
+    $ret .= '<select onchange="g_installer_object.gatherInstallerState()" id="installer_db_type_select">';
     foreach ( PDO::getAvailableDrivers() as $driver )
         {
         $ret .= '<option value="'.htmlspecialchars ( $driver ).'"';

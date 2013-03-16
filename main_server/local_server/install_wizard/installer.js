@@ -460,13 +460,30 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
                 };
             };
             
-        var region_bias_object = document.getElementById ( 'installer_region_bias_select' );
-        
-        this.m_installer_state.region_bias = region_bias_object.options[region_bias_object.selectedIndex].value;
-            
         var language_object = document.getElementById ( 'installer_lang_select' );
         
         this.m_installer_state.comdef_global_language = language_object.options[language_object.selectedIndex].value;
+            
+        var pw_length_object = document.getElementById ( 'installer_pw_length_select' );
+        
+        this.m_installer_state.min_pw_len = pw_length_object.options[pw_length_object.selectedIndex].value;
+            
+        var region_bias_object = document.getElementById ( 'installer_region_bias_select' );
+        
+        this.m_installer_state.region_bias = region_bias_object.options[region_bias_object.selectedIndex].value;
+        
+        if ( this.m_map_object )
+            {
+            var centerPos = this.m_map_object.main_marker.getPosition();
+
+            this.m_installer_state.search_spec_map_center.longitude = centerPos.lng();
+            this.m_installer_state.search_spec_map_center.latitude = centerPos.lat();
+            this.m_installer_state.search_spec_map_center.zoom = this.m_map_object.getZoom();
+            };
+        
+        this.m_installer_state.bmlt_title = document.getElementById ( 'installer_title_input' ).value;
+            
+        this.m_installer_state.banner_text = document.getElementById ( 'installer_banner_input' ).value;
             
         var distance_units_object = document.getElementById ( 'distance_units_select' );
         

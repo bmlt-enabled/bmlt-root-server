@@ -163,8 +163,9 @@ div.one_line_div
     padding: 0.25em;
 }
 
-div.left_right_aligned_div
+label.left_right_aligned
 {
+    display:block;
     float:left;
     width:40%;
     text-align:right;
@@ -284,13 +285,13 @@ textarea.bmlt_text_item_dimmed
 
 div.right_left_aligned_div input
 {
-    float:left;
     margin-right:0.5em;
 }
 
 div.extra_text_div
 {
     font-style:italic;
+    padding-left:0.5em;
 }
 
 h1.page_heading_h1
