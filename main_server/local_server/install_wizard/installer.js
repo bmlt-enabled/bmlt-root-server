@@ -311,23 +311,35 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
             if ( ret_val == 0 )
                 {
                 document.getElementById ( 'admin_login_stuff_div' ).className = 'item_hidden';
-                document.getElementById ( 'database_install_stuff_div' ).className = 'item_hidden';
+                if ( document.getElementById ( 'database_install_stuff_div' ) )
+                    {
+                    document.getElementById ( 'database_install_stuff_div' ).className = 'item_hidden';
+                    };
                 }
             else if ( ret_val == -1 )
                 {
                 document.getElementById ( 'admin_login_stuff_div' ).className = '';
-                document.getElementById ( 'database_install_stuff_div' ).className = 'item_hidden';
+                if ( document.getElementById ( 'database_install_stuff_div' ) )
+                    {
+                    document.getElementById ( 'database_install_stuff_div' ).className = 'item_hidden';
+                    };
                 }
             else
                 {
                 document.getElementById ( 'admin_login_stuff_div' ).className = '';
-                document.getElementById ( 'database_install_stuff_div' ).className = '';
+                if ( document.getElementById ( 'database_install_stuff_div' ) )
+                    {
+                    document.getElementById ( 'database_install_stuff_div' ).className = '';
+                    };
                 };
             }
         else
             {
             document.getElementById ( 'admin_login_stuff_div' ).className = '';
-            document.getElementById ( 'database_install_stuff_div' ).className = 'item_hidden';
+            if ( document.getElementById ( 'database_install_stuff_div' ) )
+                {
+                document.getElementById ( 'database_install_stuff_div' ).className = 'item_hidden';
+                };
             };
     };
     
@@ -431,21 +443,24 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
         var admin_login = (admin_login_object.value && (admin_login_object.value != admin_login_object.defaultValue)) ? admin_login_object.value : '';
         var admin_password = (admin_password_object.value && (admin_password_object.value != admin_password_object.defaultValue)) ? admin_password_object.value : '';
         
-        if (    !this.m_installer_state.dbType
-            ||  !this.m_installer_state.dbName
-            ||  !this.m_installer_state.dbUser
-            ||  !this.m_installer_state.dbPassword
-            ||  !this.m_installer_state.dbServer
-            ||  !this.m_installer_state.dbPrefix
-            ||  !admin_login
-            ||  !admin_password
-            )
+        if ( document.getElementById ( 'database_install_stuff_div' ) )
             {
-            document.getElementById ( 'database_install_stuff_div' ).className = 'item_hidden';
-            }
-        else
-            {
-            document.getElementById ( 'database_install_stuff_div' ).className = '';
+            if (    !this.m_installer_state.dbType
+                ||  !this.m_installer_state.dbName
+                ||  !this.m_installer_state.dbUser
+                ||  !this.m_installer_state.dbPassword
+                ||  !this.m_installer_state.dbServer
+                ||  !this.m_installer_state.dbPrefix
+                ||  !admin_login
+                ||  !admin_password
+                )
+                {
+                document.getElementById ( 'database_install_stuff_div' ).className = 'item_hidden';
+                }
+            else
+                {
+                document.getElementById ( 'database_install_stuff_div' ).className = '';
+                };
             };
     };
     

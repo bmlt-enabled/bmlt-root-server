@@ -63,7 +63,6 @@
 	                                        'Admin_Password'                =>  'Server Administrator Password:',
 	                                        'Admin_Password_Default_Text'   =>  'Enter A Server Administrator Password',
 	                                        'Admin_Password_Additional_Text'    =>  'Make sure that this is a non-trivial password! It has a great deal of power! (Also, don\' forget it).',
-                                            'ServerAdminDefaultLogin'       =>  'serveradmin',
                                             'ServerAdminName'               =>  'Server Administrator',
                                             'ServerAdminDesc'               =>  'Main Server Administrator',
                                             'ServerLangLabel'               =>  'Default Server Language:',
@@ -98,5 +97,6 @@
                                             'search_spec_map_center'        =>  array ( 'longitude' => -118.563659, 'latitude' => 34.235918, 'zoom' => 6 ),
 	                                        'DistanceChoices'               =>  array ( 2, 5, 10, 20, 50 ),
 	                                        'HistoryChoices'                =>  array ( 0, 1, 5, 10 ),
+                                            'ServerAdminDefaultLogin'       =>  'serveradmin',
 	                                        );
 ?>

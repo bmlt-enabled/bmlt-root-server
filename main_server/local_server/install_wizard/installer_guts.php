@@ -94,13 +94,22 @@ $default_lang = $lang;
                         <input type="text" id="installer_db_pw_input" onkeyup="g_installer_object.gatherInstallerState()" value="<?php echo htmlspecialchars ( $prefs_array['dbPassword'] ); ?>" class="bmlt_text_item_small" />
                     </div>
                 </div>
+                <div class="clear_both"></div>
                 <?php echo bmlt_create_next_prev_buttons(1) ?>
             </div>
             <div id="bmlt_installer_page_2" class="bmlt_installer_page_2">
                 <?php echo bmlt_create_next_prev_buttons(2) ?>
                 <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_2_Heading']; ?></h1>
                 <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_2_Text']; ?></h2>
-                <div id="installer_map_display_div" class="installer_map_display_div"></div>
+                <div class="one_line_div">
+                    <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['RegionBiasLabel'] ); ?></div>
+                    <div class="right_left_aligned_div">
+                        <?php echo bmlt_create_region_bias_select(); ?>
+                    </div>
+                </div>
+                <div class="clear_both"></div>
+                <div class="installer_map_wrapper_div"><div id="installer_map_display_div" class="installer_map_display_div"></div></div>
+                <div class="clear_both"></div>
                 <?php echo bmlt_create_next_prev_buttons(2) ?>
             </div>
             <div id="bmlt_installer_page_3" class="bmlt_installer_page_3">
@@ -111,7 +120,7 @@ $default_lang = $lang;
                     <div class="one_line_div">
                         <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Admin_Login'] ); ?></div>
                         <div class="right_left_aligned_div">
-                            <input type="text" id="installer_admin_login_input" onkeyup="g_installer_object.gatherInstallerState()" value="<?php echo $comdef_install_wizard_strings['serveradmin'] ?>" class="bmlt_text_item_small" />
+                            <input type="text" id="installer_admin_login_input" onkeyup="g_installer_object.gatherInstallerState()" value="<?php echo $comdef_install_wizard_strings['ServerAdminDefaultLogin'] ?>" class="bmlt_text_item_small" />
                         </div>
                         <div class="extra_text_div"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Admin_Login_Additional_Text'] ); ?></div>
                     </div>
@@ -132,9 +141,10 @@ $default_lang = $lang;
                 <div class="one_line_div">
                     <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['DistanceUnitsLabel'] ); ?></div>
                     <div class="right_left_aligned_div">
-                        <select
+                        
                     </div>
                 </div>
+                <div class="clear_both"></div>
                 <?php echo bmlt_create_next_prev_buttons(3) ?>
             </div>
             <div id="bmlt_installer_page_4" class="bmlt_installer_page_4">
@@ -151,6 +161,7 @@ $default_lang = $lang;
                 </div>
                 <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_4_Heading']; ?></h1>
                 <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_4_Text']; ?></h2>
+                <div class="clear_both"></div>
                 <?php echo bmlt_create_next_prev_buttons(4) ?>
             </div><?php
                     }
@@ -267,6 +278,36 @@ function ServerLangSortCallback( $in_lang_a,
         {
         $ret = strncasecmp ( $in_lang_a, $in_lang_b );
         }
+        
+    return $ret;
+}
+
+function bmlt_create_region_bias_select()
+{
+    global  $prefs_array;
+    $ret = '';
+    
+    $file_path = dirname ( __FILE__ ).'/country_names_and_code_elements.txt';
+    $cc_array = explode ( "\n", file_get_contents ( $file_path ) );
+    
+    $ret .= '<select id="installer_region_bias_select">';
+        foreach ( $cc_array as $cc )
+            {
+            $cc_elem = explode ( "\t", trim ( $cc ) );
+            
+            if ( isset ( $cc_elem ) && is_array ( $cc_elem ) && (count ( $cc_elem ) == 2) )
+                {
+                $name = ucwords ( strtolower ( trim ( $cc_elem[0] ) ) );
+                $code = strtolower ( trim ( $cc_elem[1] ) );
+                $ret .= '<option value="'.htmlspecialchars ( $code ).'"';
+                    if ( strtolower ( $prefs_array['region_bias'] ) == $code )
+                        {
+                        $ret .= ' selected="selected"';
+                        }
+                $ret .= '>'.htmlspecialchars ( $name ).'</option>';
+                }
+            }
+    $ret .= '</select>';
         
     return $ret;
 }

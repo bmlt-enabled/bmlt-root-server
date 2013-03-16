@@ -299,6 +299,17 @@ h2.page_heading_h2
 div.installer_map_display_div
 {
     height:400px;
+    margin:1px;
+}
+
+div.installer_map_wrapper_div
+{
+    margin-top:1em;
+    border:1px solid #009;
+    background-color:#009;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
 }
 
 div.next_prev_container_div
