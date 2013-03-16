@@ -176,6 +176,11 @@ label.left_right_aligned
     font-weight:bold;
 }
 
+.red_char
+{
+    color:#c00;
+}
+
 .centered_text
 {
     text-align:center;

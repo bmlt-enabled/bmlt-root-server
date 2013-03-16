@@ -303,35 +303,46 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
                                                 )
     {
         this.m_ajax_request_in_progress = null;
-        
+
         if ( in_http_request.responseText )
             {
             eval ( 'var ret_val = parseInt ( ' + in_http_request.responseText + ', 10 );' );
+            document.getElementById ( 'admin_db_items_warning' ).innerHTML = '';
+            document.getElementById ( 'admin_pw_warning_div_2' ).className = 'item_hidden';
             
-            if ( ret_val == 0 )
+            if ( ret_val == 0 ) // There is an existing database
                 {
                 document.getElementById ( 'admin_login_stuff_fieldset' ).className = 'item_hidden';
                 if ( document.getElementById ( 'database_install_stuff_div' ) )
                     {
                     document.getElementById ( 'database_install_stuff_div' ).className = 'item_hidden';
                     };
+                document.getElementById ( 'admin_pw_warning_div_2' ).className = 'extra_text_div red_char';
+                document.getElementById ( 'admin_db_items_warning' ).innerHTML = g_db_init_db_set_warning_text;
                 }
-            else if ( ret_val == -1 )
+            else if ( ret_val == -1 )   // No database
                 {
                 document.getElementById ( 'admin_login_stuff_fieldset' ).className = '';
                 if ( document.getElementById ( 'database_install_stuff_div' ) )
                     {
                     document.getElementById ( 'database_install_stuff_div' ).className = 'item_hidden';
                     };
+                
+                document.getElementById ( 'admin_pw_warning_div' ).innerHTML = '';
                 }
             else
                 {
                 document.getElementById ( 'admin_login_stuff_fieldset' ).className = '';
+                if ( document.getElementById ( 'database_install_stuff_div' ) )
+                    {
+                    document.getElementById ( 'database_install_stuff_div' ).className = '';
+                    };
                 this.gatherInstallerState ();
                 };
             }
-        else
+        else    // Nothing to report.
             {
+            document.getElementById ( 'admin_pw_warning_div' ).innerHTML = '';
             document.getElementById ( 'admin_login_stuff_fieldset' ).className = '';
             if ( document.getElementById ( 'database_install_stuff_div' ) )
                 {
@@ -397,6 +408,7 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
                 if ( ret_val.status )   // Hide the initialize button upon success.
                     {
                     document.getElementById ( 'database_install_stuff_div' ).className = 'item_hidden';
+                    document.getElementById ( 'admin_db_items_warning' ).innerHTML = '';
                     }
                 else
                     {
@@ -410,6 +422,19 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
         
         document.getElementById ( 'bmlt_installer_initialize_ajax_button_throbber_span' ).className = 'item_hidden';
         document.getElementById ( 'bmlt_installer_initialize_ajax_button' ).className = 'bmlt_admin_ajax_button';
+    };
+    
+    /************************************************************************************//**
+    *   \brief Returns the minimum password length                                          *
+    *   \returns an integer, with the password length.                                      *
+    ****************************************************************************************/
+    this.geMinPasswordLength = function()
+    {
+        var pw_length_object = document.getElementById ( 'installer_pw_length_select' );
+        
+        this.m_installer_state.min_pw_len = pw_length_object.options[pw_length_object.selectedIndex].value;
+        
+        return parseInt ( this.m_installer_state.min_pw_len, 10 );
     };
     
     /************************************************************************************//**
@@ -450,23 +475,44 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
                 ||  !this.m_installer_state.dbPrefix
                 ||  !admin_login
                 ||  !admin_password
+                ||  (admin_password && (admin_password.length < this.geMinPasswordLength()))
                 )
                 {
                 document.getElementById ( 'database_install_stuff_div' ).className = 'item_hidden';
+                if (    !admin_login
+                    ||  !admin_password
+                    ||  (admin_password && (admin_password.length < this.geMinPasswordLength()))
+                    )
+                    {
+                    document.getElementById ( 'admin_db_items_warning' ).innerHTML = g_db_init_no_pw_warning_text;
+                    }
+                else
+                    {
+                    document.getElementById ( 'admin_db_items_warning' ).innerHTML = '';
+                    };
                 }
             else
                 {
-                document.getElementById ( 'database_install_stuff_div' ).className = '';
+                document.getElementById ( 'admin_db_items_warning' ).innerHTML = '';
                 };
             };
-            
+        
+        var min_pw_len = this.geMinPasswordLength();
+        
+        if ( admin_password && (admin_password.length < min_pw_len) )
+            {
+            document.getElementById ( 'admin_pw_warning_div' ).innerHTML = sprintf ( g_pw_length_warning_text, min_pw_len );
+            }
+        else
+            {
+            document.getElementById ( 'admin_pw_warning_div' ).innerHTML = '';
+            };
+        
         var language_object = document.getElementById ( 'installer_lang_select' );
         
         this.m_installer_state.comdef_global_language = language_object.options[language_object.selectedIndex].value;
             
-        var pw_length_object = document.getElementById ( 'installer_pw_length_select' );
-        
-        this.m_installer_state.min_pw_len = pw_length_object.options[pw_length_object.selectedIndex].value;
+        this.geMinPasswordLength();
             
         var region_bias_object = document.getElementById ( 'installer_region_bias_select' );
         
@@ -475,7 +521,12 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
         if ( this.m_map_object )
             {
             var centerPos = this.m_map_object.main_marker.getPosition();
-
+            
+            if ( !this.m_installer_state.search_spec_map_center )
+                {
+                this.m_installer_state.search_spec_map_center = new Object;
+                };
+            
             this.m_installer_state.search_spec_map_center.longitude = centerPos.lng();
             this.m_installer_state.search_spec_map_center.latitude = centerPos.lat();
             this.m_installer_state.search_spec_map_center.zoom = this.m_map_object.getZoom();
@@ -495,6 +546,10 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
     // #mark -
     
     this.m_map_center = in_map_center;
+    if ( !this.m_installer_state )
+        {
+        this.m_installer_state = g_prefs_state;
+        };
     this.m_installer_wrapper_object = document.getElementById ( 'installer_wrapper' );
 };
 
@@ -589,4 +644,121 @@ function BMLT_Installer_AjaxRequest (   url,        ///< The URI to be called
     req.send ( sVars );
     
     return req;
+};
+
+// #mark - 
+// #mark ########## Third-Party Code ##########
+// #mark -
+
+/**
+sprintf() for JavaScript 0.6
+
+Copyright (c) Alexandru Marasteanu <alexaholic [at) gmail (dot] com>
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of sprintf() for JavaScript nor the
+      names of its contributors may be used to endorse or promote products
+      derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL Alexandru Marasteanu BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+Changelog:
+2007.04.03 - 0.1:
+ - initial release
+2007.09.11 - 0.2:
+ - feature: added argument swapping
+2007.09.17 - 0.3:
+ - bug fix: no longer throws exception on empty paramenters (Hans Pufal)
+2007.10.21 - 0.4:
+ - unit test and patch (David Baird)
+2010.05.09 - 0.5:
+ - bug fix: 0 is now preceeded with a + sign
+ - bug fix: the sign was not at the right position on padded results (Kamal Abdali)
+ - switched from GPL to BSD license
+2010.05.22 - 0.6:
+ - reverted to 0.4 and fixed the bug regarding the sign of the number 0
+ Note:
+ Thanks to Raphael Pigulla <raph (at] n3rd [dot) org> (http://www.n3rd.org/)
+ who warned me about a bug in 0.5, I discovered that the last update was
+ a regress. I appologize for that.
+**/
+
+function sprintf()
+{
+    function str_repeat(i, m)
+    {
+        for (var o = []; m > 0; o[--m] = i);
+        return o.join('');
+    };
+
+    var i = 0, a, f = arguments[i++], o = [], m, p, c, x, s = '';
+    
+    while (f)
+        {
+        if (m = /^[^\x25]+/.exec(f))
+            {
+            o.push(m[0]);
+            }
+        else if (m = /^\x25{2}/.exec(f))
+            {
+            o.push('%');
+            }
+        else if (m = /^\x25(?:(\d+)\$)?(\+)?(0|'[^$])?(-)?(\d+)?(?:\.(\d+))?([b-fosuxX])/.exec(f))
+            {
+            if (((a = arguments[m[1] || i++]) == null) || (a == undefined))
+                {
+                throw('Too few arguments.');
+                };
+            
+            if (/[^s]/.test(m[7]) && (typeof(a) != 'number'))
+                {
+                throw('Expecting number but found ' + typeof(a));
+                };
+            
+            switch (m[7])
+                {
+                case 'b': a = a.toString(2); break;
+                case 'c': a = String.fromCharCode(a); break;
+                case 'd': a = parseInt(a,10); break;
+                case 'e': a = m[6] ? a.toExponential(m[6]) : a.toExponential(); break;
+                case 'f': a = m[6] ? parseFloat(a).toFixed(m[6]) : parseFloat(a); break;
+                case 'o': a = a.toString(8); break;
+                case 's': a = ((a = String(a)) && m[6] ? a.substring(0, m[6]) : a); break;
+                case 'u': a = Math.abs(a); break;
+                case 'x': a = a.toString(16); break;
+                case 'X': a = a.toString(16).toUpperCase(); break;
+                };
+            
+            a = (/[def]/.test(m[7]) && m[2] && a >= 0 ? '+'+ a : a);
+            c = m[3] ? m[3] == '0' ? '0' : m[3].charAt(1) : ' ';
+            x = m[5] - String(a).length - s.length;
+            p = m[5] ? str_repeat(c, x) : '';
+            o.push(s + (m[4] ? a + p : p + a));
+            }
+        else
+            {
+            throw('Huh ?!');
+            };
+        
+        f = f.substring(m[0].length);
+        };
+    
+    return o.join('');
 };

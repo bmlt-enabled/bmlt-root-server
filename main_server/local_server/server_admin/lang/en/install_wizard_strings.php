@@ -29,6 +29,11 @@
                                             'AJAX_Handler_DB_Established_Error' =>  'The database already esists, and has been set up! You cannot use this setup to overwrite an existing database!',
                                             'AJAX_Handler_DB_Incomplete_Error'  =>  'There is not enough information to initialize the database!',
                                             
+                                            'NoDatabase_Note_AlreadySet'    =>  'There is already an existing database, so you cannot initialize a new one.',
+                                            'NoDatabase_Note_PasswordIssue' =>  'You must create a Server Administrator account before the database can be initialized.',
+                                            'NoServerAdmin_Note_AlreadySet' =>  'There is already an existing database, so you cannot set up a Server Administrator account (One already exists).',
+                                            'NeedLongerPasswordNote'        =>  'This password is too short. It must be at least %d characters long.',
+                                            
 	                                        'Prev_Button'                   =>  'PREVIOUS',
 	                                        'Next_Button'                   =>  'NEXT',
 

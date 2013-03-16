@@ -73,7 +73,7 @@ if (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'initiali
         c_comdef_dbsingleton::init ( $http_vars['dbType'], $http_vars['dbServer'], $http_vars['dbName'], $http_vars['dbUser'], $http_vars['dbPassword'] );
     
         // First, we make sure that the database does not already exist. If so, we immediately fail, as we will not overwrite an existing database.
-		$result = c_comdef_dbsingleton::preparedQuery ( 'SHOW TABLES LIKE \'?\'', array($http_vars['dbPrefix'].'_comdef_users') );
+		$result = c_comdef_dbsingleton::preparedQuery ( 'SHOW TABLES LIKE ?', array($http_vars['dbPrefix'].'_comdef_users') );
 		
 		$response = array ( 'status' => 'false', 'report' => 'AJAX_Handler_DB_Established_Error' );
 		
@@ -117,7 +117,7 @@ elseif (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'test
         c_comdef_dbsingleton::init ( $http_vars['dbType'], $http_vars['dbServer'], $http_vars['dbName'], $http_vars['dbUser'], $http_vars['dbPassword'] );
     
         // If we have an existing database, we return the word "false".
-		$result = c_comdef_dbsingleton::preparedQuery ( 'SHOW TABLES LIKE \'?\'', array($http_vars['dbPrefix'].'_comdef_users') );
+		$result = c_comdef_dbsingleton::preparedQuery ( 'SHOW TABLES LIKE ?', array($http_vars['dbPrefix'].'_comdef_users') );
 		
 		if ( isset ( $result ) && is_array ( $result ) && count ( $result ) )
 		    {
@@ -130,7 +130,7 @@ elseif (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'test
         }
     catch ( Exception $e )
         {
-        echo array2json ( array ( 'status' => 'false', 'report' => $comdef_install_wizard_strings['AJAX_Handler_DB_Connect_Error'] ) );
+        echo '-1';
         }
     }
 elseif ( isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'test') )

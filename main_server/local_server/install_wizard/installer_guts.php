@@ -132,8 +132,10 @@ $default_lang = $lang;
                             </div>
                             <div class="extra_text_div"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Admin_Password_Additional_Text'] ); ?></div>
                         </div>
+                        <div class="one_line_div"><div id="admin_pw_warning_div" class="extra_text_div red_char"></div></div>
                         <div class="clear_both"></div>
                     </fieldset>
+                    <div class="one_line_div"><div id="admin_pw_warning_div_2" class="item_hidden"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['NoServerAdmin_Note_AlreadySet'] ); ?></div></div>
                     <fieldset id="admin_settings_fieldset">
                         <div class="one_line_div">
                             <label class="left_right_aligned bold_char" for="installer_lang_select"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['ServerLangLabel'] ); ?></label>
@@ -226,6 +228,7 @@ $default_lang = $lang;
                             </span>
                         </div>
                     </div>
+                    <div class="one_line_div"><div id="admin_db_items_warning" class="extra_text_div red_char"></div></div>
                     <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_4_Heading']; ?></h1>
                     <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_4_Text']; ?></h2>
                     <div class="clear_both"></div>
@@ -250,6 +253,10 @@ $default_lang = $lang;
         </div>
     </form>
     <script type="text/javascript">
+        g_pw_length_warning_text = '<?php echo htmlspecialchars ( $comdef_install_wizard_strings['NeedLongerPasswordNote'] ); ?>';
+        g_db_init_no_pw_warning_text = '<?php echo htmlspecialchars ( $comdef_install_wizard_strings['NoDatabase_Note_PasswordIssue'] ); ?>';
+        g_db_init_db_set_warning_text = '<?php echo htmlspecialchars ( $comdef_install_wizard_strings['NoDatabase_Note_AlreadySet'] ); ?>';
+        
         g_installer_object.m_top_dir_path = '<?php echo $realpath; ?>';
         g_installer_object.m_main_dir_basename = '<?php echo $basename; ?>';
         g_installer_object.m_ajax_uri = '<?php echo htmlspecialchars ( $_SERVER['PHP_SELF'].'?ajax_req=' ); ?>';
