@@ -116,7 +116,7 @@ $default_lang = $lang;
                 <?php echo bmlt_create_next_prev_buttons(3) ?>
                 <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_3_Heading']; ?></h1>
                 <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_3_Text']; ?></h2>
-                <div id="admin_login_stuff_div">
+                <fieldset id="admin_login_stuff_fieldset">
                     <div class="one_line_div">
                         <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Admin_Login'] ); ?></div>
                         <div class="right_left_aligned_div">
@@ -131,20 +131,37 @@ $default_lang = $lang;
                         </div>
                         <div class="extra_text_div"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Admin_Password_Additional_Text'] ); ?></div>
                     </div>
-                </div>
-                <div class="one_line_div">
-                    <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['ServerLangLabel'] ); ?></div>
-                    <div class="right_left_aligned_div">
-                        <?php echo bmlt_create_lang_select(); ?>
+                    <div class="clear_both"></div>
+                </fieldset>
+                <fieldset id="admin_settings_fieldset">
+                    <div class="one_line_div">
+                        <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['ServerLangLabel'] ); ?></div>
+                        <div class="right_left_aligned_div"><?php echo bmlt_create_lang_select(); ?></div>
                     </div>
-                </div>
-                <div class="one_line_div">
-                    <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['DistanceUnitsLabel'] ); ?></div>
-                    <div class="right_left_aligned_div">
-                        
+                    <div class="one_line_div">
+                        <div class="left_right_aligned_div bold_char"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['DistanceUnitsLabel'] ); ?></div>
+                        <div class="right_left_aligned_div">
+                            <select id="distance_units_select">
+                                <option value="mi"<?php
+                                            if ( $comdef_install_wizard_strings['DefaultDistanceUnits'] == 'mi' )
+                                                {
+                                                echo ' selected="selected"';
+                                                }
+                                            echo '>'.htmlspecialchars ( $comdef_install_wizard_strings['DistanceUnitsMiles'] );
+                                        ?></option>
+                                <option value="km"<?php
+                                            if ( $comdef_install_wizard_strings['DefaultDistanceUnits'] == 'km' )
+                                                {
+                                                echo ' selected="selected"';
+                                                }
+                                            
+                                            echo '>'.htmlspecialchars ( $comdef_install_wizard_strings['DistanceUnitsKM'] );
+                                        ?></option>
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="clear_both"></div>
+                    <div class="clear_both"></div>
+                </fieldset>
                 <?php echo bmlt_create_next_prev_buttons(3) ?>
             </div>
             <div id="bmlt_installer_page_4" class="bmlt_installer_page_4">

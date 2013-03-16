@@ -62,7 +62,7 @@
 	                                        'Admin_Login_Additional_Text'   =>  'This is the login string for the Server Administrator.',
 	                                        'Admin_Password'                =>  'Server Administrator Password:',
 	                                        'Admin_Password_Default_Text'   =>  'Enter A Server Administrator Password',
-	                                        'Admin_Password_Additional_Text'    =>  'Make sure that this is a non-trivial password! It has a great deal of power! (Also, don\' forget it).',
+	                                        'Admin_Password_Additional_Text'    =>  'Make sure that this is a non-trivial password! It has a great deal of power! (Also, don\'t forget it).',
                                             'ServerAdminName'               =>  'Server Administrator',
                                             'ServerAdminDesc'               =>  'Main Server Administrator',
                                             'ServerLangLabel'               =>  'Default Server Language:',

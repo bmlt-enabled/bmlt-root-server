@@ -310,7 +310,7 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
             
             if ( ret_val == 0 )
                 {
-                document.getElementById ( 'admin_login_stuff_div' ).className = 'item_hidden';
+                document.getElementById ( 'admin_login_stuff_fieldset' ).className = 'item_hidden';
                 if ( document.getElementById ( 'database_install_stuff_div' ) )
                     {
                     document.getElementById ( 'database_install_stuff_div' ).className = 'item_hidden';
@@ -318,7 +318,7 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
                 }
             else if ( ret_val == -1 )
                 {
-                document.getElementById ( 'admin_login_stuff_div' ).className = '';
+                document.getElementById ( 'admin_login_stuff_fieldset' ).className = '';
                 if ( document.getElementById ( 'database_install_stuff_div' ) )
                     {
                     document.getElementById ( 'database_install_stuff_div' ).className = 'item_hidden';
@@ -326,16 +326,13 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
                 }
             else
                 {
-                document.getElementById ( 'admin_login_stuff_div' ).className = '';
-                if ( document.getElementById ( 'database_install_stuff_div' ) )
-                    {
-                    document.getElementById ( 'database_install_stuff_div' ).className = '';
-                    };
+                document.getElementById ( 'admin_login_stuff_fieldset' ).className = '';
+                this.gatherInstallerState ();
                 };
             }
         else
             {
-            document.getElementById ( 'admin_login_stuff_div' ).className = '';
+            document.getElementById ( 'admin_login_stuff_fieldset' ).className = '';
             if ( document.getElementById ( 'database_install_stuff_div' ) )
                 {
                 document.getElementById ( 'database_install_stuff_div' ).className = 'item_hidden';
@@ -462,6 +459,18 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
                 document.getElementById ( 'database_install_stuff_div' ).className = '';
                 };
             };
+            
+        var region_bias_object = document.getElementById ( 'installer_region_bias_select' );
+        
+        this.m_installer_state.region_bias = region_bias_object.options[region_bias_object.selectedIndex].value;
+            
+        var language_object = document.getElementById ( 'installer_lang_select' );
+        
+        this.m_installer_state.comdef_global_language = language_object.options[language_object.selectedIndex].value;
+            
+        var distance_units_object = document.getElementById ( 'distance_units_select' );
+        
+        this.m_installer_state.comdef_distance_units = distance_units_object.options[distance_units_object.selectedIndex].value;
     };
     
     // #mark - 
