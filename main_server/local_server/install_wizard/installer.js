@@ -16,14 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this code.  If not, see <http://www.gnu.org/licenses/>.
 */
-function BMLTInstaller( in_map_center   ///< The JSON object containing the map center.
-                        )
+function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
+                    )
 {
     var m_installer_wrapper_object;
     var m_map_object;
     var m_map_center;
-    var m_top_dir_path;
-    var m_main_dir_basename;
     var m_installer_state;
     var m_ajax_uri;
     var m_ajax_request_in_progress;
@@ -84,6 +82,7 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
             {
             this.m_installer_wrapper_object.className = 'page_4_wrapper';
             this.testForDatabaseSetup();
+            document.getElementById ( 'file_text_pre' ).innerHTML = this.createFileData();
             };
     };
     
@@ -216,9 +215,10 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
                                     )
     {
         var map_object = null;
+
         var myOptions = {
-                        'center': new google.maps.LatLng ( this.m_map_center.latitude, this.m_map_center.longitude ),
-                        'zoom': this.m_map_center.zoom,
+                        'center': new google.maps.LatLng ( this.m_installer_state.search_spec_map_center.latitude, this.m_installer_state.search_spec_map_center.longitude ),
+                        'zoom': this.m_installer_state.search_spec_map_center.zoom,
                         'mapTypeId': google.maps.MapTypeId.ROADMAP,
                         'mapTypeControlOptions': { 'style': google.maps.MapTypeControlStyle.DROPDOWN_MENU },
                         'zoomControl': true,
@@ -452,9 +452,6 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
         var admin_login_object = document.getElementById('installer_admin_login_input');
         var admin_password_object = document.getElementById('installer_admin_password_input');
 
-        this.m_installer_state = null;
-        this.m_installer_state = new Object;
-        
         this.m_installer_state.dbType = db_type_object.options[db_type_object.selectedIndex].value;
         this.m_installer_state.dbName = (db_name_object.value && (db_name_object.value != db_name_object.defaultValue)) ? db_name_object.value : '';
         this.m_installer_state.dbUser = (db_user_object.value && (db_user_object.value != db_user_object.defaultValue)) ? db_user_object.value : '';
@@ -508,6 +505,14 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
             document.getElementById ( 'admin_pw_warning_div' ).innerHTML = '';
             };
         
+        var search_count_select_object = document.getElementById ( 'search_count_select' );
+        
+        this.m_installer_state.number_of_meetings_for_auto = search_count_select_object.options[search_count_select_object.selectedIndex].value;
+        
+        var change_depth_for_meetings_object = document.getElementById ( 'installer_history_select' );
+        
+        this.m_installer_state.change_depth_for_meetings = change_depth_for_meetings_object.options[change_depth_for_meetings_object.selectedIndex].value;
+        
         var language_object = document.getElementById ( 'installer_lang_select' );
         
         this.m_installer_state.comdef_global_language = language_object.options[language_object.selectedIndex].value;
@@ -539,17 +544,79 @@ function BMLTInstaller( in_map_center   ///< The JSON object containing the map 
         var distance_units_object = document.getElementById ( 'distance_units_select' );
         
         this.m_installer_state.comdef_distance_units = distance_units_object.options[distance_units_object.selectedIndex].value;
+        
+        this.m_installer_state.default_duration_text = '';
     };
     
+    /************************************************************************************//**
+    *   \brief  Creates the text for the file                                               *
+    *   \returns    The PHP code for the auto-config.inc.php file.                          *
+    ****************************************************************************************/
+    this.createFileData = function()
+    {
+        var ret = "&lt;?php\n";
+        
+        if ( this.m_installer_state && this.m_installer_state.search_spec_map_center )
+            {
+            ret += "defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.\n";
+
+            ret += "\n\t// These are the settings created by the installer wizard.\n";
+
+            ret += "\n\t\t// Database settings:\n";
+            ret += "\t\t$dbType = '" + this.m_installer_state.dbType.replace(/'/g,"\\'") + "'; // This is the PHP PDO driver name for your database.\n";
+            ret += "\t\t$dbName = '" + this.m_installer_state.dbName.replace(/'/g,"\\'") + "'; // This is the name of the database.\n";
+            ret += "\t\t$dbUser = '" + this.m_installer_state.dbUser.replace(/'/g,"\\'") + "'; // This is the SQL user that is authorized for the above database.\n";
+            ret += "\t\t$dbPassword = '" + this.m_installer_state.dbPassword.replace(/'/g,"\\'") + "'; // This is the password for the above authorized user. Make it a big, ugly hairy one. It is powerful, and there is no need to remember it.\n";
+            ret += "\t\t$dbServer = '" + this.m_installer_state.dbServer.replace(/'/g,"\\'") + "'; // This is the host/server for accessing the database.\n";
+            ret += "\t\t$dbPrefix = '" + this.m_installer_state.dbPrefix.replace(/'/g,"\\'") + "'; // This is a table name prefix that can be used to differentiate tables used by different root server instances that share the same database.\n";
+
+            ret += "\n\t\t// Location and Map settings:\n";
+            ret += "\t\t$region_bias = '" + this.m_installer_state.region_bias + "'; // This is a 2-letter code for a 'region bias,' which helps Google Maps to figure out ambiguous search queries.\n";
+            ret += "\t\t$search_spec_map_center = array ( 'longitude' => " + parseFloat ( this.m_installer_state.search_spec_map_center.longitude ).toString() + ", 'latitude' => " + parseFloat ( this.m_installer_state.search_spec_map_center.latitude ).toString() + ", 'zoom' => " + parseInt ( this.m_installer_state.search_spec_map_center.zoom, 10 ).toString() + " ); // This is the default map location for new meetings.\n";
+            ret += "\t\t$comdef_distance_units = '" + this.m_installer_state.comdef_distance_units + "';\n";
+
+            ret += "\n\t\t// Display settings:\n";
+            ret += "\t\t$bmlt_title = '" + this.m_installer_state.bmlt_title.replace(/'/g,"\\'") + "'; // This is the page title and heading for the main administration login page.\n";
+            ret += "\t\t$banner_text = '" + this.m_installer_state.banner_text.replace(/'/g,"\\'") + "'; // This is text that is displayed just above the login box on the main login page.\n";
+
+            ret += "\n\t\t// Miscellaneous settings:\n";
+            ret += "\t\t$comdef_global_language ='" + this.m_installer_state.comdef_global_language + "'; // This is the 2-letter code for the default root server localization (will default to 'en' -English, if the localization is not available).\n";
+            ret += "\t\t$min_pw_len = " + this.m_installer_state.min_pw_len + "; // The minimum number of characters in a user account password for this root server.\n";
+            ret += "\t\t$number_of_meetings_for_auto = " + parseInt ( this.m_installer_state.number_of_meetings_for_auto, 10 ) + "; // This is an approximation of the number of meetings to search for in the auto-search feature. The higher the number, the wider the radius.\n";
+            ret += "\t\t$change_depth_for_meetings = " + parseInt ( this.m_installer_state.change_depth_for_meetings, 10 ) + "; // This is how many changes should be recorded for each meeting. The higher the number, the larger the database will grow, as this can become quite substantial.\n";
+            
+            ret += "\n\t// These are 'hard-coded,' but can be changed later.\n";
+            
+            ret += "\n\t\t$time_format = '" + this.m_installer_state.time_format.replace(/'/g,"\\'") + "'; // The PHP date() format for the times displayed.\n";
+            ret += "\t\t$change_date_format = '" + this.m_installer_state.change_date_format.replace(/'/g,"\\'") + "'; // The PHP date() format for times/dates displayed in the change records.\n";
+            ret += "\t\t$admin_session_name = '" + this.m_installer_state.admin_session_name.replace(/'/g,"\\'") + "'; // This is merely the 'tag' used to identify the BMLT admin session.\n";
+            ret += "\n\t\t// This text can be used in certain custom printed lists. It is usually not especially important.\n";
+            ret += "\t\tif ( !defined ( '_DEFAULT_DURATION' ) ) define ( '_DEFAULT_DURATION', '" + this.m_installer_state.default_duration.replace(/'/g,"\\'") + "' );\n";
+            ret += "\n\t\t// These are used for the NAWS format translation. They are the shared IDs of the wheelchair, open and closed formats.\n";
+            ret += "\t\t// If you edit your formats, and change these IDs, please change them here, as well.\n";
+            ret += "\t\tif ( !defined ( 'WC_FORMAT' ) ) define ( 'WC_FORMAT', '33' ); // Wheelchair-Accessible\n";
+            ret += "\t\tif ( !defined ( 'O_FORMAT' ) ) define ( 'O_FORMAT', '17' ); // Open Meeting\n";
+            ret += "\t\tif ( !defined ( 'C_FORMAT' ) ) define ( 'C_FORMAT', '4' ); // Closed Meeting\n";
+
+            ret += "?&gt;\n";
+            }
+        else
+            {
+            ret = '';
+            };
+        
+        return ret;
+    };
+
     // #mark - 
     // #mark Main Context
     // #mark -
     
-    this.m_map_center = in_map_center;
     if ( !this.m_installer_state )
         {
-        this.m_installer_state = g_prefs_state;
+        this.m_installer_state = in_prefs;
         };
+    
     this.m_installer_wrapper_object = document.getElementById ( 'installer_wrapper' );
 };
 

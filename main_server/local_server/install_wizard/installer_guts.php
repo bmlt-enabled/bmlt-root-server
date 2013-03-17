@@ -50,13 +50,16 @@ $default_lang = $lang;
                         if ( count ( PDO::getAvailableDrivers() ) )
                             {
                 ?>                <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+                <script type="text/javascript" src="local_server/install_wizard/installer.js"></script>
                 <script type="text/javascript">
-                    var g_installer_object = new BMLTInstaller ( <?php echo array2json ( $prefs_array['search_spec_map_center'] ); ?> );
+                    var g_installer_object = new BMLTInstaller ( <?php echo array2json ( $prefs_array ) ?> );
                 </script>
                 <div id="bmlt_installer_page_1" class="bmlt_installer_page_1">
                     <?php echo bmlt_create_next_prev_buttons(1) ?>
                     <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_1_Heading']; ?></h1>
                     <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_1_Text']; ?></h2>
+                    <div class="explanatory_text_div"><?php echo $comdef_install_wizard_strings['Explanatory_Text_1_Initial_Intro']; ?></div>
+                    <div class="explanatory_text_div"><?php echo $comdef_install_wizard_strings['Explanatory_Text_1_DB_Intro']; ?></div>
                     <div class="one_line_div">
                         <label class="left_right_aligned bold_char" for="installer_db_type_select"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_Type'] ); ?></label>
                         <div class="right_left_aligned_div">
@@ -94,6 +97,7 @@ $default_lang = $lang;
                         <div class="right_left_aligned_div">
                             <input type="text" id="installer_db_pw_input" onkeyup="g_installer_object.gatherInstallerState()" value="<?php echo htmlspecialchars ( $prefs_array['dbPassword'] ); ?>" class="bmlt_text_item_small" />
                         </div>
+                        <div class="extra_text_div"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_PW_Additional_Text'] ); ?></div>
                     </div>
                     <div class="clear_both"></div>
                     <?php echo bmlt_create_next_prev_buttons(1) ?>
@@ -102,6 +106,8 @@ $default_lang = $lang;
                     <?php echo bmlt_create_next_prev_buttons(2) ?>
                     <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_2_Heading']; ?></h1>
                     <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_2_Text']; ?></h2>
+                    <div class="explanatory_text_div"><?php echo $comdef_install_wizard_strings['Explanatory_Text_2_Initial_Intro']; ?></div>
+                    <div class="explanatory_text_div"><?php echo $comdef_install_wizard_strings['Explanatory_Text_2_Region_Bias_Intro']; ?></div>
                     <div class="one_line_div">
                         <label class="left_right_aligned bold_char" for="installer_region_bias_select"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['RegionBiasLabel'] ); ?></label>
                         <div class="right_left_aligned_div">
@@ -118,6 +124,7 @@ $default_lang = $lang;
                     <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_3_Heading']; ?></h1>
                     <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_3_Text']; ?></h2>
                     <fieldset id="admin_login_stuff_fieldset">
+                        <div class="explanatory_text_div"><?php echo $comdef_install_wizard_strings['Explanatory_Text_3_Server_Admin_Intro']; ?></div>
                         <div class="one_line_div">
                             <label class="left_right_aligned bold_char" for="installer_admin_login_input"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Admin_Login'] ); ?></label>
                             <div class="right_left_aligned_div">
@@ -137,6 +144,19 @@ $default_lang = $lang;
                     </fieldset>
                     <div class="one_line_div"><div id="admin_pw_warning_div_2" class="item_hidden"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['NoServerAdmin_Note_AlreadySet'] ); ?></div></div>
                     <fieldset id="admin_settings_fieldset">
+                        <div class="explanatory_text_div"><?php echo $comdef_install_wizard_strings['Explanatory_Text_3_Misc_Intro']; ?></div>
+                        <div class="one_line_div">
+                            <label class="left_right_aligned bold_char" for="installer_title_input"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['TitleTextLabel'] ); ?></label>
+                            <div class="right_left_aligned_div">
+                                <input type="text" id="installer_title_input" onkeyup="g_installer_object.gatherInstallerState()" value="<?php echo htmlspecialchars ( $prefs_array['bmlt_title'] ); ?>" class="bmlt_text_item" />
+                            </div>
+                        </div>
+                        <div class="one_line_div">
+                            <label class="left_right_aligned bold_char" for="installer_banner_input"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['BannerTextLabel'] ); ?></label>
+                            <div class="right_left_aligned_div">
+                                <input type="text" id="installer_banner_input" onkeyup="g_installer_object.gatherInstallerState()" value="<?php echo htmlspecialchars ( $prefs_array['banner_text'] ); ?>" class="bmlt_text_item" />
+                            </div>
+                        </div>
                         <div class="one_line_div">
                             <label class="left_right_aligned bold_char" for="installer_lang_select"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['ServerLangLabel'] ); ?></label>
                             <div class="right_left_aligned_div"><?php echo bmlt_create_lang_select(); ?></div>
@@ -158,6 +178,7 @@ $default_lang = $lang;
                                     ?>
                                 </select>
                             </div>
+                            <div class="extra_text_div"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['PasswordLengthExtraText'] ); ?></div>
                         </div>
                         <div class="one_line_div">
                             <label class="left_right_aligned bold_char" for="distance_units_select"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['DistanceUnitsLabel'] ); ?></label>
@@ -201,16 +222,23 @@ $default_lang = $lang;
                             <div class="extra_text_div"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['SearchDepthText'] ); ?></div>
                         </div>
                         <div class="one_line_div">
-                            <label class="left_right_aligned bold_char" for="installer_title_input"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['TitleTextLabel'] ); ?></label>
+                            <label class="left_right_aligned bold_char" for="installer_history_select"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['HistoryDepthLabel'] ); ?></label>
                             <div class="right_left_aligned_div">
-                                <input type="text" id="installer_title_input" onkeyup="g_installer_object.gatherInstallerState()" value="<?php echo htmlspecialchars ( $prefs_array['bmlt_title'] ); ?>" class="bmlt_text_item" />
+                                <select onchange="g_installer_object.gatherInstallerState()" id="installer_history_select">
+                                    <?php
+                                        foreach ( $comdef_install_wizard_strings['HistoryChoices'] as $count )
+                                            {
+                                            echo '<option';
+                                                if ( $count == $prefs_array['change_depth_for_meetings'] )
+                                                    {
+                                                    echo ' selected="selected"';
+                                                    }
+                                            echo ">$count</option>";
+                                            }
+                                    ?>
+                                </select>
                             </div>
-                        </div>
-                        <div class="one_line_div">
-                            <label class="left_right_aligned bold_char" for="installer_banner_input"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['BannerTextLabel'] ); ?></label>
-                            <div class="right_left_aligned_div">
-                                <input type="text" id="installer_banner_input" onkeyup="g_installer_object.gatherInstallerState()" value="<?php echo htmlspecialchars ( $prefs_array['banner_text'] ); ?>" class="bmlt_text_item" />
-                            </div>
+                            <div class="extra_text_div"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['HistoryDepthText'] ); ?></div>
                         </div>
                         <div class="clear_both"></div>
                     </fieldset>
@@ -218,6 +246,7 @@ $default_lang = $lang;
                 </div>
                 <div id="bmlt_installer_page_4" class="bmlt_installer_page_4">
                     <?php echo bmlt_create_next_prev_buttons(4) ?>
+                    <div class="explanatory_text_div"><?php echo $comdef_install_wizard_strings['Explanatory_Text_4_Main_Intro']; ?></div>
                     <div id="database_install_stuff_div" class="item_hidden">
                         <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_4_DB_Setup_Heading']; ?></h1>
                         <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_4_DB_Setup_Text']; ?></h2>
@@ -231,6 +260,12 @@ $default_lang = $lang;
                     <div class="one_line_div"><div id="admin_db_items_warning" class="extra_text_div red_char"></div></div>
                     <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_4_Heading']; ?></h1>
                     <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_4_Text']; ?></h2>
+                    <div class="explanatory_text_div"><?php echo $comdef_install_wizard_strings['Explanatory_Text_4_File_Intro']; ?></div>
+                    <div class="explanatory_text_div"><?php echo $comdef_install_wizard_strings['Explanatory_Text_4_File_Extra']; ?></div>
+                    <pre class="result_code_pre" id="file_text_pre"></pre>
+                    <h2 class="page_heading_h2"><?php echo sprintf ( $comdef_install_wizard_strings['Page_4_PathInfo'], $realpath, $basename ); ?></h2>
+                    <pre class="result_code_pre"><?php echo "chmod 0644 $realpath/auto-config.inc.php"; ?></pre>
+                    <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_4_Final']; ?></h2>
                     <div class="clear_both"></div>
                     <?php echo bmlt_create_next_prev_buttons(4) ?>
                 </div><?php
@@ -257,8 +292,6 @@ $default_lang = $lang;
         g_db_init_no_pw_warning_text = '<?php echo htmlspecialchars ( $comdef_install_wizard_strings['NoDatabase_Note_PasswordIssue'] ); ?>';
         g_db_init_db_set_warning_text = '<?php echo htmlspecialchars ( $comdef_install_wizard_strings['NoDatabase_Note_AlreadySet'] ); ?>';
         
-        g_installer_object.m_top_dir_path = '<?php echo $realpath; ?>';
-        g_installer_object.m_main_dir_basename = '<?php echo $basename; ?>';
         g_installer_object.m_ajax_uri = '<?php echo htmlspecialchars ( $_SERVER['PHP_SELF'].'?ajax_req=' ); ?>';
 
         g_installer_object.handleTextInputLoad(document.getElementById('installer_db_name_input'),'<?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_Name_Default_Text'] ); ?>','small');

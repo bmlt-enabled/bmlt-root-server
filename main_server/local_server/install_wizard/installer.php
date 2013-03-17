@@ -75,12 +75,8 @@ else
             <meta http-equiv="Content-Script-Type" content="text/javascript" />
             <title>BMLT Installer</title>
             <link rel="stylesheet" href="local_server/server_admin/style/install_wizard_styles.css" />
-            <script type="text/javascript">var  g_prefs_state = <?php echo array2json ( $prefs_array ) ?>;</script>
-            <script type="text/javascript" src="local_server/install_wizard/installer.js"></script>
         </head>
         <body>
-            <h1>This Page Is Still Under Construction</h1>
-            <h2>Until this install wizard is complete, you must manually place your auto-config.ing.php file at the same level as the main_server directory.</h2>
             <?php require_once ( dirname ( __FILE__ ).'/installer_guts.php' ); ?>
         </body>
     </html>
