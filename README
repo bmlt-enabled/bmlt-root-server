@@ -46,6 +46,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0a10 =
+* March 16, 2013
+* Finished major coding for the root server, as the installer wizard was the last part.
+
 = Version 2.0a9 =
 * March 9, 2013
 * Fixed a rather serious issue, in which apostrophes (') in text could cause the editor to go kablooey.
