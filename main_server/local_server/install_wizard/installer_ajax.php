@@ -88,10 +88,10 @@ if (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'initiali
             
             $serveradmin_name = $comdef_install_wizard_strings['ServerAdminName'];
             $serveradmin_desc = $comdef_install_wizard_strings['ServerAdminName'];
-            $sql_serveradmin = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/serverAdmin.sql' ) );
+            $sql_serveradmin = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/sql_files/serverAdmin.sql' ) );
+            $salt = $http_vars['salt'];
             $max_crypt = true;
-            $sql_array = array ( $serveradmin_name, $serveradmin_desc, $http_vars['admin_login'], FullCrypt ( $http_vars['admin_password'], $http_vars['salt'], $max_crypt ), $lang );
-    
+            $sql_array = array ( $serveradmin_name, $serveradmin_desc, $http_vars['admin_login'], FullCrypt ( $http_vars['admin_password'], $salt, $max_crypt ), $lang );
             c_comdef_dbsingleton::preparedExec ( $sql_serveradmin, $sql_array );
             };
         
