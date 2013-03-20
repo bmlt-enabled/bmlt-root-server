@@ -390,8 +390,15 @@ function BMLT_Server_Admin ()
         this.m_ajax_request_in_progress = null;
         if ( in_http_request.responseText )
             {
-            eval ( 'var json_object = ' + in_http_request.responseText + ';' );
-            }
+            if ( in_http_request.responseText == 'NOT AUTHORIZED' )
+                {
+                alert ( g_AJAX_Auth_Failure );
+                }
+            else
+                {
+                eval ( 'var json_object = ' + in_http_request.responseText + ';' );
+                };
+            };
             
         if ( json_object.ACCOUNT_CHANGED )
             {
@@ -1445,8 +1452,15 @@ function BMLT_Server_Admin ()
     {
         if ( in_http_request.responseText )
             {
-            eval ( 'var json_object = ' + in_http_request.responseText + ';' );
-            }
+            if ( in_http_request.responseText == 'NOT AUTHORIZED' )
+                {
+                alert ( g_AJAX_Auth_Failure );
+                }
+            else
+                {
+                eval ( 'var json_object = ' + in_http_request.responseText + ';' );
+                };
+            };
             
         if ( json_object )
             {
@@ -1561,8 +1575,15 @@ function BMLT_Server_Admin ()
     {
         if ( in_http_request.responseText )
             {
-            eval ( 'var json_object = ' + in_http_request.responseText + ';' );
-            }
+            if ( in_http_request.responseText == 'NOT AUTHORIZED' )
+                {
+                alert ( g_AJAX_Auth_Failure );
+                }
+            else
+                {
+                eval ( 'var json_object = ' + in_http_request.responseText + ';' );
+                };
+            };
             
         if ( json_object )
             {
@@ -2737,8 +2758,15 @@ function BMLT_Server_Admin ()
     {
         if ( in_http_request.responseText )
             {
-            eval ( 'var json_object = ' + in_http_request.responseText + ';' );
-            }
+            if ( in_http_request.responseText == 'NOT AUTHORIZED' )
+                {
+                alert ( g_AJAX_Auth_Failure );
+                }
+            else
+                {
+                eval ( 'var json_object = ' + in_http_request.responseText + ';' );
+                };
+            };
             
         if ( json_object )
             {
@@ -3328,7 +3356,14 @@ function BMLT_Server_Admin ()
     {
         if ( in_http_request.responseText )
             {
-            eval ( 'var json_object = ' + in_http_request.responseText + ';' );
+            if ( in_http_request.responseText == 'NOT AUTHORIZED' )
+                {
+                alert ( g_AJAX_Auth_Failure );
+                }
+            else
+                {
+                eval ( 'var json_object = ' + in_http_request.responseText + ';' );
+                };
             
             if ( json_object )
                 {
@@ -3416,7 +3451,14 @@ function BMLT_Server_Admin ()
     {
         if ( in_http_request.responseText )
             {
-            eval ( 'var json_object = ' + in_http_request.responseText + ';' );
+            if ( in_http_request.responseText == 'NOT AUTHORIZED' )
+                {
+                alert ( g_AJAX_Auth_Failure );
+                }
+            else
+                {
+                eval ( 'var json_object = ' + in_http_request.responseText + ';' );
+                };
             
             if ( json_object )
                 {
@@ -3510,7 +3552,14 @@ function BMLT_Server_Admin ()
     {
         if ( in_http_request.responseText )
             {
-            eval ( 'var json_object = ' + in_http_request.responseText + ';' );
+            if ( in_http_request.responseText == 'NOT AUTHORIZED' )
+                {
+                alert ( g_AJAX_Auth_Failure );
+                }
+            else
+                {
+                eval ( 'var json_object = ' + in_http_request.responseText + ';' );
+                };
             
             if ( json_object )
                 {
@@ -3821,7 +3870,14 @@ function BMLT_Server_Admin ()
     {
         if ( in_http_request.responseText )
             {
-            eval ( 'var json_object = ' + in_http_request.responseText + ';' );
+            if ( in_http_request.responseText == 'NOT AUTHORIZED' )
+                {
+                alert ( g_AJAX_Auth_Failure );
+                }
+            else
+                {
+                eval ( 'var json_object = ' + in_http_request.responseText + ';' );
+                };
             
             if ( json_object )
                 {
@@ -3907,7 +3963,14 @@ function BMLT_Server_Admin ()
     {
         if ( in_http_request.responseText )
             {
-            eval ( 'var json_object = ' + in_http_request.responseText + ';' );
+            if ( in_http_request.responseText == 'NOT AUTHORIZED' )
+                {
+                alert ( g_AJAX_Auth_Failure );
+                }
+            else
+                {
+                eval ( 'var json_object = ' + in_http_request.responseText + ';' );
+                };
             
             if ( json_object )
                 {
@@ -4000,7 +4063,14 @@ function BMLT_Server_Admin ()
     {
         if ( in_http_request.responseText )
             {
-            eval ( 'var json_object = ' + in_http_request.responseText + ';' );
+            if ( in_http_request.responseText == 'NOT AUTHORIZED' )
+                {
+                alert ( g_AJAX_Auth_Failure );
+                }
+            else
+                {
+                eval ( 'var json_object = ' + in_http_request.responseText + ';' );
+                };
             
             if ( json_object )
                 {
@@ -4557,7 +4627,14 @@ function BMLT_Server_Admin ()
         
         if ( in_http_request.responseText )
             {
-            eval ( 'var json_object = ' + in_http_request.responseText + ';' );
+            if ( in_http_request.responseText == 'NOT AUTHORIZED' )
+                {
+                alert ( g_AJAX_Auth_Failure );
+                }
+            else
+                {
+                eval ( 'var json_object = ' + in_http_request.responseText + ';' );
+                };
             
             if ( json_object )
                 {
@@ -4655,7 +4732,14 @@ function BMLT_Server_Admin ()
 
         if ( in_http_request.responseText )
             {
-            eval ( 'var json_object = ' + in_http_request.responseText + ';' );
+            if ( in_http_request.responseText == 'NOT AUTHORIZED' )
+                {
+                alert ( g_AJAX_Auth_Failure );
+                }
+            else
+                {
+                eval ( 'var json_object = ' + in_http_request.responseText + ';' );
+                };
             
             if ( json_object )
                 {

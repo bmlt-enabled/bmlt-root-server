@@ -266,5 +266,6 @@
 	                                        'format_editor_delete_button_confirm'                   =>  'Are you sure that you want to delete this format?',
 	                                        'format_editor_delete_button_confirm_perm'              =>  'This format will be deleted permanently!',
 	                                        'min_password_length_string'                            =>  'The password is too short! It must be at least %d characters long!',
+	                                        'AJAX_Auth_Failure'                                     =>  'Authorization failed for this operation. There may be a problem with the server configuration.',
 	                                    );
 ?>

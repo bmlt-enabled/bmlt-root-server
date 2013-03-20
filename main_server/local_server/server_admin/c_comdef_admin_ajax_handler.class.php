@@ -50,7 +50,7 @@ class c_comdef_admin_ajax_handler
         // We check this every chance that we get.
         if ( !$this->my_user || ($this->my_user->GetUserLevel() == _USER_LEVEL_DISABLED) )
             {
-            die ( '<h2>NOT AUTHORIZED</h2>' );
+            die ( 'NOT AUTHORIZED' );
             }
     }
     

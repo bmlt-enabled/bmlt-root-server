@@ -46,6 +46,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0a12 =
+* March 20, 2013
+* Added alerts to display a message if the AJAX authorization fails..
+
 = Version 2.0a11 =
 * March 19, 2013
 * Fixed a bug, in which the server admin account was not being properly set in the setup install wizard.
