@@ -3395,7 +3395,6 @@ function BMLT_Server_Admin ()
                     var main_service_body_editor = document.getElementById ( 'bmlt_admin_single_service_body_editor_div' );
                     main_service_body_editor.m_ajax_request_in_progress = null;
                     BMLT_Admin_StartFader ( 'bmlt_admin_fader_service_body_editor_success_div', this.m_success_fade_duration );
-                    this.setWarningFaders();
                     };
                 }
             else
