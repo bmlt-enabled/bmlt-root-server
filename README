@@ -46,9 +46,13 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0b0 =
+* March 22, 2013
+* Official Beta Release.
+
 = Version 2.0a12 =
 * March 20, 2013
-* Added alerts to display a message if the AJAX authorization fails..
+* Added alerts to display a message if the AJAX authorization fails.
 
 = Version 2.0a11 =
 * March 19, 2013
