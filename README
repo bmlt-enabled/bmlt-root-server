@@ -46,6 +46,21 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0b1 =
+* March 25, 2013
+* Fixed this bug:
+    1) Open Two Editors Accidentally
+        1)  Log in as a Service Body Admin (or Server Admin)
+        2)  Open the "Meeting Editor" dropdown
+        3)  Do A Meeting Search That Will Yield Results
+        4)  Open the "Edit Meetings" tab
+        5)  Open the top Search Result dropdown
+        6)  Close it
+        7)  Click on the "Create A New Meeting" button (Either click on "Cancel", or the meeting name).
+    
+        ANOMALY:    Both the Create Meeting And First Result dropdowns open
+        EXPECTED:   Only the Create Meeting Editor dropdown opens
+
 = Version 2.0b0 =
 * March 22, 2013
 * Official Beta Release.

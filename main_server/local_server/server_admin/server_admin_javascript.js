@@ -1240,7 +1240,8 @@ function BMLT_Server_Admin ()
                     {
                     display_parent.removeChild ( display_parent.meeting_editor_object );
                     };
-            
+                
+                this.m_editing_window_open.meeting_id = null;
                 display_parent.meeting_editor_object = null;
                 };
             };
