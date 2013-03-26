@@ -60,6 +60,7 @@ CHANGELIST
     
         ANOMALY:    Both the Create Meeting And First Result dropdowns open
         EXPECTED:   Only the Create Meeting Editor dropdown opens
+* Turned off debug mode.
 
 = Version 2.0b0 =
 * March 22, 2013

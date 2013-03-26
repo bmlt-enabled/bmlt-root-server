@@ -1504,7 +1504,7 @@ function BMLT_Server_Admin ()
             var editor_object = JSON.stringify ( editor.meeting_object );
             var original_object = JSON.stringify ( this.getMeetingObjectById ( in_meeting_id, false ) );
             return (editor_object != original_object);
-            }
+            };
         
         return false;
     };
@@ -2160,7 +2160,7 @@ function BMLT_Server_Admin ()
             tabs[c].className = tab_class;
             sheets[c].className = sheet_class;
             };
-    }
+    };
         
     // #mark - 
     // #mark Basic Tab
@@ -2406,7 +2406,7 @@ function BMLT_Server_Admin ()
                 if ( google.maps.OK != status )
                     {
                     alert ( g_meeting_lookup_failed );
-                    }
+                    };
                 }
             else
                 {
@@ -2881,7 +2881,7 @@ function BMLT_Server_Admin ()
         else
             {
             sb_id = g_service_bodies_array[0][0];
-            }
+            };
         
         var save_button_a = document.getElementById ( 'bmlt_admin_service_body_editor_form_service_body_save_button' );
         
@@ -2901,8 +2901,8 @@ function BMLT_Server_Admin ()
                     {
                     sb_object = g_service_bodies_array[c];
                     break;
-                    }
-                }
+                    };
+                };
             
             save_button_a.innerHTML = g_service_body_save_button;
             main_service_body_editor.className = 'bmlt_admin_single_service_body_editor_div';
@@ -3049,7 +3049,7 @@ function BMLT_Server_Admin ()
                         user_select_element.selectedIndex = c;
                         break;
                         };
-                    }
+                    };
                 };
             };
     };
@@ -3484,7 +3484,7 @@ function BMLT_Server_Admin ()
                     catch (e)
                         {
                         service_body_select.add ( new_option, service_body_select.options.length - 2 );
-                        }
+                        };
                     
                     service_body_select.selectedIndex = service_body_select.options.length - 3;
                     var main_service_body_editor = document.getElementById ( 'bmlt_admin_single_service_body_editor_div' );
@@ -3727,7 +3727,7 @@ function BMLT_Server_Admin ()
                 if ( selected_user_object[5] == 1 ) // This should never be, but just in case...
                     {
                     main_user_editor_div.className = 'bmlt_admin_single_user_editor_div bmlt_admin_new_user_editor';
-                    }
+                    };
                 
                 main_user_editor_div.current_user_object = selected_user_object;
             
@@ -3995,7 +3995,7 @@ function BMLT_Server_Admin ()
                     catch (e)
                         {
                         user_select.add ( new_option, user_select.options.length - 2 );
-                        }
+                        };
                     
                     user_select.selectedIndex = user_select.options.length - 3;
                     var main_user_editor_div = document.getElementById ( 'bmlt_admin_single_user_editor_div' );
@@ -4293,7 +4293,7 @@ function BMLT_Server_Admin ()
             {
             format_line_tr = in_container_table.insertRow ( -1 );
             insertion_point = -1;
-            }
+            };
             
         format_line_tr.id = 'format_editor_line_' + in_format_id + '_tr';
         

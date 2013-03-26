@@ -42,14 +42,15 @@
 			    {
                 $opt = preg_replace( "|\/\*.*?\*\/|s", "", $opt );
                 $opt = preg_replace( '#(?<!:)\/\/.*?\n#s', "", $opt );
-                $opt = preg_replace( "|\s+|s", " ", $opt );
+                $opt = preg_replace( "|[\n\r]+|s", "\r", $opt );
+                $opt = preg_replace( "|[\t ]+|s", " ", $opt );
                 }
 			header ( "Content-type: text/javascript" );	
 			if ( zlib_get_coding_type() === false )
 				{
 				ob_start("ob_gzhandler");
 				}
-				else
+			else
 				{
 				ob_start();
 				}
