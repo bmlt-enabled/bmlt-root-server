@@ -46,6 +46,20 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0b2 =
+* March 27, 2013
+* Fixed this bug:
+    2) Location Search Fails With Too-Tight Comma
+        1)  Log in as a Service Body Admin (or Server Admin)
+        2)  Open the "Meeting Editor" dropdown
+        3)  Check "This is a Location or PostCode."
+        4)  Enter "Babylon,NY" (Notice no spaces between comma and succeeding character).
+        5)  Click "Search For Meetings"
+        
+        ANOMALY:    No Search Results
+        EXPECTED:   A number of returned meetings
+        EXTRA INFO: Entering "Babylon, NY" (Note space between comma and succeeding character) works.
+
 = Version 2.0b1 =
 * March 25, 2013
 * Fixed this bug:

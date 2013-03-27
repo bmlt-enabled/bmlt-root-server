@@ -218,6 +218,7 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
             // We do a geocode to find out if this is an address.
             if ( !$geo_search )
                 {
+                $search_string = preg_replace ( '|,(\s*?)|', ', ', $search_string );    // This works around a bug caused by too-tight commas.
                 $geo = GetGeocodeFromString ( $search_string, $in_http_vars['advanced_weekdays'] );
                 if ( is_array ( $geo ) && count ( $geo ) )
                     {
