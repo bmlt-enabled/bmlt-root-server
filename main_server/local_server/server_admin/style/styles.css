@@ -36,6 +36,8 @@ body
 {
     background-color:#009;
     font-family:Verdana,Helvetica,Arial,Sans-Serif
+    margin:0;
+    padding: 0;
 }
 
 div.c_comdef_admin_login_form_container_div
@@ -1051,18 +1053,21 @@ div.bmlt_admin_user_editor_button_div
 div.admin_page_wrapper
 {
     position:absolute;
+    left:0px;
+    right:0px;
     top:3em;
-    width:100%;
 }
 
 div.bmlt_admin_logout_bar
 {
+    margin:0;
+    border:none;
     padding:0.1em;
     height:3em;
-    position:fixed;
+    position:absolute;
     top:0px;
     left:0px;
-    width:100%;
+    right:0px;
     text-align:center;
 }
 
