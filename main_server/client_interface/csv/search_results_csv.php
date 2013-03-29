@@ -252,6 +252,11 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 								    &$return_results = null ///< If supplied, should point to an array that will be filled with the actual meeting objects that comprise the result.
 								)
 {
+    if ( !isset ( $_SESSION ) )
+        {
+        session_start();
+        }
+
 	$ret = null;
 	require_once ( dirname ( __FILE__ ).'/c_comdef_meeting_search_manager.class.php' );
 
