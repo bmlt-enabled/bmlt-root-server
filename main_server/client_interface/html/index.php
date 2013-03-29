@@ -8,24 +8,9 @@ require_once ( dirname ( __FILE__ ).'/bmlt-basic/bmlt_basic.class.php' ) ?><!DOC
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <title>Browse the Root Server</title>
         <?php
-            $config_file_path = dirname ( __FILE__ ).'/../../server/config/get-config.php';
-            $url_path = 'http://'.$_SERVER['SERVER_NAME'].dirname ( $_SERVER['SCRIPT_NAME'] ).'/../..';
-            if ( file_exists ( $config_file_path ) )
-                {
-                include ( $config_file_path );
-                }
-
             $shortcut_icon = "$url_path/local_server/server_admin/style/images/shortcut.png";
             $stylesheet = "$url_path/local_server/server_admin/style".( defined( '__DEBUG_MODE__' ) ? '/' : '/style_stripper.php?filename=' )."styles.css";
             
-            require_once ( dirname ( __FILE__ ).'/../../server/shared/classes/comdef_utilityclasses.inc.php');
-            require_once ( dirname ( __FILE__ ).'/../../server/c_comdef_server.class.php');
-            require_once ( dirname ( __FILE__ ).'/../../local_server/db_connect.php');
-            
-            DB_Connect_and_Upgrade ( );
-
-            $server = c_comdef_server::MakeServer();
-
             $basic_bmlt_object->output_head();
         ?>
 		<link rel="stylesheet" href="<?php echo c_comdef_htmlspecialchars ( $stylesheet ) ?>" />
