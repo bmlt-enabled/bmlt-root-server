@@ -413,14 +413,6 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 						{
                         $val = $mtg_obj->GetMeetingDataValue ( $key );
                     
-                        if ( $key == 'email_contact' )
-                            {
-                            if ( !$mtg_obj->UserCanObserve() )
-                                {
-                                $val = null;
-                                }
-                            }
-                    
                         if ( isset ( $val ) )
                             {
                             if ( ($key == 'formats') )
@@ -454,6 +446,18 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
                                         {
                                         $formats_ar[$format] = 1;
                                         }
+                                    }
+                                }
+                            
+                            if ( $mtg_obj->IsItemHidden ( $key ) && $val )
+                                {
+                                if ( $mtg_obj->UserCanObserve() )
+                                    {
+                                    $val = 'observer_only#@-@#'.$mtg_obj->GetMeetingDataPrompt ( $key ).'#@-@#'.$mtg_obj->GetMeetingDataValue ( $key );
+                                    }
+                                else
+                                    {
+                                    $val = '';
                                     }
                                 }
                             }

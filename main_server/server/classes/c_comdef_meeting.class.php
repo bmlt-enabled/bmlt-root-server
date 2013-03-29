@@ -992,6 +992,27 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 	}
 	
 	/*******************************************************************/
+	/**	\brief Returns whether or not a data item is hidden.
+	
+		\returns a boolean. True, if the data item is hidden from normal users.
+	*/
+	function IsItemHidden ( $in_key	///< A string. This is the key in the data array.
+						    )
+	{
+		$ret = ($in_key == 'email_contact');
+		
+		if ( !$ret && isset ( $this->_my_meeting_data[$in_key] ) )
+			{
+			if ( is_array ( $this->_my_meeting_data[$in_key] ) && isset ( $this->_my_meeting_data[$in_key]['value'] ) )
+				{
+				$ret = (isset ( $this->_my_meeting_data[$in_key]['visibility'] ) && ($this->_my_meeting_data[$in_key]['visibility'] == _VISIBILITY_NONE_));
+				}
+			}
+		
+		return $ret;
+	}
+	
+	/*******************************************************************/
 	/**	\brief Returns the internal meeting data string prompt.
 	
 		\returns a string. Null if the element is not there.

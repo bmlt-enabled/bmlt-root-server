@@ -44,7 +44,8 @@ require_once ( dirname ( __FILE__ ).'/BMLT-Satellite-Base-Class/bmlt-cms-satelli
 
 class bmlt_basic extends BMLTPlugin
 {
-    var $my_shortcode = null;   ///< This will hold the given shortcode.
+    var $my_shortcode = null;           ///< This will hold the given shortcode.
+    var $m_is_logged_in_user = null;    ///< This will be true, if the user is logged in.
     
     /************************************************************************************//**
     *                                   CLIENT FUNCTIONS                                    *
@@ -387,6 +388,7 @@ if ( !isset ( $basic_bmlt_object ) && class_exists ( "bmlt_basic" ) )
 
 if ( $basic_bmlt_object )
     {
+    $basic_bmlt_object->m_is_logged_in_user = isset ( $server ) && ($server instanceof c_comdef_server) && ($server->GetCurrentUserObj() instanceof c_comdef_user);
     $basic_bmlt_object->ajax_router();
     }
 else
