@@ -52,7 +52,7 @@ defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that 
 require_once ( dirname ( __FILE__ )."/../../server/c_comdef_server.class.php" );
 require_once ( dirname ( __FILE__ )."/../../server/shared/classes/comdef_utilityclasses.inc.php" );
 
-include ( dirname ( __FILE__ ).'/../../server/config//get-config.php' );
+include ( dirname ( __FILE__ ).'/../../server/config/get-config.php' );
 
 $t_server = c_comdef_server::MakeServer();	// We initialize the server.
 
@@ -137,10 +137,13 @@ if ( isset ( $_SESSION[$admin_session_name] ) )
 		die ( '<div class="c_comdef_not_auth_container_div"><div class="c_comdef_not_auth_div"><h1 class="c_comdef_not_auth_1">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['not_auth_1'] ).'</h1><h2 class="c_comdef_not_auth_2">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['not_auth_2'] ).'</h2></div></div></body></html>' );
 		}
 	
-	echo '<div class="bmlt_admin_logout_bar"><h4><a href="'.$_SERVER['PHP_SELF'].'?admin_action=logout">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['logout'] ).'</a></h4>';
-        $server_info = GetServerInfo();
-        echo '<div class="server_version_display_div">'.htmlspecialchars ( $server_info['version'] ).'</div>';
-    echo '</div>';
+	if ( !isset ( $supress_header ) || !$supress_header )
+	    {
+        echo '<div class="bmlt_admin_logout_bar"><h4><a href="'.$_SERVER['PHP_SELF'].'?admin_action=logout">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['logout'] ).'</a></h4>';
+            $server_info = GetServerInfo();
+            echo '<div class="server_version_display_div">'.htmlspecialchars ( $server_info['version'] ).'</div>';
+        echo '</div>';
+        }
 	}
 else
 	{
@@ -174,7 +177,7 @@ function GetServerInfo()
             }
         }
 
-    $config_file_path = dirname ( __FILE__ ).'/../../server/config//get-config.php';
+    $config_file_path = dirname ( __FILE__ ).'/../../server/config/get-config.php';
 
     if ( file_exists ( $config_file_path ) )
         {
@@ -211,7 +214,7 @@ function GetServerInfo()
 function c_comdef_LoginForm(	&$in_server	///< A reference to an instance of c_comdef_server
 								)
 	{	
-	include ( dirname ( __FILE__ ).'/../server/config//get-config.php' );
+	include ( dirname ( __FILE__ ).'/../server/config/get-config.php' );
 
 	$http_vars = array_merge ( $_GET, $_POST );
 	

@@ -127,7 +127,7 @@ class c_comdef_server
         try
             {
             self::SetServer ( $this );
-            include ( dirname ( __FILE__ )."/config//get-config.php" );
+            include ( dirname ( __FILE__ )."/config/get-config.php" );
             c_comdef_dbsingleton::init ( $dbType, $dbServer, $dbName, $dbUser, $dbPassword, 'utf8' );
             $this->_format_table_name = $dbPrefix."_comdef_formats";
             $this->_meeting_table_name = $dbPrefix."_comdef_meetings";
@@ -627,7 +627,7 @@ class c_comdef_server
     */
     static function GetNewMeetingID ( )
     {
-        include ( dirname ( __FILE__ )."/config//get-config.php" );
+        include ( dirname ( __FILE__ )."/config/get-config.php" );
         
         try
             {
@@ -846,7 +846,7 @@ class c_comdef_server
                                 $in_id      //< The ID (an integer) for the item to be "trimmed."
                                 )
     {
-        include ( dirname ( __FILE__ )."/config//get-config.php" );
+        include ( dirname ( __FILE__ )."/config/get-config.php" );
         
         $change_limit = 0;
         
@@ -1088,7 +1088,7 @@ class c_comdef_server
     static function &GetCurrentUserObj($in_is_ajax = false  ///< If it's an AJAX handler, this is true.
                                         )
     {
-    include ( dirname ( __FILE__ ).'/config//get-config.php' );
+    include ( dirname ( __FILE__ ).'/config/get-config.php' );
 
     $ret = null;
     

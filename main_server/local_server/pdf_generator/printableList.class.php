@@ -26,7 +26,7 @@
 */
 require_once ( dirname ( __FILE__ ).'/napdf.class.php' );
 define ( 'BMLT_EXEC', true );	// This is a security verifier. Keeps files from being executed outside of the context
-require_once ( dirname ( __FILE__ ).'/../../server/config//get-config.php' );
+require_once ( dirname ( __FILE__ ).'/../../server/config/get-config.php' );
 
 interface IPrintableList
 {

@@ -32,7 +32,7 @@
 defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
 require_once ( dirname ( __FILE__ ).'/common_search.inc.php' );
-require ( dirname ( __FILE__ ).'/../../server/config//get-config.php' );	// Just to make sure we have an early copy.
+require ( dirname ( __FILE__ ).'/../../server/config/get-config.php' );	// Just to make sure we have an early copy.
 
 /// These are the default formats for wheelchair, open and closed (used for the NAWS format). They can be overridden in the /get-config.php file.
 if ( !defined('WC_FORMAT') )
@@ -252,11 +252,6 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 								    &$return_results = null ///< If supplied, should point to an array that will be filled with the actual meeting objects that comprise the result.
 								)
 {
-    if ( !isset ( $_SESSION ) )
-        {
-        session_start();
-        }
-
 	$ret = null;
 	require_once ( dirname ( __FILE__ ).'/c_comdef_meeting_search_manager.class.php' );
 
@@ -269,7 +264,7 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 		$lang_enum = c_comdef_server::GetServer()->GetLocalLang();
 	
 		// This can be changed in the auto config.
-		include ( dirname ( __FILE__ ).'/../../server/config//get-config.php' );
+		include ( dirname ( __FILE__ ).'/../../server/config/get-config.php' );
 	
 		if ( isset ( $in_http_vars['lang_enum'] ) && $in_http_vars['lang_enum'] )
 			{
