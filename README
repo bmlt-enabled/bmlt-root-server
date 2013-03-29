@@ -46,6 +46,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0b4 =
+* March 29, 2013
+* Added full support for observers to browse the database, and view restricted fields in a secure fashion.
+
 = Version 2.0b3 =
 * March 28, 2013
 * I realized that I had completely neglected the needs of observers (logged in, but can't edit).
