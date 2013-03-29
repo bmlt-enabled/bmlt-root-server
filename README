@@ -46,6 +46,18 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0b3 =
+* March 28, 2013
+* I realized that I had completely neglected the needs of observers (logged in, but can't edit).
+  I added a basic search for them. Due to the way that the satellites are written, this took about
+  an hour, and represents basically zero risk to the main server admin functionality. In order to
+  use the new browser, you add /client_interface/html to the main_server URI. It will ask you to
+  log in (if you have not already done so), and will present the basic search interface shown in the
+  3.X version satellites.
+  However, this will require some more work in order to integrate it more completely to the server.
+  Even though the functionality is incomplete, I am making a release in order to ensure that the
+  main server editor functionality was not affected.
+
 = Version 2.0b2 =
 * March 27, 2013
 * Fixed this bug:
