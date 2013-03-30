@@ -224,8 +224,8 @@ function c_comdef_LoginForm(	&$in_server	///< A reference to an instance of c_co
 	$ret = '<div class="c_comdef_admin_login_form_container_div">';
 		// If there is no JavaScript, then this message is displayed, and the form will not be revealed.
 		$ret .= '<noscript><h1>'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['noscript'] ).'</h1></noscript>';
-        $ret .= '<h1 class="lohgin_form_main_banner_h1">'.c_comdef_htmlspecialchars ( $server_info['title']  ).'</h1>';
-        $ret .= '<h2 class="lohgin_form_secondary_banner_h2">'.c_comdef_htmlspecialchars ( $server_info['banner_text']  ).'</h2>';
+        $ret .= '<h1 class="login_form_main_banner_h1">'.c_comdef_htmlspecialchars ( $server_info['title']  ).'</h1>';
+        $ret .= '<h2 class="login_form_secondary_banner_h2">'.c_comdef_htmlspecialchars ( $server_info['banner_text']  ).'</h2>';
 		$ret .= '<form method="post" class="c_comdef_admin_login_form" id="c_comdef_admin_login_form" action="'.c_comdef_htmlspecialchars ( $_SERVER['SCRIPT_NAME'] );
 			foreach ( $http_vars as $key => $value )
 				{

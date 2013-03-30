@@ -543,6 +543,11 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
             
         var distance_units_object = document.getElementById ( 'distance_units_select' );
         
+        var duration_time_hours_object = document.getElementById ( 'installer_duration_hour_select' );
+        var duration_time_minutes_object = document.getElementById ( 'installer_duration_minutes_select' );
+        
+        this.m_installer_state.default_duration_time = sprintf ( "%d:%02d:00", parseInt ( duration_time_hours_object.options[duration_time_hours_object.selectedIndex].value, 10 ), parseInt ( duration_time_minutes_object.options[duration_time_minutes_object.selectedIndex].value, 10 ) );
+        
         this.m_installer_state.comdef_distance_units = distance_units_object.options[distance_units_object.selectedIndex].value;
         
         this.m_installer_state.default_duration_text = '';
@@ -584,6 +589,7 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
             ret += "\t\t$min_pw_len = " + this.m_installer_state.min_pw_len + "; // The minimum number of characters in a user account password for this root server.\n";
             ret += "\t\t$number_of_meetings_for_auto = " + parseInt ( this.m_installer_state.number_of_meetings_for_auto, 10 ) + "; // This is an approximation of the number of meetings to search for in the auto-search feature. The higher the number, the wider the radius.\n";
             ret += "\t\t$change_depth_for_meetings = " + parseInt ( this.m_installer_state.change_depth_for_meetings, 10 ) + "; // This is how many changes should be recorded for each meeting. The higher the number, the larger the database will grow, as this can become quite substantial.\n";
+            ret += "\t\t$default_duration_time = '" + this.m_installer_state.default_duration_time + "'; // This is the default duration for meetings that have no duration specified.\n";
             
             ret += "\n\t// These are 'hard-coded,' but can be changed later.\n";
             

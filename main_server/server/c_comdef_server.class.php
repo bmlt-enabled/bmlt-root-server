@@ -2512,6 +2512,7 @@ class c_comdef_server
             c_comdef_server::$server_local_strings['weekdays'] = explode ( ",", file_get_contents ( dirname ( __FILE__ ).'/config/lang/'.$lang_enum.'/weekdays.csv' ) );
             c_comdef_server::$server_local_strings['comdef_map_radius_ranges'] = $comdef_map_radius_ranges;
             c_comdef_server::$server_local_strings['region_bias'] = $region_bias;
+            c_comdef_server::$server_local_strings['default_duration_time'] = isset ( $default_duration_time ) ? $default_duration_time : '1:00:00';
             c_comdef_server::$server_local_strings['search_spec_map_center'] = $search_spec_map_center;
             c_comdef_server::$server_local_strings['comdef_search_results_strings'] = $comdef_search_results_strings;
             c_comdef_server::$server_local_strings['comdef_search_admin_strings'] = $comdef_search_admin_strings;

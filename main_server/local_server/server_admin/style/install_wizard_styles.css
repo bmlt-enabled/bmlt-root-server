@@ -301,10 +301,12 @@ div.right_left_aligned_div input
     margin-right:0.5em;
 }
 
-div.extra_text_div
+div.extra_text_div,
+label.extra_text_label
 {
     font-style:italic;
     padding-left:0.5em;
+    padding-right:0.5em;
 }
 
 h1.page_heading_h1

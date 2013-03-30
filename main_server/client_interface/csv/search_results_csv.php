@@ -471,6 +471,11 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 						$line[$key] = $val;
 						}
 					
+					if ( !isset ( $line['duration_time'] ) || !$line['duration_time'] || ($line['duration_time'] == '00:00:00') )
+					    {
+					    $line['duration_time'] = $localized_strings['default_duration_time'];
+					    }
+					
                     if ( c_comdef_server::GetCurrentUserObj() instanceof c_comdef_user )
                         {
                         $line['published'] = $mtg_obj->IsPublished();

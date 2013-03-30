@@ -241,6 +241,46 @@ $default_lang = $lang;
                             <div class="extra_text_div"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['HistoryDepthText'] ); ?></div>
                         </div>
                         <div class="clear_both"></div>
+                        <div class="one_line_div">
+                            <label class="left_right_aligned bold_char" for="installer_duration_hour_select"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['DurationLabel'] ); ?></label>
+                            <div class="right_left_aligned_div">
+                                <select onchange="g_installer_object.gatherInstallerState()" id="installer_duration_hour_select">
+                                    <?php
+                                        $default_duration = explode ( ':', $comdef_install_wizard_strings['DefaultDurationTime'] );
+                                        $default_duration[0] = intval ( $default_duration[0] );
+                                        $default_duration[1] = intval ( $default_duration[1] );
+
+                                        for ( $hours = 0; $hours < 24; $hours++ )
+                                            {
+                                            echo '<option value ="'.htmlspecialchars ( $hours ).'"';
+                                                if ( $default_duration[0] == $hours )
+                                                    {
+                                                    echo ' selected="selected"';
+                                                    }
+                                            echo '>'.htmlspecialchars ( $hours ).'</option>';
+                                            }
+                                    ?>
+                                </select>
+                                <label class="extra_text_label" for="installer_duration_hour_select"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['DurationHourLabel'] ); ?></label>
+                            </div>
+                            <div class="right_left_aligned_div">
+                                <select onchange="g_installer_object.gatherInstallerState()" id="installer_duration_minutes_select">
+                                    <?php
+                                    for ( $minutes = 0; $minutes < 60; $minutes++ )
+                                        {
+                                        echo '<option value ="'.htmlspecialchars ( $minutes ).'"';
+                                            if ( $default_duration[1] == $minutes )
+                                                {
+                                                echo ' selected="selected"';
+                                                }
+                                        echo '>'.htmlspecialchars ( sprintf ( "%02d", $minutes ) ).'</option>';
+                                        }
+                                    ?>
+                                </select>
+                                <label class="extra_text_label" for="installer_duration_minute_select"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['DurationMinutesLabel'] ); ?></label>
+                            </div>
+                        </div>
+                        <div class="clear_both"></div>
                     </fieldset>
                     <?php echo bmlt_create_next_prev_buttons(3) ?>
                 </div>

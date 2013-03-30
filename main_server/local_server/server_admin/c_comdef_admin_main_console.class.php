@@ -381,7 +381,7 @@ class c_comdef_admin_main_console
             $ret .= '</script>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
             $ret .= '<script type="text/javascript" src="'.dirname ( $_SERVER['PHP_SELF'] ).'/local_server/server_admin'.(defined('__DEBUG_MODE__') ? '/' : '/js_stripper.php?filename=' ).'json2.js"></script>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
             $ret .= '<script type="text/javascript" src="'.dirname ( $_SERVER['PHP_SELF'] ).'/local_server/server_admin'.(defined('__DEBUG_MODE__') ? '/' : '/js_stripper.php?filename=' ).'server_admin_javascript.js"></script>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-            $ret .= '<noscript class="main_noscript">'.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['noscript'] ).'</noscript>';
+            $ret .= '<noscript class="main_noscript">'.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['noscript'] ).'</noscript>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
             // Belt and suspenders. Just make sure the user is legit.
             if ( ($this->my_user instanceof c_comdef_user) && ($this->my_user->GetUserLevel() != _USER_LEVEL_DISABLED) )
                 {
@@ -399,6 +399,10 @@ class c_comdef_admin_main_console
                         $ret .= $this->return_meeting_editor_panel();
                         
                     case    _USER_LEVEL_OBSERVER:
+                        if ( $this->my_user->GetUserLevel() == _USER_LEVEL_OBSERVER )   // Observers get a link to the meeting search.
+                            {
+                            $ret .= '<div class="bmlt_admin_observer_link_div"><a href="client_interface/html" class="bmlt_admin_observer_link_a">'.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['Observer_Link_Text'] ).'</a></div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                            }
                         $ret .= $this->return_user_account_settings_panel();
                     break;
                 

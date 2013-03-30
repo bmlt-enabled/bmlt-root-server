@@ -53,7 +53,7 @@ div.c_comdef_admin_login_form_inner_container_div
     width:400px;
 }
 
-h1.lohgin_form_main_banner_h1
+h1.login_form_main_banner_h1
 {
     font-size:3em;
     border-bottom:2px solid white;
@@ -61,7 +61,7 @@ h1.lohgin_form_main_banner_h1
     margin-bottom:0.25em;
 }
 
-h2.lohgin_form_secondary_banner_h2
+h2.login_form_secondary_banner_h2
 {
     font-size:2em;
     margin-bottom:0.5em;
@@ -408,6 +408,31 @@ div.bmlt_admin_meeting_editor_tab_bar
 {
     background-color:#009;
     height: 30px;
+}
+
+div.bmlt_admin_observer_link_div
+{
+    height:14px;
+    padding:2px;
+    padding-left:24px;
+}
+
+a.bmlt_admin_observer_link_a,
+a.bmlt_admin_observer_link_a:visited
+{
+    font-size:large;
+    font-weight:bold;
+    outline:none;
+    color:#99f;
+    text-decoration:underline;
+}
+
+a.bmlt_admin_observer_link_a:hover,
+a.bmlt_admin_observer_link_a:active
+{
+    outline:none;
+    color:#f96;
+    text-decoration:none;
 }
 
 a.bmlt_admin_meeting_editor_tab_item_a_unselected,
@@ -1295,4 +1320,12 @@ h2.c_comdef_not_auth_3
 {
     color:#f66;
     text-align:center;
+}
+
+@media print
+{
+    div.bmlt_admin_logout_bar
+    {
+        display:none;
+    }
 }

@@ -86,6 +86,9 @@
                                             'RegionBiasLabel'               =>  'Region Bias:',
                                             'PasswordLengthLabel'           =>  'Minimum Password Length:',
                                             'PasswordLengthExtraText'       =>  'This will also affect the Server Administrator password, above.',
+                                            'DurationLabel'                 =>  'Default Meeting Duration:',
+                                            'DurationHourLabel'             =>  'Hours',
+                                            'DurationMinutesLabel'          =>  'Minutes',
                                             
 	                                        'Page_4_Tab'                    =>  'STEP 4: Save The Settings',
 	                                        'Page_4_DB_Setup_Heading'       =>  'Initialize A New Database',
@@ -98,6 +101,7 @@
                                             'DefaultMeetingCount'           =>  10,
                                             'DefaultChangeDepth'            =>  5,
                                             'DefaultDistanceUnits'          =>  'mi',
+                                            'DefaultDurationTime'           =>  '01:30:00',
                                             'DurationTextInitialText'       =>  'N.A. Meetings are usually 90 minutes long (an hour and a half), unless otherwise indicated.',
                                             'time_format'                   =>  'g:i A',
                                             'change_date_format'            =>  'g:i A, n/j/Y',
