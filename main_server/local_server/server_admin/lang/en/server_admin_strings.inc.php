@@ -159,6 +159,8 @@
 	                                        'service_body_editor_screen_sb_id_label'                =>  'ID:',
 	                                        'service_body_editor_screen_sb_name_label'              =>  'Name:',
 	                                        'service_body_name_default_prompt_text'                 =>  'Enter the Name of This Service Body',
+	                                        'service_body_parent_popup_label'                       =>  'Service Body Parent:',
+	                                        'service_body_parent_popup_no_parent_option'            =>  'No Parent (Top-Level)',
 	                                        'service_body_editor_screen_sb_admin_user_label'        =>  'Primary Admin:',
 	                                        'service_body_editor_screen_sb_admin_description_label' =>  'Description:',
 	                                        'service_body_description_default_prompt_text'          =>  'Enter A Description of This Service Body',

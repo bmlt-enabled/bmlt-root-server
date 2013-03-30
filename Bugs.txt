@@ -47,3 +47,11 @@ FIXED IN VERSION 2.0b5
 
 5) If there are no Service bodies (new install), the "Service Bodies" section is not displayed (so no new ones can be created).
 FIXED IN VERSION 2.0b6
+
+6) No Way To Nest Service Bodies
+    1) Log In as a Server Administrator
+    2) Open the "Service Body Administration" panel
+    3) Try to change the hierarchy (the "parent" of the Service body)
+    
+    ANOMALY: No way to do it
+    EXPECTED: A popup menu with a choice of other Service bodies that can be used as "parents"
