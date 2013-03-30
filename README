@@ -46,6 +46,34 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0b6 =
+* March 30, 2013
+* Fixed this bug:
+    If there are no Service bodies (new install), the "Service Bodies" section is not displayed (so no new ones can be created).
+    
+= Version 2.0b5 =
+* March 30, 2013
+* Fixed these bugs:
+    3) No default duration
+        1) Log in as an Observer
+        2) Select "Meeting Search"
+        3) Using the GNYR Dataset, enter "Amagansett, NY" into the text search box
+    
+        ANOMALY: A number of meetings show no duration.
+        EXPECTED: A 90-minute duration
+        EXTRA INFO: This should probably be set explicitly in the install wizard
+
+    4) In Observer Meeting Search Mode, Multiple Instances of Hidden Fields Can Be Displayed
+        1) Log in as an Observer
+        2) Select "Meeting Search"
+        3) Using the GNYR Dataset, enter "Amagansett, NY" into the text search box. Ensure that the "This is a location or postcode" checkbox is selected.
+        4) Hit "GO"
+        5) Repeat Search (Return to "Specify A New Search," and hit "GO." No need to re-enter the search criteria)
+        6) Select the first meeting displayed
+    
+        ANOMALY: Multiple instances of the "email_contact" field displayed.
+        EXPECTED: Only one instance displayed.
+
 = Version 2.0b4 =
 * March 29, 2013
 * Added full support for observers to browse the database, and view restricted fields in a secure fashion.
