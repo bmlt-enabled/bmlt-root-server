@@ -44,3 +44,6 @@ FIXED IN VERSION 2.0b5
     ANOMALY: Multiple instances of the "email_contact" field displayed.
     EXPECTED: Only one instance displayed.
 FIXED IN VERSION 2.0b5
+
+5) If there are no Service bodies (new install), the "Service Bodies" section is not displayed (so no new ones can be created).
+FIXED IN VERSION 2.0b6

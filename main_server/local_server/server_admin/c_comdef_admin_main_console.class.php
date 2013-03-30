@@ -656,8 +656,9 @@ class c_comdef_admin_main_console
     function return_service_body_admin_panel()
     {
         $ret = '';
-        
-        if ( count ( $this->my_editable_service_bodies ) )
+        $full_editors = $this->get_full_editor_users();
+
+        if ( count ( $full_editors ) )  // Have to have at least one Service body admin
             {
             $ret = '<div id="bmlt_admin_service_body_editor_disclosure_div" class="bmlt_admin_service_body_editor_disclosure_div bmlt_admin_service_body_editor_disclosure_div_closed">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= '<a class="bmlt_admin_service_body_editor_disclosure_a" href="javascript:admin_handler_object.toggleServiceBodyEditor();">';
@@ -688,7 +689,7 @@ class c_comdef_admin_main_console
                         $ret .= '<span class="failure_text_span">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_delete_fail_text'] ).'</span>';
                     $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= '</div>';
-                
+            
                 $ret .= $this->return_single_service_body_editor_panel();
             $ret .= '</div>';
             $ret .= '<script type="text/javascript">admin_handler_object.populateServiceBodyEditor()</script>';
@@ -707,7 +708,7 @@ class c_comdef_admin_main_console
             $ret .= '<fieldset id="bmlt_admin_single_service_body_editor_fieldset" class="bmlt_admin_single_service_body_editor_fieldset">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= '<legend id="bmlt_admin_single_service_body_editor_fieldset_legend" class="bmlt_admin_single_service_body_editor_fieldset_legend">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
 
-                    if ( count ( $this->my_editable_service_bodies ) == 1 )
+                    if ( !($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) && count ( $this->my_editable_service_bodies ) == 1 )
                         {
                         $ret .= '<span class="service_body_title_span">'.htmlspecialchars ( $this->my_editable_service_bodies[0]->GetLocalName() ).'</span>';
                         }
@@ -905,6 +906,7 @@ class c_comdef_admin_main_console
     {
         $ret = '<select id="bmlt_admin_single_service_body_editor_sb_select" class="bmlt_admin_single_service_body_editor_sb_select" onchange="admin_handler_object.populateServiceBodyEditor();">';
             $first = true;
+
             for ( $index = 0; $index  < count ( $this->my_editable_service_bodies ); $index++ )
                 {
                 $service_body = $this->my_editable_service_bodies[$index];
@@ -914,17 +916,27 @@ class c_comdef_admin_main_console
                     $ret .= ' selected="selected"';
                     $first = false;
                     }
-                
                 $ret .= '>'.htmlspecialchars ( $service_body->GetLocalName() ).'</option>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 }
             
             // Service body admin adds a special one at the end for creating a new one.
             if ( $this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN )
                 {
-                $ret .= '<option value="" disabled="disabled"></option>';
-                $ret .= '<option value="0">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_create_new_sb_option'] ).'</option>';
+                if ( !$first )
+                    {
+                    $ret .= '<option value="" disabled="disabled"></option>';
+                    }
+                    
+                $ret .= '<option value="0"';
+                
+                if ( $first )
+                    {
+                    $ret .= ' selected="selected"';
+                    }
+                    
+                $ret .= '>'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_create_new_sb_option'] ).'</option>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 }
-        $ret .= '</select>';
+        $ret .= '</select>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
         
         return $ret;
     }

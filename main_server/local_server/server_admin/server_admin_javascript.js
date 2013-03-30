@@ -60,9 +60,20 @@ function BMLT_Server_Admin ()
     ****************************************************************************************/
     this.setWarningFaders = function()
     {
-        document.getElementById ( 'bmlt_admin_fader_service_body_editor_warn_div' ).className = 'bmlt_admin_fader_div';
-        document.getElementById ( 'bmlt_admin_fader_meeting_editor_warn_div' ).className = 'bmlt_admin_fader_div';
-        document.getElementById ( 'bmlt_admin_fader_account_warn_div' ).className = 'bmlt_admin_fader_div';
+        if ( document.getElementById ( 'bmlt_admin_fader_service_body_editor_warn_div' ) )
+            {
+            document.getElementById ( 'bmlt_admin_fader_service_body_editor_warn_div' ).className = 'bmlt_admin_fader_div';
+            };
+            
+        if ( document.getElementById ( 'bmlt_admin_fader_meeting_editor_warn_div' ) )
+            {
+            document.getElementById ( 'bmlt_admin_fader_meeting_editor_warn_div' ).className = 'bmlt_admin_fader_div';
+            };
+        
+        if ( document.getElementById ( 'bmlt_admin_fader_account_warn_div' ) )
+            {
+            document.getElementById ( 'bmlt_admin_fader_account_warn_div' ).className = 'bmlt_admin_fader_div';
+            };
         
         this.m_warn_user_to_refresh = true;
     };
@@ -2876,7 +2887,14 @@ function BMLT_Server_Admin ()
         if ( service_body_select )  // If we are able to switch between multiple Service bodies, we can do so here.
             {
             index = service_body_select.selectedIndex;
-            sb_id = service_body_select.options[index].value;
+            if ( service_body_select.options[index] )
+                {
+                sb_id = service_body_select.options[index].value;
+                }
+            else
+                {
+                sb_id = 0;
+                };
             }
         else
             {
