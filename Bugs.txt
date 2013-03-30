@@ -36,8 +36,11 @@ FIXED IN VERSION 2.0b5
 4) In Observer Meeting Search Mode, Multiple Instances of Hidden Fields Can Be Displayed
     1) Log in as an Observer
     2) Select "Meeting Search"
-    3) Using the GNYR Dataset, enter "Amagansett, NY" into the text search box
-    4) Select the first meeting displayed
+    3) Using the GNYR Dataset, enter "Amagansett, NY" into the text search box. Ensure that the "This is a location or postcode" checkbox is selected.
+    4) Hit "GO"
+    5) Repeat Search (Return to "Specify A New Search," and hit "GO." No need to re-enter the search criteria)
+    6) Select the first meeting displayed
     
     ANOMALY: Multiple instances of the "email_contact" field displayed.
     EXPECTED: Only one instance displayed.
+FIXED IN VERSION 2.0b5
