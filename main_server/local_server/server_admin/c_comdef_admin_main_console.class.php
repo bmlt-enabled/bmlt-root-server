@@ -1499,7 +1499,7 @@ class c_comdef_admin_main_console
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_start_label'] ).'</span>';
                     $ret .= '<span class="bmlt_admin_value_left bmlt_admin_time_selector">';
-                        $ret .= '<select id="bmlt_admin_single_meeting_editor_template_meeting_start_hour_select">';
+                        $ret .= '<select id="bmlt_admin_single_meeting_editor_template_meeting_start_hour_select" onchange="admin_handler_object.reactToTimeSelect(template)">';
                             $ret .= '<option value ="1">1</option>';
                             $ret .= '<option value ="2">2</option>';
                             $ret .= '<option value ="3">3</option>';
@@ -1516,7 +1516,7 @@ class c_comdef_admin_main_console
                             $ret .= '<option value ="0">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_midnight_label'] ).'</option>';
                         $ret .= '</select>';
                         $ret .= '<span id="bmlt_admin_template_time_span" class="bmlt_admin_time_span">:';
-                            $ret .= '<select id="bmlt_admin_single_meeting_editor_template_meeting_start_minute_select">';
+                            $ret .= '<select id="bmlt_admin_single_meeting_editor_template_meeting_start_minute_select" onchange="admin_handler_object.reactToTimeSelect(template)">';
                                 for ( $m = 0; $m < 60; $m += 5 )
                                     {
                                     $ret .= '<option value="'.$m.'">'.sprintf ( "%02d", $m ).'</option>';
@@ -1533,7 +1533,7 @@ class c_comdef_admin_main_console
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_duration_label'] ).'</span>';
                     $ret .= '<span class="bmlt_admin_value_left bmlt_admin_time_selector">';
-                        $ret .= '<select id="bmlt_admin_single_meeting_editor_template_meeting_duration_hour_select">';
+                        $ret .= '<select id="bmlt_admin_single_meeting_editor_template_meeting_duration_hour_select" onchange="admin_handler_object.reactToDurationSelect(template)">';
                             for ( $m = 0; $m < 24; $m++ )
                                 {
                                 $ret .= '<option value="'.$m.'">'.$m.'</option>';
@@ -1541,7 +1541,7 @@ class c_comdef_admin_main_console
                             $ret .= '<option value ="24">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_oe_label'] ).'</option>';
                         $ret .= '</select>';
                         $ret .= '<span id="bmlt_admin_template_duration_span" class="bmlt_admin_time_span">:';
-                            $ret .= '<select id="bmlt_admin_single_meeting_editor_template_meeting_duration_minute_select">';
+                            $ret .= '<select id="bmlt_admin_single_meeting_editor_template_meeting_duration_minute_select" onchange="admin_handler_object.reactToDurationSelect(template)">';
                                 for ( $m = 0; $m < 60; $m += 5 )
                                     {
                                     $ret .= '<option value="'.$m.'">'.sprintf ( "%02d", $m ).'</option>';

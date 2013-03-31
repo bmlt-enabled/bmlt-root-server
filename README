@@ -46,6 +46,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0b9 =
+* March 31, 2013
+* Fixed a number of small JavaScript bugs that had the annoying habit of interfering with the "dirty" flag for meetings.
+
 = Version 2.0b8 =
 * March 31, 2013
 * Removed the useless "trainee" position of "Service Body Editor" as a choice.

@@ -558,7 +558,12 @@ function BMLT_Server_Admin ()
             ret.longitude = g_default_longitude;
             ret.latitude = g_default_latitude;
             ret.start_time = g_default_meeting_start_time;
-            ret.duration_time = g_default_meeting_duration;
+
+            var dur = g_default_meeting_duration.split(':');
+            dur[0] = parseInt ( dur[0], 10 );
+            dur[1] = parseInt ( dur[1], 10 );
+            ret.duration_time = sprintf ( '%02d:%02d:00', dur[0], dur[1] );
+
             ret.weekday_tinyint = g_default_meeting_weekday.toString();
             ret.id_bigint = 0;  // All new meetings are ID 0.
             ret.published = '0';
@@ -965,6 +970,35 @@ function BMLT_Server_Admin ()
                                         )
     {
         this.m_search_results = in_search_results_json_object;
+        
+        for ( var c = 0; c < this.m_search_results.length; c++ )    
+            {
+            if ( this.m_search_results[c] )
+                {
+                // The reason we do this whacky stuff, is that the formats may not be in the same order from the server as we keep them, so this little dance re-orders them.
+                var format_array = new Array;
+                var main_formats = g_format_object_array;
+                var mtg_formats = this.m_search_results[c].formats.split ( ',' );
+        
+                for ( var i = 0; i < main_formats.length; i++ )
+                    {
+                    for ( var n = 0; n < mtg_formats.length; n++ )
+                        {
+                        if ( main_formats[i].key == mtg_formats[n] )
+                            {
+                            format_array[format_array.length] = mtg_formats[n];
+                            };
+                        };
+                    };
+                
+                this.m_search_results[c].formats = format_array.join(',');
+                
+                var dur = this.m_search_results[c].duration_time.split(':');
+                dur[0] = parseInt ( dur[0], 10 );
+                dur[1] = parseInt ( dur[1], 10 );
+                this.m_search_results[c].duration_time = sprintf ( '%02d:%02d:00', dur[0], dur[1] );
+                };
+            };
         
         this.createMeetingList();
         
