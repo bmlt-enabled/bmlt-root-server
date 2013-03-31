@@ -665,7 +665,7 @@ class c_comdef_admin_ajax_handler
                 $sb_to_change->SetKMLURI ( $kml_uri );
                 $sb_to_change->SetSBType ( $type );
                 $sb_to_change->SetWorldID ( $worldid );
-                
+            
                 if ( $sb_to_change->UpdateToDB() )
                     {
                     header ( 'Content-type: application/json' );
@@ -692,7 +692,7 @@ class c_comdef_admin_ajax_handler
             echo "{'success':false,'report':'$err_string'}";
             }
     }
-
+                
     /*******************************************************************/
     /**
         \brief  This handles creating a new Service body.

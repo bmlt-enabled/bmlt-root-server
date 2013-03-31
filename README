@@ -47,8 +47,9 @@ For instructions on installing the root server, see this page:
 CHANGELIST
 ----------
 = Version 2.0b8 =
-* TBD
+* March 31, 2013
 * Removed the useless "trainee" position of "Service Body Editor" as a choice.
+* Fixed a rather nasty bug in the new Service Body Parent functionality.
 
 = Version 2.0b7 =
 * March 30, 2013

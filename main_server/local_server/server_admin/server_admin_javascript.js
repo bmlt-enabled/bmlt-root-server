@@ -2927,7 +2927,7 @@ function BMLT_Server_Admin ()
             // This makes a copy of the Service body object, so we can modify it.
             selected_service_body_object = JSON.parse ( JSON.stringify ( sb_object ) );
             };
-        
+
         main_service_body_editor.service_body_object = selected_service_body_object;
         
         var id_display = document.getElementById ( 'service_body_admin_id_display' );
@@ -3299,7 +3299,7 @@ function BMLT_Server_Admin ()
         
         if ( service_body_parent_select )
             {
-            main_service_body_editor.service_body_object[0] = parseInt ( service_body_parent_select.value, 10 );
+            main_service_body_editor.service_body_object[1] = parseInt ( service_body_parent_select.value, 10 );
             };
 
         this.validateServiceBodyEditorButtons();
