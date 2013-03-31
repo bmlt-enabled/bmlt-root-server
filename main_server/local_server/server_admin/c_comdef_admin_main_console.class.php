@@ -747,6 +747,13 @@ class c_comdef_admin_main_console
                         $ret .= '</span>';
                         $ret .= '<div class="clear_both"></div>';
                     $ret .= '</div>';
+                    $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                        $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_parent_popup_label'] ).'</span>';
+                        $ret .= '<span class="bmlt_admin_value_left">';
+                            $ret .= $this->create_service_body_parent_popup();
+                        $ret .= '</span>';
+                        $ret .= '<div class="clear_both"></div>';
+                    $ret .= '</div>';
                     }
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_sb_name_label'] ).'</span>';
@@ -899,12 +906,32 @@ class c_comdef_admin_main_console
     }
     
     /********************************************************************************************************//**
+    \brief This creates the HTML for a Service body parent selection popup menu.
+    \returns The HTML and JavaScript for the popup menu (select element).
+    ************************************************************************************************************/
+    function create_service_body_parent_popup ()
+    {
+        $ret = '<select id="bmlt_admin_single_service_body_editor_parent_select" class="bmlt_admin_single_service_body_editor_parent_select" onchange="admin_handler_object.populateServiceBodyEditor();">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+
+            $ret .= '<option id="parent_popup_option_0" selected="selected" value="0">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_parent_popup_no_parent_option'] ).'</option>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+            
+            for ( $index = 0; $index  < count ( $this->my_editable_service_bodies ); $index++ )
+                {
+                $service_body = $this->my_editable_service_bodies[$index];
+                $ret .= '<option id="parent_popup_option_'.$service_body->GetID().'" value="'.$service_body->GetID().'">'.htmlspecialchars ( $service_body->GetLocalName() ).'</option>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                }
+        $ret .= '</select>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+        
+        return $ret;
+    }
+    
+    /********************************************************************************************************//**
     \brief This creates the HTML for a Service body selection popup menu.
     \returns The HTML and JavaScript for the popup menu (select element).
     ************************************************************************************************************/
     function create_service_body_popup ()
     {
-        $ret = '<select id="bmlt_admin_single_service_body_editor_sb_select" class="bmlt_admin_single_service_body_editor_sb_select" onchange="admin_handler_object.populateServiceBodyEditor();">';
+        $ret = '<select id="bmlt_admin_single_service_body_editor_sb_select" class="bmlt_admin_single_service_body_editor_sb_select" onchange="admin_handler_object.populateServiceBodyEditor();">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
             $first = true;
 
             for ( $index = 0; $index  < count ( $this->my_editable_service_bodies ); $index++ )

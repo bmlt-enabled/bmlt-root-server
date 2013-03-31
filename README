@@ -46,6 +46,17 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0b7 =
+* March 30, 2013
+* Fixed this bug:
+    6) No Way To Nest Service Bodies
+        1) Log In as a Server Administrator
+        2) Open the "Service Body Administration" panel
+        3) Try to change the hierarchy (the "parent" of the Service body)
+    
+        ANOMALY: No way to do it
+        EXPECTED: A popup menu with a choice of other Service bodies that can be used as "parents"
+
 = Version 2.0b6 =
 * March 30, 2013
 * Fixed this bug:
