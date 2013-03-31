@@ -612,7 +612,7 @@ class c_comdef_admin_main_console
         $ret = '<select id="bmlt_admin_single_user_editor_level_select" class="bmlt_admin_single_user_editor_level_select" onchange="admin_handler_object.readUserEditorState();">';
             $first = true;
             $ret .= '<option value="2">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_2'] ).'</option>';
-            $ret .= '<option value="3">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_3'] ).'</option>';
+//             $ret .= '<option value="3">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_3'] ).'</option>';
             $ret .= '<option value="5">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_5'] ).'</option>';
             $ret .= '<option value="" disabled="disabled"></option>';
             $ret .= '<option value="4">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_4'] ).'</option>';
@@ -803,22 +803,22 @@ class c_comdef_admin_main_console
                     $ret .= '<div class="clear_both"></div>';
                     }
                 
-                if ( count ( $basic_editors ) )
-                    {
-                    $ret .= '<div id="service_body_admin_editor_list_div" class="bmlt_admin_one_line_in_a_form clear_both">';
-                        $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_sb_admin_editor_label'] ).'</span>';
-                        $ret .= '<span class="bmlt_admin_value_left light_italic_display">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_sb_admin_editor_desc'] ).'</span>';
-                        $ret .= '<div class="clear_both"></div>';
-                        
-                        foreach ( $basic_editors as $user )
-                            {
-                            $ret .= '<span class="bmlt_admin_med_label_right"><input type="checkbox" id="service_body_admin_editor_user_'.$user->GetID().'_checkbox" onchange="admin_handler_object.serviceBodyUserChecboxHandler('.$user->GetID().',this);" onclick="admin_handler_object.serviceBodyUserChecboxHandler('.$user->GetID().',this);" /></span>';
-                            $ret .= '<label class="bmlt_admin_med_label_left" for="service_body_admin_editor_user_'.$user->GetID().'_checkbox">'.htmlspecialchars ( $user->GetLocalName() ).'</label>';
-                            $ret .= '<div class="clear_both"></div>';
-                            }
-                    $ret .= '</div>';
-                    $ret .= '<div class="clear_both"></div>';
-                    }
+//                 if ( count ( $basic_editors ) )
+//                     {
+//                     $ret .= '<div id="service_body_admin_editor_list_div" class="bmlt_admin_one_line_in_a_form clear_both">';
+//                         $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_sb_admin_editor_label'] ).'</span>';
+//                         $ret .= '<span class="bmlt_admin_value_left light_italic_display">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_sb_admin_editor_desc'] ).'</span>';
+//                         $ret .= '<div class="clear_both"></div>';
+//                         
+//                         foreach ( $basic_editors as $user )
+//                             {
+//                             $ret .= '<span class="bmlt_admin_med_label_right"><input type="checkbox" id="service_body_admin_editor_user_'.$user->GetID().'_checkbox" onchange="admin_handler_object.serviceBodyUserChecboxHandler('.$user->GetID().',this);" onclick="admin_handler_object.serviceBodyUserChecboxHandler('.$user->GetID().',this);" /></span>';
+//                             $ret .= '<label class="bmlt_admin_med_label_left" for="service_body_admin_editor_user_'.$user->GetID().'_checkbox">'.htmlspecialchars ( $user->GetLocalName() ).'</label>';
+//                             $ret .= '<div class="clear_both"></div>';
+//                             }
+//                     $ret .= '</div>';
+//                     $ret .= '<div class="clear_both"></div>';
+//                     }
                     
                 if ( count ( $observers ) )
                     {

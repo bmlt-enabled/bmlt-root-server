@@ -46,6 +46,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0b8 =
+* TBD
+* Removed the useless "trainee" position of "Service Body Editor" as a choice.
+
 = Version 2.0b7 =
 * March 30, 2013
 * Fixed this bug:
