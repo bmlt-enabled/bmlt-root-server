@@ -3841,12 +3841,7 @@ function BMLT_Server_Admin ()
                     user_level_popup_span.className = 'bmlt_admin_value_left';
                     user_level_sa_span.className = 'item_hidden';
                     var user_level_popup_select = document.getElementById ( 'bmlt_admin_single_user_editor_level_select' );
-                    user_level_popup_select.selectedIndex = (selected_user_object[5] == 2) ? 0
-                                                                : ((selected_user_object[5] == 3) ? 1
-                                                                    : ((selected_user_object[5] == 5) ? 2
-                                                                        : 4
-                                                                    )
-                                                                );
+                    user_level_popup_select.selectedIndex = (selected_user_object[5] == 2) ? 0 : ((selected_user_object[5] == 5) ? 1 : 3 );
                     }
                 else    // This should never be, but just in case...
                     {

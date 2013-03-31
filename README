@@ -46,6 +46,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0b11 =
+* March 31, 2013
+* Fixed a JavaScript Issue, where the user level popup was not being correctly set, as a result of the removal of the useless "Editor" level.
+
 = Version 2.0b10 =
 * March 31, 2013
 * Fixed a JavaScript Issue, where the "dirty confirm" was not being shown in some instances. It is still an issue in a couple (like closing the browser).
