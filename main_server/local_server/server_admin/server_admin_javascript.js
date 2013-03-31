@@ -1281,13 +1281,22 @@ function BMLT_Server_Admin ()
                 }
             else
                 {
-                if ( display_parent.meeting_editor_object && (display_parent.meeting_editor_object.parentNode == display_parent) )
+                var proceed = true;
+                if ( (this.m_editing_window_open != null) && this.isMeetingDirty ( this.m_editing_window_open.meeting_id ) )
                     {
-                    display_parent.removeChild ( display_parent.meeting_editor_object );
+                    proceed = confirm ( g_meeting_closure_confirm_text );
                     };
+        
+                if ( proceed )
+                    {
+                    if ( display_parent.meeting_editor_object && (display_parent.meeting_editor_object.parentNode == display_parent) )
+                        {
+                        display_parent.removeChild ( display_parent.meeting_editor_object );
+                        };
                 
-                this.m_editing_window_open.meeting_id = null;
-                display_parent.meeting_editor_object = null;
+                    this.m_editing_window_open.meeting_id = null;
+                    display_parent.meeting_editor_object = null;
+                    };
                 };
             };
     };

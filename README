@@ -46,6 +46,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0b10 =
+* March 31, 2013
+* Fixed a JavaScript Issue, where the "dirty confirm" was not being shown in some instances. It is still an issue in a couple (like closing the browser).
+
 = Version 2.0b9 =
 * March 31, 2013
 * Fixed a number of small JavaScript bugs that had the annoying habit of interfering with the "dirty" flag for meetings.
