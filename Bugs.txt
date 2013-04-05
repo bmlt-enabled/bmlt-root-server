@@ -55,3 +55,13 @@ FIXED IN VERSION 2.0b6
     
     ANOMALY: No way to do it
     EXPECTED: A popup menu with a choice of other Service bodies that can be used as "parents"
+FIXED IN VERSION 2.0b10
+
+7) Swedish Language Ümlauts Result In Bad Location Searches
+    This expresses itself in satellite searches, but is probably a root server bug.
+    Search for these cities, using the Swedish root server ( http://www.nasverige.org/bmlt ):
+        Malmö
+        Strängnäs
+        Göteborg
+    The searches will not produce expected results.
+    
