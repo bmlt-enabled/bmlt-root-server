@@ -424,7 +424,7 @@ class c_comdef_admin_main_console
     static function js_html(    $in_raw_html
                             )
     {
-        return str_replace ( "'", "\'", htmlspecialchars ( $in_raw_html ) );
+        return preg_replace ( "|[\n\r]|", " ", str_replace ( "'", "\'", htmlspecialchars ( $in_raw_html, ENT_SUBSTITUTE | ENT_NOQUOTES ) ) );
     }
     
     /********************************************************************************************************//**
