@@ -46,6 +46,11 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0b14 =
+* April 8, 2013
+* The Swedish localization is all but complete.
+* Switched the order of the long/lat fields in the NAWS export.
+
 = Version 2.0b12 =
 * April 6, 2013
 * Added placeholders for the Swedish and Spanish localizations.

@@ -570,8 +570,8 @@ function ReturnNAWSFormatCSV (
 									'Format5'			=> 'BMLT_FuncNAWSReturnFormat5',
 									'Delete'			=> null,
 									'LastChanged'		=> 'BMLT_FuncNAWSReturnLastMeetingChangeTime',
-									'Latitude'			=> 'latitude',
 									'Longitude'			=> 'longitude',
+									'Latitude'			=> 'latitude',
 									'ContactGP'			=> null
 								);
 	
