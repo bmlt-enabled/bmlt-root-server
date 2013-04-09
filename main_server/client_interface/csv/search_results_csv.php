@@ -943,9 +943,9 @@ function BMLT_FuncNAWSReturnMeetingTown (	$in_meeting_id,	///< The ID of the mee
 
 /*******************************************************************/
 /**
-	\brief Returns the string for the NAWS ID for the meeting (used for the NAWS format)
+	\brief Returns the latest changed date for the given meeting.
 	
-	\returns A string The meeting ID, in NAWS form (G0000000).
+	\returns a date in ISO form ('2013-01-31').
 */	
 function BMLT_FuncNAWSReturnLastMeetingChangeTime (	$in_meeting_id,	///< The ID of the meeting (internal DB ID) This can also be a meeting object.
 													&$server		///< A reference to an instance of c_comdef_server

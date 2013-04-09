@@ -57,12 +57,12 @@ if (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'initiali
     &&  isset ( $http_vars['admin_password'] ) && $http_vars['admin_password']  // This is cleartext, but that can't be helped. This is the only place in the installer where this happens.
      )
     {
+    $value_array = array();
     $sql[] = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/sql_files/initialMeetingsStructure.sql' ) );
     $sql[] = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/sql_files/initialFormatsStructure.sql' ) );
     $sql[] = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/sql_files/initialChangesStructure.sql' ) );
     $sql[] = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/sql_files/initialServiceBodiesStructure.sql' ) );
     $sql[] = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/sql_files/InitialUsersStructure.sql' ) );
-    $sql[] = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/sql_files/InitialFormatsData.sql' ) );
     $sql[] = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/sql_files/InitialMeetingsData.sql' ) );
 
     // Our SQL is now ready to be set to the server. We need to use PDO, as that is the abstraction mechanism used by the server.
@@ -79,26 +79,43 @@ if (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'initiali
 		
 		if ( !isset ( $result ) || !is_array ( $result ) || !count ( $result ) )
 		    {
+            $value_array = array();
 		    $response['status'] = true;
 		    $response['report'] = '';
             foreach ( $sql as $sql_statement )
                 {
-                c_comdef_dbsingleton::preparedExec ( $sql_statement, array() );
+                c_comdef_dbsingleton::preparedExec ( $sql_statement, $value_array );
                 }
             
             $serveradmin_name = $comdef_install_wizard_strings['ServerAdminName'];
-            $serveradmin_desc = $comdef_install_wizard_strings['ServerAdminName'];
+            $serveradmin_desc = $comdef_install_wizard_strings['ServerAdminDesc'];
             $sql_serveradmin = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/sql_files/serverAdmin.sql' ) );
             $salt = $http_vars['salt'];
             $max_crypt = true;
             $sql_array = array ( $serveradmin_name, $serveradmin_desc, $http_vars['admin_login'], FullCrypt ( $http_vars['admin_password'], $salt, $max_crypt ), $lang );
             c_comdef_dbsingleton::preparedExec ( $sql_serveradmin, $sql_array );
-            };
-        
+            
+            // Formats are special. There are diacriticals that need to be escaped, so we make sure they get set into the values array.
+            $sql_temp = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/sql_files/InitialFormatsData.sql' ) );
+                
+            $value_array = array();
+            if ( preg_match_all ( "|'(.*?)'|", $sql_temp, $value_array ) );
+                {
+                $value_array = $value_array[0];
+                for ( $c = 0; $c < count ( $value_array ); $c++ )
+                    {
+                    $value_array[$c] = c_comdef_dbsingleton::pdoInstance()->quote ( preg_replace ( "|'(.*?)'|", "$1", $value_array[$c] ) );
+                    }
+                
+                $sql_temp = preg_replace ( "|'.*?'|", "?", $sql_temp );
+                c_comdef_dbsingleton::preparedExec ( $sql_temp, $value_array );
+                }
+            }
         echo array2json ( $response );
         }
     catch ( Exception $e )
         {
+die ( print_r ( $e, true ) );
         $response = array ( 'status' => 'false', 'report' => $comdef_install_wizard_strings['AJAX_Handler_DB_Connect_Error'] );
         echo array2json ( $response );
         }
