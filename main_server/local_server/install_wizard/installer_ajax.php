@@ -104,7 +104,7 @@ if (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'initiali
                 $value_array = $value_array[0];
                 for ( $c = 0; $c < count ( $value_array ); $c++ )
                     {
-                    $value_array[$c] = c_comdef_dbsingleton::pdoInstance()->quote ( preg_replace ( "|'(.*?)'|", "$1", $value_array[$c] ) );
+                    $value_array[$c] = preg_replace ( "|'(.*?)'|", "$1", $value_array[$c] );
                     }
                 
                 $sql_temp = preg_replace ( "|'.*?'|", "?", $sql_temp );
