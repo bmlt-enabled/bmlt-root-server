@@ -46,6 +46,22 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0.0 =
+* April 13, 2013
+* Official release of 2.0.0
+* There are 3 open bugs in this release that need to be addressed in a near-future "point release":
+    7) Swedish Language Ümlauts Result In Bad Location Searches
+        This expresses itself in satellite searches, but is probably a root server bug.
+        Search for these cities, using the Swedish root server ( http://www.nasverige.org/bmlt ):
+            Malmö
+            Strängnäs
+            Göteborg
+        The searches will not produce expected results.
+    
+    8) Localization Needs to support military time in the satellite/root server.
+
+    9) Non-MySQL databases (in particular, Postgres) don't work.
+
 = Version 2.0b15 =
 * April 9, 2013
 * Did some work to ensure that strings stored in the database would retain their UTF-8 characteristics.

@@ -65,3 +65,6 @@ FIXED IN VERSION 2.0b10
         Göteborg
     The searches will not produce expected results.
     
+8) Localization Needs to support military time in the satellite/root server.
+
+9) Non-MySQL databases (in particular, Postgres) don't work.
