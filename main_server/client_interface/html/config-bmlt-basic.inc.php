@@ -35,6 +35,9 @@ $server = c_comdef_server::MakeServer();
 
 if ( $server )
     {
+    global $bmlt_localization;  ///< Use this to control the localization.
+    $bmlt_localization = $server->GetLocalLang();
+    
     if ( !isset ( $_SESSION ) )
         {
         session_start();

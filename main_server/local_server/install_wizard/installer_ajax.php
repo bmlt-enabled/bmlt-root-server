@@ -58,12 +58,12 @@ if (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'initiali
      )
     {
     $value_array = array();
-    $sql[] = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/sql_files/initialMeetingsStructure.sql' ) );
-    $sql[] = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/sql_files/initialFormatsStructure.sql' ) );
-    $sql[] = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/sql_files/initialChangesStructure.sql' ) );
-    $sql[] = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/sql_files/initialServiceBodiesStructure.sql' ) );
-    $sql[] = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/sql_files/InitialUsersStructure.sql' ) );
-    $sql[] = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/sql_files/InitialMeetingsData.sql' ) );
+    $sql[] = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbName'].'.'.$http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/sql_files/initialMeetingsStructure.sql' ) );
+    $sql[] = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbName'].'.'.$http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/sql_files/initialFormatsStructure.sql' ) );
+    $sql[] = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbName'].'.'.$http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/sql_files/initialChangesStructure.sql' ) );
+    $sql[] = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbName'].'.'.$http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/sql_files/initialServiceBodiesStructure.sql' ) );
+    $sql[] = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbName'].'.'.$http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/sql_files/InitialUsersStructure.sql' ) );
+    $sql[] = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbName'].'.'.$http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/sql_files/InitialMeetingsData.sql' ) );
 
     // Our SQL is now ready to be set to the server. We need to use PDO, as that is the abstraction mechanism used by the server.
     
@@ -73,7 +73,7 @@ if (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'initiali
         c_comdef_dbsingleton::init ( $http_vars['dbType'], $http_vars['dbServer'], $http_vars['dbName'], $http_vars['dbUser'], $http_vars['dbPassword'] );
     
         // First, we make sure that the database does not already exist. If so, we immediately fail, as we will not overwrite an existing database.
-		$result = c_comdef_dbsingleton::preparedQuery ( 'SHOW TABLES LIKE ?', array($http_vars['dbPrefix'].'_comdef_users') );
+		$result = c_comdef_dbsingleton::preparedQuery ( 'SELECT * FROM '.$http_vars['dbName'].'.'.$http_vars['dbPrefix'].'_comdef_users WHERE 1', array() );
 		
 		$response = array ( 'status' => 'false', 'report' => 'AJAX_Handler_DB_Established_Error' );
 		
@@ -89,14 +89,14 @@ if (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'initiali
             
             $serveradmin_name = $comdef_install_wizard_strings['ServerAdminName'];
             $serveradmin_desc = $comdef_install_wizard_strings['ServerAdminDesc'];
-            $sql_serveradmin = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/sql_files/serverAdmin.sql' ) );
+            $sql_serveradmin = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbName'].'.'.$http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/sql_files/serverAdmin.sql' ) );
             $salt = $http_vars['salt'];
             $max_crypt = true;
             $sql_array = array ( $serveradmin_name, $serveradmin_desc, $http_vars['admin_login'], FullCrypt ( $http_vars['admin_password'], $salt, $max_crypt ), $lang );
             c_comdef_dbsingleton::preparedExec ( $sql_serveradmin, $sql_array );
             
             // Formats are special. There are diacriticals that need to be escaped, so we make sure they get set into the values array.
-            $sql_temp = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/sql_files/InitialFormatsData.sql' ) );
+            $sql_temp = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\-A-Z0-9]|', '', $http_vars['dbName'].'.'.$http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/sql_files/InitialFormatsData.sql' ) );
                 
             $value_array = array();
             if ( preg_match_all ( "|'(.*?)'|", $sql_temp, $value_array ) );
@@ -115,7 +115,7 @@ if (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'initiali
         }
     catch ( Exception $e )
         {
-die ( print_r ( $e, true ) );
+// die ( print_r ( $e, true ) );
         $response = array ( 'status' => 'false', 'report' => $comdef_install_wizard_strings['AJAX_Handler_DB_Connect_Error'] );
         echo array2json ( $response );
         }
@@ -134,7 +134,7 @@ elseif (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'test
         c_comdef_dbsingleton::init ( $http_vars['dbType'], $http_vars['dbServer'], $http_vars['dbName'], $http_vars['dbUser'], $http_vars['dbPassword'] );
     
         // If we have an existing database, we return the word "false".
-		$result = c_comdef_dbsingleton::preparedQuery ( 'SHOW TABLES LIKE ?', array($http_vars['dbPrefix'].'_comdef_users') );
+		$result = c_comdef_dbsingleton::preparedQuery ( 'SELECT * FROM '.$http_vars['dbName'].'.'.$http_vars['dbPrefix'].'_comdef_users WHERE 1', array() );
 		
 		if ( isset ( $result ) && is_array ( $result ) && count ( $result ) )
 		    {
@@ -147,6 +147,7 @@ elseif (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'test
         }
     catch ( Exception $e )
         {
+// die ( print_r ( $e, true ) );
         echo '-1';
         }
     }

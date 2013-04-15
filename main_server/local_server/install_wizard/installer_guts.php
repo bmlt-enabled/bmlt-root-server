@@ -433,7 +433,7 @@ function ServerLangSortCallback( $in_lang_a,
         }
     else
         {
-        $ret = strncasecmp ( $in_lang_a, $in_lang_b );
+        $ret = strncasecmp ( $in_lang_a, $in_lang_b, strlen ( $in_lang_a ) );
         }
         
     return $ret;

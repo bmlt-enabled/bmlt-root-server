@@ -46,6 +46,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0.1b0 =
+* April 14, 2013
+* Fixed two bugs in the localization of the "Observer search" feature.
+
 = Version 2.0.0 =
 * April 13, 2013
 * Official release of 2.0.0
