@@ -3039,12 +3039,15 @@ function BMLT_Server_Admin ()
         
         var service_body_parent_select = document.getElementById ( 'bmlt_admin_single_service_body_editor_parent_select' );
 
-        for ( var c = 0; c < service_body_parent_select.options.length; c++ )
+        if ( service_body_parent_select )
             {
-            service_body_parent_select.options[c].selected = false;
-            service_body_parent_select.options[c].disabled = false;
+            for ( var c = 0; c < service_body_parent_select.options.length; c++ )
+                {
+                service_body_parent_select.options[c].selected = false;
+                service_body_parent_select.options[c].disabled = false;
+                };
             };
-
+        
         document.getElementById ( 'parent_popup_option_' + selected_service_body_object[0] ).disabled = true;
         document.getElementById ( 'parent_popup_option_' + selected_service_body_object[1] ).selected = true;
         
