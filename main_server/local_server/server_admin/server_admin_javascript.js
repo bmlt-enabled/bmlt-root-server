@@ -1680,6 +1680,7 @@ function BMLT_Server_Admin ()
                     };
                 
                 this.m_search_results[this.m_search_results.length] = json_object[0];
+                in_orig_meeting_id = json_object[0][0];
                 BMLT_Admin_StartFader ( 'bmlt_admin_fader_meeting_editor_add_success_div', this.m_success_fade_duration );
                 }
             else
@@ -3046,10 +3047,10 @@ function BMLT_Server_Admin ()
                 service_body_parent_select.options[c].selected = false;
                 service_body_parent_select.options[c].disabled = false;
                 };
-            };
         
-        document.getElementById ( 'parent_popup_option_' + selected_service_body_object[0] ).disabled = true;
-        document.getElementById ( 'parent_popup_option_' + selected_service_body_object[1] ).selected = true;
+            document.getElementById ( 'parent_popup_option_' + selected_service_body_object[0] ).disabled = true;
+            document.getElementById ( 'parent_popup_option_' + selected_service_body_object[1] ).selected = true;
+            };
         
         this.setServiceBodyEditorCheckboxes();
         

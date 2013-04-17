@@ -114,7 +114,8 @@ class c_comdef_admin_ajax_handler
             }
         else if ( isset ( $this->my_http_vars['do_meeting_search'] ) )
             {
-            $returned_text = $this->TranslateToJSON ( $this->GetSearchResults ( $this->my_http_vars ) );
+            $used_formats = array();
+            $returned_text = $this->TranslateToJSON ( $this->GetSearchResults ( $this->my_http_vars, $used_formats ) );
             }
         else
             {
@@ -1128,7 +1129,8 @@ class c_comdef_admin_ajax_handler
                     if ( $meeting->UpdateToDB() )
                         {
                         header ( 'Content-type: application/json' );
-                        echo $this->TranslateToJSON ( $this->GetSearchResults ( array ( 'meeting_ids' => array ( $meeting->GetID() ) ) ) );
+                        $used_formats = array();
+                        echo $this->TranslateToJSON ( $this->GetSearchResults ( array ( 'meeting_ids' => array ( $meeting->GetID() ) ), $used_formats ) );
                         }
                     else
                         {
@@ -1197,7 +1199,7 @@ class c_comdef_admin_ajax_handler
 
         $result = DisplaySearchResultsCSV ( $in_http_vars, $ignore_me, $geocode_results, $meeting_objects );
 
-        if ( is_array ( $meeting_objects ) && count ( $meeting_objects ) && is_array ( $formats_ar ) )
+        if ( isset ( $meeting_objects ) &&  is_array ( $meeting_objects ) && count ( $meeting_objects ) && isset ( $formats_ar ) && is_array ( $formats_ar ) )
             {
             foreach ( $meeting_objects as $one_meeting )
                 {

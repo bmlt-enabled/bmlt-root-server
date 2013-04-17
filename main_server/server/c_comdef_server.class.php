@@ -204,7 +204,7 @@ class c_comdef_server
             }
         else
             {
-            $ret = strncasecmp ( $in_lang_a, $in_lang_b );
+            $ret = strncasecmp ( $in_lang_a, $in_lang_b, count ( $in_lang_a ) );
             }
             
         return $ret;
