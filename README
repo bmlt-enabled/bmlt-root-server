@@ -46,9 +46,11 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
-= Version 2.0.1b0 =
-* April 14, 2013
+= Version 2.0.1 =
+* April 17, 2013
 * Fixed two bugs in the localization of the "Observer search" feature.
+* Fixed a bug, in which the upublished meetings were unintentionally returned as valid search results.
+* Fixed some bugs that caused JavaScript issues.
 
 = Version 2.0.0 =
 * April 13, 2013
