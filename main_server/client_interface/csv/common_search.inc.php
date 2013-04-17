@@ -357,10 +357,14 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 			}
 		
 		// Next, set up the advanced published option.
-		if ( isset ( $in_http_vars['advanced_published'] ) )
+		if ( isset ( $in_http_vars['advanced_published'] ) && (c_comdef_server::GetCurrentUserObj() instanceof c_comdef_user) )
 			{
 			$in_search_manager->SetPublished( intval ( $in_http_vars['advanced_published'] ) );
 			}
+		else
+		    {
+			$in_search_manager->SetPublished ( 1 );
+		    }
 		
 		// Set the start window.
 		$start_time = null;
