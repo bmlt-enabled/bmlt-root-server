@@ -252,9 +252,22 @@ function call_curl (	$in_uri,				///< A string. The URI to call.
 		}
 	else
 		{
-		// Create a new cURL resource.
-		$resource = curl_init();
-		
+        // This gets the session as a cookie.
+        if (isset ( $_COOKIE['PHPSESSID'] ) && $_COOKIE['PHPSESSID'] )
+            {
+            $strCookie = 'PHPSESSID=' . $_COOKIE['PHPSESSID'] . '; path=/';
+
+            session_write_close();
+            }
+
+        // Create a new cURL resource.
+        $resource = curl_init();
+        
+        if ( isset ( $strCookie ) )
+            {
+            curl_setopt ( $resource, CURLOPT_COOKIE, $strCookie );
+            }
+        
 		// If we will be POSTing this transaction, we split up the URI.
 		if ( $in_post )
 			{
