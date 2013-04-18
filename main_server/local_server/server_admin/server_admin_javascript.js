@@ -1530,6 +1530,7 @@ function BMLT_Server_Admin ()
                         break;
                         };
                     };
+                
                 this.cancelMeetingEdit ( json_object.report, true );
                 this.createMeetingList();
                 BMLT_Admin_StartFader ( 'bmlt_admin_fader_meeting_editor_delete_success_div', this.m_success_fade_duration );

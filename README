@@ -46,6 +46,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0.2 =
+* TBD
+* Fixed an issue where sessions were not being preserved properly across a cURL call.
+
 = Version 2.0.1 =
 * April 17, 2013
 * Fixed two bugs in the localization of the "Observer search" feature.
