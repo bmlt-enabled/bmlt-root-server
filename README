@@ -49,6 +49,7 @@ CHANGELIST
 = Version 2.0.2 =
 * TBD
 * Fixed an issue where sessions were not being preserved properly across a cURL call.
+* Fixed a bug, where the "hidden" fields were having their values "mangled" by the root server.
 
 = Version 2.0.1 =
 * April 17, 2013

@@ -1197,7 +1197,7 @@ class c_comdef_admin_ajax_handler
         $ignore_me = null;
         $meeting_objects = array();
 
-        $result = DisplaySearchResultsCSV ( $in_http_vars, $ignore_me, $geocode_results, $meeting_objects );
+        $result = DisplaySearchResultsCSV ( $in_http_vars, $ignore_me, $geocode_results, $meeting_objects, true );
 
         if ( isset ( $meeting_objects ) &&  is_array ( $meeting_objects ) && count ( $meeting_objects ) && isset ( $formats_ar ) && is_array ( $formats_ar ) )
             {

@@ -249,7 +249,8 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 								                                        - 'longitude' The longitude of the search center
 								                                        - 'latitude' Th latitude of the search center
 								                                */
-								    &$return_results = null ///< If supplied, should point to an array that will be filled with the actual meeting objects that comprise the result.
+								    &$return_results = null,    ///< If supplied, should point to an array that will be filled with the actual meeting objects that comprise the result.
+                                    $in_supress_hidden_concat = false   ///< If true, then hidden fields will not have their prompts encoded
 								)
 {
 	$ret = null;
@@ -449,7 +450,7 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
                                     }
                                 }
                             
-                            if ( $mtg_obj->IsItemHidden ( $key ) && $val )
+                            if ( $mtg_obj->IsItemHidden ( $key ) && $val && !$in_supress_hidden_concat )
                                 {
                                 if ( $mtg_obj->UserCanObserve() )
                                     {
