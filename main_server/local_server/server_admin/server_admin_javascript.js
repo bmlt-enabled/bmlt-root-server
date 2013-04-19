@@ -1094,7 +1094,7 @@ function BMLT_Server_Admin ()
                                         )
     {
         var meeting_editorLink = document.createElement ( 'a' );
-        meeting_editorLink.href = 'javascript:admin_handler_object.toggleMeetingSingleEditor(' + in_meeting_object.id_bigint + ')';
+        meeting_editorLink.href = 'javascript:admin_handler_object.toggleMeetingSingleEditor(' + in_meeting_object.id_bigint + ', false)';
         meeting_editorLink.className = 'bmlt_admin_meeting_search_results_single_meeting_a';
 
         var element_span = document.createElement ( 'span' );   // Create the container element.
@@ -1235,7 +1235,8 @@ function BMLT_Server_Admin ()
     /************************************************************************************//**
     *   \brief  Brings up a new meeting screen.                                             *
     ****************************************************************************************/
-    this.toggleMeetingSingleEditor = function( in_meeting_id
+    this.toggleMeetingSingleEditor = function( in_meeting_id,
+                                                in_no_confirm
                                                 )
     {
         var display_parent = document.getElementById ( 'bmlt_admin_meeting_search_results_single_meeting_' + in_meeting_id + '_div' );
@@ -1245,7 +1246,7 @@ function BMLT_Server_Admin ()
             if ( !display_parent.meeting_editor_object )
                 {
                 var proceed = true;
-                if ( (this.m_editing_window_open != null) && this.isMeetingDirty ( this.m_editing_window_open.meeting_id ) )
+                if ( !in_no_confirm && (this.m_editing_window_open != null) && this.isMeetingDirty ( this.m_editing_window_open.meeting_id ) )
                     {
                     proceed = confirm ( g_meeting_editor_already_editing_confirm );
                     };
@@ -1282,7 +1283,7 @@ function BMLT_Server_Admin ()
             else
                 {
                 var proceed = true;
-                if ( (this.m_editing_window_open != null) && this.isMeetingDirty ( this.m_editing_window_open.meeting_id ) )
+                if ( !in_no_confirm && (this.m_editing_window_open != null) && this.isMeetingDirty ( this.m_editing_window_open.meeting_id ) )
                     {
                     proceed = confirm ( g_meeting_closure_confirm_text );
                     };
@@ -1461,7 +1462,7 @@ function BMLT_Server_Admin ()
                 }
             else
                 {
-                this.toggleMeetingSingleEditor ( in_meeting_id );
+                this.toggleMeetingSingleEditor ( in_meeting_id, in_no_confirm );
                 };
             };
     };
