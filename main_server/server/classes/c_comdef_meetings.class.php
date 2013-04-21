@@ -645,95 +645,86 @@ class c_comdef_meetings implements i_comdef_has_parent
 					if ( is_array ( $text_fields ) && count ( $text_fields ) )
 						{
 						$in_string = mb_strtolower ( trim ( $in_string ), 'UTF-8' );
+						$in_string = preg_replace ( '|\s+|', ' ', $in_string );
 						
 						if ( !$in_literal )
 						    {
 						    $string_metaphone = SplitIntoMetaphone ( $in_string, $in_lang_enum );
+						    $string_metaphone = implode ( ' ', $string_metaphone );
 						    }
 						
 						foreach ( $text_fields as $test_text )
 						    {
 						    // We will be checking the field text.
 						    $test_text = mb_strtolower ( trim ( $test_text ), 'UTF-8' );
+						    $test_text = preg_replace ( '|\s+|', ' ', $test_text );
 						    
-						    if ( isset ( $string_metaphone ) && is_array ( $string_metaphone ) && count ( $string_metaphone ) )
-						        {
-						        $test_metaphone = SplitIntoMetaphone ( $test_text, $in_lang_enum );
-
-                                if ( isset ( $test_metaphone ) && is_array ( $test_metaphone ) && count ( $test_metaphone ) )
+						    if ( $test_text )
+                                {
+                                if ( isset ( $string_metaphone ) )
                                     {
-                                    $found_string = true;
-                                    
-                                    foreach ( $test_metaphone as $str1 )
+                                    $test_metaphone = SplitIntoMetaphone ( $test_text, $in_lang_enum );
+						            $test_metaphone = implode ( ' ', $test_metaphone );
+                                    if ( mb_strpos ( $test_metaphone, $string_metaphone, 0, 'UTF-8' ) !== false )
                                         {
-                                        foreach ( $string_metaphone as $str2 )
+                                        if ( !$ret )
                                             {
-                                            if ( mb_strtolower ( trim ( $str1 ), 'UTF-8' ) == mb_strtolower ( trim ( $str2 ), 'UTF-8' ) )
+                                            $ret = array ( $meeting );
+                                            }
+                                        else
+                                            {
+                                            $ret[] = $meeting;
+                                            }
+                            
+                                        break;
+                                        }
+                                    }
+                                else
+                                    {
+                                    $string_test = preg_split ( '|\s+|', $in_string );
+                                
+                                    if ( $in_all_words_bool )
+                                        {
+                                        $test_string = mb_strtolower ( trim ( $test_string ), 'UTF-8' );
+                                    
+                                        if ( isset ( $string_test ) && is_array ( $string_test ) && count ( $string_test ) )
+                                            {
+                                            $found_string = true;
+                                        
+                                            foreach ( $string_test as $str )
                                                 {
-                                                $found_string = true;
-                                                }
-                                            else
-                                                {
-                                                $found_string = false;
-                                                if ( $in_all_words_bool )
+                                                $str = mb_strtolower ( trim ( $str ), 'UTF-8' );
+                                                $found_string = preg_match ( '|'.preg_quote ( $str ).'|', $test_text );
+                                            
+                                                if ( $found_string != $in_all_words_bool  )
                                                     {
                                                     break;
                                                     }
                                                 }
                                             }
-                                        
-                                        if ( $in_all_words_bool )
+                                        else
                                             {
-                                            break;
+                                            $test_string = preg_replace ( '|^[\'\"]*?(.*?)[\'\"]*?$|', '', $in_string );
+                                            $found_string = preg_match ( '|'.preg_quote ( $test_string ).'|', $test_text );
                                             }
                                         }
+                                
+                                    if ( $found_string )
+                                        {
+                                        if ( !$ret )
+                                            {
+                                            $ret = array ( $meeting );
+                                            }
+                                        else
+                                            {
+                                            $ret[] = $meeting;
+                                            }
+                                
+                                        break;
+                                        }
                                     }
-						        }
-						    else
-						        {
-						        $string_test = preg_split ( '|\s+|', $in_string );
-						        
-						        if ( $in_all_words_bool )
-						            {
-						            $test_string = mb_strtolower ( trim ( $test_string ), 'UTF-8' );
-						            
-						            if ( isset ( $string_test ) && is_array ( $string_test ) && count ( $string_test ) )
-						                {
-						                $found_string = true;
-						                
-						                foreach ( $string_test as $str )
-						                    {
-						                    $str = mb_strtolower ( trim ( $str ), 'UTF-8' );
-						                    $found_string = preg_match ( '|'.preg_quote ( $str ).'|', $test_text );
-						                    
-						                    if ( $found_string != $in_all_words_bool  )
-						                        {
-						                        break;
-						                        }
-						                    }
-						                }
-						            else
-						                {
-						                $test_string = preg_replace ( '|^[\'\"]*?(.*?)[\'\"]*?$|', '', $in_string );
-						                $found_string = preg_match ( '|'.preg_quote ( $test_string ).'|', $test_text );
-						                }
-						            }
-						        }
-						        
-						    if ( $found_string )
-						        {
-						        if ( !$ret )
-						            {
-						            $ret = array ( $meeting );
-						            }
-						        else
-						            {
-						            $ret[] = $meeting;
-						            }
-						        
-						        break;
-						        }
-						    }
+                                }
+                            }
 						}
 					}
 				}
