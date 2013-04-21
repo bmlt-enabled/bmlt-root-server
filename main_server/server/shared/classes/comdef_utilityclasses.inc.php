@@ -31,39 +31,48 @@ function SplitIntoMetaphone (
 {
 	$ret = null;
 	
+    $in_string = mb_strtolower ( trim ( $in_string ), 'UTF-8' );
+    
 	/// If no language is given, we use the server's native language.
 	if ( null == $in_lang_enum )
 		{
 		$in_lang_enum = c_comdef_server::GetServer()->GetLocalLang();
 		}
 	
-	$ar = preg_split ( "|\s+|", $in_string );
-	
-	if ( is_array ( $ar ) && count ( $ar ) )
-		{
-		foreach ( $ar as &$string )
-			{
-			$string = mb_strtolower ( trim ( $string ), 'UTF-8' );
-			/// We use the metaphone as the array value. The string is the key.
-			/// This also makes it a bit more efficient if a repeated string is provided.
-			if ( !$in_literal && ("en" == $in_lang_enum) )
-				{
-				$mp = metaphone ( $string );
-				}
-			/// We also have a Spanish version of metaphone() available.
-			elseif ( !$in_literal && ("es" == $in_lang_enum) )
-				{
-				$mp = spanish_metaphone ( $string );
-				}
-			else
-				{
-				$mp = $string;
-				}
-			
-			$ret[$string] = $mp;
-			}
-		}
-	
+    if ( ("en" == $in_lang_enum) || ("es" == $in_lang_enum) )
+        {
+        $ar = explode ( " ", $in_string );
+
+        if ( is_array ( $ar ) && count ( $ar ) )
+            {
+            foreach ( $ar as &$string )
+                {
+                $string = mb_strtolower ( trim ( $string ), 'UTF-8' );
+            
+                if ( $string )
+                    {
+                    $mp = $string;
+                
+                    if ( !$in_literal && ("en" == $in_lang_enum) )
+                        {
+                        $mp = metaphone ( $mp );
+                        }
+                    /// We also have a Spanish version of metaphone() available.
+                    elseif ( !$in_literal && ("es" == $in_lang_enum) )
+                        {
+                        $mp = spanish_metaphone ( $mp );
+                        }
+            
+                    $ret[] = $mp;
+                    }
+                }
+            }
+        }
+    else
+        {
+        $ret = array ( $in_string );
+        }
+    
 	return $ret;
 }
 

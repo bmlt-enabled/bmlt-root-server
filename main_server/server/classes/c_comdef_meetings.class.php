@@ -420,7 +420,7 @@ class c_comdef_meetings implements i_comdef_has_parent
 			{
 			if ( !$in_match_case )
 				{
-				$in_value = strtolower ( $in_value );
+				$in_value = mb_strtolower ( $in_value, 'UTF-8' );
 				}
 			$iterating_target = $this->GetMeetingObjects ( );
 	
@@ -450,7 +450,7 @@ class c_comdef_meetings implements i_comdef_has_parent
 								{
 								if ( !$in_match_case )
 									{
-									$value = strtolower ( $value );
+									$value = mb_strtolower ( $value, 'UTF-8' );
 									}
 								
 								$preg = preg_quote ( $in_value );
@@ -546,20 +546,14 @@ class c_comdef_meetings implements i_comdef_has_parent
 			$in_lang_enum = c_comdef_server::GetServer()->GetLocalLang();
 			}
 		
-		$weekday_path = dirname ( __FILE__ )."/../config/lang/".$in_lang_enum."/weekdays.csv";
-		
-		if ( !file_exists ( $weekday_path ) )
-			{
-			$weekday_path = dirname ( __FILE__ )."/../config/lang/en/weekdays.csv";
-			}
+		$in_all_words_bool = (isset ( $in_all_words_bool ) && $in_all_words_bool) ? true : false;   // Just make sure that there is a value in here.
+		$in_literal = (isset ( $in_literal ) && $in_literal) ? true : false;   // Just make sure that there is a value in here.
 			
-		$local_weekdays = explode ( ",", file_get_contents ( $weekday_path ) );
+        $localized_strings = c_comdef_server::GetLocalStrings();
+
+		$local_weekdays = $localized_strings['comdef_server_admin_strings']['user_editor_account_type_1'];
 		
 		/// We force the search to happen in lowercase. This is a very basic search.
-		$in_string = strtolower ( $in_string );
-		/// If we will use metaphone, we convert our search criteria to metaphone keys.
-		$in_string_comp = SplitIntoMetaphone ( $in_string, $in_lang_enum, $in_literal );
-		
 		$iterating_target =& $this->GetMeetingObjects ( );
 		
 		if ( is_array ( $iterating_target ) && count ( $iterating_target ) )
@@ -611,7 +605,7 @@ class c_comdef_meetings implements i_comdef_has_parent
 							case	'weekday_tinyint':
 								if ( isset ( $meeting_data['weekday_tinyint'] ) )
 									{
-									$text_fields[$key] = $local_weekdays[$meeting_data['weekday_tinyint'] - 1];
+									$text_fields[$key] = $local_weekdays[$meeting_data['weekday_tinyint']];
 									}
 							break;
 		
@@ -647,7 +641,7 @@ class c_comdef_meetings implements i_comdef_has_parent
 						}
 					
 					$found_string = false;
-					
+
 					if ( is_array ( $text_fields ) && count ( $text_fields ) )
 						{
 						$in_string = mb_strtolower ( trim ( $in_string ), 'UTF-8' );
@@ -665,7 +659,7 @@ class c_comdef_meetings implements i_comdef_has_parent
 						    if ( isset ( $string_metaphone ) && is_array ( $string_metaphone ) && count ( $string_metaphone ) )
 						        {
 						        $test_metaphone = SplitIntoMetaphone ( $test_text, $in_lang_enum );
-						        
+
                                 if ( isset ( $test_metaphone ) && is_array ( $test_metaphone ) && count ( $test_metaphone ) )
                                     {
                                     $found_string = true;
@@ -697,8 +691,6 @@ class c_comdef_meetings implements i_comdef_has_parent
 						        }
 						    else
 						        {
-						        $in_all_words_bool = (isset ( $in_all_words_bool ) && $in_all_words_bool) ? true : false;   // Just make sure that there is a value in here.
-						        
 						        $string_test = preg_split ( '|\s+|', $in_string );
 						        
 						        if ( $in_all_words_bool )
@@ -712,7 +704,7 @@ class c_comdef_meetings implements i_comdef_has_parent
 						                foreach ( $string_test as $str )
 						                    {
 						                    $str = mb_strtolower ( trim ( $str ), 'UTF-8' );
-						                    $found_string = preg_match ( '|'.preg_quote ( $test_string ).'|', $test_text );
+						                    $found_string = preg_match ( '|'.preg_quote ( $str ).'|', $test_text );
 						                    
 						                    if ( $found_string != $in_all_words_bool  )
 						                        {
@@ -746,7 +738,7 @@ class c_comdef_meetings implements i_comdef_has_parent
 					}
 				}
 			}
-		
+
 		$reto = null;
 		
 		if ( is_array ( $ret ) && count ( $ret ) )

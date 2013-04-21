@@ -462,7 +462,7 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 			{
 			// And last, but not least, a string search:
             $find_all = (isset ( $in_http_vars['SearchStringAll'] ) && $in_http_vars['SearchStringAll']) ? true :false;
-            $literal = (isset ( $in_http_vars['SearchStringExact'] ) && $in_http_vars['SearchStringExact']) ? true :false;				
+            $literal = (isset ( $in_http_vars['SearchStringExact'] ) && $in_http_vars['SearchStringExact']) ? true :false;
             $in_search_manager->SetSearchString ( $search_string, $find_all, $literal );
 			}
 			
