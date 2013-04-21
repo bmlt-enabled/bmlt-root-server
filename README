@@ -47,7 +47,7 @@ For instructions on installing the root server, see this page:
 CHANGELIST
 ----------
 = Version 2.0.3 =
-* TBD
+* April 21, 2013
 * Rewrote the text search for non-location text. It was not handling non-Roman text properly.
 
 = Version 2.0.2 =
