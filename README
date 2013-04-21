@@ -46,6 +46,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0.3 =
+* TBD
+* Rewrote the text search for non-location text. It was not handling non-Roman text properly.
+
 = Version 2.0.2 =
 * April 18, 2013
 * Fixed an issue where sessions were not being preserved properly across a cURL call.

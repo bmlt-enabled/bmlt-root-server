@@ -43,7 +43,7 @@ function SplitIntoMetaphone (
 		{
 		foreach ( $ar as &$string )
 			{
-			$string = strtolower ( $string );
+			$string = mb_strtolower ( trim ( $string ), 'UTF-8' );
 			/// We use the metaphone as the array value. The string is the key.
 			/// This also makes it a bit more efficient if a repeated string is provided.
 			if ( !$in_literal && ("en" == $in_lang_enum) )
@@ -59,6 +59,7 @@ function SplitIntoMetaphone (
 				{
 				$mp = $string;
 				}
+			
 			$ret[$string] = $mp;
 			}
 		}
