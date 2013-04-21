@@ -22,6 +22,8 @@ I decided to start new on GitHub, as opposed to bringing over the SourceForge pr
 in order to reduce disk space usage, and because it's a pain to rearrange a standard
 SVN structure to Git.
 
+NOTE: The repository origin has been transferred to Bitbucket! GitHup is now only archival.
+
 REQUIREMENTS
 ------------
 
@@ -49,6 +51,7 @@ CHANGELIST
 = Version 2.0.3 =
 * April 21, 2013
 * Rewrote the text search for non-location text. It was not handling non-Roman text properly.
+* This is the first release on Bitbucket
 
 = Version 2.0.2 =
 * April 18, 2013
