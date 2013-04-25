@@ -158,7 +158,7 @@ if ( $server instanceof c_comdef_server )
 							// This is for convenience. We turn the meeting array into an associative one by adding the keys.
 							$meeting = array_combine ( $keys, $meeting );
 							
-							$single_uri = 'http://'.$_SERVER['SERVER_NAME'].preg_replace ( '#(.*\/).*?\/.*?\/.*?$#', "$1", $_SERVER['SCRIPT_NAME'] ).'index.php?single_meeting_id='.intval ( $meeting['id_bigint'] );
+// 							$single_uri = 'http://'.$_SERVER['SERVER_NAME'].preg_replace ( '#(.*\/).*?\/.*?\/.*?$#', "$1", $_SERVER['SCRIPT_NAME'] ).'index.php?single_meeting_id='.intval ( $meeting['id_bigint'] );
 
 							$location_borough = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_city_subsection'] ) ) );
 							$location_neighborhood = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_neighborhood'] ) ) );
@@ -242,7 +242,7 @@ if ( $server instanceof c_comdef_server )
 									$ret .= $town;
 									$ret .= $in_block ? '</div>' : '</td>';
 									$ret .= $in_block ? '<div class="bmlt_simple_meeting_one_meeting_name_div">' : '<td class="bmlt_simple_meeting_one_meeting_name_td">';
-									$ret .= '<a href="'.$single_uri.'">';
+// 									$ret .= '<a href="'.$single_uri.'">';
 									if ( $name )
 										{
 										$ret .= $name;
@@ -251,7 +251,7 @@ if ( $server instanceof c_comdef_server )
 										{
 										$ret .= $localized_strings['comdef_search_results_strings']['Value_Prompts']['generic'];
 										}
-									$ret .= '</a>';
+// 									$ret .= '</a>';
 									$ret .= $in_block ? '</div>' : '</td>';
 								
 									$ret .= $in_block ? '<div class="bmlt_simple_meeting_one_meeting_time_div">' : '<td class="bmlt_simple_meeting_one_meeting_time_td">';

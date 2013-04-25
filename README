@@ -48,6 +48,11 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0.4 =
+* April 25, 2013
+* Removed the single meeting details link from the simple search results, as it points to the root server, and the root server has changed a lot.
+* Cleaned up some redundant code.
+
 = Version 2.0.3 =
 * April 21, 2013
 * Rewrote the text search for non-location text. It was not handling non-Roman text properly.
