@@ -20,7 +20,15 @@
 defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
 global  $http_vars;
-$http_vars = array_merge_recursive ( $_GET, $_POST );
+$http_vars = array_merge ( $_GET, $_POST );
+
+$count = count ( $http_vars );
+
+// This is because some servers escape quotes.
+foreach ( $http_vars as &$value )
+    {
+    $value = stripslashes ( $value );
+    }
 
 require_once ( dirname ( __FILE__ ).'/install_wizard/index.php' );  // We test for the install wizard, first.
 
