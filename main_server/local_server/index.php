@@ -22,8 +22,6 @@ defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that 
 global  $http_vars;
 $http_vars = array_merge ( $_GET, $_POST );
 
-$count = count ( $http_vars );
-
 require_once ( dirname ( __FILE__ ).'/install_wizard/index.php' );  // We test for the install wizard, first.
 
 if ( isset ( $http_vars ['bmlt_ajax_callback'] ) )

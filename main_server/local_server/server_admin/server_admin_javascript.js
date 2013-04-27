@@ -1413,7 +1413,9 @@ function BMLT_Server_Admin ()
     {
         if ( !this.isMeetingDirty ( in_meeting_id ) || ( this.isMeetingDirty ( in_meeting_id ) && (in_no_confirm || confirm ( g_meeting_closure_confirm_text ) )) )
             {
-            var display_parent = document.getElementById ( 'bmlt_admin_meeting_editor_new_meeting_' + in_meeting_id + '_editor_display' );
+            var parent_id = 'bmlt_admin_meeting_editor_new_meeting_' + in_meeting_id + '_editor_display';
+            
+            var display_parent = document.getElementById ( parent_id );
             
             var editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
             
@@ -1682,7 +1684,6 @@ function BMLT_Server_Admin ()
                     };
                 
                 this.m_search_results[this.m_search_results.length] = json_object[0];
-                in_orig_meeting_id = json_object[0][0];
                 BMLT_Admin_StartFader ( 'bmlt_admin_fader_meeting_editor_add_success_div', this.m_success_fade_duration );
                 }
             else
@@ -3724,7 +3725,6 @@ function BMLT_Server_Admin ()
                     document.getElementById ( 'bmlt_admin_service_body_delete_ajax_button_throbber_span' ).className = 'item_hidden';
                     this.populateServiceBodyEditor();
                     BMLT_Admin_StartFader ( 'bmlt_admin_fader_service_body_editor_delete_success_div', this.m_success_fade_duration );
-                    alert ( g_service_body_meeting_editor_note );
                     };
                 }
             else
@@ -4954,8 +4954,8 @@ function BMLT_Server_Admin ()
     this.m_search_specifier_shown = true;
     this.m_meeting_editor_panel_shown = false;
     this.m_warn_user_to_refresh = false;
-    this.m_success_fade_duration = 2000;        ///< 2 seconds for a success fader.
-    this.m_failure_fade_duration = 5000;        ///< 5 seconds for a success fader.
+    this.m_success_fade_duration = 10000;        ///< 10 seconds for a success fader.
+    this.m_failure_fade_duration = 10000;        ///< 10 seconds for a failure fader.
     this.m_format_editor_table_rows = 0;
 };
     

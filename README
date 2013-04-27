@@ -48,6 +48,11 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0.7 =
+* April 27, 2013
+* 2.0.6 had issues. This should REALLY fix the problem (Do you know this tune?)...
+* Fixed a fairly old bug in the root server, where creating new meetings could result in a hung screen.
+
 = Version 2.0.6 =
 * April 27, 2013
 * 2.0.5 had issues. This should REALLY fix the problem...

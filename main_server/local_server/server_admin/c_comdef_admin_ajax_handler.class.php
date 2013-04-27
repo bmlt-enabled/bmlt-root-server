@@ -66,11 +66,11 @@ class c_comdef_admin_ajax_handler
         
         if ( isset ( $this->my_http_vars['set_format_change'] ) && $this->my_http_vars['set_format_change'] )
             {
-            $this->HandleFormatChange ( stripslashes ( $this->my_http_vars['set_format_change'] ) );
+            $this->HandleFormatChange ( $this->my_http_vars['set_format_change'] );
             }
         if ( isset ( $this->my_http_vars['delete_format'] ) && $this->my_http_vars['delete_format'] )
             {
-            $this->HandleDeleteFormat ( stripslashes ( $this->my_http_vars['delete_format'] ) );
+            $this->HandleDeleteFormat ( $this->my_http_vars['delete_format'] );
             }
         elseif ( isset ( $this->my_http_vars['get_naws_dump'] ) && $this->my_http_vars['get_naws_dump'] )
             {
@@ -78,39 +78,39 @@ class c_comdef_admin_ajax_handler
             }
         elseif ( isset ( $this->my_http_vars['create_new_user'] ) && $this->my_http_vars['create_new_user'] )
             {
-            $this->HandleUserCreate ( stripslashes ( $this->my_http_vars['create_new_user'] ) );
+            $this->HandleUserCreate ( $this->my_http_vars['create_new_user'] );
             }
         elseif ( isset ( $this->my_http_vars['set_user_change'] ) && $this->my_http_vars['set_user_change'] )
             {
-            $this->HandleUserChange ( stripslashes ( $this->my_http_vars['set_user_change'] ) );
+            $this->HandleUserChange ( $this->my_http_vars['set_user_change'] );
             }
         else if ( isset ( $this->my_http_vars['delete_user'] ) && $this->my_http_vars['delete_user'] )
             {
-            $this->HandleDeleteUser ( stripslashes ( $this->my_http_vars['delete_user'] ), isset ( $this->my_http_vars['permanently'] ) );
+            $this->HandleDeleteUser ( $this->my_http_vars['delete_user'], isset ( $this->my_http_vars['permanently'] ) );
             }
         elseif ( isset ( $this->my_http_vars['create_new_service_body'] ) && $this->my_http_vars['create_new_service_body'] )
             {
-            $this->HandleServiceBodyCreate ( stripslashes ( $this->my_http_vars['create_new_service_body'] ) );
+            $this->HandleServiceBodyCreate ( $this->my_http_vars['create_new_service_body'] );
             }
         elseif ( isset ( $this->my_http_vars['set_service_body_change'] ) && $this->my_http_vars['set_service_body_change'] )
             {
-            $this->HandleServiceBodyChange ( stripslashes ( $this->my_http_vars['set_service_body_change'] ) );
+            $this->HandleServiceBodyChange ( $this->my_http_vars['set_service_body_change'] );
             }
         else if ( isset ( $this->my_http_vars['delete_service_body'] ) && $this->my_http_vars['delete_service_body'] )
             {
-            $this->HandleDeleteServiceBody ( stripslashes ( $this->my_http_vars['delete_service_body'] ), isset ( $this->my_http_vars['permanently'] ) );
+            $this->HandleDeleteServiceBody ( $this->my_http_vars['delete_service_body'], isset ( $this->my_http_vars['permanently'] ) );
             }
         else if ( isset ( $this->my_http_vars['set_meeting_change'] ) && $this->my_http_vars['set_meeting_change'] )
             {
-            $this->HandleMeetingUpdate ( stripslashes ( $this->my_http_vars['set_meeting_change'] ) );
+            $this->HandleMeetingUpdate ( $this->my_http_vars['set_meeting_change'] );
             }
         else if ( isset ( $this->my_http_vars['delete_meeting'] ) && $this->my_http_vars['delete_meeting'] )
             {
-            $returned_text = $this->HandleDeleteMeeting ( stripslashes ( $this->my_http_vars['delete_meeting'] ), isset ( $this->my_http_vars['permanently'] ) );
+            $returned_text = $this->HandleDeleteMeeting ( $this->my_http_vars['delete_meeting'], isset ( $this->my_http_vars['permanently'] ) );
             }
         else if ( isset ( $this->my_http_vars['get_meeting_history'] ) && $this->my_http_vars['get_meeting_history'] )
             {
-            $returned_text = $this->GetMeetingHistory ( stripslashes ( $this->my_http_vars['get_meeting_history'] ) );
+            $returned_text = $this->GetMeetingHistory ( $this->my_http_vars['get_meeting_history'] );
             }
         else if ( isset ( $this->my_http_vars['do_meeting_search'] ) )
             {
@@ -794,24 +794,24 @@ class c_comdef_admin_ajax_handler
                             }
                     
                         header ( 'Content-type: application/json' );
-                        echo "{'success':false,'report':'$ierr_string'}";
+                        echo "{'success':true}";
                         }
                     else
                         {
                         header ( 'Content-type: application/json' );
-                        echo "{'success':false,'report':'$ierr_string'}";
+                        echo "{'success':false,'report':'$err_string'}";
                         }
                     }
                 else
                     {
                     header ( 'Content-type: application/json' );
-                    echo "{'success':false,'report':'$ierr_string'}";
+                    echo "{'success':false,'report':'$err_string'}";
                     }
                 }
             catch ( Exception $e )
                 {
                 header ( 'Content-type: application/json' );
-                echo "{'success':false,'report':'$ierr_string'}";
+                echo "{'success':false,'report':'$err_string'}";
                 }
             }
         else
