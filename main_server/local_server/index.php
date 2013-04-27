@@ -24,12 +24,6 @@ $http_vars = array_merge ( $_GET, $_POST );
 
 $count = count ( $http_vars );
 
-// This is because some servers escape quotes.
-foreach ( $http_vars as &$value )
-    {
-    $value = stripslashes ( $value );
-    }
-
 require_once ( dirname ( __FILE__ ).'/install_wizard/index.php' );  // We test for the install wizard, first.
 
 if ( isset ( $http_vars ['bmlt_ajax_callback'] ) )
