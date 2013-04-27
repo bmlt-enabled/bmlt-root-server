@@ -48,6 +48,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0.5 =
+* April 27, 2013
+* Fixed a bug that appeared in some servers, where quotes were escaped. This interfered with administration.
+
 = Version 2.0.4 =
 * April 25, 2013
 * Removed the single meeting details link from the simple search results, as it points to the root server, and the root server has changed a lot.
