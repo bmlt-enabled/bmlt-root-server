@@ -48,6 +48,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0.8 =
+* April 29, 2013
+* Fixed a bug, in which blank text fields were not being saved.
+
 = Version 2.0.7 =
 * April 27, 2013
 * 2.0.6 had issues. This should REALLY fix the problem (Do you know this tune?)...
