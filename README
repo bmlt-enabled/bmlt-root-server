@@ -48,6 +48,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0.9 =
+* May 1, 2013
+* Fixed a bug, in which single-quotes (apostrophes) were causing problems in some text fields.
+
 = Version 2.0.8 =
 * April 29, 2013
 * Fixed a bug, in which blank text fields were not being saved.

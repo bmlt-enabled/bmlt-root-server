@@ -232,9 +232,13 @@ function BMLT_Server_Admin ()
         
         if ( (in_item.type == 'text') || (in_item.name == 'textarea') )
             {
-            if ( in_item.value != in_item.defaultValue )
+            var value = in_item.value.toString();
+            
+            value = value.replace ( /'/g, "\\'" );  // Make sure to escape apostrophes.
+            
+            if ( value != in_item.defaultValue )
                 {
-                eval_str = 'editor_object.meeting_object.' + in_value_field + ' = \'' + in_item.value.toString() + '\';';
+                eval_str = 'editor_object.meeting_object.' + in_value_field + ' = \'' + value + '\';';
                 }
             else
                 {
