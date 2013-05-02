@@ -48,6 +48,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0.10 =
+* May 1, 2013
+* Hopefully, added a workaround for servers with dicey session support.
+
 = Version 2.0.9 =
 * May 1, 2013
 * Fixed a bug, in which single-quotes (apostrophes) were causing problems in some text fields.
