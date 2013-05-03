@@ -794,7 +794,7 @@ class c_comdef_admin_ajax_handler
                             }
                     
                         header ( 'Content-type: application/json' );
-                        echo "{'success':true}";
+                        echo "{'success':true, 'id':$in_sb_id}";
                         }
                     else
                         {

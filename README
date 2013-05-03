@@ -48,6 +48,12 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0.11 =
+* May 2, 2013
+* Fixed a bug, in which some text fields were over-HTMLing ampersands (&).
+* Fixed a bug, in which creating new Service bodies would sometimes result in a "hanging throbber."
+* Fixed a bug, in which deleting a Service body did not remove it from the popup menu.
+
 = Version 2.0.10 =
 * May 1, 2013
 * Hopefully, added a workaround for servers with dicey session support.

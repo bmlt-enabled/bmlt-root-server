@@ -1841,91 +1841,91 @@ function BMLT_Server_Admin ()
         var meeting_latitude_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_latitude_text_input' );
         var meeting_contact_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_contact_text_input' );
 
-        meeting_name_text_item.value = meeting_object.meeting_name ? meeting_object.meeting_name : meeting_name_text_item.value;
+        meeting_name_text_item.value = htmlspecialchars_decode ( meeting_object.meeting_name ? meeting_object.meeting_name : meeting_name_text_item.value );
         this.setTextItemClass ( meeting_name_text_item );
         meeting_name_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'meeting_name')};
         meeting_name_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_name_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
 
-        meeting_cc_text_item.value = meeting_object.worldid_mixed ? meeting_object.worldid_mixed : meeting_cc_text_item.value;
+        meeting_cc_text_item.value = htmlspecialchars_decode ( meeting_object.worldid_mixed ? meeting_object.worldid_mixed : meeting_cc_text_item.value );
         this.setTextItemClass ( meeting_cc_text_item );
         meeting_cc_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'worldid_mixed')};
         meeting_cc_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_cc_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
         
-        meeting_location_text_item.value = meeting_object.location_text ? meeting_object.location_text : meeting_location_text_item.value;
+        meeting_location_text_item.value = htmlspecialchars_decode ( meeting_object.location_text ? meeting_object.location_text : meeting_location_text_item.value );
         this.setTextItemClass ( meeting_location_text_item );
         meeting_location_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_text')};
         meeting_location_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_location_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
         
-        meeting_info_text_item.value = meeting_object.location_info ? meeting_object.location_info : meeting_info_text_item.value;
+        meeting_info_text_item.value = htmlspecialchars_decode ( meeting_object.location_info ? meeting_object.location_info : meeting_info_text_item.value );
         this.setTextItemClass ( meeting_info_text_item );
         meeting_info_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_info')};
         meeting_info_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_info_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
         
-        meeting_street_text_item.value = meeting_object.location_street ? meeting_object.location_street : meeting_street_text_item.value;
+        meeting_street_text_item.value = htmlspecialchars_decode ( meeting_object.location_street ? meeting_object.location_street : meeting_street_text_item.value );
         this.setTextItemClass ( meeting_street_text_item );
         meeting_street_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_street')};
         meeting_street_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_street_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
         
-        meeting_neighborhood_text_item.value = meeting_object.location_neighborhood ? meeting_object.location_neighborhood : meeting_neighborhood_text_item.value;
+        meeting_neighborhood_text_item.value = htmlspecialchars_decode ( meeting_object.location_neighborhood ? meeting_object.location_neighborhood : meeting_neighborhood_text_item.value );
         this.setTextItemClass ( meeting_neighborhood_text_item );
         meeting_neighborhood_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_neighborhood')};
         meeting_neighborhood_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_neighborhood_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
         
-        meeting_borough_text_item.value = meeting_object.location_city_subsection ? meeting_object.location_city_subsection : meeting_borough_text_item.value;
+        meeting_borough_text_item.value = htmlspecialchars_decode ( meeting_object.location_city_subsection ? meeting_object.location_city_subsection : meeting_borough_text_item.value );
         this.setTextItemClass ( meeting_borough_text_item );
         meeting_borough_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_city_subsection')};
         meeting_borough_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_borough_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
         
-        meeting_city_text_item.value = meeting_object.location_municipality ? meeting_object.location_municipality : meeting_city_text_item.value;
+        meeting_city_text_item.value = htmlspecialchars_decode ( meeting_object.location_municipality ? meeting_object.location_municipality : meeting_city_text_item.value );
         this.setTextItemClass ( meeting_city_text_item );
         meeting_city_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_municipality')};
         meeting_city_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_city_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
         
-        meeting_county_text_item.value = meeting_object.location_sub_province ? meeting_object.location_sub_province : meeting_county_text_item.value;
+        meeting_county_text_item.value = htmlspecialchars_decode ( meeting_object.location_sub_province ? meeting_object.location_sub_province : meeting_county_text_item.value );
         this.setTextItemClass ( meeting_county_text_item );
         meeting_county_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_sub_province')};
         meeting_county_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_county_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
         
-        meeting_state_text_item.value = meeting_object.location_province ? meeting_object.location_province : meeting_state_text_item.value;
+        meeting_state_text_item.value = htmlspecialchars_decode ( meeting_object.location_province ? meeting_object.location_province : meeting_state_text_item.value );
         this.setTextItemClass ( meeting_state_text_item );
         meeting_state_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_province')};
         meeting_state_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_state_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
         
-        meeting_zip_text_item.value = meeting_object.location_postal_code_1 ? meeting_object.location_postal_code_1 : meeting_zip_text_item.value;
+        meeting_zip_text_item.value = htmlspecialchars_decode ( meeting_object.location_postal_code_1 ? meeting_object.location_postal_code_1 : meeting_zip_text_item.value );
         this.setTextItemClass ( meeting_zip_text_item );
         meeting_zip_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_postal_code_1')};
         meeting_zip_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_zip_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
         
-        meeting_nation_text_item.value = meeting_object.location_nation ? meeting_object.location_nation : meeting_nation_text_item.value;
+        meeting_nation_text_item.value = htmlspecialchars_decode ( meeting_object.location_nation ? meeting_object.location_nation : meeting_nation_text_item.value );
         this.setTextItemClass ( meeting_nation_text_item );
         meeting_nation_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_nation')};
         meeting_nation_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_nation_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
         
-        meeting_longitude_text_item.value = meeting_object.longitude ? meeting_object.longitude : meeting_longitude_text_item.value;
+        meeting_longitude_text_item.value = htmlspecialchars_decode ( meeting_object.longitude ? meeting_object.longitude : meeting_longitude_text_item.value );
         this.setTextItemClass ( meeting_longitude_text_item );
         meeting_longitude_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'longitude')};
         meeting_longitude_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_longitude_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
         
-        meeting_latitude_text_item.value = meeting_object.latitude ? meeting_object.latitude : meeting_latitude_text_item.value;
+        meeting_latitude_text_item.value = htmlspecialchars_decode ( meeting_object.latitude ? meeting_object.latitude : meeting_latitude_text_item.value );
         this.setTextItemClass ( meeting_latitude_text_item );
         meeting_latitude_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'latitude')};
         meeting_latitude_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_latitude_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
         
-        meeting_contact_text_item.value = meeting_object.email_contact ? meeting_object.email_contact : meeting_contact_text_item.value;
+        meeting_contact_text_item.value = htmlspecialchars_decode ( meeting_object.email_contact ? meeting_object.email_contact : meeting_contact_text_item.value );
         this.setTextItemClass ( meeting_contact_text_item );
         meeting_contact_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'email_contact')};
         meeting_contact_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
@@ -2668,8 +2668,8 @@ function BMLT_Server_Admin ()
         meeting_object.longitude = in_longLat.lng();
         meeting_object.latitude = in_longLat.lat();
         
-        meeting_longitude_text_item.value = meeting_object.longitude;
-        meeting_latitude_text_item.value = meeting_object.latitude;
+        meeting_longitude_text_item.value = htmlspecialchars_decode ( meeting_object.longitude );
+        meeting_latitude_text_item.value = htmlspecialchars_decode ( meeting_object.latitude );
         
         this.setItemValue(meeting_longitude_text_item, in_meeting_id, 'longitude');
         this.setItemValue(meeting_latitude_text_item, in_meeting_id, 'latitude');
@@ -2765,7 +2765,7 @@ function BMLT_Server_Admin ()
 
             if ( val )
                 {
-                text_field.value = val;
+                text_field.value = htmlspecialchars_decode ( val );
                 };
             
             this.handleTextInputLoad ( text_field, def_val );
@@ -2988,27 +2988,27 @@ function BMLT_Server_Admin ()
             
         var name_text_input = document.getElementById ( 'bmlt_admin_service_body_editor_sb_name_text_input' );
         
-        name_text_input.value = selected_service_body_object[2];
+        name_text_input.value = htmlspecialchars_decode ( selected_service_body_object[2] );
         this.handleTextInputLoad ( name_text_input, g_service_body_name_default_prompt_text );
         
         var description_textarea = document.getElementById ( 'bmlt_admin_sb_description_textarea' );
         
-        description_textarea.value = selected_service_body_object[3];
+        description_textarea.value = htmlspecialchars_decode ( selected_service_body_object[3] );
         this.handleTextInputLoad ( description_textarea, g_service_body_description_default_prompt_text );
 
         var email_text_input = document.getElementById ( 'bmlt_admin_service_body_editor_sb_email_text_input' );
         
-        email_text_input.value = selected_service_body_object[6];
+        email_text_input.value = htmlspecialchars_decode ( selected_service_body_object[6] );
         this.handleTextInputLoad ( email_text_input, g_service_body_email_default_prompt_text );
 
         var uri_text_input = document.getElementById ( 'bmlt_admin_service_body_editor_sb_uri_text_input' );
         
-        uri_text_input.value = selected_service_body_object[7];
+        uri_text_input.value = htmlspecialchars_decode ( selected_service_body_object[7] );
         this.handleTextInputLoad ( uri_text_input, g_service_body_uri_default_prompt_text );
         
         var world_id_text_input = document.getElementById ( 'bmlt_admin_single_service_body_editor_world_cc_text_input' );
 
-        world_id_text_input.value = selected_service_body_object[12];
+        world_id_text_input.value = htmlspecialchars_decode ( selected_service_body_object[12] );
         var naws_link_div = document.getElementById ( 'service_body_editor_naws_link_div' );
         var naws_link_a = document.getElementById ( 'service_body_editor_naws_link_a' );
         
@@ -3055,8 +3055,15 @@ function BMLT_Server_Admin ()
                 service_body_parent_select.options[c].disabled = false;
                 };
         
-            document.getElementById ( 'parent_popup_option_' + selected_service_body_object[0] ).disabled = true;
-            document.getElementById ( 'parent_popup_option_' + selected_service_body_object[1] ).selected = true;
+            if ( document.getElementById ( 'parent_popup_option_' + selected_service_body_object[0] ) )
+                {
+                document.getElementById ( 'parent_popup_option_' + selected_service_body_object[0] ).disabled = true;
+                };
+            
+            if ( document.getElementById ( 'parent_popup_option_' + selected_service_body_object[1] ) )
+                {
+                document.getElementById ( 'parent_popup_option_' + selected_service_body_object[1] ).selected = true;
+                };
             };
         
         this.setServiceBodyEditorCheckboxes();
@@ -3563,8 +3570,8 @@ function BMLT_Server_Admin ()
                     g_editable_service_bodies_array[g_editable_service_bodies_array.length] = json_object.service_body;
                     var service_body_select = document.getElementById ( 'bmlt_admin_single_service_body_editor_sb_select' );
                     var new_option = document.createElement ( 'option' );
-                    new_option.value = json_object.service_body[0];
-                    new_option.text = json_object.service_body[2];
+                    new_option.value = htmlspecialchars_decode ( json_object.service_body[0] );
+                    new_option.text = htmlspecialchars_decode ( json_object.service_body[2] );
                     
                     try
                         {
@@ -3667,7 +3674,7 @@ function BMLT_Server_Admin ()
                     service_body_select.selectedIndex = 0;
                     for ( var index = 0; index < g_editable_service_bodies_array.length; index++ )
                         {
-                        if ( g_editable_service_bodies_array[index][0] == parseInt(json_object.report, 10) )
+                        if ( g_editable_service_bodies_array[index][0] == parseInt(json_object.id, 10) )
                             {
                             service_body_select.remove ( index );
                             g_editable_service_bodies_array.splice ( index, 1 );
@@ -3677,7 +3684,7 @@ function BMLT_Server_Admin ()
                         
                     for ( var index = 0; index < g_service_bodies_array.length; index++ )
                         {
-                        if ( g_service_bodies_array[index][0] == parseInt(json_object.report, 10) )
+                        if ( g_service_bodies_array[index][0] == parseInt(json_object.id, 10) )
                             {
                             g_service_bodies_array.splice ( index, 1 );
                             break;
@@ -3824,23 +3831,23 @@ function BMLT_Server_Admin ()
                 id_text_item.innerHTML = selected_user_object[0];
             
                 var login_field = document.getElementById ( 'bmlt_admin_user_editor_login_input' );
-                login_field.value = selected_user_object[1];
+                login_field.value = htmlspecialchars_decode ( selected_user_object[1] );
                 this.handleTextInputBlur ( login_field );
             
                 var name_field = document.getElementById ( 'bmlt_admin_user_editor_name_input' );
-                name_field.value = selected_user_object[2];
+                name_field.value = htmlspecialchars_decode ( selected_user_object[2] );
                 this.handleTextInputBlur ( name_field );
             
                 var description_textarea = document.getElementById ( 'bmlt_admin_user_editor_description_textarea' );
-                description_textarea.value = selected_user_object[3];
+                description_textarea.value = htmlspecialchars_decode ( selected_user_object[3] );
                 this.handleTextInputBlur ( description_textarea );
             
                 var email_field = document.getElementById ( 'bmlt_admin_user_editor_email_input' );
-                email_field.value = selected_user_object[4];
+                email_field.value = htmlspecialchars_decode ( selected_user_object[4] );
                 this.handleTextInputBlur ( email_field );
             
                 var password_field = document.getElementById ( 'bmlt_admin_user_editor_password_input' );
-                password_field.value = selected_user_object[0] ? g_user_password_default_text : g_user_new_password_default_text;
+                password_field.value = htmlspecialchars_decode ( selected_user_object[0] ? g_user_password_default_text : g_user_new_password_default_text );
                 this.handleTextInputLoad ( password_field );
             
                 var user_level_popup_span = document.getElementById ( 'user_editor_single_non_service_body_admin_display' );
@@ -4068,8 +4075,8 @@ function BMLT_Server_Admin ()
                     g_users[g_users.length] = json_object.user;
                     var user_select = document.getElementById ( 'bmlt_admin_single_user_editor_user_select' );
                     var new_option = document.createElement ( 'option' );
-                    new_option.value = json_object.user[0];
-                    new_option.text = json_object.user[2];
+                    new_option.value = htmlspecialchars_decode ( json_object.user[0] );
+                    new_option.text = htmlspecialchars_decode ( json_object.user[2] );
                     
                     try
                         {
@@ -4457,7 +4464,7 @@ function BMLT_Server_Admin ()
             format_key_input.format_object = format;
             format_key_input.data_member_name = 'key';
             format_key_input.tiny = true;
-            format_key_input.value = format.key;
+            format_key_input.value = htmlspecialchars_decode ( format.key );
             format_key_input.defaultValue = '';
             format_key_input.id = 'bmlt_format_key_' + unique_id + '_text_item';
             format_key_input.onfocus= function () { admin_handler_object.handleTextInputFocus(this); };
@@ -4475,7 +4482,7 @@ function BMLT_Server_Admin ()
             format_name_input.format_object = format;
             format_name_input.data_member_name = 'name';
             format_name_input.small = true;
-            format_name_input.value = format.name;
+            format_name_input.value = htmlspecialchars_decode ( format.name );
             format_name_input.defaultValue = '';
             format_name_input.id = 'bmlt_format_name_' + unique_id + '_text_item';
             format_name_input.onfocus= function () { admin_handler_object.handleTextInputFocus(this); };
@@ -4491,7 +4498,7 @@ function BMLT_Server_Admin ()
             var format_description_input = document.createElement ( 'textarea' );
             format_description_input.format_object = format;
             format_description_input.data_member_name = 'description';
-            format_description_input.value = format.description;
+            format_description_input.value = htmlspecialchars_decode ( format.description );
             format_description_input.id = 'bmlt_format_description_' + unique_id + '_text_item';
             format_description_input.med = true;
             format_description_input.onfocus= function () { admin_handler_object.handleTextInputFocus(this); };
@@ -5255,6 +5262,87 @@ function BMLT_Admin_setSelectByValue (  in_select_object,
 // #mark - 
 // #mark ########## Third-Party Code ##########
 // #mark -
+function htmlspecialchars_decode (  string,
+                                    quote_style)
+{
+  // http://kevin.vanzonneveld.net
+  // +   original by: Mirek Slugen
+  // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+  // +   bugfixed by: Mateusz "loonquawl" Zalega
+  // +      input by: ReverseSyntax
+  // +      input by: Slawomir Kaniecki
+  // +      input by: Scott Cariss
+  // +      input by: Francois
+  // +   bugfixed by: Onno Marsman
+  // +    revised by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+  // +   bugfixed by: Brett Zamir (http://brett-zamir.me)
+  // +      input by: Ratheous
+  // +      input by: Mailfaker (http://www.weedem.fr/)
+  // +      reimplemented by: Brett Zamir (http://brett-zamir.me)
+  // +    bugfixed by: Brett Zamir (http://brett-zamir.me)
+  // *     example 1: htmlspecialchars_decode("<p>this -&gt; &quot;</p>", 'ENT_NOQUOTES');
+  // *     returns 1: '<p>this -> &quot;</p>'
+  // *     example 2: htmlspecialchars_decode("&amp;quot;");
+  // *     returns 2: '&quot;'
+  var   optTemp = 0,
+        i = 0,
+        noquotes = false;
+
+  if (typeof quote_style === 'undefined')
+    {
+    quote_style = 2;
+    };
+  
+  string = string.toString().replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+  var OPTS = {
+    'ENT_NOQUOTES': 0,
+    'ENT_HTML_QUOTE_SINGLE': 1,
+    'ENT_HTML_QUOTE_DOUBLE': 2,
+    'ENT_COMPAT': 2,
+    'ENT_QUOTES': 3,
+    'ENT_IGNORE': 4
+  };
+  
+  if (quote_style === 0)
+    {
+    noquotes = true;
+    };
+
+  if (typeof quote_style !== 'number')
+    { // Allow for a single string or an array of string flags
+    quote_style = [].concat(quote_style);
+    for (i = 0; i < quote_style.length; i++)
+        {
+        // Resolve string input to bitwise e.g. 'PATHINFO_EXTENSION' becomes 4
+        if (OPTS[quote_style[i]] === 0)
+            {
+            noquotes = true;
+            }
+        else if (OPTS[quote_style[i]])
+            {
+            optTemp = optTemp | OPTS[quote_style[i]];
+            };
+        };
+    
+    quote_style = optTemp;
+    };
+
+  if (quote_style & OPTS.ENT_HTML_QUOTE_SINGLE)
+    {
+    string = string.replace(/&#0*39;/g, "'"); // PHP doesn't currently escape if more than one 0, but it should
+    // string = string.replace(/&apos;|&#x0*27;/g, "'"); // This would also be useful here, but not a part of PHP
+    };
+
+  if (!noquotes)
+    {
+    string = string.replace(/&quot;/g, '"');
+    };
+
+  // Put this in last place to avoid escape being double-decoded
+  string = string.replace(/&amp;/g, '&');
+
+  return string;
+};
 
 /**
 sprintf() for JavaScript 0.6
