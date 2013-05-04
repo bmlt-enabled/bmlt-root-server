@@ -135,7 +135,7 @@ class c_comdef_server
             $this->_service_bodies_table_name = $dbPrefix."_comdef_service_bodies";
             $this->_user_table_name = $dbPrefix."_comdef_users";
 
-            if ( null !== $serverNamespace )
+            if ( isset ( $serverNamespace ) && (null !== $serverNamespace) )
                 {
                 $this->_server_namespace = $serverNamespace;
                 }

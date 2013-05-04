@@ -48,6 +48,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0.12 =
+* May 4, 2013
+* Simply stopped a warning/note from showing up in strict PHP.
+
 = Version 2.0.11 =
 * May 2, 2013
 * Fixed a bug, in which some text fields were over-HTMLing ampersands (&).
