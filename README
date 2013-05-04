@@ -48,6 +48,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0.14 =
+* TBD
+* Adding German localization.
+
 = Version 2.0.12 =
 * May 4, 2013
 * Simply stopped a warning/note from showing up in strict PHP.
