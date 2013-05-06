@@ -323,7 +323,7 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_default_zoom = '.floatval ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_default_zoom'] ).';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_meeting_lookup_failed = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_lookup_failed'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_region_bias = \''.self::js_html ( $this->my_localized_strings['region_bias'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_style_dir = \''.self::js_html ( dirname ( $_SERVER['PHP_SELF'] ).'/local_server/server_admin/style' ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_style_dir = \''.self::js_html ( ((dirname ( $_SERVER['PHP_SELF'] ) != '/') ? dirname ( $_SERVER['PHP_SELF'] ) : '').'/local_server/server_admin/style' ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_Create_new_meeting_button_name = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_create_button_name'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_Save_meeting_button_name = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_save_buttonName'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_default_meeting_weekday = '.intVal ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_default_weekday'] ).';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
@@ -379,8 +379,8 @@ class c_comdef_admin_main_console
                     $ret .= '\''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_midnight_label'] ).'\'';
                 $ret .= '];';
             $ret .= '</script>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-            $ret .= '<script type="text/javascript" src="'.dirname ( $_SERVER['PHP_SELF'] ).'/local_server/server_admin'.(defined('__DEBUG_MODE__') ? '/' : '/js_stripper.php?filename=' ).'json2.js"></script>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-            $ret .= '<script type="text/javascript" src="'.dirname ( $_SERVER['PHP_SELF'] ).'/local_server/server_admin'.(defined('__DEBUG_MODE__') ? '/' : '/js_stripper.php?filename=' ).'server_admin_javascript.js"></script>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+            $ret .= '<script type="text/javascript" src="'.((dirname ( $_SERVER['PHP_SELF'] ) != '/') ? dirname ( $_SERVER['PHP_SELF'] ) : '').'/local_server/server_admin'.(defined('__DEBUG_MODE__') ? '/' : '/js_stripper.php?filename=' ).'json2.js"></script>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+            $ret .= '<script type="text/javascript" src="'.((dirname ( $_SERVER['PHP_SELF'] ) != '/') ? dirname ( $_SERVER['PHP_SELF'] ) : '').'/local_server/server_admin'.(defined('__DEBUG_MODE__') ? '/' : '/js_stripper.php?filename=' ).'server_admin_javascript.js"></script>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
             $ret .= '<noscript class="main_noscript">'.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['noscript'] ).'</noscript>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
             // Belt and suspenders. Just make sure the user is legit.
             if ( ($this->my_user instanceof c_comdef_user) && ($this->my_user->GetUserLevel() != _USER_LEVEL_DISABLED) )

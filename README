@@ -49,7 +49,8 @@ For instructions on installing the root server, see this page:
 CHANGELIST
 ----------
 = Version 2.0.14 =
-* TBD
+* May 6, 2013
+* Fixed a bug that occurred when the main_server was at the root of the domain. It would prevent JavaScript from being loaded.
 * Adding German localization.
 
 = Version 2.0.12 =
