@@ -49,8 +49,8 @@ For instructions on installing the root server, see this page:
 CHANGELIST
 ----------
 = Version 2.0.16 =
-* TBD
-* Made it so that hitting the RETURN key in the meeting search will trigger a search.
+* May 8, 2013
+* Made it so that hitting the RETURN key in the meeting search will trigger a search. This is a big usability enhancement.
 
 = Version 2.0.15 =
 * May 8, 2013
