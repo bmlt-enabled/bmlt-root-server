@@ -1172,7 +1172,10 @@ class c_comdef_admin_main_console
             $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                 $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_text_input_label'] ).'</span>';
                 $ret .= '<span class="bmlt_admin_value_left"><input name="bmlt_admin_text_specifier_input" id="bmlt_admin_text_specifier_input" type="text" value="'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_text_input_default_text'] ).'" onkeyup="admin_handler_object.handleTextInputChange(this);" onchange="admin_handler_object.handleTextInputChange(this);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
-                $ret .= '<script type="text/javascript">admin_handler_object.handleTextInputLoad(document.getElementById(\'bmlt_admin_text_specifier_input\'),\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_text_input_default_text'] ).'\');</script>';
+                $ret .= '<script type="text/javascript">';
+                    $ret .= 'document.getElementById (\'bmlt_admin_text_specifier_input\').onkeypress = BMLT_Admin_keyDown;';
+                    $ret .= 'admin_handler_object.handleTextInputLoad(document.getElementById(\'bmlt_admin_text_specifier_input\'),\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_text_input_default_text'] ).'\');';
+                $ret .= '</script>';
                 $ret .= '<div class="clear_both"></div>';
             $ret .= '</div>';
             $ret .= '<div class="bmlt_admin_one_line_in_a_form_no_margin">';

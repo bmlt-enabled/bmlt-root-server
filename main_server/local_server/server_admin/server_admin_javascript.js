@@ -5258,6 +5258,17 @@ function BMLT_Admin_setSelectByValue (  in_select_object,
         
     in_select_object.selectedIndex = setIndex;
 };
+  
+/****************************************************************************************//**
+*	\brief This just traps the enter key for the text entry.                                *
+********************************************************************************************/
+function BMLT_Admin_keyDown()
+{
+    if ( admin_handler_object.m_search_specifier_shown && (event.keyCode == 13) )
+        {
+        admin_handler_object.searchForMeetings();
+        };
+};
 
 // #mark - 
 // #mark ########## Third-Party Code ##########

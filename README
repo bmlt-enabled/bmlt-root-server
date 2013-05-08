@@ -48,6 +48,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0.16 =
+* TBD
+* Made it so that hitting the RETURN key in the meeting search will trigger a search.
+
 = Version 2.0.15 =
 * May 8, 2013
 * Fixed a bug, in which a Service Body Admin with no Service body privileges would be shown a Service Body Admin editor.
