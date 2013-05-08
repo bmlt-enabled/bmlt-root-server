@@ -48,6 +48,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0.15 =
+* May 8, 2013
+* Fixed a bug, in which a Service Body Admin with no Service body privileges would be shown a Service Body Admin editor.
+
 = Version 2.0.14 =
 * May 6, 2013
 * Fixed a bug that occurred when the main_server was at the root of the domain. It would prevent JavaScript from being loaded.

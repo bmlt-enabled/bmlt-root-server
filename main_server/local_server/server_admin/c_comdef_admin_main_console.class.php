@@ -393,7 +393,10 @@ class c_comdef_admin_main_console
                         $ret .= $this->return_user_admin_panel();
                 
                     case    _USER_LEVEL_SERVICE_BODY_ADMIN:
-                        $ret .= $this->return_service_body_admin_panel();
+                        if ( count ( $this->my_editable_service_bodies ) > 0 )
+                            {
+                            $ret .= $this->return_service_body_admin_panel();
+                            }
                 
                     case    _USER_LEVEL_EDITOR:
                         $ret .= $this->return_meeting_editor_panel();
