@@ -21,7 +21,7 @@
     along with this code.  If not, see <http://www.gnu.org/licenses/>.
 ********************************************************************************************/
 
-define ( 'BMLT_EXEC', true );	// This is a security verifier. Keeps files from being executed outside of the context
+defined( 'BMLT_EXEC' ) or define ( 'BMLT_EXEC', true );	// This is a security verifier. Keeps files from being executed outside of the context
 $file_dir = str_replace ( '/client_interface/xml', '', dirname ( __FILE__ ) ).'/server/c_comdef_server.class.php';
 require_once ( $file_dir );
 $server = c_comdef_server::MakeServer();

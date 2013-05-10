@@ -23,7 +23,7 @@
     along with this code.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-define ( 'BMLT_EXEC', true );	// This is a security verifier. Keeps files from being executed outside of the context
+defined( 'BMLT_EXEC' ) or define ( 'BMLT_EXEC', true );	// This is a security verifier. Keeps files from being executed outside of the context
 require_once ( dirname ( __FILE__ ).'/../../server/shared/classes/comdef_utilityclasses.inc.php');
 require_once ( dirname ( __FILE__ ).'/../../server/shared/Array2Json.php');
 require_once ( dirname ( __FILE__ ).'/../../server/c_comdef_server.class.php');

@@ -20,7 +20,7 @@ global $g_weekday_names;
 
 $g_weekday_names = array ( "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" );
 
-define ( 'BMLT_EXEC', true );	// This is a security verifier. Keeps files from being executed outside of the context
+defined( 'BMLT_EXEC' ) or define ( 'BMLT_EXEC', true );	// This is a security verifier. Keeps files from being executed outside of the context
 
 defined ( "_DEFAULT_DURATION") or define ( "_DEFAULT_DURATION", "N.A. Meetings are usually 60 minutes long (an hour), unless otherwise indicated." );
 defined ( "_PDF_AUTHOR") or define ( "_PDF_AUTHOR", "Basic Meeting List Toolbox" );

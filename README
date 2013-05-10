@@ -48,6 +48,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0.17 =
+* May 9, 2013
+* Made some invisible 'belt & suspenders' tweaks to the code to ensure no warnings.
+
 = Version 2.0.16 =
 * May 8, 2013
 * Made it so that hitting the RETURN key in the meeting search will trigger a search. This is a big usability enhancement.
