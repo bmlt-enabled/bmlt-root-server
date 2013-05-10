@@ -69,10 +69,13 @@ class c_comdef_admin_main_console
         // We will build an array of formats in the structure we'll need for our editor. We start by gathering all of the shared IDs.
         foreach ( $langs as $lang_key => $lang_name )
             {
-            $the_format_object_array = $server_format_array[$lang_key];
-            foreach ( $the_format_object_array as $format )
+            if ( isset ( $server_format_array[$lang_key] ) )
                 {
-                $format_ids[] = $format->GetSharedID();
+                $the_format_object_array = $server_format_array[$lang_key];
+                foreach ( $the_format_object_array as $format )
+                    {
+                    $format_ids[] = $format->GetSharedID();
+                    }
                 }
             }
             
@@ -87,19 +90,22 @@ class c_comdef_admin_main_console
             foreach ( $langs as $lang_key => $lang_name )
                 {
                 // Then through all the formats with data in each language...
-                $the_format_object_array = $server_format_array[$lang_key];
-                foreach ( $the_format_object_array as $format )
+                if ( isset ( $server_format_array[$lang_key] ) )
                     {
-                    // If the format is available with data in this language, we add it to our ID.
-                    if ( $format->GetSharedID() == $id )
+                    $the_format_object_array = $server_format_array[$lang_key];
+                    foreach ( $the_format_object_array as $format )
                         {
-                        $single_format[$lang_key]['shared_id'] = $id;
-                        $single_format[$lang_key]['lang_key'] = $lang_key;
-                        $single_format[$lang_key]['lang_name'] = $lang_name;
-                        $single_format[$lang_key]['key'] = $format->GetKey();
-                        $single_format[$lang_key]['name'] = $format->GetLocalName();
-                        $single_format[$lang_key]['description'] = $format->GetLocalDescription();
-                        $single_format[$lang_key]['type'] = $format->GetFormatType();
+                        // If the format is available with data in this language, we add it to our ID.
+                        if ( $format->GetSharedID() == $id )
+                            {
+                            $single_format[$lang_key]['shared_id'] = $id;
+                            $single_format[$lang_key]['lang_key'] = $lang_key;
+                            $single_format[$lang_key]['lang_name'] = $lang_name;
+                            $single_format[$lang_key]['key'] = $format->GetKey();
+                            $single_format[$lang_key]['name'] = $format->GetLocalName();
+                            $single_format[$lang_key]['description'] = $format->GetLocalDescription();
+                            $single_format[$lang_key]['type'] = $format->GetFormatType();
+                            }
                         }
                     }
                 }
@@ -139,7 +145,8 @@ class c_comdef_admin_main_console
 			}
 		
 		// Sort them by their field keys, so we have a consistent order.
-		ksort ( $this->my_data_field_templates, (SORT_NATURAL | SORT_FLAG_CASE) );
+		$flags = ( defined ( SORT_NATURAL ) && defined ( SORT_FLAG_CASE ) ) ? intval ( SORT_NATURAL | SORT_FLAG_CASE ) : null;
+		ksort ( $this->my_data_field_templates, $flags );
     }
     
     /********************************************************************************************************//**
@@ -250,24 +257,27 @@ class c_comdef_admin_main_console
                     $first = true;
                     foreach ( $this->my_formats as $formats )
                         {
-                        $format = $formats['formats'][$this->my_server->GetLocalLang()];
-                        if ( $format )
+                        if ( isset ( $formats['formats'][$this->my_server->GetLocalLang()] ) )
                             {
-                            if ( !$first )
+                            $format = $formats['formats'][$this->my_server->GetLocalLang()];
+                            if ( $format )
                                 {
-                                $ret .= ',';
-                                }
-                            else
-                                {
-                                $first = false;
-                                }
+                                if ( !$first )
+                                    {
+                                    $ret .= ',';
+                                    }
+                                else
+                                    {
+                                    $first = false;
+                                    }
                             
-                            $ret .= '{';
-                                $ret .= '"id":'.$format['shared_id'];
-                                $ret .= ',"key":"'.$format['key'].'"';
-                                $ret .= ',"name":"'.$format['name'].'"';
-                                $ret .= ',"description":"'.$format['description'].'"';
-                            $ret .= '}';
+                                $ret .= '{';
+                                    $ret .= '"id":'.$format['shared_id'];
+                                    $ret .= ',"key":"'.$format['key'].'"';
+                                    $ret .= ',"name":"'.$format['name'].'"';
+                                    $ret .= ',"description":"'.$format['description'].'"';
+                                $ret .= '}';
+                                }
                             }
                         }
                 $ret .= '];'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
@@ -427,7 +437,8 @@ class c_comdef_admin_main_console
     static function js_html(    $in_raw_html
                             )
     {
-        return preg_replace ( "|[\n\r]|", " ", str_replace ( "'", "\'", htmlspecialchars ( $in_raw_html, ENT_SUBSTITUTE | ENT_NOQUOTES ) ) );
+        $flags = (defined ( ENT_SUBSTITUTE ) && defined ( ENT_NOQUOTES )) ? intval ( ENT_SUBSTITUTE | ENT_NOQUOTES ) : null;
+        return preg_replace ( "|[\n\r]|", " ", str_replace ( "'", "\'", htmlspecialchars ( $in_raw_html ), $flags ) );
     }
     
     /********************************************************************************************************//**
@@ -1362,7 +1373,7 @@ class c_comdef_admin_main_console
         $ret = '<div id="bmlt_admin_meeting_editor_form_new_meetings_div" class="bmlt_admin_meeting_editor_form_new_meetings_div">';
             $ret .= '<div class="bmlt_admin_meeting_editor_form_meetings_inner_div">';
                 $ret .= '<div class="bmlt_admin_meeting_editor_form_meeting_button_div">';
-                    $ret .= '<span id="bmlt_admin_meeting_ajax_button_span" class="bmlt_admin_meeting_editor_form_meeting_button_single_span"><a id="bmlt_admin_meeting_editor_form_meeting_'.$in_index.'button" href="javascript:admin_handler_object.createANewMeetingButtonHit(this);" class="bmlt_admin_ajax_button button">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_create_button'] ).'</a></span>';
+                    $ret .= '<span id="bmlt_admin_meeting_ajax_button_span" class="bmlt_admin_meeting_editor_form_meeting_button_single_span"><a id="bmlt_admin_meeting_editor_form_meeting_0_button" href="javascript:admin_handler_object.createANewMeetingButtonHit(this);" class="bmlt_admin_ajax_button button">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_create_button'] ).'</a></span>';
                     $ret .= '<div class="clear_both"></div>';
                     $ret .= '<div id="bmlt_admin_meeting_editor_new_meeting_0_editor_display" class="bmlt_admin_meeting_editor_meeting_editor_display item_hidden"></div>';
                     $ret .= '<div class="clear_both"></div>';

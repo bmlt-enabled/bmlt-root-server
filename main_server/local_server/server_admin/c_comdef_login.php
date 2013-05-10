@@ -214,7 +214,7 @@ function GetServerInfo()
 function c_comdef_LoginForm(	&$in_server	///< A reference to an instance of c_comdef_server
 								)
 	{	
-	include ( dirname ( __FILE__ ).'/../server/config/get-config.php' );
+	include ( dirname ( __FILE__ ).'/../../server/config/get-config.php' );
 
 	$http_vars = array_merge ( $_GET, $_POST );
 	

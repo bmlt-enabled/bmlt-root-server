@@ -1442,7 +1442,7 @@ class c_comdef_server
             {
             foreach ( $rows as $row )
                 {
-                $ret = new c_comdef_user ( $this, $row['id_bigint'],
+                $ret = new c_comdef_user ( c_comdef_server::GetServer(), $row['id_bigint'],
                                                 $row['user_level_tinyint'],
                                                 $row['email_address_string'],
                                                 $row['login_string'],
@@ -2508,30 +2508,30 @@ class c_comdef_server
         
             c_comdef_server::$server_local_strings['name'] = file_get_contents ( dirname ( __FILE__ ).'/config/lang/'.$lang_enum.'/name.txt' );
             c_comdef_server::$server_local_strings['enum'] = $lang_enum;
-            c_comdef_server::$server_local_strings['theme'] = $theme;
+//             c_comdef_server::$server_local_strings['theme'] = isset ( $theme ) ? $theme : '';
             c_comdef_server::$server_local_strings['weekdays'] = explode ( ",", file_get_contents ( dirname ( __FILE__ ).'/config/lang/'.$lang_enum.'/weekdays.csv' ) );
             c_comdef_server::$server_local_strings['comdef_map_radius_ranges'] = $comdef_map_radius_ranges;
             c_comdef_server::$server_local_strings['region_bias'] = $region_bias;
             c_comdef_server::$server_local_strings['default_duration_time'] = isset ( $default_duration_time ) ? $default_duration_time : '1:00:00';
             c_comdef_server::$server_local_strings['search_spec_map_center'] = $search_spec_map_center;
             c_comdef_server::$server_local_strings['comdef_search_results_strings'] = $comdef_search_results_strings;
-            c_comdef_server::$server_local_strings['comdef_search_admin_strings'] = $comdef_search_admin_strings;
+//             c_comdef_server::$server_local_strings['comdef_search_admin_strings'] = $comdef_search_admin_strings;
             c_comdef_server::$server_local_strings['comdef_format_types'] = $comdef_format_types;
             c_comdef_server::$server_local_strings['change_type_strings'] = $change_type_strings;
             c_comdef_server::$server_local_strings['detailed_change_strings'] = $detailed_change_strings;
             c_comdef_server::$server_local_strings['prompt_delimiter'] =  defined('__PROMPT_DELIMITER__') ? __PROMPT_DELIMITER__ : ':';
             c_comdef_server::$server_local_strings['end_change_report'] =  defined('_END_CHANGE_REPORT') ? _END_CHANGE_REPORT : '.';
             c_comdef_server::$server_local_strings['charset'] = defined('__HTML_DISPLAY_CHARSET__') ? __HTML_DISPLAY_CHARSET__ : 'UTF-8';
-            c_comdef_server::$server_local_strings['default_sort_key'] = $default_sort_key;
-            c_comdef_server::$server_local_strings['default_sort_dir'] = $default_sort_dir;
-            c_comdef_server::$server_local_strings['page_display_size'] = $page_display_size;
-            c_comdef_server::$server_local_strings['results_per_page'] = $results_per_page;
+//             c_comdef_server::$server_local_strings['default_sort_key'] = $default_sort_key;
+//             c_comdef_server::$server_local_strings['default_sort_dir'] = $default_sort_dir;
+//             c_comdef_server::$server_local_strings['page_display_size'] = $page_display_size;
+//             c_comdef_server::$server_local_strings['results_per_page'] = $results_per_page;
             c_comdef_server::$server_local_strings['time_format'] = $time_format;
             c_comdef_server::$server_local_strings['min_pw_len'] = intval ( $min_pw_len );
-            c_comdef_server::$server_local_strings['allow_contact_form'] = $allow_contact_form;
-            c_comdef_server::$server_local_strings['recursive_contact_form'] = $recursive_contact_form;
-            c_comdef_server::$server_local_strings['sort_depth'] = $sort_depth;
-            c_comdef_server::$server_local_strings['default_sorts'] = $default_sorts;
+//             c_comdef_server::$server_local_strings['allow_contact_form'] = $allow_contact_form;
+//             c_comdef_server::$server_local_strings['recursive_contact_form'] = $recursive_contact_form;
+//             c_comdef_server::$server_local_strings['sort_depth'] = $sort_depth;
+//             c_comdef_server::$server_local_strings['default_sorts'] = $default_sorts;
             c_comdef_server::$server_local_strings['number_of_meetings_for_auto'] = $number_of_meetings_for_auto;
             c_comdef_server::$server_local_strings['comdef_global_more_details_address'] = $comdef_global_more_details_address;
             c_comdef_server::$server_local_strings['comdef_global_list_address'] = $comdef_global_list_address;
