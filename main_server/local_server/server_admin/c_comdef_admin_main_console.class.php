@@ -626,7 +626,6 @@ class c_comdef_admin_main_console
         $ret = '<select id="bmlt_admin_single_user_editor_level_select" class="bmlt_admin_single_user_editor_level_select" onchange="admin_handler_object.readUserEditorState();">';
             $first = true;
             $ret .= '<option value="2">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_2'] ).'</option>';
-//             $ret .= '<option value="3">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_3'] ).'</option>';
             $ret .= '<option value="5">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_5'] ).'</option>';
             $ret .= '<option value="" disabled="disabled"></option>';
             $ret .= '<option value="4">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_4'] ).'</option>';

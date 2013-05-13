@@ -1267,7 +1267,7 @@ function BMLT_Server_Admin ()
                         else
                             {
                             document.getElementById ( 'bmlt_admin_meeting_editor_new_meeting_0_editor_display' ).className = 'item_hidden';
-                            document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_button' ).className = 'bmlt_admin_ajax_button button';
+                            document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_0_button' ).className = 'bmlt_admin_ajax_button button';
                             };
             
                         this.m_editing_window_open = null;
@@ -1313,7 +1313,7 @@ function BMLT_Server_Admin ()
                                             )
     {
         var display_parent = document.getElementById ( 'bmlt_admin_meeting_editor_new_meeting_0_editor_display' );
-        var new_meeting_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_button' );
+        var new_meeting_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_0_button' );
         
         display_parent.innerHTML = '';
         
@@ -1448,7 +1448,7 @@ function BMLT_Server_Admin ()
             
                 if ( in_meeting_id == 0 )
                     {
-                    var new_meeting_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_button' );
+                    var new_meeting_button = document.getElementById ( 'bmlt_admin_meeting_editor_form_meeting_0_button' );
                     new_meeting_button.className = 'bmlt_admin_ajax_button button';
                     };
                 

@@ -48,6 +48,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0.19 =
+* May 12, 2013
+* Fixed a JavaScript bug, in which the "Create New Meeting" button would sometimes trigger an error.
+
 = Version 2.0.18 =
 * May 10, 2013
 * Made more invisible 'belt & suspenders' tweaks to the code to ensure no warnings.
