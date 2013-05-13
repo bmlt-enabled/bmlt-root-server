@@ -48,6 +48,11 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0.20 =
+* May 13, 2013
+* Reduced the number of times that the marker redraw is called in the standard [[bmlt]] shortcode handler.
+* Fixed an issue with CSS that caused displayed maps to get funky.
+
 = Version 2.0.19 =
 * May 12, 2013
 * Fixed a JavaScript bug, in which the "Create New Meeting" button would sometimes trigger an error.
