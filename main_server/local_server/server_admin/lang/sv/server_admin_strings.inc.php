@@ -28,7 +28,7 @@
 	                                        'account_type_label'                                    =>  'Jag är en:',
 	                                        'account_type_1'                                        =>  'Server Administratör',
 	                                        'account_type_2'                                        =>  'Serviceenhet Administratör',
-// 	                                        'account_type_3'                                        =>  'Serviceenhet Redaktör',
+											'ServerMapsURL'                                         =>  'http://maps.googleapis.com/maps/api/geocode/xml?address=##SEARCH_STRING##&sensor=false',
 	                                        'account_type_4'                                        =>  'hacker? tydligen inte...',
 	                                        'account_type_5'                                        =>  'Serviceenhet övervakare',
 	                                        'change_password_label'                                 =>  'Ändra mitt lösenord till:',

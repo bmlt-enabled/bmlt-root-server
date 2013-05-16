@@ -12,6 +12,8 @@ server, and provide the server to other NA Service bodies.
 
 You can find out way too much about the BMLT here: http://bmlt.magshare.org
 
+You can follow us on Twitter for release announcements: http://twitter.com/BMLT_NA
+
 This project is the "root" server for the BMLT. It is the "server" part of the BMLT
 "client/server" architecture.
 
@@ -22,7 +24,7 @@ I decided to start new on GitHub, as opposed to bringing over the SourceForge pr
 in order to reduce disk space usage, and because it's a pain to rearrange a standard
 SVN structure to Git.
 
-NOTE: The repository origin has been transferred to Bitbucket! GitHup is now only archival.
+NOTE: The repository origin has been transferred to Bitbucket! GitHub is now only archival (ends at version 2.0.2).
 
 REQUIREMENTS
 ------------
@@ -48,6 +50,11 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0.21 =
+* May 16, 2013
+* Fixed a hang that occurred on certain corner cases in the meeting search.
+* Fixed a rather nasty bug, in which a deprecated Google API was being called to resolve addresses. The fix greatly simplifies the search, and makes it more accurate.
+
 = Version 2.0.20 =
 * May 13, 2013
 * Reduced the number of times that the marker redraw is called in the standard [[bmlt]] shortcode handler.

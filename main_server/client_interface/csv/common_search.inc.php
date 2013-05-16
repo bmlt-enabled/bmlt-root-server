@@ -661,18 +661,14 @@ function GetGeocodeFromString ( $in_string,	///< The string to be checked.
 	$ret = null;
 	$localized_strings = c_comdef_server::GetLocalStrings();
 	
-	$geo_uri = $localized_strings['comdef_search_results_strings']['ServerMapsURL'];
+	$geo_uri = $localized_strings['comdef_server_admin_strings']['ServerMapsURL'];
 	
 	if ( $localized_strings['region_bias'] )
 		{
-		$in_string .= ','.strtoupper($localized_strings['region_bias']);	// Kludge. Attach the region bias string to the text search.
 		$geo_uri .= '&region='.$localized_strings['region_bias'];
 		}
 	
-	$in_string = urlencode ( $in_string );
-	
-	$geo_uri = str_replace ( '##SEARCH_STRING##', $in_string, $geo_uri );
-	$geo_uri = str_replace ( '##KEY##', urlencode ( $gkey ), $geo_uri );
+	$geo_uri = str_replace ( '##SEARCH_STRING##', urlencode ( $in_string ), $geo_uri );
 	
 	// We set up a 200-mile bounds, in order to encourage Google to look in the proper place.
 	$m_p_deg = 100 / (111.321 * cos(deg2rad ( $localized_strings['search_spec_map_center']['latitude'] )) * 1.609344);	// Degrees for 100 miles.
@@ -680,53 +676,28 @@ function GetGeocodeFromString ( $in_string,	///< The string to be checked.
 	$bounds_ar .= "|";
 	$bounds_ar .= strval ( $localized_strings['search_spec_map_center']['latitude'] + $m_p_deg ).",".strval ( $localized_strings['search_spec_map_center']['longitude'] + $m_p_deg );		// Northeast corner
 
-	$geo_uri .= '&bounds='.$bounds_ar;
-	
-	$geo_uri .= '&sensor=false';
+    $xml = simplexml_load_file ( $geo_uri );
 
-	$geo_xml = call_curl ( $geo_uri, false );
+    if ( $xml->status == 'OK' )
+        {
+        $ret['longitude'] = floatval ( $xml->result->geometry->location->lng );
+        $ret['latitude'] = floatval ( $xml->result->geometry->location->lat );
+        $radius = c_comdef_server::HuntForRadius ( $localized_strings['number_of_meetings_for_auto'], $ret['longitude'], $ret['latitude'], $in_weekday_tinyint_array );
+        if ( $radius )
+            {
+            // The native units for the radius search is km. We need to convert to miles, if we are in miles.
+            if ( $localized_strings['dist_units'] == 'mi' )
+                {
+                $radius /= 1.609344;
+                }
 
-	$geo_xml = DOMDocument::loadXML ( $geo_xml );
-	
-	if ( $geo_xml instanceof DOMDocument )
-		{
-		$response = $geo_xml->getElementsByTagName('Response');
-		if ( ($response instanceof DOMNodeList) && $response->length )
-			{
-			for ( $c = 0; $c < $response->length; $c++ )
-				{
-				$places = $response->item($c)->getElementsByTagName('Placemark');
-				if ( ($places instanceof DOMNodeList) && $places->length )
-					{
-					$points = $places->item($c)->getElementsByTagName('Point');
-					if ( ($points instanceof DOMNodeList) && $points->length )
-						{
-						$coords = $points->item($c)->getElementsByTagName('coordinates');
-						if ( ($coords instanceof DOMNodeList) && $points->length )
-							{
-							list ( $ret['longitude'], $ret['latitude'] ) = explode( ",", $coords->item(0)->nodeValue );
-							$radius = c_comdef_server::HuntForRadius ( $localized_strings['number_of_meetings_for_auto'], $ret['longitude'], $ret['latitude'], $in_weekday_tinyint_array );
-							if ( $radius )
-								{
-                                // The native units for the radius search is km. We need to convert to miles, if we are in miles.
-                                if ( $localized_strings['dist_units'] == 'mi' )
-                                    {
-                                    $radius /= 1.609344;
-                                    }
-
-								$ret['radius'] = $radius;
-								break;
-								}
-							else
-								{
-								$ret = null;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+            $ret['radius'] = $radius;
+            }
+        else
+            {
+            $ret = null;
+            }
+        }
 	
 	return $ret;
 }

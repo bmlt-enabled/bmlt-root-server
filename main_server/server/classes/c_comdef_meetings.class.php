@@ -632,7 +632,7 @@ class c_comdef_meetings implements i_comdef_has_parent
 										{
 										if ( ($meeting_data[$key]['visibility'] != _VISIBILITY_NONE_) || $meeting->UserCanObserve() )
 										    {
-										    $text_fields[$key] =& $meeting_data[$key]['value'];
+										    $text_fields[$key] = $meeting_data[$key]['value'];
 										    }
 										}
 									}
