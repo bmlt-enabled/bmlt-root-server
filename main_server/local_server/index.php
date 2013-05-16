@@ -24,7 +24,11 @@ $http_vars = array_merge ( $_GET, $_POST );
 
 require_once ( dirname ( __FILE__ ).'/install_wizard/index.php' );  // We test for the install wizard, first.
 
-if ( isset ( $http_vars ['bmlt_ajax_callback'] ) )
+if ( isset ( $http_vars ['bmlt_data_transfer'] ) )  // This checks for the transfer wizard.
+    {
+    require_once ( dirname ( __FILE__ ).'/server_admin/c_comdef_data_importer.class.php');
+    }
+elseif ( isset ( $http_vars ['bmlt_ajax_callback'] ) )
     {
     require_once ( dirname ( __FILE__ ).'/server_admin/c_comdef_admin_ajax_handler.class.php');
     }

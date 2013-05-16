@@ -132,15 +132,17 @@ class c_comdef_admin_ajax_handler
     function HandleAccountChange ()
     {
         $response_text = array();
-    
-        if ( (intval ( $this->my_user->GetID() ) == intval ( $this->my_http_vars['target_user'] )) && isset ( $this->my_http_vars['account_email_value'] ) )
+        
+        $t_user = isset ( $this->my_http_vars['target_user'] ) ? intval ( $this->my_http_vars['target_user'] ) : 0;
+        
+        if ( (intval ( $this->my_user->GetID() ) == $t_user) && isset ( $this->my_http_vars['account_email_value'] ) )
             {
             $this->my_user->SetEmailAddress ( $this->my_http_vars['account_email_value'] );
             $success = $this->my_user->UpdateToDB ( );
             $response_text['EMAIL_CHANGED'] = ($success ? true : false);
             }
     
-        if ( (intval ( $this->my_user->GetID() ) == intval ( $this->my_http_vars['target_user'] )) && isset ( $this->my_http_vars['account_description_value'] ) )
+        if ( (intval ( $this->my_user->GetID() ) == $t_user) && isset ( $this->my_http_vars['account_description_value'] ) )
             {
             $this->my_user->SetLocalDescription ( $this->my_http_vars['account_description_value'] );
             $success = $this->my_user->UpdateToDB ( );
@@ -153,14 +155,14 @@ class c_comdef_admin_ajax_handler
         
         if ( $this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN )
             {
-            if ( (intval ( $this->my_user->GetID() ) == intval ( $this->my_http_vars['target_user'] )) && isset ( $this->my_http_vars['account_name_value'] ) )
+            if ( (intval ( $this->my_user->GetID() ) == $t_user) && isset ( $this->my_http_vars['account_name_value'] ) )
                 {
                 $this->my_user->SetLocalName ( $this->my_http_vars['account_name_value'] );
                 $success = $this->my_user->UpdateToDB ( );
                 $response_text['NAME_CHANGED'] = ($success ? true : false);
                 }
         
-            if ( (intval ( $this->my_user->GetID() ) == intval ( $this->my_http_vars['target_user'] )) && isset ( $this->my_http_vars['account_login_value'] ) )
+            if ( (intval ( $this->my_user->GetID() ) == $t_user) && isset ( $this->my_http_vars['account_login_value'] ) )
                 {
                 $login = $this->my_http_vars['account_login_value'];
                 $login_changed = true;
@@ -171,7 +173,7 @@ class c_comdef_admin_ajax_handler
             unset ( $this->my_http_vars['account_login_value'] );
             }
         
-        if ( (intval ( $this->my_user->GetID() ) == intval ( $this->my_http_vars['target_user'] )) && (isset ( $this->my_http_vars['account_login_value'] ) || isset ( $this->my_http_vars['account_password_value'] )) )
+        if ( (intval ( $this->my_user->GetID() ) == $t_user) && (isset ( $this->my_http_vars['account_login_value'] ) || isset ( $this->my_http_vars['account_password_value'] )) )
             {
             $success = $this->my_user->UpdateToDB ( false, $login, $password );
             $response_text['PASSWORD_CHANGED'] = ($success ? true : false);
