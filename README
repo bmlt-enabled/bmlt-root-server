@@ -53,6 +53,7 @@ CHANGELIST
 = Version 2.0.21 =
 * May 16, 2013
 * Fixed a hang that occurred on certain corner cases in the meeting search.
+* Fixed a rather nasty bug, in which a deprecated Google API was being called to resolve addresses. The fix greatly simplifies the search, and makes it more accurate.
 
 = Version 2.0.20 =
 * May 13, 2013

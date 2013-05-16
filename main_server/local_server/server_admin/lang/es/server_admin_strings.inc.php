@@ -27,7 +27,7 @@
 	                                        'account_type_label'                                    =>  'I Am A:',
 	                                        'account_type_1'                                        =>  'Server Administrator',
 	                                        'account_type_2'                                        =>  'Service Body Administrator',
-// 	                                        'account_type_3'                                        =>  'Service Body Editor',
+											'ServerMapsURL'                                         =>  'http://maps.googleapis.com/maps/api/geocode/xml?address=##SEARCH_STRING##&sensor=false',
 	                                        'account_type_4'                                        =>  'Pathetic Luser Who Shouldn\'t Even Have Access to This Page -The Author of the Software Pooched it BAD!',
 	                                        'account_type_5'                                        =>  'Service Body Observer',
 	                                        'change_password_label'                                 =>  'Change My Password To:',
