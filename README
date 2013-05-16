@@ -50,6 +50,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0.21 =
+* May 16, 2013
+* Fixed a hang that occurred on certain corner cases in the meeting search.
+
 = Version 2.0.20 =
 * May 13, 2013
 * Reduced the number of times that the marker redraw is called in the standard [[bmlt]] shortcode handler.
