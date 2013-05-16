@@ -2499,8 +2499,8 @@ class c_comdef_server
                 }
             include ( dirname ( __FILE__ )."/config/comdef-config.inc.php" );
             include ( dirname ( __FILE__ ).'/../local_server/server_admin/lang/'.$lang_enum.'/server_admin_strings.inc.php' );
-            include ( dirname ( __FILE__ ).'/config/lang/'.$lang_enum.'/change_desc.inc.php' );
             include ( dirname ( __FILE__ ).'/config/lang/'.$lang_enum.'/search_results_strings.inc.php' );
+            include ( dirname ( __FILE__ ).'/config/lang/'.$lang_enum.'/change_desc.inc.php' );
             include ( dirname ( __FILE__ ).'/config/lang/'.$lang_enum.'/format_codes.inc.php' );
 
             global  $comdef_global_more_details_address,    ///< This is a format string for the way the address line is displayed in the "more details" screen.
@@ -2527,17 +2527,6 @@ class c_comdef_server
             c_comdef_server::$server_local_strings['comdef_global_list_address'] = $comdef_global_list_address;
             c_comdef_server::$server_local_strings['comdef_server_admin_strings'] = $comdef_server_admin_strings;
             
-//             c_comdef_server::$server_local_strings['theme'] = isset ( $theme ) ? $theme : '';
-//             c_comdef_server::$server_local_strings['comdef_search_admin_strings'] = $comdef_search_admin_strings;
-//             c_comdef_server::$server_local_strings['default_sort_key'] = $default_sort_key;
-//             c_comdef_server::$server_local_strings['default_sort_dir'] = $default_sort_dir;
-//             c_comdef_server::$server_local_strings['page_display_size'] = $page_display_size;
-//             c_comdef_server::$server_local_strings['results_per_page'] = $results_per_page;
-//             c_comdef_server::$server_local_strings['allow_contact_form'] = $allow_contact_form;
-//             c_comdef_server::$server_local_strings['recursive_contact_form'] = $recursive_contact_form;
-//             c_comdef_server::$server_local_strings['sort_depth'] = $sort_depth;
-//             c_comdef_server::$server_local_strings['default_sorts'] = $default_sorts;
-
             if ( trim($comdef_distance_units) )
                 {
                 c_comdef_server::$server_local_strings['dist_units'] = strtolower(trim($comdef_distance_units));
