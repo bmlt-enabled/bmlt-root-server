@@ -50,6 +50,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0.22 =
+* TBD
+* Added support for servers running on non-standard HTTP ports.
+
 = Version 2.0.21 =
 * May 16, 2013
 * Fixed a hang that occurred on certain corner cases in the meeting search.

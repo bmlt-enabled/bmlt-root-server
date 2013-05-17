@@ -40,7 +40,15 @@ else
 		<meta http-equiv="Content-Style-Type" content="text/css" />
 <?php
             $config_file_path = dirname ( __FILE__ ).'/../server/config/get-config.php';
-            $url_path = 'http://'.$_SERVER['SERVER_NAME'].dirname ( $_SERVER['SCRIPT_NAME'] );
+            $url_path = 'http://'.$_SERVER['SERVER_NAME'];
+            
+            if ( intval ( $_SERVER['SERVER_PORT'] ) != 80 )
+                {
+                $url_path .= ':'.intval ( $_SERVER['SERVER_PORT'] );
+                }
+            
+            $url_path .= dirname ( $_SERVER['SCRIPT_NAME'] );
+            
             if ( file_exists ( $config_file_path ) )
                 {
                 include ( $config_file_path );
