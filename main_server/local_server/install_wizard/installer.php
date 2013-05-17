@@ -68,14 +68,7 @@ else
                             'admin_session_name'            =>  'BMLT_Admin',
                             );
         
-        $url_path = 'http://'.$_SERVER['SERVER_NAME'];
-        
-        if ( intval ( $_SERVER['SERVER_PORT'] ) != 80 )
-            {
-            $url_path .= ':'.intval ( $_SERVER['SERVER_PORT'] );
-            }
-        
-        $url_path .= dirname ( $_SERVER['SCRIPT_NAME'] );
+    $url_path = dirname ( $_SERVER['PHP_SELF'] );
     ?>
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
