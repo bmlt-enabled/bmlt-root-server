@@ -50,6 +50,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0.23 =
+* May 18, 2013
+* Fixed an issue, where the Meeting search (Observer only) could have a bad AJAX URI.
+
 = Version 2.0.22 =
 * May 18, 2013
 * Added compensation for servers running on non-standard HTTP ports.
