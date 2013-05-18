@@ -51,8 +51,9 @@ For instructions on installing the root server, see this page:
 CHANGELIST
 ----------
 = Version 2.0.22 =
-* TBD
-* Added support for servers running on non-standard HTTP ports.
+* May 18, 2013
+* Added compensation for servers running on non-standard HTTP ports.
+* Made it so that older auto-config files will not trigger the install wizard.
 
 = Version 2.0.21 =
 * May 16, 2013
