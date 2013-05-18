@@ -67,6 +67,8 @@ else
                             'change_date_format'            =>  $comdef_install_wizard_strings['change_date_format'],
                             'admin_session_name'            =>  'BMLT_Admin',
                             );
+        
+    $url_path = dirname ( $_SERVER['PHP_SELF'] );
     ?>
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -75,7 +77,7 @@ else
             <meta http-equiv="content-type" content="text/html; charset=utf-8" />
             <meta http-equiv="Content-Script-Type" content="text/javascript" />
             <title>BMLT Installer</title>
-            <link rel="stylesheet" href="local_server/server_admin/style/install_wizard_styles.css" />
+            <link rel="stylesheet" href="<?php echo $url_path ?>/local_server/server_admin/style/install_wizard_styles.css" />
         </head>
         <body>
             <?php require_once ( dirname ( __FILE__ ).'/installer_guts.php' ); ?>

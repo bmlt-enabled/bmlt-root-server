@@ -30,6 +30,22 @@ else
     die ( 'The Config File Is Missing!' );
     }
 
+// These are defaults for some of the newer fields.
+if ( !isset ( $region_bias ) || (null === $region_bias) )
+    {
+    $region_bias = 'us';
+    }
+
+if ( !isset ( $banner_text ) || (null === $banner_text) )
+    {
+    $banner_text = '';
+    }
+
+if ( !isset ( $comdef_global_language ) || !$comdef_global_language )
+    {
+    $comdef_global_language = 'en';
+    }
+
 // We only invoke the wizard if the configuration has not been done.
 if (   !(
             isset ( $dbType ) && $dbType
@@ -39,15 +55,12 @@ if (   !(
         &&  isset ( $dbPassword ) && $dbPassword
         &&  isset ( $dbPrefix ) && $dbPrefix
         &&  isset ( $bmlt_title ) && $bmlt_title
-	    &&  isset ( $comdef_global_language ) && $comdef_global_language
 	    &&  isset ( $min_pw_len ) && $min_pw_len
-	    &&  (isset ( $region_bias ) || null === $region_bias)
 	    &&  isset ( $search_spec_map_center ) && is_array ( $search_spec_map_center ) && count ( $search_spec_map_center )
 	    &&  isset ( $number_of_meetings_for_auto ) && $number_of_meetings_for_auto
 	    &&  isset ( $time_format ) && $time_format
 	    &&  isset ( $change_date_format ) && $change_date_format
 	    &&  isset ( $change_depth_for_meetings ) && $change_depth_for_meetings
-	    &&  (isset ( $banner_text ) || null === $banner_text)
 	    &&  isset ( $admin_session_name )
 	    &&  isset ( $comdef_distance_units ) && $comdef_distance_units
         )
