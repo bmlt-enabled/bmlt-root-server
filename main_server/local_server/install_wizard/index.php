@@ -46,6 +46,11 @@ if ( !isset ( $comdef_global_language ) || !$comdef_global_language )
     $comdef_global_language = 'en';
     }
 
+if ( !defined ( '_DEFAULT_DURATION' ) ) define ( '_DEFAULT_DURATION', '' );
+if ( !defined ( 'WC_FORMAT' ) ) define ( 'WC_FORMAT', '33' );	// These are used for the NAWS format translation. They are the shared IDs of the wheelchair, open and closed formats.
+if ( !defined ( 'O_FORMAT' ) ) define ( 'O_FORMAT', '17' );
+if ( !defined ( 'C_FORMAT' ) ) define ( 'C_FORMAT', '4' );
+
 // We only invoke the wizard if the configuration has not been done.
 if (   !(
             isset ( $dbType ) && $dbType
