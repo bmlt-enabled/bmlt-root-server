@@ -1935,6 +1935,7 @@ function BMLT_Server_Admin ()
         
         this.setPublished ( meeting_object );
         this.handleNewAddressInfo(meeting_id);
+        this.setFormatCheckboxHandlers ( meeting_object );
     };
     
     /************************************************************************************//**
@@ -2168,6 +2169,27 @@ function BMLT_Server_Admin ()
         
         published_checkbox.onchange = function() { admin_handler_object.reactToPublishedCheck ( meeting_id ); };
         published_checkbox.onclick = function() { admin_handler_object.reactToPublishedCheck ( meeting_id ); };
+    };
+    
+    /************************************************************************************//**
+    *   \brief  
+    ****************************************************************************************/
+    this.setFormatCheckboxHandlers = function (  in_meeting_object
+                                                )
+    {
+        var meeting_id = in_meeting_object.id_bigint;
+        var main_formats = g_format_object_array;
+        
+        for ( var c = 0; c < main_formats.length; c++ )
+            {
+            var format_checkbox = document.getElementById ( 'bmlt_admin_meeting_' + in_meeting_object.id_bigint + '_format_' + main_formats[c].id + '_checkbox' );
+            
+            if ( format_checkbox )
+                {
+                format_checkbox.onchange = function() { admin_handler_object.reactToFormatCheckbox ( format_checkbox, meeting_id ); };
+                format_checkbox.onclick = function() { admin_handler_object.reactToFormatCheckbox ( format_checkbox, meeting_id ); };
+                };
+            };
     };
         
     // #mark - 
