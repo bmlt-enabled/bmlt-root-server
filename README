@@ -50,6 +50,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0.25 =
+* TBD
+* Removed some old code from the header that caused the AJAX responses to be a bit slow. Satellites linking to this version should render more quickly.
+
 = Version 2.0.24 =
 * May 19, 2013
 * Fixed a bug, where clicking the format checkboxes with Internet Explorer did not trigger their callbacks.

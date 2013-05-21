@@ -325,89 +325,89 @@ function GetHeaderXHTML (
 		
 	$google_include = "http://maps.google.com/maps?file=api&amp;v=2&amp;key=$gkey";
 	$einsert = htmlspecialchars ( $in_http_vars['bmlt_root'] )."server/shared/$stripper"."einsert.js";
-	
-	$scripts = "$ajax_threads $check_ajax";
-
-	if ( isset( $in_http_vars['supports_ajax'] ) && ($in_http_vars['supports_ajax'] == 'yes') )
-		{
-		$scripts .= " $google_include $einsert";
-		}
-	
-	$stripper = 'style_stripper.php?filename=';
-	if ( defined ( '__DEBUG_MODE__' ) )
-	    {
-	    $stripper = '';
-	    }
-	
-	$localized_strings = c_comdef_server::GetLocalStrings();
-	$search_spec = htmlspecialchars ( $in_http_vars['bmlt_root'] )."themes/".$localized_strings['theme']."/html/$stripper"."search_specification.css";
-	$search_results_single_meeting = htmlspecialchars ( $in_http_vars['bmlt_root'] )."themes/".$localized_strings['theme']."/html/$stripper"."search_results_single_meeting.css";
-	$search_results_single_meeting_print = htmlspecialchars ( $in_http_vars['bmlt_root'] )."themes/".$localized_strings['theme']."/html/$stripper"."search_results_single_meeting_print.css";
-	$search_results_list = htmlspecialchars ( $in_http_vars['bmlt_root'] )."themes/".$localized_strings['theme']."/html/$stripper"."search_results_list.css";
-	$search_results_map = htmlspecialchars ( $in_http_vars['bmlt_root'] )."themes/".$localized_strings['theme']."/html/$stripper"."search_results_map.css";
-	$search_results_print = htmlspecialchars ( $in_http_vars['bmlt_root'] )."themes/".$localized_strings['theme']."/html/$stripper"."search_results_print.css";
-	
-	$styles = "$search_spec $search_results_list $search_results_map $search_results_single_meeting $search_results_single_meeting_print $search_results_print";
-	
-	if ( !isset ( $in_http_vars['style_only'] ) && !isset ( $in_http_vars['script_only'] ) )
-		{
-		ob_start ();
-		if ( isset ( $ajax_threads ) && trim ( $ajax_threads ) )
-			{
-			echo '<script type="text/javascript" src="'.htmlspecialchars ( trim ( $ajax_threads ) ).'"></script>';
-			}
-
-		if ( isset ( $check_ajax ) && trim ( $check_ajax ) )
-			{
-			echo '<script type="text/javascript" src="'.htmlspecialchars ( trim ( $check_ajax ) ).'"></script>';
-			}
-
-		if ( isset( $in_http_vars['supports_ajax'] ) && ($in_http_vars['supports_ajax'] == 'yes') )
-			{
-			?>
-			<script src="<?php echo $google_include ?>" type="text/javascript"></script>
-			<script src="<?php echo $einsert ?>" type="text/javascript"></script>
-			<?php
-			}
-			
-		if ( isset ( $in_http_vars['search_form'] ) )
-			{
-			?>
-			<link rel="stylesheet" href="<?php echo $search_spec ?>" />
-			<?php
-			}
-		elseif ( (isset ( $in_http_vars['single_meeting_id'] ) && $in_http_vars['single_meeting_id']) || (isset ( $in_http_vars['do_search'] ) && $in_http_vars['do_search']) )
-			{
-			?>
-			<link rel="stylesheet" href="<?php echo $search_spec ?>" />
-			<link rel="stylesheet" href="<?php echo $search_results_single_meeting ?>" />
-			<link rel="stylesheet" href="<?php echo $search_results_single_meeting_print ?>" media="print" />
-			<?php
-			}
-			
-		if ( isset ( $in_http_vars['do_search'] ) && $in_http_vars['do_search'] )
-			{
-			?>
-			<link rel="stylesheet" href="<?php echo $search_results_list ?>" />
-			<link rel="stylesheet" href="<?php echo $search_results_map ?>" />
-			<link rel="stylesheet" href="<?php echo $search_results_print ?>" media="print" />
-			<?php
-			}
-		
-		$ret = ob_get_contents();
-		ob_end_clean();
-		}
-	else
-		{
-		if ( isset ( $in_http_vars['style_only'] ) )
-			{
-			$ret = $styles;
-			}
-		else
-			{
-			$ret = $scripts;
-			}
-		}
+// 	
+// 	$scripts = "$ajax_threads $check_ajax";
+// 
+// 	if ( isset( $in_http_vars['supports_ajax'] ) && ($in_http_vars['supports_ajax'] == 'yes') )
+// 		{
+// 		$scripts .= " $google_include $einsert";
+// 		}
+// 	
+// 	$stripper = 'style_stripper.php?filename=';
+// 	if ( defined ( '__DEBUG_MODE__' ) )
+// 	    {
+// 	    $stripper = '';
+// 	    }
+// 	
+// 	$localized_strings = c_comdef_server::GetLocalStrings();
+// 	$search_spec = htmlspecialchars ( $in_http_vars['bmlt_root'] )."themes/".$localized_strings['theme']."/html/$stripper"."search_specification.css";
+// 	$search_results_single_meeting = htmlspecialchars ( $in_http_vars['bmlt_root'] )."themes/".$localized_strings['theme']."/html/$stripper"."search_results_single_meeting.css";
+// 	$search_results_single_meeting_print = htmlspecialchars ( $in_http_vars['bmlt_root'] )."themes/".$localized_strings['theme']."/html/$stripper"."search_results_single_meeting_print.css";
+// 	$search_results_list = htmlspecialchars ( $in_http_vars['bmlt_root'] )."themes/".$localized_strings['theme']."/html/$stripper"."search_results_list.css";
+// 	$search_results_map = htmlspecialchars ( $in_http_vars['bmlt_root'] )."themes/".$localized_strings['theme']."/html/$stripper"."search_results_map.css";
+// 	$search_results_print = htmlspecialchars ( $in_http_vars['bmlt_root'] )."themes/".$localized_strings['theme']."/html/$stripper"."search_results_print.css";
+// 	
+// 	$styles = "$search_spec $search_results_list $search_results_map $search_results_single_meeting $search_results_single_meeting_print $search_results_print";
+// 	
+// 	if ( !isset ( $in_http_vars['style_only'] ) && !isset ( $in_http_vars['script_only'] ) )
+// 		{
+// 		ob_start ();
+// 		if ( isset ( $ajax_threads ) && trim ( $ajax_threads ) )
+// 			{
+// 			echo '<script type="text/javascript" src="'.htmlspecialchars ( trim ( $ajax_threads ) ).'"></script>';
+// 			}
+// 
+// 		if ( isset ( $check_ajax ) && trim ( $check_ajax ) )
+// 			{
+// 			echo '<script type="text/javascript" src="'.htmlspecialchars ( trim ( $check_ajax ) ).'"></script>';
+// 			}
+// 
+// 		if ( isset( $in_http_vars['supports_ajax'] ) && ($in_http_vars['supports_ajax'] == 'yes') )
+// 			{
+// 			?>
+// 			<script src="<?php echo $google_include ?>" type="text/javascript"></script>
+// 			<script src="<?php echo $einsert ?>" type="text/javascript"></script>
+// 			<?php
+// 			}
+// 			
+// 		if ( isset ( $in_http_vars['search_form'] ) )
+// 			{
+// 			?>
+// 			<link rel="stylesheet" href="<?php echo $search_spec ?>" />
+// 			<?php
+// 			}
+// 		elseif ( (isset ( $in_http_vars['single_meeting_id'] ) && $in_http_vars['single_meeting_id']) || (isset ( $in_http_vars['do_search'] ) && $in_http_vars['do_search']) )
+// 			{
+// 			?>
+// 			<link rel="stylesheet" href="<?php echo $search_spec ?>" />
+// 			<link rel="stylesheet" href="<?php echo $search_results_single_meeting ?>" />
+// 			<link rel="stylesheet" href="<?php echo $search_results_single_meeting_print ?>" media="print" />
+// 			<?php
+// 			}
+// 			
+// 		if ( isset ( $in_http_vars['do_search'] ) && $in_http_vars['do_search'] )
+// 			{
+// 			?>
+// 			<link rel="stylesheet" href="<?php echo $search_results_list ?>" />
+// 			<link rel="stylesheet" href="<?php echo $search_results_map ?>" />
+// 			<link rel="stylesheet" href="<?php echo $search_results_print ?>" media="print" />
+// 			<?php
+// 			}
+// 		
+// 		$ret = ob_get_contents();
+// 		ob_end_clean();
+// 		}
+// 	else
+// 		{
+// 		if ( isset ( $in_http_vars['style_only'] ) )
+// 			{
+// 			$ret = $styles;
+// 			}
+// 		else
+// 			{
+// 			$ret = $scripts;
+// 			}
+// 		}
 	
 	return $ret;
 	}
