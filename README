@@ -53,6 +53,7 @@ CHANGELIST
 = Version 2.0.25 =
 * TBD
 * Removed some old code from the header that caused the AJAX responses to be a bit slow. Satellites linking to this version should render more quickly.
+* Added a 'recursive' parameter to the semantic interface. This allows the response to return an entire Service body hierarchy, based on 1 Service body.
 
 = Version 2.0.24 =
 * May 19, 2013

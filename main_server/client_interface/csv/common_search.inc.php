@@ -42,6 +42,9 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 															If no 'services' values are given, then the search will not use the Service Body field as a
 															search criteria.
 														
+														- 'recursive'
+														    If this is set to '1', then the 'services' key will recursively follow Service bodies.
+														    
 														- 'weekdays'
 															This is an array of positive integers ( 1-7).
 															This is interpreted as an array of integers. Each integer represents a weekday (1 -> Sunday, 7 -> Saturday).
@@ -264,11 +267,40 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 			$in_http_vars['services'] = $in_http_vars['advanced_service_bodies'];
 			}
 		
+		if ( isset ( $in_http_vars['services'] ) && !is_array ( $in_http_vars['services'] ) )
+		    {
+		    $in_http_vars['services'] = array ( $in_http_vars['services'] );
+		    }
+
 		// Look for Service bodies.
 		if ( isset ( $in_http_vars['services'] ) && is_array ( $in_http_vars['services'] ) && count ( $in_http_vars['services'] ) )
 			{
+			$services = array();
+
+			if ( isset ( $in_http_vars['recursive'] ) && $in_http_vars['recursive'] )
+			    {
+                foreach ( $in_http_vars['services'] as $service )
+                    {
+                    $nested = GetAllContainedServiceBodyIDs ( intval ( $service ) );
+                    
+                    if ( isset ( $nested ) && is_array ( $nested ) && count ( $nested ) )
+                        {
+                        foreach ( $nested as $sb_i )
+                            {
+                            $sb_i = intval ( $sb_i );
+                            $services[$sb_i] = $sb_i;
+                            }
+                        }
+                    }
+                }
+            else
+                {
+                $services = $in_http_vars['services'];
+                }
+
 			$sb =& $in_search_manager->GetServiceBodies();
-			foreach ( $in_http_vars['services'] as $service )
+			
+			foreach ( $services as $service )
 				{
 				$sb[intval($service)] = 1;
 				}
@@ -278,6 +310,7 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 		    unset ( $in_http_vars['services'] );
 		    }
 		
+
 		if (   !( isset ( $in_http_vars['geo_width_km'] ) && $in_http_vars['geo_width_km'] )
 		    && !( isset ( $in_http_vars['geo_width'] ) && $in_http_vars['geo_width'] )
 		    && isset ( $in_http_vars['bmlt_search_type'] )
@@ -318,7 +351,7 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 		
 		if ( isset ( $in_http_vars['weekdays'] ) && is_array ( $in_http_vars['weekdays'] ) && count ( $in_http_vars['weekdays'] ) )
 			{
-			$wd =& $in_search_manager->GetWeekdays();
+			$wd = $in_search_manager->GetWeekdays();
 			foreach ( $in_http_vars['weekdays'] as $weekday )
 				{
 				$wd[intval($weekday)] = 1;
@@ -326,7 +359,7 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 			}
 		elseif ( isset ( $in_http_vars['weekdays'] ) )
 			{
-			$wd =& $in_search_manager->GetWeekdays();
+			$wd = $in_search_manager->GetWeekdays();
 			$wd[intval($in_http_vars['weekdays'])] = 1;
 			}
 		
@@ -339,7 +372,7 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 		
 		if ( isset ( $in_http_vars['formats'] ) && is_array ( $in_http_vars['formats'] ) && count ( $in_http_vars['formats'] ) )
 			{
-			$fm =& $in_search_manager->GetFormats();
+			$fm = $in_search_manager->GetFormats();
 			foreach ( $in_http_vars['formats'] as $format )
 				{
 				$fm[intval($format)] = 1;
@@ -349,7 +382,7 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 		// Next, set up the languages.
 		if ( isset ( $in_http_vars['langs'] ) && is_array ( $in_http_vars['langs'] ) && count ( $in_http_vars['langs'] ) )
 			{
-			$lan =& $in_search_manager->GetLanguages();
+			$lan = $in_search_manager->GetLanguages();
 			foreach ( $in_http_vars['langs'] as $lng )
 				{
 				$lan[$lng] = 1;
@@ -482,6 +515,36 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 			$in_search_manager->SetKeyValueSearch ( $in_http_vars['meeting_key'], $in_http_vars['meeting_key_value'], $in_http_vars['meeting_key_match_case'], $in_http_vars['meeting_key_contains'] );
 			}
 		}
+}
+
+/*******************************************************************/
+/** \brief This gets all the Service bodies, and returns a one-dimensional
+           arry, containing its ID, and the IDs of all the Service bodies
+           that are contained in the array.
+	
+	\returns an array of integers.
+*/
+function GetAllContainedServiceBodyIDs ( $in_parent_id = 0  ///< This is the ID of the top Service body (will not be included in the reponse).
+                                        )
+{
+    $in_parent_id = intval ( $in_parent_id );
+    $ret = array( $in_parent_id );
+    
+    $service_bodies = c_comdef_server::GetServer()->GetServiceBodyArray();
+    
+    foreach ( $service_bodies as $service_body )
+        {
+        $sb_id = intval ( $service_body->GetID() );
+        $parent_id = intval ( $service_body->GetOwnerID() );
+        
+        if ( $in_parent_id == $parent_id )
+            {
+            $ret2 = GetAllContainedServiceBodyIDs ( $sb_id );
+            $ret = array_merge ( $ret, $ret2 );
+            }
+        }
+    
+    return $ret;
 }
 
 /*******************************************************************/

@@ -260,7 +260,7 @@ class c_comdef_meeting_search_manager
 		in the meeting search. If any format is specified as 1, then ONLY meetings with the given format will be
 		considered in the search, and you must explicitly set any other formats you wish found.
 	*/
-	function &GetFormats()
+	function GetFormats()
 	{
 		return $this->_formats;
 	}
@@ -460,7 +460,7 @@ class c_comdef_meeting_search_manager
 		\returns a new instance (not a reference) to a c_comdef_meeting_search_manager
 		object, containing a subset of the meetings to fill this one page.
 	*/
-	function &GetPageOfResults( $in_page_no = 1	///< A positive integer. This should be 1 to $this->GetNumberOfPages() (1-based)
+	function GetPageOfResults( $in_page_no = 1	///< A positive integer. This should be 1 to $this->GetNumberOfPages() (1-based)
 							)
 	{
 		if ( $in_page_no < 1 )	// Can't be less than 1.
@@ -576,7 +576,7 @@ class c_comdef_meeting_search_manager
 		consideration in the meeting search. If any language is specified as 1, then ONLY meetings with the given
 		language will be considered in the search, and you must explicitly set any other language you wish found.
 	*/
-	function &GetLanguages()
+	function GetLanguages()
 	{
 		return $this->_languages;
 	}
@@ -594,7 +594,7 @@ class c_comdef_meeting_search_manager
 		consideration in the meeting search. If any weekday is specified as 1, then ONLY meetings that occur on
 		the given weekday will be considered in the search, and you must explicitly set any other weekday you wish found.
 	*/
-	function &GetWeekdays()
+	function GetWeekdays()
 	{
 		return $this->_weekdays;
 	}
@@ -605,7 +605,7 @@ class c_comdef_meeting_search_manager
 		\returns a reference to the c_comdef_server object instantiated by
 		this object.
 	*/
-	function &GetServer()
+	function GetServer()
 	{
 		return $this->_my_server;
 	}
@@ -616,7 +616,7 @@ class c_comdef_meeting_search_manager
 		\returns a reference to the c_comdef_meeting_search_manager object.
 		If this is the root object, it will return a reference to itself.
 	*/
-	function &GetRootObject()
+	function GetRootObject()
 	{
 		$ret = null;
 		
@@ -838,7 +838,7 @@ class c_comdef_meeting_search_manager
 		
 		\returns a reference to the search string.
 	*/
-	function &GetSearchString ()
+	function GetSearchString ()
 	{
 		return $this->_search_string;
 	}
@@ -857,7 +857,7 @@ class c_comdef_meeting_search_manager
 		
 		\returns a reference to the meeting ID array.
 	*/
-	function &GetMeetingIDArray ()
+	function GetMeetingIDArray ()
 	{
 		return $this->_meeting_id_array;
 	}
@@ -887,7 +887,7 @@ class c_comdef_meeting_search_manager
 		languages in human-readable, local form. The key will be the enum,
 		and the value will be the name of the language.
 	*/
-	function &GetAvailableLanguages()
+	function GetAvailableLanguages()
 	{
 		$ret = null;
 		
@@ -911,7 +911,7 @@ class c_comdef_meeting_search_manager
 		
 		This will reference the actual objects controlled by the server.
 	*/
-	function &GetAvailableServiceBodies()
+	function GetAvailableServiceBodies()
 	{
 		$ret = null;
 		
@@ -936,7 +936,7 @@ class c_comdef_meeting_search_manager
 		
 		This will reference the actual objects controlled by the server.
 	*/
-	function &GetAvailableFormats()
+	function GetAvailableFormats()
 	{
 		$ret = null;
 		
@@ -1013,7 +1013,7 @@ class c_comdef_meeting_search_manager
 		\returns a reference to the internal $_search_results field (an
 		instance of c_comdef_search_results).
 	*/
-	function &GetSearchResults_Obj( $in_new_search = false	///< If this is set to true, the search is done anew.
+	function GetSearchResults_Obj( $in_new_search = false	///< If this is set to true, the search is done anew.
 									)
 	{
 		// See if we need to make a new search. Only the root can do a new search.
@@ -1177,7 +1177,7 @@ class c_comdef_meeting_search_manager
 		
 		\returns a reference to an array of references to c_comdef_meeting objects.
 	*/
-	function &GetSearchResultsAsArray()
+	function GetSearchResultsAsArray()
 	{
 		$ret = null;
 		
