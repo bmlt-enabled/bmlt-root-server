@@ -202,7 +202,7 @@ class c_comdef_meeting_search_manager
 			$this->_my_server = c_comdef_server::MakeServer();	// We initialize the server.
 			
 			$this->SetFormats();						// We set the formats array.
-			$this->SetServiceBodies();					// We set the Service Bodies array.
+			$this->SetUpServiceBodies();					// We set the Service Bodies array.
 			$this->SetLanguages();						// We set the Languages array.
 			
 			// Set up the weekday array (1 = Sunday, 7 = Saturday ).
@@ -295,9 +295,9 @@ class c_comdef_meeting_search_manager
 		all available service bodies on the server. They are initialized
 		to 0 (neutral).
 	*/
-	function SetServiceBodies()
+	function SetUpServiceBodies()
 	{
-		$this->_service_bodies = null;
+		$this->_service_bodies = array();
 		
 		// Basic error checking.
 		if ( $this->_my_server instanceof c_comdef_server )
@@ -306,8 +306,9 @@ class c_comdef_meeting_search_manager
 			$bodies =& $this->_my_server->GetServiceBodyArray();
 			if ( is_array ( $bodies ) && count ( $bodies ) )
 				{
-				foreach ( $bodies as $key => &$value )
+				foreach ( $bodies as $body )
 					{
+					$key = $body->GetID();
 					$this->_service_bodies[$key] = 0;
 					}
 				}
