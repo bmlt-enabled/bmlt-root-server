@@ -273,10 +273,10 @@ class c_comdef_admin_main_console
                             
                                 $ret .= '{';
                                     $ret .= '"id":'.$format['shared_id'];
-                                    $ret .= ',"key":"'.$format['key'].'"';
-                                    $ret .= ',"name":"'.$format['name'].'"';
-                                    $ret .= ',"description":"'.$format['description'].'"';
-                                $ret .= '}';
+                                    $ret .= ',"key":"'.str_replace ( '"', '\"', $format['key'] ).'"';
+                                    $ret .= ',"name":"'.str_replace ( '"', '\"', $format['name'] ).'"';
+                                    $ret .= ',"description":"'.str_replace ( '"', '\"', $format['description'] ).'"';
+                                $ret .= '}'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                                 }
                             }
                         }
