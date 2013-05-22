@@ -377,7 +377,7 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 		
 		if ( isset ( $in_http_vars['formats'] ) && is_array ( $in_http_vars['formats'] ) && count ( $in_http_vars['formats'] ) )
 			{
-			$fm = $in_search_manager->GetFormats();
+			$fm =& $in_search_manager->GetFormats();
 			foreach ( $in_http_vars['formats'] as $format )
 				{
 				$fm[intval($format)] = 1;

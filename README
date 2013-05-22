@@ -51,7 +51,7 @@ For instructions on installing the root server, see this page:
 CHANGELIST
 ----------
 = Version 2.0.25 =
-* TBD
+* May 22, 2013
 * Removed some old code from the header that caused the AJAX responses to be a bit slow. Satellites linking to this version should render more quickly.
 * Added a 'recursive' parameter to the semantic interface. This allows the response to return an entire Service body hierarchy, based on 1 Service body.
 * Made the search parser a bit more forgiving for Service bodies and weekdays. They are no longer REQUIRED to be arrays, which makes single values easier to specify.

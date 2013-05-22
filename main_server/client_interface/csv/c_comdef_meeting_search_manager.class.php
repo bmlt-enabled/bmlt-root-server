@@ -201,9 +201,9 @@ class c_comdef_meeting_search_manager
 			
 			$this->_my_server = c_comdef_server::MakeServer();	// We initialize the server.
 			
-			$this->SetFormats();						// We set the formats array.
+			$this->SetUpFormats();						// We set the formats array.
 			$this->SetUpServiceBodies();					// We set the Service Bodies array.
-			$this->SetLanguages();						// We set the Languages array.
+			$this->SetUpLanguages();						// We set the Languages array.
 			
 			// Set up the weekday array (1 = Sunday, 7 = Saturday ).
 			$this->_weekdays = null;
@@ -223,7 +223,7 @@ class c_comdef_meeting_search_manager
 	/** \brief Sets an internal array of integers, containing the Shared IDs for
 		all available formats on the server. They are initialized to 0 (neutral).
 	*/
-	function SetFormats()
+	function SetUpFormats()
 	{
 		$this->_formats = null;
 		
@@ -260,7 +260,7 @@ class c_comdef_meeting_search_manager
 		in the meeting search. If any format is specified as 1, then ONLY meetings with the given format will be
 		considered in the search, and you must explicitly set any other formats you wish found.
 	*/
-	function GetFormats()
+	function &GetFormats()
 	{
 		return $this->_formats;
 	}
@@ -545,7 +545,7 @@ class c_comdef_meeting_search_manager
 		The array uses the language enum as the key, and the -1->0->1
 		form as the selector.
 	*/
-	function SetLanguages()
+	function SetUpLanguages()
 	{
 		$this->_languages = null;
 		
