@@ -576,7 +576,7 @@ class c_comdef_meeting_search_manager
 		consideration in the meeting search. If any language is specified as 1, then ONLY meetings with the given
 		language will be considered in the search, and you must explicitly set any other language you wish found.
 	*/
-	function GetLanguages()
+	function &GetLanguages()
 	{
 		return $this->_languages;
 	}
@@ -594,7 +594,7 @@ class c_comdef_meeting_search_manager
 		consideration in the meeting search. If any weekday is specified as 1, then ONLY meetings that occur on
 		the given weekday will be considered in the search, and you must explicitly set any other weekday you wish found.
 	*/
-	function GetWeekdays()
+	function &GetWeekdays()
 	{
 		return $this->_weekdays;
 	}

@@ -349,9 +349,14 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 			$in_http_vars['weekdays'] = $in_http_vars['advanced_weekdays'];
 			}
 		
+		if ( isset ( $in_http_vars['weekdays'] ) && !is_array ( $in_http_vars['weekdays'] ) && (intval ( $in_http_vars['weekdays'] ) > 0) && (intval ( $in_http_vars['weekdays'] ) < 8) )
+		    {
+		    $in_http_vars['weekdays'] = array ( intval ( $in_http_vars['weekdays'] ) );
+		    }
+		
 		if ( isset ( $in_http_vars['weekdays'] ) && is_array ( $in_http_vars['weekdays'] ) && count ( $in_http_vars['weekdays'] ) )
 			{
-			$wd = $in_search_manager->GetWeekdays();
+			$wd =& $in_search_manager->GetWeekdays();
 			foreach ( $in_http_vars['weekdays'] as $weekday )
 				{
 				$wd[intval($weekday)] = 1;
