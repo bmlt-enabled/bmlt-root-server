@@ -99,6 +99,11 @@ $default_lang = $lang;
                         </div>
                         <div class="extra_text_div"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_PW_Additional_Text'] ); ?></div>
                     </div>
+                    <div class="one_line_div">
+                        <div class="one_line_div centered_text">
+                            <a class="bmlt_admin_ajax_button" href="javascript:g_installer_object.buttonTestForDatabaseSetup()"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Database_TestButton_Text'] ); ?></a>
+                        </div>
+                    </div>
                     <div class="clear_both"></div>
                     <?php echo bmlt_create_next_prev_buttons(1) ?>
                 </div>

@@ -50,6 +50,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0.28 =
+* TBD
+* Adding a database connectivity test button to the installer wizard.
+
 = Version 2.0.27 =
 * May 22, 2013
 * Fixes an obscure bug that can be caused by entry of double-quotes into the format.

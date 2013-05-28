@@ -270,6 +270,62 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
     /************************************************************************************//**
     *   \brief 
     ****************************************************************************************/
+    this.buttonTestForDatabaseSetup = function()
+    {
+        var uri = this.m_ajax_uri;
+        
+        this.gatherInstallerState();
+        
+        if ( this.m_ajax_request_in_progress )
+            {
+            this.m_ajax_request_in_progress.abort();
+            this.m_ajax_request_in_progress = null;
+            };
+        
+        uri += 'test';
+        uri += '&dbType=' + this.m_installer_state.dbType;
+        uri += '&dbName=' + this.m_installer_state.dbName;
+        uri += '&dbUser=' + this.m_installer_state.dbUser;
+        uri += '&dbPassword=' + this.m_installer_state.dbPassword;
+        uri += '&dbServer=' + this.m_installer_state.dbServer;
+        uri += '&dbPrefix=' + this.m_installer_state.dbPrefix;
+        
+        var salt = new Date();
+        uri += '&salt=' + salt.getTime();
+    
+        this.m_ajax_request_in_progress = BMLT_Installer_AjaxRequest ( uri, function(in_req) { g_installer_object.buttonTestForDatabaseSetupCallback(in_req); }, 'post' );
+    };
+    
+    /************************************************************************************//**
+    *   \brief 
+    ****************************************************************************************/
+    this.buttonTestForDatabaseSetupCallback = function(   in_http_request
+                                                        )
+    {
+        this.m_ajax_request_in_progress = null;
+
+        if ( in_http_request.responseText )
+            {
+            eval ( 'var ret_val = parseInt ( ' + in_http_request.responseText + ', 10 );' );
+            
+            if ( ret_val == 0 ) // There is an existing database
+                {
+                }
+            else if ( ret_val == -1 )   // No database
+                {
+                }
+            else
+                {
+                };
+            }
+        else    // Nothing to report.
+            {
+            };
+    };
+    
+    /************************************************************************************//**
+    *   \brief 
+    ****************************************************************************************/
     this.testForDatabaseSetup = function()
     {
         var uri = this.m_ajax_uri;
