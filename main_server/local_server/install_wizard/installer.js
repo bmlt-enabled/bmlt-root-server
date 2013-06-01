@@ -282,7 +282,7 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
             this.m_ajax_request_in_progress = null;
             };
         
-        uri += 'test';
+        uri += 'test_comprehensive';
         uri += '&dbType=' + this.m_installer_state.dbType;
         uri += '&dbName=' + this.m_installer_state.dbName;
         uri += '&dbUser=' + this.m_installer_state.dbUser;

@@ -120,7 +120,7 @@ if (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'initiali
         echo array2json ( $response );
         }
     }
-elseif (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'test')
+elseif (    (isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'test') || ($http_vars['ajax_req'] == 'test_comprehensive'))
         &&  isset ( $http_vars['dbName'] ) && $http_vars['dbName']
         &&  isset ( $http_vars['dbUser'] ) && $http_vars['dbUser']
         &&  isset ( $http_vars['dbPassword'] ) && $http_vars['dbPassword']
@@ -142,13 +142,25 @@ elseif (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'test
 		    }
 		else
 		    {
-		    echo '1';
+		    if ( $http_vars['ajax_req'] == 'test_comprehensive' )
+		        {
+		        }
+		    else
+		        {
+		        echo '1';
+		        }
 		    }
         }
     catch ( Exception $e )
         {
 // die ( print_r ( $e, true ) );
-        echo '-1';
+        if ( $http_vars['ajax_req'] == 'test_comprehensive' )
+            {
+            }
+        else
+            {
+            echo '-1';
+            }
         }
     }
 elseif ( isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'test') )
