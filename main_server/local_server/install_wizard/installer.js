@@ -306,16 +306,11 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
 
         if ( in_http_request.responseText )
             {
-            eval ( 'var ret_val = parseInt ( ' + in_http_request.responseText + ', 10 );' );
+            eval ( 'var json_object = ' + in_http_request.responseText + ';' );
             
-            if ( ret_val == 0 ) // There is an existing database
+            if ( json_object ) // There is an existing database
                 {
-                }
-            else if ( ret_val == -1 )   // No database
-                {
-                }
-            else
-                {
+                alert ( json_object.message );
                 };
             }
         else    // Nothing to report.

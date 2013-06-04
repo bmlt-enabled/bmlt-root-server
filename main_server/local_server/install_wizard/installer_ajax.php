@@ -138,12 +138,13 @@ elseif (    (isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'tes
 		
 		if ( isset ( $result ) && is_array ( $result ) && count ( $result ) )
 		    {
-		    echo '0';
+            echo "{'success':true, 'message':'".str_replace ( "'", "\'", $comdef_install_wizard_strings['Database_TestButton_Success'] )."'}";
 		    }
 		else
 		    {
 		    if ( $http_vars['ajax_req'] == 'test_comprehensive' )
 		        {
+                echo "{'success':false, 'message':'".str_replace ( "'", "\'", $comdef_install_wizard_strings['Database_TestButton_Fail'] )."'}";
 		        }
 		    else
 		        {
@@ -153,9 +154,9 @@ elseif (    (isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'tes
         }
     catch ( Exception $e )
         {
-// die ( print_r ( $e, true ) );
         if ( $http_vars['ajax_req'] == 'test_comprehensive' )
             {
+            echo "{'success':false, 'message':'".str_replace ( "'", "\'", $comdef_install_wizard_strings['Database_TestButton_Fail'].$e->getMessage() )."'}";
             }
         else
             {
