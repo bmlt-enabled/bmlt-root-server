@@ -24,6 +24,9 @@
 	                                        'Database_Version_Error'        =>  'ERROR: You must have PHP Version 5.2 or greater installed on this server!',
 	                                        'Database_PDO_Error'            =>  'ERROR: You do not have PHP PDO installed!',
 	                                        'Database_Type_Error'           =>  'ERROR: Even though you have PDO, you have no database drivers installed!',
+	                                        'Database_TestButton_Text'      =>  'TEST',
+	                                        'Database_TestButton_Success'   =>  'The database connection was successful.',
+	                                        'Database_TestButton_Fail'      =>  'The database connection failed: ',
 
                                             'AJAX_Handler_DB_Connect_Error' =>  'The database connection failed! Please make sure that the database exists, IS COMPLETELY EMPTY, the user is created, and that user has full permissions on the empty database.',
                                             'AJAX_Handler_DB_Established_Error' =>  'The database already esists, and has been set up! You cannot use this setup to overwrite an existing database!',

@@ -120,7 +120,7 @@ if (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'initiali
         echo array2json ( $response );
         }
     }
-elseif (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'test')
+elseif (    (isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'test') || ($http_vars['ajax_req'] == 'test_comprehensive'))
         &&  isset ( $http_vars['dbName'] ) && $http_vars['dbName']
         &&  isset ( $http_vars['dbUser'] ) && $http_vars['dbUser']
         &&  isset ( $http_vars['dbPassword'] ) && $http_vars['dbPassword']
@@ -138,17 +138,30 @@ elseif (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'test
 		
 		if ( isset ( $result ) && is_array ( $result ) && count ( $result ) )
 		    {
-		    echo '0';
+            echo "{'success':true, 'message':'".str_replace ( "'", "\'", $comdef_install_wizard_strings['Database_TestButton_Success'] )."'}";
 		    }
 		else
 		    {
-		    echo '1';
+		    if ( $http_vars['ajax_req'] == 'test_comprehensive' )
+		        {
+                echo "{'success':false, 'message':'".str_replace ( "'", "\'", $comdef_install_wizard_strings['Database_TestButton_Fail'] )."'}";
+		        }
+		    else
+		        {
+		        echo '1';
+		        }
 		    }
         }
     catch ( Exception $e )
         {
-// die ( print_r ( $e, true ) );
-        echo '-1';
+        if ( $http_vars['ajax_req'] == 'test_comprehensive' )
+            {
+            echo "{'success':false, 'message':'".str_replace ( "'", "\'", $comdef_install_wizard_strings['Database_TestButton_Fail'].$e->getMessage() )."'}";
+            }
+        else
+            {
+            echo '-1';
+            }
         }
     }
 elseif ( isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'test') )

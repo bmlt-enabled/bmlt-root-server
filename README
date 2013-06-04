@@ -54,6 +54,10 @@ CHANGELIST
 * TBD
 * 
 
+= Version 2.0.28 =
+* June 4, 2013
+* Added a database connectivity test button to the installer wizard.
+
 = Version 2.0.27 =
 * May 22, 2013
 * Fixes an obscure bug that can be caused by entry of double-quotes into the format.
