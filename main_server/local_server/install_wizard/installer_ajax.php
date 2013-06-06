@@ -174,7 +174,14 @@ elseif ( isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'initial
     }
 else
     {
-    echo 'ERROR';
+    if ( $http_vars['ajax_req'] == 'test_comprehensive' )
+        {
+        echo "{'success':false, 'message':'".str_replace ( "'", "\'", $comdef_install_wizard_strings['Database_TestButton_Fail'] )."'}";
+        }
+    else
+        {
+        echo 'ERROR';
+        }
     }
 
 ob_end_flush();
