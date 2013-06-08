@@ -403,7 +403,7 @@ class c_comdef_admin_main_console
                         $ret .= $this->return_user_admin_panel();
                 
                     case    _USER_LEVEL_SERVICE_BODY_ADMIN:
-                        if ( count ( $this->my_editable_service_bodies ) > 0 )
+                        if ( (count ( $this->my_editable_service_bodies ) > 0) || ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) )
                             {
                             $ret .= $this->return_service_body_admin_panel();
                             }
@@ -610,7 +610,11 @@ class c_comdef_admin_main_console
                     $ret .= '>'.htmlspecialchars ( $user->GetLocalName() ).'</option>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                     }
                 }
-            $ret .= '<option value="" disabled="disabled"></option>';
+            if ( count ( $this->my_users ) )
+                {
+                $ret .= '<option value="" disabled="disabled"></option>';
+                }
+            
             $ret .= '<option value="0" selected="selected">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_create_new_user_option'] ).'</option>';
         $ret .= '</select>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
         
