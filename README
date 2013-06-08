@@ -57,6 +57,7 @@ CHANGELIST
 = Version 2.0.30 =
 * June 8, 2013
 * Made the TEST button more useful. Also fixed a bug in it, where it would fail for a perfectly-formed empty database.
+* Fixed a bug, where the Service body admin section would not appear properly for Server Administrators if there were no preexisting Service bodies.
 
 = Version 2.0.29 =
 * June 6, 2013
