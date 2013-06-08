@@ -71,6 +71,7 @@ if (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'initiali
         {
         // We connect the PDO layer:
         c_comdef_dbsingleton::init ( $http_vars['dbType'], $http_vars['dbServer'], $http_vars['dbName'], $http_vars['dbUser'], $http_vars['dbPassword'] );
+        c_comdef_dbsingleton::connect();
     
         // First, we make sure that the database does not already exist. If so, we immediately fail, as we will not overwrite an existing database.
 		$result = c_comdef_dbsingleton::preparedQuery ( 'SELECT * FROM '.$http_vars['dbName'].'.'.$http_vars['dbPrefix'].'_comdef_users WHERE 1', array() );
@@ -115,7 +116,6 @@ if (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'initiali
         }
     catch ( Exception $e )
         {
-// die ( print_r ( $e, true ) );
         $response = array ( 'status' => 'false', 'report' => $comdef_install_wizard_strings['AJAX_Handler_DB_Connect_Error'] );
         echo array2json ( $response );
         }
@@ -132,24 +132,23 @@ elseif (    (isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'tes
     try
         {
         c_comdef_dbsingleton::init ( $http_vars['dbType'], $http_vars['dbServer'], $http_vars['dbName'], $http_vars['dbUser'], $http_vars['dbPassword'] );
-    
-        // If we have an existing database, we return the word "false".
-		$result = c_comdef_dbsingleton::preparedQuery ( 'SELECT * FROM '.$http_vars['dbName'].'.'.$http_vars['dbPrefix'].'_comdef_users WHERE 1', array() );
-		
-		if ( isset ( $result ) && is_array ( $result ) && count ( $result ) )
-		    {
-            echo "{'success':true, 'message':'".str_replace ( "'", "\'", $comdef_install_wizard_strings['Database_TestButton_Success'] )."'}";
+        c_comdef_dbsingleton::connect();
+        
+        if ( $http_vars['ajax_req'] == 'test_comprehensive' )
+            {
+            try
+                {
+		        $result = c_comdef_dbsingleton::preparedQuery ( 'SELECT * FROM '.$http_vars['dbName'].'.'.$http_vars['dbPrefix'].'_comdef_users WHERE 1', array() );
+                echo "{'success':false, 'message':'".str_replace ( "'", "\'", $comdef_install_wizard_strings['Database_TestButton_Fail2'] )."'}";
+                }
+            catch ( EXception $e2 )
+                {
+		        echo "{'success':true, 'message':'".str_replace ( "'", "\'", $comdef_install_wizard_strings['Database_TestButton_Success'] )."'}";
+                }
 		    }
 		else
 		    {
-		    if ( $http_vars['ajax_req'] == 'test_comprehensive' )
-		        {
-                echo "{'success':false, 'message':'".str_replace ( "'", "\'", $comdef_install_wizard_strings['Database_TestButton_Fail'] )."'}";
-		        }
-		    else
-		        {
-		        echo '1';
-		        }
+		    echo '1';
 		    }
         }
     catch ( Exception $e )

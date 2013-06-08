@@ -50,6 +50,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0.30 =
+* June 8, 2013
+* Made the TEST button more useful. Also fixed a bug in it, where it would fail for a perfectly-formed empty database.
+
 = Version 2.0.29 =
 * June 6, 2013
 * Simply trap when the TEST button is hit with no information (used to give no response). It now gives an error message.
