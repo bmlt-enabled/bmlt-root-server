@@ -50,6 +50,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0.32 =
+* June 26, 2013
+* Simply added an error handler for when a duplicate user login is specified when trying to create a new user.
+
 = Version 2.0.31 =
 * June 8, 2013
 * There was actually a nasty bug in the installer wizard that was caused by some of the work to address non-MySQL databases. This has been fixed.

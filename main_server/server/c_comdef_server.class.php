@@ -1057,6 +1057,27 @@ class c_comdef_server
     }
 
     /*******************************************************************/
+    /** \brief Given a login, looks up the user, and returns
+        a reference to that user object.
+    
+        \returns a reference to a c_comdef_user object. Null if none.
+    */
+    static function &GetUserByLogin(    $in_login      ///< A string. The login ID.
+                                    )
+    {
+        $ret = null;
+        
+        $users_obj =& self::GetServer()->_users_obj;
+        
+        if ( $users_obj instanceof c_comdef_users )
+            {
+            $ret =& $users_obj->GetUserByLogin ( $in_login );
+            }
+        
+        return $ret;
+    }
+
+    /*******************************************************************/
     /** \brief Given a login and password, looks up the user, and returns
         a reference to that user object.
     

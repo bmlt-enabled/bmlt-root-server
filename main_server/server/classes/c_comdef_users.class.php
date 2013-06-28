@@ -135,6 +135,29 @@ class c_comdef_users implements i_comdef_has_parent
 	}
 
 	/*******************************************************************/
+	/** \brief Given a login, looks up the user, and returns
+		a reference to that user object.
+	
+		\returns a reference to a c_comdef_user object. Null if none.
+	*/
+	function &GetUserByLogin(   $in_login		///< A string. The login ID.
+                            )
+	{
+		$ret = null;
+		
+		foreach ( $this->_local_copy_of_array as &$user )
+			{
+			if ( ($in_login == $user->GetLogin()) )
+				{
+				$ret =& $user;
+				break;
+				}
+			}
+		
+		return $ret;
+	}
+
+	/*******************************************************************/
 	/** \brief Given a login and password, looks up the user, and returns
 		a reference to that user object.
 	
