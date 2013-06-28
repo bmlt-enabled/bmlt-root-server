@@ -434,27 +434,36 @@ class c_comdef_admin_ajax_handler
                 $user_level = intval ( $the_new_user[5] );
                 $password = trim ( $the_new_user[6] );
             
-                $user_to_create = new c_comdef_user;
-            
-                if ( $user_to_create instanceof c_comdef_user )
+                if ( !$this->my_server->GetUserByLogin ( $login ) )
                     {
-                    $user_to_create->SetLogin ( $login );
-                    $user_to_create->SetLocalName ( $name );
-                    $user_to_create->SetLocalDescription ( $description );
-                    $user_to_create->SetEmailAddress ( $email );
-                    $user_to_create->SetUserLevel ( $user_level );
+                    $user_to_create = new c_comdef_user;
+            
+                    if ( $user_to_create instanceof c_comdef_user )
+                        {
+                        $user_to_create->SetLogin ( $login );
+                        $user_to_create->SetLocalName ( $name );
+                        $user_to_create->SetLocalDescription ( $description );
+                        $user_to_create->SetEmailAddress ( $email );
+                        $user_to_create->SetUserLevel ( $user_level );
                     
-                    if ( $password )
-                        {
-                        $user_to_create->SetNewPassword ( $password );
-                        }
+                        if ( $password )
+                            {
+                            $user_to_create->SetNewPassword ( $password );
+                            }
                 
-                    if ( $user_to_create->UpdateToDB() )
-                        {
-                        // Get whatever ID was assigned to this User.
-                        $the_new_user[0] = intval ( $user_to_create->GetID() );
-                        header ( 'Content-type: application/json' );
-                        echo "{'success':true,'user':".array2json ( $the_new_user )."}";
+                        if ( $user_to_create->UpdateToDB() )
+                            {
+                            // Get whatever ID was assigned to this User.
+                            $the_new_user[0] = intval ( $user_to_create->GetID() );
+                            header ( 'Content-type: application/json' );
+                            echo "{'success':true,'user':".array2json ( $the_new_user )."}";
+                            }
+                        else
+                            {
+                            $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_create_fail_text'] );
+                            header ( 'Content-type: application/json' );
+                            echo "{'success':false,'report':'$err_string'}";
+                            }
                         }
                     else
                         {
@@ -465,7 +474,7 @@ class c_comdef_admin_ajax_handler
                     }
                 else
                     {
-                    $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_create_fail_text'] );
+                    $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_create_fail_already_exists'] );
                     header ( 'Content-type: application/json' );
                     echo "{'success':false,'report':'$err_string'}";
                     }

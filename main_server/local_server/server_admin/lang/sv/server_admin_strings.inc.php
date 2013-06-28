@@ -228,6 +228,7 @@
 	                                        'user_change_fader_fail_text'                           =>  'Användaren ändrades inte!',
 	                                        'user_change_fader_create_success_text'                 =>  'Användaren skapades',
 	                                        'user_change_fader_create_fail_text'                    =>  'Användaren skapades inte!',
+	                                        'user_change_fader_create_fail_already_exists'          =>  'A Login For The User That You Are Trying To Create Already Exists',
 	                                        'user_change_fader_delete_success_text'                 =>  'Användaren kasserad',
 	                                        'user_change_fader_delete_fail_text'                    =>  'Användaren kasserades inte!',
 	                                        'user_save_button'                                      =>  'Spara ändringar för användaren',

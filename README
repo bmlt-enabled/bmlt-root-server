@@ -53,6 +53,9 @@ CHANGELIST
 = Version 2.1.0 =
 * TBD
 * 
+= Version 2.0.32 =
+* June 26, 2013
+* Simply added an error handler for when a duplicate user login is specified when trying to create a new user.
 
 = Version 2.0.31 =
 * June 8, 2013
