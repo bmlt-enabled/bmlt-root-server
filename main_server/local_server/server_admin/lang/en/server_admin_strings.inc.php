@@ -223,7 +223,7 @@
 	                                        'user_change_fader_fail_text'                           =>  'The User Change Failed',
 	                                        'user_change_fader_create_success_text'                 =>  'The User Was Successfully Created',
 	                                        'user_change_fader_create_fail_text'                    =>  'The User Create Failed',
-	                                        'user_change_fader_create_fail_already_exists'          =>  'A Login For The User That You Are Trying To Create Already Exists',
+	                                        'user_change_fader_create_fail_already_exists'          =>  'A Login For The User That You Are Trying To Create Already Exists.',
 	                                        'user_change_fader_delete_success_text'                 =>  'The User Was Successfully Deleted',
 	                                        'user_change_fader_delete_fail_text'                    =>  'The User Delete Failed',
 	                                        'user_save_button'                                      =>  'Save the Changes to This User',

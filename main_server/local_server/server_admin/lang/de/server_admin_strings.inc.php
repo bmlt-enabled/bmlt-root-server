@@ -223,7 +223,7 @@
 	                                        'user_change_fader_fail_text'                           =>  'Das Ändern des Benutzers schlug fehl',
 	                                        'user_change_fader_create_success_text'                 =>  'Der Benutzer wurde erfolgreich erstellt',
 	                                        'user_change_fader_create_fail_text'                    =>  'Das Erstellen des Benutzers schlug fehl',
-	                                        'user_change_fader_create_fail_already_exists'          =>  'A Login For The User That You Are Trying To Create Already Exists',
+	                                        'user_change_fader_create_fail_already_exists'          =>  'Ein Login für den Benutzer, den du zu erstellen versuchst, existiert bereits.',
 	                                        'user_change_fader_delete_success_text'                 =>  'Der Benutzer wurde erfolgreich gelöscht',
 	                                        'user_change_fader_delete_fail_text'                    =>  'Das Löschen des Benutzers schlug fehl',
 	                                        'user_save_button'                                      =>  'Änderungen an diesem Benutzer speichern',

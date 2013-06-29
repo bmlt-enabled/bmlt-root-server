@@ -50,6 +50,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0.33 =
+* TBD
+* Added a German translation of the duplicate login error message.
+
 = Version 2.0.32 =
 * June 26, 2013
 * Simply added an error handler for when a duplicate user login is specified when trying to create a new user.
