@@ -164,6 +164,7 @@ if ( $server instanceof c_comdef_server )
 							$location_neighborhood = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_neighborhood'] ) ) );
 							$location_province = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_province'] ) ) );
 							$location_nation = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_nation'] ) ) );
+							$location_postal_code_1 = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_postal_code_1'] ) ) );
 							
 							if ( trim ( stripslashes ( $meeting['location_municipality'] ) ) )
 								{
@@ -185,6 +186,11 @@ if ( $server instanceof c_comdef_server )
 							if ( $location_province )
 								{
 								$town = "$town<span class=\"c_comdef_search_results_province\">, $location_province</span>";
+								}
+							
+							if ( $location_postal_code_1 )
+								{
+								$town = "$town<span class=\"c_comdef_search_results_zip\">, $location_postal_code_1</span>";
 								}
 							
 							if ( $location_nation )

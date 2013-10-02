@@ -51,7 +51,8 @@ For instructions on installing the root server, see this page:
 CHANGELIST
 ----------
 = Version 2.0.33 =
-* TBD
+* October 2, 2013
+* Added the zip code to the simple output.
 * Added a German translation of the duplicate login error message.
 * Tweaked the German translations a bit.
 
