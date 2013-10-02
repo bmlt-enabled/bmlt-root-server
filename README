@@ -53,6 +53,13 @@ CHANGELIST
 = Version 2.1.0 =
 * TBD
 * 
+
+= Version 2.0.33 =
+* October 2, 2013
+* Added the zip code to the simple output.
+* Added a German translation of the duplicate login error message.
+* Tweaked the German translations a bit.
+
 = Version 2.0.32 =
 * June 26, 2013
 * Simply added an error handler for when a duplicate user login is specified when trying to create a new user.
