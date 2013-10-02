@@ -57,6 +57,7 @@ CHANGELIST
 = Version 2.0.33 =
 * October 2, 2013
 * Added the zip code to the simple output.
+* Fixed a bug, where setting the map location would not properly enable the save button.
 * Added a German translation of the duplicate login error message.
 * Tweaked the German translations a bit.
 

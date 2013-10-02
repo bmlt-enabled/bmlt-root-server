@@ -2526,6 +2526,7 @@ function BMLT_Server_Admin ()
                 this.displayMainMarkerInMap ( in_meeting_id );
 
                 google.maps.event.removeListener ( the_meeting_object.m_geocoder );
+                this.validateMeetingEditorButton ( in_meeting_id );
                 }
             else
                 {
