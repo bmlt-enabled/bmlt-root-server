@@ -54,6 +54,10 @@ CHANGELIST
 * TBD
 * 
 
+= Version 2.0.34
+* October 19, 2013
+* Fixed a bug in the XML/JSON export, where empty fields could result in incorrect data.
+
 = Version 2.0.33 =
 * October 2, 2013
 * Added the zip code to the simple output.
