@@ -280,13 +280,14 @@ function GetSearchResults (
 				$row_columns = array();
 				foreach ( $row as $column )
 					{
-					if ( isset ( $column ) )
-						{
-						if ( in_array ( $keys[$index++], $the_keys ) )
-							{
-							array_push ( $row_columns, $column );
-							}
-						}
+					if ( !$column )
+					    {
+					    $column = ' ';
+					    }
+                    if ( in_array ( $keys[$index++], $the_keys ) )
+                        {
+                        array_push ( $row_columns, $column );
+                        }
 					}
 				$result2[$row[0]] = '"'.implode ( '","', $row_columns ).'"';
 				}
@@ -746,7 +747,7 @@ function TranslateToJSON ( $in_csv_data ///< An array of CSV data, with the firs
 				{
 				if ( isset ( $column ) )
 					{
-					$line[$keys[$index++]] = $column;
+					$line[$keys[$index++]] = trim ( $column );
 					}
 				}
 			array_push ( $temp_keyed_array, $line );
@@ -785,7 +786,7 @@ function TranslateToXML (	$in_csv_data	///< An array of CSV data, with the first
 				{
 				if ( isset ( $column ) )
 					{
-					$line[$keys[$index++]] = $column;
+					$line[$keys[$index++]] = trim ( $column );
 					}
 				}
 			array_push ( $temp_keyed_array, $line );
