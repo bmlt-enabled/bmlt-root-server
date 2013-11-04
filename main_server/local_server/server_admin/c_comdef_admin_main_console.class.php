@@ -58,7 +58,7 @@ class c_comdef_admin_main_console
             }
 
         $this->my_users = array_values ( $this->my_server->GetServerUsersObj()->GetUsersArray() );
-        $this->my_ajax_uri = $_SERVER['PHP_SELF'].'?bmlt_ajax_callback=1';
+        $this->my_ajax_uri = 'http://'.$_SERVER['SERVER_NAME'].'/'.$_SERVER['PHP_SELF'].'?bmlt_ajax_callback=1';
         
         $this->my_formats = array();
         $langs = $this->my_server->GetServerLangs();

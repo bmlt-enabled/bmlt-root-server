@@ -50,6 +50,12 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.0.35 =
+* TBD
+* Consolidated and reduced the localization strings.
+* Removed the useless PDF generator directory (I'll get back to this properly, in a future release).
+* Did some technical work to ensure that the server will work properly in some virtual host environments.
+
 = Version 2.0.34 =
 * October 19, 2013
 * Fixed a bug in the XML/JSON export, where empty fields could result in incorrect data.

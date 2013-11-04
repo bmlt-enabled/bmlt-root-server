@@ -24,17 +24,17 @@
 	/** We scan through the "lang" directory, and pick out the available localizations.
 		These will be kept in the comdef_global_languages array.
 	*/
-	if ( $handle = opendir ( dirname ( __FILE__ ).'/lang' ) )
+	if ( $handle = opendir ( dirname ( __FILE__ ).'/../../local_server/server_admin/lang' ) )
 		{
 		while ( false !== ($file = readdir($handle)) )
 			{
 			if (!('.' == $file[0])
-				&& is_dir ( dirname ( __FILE__ ).'/lang/'.$file )
-				&& file_exists ( dirname ( __FILE__ ).'/lang/'.$file.'/name.txt' )
-				&& file_exists ( dirname ( __FILE__ ).'/lang/'.$comdef_global_language.'/format_codes.php' ) )
+				&& is_dir ( dirname ( __FILE__ ).'/../../local_server/server_admin/lang/'.$file )
+				&& file_exists ( dirname ( __FILE__ ).'/../../local_server/server_admin/lang/'.$file.'/name.txt' )
+				&& file_exists ( dirname ( __FILE__ ).'/../../local_server/server_admin/lang/'.$comdef_global_language.'/format_codes.php' ) )
 				{
 				/// The "name.txt" file contains -ONLY- the language name, in its local language.
-				$name = file_get_contents ( dirname ( __FILE__ ).'/lang/'.$file.'/name.txt' );
+				$name = file_get_contents ( dirname ( __FILE__ ).'/../../local_server/server_admin/lang/'.$file.'/name.txt' );
 				/// Each language has a text file, which has its name, in local language.
 				$comdef_global_languages[$file] = $name;
 				}
@@ -45,12 +45,12 @@
 	$comdef_global_list_address =  '@@%%location_text%%, @@%%location_street%% @@%%location_info%%';
 	
 	/// Include the automatically generated configuration.
-	if ( file_exists ( dirname ( __FILE__ )."//get-config.php" ) )
+	if ( file_exists ( dirname ( __FILE__ )."/get-config.php" ) )
 		{
-		include ( dirname ( __FILE__ )."//get-config.php" );
+		include ( dirname ( __FILE__ )."/get-config.php" );
 		}
 	else
 		{
-		throw ( new Exception ( "No /get-config.php file!" ) );
+		throw ( new Exception ( "No get-config.php file!" ) );
 		}
 ?>

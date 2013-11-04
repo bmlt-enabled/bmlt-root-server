@@ -145,21 +145,21 @@ class c_comdef_server
                 }
             
             // Brute-force protection against selecting a language that isn't supported by the resources at hand.
-            if ( !file_exists ( dirname ( __FILE__ )."/config/lang/".$comdef_global_language."/name.txt" ) )
+            if ( !file_exists ( dirname ( __FILE__ )."/../local_server/server_admin/lang/".$comdef_global_language."/name.txt" ) )
                 {
                 $comdef_global_language = "en";
                 }
             
             $this->_local_type_lang_enum = $comdef_global_language;
             
-            $dh = opendir ( dirname ( __FILE__ ).'/config/lang/' );
+            $dh = opendir ( dirname ( __FILE__ ).'/../local_server/server_admin/lang/' );
             $server_lang_names = array();
             
             if ( $dh )
                 {
                 while ( false !== ($enum = readdir( $dh )) )
                     {
-                    $file_path = dirname ( __FILE__ )."/config/lang/$enum/name.txt";
+                    $file_path = dirname ( __FILE__ )."/../local_server/server_admin/lang/$enum/name.txt";
                     if ( file_exists ( $file_path ) )
                         {
                         $server_lang_names[$enum] = trim ( file_get_contents ( $file_path ) );
@@ -2504,38 +2504,36 @@ class c_comdef_server
             {
             $lang_enum = $server->GetLocalLang();
             
-            if ( isset ( $_GET['lang_enum'] ) && $_GET['lang_enum'] && file_exists ( dirname ( __FILE__ ).'/config/lang/'.$_GET['lang_enum'] ) )
+            if ( isset ( $_GET['lang_enum'] ) && $_GET['lang_enum'] && file_exists ( dirname ( __FILE__ ).'/../local_server/server_admin/lang/'.$_GET['lang_enum'] ) )
                 {
                 $lang_enum = $_GET['lang_enum'];
                 }
         
-            if ( isset ( $_POST['lang_enum'] ) && $_POST['lang_enum'] && file_exists ( dirname ( __FILE__ ).'/config/lang/'.$_POST['lang_enum'] ) )
+            if ( isset ( $_POST['lang_enum'] ) && $_POST['lang_enum'] && file_exists ( dirname ( __FILE__ ).'/../local_server/server_admin/lang/'.$_POST['lang_enum'] ) )
                 {
                 $lang_enum = $_POST['lang_enum'];
                 }
             
-            if ( $in_lang_enum && file_exists ( dirname ( __FILE__ ).'/config/lang/'.$in_lang_enum ) )
+            if ( $in_lang_enum && file_exists ( dirname ( __FILE__ ).'/../local_server/server_admin/lang/'.$in_lang_enum ) )
                 {
                 $lang_enum = $in_lang_enum;
                 }
             include ( dirname ( __FILE__ )."/config/comdef-config.inc.php" );
             include ( dirname ( __FILE__ ).'/../local_server/server_admin/lang/'.$lang_enum.'/server_admin_strings.inc.php' );
-            include ( dirname ( __FILE__ ).'/config/lang/'.$lang_enum.'/search_results_strings.inc.php' );
-            include ( dirname ( __FILE__ ).'/config/lang/'.$lang_enum.'/change_desc.inc.php' );
-            include ( dirname ( __FILE__ ).'/config/lang/'.$lang_enum.'/format_codes.inc.php' );
+            include ( dirname ( __FILE__ ).'/../local_server/server_admin/lang/'.$lang_enum.'/change_desc.inc.php' );
+//             include ( dirname ( __FILE__ ).'/../local_server/server_admin/lang/'.$lang_enum.'/search_results_strings.inc.php' );
+//             include ( dirname ( __FILE__ ).'/../local_server/server_admin/lang/'.$lang_enum.'/format_codes.inc.php' );
 
             global  $comdef_global_more_details_address,    ///< This is a format string for the way the address line is displayed in the "more details" screen.
                     $comdef_global_list_address;            ///< The same, but for the list.
         
-            c_comdef_server::$server_local_strings['name'] = file_get_contents ( dirname ( __FILE__ ).'/config/lang/'.$lang_enum.'/name.txt' );
+            c_comdef_server::$server_local_strings['name'] = file_get_contents ( dirname ( __FILE__ ).'/../local_server/server_admin/lang/'.$lang_enum.'/name.txt' );
             c_comdef_server::$server_local_strings['enum'] = $lang_enum;
-            c_comdef_server::$server_local_strings['weekdays'] = explode ( ",", file_get_contents ( dirname ( __FILE__ ).'/config/lang/'.$lang_enum.'/weekdays.csv' ) );
+            c_comdef_server::$server_local_strings['weekdays'] = explode ( ",", file_get_contents ( dirname ( __FILE__ ).'/../local_server/server_admin/lang/'.$lang_enum.'/weekdays.csv' ) );
             c_comdef_server::$server_local_strings['comdef_map_radius_ranges'] = $comdef_map_radius_ranges;
             c_comdef_server::$server_local_strings['region_bias'] = $region_bias;
             c_comdef_server::$server_local_strings['default_duration_time'] = isset ( $default_duration_time ) ? $default_duration_time : '1:00:00';
             c_comdef_server::$server_local_strings['search_spec_map_center'] = $search_spec_map_center;
-            c_comdef_server::$server_local_strings['comdef_search_results_strings'] = $comdef_search_results_strings;
-            c_comdef_server::$server_local_strings['comdef_format_types'] = $comdef_format_types;
             c_comdef_server::$server_local_strings['change_type_strings'] = $change_type_strings;
             c_comdef_server::$server_local_strings['detailed_change_strings'] = $detailed_change_strings;
             c_comdef_server::$server_local_strings['prompt_delimiter'] =  defined('__PROMPT_DELIMITER__') ? __PROMPT_DELIMITER__ : ':';
@@ -2547,6 +2545,8 @@ class c_comdef_server
             c_comdef_server::$server_local_strings['comdef_global_more_details_address'] = $comdef_global_more_details_address;
             c_comdef_server::$server_local_strings['comdef_global_list_address'] = $comdef_global_list_address;
             c_comdef_server::$server_local_strings['comdef_server_admin_strings'] = $comdef_server_admin_strings;
+//             c_comdef_server::$server_local_strings['comdef_search_results_strings'] = $comdef_search_results_strings;
+//             c_comdef_server::$server_local_strings['comdef_format_types'] = $comdef_format_types;
             
             if ( trim($comdef_distance_units) )
                 {
