@@ -295,7 +295,7 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 			}
 		$sort_dir_desc = ($in_http_vars['sort_dir'] == "desc") ? true : false;
 	
-		$search_manager->SetSort ( $default_sorts[$in_http_vars['sort_key']], $sort_dir_desc, $sort_depth );
+		$search_manager->SetSort ( $localized_strings['default_sorts'][$in_http_vars['sort_key']], $sort_dir_desc, $sort_depth );
 		$search_manager->DoSearch();
 		
 		$long = null;

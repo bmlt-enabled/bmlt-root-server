@@ -2545,6 +2545,17 @@ class c_comdef_server
             c_comdef_server::$server_local_strings['comdef_global_more_details_address'] = $comdef_global_more_details_address;
             c_comdef_server::$server_local_strings['comdef_global_list_address'] = $comdef_global_list_address;
             c_comdef_server::$server_local_strings['comdef_server_admin_strings'] = $comdef_server_admin_strings;
+            c_comdef_server::$server_local_strings['comdef_server_default_sorts'] = $default_sorts;
+            
+            if ( !c_comdef_server::$server_local_strings['comdef_server_default_sorts'] )
+                {
+                c_comdef_server::$server_local_strings['comdef_server_default_sorts'] = array ('weekday' => array('weekday_tinyint','location_municipality','location_city_subsection','start_time','location_neighborhood'),
+                            'time' => array('weekday_tinyint','start_time','location_municipality','location_city_subsection','location_neighborhood'),
+                            'town' => array('location_municipality','location_city_subsection','location_neighborhood','weekday_tinyint','start_time'),
+                            'state' => array('location_province','location_municipality','location_city_subsection','weekday_tinyint','start_time'),
+                            'weekday_state' => array('weekday_tinyint','location_province','location_municipality','start_time','location_city_subsection'));
+                }
+                
 //             c_comdef_server::$server_local_strings['comdef_search_results_strings'] = $comdef_search_results_strings;
 //             c_comdef_server::$server_local_strings['comdef_format_types'] = $comdef_format_types;
             
