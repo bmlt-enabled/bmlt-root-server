@@ -2696,6 +2696,8 @@ function BMLT_Server_Admin ()
         
         this.setItemValue(meeting_longitude_text_item, in_meeting_id, 'longitude');
         this.setItemValue(meeting_latitude_text_item, in_meeting_id, 'latitude');
+        
+        this.validateMeetingEditorButton(in_meeting_id);
     };
         
     // #mark - 
