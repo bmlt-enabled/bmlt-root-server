@@ -56,6 +56,7 @@ CHANGELIST
 * Removed the useless PDF generator directory (I'll get back to this properly, in a future release).
 * Did some technical work to ensure that the server will work properly in some virtual host environments.
 * Added a couple of more choices to the default sirt keys. Also, the default sort keys were not being provided. Obviously, this was not an issue.
+* Fixed a bug in the meeting editor, where setting the map to an address did not activate the save button.
 
 = Version 2.0.34 =
 * October 19, 2013
