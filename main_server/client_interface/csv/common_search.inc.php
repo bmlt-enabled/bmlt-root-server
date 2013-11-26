@@ -191,6 +191,12 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 															
 														- 'sort_results_by_distance'
 															If this is true, then, if possible, the search results will be sorted by distance from the radius center.
+															If this is set, then the 'sort_keys' parameter below will be ignored.
+															
+														- 'sort_keys'
+														    This is a comma-separated list of sort keys. The leftmost one will be the top priority, and the rightmost the lowest.
+														    The sort depth will be the number of keys.
+														    The direction will be assumed 'asc', unless 'desc' is one of the keys (it can be anywhere in the list).
 												*/
 						)
 {
@@ -212,6 +218,43 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 			{
 			$in_search_manager->SetSortByDistance ( $in_http_vars['sort_results_by_distance'] );
 			}
+		elseif ( isset ( $in_http_vars['sort_keys'] ) && $in_http_vars['sort_keys'] )
+		    {
+		    $sort_fields = array();
+		    $keys = explode ( ',', $in_http_vars['sort_keys'] );
+		    $dir = 'asc';
+		    foreach ( $keys as $key )
+		        {
+		        if ( strtolower ( trim ( $key ) ) == 'desc' )
+		            {
+		            $dir = 'desc';
+		            }
+		        else
+		            {
+		            $templates = c_comdef_meeting::GetDataTableTemplate();
+		            if ( $templates && count ( $templates ) )
+		                {
+		                $additional = array ();
+		                
+		                foreach ( $templates as $template )
+		                    {
+		                    $value = $template['key'];
+		                    array_push ( $additional, $value );
+		                    }
+		                
+		                $standards = array ( 'weekday_tinyint', 'id_bigint', 'worldid_mixed', 'service_body_bigint', 'lang_enum', 'duration_time', 'start_time', 'longitude', 'latitude' );
+                        $templates = array_merge ( $standards, $additional );
+                        
+                        if ( in_array ( $key, $templates ) )
+                            {
+                            array_push ( $sort_fields, $key );
+                            }
+		                }
+		            }
+		        }
+		        
+		    $in_search_manager->SetSort ( $sort_fields, $dir == 'desc', count ( $sort_fields ) );
+		    }
 		
 		// The first thing we do is try to resolve any address lookups.
 		if ( $search_string && isset ( $in_http_vars['StringSearchIsAnAddress'] ) && $in_http_vars['StringSearchIsAnAddress'] )

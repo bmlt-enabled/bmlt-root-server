@@ -781,26 +781,13 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 		
 		\throws a PDOException if there is a problem.
 	*/
-	static function GetDataTableTemplate(
-										$in_lang_enum = null	///< The language to use. If not given the server default will be used.
-										)
+	static function GetDataTableTemplate()
 	{
 		$ret = array();
-		
-		if ( !$in_lang_enum )
-			{
-			$in_lang_enum = c_comdef_server::GetServer()->GetLocalLang();
-			}
-		
-		// Should never happen.
-		if ( !$in_lang_enum )
-			{
-			$in_lang_enum = "en";
-			}
 			
 		try
 			{
-			$sql = "SELECT * FROM `".c_comdef_server::GetMeetingTableName_obj()."_data` WHERE meetingid_bigint=0 AND lang_enum=?"; 
+			$sql = "SELECT * FROM `".c_comdef_server::GetMeetingTableName_obj()."_data` WHERE meetingid_bigint=0"; 
 			
 			$rows = c_comdef_dbsingleton::preparedQuery( $sql, array ( $in_lang_enum ) );
 			foreach ( $rows as $row )
