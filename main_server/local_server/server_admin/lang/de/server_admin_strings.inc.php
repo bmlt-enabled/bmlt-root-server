@@ -27,10 +27,7 @@
 	                                        'account_type_label'                                    =>  'Ich bin ein:',
 	                                        'account_type_1'                                        =>  'Server Administrator',
 	                                        'account_type_2'                                        =>  'Service Body Administrator',
-<<<<<<< HEAD
-=======
 											'ServerMapsURL'                                         =>  'http://maps.googleapis.com/maps/api/geocode/xml?address=##SEARCH_STRING##&sensor=false',
->>>>>>> master
 	                                        'account_type_4'                                        =>  'Pathetic Luser Who Shouldn\'t Even Have Access to This Page -The Author of the Software Pooched it BAD!',
 	                                        'account_type_5'                                        =>  'Service Body Observer',
 	                                        'Data_Transfer_Link_Text'                               =>  'Import Meeting Data (WARNING: Replaces Current Data!)',

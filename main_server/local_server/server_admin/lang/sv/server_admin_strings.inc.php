@@ -28,10 +28,7 @@
 	                                        'account_type_label'                                    =>  'Jag är en:',
 	                                        'account_type_1'                                        =>  'Server Administratör',
 	                                        'account_type_2'                                        =>  'Serviceenhet Administratör',
-<<<<<<< HEAD
-=======
 											'ServerMapsURL'                                         =>  'http://maps.googleapis.com/maps/api/geocode/xml?address=##SEARCH_STRING##&sensor=false',
->>>>>>> master
 	                                        'account_type_4'                                        =>  'hacker? tydligen inte...',
 	                                        'account_type_5'                                        =>  'Serviceenhet övervakare',
 	                                        'Data_Transfer_Link_Text'                               =>  'Import Meeting Data (WARNING: Replaces Current Data!)',
