@@ -2522,6 +2522,7 @@ function BMLT_Server_Admin ()
                 the_meeting_object.latitude = in_geocode_response[0].geometry.location.lat();
         
                 var map_center = new google.maps.LatLng ( the_meeting_object.latitude, the_meeting_object.longitude );
+                this.setMeetingLongLat ( map_center, in_meeting_id );
                 meeting_editor.main_map.panTo ( map_center );
                 this.displayMainMarkerInMap ( in_meeting_id );
 
@@ -2696,6 +2697,8 @@ function BMLT_Server_Admin ()
         
         this.setItemValue(meeting_longitude_text_item, in_meeting_id, 'longitude');
         this.setItemValue(meeting_latitude_text_item, in_meeting_id, 'latitude');
+        
+        this.validateMeetingEditorButton(in_meeting_id);
     };
         
     // #mark - 

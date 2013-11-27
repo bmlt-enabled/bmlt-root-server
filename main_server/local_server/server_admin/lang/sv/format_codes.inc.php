@@ -1,14 +1,14 @@
 <?php
 /***********************************************************************/
 /** \file	format_codes.inc.php
-	\brief	The format codes for this language (Spanish)
+	\brief	The format codes for this language (English)
 	
 	This sets the global array to the various format type codes, and their descriptions.
 	You should keep the types ("FCX"), but change the descriptions to your language.
     
     This file is part of the Basic Meeting List Toolbox (BMLT).
     
-    Find out more at: http://magshare.org/bmlt
+    Find out more at: http://bmlt.magshare.org
 
     BMLT is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 	defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
 	$comdef_format_types = array (
-									/// Spanish text for Format codes.
+									/// English text for Format codes.
 									"FC1"=>"Format Code",			/**< Meeting Format (Speaker, Book Study, etc.)  */
 									"FC2"=>"Location Code",			/**< Location Code (Wheelchair Accessible, Limited Parking, etc.)  */
 									"FC3"=>"Attendance Restriction"	/**< Attendance Restriction (Men Only, Closed, Open, No Children, etc.)  */

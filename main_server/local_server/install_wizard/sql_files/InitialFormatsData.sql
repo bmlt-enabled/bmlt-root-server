@@ -85,7 +85,7 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (34, 'YP', NULL, NULL, 'es', 'Jovenes', 'Esta reunión se centra en las necesidades de los miembros más jóvenes de NA.', 'FC1'),
 (35, 'OE', NULL, NULL, 'es', 'Sin Tiempo Fijo', 'No tiene tiempo fijo. Esta reunión continua hasta que cada miembro haya tenido la oportunidad de compartir.', 'FC1'),
 
-(4, 'S', NULL, NULL, 'sv', 'Slutet möte', 'Ett slutet NA möte är för de individer som identifierar sig som beroende eller för de som är osäkra och tror att de kanske har drogproblem.', 'FC3'),
+(4, 'S', NULL, NULL, 'sv', 'Slutet möte', 'Slutet möte är för de individer som identifierar sig som beroende eller för de som är osäkra och tror att de kanske har drogproblem.', 'FC3'),
 (9, 'ESP', NULL, NULL, 'sv', 'Spanska', 'Spansktalande möte', 'FC3'),
 (15, 'M', NULL, NULL, 'sv', 'Mansmöte', 'Detta möte är endast öppet för män.', 'FC3'),
 (17, 'Ö', NULL, NULL, 'sv', 'Öppet möte', 'Ett öppet möte är ett NA-möte där vem som helst som är intresserad av hur vi har funnit tillfrisknande från beroendesjukdomen kan närvara.', 'FC3'),

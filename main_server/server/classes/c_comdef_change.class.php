@@ -852,14 +852,14 @@ class c_comdef_change extends t_comdef_local_type implements i_comdef_db_stored
 															
 															case	'lang_enum':
 																$prompt = $localized_strings['detailed_change_strings'][$array_key];
-																$file_path = dirname ( __FILE__ )."/../config/lang/$before_value/name.txt";
+																$file_path = dirname ( __FILE__ )."/../../local_server/server_admin/lang/$before_value/name.txt";
 																
 																if ( file_exists ( $file_path ) )
 																	{
 																	$before_value = trim ( file_get_contents ( $file_path ) );
 																	}
 																
-																$file_path = dirname ( __FILE__ )."/../config/lang/$after_value/name.txt";
+																$file_path = dirname ( __FILE__ )."/../../local_server/server_admin/lang/$after_value/name.txt";
 																
 																if ( file_exists ( $file_path ) )
 																	{

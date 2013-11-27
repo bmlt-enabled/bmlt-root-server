@@ -647,6 +647,7 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
             ret += "\n\t\t$time_format = '" + this.m_installer_state.time_format.replace(/'/g,"\\'") + "'; // The PHP date() format for the times displayed.\n";
             ret += "\t\t$change_date_format = '" + this.m_installer_state.change_date_format.replace(/'/g,"\\'") + "'; // The PHP date() format for times/dates displayed in the change records.\n";
             ret += "\t\t$admin_session_name = '" + this.m_installer_state.admin_session_name.replace(/'/g,"\\'") + "'; // This is merely the 'tag' used to identify the BMLT admin session.\n";
+            ret += "\t\t$default_sorts = '" + this.m_installer_state.default_sorts.replace(/'/g,"\\'") + "'; // This is the set of sort keys available by default.\n";
             ret += "\n\t\t// This text can be used in certain custom printed lists. It is usually not especially important.\n";
             ret += "\t\tif ( !defined ( '_DEFAULT_DURATION' ) ) define ( '_DEFAULT_DURATION', '" + this.m_installer_state.default_duration.replace(/'/g,"\\'") + "' );\n";
             ret += "\n\t\t// These are used for the NAWS format translation. They are the shared IDs of the wheelchair, open and closed formats.\n";

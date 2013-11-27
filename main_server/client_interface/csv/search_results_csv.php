@@ -241,7 +241,12 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 														 	- 'meeting_ids'
 														 		An array of positive integers. Each integer is an ID of an individual meeting. If this is set, all other
 														 		search criteria are ignored.
-													*/
+																	
+                                                            - 'sort_keys'
+                                                                This is a comma-separated list of sort keys. The leftmost one will be the top priority, and the rightmost the lowest.
+                                                                The sort depth will be the number of keys.
+                                                                The direction will be assumed 'asc', unless 'desc' is one of the keys (it can be anywhere in the list).
+											*/
 									&$return_array = null,	///< If this is supplied, then the result will be saved in this as an array. It must be an empty array, supplied by reference.
 								    &$return_geocode = null,    /**< If this is supplied, the response will be an associative array, with the search center and radius.
 								                                    It will return:
@@ -277,12 +282,12 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 			$in_http_vars['results_per_page'] = 0;
 			}
 		
-		if ( !isset ( $in_http_vars['sort_key'] ) )
+		if ( !isset ( $in_http_vars['sort_key'] ) && !isset ($in_http_vars['sort_keys'] ) )
 			{
 			$in_http_vars['sort_key'] = $default_sort_key;
 			}
 	
-		if ( !isset ( $in_http_vars['sort_dir'] ) || ( ($in_http_vars['sort_dir'] != 'desc') && ($in_http_vars['sort_dir'] != 'asc') ) )
+		if ( (!isset ( $in_http_vars['sort_dir'] ) || ( ($in_http_vars['sort_dir'] != 'desc') && ($in_http_vars['sort_dir'] != 'asc') ) ) && !isset ($in_http_vars['sort_keys'] ) )
 			{
 			$in_http_vars['sort_dir'] = $default_sort_dir;
 			}
@@ -294,8 +299,12 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 			$search_manager->SetResultsPerPage ( $in_http_vars['page_display_size'] );
 			}
 		$sort_dir_desc = ($in_http_vars['sort_dir'] == "desc") ? true : false;
-	
-		$search_manager->SetSort ( $default_sorts[$in_http_vars['sort_key']], $sort_dir_desc, $sort_depth );
+	    
+	    if ( !isset ( $in_http_vars['sort_keys'] ) )
+	        {
+		    $search_manager->SetSort ( $localized_strings['default_sorts'][$in_http_vars['sort_key']], $sort_dir_desc, $sort_depth );
+		    }
+		    
 		$search_manager->DoSearch();
 		
 		$long = null;
