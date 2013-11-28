@@ -51,14 +51,13 @@ For instructions on installing the root server, see this page:
 CHANGELIST
 ----------
 = Version 2.1.0 =
-* TBD
+* November 28, 2013
 * Consolidated and reduced the localization strings. Now, almost all the strings used in administration are in one file.
-* Removed the useless PDF generator directory (I'll get back to this properly, in a future release).
+* Removed the useless PDF generator directory.
 * Did some technical work to ensure that the server will work properly in some virtual host environments.
 * Added a couple of more choices to the default sort keys.
 * Added the capability to specify arbitrary sort keys in the semantic URIs.
 * Fixed a bug in the meeting editor, where setting the map to an address did not activate the save button.
-* Added an option to the semantic search that allows meeting searches to be returned as GPX files.
 * Added GPX, KML and POI/CSV export options to the semantic interface.
 
 = Version 2.0.34
