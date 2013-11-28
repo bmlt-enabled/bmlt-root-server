@@ -271,5 +271,80 @@
 	                                        'min_password_length_string'                            =>  'Das Passwort ist zu kurz! Es muss mindestens %d zeichen betragen!',
 	                                        'AJAX_Auth_Failure'                                     =>  'Authorisation fehlgeschlagen für diese Operation. Es kann sein, dass ein Problem mit der Serverkonfiguration besteht.',
 	                                        'Observer_Link_Text'                                    =>  'Meetingssuche',
+											'MapsURL'                                               =>  'http://maps.google.com/maps?q=##LAT##,##LONG##+(##NAME##)&amp;ll=##LAT##,##LONG##',
+											'hidden_value'                                          =>  'Cannot Display Data -Unauthorized',
+											'Value_Prompts'                                         =>  array (	'id_bigint' => 'Meeting ID',
+                                                                                                                'worldid_mixed' => 'World Services ID',
+                                                                                                                'service_body' => 'Service Body',
+                                                                                                                'service_bodies' => 'Service Bodies',
+                                                                                                                'weekdays' => 'Weekdays',
+                                                                                                                'weekday' => 'Meeting Gathers Every',
+                                                                                                                'start_time' => 'Meeting Starts at',
+                                                                                                                'duration_time' => 'Meeting Lasts',
+                                                                                                                'location' => 'Location',
+                                                                                                                'duration_time_hour' => 'Hour',
+                                                                                                                'duration_time_hours' => 'Hours',
+                                                                                                                'duration_time_minute' => 'Minute',
+                                                                                                                'duration_time_minutes' => 'Minutes',
+                                                                                                                'lang_enum' => 'Language',
+                                                                                                                'formats' => 'Formats',
+                                                                                                                'distance' => 'Distance from Center',
+                                                                                                                'generic' => 'NA Meeting',
+                                                                                                                'close_title' => 'Close This Meeting Detail Window',
+                                                                                                                'close_text' => 'Close Window',
+                                                                                                                'map_alt' => 'Map to Meeting',
+                                                                                                                'map' => 'Follow This Link for A Map',
+                                                                                                                'title_checkbox_unpub_meeting' => 'This meeting is unpublished. It cannot be seen by regular searches.',
+                                                                                                                'title_checkbox_copy_meeting' => 'This meeting is a duplicate of another meeting. It is also unpublished. It cannot be seen by regular searches.'
+                                                                                                            ),
 	                                    );
+
+	$change_type_strings = array (
+		'__THE_MEETING_WAS_CHANGED__' => 'The meeting was changed.',
+		'__THE_MEETING_WAS_CREATED__' => 'The meeting was created.',
+		'__THE_MEETING_WAS_DELETED__' => 'The meeting was deleted.',
+		'__THE_MEETING_WAS_ROLLED_BACK__' => 'The meeting was rolled back to a previous version.',
+	
+		'__THE_FORMAT_WAS_CHANGED__' => 'The format was changed.',
+		'__THE_FORMAT_WAS_CREATED__' => 'The format was created.',
+		'__THE_FORMAT_WAS_DELETED__' => 'The format was deleted.',
+		'__THE_FORMAT_WAS_ROLLED_BACK__' => 'The format was rolled back to a previous version.',
+	
+		'__THE_SERVICE_BODY_WAS_CHANGED__' => 'The service body was changed.',
+		'__THE_SERVICE_BODY_WAS_CREATED__' => 'The service body was created.',
+		'__THE_SERVICE_BODY_WAS_DELETED__' => 'The service body was deleted.',
+		'__THE_SERVICE_BODY_WAS_ROLLED_BACK__' => 'The service body was rolled back to a previous version.',
+	
+		'__THE_USER_WAS_CHANGED__' => 'The user was changed.',
+		'__THE_USER_WAS_CREATED__' => 'The user was created.',
+		'__THE_USER_WAS_DELETED__' => 'The user was deleted.',
+		'__THE_USER_WAS_ROLLED_BACK__' => 'The user was rolled back to a previous version.',
+	
+		'__BY__' => 'by',
+		'__FOR__' => 'for'
+	);
+	
+	$detailed_change_strings = array (
+		'was_changed_from' => 'was changed from',
+		'to' => 'to',
+		'was_changed' => 'was changed',
+		'was_added_as' => 'was added as',
+		'was_deleted' => 'was deleted',
+		'was_published' => 'The meeting was published',
+		'was_unpublished' => 'The meeting was unpublished',
+		'formats_prompt' => 'The meeting format',
+		'duration_time' => 'The meeting duration',
+		'start_time' => 'The meeting start time',
+		'longitude' => 'The meeting longitude',
+		'latitude' => 'The meeting latitude',
+		'sb_prompt' => 'The meeting changed its Service Body from',
+		'id_bigint' => 'The meeting ID',
+		'lang_enum' => 'The meeting language',
+		'worldid_mixed' => 'The World Services ID',
+		'worldid_mixed' => 'The shared Group ID',
+		'weekday_tinyint' => 'The day of the week on which the meeting gathers',
+		'non_existent_service_body' => 'Service Body No Longer Exists',
+	);
+	
+	defined ( '_END_CHANGE_REPORT' ) or define ( '_END_CHANGE_REPORT', '.' );
 ?>

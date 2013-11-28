@@ -2520,16 +2520,12 @@ class c_comdef_server
                 }
             include ( dirname ( __FILE__ )."/config/comdef-config.inc.php" );
             include ( dirname ( __FILE__ ).'/../local_server/server_admin/lang/'.$lang_enum.'/server_admin_strings.inc.php' );
-            include ( dirname ( __FILE__ ).'/../local_server/server_admin/lang/'.$lang_enum.'/change_desc.inc.php' );
-//             include ( dirname ( __FILE__ ).'/../local_server/server_admin/lang/'.$lang_enum.'/search_results_strings.inc.php' );
-//             include ( dirname ( __FILE__ ).'/../local_server/server_admin/lang/'.$lang_enum.'/format_codes.inc.php' );
 
             global  $comdef_global_more_details_address,    ///< This is a format string for the way the address line is displayed in the "more details" screen.
                     $comdef_global_list_address;            ///< The same, but for the list.
         
             c_comdef_server::$server_local_strings['name'] = file_get_contents ( dirname ( __FILE__ ).'/../local_server/server_admin/lang/'.$lang_enum.'/name.txt' );
             c_comdef_server::$server_local_strings['enum'] = $lang_enum;
-            c_comdef_server::$server_local_strings['weekdays'] = explode ( ",", file_get_contents ( dirname ( __FILE__ ).'/../local_server/server_admin/lang/'.$lang_enum.'/weekdays.csv' ) );
             c_comdef_server::$server_local_strings['comdef_map_radius_ranges'] = $comdef_map_radius_ranges;
             c_comdef_server::$server_local_strings['region_bias'] = $region_bias;
             c_comdef_server::$server_local_strings['default_duration_time'] = isset ( $default_duration_time ) ? $default_duration_time : '1:00:00';
@@ -2546,6 +2542,7 @@ class c_comdef_server
             c_comdef_server::$server_local_strings['comdef_global_list_address'] = $comdef_global_list_address;
             c_comdef_server::$server_local_strings['comdef_server_admin_strings'] = $comdef_server_admin_strings;
             c_comdef_server::$server_local_strings['comdef_server_default_sorts'] = $default_sorts;
+            c_comdef_server::$server_local_strings['weekdays'] = $comdef_server_admin_strings['meeting_search_weekdays_names'];
             
             if ( !c_comdef_server::$server_local_strings['comdef_server_default_sorts'] )
                 {
@@ -2556,8 +2553,6 @@ class c_comdef_server
                             'weekday_state' => array('weekday_tinyint','location_province','location_municipality','start_time','location_city_subsection'));
                 }
                 
-//             c_comdef_server::$server_local_strings['comdef_search_results_strings'] = $comdef_search_results_strings;
-//             c_comdef_server::$server_local_strings['comdef_format_types'] = $comdef_format_types;
             
             if ( trim($comdef_distance_units) )
                 {

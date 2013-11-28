@@ -345,11 +345,11 @@ class c_comdef_format extends t_comdef_world_type implements i_comdef_db_stored,
 		$this->SetWorldID($in_worldid_mixed);
 
 		/// This gets us the format codes, with their localized descriptions.
-		$file_path = dirname ( __FILE__ ).'/../../local_server/server_admin/lang/'.$in_lang_enum.'/format_codes.inc.php';
-		
-		require ( $file_path );
-
-		$this->SetFormatCodes ( $comdef_format_types );
+// 		$file_path = dirname ( __FILE__ ).'/../../local_server/server_admin/lang/'.$in_lang_enum.'/format_codes.inc.php';
+// 		
+// 		require ( $file_path );
+// 
+// 		$this->SetFormatCodes ( $comdef_format_types );
 	}
 	
 	/*******************************************************************/
