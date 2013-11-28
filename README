@@ -59,6 +59,7 @@ CHANGELIST
 * Added the capability to specify arbitrary sort keys in the semantic URIs.
 * Fixed a bug in the meeting editor, where setting the map to an address did not activate the save button.
 * Added an option to the semantic search that allows meeting searches to be returned as GPX files.
+* Added GPX, KML and POI/CSV export options to the semantic interface.
 
 = Version 2.0.34
 * October 19, 2013

@@ -97,131 +97,145 @@ function parse_redirect (
 			elseif ( isset ( $http_vars['gpx_data'] ) )
 				{
 				$result2 = returnArrayFromCSV ( explode ( "\n", $result2 ) );
-                $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-                $result .= "<gpx version=\"1.0\" xmlns=\"http://".htmlspecialchars ( trim ( strtolower ( $_SERVER['SERVER_NAME'] ) ) )."\" xmlns:xsn=\"http://www.w3.org/2001/XMLSchema-instance\" xsn:schemaLocation=\"http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd\">";
+				if ( is_array ( $result2 ) && count ( $result2 ) )
+				    {
+                    $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+                    $result .= "<gpx version=\"1.0\" xmlns=\"http://".htmlspecialchars ( trim ( strtolower ( $_SERVER['SERVER_NAME'] ) ) )."\" xmlns:xsn=\"http://www.w3.org/2001/XMLSchema-instance\" xsn:schemaLocation=\"http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd\">";
                 
-                $minlng = 361;
-                $minlat = 361;
-                $maxlng = -361;
-                $maxlat = -361;
+                    $minlng = 361;
+                    $minlat = 361;
+                    $maxlng = -361;
+                    $maxlat = -361;
                 
-                foreach ( $result2 as $meeting )
-                    {
-                    $lng = floatval ( $meeting['longitude'] );
-                    $lat = floatval ( $meeting['latitude'] );
-                    
-                    if ( $lng || $lat )
+                    foreach ( $result2 as $meeting )
                         {
-                        $minlng = min ( $minlng, $lng );
-                        $minlat = min ( $minlat, $lat );
-                        $maxlng = max ( $maxlng, $lng );
-                        $maxlat = max ( $maxlat, $lat );
+                        $lng = floatval ( $meeting['longitude'] );
+                        $lat = floatval ( $meeting['latitude'] );
+                    
+                        if ( $lng || $lat )
+                            {
+                            $minlng = min ( $minlng, $lng );
+                            $minlat = min ( $minlat, $lat );
+                            $maxlng = max ( $maxlng, $lng );
+                            $maxlat = max ( $maxlat, $lat );
+                            }
+                        }
+                
+                    $result .= '<bounds minlat="'.htmlspecialchars ( $minlat ).'" minlon="'.htmlspecialchars ( $minlng ).'" maxlat="'.htmlspecialchars ( $maxlat ).'" maxlon="'.htmlspecialchars ( $maxlng ).'"/>';
+                
+                    foreach ( $result2 as $meeting )
+                        {
+                        $desc = prepareSimpleLine ( $meeting );
+                    
+                        $name = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['meeting_name'] ) ) );
+                        if ( !$name )
+                            {
+                            $name = "NA Meeting";
+                            }
+                        
+                        $lng = floatval ( $meeting['longitude'] );
+                        $lat = floatval ( $meeting['latitude'] );
+                        $type = 'NA Meeting';
+                    
+                        if ( $lng || $lat )
+                            {
+                            $result .= '<wpt lat="'.htmlspecialchars ( $lat ).'" lon="'.htmlspecialchars ( $lng ).'">';
+                                $result .= '<name><![CDATA['.htmlspecialchars ( $name ).']]></name>';
+                                if ( $desc )
+                                    {
+                                    $result .= '<desc><![CDATA['.htmlspecialchars ( $desc ).']]></desc>';
+                                    }
+                            
+                                $result .= '<type><![CDATA['.htmlspecialchars ( $type ).']]></type>';
+                                $result .= '<sym>Diamond, Blue</sym>';
+                            $result .= '</wpt>';
+                            }
+                        }
+                
+                    $result .= '</gpx>';
+                    }
+				}
+			elseif ( isset ( $http_vars['kml_data'] ) )
+				{
+				$result2 = returnArrayFromCSV ( explode ( "\n", $result2 ) );
+				if ( is_array ( $result2 ) && count ( $result2 ) )
+				    {
+                    $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+                    $result .= "<kml version=\"1.0\" xmlns=\"http://".htmlspecialchars ( trim ( strtolower ( $_SERVER['SERVER_NAME'] ) ) )."\" xmlns:xsn=\"http://www.w3.org/2001/XMLSchema-instance\" xsn:schemaLocation=\"http://schemas.opengis.net/ http://schemas.opengis.net/kml/2.2.0/ogckml22.xsd\">";
+                    $result .= '<Document>';
+                
+                    foreach ( $result2 as $meeting )
+                        {
+                        $desc = prepareSimpleLine ( $meeting );
+                        $address = prepareSimpleLine ( $meeting, false );
+                    
+                        $name = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['meeting_name'] ) ) );
+                        
+                        if ( !$name )
+                            {
+                            $name = "NA Meeting";
+                            }
+                        
+                        $lng = floatval ( $meeting['longitude'] );
+                        $lat = floatval ( $meeting['latitude'] );
+                    
+                        if ( $lng || $lat )
+                            {
+                            $result .= '<Placemark>';
+                                $result .= '<name>'.htmlspecialchars ( $name ).'</name>';
+                                
+                                if ( $address )
+                                    {
+                                    $result .= '<address>'.$address.'</address>';
+                                    }
+                                
+                                if ( $desc )
+                                    {
+                                    $result .= '<description>'.$desc.'</description>';
+                                    }
+                                    
+                                $result .= '<Point>';
+                                    $result .= '<coordinates>';
+                                        $result .=  htmlspecialchars ( $lng ).','.htmlspecialchars ( $lat ).',0';
+                                    $result .= '</coordinates>';
+                                $result .= '</Point>';
+                            $result .= '</Placemark>';
+                            }
+                        }
+                
+                    $result .= '</Document>';
+                    $result .= '</kml>';
+                    }
+				}
+			elseif ( isset ( $http_vars['poi_data'] ) )
+				{
+				$result2 = returnArrayFromCSV ( explode ( "\n", $result2 ) );
+				if ( is_array ( $result2 ) && count ( $result2 ) )
+				    {
+                    $result = "lon,lat,name,desc\n";
+                    foreach ( $result2 as $meeting )
+                        {
+                        $desc = htmlspecialchars_decode ( prepareSimpleLine ( $meeting ) );
+                    
+                        $name = trim ( stripslashes ( $meeting['meeting_name'] ) );
+                        
+                        if ( !$name )
+                            {
+                            $name = "NA Meeting";
+                            }
+                    
+                        $name = addcslashes ( $name, '"' );
+                        $desc = addcslashes ( $desc, '"' );
+                    
+                        $lng = floatval ( $meeting['longitude'] );
+                        $lat = floatval ( $meeting['latitude'] );
+                    
+                        if ( $lng || $lat )
+                            {
+                            $result .= '"'.$lng.'","'.$lat.'","'.$name.'","'.$desc.'"'."\n";
+                            }
                         }
                     }
-                
-                $result .= '<bounds minlat="'.htmlspecialchars ( $minlat ).'" minlon="'.htmlspecialchars ( $minlng ).'" maxlat="'.htmlspecialchars ( $maxlat ).'" maxlon="'.htmlspecialchars ( $maxlng ).'"/>';
-                
-                foreach ( $result2 as $meeting )
-                    {
-                    $location_borough = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_city_subsection'] ) ) );
-                    $location_neighborhood = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_neighborhood'] ) ) );
-                    $location_province = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_province'] ) ) );
-                    $location_nation = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_nation'] ) ) );
-                    $location_postal_code_1 = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_postal_code_1'] ) ) );
-                    $location_text = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_text'] ) ) );
-                    $street = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_street'] ) ) );
-                    $info = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_info'] ) ) );
-					$desc = $location_text;
-                    
-                    if ( trim ( stripslashes ( $meeting['location_municipality'] ) ) )
-                        {
-                        if ( $location_borough )
-                            {
-                            // We do it this verbose way, so we will scrag the comma if we want to hide the town.
-                            $town = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_municipality'] ) ) );
-                            }
-                        else
-                            {
-                            $town = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_municipality'] ) ) );
-                            }
-                        }
-                    elseif ( $location_borough )
-                        {
-                        $town = $location_borough;
-                        }
-                    
-                    if ( $location_province )
-                        {
-                        $town = "$town, $location_province";
-                        }
-                    
-                    if ( $location_postal_code_1 )
-                        {
-                        $town = "$town, $location_postal_code_1";
-                        }
-                    
-                    if ( $location_nation )
-                        {
-                        $town = "$town, $location_nation";
-                        }
-                    
-                    if ( $location_neighborhood )
-                        {
-                        $town = "$town ($location_neighborhood)";
-                        }
-                    
-                    if ( $street )
-                        {
-                        if ( $desc )
-                            {
-                            $desc .= ", ";
-                            }
-                        $desc .= $street;
-                        }
-                    
-                    if ( $town )
-                        {
-                        if ( $desc )
-                            {
-                            $desc .= ", ";
-                            }
-                        $desc .= $town;
-                        }
-                    
-                    if ( $info )
-                        {
-                        if ( $desc )
-                            {
-                            $desc .= " ($info)";
-                            }
-                        else
-                            {
-                            $desc = $info;
-                            }
-                        }
-                    
-                    $name = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['meeting_name'] ) ) );
-                    $weekday = intval ( trim ( stripslashes ( $meeting['weekday_tinyint'] ) ) );
-                    $time = date ( "H:i", strtotime ( $meeting['start_time'] ) );
-                    $lng = floatval ( $meeting['longitude'] );
-                    $lat = floatval ( $meeting['latitude'] );
-                    $type = 'NA Meeting';
-                    $weekday = $localized_strings['comdef_server_admin_strings']['meeting_search_weekdays_names'][$weekday];
-                    
-                    $desc = "$weekday, $time, $desc";
-                    
-                    if ( $lng || $lat )
-                        {
-                        $result .= '<wpt lat="'.htmlspecialchars ( $lat ).'" lon="'.htmlspecialchars ( $lng ).'">';
-                            $result .= '<name><![CDATA['.htmlspecialchars ( $name ).']]></name>';
-                            $result .= '<desc><![CDATA['.htmlspecialchars ( $desc ).']]></desc>';
-                            $result .= '<type><![CDATA['.htmlspecialchars ( $type ).']]></type>';
-                            $result .= '<sym>Diamond, Blue</sym>';
-                        $result .= '</wpt>';
-                        }
-                    }
-                
-                $result .= '</gpx>';
 				}
 			elseif ( isset ( $http_vars['json_data'] ) )
 				{
@@ -342,11 +356,121 @@ function parse_redirect (
 
 /*******************************************************************/
 /**
+	\brief	This returns a string, with the meeting's daya, time and location data in a simple string.
+	
+	\returns    a string, containing the meeting day, time and location summary.
+*/	
+function prepareSimpleLine ( $meeting,          /**< An associative array of meeting data */
+                             $withDate = true   /**< If false (default is true), the weekday and time will not be added. */
+)
+{
+	$localized_strings = c_comdef_server::GetLocalStrings();
+
+    $location_borough = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_city_subsection'] ) ) );
+    $location_neighborhood = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_neighborhood'] ) ) );
+    $location_province = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_province'] ) ) );
+    $location_nation = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_nation'] ) ) );
+    $location_postal_code_1 = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_postal_code_1'] ) ) );
+    $location_text = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_text'] ) ) );
+    $street = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_street'] ) ) );
+    $info = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_info'] ) ) );
+    $town = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_municipality'] ) ) );
+    $desc = $withDate ? '' : $location_text;
+    
+    if ( $location_borough )
+        {
+        $town = $location_borough;
+        }
+    
+    if ( $location_province )
+        {
+        $town = "$town, $location_province";
+        }
+    
+    if ( $location_postal_code_1 )
+        {
+        $town = "$town, $location_postal_code_1";
+        }
+    
+    if ( $location_nation )
+        {
+        $town = "$town, $location_nation";
+        }
+    
+    if ( $withDate && $location_neighborhood )
+        {
+        $town = "$town ($location_neighborhood)";
+        }
+    
+    if ( $street )
+        {
+        if ( $desc )
+            {
+            $desc .= ", ";
+            }
+        $desc .= $street;
+        }
+    
+    if ( $town )
+        {
+        if ( $desc )
+            {
+            $desc .= ", ";
+            }
+        $desc .= $town;
+        }
+    
+    if ( $withDate && $info )
+        {
+        if ( $desc )
+            {
+            $desc .= " ($info)";
+            }
+        else
+            {
+            $desc = $info;
+            }
+        }
+    
+    $weekday = intval ( trim ( stripslashes ( $meeting['weekday_tinyint'] ) ) );
+    $time = date ( $localized_strings['time_format'], strtotime ( $meeting['start_time'] ) );
+    $weekday = $localized_strings['comdef_server_admin_strings']['meeting_search_weekdays_names'][$weekday];
+    
+    $ret = NULL;
+    
+    if ( $withDate && $weekday )
+        {
+        $ret = $weekday;
+        }
+        
+    if ( $withDate && $time )
+        {
+        if ( $ret )
+            {
+            $ret .= ', ';
+            }
+        
+        $ret .= $time;
+        }
+    
+    if ( $ret )
+        {
+        $ret .= ', ';
+        }
+    
+    $ret .= $desc;
+    
+    return $ret;
+}
+
+/*******************************************************************/
+/**
 	\brief	This returns an associative array from the given CSV, which is an array of lines, and the top line is the field names.
 	
 	\returns an associative array. Each main element will be one line, and each line will be an associative array of fields. If a field is not present in the line, it is not included.
 */	
-function returnArrayFromCSV ( $inCSVArray )
+function returnArrayFromCSV ( $inCSVArray   ///< A array of CSV data, slit as lines (each element is a single text line of CSV data). the first line is the header (array keys).
+)
 {
     $ret = NULL;
     
