@@ -58,6 +58,7 @@ CHANGELIST
 * Added a couple of more choices to the default sort keys.
 * Added the capability to specify arbitrary sort keys in the semantic URIs.
 * Fixed a bug in the meeting editor, where setting the map to an address did not activate the save button.
+* Added an option to the semantic search that allows meeting searches to be returned as GPX files.
 
 = Version 2.0.34
 * October 19, 2013
