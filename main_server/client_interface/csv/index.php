@@ -47,13 +47,15 @@ try
 				}
 			else
 				{
-			    header ( 'Content-Type:text/csv' );
+                header ( 'Content-Type:text/csv; charset=UTF-8' );
+                header ( 'Content-Disposition: attachment; filename="SearchResults.csv"');
 				ob_start();
 				}
 			}
 		else
 			{
- 			header ( 'Content-Type:text/csv' );
+		    header ( 'Content-Type:text/csv; charset=UTF-8' );
+            header ( 'Content-Disposition: attachment; filename="SearchResults.csv"');
 			ob_start();
 			}
 		echo $ret;
