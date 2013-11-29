@@ -161,7 +161,7 @@ function parse_redirect (
 				if ( is_array ( $result2 ) && count ( $result2 ) )
 				    {
                     $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-                    $result .= "<kml version=\"1.0\" xmlns=\"http://".htmlspecialchars ( trim ( strtolower ( $_SERVER['SERVER_NAME'] ) ) )."\" xmlns:xsn=\"http://www.w3.org/2001/XMLSchema-instance\" xsn:schemaLocation=\"http://schemas.opengis.net/ http://schemas.opengis.net/kml/2.2.0/ogckml22.xsd\">";
+                    $result .= '<kml xmlns="http://www.opengis.net/kml/2.2">';
                     $result .= '<Document>';
                 
                     foreach ( $result2 as $meeting )

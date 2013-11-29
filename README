@@ -50,6 +50,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.1.2 =
+* November 29, 2013
+* There was an error in the KML output. This has been fixed.
+
 = Version 2.1.1 =
 * November 29, 2013
 * Fixed a bug in the simple search, where weekdays were offset by 1 (actually caused by the localization work).
