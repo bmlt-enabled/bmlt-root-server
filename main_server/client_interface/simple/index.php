@@ -203,7 +203,7 @@ if ( $server instanceof c_comdef_server )
 								$town = "$town<span class=\"c_comdef_search_results_neighborhood\"> ($location_neighborhood)</span>";
 								}
 	
-							$weekday = $localized_strings['weekdays'][intval ( $meeting['weekday_tinyint'] ) -1];
+							$weekday = $localized_strings['weekdays'][intval ( $meeting['weekday_tinyint'] )];
 							$time = BuildMeetingTime ( $meeting['start_time'] );
 							
 							$address = '';

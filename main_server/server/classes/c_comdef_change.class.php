@@ -820,8 +820,8 @@ class c_comdef_change extends t_comdef_local_type implements i_comdef_db_stored
 															
 															case	'weekday_tinyint':
 																$prompt = $localized_strings['detailed_change_strings'][$array_key];
-																$before_value = $localized_strings['weekdays'][max ( 0, intval ( $before_value ) -1 )];
-																$after_value = $localized_strings['weekdays'][max ( 0, intval ( $after_value ) -1 )];
+																$before_value = $localized_strings['weekdays'][max ( 0, intval ( $before_value ) )];
+																$after_value = $localized_strings['weekdays'][max ( 0, intval ( $after_value ) )];
 																$change_string = c_comdef_htmlspecialchars ( $prompt ).' '.c_comdef_htmlspecialchars ( $localized_strings['detailed_change_strings']['was_changed_from'] ).' '.c_comdef_htmlspecialchars ( $before_value ).' '.c_comdef_htmlspecialchars ( $localized_strings['detailed_change_strings']['to'] ).' '.c_comdef_htmlspecialchars ( $after_value ).$localized_strings['end_change_report'];
 															break;
 															
