@@ -29,7 +29,7 @@
 */
 defined( 'BMLT_EXEC' ) or define ( 'BMLT_EXEC', true );	// This is a security verifier. Keeps files from being executed outside of the context
 require_once ( dirname ( __FILE__ ).'/../../server/shared/classes/comdef_utilityclasses.inc.php');
-require_once ( dirname ( __FILE__ ).'/../../server/c_comdef_server.class.php');
+require_once ( dirname ( __FILE__ ).'/../csv/csv.php');
 
 $server = c_comdef_server::MakeServer();
 $ret = null;
@@ -47,7 +47,7 @@ if ( $server instanceof c_comdef_server )
 
 		\returns CSV data, with the first row a key header.
 	*/
-	function parse_redirect (
+	function parse_redirect_simple (
 							&$server	///< A reference to an instance of c_comdef_server
 							)
 		{
@@ -65,7 +65,7 @@ if ( $server instanceof c_comdef_server )
 		switch ( $http_vars['switcher'] )
 			{
 			case 'GetSearchResults':
-				$result = GetSearchResults ( $http_vars, isset ( $http_vars['block_mode'] ), $http_vars['container_id'] );
+				$result = GetSimpleSearchResults ( $http_vars, isset ( $http_vars['block_mode'] ), $http_vars['container_id'] );
 			break;
 			
 			case 'GetFormats':
@@ -76,11 +76,13 @@ if ( $server instanceof c_comdef_server )
 					$lang = $http_vars['lang_enum'];
 					}
 				
-				$result = GetFormats ( $server, isset ( $http_vars['block_mode'] ), $http_vars['container_id'], $lang );
+				unset ( $http_vars['lang_enum'] );
+				unset ( $http_vars['switcher'] );
+				$result = GetSimpleFormats ( $server, isset ( $http_vars['block_mode'] ), $http_vars['container_id'], $lang, $http_vars );
 			break;
 			
 			default:
-				$result = HandleDefault ( $http_vars );
+				$result = HandleSimpleDefault ( $http_vars );
 			break;
 			}
 		
@@ -93,7 +95,7 @@ if ( $server instanceof c_comdef_server )
 		
 		\returns XHTML data. It will either be a table, or block elements.
 	*/	
-	function GetSearchResults ( 
+	function GetSimpleSearchResults ( 
 								$in_http_vars,			///< The HTTP GET and POST parameters.
 								$in_block = false,		///< If this is true, the results will be sent back as block elements (div tags), as opposed to a table. Default is false.
 								$in_container_id = null	///< This is an optional ID for the "wrapper."
@@ -278,7 +280,7 @@ if ( $server instanceof c_comdef_server )
 									$ret .= $format;
 									$ret .= $in_block ? '</div>' : '</td>';
 								
-								$ret .= $in_block ? '</div>' : '</tr>';
+								$ret .= $in_block ? '<div class="bmlt_clear_div"></div></div>' : '</tr>';
 								}
 							}
 						}
@@ -326,13 +328,14 @@ if ( $server instanceof c_comdef_server )
 	/**
 		\brief	This returns the complete formats table.
 		
-		\returns CSV data, with the first row a key header.
+		\returns XHTML data, with the first row a key header.
 	*/	
-	function GetFormats ( 	
+	function GetSimpleFormats ( 	
 						&$server,					///< A reference to an instance of c_comdef_server
 						$in_block = false,			///< If this is true, the results will be sent back as block elements (div tags), as opposed to a table. Default is false.
 						$in_container_id = null,	///< This is an optional ID for the "wrapper."
-						$in_lang = null				///< The language of the formats to be returned. Default is null (server language). Can be an array.
+						$in_lang = null,			///< The language of the formats to be returned. Default is null (server language). Can be an array.
+						$in_search_params = NULL    ///< If this is supplied, then it is a search parameter list. The idea is that only the formats used in the returned meetings will be displayed.
 						)
 		{
 		$my_keys = array (	'key_string',
@@ -341,7 +344,14 @@ if ( $server instanceof c_comdef_server )
 							);
 		
 		$ret = $in_block ? '<div class="bmlt_simple_format_div"'.($in_container_id ? ' id="'.c_comdef_htmlspecialchars ( $in_container_id ).'"' : '').'>' : '<table class="bmlt_simple_format_table"'.($in_container_id ? ' id="'.c_comdef_htmlspecialchars ( $in_container_id ).'"' : '').' cellpadding="0" cellspacing="0" summary="Format Codes">';
+		$formats_ar = array();
 		
+		if ( isset ( $in_search_params ) && is_array ( $in_search_params ) && count ( $in_search_params ) )
+		    {
+		    require_once ( dirname ( __FILE__ ).'/../csv/search_results_csv.php' );
+			$results = GetSearchResults ( $in_search_params, $formats_ar );
+	     	}
+
 		$formats_obj = $server->GetFormatsObj();
 		if ( $formats_obj instanceof c_comdef_formats )
 			{
@@ -376,6 +386,25 @@ if ( $server instanceof c_comdef_server )
 						{
 						if ( $format instanceof c_comdef_format )
 							{
+							if ( ($formats_ar != NULL) )
+							    {
+							    $has = FALSE;
+							    
+							    foreach ( $formats_ar as $format_obj )
+							        {
+							        if ( $format->GetSharedID() && ($format_obj->GetSharedID() == $format->GetSharedID()) )
+							            {
+							            $has = TRUE;
+							            break;
+							            }
+							        }
+							        
+							    if ( !$has )
+							        {
+							        continue;
+							        }
+							    }
+							    
 							if ( $alt == 1 )
 								{
 								$alt = 0;
@@ -418,7 +447,7 @@ if ( $server instanceof c_comdef_server )
 								$ret .= c_comdef_htmlspecialchars ( trim ( $val ) );
 								$ret .= $in_block ?  '</div>' : '</td>';
 								}
-							$ret .= $in_block ? '</div>' : '</tr>';
+							$ret .= $in_block ? '<div class="bmlt_clear_div"></div></div>' : '</tr>';
 							}
 						}
 					}
@@ -436,25 +465,14 @@ if ( $server instanceof c_comdef_server )
 		
 		\returns English error string (not XML).
 	*/	
-	function HandleDefault ( 
+	function HandleSimpleDefault ( 
 							$in_http_vars	///< The HTTP GET and POST parameters.
 							)
 		{
 		return "You must supply either 'switcher=GetSearchResults' or 'switcher=GetFormats'";
 		}
 	
-	/*******************************************************************/
-	/**
-		\brief Handles no server available (error).
-		
-		\returns null;
-	*/	
-	function HandleNoServer ( )
-		{
-		return null;
-		}
-	
-	$ret = parse_redirect ( $server );
+	$ret = parse_redirect_simple ( $server );
 	}
 else
 	{
