@@ -51,6 +51,10 @@ For instructions on installing the root server, see this page:
 CHANGELIST
 ----------
 = Version 2.1.4 =
+* December 7, 2013
+* Added French localization.
+
+= Version 2.1.4 =
 * December 3, 2013
 * Fixed a syntax error in the Installer Wizard.
 
