@@ -289,7 +289,7 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 	
 		if ( (!isset ( $in_http_vars['sort_dir'] ) || ( ($in_http_vars['sort_dir'] != 'desc') && ($in_http_vars['sort_dir'] != 'asc') ) ) && !isset ($in_http_vars['sort_keys'] ) )
 			{
-			$in_http_vars['sort_dir'] = $default_sort_dir;
+			$in_http_vars['sort_dir'] = 'asc';
 			}
 	
 		SetUpSearch ( $search_manager, $in_http_vars );
@@ -302,7 +302,7 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 	    
 	    if ( !isset ( $in_http_vars['sort_keys'] ) )
 	        {
-		    $search_manager->SetSort ( $localized_strings['default_sorts'][$in_http_vars['sort_key']], $sort_dir_desc, $sort_depth );
+		    $search_manager->SetSort ( $localized_strings['default_sorts'][$in_http_vars['sort_key']], $sort_dir_desc, 0 );
 		    }
 		    
 		$search_manager->DoSearch();

@@ -789,7 +789,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 			{
 			$sql = "SELECT * FROM `".c_comdef_server::GetMeetingTableName_obj()."_data` WHERE meetingid_bigint=0"; 
 			
-			$rows = c_comdef_dbsingleton::preparedQuery( $sql, array ( $in_lang_enum ) );
+			$rows = c_comdef_dbsingleton::preparedQuery( $sql, array() );
 			foreach ( $rows as $row )
 				{
 				$ret[$row['key']]['key'] = $row['key'];

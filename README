@@ -50,6 +50,11 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.1.6 =
+* December 8, 2013
+* Added More French localization.
+* Fixed a couple of PHP warnings.
+
 = Version 2.1.5 =
 * December 7, 2013
 * Added French localization.

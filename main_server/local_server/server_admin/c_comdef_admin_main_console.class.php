@@ -145,7 +145,7 @@ class c_comdef_admin_main_console
 			}
 		
 		// Sort them by their field keys, so we have a consistent order.
-		$flags = ( defined ( SORT_NATURAL ) && defined ( SORT_FLAG_CASE ) ) ? intval ( SORT_NATURAL | SORT_FLAG_CASE ) : null;
+		$flags = ( defined ( 'SORT_NATURAL' ) && defined ( 'SORT_FLAG_CASE' ) ) ? intval ( SORT_NATURAL | SORT_FLAG_CASE ) : null;
 		ksort ( $this->my_data_field_templates, $flags );
     }
     
@@ -438,7 +438,7 @@ class c_comdef_admin_main_console
     static function js_html(    $in_raw_html
                             )
     {
-        $flags = (defined ( ENT_SUBSTITUTE ) && defined ( ENT_NOQUOTES )) ? intval ( ENT_SUBSTITUTE | ENT_NOQUOTES ) : null;
+        $flags = (defined ( 'ENT_SUBSTITUTE' ) && defined ( 'ENT_NOQUOTES' )) ? intval ( ENT_SUBSTITUTE | ENT_NOQUOTES ) : null;
         return preg_replace ( "|[\n\r]|", " ", str_replace ( "'", "\'", htmlspecialchars ( $in_raw_html ), $flags ) );
     }
     
