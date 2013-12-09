@@ -241,7 +241,7 @@ if ( $server instanceof c_comdef_server )
 							
 							$name_uri = urlencode( htmlspecialchars_decode ( $name ) );
 							
-							$map_uri = str_replace ( "##LONG##", c_comdef_htmlspecialchars ( $meeting['longitude'] ), str_replace ( "##LAT##", c_comdef_htmlspecialchars ( $meeting['latitude'] ), str_replace ( "##NAME##", $name_uri, $localized_strings['comdef_search_results_strings']['MapsURL'] ) ) );
+    						$map_uri = str_replace ( "##LONG##", c_comdef_htmlspecialchars ( $meeting['longitude'] ), str_replace ( "##LAT##", c_comdef_htmlspecialchars ( $meeting['latitude'] ), str_replace ( "##NAME##", $name_uri, $localized_strings['comdef_server_admin_strings']['MapsURL'] ) ) );
 							
 							if ( $time && $weekday && $address )
 								{
@@ -271,9 +271,7 @@ if ( $server instanceof c_comdef_server )
 									$ret .= $in_block ? '</div>' : '</td>';
 								
 									$ret .= $in_block ? '<div class="bmlt_simple_meeting_one_meeting_address_div">' : '<td class="bmlt_simple_meeting_one_meeting_address_td">';
-									$ret .= '<a href="'.$map_uri.'">';
-									$ret .= $address;
-									$ret .= '</a>';
+									$ret .= '<a href="'.$map_uri.'">'.$address.'</a>';
 									$ret .= $in_block ? '</div>' : '</td>';
 								
 									$ret .= $in_block ? '<div class="bmlt_simple_meeting_one_meeting_format_div">' : '<td class="bmlt_simple_meeting_one_meeting_format_td">';

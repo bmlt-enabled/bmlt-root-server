@@ -50,6 +50,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.1.7 =
+* December 9, 2013
+* Fixed a bug in the simple meeting Map URL, caused by the localization work.
+
 = Version 2.1.6 =
 * December 8, 2013
 * Added More French localization.
