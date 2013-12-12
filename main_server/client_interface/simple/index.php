@@ -260,7 +260,7 @@ if ( $server instanceof c_comdef_server )
 									
 									if ( isset ( $single_uri ) && $single_uri )
 									    {
-                                        $ret .= '<a href="'.htmlspecialchars ( $single_uri ).'">';
+                                        $ret .= '<a href="'.htmlspecialchars ( $single_uri ).intval ( $meeting['id_bigint'] ).'">';
                                         }
                                     
 									if ( $name )
