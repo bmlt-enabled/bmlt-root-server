@@ -114,11 +114,16 @@ if ( $server instanceof c_comdef_server )
 			}
 		elseif ( !isset ( $in_http_vars['geo_loc'] ) || $in_http_vars['geo_loc'] != 'yes' )
 			{
-			if ( !isset( $in_http_vars['geo_width'] ) )
+			if ( !isset ( $in_http_vars['geo_width'] ) )
 				{
 				$in_http_vars['geo_width'] = 0;
 				}
 			}
+        
+        if ( !(isset ( $in_http_vars['sort_key'] ) && $in_http_vars['sort_key']) && !(isset ( $in_http_vars['sort_keys'] ) && $in_http_vars['sort_keys']) )
+            {
+            $in_http_vars['sort_key'] = 'time';
+            }
 
 		require_once ( dirname ( __FILE__ ).'/../csv/search_results_csv.php' );
 		$results = DisplaySearchResultsCSV ( $in_http_vars );
@@ -128,6 +133,11 @@ if ( $server instanceof c_comdef_server )
 		// What we do, is to parse the CSV return. We'll pick out certain fields, and format these into a table or block element return.
 		if ( $results )
 			{
+            if ( isset ( $in_http_vars['single_uri'] ) && $in_http_vars['single_uri'] )
+                {
+                $single_uri = $in_http_vars['single_uri'];
+                }
+            
 			// Start by turning the CSV into an array of meeting lines.
 			$results = explode ( "\n", $results );
 
@@ -159,9 +169,6 @@ if ( $server instanceof c_comdef_server )
 							{
 							// This is for convenience. We turn the meeting array into an associative one by adding the keys.
 							$meeting = array_combine ( $keys, $meeting );
-							
-// 							$single_uri = 'http://'.$_SERVER['SERVER_NAME'].preg_replace ( '#(.*\/).*?\/.*?\/.*?$#', "$1", $_SERVER['SCRIPT_NAME'] ).'index.php?single_meeting_id='.intval ( $meeting['id_bigint'] );
-
 							$location_borough = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_city_subsection'] ) ) );
 							$location_neighborhood = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_neighborhood'] ) ) );
 							$location_province = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_province'] ) ) );
@@ -239,7 +246,7 @@ if ( $server instanceof c_comdef_server )
 							$name = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['meeting_name'] ) ) );
 							$format = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['formats'] ) ) );
 							
-							$name_uri = urlencode( htmlspecialchars_decode ( $name ) );
+							$name_uri = urlencode ( htmlspecialchars_decode ( $name ) );
 							
     						$map_uri = str_replace ( "##LONG##", c_comdef_htmlspecialchars ( $meeting['longitude'] ), str_replace ( "##LAT##", c_comdef_htmlspecialchars ( $meeting['latitude'] ), str_replace ( "##NAME##", $name_uri, $localized_strings['comdef_server_admin_strings']['MapsURL'] ) ) );
 							
@@ -250,16 +257,26 @@ if ( $server instanceof c_comdef_server )
 									$ret .= $town;
 									$ret .= $in_block ? '</div>' : '</td>';
 									$ret .= $in_block ? '<div class="bmlt_simple_meeting_one_meeting_name_div">' : '<td class="bmlt_simple_meeting_one_meeting_name_td">';
-// 									$ret .= '<a href="'.$single_uri.'">';
+									
+									if ( isset ( $single_uri ) && $single_uri )
+									    {
+                                        $ret .= '<a href="'.htmlspecialchars ( $single_uri ).'">';
+                                        }
+                                    
 									if ( $name )
 										{
 										$ret .= $name;
 										}
 									else
 										{
-										$ret .= $localized_strings['comdef_search_results_strings']['Value_Prompts']['generic'];
+										$ret .= $localized_strings['comdef_server_admin_strings']['Value_Prompts']['generic'];
 										}
-// 									$ret .= '</a>';
+									
+									if ( isset ( $single_uri ) && $single_uri )
+									    {
+        								$ret .= '</a>';
+        								}
+        							
 									$ret .= $in_block ? '</div>' : '</td>';
 								
 									$ret .= $in_block ? '<div class="bmlt_simple_meeting_one_meeting_time_div">' : '<td class="bmlt_simple_meeting_one_meeting_time_td">';
@@ -306,11 +323,11 @@ if ( $server instanceof c_comdef_server )
 		
 		if ( ($in_time == "00:00:00") || ($in_time == "23:59:00") )
 			{
-			$time = c_comdef_htmlspecialchars ( $localized_strings['comdef_search_results_strings']['time_midnight'] );
+			$time = c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_midnight_label'] );
 			}
 		elseif ( $in_time == "12:00:00" )
 			{
-			$time = c_comdef_htmlspecialchars ( $localized_strings['comdef_search_results_strings']['time_noon'] );
+			$time = c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_noon_label'] );
 			}
 		else
 			{

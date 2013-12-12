@@ -1200,7 +1200,7 @@ function BMLT_Server_Admin ()
 
         element_span = document.createElement ( 'span' );   // Create the container element.
         element_span.className = 'bmlt_admin_meeting_search_results_single_meeting_meeting_name_span';
-        text_node = document.createTextNode ( in_meeting_object.meeting_name );
+        text_node = document.createTextNode ( in_meeting_object.meeting_name + (in_meeting_object.location_street ? ', ' + in_meeting_object.location_street : '') + (in_meeting_object.location_city_subsection ? ', ' + in_meeting_object.location_city_subsection : '') + (in_meeting_object.location_municipality ? ', ' + in_meeting_object.location_municipality : '') + (in_meeting_object.location_province ? ', ' + in_meeting_object.location_province : '') + (in_meeting_object.location_sub_province ? ', (' + in_meeting_object.location_sub_province + ')' : '') + (in_meeting_object.location_postal_code_1 ? ', ' + in_meeting_object.location_postal_code_1 : '')  );
         element_span.appendChild ( text_node );
         meeting_editorLink.appendChild ( element_span );
 

@@ -2485,7 +2485,6 @@ class c_comdef_server
             - 'weekdays'                        An array of weekday names. 0 -> Sunday, 6 -> Saturday
             - 'prompt_delimiter'                The character used to delimit prompts (usually a colon ':').
             - 'comdef_map_radius_ranges'        An array of floating point numbers that indicate the choices for the radius selector (in miles).
-            - 'comdef_search_results_strings'   An associative array, with all the various strings used in most displays.
             - 'comdef_search_admin_strings'     An associative array, with strings used only in administration.
             - 'comdef_format_types'             An associative array that maps format classes to their descriptions.
             - 'change_type_strings'             An associative array that maps the types of changes to their descriptions.

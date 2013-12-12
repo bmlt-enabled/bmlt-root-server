@@ -111,7 +111,7 @@ if ( $server )
             $bmlt_basic_configuration_index = 0;
 
             $bmlt_basic_configuration[$bmlt_basic_configuration_index++] = array (
-                'root_server'               =>  'http://'.$_SERVER['SERVER_NAME'].dirname ( $_SERVER['SCRIPT_NAME'] ).'/../..', 
+                'root_server'               =>  'http://'.$_SERVER['SERVER_NAME'].dirname ( dirname ( dirname ( $_SERVER['SCRIPT_NAME'] ) ) ), 
                 'map_center_latitude'       =>  floatval ( $localized_strings['search_spec_map_center']['latitude'] ),
                 'map_center_longitude'      =>  floatval ( $localized_strings['search_spec_map_center']['longitude'] ),
                 'map_zoom'                  =>  floatval ( $localized_strings['comdef_server_admin_strings']['meeting_editor_default_zoom'] ),

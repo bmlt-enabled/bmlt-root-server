@@ -679,13 +679,13 @@ class c_comdef_change extends t_comdef_local_type implements i_comdef_db_stored
 										// This is a security measure. If the reader can't see BOTH the before and after, we show them neither.
 										if ( isset ( $before_value['visibility'] ) && ($before_value['visibility'] == _VISIBILITY_NONE_) && (!$after->UserCanObserve() || !$before->UserCanObserve()) )
 											{
-											$before_value['value'] == $localized_strings['comdef_search_results_strings']['hidden_value'];
+											$before_value['value'] == $localized_strings['comdef_server_admin_strings']['hidden_value'];
 											}
 
 										$after_value = isset ( $after_data[$array_key] ) ? $after_data[$array_key] : null;
 										if ( isset ( $after_value['visibility'] ) && ($after_value['visibility'] == _VISIBILITY_NONE_) && (!$after->UserCanObserve() || !$before->UserCanObserve()) )
 											{
-											$after_value['value'] == $localized_strings['comdef_search_results_strings']['hidden_value'];
+											$after_value['value'] == $localized_strings['comdef_server_admin_strings']['hidden_value'];
 											}
 										$prompt = $array_key;
 										$change_string = null;

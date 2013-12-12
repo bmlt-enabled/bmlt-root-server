@@ -696,11 +696,11 @@ function BuildTime ( $in_time, ///< A string. The value of the time field.
 		{
 		if ( ($in_time == "00:00:00") || ($in_time == "23:59:00") )
 			{
-			$time = c_comdef_htmlspecialchars ( $localized_strings['comdef_search_results_strings']['time_midnight'] );
+			$time = c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_noon_label'] );
 			}
 		elseif ( $in_time == "12:00:00" )
 			{
-			$time = c_comdef_htmlspecialchars ( $localized_strings['comdef_search_results_strings']['time_noon'] );
+			$time = c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_midnight_label'] );
 			}
 		else
 			{

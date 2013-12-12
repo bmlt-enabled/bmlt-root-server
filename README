@@ -50,6 +50,13 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.1.8 =
+* December 11, 2013
+* Fixed a bug that could affect rare servers with security set to "11." The Observer browser did not work.
+* Fixed a bug that prevented meetings listed at noon and midnight from being displayed in simple searches (localization bug).
+* Fixed a bug that created a disorganized sort for simple meeting results.
+* Added address information to the meeting search results in the Meeting Editor. This was a request by an ASC administrator, so it had a high priority.
+
 = Version 2.1.7 =
 * December 9, 2013
 * Fixed a bug in the simple meeting Map URL, caused by the localization work.
