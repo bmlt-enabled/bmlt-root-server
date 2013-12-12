@@ -1,0 +1,48 @@
+<?php
+/* THIS IS AN EXAMPLE CONFIGURATION FILE PRODUCED BY THE INSTALLER WIZARD
+
+    You would call this file "auto-config.inc.php", and place it at the same level as your "main_server" directory (or whatever you name the main folder).
+ */
+defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
+
+	// These are the settings created by the installer wizard.
+
+		// Database settings:
+		$dbType = 'mysql'; // This is the PHP PDO driver name for your database.
+		$dbName = '<YOUR DATABASE>'; // This is the name of the database.
+		$dbUser = '<YOUR DATABASE USER>'; // This is the SQL user that is authorized for the above database.
+		$dbPassword = '<YOUR DATABASE USER PASSWORD>'; // This is the password for the above authorized user. Make it a big, ugly hairy one. It is powerful, and there is no need to remember it.
+		$dbServer = 'localhost'; // This is the host/server for accessing the database.
+		$dbPrefix = 'na'; // This is a table name prefix that can be used to differentiate tables used by different root server instances that share the same database.
+
+		// Location and Map settings:
+		$region_bias = 'us'; // This is a 2-letter code for a 'region bias,' which helps Google Maps to figure out ambiguous search queries.
+		$search_spec_map_center = array ( 'longitude' => -73, 'latitude' => 43, 'zoom' => 12 ); // This is the default map location for new meetings.
+		$comdef_distance_units = 'km';
+
+		// Display settings:
+		$bmlt_title = 'Basic Meeting List Toolbox Administration'; // This is the page title and heading for the main administration login page.
+		$banner_text = 'Administration Login'; // This is text that is displayed just above the login box on the main login page.
+
+		// Miscellaneous settings:
+		$comdef_global_language ='en'; // This is the 2-letter code for the default root server localization (will default to 'en' -English, if the localization is not available).
+		$min_pw_len = 10; // The minimum number of characters in a user account password for this root server.
+		$number_of_meetings_for_auto = 10; // This is an approximation of the number of meetings to search for in the auto-search feature. The higher the number, the wider the radius.
+		$change_depth_for_meetings = 5; // This is how many changes should be recorded for each meeting. The higher the number, the larger the database will grow, as this can become quite substantial.
+		$default_duration_time = '1:30:00'; // This is the default duration for meetings that have no duration specified.
+
+	// These are 'hard-coded,' but can be changed later.
+
+		$time_format = 'g:i A'; // The PHP date() format for the times displayed.
+		$change_date_format = 'g:i A, n/j/Y'; // The PHP date() format for times/dates displayed in the change records.
+		$admin_session_name = 'BMLT_Admin'; // This is merely the 'tag' used to identify the BMLT admin session.
+
+		// This text can be used in certain custom printed lists. It is usually not especially important.
+		if ( !defined ( '_DEFAULT_DURATION' ) ) define ( '_DEFAULT_DURATION', 'N.A. Meetings are usually 90 minutes long (an hour and a half), unless otherwise indicated.' );
+
+		// These are used for the NAWS format translation. They are the shared IDs of the wheelchair, open and closed formats.
+		// If you edit your formats, and change these IDs, please change them here, as well.
+		if ( !defined ( 'WC_FORMAT' ) ) define ( 'WC_FORMAT', '33' ); // Wheelchair-Accessible
+		if ( !defined ( 'O_FORMAT' ) ) define ( 'O_FORMAT', '17' ); // Open Meeting
+		if ( !defined ( 'C_FORMAT' ) ) define ( 'C_FORMAT', '4' ); // Closed Meeting
+?>
