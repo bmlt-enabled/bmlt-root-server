@@ -78,7 +78,7 @@ if (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'initiali
             {
             // First, we make sure that the database does not already exist. If so, we immediately fail, as we will not overwrite an existing database.
 		    $result = c_comdef_dbsingleton::preparedQuery ( 'SELECT * FROM '.$db_prefix.$http_vars['dbPrefix'].'_comdef_users WHERE 1', array() );
-		    $response = array ( 'status' => 'false', 'report' => 'AJAX_Handler_DB_Established_Error' );
+		    $response = array ( 'status' => 'false', 'report' => $comdef_install_wizard_strings['AJAX_Handler_DB_Established_Error'] );
 		    }
 		catch ( Exception $e2 )
 		    {
@@ -102,18 +102,22 @@ if (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'initiali
             $salt = $http_vars['salt'];
             $max_crypt = true;
             $sql_array = array ( $serveradmin_name, $serveradmin_desc, $http_vars['admin_login'], FullCrypt ( $http_vars['admin_password'], $salt, $max_crypt ), $lang );
+
             c_comdef_dbsingleton::preparedExec ( $sql_serveradmin, $sql_array );
-            
+
             // Formats are special. There are diacriticals that need to be escaped, so we make sure they get set into the values array.
             $sql_temp = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\.\-A-Z0-9]|', '', $db_prefix.$http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/sql_files/InitialFormatsData.sql' ) );
                 
             $value_array = array();
+            $sql_temp = str_replace ( "\\'", "`", $sql_temp );
+            
             if ( preg_match_all ( "|'(.*?)'|", $sql_temp, $value_array ) );
                 {
                 $value_array = $value_array[0];
                 for ( $c = 0; $c < count ( $value_array ); $c++ )
                     {
                     $value_array[$c] = preg_replace ( "|'(.*?)'|", "$1", $value_array[$c] );
+                    $value_array[$c] = str_replace ( "`", "'", $value_array[$c] );
                     }
                 
                 $sql_temp = preg_replace ( "|'.*?'|", "?", $sql_temp );

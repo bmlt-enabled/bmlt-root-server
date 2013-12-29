@@ -50,6 +50,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.1.10 =
+* December 29, 2013
+* Fixed a bug in the install wizard that would result in corrupted initial databases.
+
 = Version 2.1.9 =
 * December 12, 2013
 * Fixed a very small bug in the simple output. This would only affect rare installations. If a single_meeting_id= link was provided, it would not resolve properly.
