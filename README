@@ -50,6 +50,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.1.11 =
+* December 31, 2013
+* Addressed a bug that could affect the observer browser in some Internet Explorer sessions (AJAX bug).
+
 = Version 2.1.10 =
 * December 29, 2013
 * Fixed a bug in the install wizard that would result in corrupted initial databases.
