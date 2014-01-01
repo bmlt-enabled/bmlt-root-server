@@ -50,6 +50,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.1.12 =
+* TBD
+* Removed an erroneous French format, and added three new formats. Fixed a broken Swedish format, and made it an English format (Web).
+
 = Version 2.1.11 =
 * December 31, 2013
 * Addressed a bug that could affect the observer browser in some Internet Explorer sessions (AJAX bug).
