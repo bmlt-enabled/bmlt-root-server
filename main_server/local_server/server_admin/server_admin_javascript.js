@@ -4399,7 +4399,7 @@ function BMLT_Server_Admin ()
         in_offset = parseInt ( in_offset, 10 ); // Just to make sure.
         var format_line_tr = null;
 
-        var insertion_point = (g_formats_array.length + in_offset) * g_langs.length;
+        var insertion_point = (g_formats_array.length + in_offset) * (g_langs.length + 1);
         
         if ( document.getElementById ( 'format_create_line_tr' ) )
             {
@@ -4469,7 +4469,7 @@ function BMLT_Server_Admin ()
             container_row.format_group_objects = in_format_lang_group;
             if ( !in_format_id )
                 {
-                container_row.className = ' new_format_line';
+                container_row.className = 'new_format_line';
                 }
             else
                 {
@@ -4606,8 +4606,15 @@ function BMLT_Server_Admin ()
             
         container_row = in_container_table.insertRow ( insertion_point );
         container_row.id = 'format_editor_naws_id_' + in_format_id + '_tr';
-        container_row.className = 'format_editor_naws_id_tr format_editor_format_line_' + ((in_index % 2) ? 'even' : 'odd') + '_tr';
+        var row_className = 'format_editor_naws_id_tr format_editor_format_line_' + ((in_index % 2) ? 'even' : 'odd') + '_tr';
         
+        if ( in_format_id == 0 )
+            {
+            row_className = 'format_editor_naws_id_tr new_format_line';
+            };
+        
+        container_row.className = row_className;
+
         var naws_td = container_row.insertCell ( -1 );
         naws_td.id = 'format_editor_naws_id_' + in_format_id + '_td';
         naws_td.className = 'format_editor_naws_id_td';
@@ -4761,6 +4768,10 @@ function BMLT_Server_Admin ()
             
                 container_row.parentNode.removeChild ( container_row );
                 };
+                
+            var container_row = document.getElementById ( 'format_editor_naws_id_0_tr' );
+        
+            container_row.parentNode.removeChild ( container_row );
             
             create_button.innerHTML = g_format_editor_create_format_button_text;
             create_button.href = 'javascript:admin_handler_object.createFormatOpen()';
