@@ -300,6 +300,38 @@
                                                                                                                 'title_checkbox_unpub_meeting' => 'This meeting is unpublished. It cannot be seen by regular searches.',
                                                                                                                 'title_checkbox_copy_meeting' => 'This meeting is a duplicate of another meeting. It is also unpublished. It cannot be seen by regular searches.'
                                                                                                             ),
+                                            'world_format_codes_prompt'                             =>  'Naws mötesformat:',
+                                            'world_format_codes'                                    => array (
+                                                                                                                ''	    =>	'Ingen',
+                                                                                                                'OPEN'  =>  'Öppet möte',
+                                                                                                                'CLOSED'=>  'Slutet möte',
+                                                                                                                'WCHR'  =>  'Rullstolsvänlig lokal',
+                                                                                                                'BEG'	=>	'Nykomling',
+                                                                                                                'BT'	=>	'Basic Text möte',
+                                                                                                                'CAN'	=>	'Ljusmöte',
+                                                                                                                'CPT'	=>	'12 Konsept möte',
+                                                                                                                'CW'	=>	'Barn välkomna',
+                                                                                                                'DISC'	=>	'Diskutionsmöte',
+                                                                                                                'GL'	=>	'Gay/Lesbiskt',
+                                                                                                                'IP'	=>	'IP Studie',
+                                                                                                                'IW'	=>	'Det fungerar Studie',
+                                                                                                                'JFT'	=>	'Bara för idag Studie',
+                                                                                                                'LC'	=>	'Living Clean Studie',
+                                                                                                                'LIT'	=>	'Literatur Studie',
+                                                                                                                'M'	    =>	'Mansmöte',
+                                                                                                                'MED'	=>	'Meditationsmöte',
+                                                                                                                'QA'	=>	'Frågor och svar',
+                                                                                                                'RA'	=>	'Ej publikt möte',
+                                                                                                                'SMOK'	=>	'Rökare',
+                                                                                                                'SPK'	=>	'Talarmöte',
+                                                                                                                'STEP'	=>	'Stegmöte',
+                                                                                                                'SWG'	=>	'Stegarnetsguiden studie',
+                                                                                                                'TOP'	=>	'Temamöte',
+                                                                                                                'TRAD'	=>	'Traditionsmöte',
+                                                                                                                'VAR'	=>	'Blandad mötesform',
+                                                                                                                'W'	    =>	'Kvinnomöte',
+                                                                                                                'Y'	    =>	'Ungdomsmöte'     
+                                                                                                            )
 	                                    );
 
 	$change_type_strings = array (

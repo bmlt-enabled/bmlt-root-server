@@ -299,6 +299,38 @@
                                                                                                                 'title_checkbox_unpub_meeting' => 'This meeting is unpublished. It cannot be seen by regular searches.',
                                                                                                                 'title_checkbox_copy_meeting' => 'This meeting is a duplicate of another meeting. It is also unpublished. It cannot be seen by regular searches.'
                                                                                                             ),
+                                            'world_format_codes_prompt'                             =>  'NAWS Format:',
+                                            'world_format_codes'                                    => array (
+                                                                                                            ''	    =>	'None',
+                                                                                                            'OPEN'  =>  'Open',
+                                                                                                            'CLOSED'=>  'Closed',
+                                                                                                            'WCHR'  =>  'Wheelchair-Accessible',
+                                                                                                            'BEG'	=>	'Beginner/Newcomer',
+                                                                                                            'BT'	=>	'Basic Text',
+                                                                                                            'CAN'	=>	'Candlelight',
+                                                                                                            'CPT'	=>	'12 Concepts',
+                                                                                                            'CW'	=>	'Children Welcome',
+                                                                                                            'DISC'	=>	'Discussion/Participation',
+                                                                                                            'GL'	=>	'Gay/Lesbian',
+                                                                                                            'IP'	=>	'IP Study',
+                                                                                                            'IW'	=>	'It Works Study',
+                                                                                                            'JFT'	=>	'Just For Today Study',
+                                                                                                            'LC'	=>	'Living Clean',
+                                                                                                            'LIT'	=>	'Literature Study',
+                                                                                                            'M'	    =>	'Men',
+                                                                                                            'MED'	=>	'Meditation',
+                                                                                                            'QA'	=>	'Questions & Answers',
+                                                                                                            'RA'	=>	'Restricted Access',
+                                                                                                            'SMOK'	=>	'Smoking',
+                                                                                                            'SPK'	=>	'Speaker',
+                                                                                                            'STEP'	=>	'Step',
+                                                                                                            'SWG'	=>	'Step Working Guide Study',
+                                                                                                            'TOP'	=>	'Topic',
+                                                                                                            'TRAD'	=>	'Tradition',
+                                                                                                            'VAR'	=>	'Format Varies',
+                                                                                                            'W'	    =>	'Women',
+                                                                                                            'Y'	    =>	'Young People',
+                                                                                                            )
 	                                    );
 
 	$change_type_strings = array (

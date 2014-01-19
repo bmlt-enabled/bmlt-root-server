@@ -299,6 +299,38 @@
                                                                                                                 'title_checkbox_unpub_meeting' => 'Cette rencontre n\'est pas publiée. Il ne peut pas être vu par des recherches régulières.',
                                                                                                                 'title_checkbox_copy_meeting' => 'Cette réunion est une copie d\'une autre réunion. Il est également non publié. Elle ne peut être vue par recherches régulières.'
                                                                                                             ),
+                                            'world_format_codes_prompt'                             =>  'Format SMNA:',
+                                            'world_format_codes'                                    => array (
+                                                                                                                ''	    =>	'Aucun',
+                                                                                                                'OPEN'  =>  'Ouvert',
+                                                                                                                'CLOSED'=>  'Fermée',
+                                                                                                                'WCHR'  =>  'Fauteuil Roulant',
+                                                                                                                'BEG'   =>	'Débutant/Nouveau',
+                                                                                                                'BT'    =>	'Texte de base',
+                                                                                                                'CAN'   =>	'À la Chandelle',
+                                                                                                                'CPT'   =>	'12 Concepts',
+                                                                                                                'CW'    =>	'Enfants bienvenus',
+                                                                                                                'DISC'  =>	'Discussion',
+                                                                                                                'GL'    =>	'Gais/Lesbiennes',
+                                                                                                                'IP'    =>	'Étude de pamphlet IP',
+                                                                                                                'IW'    =>	'Étude du livre « Ça marche »',
+                                                                                                                'JFT'   =>	'Étude du livre « Juste pour aujourd’hui »',
+                                                                                                                'LC'    =>	'Étude du livre « Vivre abstinent »',
+                                                                                                                'LIT'   =>	'Étude de littérature',
+                                                                                                                'M'     =>	'Hommes',
+                                                                                                                'MED'   =>	'Méditation',
+                                                                                                                'QA'    =>	'Questions et réponses',
+                                                                                                                'RA'    =>	'Accès limité',
+                                                                                                                'SMOK'  =>	'Fumeurs',
+                                                                                                                'SPK'   =>	'Partage',
+                                                                                                                'STEP'  =>	'Étapes',
+                                                                                                                'SWG'   =>	'Étude du « Guide de travail sur les étapes »',
+                                                                                                                'TOP'   =>	'Thématique',
+                                                                                                                'TRAD'  =>	'Traditions',
+                                                                                                                'VAR'   =>	'Formats variés',
+                                                                                                                'W'     =>	'Femmes',
+                                                                                                                'Y'     =>	'Jeunes'
+                                                                                                            )
 	                                    );
 
 	$change_type_strings = array (

@@ -258,6 +258,8 @@ class c_comdef_admin_ajax_handler
                         $server_format->SetLocalDescription ( $format_data['description'] );
                         }
                 
+                    $server_format->SetWorldID ( $format_data['worldid_mixed'] );
+                    
                     array_push ( $the_objects_to_be_changed, $server_format );
                     }
                 }
@@ -290,7 +292,8 @@ class c_comdef_admin_ajax_handler
                                                 'key' => $one_format->GetKey(),
                                                 'name' => $one_format->GetLocalName(),
                                                 'description' => $one_format->GetLocalDescription(),
-                                                'type' => $one_format->GetFormatType()
+                                                'type' => $one_format->GetFormatType(),
+                                                'worldid_mixed' => $one_format->GetWorldID()
                                                 );
                 
                     $new_shared_id = $saved_format_object['shared_id'];

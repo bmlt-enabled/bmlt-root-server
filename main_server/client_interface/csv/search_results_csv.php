@@ -50,9 +50,12 @@ if ( !defined('C_FORMAT') )
 
 global $g_format_dictionary;	///< This is a dictionary used to translate formats to NAWS format. It uses the format shared IDs in the server's language.
 
+bmlt_populate_format_dictionary();
+
 /// If you wish to override this, simply set this up in your /get-config.php file. That will supersede this.
 if ( !isset ( $g_format_dictionary ) || !is_array ( $g_format_dictionary ) || !count ( $g_format_dictionary ) )
 	{
+	/// This is the default set.
 	/// The right side is the BMLT side, and the left side is the NAWS code. The left side should not be changed.
 	$g_format_dictionary = array (
 								'BEG'	=> 1,
@@ -82,6 +85,32 @@ if ( !isset ( $g_format_dictionary ) || !is_array ( $g_format_dictionary ) || !c
 								'Y'		=> 34
 								);
 	}
+
+/*******************************************************************/
+/** \brief This reads in the server format codes, and populates the
+           format dictionary with the NAWS IDs.
+*/
+function bmlt_populate_format_dictionary()
+{
+    global $g_format_dictionary;	///< This is a dictionary used to translate formats to NAWS format. It uses the format shared IDs in the server's language.
+    
+	$server = c_comdef_server::MakeServer();
+	$localized_strings = c_comdef_server::GetLocalStrings();
+	$formats_array = c_comdef_server::GetServer()->GetFormatsObj ()->GetFormatsArray();
+
+	foreach ( $formats_array['en'] as $format )
+	    {
+	    if ( $format instanceof c_comdef_format )
+	        {
+            $world_id = $format->GetWorldID();
+            $shared_id = $format->GetSharedID();
+            if ( $world_id && $shared_id )
+                {
+                $g_format_dictionary[$world_id] = $shared_id;
+                }
+            }
+	    }
+}
 
 /*******************************************************************/
 /** \brief This function does a search, then builds a CSV result,
@@ -735,6 +764,8 @@ function BMLT_FuncNAWSReturnOpenOrClosed (	$in_meeting_id,	///< The ID of the me
 											&$server		///< A reference to an instance of c_comdef_server
 										)
 {
+    global $g_format_dictionary;
+    
 	$ret = 'CLOSED';
 	
 	if ( $in_meeting_id instanceof c_comdef_meeting )
@@ -746,13 +777,16 @@ function BMLT_FuncNAWSReturnOpenOrClosed (	$in_meeting_id,	///< The ID of the me
 		$the_meeting = $server->GetOneMeeting ( $in_meeting_id );
 		}
 	
+	$id = $g_format_dictionary['OPEN'];
+
 	if ( $the_meeting instanceof c_comdef_meeting )
 		{
 		$formats = $the_meeting->GetMeetingDataValue ( 'formats' );
 		
 		if ( is_array ( $formats ) && count ( $formats ) )
 			{
-			if ( isset ( $formats[O_FORMAT] ) )
+			
+			if ( isset ( $formats[$id] ) )
 				{
 				$ret = 'OPEN';
 				}
@@ -772,6 +806,8 @@ function BMLT_FuncNAWSReturnWheelchair (	$in_meeting_id,	///< The ID of the meet
 											&$server		///< A reference to an instance of c_comdef_server
 										)
 {
+    global $g_format_dictionary;
+    
 	$ret = 'FALSE';
 	
 	if ( $in_meeting_id instanceof c_comdef_meeting )
@@ -783,13 +819,15 @@ function BMLT_FuncNAWSReturnWheelchair (	$in_meeting_id,	///< The ID of the meet
 		$the_meeting = $server->GetOneMeeting ( $in_meeting_id );
 		}
 	
+	$id = $g_format_dictionary['WCHR'];
+			
 	if ( $the_meeting instanceof c_comdef_meeting )
 		{
 		$formats = $the_meeting->GetMeetingDataValue ( 'formats' );
 		
 		if ( is_array ( $formats ) && count ( $formats ) )
 			{
-			if ( isset ( $formats[WC_FORMAT] ) )
+			if ( isset ( $formats[$id] ) )
 				{
 				$ret = 'TRUE';
 				}
@@ -1066,11 +1104,14 @@ function BMLT_FuncNAWSReturnFormat1 (	$in_meeting_id,	///< The ID of the meeting
 			{
 			foreach ( $g_format_dictionary as $n_format => $b_format )
 				{
-				if ( isset ( $formats[$b_format] ) )
-					{
-					$ret = $n_format;
-					break;
-					}
+				if ( ($n_format != 'OPEN') && ($n_format != 'CLOSED') && ($n_format != 'WCHR') )
+				    {
+                    if ( isset ( $formats[$b_format] ) )
+                        {
+                        $ret = $n_format;
+                        break;
+                        }
+                    }
 				}
 			}
 		}
@@ -1109,14 +1150,17 @@ function BMLT_FuncNAWSReturnFormat2 (	$in_meeting_id,	///< The ID of the meeting
 			$count = 1;
 			foreach ( $g_format_dictionary as $n_format => $b_format )
 				{
-				if ( isset ( $formats[$b_format] ) )
-					{
-					if ( !$count-- )
-						{
-						$ret = $n_format;
-						break;
-						}
-					}
+				if ( ($n_format != 'OPEN') && ($n_format != 'CLOSED') && ($n_format != 'WCHR') )
+				    {
+                    if ( isset ( $formats[$b_format] ) )
+                        {
+                        if ( !$count-- )
+                            {
+                            $ret = $n_format;
+                            break;
+                            }
+                        }
+                    }
 				}
 			}
 		}
@@ -1155,14 +1199,17 @@ function BMLT_FuncNAWSReturnFormat3 (	$in_meeting_id,	///< The ID of the meeting
 			$count = 2;
 			foreach ( $g_format_dictionary as $n_format => $b_format )
 				{
-				if ( isset ( $formats[$b_format] ) )
-					{
-					if ( !$count-- )
-						{
-						$ret = $n_format;
-						break;
-						}
-					}
+				if ( ($n_format != 'OPEN') && ($n_format != 'CLOSED') && ($n_format != 'WCHR') )
+				    {
+                    if ( isset ( $formats[$b_format] ) )
+                        {
+                        if ( !$count-- )
+                            {
+                            $ret = $n_format;
+                            break;
+                            }
+                        }
+                    }
 				}
 			}
 		}
@@ -1201,14 +1248,17 @@ function BMLT_FuncNAWSReturnFormat4 (	$in_meeting_id,	///< The ID of the meeting
 			$count = 3;
 			foreach ( $g_format_dictionary as $n_format => $b_format )
 				{
-				if ( isset ( $formats[$b_format] ) )
-					{
-					if ( !$count-- )
-						{
-						$ret = $n_format;
-						break;
-						}
-					}
+				if ( ($n_format != 'OPEN') && ($n_format != 'CLOSED') && ($n_format != 'WCHR') )
+				    {
+                    if ( isset ( $formats[$b_format] ) )
+                        {
+                        if ( !$count-- )
+                            {
+                            $ret = $n_format;
+                            break;
+                            }
+                        }
+                    }
 				}
 			}
 		}
@@ -1247,14 +1297,17 @@ function BMLT_FuncNAWSReturnFormat5 (	$in_meeting_id,	///< The ID of the meeting
 			$count = 4;
 			foreach ( $g_format_dictionary as $n_format => $b_format )
 				{
-				if ( isset ( $formats[$b_format] ) )
-					{
-					if ( !$count-- )
-						{
-						$ret = $n_format;
-						break;
-						}
-					}
+				if ( ($n_format != 'OPEN') && ($n_format != 'CLOSED') && ($n_format != 'WCHR') )
+				    {
+                    if ( isset ( $formats[$b_format] ) )
+                        {
+                        if ( !$count-- )
+                            {
+                            $ret = $n_format;
+                            break;
+                            }
+                        }
+                    }
 				}
 			}
 		}

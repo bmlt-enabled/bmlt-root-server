@@ -105,6 +105,7 @@ class c_comdef_admin_main_console
                             $single_format[$lang_key]['name'] = $format->GetLocalName();
                             $single_format[$lang_key]['description'] = $format->GetLocalDescription();
                             $single_format[$lang_key]['type'] = $format->GetFormatType();
+                            $single_format[$lang_key]['worldid_mixed'] = $format->GetWorldID();
                             }
                         }
                     }
@@ -276,6 +277,7 @@ class c_comdef_admin_main_console
                                     $ret .= ',"key":"'.str_replace ( '"', '\"', $format['key'] ).'"';
                                     $ret .= ',"name":"'.str_replace ( '"', '\"', $format['name'] ).'"';
                                     $ret .= ',"description":"'.str_replace ( '"', '\"', $format['description'] ).'"';
+                                    $ret .= ',"worldid_mixed":"'.str_replace ( '"', '\"', $format['worldid_mixed'] ).'"';
                                 $ret .= '}'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                                 }
                             }
@@ -387,7 +389,24 @@ class c_comdef_admin_main_console
                     $ret .= '\''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_pm_label'] ).'\',';
                     $ret .= '\''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_noon_label'] ).'\',';
                     $ret .= '\''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_midnight_label'] ).'\'';
-                $ret .= '];';
+                $ret .= '];'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_naws_popup_prompt = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['world_format_codes_prompt'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= "var g_naws_values = [";
+                    $n_first = true;
+                    foreach ( $this->my_localized_strings['comdef_server_admin_strings']['world_format_codes'] as $key => $value )
+                        {
+                        if ( !$n_first )
+                            {
+                            $ret .= ','.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                            }
+                        else
+                            {
+                            $n_first = false;
+                            $ret .= (defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                            }
+                        $ret .= '{"key":"'.self::js_html ( $key ).'","value":"'.self::js_html ( $value ).'"}';
+                        }
+                $ret .= (defined ( '__DEBUG_MODE__' ) ? "\n" : '').'];';
             $ret .= '</script>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
             $ret .= '<script type="text/javascript" src="'.((dirname ( $_SERVER['PHP_SELF'] ) != '/') ? dirname ( $_SERVER['PHP_SELF'] ) : '').'/local_server/server_admin'.(defined('__DEBUG_MODE__') ? '/' : '/js_stripper.php?filename=' ).'json2.js"></script>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
             $ret .= '<script type="text/javascript" src="'.((dirname ( $_SERVER['PHP_SELF'] ) != '/') ? dirname ( $_SERVER['PHP_SELF'] ) : '').'/local_server/server_admin'.(defined('__DEBUG_MODE__') ? '/' : '/js_stripper.php?filename=' ).'server_admin_javascript.js"></script>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');

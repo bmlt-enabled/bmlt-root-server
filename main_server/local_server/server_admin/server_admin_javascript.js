@@ -4429,7 +4429,7 @@ function BMLT_Server_Admin ()
             id_td.innerHTML = '&nbsp;';
             };
         
-        id_td.setAttribute ( 'rowspan', g_langs.length );
+        id_td.setAttribute ( 'rowspan', g_langs.length + 1 );
         id_td.rowSpan = g_langs.length;
         for ( var c = 0; c < g_langs.length; c++ )
             {
@@ -4603,7 +4603,88 @@ function BMLT_Server_Admin ()
             this.handleTextInputLoad ( format_name_input, g_format_editor_name_default_text );
             this.handleTextInputLoad ( format_description_input, g_format_editor_description_default_text );
             };
+            
+        container_row = in_container_table.insertRow ( insertion_point );
+        container_row.id = 'format_editor_naws_id_' + in_format_id + '_tr';
+        container_row.className = 'format_editor_naws_id_tr format_editor_format_line_' + ((in_index % 2) ? 'even' : 'odd') + '_tr';
+        
+        var naws_td = container_row.insertCell ( -1 );
+        naws_td.id = 'format_editor_naws_id_' + in_format_id + '_td';
+        naws_td.className = 'format_editor_naws_id_td';
+        naws_td.setAttribute ( 'colspan', 6 );
+        
+        var naws_menu_prompt = document.createElement ( 'label' );
+        naws_menu_prompt.id = 'format_editor_naws_id_' + in_format_id + '_label';
+        naws_menu_prompt.className = 'format_editor_naws_id_label';
+        naws_menu_prompt.setAttribute ( 'for', 'format_editor_naws_id_' + in_format_id + '_select' );
 
+        naws_menu_prompt.appendChild ( document.createTextNode ( g_naws_popup_prompt ) );
+        naws_td.appendChild ( naws_menu_prompt );
+
+        naws_menu = document.createElement ( 'select' );
+        naws_menu.id = 'format_editor_naws_id_' + in_format_id + '_select';
+        naws_menu.className = 'format_editor_naws_id_select';
+        naws_menu.format_group_objects = in_format_lang_group;
+        naws_menu.shared_id = in_format_id;
+        naws_menu.data_member_name = 'worldid_mixed';
+        naws_menu.onchange = function () { admin_handler_object.handleFormatNAWSSelectInput ( this ); };
+        
+        for ( var i = 0; i < g_naws_values.length; i++ )
+            {
+            var val = g_naws_values[i].value ? htmlspecialchars_decode ( g_naws_values[i].value ) : '';
+            if ( val )
+                {
+                var key = g_naws_values[i].key ? g_naws_values[i].key: '';
+                var opt = document.createElement ( 'option' );
+                opt.value = htmlspecialchars_decode ( key );
+                opt.appendChild ( document.createTextNode ( htmlspecialchars_decode ( val ) ) );
+                };
+            
+            naws_menu.appendChild ( opt );
+            };
+        
+        var key_match = false;
+        
+        var format_world_id_key = in_format_lang_group.en.worldid_mixed ? htmlspecialchars_decode ( in_format_lang_group.en.worldid_mixed ) : null;
+        
+        // Make sure the correct value is selected.
+        if ( format_world_id_key )
+            {
+            for ( var i = 0; i < g_naws_values.length; i++ )
+                {
+                var key = g_naws_values[i].key ? htmlspecialchars_decode ( g_naws_values[i].key ) : '';
+                if ( key == format_world_id_key )
+                    {
+                    key_match = true;
+                    naws_menu.selectedIndex = i;
+                    break;
+                    };
+                };
+            };
+                
+        if ( !key_match )
+            {
+            naws_menu.selectedIndex = 0;
+            };
+        
+        naws_td.appendChild ( naws_menu );
+    
+    /************************************************************************************//**
+    *   \brief  Handle data input from the text items.                                      *
+    ****************************************************************************************/
+    this.handleFormatNAWSSelectInput = function ( in_select_input_object ///< This will contain the affected select input
+                                            )
+        {
+        var new_value = in_select_input_object.options[in_select_input_object.selectedIndex].value;
+        
+        for ( var c = 0; c < g_langs.length; c++ )
+            {
+            in_select_input_object.format_group_objects[g_langs[c]].worldid_mixed = new_value;
+            };
+        
+        this.evaluateFormatState ( in_select_input_object.shared_id );
+        };
+        
     /************************************************************************************//**
     *   \brief  This goes through all the formats in the list, and ensures they have the    *
     *           proper styling to them.                                                     *
@@ -4618,6 +4699,9 @@ function BMLT_Server_Admin ()
                 {
                 var lang_key = g_langs[c];
                 var format_row = null;
+                var format_row_2 = document.getElementById ( 'format_editor_naws_id_' + format_id + '_tr' );
+                format_row_2.className = 'format_editor_naws_id_tr format_editor_format_line_' + ((index % 2) ? 'even' : 'odd') + '_tr';
+                
                 if ( c == 0 )
                     {
                     format_row = document.getElementById ( 'format_editor_line_' + format_id + '_tr' );
@@ -4881,9 +4965,12 @@ function BMLT_Server_Admin ()
                                 {
                                 var lang_key = g_langs[c];
                                 container_row = document.getElementById ( 'format_editor_' + lang_key + '_line_' + the_id + '_tr' );
-            
                                 container_row.parentNode.removeChild ( container_row );
                                 };
+                                
+                            container_row = document.getElementById ( 'format_editor_naws_id_' + the_id + '_tr' );
+                            container_row.parentNode.removeChild ( container_row );
+
                             this.setWarningFaders();
                             g_formats_array.splice ( index, 1 );
                             BMLT_Admin_StartFader ( 'bmlt_admin_fader_format_editor_delete_success_div', this.m_success_fade_duration );
@@ -4953,10 +5040,10 @@ function BMLT_Server_Admin ()
         // We now have the original (unmodified) format group. We now compare this group to the values of the edite format group.
         // We compare them the simple way, by stringifying them, and comparing the strings.
         
-        var original_strin = JSON.stringify ( original_format_group_object );
-        var new_strin = JSON.stringify ( edited_format_group_object );
+        var original_string = JSON.stringify ( original_format_group_object );
+        var new_string = JSON.stringify ( edited_format_group_object );
         
-        return ( original_strin != new_strin );
+        return ( original_string != new_string );
         };
 
     /************************************************************************************//**

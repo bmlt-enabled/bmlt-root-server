@@ -50,9 +50,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
-= Version 2.1.12 =
+= Version 2.2.0 =
 * TBD
 * Removed an erroneous French format, and added three new formats. Fixed a broken Swedish format, and made it an English format (Web).
+* Added the ability to select a NAWS format code as a translation match for an existing format code. This allows arbitrary format editing.
 
 = Version 2.1.11 =
 * December 31, 2013

@@ -1252,6 +1252,25 @@ tr.format_editor_format_line_odd_tr td
     background-color:white;
 }
 
+tr.format_editor_naws_id_tr
+{
+    margin: 0;
+    border:none;
+    text-align:center;
+}
+
+tr.format_editor_naws_id_tr td
+{
+    padding:4px;
+}
+
+tr.format_editor_naws_id_tr .format_editor_naws_id_label
+{
+    padding-right:8px;
+    text-align:right;
+    font-weight:bold;
+}
+
 tr.new_format_line td
 {
     background-color:#fee;
