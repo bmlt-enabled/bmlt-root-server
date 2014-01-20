@@ -258,12 +258,15 @@ class c_comdef_admin_ajax_handler
                         $server_format->SetLocalDescription ( $format_data['description'] );
                         }
                 
-                    $server_format->SetWorldID ( $format_data['worldid_mixed'] );
+                    if ( isset ( $format_data['worldid_mixed'] ) && $format_data['worldid_mixed'] )
+                        {
+                        $server_format->SetWorldID ( $format_data['worldid_mixed'] );
+                        }
                     
                     array_push ( $the_objects_to_be_changed, $server_format );
                     }
                 }
-        
+
             $the_changed_objects = array();
         
             if ( $the_objects_to_be_changed && is_array ( $the_objects_to_be_changed ) && count ( $the_objects_to_be_changed ) )

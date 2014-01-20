@@ -514,7 +514,7 @@ class c_comdef_server
     */
     function GetFormatsArray()
     {
-        return $this->GetFormatsObj()->GetFormatsArray();
+        return ($this->GetFormatsObj() instanceof c_comdef_formats) ? $this->GetFormatsObj()->GetFormatsArray() : NULL;
     }
     
     /*******************************************************************/

@@ -4573,30 +4573,33 @@ function BMLT_Server_Admin ()
                 new_throbber_span.appendChild ( new_throbber_img );
                 format_change_div.appendChild ( new_throbber_span );
                 format_buttons_td.appendChild ( format_change_div );
-            
-                var format_delete_div = document.createElement ( 'div' );
-                format_delete_div.id = 'format_editor_delete_' + in_format_id + '_div';
-                format_delete_div.className = 'format_editor_delete_div hide_in_new_format_admin';
-            
-                var format_delete_a = document.createElement ( 'a' );
-                format_delete_a.id = 'format_editor_delete_' + in_format_id + '_a';
-                format_change_a.format_group_objects = in_format_lang_group;
-                format_delete_a.className = 'bmlt_admin_ajax_button';
-                format_delete_a.appendChild ( document.createTextNode ( g_format_editor_delete_format_button_text ) );
-                format_delete_a.href = 'javascript:admin_handler_object.deleteFormat(' + in_format_id + ')';
-            
-                format_delete_div.appendChild ( format_delete_a );
-                var new_throbber_span = document.createElement ( 'span' );
-                new_throbber_span.className = 'item_hidden';
-                new_throbber_span.id = 'format_editor_delete_' + in_format_id + '_throbber_span';
                 
-                var new_throbber_img = document.createElement ( 'img' );
-                new_throbber_img.src = g_throbber_image_loc;
-                new_throbber_img.setAttribute ( 'alt', 'AJAX Throbber' );
+                if ( g_formats_array.length > 1 )   // Can't delete the last format.
+                    {
+                    var format_delete_div = document.createElement ( 'div' );
+                    format_delete_div.id = 'format_editor_delete_' + in_format_id + '_div';
+                    format_delete_div.className = 'format_editor_delete_div hide_in_new_format_admin';
+            
+                    var format_delete_a = document.createElement ( 'a' );
+                    format_delete_a.id = 'format_editor_delete_' + in_format_id + '_a';
+                    format_change_a.format_group_objects = in_format_lang_group;
+                    format_delete_a.className = 'bmlt_admin_ajax_button';
+                    format_delete_a.appendChild ( document.createTextNode ( g_format_editor_delete_format_button_text ) );
+                    format_delete_a.href = 'javascript:admin_handler_object.deleteFormat(' + in_format_id + ')';
+            
+                    format_delete_div.appendChild ( format_delete_a );
+                    var new_throbber_span = document.createElement ( 'span' );
+                    new_throbber_span.className = 'item_hidden';
+                    new_throbber_span.id = 'format_editor_delete_' + in_format_id + '_throbber_span';
+                
+                    var new_throbber_img = document.createElement ( 'img' );
+                    new_throbber_img.src = g_throbber_image_loc;
+                    new_throbber_img.setAttribute ( 'alt', 'AJAX Throbber' );
 
-                new_throbber_span.appendChild ( new_throbber_img );
-                format_delete_div.appendChild ( new_throbber_span );
-                format_buttons_td.appendChild ( format_delete_div );
+                    new_throbber_span.appendChild ( new_throbber_img );
+                    format_delete_div.appendChild ( new_throbber_span );
+                    format_buttons_td.appendChild ( format_delete_div );
+                    };
                 };
             
             this.handleTextInputLoad ( format_key_input, '' );
@@ -4858,7 +4861,9 @@ function BMLT_Server_Admin ()
                 else
                     {
                     edited_format_group = json_object.report;
-                    for ( var index = 0; index <= g_formats_array.length; index++ )
+                    var index = 0;
+                    var handled = false;
+                    while ( index <= g_formats_array.length )
                         {
                         if ( index == g_formats_array.length )
                             {
@@ -4867,12 +4872,13 @@ function BMLT_Server_Admin ()
                             this.cancelCreateNewFormat();
                             var format_table = document.getElementById ( 'bmlt_admin_format_editor_table' );
                             this.createFormatRow ( index, g_formats_array[index].id, edited_format_group, format_table, -1 );
+                            handled = true;
+                            break;
                             };
                         
                         if ( edited_format_group[g_langs[0]].shared_id == g_formats_array[index].id )
                             {
                             g_formats_array[index].formats = JSON.parse ( JSON.stringify ( edited_format_group ) );
-                            this.setWarningFaders();
                             BMLT_Admin_StartFader ( 'bmlt_admin_fader_format_editor_success_div', this.m_success_fade_duration );
                             
                             if ( in_format_id )
@@ -4881,12 +4887,15 @@ function BMLT_Server_Admin ()
                                 };
                             
                             this.restyleFormats();
+                            handled = true;
                             break;
                             };
+                            
+                        index++;
                         };
                     
                     // If we went through without interruption, then the job was not complete.
-                    if ( index == g_formats_array.length )
+                    if ( !handled )
                         {
                         BMLT_Admin_StartFader ( 'bmlt_admin_fader_format_editor_fail_div', this.m_failure_fade_duration );
                         };
@@ -4963,8 +4972,10 @@ function BMLT_Server_Admin ()
                 else
                     {
                     var the_id = parseInt ( json_object.report, 10 );
+                    var index = 0;
+                    var handled = false;
                     
-                    for ( var index = 0; index < g_formats_array.length; index++ )
+                    while ( index <= g_formats_array.length )
                         {
                         if ( parseInt ( g_formats_array[index].id, 10 ) == the_id )
                             {
@@ -4983,14 +4994,24 @@ function BMLT_Server_Admin ()
                             container_row.parentNode.removeChild ( container_row );
 
                             this.setWarningFaders();
-                            g_formats_array.splice ( index, 1 );
+                            if ( g_formats_array.length > 1 )
+                                {
+                                g_formats_array.splice ( index, 1 );
+                                }
+                            else
+                                {
+                                g_formats_array = Array();
+                                };
                             BMLT_Admin_StartFader ( 'bmlt_admin_fader_format_editor_delete_success_div', this.m_success_fade_duration );
                             this.restyleFormats();
+                            handled = true;
                             break;
                             };
+                        
+                        index++;
                         };
                     
-                    if ( index == g_formats_array.length )
+                    if ( !handled )
                         {
                         BMLT_Admin_StartFader ( 'bmlt_admin_fader_format_editor_delete_fail_div', this.m_failure_fade_duration );
                         };
