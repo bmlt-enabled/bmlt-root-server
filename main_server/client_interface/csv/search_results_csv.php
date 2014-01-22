@@ -738,7 +738,7 @@ function ReturnNAWSDeletedMeetings (
 									}
 								else
 									{
-									$value1 = 'TRUE';
+									$value1 = 'D';
 									}
 								
 								$line[$key] = $value1;

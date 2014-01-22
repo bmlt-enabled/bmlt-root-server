@@ -50,6 +50,12 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.2.1 =
+* January 21, 2014
+* Fixed a minor warning issue with the simple output.
+* Turned off debug mode (oops).
+* Changed the value in the "Delete" column for the NAWS export to "D" (as per request from NAWS)
+
 = Version 2.2.0 =
 * January 20, 2014
 * Removed an erroneous French format, and added three new formats. Fixed a broken Swedish format, and made it an English format (Web).

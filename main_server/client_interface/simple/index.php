@@ -65,7 +65,7 @@ if ( $server instanceof c_comdef_server )
 		switch ( $http_vars['switcher'] )
 			{
 			case 'GetSearchResults':
-				$result = GetSimpleSearchResults ( $http_vars, isset ( $http_vars['block_mode'] ), $http_vars['container_id'] );
+				$result = GetSimpleSearchResults ( $http_vars, isset ( $http_vars['block_mode'] ), isset ( $http_vars['container_id'] ) ? $http_vars['container_id'] : null );
 			break;
 			
 			case 'GetFormats':
