@@ -74,12 +74,10 @@ class c_comdef_admin_main_console
                 $the_format_object_array = $server_format_array[$lang_key];
                 foreach ( $the_format_object_array as $format )
                     {
-                    $format_ids[] = $format->GetSharedID();
+                    $format_ids['format_'.$format->GetSharedID()] = $format->GetSharedID();
                     }
                 }
             }
-            
-        $format_ids = array_unique ( $format_ids, SORT_NUMERIC );
             
         // OK, we have a sorted array of unique format IDs. Now, we assign each one an array of format data per language.
         

@@ -50,6 +50,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.2.2 =
+* TBD
+* Fixed an issue that happened on a somewhat nonstandard server. This resulted in the format editor not working.
+
 = Version 2.2.1 =
 * January 21, 2014
 * Fixed a minor warning issue with the simple output.
