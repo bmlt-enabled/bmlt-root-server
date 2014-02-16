@@ -47,21 +47,23 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"; ?>
 	<xs:element name="serviceBodies">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element maxOccurs="unbounded" ref="xsn:serviceBody"/>
+				<xs:element maxOccurs="unbounded" ref="xsn:row"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="serviceBody">
+	<xs:element name="row">
 		<xs:complexType mixed="true">
 			<xs:sequence>
-				<xs:element minOccurs="0" maxOccurs="unbounded" ref="xsn:serviceBody"/>
+                <xs:element minOccurs="0" maxOccurs="1" name="id" type="xs:integer"/>
+                <xs:element minOccurs="0" maxOccurs="1" name="parent_id" type="xs:string"/>
+                <xs:element minOccurs="0" maxOccurs="1" name="name" type="xs:string"/>
+                <xs:element minOccurs="0" maxOccurs="1" name="description" type="xs:string"/>
+                <xs:element minOccurs="0" maxOccurs="1" name="type" type="xs:string"/>
+                <xs:element minOccurs="0" maxOccurs="1" name="url" type="xs:string"/>
+                <xs:element minOccurs="0" maxOccurs="1" name="kmluri" type="xs:string"/>
+                <xs:element minOccurs="0" maxOccurs="1" name="world_id" type="xs:string"/>
 			</xs:sequence>
-			<xs:attribute name="id" use="required" type="xs:integer"/>
-			<xs:attribute name="sb_name" use="required" type="xs:string"/>
-			<xs:attribute name="sb_type" use="required" type="xs:string"/>
-			<xs:attribute name="sb_desc" type="xs:string"/>
-			<xs:attribute name="sb_uri" type="xs:string"/>
-			<xs:attribute name="sb_kmluri" type="xs:string"/>
+            <xs:attribute name="id" use="required" type="xs:integer"/>
 		</xs:complexType>
 	</xs:element>
 </xs:schema>

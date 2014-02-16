@@ -57,9 +57,16 @@ function parse_redirect (
     $langs = array ( $server->GetLocalLang() );
 	$localized_strings = c_comdef_server::GetLocalStrings();
     
-    if ( isset ( $http_vars['lang_enum'] ) && is_array ( $http_vars['lang_enum'] ) && count ( $http_vars['lang_enum'] ) )
+    if ( isset ( $http_vars['lang_enum'] ) )
         {
-        $langs = $http_vars['lang_enum'];
+        if ( !is_array ( $http_vars['lang_enum'] ) )
+            {
+            $langs = array ( trim ( $http_vars['lang_enum'] ) );
+            }
+        else
+            {
+            $langs = $http_vars['lang_enum'];
+            }
         }
 
 	switch ( $http_vars['switcher'] )
@@ -285,9 +292,9 @@ function parse_redirect (
 				{
                 $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 				$xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', $_SERVER['SERVER_NAME'].dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetServiceBodies.php' ) );
-				$result .= "<formats xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
+				$result .= "<serviceBodies xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
 				$result .= TranslateToXML ( $result2 );
-				$result .= "</formats>";
+				$result .= "</serviceBodies>";
 				}
 			elseif ( isset ( $http_vars['json_data'] ) )
 				{
@@ -719,7 +726,7 @@ function GetServiceBodies   (
 					        )
     {
 	$ret = array ();
-	$ret[0] = '"id","parent_id","name","description","url","world_id"';
+	$ret[0] = '"id","parent_id","name","description","type","url","kml_url","world_id"';
 	
 	try
 		{
@@ -735,7 +742,9 @@ function GetServiceBodies   (
                     $row[] = $sb->GetOwnerID();
                     $row[] = $sb->GetLocalName();
                     $row[] = $sb->GetLocalDescription();
+                    $row[] = $sb->GetSBType();
                     $row[] = $sb->GetURI();
+                    $row[] = $sb->GetKMLURI();
                     $row[] = $sb->GetWorldID();
                     $row = '"'.implode ('","', $row).'"';
                     $ret[] = $row;
