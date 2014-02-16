@@ -74,10 +74,10 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"; ?>
 										echo "integer";
 									break;
 									
-									case	'start_time':
-									case	'duration_time':
-										echo "time";
-									break;
+// 									case	'start_time':
+// 									case	'duration_time':
+// 										echo "time";
+// 									break;
 									
 									case	'longitude':
 									case	'latitude':
@@ -95,7 +95,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"; ?>
 								}
 ?>
 						</xs:sequence>
-                        <xs:attribute name="id" use="required" type="xs:integer"/>
+                        <xs:attribute name="sequence_index" use="required" type="xs:integer"/>
 					</xs:complexType>
 				</xs:element>
                 <xs:element name="formats" minOccurs="0">

@@ -40,7 +40,7 @@ if ( $server instanceof c_comdef_server )
 			}
 		else
 			{
-			header ( 'Content-Type:application/xml' );
+			header ( 'Content-Type:application/xml; charset=UTF-8' );
 			ob_start();
 			}
 		echo '<'.'?'.'xml version="1.0" encoding="UTF-8"'.'?'.'>';

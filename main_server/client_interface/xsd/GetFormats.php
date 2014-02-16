@@ -60,10 +60,10 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"; ?>
                 <xs:element ref="xsn:lang"/>
                 <xs:element ref="xsn:id"/>
             </xs:sequence>
-            <xs:attribute name="id" use="required" type="xs:integer"/>
+            <xs:attribute name="sequence_index" use="required" type="xs:integer"/>
         </xs:complexType>
     </xs:element>
-    <xs:element name="key_string" type="xs:NCName"/>
+    <xs:element name="key_string" type="xs:string"/>
     <xs:element name="name_string" type="xs:string"/>
     <xs:element name="description_string" type="xs:string"/>
     <xs:element name="lang" type="xs:NCName"/>

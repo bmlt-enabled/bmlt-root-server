@@ -60,7 +60,7 @@ function array2xml(	$array,				///< The input array
 		{
 		if (is_array($child))
 			{
-			$output .= '<' . (is_string($root) ? htmlspecialchars($root) : $ArrayNumberPrefix) . ' id="'.strval ( intval ($s_array2xml_index++) ).'">';
+			$output .= '<' . (is_string($root) ? htmlspecialchars($root) : $ArrayNumberPrefix) . ' sequence_index="'.strval ( intval ($s_array2xml_index++) ).'">';
 			$nested++;
 			$output .= array2xml($child, null, null, false);
 			$nested--;

@@ -59,7 +59,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"; ?>
                             <xs:element name="kmluri" type="xs:string" minOccurs="0" maxOccurs="1"/>
                             <xs:element name="world_id" type="xs:string" minOccurs="0" maxOccurs="1"/>
                         </xs:sequence>
-                        <xs:attribute name="id" type="xs:integer" use="required"/>
+                        <xs:attribute name="sequence_index" type="xs:integer" use="required"/>
                     </xs:complexType>
 				</xs:element>
 			</xs:sequence>

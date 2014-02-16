@@ -51,10 +51,11 @@ For instructions on installing the root server, see this page:
 CHANGELIST
 ----------
 = Version 2.2.2 =
-* TBD
+* February 16, 2014
 * Fixed an issue that happened on a somewhat nonstandard server. This resulted in the format editor not working.
 * The GetServiceBodies XML schema (and dump) had some errors. These have been addressed. This does slightly change the semantics for the GetServiceBodies variant.
-* made it so that you don't need to specify array brackets ([]) for the GetFormats variant of the semantic interface.
+* Made it so that you don't need to specify array brackets ([]) for the GetFormats variant of the semantic interface.
+* Changed the "id" attribute in the XML rows to "sequence_index". This helped some semantic users parse the data.
 
 = Version 2.2.1 =
 * January 21, 2014
