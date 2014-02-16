@@ -47,23 +47,22 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"; ?>
 	<xs:element name="serviceBodies">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element maxOccurs="unbounded" ref="xsn:row"/>
+				<xs:element maxOccurs="unbounded" name="row">
+                    <xs:complexType mixed="true">
+                        <xs:sequence>
+                            <xs:element name="id" type="xs:integer" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="parent_id" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="description" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="type" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="url" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="kmluri" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="world_id" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                        </xs:sequence>
+                        <xs:attribute name="id" type="xs:integer" use="required"/>
+                    </xs:complexType>
+				</xs:element>
 			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="row">
-		<xs:complexType mixed="true">
-			<xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="1" name="id" type="xs:integer"/>
-                <xs:element minOccurs="0" maxOccurs="1" name="parent_id" type="xs:string"/>
-                <xs:element minOccurs="0" maxOccurs="1" name="name" type="xs:string"/>
-                <xs:element minOccurs="0" maxOccurs="1" name="description" type="xs:string"/>
-                <xs:element minOccurs="0" maxOccurs="1" name="type" type="xs:string"/>
-                <xs:element minOccurs="0" maxOccurs="1" name="url" type="xs:string"/>
-                <xs:element minOccurs="0" maxOccurs="1" name="kmluri" type="xs:string"/>
-                <xs:element minOccurs="0" maxOccurs="1" name="world_id" type="xs:string"/>
-			</xs:sequence>
-            <xs:attribute name="id" use="required" type="xs:integer"/>
 		</xs:complexType>
 	</xs:element>
 </xs:schema>
