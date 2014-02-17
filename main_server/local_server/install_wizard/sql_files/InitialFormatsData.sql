@@ -36,6 +36,7 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (6, 'CL', NULL, 'CAN', 'en', 'Candlelight', 'This meeting is held by candlelight.', 'FC2'),
 (7, 'CS', NULL, '', 'en', 'Children under Supervision', 'Well-behaved, supervised children are welcome.', 'FC3'),
 (8, 'D', NULL, 'DISC', 'en', 'Discussion', 'This meeting invites participation by all attendees.', 'FC1'),
+(9, 'ES', NULL, NULL, 'en', 'Español', 'This meeting is conducted in Spanish.', 'FC3'),
 (10, 'GL', NULL, 'GL', 'en', 'Gay/Lesbian/Transgender', 'This meeting is focused on the needs of gay, lesbian and transgender members of NA.', 'FC3'),
 (11, 'IL', NULL, NULL, 'en', 'Illness', 'This meeting is focused on the needs of NA members with chronic illness.', 'FC1'),
 (12, 'IP', NULL, 'IP', 'en', 'Informational Pamphlet', 'This meeting is focused on discussion of one or more Informational Pamphlets.', 'FC1'),

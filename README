@@ -50,6 +50,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.2.3 =
+* February 17, 2014
+* Accidentally removed a format from the default formats (only applied during the install wizard, so this will not affect already installed deployments).
+
 = Version 2.2.2 =
 * February 16, 2014
 * Fixed an issue that happened on a somewhat nonstandard server. This resulted in the format editor not working.
