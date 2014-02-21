@@ -202,9 +202,39 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 {
     $search_string = isset ( $in_http_vars['SearchString'] ) ? trim ( $in_http_vars['SearchString'] ) : '';
     
-	if ( $search_string && !(isset ( $in_http_vars['StringSearchIsAnAddress'] ) && $in_http_vars['StringSearchIsAnAddress']) && intval ( $search_string ) && preg_match ( '|\d+|', $search_string ) )
+	if ( $search_string && !(isset ( $in_http_vars['StringSearchIsAnAddress'] ) && $in_http_vars['StringSearchIsAnAddress']) && intval ( $search_string ) && (preg_match ( '|\d+|', $search_string ) || preg_match ( '(|\d+|,)+', $search_string )) )
         {
-        $in_http_vars['meeting_ids'] = array ( intval ( $search_string ) );
+        $temp_ids = explode ( ',', $search_string );
+        
+        if ( is_array ( $temp_ids ) && count ( $temp_ids ) )
+            {
+            $first = true;
+            
+            foreach ( $temp_ids as $id )
+                {
+                $id = intval ( trim ( $id ) );
+                
+                if ( $id )
+                    {
+                    if ( $first )
+                        {
+                        $in_http_vars['meeting_ids'] = null;
+                        $first = false;
+                        }
+                    
+                    $in_http_vars['meeting_ids'][] = $id;
+                    }
+                }
+            }
+        else
+            {
+            $id = intval ( $search_string );
+            
+            if ( $id )
+                {
+                $in_http_vars['meeting_ids'] = array ( intval ( $id ) );
+                }
+            }
         }
     
 	// If we have a meeting ID array, then that defines the entire search. We ignore everything else

@@ -50,6 +50,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.4 =
+* TBD
+* Added the capability to indicate multiple meeting IDs in the search string by separating them with commas.
+
 = Version 2.2.3 =
 * February 17, 2014
 * Accidentally removed a format from the default formats (only applied during the install wizard, so this will not affect already installed deployments).
