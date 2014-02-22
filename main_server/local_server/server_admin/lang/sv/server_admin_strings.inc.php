@@ -331,6 +331,7 @@
                                                                                                                 'VAR'	=>	'Blandad mötesform',
                                                                                                                 'W'	    =>	'Kvinnomöte',
                                                                                                                 'Y'	    =>	'Ungdomsmöte'     
+                                                                                                                'LANG'  =>  'Alternate Language'
                                                                                                             )
 	                                    );
 

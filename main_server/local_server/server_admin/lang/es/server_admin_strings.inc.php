@@ -330,6 +330,7 @@
                                                                                                             'VAR'	=>	'Format Varies',
                                                                                                             'W'	    =>	'Women',
                                                                                                             'Y'	    =>	'Young People',
+                                                                                                            'LANG'  =>  'Alternate Language'
                                                                                                             )
 	                                    );
 

@@ -589,7 +589,7 @@ function ReturnNAWSFormatCSV (
 									'WheelChr'			=> 'BMLT_FuncNAWSReturnWheelchair',
 									'Day'				=> 'BMLT_FuncNAWSReturnWeekday',
 									'Time'				=> 'BMLT_FuncNAWSReturnTime',
-									'Language1'			=> null,
+									'Language1'			=> 'BMLT_FuncNAWSReturnLanguage1',
 									'Language2'			=> null,
 									'Language3'			=> null,
 									'LocationId'		=> null,
@@ -611,7 +611,8 @@ function ReturnNAWSFormatCSV (
 									'LastChanged'		=> 'BMLT_FuncNAWSReturnLastMeetingChangeTime',
 									'Longitude'			=> 'longitude',
 									'Latitude'			=> 'latitude',
-									'ContactGP'			=> null
+									'ContactGP'			=> null,
+									'bmlt_id'           => 'id_bigint'
 								);
 	
 	$ret = null;
@@ -913,6 +914,20 @@ function BMLT_FuncNAWSReturnTime (	$in_meeting_id,	///< The ID of the meeting (i
 			}
 		}
 	
+	return $ret;
+}
+
+/*******************************************************************/
+/**
+	\brief Returns the string for the first alternative lanuage (if any)
+	
+	\returns A string.
+*/	
+function BMLT_FuncNAWSReturnLanguage1 (	$in_meeting_id,	///< The ID of the meeting (internal DB ID) This can also be a meeting object.
+									    &$server		///< A reference to an instance of c_comdef_server
+								    )
+{
+	$ret = null;
 	return $ret;
 }
 
