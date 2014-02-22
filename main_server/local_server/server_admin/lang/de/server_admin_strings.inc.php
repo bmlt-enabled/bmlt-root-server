@@ -315,7 +315,7 @@
                                                                                                             'JFT'	=>	'Nur für Heute',
                                                                                                             'LC'	=>	'Thema Living Clean',
                                                                                                             'LIT'	=>	'Literaturmeeting',
-                                                                                                            'M'	    =>	'Mäner',
+                                                                                                            'M'	    =>	'Männer',
                                                                                                             'MED'	=>	'Meditation',
                                                                                                             'QA'	=>	'Frage & Antwort',
                                                                                                             'RA'	=>	'Eingeschränkter Zutritt',
