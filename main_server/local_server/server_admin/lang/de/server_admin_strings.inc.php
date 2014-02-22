@@ -310,7 +310,7 @@
                                                                                                             'CW'	=>	'Kinder willkommen',
                                                                                                             'DISC'	=>	'Diskussion/Teilen',
                                                                                                             'GL'	=>	'Schwul/Lesbisch',
-                                                                                                            'IP'	=>	'Thema IP',
+                                                                                                            'IP'	=>	'Thema Faltblätter',
                                                                                                             'IW'	=>	'Es funktioniert',
                                                                                                             'JFT'	=>	'Nur für Heute',
                                                                                                             'LC'	=>	'Thema Living Clean',
