@@ -51,10 +51,11 @@ For instructions on installing the root server, see this page:
 CHANGELIST
 ----------
 = Version 2.2.4 =
-* TBD
-* Added the capability to indicate multiple meeting IDs in the search string by separating them with commas.
-* Added fields to the NAWS export to assist in assigning NAWS Committee Codes to existing meetings.
+* February 23, 2014
+* Added the capability to indicate multiple meeting IDs in the search string, by separating them with commas. This allows a list of specific meetings, selected by BMLT ID, to be returned.
+* Added a field to the NAWS export to assist in future assigning NAWS Committee Codes to existing meetings.
 * Fixed some issues with non-standard TCP ports.
+* Fixed an error with validating the server version in the satellite admin page.
 
 = Version 2.2.3 =
 * February 17, 2014
