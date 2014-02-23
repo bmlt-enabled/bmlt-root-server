@@ -52,7 +52,7 @@ function parse_redirect (
 	$http_vars = array_merge_recursive ( $_GET, $_POST );
 	
 	// Just to be safe, we override any root passed in. We know where our root is, and we don't need to be told.
-	$http_vars['bmlt_root'] = 'http://'.$_SERVER['SERVER_NAME'].dirname ( $_SERVER['SCRIPT_NAME'] )."/../../";
+	$http_vars['bmlt_root'] = 'http://'.$_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').dirname ( $_SERVER['SCRIPT_NAME'] )."/../../";
 	
     $langs = array ( $server->GetLocalLang() );
 	$localized_strings = c_comdef_server::GetLocalStrings();
@@ -78,7 +78,7 @@ function parse_redirect (
 			if ( isset ( $http_vars['xml_data'] ) )
 				{
                 $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-				$xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', trim ( strtolower ( $_SERVER['SERVER_NAME'] ) ).dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetSearchResults.php' ) );
+				$xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', trim ( strtolower ( $_SERVER['SERVER_NAME'] ) ).(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetSearchResults.php' ) );
 				$result .= "<meetings xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
 				$result .= TranslateToXML ( $result2 );
 				if ( (isset ( $http_vars['get_used_formats'] ) || isset ( $http_vars['get_formats_only'] )) && $formats_ar && is_array ( $formats_ar ) && count ( $formats_ar ) )
@@ -86,7 +86,7 @@ function parse_redirect (
                     if ( isset ( $http_vars['get_formats_only'] ) )
                         {
                         $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-                        $xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', trim ( strtolower ( $_SERVER['SERVER_NAME'] ) ).dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetFormats.php' ) );
+                        $xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', trim ( strtolower ( $_SERVER['SERVER_NAME'] ) ).(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetFormats.php' ) );
                         $result .= "<formats xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
                         }
                     else
@@ -270,7 +270,7 @@ function parse_redirect (
 			if ( isset ( $http_vars['xml_data'] ) )
 				{
                 $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-				$xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', $_SERVER['SERVER_NAME'].dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetFormats.php' ) );
+				$xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', $_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetFormats.php' ) );
 				$result .= "<formats xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
 				$result .= TranslateToXML ( $result2 );
 				$result .= "</formats>";
@@ -291,7 +291,7 @@ function parse_redirect (
 			if ( isset ( $http_vars['xml_data'] ) )
 				{
                 $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-				$xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', $_SERVER['SERVER_NAME'].dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetServiceBodies.php' ) );
+				$xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', $_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetServiceBodies.php' ) );
 				$result .= "<serviceBodies xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
 				$result .= TranslateToXML ( $result2 );
 				$result .= "</serviceBodies>";
@@ -338,7 +338,7 @@ function parse_redirect (
 			if ( isset ( $http_vars['xml_data'] ) )
 				{
                 $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-				$xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', $_SERVER['SERVER_NAME'].dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetChanges.php' ) );
+				$xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', $_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetChanges.php' ) );
 				$result .= "<changes xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
 				$result .= TranslateToXML ( $result2 );
 				$result .= "</changes>";

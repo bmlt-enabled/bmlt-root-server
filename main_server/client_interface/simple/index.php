@@ -60,7 +60,7 @@ if ( $server instanceof c_comdef_server )
 			}
 		
 		// Just to be safe, we override any root passed in. We know where our root is, and we don't need to be told.
-		$http_vars['bmlt_root'] = 'http://'.$_SERVER['SERVER_NAME'].dirname ( $_SERVER['SCRIPT_NAME'] )."/../../";
+		$http_vars['bmlt_root'] = 'http://'.$_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').dirname ( $_SERVER['SCRIPT_NAME'] )."/../../";
 		
 		switch ( $http_vars['switcher'] )
 			{

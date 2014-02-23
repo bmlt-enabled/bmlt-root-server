@@ -44,7 +44,7 @@ if ( $server instanceof c_comdef_server )
 			ob_start();
 			}
 		echo '<'.'?'.'xml version="1.0" encoding="UTF-8"'.'?'.'>';
-		$xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', $_SERVER['SERVER_NAME'].dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetLangs.php' ) );
+		$xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', $_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetLangs.php' ) );
 		echo "<languages xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
 
 		foreach ( $langs as $key_string => $name_string )

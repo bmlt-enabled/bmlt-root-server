@@ -80,7 +80,7 @@ class bmlt_basic extends BMLTPlugin
     ****************************************************************************************/
     protected function get_ajax_base_uri()
         {
-        $ret = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME'];
+        $ret = 'http://'.$_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').$_SERVER['SCRIPT_NAME'];
         return $ret;
         }
     

@@ -78,7 +78,7 @@ else
             <meta http-equiv="Content-Script-Type" content="text/javascript" />
             <title>BMLT Installer</title>
             <?php
-            $url_path = 'http://'.$_SERVER['SERVER_NAME'].'/'.dirname ( $_SERVER['PHP_SELF'] );
+            $url_path = 'http://'.$_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').'/'.dirname ( $_SERVER['PHP_SELF'] );
             $shortcut_icon = "$url_path/local_server/server_admin/style/images/shortcut.png";
             $stylesheet = "$url_path/local_server/server_admin/style/install_wizard_styles.css";
             ?>

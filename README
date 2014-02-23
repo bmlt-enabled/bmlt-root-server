@@ -54,6 +54,7 @@ CHANGELIST
 * TBD
 * Added the capability to indicate multiple meeting IDs in the search string by separating them with commas.
 * Added fields to the NAWS export to assist in assigning NAWS Committee Codes to existing meetings.
+* Fixed some issues with non-standard TCP ports.
 
 = Version 2.2.3 =
 * February 17, 2014
