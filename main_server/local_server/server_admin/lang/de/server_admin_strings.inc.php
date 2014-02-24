@@ -65,6 +65,7 @@
 	                                        'meeting_editor_create_new_text'                        =>  'Erstelle ein neues Meeting',
 	                                        'meeting_editor_location_map_link'                      =>  'Ort auf Karte',
 	                                        'meeting_editor_screen_match_map_button'                =>  'Setze Karte auf Adresse',
+	                                        'meeting_editor_screen_match_ll_button'                 =>  'Set Longitude and Latitude to Address',
 	                                        'meeting_editor_screen_default_text_prompt'             =>  'Trage einen Text oder eine Zahl ein',
 	                                        'meeting_is_published'                                  =>  'Meeting is veröffentlicht',
 	                                        'meeting_editor_screen_meeting_name_label'              =>  'Meetings-Name:',

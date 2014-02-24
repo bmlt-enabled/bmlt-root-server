@@ -65,6 +65,7 @@
 	                                        'meeting_editor_create_new_text'                        =>  'Créer une nouvelle réunion',
 	                                        'meeting_editor_location_map_link'                      =>  'Carte de localisation',
 	                                        'meeting_editor_screen_match_map_button'                =>  'Réglez la carte pour adresse',
+	                                        'meeting_editor_screen_match_ll_button'                 =>  'Set Longitude and Latitude to Address',
 	                                        'meeting_editor_screen_default_text_prompt'             =>  'Entrez du texte ou un nombre',
 	                                        'meeting_is_published'                                  =>  'Réunion est publié',
 	                                        'meeting_editor_screen_meeting_name_label'              =>  'Nom de réunion:',
