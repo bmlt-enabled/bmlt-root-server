@@ -1649,6 +1649,9 @@ class c_comdef_admin_main_console
                     $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_latitude_text_input" type="text" value="'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_latitude_prompt'] ).'" /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
+                $ret .= '<div class="bmlt_admin_single_meeting_editor_map_button_bar_div">';
+                    $ret .= '<a id="bmlt_admin_meeting_ll_template_button_a" class="bmlt_admin_ajax_button button_disabled">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_match_ll_button'] ).'</a>';
+                $ret .= '</div>';
             $ret .= '</div>';
             $ret .= '<div class="bmlt_admin_meeting_editor_address_div">';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';

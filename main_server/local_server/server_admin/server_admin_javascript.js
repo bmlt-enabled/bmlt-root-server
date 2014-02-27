@@ -2402,14 +2402,20 @@ function BMLT_Server_Admin ()
 
             var set_map_to_address_button = document.getElementById ( 'bmlt_admin_meeting_map_' + in_meeting_id + '_button_a' );
 
+            var set_ll_to_address_button = document.getElementById ( 'bmlt_admin_meeting_ll_' + in_meeting_id + '_button_a' );
+
             if ( zip_text || borough_text || city_text || state_text || nation_text )
                 {
+                set_ll_to_address_button.href = 'javascript:admin_handler_object.setMapToAddress(' + in_meeting_id + ')';
                 set_map_to_address_button.href = 'javascript:admin_handler_object.setMapToAddress(' + in_meeting_id + ')';
+                set_ll_to_address_button.className = 'bmlt_admin_ajax_button';
                 set_map_to_address_button.className = 'bmlt_admin_ajax_button';
                 }
             else
                 {
-                set_map_to_address_button.href = null;
+                set_ll_to_address_button.href = null;
+                set_map_to_address_button.className = 'bmlt_admin_ajax_button button_disabled';
+                set_ll_to_address_button.href = null;
                 set_map_to_address_button.className = 'bmlt_admin_ajax_button button_disabled';
                 };
             };
@@ -2434,6 +2440,7 @@ function BMLT_Server_Admin ()
         var state_text = meeting_state_text_item.value;
         var zip_text = meeting_zip_text_item.value;
         var nation_text = meeting_nation_text_item.value;
+        
         if ( zip_text || borough_text || city_text || state_text || nation_text )
             {
             this.lookupLocation ( in_meeting_id );
@@ -2512,21 +2519,34 @@ function BMLT_Server_Admin ()
     {
         var meeting_editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id, 10 ) + '_div' );
 
-        if ( meeting_editor && meeting_editor.main_map )
+        if ( meeting_editor )
             {
             var the_meeting_object = meeting_editor.meeting_object;
 
             if ( in_geocode_response && in_geocode_response.length && (google.maps.OK == in_geocode_response[0].status) )
                 {
-                the_meeting_object.longitude = in_geocode_response[0].geometry.location.lng();
-                the_meeting_object.latitude = in_geocode_response[0].geometry.location.lat();
-        
-                var map_center = new google.maps.LatLng ( the_meeting_object.latitude, the_meeting_object.longitude );
-                this.setMeetingLongLat ( map_center, in_meeting_id );
-                meeting_editor.main_map.panTo ( map_center );
-                this.displayMainMarkerInMap ( in_meeting_id );
+                var lng = in_geocode_response[0].geometry.location.lng();
+                var lat = in_geocode_response[0].geometry.location.lat();
+                
+                if ( meeting_editor.main_map )
+                    {
+                    google.maps.event.removeListener ( the_meeting_object.m_geocoder );
+                    };
+                
+                delete  the_meeting_object.m_geocoder;
+                
+                var map_center = new google.maps.LatLng ( lat, lng );
 
-                google.maps.event.removeListener ( the_meeting_object.m_geocoder );
+                this.setMeetingLongLat ( map_center, in_meeting_id );
+                
+                if ( meeting_editor.main_map )
+                    {
+                    meeting_editor.main_map.panTo ( map_center );
+                    this.displayMainMarkerInMap ( in_meeting_id );
+
+                    google.maps.event.removeListener ( the_meeting_object.m_geocoder );
+                    };
+                
                 this.validateMeetingEditorButton ( in_meeting_id );
                 }
             else
@@ -2688,9 +2708,12 @@ function BMLT_Server_Admin ()
         var meeting_object = root_element.meeting_object;
         var meeting_longitude_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_longitude_text_input' );
         var meeting_latitude_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_latitude_text_input' );
+                
+        var lng = (Math.round (100000000.0 * in_longLat.lng()) / 100000000.0);
+        var lat = (Math.round (100000000.0 * in_longLat.lat()) / 100000000.0);
         
-        meeting_object.longitude = in_longLat.lng();
-        meeting_object.latitude = in_longLat.lat();
+        meeting_object.longitude = lng;
+        meeting_object.latitude = lat;
         
         meeting_longitude_text_item.value = htmlspecialchars_decode ( meeting_object.longitude );
         meeting_latitude_text_item.value = htmlspecialchars_decode ( meeting_object.latitude );
