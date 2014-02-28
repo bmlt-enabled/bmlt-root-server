@@ -1415,7 +1415,7 @@ function BMLT_Server_Admin ()
                                         in_no_confirm
                                 )
     {
-        if ( !this.isMeetingDirty ( in_meeting_id ) || ( this.isMeetingDirty ( in_meeting_id ) && (in_no_confirm || confirm ( g_meeting_closure_confirm_text ) )) )
+        if ( !this.isMeetingDirty ( in_meeting_id ) || (this.isMeetingDirty ( in_meeting_id ) && (in_no_confirm || confirm ( g_meeting_closure_confirm_text ))) )
             {
             var parent_id = 'bmlt_admin_meeting_editor_new_meeting_' + in_meeting_id + '_editor_display';
             
@@ -1468,7 +1468,7 @@ function BMLT_Server_Admin ()
                 }
             else
                 {
-                this.toggleMeetingSingleEditor ( in_meeting_id, in_no_confirm );
+                this.toggleMeetingSingleEditor ( in_meeting_id, true );
                 };
             };
     };

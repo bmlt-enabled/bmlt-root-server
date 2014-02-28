@@ -53,6 +53,7 @@ CHANGELIST
 = Version 2.3.0 =
 * TBD
 * Added a button to the meeting editor location tab, to set the meeting long/lat to the address (people were missing the button in the map).
+* Fixed a mild bug, where the confirm dialog was shown twice when canceling a meeting edit.
 
 = Version 2.2.5 =
 * February 24, 2014
