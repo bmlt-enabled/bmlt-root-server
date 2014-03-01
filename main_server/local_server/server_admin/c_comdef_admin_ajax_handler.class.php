@@ -223,6 +223,11 @@ class c_comdef_admin_ajax_handler
                 {
                 if ( $format_data )
                     {
+                    foreach ( $format_data as &$data_val )  // This removes double-slashes, added by the JSON encoding.
+                        {
+                        $data_val = str_replace ( '\\\\', '\\', $data_val );
+                        }
+                        
                     if ( !$shared_id )
                         {
                         $shared_id = intval ( $format_data['shared_id'] );
@@ -245,7 +250,6 @@ class c_comdef_admin_ajax_handler
                         {
                         $this->my_server->GetOneFormat ( $format_data['shared_id'], $format_data['lang_key'] );
                         }
-        
                     if ( !($server_format instanceof c_comdef_format) )
                         {
                         $parent = null;

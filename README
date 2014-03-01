@@ -51,10 +51,11 @@ For instructions on installing the root server, see this page:
 CHANGELIST
 ----------
 = Version 2.3.0 =
-* TBD
+* March 1, 2014
 * Added a button to the meeting editor location tab, to set the meeting long/lat to the address (people were missing the button in the map).
 * Fixed a mild bug, where the confirm dialog was shown twice when canceling a meeting edit.
 * Fixed an issue, where including double quotes (") in meeting data could cause the server to experience an AJAX hang.
+* Fixed another issue, where adding backslashes (\) to data in the editor resulted in incorrect values in the database.
 
 = Version 2.2.5 =
 * February 24, 2014
