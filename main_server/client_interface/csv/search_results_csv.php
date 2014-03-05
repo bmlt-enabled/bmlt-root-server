@@ -634,7 +634,6 @@ function ReturnNAWSFormatCSV (
 			}
 		}
 
-// 	require_once ( dirname ( __FILE__ ).'/search_results_csv.php' );
 	$ret_array = array ();	// If we supply an array as a second parameter, we will get the dump returned in a two-dimensional array.
 	DisplaySearchResultsCSV ( $in_http_vars, $ret_array );	// Start off by getting the CSV dump in the same manner as the normal CSV dump.
 
@@ -667,7 +666,7 @@ function ReturnNAWSFormatCSV (
 			}
 		}
 
-	$del_meetings = ReturnNAWSDeletedMeetings ( $server, $transfer_dictionary );	// We append deleted meetings to the end.
+	$del_meetings = ReturnNAWSDeletedMeetings ( $server, $transfer_dictionary, $in_http_vars['services'] );	// We append deleted meetings to the end.
 	
 	if ( is_array ( $del_meetings ) && count ( $del_meetings ) )
 		{
@@ -675,8 +674,8 @@ function ReturnNAWSFormatCSV (
 			{
 			if ( is_array ( $one_meeting ) && count ( $one_meeting ) )
 				{
-				$ret .= "\n".'"'.join ( '","', $one_meeting ).'"';
-				}
+                $ret .= "\n".'"'.join ( '","', $one_meeting ).'"';
+                }
 			}
 		}
 	
@@ -694,8 +693,9 @@ function ReturnNAWSFormatCSV (
 	\returns An array of World IDs and change dates. These each represent deleted meetings.
 */	
 function ReturnNAWSDeletedMeetings ( 
-									&$server,				///< A reference to an instance of c_comdef_server
-									$in_transfer_dictionary	///< The transfer dictionary
+									&$server,				    ///< A reference to an instance of c_comdef_server
+									$in_transfer_dictionary,    ///< The transfer dictionary
+									$in_services                ///< Any Service body IDs
 									)
 	{
 	$ret = null;
@@ -718,7 +718,25 @@ function ReturnNAWSDeletedMeetings (
 					$line = null;
 					if ( !$server->GetOneMeeting ( $b_obj->GetID() ) && $b_obj->UserCanObserve() )	// Must be currently deleted, and the user must be able to at least observe.
 						{
-						$one_meeting = 
+						if ( is_array ( $in_services ) && count ( $in_services ) )
+						    {
+						    $found = false;
+						    rewind ( $in_services );
+						    foreach ( $in_services as $sb_id )
+						        {
+						        if ( intval ( $b_obj->GetServiceBodyID() ) == intval ( $sb_id ) )
+						            {
+						            $found = true;
+						            break;
+						            }
+						        }
+						    
+						    if ( !$found )
+						        {
+// 						        break;
+						        }
+						    }
+						    
 						$value = intval ( preg_replace ( '|\D*?|', '', $b_obj->GetMeetingDataValue ( 'worldid_mixed' ) ) );
 						if ( $value )
 							{
@@ -930,7 +948,7 @@ function BMLT_FuncNAWSReturnLanguage1 (	$in_meeting_id,	///< The ID of the meeti
     global $g_format_dictionary;
     
 	$ret = '';
-	
+
 	if ( $in_meeting_id instanceof c_comdef_meeting )
 		{
 		$the_meeting = $in_meeting_id;
@@ -943,9 +961,21 @@ function BMLT_FuncNAWSReturnLanguage1 (	$in_meeting_id,	///< The ID of the meeti
 	if ( $the_meeting instanceof c_comdef_meeting )
 		{
 		$formats = $the_meeting->GetMeetingDataValue ( 'formats' );
+		$lang = $server->GetLocalLang();
 		
 		if ( is_array ( $formats ) && count ( $formats ) )
 			{
+			foreach ( $formats as $format )
+			    {
+			    if ( $format instanceof c_comdef_format )
+			        {
+			        if ( 'LANG' == $format->GetWorldID ( ) )
+			            {
+			            $ret = strtoupper ( trim ( $format->GetKey() ) );
+			            break;
+			            }
+			        }
+			    }
 			}
 		}
 	
