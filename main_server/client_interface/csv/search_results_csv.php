@@ -927,7 +927,28 @@ function BMLT_FuncNAWSReturnLanguage1 (	$in_meeting_id,	///< The ID of the meeti
 									    &$server		///< A reference to an instance of c_comdef_server
 								    )
 {
-	$ret = null;
+    global $g_format_dictionary;
+    
+	$ret = '';
+	
+	if ( $in_meeting_id instanceof c_comdef_meeting )
+		{
+		$the_meeting = $in_meeting_id;
+		}
+	else
+		{
+		$the_meeting = $server->GetOneMeeting ( $in_meeting_id );
+		}
+
+	if ( $the_meeting instanceof c_comdef_meeting )
+		{
+		$formats = $the_meeting->GetMeetingDataValue ( 'formats' );
+		
+		if ( is_array ( $formats ) && count ( $formats ) )
+			{
+			}
+		}
+	
 	return $ret;
 }
 
