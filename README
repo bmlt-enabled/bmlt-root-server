@@ -51,8 +51,10 @@ For instructions on installing the root server, see this page:
 CHANGELIST
 ----------
 = Version 2.3.1 =
-* TBD
-
+* March 5, 2014
+* Added the ability to convey special language formats to NAWS.
+* Fixed a bug, in which all deleted meetings in the NAWS dump had the same change date.
+* Fixed a bug, in which all deleted meetings, regardless of Service body, were sent to NAWS. It now only filters for the deleted meetings attached to the requesting Service body.
 
 = Version 2.3.0 =
 * March 1, 2014

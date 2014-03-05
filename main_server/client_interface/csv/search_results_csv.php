@@ -724,21 +724,18 @@ function ReturnNAWSDeletedMeetings (
 						    rewind ( $in_services );
 						    foreach ( $in_services as $sb_id )
 						        {
-						        if ( intval ( $b_obj->GetServiceBodyID() ) == intval ( $sb_id ) )
-						            {
-						            $found = true;
-						            break;
-						            }
-						        }
-						    
-						    if ( !$found )
-						        {
-// 						        break;
+                                if ( !$found )
+                                    {
+                                    if ( intval ( $b_obj->GetServiceBodyID() ) == intval ( $sb_id ) )
+                                        {
+                                        $found = true;
+                                        }
+                                    }
 						        }
 						    }
 						    
 						$value = intval ( preg_replace ( '|\D*?|', '', $b_obj->GetMeetingDataValue ( 'worldid_mixed' ) ) );
-						if ( $value )
+						if ( $value && $found )
 							{
 							foreach ( $in_transfer_dictionary as $key => $value2 )
 								{
@@ -748,7 +745,10 @@ function ReturnNAWSDeletedMeetings (
 									// See if this is a function.
 									if ( function_exists ( $value2 ) && is_callable ( $value2 ) && preg_match ( '|^BMLT_FuncNAWSReturn|', $value2 ) )
 										{
-										$value1 = $value2 ($b_obj, $server);
+                                        if ( $value2 == 'BMLT_FuncNAWSReturnLastMeetingChangeTime' )
+                                            {
+										    $value1 =  date ( 'n/j/y', $change->GetChangeDate() );
+										    }
 										}
 									else	// See if we just transfer the value with no change.
 										{
