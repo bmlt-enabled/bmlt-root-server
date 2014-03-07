@@ -51,7 +51,7 @@ For instructions on installing the root server, see this page:
 CHANGELIST
 ----------
 = Version 2.3.2 =
-* TBD
+* March 7, 2014
 * Removed a couple of redundant entries from the "seed" format database table.
 
 = Version 2.3.1 =
