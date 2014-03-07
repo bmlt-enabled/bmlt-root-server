@@ -50,6 +50,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.3.2 =
+* TBD
+* Removed a couple of redundant entries from the "seed" format database table.
+
 = Version 2.3.1 =
 * March 5, 2014
 * Added the ability to convey special language formats to NAWS.
