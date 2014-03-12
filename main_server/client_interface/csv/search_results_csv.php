@@ -735,6 +735,7 @@ function ReturnNAWSDeletedMeetings (
 						    }
 						    
 						$value = intval ( preg_replace ( '|\D*?|', '', $b_obj->GetMeetingDataValue ( 'worldid_mixed' ) ) );
+						
 						if ( $value && $found )
 							{
 							foreach ( $in_transfer_dictionary as $key => $value2 )
@@ -748,6 +749,10 @@ function ReturnNAWSDeletedMeetings (
                                         if ( $value2 == 'BMLT_FuncNAWSReturnLastMeetingChangeTime' )
                                             {
 										    $value1 =  date ( 'n/j/y', $change->GetChangeDate() );
+										    }
+										else
+										    {
+						                    $value1 = $value2 ( $b_obj, $server );
 										    }
 										}
 									else	// See if we just transfer the value with no change.

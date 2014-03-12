@@ -50,6 +50,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.3.3 =
+* March 12, 2014
+* Fixed a rather embarrassing error, in which several fields were left out of deleted meetings in the NAWS export. All root servers that plan to sync with NAWS should apply this update.
+
 = Version 2.3.2 =
 * March 7, 2014
 * Removed a couple of redundant entries from the "seed" format database table.
