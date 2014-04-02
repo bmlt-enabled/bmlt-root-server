@@ -50,6 +50,11 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.3.4 =
+* TBD
+* Removed a redundant include of the Google Maps API from the admin screen.
+* Fixed a JavaScript error with the set map to address functionality of the editor.
+
 = Version 2.3.3 =
 * March 12, 2014
 * Fixed a rather embarrassing error, in which several fields were left out of deleted meetings in the NAWS export. All root servers that plan to sync with NAWS should apply this update.

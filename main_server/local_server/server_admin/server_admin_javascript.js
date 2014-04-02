@@ -2528,11 +2528,6 @@ function BMLT_Server_Admin ()
                 var lng = in_geocode_response[0].geometry.location.lng();
                 var lat = in_geocode_response[0].geometry.location.lat();
                 
-                if ( meeting_editor.main_map )
-                    {
-                    google.maps.event.removeListener ( the_meeting_object.m_geocoder );
-                    };
-                
                 delete  the_meeting_object.m_geocoder;
                 
                 var map_center = new google.maps.LatLng ( lat, lng );
