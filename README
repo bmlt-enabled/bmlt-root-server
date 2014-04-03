@@ -51,7 +51,7 @@ For instructions on installing the root server, see this page:
 CHANGELIST
 ----------
 = Version 2.3.4 =
-* TBD
+* April 2, 2014
 * Removed a redundant include of the Google Maps API from the admin screen.
 * Fixed a JavaScript error with the set map to address functionality of the editor.
 
