@@ -66,7 +66,7 @@
 	                                        'meeting_editor_create_new_text'                        =>  'Skapa ett nytt möte',
 	                                        'meeting_editor_location_map_link'                      =>  'Karta',
 	                                        'meeting_editor_screen_match_map_button'                =>  'Sätt karta för adress',
-	                                        'meeting_editor_screen_match_ll_button'                 =>  'Set Longitude and Latitude to Address',
+	                                        'meeting_editor_screen_match_ll_button'                 =>  'Ange longitude och latitud för adressen',
 	                                        'meeting_editor_screen_default_text_prompt'             =>  'Fyll i text eller nummer',
 	                                        'meeting_is_published'                                  =>  'Mötet är nu publicerat',
 	                                        'meeting_editor_screen_meeting_name_label'              =>  'Mötets namn:',
@@ -332,7 +332,7 @@
                                                                                                                 'VAR'	=>	'Blandad mötesform',
                                                                                                                 'W'	    =>	'Kvinnomöte',
                                                                                                                 'Y'	    =>	'Ungdomsmöte'     
-                                                                                                                'LANG'  =>  'Alternate Language'
+                                                                                                                'LANG'  =>  'Alternativt språk'
                                                                                                             )
 	                                    );
 
