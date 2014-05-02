@@ -1214,7 +1214,7 @@ class c_comdef_server
                                             )
     {
         $ret = null;
-        $server =& self::GetServer();
+        $server = self::GetServer();
         if ( $server instanceof c_comdef_server )
             {
             $array_obj =& $server->GetServiceBodyArray();

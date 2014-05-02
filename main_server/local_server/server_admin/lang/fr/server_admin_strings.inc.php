@@ -330,7 +330,7 @@
                                                                                                                 'TRAD'  =>	'Traditions',
                                                                                                                 'VAR'   =>	'Formats variés',
                                                                                                                 'W'     =>	'Femmes',
-                                                                                                                'Y'     =>	'Jeunes'
+                                                                                                                'Y'     =>	'Jeunes',
                                                                                                                 'LANG'  =>  'Alternate Language'
                                                                                                             )
 	                                    );

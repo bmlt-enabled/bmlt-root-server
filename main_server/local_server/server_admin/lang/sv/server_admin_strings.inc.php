@@ -331,7 +331,7 @@
                                                                                                                 'TRAD'	=>	'Traditionsmöte',
                                                                                                                 'VAR'	=>	'Blandad mötesform',
                                                                                                                 'W'	    =>	'Kvinnomöte',
-                                                                                                                'Y'	    =>	'Ungdomsmöte'     
+                                                                                                                'Y'	    =>	'Ungdomsmöte',   
                                                                                                                 'LANG'  =>  'Alternativt språk'
                                                                                                             )
 	                                    );
