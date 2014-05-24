@@ -1341,6 +1341,13 @@ h2.c_comdef_not_auth_3
     text-align:center;
 }
 
+div#lang_enum_select_div
+{
+    margin-top:8px;
+    margin-bottom:8px;
+    text-align:center;
+}
+
 @media print
 {
     div.bmlt_admin_logout_bar

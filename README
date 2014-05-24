@@ -50,6 +50,11 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.4.0 =
+* TBD
+* Fixed some French localization issues with the admin screens.
+* Added the ability to specify a language for the administration, so multiple languages can be used for a root server.
+
 = Version 2.3.5 =
 * May 1, 2014
 * Added a couple more Swedish translated strings.

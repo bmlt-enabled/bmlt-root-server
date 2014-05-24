@@ -641,6 +641,7 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
             ret += "\t\t$number_of_meetings_for_auto = " + parseInt ( this.m_installer_state.number_of_meetings_for_auto, 10 ) + "; // This is an approximation of the number of meetings to search for in the auto-search feature. The higher the number, the wider the radius.\n";
             ret += "\t\t$change_depth_for_meetings = " + parseInt ( this.m_installer_state.change_depth_for_meetings, 10 ) + "; // This is how many changes should be recorded for each meeting. The higher the number, the larger the database will grow, as this can become quite substantial.\n";
             ret += "\t\t$default_duration_time = '" + this.m_installer_state.default_duration_time + "'; // This is the default duration for meetings that have no duration specified.\n";
+            ret += "\t\t$g_enable_language_selector = NULL; // Set this to '1' or TRUE to have a language selector appear when logging in.\n";
             
             ret += "\n\t// These are 'hard-coded,' but can be changed later.\n";
             

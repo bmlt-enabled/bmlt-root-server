@@ -150,8 +150,34 @@ class c_comdef_server
                 $comdef_global_language = "en";
                 }
             
-            $this->_local_type_lang_enum = $comdef_global_language;
+            global  $http_vars;
             
+            if ( isset ( $http_vars ) && is_array ( $http_vars ) && count ( $http_vars ) && isset ( $http_vars['lang_enum'] ) )
+                {
+                $lang_name = $http_vars['lang_enum'];
+                
+                if ( file_exists ( dirname ( __FILE__ )."/../local_server/server_admin/lang/".$lang_name."/name.txt" ) )
+                    {
+                    $comdef_global_language = $lang_name;
+                    }
+                }
+            elseif ( isset ( $_SESSION ) && is_array ( $_SESSION ) && isset ( $_SESSION['lang_enum'] ) )
+                {
+                $lang_name = $_SESSION['lang_enum'];
+                
+                if ( file_exists ( dirname ( __FILE__ )."/../local_server/server_admin/lang/".$lang_name."/name.txt" ) )
+                    {
+                    $comdef_global_language = $lang_name;
+                    }
+                }
+            
+            if ( isset ( $_SESSION ) && is_array ( $_SESSION ) )
+                {
+                $_SESSION['lang_enum'] = $comdef_global_language;
+                }
+            
+            $this->_local_type_lang_enum = $comdef_global_language;
+
             $dh = opendir ( dirname ( __FILE__ ).'/../local_server/server_admin/lang/' );
             $server_lang_names = array();
             

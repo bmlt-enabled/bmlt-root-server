@@ -221,12 +221,39 @@ function c_comdef_LoginForm(	&$in_server	///< A reference to an instance of c_co
 	$localized_strings = c_comdef_server::GetLocalStrings();
     $server_info = GetServerInfo();
 
+    global  $comdef_global_language;
+    
+    if ( isset ( $http_vars ) && is_array ( $http_vars ) && count ( $http_vars ) && isset ( $http_vars['lang_enum'] ) )
+        {
+        $lang_name = $http_vars['lang_enum'];
+        
+        if ( file_exists ( dirname ( __FILE__ )."/lang/".$lang_name."/name.txt" ) )
+            {
+            $comdef_global_language = $lang_name;
+            }
+        }
+    elseif ( isset ( $_SESSION ) && is_array ( $_SESSION ) && isset ( $_SESSION['lang_enum'] ) )
+        {
+        $lang_name = $_SESSION['lang_enum'];
+        
+        if ( file_exists ( dirname ( __FILE__ )."/lang/".$lang_name."/name.txt" ) )
+            {
+            $comdef_global_language = $lang_name;
+            }
+        }
+    
+    if ( isset ( $_SESSION ) && is_array ( $_SESSION ) )
+        {
+        $_SESSION['lang_enum'] = $comdef_global_language;
+        }
+
 	$ret = '<div class="c_comdef_admin_login_form_container_div">';
 		// If there is no JavaScript, then this message is displayed, and the form will not be revealed.
 		$ret .= '<noscript><h1>'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['noscript'] ).'</h1></noscript>';
         $ret .= '<h1 class="login_form_main_banner_h1">'.c_comdef_htmlspecialchars ( $server_info['title']  ).'</h1>';
         $ret .= '<h2 class="login_form_secondary_banner_h2">'.c_comdef_htmlspecialchars ( $server_info['banner_text']  ).'</h2>';
 		$ret .= '<form method="post" class="c_comdef_admin_login_form" id="c_comdef_admin_login_form" action="'.c_comdef_htmlspecialchars ( $_SERVER['SCRIPT_NAME'] );
+		$ret_temp = '';
 			foreach ( $http_vars as $key => $value )
 				{
 				switch ( $key )
@@ -244,8 +271,15 @@ function c_comdef_LoginForm(	&$in_server	///< A reference to an instance of c_co
 							{
 							$value = join ( ",", $value );
 							}
-	
-						$ret .= '&amp;'.c_comdef_htmlspecialchars ( $key ).'='.c_comdef_htmlspecialchars ( $value );
+	                    if ( $ret_temp )
+	                        {
+	                        $ret_temp .= '&amp;';
+	                        }
+	                    else
+	                        {
+	                        $ret_temp = '?';
+	                        }
+						$ret_temp .= c_comdef_htmlspecialchars ( $key ).'='.c_comdef_htmlspecialchars ( $value );
 					break;
 					}
 				}
@@ -261,6 +295,26 @@ function c_comdef_LoginForm(	&$in_server	///< A reference to an instance of c_co
 					$ret .= '<label for="c_comdef_admin_password">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['password'] ).$localized_strings['prompt_delimiter'].'</label>';
 					$ret .= '<input type="password" id="c_comdef_admin_password" name="c_comdef_admin_password" value="" />';
 				$ret .= '</div>';
+				if ( $g_enable_language_selector)
+				    {
+                    $ret .= '<div id="lang_enum_select_div" class="c_comdef_admin_login_form_line_div">';
+                        $ret .= '<select id="lang_enum_select" name="lang_enum">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                        $lang_array = c_comdef_server::GetServer()->GetServerLangs();
+                            foreach ( $lang_array as $id => $name )
+                                {
+                                if ( $id && $name )
+                                    {
+                                    $ret .= '<option value="'.htmlspecialchars ( $id ).'"';
+                                    if ( $comdef_global_language == $id )
+                                        {
+                                        $ret .= ' selected="selected"';
+                                        }
+                                    $ret.= '>'.htmlspecialchars ( $name ).'</option>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                                    }
+                                }
+                        $ret .= '</select>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                    $ret .= '</div>';
+                    }
 				$ret .= '<div class="c_comdef_admin_login_form_submit_div">';
 					$ret .= '<input type="submit" value="'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['button'] ).'" />';
 				$ret .= '</div>';
