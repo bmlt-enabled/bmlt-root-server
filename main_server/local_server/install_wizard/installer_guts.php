@@ -285,6 +285,15 @@ $default_lang = $lang;
                                 <label class="extra_text_label" for="installer_duration_minute_select"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['DurationMinutesLabel'] ); ?></label>
                             </div>
                         </div>
+                        <div class="one_line_div">
+                            <label class="left_right_aligned bold_char" for="installer_admin_language_selector_checkbox"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['LanguageSelectorEnableLabel'] ); ?></label>
+                            <div class="right_left_aligned_div">
+                                <input type="checkbox" id="installer_admin_language_selector_checkbox" value="enable_language_selector" />
+                            </div>
+                            <div class="extra_text_div">
+                                <?php echo htmlspecialchars ( $comdef_install_wizard_strings['LanguageSelectorEnableExtraText'] ); ?>
+                            </div>
+                        </div>
                         <div class="clear_both"></div>
                     </fieldset>
                     <?php echo bmlt_create_next_prev_buttons(3) ?>

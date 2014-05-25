@@ -60,6 +60,7 @@ else
                             'banner_text'                   =>  $comdef_install_wizard_strings['BannerTextInitialText'],
                             'comdef_distance_units'         =>  $comdef_install_wizard_strings['DefaultDistanceUnits'],
                             'default_duration_time'         =>  $comdef_install_wizard_strings['DefaultDurationTime'],
+                            'enable_language_selector'      =>  FALSE,
                             
                             /* These are "hard-coded," and can be changed later. */
                             'default_duration'              =>  $comdef_install_wizard_strings['DurationTextInitialText'],

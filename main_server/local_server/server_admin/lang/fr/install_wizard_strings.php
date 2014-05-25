@@ -93,6 +93,8 @@
                                             'DurationLabel'                 =>  'Durée par défaut de la réunion:',
                                             'DurationHourLabel'             =>  'Heures',
                                             'DurationMinutesLabel'          =>  'Minutes',
+                                            'LanguageSelectorEnableLabel'   =>  'Display Language Selector On Login:',
+                                            'LanguageSelectorEnableExtraText'   =>  'If you select this, a popup menu will appear in the login screen, so administrators can select their language.',
                                             
 	                                        'Page_4_Tab'                    =>  'Étape 4: Enregistrer les paramètres',
 	                                        'Page_4_DB_Setup_Heading'       =>  'Initialiser une nouvelle base de données',

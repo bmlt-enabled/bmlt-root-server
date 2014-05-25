@@ -93,6 +93,8 @@
                                             'DurationLabel'                 =>  'Default Meeting Duration:',
                                             'DurationHourLabel'             =>  'Hours',
                                             'DurationMinutesLabel'          =>  'Minutes',
+                                            'LanguageSelectorEnableLabel'   =>  'Display Language Selector On Login:',
+                                            'LanguageSelectorEnableExtraText'   =>  'If you select this, a popup menu will appear in the login screen, so administrators can select their language.',
                                             
 	                                        'Page_4_Tab'                    =>  'STEP 4: Save The Settings',
 	                                        'Page_4_DB_Setup_Heading'       =>  'Initialize A New Database',
