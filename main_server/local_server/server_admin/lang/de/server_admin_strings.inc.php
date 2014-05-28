@@ -333,6 +333,11 @@
                                                                                                             )
 	                                    );
 
+	$email_contact_strings = array (
+	    'meeting_contact_form_subject_format'   =>  "[MEETING LIST CONTACT] %s",
+	    'meeting_contact_message_format'        =>  "%s\n--\nThis message was sent directly from the meeting list web site at %s.\nThe sender is not aware of your email address."
+	);
+
 	$change_type_strings = array (
 		'__THE_MEETING_WAS_CHANGED__' => 'The meeting was changed.',
 		'__THE_MEETING_WAS_CREATED__' => 'The meeting was created.',

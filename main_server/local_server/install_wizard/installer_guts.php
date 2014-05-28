@@ -294,6 +294,15 @@ $default_lang = $lang;
                                 <?php echo htmlspecialchars ( $comdef_install_wizard_strings['LanguageSelectorEnableExtraText'] ); ?>
                             </div>
                         </div>
+                        <div class="one_line_div">
+                            <label class="left_right_aligned bold_char" for="installer_admin_email_contact_checkbox"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['EmailContactEnableLabel'] ); ?></label>
+                            <div class="right_left_aligned_div">
+                                <input type="checkbox" id="installer_admin_email_contact_checkbox" value="enable_email_contact_selector" />
+                            </div>
+                            <div class="extra_text_div">
+                                <?php echo htmlspecialchars ( $comdef_install_wizard_strings['EmailContactEnableExtraText'] ); ?>
+                            </div>
+                        </div>
                         <div class="clear_both"></div>
                     </fieldset>
                     <?php echo bmlt_create_next_prev_buttons(3) ?>

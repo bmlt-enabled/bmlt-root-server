@@ -603,6 +603,8 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
         
         this.m_installer_state.enable_language_selector = document.getElementById ( 'installer_admin_language_selector_checkbox' ).checked;
         
+        this.m_installer_state.enable_email_contact = document.getElementById ( 'installer_admin_email_contact_checkbox' ).checked;
+        
         this.m_installer_state.default_duration_text = '';
     };
     
@@ -644,9 +646,11 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
             ret += "\t\t$change_depth_for_meetings = " + parseInt ( this.m_installer_state.change_depth_for_meetings, 10 ) + "; // This is how many changes should be recorded for each meeting. The higher the number, the larger the database will grow, as this can become quite substantial.\n";
             ret += "\t\t$default_duration_time = '" + this.m_installer_state.default_duration_time + "'; // This is the default duration for meetings that have no duration specified.\n";
             ret += "\t\t$g_enable_language_selector = " + (this.m_installer_state.enable_language_selector ? 'TRUE' : 'FALSE') + "; // If this is TRUE (or 1), then the Root server login screen will have an additional popup menu, allowing the language to be selected.\n";
+            ret += "\t\t$g_enable_email_contact = " + (this.m_installer_state.enable_email_contact ? 'TRUE' : 'FALSE') + "; // If this is TRUE (or 1), then the site visitors will be able to send emails to the administrators from meeting records..\n";
             
             ret += "\n\t// These are 'hard-coded,' but can be changed later.\n";
             
+            ret += "\n\t\t$include_service_body_admin_on_emails = FALSE; // If this is TRUE (or 1), then any emails sent using the meeting contact will include the Service Body Admin contact for the meeting Service body (ignored, if $g_enable_email_contact is FALSE).\n";
             ret += "\n\t\t$time_format = '" + this.m_installer_state.time_format.replace(/'/g,"\\'") + "'; // The PHP date() format for the times displayed.\n";
             ret += "\t\t$change_date_format = '" + this.m_installer_state.change_date_format.replace(/'/g,"\\'") + "'; // The PHP date() format for times/dates displayed in the change records.\n";
             ret += "\t\t$admin_session_name = '" + this.m_installer_state.admin_session_name.replace(/'/g,"\\'") + "'; // This is merely the 'tag' used to identify the BMLT admin session.\n";

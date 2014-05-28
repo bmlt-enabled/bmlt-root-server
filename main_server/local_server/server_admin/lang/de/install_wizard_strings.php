@@ -95,6 +95,8 @@
                                             'DurationMinutesLabel'          =>  'Minutes',
                                             'LanguageSelectorEnableLabel'   =>  'Display Language Selector On Login:',
                                             'LanguageSelectorEnableExtraText'   =>  'If you select this, a popup menu will appear in the login screen, so administrators can select their language.',
+                                            'EmailContactEnableLabel'       =>  'Allow Email Contacts From Meetings:',
+                                            'EmailContactEnableExtraText'   =>  'If you select this, site visitors will be able to send emails from meeting records.',
                                             
 	                                        'Page_4_Tab'                    =>  'STEP 4: Save The Settings',
 	                                        'Page_4_DB_Setup_Heading'       =>  'Initialize A New Database',
@@ -126,7 +128,7 @@
                                             'Explanatory_Text_2_Initial_Intro'  =>  'In this step, we will set a location for the center of the area covered by your root server. It does not need to be any particular location, but it should allow your administrators to figure out where they are quickly, as it will be the default location for new meetings.',
                                             'Explanatory_Text_2_Region_Bias_Intro'  =>  'The "Region Bias" is a code that is sent to Google when a location search is done, and can help Google to make sense of ambiguous search queries.',
 
-                                            'Explanatory_Text_3_Server_Admin_Intro'  =>  'The Server Administrator is the main user for the server. It is the only account that can create new users and Service bodies, and is very powerful. You should create a login ID and a non-trivial password for this account. Yo\'ll be able to modify the other aspects of the account on the main server, once the database has been set up.',
+                                            'Explanatory_Text_3_Server_Admin_Intro'  =>  'The Server Administrator is the main user for the server. It is the only account that can create new users and Service bodies, and is very powerful. You should create a login ID and a non-trivial password for this account. You\'ll be able to modify the other aspects of the account on the main server, once the database has been set up.',
                                             'Explanatory_Text_3_Misc_Intro'  =>  'These are various settings that affect how the root server behaves and appears.',
                                             
                                             'Explanatory_Text_4_Main_Intro'  =>  'If you have entered the database information, and if you have specified the login information for the Server Administrator, then you can initialize the database here. Remember that the database must be COMPLETELY EMPTY of BMLT Root Server tables for this server (It can have tables for other servers or services).',

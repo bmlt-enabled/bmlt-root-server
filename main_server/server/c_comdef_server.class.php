@@ -2557,6 +2557,7 @@ class c_comdef_server
             c_comdef_server::$server_local_strings['search_spec_map_center'] = $search_spec_map_center;
             c_comdef_server::$server_local_strings['change_type_strings'] = $change_type_strings;
             c_comdef_server::$server_local_strings['detailed_change_strings'] = $detailed_change_strings;
+            c_comdef_server::$server_local_strings['email_contact_strings'] = $email_contact_strings;
             c_comdef_server::$server_local_strings['prompt_delimiter'] =  defined('__PROMPT_DELIMITER__') ? __PROMPT_DELIMITER__ : ':';
             c_comdef_server::$server_local_strings['end_change_report'] =  defined('_END_CHANGE_REPORT') ? _END_CHANGE_REPORT : '.';
             c_comdef_server::$server_local_strings['charset'] = defined('__HTML_DISPLAY_CHARSET__') ? __HTML_DISPLAY_CHARSET__ : 'UTF-8';

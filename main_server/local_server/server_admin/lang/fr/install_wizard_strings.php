@@ -95,6 +95,8 @@
                                             'DurationMinutesLabel'          =>  'Minutes',
                                             'LanguageSelectorEnableLabel'   =>  'Display Language Selector On Login:',
                                             'LanguageSelectorEnableExtraText'   =>  'If you select this, a popup menu will appear in the login screen, so administrators can select their language.',
+                                            'EmailContactEnableLabel'       =>  'Allow Email Contacts From Meetings:',
+                                            'EmailContactEnableExtraText'   =>  'If you select this, site visitors will be able to send emails from meeting records.',
                                             
 	                                        'Page_4_Tab'                    =>  'Étape 4: Enregistrer les paramètres',
 	                                        'Page_4_DB_Setup_Heading'       =>  'Initialiser une nouvelle base de données',
