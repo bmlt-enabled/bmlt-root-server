@@ -54,6 +54,7 @@ CHANGELIST
 * TBD
 * Fixed some French localization issues with the admin screens.
 * Added the ability to specify a language for the administration, so multiple languages can be used for a root server.
+* Added (re-added, really) the ability to contact the meeting list administrators for a meeting with a message.
 
 = Version 2.3.5 =
 * May 1, 2014

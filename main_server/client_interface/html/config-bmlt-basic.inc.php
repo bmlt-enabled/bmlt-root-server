@@ -18,7 +18,8 @@
 *   along with this code.  If not, see <http://www.gnu.org/licenses/>.                      *
 ********************************************************************************************/
 
-$config_file_path = dirname ( __FILE__ ).'/../../server/config/get-config.php';
+$config_file_path = dirname ( dirname ( dirname ( __FILE__ ) ) ).'/server/config/get-config.php';
+            
 $url_path = 'http://'.$_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').dirname ( $_SERVER['SCRIPT_NAME'] ).'/../..';
 if ( file_exists ( $config_file_path ) )
     {
@@ -37,12 +38,12 @@ if ( $server )
     {
     global $bmlt_localization;  ///< Use this to control the localization.
     $bmlt_localization = $server->GetLocalLang();
-    
+
     if ( !isset ( $_SESSION ) )
         {
         session_start();
         }
-    
+
     if ( (isset ( $_GET['admin_action'] ) && (($_GET['admin_action'] == 'logout'))) || (isset ( $_POST['admin_action'] ) && (($_POST['admin_action'] == 'login'))) )
         {
         // Belt and suspenders -nuke the stored login.
@@ -58,6 +59,11 @@ if ( $server )
             if ( null != $enc_password )
                 {
                 $_SESSION[$admin_session_name] = "$login\t$enc_password";
+                // If the login interrupted going somewhere else, we complete the journey.
+                if ( isset ( $_POST['attemptedurl']  ) && $_POST['attemptedurl'] )
+                    {
+                    header ( 'Location: '.$_POST['attemptedurl'] );
+                    }
                 }
             else
                 {
@@ -67,7 +73,7 @@ if ( $server )
                     {
                     // Get the display strings.
                     $localized_strings = c_comdef_server::GetLocalStrings();
-    
+
                     c_comdef_LogoutUser();
 
                     // If the login is invalid, we terminate the whole kit and kaboodle, and inform the user they are persona non grata.
@@ -92,7 +98,7 @@ if ( $server )
         unset ( $_GET['c_comdef_admin_login'] );
         unset ( $_GET['c_comdef_admin_password'] );
         }
-    
+
     if ( isset ( $_SESSION[$admin_session_name] ) )
         {
         // Get the display strings.
@@ -100,7 +106,7 @@ if ( $server )
 
         // We double-check, and see if the user is valid.
         $user_obj = $server->GetCurrentUserObj();
-        
+    
         if ( ($user_obj instanceof c_comdef_user) && ($user_obj->GetUserLevel() != _USER_LEVEL_DISABLED) )
             {
             $localized_strings = c_comdef_server::GetLocalStrings();
