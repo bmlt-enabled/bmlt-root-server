@@ -1486,7 +1486,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 			$my_formats = c_comdef_server::GetServer()->GetFormatsObj();
 			foreach ( $meeting_row['formats'] as $format_id )
 				{
-				$new_formats[$format_id] =& $my_formats->GetFormatBySharedIDCodeAndLanguage ( $format_id, $row['lang_enum'] );
+				$new_formats[$format_id] = $my_formats->GetFormatBySharedIDCodeAndLanguage ( $format_id, $row['lang_enum'] );
 				}
 			
 			$meeting_row['formats'] = $new_formats;
