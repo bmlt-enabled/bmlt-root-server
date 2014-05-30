@@ -13,6 +13,15 @@
 	        spam-checking. It will send an email to whatever contact is associated
 	        with a meeting.
 	        
+	        In order to mitigate spam use, we look for:
+	            meeting_id=<INTEGER> The ID of the meeting being referenced.
+	            service_body_id=<INTEGER> The ID of the Service body associated with the meeting.
+	            from_address=<STRING> A validly-formatted email address to be used as the "FROM:" line.
+	            message=<STRING> The message text.
+	            
+	        All of these must be supplied, and the Service body ID needs to jive with the one associated with the meeting ID.
+	        That's not something that spammers will be easily able to determine; especially when you consider how worthless the recipient will be to them.
+	        
 	        The contacts are tiered in this manner:
 	            - If a contact is provided for the meeting itself (email_contact field, or contact_email_1), then that contact is used.
 	            - If there are multiple contacts using the default contact structure (contact_email_1, contact_email_2), then we will send to both of them.
@@ -23,6 +32,10 @@
 	        A simple integer response is returned. 1, if the email was successfully sent, 0 if email contacts are disallowed, -1, if no email contacts are available for this meeting, -2, if the from email address is invalid, -3 if the email was flagged as spam, and -4 if there was some error encountered while sending.
             
             If the meeting ID is 0 (or there is no input), then the message text and from are ignored, and this is considered a test to see if email is supported. A response of 1 is yes, 0, otherwise.
+            
+            This won't work if the $g_enable_email_contact = TRUE; line is not in the auto-config.inc.php file.
+            
+            If you want to include all the Service body contacts (multiple recipients are possible), then set $include_service_body_admin_on_emails = TRUE; in the config file.
             
     This file is part of the Basic Meeting List Toolbox (BMLT).
     
