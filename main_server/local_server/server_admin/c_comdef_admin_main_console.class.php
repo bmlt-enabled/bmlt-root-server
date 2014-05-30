@@ -442,6 +442,10 @@ class c_comdef_admin_main_console
                 }
             
         $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+        if ( isset ( $_GET['edit_meeting'] ) && intval ( $_GET['edit_meeting'] ) )
+            {
+            $ret .= '<script type="text/javascript">admin_handler_object.openMeetingForEditing('.intval ( $_GET['edit_meeting'] ).');</script>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+            }
         
         return  $ret;
     }
@@ -1164,7 +1168,6 @@ class c_comdef_admin_main_console
                     $ret .= $this->return_meeting_specification_panel();
                     $ret .= $this->return_meeting_editor_meetings_panel();
                 $ret .= '</div>';
-            
                 $ret .= '<div class="clear_both"></div>';
             $ret .= '</div>';
             }

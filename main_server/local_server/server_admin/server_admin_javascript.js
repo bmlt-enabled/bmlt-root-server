@@ -501,6 +501,19 @@ function BMLT_Server_Admin ()
     // #mark - 
     // #mark ########## Meeting Editor Section ##########
     // #mark -
+
+    /************************************************************************************//**
+    *   \brief  This opens the editor to a particular meeting, as given by an ID.           *
+    ****************************************************************************************/
+    this.openMeetingForEditing = function ( in_meeting_id   ///< The ID of the meeting to be opened.
+                                            )
+        {
+        this.m_meeting_editor_panel_shown = false;
+        this.toggleMeetingEditor();
+        var uri = g_ajax_callback_uri + '&do_meeting_search=1&SearchStringAll=1&SearchString=' + parseInt ( in_meeting_id );
+        this.clearSearchResults();
+        this.callRootServerForMeetingSearch ( uri );
+        };
         
     /************************************************************************************//**
     *   \brief  Toggles the visibility of the meeting editor section.                       *
