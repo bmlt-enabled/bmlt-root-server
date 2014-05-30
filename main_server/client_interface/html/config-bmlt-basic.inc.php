@@ -26,9 +26,9 @@ if ( file_exists ( $config_file_path ) )
     include ( $config_file_path );
     }
 
-require_once ( dirname ( __FILE__ ).'/../../server/shared/classes/comdef_utilityclasses.inc.php');
-require_once ( dirname ( __FILE__ ).'/../../server/c_comdef_server.class.php');
-require_once ( dirname ( __FILE__ ).'/../../local_server/db_connect.php');
+require_once ( dirname ( dirname ( dirname ( __FILE__ ) ) ).'/server/shared/classes/comdef_utilityclasses.inc.php');
+require_once ( dirname ( dirname ( dirname ( __FILE__ ) ) ).'/server/c_comdef_server.class.php');
+require_once ( dirname ( dirname ( dirname ( __FILE__ ) ) ).'/local_server/db_connect.php');
 
 DB_Connect_and_Upgrade ( );
 

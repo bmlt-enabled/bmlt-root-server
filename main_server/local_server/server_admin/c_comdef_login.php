@@ -92,6 +92,7 @@ if ( (isset ( $_GET['admin_action'] ) && (($_GET['admin_action'] == 'logout'))) 
             // If the login interrupted going somewhere else, we complete the journey.
             if ( isset ( $_POST['attemptedurl']  ) && $_POST['attemptedurl'] )
                 {
+                ob_end_clean();
                 header ( 'Location: '.$_POST['attemptedurl'] );
                 }
             }

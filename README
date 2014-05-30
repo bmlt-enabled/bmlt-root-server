@@ -55,6 +55,8 @@ CHANGELIST
 * Fixed some French localization issues with the admin screens.
 * Added the ability to specify a language for the administration, so multiple languages can be used for a root server.
 * Added (re-added, really) the ability to contact the meeting list administrators for a meeting with a message.
+* Added support for directly going to the editor for a particular meeting, via URI.
+* Added the capability to continue to the desired editing function after being stopped for a login.
 
 = Version 2.3.5 =
 * May 1, 2014
