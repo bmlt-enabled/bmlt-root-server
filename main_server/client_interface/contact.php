@@ -3,7 +3,7 @@
 /** 	\file	contact.php
 
 	\brief	This file is a very simple interface for contacts related to meetings.
-	        Only 3 inputs are provided: The meeting ID (an integer),
+	        Only 4 inputs are provided: The meeting ID (an integer), the Service body ID (an integer),
 	        the from address (a string), and the message (a string).
 	        This comes via GET, not POST.
 	        
@@ -338,21 +338,25 @@ if ( !$isspam )
                                                 $email_contacts[] = $email;
                                                 }
                                             }
-                                
-                                        $service_body = $service_body->GetOwnerIDObject();
+                                        
+                                        // We don't recurse if we aren't supposed to
+                                        $service_body = $include_every_admin_on_emails ? $service_body->GetOwnerIDObject() : NULL;
                                         } while ( $service_body );
                             
                                     // The one exception is the Server Administrator, and we get that email from the individual account.
-                        
-                                    $server_admin_user = c_comdef_server::GetUserByIDObj ( 1 );
-                        
-                                    if ( $server_admin_user && $server_admin_user->GetEmailAddress() )
-                                        {
-                                        $email = simplifyEmailAddress ( $server_admin_user->GetEmailAddress() );
                                     
-                                        if ( $email )
+                                    if ( $include_every_admin_on_emails )   // The Server admin is not involved unless we are cascading.
+                                        {
+                                        $server_admin_user = c_comdef_server::GetUserByIDObj ( 1 );
+                        
+                                        if ( $server_admin_user && $server_admin_user->GetEmailAddress() )
                                             {
-                                            $email_contacts[] = $email;
+                                            $email = simplifyEmailAddress ( $server_admin_user->GetEmailAddress() );
+                                    
+                                            if ( $email )
+                                                {
+                                                $email_contacts[] = $email;
+                                                }
                                             }
                                         }
                             
@@ -378,8 +382,9 @@ if ( !$isspam )
                                                 $local_strings = c_comdef_server::GetLocalStrings();
                                                 
                                                 $subject = sprintf ( $local_strings['email_contact_strings']['meeting_contact_form_subject_format'], $meeting_object->GetLocalName() );
-                                                $url = 'http://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].'/client_interface/html/index.php?single_meeting_id='.$meeting_id;
-                                                $body = sprintf ( $local_strings['email_contact_strings']['meeting_contact_message_format'], $message_text, $url );
+                                                $url1 = 'http://'.$_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').'/client_interface/html/index.php?single_meeting_id='.$meeting_id;
+                                                $url2 = 'http://'.$_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').'/?edit_meeting='.$meeting_id;
+                                                $body = sprintf ( $local_strings['email_contact_strings']['meeting_contact_message_format'], $message_text, $url1, $url2 );
                                                 if ( sendEMail ( $to_line, $from_address, $subject, $body  ) )
                                                     {
                                                     $ret = 1;

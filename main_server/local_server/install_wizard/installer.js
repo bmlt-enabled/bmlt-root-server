@@ -645,22 +645,18 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
             ret += "\t\t$number_of_meetings_for_auto = " + parseInt ( this.m_installer_state.number_of_meetings_for_auto, 10 ) + "; // This is an approximation of the number of meetings to search for in the auto-search feature. The higher the number, the wider the radius.\n";
             ret += "\t\t$change_depth_for_meetings = " + parseInt ( this.m_installer_state.change_depth_for_meetings, 10 ) + "; // This is how many changes should be recorded for each meeting. The higher the number, the larger the database will grow, as this can become quite substantial.\n";
             ret += "\t\t$default_duration_time = '" + this.m_installer_state.default_duration_time + "'; // This is the default duration for meetings that have no duration specified.\n";
-            ret += "\t\t$g_enable_language_selector = " + (this.m_installer_state.enable_language_selector ? 'TRUE' : 'FALSE') + "; // If this is TRUE (or 1), then the Root server login screen will have an additional popup menu, allowing the language to be selected.\n";
-            ret += "\t\t$g_enable_email_contact = " + (this.m_installer_state.enable_email_contact ? 'TRUE' : 'FALSE') + "; // If this is TRUE (or 1), then the site visitors will be able to send emails to the administrators from meeting records..\n";
+            ret += "\t\t$g_enable_language_selector = " + (this.m_installer_state.enable_language_selector ? 'TRUE' : 'FALSE') + "; // Set this to TRUE (or 1) to enable a popup on the login screen that allows the administrator to select their language.\n";
+            ret += "\t\t$g_enable_email_contact = " + (this.m_installer_state.enable_email_contact ? 'TRUE' : 'FALSE') + "; // If this is TRUE (or 1), then this will enable the ability to contact meeting list contacts via a secure email form.\n";
             
             ret += "\n\t// These are 'hard-coded,' but can be changed later.\n";
             
+            ret += "\n\t\t// These reflect the way that we handle contact emails.\n";
             ret += "\n\t\t$include_service_body_admin_on_emails = FALSE; // If this is TRUE (or 1), then any emails sent using the meeting contact will include the Service Body Admin contact for the meeting Service body (ignored, if $g_enable_email_contact is FALSE).\n";
-            ret += "\n\t\t$time_format = '" + this.m_installer_state.time_format.replace(/'/g,"\\'") + "'; // The PHP date() format for the times displayed.\n";
+            ret += "\n\t\t$include_every_admin_on_emails = FALSE; // If this is TRUE (or 1), then any emails sent using the meeting contact will include all Service Body Admin contacts (including the Server Administrator) for the meeting (ignored, if $g_enable_email_contact or $include_service_body_admin_on_emails is FALSE).\n";
+
+            ret += "\n\n\t\t$time_format = '" + this.m_installer_state.time_format.replace(/'/g,"\\'") + "'; // The PHP date() format for the times displayed.\n";
             ret += "\t\t$change_date_format = '" + this.m_installer_state.change_date_format.replace(/'/g,"\\'") + "'; // The PHP date() format for times/dates displayed in the change records.\n";
             ret += "\t\t$admin_session_name = '" + this.m_installer_state.admin_session_name.replace(/'/g,"\\'") + "'; // This is merely the 'tag' used to identify the BMLT admin session.\n";
-            ret += "\n\t\t// This text can be used in certain custom printed lists. It is usually not especially important.\n";
-            ret += "\t\tif ( !defined ( '_DEFAULT_DURATION' ) ) define ( '_DEFAULT_DURATION', '" + this.m_installer_state.default_duration.replace(/'/g,"\\'") + "' );\n";
-            ret += "\n\t\t// These are used for the NAWS format translation. They are the shared IDs of the wheelchair, open and closed formats.\n";
-            ret += "\t\t// If you edit your formats, and change these IDs, please change them here, as well.\n";
-            ret += "\t\tif ( !defined ( 'WC_FORMAT' ) ) define ( 'WC_FORMAT', '33' ); // Wheelchair-Accessible\n";
-            ret += "\t\tif ( !defined ( 'O_FORMAT' ) ) define ( 'O_FORMAT', '17' ); // Open Meeting\n";
-            ret += "\t\tif ( !defined ( 'C_FORMAT' ) ) define ( 'C_FORMAT', '4' ); // Closed Meeting\n";
 
             ret += "?&gt;\n";
             }

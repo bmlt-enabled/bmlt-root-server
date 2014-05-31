@@ -337,7 +337,7 @@
 
 	$email_contact_strings = array (
 	    'meeting_contact_form_subject_format'   =>  "[MEETING LIST CONTACT] %s",
-	    'meeting_contact_message_format'        =>  "%s\n--\nThis message was sent directly from the meeting list web site at %s.\nThe sender is not aware of your email address."
+	    'meeting_contact_message_format'        =>  "%s\n--\nThis message concerns this meeting: %s (Edit Link: %s)\nIt was sent directly from the meeting list web server, and the sender is not aware of your email address."
 	);
 
 	$change_type_strings = array (

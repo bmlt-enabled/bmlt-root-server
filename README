@@ -51,7 +51,7 @@ For instructions on installing the root server, see this page:
 CHANGELIST
 ----------
 = Version 2.4.0 =
-* TBD
+* May 31, 2014
 * Fixed some French localization issues with the admin screens.
 * Added the ability to specify a language for the administration, so multiple languages can be used for a root server.
 * Added (re-added, really) the ability to contact the meeting list administrators for a meeting with a message.

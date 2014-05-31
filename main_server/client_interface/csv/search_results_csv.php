@@ -34,20 +34,6 @@ defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that 
 require_once ( dirname ( __FILE__ ).'/common_search.inc.php' );
 require ( dirname ( __FILE__ ).'/../../server/config/get-config.php' );	// Just to make sure we have an early copy.
 
-/// These are the default formats for wheelchair, open and closed (used for the NAWS format). They can be overridden in the /get-config.php file.
-if ( !defined('WC_FORMAT') )
-	{
-	define ( 'WC_FORMAT', '33' );
-	}
-if ( !defined('O_FORMAT') )
-	{
-	define ( 'O_FORMAT', '17' );
-	}
-if ( !defined('C_FORMAT') )
-	{
-	define ( 'C_FORMAT', '4' );
-	}
-
 global $g_format_dictionary;	///< This is a dictionary used to translate formats to NAWS format. It uses the format shared IDs in the server's language.
 
 bmlt_populate_format_dictionary();
