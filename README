@@ -50,6 +50,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.4.1 =
+* June 1, 2014
+* Oops. Forgot to turn off debug mode.
+
 = Version 2.4.0 =
 * May 31, 2014
 * Fixed some French localization issues with the admin screens.

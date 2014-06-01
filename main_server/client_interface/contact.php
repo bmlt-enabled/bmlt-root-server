@@ -57,7 +57,7 @@
 
 global $g_mail_debug;
 
-$g_mail_debug = TRUE;   ///< Set this to TRUE to output the email as an echo, instead of sending it.
+$g_mail_debug = FALSE;   ///< Set this to TRUE to output the email as an echo, instead of sending it.
 
 /***********************************************************************/
 /** \brief This analyzes an input string for obvious spam signatures.
