@@ -243,235 +243,243 @@ if ( isset ( $_GET['meeting_id'] ) )
     {
     $meeting_id = intval ( $_GET['meeting_id'] );
     }
-
-if ( isset ( $_GET['service_body_id'] ) )
-    {
-    $service_body_id = intval ( $_GET['service_body_id'] );
-    }
-
-if ( isset ( $_GET['message'] ) )
-    {
-    $message_text = $_GET['message'];
-    }
-
-if ( isset ( $_GET['from_address'] ) )
-    {
-    $from_address = $_GET['from_address'];
-    }
-
-$isspam = FALSE;
-            
-foreach ( $_GET as $key => $value )
-    {
-    $key = strtolower ( strval ( $key ) );
     
-    // Any attempt to sneak in extra fields automatically marks this as spam.        
-    if ( ($key != 'meeting_id') && ($key != 'service_body_id') && ($key != 'from_address') && ($key != 'message') )
+// If this is just a test, we respond with the capability.
+if ( 0 ==  $meeting_id )
+    {
+    $ret = $g_enable_email_contact ? 1 : 0;
+    }
+else
+    {
+    if ( isset ( $_GET['service_body_id'] ) )
         {
-        if ( $g_mail_debug )
-            {
-            echo ( "$key is invalid<br />" );
-            }
-        
-        $isspam = TRUE;
-        break;
+        $service_body_id = intval ( $_GET['service_body_id'] );
         }
-    }
 
-if ( !$isspam )
-    {
-    $isspam = isset ( $from_address ) ? analyzeFromLine ( $from_address ) : FALSE;
+    if ( isset ( $_GET['message'] ) )
+        {
+        $message_text = $_GET['message'];
+        }
+
+    if ( isset ( $_GET['from_address'] ) )
+        {
+        $from_address = $_GET['from_address'];
+        }
+
+    $isspam = FALSE;
+            
+    foreach ( $_GET as $key => $value )
+        {
+        $key = strtolower ( strval ( $key ) );
     
+        // Any attempt to sneak in extra fields automatically marks this as spam.        
+        if ( ($key != 'meeting_id') && ($key != 'service_body_id') && ($key != 'from_address') && ($key != 'message') )
+            {
+            if ( $g_mail_debug )
+                {
+                echo ( "$key is invalid<br />" );
+                }
+        
+            $isspam = TRUE;
+            break;
+            }
+        }
+
     if ( !$isspam )
         {
-        if ( isset ( $from_address ) ? isValidEmailAddress ( $from_address ) : TRUE )
+        $isspam = isset ( $from_address ) ? analyzeFromLine ( $from_address ) : FALSE;
+    
+        if ( !$isspam )
             {
-            $isspam = isset ( $message_text ) ? analyzeMessageContent ( $message_text ) : FALSE;
-    
-            if ( !$isspam )
+            if ( isset ( $from_address ) ? isValidEmailAddress ( $from_address ) : TRUE )
                 {
-                if ( file_exists ( dirname ( dirname ( dirname ( __FILE__ )  ) ).'/auto-config.inc.php' ) )
+                $isspam = isset ( $message_text ) ? analyzeMessageContent ( $message_text ) : FALSE;
+    
+                if ( !$isspam )
                     {
-                    define ( 'BMLT_EXEC', 1 );
-
-                    // We check to make sure that we are supporting the capability.
-                    require_once ( dirname ( dirname ( dirname ( __FILE__ )  ) ).'/auto-config.inc.php' );
-
-                    if ( $g_enable_email_contact && $meeting_id )
+                    if ( file_exists ( dirname ( dirname ( dirname ( __FILE__ )  ) ).'/auto-config.inc.php' ) )
                         {
-                        require_once ( dirname ( dirname ( __FILE__ ) ).'/server/c_comdef_server.class.php' );
-                        $server = c_comdef_server::MakeServer();
+                        define ( 'BMLT_EXEC', 1 );
 
-                        if ( $server instanceof c_comdef_server )
+                        // We check to make sure that we are supporting the capability.
+                        require_once ( dirname ( dirname ( dirname ( __FILE__ )  ) ).'/auto-config.inc.php' );
+
+                        if ( $g_enable_email_contact && $meeting_id )
                             {
-                            $email_contacts = array();  // This will contain our meeting email contact list.
-    
-                            $meeting_object = c_comdef_server::GetOneMeeting ( $meeting_id );
-    
-                            if ( $meeting_object instanceof c_comdef_meeting )  // We must have a valid meeting.
+                            require_once ( dirname ( dirname ( __FILE__ ) ).'/server/c_comdef_server.class.php' );
+                            $server = c_comdef_server::MakeServer();
+
+                            if ( $server instanceof c_comdef_server )
                                 {
-                                // This is a pretty good spamtrap. The submission must have both the meeting ID and the valid Service body ID.
-                                if ( isset ( $service_body_id ) && $service_body_id && ($service_body_id == $meeting_object->GetServiceBodyID()) )
+                                $email_contacts = array();  // This will contain our meeting email contact list.
+    
+                                $meeting_object = c_comdef_server::GetOneMeeting ( $meeting_id );
+    
+                                if ( $meeting_object instanceof c_comdef_meeting )  // We must have a valid meeting.
                                     {
-                                    if ( $meeting_object->GetEmailContact() )   // The direct contact is placed first in the queue.
+                                    // This is a pretty good spamtrap. The submission must have both the meeting ID and the valid Service body ID.
+                                    if ( isset ( $service_body_id ) && $service_body_id && ($service_body_id == $meeting_object->GetServiceBodyID()) )
                                         {
-                                        $email = simplifyEmailAddress ( $meeting_object->GetEmailContact() );
+                                        if ( $meeting_object->GetEmailContact() )   // The direct contact is placed first in the queue.
+                                            {
+                                            $email = simplifyEmailAddress ( $meeting_object->GetEmailContact() );
                                 
-                                        if ( $email )
-                                            {
-                                            $email_contacts[] = $email;
-                                            }
-                                        }
-                        
-                                    // We now walk up the hierarchy, and add contacts as we find them. We use the emails set in the Service body admin, not individual accounts.
-                        
-                                    $service_body = $meeting_object->GetServiceBodyObj();
-                        
-                                    do
-                                        {
-                                        if ( $service_body && $service_body->GetContactEmail() )
-                                            {
-                                            $email = simplifyEmailAddress ( $service_body->GetContactEmail() );
-                                    
                                             if ( $email )
                                                 {
                                                 $email_contacts[] = $email;
                                                 }
                                             }
+                        
+                                        // We now walk up the hierarchy, and add contacts as we find them. We use the emails set in the Service body admin, not individual accounts.
+                        
+                                        $service_body = $meeting_object->GetServiceBodyObj();
+                        
+                                        do
+                                            {
+                                            if ( $service_body && $service_body->GetContactEmail() )
+                                                {
+                                                $email = simplifyEmailAddress ( $service_body->GetContactEmail() );
+                                    
+                                                if ( $email )
+                                                    {
+                                                    $email_contacts[] = $email;
+                                                    }
+                                                }
                                         
-                                        // We don't recurse if we aren't supposed to
-                                        $service_body = $include_every_admin_on_emails ? $service_body->GetOwnerIDObject() : NULL;
-                                        } while ( $service_body );
+                                            // We don't recurse if we aren't supposed to
+                                            $service_body = $include_every_admin_on_emails ? $service_body->GetOwnerIDObject() : NULL;
+                                            } while ( $service_body );
                             
-                                    // The one exception is the Server Administrator, and we get that email from the individual account.
+                                        // The one exception is the Server Administrator, and we get that email from the individual account.
                                     
-                                    if ( $include_every_admin_on_emails )   // The Server admin is not involved unless we are cascading.
-                                        {
-                                        $server_admin_user = c_comdef_server::GetUserByIDObj ( 1 );
-                        
-                                        if ( $server_admin_user && $server_admin_user->GetEmailAddress() )
+                                        if ( $include_every_admin_on_emails )   // The Server admin is not involved unless we are cascading.
                                             {
-                                            $email = simplifyEmailAddress ( $server_admin_user->GetEmailAddress() );
-                                    
-                                            if ( $email )
+                                            $server_admin_user = c_comdef_server::GetUserByIDObj ( 1 );
+                        
+                                            if ( $server_admin_user && $server_admin_user->GetEmailAddress() )
                                                 {
-                                                $email_contacts[] = $email;
+                                                $email = simplifyEmailAddress ( $server_admin_user->GetEmailAddress() );
+                                    
+                                                if ( $email )
+                                                    {
+                                                    $email_contacts[] = $email;
+                                                    }
                                                 }
                                             }
-                                        }
                             
-                                    // At this point, we have one or more email addresses in our $email_contacts array. It's possible that the Server Admin may be the only contact.
+                                        // At this point, we have one or more email addresses in our $email_contacts array. It's possible that the Server Admin may be the only contact.
                             
-                                    if ( count ( $email_contacts ) )    // Make sure that we have something.
-                                        {
-                                        $to_line = NULL;
+                                        if ( count ( $email_contacts ) )    // Make sure that we have something.
+                                            {
+                                            $to_line = NULL;
                                 
-                                        if ( (1 < count ( $email_contacts )) && $include_service_body_admin_on_emails ) // See if we are including anyone else.
-                                            {
-                                            $to_line = implode ( ",", $email_contacts );
-                                            }
-                                        else
-                                            {
-                                            $to_line = $email_contacts[0];  // Otherwise, just the primary contact.
-                                            }
-                                    
-                                        if ( $to_line ) // Assuming all went well, we have a nice to line, here.
-                                            {
-                                            if ( isValidEmailAddress ( $to_line ) )    // Make sure our email addresses are valid.
+                                            if ( (1 < count ( $email_contacts )) && $include_service_body_admin_on_emails ) // See if we are including anyone else.
                                                 {
-                                                $local_strings = c_comdef_server::GetLocalStrings();
-                                                
-                                                $subject = sprintf ( $local_strings['email_contact_strings']['meeting_contact_form_subject_format'], $meeting_object->GetLocalName() );
-                                                $url1 = 'http://'.$_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').'/client_interface/html/index.php?single_meeting_id='.$meeting_id;
-                                                $url2 = 'http://'.$_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').'/?edit_meeting='.$meeting_id;
-                                                $body = sprintf ( $local_strings['email_contact_strings']['meeting_contact_message_format'], $message_text, $url1, $url2 );
-                                                if ( sendEMail ( $to_line, $from_address, $subject, $body  ) )
-                                                    {
-                                                    $ret = 1;
-                                                    }
-                                                else
-                                                    {
-                                                    $ret = -4;
-                                                    }
-                                                
+                                                $to_line = implode ( ",", $email_contacts );
                                                 }
                                             else
                                                 {
-                                                $ret = -1;
+                                                $to_line = $email_contacts[0];  // Otherwise, just the primary contact.
+                                                }
+                                    
+                                            if ( $to_line ) // Assuming all went well, we have a nice to line, here.
+                                                {
+                                                if ( isValidEmailAddress ( $to_line ) )    // Make sure our email addresses are valid.
+                                                    {
+                                                    $local_strings = c_comdef_server::GetLocalStrings();
+                                                
+                                                    $subject = sprintf ( $local_strings['email_contact_strings']['meeting_contact_form_subject_format'], $meeting_object->GetLocalName() );
+                                                    $url1 = 'http://'.$_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').'/client_interface/html/index.php?single_meeting_id='.$meeting_id;
+                                                    $url2 = 'http://'.$_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').'/?edit_meeting='.$meeting_id;
+                                                    $body = sprintf ( $local_strings['email_contact_strings']['meeting_contact_message_format'], $message_text, $url1, $url2 );
+                                                    if ( sendEMail ( $to_line, $from_address, $subject, $body  ) )
+                                                        {
+                                                        $ret = 1;
+                                                        }
+                                                    else
+                                                        {
+                                                        $ret = -4;
+                                                        }
+                                                
+                                                    }
+                                                else
+                                                    {
+                                                    $ret = -1;
+                                                    }
+                                                }
+                                            else
+                                                {
+                                                $ret = -1;  // Should never happen.
                                                 }
                                             }
                                         else
                                             {
-                                            $ret = -1;  // Should never happen.
+                                            $ret = -1;
                                             }
                                         }
                                     else
                                         {
-                                        $ret = -1;
-                                        }
-                                    }
-                                else
-                                    {
-                                    if ( $g_mail_debug )
-                                        {
-                                        die ( "Content Considered Spam (Service body check failed)" );
-                                        }
+                                        if ( $g_mail_debug )
+                                            {
+                                            die ( "Content Considered Spam (Service body check failed)" );
+                                            }
                 
-                                    $ret = -3;
+                                        $ret = -3;
+                                        }
                                     }
                                 }
                             }
-                        }
 
-                    // If this is just a test, we respond with the capability.
-                    if ( 0 ==  $meeting_id )
+                        // If this is just a test, we respond with the capability.
+                        if ( 0 ==  $meeting_id )
+                            {
+                            $ret = $g_enable_email_contact ? 1 : 0;
+                            }
+                        }
+                    else
                         {
-                        $ret = $g_enable_email_contact ? 1 : 0;
+                        die ( "SERVER NOT INITIALIZED" );
                         }
                     }
                 else
                     {
-                    die ( "SERVER NOT INITIALIZED" );
+                    if ( $g_mail_debug )
+                        {
+                        die ( "Content Considered Spam" );
+                        }
+                
+                    $ret = -3;
                     }
                 }
             else
                 {
                 if ( $g_mail_debug )
                     {
-                    die ( "Content Considered Spam" );
+                    die ( "From Address Invalidm" );
                     }
-                
-                $ret = -3;
+            
+                $ret = -2;
                 }
             }
         else
             {
             if ( $g_mail_debug )
                 {
-                die ( "From Address Invalidm" );
+                die ( "From Address Considered Spam" );
                 }
             
-            $ret = -2;
+            $ret = -3;
             }
         }
     else
         {
         if ( $g_mail_debug )
             {
-            die ( "From Address Considered Spam" );
+            die ( "Extra parameters (considered spam)" );
             }
-            
+    
         $ret = -3;
         }
-    }
-else
-    {
-    if ( $g_mail_debug )
-        {
-        die ( "Extra parameters (considered spam)" );
-        }
-    
-    $ret = -3;
     }
 
 echo intval ( $ret );

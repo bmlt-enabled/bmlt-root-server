@@ -50,6 +50,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.4.2 =
+* TBD
+* Simplified the response for the test in the email sender.
+
 = Version 2.4.1 =
 * June 1, 2014
 * Oops. Forgot to turn off debug mode.
