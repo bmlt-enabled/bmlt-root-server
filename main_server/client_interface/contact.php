@@ -78,6 +78,7 @@ function analyzeFromLine ( $inFrom ///< The message from line as a text string.
 /***********************************************************************/
 /** \brief This analyzes an input string for obvious spam signatures (mostly checking for URLs).
            This is VERY basic, but it will catch 99% of the usual spam types.
+           Cribbed from here: http://wcetdesigns.com/tutorials/2011/11/30/detect-url-in-string.html
 
     \returns a Boolean. TRUE if the message appears to be spam.
 */
@@ -85,19 +86,21 @@ function analyzeMessageContent ( $inMessage ///< The message as a text string.
                                 )
 {
     $ret = FALSE;
+    $count = 0;
     
-    $matches = array();
-    
-    // Start by searching for URIs.
-    // A URI is 2 or more alpha characters, followed by a colon, followed by one (or more) forward-slash, followed by more text.
-    $count = preg_match ( "|[a-z]{2}\:\/+?[a-z\_\.\-]|", strtolower ( $inMessage ), $matches );
-    
-    // If we got a URI, then we look at it a bit closer.
-    if ( $count && is_array ( $matches ) && count ( $matches ) )
+    $p = '#^(http(s)?|ftp)://([a-z0-9_-]+.)+([a-z]{2,}){1}((:|/)(.*))?$#';
+
+    $w = preg_split ( "/\s+/", $inMessage, -1, PREG_SPLIT_NO_EMPTY );
+
+    foreach ( $w as $s )
         {
-        if ( $count > 2 )   // More than two is auto-spam.
+        if ( preg_match ( $p, $s ) )
             {
-            $ret = TRUE;
+            if ( 1 < $count++ ) // More than 2 is spam.
+                {
+                $ret = TRUE;
+                break;
+                }
             }
         }
     
@@ -106,7 +109,6 @@ function analyzeMessageContent ( $inMessage ///< The message as a text string.
 
 /***********************************************************************/
 /** \brief This analyzes email address (or a list of them), and returns TRUE if they are OK (as formatted).
-
     \returns a Boolean. TRUE if the emails are OK.
 */
 function isValidEmailAddress (  $in_test_address    ///< The email address (or a list or array) to be checked.
@@ -389,9 +391,22 @@ else
                                                     $local_strings = c_comdef_server::GetLocalStrings();
                                                 
                                                     $subject = sprintf ( $local_strings['email_contact_strings']['meeting_contact_form_subject_format'], $meeting_object->GetLocalName() );
-                                                    $url1 = 'http://'.$_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').'/client_interface/html/index.php?single_meeting_id='.$meeting_id;
-                                                    $url2 = 'http://'.$_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').'/?edit_meeting='.$meeting_id;
-                                                    $body = sprintf ( $local_strings['email_contact_strings']['meeting_contact_message_format'], $message_text, $url1, $url2 );
+                                                    $dirn = dirname ( ( dirname ( $_SERVER['PHP_SELF'] )) );
+                                                    if ( '/' == $dirn )
+                                                        {
+                                                        $dirn = '';
+                                                        }
+                                                    $root_dirname = 'http://'.$_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').$dirn;
+                                                    $url1 = $root_dirname.'/client_interface/html/index.php?single_meeting_id='.$meeting_id;
+                                                    $url2 = $root_dirname.'/?edit_meeting='.$meeting_id;
+                                                    $body = sprintf ( $local_strings['email_contact_strings']['meeting_contact_message_format'],
+                                                                    $message_text,
+                                                                    $meeting_object->GetLocalName(),
+                                                                    $meeting_object->GetMeetingDataValue('start_time'),
+                                                                    $local_strings['weekdays'][$meeting_object->GetMeetingDataValue('weekday_tinyint')],
+                                                                    $url1,
+                                                                    $url2
+                                                                    );
                                                     if ( sendEMail ( $to_line, $from_address, $subject, $body  ) )
                                                         {
                                                         $ret = 1;

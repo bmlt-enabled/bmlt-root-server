@@ -338,7 +338,7 @@
 
 	$email_contact_strings = array (
 	    'meeting_contact_form_subject_format'   =>  "[MEETING LIST CONTACT] %s",
-	    'meeting_contact_message_format'        =>  "%s\n--\nThis message concerns this meeting: %s (Edit Link: %s)\nIt was sent directly from the meeting list web server, and the sender is not aware of your email address."
+	    'meeting_contact_message_format'        =>  "%s\n--\nThis message concerns this meeting named \"%s\", which meets at %s, on %s\nBrowser Link: %s\nEdit Link: %s\nIt was sent directly from the meeting list web server, and the sender is not aware of your email address.\nPlease be aware that replying will expose your email address.\nIf you use \"Reply All\", and there are multiple email recipients, you may expose other people's email addresses.\nPlease respect people's privacy and anonymity; including the original sender of this message."
 	);
 
 	$change_type_strings = array (
