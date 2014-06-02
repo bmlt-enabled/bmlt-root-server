@@ -396,13 +396,16 @@ else
                                                         {
                                                         $dirn = '';
                                                         }
+                                                    $start_time = explode ( ':', $meeting_object->GetMeetingDataValue ( 'start_time' ) );
+                                                    unset ( $start_time[2] );
+                                                    $start_time = implode ( ':', $start_time );
                                                     $root_dirname = 'http://'.$_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').$dirn;
-                                                    $url1 = $root_dirname.'/client_interface/html/index.php?single_meeting_id='.$meeting_id;
+                                                    $url1 = $root_dirname.'/?single_meeting_id='.$meeting_id;
                                                     $url2 = $root_dirname.'/?edit_meeting='.$meeting_id;
                                                     $body = sprintf ( $local_strings['email_contact_strings']['meeting_contact_message_format'],
                                                                     $message_text,
                                                                     $meeting_object->GetLocalName(),
-                                                                    $meeting_object->GetMeetingDataValue('start_time'),
+                                                                    $start_time,
                                                                     $local_strings['weekdays'][$meeting_object->GetMeetingDataValue('weekday_tinyint')],
                                                                     $url1,
                                                                     $url2

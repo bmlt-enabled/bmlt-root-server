@@ -18,16 +18,33 @@
     along with this code.  If not, see <http://www.gnu.org/licenses/>.
 */
 defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
-require_once ( dirname ( __FILE__ ).'/c_comdef_admin_main_console.class.php' );
 
-$console_object = new c_comdef_admin_main_console($http_vars);
-
-$ret = 'ERROR';
-
-if ( $console_object instanceof c_comdef_admin_main_console )
+// If the single_meeting_id argument is supplied, then we switch to the browser.
+if ( isset ( $http_vars['single_meeting_id'] ) && intval ( $http_vars['single_meeting_id'] ) )
     {
-    $ret = $console_object->return_main_console_html();
+    $dirn = dirname ( ( dirname ( $_SERVER['PHP_SELF'] )) );
+    if ( '/' == $dirn )
+        {
+        $dirn = '';
+        }
+    
+    $new_location = 'http://'.$_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').$dirn.'/client_interface/html/index.php?single_meeting_id='.intval ( $http_vars['single_meeting_id'] );
+    
+    header ( "Location: $new_location" );
     }
+else
+    {
+    require_once ( dirname ( __FILE__ ).'/c_comdef_admin_main_console.class.php' );
 
-echo $ret;
+    $console_object = new c_comdef_admin_main_console($http_vars);
+
+    $ret = 'ERROR';
+
+    if ( $console_object instanceof c_comdef_admin_main_console )
+        {
+        $ret = $console_object->return_main_console_html();
+        }
+
+    echo $ret;
+    }
 ?>

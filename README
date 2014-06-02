@@ -53,6 +53,8 @@ CHANGELIST
 = Version 2.4.2 =
 * TBD
 * Simplified the response for the test in the email sender.
+* Made the email generated from contacts a bit more explanatory.
+* Improved the ability to access the browser and the editor for meetings. This works in conjunction with the email sent from contacts.
 
 = Version 2.4.1 =
 * June 1, 2014
