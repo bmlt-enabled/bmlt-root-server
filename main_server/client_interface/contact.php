@@ -342,7 +342,7 @@ else
                                                 {
                                                 $email = simplifyEmailAddress ( $service_body->GetContactEmail() );
                                     
-                                                if ( $email )
+                                                if ( $email && !in_array ( $email, $email_contacts[] ) )    // Make sure we don't already have it.
                                                     {
                                                     $email_contacts[] = $email;
                                                     }
