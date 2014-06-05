@@ -50,6 +50,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.4.3 =
+* June 4, 2014
+* Fixed a bug introduced by the new code (It only manifested when sending mail, so no one has been affected).
+
 = Version 2.4.2 =
 * June 4, 2014
 * Simplified the response for the test in the email sender.
