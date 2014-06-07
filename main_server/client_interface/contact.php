@@ -59,6 +59,11 @@ global $g_mail_debug;
 
 $g_mail_debug = FALSE;   ///< Set this to TRUE to output the email as an echo, instead of sending it.
 
+if ( preg_match ( "/localhost/", $_SERVER['SERVER_NAME'] ) )
+    {
+    $g_mail_debug = TRUE;   // We always debug for localhost testing.
+    }
+
 /***********************************************************************/
 /** \brief This analyzes an input string for obvious spam signatures.
            This looks for attempts to insert headers into the From: line.
