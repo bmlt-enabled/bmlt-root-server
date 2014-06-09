@@ -51,7 +51,9 @@ For instructions on installing the root server, see this page:
 CHANGELIST
 ----------
 = Version 2.4.4
-* TBD
+* June 9, 2014
+* Fixed a bug in the semantic interfaces that caused problems with clients. If a meeting had no name, a blank name was returned. It now returns a generic "NA Meeting".
+* Fixed a bug in the administration system that prevented logins after a logout.
 
 = Version 2.4.3 =
 * June 4, 2014

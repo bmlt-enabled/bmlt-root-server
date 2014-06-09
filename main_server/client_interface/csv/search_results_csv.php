@@ -387,6 +387,12 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 			{
 			$keys = c_comdef_meeting::GetAllMeetingKeys ( );
 			
+			// This is a required one for data export.
+			if ( !in_array ( 'meeting_name', $keys ) )
+			    {
+			    $keys[] = 'meeting_name';
+			    }
+			
 			$ret = '"'.join ( '","', $keys ).'"';
 
 			$formats = c_comdef_server::GetServer()->GetFormatsObj ();
@@ -438,6 +444,11 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 						{
                         $val = $mtg_obj->GetMeetingDataValue ( $key );
                     
+                        if ( ($key == 'meeting_name') && !$val )    // No meeting name results in a generic "NA Meeting" as the name.
+                            {
+                            $val = $localized_strings['comdef_server_admin_strings']['Value_Prompts']['generic'];
+                            }
+                            
                         if ( isset ( $val ) )
                             {
                             if ( ($key == 'formats') )
