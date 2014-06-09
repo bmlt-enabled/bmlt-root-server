@@ -60,7 +60,7 @@ if ( $server )
                 {
                 $_SESSION[$admin_session_name] = "$login\t$enc_password";
                 // If the login interrupted going somewhere else, we complete the journey.
-                if ( isset ( $_POST['attemptedurl']  ) && $_POST['attemptedurl'] )
+                if ( isset ( $_POST['attemptedurl']  ) && $_POST['attemptedurl'] && !((isset ( $_GET['admin_action'] ) && (($_GET['admin_action'] == 'logout')))) && !((isset ( $_POST['admin_action'] ) && (($_POST['admin_action'] == 'logout')))) )
                     {
                     header ( 'Location: '.$_POST['attemptedurl'] );
                     }
