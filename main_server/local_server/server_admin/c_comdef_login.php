@@ -90,7 +90,7 @@ if ( (isset ( $_GET['admin_action'] ) && (($_GET['admin_action'] == 'logout'))) 
             {
             $_SESSION[$admin_session_name] = "$login\t$enc_password";
             // If the login interrupted going somewhere else, we complete the journey.
-            if ( isset ( $_POST['attemptedurl']  ) && $_POST['attemptedurl'] && !((isset ( $_GET['admin_action'] ) && (($_GET['admin_action'] == 'logout')))) && !((isset ( $_POST['admin_action'] ) && (($_POST['admin_action'] == 'logout')))) )
+            if ( isset ( $_POST['attemptedurl']  ) && $_POST['attemptedurl'] && (0 >= strpos ( 'logout', $_POST['attemptedurl'] )) )
                 {
                 ob_end_clean();
                 header ( 'Location: '.$_POST['attemptedurl'] );
@@ -317,7 +317,13 @@ function c_comdef_LoginForm(	&$in_server	///< A reference to an instance of c_co
                 }
         $ret .= '">';	// Only the login will go through post.
             $ret .= '<input id="admin_action" type="hidden" name="admin_action" value="login" />';
-            $ret .= '<input id="attemptedurl" type="hidden" name="attemptedurl" value="'.c_comdef_htmlspecialchars ( full_url ( $_SERVER ) ).'" />';
+            $attempted_url = full_url ( $_SERVER );
+            
+            if ( !preg_match ( '|logout|', $attempted_url ) )
+                {
+                $ret .= '<input id="attemptedurl" type="hidden" name="attemptedurl" value="'.c_comdef_htmlspecialchars ( $attempted_url ).'" />';
+                }
+            
             $ret .= '<div style="display:none" id="c_comdef_admin_login_form_inner_container_div" class="c_comdef_admin_login_form_inner_container_div">';
                 $ret .= '<div class="c_comdef_admin_login_form_line_div">';
                 $ret .= '<div class="c_comdef_admin_login_form_prompt">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['title'] ).'</div>';
