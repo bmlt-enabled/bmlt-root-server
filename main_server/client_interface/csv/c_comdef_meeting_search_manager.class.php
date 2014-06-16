@@ -201,7 +201,7 @@ class c_comdef_meeting_search_manager
 			
 			$this->_my_server = c_comdef_server::MakeServer();	// We initialize the server.
 			
-			$this->SetUpFormats();						// We set the formats array.
+			$this->SetUpFormats();						    // We set the formats array.
 			$this->SetUpServiceBodies();					// We set the Service Bodies array.
 			$this->SetUpLanguages();						// We set the Languages array.
 			
@@ -269,7 +269,7 @@ class c_comdef_meeting_search_manager
 	/** \brief Sets a key/value search.
 	*/
 	function SetKeyValueSearch(
-								$in_meeting_key,					///< A string. This is the xact name of the key to match.
+								$in_meeting_key,					///< A string. This is the exact name of the key to match.
 								$in_meeting_key_value,				///< A string. The value to match.
 								$in_meeting_key_match_case = false,	///< If true, the case must match. Default is false.
 								$in_meeting_key_contains = true		///< If this is false, then the string must be complete. Default is true (contains).
