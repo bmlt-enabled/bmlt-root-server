@@ -301,7 +301,7 @@
                                                                                                                 'title_checkbox_copy_meeting' => 'Esta reunión es un duplicado de otra reunión. También es inédito. No puede ser visto por búsquedas regulares.'
                                                                                                             ),
                                             'world_format_codes_prompt'                             =>  'NAWS Format:',
-                                            'world_format_codes'                                    => array (
+                                            'world_format_codes'                                    =>  array (
                                                                                                             ''	    =>	'Ninguno',
                                                                                                             'OPEN'  =>  'Abierto',
                                                                                                             'CLOSED'=>  'Cerrado',
@@ -332,7 +332,8 @@
                                                                                                             'W'	    =>	'Mujeres',
                                                                                                             'Y'	    =>	'Jovenes',
                                                                                                             'LANG'  =>  'Idioma alternativo'
-                                                                                                            )
+                                                                                                            ),
+                                            'cookie_monster'                                        =>  'This site uses a cookie to store your preferred language.'
 	                                    );
 
 	$email_contact_strings = array (

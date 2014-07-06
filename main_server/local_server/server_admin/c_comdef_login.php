@@ -58,14 +58,21 @@ $t_server = c_comdef_server::MakeServer();	// We initialize the server.
 
 $lang_enum = $t_server->GetServer()->GetLocalLang();
 
-if ( isset ( $_GET['lang_enum'] ) && $_GET['lang_enum'] )
+// We use a cookie to store the language pref.
+if ( isset ( $_COOKIE ) && isset ( $_COOKIE['bmlt_admin_lang_pref'] ) && $_COOKIE['bmlt_admin_lang_pref'] )
     {
-    $lang_enum = $_GET['lang_enum'];
+    $bmlt_localization = $_COOKIE['bmlt_admin_lang_pref'];
     }
 
-if ( isset ( $_POST['lang_enum'] ) && $_POST['lang_enum'] )
+if ( isset ( $http_vars['lang_enum'] ) && $http_vars['lang_enum'] )
     {
-    $lang_enum = $_POST['lang_enum'];
+    $lang_enum = $http_vars['lang_enum'];
+    }
+
+if ( $g_enable_language_selector )
+    {
+    $expires = time() + (60 * 60 * 24 * 365);   // Expire in one year.
+    setcookie ( 'bmlt_admin_lang_pref', $lang_enum, $expires, '/' );
     }
 
 if ( !isset ( $_SESSION ) )
@@ -343,15 +350,16 @@ function c_comdef_LoginForm(	&$in_server	///< A reference to an instance of c_co
                                 {
                                 if ( $id && $name )
                                     {
-                                    $ret .= '<option value="'.htmlspecialchars ( $id ).'"';
+                                    $ret .= '<option value="'.c_comdef_htmlspecialchars ( $id ).'"';
                                     if ( $comdef_global_language == $id )
                                         {
                                         $ret .= ' selected="selected"';
                                         }
-                                    $ret.= '>'.htmlspecialchars ( $name ).'</option>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                                    $ret.= '>'.c_comdef_htmlspecialchars ( $name ).'</option>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                                     }
                                 }
                         $ret .= '</select>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                        $ret .= '<div id="cookie_notice_div" class="bmlt_cookie_notice_div">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['cookie_monster'] ).'</div>';
                     $ret .= '</div>';
                     }
                 $ret .= '<div class="c_comdef_admin_login_form_submit_div">';

@@ -39,6 +39,15 @@ if ( $server )
     global $bmlt_localization;  ///< Use this to control the localization.
     $bmlt_localization = $server->GetLocalLang();
 
+    // We use a cookie to store the language pref.
+    if ( isset ( $_COOKIE ) && isset ( $_COOKIE['bmlt_admin_lang_pref'] ) && $_COOKIE['bmlt_admin_lang_pref'] )
+        {
+        $bmlt_localization = $_COOKIE['bmlt_admin_lang_pref'];
+        }
+
+    $expires = time() + (60 * 60 * 24 * 365);   // Expire in one year.
+    setcookie ( 'bmlt_admin_lang_pref', $bmlt_localization, $expires, '/' );
+
     if ( !isset ( $_SESSION ) )
         {
         session_start();

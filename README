@@ -53,6 +53,7 @@ CHANGELIST
 = Version 2.4.5
 * TBD
 * Added true Spanish localization to the Root Server.
+* Added a cookie for storing the selected language.
 
 = Version 2.4.4
 * June 9, 2014

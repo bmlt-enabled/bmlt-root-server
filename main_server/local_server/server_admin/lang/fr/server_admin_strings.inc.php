@@ -301,7 +301,7 @@
                                                                                                                 'title_checkbox_copy_meeting' => 'Cette réunion est une copie d\'une autre réunion. Il est également non publié. Elle ne peut être vue par recherches régulières.'
                                                                                                             ),
                                             'world_format_codes_prompt'                             =>  'Format SMNA:',
-                                            'world_format_codes'                                    => array (
+                                            'world_format_codes'                                    =>  array (
                                                                                                                 ''	    =>	'Aucun',
                                                                                                                 'OPEN'  =>  'Ouvert',
                                                                                                                 'CLOSED'=>  'Fermée',
@@ -332,7 +332,8 @@
                                                                                                                 'W'     =>	'Femmes',
                                                                                                                 'Y'     =>	'Jeunes',
                                                                                                                 'LANG'  =>  'Alternate Language'
-                                                                                                            )
+                                                                                                            ),
+                                            'cookie_monster'                                        =>  'This site uses a cookie to store your preferred language.'
 	                                    );
 
 	$email_contact_strings = array (

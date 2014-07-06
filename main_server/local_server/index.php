@@ -22,7 +22,26 @@ defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that 
 global  $http_vars;
 $http_vars = array_merge ( $_GET, $_POST );
 
+// We use a cookie to store the language pref.
+if ( isset ( $_COOKIE ) && isset ( $_COOKIE['bmlt_admin_lang_pref'] ) && $_COOKIE['bmlt_admin_lang_pref'] )
+    {
+    $lang_enum = $_COOKIE['bmlt_admin_lang_pref'];
+    }
+
+if ( isset ( $http_vars['lang_enum'] ) && $http_vars['lang_enum'] )
+    {
+    $lang_enum = $http_vars['lang_enum'];
+    }
+
+$http_vars['lang_enum'] = $lang_enum;       // Quick and dirty way to ensure that this gets properly propagated.
+
 require_once ( dirname ( __FILE__ ).'/install_wizard/index.php' );  // We test for the install wizard, first.
+
+if ( $g_enable_language_selector )
+    {
+    $expires = time() + (60 * 60 * 24 * 365);   // Expire in one year.
+    setcookie ( 'bmlt_admin_lang_pref', $lang_enum, $expires, '/' );
+    }
 
 if ( isset ( $http_vars ['bmlt_data_transfer'] ) )  // This checks for the transfer wizard.
     {

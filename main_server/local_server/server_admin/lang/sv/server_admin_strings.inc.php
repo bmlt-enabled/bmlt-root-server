@@ -302,7 +302,7 @@
                                                                                                                 'title_checkbox_copy_meeting' => 'This meeting is a duplicate of another meeting. It is also unpublished. It cannot be seen by regular searches.'
                                                                                                             ),
                                             'world_format_codes_prompt'                             =>  'Naws mötesformat:',
-                                            'world_format_codes'                                    => array (
+                                            'world_format_codes'                                    =>  array (
                                                                                                                 ''	    =>	'Ingen',
                                                                                                                 'OPEN'  =>  'Öppet möte',
                                                                                                                 'CLOSED'=>  'Slutet möte',
@@ -333,7 +333,8 @@
                                                                                                                 'W'	    =>	'Kvinnomöte',
                                                                                                                 'Y'	    =>	'Ungdomsmöte',   
                                                                                                                 'LANG'  =>  'Alternativt språk'
-                                                                                                            )
+                                                                                                            ),
+                                            'cookie_monster'                                        =>  'This site uses a cookie to store your preferred language.'
 	                                    );
 
 	$email_contact_strings = array (
