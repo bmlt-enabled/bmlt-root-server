@@ -331,7 +331,7 @@
                                                                                                             'Y'	    =>	'Junge Menschen',
                                                                                                             'LANG'  =>  'Fremdsprache'
                                                                                                             ),
-                                            'cookie_monster'                                        =>  'This site uses a cookie to store your preferred language.'
+                                            'cookie_monster'                                        =>  'Diese Website benutzt ein Cookie, um Ihre bevorzugte Sprache zu speichern.'
 	                                    );
 
 	$email_contact_strings = array (
