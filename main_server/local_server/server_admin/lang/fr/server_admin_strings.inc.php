@@ -333,7 +333,7 @@
                                                                                                                 'Y'     =>	'Jeunes',
                                                                                                                 'LANG'  =>  'Alternate Language'
                                                                                                             ),
-                                            'cookie_monster'                                        =>  'This site uses a cookie to store your preferred language.'
+                                            'cookie_monster'                                        =>  'Ce site contient un cookie pour emmagasiner l\'information de votre langue de préférée.'
 	                                    );
 
 	$email_contact_strings = array (
