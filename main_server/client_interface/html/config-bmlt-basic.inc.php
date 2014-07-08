@@ -86,7 +86,7 @@ if ( $server )
                     c_comdef_LogoutUser();
 
                     // If the login is invalid, we terminate the whole kit and kaboodle, and inform the user they are persona non grata.
-                    die ( '<h2 class="c_comdef_not_auth_3">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['not_auth_3'] ).'</h2>'.c_comdef_LoginForm($server).'</body></html>' );
+                    die ( '<h2 class="c_comdef_not_auth_3">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['not_auth_3'] ).'</h2>' );
                     }
                 }
             }
