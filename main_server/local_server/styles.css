@@ -40,11 +40,13 @@ fieldset
 	padding: 4px;
 }
 
-.link_to_fill {
+.link_to_fill
+{
 	float:left;
 }
 
-.attributions {
+.attributions
+{
 	font-size: x-small;
 	text-align:left;
 	background: white;
@@ -54,7 +56,8 @@ fieldset
 	margin-top: 8px;
 }
 
-.attributions ul {
+.attributions ul
+{
 	width: 90%;
 	margin-left:auto;
 	margin-right:auto;

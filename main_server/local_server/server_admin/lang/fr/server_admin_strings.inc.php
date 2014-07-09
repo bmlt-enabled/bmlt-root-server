@@ -51,7 +51,7 @@
 	                                        'access_service_body_label'                             =>  'J\'ai accès à:',
 	                                        'meeting_text_input_default_text'                       =>  'Saisissez un mot-clé pour la recherche contextuelle',
 	                                        'meeting_text_location_label'                           =>  'Il s\'agit d\'une Ville ou code postal',
-	                                        'meeting_search_weekdays_label'                         =>  'Critére de rechercher selon le ou des jours de la semaine:',
+	                                        'meeting_search_weekdays_label'                         =>  'Recherche par jour de semaine:',
 	                                        'meeting_search_weekdays_names'                         =>  array ( 'Tous', 'Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi' ),
 	                                        'meeting_search_service_bodies_label'                   =>  'Choisir parmi les comités:',
 	                                        'meeting_search_start_time_label'                       =>  'Recherche par réunion Heure de début:',

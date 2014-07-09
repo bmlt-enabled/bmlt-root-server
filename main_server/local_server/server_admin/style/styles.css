@@ -181,6 +181,18 @@ div.bmlt_admin_one_line_in_a_form_no_margin
     padding-right:1em;
 }
 
+span.weekday_checkbox_span input
+{
+    display:block;
+    float:left;
+    margin-right:0.25em;
+}
+
+span.weekday_checkbox_span label.bmlt_admin_med_checkbox_label_left
+{
+    display:block;
+}
+
 .bmlt_admin_med_label_right
 {
     width:20em;

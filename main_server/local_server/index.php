@@ -37,7 +37,7 @@ $http_vars['lang_enum'] = $lang_enum;       // Quick and dirty way to ensure tha
 
 require_once ( dirname ( __FILE__ ).'/install_wizard/index.php' );  // We test for the install wizard, first.
 
-if ( $g_enable_language_selector )
+if ( isset ( $g_enable_language_selector ) && $g_enable_language_selector )
     {
     $expires = time() + (60 * 60 * 24 * 365);   // Expire in one year.
     setcookie ( 'bmlt_admin_lang_pref', $lang_enum, $expires, '/' );

@@ -334,7 +334,7 @@
                                                                                                                 'Y'	    =>	'Ungdomsmöte',   
                                                                                                                 'LANG'  =>  'Alternativt språk'
                                                                                                             ),
-                                            'cookie_monster'                                        =>  'This site uses a cookie to store your preferred language.'
+                                            'cookie_monster'                                        =>  'Denna sida använder cookies för att minnas ditt språkval.'
 	                                    );
 
 	$email_contact_strings = array (

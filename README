@@ -54,6 +54,7 @@ CHANGELIST
 * TBD
 * Added true Spanish localization to the Root Server.
 * Added a cookie for storing the selected language.
+* Tweaked the French localization.
 
 = Version 2.4.4
 * June 9, 2014

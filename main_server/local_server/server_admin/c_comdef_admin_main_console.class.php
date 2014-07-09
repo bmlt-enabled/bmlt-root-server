@@ -1221,7 +1221,7 @@ class c_comdef_admin_main_console
                 $ret .= '<div class="bmlt_admin_value_left_div">';
                     for ( $c = 0; $c < 8; $c++ )
                         {
-                        $ret .= '<span class="single_checkbox_span">';
+                        $ret .= '<span class="single_checkbox_span weekday_checkbox_span">';
                             $ret .= '<input checked="checked" type="checkbox" id="bmlt_admin_meeting_search_weekday_checkbox_'.$c.'" onclick="admin_handler_object.handleWeekdayCheckBoxChanges('.$c.');" onchange="admin_handler_object.handleWeekdayCheckBoxChanges('.$c.');" />'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                             $ret .= '<label class="bmlt_admin_med_checkbox_label_left" for="bmlt_admin_meeting_search_weekday_checkbox_'.$c.'">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_search_weekdays_names'][$c] ).'</label>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                         $ret .= '</span>';
