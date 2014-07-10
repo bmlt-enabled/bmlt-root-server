@@ -102,6 +102,8 @@ if ( $server instanceof c_comdef_server )
 								)
 		{
 		$localized_strings = c_comdef_server::GetLocalStrings();
+		$original_weekday = -1;
+		$current_weekday = -1;
 	
 		if ( !( isset ( $in_http_vars['geo_width'] ) && $in_http_vars['geo_width'] ) && isset ( $in_http_vars['bmlt_search_type'] ) && ($in_http_vars['bmlt_search_type'] == 'advanced') && isset ( $in_http_vars['advanced_radius'] ) && isset ( $in_http_vars['advanced_mapmode'] ) && $in_http_vars['advanced_mapmode'] && ( floatval ( $in_http_vars['advanced_radius'] != 0.0 ) ) && isset ( $in_http_vars['lat_val'] ) &&  isset ( $in_http_vars['long_val'] ) && ( (floatval ( $in_http_vars['lat_val'] ) != 0.0) || (floatval ( $in_http_vars['long_val'] ) != 0.0) ) )
 			{
@@ -145,6 +147,8 @@ if ( $server instanceof c_comdef_server )
 				{
 				$ret = $in_block ? '<div class="bmlt_simple_meetings_div"'.($in_container_id ? ' id="'.c_comdef_htmlspecialchars ( $in_container_id ).'"' : '').'>' : '<table class="bmlt_simple_meetings_table"'.($in_container_id ? ' id="'.c_comdef_htmlspecialchars ( $in_container_id ).'"' : '').' cellpadding="0" cellspacing="0" summary="Meetings">';
 				$keys = preg_replace ( '|^"|', '', preg_replace ( '|"$|', '', explode ( '","', $results[0] ) ) );
+				
+				$weekday_div = FALSE;
 				
 				$alt = 1;	// This is used to provide an alternating class.
 				// We skip the first line, because that is the field header.
@@ -252,6 +256,20 @@ if ( $server instanceof c_comdef_server )
 							
 							if ( $time && $weekday && $address )
 								{
+								if ( ($current_weekday != $meeting['weekday_tinyint']) && $in_block )
+								    {
+								    if ( $current_weekday != -1 )
+								        {
+								        $weekday_div = FALSE;
+								        $ret .= '</div>';
+								        }
+								    
+								    $current_weekday = $meeting['weekday_tinyint'];
+								    
+								    $ret .= '<div class="bmlt_simple_meeting_weekday_div_'.$current_weekday.'">';
+								    $weekday_div = TRUE;
+								    }
+								
 								$ret .= $in_block ? '<div class="bmlt_simple_meeting_one_meeting_div bmlt_alt_'.intval ( $alt ).'">' : '<tr class="bmlt_simple_meeting_one_meeting_tr bmlt_alt_'.intval ( $alt ).'">';
 									$ret .= $in_block ? '<div class="bmlt_simple_meeting_one_meeting_town_div">' : '<td class="bmlt_simple_meeting_one_meeting_town_td">';
 									$ret .= $town;
@@ -300,6 +318,12 @@ if ( $server instanceof c_comdef_server )
 							}
 						}
 					}
+				
+				if ( $weekday_div && $in_block )
+				    {
+				    $ret .= '</div>';
+				    }
+				
 				$ret .= $in_block ? '</div>' : '</table>';
 				}
 			}

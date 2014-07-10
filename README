@@ -55,6 +55,7 @@ CHANGELIST
 * Added true Spanish localization to the Root Server.
 * Added a cookie for storing the selected language.
 * Tweaked the French localization.
+* Added a weekday wrapper around block mode simple responses. This allows better integration of search results with CSS.
 
 = Version 2.4.4
 * June 9, 2014
