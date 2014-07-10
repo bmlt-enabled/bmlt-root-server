@@ -21,6 +21,7 @@ defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that 
 
 global  $http_vars;
 $http_vars = array_merge ( $_GET, $_POST );
+$lang_enum = '';
 
 // We use a cookie to store the language pref.
 if ( isset ( $_COOKIE ) && isset ( $_COOKIE['bmlt_admin_lang_pref'] ) && $_COOKIE['bmlt_admin_lang_pref'] )
