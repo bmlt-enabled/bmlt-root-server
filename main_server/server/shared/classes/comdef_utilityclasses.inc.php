@@ -223,6 +223,7 @@ function json_prepare($data, $escapeSpecialChars = false)
 		{
 		if (!is_null($data))
 			{
+			$data = preg_replace ( "|\"|", "\\\"",  $data );
 			if ($escapeSpecialChars)
 				{
 				$data = utf8_encode(c_comdef_htmlspecialchars($data, ENT_QUOTES));

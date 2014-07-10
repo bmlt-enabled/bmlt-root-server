@@ -179,10 +179,15 @@ class PhpJsonXmlArrayStringInterchanger{
             $this->errorLog[]="The first parameter should to be string in function: ".__FUNCTION__." on line: ".__LINE__." in filename= ".__FILE__;
             return false;
         }
-//         $json=str_replace("\\'", "'",$json);
-//         $json=str_replace('\\"', '"',$json);
-        $json=str_replace('\\\"', '\"',$json);
+        // This weirdness, is because some servers bounce the parsed quotes.
+        $json1=str_replace('\\\"', '\"',$json);
+        $json=str_replace('\\"', '"',$json1);
         $array=json_decode($json,true);
+        if ( !isset ( $array ) || !count ( $array ) || ($array === false) )
+            {
+            $array=json_decode($json1,true);
+            }
+        
         if($array===false){
             $this->errorLog[]="Failed to decode JSON in function: ".__FUNCTION__." on line: ".__LINE__." in filename= ".__FILE__;
             return false;
