@@ -268,6 +268,10 @@ if ( $server instanceof c_comdef_server )
 								    
 								    $ret .= '<div class="bmlt_simple_meeting_weekday_div_'.$current_weekday.'">';
 								    $weekday_div = TRUE;
+								    if ( isset ( $in_http_vars['weekday_header'] ) && $in_http_vars['weekday_header'] )
+								        {
+								        $ret .= '<div class="weekday-header weekday-index-'.$current_weekday.'">'.htmlspecialchars ( $weekday ).'</div>';
+								        }
 								    }
 								
 								$ret .= $in_block ? '<div class="bmlt_simple_meeting_one_meeting_div bmlt_alt_'.intval ( $alt ).'">' : '<tr class="bmlt_simple_meeting_one_meeting_tr bmlt_alt_'.intval ( $alt ).'">';
