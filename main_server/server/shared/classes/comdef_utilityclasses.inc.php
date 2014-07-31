@@ -325,7 +325,10 @@ function call_curl (	$in_uri,				///< A string. The URI to call.
 		
 		// Direct cURL to send request header to server allowing compressed content to be returned and decompressed automatically (use only if needed).
 		curl_setopt ( $resource, CURLOPT_ENCODING, 'gzip,deflate' );
-		
+			
+        // Pretend we're a browser, so that anti-cURL settings don't pooch us.
+        curl_setopt ( $resource, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)" ); 
+    
 		// Execute cURL call and return results in $content variable.
 		$content = curl_exec ( $resource );
 		

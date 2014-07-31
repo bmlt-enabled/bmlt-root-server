@@ -51,7 +51,8 @@ For instructions on installing the root server, see this page:
 CHANGELIST
 ----------
 = Version 2.4.6
-* TBD
+* Fixed an issue with apostrophes (') causing problems.
+* Added a user-agent to the cCURL calls, as some servers filter out cURL calls.
 
 = Version 2.4.5
 * July 10, 2014
