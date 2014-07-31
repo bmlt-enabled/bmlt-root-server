@@ -128,6 +128,7 @@ if (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'initiali
         }
     catch ( Exception $e )
         {
+die ( print_r ( $e, true ) );
         $response = array ( 'status' => false, 'report' => $comdef_install_wizard_strings['AJAX_Handler_DB_Connect_Error'] );
         echo array2json ( $response );
         }
