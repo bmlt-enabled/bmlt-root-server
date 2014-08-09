@@ -180,9 +180,9 @@ class PhpJsonXmlArrayStringInterchanger{
             return false;
         }
         // This weirdness, is because some servers bounce the parsed quotes.
-        $json=str_replace("\'", "'", $json);
         $json1=str_replace('\\\"', '\"',$json);
         $json=str_replace('\\"', '"',$json1);
+        $json=str_replace("\'", "'", $json);
         $array=json_decode($json,true);
         if ( !isset ( $array ) || !$array || !count ( $array ) || ($array === false) )
             {
