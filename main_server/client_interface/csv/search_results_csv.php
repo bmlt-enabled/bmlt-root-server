@@ -1,6 +1,6 @@
 <?php
 /***********************************************************************/
-/** 	\file	search_results_list.php
+/** 	\file	search_results_csv.php
 
 	\brief	This file represents a View layer of the BMLT MVC pattern. It
 	will do a meeting search, and return the results as comma-separated

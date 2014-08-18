@@ -43,7 +43,7 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (43, 'QA', NULL, 'QA', 'en', 'Question and Answer', 'Attendees may ask questions and expect answers from Group members.', 'FC1'),
 (44, 'CW', NULL, 'CW', 'en', 'Children Welcome', 'Children are welcome at this meeting.', 'FC3'),
 (45, 'CP', NULL, 'CPT', 'en', 'Concepts', 'This meeting is focused on discussion of the twelve concepts of NA.', 'FC1'),
-(46, 'FIN', NULL, NULL, 'en', 'Finish', 'finish speaking meeting', 'FC3'),
+(46, 'FIN', NULL, NULL, 'en', 'Finnish', 'finnish speaking meeting', 'FC3'),
 (47, 'ENG', NULL, NULL, 'en', 'English speaking', 'This Meeting can be attended by speakers of English.', 'FC3'),
 (48, 'PER', NULL, NULL, 'en', 'Persian', 'Persian speeking meeting', 'FC1'),
 (49, 'L/R', NULL, NULL, 'en', 'Lithuanian/Russian', 'Lithuanian/Russian Speaking Meeting', 'FC1'),

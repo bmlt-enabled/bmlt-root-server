@@ -353,6 +353,11 @@ function parse_redirect (
 				}
 		break;
 		
+		case 'GetNAWSDump':
+		    CSVHandleNawsDump ( $http_vars, $server );
+		break;
+		
+		
 		default:
 			$result = HandleDefault ( $http_vars );
 		break;
@@ -468,6 +473,49 @@ function prepareSimpleLine ( $meeting,          /**< An associative array of mee
     $ret .= $desc;
     
     return $ret;
+}
+
+/*******************************************************************/
+/**
+    \brief  
+*/  
+function CSVHandleNawsDump ($in_http_Vars,  ///< The ID of the Service Body to dump
+                            $in_server      ///< The Root Server instance
+                            )
+{
+    $sb = $in_server->GetServiceBodyByIDObj ( intval ( $in_http_Vars['sb_id'] ) );
+    
+    if ( $sb )
+        {
+	    require_once ( dirname ( __FILE__ ).'/search_results_csv.php' );
+        $service_bodies = array ( 'services' => c_comdef_server::GetServiceBodyHierarchyIDs ( intval ( $in_http_Vars['sb_id'] ) ) );
+            
+        header ( 'Content-Type:text/csv' );
+        
+        $cc = preg_replace ( '|[\W]|', '_', strtoupper ( trim ( $sb->GetWorldID() ) ) );
+        
+        if ( preg_match ( '|^_+$|', $cc ) )
+            {
+            $cc = '';
+            }
+
+        $filename = preg_replace ( '|[\W]|', '_', strtolower ( trim ( $sb->GetLocalName() ) ) );
+        
+        if ( preg_match ( '|^_+$|', $filename ) )
+            {
+            $filename = '';
+            }
+        
+        $filename .= date ( '_Y_m_d_H_i_s' );
+    
+        if ( $cc )
+            {
+            $filename = "$cc"."_$filename";
+            }
+        
+        header ( "Content-Disposition: attachment; filename=BMLT_$filename.csv" );
+        echo ReturnNAWSFormatCSV ( $service_bodies, $in_server );
+        }
 }
 
 /*******************************************************************/
@@ -1014,7 +1062,7 @@ function HandleDefault (
 						$in_http_vars	///< The HTTP GET and POST parameters.
 						)
 	{
-	return "You must supply one of the following: 'switcher=GetSearchResults', 'switcher=GetFormats', 'switcher=GetChanges' or 'switcher=GetServiceBodies'.";
+	return "You must supply one of the following: 'switcher=GetSearchResults', 'switcher=GetFormats', 'switcher=GetChanges', 'switcher=GetNAWSDump' or 'switcher=GetServiceBodies'.";
 	}
 
 /*******************************************************************/
