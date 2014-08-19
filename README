@@ -51,7 +51,7 @@ For instructions on installing the root server, see this page:
 CHANGELIST
 ----------
 = Version 2.4.6
-* TBD
+* August 19, 2014
 * Fixed an issue with apostrophes (') causing problems.
 * Added a user-agent to the cCURL calls, as some servers filter out cURL calls.
 * Added a simpler, more direct semantic access to NAWS dumps.
