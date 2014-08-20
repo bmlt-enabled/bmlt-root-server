@@ -50,6 +50,9 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.4.7
+* TBD
+
 = Version 2.4.6
 * August 19, 2014
 * Fixed an issue with apostrophes (') causing problems.
