@@ -52,6 +52,7 @@ CHANGELIST
 ----------
 = Version 2.4.7
 * TBD
+* Added an ID to the weekday sections of the simple response (allows easy linking on display pages).
 
 = Version 2.4.6
 * August 19, 2014

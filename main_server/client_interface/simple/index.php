@@ -270,7 +270,7 @@ if ( $server instanceof c_comdef_server )
 								    $weekday_div = TRUE;
 								    if ( isset ( $in_http_vars['weekday_header'] ) && $in_http_vars['weekday_header'] )
 								        {
-								        $ret .= '<div class="weekday-header weekday-index-'.$current_weekday.'">'.htmlspecialchars ( $weekday ).'</div>';
+								        $ret .= '<div id="weekday-start-'.$current_weekday.'" class="weekday-header weekday-index-'.$current_weekday.'">'.htmlspecialchars ( $weekday ).'</div>';
 								        }
 								    }
 								
