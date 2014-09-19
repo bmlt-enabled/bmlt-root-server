@@ -4,7 +4,7 @@ defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that 
 /*
 	Working with XML. Usage: 
 	$xml=xml2ary(file_get_contents('1.xml'));
-	$link=&$xml['ddd']['_c'];
+	$link=$xml['ddd']['_c'];
 	$link['twomore']=$link['onemore'];
 	// ins2ary(); // dot not insert a link, and arrays with links inside!
 	echo ary2xml($xml);
@@ -35,29 +35,29 @@ function xml2ary(&$string) {
 	xml_parser_free($parser);
 
 	$mnary=array();
-	$ary=&$mnary;
+	$ary=$mnary;
 	foreach ($vals as $r) {
 		$t=$r['tag'];
 		if ($r['type']=='open') {
 				if (isset($ary[$t])) {
 					if (isset($ary[$t][0])) $ary[$t][]=array(); else $ary[$t]=array($ary[$t], array());
-					$cv=&$ary[$t][count($ary[$t])-1];
-				} else $cv=&$ary[$t];
+					$cv=$ary[$t][count($ary[$t])-1];
+				} else $cv=$ary[$t];
 				if (isset($r['attributes'])) {foreach ($r['attributes'] as $k=>$v) $cv['_a'][$k]=$v;}
 				$cv['_c']=array();
-				$cv['_c']['_p']=&$ary;
-				$ary=&$cv['_c'];
+				$cv['_c']['_p']=$ary;
+				$ary=$cv['_c'];
 
 		} elseif ($r['type']=='complete') {
 				if (isset($ary[$t])) { // same as open
 					if (isset($ary[$t][0])) $ary[$t][]=array(); else $ary[$t]=array($ary[$t], array());
-					$cv=&$ary[$t][count($ary[$t])-1];
-				} else $cv=&$ary[$t];
+					$cv=$ary[$t][count($ary[$t])-1];
+				} else $cv=$ary[$t];
 				if (isset($r['attributes'])) {foreach ($r['attributes'] as $k=>$v) $cv['_a'][$k]=$v;}
 				$cv['_v']=(isset($r['value']) ? $r['value'] : '');
 
 		} elseif ($r['type']=='close') {
-				$ary=&$ary['_p'];
+				$ary=$ary['_p'];
 		}
 	}	
 	

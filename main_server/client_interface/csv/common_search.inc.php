@@ -371,7 +371,7 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
                 $services = $in_http_vars['services'];
                 }
 
-			$sb =& $in_search_manager->GetServiceBodies();
+			$sb = $in_search_manager->GetServiceBodies();
 			
 			foreach ( $services as $service )
 				{
@@ -429,7 +429,7 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 		
 		if ( isset ( $in_http_vars['weekdays'] ) && is_array ( $in_http_vars['weekdays'] ) && count ( $in_http_vars['weekdays'] ) )
 			{
-			$wd =& $in_search_manager->GetWeekdays();
+			$wd = $in_search_manager->GetWeekdays();
 			foreach ( $in_http_vars['weekdays'] as $weekday )
 				{
 				$wd[intval($weekday)] = 1;
@@ -450,7 +450,7 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 		
 		if ( isset ( $in_http_vars['formats'] ) && is_array ( $in_http_vars['formats'] ) && count ( $in_http_vars['formats'] ) )
 			{
-			$fm =& $in_search_manager->GetFormats();
+			$fm = $in_search_manager->GetFormats();
 			foreach ( $in_http_vars['formats'] as $format )
 				{
 				$fm[intval($format)] = 1;

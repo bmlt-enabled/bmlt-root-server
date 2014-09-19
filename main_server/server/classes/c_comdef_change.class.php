@@ -646,8 +646,8 @@ class c_comdef_change extends t_comdef_local_type implements i_comdef_db_stored
 						// We then get pointers to the meeting data for each.
 						if ( ($before instanceof c_comdef_meeting) && ($after instanceof c_comdef_meeting) )
 							{
-							$before_data =& $before->GetMeetingData(); 
-							$after_data =& $after->GetMeetingData();
+							$before_data = $before->GetMeetingData(); 
+							$after_data = $after->GetMeetingData();
 							
 							// Make sure we're kosher.
 							if ( is_array ( $before_data ) && is_array ( $after_data ) )
@@ -826,8 +826,8 @@ class c_comdef_change extends t_comdef_local_type implements i_comdef_db_stored
 															break;
 															
 															case	'service_body_bigint':
-																$from_sb =& c_comdef_server::GetServer()->GetServiceBodyByIDObj ( intval ( $before_value ) );
-																$to_sb =& c_comdef_server::GetServer()->GetServiceBodyByIDObj ( intval ( $after_value ) );
+																$from_sb = c_comdef_server::GetServer()->GetServiceBodyByIDObj ( intval ( $before_value ) );
+																$to_sb = c_comdef_server::GetServer()->GetServiceBodyByIDObj ( intval ( $after_value ) );
 																if ( $from_sb instanceof c_comdef_service_body )
 																	{
 																	$before_value = $from_sb->GetLocalName();

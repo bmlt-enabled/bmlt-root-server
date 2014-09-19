@@ -98,7 +98,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
 	{
 		$ret = false;
 			
-		$cur_user =& c_comdef_server::GetCurrentUserObj();
+		$cur_user = c_comdef_server::GetCurrentUserObj();
 		
 		if ( $cur_user instanceof c_comdef_user )
 			{
@@ -721,7 +721,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
 		// We load the server user if one wasn't supplied.
 		if ( null == $in_user_object )
 			{
-			$in_user_object =& c_comdef_server::GetCurrentUserObj();
+			$in_user_object = c_comdef_server::GetCurrentUserObj();
 			}
 		
 		// We clone, in case changes have been made, and we don't want to screw them up.

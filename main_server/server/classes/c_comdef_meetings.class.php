@@ -76,7 +76,7 @@ class c_comdef_meetings implements i_comdef_has_parent
 	*/
 	function RemoveInvalidMeetings()
 	{
-		$cur_user =& c_comdef_server::GetCurrentUserObj();
+		$cur_user = c_comdef_server::GetCurrentUserObj();
 		
 		// Logged-in user sees dead meetings.
 		if ( !($cur_user instanceof c_comdef_user) )
@@ -227,7 +227,7 @@ class c_comdef_meetings implements i_comdef_has_parent
 			if ( $one_meeting instanceof c_comdef_meeting )
 				{
 				$id = $one_meeting->GetID();
-				$meeting =& $one_meeting;
+				$meeting = $one_meeting;
 				}
 			else
 				{
@@ -250,7 +250,7 @@ class c_comdef_meetings implements i_comdef_has_parent
 				
 				if ( $value instanceof c_comdef_service_body )
 					{
-					$this->_service_bodies_used[$key] =& $value;
+					$this->_service_bodies_used[$key] = $value;
 					}
 				
 				$meeting = new c_comdef_meeting ( $this, $one_meeting );
@@ -357,13 +357,13 @@ class c_comdef_meetings implements i_comdef_has_parent
             $in_radius *= 1.609344;
             }
 		
-		$iterating_target =& $this->GetMeetingObjects ( );
+		$iterating_target = $this->GetMeetingObjects ( );
 		foreach ( $iterating_target as &$meeting )
 			{
 			if ( $meeting instanceof c_comdef_meeting )
 				{
 				// Get a reference to the meeting data.
-				$meeting_data =& $meeting->GetMeetingData();
+				$meeting_data = $meeting->GetMeetingData();
 				$lat = $meeting->GetMeetingDataValue ( 'latitude' );
 				$long = $meeting->GetMeetingDataValue ( 'longitude' );
 
@@ -371,7 +371,7 @@ class c_comdef_meetings implements i_comdef_has_parent
 				
 				if ( self::IsInDistance ( $in_latitude, $in_longitude, $lat, $long, $in_radius, $dist ) )
 					{
-					$ret[$meeting->GetID()] =& $meeting;
+					$ret[$meeting->GetID()] = $meeting;
 					}
 				}
 			}
@@ -427,7 +427,7 @@ class c_comdef_meetings implements i_comdef_has_parent
 			foreach ( $iterating_target as &$meeting )
 				{
 				// Get a reference to the meeting data.
-				$meeting_data =& $meeting->GetMeetingData();
+				$meeting_data = $meeting->GetMeetingData();
 				
 				// We won't mess with data values that are objects or arrays.
 				if ( is_array ( $meeting_data ) && count ( $meeting_data ) )
@@ -464,7 +464,7 @@ class c_comdef_meetings implements i_comdef_has_parent
 							
 								if ( $match )
 									{
-									$reto[] =& $meeting;
+									$reto[] = $meeting;
 									}
 								/*
 									This is all new, as of Version 1.5.
@@ -499,7 +499,7 @@ class c_comdef_meetings implements i_comdef_has_parent
 								
 									if ( $found === true )
 										{
-										$reto[] =& $meeting;
+										$reto[] = $meeting;
 										}
 									}
 								}
@@ -554,7 +554,7 @@ class c_comdef_meetings implements i_comdef_has_parent
 		$local_weekdays = $localized_strings['comdef_server_admin_strings']['user_editor_account_type_1'];
 		
 		/// We force the search to happen in lowercase. This is a very basic search.
-		$iterating_target =& $this->GetMeetingObjects ( );
+		$iterating_target = $this->GetMeetingObjects ( );
 		
 		if ( is_array ( $iterating_target ) && count ( $iterating_target ) )
 			{
@@ -565,7 +565,7 @@ class c_comdef_meetings implements i_comdef_has_parent
 				if ( $meeting instanceof c_comdef_meeting )
 					{
 					// Get a reference to the meeting data.
-					$meeting_data =& $meeting->GetMeetingData();
+					$meeting_data = $meeting->GetMeetingData();
 					
 					/*
 						What we do here, is build up a list of every text field in the meeting record.
@@ -756,11 +756,11 @@ class c_comdef_meetings implements i_comdef_has_parent
 	{
 		$ret = null;
 		
-		$iterating_target =& $this->GetMeetingObjects ( );
+		$iterating_target = $this->GetMeetingObjects ( );
 		foreach ( $iterating_target as &$meeting )
 			{
 			// Get a reference to the meeting data.
-			$meeting_data =& $meeting->GetMeetingData();
+			$meeting_data = $meeting->GetMeetingData();
 			
 			foreach ( $meeting_data as $key => $value )
 				{
@@ -785,7 +785,7 @@ class c_comdef_meetings implements i_comdef_has_parent
 								)
 	{
 		$this->_sort_key = null;
-		$my_meeting_data =& $this->GetMeetingObjects ( );
+		$my_meeting_data = $this->GetMeetingObjects ( );
 
 		if ( is_array ( $my_meeting_data ) && count ( $my_meeting_data ) && is_array ( $in_sort_fields_array ) && count ( $in_sort_fields_array ) )
 			{
@@ -851,7 +851,7 @@ class c_comdef_meetings implements i_comdef_has_parent
 		
 		if ( ($object_a instanceof c_comdef_meeting) && ($object_b instanceof c_comdef_meeting) )
 			{
-			$parent =& $object_a->GetParentObj();	// This is how we get the sort key.
+			$parent = $object_a->GetParentObj();	// This is how we get the sort key.
 			if ( $parent instanceof c_comdef_meetings )
 				{
 				$sort_key = $parent->GetSortKey();
@@ -859,8 +859,8 @@ class c_comdef_meetings implements i_comdef_has_parent
 				
 				if ( is_array ( $sort_key ) && count ( $sort_key ) )
 					{
-					$meeting_data_a =& $object_a->GetMeetingData();
-					$meeting_data_b =& $object_b->GetMeetingData();
+					$meeting_data_a = $object_a->GetMeetingData();
+					$meeting_data_b = $object_b->GetMeetingData();
 					
 					if ( is_array ( $meeting_data_a ) && count ( $meeting_data_a ) && is_array ( $meeting_data_b) && count ( $meeting_data_b ) )
 						{
@@ -871,21 +871,21 @@ class c_comdef_meetings implements i_comdef_has_parent
 								// This is if we have an optional field, with a "value" sub array element.
 								if ( is_array ( $meeting_data_a[$s_key] ) && isset ( $meeting_data_a[$s_key]['value'] ) )
 									{
-									$value_a =& $meeting_data_a[$s_key]['value'];
+									$value_a = $meeting_data_a[$s_key]['value'];
 									}
 								else	// If not, we use the actual value of the parameter itself.
 									{
-									$value_a =& $meeting_data_a[$s_key];
+									$value_a = $meeting_data_a[$s_key];
 									}
 								
 								// We do the same for the next element.
 								if ( is_array ( $meeting_data_b[$s_key] ) && isset ( $meeting_data_b[$s_key]['value'] ) )
 									{
-									$value_b =& $meeting_data_b[$s_key]['value'];
+									$value_b = $meeting_data_b[$s_key]['value'];
 									}
 								else
 									{
-									$value_b =& $meeting_data_b[$s_key];
+									$value_b = $meeting_data_b[$s_key];
 									}
 								
 								// If they are strings, we do a binary-safe comparison.

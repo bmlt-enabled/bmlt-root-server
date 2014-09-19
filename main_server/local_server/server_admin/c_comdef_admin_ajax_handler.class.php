@@ -635,7 +635,7 @@ class c_comdef_admin_ajax_handler
         
             if ( $changes instanceof c_comdef_changes )
                 {
-                $obj_array =& $changes->GetChangesObjects();
+                $obj_array = $changes->GetChangesObjects();
             
                 if ( is_array ( $obj_array ) && count ( $obj_array ) )
                     {
@@ -803,7 +803,7 @@ class c_comdef_admin_ajax_handler
             {
             try
                 {
-                $service_body =& $this->my_server->GetServiceBodyByIDObj($in_sb_id);
+                $service_body = $this->my_server->GetServiceBodyByIDObj($in_sb_id);
             
                 if ( $service_body instanceof c_comdef_service_body )
                     {
@@ -853,7 +853,7 @@ class c_comdef_admin_ajax_handler
         
             if ( $changes instanceof c_comdef_changes )
                 {
-                $obj_array =& $changes->GetChangesObjects();
+                $obj_array = $changes->GetChangesObjects();
             
                 if ( is_array ( $obj_array ) && count ( $obj_array ) )
                     {
@@ -879,7 +879,7 @@ class c_comdef_admin_ajax_handler
     
         if ( $changes instanceof c_comdef_changes )
             {
-            $obj_array =& $changes->GetChangesObjects();
+            $obj_array = $changes->GetChangesObjects();
         
             if ( is_array ( $obj_array ) && count ( $obj_array ) )
                 {
@@ -927,7 +927,7 @@ class c_comdef_admin_ajax_handler
     {
         try
             {
-            $meeting =& $this->my_server->GetOneMeeting($in_meeting_id);
+            $meeting = $this->my_server->GetOneMeeting($in_meeting_id);
             
             if ( $meeting instanceof c_comdef_meeting )
                 {
@@ -980,7 +980,7 @@ class c_comdef_admin_ajax_handler
         
             if ( $changes instanceof c_comdef_changes )
                 {
-                $obj_array =& $changes->GetChangesObjects();
+                $obj_array = $changes->GetChangesObjects();
             
                 if ( is_array ( $obj_array ) && count ( $obj_array ) )
                     {
@@ -1021,7 +1021,7 @@ class c_comdef_admin_ajax_handler
             {
             if ( $in_meeting_data['id_bigint'] )
                 {
-                $meeting =& $this->my_server->GetOneMeeting($in_meeting_data['id_bigint']);
+                $meeting = $this->my_server->GetOneMeeting($in_meeting_data['id_bigint']);
                 }
             else
                 {
@@ -1039,7 +1039,7 @@ class c_comdef_admin_ajax_handler
                 if ( $meeting->UserCanEdit() )
                     {
                     $result_data = array ( 'meeting_id' => $in_meeting_data['id_bigint'] );
-                    $data =& $meeting->GetMeetingData();
+                    $data = $meeting->GetMeetingData();
 
                     // We prepare the "template" array. These are the data values for meeting 0 in the two tables.
                     // We will use them to provide default visibility values. Only the server admin can override these.

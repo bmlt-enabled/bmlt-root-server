@@ -1180,7 +1180,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 	function GetServiceBodyName()
 	{
 		$ret = $this->_my_meeting_data['service_body_bigint'];
-		$sb =& $this->GetServiceBodyObj();
+		$sb = $this->GetServiceBodyObj();
 		
 		if ( $sb instanceof c_comdef_service_body )
 			{
@@ -1317,8 +1317,8 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 						$in_format	///< An integer, containing the format to be added.
 						)
 	{
-		$myData =& $this->GetMeetingData();
-		$my_formats =& c_comdef_server::GetServer()->GetFormatsObj();
+		$myData = $this->GetMeetingData();
+		$my_formats = c_comdef_server::GetServer()->GetFormatsObj();
 		
 		// If we already have the format, we don't add it, but there's no error.
 		if ( !isset ( $myData['formats'][$in_format] ) )
@@ -1343,7 +1343,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 						$in_format	///< An integer, containing the format to be removed.
 						)
 	{
-		$myData =& $this->GetMeetingData();
+		$myData = $this->GetMeetingData();
 
 		if ( isset ( $myData['formats'][$in_format] ) )
 			{
@@ -1590,7 +1590,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 		
 		if ( !$ret )
 			{
-			$service_body =& $this->GetServiceBodyObj();
+			$service_body = $this->GetServiceBodyObj();
 			
 			if ( $service_body instanceof c_comdef_service_body )
 				{
@@ -1626,12 +1626,12 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 			if ( ($in_user_object->GetUserLevel() != _USER_LEVEL_SERVER_ADMIN) && ($in_user_object->GetUserLevel() != _USER_LEVEL_DISABLED) && (($in_user_object->GetUserLevel() == _USER_LEVEL_EDITOR) || ($in_user_object->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN)) )
 				{
 				// If there is an existing object, then we can't make changes unless it's allowed in the existing object.
-				$current_obj =& c_comdef_server::GetServer()->GetOneMeeting ( $this->GetID() );
+				$current_obj = c_comdef_server::GetServer()->GetOneMeeting ( $this->GetID() );
 				
 				// If there is no current object, then we are a new meeting.
 				if ( null == $current_obj )
 					{
-					$current_obj =& $this;
+					$current_obj = $this;
 					}
 				else
 					{
@@ -1643,7 +1643,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 				
 				if ( $current_obj instanceof c_comdef_meeting )
 					{
-					$my_service_body =& c_comdef_server::GetServiceBodyByIDObj ( $current_obj->GetServiceBodyID() );
+					$my_service_body = c_comdef_server::GetServiceBodyByIDObj ( $current_obj->GetServiceBodyID() );
 					
 					if ( $in_user_object->GetUserLevel() == _USER_LEVEL_EDITOR )
 						{
@@ -1690,12 +1690,12 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 			if ( $in_user_object->GetUserLevel() == _USER_LEVEL_OBSERVER )
 				{
 				// If there is an existing object, then we can't make changes unless it's allowed in the existing object.
-				$current_obj =& c_comdef_server::GetServer()->GetOneMeeting ( $this->GetID() );
+				$current_obj = c_comdef_server::GetServer()->GetOneMeeting ( $this->GetID() );
 				
 				// If there is no current object, then we are a new meeting.
 				if ( null == $current_obj )
 					{
-					$current_obj =& $this;
+					$current_obj = $this;
 					}
 				else
 					{
@@ -1707,7 +1707,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 				
 				if ( $current_obj instanceof c_comdef_meeting )
 					{
-					$my_service_body =& c_comdef_server::GetServiceBodyByIDObj ( $current_obj->GetServiceBodyID() );
+					$my_service_body = c_comdef_server::GetServiceBodyByIDObj ( $current_obj->GetServiceBodyID() );
 					
 					if ( ($my_service_body instanceof c_comdef_service_body) && $my_service_body->IsUserInServiceBodyHierarchy ( $in_user_object ) )
 						{

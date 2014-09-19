@@ -778,7 +778,7 @@ function GetServiceBodies   (
 	
 	try
 		{
-        $array_obj =& $server->GetServiceBodyArray();
+        $array_obj = $server->GetServiceBodyArray();
         if ( is_array ( $array_obj ) && count ( $array_obj ) )
             {
             foreach ( $array_obj as &$sb )
@@ -827,7 +827,7 @@ function GetChanges (
 		$change_objects = c_comdef_server::GetChangesFromIDAndType ( 'c_comdef_meeting', null, $in_start_date, $in_end_date );
 		if ( $change_objects instanceof c_comdef_changes )
 			{
-			$obj_array =& $change_objects->GetChangesObjects();
+			$obj_array = $change_objects->GetChangesObjects();
 			
 			if ( is_array ( $obj_array ) && count ( $obj_array ) )
 				{

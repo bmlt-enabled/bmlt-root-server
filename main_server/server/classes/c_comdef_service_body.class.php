@@ -100,7 +100,7 @@ class c_comdef_service_body extends t_comdef_world_type implements i_comdef_db_s
 			$before = null;
 			$before_id = null;
 			$before_lang = null;
-			$before_obj =& c_comdef_server::GetServiceBodyByIDObj ( $this->GetID() );
+			$before_obj = c_comdef_server::GetServiceBodyByIDObj ( $this->GetID() );
 			
 			if ( $before_obj instanceof c_comdef_service_body )
 				{
@@ -480,7 +480,7 @@ class c_comdef_service_body extends t_comdef_world_type implements i_comdef_db_s
 	function &GetOwnerIDObject()
 	{
 		$owner_id = $this->GetOwnerID();
-		$ret =& c_comdef_server::GetServiceBodyByIDObj ( $owner_id );
+		$ret = c_comdef_server::GetServiceBodyByIDObj ( $owner_id );
 		return $ret;
 	}
 	
@@ -621,7 +621,7 @@ class c_comdef_service_body extends t_comdef_world_type implements i_comdef_db_s
 		
 		if ( !$ret && $in_recursive )
 			{
-			$owner =& $this->GetOwnerIDObject();
+			$owner = $this->GetOwnerIDObject();
 			
 			if ( $owner instanceof c_comdef_service_body )
 				{
@@ -665,7 +665,7 @@ class c_comdef_service_body extends t_comdef_world_type implements i_comdef_db_s
 		
 		foreach ( $editor_ids as $id )
 			{
-			$ret_array[$id] =& c_comdef_server::GetUserByIDObj ( $id );
+			$ret_array[$id] = c_comdef_server::GetUserByIDObj ( $id );
 			}
 		
 		return $ret_array;
@@ -950,7 +950,7 @@ class c_comdef_service_body extends t_comdef_world_type implements i_comdef_db_s
 			if ( $in_user_object->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN )
 				{
 				// If there is an existing object, then we can't make changes unless it's allowed in the existing object.
-				$current_obj =& c_comdef_server::GetServiceBodyByIDObj ( $this->GetID() );
+				$current_obj = c_comdef_server::GetServiceBodyByIDObj ( $this->GetID() );
 				
 				$new_obj = false;
 				
@@ -963,7 +963,7 @@ class c_comdef_service_body extends t_comdef_world_type implements i_comdef_db_s
 					}
 				else
 					{
-					$current_obj =& $this;
+					$current_obj = $this;
 					}
 				
 				if ( $current_obj instanceof c_comdef_service_body )
@@ -1004,11 +1004,11 @@ class c_comdef_service_body extends t_comdef_world_type implements i_comdef_db_s
 						)
 		{
 		$ret = false;
-		$server =& c_comdef_server::GetServer();
+		$server = c_comdef_server::GetServer();
 		
 		if ( $server instanceof c_comdef_server )
 			{
-			$sb_to_check =& $server->GetServiceBodyByIDObj($in_sb_id);
+			$sb_to_check = $server->GetServiceBodyByIDObj($in_sb_id);
 			
 			$parent = $this->GetOwnerID();
 			
@@ -1020,7 +1020,7 @@ class c_comdef_service_body extends t_comdef_world_type implements i_comdef_db_s
 				{
 				if ( $parent )
 					{
-					$sb_to_check =& $server->GetServiceBodyByIDObj($parent);
+					$sb_to_check = $server->GetServiceBodyByIDObj($parent);
 					
 					if ( $sb_to_check instanceof c_comdef_service_body )
 						{

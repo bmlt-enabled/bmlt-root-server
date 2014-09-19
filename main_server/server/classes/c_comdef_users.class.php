@@ -102,7 +102,7 @@ class c_comdef_users implements i_comdef_has_parent
 			{
 			if ( $in_user_id == $user->GetID() )
 				{
-				$ret =& $user;
+				$ret = $user;
 				break;
 				}
 			}
@@ -149,7 +149,7 @@ class c_comdef_users implements i_comdef_has_parent
 			{
 			if ( ($in_login == $user->GetLogin()) )
 				{
-				$ret =& $user;
+				$ret = $user;
 				break;
 				}
 			}
@@ -174,7 +174,7 @@ class c_comdef_users implements i_comdef_has_parent
 			{
 			if ( ($in_login == $user->GetLogin()) && ($in_password == $user->GetPassword()) )
 				{
-				$ret =& $user;
+				$ret = $user;
 				break;
 				}
 			}

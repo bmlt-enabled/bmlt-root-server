@@ -69,7 +69,7 @@ if ( isset ( $http_vars['lang_enum'] ) && $http_vars['lang_enum'] )
     $lang_enum = $http_vars['lang_enum'];
     }
 
-if ( $g_enable_language_selector )
+if ( isset ( $g_enable_language_selector ) && $g_enable_language_selector )
     {
     $expires = time() + (60 * 60 * 24 * 365);   // Expire in one year.
     setcookie ( 'bmlt_admin_lang_pref', $lang_enum, $expires, '/' );
@@ -341,7 +341,7 @@ function c_comdef_LoginForm(	&$in_server	///< A reference to an instance of c_co
                     $ret .= '<label for="c_comdef_admin_password">'.c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['password'] ).$localized_strings['prompt_delimiter'].'</label>';
                     $ret .= '<input type="password" id="c_comdef_admin_password" name="c_comdef_admin_password" value="" />';
                 $ret .= '</div>';
-                if ( $g_enable_language_selector)
+                if ( isset ( $g_enable_language_selector ) && $g_enable_language_selector )
                     {
                     $ret .= '<div id="lang_enum_select_div" class="c_comdef_admin_login_form_line_div">';
                         $ret .= '<select id="lang_enum_select" name="lang_enum">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');

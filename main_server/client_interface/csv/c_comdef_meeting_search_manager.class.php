@@ -164,24 +164,24 @@ class c_comdef_meeting_search_manager
 		// If this is a page of results, we set up the object to reference the root.
 		if ( $in_parent instanceof c_comdef_meeting_search_manager )
 			{
-			$this->_my_root =& $in_parent;
+			$this->_my_root = $in_parent;
 			// These all reference the root object's values.
-			$this->_formats =& $in_parent->_formats;
-			$this->_service_bodies =& $in_parent->_service_bodies;
-			$this->_languages =& $in_parent->_languages;
-			$this->_weekdays =& $in_parent->_weekdays;
-			$this->_start_after =& $in_parent->_start_after;
-			$this->_start_before =& $in_parent->_start_before;
-			$this->_min_duration =& $in_parent->_min_duration;
-			$this->_max_duration =& $in_parent->_max_duration;
-			$this->_search_radius =& $in_parent->_search_radius;
-			$this->_search_center_long =& $in_parent->_search_center_long;
-			$this->_search_center_lat =& $in_parent->_search_center_lat;
-			$this->_search_string =& $in_parent->_search_string;
-			$this->_meeting_id_array =& $in_parent->_meeting_id_array;
-			$this->_published_search =& $in_parent->_published_search;
+			$this->_formats = $in_parent->_formats;
+			$this->_service_bodies = $in_parent->_service_bodies;
+			$this->_languages = $in_parent->_languages;
+			$this->_weekdays = $in_parent->_weekdays;
+			$this->_start_after = $in_parent->_start_after;
+			$this->_start_before = $in_parent->_start_before;
+			$this->_min_duration = $in_parent->_min_duration;
+			$this->_max_duration = $in_parent->_max_duration;
+			$this->_search_radius = $in_parent->_search_radius;
+			$this->_search_center_long = $in_parent->_search_center_long;
+			$this->_search_center_lat = $in_parent->_search_center_lat;
+			$this->_search_string = $in_parent->_search_string;
+			$this->_meeting_id_array = $in_parent->_meeting_id_array;
+			$this->_published_search = $in_parent->_published_search;
 			
-			$this->_my_server =& $in_parent->_my_server;
+			$this->_my_server = $in_parent->_my_server;
 			
 			// These may get changed by this instance.
 			$this->sort_array = $in_parent->sort_array;	
@@ -303,7 +303,7 @@ class c_comdef_meeting_search_manager
 		if ( $this->_my_server instanceof c_comdef_server )
 			{
 			// Start by getting the service bodies aggregator object.
-			$bodies =& $this->_my_server->GetServiceBodyArray();
+			$bodies = $this->_my_server->GetServiceBodyArray();
 			if ( is_array ( $bodies ) && count ( $bodies ) )
 				{
 				foreach ( $bodies as $body )
@@ -496,10 +496,10 @@ class c_comdef_meeting_search_manager
 				{
 				if ( $main_array[$index] instanceof c_comdef_meeting )
 					{
-					$data =& $main_array[$index]->GetMeetingData();
+					$data = $main_array[$index]->GetMeetingData();
 					if ( is_array ( $data ) && count ( $data ) )
 						{
-						$ret_array[$data['id_bigint']] =& $main_array[$index];
+						$ret_array[$data['id_bigint']] = $main_array[$index];
 						}
 					}
 				}
@@ -516,7 +516,7 @@ class c_comdef_meeting_search_manager
 			}
 		elseif ( $this->_my_root instanceof c_comdef_meeting_search_manager )
 			{
-			$ret =& $this->_my_root->GetPageOfResults($in_page_no);
+			$ret = $this->_my_root->GetPageOfResults($in_page_no);
 			}
 
 		return $ret;
@@ -623,11 +623,11 @@ class c_comdef_meeting_search_manager
 		
 		if ( $this->_my_root instanceof c_comdef_meeting_search_manager )
 			{
-			$ret =& $this->_my_root;
+			$ret = $this->_my_root;
 			}
 		else
 			{
-			$ret =& $this;
+			$ret = $this;
 			}
 		
 		return $ret;
@@ -895,7 +895,7 @@ class c_comdef_meeting_search_manager
 		// Basic error checking.
 		if ( $this->_my_server instanceof c_comdef_server )
 			{
-			$ret =& $this->_my_server->GetServerLangs();
+			$ret = $this->_my_server->GetServerLangs();
 			}
 		
 		return $ret;
@@ -919,7 +919,7 @@ class c_comdef_meeting_search_manager
 		// Basic error checking.
 		if ( $this->_my_server instanceof c_comdef_server )
 			{
-			$ret =& $this->_my_server->GetServiceBodyArray();
+			$ret = $this->_my_server->GetServiceBodyArray();
 			}
 		
 		return $ret;
@@ -945,11 +945,11 @@ class c_comdef_meeting_search_manager
 		if ( $this->_my_server instanceof c_comdef_server )
 			{
 			// Start by getting the format aggregator object.
-			$formats_obj =& $this->_my_server->GetFormatsObj();
+			$formats_obj = $this->_my_server->GetFormatsObj();
 			
 			if ( $formats_obj instanceof c_comdef_formats )
 				{
-				$ret =& $formats_obj->GetFormatsArray();
+				$ret = $formats_obj->GetFormatsArray();
 				}
 			}
 		
@@ -1184,11 +1184,11 @@ class c_comdef_meeting_search_manager
 		
 		if ( $this->GetSearchResults_Obj () instanceof c_comdef_meetings )
 			{
-			$s_array =& $this->GetSearchResults_Obj ()->GetMeetingObjects();
+			$s_array = $this->GetSearchResults_Obj ()->GetMeetingObjects();
 			
 			if ( is_array ( $s_array ) && count ( $s_array ) )
 				{
-				$ret =& $s_array;
+				$ret = $s_array;
 				}
 			}
 		

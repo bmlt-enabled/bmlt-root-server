@@ -426,7 +426,7 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
                 }
 		
 			$ret .= ',"'.join ( '","', $formats_keys_header ).'"'."\n";
-			$in_ar =& $page_data->GetSearchResultsAsArray ( );
+			$in_ar = $page_data->GetSearchResultsAsArray ( );
 			
 			if ( isset ( $return_results ) && is_array ( $return_results ) )
 			    {
@@ -703,7 +703,7 @@ function ReturnNAWSDeletedMeetings (
 	if ( $changes instanceof c_comdef_changes )
 		{
 		$ret = array();
-		$c_array =& $changes->GetChangesObjects();
+		$c_array = $changes->GetChangesObjects();
 		
 		if ( is_array ( $c_array ) && count ( $c_array ) )
 			{

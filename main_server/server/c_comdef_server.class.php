@@ -322,7 +322,7 @@ class c_comdef_server
         
         if ( $this->_users_obj instanceof c_comdef_users )
             {
-            $ar =& $this->_users_obj->GetUsersArray();
+            $ar = $this->_users_obj->GetUsersArray();
             
             foreach ( $ar as &$u )
                 {
@@ -439,7 +439,7 @@ class c_comdef_server
                 {
                 $key = $rs['service_body_bigint'];
                 $value = $key;
-                $obj =& self::GetServiceBodyByIDObj ( $key );
+                $obj = self::GetServiceBodyByIDObj ( $key );
                 if ( $obj instanceof c_comdef_service_body )
                     {
                     $name = trim ( $obj->GetLocalName() );
@@ -501,7 +501,7 @@ class c_comdef_server
             if ( $sb instanceof c_comdef_service_body )
                 {
                 $id = $sb->GetID();
-                $ret_array['object'] =& $sb;
+                $ret_array['object'] = $sb;
                 }
             }
 
@@ -600,7 +600,7 @@ class c_comdef_server
     {
         $ret = 0;
         
-        $meeting_to_copy =& self::GetOneMeeting ( $in_meeting_id );
+        $meeting_to_copy = self::GetOneMeeting ( $in_meeting_id );
         
         if ( $meeting_to_copy instanceof c_comdef_meeting )
             {
@@ -884,11 +884,11 @@ class c_comdef_server
         if ( $change_limit )
             {
             // Get rid of oldest change first.
-            $changes =& self::GetChangesFromIDAndType( $in_type, $in_id );
+            $changes = self::GetChangesFromIDAndType( $in_type, $in_id );
 
             if ( $changes instanceof c_comdef_changes )
                 {
-                $ch_objs =& $changes->GetChangesObjects();
+                $ch_objs = $changes->GetChangesObjects();
                 
                 if ( is_array ( $ch_objs ) )
                     {
@@ -1071,11 +1071,11 @@ class c_comdef_server
 
         if ( 0 < intval ( $in_user_id_bigint ) )
             {
-            $users_obj =& self::GetServer()->_users_obj;
+            $users_obj = self::GetServer()->_users_obj;
             
             if ( $users_obj instanceof c_comdef_users )
                 {
-                $ret =& $users_obj->GetUserByID ( $in_user_id_bigint );
+                $ret = $users_obj->GetUserByID ( $in_user_id_bigint );
                 }
             }
         
@@ -1093,11 +1093,11 @@ class c_comdef_server
     {
         $ret = null;
         
-        $users_obj =& self::GetServer()->_users_obj;
+        $users_obj = self::GetServer()->_users_obj;
         
         if ( $users_obj instanceof c_comdef_users )
             {
-            $ret =& $users_obj->GetUserByLogin ( $in_login );
+            $ret = $users_obj->GetUserByLogin ( $in_login );
             }
         
         return $ret;
@@ -1116,11 +1116,11 @@ class c_comdef_server
     {
         $ret = null;
         
-        $users_obj =& self::GetServer()->_users_obj;
+        $users_obj = self::GetServer()->_users_obj;
         
         if ( $users_obj instanceof c_comdef_users )
             {
-            $ret =& $users_obj->GetUserByLoginCredentials ( $in_login, $in_password );
+            $ret = $users_obj->GetUserByLoginCredentials ( $in_login, $in_password );
             }
         
         return $ret;
@@ -1147,7 +1147,7 @@ class c_comdef_server
     if ( isset ( $_SESSION[$admin_session_name] ) )
         {
         list ( $login_id, $encrypted_password ) = explode ( "\t", $_SESSION[$admin_session_name] );
-        $ret =& self::GetUserByLoginCredentials ( $login_id, $encrypted_password );
+        $ret = self::GetUserByLoginCredentials ( $login_id, $encrypted_password );
         }
 
     return $ret;
@@ -1166,7 +1166,7 @@ class c_comdef_server
     
     if ( !($in_user_obj instanceof c_comdef_user) )
         {
-        $in_user_obj =& self::GetCurrentUserObj($in_is_ajax);
+        $in_user_obj = self::GetCurrentUserObj($in_is_ajax);
         }
     
     if ( $in_user_obj instanceof c_comdef_user )
@@ -1189,7 +1189,7 @@ class c_comdef_server
     {
     $ret = null;
     
-    $users_obj =& self::GetServer()->_users_obj;
+    $users_obj = self::GetServer()->_users_obj;
     
     if ( $users_obj instanceof c_comdef_users )
         {
@@ -1212,17 +1212,17 @@ class c_comdef_server
     {
         $ret_array = null;
             
-        $users_obj =& self::GetServer()->_users_obj;
+        $users_obj = self::GetServer()->_users_obj;
         
         if ( $users_obj instanceof c_comdef_users )
             {
-            $user_array =& $users_obj->GetUsersArray();
+            $user_array = $users_obj->GetUsersArray();
             
             foreach ( $user_array as &$user_obj )
                 {
                 if ( ($user_obj->GetUserLevel() > 0) && ($in_include_disabled || ($user_obj->GetUserLevel() != _USER_LEVEL_DISABLED)) && (($user_obj->GetUserLevel() == $in_user_level_bigint) || ($in_or_higher && ($user_obj->GetUserLevel() < $in_user_level_bigint))) )
                     {
-                    $ret_array[$user_obj->GetID()] =& $user_obj;
+                    $ret_array[$user_obj->GetID()] = $user_obj;
                     }
                 }
             }
@@ -1243,7 +1243,7 @@ class c_comdef_server
         $server = self::GetServer();
         if ( $server instanceof c_comdef_server )
             {
-            $array_obj =& $server->GetServiceBodyArray();
+            $array_obj = $server->GetServiceBodyArray();
             if ( is_array ( $array_obj ) && count ( $array_obj ) )
                 {
                 foreach ( $array_obj as &$sb )
@@ -1253,7 +1253,7 @@ class c_comdef_server
                         $id = $sb->GetID();
                         if ( intval ( $in_service_body_id_bigint ) == intval ( $id ) )
                             {
-                            $ret =& $sb;
+                            $ret = $sb;
                             }
                         }
                     }
@@ -1273,10 +1273,10 @@ class c_comdef_server
                                                 )
     {
         $ret = array();
-        $server =& self::GetServer();
+        $server = self::GetServer();
         if ( $server instanceof c_comdef_server )
             {
-            $array_obj =& $server->GetServiceBodyArray();
+            $array_obj = $server->GetServiceBodyArray();
             if ( is_array ( $array_obj ) && count ( $array_obj ) )
                 {
                 foreach ( $array_obj as &$sb )
@@ -1452,7 +1452,7 @@ class c_comdef_server
         
         if ( $changes instanceof c_comdef_changes )
             {
-            $c_array =& $changes->GetChangesObjects();
+            $c_array = $changes->GetChangesObjects();
             
             if ( is_array ( $c_array ) && count ( $c_array ) )
                 {
@@ -2036,7 +2036,7 @@ class c_comdef_server
                 {
                 $center_lat = ($north + $south) / 2.0;
                 $center_long = ($east + $west) / 2.0;
-                $meetings =& $ret->GetMeetingObjects();
+                $meetings = $ret->GetMeetingObjects();
                 foreach ( $meetings as &$meeting )
                     {
                     $dist = c_comdef_meetings::GetDistance ( $center_lat, $center_long, $meeting->GetMeetingDataValue('latitude'), $meeting->GetMeetingDataValue('longitude') );
@@ -2128,10 +2128,10 @@ class c_comdef_server
                                             $in_formats     ///< An array of integers. These are formats. The filtering will be an "AND" filtering, so qualified meetings must have all of the given formats.
                                             )
     {
-        $meetings =& $in_meetings->GetMeetingObjects();
+        $meetings = $in_meetings->GetMeetingObjects();
         foreach ( $meetings as &$meeting )
             {
-            $data =& $meeting->GetMeetingData();
+            $data = $meeting->GetMeetingData();
             $formats = $data['formats'];
             $found = 0;
             foreach ( $formats as $key => $value )
@@ -2616,7 +2616,7 @@ class c_comdef_server
             $in_user_id = self::GetCurrentUserObj()->GetID();
             }
         
-        $service_bodies =& c_comdef_server::GetServer()->GetServiceBodyArray();
+        $service_bodies = c_comdef_server::GetServer()->GetServiceBodyArray();
         
         if ( is_array ( $service_bodies ) && count ( $service_bodies ) )
             {
