@@ -480,10 +480,17 @@ class c_comdef_meeting_search_manager
 		if ( !$this->_my_root && $this->_search_results instanceof c_comdef_meetings )
 			{
 			// This is the starting index for our page of results.
-			$main_array = $this->_search_results->GetMeetingObjects();
+			$main_array_1 = $this->_search_results->GetMeetingObjects();
+			$main_array = array();
+			foreach ( $main_array_1 as $meeting )
+			    {
+			    array_push ( $main_array, $meeting );
+			    }
+			    
 			$ret_array = array();
 			$min = $this->GetResultsPerPage() * ($in_page_no - 1);
-			if ( intval ( $this->GetResultsPerPage() ) > 0 )
+            $actual = intval ( $this->GetResultsPerPage() );
+			if ( $actual > 0 )
 				{
 				$max = min ( count ( $main_array ), $min + $this->GetResultsPerPage() );
 				}
@@ -492,7 +499,7 @@ class c_comdef_meeting_search_manager
 				$max = $this->GetNumberOfResults ( );
 				}
 			
-			for ( $index = $min; $index < $max; $index++ )
+			for ( $index = intval ( $min ); $index < intval ( $max ); $index++ )
 				{
 				if ( $main_array[$index] instanceof c_comdef_meeting )
 					{
@@ -1001,7 +1008,9 @@ class c_comdef_meeting_search_manager
 	{
 		$this->GetSearchResults_Obj(true);
 		
-		return $this->GetNumberOfResults();
+		$ret = $this->GetNumberOfResults();
+		
+		return $ret;
 	}
 	
 	/*******************************************************************/
@@ -1111,7 +1120,6 @@ class c_comdef_meeting_search_manager
 					
 					// Do the main database search first.
 					$null_me = null;
-
 					$this->_search_results = c_comdef_server::GetMeetings (	$service_bodies,
 																			$languages,
 																			$weekdays,

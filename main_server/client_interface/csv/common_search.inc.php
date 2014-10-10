@@ -371,7 +371,7 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
                 $services = $in_http_vars['services'];
                 }
 
-			$sb = $in_search_manager->GetServiceBodies();
+			$sb =& $in_search_manager->GetServiceBodies();
 			
 			foreach ( $services as $service )
 				{

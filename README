@@ -51,10 +51,11 @@ For instructions on installing the root server, see this page:
 CHANGELIST
 ----------
 = Version 2.4.7
-* TBD
+* October 9, 2014
 * Added an ID to the weekday sections of the simple response (allows easy linking on display pages).
 * Fixed a number of warnings.
 * Added some satellite fixes.
+* Fixed a rather nasty error in the semantic response that could have caused a lot of bad search results. I'm shocked I haven't heard anything.
 
 = Version 2.4.6
 * August 19, 2014
