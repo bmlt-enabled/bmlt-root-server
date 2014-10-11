@@ -50,6 +50,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.4.8
+* TBD
+* Fixed an issue where low-numbered ASCs and RSCs did not have leading zeroes in the NAWS export, which could cause issues for NAWS.
+
 = Version 2.4.7
 * October 9, 2014
 * Added an ID to the weekday sections of the simple response (allows easy linking on display pages).

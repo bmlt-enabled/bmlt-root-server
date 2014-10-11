@@ -21,6 +21,8 @@ defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that 
 require_once ( dirname ( __FILE__ ).'/../../server/c_comdef_server.class.php');
 require_once ( dirname ( __FILE__ ).'/../../server/shared/Array2Json.php');
 
+// #define ( '__NAWS_IMPORT__', 1 )    /* Uncomment to enable the NAWS import functionality. */
+
 /************************************************************************************************************//**
     \class c_comdef_admin_main_console
     \brief Controls display of the main BMLT administration console.
@@ -791,6 +793,13 @@ class c_comdef_admin_main_console
                         $ret .= '</span>';
                         $ret .= '<div class="clear_both"></div>';
                     $ret .= '</div>';
+                    
+                    // This is the part of the form that allows us to import a list of IDs from NAWS, and replace them in our database.
+                    if ( defined ( '__NAWS_IMPORT__' ) )
+                        {
+                        $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                        $ret .= '</div>';
+                        }
                     }
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_sb_name_label'] ).'</span>';

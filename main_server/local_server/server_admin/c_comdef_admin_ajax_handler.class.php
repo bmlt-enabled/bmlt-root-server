@@ -54,6 +54,27 @@ class c_comdef_admin_ajax_handler
             }
     }
     
+    /*******************************************************************/
+    /**
+        \brief 
+    */
+    function parse_naws_response_csv ( $inFileRecord,   ///< This is a reference to the uploaded file record of the input CSV file.
+                                        $inServer       ///< The instance of BMLT server to use.
+                                    )
+    {
+        if ( $inFileRecord && ($inServer instanceof c_comdef_server) )
+            {
+            $csv_array = fgetcsv ( $inFileRecord );
+        
+            if ( isset ( $csv_array ) && is_array ( $csv_array ) && (count ( $csv_array ) > 0) )
+                {
+                foreach ( $csv_array as $line )
+                    {
+                    }
+                }
+            }
+    }
+
     /*******************************************************************************************************//**
     \brief
     \returns

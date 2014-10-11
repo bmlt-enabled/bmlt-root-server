@@ -1126,14 +1126,14 @@ function BMLT_FuncNAWSReturnMeetingServiceBodyNAWSID (	$in_meeting_id,	///< The 
 				{
 				if ( $ret2 )
 					{
-					$ret = sprintf ( 'AR%d', $ret2 );
+					$ret = sprintf ( 'AR%05d', $ret2 );
 					}
 				}
 			elseif ( $service_body->GetSBType () == c_comdef_service_body__RSC__ )
 				{
 				if ( $ret2 )
 					{
-					$ret = sprintf ( 'RG%d', $ret2 );
+					$ret = sprintf ( 'RG%03d', $ret2 );
 					}
 				}
 			}

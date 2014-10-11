@@ -524,7 +524,7 @@ function CSVHandleNawsDump ($in_http_Vars,  ///< The ID of the Service Body to d
 	
 	\returns an associative array. Each main element will be one line, and each line will be an associative array of fields. If a field is not present in the line, it is not included.
 */	
-function returnArrayFromCSV ( $inCSVArray   ///< A array of CSV data, slit as lines (each element is a single text line of CSV data). the first line is the header (array keys).
+function returnArrayFromCSV ( $inCSVArray   ///< A array of CSV data, split as lines (each element is a single text line of CSV data). the first line is the header (array keys).
 )
 {
     $ret = NULL;
