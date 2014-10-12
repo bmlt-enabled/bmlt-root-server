@@ -1120,6 +1120,7 @@ class c_comdef_meeting_search_manager
 					
 					// Do the main database search first.
 					$null_me = null;
+
 					$this->_search_results = c_comdef_server::GetMeetings (	$service_bodies,
 																			$languages,
 																			$weekdays,
