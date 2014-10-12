@@ -612,8 +612,9 @@ function BMLT_Server_Admin ()
         tab_specifier_element.className = 'bmlt_admin_tab_div_left bmlt_admin_tab_div_selected';
         tab_editor_element.className = 'bmlt_admin_tab_div_right bmlt_admin_tab_div_not_selected';
         
-        tab_specifier_link.href = null;
+        tab_editor_link.setAttribute ( 'href', '' );
         tab_editor_link.href = 'javascript:admin_handler_object.selectMeetingEditorTab()';
+        tab_specifier_link.removeAttribute ( "href" );
         
         search_specifier_element.className = 'bmlt_admin_meeting_editor_form_specifier_div';
         meeting_editor_element.className = 'bmlt_admin_meeting_editor_form_div item_hidden';
@@ -1242,8 +1243,9 @@ function BMLT_Server_Admin ()
         tab_specifier_element.className = 'bmlt_admin_tab_div_left bmlt_admin_tab_div_not_selected';
         tab_editor_element.className = 'bmlt_admin_tab_div_right bmlt_admin_tab_div_selected';
         
+        tab_specifier_link.setAttribute ( 'href', '' );
         tab_specifier_link.href = 'javascript:admin_handler_object.selectSearchSpecifierTab()';
-        tab_editor_link.href = null;
+        tab_editor_link.removeAttribute ( "href" );
         
         search_specifier_element.className = 'bmlt_admin_meeting_editor_form_specifier_div item_hidden';
         meeting_editor_element.className = 'bmlt_admin_meeting_editor_form_div';
@@ -2419,16 +2421,21 @@ function BMLT_Server_Admin ()
 
             if ( zip_text || borough_text || city_text || state_text || nation_text )
                 {
+                set_ll_to_address_button.setAttribute ( 'href', '' );
+                set_map_to_address_button.setAttribute ( 'href', '' );
+                
                 set_ll_to_address_button.href = 'javascript:admin_handler_object.setMapToAddress(' + in_meeting_id + ')';
                 set_map_to_address_button.href = 'javascript:admin_handler_object.setMapToAddress(' + in_meeting_id + ')';
+                
                 set_ll_to_address_button.className = 'bmlt_admin_ajax_button';
                 set_map_to_address_button.className = 'bmlt_admin_ajax_button';
                 }
             else
                 {
-                set_ll_to_address_button.href = null;
-                set_map_to_address_button.className = 'bmlt_admin_ajax_button button_disabled';
-                set_ll_to_address_button.href = null;
+                set_ll_to_address_button.removeAttribute ( "href" );
+                set_map_to_address_button.removeAttribute ( "href" );
+                
+                set_ll_to_address_button.className = 'bmlt_admin_ajax_button button_disabled';
                 set_map_to_address_button.className = 'bmlt_admin_ajax_button button_disabled';
                 };
             };

@@ -53,6 +53,7 @@ CHANGELIST
 = Version 2.4.8
 * TBD
 * Fixed an issue where low-numbered ASCs and RSCs did not have leading zeroes in the NAWS export, which could cause issues for NAWS.
+* Fixed a couple of issues with the meeting editors, where inactive anchor elements could cause "page not found" errors.
 
 = Version 2.4.7
 * October 9, 2014
