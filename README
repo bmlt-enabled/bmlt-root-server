@@ -50,8 +50,12 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.4.10
+* October 14, 2014
+* Fixed another issue, where simple searches weren't sorting properly (again, overzealous warning compensation).
+
 = Version 2.4.9
-* October 12, 2014
+* October 13, 2014
 * Fixed another issue, where meeting edits were being ignored (again, overzealous warning compensation).
 
 = Version 2.4.8

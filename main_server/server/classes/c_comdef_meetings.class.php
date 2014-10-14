@@ -785,7 +785,7 @@ class c_comdef_meetings implements i_comdef_has_parent
 								)
 	{
 		$this->_sort_key = null;
-		$my_meeting_data = $this->GetMeetingObjects ( );
+		$my_meeting_data =& $this->GetMeetingObjects ( );
 
 		if ( is_array ( $my_meeting_data ) && count ( $my_meeting_data ) && is_array ( $in_sort_fields_array ) && count ( $in_sort_fields_array ) )
 			{
