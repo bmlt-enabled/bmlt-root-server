@@ -948,7 +948,7 @@ class c_comdef_admin_ajax_handler
     {
         try
             {
-            $meeting = $this->my_server->GetOneMeeting($in_meeting_id);
+            $meeting =& $this->my_server->GetOneMeeting($in_meeting_id);
             
             if ( $meeting instanceof c_comdef_meeting )
                 {
@@ -1042,7 +1042,7 @@ class c_comdef_admin_ajax_handler
             {
             if ( $in_meeting_data['id_bigint'] )
                 {
-                $meeting = $this->my_server->GetOneMeeting($in_meeting_data['id_bigint']);
+                $meeting =& $this->my_server->GetOneMeeting($in_meeting_data['id_bigint']);
                 }
             else
                 {
@@ -1060,7 +1060,7 @@ class c_comdef_admin_ajax_handler
                 if ( $meeting->UserCanEdit() )
                     {
                     $result_data = array ( 'meeting_id' => $in_meeting_data['id_bigint'] );
-                    $data = $meeting->GetMeetingData();
+                    $data =& $meeting->GetMeetingData();
 
                     // We prepare the "template" array. These are the data values for meeting 0 in the two tables.
                     // We will use them to provide default visibility values. Only the server admin can override these.
@@ -1167,7 +1167,6 @@ class c_comdef_admin_ajax_handler
                             break;
                             }
                         }
-                    
                     if ( $meeting->UpdateToDB() )
                         {
                         header ( 'Content-type: application/json' );
