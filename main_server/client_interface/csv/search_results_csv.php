@@ -485,15 +485,57 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
                                     }
                                 }
                             
-                            if ( $mtg_obj->IsItemHidden ( $key ) && $val && !$in_supress_hidden_concat )
+                            if ( $mtg_obj->IsItemHidden ( $key ) )
                                 {
-                                if ( $mtg_obj->UserCanObserve() )
+                                if ( $val && !$in_supress_hidden_concat && $mtg_obj->UserCanObserve() )
                                     {
                                     $val = 'observer_only#@-@#'.$mtg_obj->GetMeetingDataPrompt ( $key ).'#@-@#'.$mtg_obj->GetMeetingDataValue ( $key );
                                     }
                                 else
                                     {
                                     $val = '';
+                                    }
+                                }
+                            else
+                                {
+                                switch ( $key )
+                                    {
+                                    // We don't do anything for the standard fields.
+                                    case 'id_bigint':
+                                    case 'worldid_mixed':
+                                    case 'shared_group_id_bigint':
+                                    case 'service_body_bigint':
+                                    case 'weekday_tinyint':
+                                    case 'start_time':
+                                    case 'duration_time':
+                                    case 'formats':
+                                    case 'lang_enum':
+                                    case 'longitude':
+                                    case 'latitude':
+                                    case 'latitude':
+                                    case 'published':
+                                    case 'email_contact':
+                                    case 'meeting_name':
+                                    case 'location_text':
+                                    case 'location_info':
+                                    case 'location_street':
+                                    case 'location_city_subsection':
+                                    case 'location_neighborhood':
+                                    case 'location_municipality':
+                                    case 'location_sub_province':
+                                    case 'location_province':
+                                    case 'location_postal_code_1':
+                                    case 'location_nation':
+                                    case 'comments':
+                                    break;
+                                    
+                                    // The rest get the prompt/value treatment.
+                                    default:
+                                        if ( $al )
+                                            {
+                                            $val = $mtg_obj->GetMeetingDataPrompt ( $key ).'#@-@#'.$val;
+                                            }
+                                    break;
                                     }
                                 }
                             }
