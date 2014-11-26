@@ -50,6 +50,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.6.0
+* TBD
+* Changed the NAWS Dump Link in the Service Body Editor to use the new open semantic URI.
+
 = Version 2.5.0
 * November 23, 2014
 * Added support for arbitrary fields in meetings (had neglected to support these after the 2.0 release).
