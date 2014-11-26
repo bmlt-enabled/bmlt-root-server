@@ -54,6 +54,10 @@ CHANGELIST
 * TBD
 * Changed the NAWS Dump Link in the Service Body Editor to use the new open semantic URI.
 
+= Version 2.5.1
+* November 26, 2014
+* Fixed a typo that interfered with the new arbitrary fields functionality.
+
 = Version 2.5.0
 * November 23, 2014
 * Added support for arbitrary fields in meetings (had neglected to support these after the 2.0 release).
