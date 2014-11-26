@@ -50,6 +50,10 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.5.2
+* November 26, 2014
+* The 2.5.1 fix exposed another bug in administering the "other" fields.
+
 = Version 2.5.1
 * November 26, 2014
 * Fixed a typo that interfered with the new arbitrary fields functionality.

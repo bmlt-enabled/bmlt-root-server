@@ -2829,6 +2829,17 @@ function BMLT_Server_Admin ()
 
             if ( val )
                 {
+                var val_ar = val.toString().split ( "#@-@#" );
+                
+                if ( val_ar && (val_ar.length == 2 ) )
+                    {
+                    val = val_ar[1];
+                    }
+                else if ( val_ar && (val_ar.length == 3 ) )
+                    {
+                    val = val_ar[2];
+                    };
+                    
                 text_field.value = htmlspecialchars_decode ( val );
                 };
             
