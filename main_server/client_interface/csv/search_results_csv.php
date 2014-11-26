@@ -531,7 +531,7 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
                                     
                                     // The rest get the prompt/value treatment.
                                     default:
-                                        if ( $al )
+                                        if ( $val )
                                             {
                                             $val = $mtg_obj->GetMeetingDataPrompt ( $key ).'#@-@#'.$val;
                                             }
