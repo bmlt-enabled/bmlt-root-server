@@ -54,27 +54,6 @@ class c_comdef_admin_ajax_handler
             }
     }
     
-    /*******************************************************************/
-    /**
-        \brief 
-    */
-    function parse_naws_response_csv ( $inFileRecord,   ///< This is a reference to the uploaded file record of the input CSV file.
-                                        $inServer       ///< The instance of BMLT server to use.
-                                    )
-    {
-        if ( $inFileRecord && ($inServer instanceof c_comdef_server) )
-            {
-            $csv_array = fgetcsv ( $inFileRecord );
-        
-            if ( isset ( $csv_array ) && is_array ( $csv_array ) && (count ( $csv_array ) > 0) )
-                {
-                foreach ( $csv_array as $line )
-                    {
-                    }
-                }
-            }
-    }
-
     /*******************************************************************************************************//**
     \brief
     \returns
@@ -92,10 +71,6 @@ class c_comdef_admin_ajax_handler
         if ( isset ( $this->my_http_vars['delete_format'] ) && $this->my_http_vars['delete_format'] )
             {
             $this->HandleDeleteFormat ( $this->my_http_vars['delete_format'] );
-            }
-        elseif ( isset ( $this->my_http_vars['get_naws_dump'] ) && $this->my_http_vars['get_naws_dump'] )
-            {
-            $this->HandleNawsDump ( $this->my_http_vars['get_naws_dump'] );
             }
         elseif ( isset ( $this->my_http_vars['create_new_user'] ) && $this->my_http_vars['create_new_user'] )
             {
@@ -397,48 +372,6 @@ class c_comdef_admin_ajax_handler
         else
             {
             echo 'NOT AUTHORIZED';
-            }
-    }
-    
-    /*******************************************************************/
-    /**
-        \brief  
-    */  
-    function HandleNawsDump ( $in_sb_id ///< The ID of the Service Body to dump
-                            )
-    {
-        $sb = $this->my_server->GetServiceBodyByIDObj ( $in_sb_id );
-        
-        if ( $sb )
-            {
-            $service_bodies = array ( 'services' => c_comdef_server::GetServiceBodyHierarchyIDs ( $in_sb_id ) );
-            include ( dirname ( __FILE__ ).'/../../client_interface/csv/csv.php' );
-                
-            header ( 'Content-Type:text/csv' );
-            
-            $cc = preg_replace ( '|[\W]|', '_', strtoupper ( trim ( $sb->GetWorldID() ) ) );
-            
-            if ( preg_match ( '|^_+$|', $cc ) )
-                {
-                $cc = '';
-                }
-
-            $filename = preg_replace ( '|[\W]|', '_', strtolower ( trim ( $sb->GetLocalName() ) ) );
-            
-            if ( preg_match ( '|^_+$|', $filename ) )
-                {
-                $filename = '';
-                }
-            
-            $filename .= date ( '_Y_m_d_H_i_s' );
-        
-            if ( $cc )
-                {
-                $filename = "$cc"."_$filename";
-                }
-            
-            header ( "Content-Disposition: attachment; filename=BMLT_$filename.csv" );
-            echo ReturnNAWSFormatCSV ( $service_bodies, $this->my_server );
             }
     }
     

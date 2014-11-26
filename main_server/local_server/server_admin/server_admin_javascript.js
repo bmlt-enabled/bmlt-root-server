@@ -3079,10 +3079,7 @@ function BMLT_Server_Admin ()
         if ( selected_service_body_object[12] ) // We only show the NAWS dump link if we have a World ID.
             {
             naws_link_div.className = 'naws_link_div';
-            var uri = g_ajax_callback_uri + '&get_naws_dump=' + selected_service_body_object[0];
-            var salt = new Date();
-            uri += '&salt=' + salt.getTime();
-            naws_link_a.href = uri;
+            naws_link_a.href = 'client_interface/csv/?switcher=GetNAWSDump&sb_id=' + selected_service_body_object[0];
             }
         else
             {
