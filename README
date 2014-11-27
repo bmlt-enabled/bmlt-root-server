@@ -54,6 +54,10 @@ CHANGELIST
 * TBD
 * Changed the NAWS Dump Link in the Service Body Editor to use the new open semantic URI.
 
+= Version 2.5.3
+* November 27, 2014 (Happy Thanksgiving!)
+* The 2.5.2 "fix" was inadequate. I needed to make the "other" field editing more robust.
+
 = Version 2.5.2
 * November 26, 2014
 * The 2.5.1 fix exposed another bug in administering the "other" fields.

@@ -510,7 +510,7 @@ function BMLT_Server_Admin ()
         {
         this.m_meeting_editor_panel_shown = false;
         this.toggleMeetingEditor();
-        var uri = g_ajax_callback_uri + '&do_meeting_search=1&SearchStringAll=1&SearchString=' + parseInt ( in_meeting_id );
+        var uri = g_ajax_callback_uri + '&do_meeting_search=1&simple_other_fields=1&SearchStringAll=1&SearchString=' + parseInt ( in_meeting_id );
         this.clearSearchResults();
         this.callRootServerForMeetingSearch ( uri );
         };
@@ -818,7 +818,7 @@ function BMLT_Server_Admin ()
     ****************************************************************************************/
     this.createSearchURI = function ()
     {
-        var uri = g_ajax_callback_uri + '&do_meeting_search=1&sort_key=time';
+        var uri = g_ajax_callback_uri + '&do_meeting_search=1&sort_key=time&simple_other_fields=1';
         
         var search_string = document.getElementById ( 'bmlt_admin_text_specifier_input' ).value;
         
@@ -2822,7 +2822,8 @@ function BMLT_Server_Admin ()
     {
         for ( var c = 0; c < g_other_field_ids.length; c++ )
             {
-            var text_field = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_object.id_bigint + '_meeting_' + g_other_field_ids[c] + '_text_input' );
+            var elementID = 'bmlt_admin_single_meeting_editor_' + in_meeting_object.id_bigint + '_meeting_' + g_other_field_ids[c] + '_text_input';
+            var text_field = document.getElementById ( elementID );
             var val = in_meeting_object[g_other_field_ids[c]];
             
             var def_val = text_field.value;
