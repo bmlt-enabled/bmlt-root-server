@@ -80,8 +80,10 @@ if ( !isset ( $_SESSION ) )
     session_start();
     }
 
-// See if we are logging in
-if ( (isset ( $_GET['admin_action'] ) && (($_GET['admin_action'] == 'logout'))) || (isset ( $_POST['admin_action'] ) && (($_POST['admin_action'] == 'login'))) )
+// See if we are logging in or out
+if (    (isset ( $_GET['admin_action'] ) && ($_GET['admin_action'] == 'logout'))    // No GET login.
+    ||  (isset ( $_POST['admin_action'] ) && ($_POST['admin_action'] == 'logout') || ($_POST['admin_action'] == 'login'))
+    )
     {
     // Belt and suspenders -nuke the stored login.
     $_SESSION[$admin_session_name] = null;
@@ -119,15 +121,21 @@ if ( (isset ( $_GET['admin_action'] ) && (($_GET['admin_action'] == 'logout'))) 
                 }
             }
         }
+    elseif ( (isset ( $_POST['admin_action'] ) && ($_POST['admin_action'] == 'logout')) || (isset ( $_GET['admin_action'] ) && ($_GET['admin_action'] == 'logout')) )
+        {
+        c_comdef_LogoutUser();
+        }
 
     // Make sure these get wiped and deleted.
     $_POST['admin_action'] = null;
     $_POST['c_comdef_admin_login'] = null;
     $_POST['c_comdef_admin_password'] = null;
+    
     // Shouldn't have GET, but what the hell...
     $_GET['admin_action'] = null;
     $_GET['c_comdef_admin_login'] = null;
     $_GET['c_comdef_admin_password'] = null;
+    
     // Belt and suspenders -we set them to naught, then unset them.
     unset ( $_POST['admin_action'] );
     unset ( $_POST['c_comdef_admin_login'] );

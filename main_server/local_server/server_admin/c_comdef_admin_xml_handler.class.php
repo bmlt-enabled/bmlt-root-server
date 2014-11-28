@@ -24,5 +24,8 @@ defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that 
 ***************************************************************************************************************/
 class c_comdef_admin_xml_handler
 {
+    __construct ( $in_http_vars )
+    {
+    }
 };
 ?>
