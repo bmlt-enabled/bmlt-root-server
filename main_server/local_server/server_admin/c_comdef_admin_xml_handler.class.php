@@ -21,11 +21,35 @@ defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that 
 /***********************************************************************************************************//**
     \class c_comdef_admin_xml_handler
     \brief Controls handling of the admin semantic interface.
+    
+            This class should not even be instantiated unless the user has been authorized, and an authorized seesion
+            is in progress.
 ***************************************************************************************************************/
 class c_comdef_admin_xml_handler
 {
-    __construct ( $in_http_vars )
+    var $http_vars;                     ///< This will hold the combined GET and POST parameters for this call.
+    var $server;                        ///< The BMLT server model instance.
+    
+    /********************************************************************************************************//**
+    \brief The class constructor.
+    ************************************************************************************************************/
+    __construct ( $in_http_vars,        ///< The combined GET and POST parameters.
+                  $in_server            ///< The BMLT server instance.
+                )
     {
+        $this->http_vars = $in_http_vars;
+        $this->server = $in_server;
+    }
+    
+    /********************************************************************************************************//**
+    \brief This is called to process the input and generate the output. It is the "heart" of the class.
+    \returns XML to be returned.
+    ************************************************************************************************************/
+    process_commands()
+    {
+        $ret = NULL;
+        
+        return $ret;
     }
 };
 ?>

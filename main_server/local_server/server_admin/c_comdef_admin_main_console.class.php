@@ -151,8 +151,8 @@ class c_comdef_admin_main_console
     }
     
     /********************************************************************************************************//**
-    \brief
-    \returns
+    \brief Returns the HTML for the main admin console.
+    \returns HTML code.
     ************************************************************************************************************/
     function return_main_console_html()
     {

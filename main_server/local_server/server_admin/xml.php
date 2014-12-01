@@ -31,7 +31,6 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
     ************************************************* MAIN CONTEXT *************************************************
     ***************************************************************************************************************/
 
-    global  $http_vars;
     $http_vars = array_merge ( $_GET, $_POST );
     $url_path = 'http'.((isset ( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS']) ? 's' : '').'://';
     $url_path .= $_SERVER['SERVER_NAME'];
@@ -39,6 +38,7 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
     $url_path .= '/'.dirname ( $_SERVER['PHP_SELF'] );
     $url_path .= '/xml.php';
     $lang_enum = '';
+    $login_call = FALSE;    // We only allow login with the login call. That's to prevent users constantly sending cleartext login info.
 
     // We use a cookie to store the language pref.
     if ( isset ( $_COOKIE ) && isset ( $_COOKIE['bmlt_admin_lang_pref'] ) && $_COOKIE['bmlt_admin_lang_pref'] )
@@ -74,18 +74,17 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
             }
         
         // See if we are logging in
-        if (    (isset ( $_GET['admin_action'] ) && ($_GET['admin_action'] == 'logout') && ($_GET['admin_action'] == 'login'))  // We allow GET login.
-            ||  (isset ( $_POST['admin_action'] ) && ($_POST['admin_action'] == 'logout') || ($_POST['admin_action'] == 'login'))
-            )
+        if ( isset ( $http_vars['admin_action'] ) && (($http_vars['admin_action'] == 'logout') || ($http_vars['admin_action'] == 'login')) )
             {
+            $login_call = TRUE;
             // Belt and suspenders -nuke the stored login.
             $_SESSION[$admin_session_name] = null;
             unset ( $_SESSION[$admin_session_name] );
 
-            if ( isset ( $_POST['admin_action'] ) && ($_POST['admin_action'] == 'login') )
+            if ( isset ( $http_vars['admin_action'] ) && ($http_vars['admin_action'] == 'login') )
                 {
-                $login = isset ( $_POST['c_comdef_admin_login'] ) ? $_POST['c_comdef_admin_login'] : (isset ( $_GET['c_comdef_admin_login'] ) ? $_GET['c_comdef_admin_login'] : null);
-                $pw = isset ( $_POST['c_comdef_admin_password'] ) ? $_POST['c_comdef_admin_password'] : (isset ( $_GET['c_comdef_admin_password'] ) ? $_GET['c_comdef_admin_password'] : null);
+                $login = $http_vars['c_comdef_admin_login'];
+                $pw = $http_vars['c_comdef_admin_password'];
                 
                 if ( $login && $pw )
                     {
@@ -111,36 +110,22 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
                     echo ( '<h1>NOT AUTHORIZED</h1>' );
                     }
                 }
-            elseif ( (isset ( $_POST['admin_action'] ) && ($_POST['admin_action'] == 'logout')) || (isset ( $_GET['admin_action'] ) && ($_GET['admin_action'] == 'logout')) )
+            else
                 {
                 c_comdef_LogoutUser();
                 }
-
-            // Make sure these get wiped and deleted.
-            $_POST['admin_action'] = null;
-            $_POST['c_comdef_admin_login'] = null;
-            $_POST['c_comdef_admin_password'] = null;
-            $_GET['admin_action'] = null;
-            $_GET['c_comdef_admin_login'] = null;
-            $_GET['c_comdef_admin_password'] = null;
-            
-            unset ( $_POST['admin_action'] );
-            unset ( $_POST['c_comdef_admin_login'] );
-            unset ( $_POST['c_comdef_admin_password'] );
-            unset ( $_GET['admin_action'] );
-            unset ( $_GET['c_comdef_admin_login'] );
-            unset ( $_GET['c_comdef_admin_password'] );
             }
 
-        // If we are logged in, then we get to play in the admin playground...
-        if ( isset ( $_SESSION[$admin_session_name] ) )
+        // If we are logged in, and this isn't the login call, then we get to play in the admin playground...
+        if ( !$login_call && isset ( $_SESSION[$admin_session_name] ) )
             {
             require_once ( dirname ( __FILE__ ).'/c_comdef_admin_xml_handler.class.php' );
             
-            $handler = new c_comdef_admin_xml_handler ( $http_vars );
+            $handler = new c_comdef_admin_xml_handler ( $http_vars, $server );
             
             if ( $handler )
                 {
+                echo ( $handler->process_commands() );
                 }
             }
         else
