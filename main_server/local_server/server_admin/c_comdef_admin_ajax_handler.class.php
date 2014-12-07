@@ -1171,7 +1171,7 @@ class c_comdef_admin_ajax_handler
         $ignore_me = null;
         $meeting_objects = array();
 
-        $result = DisplaySearchResultsCSV ( $in_http_vars, $ignore_me, $geocode_results, $meeting_objects, true );
+        $result = DisplaySearchResultsCSV ( $in_http_vars, $ignore_me, $geocode_results, $meeting_objects, true, true );
 
         if ( isset ( $meeting_objects ) &&  is_array ( $meeting_objects ) && count ( $meeting_objects ) && isset ( $formats_ar ) && is_array ( $formats_ar ) )
             {
@@ -1224,7 +1224,7 @@ class c_comdef_admin_ajax_handler
             $the_keys = array_intersect ( $keys, $the_keys );
             $result = '"'.implode ( '","', $the_keys )."\"\n".implode ( "\n", $result2 );
             }
-    
+        
         return $result;
     }
 
