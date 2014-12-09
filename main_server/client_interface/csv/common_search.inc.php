@@ -809,6 +809,12 @@ function GetGeocodeFromString ( $in_string,	///< The string to be checked.
 		$geo_uri .= '&region='.$localized_strings['region_bias'];
 		}
 	
+	// Bit of a kludge. If the string is just a number (a postcode), then we add the region bias directly to it.
+	if ( is_numeric ( $in_string ) && $localized_strings['region_bias'] )
+	    {
+	    $in_string .= " ".$localized_strings['region_bias'];
+	    }
+	    
 	$geo_uri = str_replace ( '##SEARCH_STRING##', urlencode ( $in_string ), $geo_uri );
 	
 	// We set up a 200-mile bounds, in order to encourage Google to look in the proper place.

@@ -128,6 +128,10 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
                 echo ( $handler->process_commands() );
                 }
             }
+        elseif ( $login_call && isset ( $_SESSION[$admin_session_name] ) )
+            {
+            echo ( 'OK' );
+            }
         else
             {
             echo ( '<h1>NOT AUTHORIZED</h1>' );
