@@ -32,10 +32,13 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
     ***************************************************************************************************************/
 
     $http_vars = array_merge ( $_GET, $_POST );
+    
+    // Create an HTTP path to our XML file. We build it manually, in case this file is being used elsewhere, or we have a redirect in the domain.
+    // We allow it to be used as HTTPS.
     $url_path = 'http'.((isset ( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS']) ? 's' : '').'://';
     $url_path .= $_SERVER['SERVER_NAME'];
-    $url_path .= ((isset ( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] && ($_SERVER['SERVER_PORT'] != 443)) || ($_SERVER['SERVER_PORT'] != 80)) ? $_SERVER['SERVER_PORT'] : '';
-    $url_path .= '/'.dirname ( $_SERVER['PHP_SELF'] );
+    $url_path .= ((isset ( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] && ($_SERVER['SERVER_PORT'] != 443)) || ($_SERVER['SERVER_PORT'] != 80)) ? ':'.$_SERVER['SERVER_PORT'] : '';
+    $url_path .= '/'.dirname ( $_SERVER['PHP_SELF'] ) != '' ? dirname ( $_SERVER['PHP_SELF'] ) : '';
     $url_path .= '/xml.php';
     $lang_enum = '';
     $login_call = FALSE;    // We only allow login with the login call. That's to prevent users constantly sending cleartext login info.
@@ -89,52 +92,78 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
                 if ( $login && $pw )
                     {
                     // If this is a valid login, we'll get an encrypted password back.
-                    $enc_password = $t_server->GetEncryptedPW ( $login, trim ( $pw ) );
+                    $enc_password = $server->GetEncryptedPW ( $login, trim ( $pw ) );
 
-                    if ( null != $enc_password )
+                    if ( null != $enc_password )    // If we got a password, we set up the session.
                         {
                         $_SESSION[$admin_session_name] = "$login\t$enc_password";
-                        }
-                    else
-                        {
-                        // Otherwise, we just check to make sure this is a kosher user.
-                        $user_obj = $t_server->GetCurrentUserObj();
-                        if ( !($user_obj instanceof c_comdef_user) || ($user_obj->GetUserLevel() == _USER_LEVEL_DISABLED) )
+                        
+                        // Check to make sure this is a kosher user.
+                        $user_obj = $server->GetCurrentUserObj();
+                        if ( !($user_obj instanceof c_comdef_user) || ($user_obj->GetUserLevel() == _USER_LEVEL_DISABLED) || ($user_obj->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) || ($user_obj->GetID() == 1) )
                             {
-                            echo ( '<h1>NOT AUTHORIZED</h1>' );
+                            // We do not allow semantic access to Server Admin functions (because security)
+                            unset ( $user_obj );    // Goodbye, Mr. Bond...
+                            c_comdef_LogoutUser();
+                            die ( '<h1>NOT AUTHORIZED</h1>' );
                             }
+                            
+                        // If we are OK, we'll fall through.
+                        }
+                    else    // These seem redundant, but a basic security posture of mine is to immediatly kill execution upon discovering a security breach.
+                        {
+                        c_comdef_LogoutUser();
+                        die ( '<h1>NOT AUTHORIZED</h1>' );
                         }
                     }
                 else
                     {
-                    echo ( '<h1>NOT AUTHORIZED</h1>' );
+                    c_comdef_LogoutUser();
+                    die ( '<h1>NOT AUTHORIZED</h1>' );
                     }
                 }
-            else
+            else    // Logout gets a "bye".
                 {
                 c_comdef_LogoutUser();
+                die ( 'BYE' );
                 }
             }
 
         // If we are logged in, and this isn't the login call, then we get to play in the admin playground...
         if ( !$login_call && isset ( $_SESSION[$admin_session_name] ) )
             {
-            require_once ( dirname ( __FILE__ ).'/c_comdef_admin_xml_handler.class.php' );
-            
-            $handler = new c_comdef_admin_xml_handler ( $http_vars, $server );
-            
-            if ( $handler )
+            // Belt and suspenders. We just check one more time...
+            $user_obj = $server->GetCurrentUserObj();
+            if ( !($user_obj instanceof c_comdef_user) || ($user_obj->GetUserLevel() == _USER_LEVEL_DISABLED) || ($user_obj->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) || ($user_obj->GetID() == 1) )
                 {
-                echo ( $handler->process_commands() );
+                c_comdef_LogoutUser();
+                die ( '<h1>NOT AUTHORIZED</h1>' );
+                }
+            else    // If everything is OK, then we actually include the class, instantiate the object, and process the request.
+                {
+                require_once ( dirname ( __FILE__ ).'/c_comdef_admin_xml_handler.class.php' );
+            
+                $handler = new c_comdef_admin_xml_handler ( $http_vars, $server );
+            
+                if ( $handler )
+                    {
+                    echo ( $handler->process_commands() );
+                    }
+                
+                // Just making sure...
+                unset ( $handler );
+                unset ( $server );
+                unset ( $http_vars );
                 }
             }
-        elseif ( $login_call && isset ( $_SESSION[$admin_session_name] ) )
+        elseif ( $login_call && isset ( $_SESSION[$admin_session_name] ) )  // Simple login just gets an "OK".
             {
             echo ( 'OK' );
             }
         else
             {
-            echo ( '<h1>NOT AUTHORIZED</h1>' );
+            c_comdef_LogoutUser();
+            die ( '<h1>NOT AUTHORIZED</h1>' );
             }
 
         ob_end_flush();
