@@ -35,11 +35,7 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
     
     // Create an HTTP path to our XML file. We build it manually, in case this file is being used elsewhere, or we have a redirect in the domain.
     // We allow it to be used as HTTPS.
-    $url_path = 'http'.((isset ( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS']) ? 's' : '').'://';
-    $url_path .= $_SERVER['SERVER_NAME'];
-    $url_path .= ((isset ( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] && ($_SERVER['SERVER_PORT'] != 443)) || ($_SERVER['SERVER_PORT'] != 80)) ? ':'.$_SERVER['SERVER_PORT'] : '';
-    $url_path .= '/'.dirname ( $_SERVER['PHP_SELF'] ) != '' ? dirname ( $_SERVER['PHP_SELF'] ) : '';
-    $url_path .= '/xml.php';
+    $url_path = GetURLToMainServerDirectory().'local_server/server_admin/xml.php';
     $lang_enum = '';
     $login_call = FALSE;    // We only allow login with the login call. That's to prevent users constantly sending cleartext login info.
 
@@ -69,8 +65,6 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
     
     if ( $server instanceof c_comdef_server )
         {
-        ob_start();
-        
         if ( !isset ( $_SESSION ) )
             {
             session_start();
@@ -125,7 +119,9 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
             else    // Logout gets a "bye".
                 {
                 c_comdef_LogoutUser();
-                die ( 'BYE' );
+                ob_start();
+                echo ( 'BYE' );
+                ob_end_flush();
                 }
             }
 
@@ -144,10 +140,14 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
                 require_once ( dirname ( __FILE__ ).'/c_comdef_admin_xml_handler.class.php' );
             
                 $handler = new c_comdef_admin_xml_handler ( $http_vars, $server );
-            
+                
                 if ( $handler )
                     {
-                    echo ( $handler->process_commands() );
+                    $ret = $handler->process_commands();  // Do what you do so well...
+                    
+                    ob_start();
+                    echo ( $ret );
+                    ob_end_flush();
                     }
                 
                 // Just making sure...
@@ -158,15 +158,15 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
             }
         elseif ( $login_call && isset ( $_SESSION[$admin_session_name] ) )  // Simple login just gets an "OK".
             {
+            ob_start();
             echo ( 'OK' );
+            ob_end_flush();
             }
         else
             {
             c_comdef_LogoutUser();
             die ( '<h1>NOT AUTHORIZED</h1>' );
             }
-
-        ob_end_flush();
         }
     else
         {

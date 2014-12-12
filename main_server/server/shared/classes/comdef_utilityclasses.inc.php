@@ -10,7 +10,23 @@
 defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
 require_once ( dirname ( __FILE__ )."/../spanish_metaphone.php" );
-	
+
+/*******************************************************************/
+/** \brief Returns a URL (HTTP) to the main_server directory (or renamed).
+
+    \returns an HTTP URL, with the port (if necessary) and HTTPS (If necessary).
+*/
+function GetURLToMainServerDirectory()
+{
+    $url_path = 'http'.((isset ( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS']) ? 's' : '').'://';
+    $url_path .= $_SERVER['SERVER_NAME'];
+    $url_path .= ((isset ( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] && ($_SERVER['SERVER_PORT'] != 443)) || ($_SERVER['SERVER_PORT'] != 80)) ? ':'.$_SERVER['SERVER_PORT'] : '';
+    $url_path_component = dirname ( dirname ( dirname ( dirname ( dirname ( __FILE__ ) ) ) ) );
+    $url_path .= str_replace ( $url_path_component, '', dirname ( dirname ( dirname ( dirname ( __FILE__ ) ) ) ) ).'/';
+    
+    return $url_path;
+}
+
 /*******************************************************************/
 /** \brief Converts a string into an array of metaphone entities.
 
