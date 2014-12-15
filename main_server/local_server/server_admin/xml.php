@@ -137,23 +137,30 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
                 }
             else    // If everything is OK, then we actually include the class, instantiate the object, and process the request.
                 {
-                require_once ( dirname ( __FILE__ ).'/c_comdef_admin_xml_handler.class.php' );
-            
-                $handler = new c_comdef_admin_xml_handler ( $http_vars, $server );
-                
-                if ( $handler )
+                if ( isset ( $http_vars['admin_action'] ) && $http_vars['admin_action'] )   // Must have an admin_action.
                     {
-                    $ret = $handler->process_commands();  // Do what you do so well...
-                    
-                    ob_start();
-                    echo ( $ret );
-                    ob_end_flush();
-                    }
+                    require_once ( dirname ( __FILE__ ).'/c_comdef_admin_xml_handler.class.php' );
+            
+                    $handler = new c_comdef_admin_xml_handler ( $http_vars, $server );
                 
-                // Just making sure...
-                unset ( $handler );
-                unset ( $server );
-                unset ( $http_vars );
+                    if ( $handler )
+                        {
+                        $ret = $handler->process_commands();  // Do what you do so well...
+                    
+                        ob_start();
+                        echo ( $ret );
+                        ob_end_flush();
+                        }
+                
+                    // Just making sure...
+                    unset ( $handler );
+                    unset ( $server );
+                    unset ( $http_vars );
+                    }
+                else
+                    {
+                    die ( '<h1>BAD ADMIN ACTION</h1>' );
+                    }
                 }
             }
         elseif ( $login_call && isset ( $_SESSION[$admin_session_name] ) )  // Simple login just gets an "OK".
