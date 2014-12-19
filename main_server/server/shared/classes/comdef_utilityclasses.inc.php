@@ -16,13 +16,23 @@ require_once ( dirname ( __FILE__ )."/../spanish_metaphone.php" );
 
     \returns an HTTP URL, with the port (if necessary) and HTTPS (If necessary).
 */
-function GetURLToMainServerDirectory()
+function GetURLToMainServerDirectory(
+                                        $inNoHTTPS = TRUE  ///< If TRUE (default), then the URI will be allowed to use HTTPS. If FALSE, then we explicitly disallow HTTPS.
+                                        )
 {
-    $url_path = 'http'.((isset ( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS']) ? 's' : '').'://';
+    $https = $inNoHTTPS && isset ( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'];
+    $port = $_SERVER['SERVER_PORT'] ;
+    
+    if ( !$https && ($port == 443) )
+        {
+        $port = 80;
+        }
+    
+    $url_path = 'http'.($https ? 's' : '').'://';
     $url_path .= $_SERVER['SERVER_NAME'];
-    $url_path .= ((isset ( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] && ($_SERVER['SERVER_PORT'] != 443)) || ($_SERVER['SERVER_PORT'] != 80)) ? ':'.$_SERVER['SERVER_PORT'] : '';
+    $url_path .= (($https && ($port != 443)) || ($port != 80)) ? ':'.$port : '';
     $url_path_component = dirname ( dirname ( dirname ( dirname ( dirname ( __FILE__ ) ) ) ) );
-    $url_path .= str_replace ( $url_path_component, '', dirname ( dirname ( dirname ( dirname ( __FILE__ ) ) ) ) ).'/';
+    $url_path .= str_replace ( $url_path_component, '', dirname ( dirname ( dirname ( dirname ( dirname ( __FILE__ ) ) ) ) ) ).'/';
     
     return $url_path;
 }

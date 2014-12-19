@@ -44,36 +44,27 @@ echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">"; ?>
 	xmlns:xsn="http://<?php echo $_SERVER['SERVER_NAME'] ?>"
 	targetNamespace="http://<?php echo $_SERVER['SERVER_NAME'] ?>"
 	elementFormDefault="qualified">
-	<xs:element name="changes">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="row" minOccurs="0" maxOccurs="unbounded">
-					<xs:complexType mixed="true">
-						<xs:sequence>
-							<xs:element minOccurs="0" maxOccurs="1" name="date_int" type="xs:integer"/>
-							<xs:element minOccurs="0" maxOccurs="1" name="date_string" type="xs:string"/>
-							<xs:element minOccurs="0" maxOccurs="1" name="change_type" type="xs:NCName"/>
-							<xs:element minOccurs="0" maxOccurs="1" name="meeting_id" type="xs:integer"/>
-							<xs:element minOccurs="0" maxOccurs="1" name="meeting_name" type="xs:string"/>
-							<xs:element minOccurs="0" maxOccurs="1" name="user_id" type="xs:integer"/>
-							<xs:element minOccurs="0" maxOccurs="1" name="user_name" type="xs:string"/>
-							<xs:element minOccurs="0" maxOccurs="1" name="service_body_id" type="xs:integer"/>
-							<xs:element minOccurs="0" maxOccurs="1" name="service_body_name" type="xs:string"/>
-                            <xs:element name="meeting_exists" minOccurs="0" maxOccurs="1">
-                                <xs:simpleType>
-                                    <xs:restriction base="xs:integer">
-                                        <xs:enumeration value="0"/>
-                                        <xs:enumeration value="1"/>
-                                    </xs:restriction>
-                                </xs:simpleType>
+    <xs:element name="permissions">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="service_body" maxOccurs="unbounded" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="permission" maxOccurs="unbounded" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:simpleContent>
+                                        <xs:extension base="xs:string">
+                                            <xs:attribute type="xs:string" name="level" use="required"/>
+                                        </xs:extension>
+                                    </xs:simpleContent>
+                                </xs:complexType>
                             </xs:element>
-							<xs:element minOccurs="0" maxOccurs="1" name="details" type="xs:string"/>
-						</xs:sequence>
-                        <xs:attribute name="sequence_index" use="required" type="xs:integer"/>
-					</xs:complexType>
-				</xs:element>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
+                        </xs:sequence>
+                        <xs:attribute type="xs:short" name="id" use="required"/>
+                        <xs:attribute type="xs:string" name="name" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 </xs:schema>
-<?php ob_end_flush(); ?>

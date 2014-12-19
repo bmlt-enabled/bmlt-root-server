@@ -33,7 +33,7 @@ class c_comdef_admin_xml_handler
     /********************************************************************************************************//**
     \brief The class constructor.
     ************************************************************************************************************/
-    __construct ( $in_http_vars,        ///< The combined GET and POST parameters.
+    function __construct ( $in_http_vars,        ///< The combined GET and POST parameters.
                   $in_server            ///< The BMLT server instance.
                 )
     {
@@ -46,7 +46,7 @@ class c_comdef_admin_xml_handler
     
     \returns XML to be returned.
     ************************************************************************************************************/
-    process_commands()
+    function process_commands()
     {
         $ret = NULL;
         // We make sure that we are allowed to access this level of functionality.
@@ -58,7 +58,7 @@ class c_comdef_admin_xml_handler
                 {
                 switch ( strtolower ( trim ( $this->http_vars['admin_action'] ) ) )
                     {
-                    case 'get_capabilities':
+                    case 'get_permissions':
                         $ret = $this->process_capabilities_request();
                     break;
                 
@@ -85,10 +85,10 @@ class c_comdef_admin_xml_handler
     
     \returns XML, containing the answer.
     ************************************************************************************************************/
-    process_capabilities_request()
+    function process_capabilities_request()
     {
-        $ret = NULL;
-        $service_bodies = $this->my_server->GetServiceBodyArray();
+        $ret = '';
+        $service_bodies = $this->server->GetServiceBodyArray();
         
         // We will fill these three arrays, depending on the users' rights for a given Service body.
         $my_meeting_observer_service_bodies = array();
@@ -134,6 +134,31 @@ class c_comdef_admin_xml_handler
                 }
             
             // At this point, we have 3 arrays (or fewer), filled with Service bodies that we have rights on. It is entirely possible that only one of them could be filled, and it may only have one member.
+            
+            // We start to construct the XML filler.
+            foreach ( $service_bodies as $service_body )
+                {
+                // If we can observe, then we have at least one permission for this Service body.
+                if ( isset ( $my_meeting_observer_service_bodies['sb_'.$service_body->GetID()] ) && $my_meeting_observer_service_bodies['sb_'.$service_body->GetID()] )
+                    {
+                    $ret .= '<service_body id="'.$service_body->GetID().'" name="'.c_comdef_htmlspecialchars ( $service_body->GetLocalName() ).'">';
+                        $ret .= '<permission level="observer" />';
+                        
+                        if ( isset ( $my_meeting_editor_service_bodies['sb_'.$service_body->GetID()] ) && $my_meeting_editor_service_bodies['sb_'.$service_body->GetID()] )
+                            {
+                            $ret .= '<permission level="meeting_editor" />';
+                            }
+                        
+                        if ( isset ( $my_editable_service_bodies['sb_'.$service_body->GetID()] ) && $my_editable_service_bodies['sb_'.$service_body->GetID()] )
+                            {
+                            $ret .= '<permission level="service_body_editor" />';
+                            }
+                    $ret .= '</service_body>';
+                    }
+                }
+            // Create a proper XML wrapper for the response data.
+			$ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<permissions xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] ).GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/AdminPermissions.php\">$ret</permissions>";
+            // We now have XML that states the current user's permission levels in all Service bodies.
             }
         else
             {
@@ -141,5 +166,6 @@ class c_comdef_admin_xml_handler
             }
         
         return $ret;
-    };
+        }
+};
 ?>
