@@ -33,9 +33,9 @@ class c_comdef_admin_xml_handler
     /********************************************************************************************************//**
     \brief The class constructor.
     ************************************************************************************************************/
-    function __construct ( $in_http_vars,        ///< The combined GET and POST parameters.
-                  $in_server            ///< The BMLT server instance.
-                )
+    function __construct (  $in_http_vars,        ///< The combined GET and POST parameters.
+                            $in_server            ///< The BMLT server instance.
+                        )
     {
         $this->http_vars = $in_http_vars;
         $this->server = $in_server;
@@ -61,6 +61,13 @@ class c_comdef_admin_xml_handler
                     case 'get_permissions':
                         $ret = $this->process_capabilities_request();
                     break;
+                    
+                    case 'get_service_body_info':
+                        if ( isset ( $this->http_vars['sb_id'] ) && $this->http_vars['sb_id'] )
+                            {
+                            $ret = $this->process_service_body_info_request()
+                            }
+                    break;
                 
                     default:
                         $ret = '<h1>BAD ADMIN ACTION</h1>';
@@ -77,6 +84,57 @@ class c_comdef_admin_xml_handler
             $ret = '<h1>NOT AUTHORIZED</h1>';
             }
         
+        return $ret;
+    }
+    
+    /********************************************************************************************************//**
+    \brief This fulfills a user request to return Service Body information.
+    
+    \returns XML, containing the answer.
+    ************************************************************************************************************/
+    function process_service_body_info_request()
+    {
+        $service_body_id = intval ( trim ( $this->http_vars['sb_id'] ) );   // The user needs to specify the BMLT ID of the Service body.
+        $ret = '';
+        // Belt and suspenders. We need to make sure the user is authorized.
+        $user_obj = $this->server->GetCurrentUserObj();
+        if ( isset ( $user_obj ) && ($user_obj instanceof c_comdef_user) && ($user_obj->GetUserLevel() != _USER_LEVEL_DISABLED) && ($user_obj->GetUserLevel() != _USER_LEVEL_SERVER_ADMIN) && ($user_obj->GetID() > 1) )
+            {
+            $service_body = $this->server->GetServiceBodyByIDObj ( $service_body_id );
+            
+            if ( isset ( $service_body ) && ($service_body instanceof c_comdef_service_body) )
+                {
+                // Everyone gets the type, URI, name, description and parent Service body.
+                $name = $service_body->GetLocalName();
+                $description = $service_body->GetLocalDescription();
+                $uri = $service_body->GetURI();
+                $type = $service_body->GetSBType();
+                $parent_service_body = intval ( $service_body->GetOwnerIDObject() );
+                
+                // These need more permission.
+                $contact_email = NULL;
+                $editors = NULL;
+                $principal_user = NULL;
+                
+                // See if we have rights to edit this Service body. Just for the heck of it, we check the user level (not really necessary, but belt and suspenders).
+                $this_user_can_edit_the_body = ($user_obj->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) && $service_body->UserCanEdit();
+                
+                // Service Body Admins (with permission for the body) get more info.
+                if ( $this_user_can_edit_the_body )
+                    {
+                    $contact_email = $service_body->GetContactEmail();
+                    $editors = $service_body->GetEditorsAsObjects();
+                    $principal_user = $service_body->GetPrincipalUserObj();
+                    }
+                    
+                // At this point, we have all the information we need to build the response XML.
+                }
+            }
+        else
+            {
+            $ret = '<h1>NOT AUTHORIZED</h1>';
+            }
+            
         return $ret;
     }
     
