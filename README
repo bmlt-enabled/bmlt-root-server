@@ -56,6 +56,7 @@ CHANGELIST
 * Fixed an admin bug, in which meetings that an admin can't edit can be listed in the search results.
 * Added a bit of a kludge to number-only location searches (postal codes). I now append the region bias to the string, as it looks like Google ignores the "region=" parameter.
 * Created a common URL to the main server (utility function). This allows use of HTTPS and increases overall quality.
+* The server now returns only the formats used somewhere in the database in response to the semantic "switcher=GetFormats" call.
 
 = Version 2.5.3
 * November 27, 2014 (Happy Thanksgiving!)

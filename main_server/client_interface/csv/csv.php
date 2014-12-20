@@ -677,7 +677,7 @@ function GetFormats (
 	if ( $formats_obj instanceof c_comdef_formats )
 		{
 		$langs = $server->GetServerLangs();
-		
+		$used_formats = $server->GetUsedFormatIDs();
 		if ( isset ( $in_lang ) && is_array ( $in_lang ) && count ( $in_lang ) )
 			{
 			$langs2 = array();
@@ -752,7 +752,11 @@ function GetFormats (
                                 
                                 $line .= '"'.str_replace ( '"', '\"', trim ( $val ) ).'"';
                                 }
-                            $ret .= "$line\n";
+                            
+                            if ( in_array ( $localized_format->GetSharedID(), $used_formats ) )
+                                {
+                                $ret .= "$line\n";
+                                }
                             }
 						}
 					}

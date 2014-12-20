@@ -63,6 +63,8 @@ class c_comdef_server
     private $_service_bodies_table_name = null;
     /// This is the container for the loaded formats.
     private $_formats_obj = null;
+    /// This is the container for the loaded formats that are actually used in the meetings. Each element is a format shared ID.
+    private $_used_format_ids = null;
     /// This is the container for the loaded users.
     private $_users_obj = null;
     /// This has the IDs of all the Service entities that "own" meetings on the server.
@@ -279,6 +281,7 @@ class c_comdef_server
     */
     function ReadFormats()
     {
+        $this->_used_format_ids = array ();
         $sql = "SELECT * FROM `".self::GetFormatTableName_obj()."` ORDER BY shared_id_bigint, lang_enum"; 
         
         $rows = c_comdef_dbsingleton::preparedQuery($sql);
@@ -308,6 +311,48 @@ class c_comdef_server
             
             /// Create our internal container, and give it the array.
             $this->_formats_obj = new c_comdef_formats ( $this, $obj_array );
+            
+            // Now that we have all our formats, we quickly read in the formats from all the meetings, and filter out just the ones that are actually used.
+            $sql = "SELECT `formats` FROM `".self::GetMeetingTableName_obj()."_main`"; 
+        
+            $rows = c_comdef_dbsingleton::preparedQuery($sql);
+        
+            if ( is_array ( $rows ) && count ( $rows ) )
+                {
+                $format_codes = array();
+                // Read each of the format CSV lists, split the list, and then check each one in our tracker.
+                foreach ( $rows as $row )
+                    {
+                    $codes = explode ( ',', $row['formats'] );
+                    foreach ( $codes as $code )
+                        {
+                        $index = "ID-$code"; // We do this, because some PHP processors refuse to allow pure ints to be associative properties.
+                        if ( !isset ( $format_codes[$index] ) )
+                            {
+                            $format_codes[$index] = 1;
+                            }
+                        else
+                            {
+                            $format_codes[$index] = intval ( $format_codes[$index] ) + 1; // Do it this way, just in case the PHP interpreter gets funny about interpreting as int.
+                            }
+                        }
+                    }
+                
+                // At this point format_codes is an associative array with only the formats actually used. The format code is in the key. We sort them so that the most frequent ones are at the beginning.
+                // We go through that, and extract our codes.
+                
+                arsort ( $format_codes );
+                $format_codes = array_keys ( $format_codes );
+                
+                foreach ( $format_codes as $format_id )
+                    {
+                    $format_id_num = intval ( preg_replace ( "|ID\-(.*)|", "$1", $format_id ) );
+                    if ( $format_id_num )
+                        {
+                        array_push ( $this->_used_format_ids, $format_id_num );
+                        }
+                    }
+                }
             }
     }
     
@@ -536,11 +581,49 @@ class c_comdef_server
     /*******************************************************************/
     /** \brief Simply returns an array of the format objects.
         
-        \returns A reference to the formats container object.
+        \returns An array of c_comdef_format objects.
     */
     function GetFormatsArray()
     {
         return ($this->GetFormatsObj() instanceof c_comdef_formats) ? $this->GetFormatsObj()->GetFormatsArray() : NULL;
+    }
+    
+    /*******************************************************************/
+    /** \brief Simply returns an array of the format objects used by the meetings (no unused ones).
+        
+        \returns An array of c_comdef_format objects.
+    */
+    function GetUsedFormatsArray()
+    {
+        $ret = NULL;
+        
+        $all_formats = $this->GetFormatsArray();
+        
+        if ( is_array ( $all_formats ) && count ( $all_formats ) && is_array ( $this->GetUsedFormatIDs() ) && count ( $this->GetUsedFormatIDs() ) )
+            {
+            $ret = array();
+            
+            foreach ( $all_formats as $format )
+                {
+                if ( in_array ( $format->GetSharedID(), $this->GetUsedFormatIDs() ) )
+                    {
+                    $ret[$format->GetSharedID()] = $format;
+                    }
+                }
+            }
+            
+        return $ret;
+    }
+    
+    /*******************************************************************/
+    /** \brief Return the shared IDs of the formats actually used by the contained meetings.
+               This can be used to avoid showing format codes that are not relevant to the database.
+        
+        \returns an array of Int, with the ones most frequently represented at the top.
+    */
+    function GetUsedFormatIDs()
+    {
+        return $this->_used_format_ids;
     }
     
     /*******************************************************************/
