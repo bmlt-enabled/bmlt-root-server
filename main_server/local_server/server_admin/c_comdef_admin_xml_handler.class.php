@@ -168,25 +168,28 @@ class c_comdef_admin_xml_handler
                     $parent_service_body_type = $parent_service_body->GetSBType();
                     }
                 
-                // These need more permission.
+                $principal_user = $service_body->GetPrincipalUserObj();
+                $guest_editors = $this->server->GetUsersByLevelObj ( _USER_LEVEL_OBSERVER, TRUE );
                 $meeting_list_editors = array();
                 $observers = array();
-            
-                $guest_editors = $service_body->GetEditorsAsObjects();
                 
                 foreach ( $guest_editors as $editor )
                     {
-                    if ( $service_body->UserCanEditMeetings ( $editor ) )
+                    if ( $editor->GetID() != $principal_user->GetID() )  // We don't count the principal user
                         {
-                        array_push ( $meeting_list_editors, $editor );
-                        }
-                    elseif ( $service_body->UserCanObserve ( $editor ) )
-                        {
-                        array_push ( $observers, $editor );
+                        if ( $service_body->UserCanEditMeetings ( $editor ) )
+                            {
+                            array_push ( $meeting_list_editors, $editor );
+                            }
+                        elseif ( $service_body->UserCanObserve ( $editor ) )
+                            {
+                            array_push ( $observers, $editor );
+                            }
                         }
                     }
                 
-                $principal_user = $service_body->GetPrincipalUserObj();
+                // We check to see which editors are mentioned in this Service body.
+                $guest_editors = $service_body->GetEditors();
                 
                 // See if we have rights to edit this Service body. Just for the heck of it, we check the user level (not really necessary, but belt and suspenders).
                 $this_user_can_edit_the_body = ($user_obj->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) && $service_body->UserCanEdit();
@@ -217,7 +220,7 @@ class c_comdef_admin_xml_handler
                                     $ret .= '<meeting_list_editors>';
                                         foreach ( $meeting_list_editors as $editor )
                                             {
-                                            $ret .= '<editor id="'.intval ( $editor->GetID() ).'">'.c_comdef_htmlspecialchars ( $editor->GetLocalName() ).'</editor>';
+                                            $ret .= '<editor id="'.intval ( $editor->GetID() ).'" type="'.( in_array ( $editor->GetID(), $guest_editors ) ? 'direct' : 'parent' ).'">'.c_comdef_htmlspecialchars ( $editor->GetLocalName() ).'</editor>';
                                             }
                                     $ret .= '</meeting_list_editors>';
                                     }
@@ -227,7 +230,7 @@ class c_comdef_admin_xml_handler
                                     $ret .= '<observers>';
                                         foreach ( $observers as $editor )
                                             {
-                                            $ret .= '<editor id="'.intval ( $editor->GetID() ).'">'.c_comdef_htmlspecialchars ( $editor->GetLocalName() ).'</editor>';
+                                            $ret .= '<editor id="'.intval ( $editor->GetID() ).'" type="'.( in_array ( $editor->GetID(), $guest_editors ) ? 'direct' : 'parent' ).'">'.c_comdef_htmlspecialchars ( $editor->GetLocalName() ).'</editor>';
                                             }
                                     $ret .= '</observers>';
                                     }
