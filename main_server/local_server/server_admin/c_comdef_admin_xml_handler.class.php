@@ -65,10 +65,7 @@ class c_comdef_admin_xml_handler
                     break;
                     
                     case 'get_service_body_info':
-                        if ( isset ( $this->http_vars['sb_id'] ) && $this->http_vars['sb_id'] )
-                            {
-                            $ret = $this->process_service_body_info_request();
-                            }
+                        $ret = $this->process_service_bodies_info_request();
                     break;
                 
                     default:
@@ -90,19 +87,65 @@ class c_comdef_admin_xml_handler
     }
     
     /********************************************************************************************************//**
+    \brief This fulfills a user request to return Service Body information for multiple Service bodies.
+    
+    \returns XML, containing the answer.
+    ************************************************************************************************************/
+    function process_service_bodies_info_request()
+    {
+        $ret = '';
+        
+        $user_obj = $this->server->GetCurrentUserObj();
+        if ( isset ( $user_obj ) && ($user_obj instanceof c_comdef_user) && ($user_obj->GetUserLevel() != _USER_LEVEL_DISABLED) && ($user_obj->GetUserLevel() != _USER_LEVEL_SERVER_ADMIN) && ($user_obj->GetID() > 1) )
+            {
+            $service_body_id = 0;
+        
+            if ( isset ( $this->http_vars['sb_id'] ) && $this->http_vars['sb_id'] )
+                {
+                $service_body_id = intval ( trim ( $this->http_vars['sb_id'] ) );   // The user needs to specify the BMLT ID of the Service body.
+                }
+            
+            if ( $service_body_id )
+                {
+                $ret = $this->process_service_body_info_request ( $service_body_id );
+                }
+            else
+                {
+                $service_bodies = $this->server->GetServiceBodyArray();
+            
+                foreach ( $service_bodies as $service_body )
+                    {
+                    if ( $service_body->UserCanObserve() )  // Belt & suspenders...
+                        {
+                        $ret .= $this->process_service_body_info_request ( $service_body->GetID() );
+                        }
+                    }
+                }
+        
+            $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<service_bodies xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] ).GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/AdminServiceBodies.php\">$ret</service_bodies>";
+            }
+        else
+            {
+            $ret = '<h1>NOT AUTHORIZED</h1>';
+            }
+            
+        return $ret;
+    }
+    
+    /********************************************************************************************************//**
     \brief This fulfills a user request to return Service Body information.
     
     \returns XML, containing the answer.
     ************************************************************************************************************/
-    function process_service_body_info_request()
+    function process_service_body_info_request (    $in_service_body_id ///< The ID of the Service body being requested.
+                                                )
     {
-        $service_body_id = intval ( trim ( $this->http_vars['sb_id'] ) );   // The user needs to specify the BMLT ID of the Service body.
         $ret = '';
         // Belt and suspenders. We need to make sure the user is authorized.
         $user_obj = $this->server->GetCurrentUserObj();
         if ( isset ( $user_obj ) && ($user_obj instanceof c_comdef_user) && ($user_obj->GetUserLevel() != _USER_LEVEL_DISABLED) && ($user_obj->GetUserLevel() != _USER_LEVEL_SERVER_ADMIN) && ($user_obj->GetID() > 1) )
             {
-            $service_body = $this->server->GetServiceBodyByIDObj ( $service_body_id );
+            $service_body = $this->server->GetServiceBodyByIDObj ( $in_service_body_id );
             
             if ( isset ( $service_body ) && ($service_body instanceof c_comdef_service_body) )
                 {
@@ -126,36 +169,38 @@ class c_comdef_admin_xml_handler
                     }
                 
                 // These need more permission.
-                $contact_email = NULL;
-                $guest_editors = NULL;
                 $meeting_list_editors = array();
                 $observers = array();
-                $principal_user = NULL;
+            
+                $guest_editors = $service_body->GetEditorsAsObjects();
+                
+                foreach ( $guest_editors as $editor )
+                    {
+                    if ( $service_body->UserCanEditMeetings ( $editor ) )
+                        {
+                        array_push ( $meeting_list_editors, $editor );
+                        }
+                    elseif ( $service_body->UserCanObserve ( $editor ) )
+                        {
+                        array_push ( $observers, $editor );
+                        }
+                    }
+                
+                $principal_user = $service_body->GetPrincipalUserObj();
                 
                 // See if we have rights to edit this Service body. Just for the heck of it, we check the user level (not really necessary, but belt and suspenders).
                 $this_user_can_edit_the_body = ($user_obj->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) && $service_body->UserCanEdit();
+                
+                $contact_email = NULL;
                 
                 // Service Body Admins (with permission for the body) get more info.
                 if ( $this_user_can_edit_the_body )
                     {
                     $contact_email = $service_body->GetContactEmail();
-                    $guest_editors = $service_body->GetEditorsAsObjects();
-                    foreach ( $guest_editors as $editor )
-                        {
-                        if ( $service_body->UserCanEditMeetings ( $editor ) )
-                            {
-                            array_push ( $meeting_list_editors, $editor );
-                            }
-                        elseif ( $service_body->UserCanObserve ( $editor ) )
-                            {
-                            array_push ( $observers, $editor );
-                            }
-                        }
-                    $principal_user = $service_body->GetPrincipalUserObj();
                     }
                     
                 // At this point, we have all the information we need to build the response XML.
-                $ret = '<service_body id="'.c_comdef_htmlspecialchars ( $service_body_id ).'" name="'.c_comdef_htmlspecialchars ( $name ).'" type="'.c_comdef_htmlspecialchars ( $type ).'">';
+                $ret = '<service_body id="'.c_comdef_htmlspecialchars ( $in_service_body_id ).'" name="'.c_comdef_htmlspecialchars ( $name ).'" type="'.c_comdef_htmlspecialchars ( $type ).'">';
                     $ret .= '<description>'.c_comdef_htmlspecialchars ( $description ).'</description>';
                     $ret .= '<uri>'.c_comdef_htmlspecialchars ( $uri ).'</uri>';
                     $ret .= '<parent_service_body name="'.c_comdef_htmlspecialchars ( $parent_service_body_name ).'" id="'.intval ( $parent_service_body_id ).'" type="'.c_comdef_htmlspecialchars ( $parent_service_body_type ).'"/>';
