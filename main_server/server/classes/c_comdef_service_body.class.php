@@ -929,8 +929,7 @@ class c_comdef_service_body extends t_comdef_world_type implements i_comdef_db_s
 	
 		\returns true, if the user is allowed to observe, false, otherwise.
 	*/
-	function UserCanObserve (
-							    $in_user_object = null	///< A reference to a c_comdef_user object, for the user to be validated. If null, or not supplied, the server current user is tested.
+	function UserCanObserve (   $in_user_object = null	///< A reference to a c_comdef_user object, for the user to be validated. If null, or not supplied, the server current user is tested.
 							    )
 	{
 	    $ret = $this->UserCanEdit ( $in_user_object );  // First, see if we are able to edit this Service body. If so, then we're golden.

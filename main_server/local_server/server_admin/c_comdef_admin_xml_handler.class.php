@@ -122,7 +122,7 @@ class c_comdef_admin_xml_handler
                     }
                 }
         
-            $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<service_bodies xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] ).GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/AdminServiceBodies.php\">$ret</service_bodies>";
+            $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<service_bodies xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/AdminServiceBodies.php\">$ret</service_bodies>";
             }
         else
             {
@@ -322,7 +322,7 @@ class c_comdef_admin_xml_handler
                     }
                 }
             // Create a proper XML wrapper for the response data.
-			$ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<permissions xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] ).GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/AdminPermissions.php\">$ret</permissions>";
+			$ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<permissions xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/AdminPermissions.php\">$ret</permissions>";
             // We now have XML that states the current user's permission levels in all Service bodies.
             }
         else

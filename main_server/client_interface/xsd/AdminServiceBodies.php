@@ -44,25 +44,70 @@ echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">"; ?>
 	xmlns:xsn="http://<?php echo $_SERVER['SERVER_NAME'] ?>"
 	targetNamespace="http://<?php echo $_SERVER['SERVER_NAME'] ?>"
 	elementFormDefault="qualified">
-	<xs:element name="serviceBodies">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element maxOccurs="unbounded" name="row">
-                    <xs:complexType mixed="true">
-                        <xs:sequence>
-                            <xs:element name="id" type="xs:integer" minOccurs="0" maxOccurs="1"/>
-                            <xs:element name="parent_id" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                            <xs:element name="name" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                            <xs:element name="description" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                            <xs:element name="type" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                            <xs:element name="url" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                            <xs:element name="kmluri" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                            <xs:element name="world_id" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                        </xs:sequence>
-                        <xs:attribute name="sequence_index" type="xs:integer" use="required"/>
-                    </xs:complexType>
-				</xs:element>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
+    <xs:element name='service_bodies'>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs='unbounded' ref='service_body'/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name='service_body'>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref='description'/>
+                <xs:element ref='uri'/>
+                <xs:element ref='parent_service_body'/>
+                <xs:element ref='service_body_type'/>
+                <xs:element ref='contact_email'/>
+                <xs:element ref='principal_user'/>
+                <xs:element ref='guest_editors'/>
+            </xs:sequence>
+            <xs:attribute name='id' use='required' type='xs:integer'/>
+            <xs:attribute name='name' use='required'/>
+            <xs:attribute name='type' use='required' type='xs:NCName'/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name='description' type='xs:string'/>
+    <xs:element name='uri' type='xs:anyURI'/>
+    <xs:element name='parent_service_body'>
+        <xs:complexType>
+            <xs:attribute name='id' use='required' type='xs:integer'/>
+            <xs:attribute name='name' use='required'/>
+            <xs:attribute name='type' use='required'/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name='service_body_type' type='xs:string'/>
+    <xs:element name='contact_email' type='xs:string'/>
+    <xs:element name='principal_user'>
+        <xs:complexType mixed='true'>
+            <xs:attribute name='id' use='required' type='xs:integer'/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name='guest_editors'>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs='0' ref='meeting_list_editors'/>
+                <xs:element minOccurs='0' ref='observers'/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name='meeting_list_editors'>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs='unbounded' ref='editor'/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name='observers'>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref='editor'/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name='editor'>
+        <xs:complexType mixed='true'>
+            <xs:attribute name='id' use='required' type='xs:integer'/>
+        </xs:complexType>
+    </xs:element>
 </xs:schema>
