@@ -193,6 +193,7 @@
 	                                        'service_body_cancel_button'                            =>  'Restaurar a original',
 	                                        'service_body_editor_type_label'                        =>  'Tipo de cuerpo servicio:',
 	                                        'service_body_editor_type_c_comdef_service_body__GRP__' =>  'Grupo',
+	                                        'service_body_editor_type_c_comdef_service_body__COP__' =>  'Co-Op',
 	                                        'service_body_editor_type_c_comdef_service_body__ASC__' =>  'Comité de Servicio de Área',
 	                                        'service_body_editor_type_c_comdef_service_body__RSC__' =>  'Conferencia de Servicio Regional',
 	                                        'service_body_editor_type_c_comdef_service_body__WSC__' =>  'World Service Conference',

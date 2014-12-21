@@ -29,6 +29,7 @@ class c_comdef_admin_xml_handler
 {
     var $http_vars;                     ///< This will hold the combined GET and POST parameters for this call.
     var $server;                        ///< The BMLT server model instance.
+    var $my_localized_strings;          ///< An array of localized strings.
     
     /********************************************************************************************************//**
     \brief The class constructor.
@@ -39,6 +40,7 @@ class c_comdef_admin_xml_handler
     {
         $this->http_vars = $in_http_vars;
         $this->server = $in_server;
+        $this->my_localized_strings = c_comdef_server::GetLocalStrings();
     }
     
     /********************************************************************************************************//**
@@ -65,7 +67,7 @@ class c_comdef_admin_xml_handler
                     case 'get_service_body_info':
                         if ( isset ( $this->http_vars['sb_id'] ) && $this->http_vars['sb_id'] )
                             {
-                            $ret = $this->process_service_body_info_request()
+                            $ret = $this->process_service_body_info_request();
                             }
                     break;
                 
@@ -109,11 +111,25 @@ class c_comdef_admin_xml_handler
                 $description = $service_body->GetLocalDescription();
                 $uri = $service_body->GetURI();
                 $type = $service_body->GetSBType();
-                $parent_service_body = intval ( $service_body->GetOwnerIDObject() );
+
+                $parent_service_body_id = -1;
+                $parent_service_body_name = "";
+                $parent_service_body_type = "";
+
+                $parent_service_body = $service_body->GetOwnerIDObject();
+                
+                if ( isset ( $parent_service_body ) && $parent_service_body )
+                    {
+                    $parent_service_body_id = intval ( $parent_service_body->GetID() );
+                    $parent_service_body_name = $parent_service_body->GetLocalName();
+                    $parent_service_body_type = $parent_service_body->GetSBType();
+                    }
                 
                 // These need more permission.
                 $contact_email = NULL;
-                $editors = NULL;
+                $guest_editors = NULL;
+                $meeting_list_editors = array();
+                $observers = array();
                 $principal_user = NULL;
                 
                 // See if we have rights to edit this Service body. Just for the heck of it, we check the user level (not really necessary, but belt and suspenders).
@@ -123,11 +139,57 @@ class c_comdef_admin_xml_handler
                 if ( $this_user_can_edit_the_body )
                     {
                     $contact_email = $service_body->GetContactEmail();
-                    $editors = $service_body->GetEditorsAsObjects();
+                    $guest_editors = $service_body->GetEditorsAsObjects();
+                    foreach ( $guest_editors as $editor )
+                        {
+                        if ( $service_body->UserCanEditMeetings ( $editor ) )
+                            {
+                            array_push ( $meeting_list_editors, $editor );
+                            }
+                        elseif ( $service_body->UserCanObserve ( $editor ) )
+                            {
+                            array_push ( $observers, $editor );
+                            }
+                        }
                     $principal_user = $service_body->GetPrincipalUserObj();
                     }
                     
                 // At this point, we have all the information we need to build the response XML.
+                $ret = '<service_body id="'.c_comdef_htmlspecialchars ( $service_body_id ).'" name="'.c_comdef_htmlspecialchars ( $name ).'" type="'.c_comdef_htmlspecialchars ( $type ).'">';
+                    $ret .= '<description>'.c_comdef_htmlspecialchars ( $description ).'</description>';
+                    $ret .= '<uri>'.c_comdef_htmlspecialchars ( $uri ).'</uri>';
+                    $ret .= '<parent_service_body name="'.c_comdef_htmlspecialchars ( $parent_service_body_name ).'" id="'.intval ( $parent_service_body_id ).'" type="'.c_comdef_htmlspecialchars ( $parent_service_body_type ).'"/>';
+                    $ret .= '<service_body_type>'.c_comdef_htmlspecialchars ( $this->my_localized_strings['service_body_types'][$type] ).'</service_body_type>';
+                    if ( $this_user_can_edit_the_body )
+                        {
+                        $ret .= '<contact_email>'.c_comdef_htmlspecialchars ( $contact_email ).'</contact_email>';
+                        $ret .= '<principal_user id="'.intval ( $principal_user->GetID() ).'">'.c_comdef_htmlspecialchars ( $principal_user->GetLocalName() ).'</principal_user>';
+                        if ( (isset ( $meeting_list_editors ) && is_array ( $meeting_list_editors ) && count ( $meeting_list_editors )) || (isset ( $observers ) && is_array ( $observers ) && count ( $observers )) )
+                            {
+                            $ret .= '<guest_editors>';
+                                if ( isset ( $meeting_list_editors ) && is_array ( $meeting_list_editors ) && count ( $meeting_list_editors ) )
+                                    {
+                                    $ret .= '<meeting_list_editors>';
+                                        foreach ( $meeting_list_editors as $editor )
+                                            {
+                                            $ret .= '<editor id="'.intval ( $editor->GetID() ).'">'.c_comdef_htmlspecialchars ( $editor->GetLocalName() ).'</editor>';
+                                            }
+                                    $ret .= '</meeting_list_editors>';
+                                    }
+                                    
+                                if ( isset ( $observers ) && is_array ( $observers ) && count ( $observers ) )
+                                    {
+                                    $ret .= '<observers>';
+                                        foreach ( $observers as $editor )
+                                            {
+                                            $ret .= '<editor id="'.intval ( $editor->GetID() ).'">'.c_comdef_htmlspecialchars ( $editor->GetLocalName() ).'</editor>';
+                                            }
+                                    $ret .= '</observers>';
+                                    }
+                            $ret .= '</guest_editors>';
+                            }
+                        }
+                $ret .= '</service_body>';
                 }
             }
         else

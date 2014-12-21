@@ -193,6 +193,7 @@
 	                                        'service_body_cancel_button'                            =>  'Restaurer l\'original',
 	                                        'service_body_editor_type_label'                        =>  'Type de composante de structure de service',
 	                                        'service_body_editor_type_c_comdef_service_body__GRP__' =>  'Groupe',
+	                                        'service_body_editor_type_c_comdef_service_body__COP__' =>  'Co-Op',
 	                                        'service_body_editor_type_c_comdef_service_body__ASC__' =>  'Comité de service local',
 	                                        'service_body_editor_type_c_comdef_service_body__RSC__' =>  'Comité de Service Regional',
 	                                        'service_body_editor_type_c_comdef_service_body__WSC__' =>  'Conférence Service mondial',

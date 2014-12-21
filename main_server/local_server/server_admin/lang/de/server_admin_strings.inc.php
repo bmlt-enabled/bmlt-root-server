@@ -193,6 +193,7 @@
 	                                        'service_body_cancel_button'                            =>  'Zurücksetzen auf Ursprung',
 	                                        'service_body_editor_type_label'                        =>  'Service Body Type:',
 	                                        'service_body_editor_type_c_comdef_service_body__GRP__' =>  'Gruppe',
+	                                        'service_body_editor_type_c_comdef_service_body__COP__' =>  'Co-Op',
 	                                        'service_body_editor_type_c_comdef_service_body__ASC__' =>  'Gebiets Service Kommitee',
 	                                        'service_body_editor_type_c_comdef_service_body__RSC__' =>  'Regionale Service Konferenz',
 	                                        'service_body_editor_type_c_comdef_service_body__WSC__' =>  'World Service Conference',

@@ -2658,7 +2658,15 @@ class c_comdef_server
                                                                                             );
 
             c_comdef_server::$server_local_strings['weekdays'] = $comdef_server_admin_strings['meeting_search_weekdays_names'];
-                
+            c_comdef_server::$server_local_strings['service_body_types'] = array (  c_comdef_service_body__GRP__ => $comdef_server_admin_strings['service_body_editor_type_c_comdef_service_body__GRP__'],
+                                                                                    c_comdef_service_body__COP__ => $comdef_server_admin_strings['service_body_editor_type_c_comdef_service_body__COP__'],
+                                                                                    c_comdef_service_body__ASC__ => $comdef_server_admin_strings['service_body_editor_type_c_comdef_service_body__ASC__'],
+                                                                                    c_comdef_service_body__RSC__ => $comdef_server_admin_strings['service_body_editor_type_c_comdef_service_body__RSC__'],
+                                                                                    c_comdef_service_body__WSC__ => $comdef_server_admin_strings['service_body_editor_type_c_comdef_service_body__WSC__'],
+                                                                                    c_comdef_service_body__MAS__ => $comdef_server_admin_strings['service_body_editor_type_c_comdef_service_body__MAS__'],
+                                                                                    c_comdef_service_body__ZFM__ => $comdef_server_admin_strings['service_body_editor_type_c_comdef_service_body__ZFM__']
+                                                                                    );
+
             
             if ( trim($comdef_distance_units) )
                 {

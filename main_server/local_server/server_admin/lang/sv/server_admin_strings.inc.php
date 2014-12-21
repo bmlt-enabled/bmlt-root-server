@@ -194,6 +194,7 @@
 	                                        'service_body_cancel_button'                            =>  'återställ',
 	                                        'service_body_editor_type_label'                        =>  'Serviceenhet typ:',
 	                                        'service_body_editor_type_c_comdef_service_body__GRP__' =>  'Grupp',
+	                                        'service_body_editor_type_c_comdef_service_body__COP__' =>  'Co-Op',
 	                                        'service_body_editor_type_c_comdef_service_body__ASC__' =>  'Distrikt',
 	                                        'service_body_editor_type_c_comdef_service_body__RSC__' =>  'Region',
 	                                        'service_body_editor_type_c_comdef_service_body__WSC__' =>  'World Service',

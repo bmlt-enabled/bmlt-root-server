@@ -44,6 +44,7 @@ require_once ( dirname ( __FILE__ )."/../shared/classes/base_templates.inc.php" 
 //	These are defines used to specify what type of Service Body this is.
 
 define ( "c_comdef_service_body__GRP__", "GR" );	// Regular Group
+define ( "c_comdef_service_body__COP__", "CO" );	// Co-Op
 define ( "c_comdef_service_body__ASC__", "AS" );	// Area Service Committee
 define ( "c_comdef_service_body__RSC__", "RS" );	// Regional Service Committee
 define ( "c_comdef_service_body__WSC__", "WS" );	// World Service Committee
@@ -897,7 +898,7 @@ class c_comdef_service_body extends t_comdef_world_type implements i_comdef_db_s
             
                 foreach ( $editors as $id )
                     {
-                    if ( $in_user_object->GetID () == $id )
+                    if ( ($in_user_object->GetID () == $id) && ($in_user_object->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) )
                         {
                         $ret = true;
                         break;
@@ -913,6 +914,58 @@ class c_comdef_service_body extends t_comdef_world_type implements i_comdef_db_s
                         if ( $parent instanceof c_comdef_service_body )
                             {
                             $ret = $parent->UserCanEditMeetings ( $in_user_object );
+                            }
+                        }
+                    }
+                }
+	        }
+	    
+	    return $ret;
+	}
+	
+	/*******************************************************************/
+	/** \brief Test to see if a user is allowed to observe in this
+	           Service body.
+	
+		\returns true, if the user is allowed to observe, false, otherwise.
+	*/
+	function UserCanObserve (
+							    $in_user_object = null	///< A reference to a c_comdef_user object, for the user to be validated. If null, or not supplied, the server current user is tested.
+							    )
+	{
+	    $ret = $this->UserCanEdit ( $in_user_object );  // First, see if we are able to edit this Service body. If so, then we're golden.
+	    
+	    if ( !$ret )    // If not, then see if we are able to edit as a "guest."
+	        {
+            if ( null == $in_user_object )
+                {
+                $in_user_object = c_comdef_server::GetCurrentUserObj();
+                }
+		
+            if ( $in_user_object instanceof c_comdef_user )
+                {
+                $in_user_object->RestoreFromDB();	// The reason you do this, is to ensure that the user wasn't modified "live." It's a security precaution.
+
+                $editors = $this->GetEditors ();
+            
+                foreach ( $editors as $id )
+                    {
+                    if ( ($in_user_object->GetID () == $id) && (($in_user_object->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) || ($in_user_object->GetUserLevel() == _USER_LEVEL_OBSERVER)) )
+                        {
+                        $ret = true;
+                        break;
+                        }
+                    }
+                
+                if ( !$ret )
+                    {
+                    if ( $this->GetOwnerID() )
+                        {
+                        $parent = c_comdef_server::GetServiceBodyByIDObj ( $this->GetOwnerID() );
+                    
+                        if ( $parent instanceof c_comdef_service_body )
+                            {
+                            $ret = $parent->UserCanObserve ( $in_user_object );
                             }
                         }
                     }
