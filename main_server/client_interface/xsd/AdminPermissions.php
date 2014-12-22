@@ -39,7 +39,7 @@ else
 	header ( 'Content-Type:application/xml; charset=UTF-8' );
 	ob_start();
 	}
-echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">"; ?>
+echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:xsn="http://<?php echo $_SERVER['SERVER_NAME'] ?>"
 	targetNamespace="http://<?php echo $_SERVER['SERVER_NAME'] ?>"

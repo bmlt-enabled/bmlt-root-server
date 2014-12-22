@@ -39,75 +39,86 @@ else
 	header ( 'Content-Type:application/xml; charset=UTF-8' );
 	ob_start();
 	}
-echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">"; ?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:xsn="http://<?php echo $_SERVER['SERVER_NAME'] ?>"
-	targetNamespace="http://<?php echo $_SERVER['SERVER_NAME'] ?>"
-	elementFormDefault="qualified">
+echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
+<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema' xmlns:ns1='http://<?php echo $_SERVER['SERVER_NAME'] ?>' elementFormDefault='qualified' targetNamespace='http://<?php echo $_SERVER['SERVER_NAME'] ?>'>
     <xs:element name='service_bodies'>
         <xs:complexType>
             <xs:sequence>
-                <xs:element maxOccurs='unbounded' ref='service_body'/>
+                <xs:element minOccurs='1' maxOccurs='unbounded' ref='ns1:service_body'/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+    
     <xs:element name='service_body'>
         <xs:complexType>
             <xs:sequence>
-                <xs:element ref='description'/>
-                <xs:element ref='uri'/>
-                <xs:element ref='parent_service_body'/>
-                <xs:element ref='service_body_type'/>
-                <xs:element ref='contact_email'/>
-                <xs:element ref='principal_user'/>
-                <xs:element ref='guest_editors'/>
+                <xs:element name='service_body_type' type='xs:string' minOccurs='1' maxOccurs='1'/>
+                <xs:element ref='ns1:principal_user' minOccurs='1' maxOccurs='1'/>
+                <xs:choice minOccurs='0' maxOccurs='5'>
+                    <xs:element name='description' type='xs:string'/>
+                    <xs:element name='uri' type='xs:anyURI'/>
+                    <xs:element name='contact_email' type='xs:string'/>
+                    <xs:element ref='ns1:parent_service_body'/>
+                    <xs:element ref='ns1:editors'/>
+                </xs:choice>
             </xs:sequence>
             <xs:attribute name='id' use='required' type='xs:integer'/>
-            <xs:attribute name='name' use='required'/>
-            <xs:attribute name='type' use='required' type='xs:NCName'/>
+            <xs:attribute name='name' use='required' type='xs:string'/>
+            <xs:attribute name='type' use='required' type='xs:string'/>
         </xs:complexType>
     </xs:element>
-    <xs:element name='description' type='xs:string'/>
-    <xs:element name='uri' type='xs:anyURI'/>
-    <xs:element name='parent_service_body'>
-        <xs:complexType>
-            <xs:attribute name='id' use='required' type='xs:integer'/>
-            <xs:attribute name='name' use='required'/>
-            <xs:attribute name='type' use='required'/>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name='service_body_type' type='xs:string'/>
-    <xs:element name='contact_email' type='xs:string'/>
+    
     <xs:element name='principal_user'>
         <xs:complexType mixed='true'>
             <xs:attribute name='id' use='required' type='xs:integer'/>
         </xs:complexType>
     </xs:element>
-    <xs:element name='guest_editors'>
+    
+    <xs:element name='parent_service_body'>
+        <xs:complexType mixed='true'>
+            <xs:attribute name='id' use='required' type='xs:integer'/>
+            <xs:attribute name='type' use='required' type='xs:string'/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name='editors'>
         <xs:complexType>
             <xs:sequence>
-                <xs:element minOccurs='0' ref='meeting_list_editors'/>
-                <xs:element minOccurs='0' ref='observers'/>
+                <xs:element ref='ns1:service_body_editors' minOccurs='1' maxOccurs='1'/>
+                <xs:element ref='ns1:meeting_list_editors' minOccurs='0' maxOccurs='1'/>
+                <xs:element ref='ns1:observers' minOccurs='0' maxOccurs='1'/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+    
+    <xs:element name='service_body_editors'>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref='ns1:editor' minOccurs='1' maxOccurs='unbounded'/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
     <xs:element name='meeting_list_editors'>
         <xs:complexType>
             <xs:sequence>
-                <xs:element maxOccurs='unbounded' ref='editor'/>
+                <xs:element ref='ns1:editor' minOccurs='1' maxOccurs='unbounded'/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+    
     <xs:element name='observers'>
         <xs:complexType>
             <xs:sequence>
-                <xs:element ref='editor'/>
+                <xs:element ref='ns1:editor' minOccurs='1' maxOccurs='unbounded'/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+    
     <xs:element name='editor'>
         <xs:complexType mixed='true'>
             <xs:attribute name='id' use='required' type='xs:integer'/>
+            <xs:attribute name='type' use='required' type='xs:string'/>
         </xs:complexType>
     </xs:element>
 </xs:schema>

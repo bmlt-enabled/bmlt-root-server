@@ -155,7 +155,7 @@ class c_comdef_admin_xml_handler
                 $uri = $service_body->GetURI();
                 $type = $service_body->GetSBType();
 
-                $parent_service_body_id = -1;
+                $parent_service_body_id = 0;
                 $parent_service_body_name = "";
                 $parent_service_body_type = "";
 
@@ -169,6 +169,7 @@ class c_comdef_admin_xml_handler
                     }
                 
                 $principal_user = $service_body->GetPrincipalUserObj();
+                $principal_user_id = intval ( $principal_user->GetID() );
                 $guest_editors = $this->server->GetUsersByLevelObj ( _USER_LEVEL_OBSERVER, TRUE );
                 $service_body_editors = array();
                 $meeting_list_editors = array();
@@ -176,20 +177,17 @@ class c_comdef_admin_xml_handler
                 
                 foreach ( $guest_editors as $editor )
                     {
-                    if ( $editor->GetID() != $principal_user->GetID() )  // We don't count the principal user
+                    if ( $service_body->UserCanEdit ( $editor ) )
                         {
-                        if ( $service_body->UserCanEdit ( $editor ) )
-                            {
-                            array_push ( $service_body_editors, $editor );
-                            }
-                        if ( $service_body->UserCanEditMeetings ( $editor ) )
-                            {
-                            array_push ( $meeting_list_editors, $editor );
-                            }
-                        elseif ( $service_body->UserCanObserve ( $editor ) )
-                            {
-                            array_push ( $observers, $editor );
-                            }
+                        array_push ( $service_body_editors, $editor );
+                        }
+                    elseif ( $service_body->UserCanEditMeetings ( $editor ) )
+                        {
+                        array_push ( $meeting_list_editors, $editor );
+                        }
+                    elseif ( $service_body->UserCanObserve ( $editor ) )
+                        {
+                        array_push ( $observers, $editor );
                         }
                     }
                 
@@ -209,48 +207,62 @@ class c_comdef_admin_xml_handler
                     
                 // At this point, we have all the information we need to build the response XML.
                 $ret = '<service_body id="'.c_comdef_htmlspecialchars ( $in_service_body_id ).'" name="'.c_comdef_htmlspecialchars ( $name ).'" type="'.c_comdef_htmlspecialchars ( $type ).'">';
-                    $ret .= '<description>'.c_comdef_htmlspecialchars ( $description ).'</description>';
-                    $ret .= '<uri>'.c_comdef_htmlspecialchars ( $uri ).'</uri>';
-                    $ret .= '<parent_service_body name="'.c_comdef_htmlspecialchars ( $parent_service_body_name ).'" id="'.intval ( $parent_service_body_id ).'" type="'.c_comdef_htmlspecialchars ( $parent_service_body_type ).'"/>';
                     $ret .= '<service_body_type>'.c_comdef_htmlspecialchars ( $this->my_localized_strings['service_body_types'][$type] ).'</service_body_type>';
-                    if ( $this_user_can_edit_the_body )
+                    $ret .= '<principal_user id="'.$principal_user_id.'">'.c_comdef_htmlspecialchars ( $principal_user->GetLocalName() ).'</principal_user>';
+                    if ( isset ( $description ) && $description )
+                        {
+                        $ret .= '<description>'.c_comdef_htmlspecialchars ( $description ).'</description>';
+                        }
+                    if ( isset ( $uri ) && $uri )
+                        {
+                        $ret .= '<uri>'.c_comdef_htmlspecialchars ( $uri ).'</uri>';
+                        }
+                    if ( isset ( $parent_service_body ) && $parent_service_body )
+                        {
+                        $ret .= '<parent_service_body id="'.intval ( $parent_service_body_id ).'" type="'.c_comdef_htmlspecialchars ( $parent_service_body_type ).'">'.c_comdef_htmlspecialchars ( $parent_service_body_name ).'</parent_service_body>';
+                        }
+                    if ( $this_user_can_edit_the_body && isset ( $contact_email ) && $contact_email )
                         {
                         $ret .= '<contact_email>'.c_comdef_htmlspecialchars ( $contact_email ).'</contact_email>';
-                        $ret .= '<principal_user id="'.intval ( $principal_user->GetID() ).'">'.c_comdef_htmlspecialchars ( $principal_user->GetLocalName() ).'</principal_user>';
-                        if ( (isset ( $meeting_list_editors ) && is_array ( $meeting_list_editors ) && count ( $meeting_list_editors )) || (isset ( $observers ) && is_array ( $observers ) && count ( $observers )) )
-                            {
-                            $ret .= '<guest_editors>';
-                                if ( isset ( $service_body_editors ) && is_array ( $service_body_editors ) && count ( $service_body_editors ) )
-                                    {
-                                    $ret .= '<service_body_editors>';
-                                        foreach ( $service_body_editors as $editor )
-                                            {
-                                            $ret .= '<editor id="'.intval ( $editor->GetID() ).'" type="'.( in_array ( $editor->GetID(), $guest_editors ) ? 'direct' : 'inherit' ).'">'.c_comdef_htmlspecialchars ( $editor->GetLocalName() ).'</editor>';
-                                            }
-                                    $ret .= '</service_body_editors>';
-                                    }
-                                    
-                                if ( isset ( $meeting_list_editors ) && is_array ( $meeting_list_editors ) && count ( $meeting_list_editors ) )
-                                    {
-                                    $ret .= '<meeting_list_editors>';
-                                        foreach ( $meeting_list_editors as $editor )
-                                            {
-                                            $ret .= '<editor id="'.intval ( $editor->GetID() ).'" type="'.( in_array ( $editor->GetID(), $guest_editors ) ? 'direct' : 'inherit' ).'">'.c_comdef_htmlspecialchars ( $editor->GetLocalName() ).'</editor>';
-                                            }
-                                    $ret .= '</meeting_list_editors>';
-                                    }
-                                    
-                                if ( isset ( $observers ) && is_array ( $observers ) && count ( $observers ) )
-                                    {
-                                    $ret .= '<observers>';
-                                        foreach ( $observers as $editor )
-                                            {
-                                            $ret .= '<editor id="'.intval ( $editor->GetID() ).'" type="'.( in_array ( $editor->GetID(), $guest_editors ) ? 'direct' : 'inherit' ).'">'.c_comdef_htmlspecialchars ( $editor->GetLocalName() ).'</editor>';
-                                            }
-                                    $ret .= '</observers>';
-                                    }
-                            $ret .= '</guest_editors>';
-                            }
+                        }
+                    if (    (isset ( $service_body_editors ) && is_array ( $service_body_editors ) && count ( $service_body_editors ))
+                        ||  (isset ( $meeting_list_editors ) && is_array ( $meeting_list_editors ) && count ( $meeting_list_editors ))
+                        ||  (isset ( $observers ) && is_array ( $observers ) && count ( $observers )) )
+                        {
+                        $ret .= '<editors>';
+                            if ( isset ( $service_body_editors ) && is_array ( $service_body_editors ) && count ( $service_body_editors ) )
+                                {
+                                $ret .= '<service_body_editors>';
+                                    foreach ( $service_body_editors as $editor )
+                                        {
+                                        $editor_id = intval ( $editor->GetID() );
+                                        $ret .= '<editor id="'.$editor_id.'" type="'.( in_array ( $editor_id, $guest_editors ) ? 'direct' : (( $editor_id == $principal_user_id ) ? 'principal' : 'inherit')).'">'.c_comdef_htmlspecialchars ( $editor->GetLocalName() ).'</editor>';
+                                        }
+                                $ret .= '</service_body_editors>';
+                                }
+                                
+                            if ( isset ( $meeting_list_editors ) && is_array ( $meeting_list_editors ) && count ( $meeting_list_editors ) )
+                                {
+                                $ret .= '<meeting_list_editors>';
+                                    foreach ( $meeting_list_editors as $editor )
+                                        {
+                                        $editor_id = intval ( $editor->GetID() );
+                                        $ret .= '<editor id="'.$editor_id.'" type="'.( in_array ( $editor_id, $guest_editors ) ? 'direct' : (( $editor_id == $principal_user_id ) ? 'principal' : 'inherit' )).'">'.c_comdef_htmlspecialchars ( $editor->GetLocalName() ).'</editor>';
+                                        }
+                                $ret .= '</meeting_list_editors>';
+                                }
+                                
+                            if ( isset ( $observers ) && is_array ( $observers ) && count ( $observers ) )
+                                {
+                                $ret .= '<observers>';
+                                    foreach ( $observers as $editor )
+                                        {
+                                        $editor_id = intval ( $editor->GetID() );
+                                        $ret .= '<editor id="'.$editor_id.'" type="'.( in_array ( $editor_id, $guest_editors ) ? 'direct' : (( $editor_id == $principal_user_id ) ? 'principal' : 'inherit' )).'">'.c_comdef_htmlspecialchars ( $editor->GetLocalName() ).'</editor>';
+                                        }
+                                $ret .= '</observers>';
+                                }
+                        $ret .= '</editors>';
                         }
                 $ret .= '</service_body>';
                 }
