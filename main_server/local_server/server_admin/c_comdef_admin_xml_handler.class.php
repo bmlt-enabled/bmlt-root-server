@@ -67,6 +67,10 @@ class c_comdef_admin_xml_handler
                     case 'get_service_body_info':
                         $ret = $this->process_service_bodies_info_request();
                     break;
+                    
+                    case 'get_meetings':
+                        $ret = $this->process_meeting_search();
+                    break;
                 
                     default:
                         $ret = '<h1>BAD ADMIN ACTION</h1>';
@@ -87,6 +91,15 @@ class c_comdef_admin_xml_handler
     }
     
     /********************************************************************************************************//**
+    \brief This fulfills a user request to return meeting information from a search..
+    
+    \returns XML, containing the answer.
+    ************************************************************************************************************/
+    function process_meeting_search()
+    {
+    }
+    
+    /********************************************************************************************************//**
     \brief This fulfills a user request to return Service Body information for multiple Service bodies.
     
     \returns XML, containing the answer.
@@ -98,27 +111,42 @@ class c_comdef_admin_xml_handler
         $user_obj = $this->server->GetCurrentUserObj();
         if ( isset ( $user_obj ) && ($user_obj instanceof c_comdef_user) && ($user_obj->GetUserLevel() != _USER_LEVEL_DISABLED) && ($user_obj->GetUserLevel() != _USER_LEVEL_SERVER_ADMIN) && ($user_obj->GetID() > 1) )
             {
-            $service_body_id = 0;
-        
+            $service_body_ids = array();
+            
+            // Look to see if the caller is asking for particular Service bodies.
             if ( isset ( $this->http_vars['sb_id'] ) && $this->http_vars['sb_id'] )
                 {
-                $service_body_id = intval ( trim ( $this->http_vars['sb_id'] ) );   // The user needs to specify the BMLT ID of the Service body.
+                if ( !is_array ( $this->http_vars['sb_id'] ) )
+                    {
+                    $service_body_ids[] = intval ( trim ( $this->http_vars['sb_id'] ) );
+                    }
+                else
+                    {
+                    foreach ( $this->http_vars['sb_id'] as $id )
+                        {
+                        if ( intval ( trim ( $id ) ) )
+                            {
+                            $service_body_ids[] = intval ( trim ( $id ) );
+                            }
+                        }
+                    }
                 }
             
-            if ( $service_body_id )
+            // If we have a request for individual Service bodies, then we just return those ones.
+            if ( isset ( $service_body_ids ) && is_array ( $service_body_ids ) && count ( $service_body_ids ) )
                 {
-                $ret = $this->process_service_body_info_request ( $service_body_id );
+                foreach ( $service_body_ids as $id )
+                    {
+                    $ret .= $this->process_service_body_info_request ( $id );
+                    }
                 }
-            else
+            else    // If they are not looking for particular bodies, then we return the whole kit & kaboodle.
                 {
                 $service_bodies = $this->server->GetServiceBodyArray();
             
                 foreach ( $service_bodies as $service_body )
                     {
-                    if ( $service_body->UserCanObserve() )  // Belt & suspenders...
-                        {
-                        $ret .= $this->process_service_body_info_request ( $service_body->GetID() );
-                        }
+                    $ret .= $this->process_service_body_info_request ( $service_body->GetID() );
                     }
                 }
         
@@ -166,6 +194,17 @@ class c_comdef_admin_xml_handler
                     $parent_service_body_id = intval ( $parent_service_body->GetID() );
                     $parent_service_body_name = $parent_service_body->GetLocalName();
                     $parent_service_body_type = $parent_service_body->GetSBType();
+                    }
+                    
+                $service_bodies = $this->server->GetServiceBodyArray();
+                $children = array();
+                
+                foreach ( $service_bodies as $child )
+                    {
+                    if ( $child->IsOwnedBy ( $in_service_body_id, TRUE ) )
+                        {
+                        $children[] = $child;
+                        }
                     }
                 
                 $principal_user = $service_body->GetPrincipalUserObj();
@@ -264,6 +303,19 @@ class c_comdef_admin_xml_handler
                                 }
                         $ret .= '</editors>';
                         }
+                    
+                    if ( isset ( $children ) && is_array ( $children ) && count ( $children ) )
+                        {
+                        $ret .= '<children>';
+                        
+                        foreach ( $children as $child )
+                            {
+                            $ret .= '<child_service_body id="'.intval ( $child->GetID() ).'" type="'.c_comdef_htmlspecialchars ( $child->GetSBType() ).'">'.c_comdef_htmlspecialchars ( $child->GetLocalName() ).'</child_service_body>';
+                            }
+                        
+                        $ret .= '</children>';
+                        }
+                    
                 $ret .= '</service_body>';
                 }
             }

@@ -54,12 +54,13 @@ echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
             <xs:sequence>
                 <xs:element name='service_body_type' type='xs:string' minOccurs='1' maxOccurs='1'/>
                 <xs:element ref='ns1:principal_user' minOccurs='1' maxOccurs='1'/>
-                <xs:choice minOccurs='0' maxOccurs='5'>
+                <xs:choice minOccurs='0' maxOccurs='6'>
                     <xs:element name='description' type='xs:string'/>
                     <xs:element name='uri' type='xs:anyURI'/>
                     <xs:element name='contact_email' type='xs:string'/>
                     <xs:element ref='ns1:parent_service_body'/>
                     <xs:element ref='ns1:editors'/>
+                    <xs:element ref='ns1:children'/>
                 </xs:choice>
             </xs:sequence>
             <xs:attribute name='id' use='required' type='xs:integer'/>
@@ -106,6 +107,14 @@ echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+
+    <xs:element name='children'>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref='ns1:child_service_body' minOccurs='1' maxOccurs='unbounded'/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
     
     <xs:element name='observers'>
         <xs:complexType>
@@ -116,6 +125,13 @@ echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
     </xs:element>
     
     <xs:element name='editor'>
+        <xs:complexType mixed='true'>
+            <xs:attribute name='id' use='required' type='xs:integer'/>
+            <xs:attribute name='type' use='required' type='xs:string'/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name='child_service_body'>
         <xs:complexType mixed='true'>
             <xs:attribute name='id' use='required' type='xs:integer'/>
             <xs:attribute name='type' use='required' type='xs:string'/>
