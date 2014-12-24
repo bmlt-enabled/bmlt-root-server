@@ -770,6 +770,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 			throw ( $ex );
 			}
 		
+		$ret['published'] = 'published';    // The last field is always the published flag.
 		return $ret;
 	}
 	

@@ -71,13 +71,9 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"; ?>
 									case	'service_body_bigint':
 									case	'shared_group_id_bigint':
 									case	'id_bigint':
+									case	'published':
 										echo "integer";
 									break;
-									
-// 									case	'start_time':
-// 									case	'duration_time':
-// 										echo "time";
-// 									break;
 									
 									case	'longitude':
 									case	'latitude':
@@ -104,11 +100,12 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"; ?>
                             <xs:element name="row" maxOccurs="unbounded">
                                 <xs:complexType>
                                     <xs:sequence>
-                                        <xs:element name="key_string" type="xs:NCName"/>
+                                        <xs:element name="key_string" type="xs:string"/>
                                         <xs:element name="name_string" type="xs:string"/>
                                         <xs:element name="description_string" type="xs:string"/>
-                                        <xs:element name="lang" type="xs:NCName"/>
+                                        <xs:element name="lang" type="xs:string"/>
                                         <xs:element name="id" type="xs:integer"/>
+                                        <xs:element name="world_id" type="xs:string" minOccurs="0"/>
                                     </xs:sequence>
                                     <xs:attribute name="id" use="required" type="xs:integer"/>
                                 </xs:complexType>

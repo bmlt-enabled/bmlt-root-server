@@ -103,6 +103,106 @@ class c_comdef_admin_xml_handler
     ************************************************************************************************************/
     function process_meeting_search()
     {
+	if ( !( isset ( $in_http_vars['geo_width'] ) && $in_http_vars['geo_width'] ) && isset ( $in_http_vars['bmlt_search_type'] ) && ($in_http_vars['bmlt_search_type'] == 'advanced') && isset ( $in_http_vars['advanced_radius'] ) && isset ( $in_http_vars['advanced_mapmode'] ) && $in_http_vars['advanced_mapmode'] && ( floatval ( $in_http_vars['advanced_radius'] != 0.0 ) ) && isset ( $in_http_vars['lat_val'] ) &&	 isset ( $in_http_vars['long_val'] ) && ( (floatval ( $in_http_vars['lat_val'] ) != 0.0) || (floatval ( $in_http_vars['long_val'] ) != 0.0) ) )
+		{
+		$in_http_vars['geo_width'] = $in_http_vars['advanced_radius'];
+		}
+	elseif ( !( isset ( $in_http_vars['geo_width'] ) && $in_http_vars['geo_width'] ) && isset ( $in_http_vars['bmlt_search_type'] ) && ($in_http_vars['bmlt_search_type'] == 'advanced') )
+		{
+		$in_http_vars['lat_val'] = null;
+		$in_http_vars['long_val'] = null;
+		}
+	elseif ( !isset ( $in_http_vars['geo_loc'] ) || $in_http_vars['geo_loc'] != 'yes' )
+		{
+		if ( !isset( $in_http_vars['geo_width'] ) )
+			{
+			$in_http_vars['geo_width'] = 0;
+			}
+		}
+
+	require_once ( dirname ( dirname ( dirname ( __FILE__ ) ) ).'/client_interface/csv/search_results_csv.php' );
+	
+	$geocode_results = null;
+	$ignore_me = null;
+	$meeting_objects = array();
+	$formats_ar = array ();
+	$result2 = DisplaySearchResultsCSV ( $this->http_vars, $ignore_me, $geocode_results, $meeting_objects );
+
+    if ( is_array ( $meeting_objects ) && count ( $meeting_objects ) && is_array ( $formats_ar ) )
+        {
+		foreach ( $meeting_objects as $one_meeting )
+		    {
+		    $formats = $one_meeting->GetMeetingDataValue ( 'formats' );
+
+            foreach ( $formats as $format )
+                {
+                if ( $format && ($format instanceof c_comdef_format) )
+                    {
+                    $format_shared_id = $format->GetSharedID();
+                    $formats_ar[$format_shared_id] = $format;
+                    }
+                }
+		    }
+		}
+	
+	if ( isset ( $in_http_vars['data_field_key'] ) && $in_http_vars['data_field_key'] )
+		{
+		// At this point, we have everything in a CSV. We separate out just the field we want.
+		$temp_keyed_array = array();
+		$result = explode ( "\n", $result );
+		$keys = array_shift ( $result );
+		$keys = explode ( "\",\"", trim ( $keys, '"' ) );
+		$the_keys = explode ( ',', $in_http_vars['data_field_key'] );
+		
+		$result = array();
+		foreach ( $result2 as $row )
+			{
+			if ( $row )
+				{
+				$index = 0;
+				$row = explode ( '","', trim ( $row, '",' ) );
+				$row_columns = array();
+				foreach ( $row as $column )
+					{
+					if ( !$column )
+					    {
+					    $column = ' ';
+					    }
+                    if ( in_array ( $keys[$index++], $the_keys ) )
+                        {
+                        array_push ( $row_columns, $column );
+                        }
+					}
+				$result[$row[0]] = '"'.implode ( '","', $row_columns ).'"';
+				}
+			}
+
+		$the_keys = array_intersect ( $keys, $the_keys );
+		$result2 = '"'.implode ( '","', $the_keys )."\"\n".implode ( "\n", $result );
+		}
+	    
+		
+    $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<meetings xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/GetSearchResults.php\">";
+    $result .= $this->TranslateCSVToXML ( $result2 );
+    if ( (isset ( $http_vars['get_used_formats'] ) || isset ( $http_vars['get_formats_only'] )) && $formats_ar && is_array ( $formats_ar ) && count ( $formats_ar ) )
+        {
+        if ( isset ( $http_vars['get_formats_only'] ) )
+            {
+            $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<formats xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/GetFormats.php\">";
+            }
+        else
+            {
+            $result .= "<formats>";
+            }
+        $result3 = GetFormats ( $server, $langs, $formats_ar );
+        $result .= TranslateToXML ( $result3 );
+        
+        $result .= "</formats>";
+        }
+    
+    $result .= isset ( $http_vars['get_formats_only'] ) ? "" : "</meetings>";
+	
+	return $result;
     }
     
     /********************************************************************************************************//**
@@ -512,6 +612,45 @@ class c_comdef_admin_xml_handler
             }
         
         return $ret;
+        }
+
+    /*******************************************************************/
+    /**
+        \brief Translates CSV to XML.
+    
+        \returns an XML string, with all the data in the CSV.
+    */	
+    function TranslateCSVToXML (	$in_csv_data	///< An array of CSV data, with the first element being the field names.
+                                )
+        {
+        $temp_keyed_array = array();
+        $in_csv_data = explode ( "\n", $in_csv_data );
+        $keys = array_shift ( $in_csv_data );
+        $keys = rtrim ( ltrim ( $keys, '"' ), '",' );
+        $keys = preg_split ( '/","/', $keys );
+    
+        foreach ( $in_csv_data as $row )
+            {
+            if ( $row )
+                {
+                $line = null;
+                $index = 0;
+                $row_t = rtrim ( ltrim ( $row, '"' ), '",' );
+                $row_t = preg_split ( '/","/', $row_t );
+                foreach ( $row_t as $column )
+                    {
+                    if ( isset ( $column ) )
+                        {
+                        $line[$keys[$index++]] = trim ( $column );
+                        }
+                    }
+                array_push ( $temp_keyed_array, $line );
+                }
+            }
+
+        $out_xml_data = array2xml ( $temp_keyed_array, 'not_used', false );
+
+        return $out_xml_data;
         }
 };
 ?>
