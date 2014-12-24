@@ -60,5 +60,4 @@ echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-</xs:schema>
-<?php ob_end_flush(); ?>
+</xs:schema><?php ob_end_flush(); ?>

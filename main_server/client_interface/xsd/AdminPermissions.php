@@ -1,7 +1,7 @@
 <?php
 /****************************************************************************************//**
-* \file GetChanges.php																		*
-* \brief Returns an XML response, containing the schema for the switcher=GetChanges XML call			*
+* \file AdminPermissions.php															    *
+* \brief Returns an XML response, containing the schema for the Admin Permissions call      *
 
     This file is part of the Basic Meeting List Toolbox (BMLT).
     
@@ -67,4 +67,4 @@ echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-</xs:schema>
+</xs:schema><?php ob_end_flush(); ?>

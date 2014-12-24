@@ -668,7 +668,8 @@ function GetFormats (
 						'name_string',
 						'description_string',
 						'lang',
-						'id'
+						'id',
+						'world_id'
 						);
 	
 	$ret = null;
@@ -747,6 +748,10 @@ function GetFormats (
                                     
                                     case	'description_string':
                                         $val = $localized_format->GetLocalDescription();
+                                    break;
+                                    
+                                    case    'world_id':
+                                        $val = $localized_format->GetWorldID();
                                     break;
                                     }
                                 

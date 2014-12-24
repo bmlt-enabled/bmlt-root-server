@@ -47,28 +47,21 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"; ?>
     <xs:element name="formats">
         <xs:complexType>
             <xs:sequence>
-                <xs:element maxOccurs="unbounded" ref="xsn:row"/>
+                <xs:element name="row" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="key_string" type="xs:string"/>
+                            <xs:element name="name_string" type="xs:string"/>
+                            <xs:element name="description_string" type="xs:string"/>
+                            <xs:element name="lang" type="xs:string"/>
+                            <xs:element name="id" type="xs:integer"/>
+                            <xs:element name="world_id" type="xs:string" minOccurs="0"/>
+                        </xs:sequence>
+                        <xs:attribute name="sequence_index" use="required" type="xs:integer"/>
+                    </xs:complexType>
+                </xs:element>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-    <xs:element name="row">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="xsn:key_string"/>
-                <xs:element ref="xsn:name_string"/>
-                <xs:element ref="xsn:description_string"/>
-                <xs:element ref="xsn:lang"/>
-                <xs:element ref="xsn:id"/>
-            </xs:sequence>
-            <xs:attribute name="sequence_index" use="required" type="xs:integer"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="key_string" type="xs:string"/>
-    <xs:element name="name_string" type="xs:string"/>
-    <xs:element name="description_string" type="xs:string"/>
-    <xs:element name="lang" type="xs:NCName"/>
-    <xs:element name="id" type="xs:integer"/>
-</xs:schema><?php
-ob_end_flush();
-?>
+</xs:schema><?php ob_end_flush(); ?>
 

@@ -70,6 +70,10 @@ class c_comdef_admin_xml_handler
                         $ret = $this->process_service_bodies_info_request();
                     break;
                     
+                    case 'get_format_info':
+                        $ret = $this->process_format_info();
+                    break;
+                    
                     case 'get_meetings':
                         $ret = $this->process_meeting_search();
                     break;
@@ -93,12 +97,88 @@ class c_comdef_admin_xml_handler
     }
     
     /********************************************************************************************************//**
-    \brief This fulfills a user request to return meeting information from a search..
+    \brief This fulfills a user request to return meeting information from a search.
     
     \returns XML, containing the answer.
     ************************************************************************************************************/
     function process_meeting_search()
     {
+    }
+    
+    /********************************************************************************************************//**
+    \brief This fulfills a user request to return format information.
+    
+    \returns XML, containing the answer.
+    ************************************************************************************************************/
+    function process_format_info()
+    {
+        $ret = '';
+        
+        $user_obj = $this->server->GetCurrentUserObj();
+        if ( isset ( $user_obj ) && ($user_obj instanceof c_comdef_user) && ($user_obj->GetUserLevel() != _USER_LEVEL_DISABLED) && ($user_obj->GetUserLevel() != _USER_LEVEL_SERVER_ADMIN) && ($user_obj->GetID() > 1) )
+            {
+            $format_ids = array();
+            
+            // See if we are receiving a request for just specific formats, or if we are being asked for all of them.
+            if ( isset ( $this->http_vars['format_id'] ) && intval ( trim ( $this->http_vars['format_id'] ) ) )
+                {
+                $format_ids[] = intval ( trim ( $this->http_vars['format_id'] ) );
+                }
+            elseif ( isset ( $this->http_vars['format_id'] ) && is_array ( $this->http_vars['format_id'] ) && count ( $this->http_vars['format_id'] ) )
+                {
+                foreach ( $this->http_vars['format_id'] as $format )
+                    {
+                    $format_ids[] = intval ( trim ( $format ) );
+                    }
+                }
+            else
+                {
+                $format_ids = NULL;
+                }
+            
+            $lang = $this->server->GetLocalLang();
+            if ( isset ( $this->http_vars['lang'] ) && trim ( $this->http_vars['lang'] ) )
+                {
+                $lang = strtolower ( trim ( $this->http_vars['lang'] ) );
+                }
+            
+            $returned_formats = array();    // We will be returning our formats in this.
+            $format_objects = $this->server->GetFormatsObj()->GetFormatsByLanguage ( $lang ); // Get all the formats (not just the ones used, but ALL of them).
+            
+            // Filter for requested formats in the requested language.
+            foreach ( $format_objects as $format )
+                {
+                if ( !$format_ids || in_array ( intval ( $format->GetSharedID() ), $format_ids ) )
+                    {
+                    $returned_formats[] = $format;
+                    }
+                }
+            
+            // At this point, we have a complete array of just the format[s] that will be returned. Time to make some XML...
+            $index = 0;
+            foreach ( $returned_formats as $format )
+                {
+                $ret .= '<row sequence_index="'.strval ( $index++ ).'">';
+                    $ret.= '<key_string>'.c_comdef_htmlspecialchars ( $format->GetKey() ).'</key_string>';
+                    $ret.= '<name_string>'.c_comdef_htmlspecialchars ( $format->GetLocalName() ).'</name_string>';
+                    $ret.= '<description_string>'.c_comdef_htmlspecialchars ( $format->GetLocalDescription() ).'</description_string>';
+                    $ret.= '<lang>'.c_comdef_htmlspecialchars ( $lang ).'</lang>';
+                    $ret.= '<id>'.intval ( $format->GetSharedID() ).'</id>';
+                    $world_id = trim ( $format->GetWorldID() );
+                    if ( isset ( $world_id ) && $world_id )
+                        {
+                        $ret.= '<world_id>'.c_comdef_htmlspecialchars ( $world_id ).'</world_id>';
+                        }
+                $ret .= '</row>';
+                }
+            $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<formats xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/GetFormats.php\">$ret</formats>";
+            }
+        else
+            {
+            $ret = '<h1>NOT AUTHORIZED</h1>';
+            }
+            
+        return $ret;
     }
     
     /********************************************************************************************************//**
@@ -155,7 +235,7 @@ class c_comdef_admin_xml_handler
                     }
                 }
         
-            $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<service_bodies xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/AdminServiceBodies.php\">$ret</service_bodies>";
+            $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<service_bodies xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/HierServiceBodies.php\">$ret</service_bodies>";
             }
         else
             {
