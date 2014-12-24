@@ -174,7 +174,12 @@ class c_comdef_users implements i_comdef_has_parent
 			{
 			if ( ($in_login == $user->GetLogin()) && ($in_password == $user->GetPassword()) )
 				{
-				$ret = $user;
+				// We do a double-check, to make sure this is the valid user.
+				$user->RestoreFromDB();
+                if ( ($in_login == $user->GetLogin()) && ($in_password == $user->GetPassword()) )
+                    {
+                    $ret = $user;
+                    }
 				break;
 				}
 			}

@@ -53,31 +53,18 @@ echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
         <xs:complexType>
             <xs:sequence>
                 <xs:element name='service_body_type' type='xs:string' minOccurs='1' maxOccurs='1'/>
-                <xs:element ref='ns1:principal_user' minOccurs='1' maxOccurs='1'/>
-                <xs:choice minOccurs='0' maxOccurs='6'>
-                    <xs:element name='description' type='xs:string'/>
-                    <xs:element name='uri' type='xs:anyURI'/>
-                    <xs:element name='contact_email' type='xs:string'/>
-                    <xs:element ref='ns1:parent_service_body'/>
-                    <xs:element ref='ns1:editors'/>
-                    <xs:element ref='ns1:children'/>
+                <xs:element name='description' type='xs:string' minOccurs='0' maxOccurs='1'/>
+                <xs:element name='uri' type='xs:anyURI' minOccurs='0' maxOccurs='1'/>
+                <xs:element ref='ns1:parent_service_body' minOccurs='0' maxOccurs='1'/>
+                <xs:element name='contact_email' type='xs:string' minOccurs='0' maxOccurs='1'/>
+                <xs:element ref='ns1:editors' minOccurs='1' maxOccurs='1'/>
+                <xs:choice>
+                    <xs:element ref='ns1:children' minOccurs='0' maxOccurs='1'/>
+                    <xs:element ref='ns1:service_bodies' minOccurs='0' maxOccurs='1'/>
                 </xs:choice>
             </xs:sequence>
             <xs:attribute name='id' use='required' type='xs:integer'/>
             <xs:attribute name='name' use='required' type='xs:string'/>
-            <xs:attribute name='type' use='required' type='xs:string'/>
-        </xs:complexType>
-    </xs:element>
-    
-    <xs:element name='principal_user'>
-        <xs:complexType mixed='true'>
-            <xs:attribute name='id' use='required' type='xs:integer'/>
-        </xs:complexType>
-    </xs:element>
-    
-    <xs:element name='parent_service_body'>
-        <xs:complexType mixed='true'>
-            <xs:attribute name='id' use='required' type='xs:integer'/>
             <xs:attribute name='type' use='required' type='xs:string'/>
         </xs:complexType>
     </xs:element>
@@ -125,16 +112,50 @@ echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
     </xs:element>
     
     <xs:element name='editor'>
-        <xs:complexType mixed='true'>
-            <xs:attribute name='id' use='required' type='xs:integer'/>
-            <xs:attribute name='type' use='required' type='xs:string'/>
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:restriction base="xs:anyType">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:minLength value="1" />
+                        </xs:restriction>
+                    </xs:simpleType>
+                    <xs:attribute name='id' use='required' type='xs:integer'/>
+                    <xs:attribute name='type' use='required' type='xs:string'/>
+                </xs:restriction>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name='parent_service_body'>
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:restriction base="xs:anyType">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:minLength value="1" />
+                        </xs:restriction>
+                    </xs:simpleType>
+                    <xs:attribute name='id' use='required' type='xs:integer'/>
+                    <xs:attribute name='type' use='required' type='xs:string'/>
+                </xs:restriction>
+            </xs:simpleContent>
         </xs:complexType>
     </xs:element>
     
     <xs:element name='child_service_body'>
-        <xs:complexType mixed='true'>
-            <xs:attribute name='id' use='required' type='xs:integer'/>
-            <xs:attribute name='type' use='required' type='xs:string'/>
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:restriction base="xs:anyType">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:minLength value="1" />
+                        </xs:restriction>
+                    </xs:simpleType>
+                    <xs:attribute name='id' use='required' type='xs:integer'/>
+                    <xs:attribute name='type' use='required' type='xs:string'/>
+                </xs:restriction>
+            </xs:simpleContent>
         </xs:complexType>
     </xs:element>
 </xs:schema>

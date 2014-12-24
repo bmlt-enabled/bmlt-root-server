@@ -146,8 +146,15 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
                     if ( $handler )
                         {
                         $ret = $handler->process_commands();  // Do what you do so well...
-                    
-                        ob_start();
+                        header ( 'Content-Type:application/xml; charset=UTF-8' );
+                        if ( zlib_get_coding_type() === false )
+                            {
+                            ob_start("ob_gzhandler");
+                            }
+                        else
+                            {
+                            ob_start();
+                            }
                         echo ( $ret );
                         ob_end_flush();
                         }

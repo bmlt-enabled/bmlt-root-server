@@ -30,6 +30,7 @@ class c_comdef_admin_xml_handler
     var $http_vars;                     ///< This will hold the combined GET and POST parameters for this call.
     var $server;                        ///< The BMLT server model instance.
     var $my_localized_strings;          ///< An array of localized strings.
+    var $handled_service_body_ids;      ///< This is used to ensure that we respect the hierarchy when doing a hierarchical Service body request.
     
     /********************************************************************************************************//**
     \brief The class constructor.
@@ -41,6 +42,7 @@ class c_comdef_admin_xml_handler
         $this->http_vars = $in_http_vars;
         $this->server = $in_server;
         $this->my_localized_strings = c_comdef_server::GetLocalStrings();
+        $this->handled_service_body_ids = array();
     }
     
     /********************************************************************************************************//**
@@ -146,7 +148,10 @@ class c_comdef_admin_xml_handler
             
                 foreach ( $service_bodies as $service_body )
                     {
-                    $ret .= $this->process_service_body_info_request ( $service_body->GetID() );
+                    if ( isset ( $this->http_vars['flat'] ) || !$service_body->GetOwnerIDObject() )    // We automatically include top-level Service bodies here, and let ones with parents sort themselves out.
+                        {
+                        $ret .= $this->process_service_body_info_request ( $service_body->GetID() );
+                        }
                     }
                 }
         
@@ -173,104 +178,108 @@ class c_comdef_admin_xml_handler
         $user_obj = $this->server->GetCurrentUserObj();
         if ( isset ( $user_obj ) && ($user_obj instanceof c_comdef_user) && ($user_obj->GetUserLevel() != _USER_LEVEL_DISABLED) && ($user_obj->GetUserLevel() != _USER_LEVEL_SERVER_ADMIN) && ($user_obj->GetID() > 1) )
             {
-            $service_body = $this->server->GetServiceBodyByIDObj ( $in_service_body_id );
-            
-            if ( isset ( $service_body ) && ($service_body instanceof c_comdef_service_body) )
+            if ( !in_array ( $in_service_body_id, $this->handled_service_body_ids ) )
                 {
-                // Everyone gets the type, URI, name, description and parent Service body.
-                $name = $service_body->GetLocalName();
-                $description = $service_body->GetLocalDescription();
-                $uri = $service_body->GetURI();
-                $type = $service_body->GetSBType();
+                $this->handled_service_body_ids[] = $in_service_body_id;
+                $service_body = $this->server->GetServiceBodyByIDObj ( $in_service_body_id );
+            
+                if ( isset ( $service_body ) && ($service_body instanceof c_comdef_service_body) )
+                    {
+                    // Everyone gets the type, URI, name, description and parent Service body.
+                    $name = $service_body->GetLocalName();
+                    $description = $service_body->GetLocalDescription();
+                    $uri = $service_body->GetURI();
+                    $type = $service_body->GetSBType();
 
-                $parent_service_body_id = 0;
-                $parent_service_body_name = "";
-                $parent_service_body_type = "";
+                    $parent_service_body_id = 0;
+                    $parent_service_body_name = "";
+                    $parent_service_body_type = "";
 
-                $parent_service_body = $service_body->GetOwnerIDObject();
+                    $parent_service_body = $service_body->GetOwnerIDObject();
                 
-                if ( isset ( $parent_service_body ) && $parent_service_body )
-                    {
-                    $parent_service_body_id = intval ( $parent_service_body->GetID() );
-                    $parent_service_body_name = $parent_service_body->GetLocalName();
-                    $parent_service_body_type = $parent_service_body->GetSBType();
-                    }
-                    
-                $service_bodies = $this->server->GetServiceBodyArray();
-                $children = array();
-                
-                foreach ( $service_bodies as $child )
-                    {
-                    if ( $child->IsOwnedBy ( $in_service_body_id, TRUE ) )
-                        {
-                        $children[] = $child;
-                        }
-                    }
-                
-                $principal_user = $service_body->GetPrincipalUserObj();
-                $principal_user_id = intval ( $principal_user->GetID() );
-                $guest_editors = $this->server->GetUsersByLevelObj ( _USER_LEVEL_OBSERVER, TRUE );
-                $service_body_editors = array();
-                $meeting_list_editors = array();
-                $observers = array();
-                
-                foreach ( $guest_editors as $editor )
-                    {
-                    if ( $service_body->UserCanEdit ( $editor ) )
-                        {
-                        array_push ( $service_body_editors, $editor );
-                        }
-                    elseif ( $service_body->UserCanEditMeetings ( $editor ) )
-                        {
-                        array_push ( $meeting_list_editors, $editor );
-                        }
-                    elseif ( $service_body->UserCanObserve ( $editor ) )
-                        {
-                        array_push ( $observers, $editor );
-                        }
-                    }
-                
-                // We check to see which editors are mentioned in this Service body.
-                $guest_editors = $service_body->GetEditors();
-                
-                // See if we have rights to edit this Service body. Just for the heck of it, we check the user level (not really necessary, but belt and suspenders).
-                $this_user_can_edit_the_body = ($user_obj->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) && $service_body->UserCanEdit();
-                
-                $contact_email = NULL;
-                
-                // Service Body Admins (with permission for the body) get more info.
-                if ( $this_user_can_edit_the_body )
-                    {
-                    $contact_email = $service_body->GetContactEmail();
-                    }
-                    
-                // At this point, we have all the information we need to build the response XML.
-                $ret = '<service_body id="'.c_comdef_htmlspecialchars ( $in_service_body_id ).'" name="'.c_comdef_htmlspecialchars ( $name ).'" type="'.c_comdef_htmlspecialchars ( $type ).'">';
-                    $ret .= '<service_body_type>'.c_comdef_htmlspecialchars ( $this->my_localized_strings['service_body_types'][$type] ).'</service_body_type>';
-                    $ret .= '<principal_user id="'.$principal_user_id.'">'.c_comdef_htmlspecialchars ( $principal_user->GetLocalName() ).'</principal_user>';
-                    if ( isset ( $description ) && $description )
-                        {
-                        $ret .= '<description>'.c_comdef_htmlspecialchars ( $description ).'</description>';
-                        }
-                    if ( isset ( $uri ) && $uri )
-                        {
-                        $ret .= '<uri>'.c_comdef_htmlspecialchars ( $uri ).'</uri>';
-                        }
                     if ( isset ( $parent_service_body ) && $parent_service_body )
                         {
-                        $ret .= '<parent_service_body id="'.intval ( $parent_service_body_id ).'" type="'.c_comdef_htmlspecialchars ( $parent_service_body_type ).'">'.c_comdef_htmlspecialchars ( $parent_service_body_name ).'</parent_service_body>';
+                        $parent_service_body_id = intval ( $parent_service_body->GetID() );
+                        $parent_service_body_name = $parent_service_body->GetLocalName();
+                        $parent_service_body_type = $parent_service_body->GetSBType();
                         }
-                    if ( $this_user_can_edit_the_body && isset ( $contact_email ) && $contact_email )
+                
+                    $principal_user = $service_body->GetPrincipalUserObj();
+                    $principal_user_id = intval ( $principal_user->GetID() );
+                
+                    // Scan for our various editors.
+                    $guest_editors = $this->server->GetUsersByLevelObj ( _USER_LEVEL_OBSERVER, TRUE );  // Observer or greater.
+                    $service_body_editors = array();
+                    $meeting_list_editors = array();
+                    $observers = array();
+                
+                    foreach ( $guest_editors as $editor )
                         {
-                        $ret .= '<contact_email>'.c_comdef_htmlspecialchars ( $contact_email ).'</contact_email>';
+                        if ( $service_body->UserCanEdit ( $editor ) )   // We will have at least one of these, as the principal user needs to be listed.
+                            {
+                            array_push ( $service_body_editors, $editor );
+                            }
+                        elseif ( $service_body->UserCanEditMeetings ( $editor ) )
+                            {
+                            array_push ( $meeting_list_editors, $editor );
+                            }
+                        elseif ( $service_body->UserCanObserve ( $editor ) )
+                            {
+                            array_push ( $observers, $editor );
+                            }
                         }
-                    if (    (isset ( $service_body_editors ) && is_array ( $service_body_editors ) && count ( $service_body_editors ))
-                        ||  (isset ( $meeting_list_editors ) && is_array ( $meeting_list_editors ) && count ( $meeting_list_editors ))
-                        ||  (isset ( $observers ) && is_array ( $observers ) && count ( $observers )) )
+                
+                    // Scan for direct descendant child Service bodies.
+                    $children = array();
+                    $service_bodies = $this->server->GetServiceBodyArray();
+                
+                    foreach ( $service_bodies as $child )
                         {
+                        if ( $child->IsOwnedBy ( $in_service_body_id, TRUE ) )
+                            {
+                            $children[] = $child;
+                            }
+                        }
+                
+                    // We check to see which editors are mentioned in this Service body.
+                    $guest_editors = $service_body->GetEditors();
+                
+                    // See if we have rights to edit this Service body. Just for the heck of it, we check the user level (not really necessary, but belt and suspenders).
+                    $this_user_can_edit_the_body = ($user_obj->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) && $service_body->UserCanEdit();
+                
+                    $contact_email = NULL;
+                
+                    // Service Body Admins (with permission for the body) get more info.
+                    if ( $this_user_can_edit_the_body )
+                        {
+                        $contact_email = $service_body->GetContactEmail();
+                        }
+                    
+                    // At this point, we have all the information we need to build the response XML.
+                    $ret = '<service_body id="'.c_comdef_htmlspecialchars ( $in_service_body_id ).'" name="'.c_comdef_htmlspecialchars ( $name ).'" type="'.c_comdef_htmlspecialchars ( $type ).'">';
+                        $ret .= '<service_body_type>'.c_comdef_htmlspecialchars ( $this->my_localized_strings['service_body_types'][$type] ).'</service_body_type>';
+                        if ( isset ( $description ) && $description )
+                            {
+                            $ret .= '<description>'.c_comdef_htmlspecialchars ( $description ).'</description>';
+                            }
+                        if ( isset ( $uri ) && $uri )
+                            {
+                            $ret .= '<uri>'.c_comdef_htmlspecialchars ( $uri ).'</uri>';
+                            }
+                        if ( isset ( $parent_service_body ) && $parent_service_body )
+                            {
+                            $ret .= '<parent_service_body id="'.intval ( $parent_service_body_id ).'" type="'.c_comdef_htmlspecialchars ( $parent_service_body_type ).'">'.c_comdef_htmlspecialchars ( $parent_service_body_name ).'</parent_service_body>';
+                            }
+                        if ( $this_user_can_edit_the_body && isset ( $contact_email ) && $contact_email )
+                            {
+                            $ret .= '<contact_email>'.c_comdef_htmlspecialchars ( $contact_email ).'</contact_email>';
+                            }
+                    
                         $ret .= '<editors>';
                             if ( isset ( $service_body_editors ) && is_array ( $service_body_editors ) && count ( $service_body_editors ) )
                                 {
+                                // We will have at least one of these (the principal user).
+                                // These are the users that can directly manipulate the Service body.
                                 $ret .= '<service_body_editors>';
                                     foreach ( $service_body_editors as $editor )
                                         {
@@ -279,7 +288,8 @@ class c_comdef_admin_xml_handler
                                         }
                                 $ret .= '</service_body_editors>';
                                 }
-                                
+                        
+                            // These are users that can't manipulate the Service body, but can edit meetings.
                             if ( isset ( $meeting_list_editors ) && is_array ( $meeting_list_editors ) && count ( $meeting_list_editors ) )
                                 {
                                 $ret .= '<meeting_list_editors>';
@@ -290,7 +300,8 @@ class c_comdef_admin_xml_handler
                                         }
                                 $ret .= '</meeting_list_editors>';
                                 }
-                                
+                        
+                            // These are users that can only see hidden fields in meetings.
                             if ( isset ( $observers ) && is_array ( $observers ) && count ( $observers ) )
                                 {
                                 $ret .= '<observers>';
@@ -302,21 +313,29 @@ class c_comdef_admin_xml_handler
                                 $ret .= '</observers>';
                                 }
                         $ret .= '</editors>';
-                        }
-                    
-                    if ( isset ( $children ) && is_array ( $children ) && count ( $children ) )
-                        {
-                        $ret .= '<children>';
-                        
-                        foreach ( $children as $child )
+                
+                        // If this is a hierarchical response, we embed the children as XML service_body elements. Otherwise, we list them as simple catalog elements.
+                        if ( !isset ( $this->http_vars['flat'] ) && isset ( $children ) && is_array ( $children ) && count ( $children ) )
                             {
-                            $ret .= '<child_service_body id="'.intval ( $child->GetID() ).'" type="'.c_comdef_htmlspecialchars ( $child->GetSBType() ).'">'.c_comdef_htmlspecialchars ( $child->GetLocalName() ).'</child_service_body>';
+                            $ret .= "<service_bodies>";
+                                foreach ( $children as $child )
+                                    {
+                                    $ret .= $this->process_service_body_info_request ( $child->GetID() );
+                                    }
+                            $ret .= "</service_bodies>";
                             }
-                        
-                        $ret .= '</children>';
-                        }
-                    
-                $ret .= '</service_body>';
+                        elseif ( isset ( $children ) && is_array ( $children ) && count ( $children ) )
+                            {
+                            $ret .= '<children>';
+                                foreach ( $children as $child )
+                                    {
+                                    $ret .= '<child_service_body id="'.intval ( $child->GetID() ).'" type="'.c_comdef_htmlspecialchars ( $child->GetSBType() ).'">'.c_comdef_htmlspecialchars ( $child->GetLocalName() ).'</child_service_body>';
+                                    }
+                            $ret .= '</children>';
+                            }
+
+                    $ret .= '</service_body>';
+                    }
                 }
             }
         else
