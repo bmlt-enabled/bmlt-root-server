@@ -33,7 +33,7 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
     
     // Create an HTTP path to our XML file. We build it manually, in case this file is being used elsewhere, or we have a redirect in the domain.
     // We allow it to be used as HTTPS.
-    $url_path = GetURLToMainServerDirectory().'local_server/server_admin/xml.php';
+    $url_path = GetURLToMainServerDirectory().'local_server/server_admin/json.php';
     $lang_enum = '';
     $login_call = FALSE;    // We only allow login with the login call. That's to prevent users constantly sending cleartext login info.
 
@@ -54,6 +54,8 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
     setcookie ( 'bmlt_admin_lang_pref', $lang_enum, $expires, '/' );
     
     require_once ( dirname ( dirname ( dirname ( __FILE__ ) ) ).'/server/shared/classes/comdef_utilityclasses.inc.php');
+    require_once ( dirname ( __FILE__ ).'/PhpJsonXmlArrayStringInterchanger.inc.php' );
+    require_once ( dirname ( dirname ( dirname ( __FILE__ ) ) ).'/server/shared/Array2Json.php');
     require_once ( dirname ( dirname ( __FILE__ ) ).'/db_connect.php');
     
     DB_Connect_and_Upgrade ( );
@@ -142,18 +144,29 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
                 
                     if ( $handler )
                         {
-                        $ret = $handler->process_commands();  // Do what you do so well...
-                        header ( 'Content-Type:application/xml; charset=UTF-8' );
-                        if ( zlib_get_coding_type() === false )
+                        $changer = new PhpJsonXmlArrayStringInterchanger;
+                        
+                        $ret = $changer->convertXmlToArray ( $handler->process_commands() );  // Do what you do so well...
+                        
+                        if ( isset ( $ret ) && is_array ( $ret ) && count ( $ret ) )
                             {
-                            ob_start("ob_gzhandler");
+                            $ret = array2json ( $ret );
+                            header ( 'Content-Type:application/json; charset=UTF-8' );
+                            if ( zlib_get_coding_type() === false )
+                                {
+                                ob_start("ob_gzhandler");
+                                }
+                            else
+                                {
+                                ob_start();
+                                }
+                            echo ( $ret );
+                            ob_end_flush();
                             }
                         else
                             {
-                            ob_start();
+                            $ret = '<h1>ERROR</h1>';
                             }
-                        echo ( $ret );
-                        ob_end_flush();
                         }
                 
                     // Just making sure...
