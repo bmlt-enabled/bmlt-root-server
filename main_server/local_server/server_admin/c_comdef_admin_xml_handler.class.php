@@ -77,7 +77,11 @@ class c_comdef_admin_xml_handler
                     case 'get_meetings':
                         $ret = $this->process_meeting_search();
                     break;
-                
+                    
+                    case 'modify_meeting_field':
+                        $ret = $this->process_meeting_modify();
+                    break;
+                    
                     default:
                         $ret = '<h1>BAD ADMIN ACTION</h1>';
                     break;
@@ -97,112 +101,261 @@ class c_comdef_admin_xml_handler
     }
     
     /********************************************************************************************************//**
+    \brief This fulfills a user request to modify a field in a meeting.
+           This will modify only one table column at a time.
+           This requires that the following HTTP parameters be set:
+                - meeting_id This is an integer that is the BMLT ID of the meeting being modified (the user must have edit rights to this meeting).
+                - meeting_field This is a string, or array of string, with the field name in the meeting search response.
+                - new_value This is a string, or array of string, with the new value for the field. If the meeting_field parameter is an array, then each value here needs to be specified to correspond with the field.
+    
+    \returns XML, containing the answer.
+    ************************************************************************************************************/
+    function process_meeting_modify()
+    {
+        $user_obj = $this->server->GetCurrentUserObj();
+        // First, make sure the use is of the correct general type.
+        if ( isset ( $user_obj ) && ($user_obj instanceof c_comdef_user) && ($user_obj->GetUserLevel() != _USER_LEVEL_DISABLED) && ($user_obj->GetUserLevel() != _USER_LEVEL_SERVER_ADMIN) && ($user_obj->GetID() > 1) )
+            {
+            // Get the meeting object, itself.
+            
+            if ( !intval ( $this->http_vars['meeting_id'] ) )  // Will we be creating a new meeting?
+                {
+                $service_body_id = intval ( $this->http_vars['service_body_id'] );
+                $weekday = 1;
+                $start_time = strtotime ( '22:30:00' );
+                $lang = c_comdef_server::GetServer()->GetLocalLang ();
+                
+                if ( $service_body_id )
+                    {
+                    $service_body = c_comdef_server::GetServer()->GetServiceBodyByIDObj ( $service_body_id );
+
+                    if ( $service_body instanceof c_comdef_service_body )
+                        {
+                        if ( $service_body->UserCanEditMeetings ( $user_obj ) )
+                            {
+                            $meeting_obj = c_comdef_server::AddNewMeeting ( $service_body_id, $weekday, $start_time, $lang );
+                            }
+                        else
+                            {
+                            $ret = '<h1>NOT AUTHORIZED</h1>';
+                            }
+                        }
+                    else
+                        {
+                        $ret = '<h1>ERROR</h1>';
+                        }
+                    }
+                else
+                    {
+                    $ret = '<h1>ERROR</h1>';
+                    }
+                }
+            else
+                {
+                $meeting_obj = $this->server->GetOneMeeting ( intval ( $this->http_vars['meeting_id'] ) );
+                }
+            
+            if ( $meeting_obj instanceof c_comdef_meeting )
+                {
+                if ( $meeting_obj->UserCanEdit ( $user_obj ) )    // We next make sure that we are allowed to make changes to this meeting.
+                    {
+                    $keys = c_comdef_meeting::GetAllMeetingKeys();  // Get all the available keys. The one passed in needs to match one of these.
+
+                    if ( in_array ( $this->http_vars['meeting_field'], $keys ) )
+                        {
+                        // In case we need to add a new field, we get the meeting data template.
+                        $template_data = c_comdef_meeting::GetDataTableTemplate();
+                        $template_longdata = c_comdef_meeting::GetLongDataTableTemplate();
+            
+                        // We merge the two tables (data and longdata).
+                        if ( is_array ( $template_data ) && count ( $template_data ) && is_array ( $template_longdata ) && count ( $template_longdata ) )
+                            {
+                            $template_data = array_merge ( $template_data, $template_longdata );
+                            }
+                    
+                        // If so, we take the field, and tweak its value.
+                        $data &= $meeting_obj->GetMeetingData ( );  // Get the data array by reference.
+                        if ( isset ( $data ) && is_array ( $data ) && count ( $data ) )
+                            {
+                            $meeting_fields = $this->http_vars['meeting_field'];
+                            $new_values = $this->http_vars['new_value'];
+                            
+                            if ( !is_array ( $meeting_fields ) )
+                                {
+                                $meeting_fields = array ( $meeting_fields )
+                                }
+                            
+                            if ( !is_array ( $new_values ) )
+                                {
+                                $new_values = array ( $new_values )
+                                }
+                            
+                            if ( count ( $meeting_fields ) == count ( $new_values ) )
+                                {
+                                $index = 0;
+                            
+                                $ret = '<change_response><meeting_id>'.intval ( $this->http_vars['meeting_id'] ).'</meeting_id>';
+                                foreach ( $meeting_fields as $meeting_field )
+                                    {
+                                    $field &= $data[$meeting_field];
+                                    $value = $new_values[$index];
+                        
+                                    if ( isset ( $field ) && is_array ( $field ) && count ( $field ) ) // If we already have the field loaded, then we simply set its value to our provided one.
+                                        {
+                                        $old_value = $field['value'];
+                                        if ( $old_value != $value )
+                                            {
+                                            $field['value'] = $value;
+                                            }
+                                        }
+                                    else    // Otherwise, we have a relatively complex job. We have to create a new data object.
+                                        {
+                                        $meeting_obj->AddDataField ( $meeting_field, $template_data[$meeting_field]['field_prompt'], $value, null, intval ( $template_data[$meeting_field]['visibility'] ) );
+                                        }
+                                    
+                                    $ret .= '<field>'.c_comdef_htmlspecialchars ( $this->http_vars['meeting_field'] ).'<old_value>'.c_comdef_htmlspecialchars ( $old_value ).'</old_value><new_value>'.c_comdef_htmlspecialchars ( $value ).'</new_value></field>';
+                                    }
+                                
+                                $ret .= '</change_response>';
+                                }
+                            else
+                                {
+                                $ret = '<h1>ERROR</h1>';
+                                }
+                            }
+                        else
+                            {
+                            $ret = '<h1>ERROR</h1>';
+                            }
+                        }
+                    else
+                        {
+                        $ret = '<h1>ERROR</h1>';
+                        }
+                    }
+                else
+                    {
+                    $ret = '<h1>NOT AUTHORIZED</h1>';
+                    }
+                }
+            else
+                {
+                $ret = '<h1>ERROR</h1>';
+                }
+            }
+        else
+            {
+            $ret = '<h1>NOT AUTHORIZED</h1>';
+            }
+    }
+    
+    /********************************************************************************************************//**
     \brief This fulfills a user request to return meeting information from a search.
     
     \returns XML, containing the answer.
     ************************************************************************************************************/
     function process_meeting_search()
     {
-	if ( !( isset ( $in_http_vars['geo_width'] ) && $in_http_vars['geo_width'] ) && isset ( $in_http_vars['bmlt_search_type'] ) && ($in_http_vars['bmlt_search_type'] == 'advanced') && isset ( $in_http_vars['advanced_radius'] ) && isset ( $in_http_vars['advanced_mapmode'] ) && $in_http_vars['advanced_mapmode'] && ( floatval ( $in_http_vars['advanced_radius'] != 0.0 ) ) && isset ( $in_http_vars['lat_val'] ) &&	 isset ( $in_http_vars['long_val'] ) && ( (floatval ( $in_http_vars['lat_val'] ) != 0.0) || (floatval ( $in_http_vars['long_val'] ) != 0.0) ) )
-		{
-		$in_http_vars['geo_width'] = $in_http_vars['advanced_radius'];
-		}
-	elseif ( !( isset ( $in_http_vars['geo_width'] ) && $in_http_vars['geo_width'] ) && isset ( $in_http_vars['bmlt_search_type'] ) && ($in_http_vars['bmlt_search_type'] == 'advanced') )
-		{
-		$in_http_vars['lat_val'] = null;
-		$in_http_vars['long_val'] = null;
-		}
-	elseif ( !isset ( $in_http_vars['geo_loc'] ) || $in_http_vars['geo_loc'] != 'yes' )
-		{
-		if ( !isset( $in_http_vars['geo_width'] ) )
-			{
-			$in_http_vars['geo_width'] = 0;
-			}
-		}
-
-	require_once ( dirname ( dirname ( dirname ( __FILE__ ) ) ).'/client_interface/csv/search_results_csv.php' );
-	
-	$geocode_results = null;
-	$ignore_me = null;
-	$meeting_objects = array();
-	$formats_ar = array ();
-	$result2 = DisplaySearchResultsCSV ( $this->http_vars, $ignore_me, $geocode_results, $meeting_objects );
-
-    if ( is_array ( $meeting_objects ) && count ( $meeting_objects ) && is_array ( $formats_ar ) )
-        {
-		foreach ( $meeting_objects as $one_meeting )
-		    {
-		    $formats = $one_meeting->GetMeetingDataValue ( 'formats' );
-
-            foreach ( $formats as $format )
+        if ( !( isset ( $this->http_vars['geo_width'] ) && $this->http_vars['geo_width'] ) && isset ( $this->http_vars['bmlt_search_type'] ) && ($this->http_vars['bmlt_search_type'] == 'advanced') && isset ( $this->http_vars['advanced_radius'] ) && isset ( $this->http_vars['advanced_mapmode'] ) && $this->http_vars['advanced_mapmode'] && ( floatval ( $this->http_vars['advanced_radius'] != 0.0 ) ) && isset ( $this->http_vars['lat_val'] ) &&	 isset ( $this->http_vars['long_val'] ) && ( (floatval ( $this->http_vars['lat_val'] ) != 0.0) || (floatval ( $this->http_vars['long_val'] ) != 0.0) ) )
+            {
+            $this->http_vars['geo_width'] = $this->http_vars['advanced_radius'];
+            }
+        elseif ( !( isset ( $this->http_vars['geo_width'] ) && $this->http_vars['geo_width'] ) && isset ( $this->http_vars['bmlt_search_type'] ) && ($this->http_vars['bmlt_search_type'] == 'advanced') )
+            {
+            $this->http_vars['lat_val'] = null;
+            $this->http_vars['long_val'] = null;
+            }
+        elseif ( !isset ( $this->http_vars['geo_loc'] ) || $this->http_vars['geo_loc'] != 'yes' )
+            {
+            if ( !isset( $this->http_vars['geo_width'] ) )
                 {
-                if ( $format && ($format instanceof c_comdef_format) )
+                $this->http_vars['geo_width'] = 0;
+                }
+            }
+
+        require_once ( dirname ( dirname ( dirname ( __FILE__ ) ) ).'/client_interface/csv/search_results_csv.php' );
+    
+        $geocode_results = null;
+        $ignore_me = null;
+        $meeting_objects = array();
+        $formats_ar = array ();
+        $result2 = DisplaySearchResultsCSV ( $this->http_vars, $ignore_me, $geocode_results, $meeting_objects );
+
+        if ( is_array ( $meeting_objects ) && count ( $meeting_objects ) && is_array ( $formats_ar ) )
+            {
+            foreach ( $meeting_objects as $one_meeting )
+                {
+                $formats = $one_meeting->GetMeetingDataValue ( 'formats' );
+
+                foreach ( $formats as $format )
                     {
-                    $format_shared_id = $format->GetSharedID();
-                    $formats_ar[$format_shared_id] = $format;
+                    if ( $format && ($format instanceof c_comdef_format) )
+                        {
+                        $format_shared_id = $format->GetSharedID();
+                        $formats_ar[$format_shared_id] = $format;
+                        }
                     }
                 }
-		    }
-		}
-	
-	if ( isset ( $in_http_vars['data_field_key'] ) && $in_http_vars['data_field_key'] )
-		{
-		// At this point, we have everything in a CSV. We separate out just the field we want.
-		$temp_keyed_array = array();
-		$result = explode ( "\n", $result );
-		$keys = array_shift ( $result );
-		$keys = explode ( "\",\"", trim ( $keys, '"' ) );
-		$the_keys = explode ( ',', $in_http_vars['data_field_key'] );
-		
-		$result = array();
-		foreach ( $result2 as $row )
-			{
-			if ( $row )
-				{
-				$index = 0;
-				$row = explode ( '","', trim ( $row, '",' ) );
-				$row_columns = array();
-				foreach ( $row as $column )
-					{
-					if ( !$column )
-					    {
-					    $column = ' ';
-					    }
-                    if ( in_array ( $keys[$index++], $the_keys ) )
-                        {
-                        array_push ( $row_columns, $column );
-                        }
-					}
-				$result[$row[0]] = '"'.implode ( '","', $row_columns ).'"';
-				}
-			}
-
-		$the_keys = array_intersect ( $keys, $the_keys );
-		$result2 = '"'.implode ( '","', $the_keys )."\"\n".implode ( "\n", $result );
-		}
-	    
-		
-    $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<meetings xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/GetSearchResults.php\">";
-    $result .= $this->TranslateCSVToXML ( $result2 );
-    if ( (isset ( $http_vars['get_used_formats'] ) || isset ( $http_vars['get_formats_only'] )) && $formats_ar && is_array ( $formats_ar ) && count ( $formats_ar ) )
-        {
-        if ( isset ( $http_vars['get_formats_only'] ) )
-            {
-            $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<formats xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/GetFormats.php\">";
             }
-        else
-            {
-            $result .= "<formats>";
-            }
-        $result3 = GetFormats ( $server, $langs, $formats_ar );
-        $result .= TranslateToXML ( $result3 );
-        
-        $result .= "</formats>";
-        }
     
-    $result .= isset ( $http_vars['get_formats_only'] ) ? "" : "</meetings>";
-	
-	return $result;
+        if ( isset ( $this->http_vars['data_field_key'] ) && $this->http_vars['data_field_key'] )
+            {
+            // At this point, we have everything in a CSV. We separate out just the field we want.
+            $temp_keyed_array = array();
+            $result = explode ( "\n", $result );
+            $keys = array_shift ( $result );
+            $keys = explode ( "\",\"", trim ( $keys, '"' ) );
+            $the_keys = explode ( ',', $this->http_vars['data_field_key'] );
+        
+            $result = array();
+            foreach ( $result2 as $row )
+                {
+                if ( $row )
+                    {
+                    $index = 0;
+                    $row = explode ( '","', trim ( $row, '",' ) );
+                    $row_columns = array();
+                    foreach ( $row as $column )
+                        {
+                        if ( !$column )
+                            {
+                            $column = ' ';
+                            }
+                        if ( in_array ( $keys[$index++], $the_keys ) )
+                            {
+                            array_push ( $row_columns, $column );
+                            }
+                        }
+                    $result[$row[0]] = '"'.implode ( '","', $row_columns ).'"';
+                    }
+                }
+
+            $the_keys = array_intersect ( $keys, $the_keys );
+            $result2 = '"'.implode ( '","', $the_keys )."\"\n".implode ( "\n", $result );
+            }
+        
+        
+        $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<meetings xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/GetSearchResults.php\">";
+        $result .= $this->TranslateCSVToXML ( $result2 );
+        if ( (isset ( $http_vars['get_used_formats'] ) || isset ( $http_vars['get_formats_only'] )) && $formats_ar && is_array ( $formats_ar ) && count ( $formats_ar ) )
+            {
+            if ( isset ( $http_vars['get_formats_only'] ) )
+                {
+                $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<formats xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/GetFormats.php\">";
+                }
+            else
+                {
+                $result .= "<formats>";
+                }
+            $result3 = GetFormats ( $server, $langs, $formats_ar );
+            $result .= TranslateToXML ( $result3 );
+        
+            $result .= "</formats>";
+            }
+    
+        $result .= isset ( $http_vars['get_formats_only'] ) ? "" : "</meetings>";
+    
+        return $result;
     }
     
     /********************************************************************************************************//**
