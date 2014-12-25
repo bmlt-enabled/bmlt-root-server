@@ -98,7 +98,7 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
                             // We do not allow semantic access to Server Admin functions (because security)
                             unset ( $user_obj );    // Goodbye, Mr. Bond...
                             c_comdef_LogoutUser();
-                            die ( '<h1>NOT AUTHORIZED</h1>' );
+                            die ( 'NOT AUTHORIZED' );
                             }
                             
                         // If we are OK, we'll fall through.
@@ -106,13 +106,13 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
                     else    // These seem redundant, but a basic security posture of mine is to immediatly kill execution upon discovering a security breach.
                         {
                         c_comdef_LogoutUser();
-                        die ( '<h1>NOT AUTHORIZED</h1>' );
+                        die ( 'NOT AUTHORIZED' );
                         }
                     }
                 else
                     {
                     c_comdef_LogoutUser();
-                    die ( '<h1>NOT AUTHORIZED</h1>' );
+                    die ( 'NOT AUTHORIZED' );
                     }
                 }
             else    // Logout gets a "bye".
@@ -132,7 +132,7 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
             if ( !($user_obj instanceof c_comdef_user) || ($user_obj->GetUserLevel() == _USER_LEVEL_DISABLED) || ($user_obj->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) || ($user_obj->GetID() == 1) )
                 {
                 c_comdef_LogoutUser();
-                die ( '<h1>NOT AUTHORIZED</h1>' );
+                die ( 'NOT AUTHORIZED' );
                 }
             else    // If everything is OK, then we actually include the class, instantiate the object, and process the request.
                 {
@@ -142,33 +142,40 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
             
                     $handler = new c_comdef_admin_xml_handler ( $http_vars, $server );
                 
-                    if ( $handler )
+                    if ( $handler instanceof c_comdef_admin_xml_handler )
                         {
                         $changer = new PhpJsonXmlArrayStringInterchanger;
                         
-                        $ret = $changer->convertXmlToArray ( $handler->process_commands() );  // Do what you do so well...
-                        
-                        if ( isset ( $ret ) && is_array ( $ret ) && count ( $ret ) )
+                        if ( $changer instanceof PhpJsonXmlArrayStringInterchanger )
                             {
-                            $ret = array2json ( $ret );
-                            header ( 'Content-Type:application/json; charset=UTF-8' );
-                            if ( zlib_get_coding_type() === false )
+                            $ret = $changer->convertXmlToArray ( $handler->process_commands() );  // Do what you do so well...
+                        
+                            if ( isset ( $ret ) && is_array ( $ret ) && count ( $ret ) )
                                 {
-                                ob_start("ob_gzhandler");
+                                $ret = array2json ( $ret );
+                                header ( 'Content-Type:application/json; charset=UTF-8' );
+                                if ( zlib_get_coding_type () === false )
+                                    {
+                                    ob_start ( "ob_gzhandler" );
+                                    }
+                                else
+                                    {
+                                    ob_start();
+                                    }
+                                echo ( $ret );
+                                ob_end_flush();
                                 }
-                            else
-                                {
-                                ob_start();
-                                }
-                            echo ( $ret );
-                            ob_end_flush();
                             }
                         else
                             {
-                            $ret = '<h1>ERROR</h1>';
+                            $ret = 'ERROR';
                             }
                         }
-                
+                    else
+                        {
+                        $ret = 'ERROR';
+                        }
+                    
                     // Just making sure...
                     unset ( $handler );
                     unset ( $server );
@@ -176,7 +183,7 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
                     }
                 else
                     {
-                    die ( '<h1>BAD ADMIN ACTION</h1>' );
+                    die ( 'BAD ADMIN ACTION' );
                     }
                 }
             }
@@ -189,12 +196,12 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
         else
             {
             c_comdef_LogoutUser();
-            die ( '<h1>NOT AUTHORIZED</h1>' );
+            die ( 'NOT AUTHORIZED' );
             }
         }
     else
         {
-        die ( '<h1>NO SERVER!</h1>' );
+        die ( 'NO SERVER!' );
         }
     }
 ?>

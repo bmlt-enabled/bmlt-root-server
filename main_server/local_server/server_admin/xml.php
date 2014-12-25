@@ -140,13 +140,13 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
             
                     $handler = new c_comdef_admin_xml_handler ( $http_vars, $server );
                 
-                    if ( $handler )
+                    if ( $handler instanceof c_comdef_admin_xml_handler )
                         {
                         $ret = $handler->process_commands();  // Do what you do so well...
                         header ( 'Content-Type:application/xml; charset=UTF-8' );
-                        if ( zlib_get_coding_type() === false )
+                        if ( zlib_get_coding_type () === false )
                             {
-                            ob_start("ob_gzhandler");
+                            ob_start ( "ob_gzhandler" );
                             }
                         else
                             {
@@ -154,6 +154,10 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
                             }
                         echo ( $ret );
                         ob_end_flush();
+                        }
+                    else
+                        {
+                        $ret = '<h1>ERROR</h1>';
                         }
                 
                     // Just making sure...
