@@ -182,12 +182,12 @@ class c_comdef_admin_xml_handler
                             
                             if ( !is_array ( $meeting_fields ) )
                                 {
-                                $meeting_fields = array ( $meeting_fields )
+                                $meeting_fields = array ( $meeting_fields );
                                 }
                             
                             if ( !is_array ( $new_values ) )
                                 {
-                                $new_values = array ( $new_values )
+                                $new_values = array ( $new_values );
                                 }
                             
                             if ( count ( $meeting_fields ) == count ( $new_values ) )
