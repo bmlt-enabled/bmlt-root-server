@@ -74,12 +74,29 @@ class c_comdef_admin_xml_handler
                         $ret = $this->process_format_info();
                     break;
                     
+                    case 'get_field_templates':
+                        $ret = $this->process_get_field_templates();
+                    break;
+                    
                     case 'get_meetings':
                         $ret = $this->process_meeting_search();
                     break;
                     
-                    case 'modify_meeting_field':
+                    case 'modify_meeting':
+                        if ( intval ( $this->http_vars['meeting_id'] ) )    // Make sure that we are referring to a meeting.
+                            {
+                            $ret = $this->process_meeting_modify();
+                            }
+                    break;
+                    
+                    case 'add_meeting':
+                        $this->http_vars['meeting_id'] = 0;
+                        unset ( $this->http_vars['meeting_id'] ) );    // Make sure that we have no meeting ID. This forces an add.
                         $ret = $this->process_meeting_modify();
+                    break;
+                    
+                    case 'delete_meeting':
+                        $ret = $this->process_meeting_delete();
                     break;
                     
                     default:
@@ -101,17 +118,129 @@ class c_comdef_admin_xml_handler
     }
     
     /********************************************************************************************************//**
-    \brief This fulfills a user request to modify a field in a meeting.
-           This will modify only one table column at a time.
+    \brief This fulfills a user request to get all the available fields for adding/modifying meeting data.
+    
+    \returns the XML for the template data.
+    ************************************************************************************************************/
+    function process_get_field_templates()
+    {
+        $ret = '';
+        
+        $user_obj = $this->server->GetCurrentUserObj();
+        // First, make sure the use is of the correct general type.
+        if ( isset ( $user_obj ) && ($user_obj instanceof c_comdef_user) && ($user_obj->GetUserLevel() != _USER_LEVEL_DISABLED) && ($user_obj->GetUserLevel() != _USER_LEVEL_SERVER_ADMIN) && ($user_obj->GetID() > 1) )
+            {
+            // Get the template data from the database.
+            $template_data = c_comdef_meeting::GetDataTableTemplate();
+            $template_longdata = c_comdef_meeting::GetLongDataTableTemplate();
+
+            // We merge the two tables (data and longdata).
+            if ( is_array ( $template_data ) && count ( $template_data ) && is_array ( $template_longdata ) && count ( $template_longdata ) )
+                {
+                $template_data = array_merge ( $template_data, $template_longdata );
+                }
+            
+            // $template_data now contains the templates for the meeting data. These are the available "slots" for new values. We need to convert to XML.
+            
+            foreach ( $template_data as $template )
+                {
+                $ret .= '<field_template>';
+                    $ret .= '<key>'.c_comdef_htmlspecialchars ( $template['key'] ).'</key>';
+                    $ret .= '<field_prompt>'.c_comdef_htmlspecialchars ( $template['field_prompt'] ).'</field_prompt>';
+                    $ret .= '<lang_enum>'.c_comdef_htmlspecialchars ( $template['lang_enum'] ).'</lang_enum>';
+                    $ret .= '<visibility>'.intval ( $template['visibility'] ).'</visibility>';
+                    
+                    if ( isset ( $template['data_string'] ) )
+                        {
+                        $ret .= '<data_string>'.c_comdef_htmlspecialchars ( $template['data_string'] ).'</data_string>';
+                        }
+                        
+                    if ( isset ( $template['data_bigint'] ) )
+                        {
+                        $ret .= '<data_bigint>'.intval ( $template['data_bigint'] ).'</data_bigint>';
+                        }
+                        
+                    if ( isset ( $template['data_double'] ) )
+                        {
+                        $ret .= '<data_double>'.intval ( $template['data_double'] ).'</data_double>';
+                        }
+                        
+                    if ( isset ( $template['data_longtext'] ) )
+                        {
+                        $ret .= '<data_longtext>'.c_comdef_htmlspecialchars ( $template['data_longtext'] ).'</data_longtext>';
+                        }
+                        
+                    if ( isset ( $template['data_blob'] ) )
+                        {
+                        $ret .= '<data_blob>'.c_comdef_htmlspecialchars ( base64_encode ( $template['data_blob'] ) ).'</data_blob>';
+                        }
+                $ret .= '</field_template>';
+                }
+            
+            $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<field_templates xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/FieldTemplates.php\">$ret</field_templates>";
+            }
+        else
+            {
+            $ret = '<h1>NOT AUTHORIZED</h1>';
+            }
+            
+        return $ret;
+    }
+    
+    /********************************************************************************************************//**
+    \brief This fulfills a user request to delete an existing meeting. $this->http_vars['meeting_id'] must be set to the meeting ID.
+    
+    \returns OK, if the meeting was successfully deleted.
+    ************************************************************************************************************/
+    function process_meeting_delete()
+    {
+        $ret = '<h1>ERROR</h1>';
+        
+        $user_obj = $this->server->GetCurrentUserObj();
+        // First, make sure the use is of the correct general type.
+        if ( isset ( $user_obj ) && ($user_obj instanceof c_comdef_user) && ($user_obj->GetUserLevel() != _USER_LEVEL_DISABLED) && ($user_obj->GetUserLevel() != _USER_LEVEL_SERVER_ADMIN) && ($user_obj->GetID() > 1) )
+            {
+            $meeting_obj = $this->server->GetOneMeeting ( intval ( $this->http_vars['meeting_id'] ) );
+            if ( $meeting_obj instanceof c_comdef_meeting ) // Make sure we got a meeting.
+                {
+                if ( $meeting_obj->UserCanEdit ( $user_obj ) )  // Make sure that we are allowed to edit this meeting.
+                    {
+                    $meeting_obj->DeleteFromDB();   // Delete the meeting.
+                    $ret = 'OK';
+                    }
+                else
+                    {
+                    $ret = '<h1>NOT AUTHORIZED</h1>';
+                    }
+                }
+            else
+                {
+                $ret = '<h1>ERROR</h1>';
+                }
+            }
+        else
+            {
+            $ret = '<h1>NOT AUTHORIZED</h1>';
+            }
+        
+        return $ret;
+    }
+    
+    /********************************************************************************************************//**
+    \brief This fulfills a user request to modify fields in a meeting (or create a new meeting).
            This requires that the following HTTP parameters be set:
-                - meeting_id This is an integer that is the BMLT ID of the meeting being modified (the user must have edit rights to this meeting).
+                - meeting_id This is an integer that is the BMLT ID of the meeting being modified (the user must have edit rights to this meeting). If this is 0 (or unset), then we will be creating a new meeting.
+                             If we are creating a new meeting, the new meeting will start at 8:30PM on Sunday, unless new values for the 'weekday' and 'start_time' fields are provided.
+                             Once the meeting is created, we can set any of its fields as given.
                 - meeting_field This is a string, or array of string, with the field name in the meeting search response.
                 - new_value This is a string, or array of string, with the new value for the field. If the meeting_field parameter is an array, then each value here needs to be specified to correspond with the field.
     
-    \returns XML, containing the answer.
+    \returns XML, containing the fields modified.
     ************************************************************************************************************/
     function process_meeting_modify()
     {
+        $ret = NULL;
+        
         $user_obj = $this->server->GetCurrentUserObj();
         // First, make sure the use is of the correct general type.
         if ( isset ( $user_obj ) && ($user_obj instanceof c_comdef_user) && ($user_obj->GetUserLevel() != _USER_LEVEL_DISABLED) && ($user_obj->GetUserLevel() != _USER_LEVEL_SERVER_ADMIN) && ($user_obj->GetID() > 1) )
@@ -134,6 +263,7 @@ class c_comdef_admin_xml_handler
                         if ( $service_body->UserCanEditMeetings ( $user_obj ) )
                             {
                             $meeting_obj = c_comdef_server::AddNewMeeting ( $service_body_id, $weekday, $start_time, $lang );
+                            $ret = '<new_meeting id="'.intval ( $meeting_obj->GetID() ).'"/>';
                             }
                         else
                             {
@@ -194,29 +324,36 @@ class c_comdef_admin_xml_handler
                                 {
                                 $index = 0;
                             
-                                $ret = '<change_response><meeting_id>'.intval ( $this->http_vars['meeting_id'] ).'</meeting_id>';
+                                $ret .= '<change_response><meeting_id>'.intval ( $this->http_vars['meeting_id'] ).'</meeting_id>';
+                                
+                                // We change each of the fields passed in to the new values passed in.
                                 foreach ( $meeting_fields as $meeting_field )
                                     {
-                                    $field &= $data[$meeting_field];
-                                    $value = $new_values[$index];
+                                    if ( ($meeting_field != 'id_bigint') && ($meeting_field != 'service_body_bigint') )    // We can't change the meeting ID or Service body (those should be done on the main interface).
+                                        {
+                                        $field &= $data[$meeting_field];    // We get the field structure as a reference, so we will actually change the data in place.
+                                        $value = $new_values[$index];
                         
-                                    if ( isset ( $field ) && is_array ( $field ) && count ( $field ) ) // If we already have the field loaded, then we simply set its value to our provided one.
-                                        {
-                                        $old_value = $field['value'];
-                                        if ( $old_value != $value )
+                                        if ( isset ( $field ) && is_array ( $field ) && count ( $field ) ) // If we already have the field loaded, then we simply set its value to our provided one.
                                             {
-                                            $field['value'] = $value;
+                                            $old_value = $field['value'];
+                                            if ( $old_value != $value )
+                                                {
+                                                $field['value'] = $value;
+                                                }
                                             }
+                                        else    // Otherwise, we have a relatively complex job. We have to create a new data object.
+                                            {
+                                            $meeting_obj->AddDataField ( $meeting_field, $template_data[$meeting_field]['field_prompt'], $value, null, intval ( $template_data[$meeting_field]['visibility'] ) );
+                                            }
+                                        
+                                        $ret .= '<field>'.c_comdef_htmlspecialchars ( $this->http_vars['meeting_field'] ).'<old_value>'.c_comdef_htmlspecialchars ( $old_value ).'</old_value><new_value>'.c_comdef_htmlspecialchars ( $value ).'</new_value></field>';
                                         }
-                                    else    // Otherwise, we have a relatively complex job. We have to create a new data object.
-                                        {
-                                        $meeting_obj->AddDataField ( $meeting_field, $template_data[$meeting_field]['field_prompt'], $value, null, intval ( $template_data[$meeting_field]['visibility'] ) );
-                                        }
-                                    
-                                    $ret .= '<field>'.c_comdef_htmlspecialchars ( $this->http_vars['meeting_field'] ).'<old_value>'.c_comdef_htmlspecialchars ( $old_value ).'</old_value><new_value>'.c_comdef_htmlspecialchars ( $value ).'</new_value></field>';
                                     }
                                 
                                 $ret .= '</change_response>';
+                                        
+                                $meeting_obj->UpdateToDB(); // Save the new data. After this, the meeting has been changed.
                                 }
                             else
                                 {
@@ -247,6 +384,8 @@ class c_comdef_admin_xml_handler
             {
             $ret = '<h1>NOT AUTHORIZED</h1>';
             }
+            
+        return $ret;
     }
     
     /********************************************************************************************************//**
