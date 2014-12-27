@@ -1,7 +1,7 @@
 <?php
 /****************************************************************************************//**
-* \file FieldTemplates.php																    *
-* \brief Returns an XML response, containing the schema for the Admin field templates call  *
+* \file ChangeResponse.php																    *
+* \brief Returns an XML response, containing the schema for the semantic editing XML call   *
 
     This file is part of the Basic Meeting List Toolbox (BMLT).
     
@@ -39,33 +39,11 @@ else
 	header ( 'Content-Type:application/xml; charset=UTF-8' );
 	ob_start();
 	}
-echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"; ?>
+echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	elementFormDefault="qualified"
 	xmlns:xsn="http://<?php echo $_SERVER['SERVER_NAME'] ?>"
-	targetNamespace="http://<?php echo $_SERVER['SERVER_NAME'] ?>">
-    <xs:element name="field_templates">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="field_template" maxOccurs="unbounded">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="key" type="xs:string"/>
-                            <xs:element name="field_prompt" type="xs:string"/>
-                            <xs:element name="lang_enum" type="xs:string"/>
-                            <xs:element name="visibility" type="xs:integer"/>
-                            <xs:choice minOccurs="0" maxOccurs="1">
-                                <xs:element name="data_string" type="xs:string"/>
-                                <xs:element name="data_bigint" type="xs:integer"/>
-                                <xs:element name="data_double" type="xs:float"/>
-                                <xs:element name="data_longtext" type="xs:string"/>
-                                <xs:element name="data_blob" type="xs:string"/>
-                            </xs:choice>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
+	targetNamespace="http://<?php echo $_SERVER['SERVER_NAME'] ?>"
+	elementFormDefault="qualified">
+	<xs:element name="change_response">
+	</xs:element>
 </xs:schema><?php ob_end_flush(); ?>
-

@@ -91,7 +91,7 @@ class c_comdef_admin_xml_handler
                     
                     case 'add_meeting':
                         $this->http_vars['meeting_id'] = 0;
-                        unset ( $this->http_vars['meeting_id'] ) );    // Make sure that we have no meeting ID. This forces an add.
+                        unset ( $this->http_vars['meeting_id'] );    // Make sure that we have no meeting ID. This forces an add.
                         $ret = $this->process_meeting_modify();
                     break;
                     
@@ -190,7 +190,7 @@ class c_comdef_admin_xml_handler
     /********************************************************************************************************//**
     \brief This fulfills a user request to delete an existing meeting. $this->http_vars['meeting_id'] must be set to the meeting ID.
     
-    \returns OK, if the meeting was successfully deleted.
+    \returns A very simple, 1-line XML Report.
     ************************************************************************************************************/
     function process_meeting_delete()
     {
@@ -205,8 +205,11 @@ class c_comdef_admin_xml_handler
                 {
                 if ( $meeting_obj->UserCanEdit ( $user_obj ) )  // Make sure that we are allowed to edit this meeting.
                     {
+                    $id = $meeting_obj->GetID();
+                    $name = $meeting_obj->GetLocalName();
+                    
                     $meeting_obj->DeleteFromDB();   // Delete the meeting.
-                    $ret = 'OK';
+                    $ret = '<deleted_meeting id="'.intval ( $id ).'" name="'.c_comdef_htmlspecialchars ( $name ).'"/>';
                     }
                 else
                     {
@@ -283,6 +286,7 @@ class c_comdef_admin_xml_handler
             else
                 {
                 $meeting_obj = $this->server->GetOneMeeting ( intval ( $this->http_vars['meeting_id'] ) );
+                $ret = '<change_meeting id="'.intval ( $meeting_obj->GetID() ).'"/>';
                 }
             
             if ( $meeting_obj instanceof c_comdef_meeting )
@@ -324,8 +328,6 @@ class c_comdef_admin_xml_handler
                                 {
                                 $index = 0;
                             
-                                $ret .= '<change_response><meeting_id>'.intval ( $this->http_vars['meeting_id'] ).'</meeting_id>';
-                                
                                 // We change each of the fields passed in to the new values passed in.
                                 foreach ( $meeting_fields as $meeting_field )
                                     {
@@ -350,10 +352,9 @@ class c_comdef_admin_xml_handler
                                         $ret .= '<field>'.c_comdef_htmlspecialchars ( $this->http_vars['meeting_field'] ).'<old_value>'.c_comdef_htmlspecialchars ( $old_value ).'</old_value><new_value>'.c_comdef_htmlspecialchars ( $value ).'</new_value></field>';
                                         }
                                     }
-                                
-                                $ret .= '</change_response>';
                                         
                                 $meeting_obj->UpdateToDB(); // Save the new data. After this, the meeting has been changed.
+                                $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<change_response xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/ChangeResponse.php\">$ret</change_response>";
                                 }
                             else
                                 {
