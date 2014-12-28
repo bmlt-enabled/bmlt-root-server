@@ -151,11 +151,11 @@ class c_comdef_admin_xml_handler
         // First, make sure the use is of the correct general type.
         if ( $this->basic_user_validation() )
             {
-            $start_date = '';
-            $end_date = '';
-            $meeting_id = '';
-            $user_id = '';
-            $service_body_id = '';
+            $start_date = (isset ( $this->http_vars['from_date'] ) && $this->http_vars['from_date']) ? strtotime ( $this->http_vars['from_date'] ) : (isset ( $this->http_vars['start_date'] ) && intval ( $this->http_vars['start_date'] ) ? intval ( $this->http_vars['start_date'] ) : null);
+            $end_date = (isset ( $this->http_vars['to_date'] ) && $this->http_vars['to_date']) ? strtotime ( $this->http_vars['to_date'] ) : (isset ( $this->http_vars['end_date'] ) && intval ( $this->http_vars['end_date'] ) ? intval ( $this->http_vars['end_date'] ) : null);
+            $meeting_id = isset ( $this->http_vars['meeting_id'] ) && intval ( $this->http_vars['meeting_id'] ) ? intval ( $this->http_vars['meeting_id'] ) : null;
+            $user_id = isset ( $this->http_vars['user_id'] ) && intval ( $this->http_vars['user_id'] ) ? intval ( $this->http_vars['user_id'] ) : null;
+            $service_body_id = isset ( $this->http_vars['service_body_id'] ) && intval ( $this->http_vars['service_body_id'] ) ? intval ( $this->http_vars['service_body_id'] ) : null;
             
             // We get the changes as CSV, then immediately turn them into XML.
             $ret = $this->TranslateCSVToXML ( $this->get_changes_as_csv ( $start_date, $end_date, $meeting_id, $user_id, $service_body_id ) );
@@ -181,7 +181,6 @@ function get_changes_as_csv (
                                 )
 	{
 	$ret = null;
-	
 	try
 		{
 		// Start by getting every meeting change between the given dates.
@@ -239,7 +238,7 @@ function get_changes_as_csv (
 					{
 					$change_type = $change->GetChangeType();
 					$date_int = intval($change->GetChangeDate());
-					$date_string = date ($change_date_format, $date_int );
+					$date_string = date ( "Y-m-d H:m:s", $date_int );
 				    
 				    if ( $change instanceof c_comdef_change )
 				        {
