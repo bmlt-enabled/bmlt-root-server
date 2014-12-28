@@ -276,14 +276,14 @@ function get_changes_as_csv (
                                 
                                 if ( $user instanceof c_comdef_user )
                                     {
-                                    $user_name = htmlspecialchars ( $user->GetLocalName() );
+                                    $user_name = $user->GetLocalName();
                                     }
             
                                 $sb = c_comdef_server::GetServiceBodyByIDObj ( $sb_id );
                                 
                                 if ( $sb instanceof c_comdef_service_body )
                                     {
-                                    $sb_name = htmlspecialchars ( $sb->GetLocalName() );
+                                    $sb_name = $sb->GetLocalName();
                                     }
                                 
                                 $meeting_exists = 0;
@@ -299,7 +299,7 @@ function get_changes_as_csv (
                                 if ( $desc && isset ( $desc['details'] ) && is_array ( $desc['details'] ) )
                                     {
                                     // We need to prevent double-quotes, as they are the string delimiters, so we replace them with single-quotes.
-                                    $details = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", implode ( " ", $desc['details'] ))) );
+                                    $details = htmlspecialchars_decode ( str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", implode ( " ", $desc['details'] ))) ), ENT_COMPAT );
                                     }
                                 
                                 $change_line = array();
