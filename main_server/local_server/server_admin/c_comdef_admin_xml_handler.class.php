@@ -157,6 +157,7 @@ class c_comdef_admin_xml_handler
             $user_id = '';
             $service_body_id = '';
             
+            // We get the changes as CSV, then immediately turn them into XML.
             $ret = $this->TranslateCSVToXML ( $this->get_changes_as_csv ( $start_date, $end_date, $meeting_id, $user_id, $service_body_id ) );
             $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<changes xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/GetChanges.php\">$ret</changes>";
             }
@@ -175,14 +176,16 @@ function get_changes_as_csv (
                                 $in_end_date = null,	///< Optional. An end date (In PHP time() format). If supplied, then only changes that occurred on, or before this date will be returned.
                                 $in_meeting_id = null,	///< Optional. If supplied, an ID for a particular meeting. Only changes for that meeting will be returned.
                                 $in_user_id = null,	    ///< Optional. If supplied, an ID for a particular user. Only changes made by that user will be returned.
-                                $in_sb_id = null	    ///< Optional. If supplied, an ID for a particular Service body. Only changes for that Service body will be returned.
+                                $in_sb_id = null,       ///< Optional. If supplied, an ID for a particular Service body. Only changes for that Service body will be returned.
+                                $in_change_type = 'c_comdef_meeting'    ///< This is the change type. Default is meeting change (NOTE: This function needs work to handle other types, but I figured I'd put in a hook for later).
                                 )
 	{
 	$ret = null;
 	
 	try
 		{
-		$change_objects = c_comdef_server::GetChangesFromIDAndType ( 'c_comdef_meeting', null, $in_start_date, $in_end_date );
+		// Start by getting every meeting change between the given dates.
+		$change_objects = c_comdef_server::GetChangesFromIDAndType ( $in_change_type, null, $in_start_date, $in_end_date );
 		if ( $change_objects instanceof c_comdef_changes )
 			{
 			$obj_array = $change_objects->GetChangesObjects();
@@ -192,6 +195,7 @@ function get_changes_as_csv (
 	            set_time_limit ( max ( 30, intval ( count ( $obj_array ) / 20 ) ) ); // Change requests can take a loooong time...
 				$localized_strings = c_comdef_server::GetLocalStrings();
                 require_once ( dirname ( dirname ( dirname ( __FILE__ ) ) ).'/server/config/get-config.php');
+                // These are our columns. This will be our header line.
 				$ret = '"date_int","date_string","change_type","meeting_id","meeting_name","user_id","user_name","service_body_id","service_body_name","meeting_exists","details"'."\n";
                 
                 // If they specify a Service body, we also look in "child" Service bodies, so we need to produce a flat array of IDs.
@@ -241,35 +245,43 @@ function get_changes_as_csv (
 				        {
                         $b_obj = $change->GetBeforeObject();
                         $a_obj = $change->GetAfterObject();
-                        $meeting_id = intval ( $change->GetBeforeObjectID() );
+                        $meeting_id = intval ( $change->GetBeforeObjectID() );  // By default, we get the meeting ID from the "before" object.
                         $sb_a = intval ( ($a_obj instanceof c_comdef_meeting) ? $a_obj->GetServiceBodyID() : 0 );
                         $sb_b = intval ( ($b_obj instanceof c_comdef_meeting) ? $b_obj->GetServiceBodyID() : 0 );
                         $sb_c = intval ( $change->GetServiceBodyID() );
                         
+                        // If the meeting was newly created, then we get the ID from the "after" object.
                         if ( !$meeting_id )
                             {
                             $meeting_id = intval ( $change->GetAfterObjectID() );
                             }
                         
+                        // If we are looking for a particular meeting, and this is it, or we don't care, then go ahead.
                         if ( (intval ( $in_meeting_id ) && intval ( $in_meeting_id ) == intval ( $meeting_id )) || !intval ( $in_meeting_id ) )
                             {
                             $meeting_name = '';
                             $user_name = '';
 					        
+					        // If we are looking for a particular Service body, and this is it, or we don't caer about the Service body, then go ahead.
 					        if ( !is_array ( $in_sb_id ) || !count ( $in_sb_id ) || in_array ( $sb_a, $in_sb_id ) || in_array ( $sb_b, $in_sb_id ) || in_array ( $sb_c, $in_sb_id ) )
 					            {
 					            $sb_id = (intval ( $sb_c ) ? $sb_c : (intval ( $sb_b ) ? $sb_b : $sb_a));
 					            
                                 $user_id = intval ( $change->GetUserID() );
                                 
-                                // If the user was specified, we look for changes by that user only.
+                                // If the user was specified, we look for changes by that user only. Otherwise, we don't care.
                                 if ( (isset ( $in_user_id ) && $in_user_id && ($in_user_id == $user_id)) || !isset ( $in_user_id ) || !$in_user_id )
                                     {
+                                    // Get the user that created this change.
                                     $user = c_comdef_server::GetUserByIDObj ( $user_id );
                                 
                                     if ( $user instanceof c_comdef_user )
                                         {
                                         $user_name = $user->GetLocalName();
+                                        }
+                                    else
+                                        {
+                                        $user_name = '????';    // Otherwise, it's a mystery.
                                         }
             
                                     // Using str_replace, because preg_replace is pretty expensive. However, I don't think this buys us much.
@@ -288,14 +300,20 @@ function get_changes_as_csv (
                                         {
                                         $sb_name = $sb->GetLocalName();
                                         }
-                                
+                                    else
+                                        {
+                                        $sb_name = '????';
+                                        }
+                                    
+                                    // We see if the meeting currently exists.
                                     $meeting_exists = 0;
                                 
                                     if ( c_comdef_server::GetOneMeeting ( $meeting_id, true ) )
                                         {
                                         $meeting_exists = 1;
                                         }
-            
+                                    
+                                    // Get the details of the change.
                                     $details = '';
                                     $desc = $change->DetailedChangeDescription();
                                 
@@ -304,9 +322,11 @@ function get_changes_as_csv (
                                         // We need to prevent double-quotes, as they are the string delimiters, so we replace them with single-quotes.
                                         $details = htmlspecialchars_decode ( str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", implode ( " ", $desc['details'] ))) ), ENT_COMPAT );
                                         }
-                                
+                                    
+                                    // We create an array, which we'll implode after we're done. Easy way to create a CSV row.
                                     $change_line = array();
-            
+                                    
+                                    // Create each column for this row.
                                     if ( $date_int )
                                         {
                                         $change_line['date_int'] = $date_int;
@@ -410,6 +430,7 @@ function get_changes_as_csv (
 		}
 	catch ( Exception $e )
 		{
+		$ret = '<h1>ERROR</h1>';
 		}
 
 	return $ret;
