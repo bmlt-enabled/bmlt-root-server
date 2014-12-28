@@ -260,143 +260,147 @@ function get_changes_as_csv (
 					            {
 					            $sb_id = (intval ( $sb_c ) ? $sb_c : (intval ( $sb_b ) ? $sb_b : $sb_a));
 					            
-                                // Using str_replace, because preg_replace is pretty expensive. However, I don't think this buys us much.
-                                if ( $b_obj instanceof c_comdef_meeting )
-                                    {
-                                    $meeting_name = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $b_obj->GetMeetingDataValue ( 'meeting_name' ))) );
-                                    }
-                                elseif ( $a_obj instanceof c_comdef_meeting )
-                                    {
-                                    $meeting_name = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $a_obj->GetMeetingDataValue ( 'meeting_name' ))) );
-                                    }
-                                
                                 $user_id = intval ( $change->GetUserID() );
                                 
-                                $user = c_comdef_server::GetUserByIDObj ( $user_id );
-                                
-                                if ( $user instanceof c_comdef_user )
+                                // If the user was specified, we look for changes by that user only.
+                                if ( (isset ( $in_user_id ) && $in_user_id && ($in_user_id == $user_id)) || !isset ( $in_user_id ) || !$in_user_id )
                                     {
-                                    $user_name = $user->GetLocalName();
-                                    }
+                                    $user = c_comdef_server::GetUserByIDObj ( $user_id );
+                                
+                                    if ( $user instanceof c_comdef_user )
+                                        {
+                                        $user_name = $user->GetLocalName();
+                                        }
             
-                                $sb = c_comdef_server::GetServiceBodyByIDObj ( $sb_id );
+                                    // Using str_replace, because preg_replace is pretty expensive. However, I don't think this buys us much.
+                                    if ( $b_obj instanceof c_comdef_meeting )
+                                        {
+                                        $meeting_name = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $b_obj->GetMeetingDataValue ( 'meeting_name' ))) );
+                                        }
+                                    elseif ( $a_obj instanceof c_comdef_meeting )
+                                        {
+                                        $meeting_name = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $a_obj->GetMeetingDataValue ( 'meeting_name' ))) );
+                                        }
                                 
-                                if ( $sb instanceof c_comdef_service_body )
-                                    {
-                                    $sb_name = $sb->GetLocalName();
-                                    }
+                                    $sb = c_comdef_server::GetServiceBodyByIDObj ( $sb_id );
                                 
-                                $meeting_exists = 0;
+                                    if ( $sb instanceof c_comdef_service_body )
+                                        {
+                                        $sb_name = $sb->GetLocalName();
+                                        }
                                 
-                                if ( c_comdef_server::GetOneMeeting ( $meeting_id, true ) )
-                                    {
-                                    $meeting_exists = 1;
-                                    }
+                                    $meeting_exists = 0;
+                                
+                                    if ( c_comdef_server::GetOneMeeting ( $meeting_id, true ) )
+                                        {
+                                        $meeting_exists = 1;
+                                        }
             
-                                $details = '';
-                                $desc = $change->DetailedChangeDescription();
+                                    $details = '';
+                                    $desc = $change->DetailedChangeDescription();
                                 
-                                if ( $desc && isset ( $desc['details'] ) && is_array ( $desc['details'] ) )
-                                    {
-                                    // We need to prevent double-quotes, as they are the string delimiters, so we replace them with single-quotes.
-                                    $details = htmlspecialchars_decode ( str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", implode ( " ", $desc['details'] ))) ), ENT_COMPAT );
-                                    }
+                                    if ( $desc && isset ( $desc['details'] ) && is_array ( $desc['details'] ) )
+                                        {
+                                        // We need to prevent double-quotes, as they are the string delimiters, so we replace them with single-quotes.
+                                        $details = htmlspecialchars_decode ( str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", implode ( " ", $desc['details'] ))) ), ENT_COMPAT );
+                                        }
                                 
-                                $change_line = array();
+                                    $change_line = array();
             
-                                if ( $date_int )
-                                    {
-                                    $change_line['date_int'] = $date_int;
-                                    }
-                                else
-                                    {
-                                    $change_line['date_int'] = 0;
-                                    }
+                                    if ( $date_int )
+                                        {
+                                        $change_line['date_int'] = $date_int;
+                                        }
+                                    else
+                                        {
+                                        $change_line['date_int'] = 0;
+                                        }
                                 
-                                if ( $date_string )
-                                    {
-                                    $change_line['date_string'] = $date_string;
-                                    }
-                                else
-                                    {
-                                    $change_line['date_string'] = '';
-                                    }
+                                    if ( $date_string )
+                                        {
+                                        $change_line['date_string'] = $date_string;
+                                        }
+                                    else
+                                        {
+                                        $change_line['date_string'] = '';
+                                        }
                                 
-                                if ( $change_type )
-                                    {
-                                    $change_line['change_type'] = $change_type;
-                                    }
-                                else
-                                    {
-                                    $change_line['change_type'] = '';
-                                    }
+                                    if ( $change_type )
+                                        {
+                                        $change_line['change_type'] = $change_type;
+                                        }
+                                    else
+                                        {
+                                        $change_line['change_type'] = '';
+                                        }
                                 
-                                if ( $meeting_id )
-                                    {
-                                    $change_line['meeting_id'] = $meeting_id;
-                                    }
-                                else
-                                    {
-                                    $change_line['meeting_id'] = 0;
-                                    }
+                                    if ( $meeting_id )
+                                        {
+                                        $change_line['meeting_id'] = $meeting_id;
+                                        }
+                                    else
+                                        {
+                                        $change_line['meeting_id'] = 0;
+                                        }
                                 
-                                if ( $meeting_name )
-                                    {
-                                    $change_line['meeting_name'] = $meeting_name;
-                                    }
-                                else
-                                    {
-                                    $change_line['meeting_name'] = '';
-                                    }
+                                    if ( $meeting_name )
+                                        {
+                                        $change_line['meeting_name'] = $meeting_name;
+                                        }
+                                    else
+                                        {
+                                        $change_line['meeting_name'] = '';
+                                        }
                                 
-                                if ( $user_id )
-                                    {
-                                    $change_line['user_id'] = $user_id;
-                                    }
-                                else
-                                    {
-                                    $change_line['user_id'] = 0;
-                                    }
+                                    if ( $user_id )
+                                        {
+                                        $change_line['user_id'] = $user_id;
+                                        }
+                                    else
+                                        {
+                                        $change_line['user_id'] = 0;
+                                        }
                                 
-                                if ( $user_name )
-                                    {
-                                    $change_line['user_name'] = $user_name;
-                                    }
-                                else
-                                    {
-                                    $change_line['user_name'] = '';
-                                    }
+                                    if ( $user_name )
+                                        {
+                                        $change_line['user_name'] = $user_name;
+                                        }
+                                    else
+                                        {
+                                        $change_line['user_name'] = '';
+                                        }
                                 
-                                if ( $sb_id )
-                                    {
-                                    $change_line['service_body_id'] = $sb_id;
-                                    }
-                                else
-                                    {
-                                    $change_line['service_body_id'] = '';
-                                    }
+                                    if ( $sb_id )
+                                        {
+                                        $change_line['service_body_id'] = $sb_id;
+                                        }
+                                    else
+                                        {
+                                        $change_line['service_body_id'] = '';
+                                        }
                                 
-                                if ( $sb_name )
-                                    {
-                                    $change_line['service_body_name'] = $sb_name;
-                                    }
-                                else
-                                    {
-                                    $change_line['service_body_name'] = '';
-                                    }
+                                    if ( $sb_name )
+                                        {
+                                        $change_line['service_body_name'] = $sb_name;
+                                        }
+                                    else
+                                        {
+                                        $change_line['service_body_name'] = '';
+                                        }
                                 
-                                $change_line['meeting_exists'] = $meeting_exists;
+                                    $change_line['meeting_exists'] = $meeting_exists;
                                 
-                                if ( $details )
-                                    {
-                                    $change_line['details'] = $details;
-                                    }
-                                else
-                                    {
-                                    $change_line['details'] = '';
-                                    }
+                                    if ( $details )
+                                        {
+                                        $change_line['details'] = $details;
+                                        }
+                                    else
+                                        {
+                                        $change_line['details'] = '';
+                                        }
                                 
-                                $ret .= '"'.implode ( '","', $change_line ).'"'."\n";
+                                    $ret .= '"'.implode ( '","', $change_line ).'"'."\n";
+                                    }
                                 }
                             }
                         }
