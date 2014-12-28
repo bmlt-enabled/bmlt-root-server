@@ -55,8 +55,7 @@ class c_comdef_admin_xml_handler
         $ret = NULL;
         // We make sure that we are allowed to access this level of functionality.
         // This is "belt and suspenders." We will constantly check user credentials.
-        $user_obj = $this->server->GetCurrentUserObj();
-        if ( isset ( $user_obj ) && ($user_obj instanceof c_comdef_user) && ($user_obj->GetUserLevel() != _USER_LEVEL_DISABLED) && ($user_obj->GetUserLevel() != _USER_LEVEL_SERVER_ADMIN) && ($user_obj->GetID() > 1) )
+        if ( $this->basic_user_validation() )
             {
             if ( isset ( $this->http_vars['admin_action'] ) && trim ( $this->http_vars['admin_action'] ) )
                 {
@@ -80,6 +79,10 @@ class c_comdef_admin_xml_handler
                     
                     case 'get_meetings':
                         $ret = $this->process_meeting_search();
+                    break;
+                    
+                    case 'get_changes':
+                        $ret = $this->process_changes();
                     break;
                     
                     case 'modify_meeting':
@@ -118,6 +121,297 @@ class c_comdef_admin_xml_handler
     }
     
     /********************************************************************************************************//**
+    \brief This is a basic funtion that tests the current user, to see if they are basically valid.
+    
+    \returns TRUE, if the user is valid.
+    ************************************************************************************************************/
+    function basic_user_validation()
+    {
+        $ret = FALSE;
+        
+        $user_obj = $this->server->GetCurrentUserObj();
+        // First, make sure the use is of the correct general type.
+        if ( isset ( $user_obj ) && ($user_obj instanceof c_comdef_user) && ($user_obj->GetUserLevel() != _USER_LEVEL_DISABLED) && ($user_obj->GetUserLevel() != _USER_LEVEL_SERVER_ADMIN) && ($user_obj->GetID() > 1) )
+            {
+            $ret = TRUE;
+            }
+        
+        return $ret;
+    }
+    
+    /********************************************************************************************************//**
+    \brief This fulfills a user request to get change records.
+    
+    \returns the XML for the change data.
+    ************************************************************************************************************/
+    function process_changes()
+    {
+        $ret = '';
+        
+        // First, make sure the use is of the correct general type.
+        if ( $this->basic_user_validation() )
+            {
+            $start_date = '';
+            $end_date = '';
+            $meeting_id = '';
+            $user_id = '';
+            $service_body_id = '';
+            
+            $ret = $this->TranslateCSVToXML ( $this->get_changes_as_csv ( $start_date, $end_date, $meeting_id, $user_id, $service_body_id ) );
+            $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<changes xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/GetChanges.php\">$ret</changes>";
+            }
+        
+        return $ret;
+    }
+
+/*******************************************************************/
+/**
+	\brief	This returns change records in CSV form (which we turn into XML).
+	
+	\returns CSV data, with the first row a key header.
+*/	
+function get_changes_as_csv (	
+                                $in_start_date = null,	///< Optional. A start date (In PHP time() format). If supplied, then only changes on, or after this date will be returned.
+                                $in_end_date = null,	///< Optional. An end date (In PHP time() format). If supplied, then only changes that occurred on, or before this date will be returned.
+                                $in_meeting_id = null,	///< Optional. If supplied, an ID for a particular meeting. Only changes for that meeting will be returned.
+                                $in_user_id = null,	    ///< Optional. If supplied, an ID for a particular user. Only changes made by that user will be returned.
+                                $in_sb_id = null	    ///< Optional. If supplied, an ID for a particular Service body. Only changes for that Service body will be returned.
+                                )
+	{
+	$ret = null;
+	
+	try
+		{
+		$change_objects = c_comdef_server::GetChangesFromIDAndType ( 'c_comdef_meeting', null, $in_start_date, $in_end_date );
+		if ( $change_objects instanceof c_comdef_changes )
+			{
+			$obj_array = $change_objects->GetChangesObjects();
+			
+			if ( is_array ( $obj_array ) && count ( $obj_array ) )
+				{
+	            set_time_limit ( max ( 30, intval ( count ( $obj_array ) / 20 ) ) ); // Change requests can take a loooong time...
+				$localized_strings = c_comdef_server::GetLocalStrings();
+                require_once ( dirname ( dirname ( dirname ( __FILE__ ) ) ).'/server/config/get-config.php');
+				$ret = '"date_int","date_string","change_type","meeting_id","meeting_name","user_id","user_name","service_body_id","service_body_name","meeting_exists","details"'."\n";
+                
+                // If they specify a Service body, we also look in "child" Service bodies, so we need to produce a flat array of IDs.
+                if ( isset ( $in_sb_id ) && $in_sb_id )
+                    {
+                    global $bmlt_array_gather;
+                    
+                    $bmlt_array_gather = array();
+                    
+                    /************************************************//**
+                    * This little internal function will simply fill    *
+                    * the $bmlt_array_gather array with a linear set of *
+                    * Service body IDs that can be used for a quick     *
+                    * comparison, later on. It is a callback function.  *
+                    ****************************************************/
+                    function bmlt_at_at ( $in_value,
+                                          $in_key
+                                        )
+                        {
+                        global $bmlt_array_gather;
+                        
+                        if ( $in_value instanceof c_comdef_service_body )
+                            {
+                            array_push ( $bmlt_array_gather, $in_value->GetID() );
+                            }
+                        }
+                    
+                    array_walk_recursive ( c_comdef_server::GetServer()->GetNestedServiceBodyArray ( $in_sb_id ), bmlt_at_at );
+                    
+                    if ( is_array ( $bmlt_array_gather ) && count ( $bmlt_array_gather ) )
+                        {
+                        $in_sb_id = $bmlt_array_gather;
+                        }
+                    else
+                        {
+                        $in_sb_id = array ( $in_sb_id );
+                        }
+                    }
+                
+				foreach ( $obj_array as $change )
+					{
+					$change_type = $change->GetChangeType();
+					$date_int = intval($change->GetChangeDate());
+					$date_string = date ($change_date_format, $date_int );
+				    
+				    if ( $change instanceof c_comdef_change )
+				        {
+                        $b_obj = $change->GetBeforeObject();
+                        $a_obj = $change->GetAfterObject();
+                        $meeting_id = intval ( $change->GetBeforeObjectID() );
+                        $sb_a = intval ( ($a_obj instanceof c_comdef_meeting) ? $a_obj->GetServiceBodyID() : 0 );
+                        $sb_b = intval ( ($b_obj instanceof c_comdef_meeting) ? $b_obj->GetServiceBodyID() : 0 );
+                        $sb_c = intval ( $change->GetServiceBodyID() );
+                        
+                        if ( !$meeting_id )
+                            {
+                            $meeting_id = intval ( $change->GetAfterObjectID() );
+                            }
+                        
+                        if ( (intval ( $in_meeting_id ) && intval ( $in_meeting_id ) == intval ( $meeting_id )) || !intval ( $in_meeting_id ) )
+                            {
+                            $meeting_name = '';
+                            $user_name = '';
+					        
+					        if ( !is_array ( $in_sb_id ) || !count ( $in_sb_id ) || in_array ( $sb_a, $in_sb_id ) || in_array ( $sb_b, $in_sb_id ) || in_array ( $sb_c, $in_sb_id ) )
+					            {
+					            $sb_id = (intval ( $sb_c ) ? $sb_c : (intval ( $sb_b ) ? $sb_b : $sb_a));
+					            
+                                // Using str_replace, because preg_replace is pretty expensive. However, I don't think this buys us much.
+                                if ( $b_obj instanceof c_comdef_meeting )
+                                    {
+                                    $meeting_name = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $b_obj->GetMeetingDataValue ( 'meeting_name' ))) );
+                                    }
+                                elseif ( $a_obj instanceof c_comdef_meeting )
+                                    {
+                                    $meeting_name = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $a_obj->GetMeetingDataValue ( 'meeting_name' ))) );
+                                    }
+                                
+                                $user_id = intval ( $change->GetUserID() );
+                                
+                                $user = c_comdef_server::GetUserByIDObj ( $user_id );
+                                
+                                if ( $user instanceof c_comdef_user )
+                                    {
+                                    $user_name = htmlspecialchars ( $user->GetLocalName() );
+                                    }
+            
+                                $sb = c_comdef_server::GetServiceBodyByIDObj ( $sb_id );
+                                
+                                if ( $sb instanceof c_comdef_service_body )
+                                    {
+                                    $sb_name = htmlspecialchars ( $sb->GetLocalName() );
+                                    }
+                                
+                                $meeting_exists = 0;
+                                
+                                if ( c_comdef_server::GetOneMeeting ( $meeting_id, true ) )
+                                    {
+                                    $meeting_exists = 1;
+                                    }
+            
+                                $details = '';
+                                $desc = $change->DetailedChangeDescription();
+                                
+                                if ( $desc && isset ( $desc['details'] ) && is_array ( $desc['details'] ) )
+                                    {
+                                    // We need to prevent double-quotes, as they are the string delimiters, so we replace them with single-quotes.
+                                    $details = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", implode ( " ", $desc['details'] ))) );
+                                    }
+                                
+                                $change_line = array();
+            
+                                if ( $date_int )
+                                    {
+                                    $change_line['date_int'] = $date_int;
+                                    }
+                                else
+                                    {
+                                    $change_line['date_int'] = 0;
+                                    }
+                                
+                                if ( $date_string )
+                                    {
+                                    $change_line['date_string'] = $date_string;
+                                    }
+                                else
+                                    {
+                                    $change_line['date_string'] = '';
+                                    }
+                                
+                                if ( $change_type )
+                                    {
+                                    $change_line['change_type'] = $change_type;
+                                    }
+                                else
+                                    {
+                                    $change_line['change_type'] = '';
+                                    }
+                                
+                                if ( $meeting_id )
+                                    {
+                                    $change_line['meeting_id'] = $meeting_id;
+                                    }
+                                else
+                                    {
+                                    $change_line['meeting_id'] = 0;
+                                    }
+                                
+                                if ( $meeting_name )
+                                    {
+                                    $change_line['meeting_name'] = $meeting_name;
+                                    }
+                                else
+                                    {
+                                    $change_line['meeting_name'] = '';
+                                    }
+                                
+                                if ( $user_id )
+                                    {
+                                    $change_line['user_id'] = $user_id;
+                                    }
+                                else
+                                    {
+                                    $change_line['user_id'] = 0;
+                                    }
+                                
+                                if ( $user_name )
+                                    {
+                                    $change_line['user_name'] = $user_name;
+                                    }
+                                else
+                                    {
+                                    $change_line['user_name'] = '';
+                                    }
+                                
+                                if ( $sb_id )
+                                    {
+                                    $change_line['service_body_id'] = $sb_id;
+                                    }
+                                else
+                                    {
+                                    $change_line['service_body_id'] = '';
+                                    }
+                                
+                                if ( $sb_name )
+                                    {
+                                    $change_line['service_body_name'] = $sb_name;
+                                    }
+                                else
+                                    {
+                                    $change_line['service_body_name'] = '';
+                                    }
+                                
+                                $change_line['meeting_exists'] = $meeting_exists;
+                                
+                                if ( $details )
+                                    {
+                                    $change_line['details'] = $details;
+                                    }
+                                else
+                                    {
+                                    $change_line['details'] = '';
+                                    }
+                                
+                                $ret .= '"'.implode ( '","', $change_line ).'"'."\n";
+                                }
+                            }
+                        }
+					}
+				}
+			}
+		}
+	catch ( Exception $e )
+		{
+		}
+
+	return $ret;
+	}
+    
+    /********************************************************************************************************//**
     \brief This fulfills a user request to get all the available fields for adding/modifying meeting data.
     
     \returns the XML for the template data.
@@ -126,9 +420,8 @@ class c_comdef_admin_xml_handler
     {
         $ret = '';
         
-        $user_obj = $this->server->GetCurrentUserObj();
         // First, make sure the use is of the correct general type.
-        if ( isset ( $user_obj ) && ($user_obj instanceof c_comdef_user) && ($user_obj->GetUserLevel() != _USER_LEVEL_DISABLED) && ($user_obj->GetUserLevel() != _USER_LEVEL_SERVER_ADMIN) && ($user_obj->GetID() > 1) )
+        if ( $this->basic_user_validation() )
             {
             // Get the template data from the database.
             $template_data = c_comdef_meeting::GetDataTableTemplate();
@@ -196,14 +489,13 @@ class c_comdef_admin_xml_handler
     {
         $ret = '<h1>ERROR</h1>';
         
-        $user_obj = $this->server->GetCurrentUserObj();
         // First, make sure the use is of the correct general type.
-        if ( isset ( $user_obj ) && ($user_obj instanceof c_comdef_user) && ($user_obj->GetUserLevel() != _USER_LEVEL_DISABLED) && ($user_obj->GetUserLevel() != _USER_LEVEL_SERVER_ADMIN) && ($user_obj->GetID() > 1) )
+        if ( $this->basic_user_validation() )
             {
             $meeting_obj = $this->server->GetOneMeeting ( intval ( $this->http_vars['meeting_id'] ) );
             if ( $meeting_obj instanceof c_comdef_meeting ) // Make sure we got a meeting.
                 {
-                if ( $meeting_obj->UserCanEdit ( $user_obj ) )  // Make sure that we are allowed to edit this meeting.
+                if ( $meeting_obj->UserCanEdit ( $this->server->GetCurrentUserObj() ) )  // Make sure that we are allowed to edit this meeting.
                     {
                     $id = $meeting_obj->GetID();
                     $name = $meeting_obj->GetLocalName();
@@ -246,31 +538,62 @@ class c_comdef_admin_xml_handler
         
         $user_obj = $this->server->GetCurrentUserObj();
         // First, make sure the use is of the correct general type.
-        if ( isset ( $user_obj ) && ($user_obj instanceof c_comdef_user) && ($user_obj->GetUserLevel() != _USER_LEVEL_DISABLED) && ($user_obj->GetUserLevel() != _USER_LEVEL_SERVER_ADMIN) && ($user_obj->GetID() > 1) )
+        if ( $this->basic_user_validation() )
             {
             // Get the meeting object, itself.
             
             if ( !intval ( $this->http_vars['meeting_id'] ) )  // Will we be creating a new meeting?
                 {
-                $service_body_id = intval ( $this->http_vars['service_body_id'] );
-                $weekday = 1;
-                $start_time = strtotime ( '22:30:00' );
-                $lang = c_comdef_server::GetServer()->GetLocalLang ();
+                $service_bodies = $this->server->GetServiceBodyArray();
+                $my_editable_service_bodies = array();
                 
-                if ( $service_body_id )
+                // We cycle through all the Service bodies, and look for ones in which we have permissions.
+                // We use the Service body IDs to key them in associative arrays.
+                foreach ( $service_bodies as $service_body )
                     {
-                    $service_body = c_comdef_server::GetServer()->GetServiceBodyByIDObj ( $service_body_id );
-
-                    if ( $service_body instanceof c_comdef_service_body )
+                    if ( ($user_obj->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) && $service_body->UserCanEditMeetings() ) // We are a full Service body editor, with rights to edit the Service body itself (as well as all its meetings).
                         {
-                        if ( $service_body->UserCanEditMeetings ( $user_obj ) )
+                        $my_editable_service_bodies['sb_'.$service_body->GetID()] = $service_body;
+                        }
+                    }
+                
+                if ( isset ( $my_editable_service_bodies ) && is_array ( $my_editable_service_bodies ) && count ( $my_editable_service_bodies ) )
+                    {
+                    $service_body_id = 0;
+                    
+                    // If we are allowed to edit more than one Service body, then we are given a choice.
+                    if ( count ( $my_editable_service_bodies ) > 1 )
+                        {
+                        $service_body_id = intval ( $this->http_vars['service_body_id'] );
+                        }
+                    else    // Otherwise, it is picked for us.
+                        {
+                        $service_body_id = $my_editable_service_bodies[0]->GetID();
+                        }
+                        
+                    $weekday = 1;
+                    $start_time = strtotime ( '22:30:00' );
+                    $lang = c_comdef_server::GetServer()->GetLocalLang ();
+                
+                    if ( $service_body_id )
+                        {
+                        $service_body = c_comdef_server::GetServer()->GetServiceBodyByIDObj ( $service_body_id );
+
+                        if ( $service_body instanceof c_comdef_service_body )
                             {
-                            $meeting_obj = c_comdef_server::AddNewMeeting ( $service_body_id, $weekday, $start_time, $lang );
-                            $ret = '<new_meeting id="'.intval ( $meeting_obj->GetID() ).'"/>';
+                            if ( $service_body->UserCanEditMeetings ( $user_obj ) )
+                                {
+                                $meeting_obj = c_comdef_server::AddNewMeeting ( $service_body_id, $weekday, $start_time, $lang );
+                                $ret = '<new_meeting id="'.intval ( $meeting_obj->GetID() ).'"/>';
+                                }
+                            else
+                                {
+                                $ret = '<h1>NOT AUTHORIZED</h1>';
+                                }
                             }
                         else
                             {
-                            $ret = '<h1>NOT AUTHORIZED</h1>';
+                            $ret = '<h1>ERROR</h1>';
                             }
                         }
                     else
@@ -280,7 +603,7 @@ class c_comdef_admin_xml_handler
                     }
                 else
                     {
-                    $ret = '<h1>ERROR</h1>';
+                    $ret = '<h1>NOT AUTHORIZED</h1>';
                     }
                 }
             else
@@ -507,8 +830,7 @@ class c_comdef_admin_xml_handler
     {
         $ret = '';
         
-        $user_obj = $this->server->GetCurrentUserObj();
-        if ( isset ( $user_obj ) && ($user_obj instanceof c_comdef_user) && ($user_obj->GetUserLevel() != _USER_LEVEL_DISABLED) && ($user_obj->GetUserLevel() != _USER_LEVEL_SERVER_ADMIN) && ($user_obj->GetID() > 1) )
+        if ( $this->basic_user_validation() )
             {
             $format_ids = array();
             
@@ -583,8 +905,7 @@ class c_comdef_admin_xml_handler
     {
         $ret = '';
         
-        $user_obj = $this->server->GetCurrentUserObj();
-        if ( isset ( $user_obj ) && ($user_obj instanceof c_comdef_user) && ($user_obj->GetUserLevel() != _USER_LEVEL_DISABLED) && ($user_obj->GetUserLevel() != _USER_LEVEL_SERVER_ADMIN) && ($user_obj->GetID() > 1) )
+        if ( $this->basic_user_validation() )
             {
             $service_body_ids = array();
             
@@ -648,8 +969,7 @@ class c_comdef_admin_xml_handler
     {
         $ret = '';
         // Belt and suspenders. We need to make sure the user is authorized.
-        $user_obj = $this->server->GetCurrentUserObj();
-        if ( isset ( $user_obj ) && ($user_obj instanceof c_comdef_user) && ($user_obj->GetUserLevel() != _USER_LEVEL_DISABLED) && ($user_obj->GetUserLevel() != _USER_LEVEL_SERVER_ADMIN) && ($user_obj->GetID() > 1) )
+        if ( $this->basic_user_validation() )
             {
             if ( !in_array ( $in_service_body_id, $this->handled_service_body_ids ) )
                 {
@@ -835,7 +1155,7 @@ class c_comdef_admin_xml_handler
         $my_editable_service_bodies = array();
         
         $user_obj = $this->server->GetCurrentUserObj();
-        if ( isset ( $user_obj ) && ($user_obj instanceof c_comdef_user) && ($user_obj->GetUserLevel() != _USER_LEVEL_DISABLED) && ($user_obj->GetUserLevel() != _USER_LEVEL_SERVER_ADMIN) && ($user_obj->GetID() > 1) )
+        if ( $this->basic_user_validation() )
             {
             // We cycle through all the Service bodies, and look for ones in which we have permissions.
             // We use the Service body IDs to key them in associative arrays.
@@ -916,6 +1236,7 @@ class c_comdef_admin_xml_handler
     function TranslateCSVToXML (	$in_csv_data	///< An array of CSV data, with the first element being the field names.
                                 )
         {
+        require_once ( dirname ( dirname ( dirname ( __FILE__ ) ) ).'/server/shared/Array2XML.php');
         $temp_keyed_array = array();
         $in_csv_data = explode ( "\n", $in_csv_data );
         $keys = array_shift ( $in_csv_data );
