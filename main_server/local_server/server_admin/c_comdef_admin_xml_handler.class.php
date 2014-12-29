@@ -895,19 +895,37 @@ function get_changes_as_csv (
             
             // At this point, we have a complete array of just the format[s] that will be returned. Time to make some XML...
             $index = 0;
+            
+            // We will find out which formats actually appear, somewhere in the DB, and indicate that when we give the info.
+            $used_formats = $this->server->GetUsedFormatsArray();
+            $used_ids = array();
+            
+            foreach ( $used_formats as $format )
+                {
+                $used_ids[] = intval ( $format->GetSharedID() );
+                }
+            
             foreach ( $returned_formats as $format )
                 {
                 $ret .= '<row sequence_index="'.strval ( $index++ ).'">';
+                    $id = intval ( $format->GetSharedID() );
                     $ret.= '<key_string>'.c_comdef_htmlspecialchars ( $format->GetKey() ).'</key_string>';
                     $ret.= '<name_string>'.c_comdef_htmlspecialchars ( $format->GetLocalName() ).'</name_string>';
                     $ret.= '<description_string>'.c_comdef_htmlspecialchars ( $format->GetLocalDescription() ).'</description_string>';
                     $ret.= '<lang>'.c_comdef_htmlspecialchars ( $lang ).'</lang>';
-                    $ret.= '<id>'.intval ( $format->GetSharedID() ).'</id>';
+                    $ret.= '<id>'.$id.'</id>';
                     $world_id = trim ( $format->GetWorldID() );
                     if ( isset ( $world_id ) && $world_id )
                         {
                         $ret.= '<world_id>'.c_comdef_htmlspecialchars ( $world_id ).'</world_id>';
                         }
+                    
+                    // If this is used somewehere, we indicate it here.
+                    if ( in_array ( $id, $used_ids ) )
+                        {
+                        $ret.= '<format_used_in_database>1</format_used_in_database>';
+                        }
+                        
                 $ret .= '</row>';
                 }
             $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<formats xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/GetFormats.php\">$ret</formats>";
