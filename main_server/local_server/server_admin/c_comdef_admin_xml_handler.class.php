@@ -90,6 +90,10 @@ class c_comdef_admin_xml_handler
                             {
                             $ret = $this->process_meeting_modify();
                             }
+                        else
+                            {
+                            $ret = '<h1>BAD ADMIN ACTION</h1>';
+                            }
                     break;
                     
                     case 'add_meeting':
@@ -566,7 +570,6 @@ function get_changes_as_csv (
             {
             $closing_tag = '</change_meeting>'; // We will usually be changing existing meetings.
             // Get the meeting object, itself.
-            
             if ( !intval ( $this->http_vars['meeting_id'] ) )  // Will we be creating a new meeting?
                 {
                 $service_bodies = $this->server->GetServiceBodyArray();
@@ -591,7 +594,7 @@ function get_changes_as_csv (
                         // If we are allowed to edit more than one Service body, then we are given a choice. We must supply an ID for the new meeting.
                         if ( count ( $my_editable_service_bodies ) > 1 )
                             {
-                            if ( isset ( intval ( $this->http_vars['service_body_id'] ) && intval ( $this->http_vars['service_body_id'] ) )
+                            if ( isset ( $this->http_vars['service_body_id'] ) && intval ( $this->http_vars['service_body_id'] ) )
                                 {
                                 $service_body_id = intval ( $this->http_vars['service_body_id'] );
                                 }
@@ -602,7 +605,7 @@ function get_changes_as_csv (
                             }
                         
                         $weekday = 1;   // Default is Sunday
-                        $start_time = strtotime ( '22:30:00' ); // Default is 8:30 PM
+                        $start_time = '22:30:00'; // Default is 8:30 PM
                         $lang = c_comdef_server::GetServer()->GetLocalLang ();  // We use whatever the server language is.
                 
                         if ( $service_body_id ) // Can't create a new meeting without a Service body.
@@ -613,7 +616,8 @@ function get_changes_as_csv (
                                 {
                                 if ( $service_body->UserCanEditMeetings ( $user_obj ) )
                                     {
-                                    $meeting_obj = c_comdef_server::AddNewMeeting ( $service_body_id, $weekday, $start_time, $lang );
+                                    $meeting_id = c_comdef_server::AddNewMeeting ( $service_body_id, $weekday, $start_time, $lang );
+                                    $meeting_obj = $this->server->GetOneMeeting ( intval ( $meeting_id ) );
                                     $ret = '<new_meeting id="'.intval ( $meeting_obj->GetID() ).'">';
                                     $closing_tag = '</new_meeting>';
                                     }
@@ -675,96 +679,134 @@ function get_changes_as_csv (
                     // We change each of the fields passed in to the new values passed in.
                     foreach ( $meeting_fields as $field )
                         {
-                        list ( $meeting_field, $value ) = explode ( ',', $field );
+                        list ( $meeting_field, $value ) = explode ( ',', $field, 2 );
                     
                         if ( in_array ( $meeting_field, $keys ) )
                             {
-                            if ( ($meeting_field != 'id_bigint') && ($meeting_field != 'service_body_bigint') )    // We can't change the meeting ID or Service body (those should be done on the main interface).
+                            switch ( $meeting_field )
                                 {
-                                switch ( $meeting_field )
-                                    {
-                                    case 'id_bigint':   // We don't currently let these get changed.
-                                    case 'lang_enum':
-                                        $value = null;
-                                        $old_value = null;
-                                    break;
-                        
-                                    case 'service_body_bigint':
-                                        $old_value = $meeting_obj->GetServiceBodyID();
-                                        $meeting_obj->SetServiceBodyID ( intval ( $value ) );
-                                    break;
-                        
-                                    case 'email_contact':
-                                        $old_value = $meeting_obj->GetEmailContact();
-                                        $meeting_obj->SetEmailContact ( intval ( $value ) );
-                                    break;
-                        
-                                    case 'published':
-                                        $old_value = $meeting_obj->IsPublished();
-                                        $meeting_obj->SetPublished ( intval ( $value ) != 0 ? true : false );
-                                    break;
-                        
-                                    case 'weekday_tinyint':
-                                        if ( (intval ( $value ) > 0) && (intval ( $value ) < 8) )
-                                            {
-                                            $old_value = $meeting_obj->GetMeetingData()[$meeting_field];
-                                            $meeting_obj->GetMeetingData()[$meeting_field] = intval ( $value );
-                                            }
-                                    break;
-                        
-                                    case 'longitude':
-                                    case 'latitude':
-                                        if ( floatval ( $value ) != 0.0 )
-                                            {
-                                            $old_value = $meeting_obj->GetMeetingData()[$meeting_field];
-                                            $meeting_obj->GetMeetingData()[$meeting_field] = floatval ( $value );
-                                            }
-                                    break;
-                        
-                                    case 'start_time':
-                                    case 'duration_time':
-                                        $old_value = $meeting_obj->GetMeetingData()[$meeting_field];
-                                        $meeting_obj->GetMeetingData()[$meeting_field] = $value;
-                                    break;
-                        
-                                    case 'formats':
-                                    case 'worldid_mixed':
-                                        $old_value = $meeting_obj->GetMeetingData()[$meeting_field];
-                                        $meeting_obj->GetMeetingData()[$meeting_field] = $value;
-                                    break;
-                        
-                                    default:
+                                case 'id_bigint':   // We don't currently let these get changed.
+                                case 'lang_enum':
+                                case 'service_body_bigint':
+                                    $value = null;
+                                    $old_value = null;
+                                break;
+                    
+                                case 'email_contact':
+                                    $old_value = $meeting_obj->GetEmailContact();
+                                    $meeting_obj->SetEmailContact ( intval ( $value ) );
+                                break;
+                    
+                                case 'published':
+                                    $old_value = $meeting_obj->IsPublished();
+                                    $meeting_obj->SetPublished ( intval ( $value ) != 0 ? true : false );
+                                break;
+                    
+                                case 'weekday_tinyint':
+                                    if ( (intval ( $value ) > 0) && (intval ( $value ) < 8) )
+                                        {
                                         $old_value = $meeting_obj->GetMeetingDataValue ( $meeting_field );
-                                        $prompt = isset ( $meeting_obj->GetMeetingData()[$meeting_field]['field_prompt'] ) ? $meeting_obj->GetMeetingData()[$meeting_field]['field_prompt'] : $template_data[$meeting_field]['field_prompt'];
-                                        $visibility = intval ( isset ( $meeting_obj->GetMeetingData()[$meeting_field]['visibility'] ) ? $meeting_obj->GetMeetingData()[$meeting_field]['visibility'] : $template_data[$meeting_field]['visibility'] );
-                                        $meeting_obj->AddDataField ( $meeting_field, $prompt, $value, null, $visibility, true );
-                                    break;
+                                        $meeting_obj->GetMeetingData()[$meeting_field] = intval ( $value );
+                                        }
+                                break;
+                    
+                                case 'longitude':
+                                case 'latitude':
+                                    if ( floatval ( $value ) != 0.0 )
+                                        {
+                                        $old_value = $meeting_obj->GetMeetingDataValue ( $meeting_field );
+                                        $meeting_obj->GetMeetingData()[$meeting_field] = floatval ( $value );
+                                        }
+                                break;
+                    
+                                case 'start_time':
+                                case 'duration_time':
+                                    $old_value = $meeting_obj->GetMeetingDataValue ( $meeting_field );
+                                    $meeting_obj->GetMeetingData()[$meeting_field] = $value;
+                                break;
+                    
+                                case 'formats':
+                                    // Formats take some extra work, because we store them in the meeting as individual objects, so we create, sort and apply those objects.
+                                    $vals = array();
+                                    $formats = explode ( ",", $value );
+                                    $lang = $this->server->GetLocalLang();
+                                    $formats_object = $this->server->GetFormatsObj();
+                                    $old_value = $meeting_obj->GetMeetingDataValue ( $meeting_field );
+                                    $old_ids = array();
+                                    
+                                    if ( isset ( $old_value ) && is_array ( $old_value ) && count ( $old_value ) )
+                                        {
+                                        foreach ( $old_value as $format_object )
+                                            {
+                                            if ( $format_object instanceof c_comdef_format )
+                                                {
+                                                $old_ids[] = $format_object->GetSharedID();
+                                                }
+                                            }
+                                        
+                                        if ( isset ( $old_ids ) && is_array ( $old_ids ) && count ( $old_ids ) )
+                                            {
+                                            $old_value = implode ( ',', $old_ids );
+                                            }
+                                        else
+                                            {
+                                            $old_value = null;
+                                            }
+                                        }
+                                    else
+                                        {
+                                        $old_value = null;
+                                        }
+                                    
+                                    foreach ( $formats as $shared_id )
+                                        {
+                                        $shared_id = intval ( $shared_id );
+                                        $object = $formats_object->GetFormatBySharedIDCodeAndLanguage ( $shared_id, $lang );
+                                        if ( $object instanceof c_comdef_format )
+                                            {
+                                            $vals[$shared_id] = $object;
+                                            }
+                                        }
+                                    uksort ( $vals, array ( 'c_comdef_meeting','format_sorter_simple' ) );
+                                    $meeting_obj->GetMeetingData()[$meeting_field] = $vals;
+                                break;
+                                
+                                case 'worldid_mixed':
+                                    $old_value = $meeting_obj->GetMeetingDataValue ( $meeting_field );
+                                    $meeting_obj->GetMeetingData()[$meeting_field] = $value;
+                                break;
+                    
+                                default:
+                                    $old_value = $meeting_obj->GetMeetingDataValue ( $meeting_field );
+                                    $prompt = isset ( $meeting_obj->GetMeetingData()[$meeting_field]['field_prompt'] ) ? $meeting_obj->GetMeetingData()[$meeting_field]['field_prompt'] : $template_data[$meeting_field]['field_prompt'];
+                                    $visibility = intval ( isset ( $meeting_obj->GetMeetingData()[$meeting_field]['visibility'] ) ? $meeting_obj->GetMeetingData()[$meeting_field]['visibility'] : $template_data[$meeting_field]['visibility'] );
+                                    $meeting_obj->AddDataField ( $meeting_field, $prompt, $value, null, $visibility, true );
+                                break;
+                                }
+                                
+                            // We only indicate changes.
+                            if ( ((isset ( $old_value ) && $old_value) || (isset ( $value ) && $value)) && ($old_value != $value) )
+                                {
+                                $ret .= '<field key="'.c_comdef_htmlspecialchars ( $meeting_field ).'">';
+                                if ( isset ( $old_value ) && $old_value )
+                                    {
+                                    $ret .= '<old_value>'.c_comdef_htmlspecialchars ( $old_value ).'</old_value>';
+                                    }
+                                else
+                                    {
+                                    $ret .= '<old_value/>';
                                     }
                                     
-                                // We only indicate changes.
-                                if ( ((isset ( $old_value ) && $old_value) || (isset ( $value ) && $value)) && ($old_value != $value) )
+                                if ( isset ( $value ) && $value )
                                     {
-                                    $ret .= '<field key="'.c_comdef_htmlspecialchars ( $meeting_field ).'">';
-                                    if ( isset ( $old_value ) && $old_value )
-                                        {
-                                        $ret .= '<old_value>'.c_comdef_htmlspecialchars ( $old_value ).'</old_value>';
-                                        }
-                                    else
-                                        {
-                                        $ret .= '<old_value/>';
-                                        }
-                                        
-                                    if ( isset ( $value ) && $value )
-                                        {
-                                        $ret .= '<new_value>'.c_comdef_htmlspecialchars ( $value ).'</new_value>';
-                                        }
-                                    else
-                                        {
-                                        $ret .= '<new_value/>';
-                                        }
-                                
-                                    $ret .= '</field>';
+                                    $ret .= '<new_value>'.c_comdef_htmlspecialchars ( $value ).'</new_value>';
                                     }
+                                else
+                                    {
+                                    $ret .= '<new_value/>';
+                                    }
+                            
+                                $ret .= '</field>';
                                 }
                             }
                         }
