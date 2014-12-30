@@ -564,6 +564,7 @@ function get_changes_as_csv (
         // First, make sure the use is of the correct general type.
         if ( $this->basic_user_validation() )
             {
+            $closing_tag = '</change_meeting>'; // We will usually be changing existing meetings.
             // Get the meeting object, itself.
             
             if ( !intval ( $this->http_vars['meeting_id'] ) )  // Will we be creating a new meeting?
@@ -571,137 +572,55 @@ function get_changes_as_csv (
                 $service_bodies = $this->server->GetServiceBodyArray();
                 $my_editable_service_bodies = array();
                 
-                // We cycle through all the Service bodies, and look for ones in which we have permissions.
-                // We use the Service body IDs to key them in associative arrays.
-                foreach ( $service_bodies as $service_body )
+                if ( $user_obj->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN )  // Must be a Service Body Admin.
                     {
-                    if ( ($user_obj->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) && $service_body->UserCanEditMeetings() ) // We are a full Service body editor, with rights to edit the Service body itself (as well as all its meetings).
+                    // We cycle through all the Service bodies, and look for ones in which we have permissions.
+                    // We use the Service body IDs to key them in associative arrays.
+                    foreach ( $service_bodies as $service_body )
                         {
-                        $my_editable_service_bodies['sb_'.$service_body->GetID()] = $service_body;
+                        if ( $service_body->UserCanEditMeetings() ) // We are a full Service body editor, with rights to edit the Service body itself (as well as all its meetings).
+                            {
+                            $my_editable_service_bodies['sb_'.$service_body->GetID()] = $service_body;
+                            }
                         }
-                    }
                 
-                if ( isset ( $my_editable_service_bodies ) && is_array ( $my_editable_service_bodies ) && count ( $my_editable_service_bodies ) )
-                    {
-                    $service_body_id = 0;
+                    if ( isset ( $my_editable_service_bodies ) && is_array ( $my_editable_service_bodies ) && count ( $my_editable_service_bodies ) )
+                        {
+                        $service_body_id = 0;
                     
-                    // If we are allowed to edit more than one Service body, then we are given a choice.
-                    if ( count ( $my_editable_service_bodies ) > 1 )
-                        {
-                        $service_body_id = intval ( $this->http_vars['service_body_id'] );
-                        }
-                    else    // Otherwise, it is picked for us.
-                        {
-                        $service_body_id = $my_editable_service_bodies[0]->GetID();
-                        }
+                        // If we are allowed to edit more than one Service body, then we are given a choice. We must supply an ID for the new meeting.
+                        if ( count ( $my_editable_service_bodies ) > 1 )
+                            {
+                            if ( isset ( intval ( $this->http_vars['service_body_id'] ) && intval ( $this->http_vars['service_body_id'] ) )
+                                {
+                                $service_body_id = intval ( $this->http_vars['service_body_id'] );
+                                }
+                            }
+                        else    // Otherwise, it is picked for us.
+                            {
+                            $service_body_id = $my_editable_service_bodies[0]->GetID();
+                            }
                         
-                    $weekday = 1;
-                    $start_time = strtotime ( '22:30:00' );
-                    $lang = c_comdef_server::GetServer()->GetLocalLang ();
+                        $weekday = 1;   // Default is Sunday
+                        $start_time = strtotime ( '22:30:00' ); // Default is 8:30 PM
+                        $lang = c_comdef_server::GetServer()->GetLocalLang ();  // We use whatever the server language is.
                 
-                    if ( $service_body_id )
-                        {
-                        $service_body = c_comdef_server::GetServer()->GetServiceBodyByIDObj ( $service_body_id );
+                        if ( $service_body_id ) // Can't create a new meeting without a Service body.
+                            {
+                            $service_body = c_comdef_server::GetServer()->GetServiceBodyByIDObj ( $service_body_id );
 
-                        if ( $service_body instanceof c_comdef_service_body )
-                            {
-                            if ( $service_body->UserCanEditMeetings ( $user_obj ) )
+                            if ( $service_body instanceof c_comdef_service_body )
                                 {
-                                $meeting_obj = c_comdef_server::AddNewMeeting ( $service_body_id, $weekday, $start_time, $lang );
-                                $ret = '<new_meeting id="'.intval ( $meeting_obj->GetID() ).'"/>';
-                                }
-                            else
-                                {
-                                $ret = '<h1>NOT AUTHORIZED</h1>';
-                                }
-                            }
-                        else
-                            {
-                            $ret = '<h1>ERROR</h1>';
-                            }
-                        }
-                    else
-                        {
-                        $ret = '<h1>ERROR</h1>';
-                        }
-                    }
-                else
-                    {
-                    $ret = '<h1>NOT AUTHORIZED</h1>';
-                    }
-                }
-            else
-                {
-                $meeting_obj = $this->server->GetOneMeeting ( intval ( $this->http_vars['meeting_id'] ) );
-                $ret = '<change_meeting id="'.intval ( $meeting_obj->GetID() ).'"/>';
-                }
-            
-            if ( $meeting_obj instanceof c_comdef_meeting )
-                {
-                if ( $meeting_obj->UserCanEdit ( $user_obj ) )    // We next make sure that we are allowed to make changes to this meeting.
-                    {
-                    $keys = c_comdef_meeting::GetAllMeetingKeys();  // Get all the available keys. The one passed in needs to match one of these.
-
-                    if ( in_array ( $this->http_vars['meeting_field'], $keys ) )
-                        {
-                        // In case we need to add a new field, we get the meeting data template.
-                        $template_data = c_comdef_meeting::GetDataTableTemplate();
-                        $template_longdata = c_comdef_meeting::GetLongDataTableTemplate();
-            
-                        // We merge the two tables (data and longdata).
-                        if ( is_array ( $template_data ) && count ( $template_data ) && is_array ( $template_longdata ) && count ( $template_longdata ) )
-                            {
-                            $template_data = array_merge ( $template_data, $template_longdata );
-                            }
-                    
-                        // If so, we take the field, and tweak its value.
-                        $data &= $meeting_obj->GetMeetingData ( );  // Get the data array by reference.
-                        if ( isset ( $data ) && is_array ( $data ) && count ( $data ) )
-                            {
-                            $meeting_fields = $this->http_vars['meeting_field'];
-                            $new_values = $this->http_vars['new_value'];
-                            
-                            if ( !is_array ( $meeting_fields ) )
-                                {
-                                $meeting_fields = array ( $meeting_fields );
-                                }
-                            
-                            if ( !is_array ( $new_values ) )
-                                {
-                                $new_values = array ( $new_values );
-                                }
-                            
-                            if ( count ( $meeting_fields ) == count ( $new_values ) )
-                                {
-                                $index = 0;
-                            
-                                // We change each of the fields passed in to the new values passed in.
-                                foreach ( $meeting_fields as $meeting_field )
+                                if ( $service_body->UserCanEditMeetings ( $user_obj ) )
                                     {
-                                    if ( ($meeting_field != 'id_bigint') && ($meeting_field != 'service_body_bigint') )    // We can't change the meeting ID or Service body (those should be done on the main interface).
-                                        {
-                                        $field &= $data[$meeting_field];    // We get the field structure as a reference, so we will actually change the data in place.
-                                        $value = $new_values[$index];
-                        
-                                        if ( isset ( $field ) && is_array ( $field ) && count ( $field ) ) // If we already have the field loaded, then we simply set its value to our provided one.
-                                            {
-                                            $old_value = $field['value'];
-                                            if ( $old_value != $value )
-                                                {
-                                                $field['value'] = $value;
-                                                }
-                                            }
-                                        else    // Otherwise, we have a relatively complex job. We have to create a new data object.
-                                            {
-                                            $meeting_obj->AddDataField ( $meeting_field, $template_data[$meeting_field]['field_prompt'], $value, null, intval ( $template_data[$meeting_field]['visibility'] ) );
-                                            }
-                                        
-                                        $ret .= '<field>'.c_comdef_htmlspecialchars ( $this->http_vars['meeting_field'] ).'<old_value>'.c_comdef_htmlspecialchars ( $old_value ).'</old_value><new_value>'.c_comdef_htmlspecialchars ( $value ).'</new_value></field>';
-                                        }
+                                    $meeting_obj = c_comdef_server::AddNewMeeting ( $service_body_id, $weekday, $start_time, $lang );
+                                    $ret = '<new_meeting id="'.intval ( $meeting_obj->GetID() ).'">';
+                                    $closing_tag = '</new_meeting>';
                                     }
-                                        
-                                $meeting_obj->UpdateToDB(); // Save the new data. After this, the meeting has been changed.
-                                $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<change_response xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/ChangeResponse.php\">$ret</change_response>";
+                                else
+                                    {
+                                    $ret = '<h1>NOT AUTHORIZED</h1>';
+                                    }
                                 }
                             else
                                 {
@@ -715,8 +634,146 @@ function get_changes_as_csv (
                         }
                     else
                         {
-                        $ret = '<h1>ERROR</h1>';
+                        $ret = '<h1>NOT AUTHORIZED</h1>';
                         }
+                    }
+                else
+                    {
+                    $ret = '<h1>NOT AUTHORIZED</h1>';
+                    }
+                }
+            else
+                {
+                $meeting_obj = $this->server->GetOneMeeting ( intval ( $this->http_vars['meeting_id'] ) );
+                $ret = '<change_meeting id="'.intval ( $meeting_obj->GetID() ).'">';
+                }
+            
+            if ( $meeting_obj instanceof c_comdef_meeting )
+                {
+                if ( $meeting_obj->UserCanEdit ( $user_obj ) )    // We next make sure that we are allowed to make changes to this meeting.
+                    {
+                    $keys = c_comdef_meeting::GetAllMeetingKeys();  // Get all the available keys. The one passed in needs to match one of these.
+
+                    // In case we need to add a new field, we get the meeting data template.
+                    $template_data = c_comdef_meeting::GetDataTableTemplate();
+                    $template_longdata = c_comdef_meeting::GetLongDataTableTemplate();
+    
+                    // We merge the two tables (data and longdata).
+                    if ( is_array ( $template_data ) && count ( $template_data ) && is_array ( $template_longdata ) && count ( $template_longdata ) )
+                        {
+                        $template_data = array_merge ( $template_data, $template_longdata );
+                        }
+            
+                    // If so, we take the field, and tweak its value.
+                    $meeting_fields = $this->http_vars['meeting_field'];
+                
+                    if ( !is_array ( $meeting_fields ) )
+                        {
+                        $meeting_fields = array ( $meeting_fields );
+                        }
+                
+                    // We change each of the fields passed in to the new values passed in.
+                    foreach ( $meeting_fields as $field )
+                        {
+                        list ( $meeting_field, $value ) = explode ( ',', $field );
+                    
+                        if ( in_array ( $meeting_field, $keys ) )
+                            {
+                            if ( ($meeting_field != 'id_bigint') && ($meeting_field != 'service_body_bigint') )    // We can't change the meeting ID or Service body (those should be done on the main interface).
+                                {
+                                switch ( $meeting_field )
+                                    {
+                                    case 'id_bigint':   // We don't currently let these get changed.
+                                    case 'lang_enum':
+                                        $value = null;
+                                        $old_value = null;
+                                    break;
+                        
+                                    case 'service_body_bigint':
+                                        $old_value = $meeting_obj->GetServiceBodyID();
+                                        $meeting_obj->SetServiceBodyID ( intval ( $value ) );
+                                    break;
+                        
+                                    case 'email_contact':
+                                        $old_value = $meeting_obj->GetEmailContact();
+                                        $meeting_obj->SetEmailContact ( intval ( $value ) );
+                                    break;
+                        
+                                    case 'published':
+                                        $old_value = $meeting_obj->IsPublished();
+                                        $meeting_obj->SetPublished ( intval ( $value ) != 0 ? true : false );
+                                    break;
+                        
+                                    case 'weekday_tinyint':
+                                        if ( (intval ( $value ) > 0) && (intval ( $value ) < 8) )
+                                            {
+                                            $old_value = $meeting_obj->GetMeetingData()[$meeting_field];
+                                            $meeting_obj->GetMeetingData()[$meeting_field] = intval ( $value );
+                                            }
+                                    break;
+                        
+                                    case 'longitude':
+                                    case 'latitude':
+                                        if ( floatval ( $value ) != 0.0 )
+                                            {
+                                            $old_value = $meeting_obj->GetMeetingData()[$meeting_field];
+                                            $meeting_obj->GetMeetingData()[$meeting_field] = floatval ( $value );
+                                            }
+                                    break;
+                        
+                                    case 'start_time':
+                                    case 'duration_time':
+                                        $old_value = $meeting_obj->GetMeetingData()[$meeting_field];
+                                        $meeting_obj->GetMeetingData()[$meeting_field] = $value;
+                                    break;
+                        
+                                    case 'formats':
+                                    case 'worldid_mixed':
+                                        $old_value = $meeting_obj->GetMeetingData()[$meeting_field];
+                                        $meeting_obj->GetMeetingData()[$meeting_field] = $value;
+                                    break;
+                        
+                                    default:
+                                        $old_value = $meeting_obj->GetMeetingDataValue ( $meeting_field );
+                                        $prompt = isset ( $meeting_obj->GetMeetingData()[$meeting_field]['field_prompt'] ) ? $meeting_obj->GetMeetingData()[$meeting_field]['field_prompt'] : $template_data[$meeting_field]['field_prompt'];
+                                        $visibility = intval ( isset ( $meeting_obj->GetMeetingData()[$meeting_field]['visibility'] ) ? $meeting_obj->GetMeetingData()[$meeting_field]['visibility'] : $template_data[$meeting_field]['visibility'] );
+                                        $meeting_obj->AddDataField ( $meeting_field, $prompt, $value, null, $visibility, true );
+                                    break;
+                                    }
+                                    
+                                // We only indicate changes.
+                                if ( ((isset ( $old_value ) && $old_value) || (isset ( $value ) && $value)) && ($old_value != $value) )
+                                    {
+                                    $ret .= '<field key="'.c_comdef_htmlspecialchars ( $meeting_field ).'">';
+                                    if ( isset ( $old_value ) && $old_value )
+                                        {
+                                        $ret .= '<old_value>'.c_comdef_htmlspecialchars ( $old_value ).'</old_value>';
+                                        }
+                                    else
+                                        {
+                                        $ret .= '<old_value/>';
+                                        }
+                                        
+                                    if ( isset ( $value ) && $value )
+                                        {
+                                        $ret .= '<new_value>'.c_comdef_htmlspecialchars ( $value ).'</new_value>';
+                                        }
+                                    else
+                                        {
+                                        $ret .= '<new_value/>';
+                                        }
+                                
+                                    $ret .= '</field>';
+                                    }
+                                }
+                            }
+                        }
+                            
+                        $meeting_obj->UpdateToDB(); // Save the new data. After this, the meeting has been changed.
+                        
+                        $ret .= $closing_tag;
+                        
+                        $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<change_response xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/ChangeResponse.php\">$ret</change_response>";
                     }
                 else
                     {
