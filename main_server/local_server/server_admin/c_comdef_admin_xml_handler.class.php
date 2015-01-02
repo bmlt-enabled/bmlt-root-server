@@ -568,7 +568,7 @@ function get_changes_as_csv (
         // First, make sure the use is of the correct general type.
         if ( $this->basic_user_validation() )
             {
-            $closing_tag = '</change_meeting>'; // We will usually be changing existing meetings.
+            $closing_tag = '</changeMeeting>'; // We will usually be changing existing meetings.
             // Get the meeting object, itself.
             if ( !intval ( $this->http_vars['meeting_id'] ) )  // Will we be creating a new meeting?
                 {
@@ -618,8 +618,8 @@ function get_changes_as_csv (
                                     {
                                     $meeting_id = c_comdef_server::AddNewMeeting ( $service_body_id, $weekday, $start_time, $lang );
                                     $meeting_obj = $this->server->GetOneMeeting ( intval ( $meeting_id ) );
-                                    $ret = '<new_meeting id="'.intval ( $meeting_obj->GetID() ).'">';
-                                    $closing_tag = '</new_meeting>';
+                                    $ret = '<newMeeting id="'.intval ( $meeting_obj->GetID() ).'">';
+                                    $closing_tag = '</newMeeting>';
                                     }
                                 else
                                     {
@@ -649,7 +649,7 @@ function get_changes_as_csv (
             else
                 {
                 $meeting_obj = $this->server->GetOneMeeting ( intval ( $this->http_vars['meeting_id'] ) );
-                $ret = '<change_meeting id="'.intval ( $meeting_obj->GetID() ).'">';
+                $ret = '<changeMeeting id="'.intval ( $meeting_obj->GetID() ).'">';
                 }
             
             if ( $meeting_obj instanceof c_comdef_meeting )
@@ -790,20 +790,20 @@ function get_changes_as_csv (
                                 $ret .= '<field key="'.c_comdef_htmlspecialchars ( $meeting_field ).'">';
                                 if ( isset ( $old_value ) && $old_value )
                                     {
-                                    $ret .= '<old_value>'.c_comdef_htmlspecialchars ( $old_value ).'</old_value>';
+                                    $ret .= '<oldValue>'.c_comdef_htmlspecialchars ( $old_value ).'</oldValue>';
                                     }
                                 else
                                     {
-                                    $ret .= '<old_value/>';
+                                    $ret .= '<oldValue/>';
                                     }
                                     
                                 if ( isset ( $value ) && $value )
                                     {
-                                    $ret .= '<new_value>'.c_comdef_htmlspecialchars ( $value ).'</new_value>';
+                                    $ret .= '<newValue>'.c_comdef_htmlspecialchars ( $value ).'</newValue>';
                                     }
                                 else
                                     {
-                                    $ret .= '<new_value/>';
+                                    $ret .= '<newValue/>';
                                     }
                             
                                 $ret .= '</field>';
@@ -815,7 +815,7 @@ function get_changes_as_csv (
                         
                         $ret .= $closing_tag;
                         
-                        $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<change_response xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/ChangeResponse.php\">$ret</change_response>";
+                        $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<changeResponse xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/ChangeResponse.php\">$ret</changeResponse>";
                     }
                 else
                     {

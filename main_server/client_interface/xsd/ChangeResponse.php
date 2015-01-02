@@ -40,19 +40,19 @@ else
 	ob_start();
 	}
 echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:xsn="http://<?php echo $_SERVER['SERVER_NAME'] ?>"
-	targetNamespace="http://<?php echo $_SERVER['SERVER_NAME'] ?>"
-	elementFormDefault="qualified">
-    <xs:element name='change_response'>
+<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema' xmlns:ns1='http://<?php echo $_SERVER['SERVER_NAME'] ?>' elementFormDefault='qualified' targetNamespace='http://<?php echo $_SERVER['SERVER_NAME'] ?>'>
+    <xs:element name='changeResponse'>
         <xs:complexType>
-            <xs:choice>
-                <xs:element ref='ns1:change_meeting'/>
-                <xs:element ref='ns1:new_meeting'/>
-            </xs:choice>
+            <xs:sequence>
+                <xs:choice>
+                    <xs:element ref='ns1:changeMeeting'/>
+                    <xs:element ref='ns1:newMeeting'/>
+                </xs:choice>
+            </xs:sequence>
         </xs:complexType>
     </xs:element>
-    <xs:element name='change_meeting'>
+    
+    <xs:element name='changeMeeting'>
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref='ns1:field'/>
@@ -60,7 +60,8 @@ echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
             <xs:attribute name='id' use='required' type='xs:integer'/>
         </xs:complexType>
     </xs:element>
-    <xs:element name='new_meeting'>
+    
+    <xs:element name='newMeeting'>
         <xs:complexType>
             <xs:sequence>
                 <xs:element maxOccurs='unbounded' ref='ns1:field'/>
@@ -68,15 +69,15 @@ echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
             <xs:attribute name='id' use='required' type='xs:integer'/>
         </xs:complexType>
     </xs:element>
+    
     <xs:element name='field'>
         <xs:complexType>
             <xs:sequence>
-                <xs:element ref='ns1:old_value'/>
-                <xs:element ref='ns1:new_value'/>
+                <xs:element name='oldValue' type='xs:string'/>
+                <xs:element name='newValue' type='xs:string'/>
             </xs:sequence>
             <xs:attribute name='key' use='required' type='xs:NCName'/>
         </xs:complexType>
     </xs:element>
-    <xs:element name='old_value' type='xs:string'/>
-    <xs:element name='new_value' type='xs:string'/>
+    
 </xs:schema><?php ob_end_flush(); ?>
