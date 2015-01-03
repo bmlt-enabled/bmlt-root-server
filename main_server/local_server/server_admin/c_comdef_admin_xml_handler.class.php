@@ -169,274 +169,274 @@ class c_comdef_admin_xml_handler
         return $ret;
     }
 
-/*******************************************************************/
-/**
-	\brief	This returns change records in CSV form (which we turn into XML).
-	
-	\returns CSV data, with the first row a key header.
-*/	
-function get_changes_as_csv (	
-                                $in_start_date = null,	///< Optional. A start date (In PHP time() format). If supplied, then only changes on, or after this date will be returned.
-                                $in_end_date = null,	///< Optional. An end date (In PHP time() format). If supplied, then only changes that occurred on, or before this date will be returned.
-                                $in_meeting_id = null,	///< Optional. If supplied, an ID for a particular meeting. Only changes for that meeting will be returned.
-                                $in_user_id = null,	    ///< Optional. If supplied, an ID for a particular user. Only changes made by that user will be returned.
-                                $in_sb_id = null,       ///< Optional. If supplied, an ID for a particular Service body. Only changes for that Service body will be returned.
-                                $in_change_type = 'c_comdef_meeting'    ///< This is the change type. Default is meeting change (NOTE: This function needs work to handle other types, but I figured I'd put in a hook for later).
-                                )
+    /*******************************************************************/
+    /**
+        \brief	This returns change records in CSV form (which we turn into XML).
+    
+        \returns CSV data, with the first row a key header.
+    */	
+    function get_changes_as_csv (	
+                                    $in_start_date = null,	///< Optional. A start date (In PHP time() format). If supplied, then only changes on, or after this date will be returned.
+                                    $in_end_date = null,	///< Optional. An end date (In PHP time() format). If supplied, then only changes that occurred on, or before this date will be returned.
+                                    $in_meeting_id = null,	///< Optional. If supplied, an ID for a particular meeting. Only changes for that meeting will be returned.
+                                    $in_user_id = null,	    ///< Optional. If supplied, an ID for a particular user. Only changes made by that user will be returned.
+                                    $in_sb_id = null,       ///< Optional. If supplied, an ID for a particular Service body. Only changes for that Service body will be returned.
+                                    $in_change_type = 'c_comdef_meeting'    ///< This is the change type. Default is meeting change (NOTE: This function needs work to handle other types, but I figured I'd put in a hook for later).
+                                    )
 	{
-	$ret = null;
-	try
-		{
-		// Start by getting every meeting change between the given dates.
-		$change_objects = c_comdef_server::GetChangesFromIDAndType ( $in_change_type, null, $in_start_date, $in_end_date );
-		if ( $change_objects instanceof c_comdef_changes )
-			{
-			$obj_array = $change_objects->GetChangesObjects();
-			
-			if ( is_array ( $obj_array ) && count ( $obj_array ) )
-				{
-	            set_time_limit ( max ( 30, intval ( count ( $obj_array ) / 20 ) ) ); // Change requests can take a loooong time...
-				$localized_strings = c_comdef_server::GetLocalStrings();
-                require_once ( dirname ( dirname ( dirname ( __FILE__ ) ) ).'/server/config/get-config.php');
-                // These are our columns. This will be our header line.
-				$ret = '"date_int","date_string","change_type","meeting_id","meeting_name","user_id","user_name","service_body_id","service_body_name","meeting_exists","details"'."\n";
-                
-                // If they specify a Service body, we also look in "child" Service bodies, so we need to produce a flat array of IDs.
-                if ( isset ( $in_sb_id ) && $in_sb_id )
+        $ret = null;
+        try
+            {
+            // Start by getting every meeting change between the given dates.
+            $change_objects = c_comdef_server::GetChangesFromIDAndType ( $in_change_type, null, $in_start_date, $in_end_date );
+            if ( $change_objects instanceof c_comdef_changes )
+                {
+                $obj_array = $change_objects->GetChangesObjects();
+            
+                if ( is_array ( $obj_array ) && count ( $obj_array ) )
                     {
-                    global $bmlt_array_gather;
-                    
-                    $bmlt_array_gather = array();
-                    
-                    /************************************************//**
-                    * This little internal function will simply fill    *
-                    * the $bmlt_array_gather array with a linear set of *
-                    * Service body IDs that can be used for a quick     *
-                    * comparison, later on. It is a callback function.  *
-                    ****************************************************/
-                    function bmlt_at_at ( $in_value,
-                                          $in_key
-                                        )
+                    set_time_limit ( max ( 30, intval ( count ( $obj_array ) / 20 ) ) ); // Change requests can take a loooong time...
+                    $localized_strings = c_comdef_server::GetLocalStrings();
+                    require_once ( dirname ( dirname ( dirname ( __FILE__ ) ) ).'/server/config/get-config.php');
+                    // These are our columns. This will be our header line.
+                    $ret = '"date_int","date_string","change_type","meeting_id","meeting_name","user_id","user_name","service_body_id","service_body_name","meeting_exists","details"'."\n";
+                
+                    // If they specify a Service body, we also look in "child" Service bodies, so we need to produce a flat array of IDs.
+                    if ( isset ( $in_sb_id ) && $in_sb_id )
                         {
                         global $bmlt_array_gather;
-                        
-                        if ( $in_value instanceof c_comdef_service_body )
+                    
+                        $bmlt_array_gather = array();
+                    
+                        /************************************************//**
+                        * This little internal function will simply fill    *
+                        * the $bmlt_array_gather array with a linear set of *
+                        * Service body IDs that can be used for a quick     *
+                        * comparison, later on. It is a callback function.  *
+                        ****************************************************/
+                        function bmlt_at_at ( $in_value,
+                                              $in_key
+                                            )
                             {
-                            array_push ( $bmlt_array_gather, $in_value->GetID() );
+                            global $bmlt_array_gather;
+                        
+                            if ( $in_value instanceof c_comdef_service_body )
+                                {
+                                array_push ( $bmlt_array_gather, $in_value->GetID() );
+                                }
+                            }
+                    
+                        array_walk_recursive ( c_comdef_server::GetServer()->GetNestedServiceBodyArray ( $in_sb_id ), bmlt_at_at );
+                    
+                        if ( is_array ( $bmlt_array_gather ) && count ( $bmlt_array_gather ) )
+                            {
+                            $in_sb_id = $bmlt_array_gather;
+                            }
+                        else
+                            {
+                            $in_sb_id = array ( $in_sb_id );
                             }
                         }
-                    
-                    array_walk_recursive ( c_comdef_server::GetServer()->GetNestedServiceBodyArray ( $in_sb_id ), bmlt_at_at );
-                    
-                    if ( is_array ( $bmlt_array_gather ) && count ( $bmlt_array_gather ) )
-                        {
-                        $in_sb_id = $bmlt_array_gather;
-                        }
-                    else
-                        {
-                        $in_sb_id = array ( $in_sb_id );
-                        }
-                    }
                 
-				foreach ( $obj_array as $change )
-					{
-					$change_type = $change->GetChangeType();
-					$date_int = intval($change->GetChangeDate());
-					$date_string = date ( "Y-m-d H:m:s", $date_int );
-				    
-				    if ( $change instanceof c_comdef_change )
-				        {
-                        $b_obj = $change->GetBeforeObject();
-                        $a_obj = $change->GetAfterObject();
-                        $meeting_id = intval ( $change->GetBeforeObjectID() );  // By default, we get the meeting ID from the "before" object.
-                        $sb_a = intval ( ($a_obj instanceof c_comdef_meeting) ? $a_obj->GetServiceBodyID() : 0 );
-                        $sb_b = intval ( ($b_obj instanceof c_comdef_meeting) ? $b_obj->GetServiceBodyID() : 0 );
-                        $sb_c = intval ( $change->GetServiceBodyID() );
-                        
-                        // If the meeting was newly created, then we get the ID from the "after" object.
-                        if ( !$meeting_id )
+                    foreach ( $obj_array as $change )
+                        {
+                        $change_type = $change->GetChangeType();
+                        $date_int = intval($change->GetChangeDate());
+                        $date_string = date ( "Y-m-d H:m:s", $date_int );
+                    
+                        if ( $change instanceof c_comdef_change )
                             {
-                            $meeting_id = intval ( $change->GetAfterObjectID() );
-                            }
+                            $b_obj = $change->GetBeforeObject();
+                            $a_obj = $change->GetAfterObject();
+                            $meeting_id = intval ( $change->GetBeforeObjectID() );  // By default, we get the meeting ID from the "before" object.
+                            $sb_a = intval ( ($a_obj instanceof c_comdef_meeting) ? $a_obj->GetServiceBodyID() : 0 );
+                            $sb_b = intval ( ($b_obj instanceof c_comdef_meeting) ? $b_obj->GetServiceBodyID() : 0 );
+                            $sb_c = intval ( $change->GetServiceBodyID() );
                         
-                        // If we are looking for a particular meeting, and this is it, or we don't care, then go ahead.
-                        if ( (intval ( $in_meeting_id ) && intval ( $in_meeting_id ) == intval ( $meeting_id )) || !intval ( $in_meeting_id ) )
-                            {
-                            $meeting_name = '';
-                            $user_name = '';
-					        
-					        // If we are looking for a particular Service body, and this is it, or we don't caer about the Service body, then go ahead.
-					        if ( !is_array ( $in_sb_id ) || !count ( $in_sb_id ) || in_array ( $sb_a, $in_sb_id ) || in_array ( $sb_b, $in_sb_id ) || in_array ( $sb_c, $in_sb_id ) )
-					            {
-					            $sb_id = (intval ( $sb_c ) ? $sb_c : (intval ( $sb_b ) ? $sb_b : $sb_a));
-					            
-                                $user_id = intval ( $change->GetUserID() );
-                                
-                                // If the user was specified, we look for changes by that user only. Otherwise, we don't care.
-                                if ( (isset ( $in_user_id ) && $in_user_id && ($in_user_id == $user_id)) || !isset ( $in_user_id ) || !$in_user_id )
+                            // If the meeting was newly created, then we get the ID from the "after" object.
+                            if ( !$meeting_id )
+                                {
+                                $meeting_id = intval ( $change->GetAfterObjectID() );
+                                }
+                        
+                            // If we are looking for a particular meeting, and this is it, or we don't care, then go ahead.
+                            if ( (intval ( $in_meeting_id ) && intval ( $in_meeting_id ) == intval ( $meeting_id )) || !intval ( $in_meeting_id ) )
+                                {
+                                $meeting_name = '';
+                                $user_name = '';
+                            
+                                // If we are looking for a particular Service body, and this is it, or we don't caer about the Service body, then go ahead.
+                                if ( !is_array ( $in_sb_id ) || !count ( $in_sb_id ) || in_array ( $sb_a, $in_sb_id ) || in_array ( $sb_b, $in_sb_id ) || in_array ( $sb_c, $in_sb_id ) )
                                     {
-                                    // Get the user that created this change.
-                                    $user = c_comdef_server::GetUserByIDObj ( $user_id );
+                                    $sb_id = (intval ( $sb_c ) ? $sb_c : (intval ( $sb_b ) ? $sb_b : $sb_a));
                                 
-                                    if ( $user instanceof c_comdef_user )
+                                    $user_id = intval ( $change->GetUserID() );
+                                
+                                    // If the user was specified, we look for changes by that user only. Otherwise, we don't care.
+                                    if ( (isset ( $in_user_id ) && $in_user_id && ($in_user_id == $user_id)) || !isset ( $in_user_id ) || !$in_user_id )
                                         {
-                                        $user_name = $user->GetLocalName();
-                                        }
-                                    else
-                                        {
-                                        $user_name = '????';    // Otherwise, it's a mystery.
-                                        }
+                                        // Get the user that created this change.
+                                        $user = c_comdef_server::GetUserByIDObj ( $user_id );
+                                
+                                        if ( $user instanceof c_comdef_user )
+                                            {
+                                            $user_name = $user->GetLocalName();
+                                            }
+                                        else
+                                            {
+                                            $user_name = '????';    // Otherwise, it's a mystery.
+                                            }
             
-                                    // Using str_replace, because preg_replace is pretty expensive. However, I don't think this buys us much.
-                                    if ( $b_obj instanceof c_comdef_meeting )
-                                        {
-                                        $meeting_name = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $b_obj->GetMeetingDataValue ( 'meeting_name' ))) );
-                                        }
-                                    elseif ( $a_obj instanceof c_comdef_meeting )
-                                        {
-                                        $meeting_name = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $a_obj->GetMeetingDataValue ( 'meeting_name' ))) );
-                                        }
+                                        // Using str_replace, because preg_replace is pretty expensive. However, I don't think this buys us much.
+                                        if ( $b_obj instanceof c_comdef_meeting )
+                                            {
+                                            $meeting_name = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $b_obj->GetMeetingDataValue ( 'meeting_name' ))) );
+                                            }
+                                        elseif ( $a_obj instanceof c_comdef_meeting )
+                                            {
+                                            $meeting_name = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $a_obj->GetMeetingDataValue ( 'meeting_name' ))) );
+                                            }
                                 
-                                    $sb = c_comdef_server::GetServiceBodyByIDObj ( $sb_id );
+                                        $sb = c_comdef_server::GetServiceBodyByIDObj ( $sb_id );
                                 
-                                    if ( $sb instanceof c_comdef_service_body )
-                                        {
-                                        $sb_name = $sb->GetLocalName();
-                                        }
-                                    else
-                                        {
-                                        $sb_name = '????';
-                                        }
+                                        if ( $sb instanceof c_comdef_service_body )
+                                            {
+                                            $sb_name = $sb->GetLocalName();
+                                            }
+                                        else
+                                            {
+                                            $sb_name = '????';
+                                            }
                                     
-                                    // We see if the meeting currently exists.
-                                    $meeting_exists = 0;
+                                        // We see if the meeting currently exists.
+                                        $meeting_exists = 0;
                                 
-                                    if ( c_comdef_server::GetOneMeeting ( $meeting_id, true ) )
-                                        {
-                                        $meeting_exists = 1;
-                                        }
+                                        if ( c_comdef_server::GetOneMeeting ( $meeting_id, true ) )
+                                            {
+                                            $meeting_exists = 1;
+                                            }
                                     
-                                    // Get the details of the change.
-                                    $details = '';
-                                    $desc = $change->DetailedChangeDescription();
+                                        // Get the details of the change.
+                                        $details = '';
+                                        $desc = $change->DetailedChangeDescription();
                                 
-                                    if ( $desc && isset ( $desc['details'] ) && is_array ( $desc['details'] ) )
-                                        {
-                                        // We need to prevent double-quotes, as they are the string delimiters, so we replace them with single-quotes.
-                                        $details = htmlspecialchars_decode ( str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", implode ( " ", $desc['details'] ))) ), ENT_COMPAT );
-                                        }
+                                        if ( $desc && isset ( $desc['details'] ) && is_array ( $desc['details'] ) )
+                                            {
+                                            // We need to prevent double-quotes, as they are the string delimiters, so we replace them with single-quotes.
+                                            $details = htmlspecialchars_decode ( str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", implode ( " ", $desc['details'] ))) ), ENT_COMPAT );
+                                            }
                                     
-                                    // We create an array, which we'll implode after we're done. Easy way to create a CSV row.
-                                    $change_line = array();
+                                        // We create an array, which we'll implode after we're done. Easy way to create a CSV row.
+                                        $change_line = array();
                                     
-                                    // Create each column for this row.
-                                    if ( $date_int )
-                                        {
-                                        $change_line['date_int'] = $date_int;
-                                        }
-                                    else
-                                        {
-                                        $change_line['date_int'] = 0;
-                                        }
+                                        // Create each column for this row.
+                                        if ( $date_int )
+                                            {
+                                            $change_line['date_int'] = $date_int;
+                                            }
+                                        else
+                                            {
+                                            $change_line['date_int'] = 0;
+                                            }
                                 
-                                    if ( $date_string )
-                                        {
-                                        $change_line['date_string'] = $date_string;
-                                        }
-                                    else
-                                        {
-                                        $change_line['date_string'] = '';
-                                        }
+                                        if ( $date_string )
+                                            {
+                                            $change_line['date_string'] = $date_string;
+                                            }
+                                        else
+                                            {
+                                            $change_line['date_string'] = '';
+                                            }
                                 
-                                    if ( $change_type )
-                                        {
-                                        $change_line['change_type'] = $change_type;
-                                        }
-                                    else
-                                        {
-                                        $change_line['change_type'] = '';
-                                        }
+                                        if ( $change_type )
+                                            {
+                                            $change_line['change_type'] = $change_type;
+                                            }
+                                        else
+                                            {
+                                            $change_line['change_type'] = '';
+                                            }
                                 
-                                    if ( $meeting_id )
-                                        {
-                                        $change_line['meeting_id'] = $meeting_id;
-                                        }
-                                    else
-                                        {
-                                        $change_line['meeting_id'] = 0;
-                                        }
+                                        if ( $meeting_id )
+                                            {
+                                            $change_line['meeting_id'] = $meeting_id;
+                                            }
+                                        else
+                                            {
+                                            $change_line['meeting_id'] = 0;
+                                            }
                                 
-                                    if ( $meeting_name )
-                                        {
-                                        $change_line['meeting_name'] = $meeting_name;
-                                        }
-                                    else
-                                        {
-                                        $change_line['meeting_name'] = '';
-                                        }
+                                        if ( $meeting_name )
+                                            {
+                                            $change_line['meeting_name'] = $meeting_name;
+                                            }
+                                        else
+                                            {
+                                            $change_line['meeting_name'] = '';
+                                            }
                                 
-                                    if ( $user_id )
-                                        {
-                                        $change_line['user_id'] = $user_id;
-                                        }
-                                    else
-                                        {
-                                        $change_line['user_id'] = 0;
-                                        }
+                                        if ( $user_id )
+                                            {
+                                            $change_line['user_id'] = $user_id;
+                                            }
+                                        else
+                                            {
+                                            $change_line['user_id'] = 0;
+                                            }
                                 
-                                    if ( $user_name )
-                                        {
-                                        $change_line['user_name'] = $user_name;
-                                        }
-                                    else
-                                        {
-                                        $change_line['user_name'] = '';
-                                        }
+                                        if ( $user_name )
+                                            {
+                                            $change_line['user_name'] = $user_name;
+                                            }
+                                        else
+                                            {
+                                            $change_line['user_name'] = '';
+                                            }
                                 
-                                    if ( $sb_id )
-                                        {
-                                        $change_line['service_body_id'] = $sb_id;
-                                        }
-                                    else
-                                        {
-                                        $change_line['service_body_id'] = '';
-                                        }
+                                        if ( $sb_id )
+                                            {
+                                            $change_line['service_body_id'] = $sb_id;
+                                            }
+                                        else
+                                            {
+                                            $change_line['service_body_id'] = '';
+                                            }
                                 
-                                    if ( $sb_name )
-                                        {
-                                        $change_line['service_body_name'] = $sb_name;
-                                        }
-                                    else
-                                        {
-                                        $change_line['service_body_name'] = '';
-                                        }
+                                        if ( $sb_name )
+                                            {
+                                            $change_line['service_body_name'] = $sb_name;
+                                            }
+                                        else
+                                            {
+                                            $change_line['service_body_name'] = '';
+                                            }
                                 
-                                    $change_line['meeting_exists'] = $meeting_exists;
+                                        $change_line['meeting_exists'] = $meeting_exists;
                                 
-                                    if ( $details )
-                                        {
-                                        $change_line['details'] = $details;
-                                        }
-                                    else
-                                        {
-                                        $change_line['details'] = '';
-                                        }
+                                        if ( $details )
+                                            {
+                                            $change_line['details'] = $details;
+                                            }
+                                        else
+                                            {
+                                            $change_line['details'] = '';
+                                            }
                                 
-                                    $ret .= '"'.implode ( '","', $change_line ).'"'."\n";
+                                        $ret .= '"'.implode ( '","', $change_line ).'"'."\n";
+                                        }
                                     }
                                 }
                             }
                         }
-					}
-				}
-			}
-		}
-	catch ( Exception $e )
-		{
-		$ret = '<h1>ERROR</h1>';
-		}
+                    }
+                }
+            }
+        catch ( Exception $e )
+            {
+            $ret = '<h1>ERROR</h1>';
+            }
 
-	return $ret;
+        return $ret;
 	}
     
     /********************************************************************************************************//**
@@ -511,11 +511,11 @@ function get_changes_as_csv (
     /********************************************************************************************************//**
     \brief This fulfills a user request to delete an existing meeting. $this->http_vars['meeting_id'] must be set to the meeting ID.
     
-    \returns A very simple, 1-line XML Report.
+    \returns A very simple XML Report.
     ************************************************************************************************************/
     function process_meeting_delete()
     {
-        $ret = '<h1>ERROR</h1>';
+        $ret = NULL;
         
         // First, make sure the use is of the correct general type.
         if ( $this->basic_user_validation() )
@@ -525,11 +525,18 @@ function get_changes_as_csv (
                 {
                 if ( $meeting_obj->UserCanEdit ( $this->server->GetCurrentUserObj() ) )  // Make sure that we are allowed to edit this meeting.
                     {
-                    $id = $meeting_obj->GetID();
-                    $name = $meeting_obj->GetLocalName();
+                    // Before we say goodbye, we take down the relevant details for the next of kin...
+                    $id = intval ( $meeting_obj->GetID() );
+                    $service_body_id = intval ( $meeting_obj->GetServiceBodyID() );
+                    $name = c_comdef_htmlspecialchars ( $meeting_obj->GetLocalName() );
+                    $weekday = intval ( $meeting_obj->GetMeetingDataValue( 'weekday_tinyint' ) );
+                    $start_time = c_comdef_htmlspecialchars ( $meeting_obj->GetMeetingDataValue( 'start_time' ) );
                     
                     $meeting_obj->DeleteFromDB();   // Delete the meeting.
-                    $ret = '<deleted_meeting id="'.intval ( $id ).'" name="'.c_comdef_htmlspecialchars ( $name ).'"/>';
+                    
+                    // Write out the death certificate.
+                    $ret = '<meetingId>'.$id.'</meetingId><meetingName>'.$name.'</meetingName><meetingWeekday>'.$weekday.'</meetingWeekday><meetingStartTime>'.$start_time.'</meetingStartTime><meetingServiceBodyId>'.$service_body_id.'</meetingServiceBodyId>';
+                    $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<deletedMeeting xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/DeletedMeeting.php\">$ret</deletedMeeting>";
                     }
                 else
                     {
@@ -680,8 +687,7 @@ function get_changes_as_csv (
                     foreach ( $meeting_fields as $field )
                         {
                         list ( $meeting_field, $value ) = explode ( ',', $field, 2 );
-                    
-                        if ( in_array ( $meeting_field, $keys ) )
+                        if ( isset ( $value ) && in_array ( $meeting_field, $keys ) )
                             {
                             switch ( $meeting_field )
                                 {
@@ -1179,7 +1185,7 @@ function get_changes_as_csv (
                     $guest_editors = $service_body->GetEditors();
                 
                     // See if we have rights to edit this Service body. Just for the heck of it, we check the user level (not really necessary, but belt and suspenders).
-                    $this_user_can_edit_the_body = ($user_obj->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) && $service_body->UserCanEdit();
+                    $this_user_can_edit_the_body = ($this->server->GetCurrentUserObj()->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) && $service_body->UserCanEdit();
                 
                     $contact_email = NULL;
                 

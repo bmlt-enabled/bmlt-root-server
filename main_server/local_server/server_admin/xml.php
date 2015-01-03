@@ -143,7 +143,12 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
                     if ( $handler instanceof c_comdef_admin_xml_handler )
                         {
                         $ret = $handler->process_commands();  // Do what you do so well...
-                        header ( 'Content-Type:application/xml; charset=UTF-8' );
+                        
+                        if ( preg_match ( '|^<\?xml|', $ret ) )   // Only output an XML header is we are actually returning XML.
+                            {
+                            header ( 'Content-Type:application/xml; charset=UTF-8' );
+                            }
+                        
                         if ( zlib_get_coding_type () === false )
                             {
                             ob_start ( "ob_gzhandler" );
