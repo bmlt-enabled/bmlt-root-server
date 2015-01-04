@@ -811,6 +811,10 @@ class c_comdef_server
         
         if ( $new_meeting instanceof c_comdef_meeting )
             {
+            $my_localized_strings = self::GetServer()->GetLocalStrings();
+            $data = $new_meeting->GetMeetingData();
+            $data['longitude'] = $my_localized_strings['search_spec_map_center']['longitude'];
+            $data['latitude'] = $my_localized_strings['search_spec_map_center']['latitude'];
             $new_meeting->UpdateToDB();
             $id = $new_meeting->GetID();
             }
@@ -2506,7 +2510,8 @@ class c_comdef_server
             $sql = $sql1.$sql2.$sql3;
             
             $rows = c_comdef_dbsingleton::preparedQuery( $sql, array() );
-
+            $ranges = (isset ( $localized_strings['comdef_map_radius_ranges'] ) && is_array ( $localized_strings['comdef_map_radius_ranges'] ) && count ( isset ( $localized_strings['comdef_map_radius_ranges'] ) ) ) ? $localized_strings['comdef_map_radius_ranges'] : null;
+            
             if ( is_array ( $rows ) && count ( $rows ) )
                 {
                 $count = intval ( $rows[0]["count(*)"] );
@@ -2518,9 +2523,9 @@ class c_comdef_server
                     }
                 else
                     {
-                    if ( $was_less )
+                    if ( $was_less && isset ( $ranges ) )
                         {
-                        foreach ( $localized_strings['comdef_map_radius_ranges'] as $range )
+                        foreach ( $ranges as $range )
                             {
                             $range_comp = $range;
                             if ( $localized_strings['dist_units'] == 'mi' )
