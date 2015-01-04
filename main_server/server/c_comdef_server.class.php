@@ -596,8 +596,8 @@ class c_comdef_server
     function GetUsedFormatsArray()
     {
         $ret = NULL;
-        
-        $all_formats = $this->GetFormatsArray()[$this->GetLocalLang()];
+        $formats_array = $this->GetFormatsArray();
+        $all_formats = $formats_array[$this->GetLocalLang()];
         
         if ( is_array ( $all_formats ) && count ( $all_formats ) && is_array ( $this->GetUsedFormatIDs() ) && count ( $this->GetUsedFormatIDs() ) )
             {
