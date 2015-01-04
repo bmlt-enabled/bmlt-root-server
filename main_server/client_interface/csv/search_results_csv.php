@@ -566,21 +566,34 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
                         if ( c_comdef_server::GetCurrentUserObj() instanceof c_comdef_user )
                             {
                             $line['published'] = $mtg_obj->IsPublished();
+                            
+                            // We don't let users without rights see meetings that are unpublished.
+                            if ( !$mtg_obj->IsPublished() && !$mtg_obj->UserCanObserve ( c_comdef_server::GetCurrentUserObj() ) )
+                                {
+                                $line = null;
+                                }
+                            }
+                        elseif ( !$mtg_obj->IsPublished() )
+                            {
+                            $line = null;
                             }
                         
-                        if ( is_array ( $return_array ) )
+                        if ( is_array ( $line ) && count ( $line ) )
                             {
-                            array_push ( $return_array, $line );
-                            }
+                            if ( is_array ( $return_array ) )
+                                {
+                                array_push ( $return_array, $line );
+                                }
                 
-                        $ret .= '"'.join ( '","', $line ).'","';
+                            $ret .= '"'.join ( '","', $line ).'","';
                     
-                        if ( isset ( $in_http_vars['dump_ind_formats'] ) && $in_http_vars['dump_ind_formats'] )
-                            {
-                            $ret .= join ( '","', $formats_ar );
+                            if ( isset ( $in_http_vars['dump_ind_formats'] ) && $in_http_vars['dump_ind_formats'] )
+                                {
+                                $ret .= join ( '","', $formats_ar );
+                                }
+                    
+                            $ret .= "\"\n";
                             }
-                    
-                        $ret .= "\"\n";
                         }
                     }
 				}

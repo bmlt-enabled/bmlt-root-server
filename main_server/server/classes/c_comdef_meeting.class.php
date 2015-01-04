@@ -1104,7 +1104,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 						$in_meeting_id_bigint	///< An integer, with the meeting's new ID.
 						)
 	{
-		$this->_my_meeting_data['id_bigint'] = $in_meeting_id_bigint;
+		$this->_my_meeting_data['id_bigint'] = intval ( $in_meeting_id_bigint );
 	}
 	
 	/*******************************************************************/
@@ -1158,7 +1158,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 	{
 		$ret = $this->_my_meeting_data['service_body_bigint'];
 		
-		$this->_my_meeting_data['service_body_bigint'] = $in_service_body_id;
+		$this->_my_meeting_data['service_body_bigint'] = intval ( $in_service_body_id );
 		
 		return $ret;
 	}

@@ -611,11 +611,15 @@ class c_comdef_admin_xml_handler
                             }
                         else    // Otherwise, it is picked for us.
                             {
-                            $service_body_id = $my_editable_service_bodies[0]->GetID();
+                            $service_body = array_shift ( $my_editable_service_bodies );
+                            if ( $service_body instanceof c_comdef_service_body )
+                                {
+                                $service_body_id = $service_body->GetID();
+                                }
                             }
                         
                         $weekday = 1;   // Default is Sunday
-                        $start_time = '22:30:00'; // Default is 8:30 PM
+                        $start_time = '20:30:00'; // Default is 8:30 PM
                         $lang = c_comdef_server::GetServer()->GetLocalLang ();  // We use whatever the server language is.
                         if ( $service_body_id ) // Can't create a new meeting without a Service body.
                             {
@@ -714,7 +718,7 @@ class c_comdef_admin_xml_handler
                                     if ( (intval ( $value ) > 0) && (intval ( $value ) < 8) )
                                         {
                                         $old_value = $meeting_obj->GetMeetingDataValue ( $meeting_field );
-                                        $data = $meeting_obj->GetMeetingData();
+                                        $data =& $meeting_obj->GetMeetingData();
                                         $data[$meeting_field] = intval ( $value );
                                         }
                                 break;
@@ -724,7 +728,7 @@ class c_comdef_admin_xml_handler
                                     if ( floatval ( $value ) != 0.0 )
                                         {
                                         $old_value = $meeting_obj->GetMeetingDataValue ( $meeting_field );
-                                        $data = $meeting_obj->GetMeetingData();
+                                        $data =& $meeting_obj->GetMeetingData();
                                         $data[$meeting_field] = floatval ( $value );
                                         }
                                 break;
@@ -732,7 +736,7 @@ class c_comdef_admin_xml_handler
                                 case 'start_time':
                                 case 'duration_time':
                                     $old_value = $meeting_obj->GetMeetingDataValue ( $meeting_field );
-                                    $data = $meeting_obj->GetMeetingData();
+                                    $data =& $meeting_obj->GetMeetingData();
                                     $data[$meeting_field] = $value;
                                 break;
                     
@@ -779,19 +783,19 @@ class c_comdef_admin_xml_handler
                                             }
                                         }
                                     uksort ( $vals, array ( 'c_comdef_meeting','format_sorter_simple' ) );
-                                    $data = $meeting_obj->GetMeetingData();
+                                    $data =& $meeting_obj->GetMeetingData();
                                     $data[$meeting_field] = $vals;
                                 break;
                                 
                                 case 'worldid_mixed':
                                     $old_value = $meeting_obj->GetMeetingDataValue ( $meeting_field );
-                                    $data = $meeting_obj->GetMeetingData();
+                                    $data =& $meeting_obj->GetMeetingData();
                                     $data[$meeting_field] = $value;
                                 break;
                     
                                 default:
                                     $old_value = $meeting_obj->GetMeetingDataValue ( $meeting_field );
-                                    $data = $meeting_obj->GetMeetingData();
+                                    $data =& $meeting_obj->GetMeetingData();
                                     $prompt = isset ( $data[$meeting_field]['field_prompt'] ) ? $data[$meeting_field]['field_prompt'] : $template_data[$meeting_field]['field_prompt'];
                                     $visibility = intval ( isset ( $data[$meeting_field]['visibility'] ) ? $data[$meeting_field]['visibility'] : $template_data[$meeting_field]['visibility'] );
                                     $meeting_obj->AddDataField ( $meeting_field, $prompt, $value, null, $visibility, true );

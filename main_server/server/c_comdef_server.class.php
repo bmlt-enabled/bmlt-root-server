@@ -805,16 +805,17 @@ class c_comdef_server
             $in_lang_enum = "en";
             }
 
-        $meeting_data = array ( 'service_body_bigint'=>$in_service_body_bigint, 'weekday_tinyint'=>$in_weekday_tinyint, 'start_time'=>$in_start_time_int, 'lang_enum'=>$in_lang_enum);
+        $meeting_data = array ( 'service_body_bigint'=>intval ( $in_service_body_bigint ), 'weekday_tinyint'=>intval ( $in_weekday_tinyint ), 'start_time'=>intval ( $in_start_time_int ), 'lang_enum'=>$in_lang_enum );
         
         $new_meeting = new c_comdef_meeting ( self::GetServer(), $meeting_data );
         
         if ( $new_meeting instanceof c_comdef_meeting )
             {
             $my_localized_strings = self::GetServer()->GetLocalStrings();
-            $data = $new_meeting->GetMeetingData();
-            $data['longitude'] = $my_localized_strings['search_spec_map_center']['longitude'];
-            $data['latitude'] = $my_localized_strings['search_spec_map_center']['latitude'];
+            $data =& $new_meeting->GetMeetingData();
+            $data['longitude'] = floatval ( $my_localized_strings['search_spec_map_center']['longitude'] );
+            $data['latitude'] = floatval ( $my_localized_strings['search_spec_map_center']['latitude'] );
+            
             $new_meeting->UpdateToDB();
             $id = $new_meeting->GetID();
             }

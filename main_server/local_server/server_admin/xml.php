@@ -116,9 +116,7 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
             else    // Logout gets a "bye".
                 {
                 c_comdef_LogoutUser();
-                ob_start();
-                echo ( 'BYE' );
-                ob_end_flush();
+                die ( 'BYE' );
                 }
             }
 
