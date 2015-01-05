@@ -50,6 +50,11 @@ For instructions on installing the root server, see this page:
 
 CHANGELIST
 ----------
+= Version 2.6.1
+* January 5, 2015
+* Made a slight change, so that the formats are not automatically read upon a server instance being created. Instead, we wait until the first call to load them. This prevents them from being loaded in cases where they are not required.
+* Fixed an issue caused by getting too fancy with radius ranges, and ended up causing problems in the hunt for radius functionality. Need to re-explore this.
+
 = Version 2.6.0
 * January 4, 2015
 * Changed the NAWS Dump Link in the Service Body Editor to use the new open semantic URI.

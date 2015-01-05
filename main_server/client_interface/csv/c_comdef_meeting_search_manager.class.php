@@ -1099,7 +1099,6 @@ class c_comdef_meeting_search_manager
 							}
 						}
 					
-					// Set up our languages array.
 					$languages = null;
 					
 					if ( is_array ( $this->_languages ) && count ( $this->_languages ) )
@@ -1116,7 +1115,7 @@ class c_comdef_meeting_search_manager
 						}
 
 					// If we will specify a search radius, we specify a restricted area for the search.
-					$search_rect = $this->GetSquareForRadius($weekdays);
+					$search_rect = $this->GetSquareForRadius ( $weekdays );
 					
 					// Do the main database search first.
 					$null_me = null;

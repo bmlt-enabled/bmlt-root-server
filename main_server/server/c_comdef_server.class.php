@@ -244,7 +244,6 @@ class c_comdef_server
     function Initialize ()
     {
         $this->ReadUsers();
-        $this->ReadFormats();
         $this->ReadServiceBodies();
         $this->ReadServiceIDs();
     }
@@ -575,6 +574,11 @@ class c_comdef_server
     */
     function GetFormatsObj()
     {
+        if ( !$this->_formats_obj )
+            {
+            $this->ReadFormats();
+            }
+        
         return $this->_formats_obj;
     }
     
@@ -623,6 +627,11 @@ class c_comdef_server
     */
     function GetUsedFormatIDs()
     {
+        if ( !$this->_used_format_ids )
+            {
+            $this->ReadFormats();
+            }
+        
         return $this->_used_format_ids;
     }
     
@@ -2500,6 +2509,7 @@ class c_comdef_server
         $count = 0;
 
         $was_less = false;
+
         do
             {
             $current_hunt_value = ($current_radius > 25) ? 5 : (($current_radius > 1) ? 0.5 : .0625);
@@ -2510,9 +2520,8 @@ class c_comdef_server
             
             $sql = $sql1.$sql2.$sql3;
             
-            $rows = c_comdef_dbsingleton::preparedQuery( $sql, array() );
-            $ranges = (isset ( $localized_strings['comdef_map_radius_ranges'] ) && is_array ( $localized_strings['comdef_map_radius_ranges'] ) && count ( isset ( $localized_strings['comdef_map_radius_ranges'] ) ) ) ? $localized_strings['comdef_map_radius_ranges'] : null;
-            
+            $rows = c_comdef_dbsingleton::preparedQuery ( $sql, array() );
+
             if ( is_array ( $rows ) && count ( $rows ) )
                 {
                 $count = intval ( $rows[0]["count(*)"] );
@@ -2524,9 +2533,9 @@ class c_comdef_server
                     }
                 else
                     {
-                    if ( $was_less && isset ( $ranges ) )
+                    if ( $was_less )
                         {
-                        foreach ( $ranges as $range )
+                        foreach ( $localized_strings['comdef_map_radius_ranges'] as $range )
                             {
                             $range_comp = $range;
                             if ( $localized_strings['dist_units'] == 'mi' )
