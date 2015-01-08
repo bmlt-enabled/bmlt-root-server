@@ -2433,7 +2433,6 @@ class c_comdef_server
     
         return $sql;
     }
-
     /*******************************************************************/
     /** \brief Find the smallest radius that contains at least the given number of meetings.
         The way this works is that the center is set, and the optimal
@@ -2509,7 +2508,9 @@ class c_comdef_server
         $count = 0;
 
         $was_less = false;
-
+        $ranges = $localized_strings['comdef_map_radius_ranges'];
+        $max = floatval ( $ranges[count ( $ranges ) - 1] );
+        
         do
             {
             $current_hunt_value = ($current_radius > 25) ? 5 : (($current_radius > 1) ? 0.5 : .0625);
@@ -2520,7 +2521,7 @@ class c_comdef_server
             
             $sql = $sql1.$sql2.$sql3;
             
-            $rows = c_comdef_dbsingleton::preparedQuery ( $sql, array() );
+            $rows = c_comdef_dbsingleton::preparedQuery( $sql, array() );
 
             if ( is_array ( $rows ) && count ( $rows ) )
                 {
@@ -2535,7 +2536,7 @@ class c_comdef_server
                     {
                     if ( $was_less )
                         {
-                        foreach ( $localized_strings['comdef_map_radius_ranges'] as $range )
+                        foreach ( $ranges as $range )
                             {
                             $range_comp = $range;
                             if ( $localized_strings['dist_units'] == 'mi' )
@@ -2649,7 +2650,7 @@ class c_comdef_server
         
             c_comdef_server::$server_local_strings['name'] = file_get_contents ( dirname ( __FILE__ ).'/../local_server/server_admin/lang/'.$lang_enum.'/name.txt' );
             c_comdef_server::$server_local_strings['enum'] = $lang_enum;
-            c_comdef_server::$server_local_strings['comdef_map_radius_ranges'] = isset ( $comdef_map_radius_ranges ) ? $comdef_map_radius_ranges : null;
+            c_comdef_server::$server_local_strings['comdef_map_radius_ranges'] = (isset ( $comdef_map_radius_ranges ) && is_array ( $comdef_map_radius_ranges ) && count ( $comdef_map_radius_ranges )) ? $comdef_map_radius_ranges : array ( 0.125, 0.25, 0.5, 0.75, 1.0, 2.0, 5.0, 10.0, 15.0, 20.0, 25.0, 30.0, 40.0, 50.0, 60.0, 80.0, 100.0 );
             c_comdef_server::$server_local_strings['region_bias'] = isset ( $region_bias ) ? $region_bias : '';
             c_comdef_server::$server_local_strings['default_duration_time'] = isset ( $default_duration_time ) ? $default_duration_time : '1:00:00';
             c_comdef_server::$server_local_strings['search_spec_map_center'] = $search_spec_map_center;
