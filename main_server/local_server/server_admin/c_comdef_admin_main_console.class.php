@@ -848,23 +848,6 @@ class c_comdef_admin_main_console
                     $ret .= '</div>';
                     $ret .= '<div class="clear_both"></div>';
                     }
-                
-//                 if ( count ( $basic_editors ) )
-//                     {
-//                     $ret .= '<div id="service_body_admin_editor_list_div" class="bmlt_admin_one_line_in_a_form clear_both">';
-//                         $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_sb_admin_editor_label'] ).'</span>';
-//                         $ret .= '<span class="bmlt_admin_value_left light_italic_display">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_sb_admin_editor_desc'] ).'</span>';
-//                         $ret .= '<div class="clear_both"></div>';
-//                         
-//                         foreach ( $basic_editors as $user )
-//                             {
-//                             $ret .= '<span class="bmlt_admin_med_label_right"><input type="checkbox" id="service_body_admin_editor_user_'.$user->GetID().'_checkbox" onchange="admin_handler_object.serviceBodyUserChecboxHandler('.$user->GetID().',this);" onclick="admin_handler_object.serviceBodyUserChecboxHandler('.$user->GetID().',this);" /></span>';
-//                             $ret .= '<label class="bmlt_admin_med_label_left" for="service_body_admin_editor_user_'.$user->GetID().'_checkbox">'.htmlspecialchars ( $user->GetLocalName() ).'</label>';
-//                             $ret .= '<div class="clear_both"></div>';
-//                             }
-//                     $ret .= '</div>';
-//                     $ret .= '<div class="clear_both"></div>';
-//                     }
                     
                 if ( count ( $observers ) )
                     {
@@ -1094,7 +1077,7 @@ class c_comdef_admin_main_console
     function return_service_body_editor_button_panel ()
     {
         $ret = '<div class="naws_link_div" id="service_body_editor_naws_link_div">';
-            $ret .= '<a id="service_body_editor_naws_link_a" href="javascript:admin_handler_object.getNawsDump();">';
+            $ret .= '<a id="service_body_editor_naws_link_a" href="client_interface/csv/?switcher=GetNAWSDump&sb_id='.intval ( $this->my_editable_service_bodies[0]->GetID() ).'">';
                 $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_uri_naws_format_text'] );
             $ret .= '</a>';
         $ret .= '</div>';

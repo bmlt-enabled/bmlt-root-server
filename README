@@ -10,15 +10,15 @@ scheduled weekly, recurring events.
 The intended clientele is Narcotics Anonymous Service bodies. They implement a BMLT
 server, and provide the server to other NA Service bodies.
 
-You can find out way too much about the BMLT here: http://bmlt.magshare.net
+You can find out way too much about the BMLT on [the BMLT Documentation Site](http://bmlt.magshare.net).
 
-You can follow us on Twitter for release announcements: http://twitter.com/BMLT_NA
+[You can follow us on Twitter for release announcements](http://twitter.com/BMLT_NA).
 
 This project is the "root" server for the BMLT. It is the "server" part of the BMLT
 "client/server" architecture.
 
 The project is actually several years old. To see the pre-GitHub history, visit the
-original SourceForge page at: https://sourceforge.net/projects/comdef/
+original SourceForge page at [the Original SourceForge Page](https://sourceforge.net/projects/comdef/).
 
 I decided to start new on GitHub, as opposed to bringing over the SourceForge project,
 in order to reduce disk space usage, and because it's a pain to rearrange a standard
@@ -33,9 +33,7 @@ The entire system is written in PHP, JavaScript, XHTML and CSS. Most of the code
 
 PHP 5.2 or above is required to establish a root server, and 5.0 or above for a satellite.
 
-For more information about server requirements, see this page:
-
-    http://bmlt.magshare.net/specific-topics/server-requirements/
+For more information about server requirements, see [the page on Server Requirements](http://bmlt.magshare.net/specific-topics/server-requirements/)
  
 INSTALLATION
 ------------
@@ -44,382 +42,385 @@ You set up a root server as the central database and administration area for a B
 implementation, but most people access it through what we call "satellite servers." These
 satellites comprise the "client" part of the BMLT "client/server" architecture.
 
-For instructions on installing the root server, see this page:
-
-    http://bmlt.magshare.net/installing-a-new-root-server/
+For instructions on installing the root server, see [the page on installing a new Root Server](http://bmlt.magshare.net/installing-a-new-root-server/)
 
 CHANGELIST
 ----------
+= Version 2.6.2
+    * TBD
+    * Tweaked the syntax of this document's changelist slightly, to make it more readable.
+    * Fixed a minor bug, where the initial Service Body Editor NAWS Dump URI was not the new publicly-accessible one.
+
 = Version 2.6.1
-* January 5, 2015
-* Made a slight change, so that the formats are not automatically read upon a server instance being created. Instead, we wait until the first call to load them. This prevents them from being loaded in cases where they are not required.
-* Fixed an issue caused by getting too fancy with radius ranges, and ended up causing problems in the hunt for radius functionality. Need to re-explore this.
+    * January 5, 2015
+    * Made a slight change, so that the formats are not automatically read upon a server instance being created. Instead, we wait until the first call to load them. This prevents them from being loaded in cases where they are not required.
+    * Fixed an issue caused by getting too fancy with radius ranges, and ended up causing problems in the hunt for radius functionality. Need to re-explore this.
 
 = Version 2.6.0
-* January 4, 2015
-* Changed the NAWS Dump Link in the Service Body Editor to use the new open semantic URI.
-* Fixed an admin bug, in which meetings that an admin can't edit can be listed in the search results.
-* Fixed a bug, in which doing searches for meetings by ID would return unpublished meetings.
-* Added a bit of a kludge to number-only location searches (postal codes). I now append the region bias to the string, as it looks like Google ignores the "region=" parameter.
-* Created a common URL to the main server (utility function). This allows use of HTTPS and increases overall quality.
-* The server now returns only the formats used somewhere in the database in response to the semantic "switcher=GetFormats" call.
-* Continuing to look for places where I can take security measures. Added a few "belt & suspenders" methods, like reloading the user from the DB at every opportunity.
-* Added the ability to edit meetings via an XML or JSON semantic interface.
+    * January 4, 2015
+    * Changed the NAWS Dump Link in the Service Body Editor to use the new open semantic URI.
+    * Fixed an admin bug, in which meetings that an admin can't edit can be listed in the search results.
+    * Fixed a bug, in which doing searches for meetings by ID would return unpublished meetings.
+    * Added a bit of a kludge to number-only location searches (postal codes). I now append the region bias to the string, as it looks like Google ignores the "region=" parameter.
+    * Created a common URL to the main server (utility function). This allows use of HTTPS and increases overall quality.
+    * The server now returns only the formats used somewhere in the database in response to the semantic "switcher=GetFormats" call.
+    * Continuing to look for places where I can take security measures. Added a few "belt & suspenders" methods, like reloading the user from the DB at every opportunity.
+    * Added the ability to edit meetings via an XML or JSON semantic interface.
 
 = Version 2.5.3
-* November 27, 2014 (Happy Thanksgiving!)
-* The 2.5.2 "fix" was inadequate. I needed to make the "other" field editing more robust.
+	* November 27, 2014 (Happy Thanksgiving!)
+	* The 2.5.2 "fix" was inadequate. I needed to make the "other" field editing more robust.
 
 = Version 2.5.2
-* November 26, 2014
-* The 2.5.1 fix exposed another bug in administering the "other" fields.
+	* November 26, 2014
+	* The 2.5.1 fix exposed another bug in administering the "other" fields.
 
 = Version 2.5.1
-* November 26, 2014
-* Fixed a typo that interfered with the new arbitrary fields functionality.
+	* November 26, 2014
+	* Fixed a typo that interfered with the new arbitrary fields functionality.
 
 = Version 2.5.0
-* November 23, 2014
-* Added support for arbitrary fields in meetings (had neglected to support these after the 2.0 release).
+	* November 23, 2014
+	* Added support for arbitrary fields in meetings (had neglected to support these after the 2.0 release).
 
 = Version 2.4.10
-* October 14, 2014
-* Fixed another issue, where simple searches weren't sorting properly (again, overzealous warning compensation).
+	* October 14, 2014
+	* Fixed another issue, where simple searches weren't sorting properly (again, overzealous warning compensation).
 
 = Version 2.4.9
-* October 13, 2014
-* Fixed another issue, where meeting edits were being ignored (again, overzealous warning compensation).
+	* October 13, 2014
+	* Fixed another issue, where meeting edits were being ignored (again, overzealous warning compensation).
 
 = Version 2.4.8
-* October 12, 2014
-* Fixed an issue where low-numbered ASCs and RSCs did not have leading zeroes in the NAWS export, which could cause issues for NAWS.
-* Fixed a couple of issues with the meeting editors, where inactive anchor elements could cause "page not found" errors.
-* Fixed a bug, where searching for selected weekdays, formats or languages stopped working.
+	* October 12, 2014
+	* Fixed an issue where low-numbered ASCs and RSCs did not have leading zeroes in the NAWS export, which could cause issues for NAWS.
+	* Fixed a couple of issues with the meeting editors, where inactive anchor elements could cause "page not found" errors.
+	* Fixed a bug, where searching for selected weekdays, formats or languages stopped working.
 
 = Version 2.4.7
-* October 9, 2014
-* Added an ID to the weekday sections of the simple response (allows easy linking on display pages).
-* Fixed a number of warnings.
-* Added some satellite fixes.
-* Fixed a rather nasty error in the semantic response that could have caused a lot of bad search results. I'm shocked I haven't heard anything.
+	* October 9, 2014
+	* Added an ID to the weekday sections of the simple response (allows easy linking on display pages).
+	* Fixed a number of warnings.
+	* Added some satellite fixes.
+	* Fixed a rather nasty error in the semantic response that could have caused a lot of bad search results. I'm shocked I haven't heard anything.
 
 = Version 2.4.6
-* August 19, 2014
-* Fixed an issue with apostrophes (') causing problems.
-* Added a user-agent to the cCURL calls, as some servers filter out cURL calls.
-* Added a simpler, more direct semantic access to NAWS dumps.
+	* August 19, 2014
+	* Fixed an issue with apostrophes (') causing problems.
+	* Added a user-agent to the cCURL calls, as some servers filter out cURL calls.
+	* Added a simpler, more direct semantic access to NAWS dumps.
 
 = Version 2.4.5
-* July 10, 2014
-* Added true Spanish localization to the Root Server.
-* Added a cookie for storing the selected language.
-* Tweaked the French localization.
-* Added a weekday wrapper around block mode simple responses. This allows better integration of search results with CSS.
-* Fixed an issue with double-quotes entered on some servers.
+	* July 10, 2014
+	* Added true Spanish localization to the Root Server.
+	* Added a cookie for storing the selected language.
+	* Tweaked the French localization.
+	* Added a weekday wrapper around block mode simple responses. This allows better integration of search results with CSS.
+	* Fixed an issue with double-quotes entered on some servers.
 
 = Version 2.4.4
-* June 9, 2014
-* Fixed a bug in the semantic interfaces that caused problems with clients. If a meeting had no name, a blank name was returned. It now returns a generic "NA Meeting".
-* Fixed a bug in the administration system that prevented logins after a logout.
+	* June 9, 2014
+	* Fixed a bug in the semantic interfaces that caused problems with clients. If a meeting had no name, a blank name was returned. It now returns a generic "NA Meeting".
+	* Fixed a bug in the administration system that prevented logins after a logout.
 
 = Version 2.4.3 =
-* June 4, 2014
-* Fixed a bug introduced by the new code (It only manifested when sending mail, so no one has been affected).
+	* June 4, 2014
+	* Fixed a bug introduced by the new code (It only manifested when sending mail, so no one has been affected).
 
 = Version 2.4.2 =
-* June 4, 2014
-* Simplified the response for the test in the email sender.
-* Made the email generated from contacts a bit more explanatory.
-* Improved the ability to access the browser and the editor for meetings. This works in conjunction with the email sent from contacts.
-* Prevent duplicate emails in the contact email.
+	* June 4, 2014
+	* Simplified the response for the test in the email sender.
+	* Made the email generated from contacts a bit more explanatory.
+	* Improved the ability to access the browser and the editor for meetings. This works in conjunction with the email sent from contacts.
+	* Prevent duplicate emails in the contact email.
 
 = Version 2.4.1 =
-* June 1, 2014
-* Oops. Forgot to turn off debug mode.
+	* June 1, 2014
+	* Oops. Forgot to turn off debug mode.
 
 = Version 2.4.0 =
-* May 31, 2014
-* Fixed some French localization issues with the admin screens.
-* Added the ability to specify a language for the administration, so multiple languages can be used for a root server.
-* Added (re-added, really) the ability to contact the meeting list administrators for a meeting with a message.
-* Added support for directly going to the editor for a particular meeting, via URI.
-* Added the capability to continue to the desired editing function after being stopped for a login.
+	* May 31, 2014
+	* Fixed some French localization issues with the admin screens.
+	* Added the ability to specify a language for the administration, so multiple languages can be used for a root server.
+	* Added (re-added, really) the ability to contact the meeting list administrators for a meeting with a message.
+	* Added support for directly going to the editor for a particular meeting, via URI.
+	* Added the capability to continue to the desired editing function after being stopped for a login.
 
 = Version 2.3.5 =
-* May 1, 2014
-* Added a couple more Swedish translated strings.
-* Fixed a bug in the French translation that caused the server admin to hose up if that language was specified.
+	* May 1, 2014
+	* Added a couple more Swedish translated strings.
+	* Fixed a bug in the French translation that caused the server admin to hose up if that language was specified.
 
 = Version 2.3.4 =
-* April 2, 2014
-* Removed a redundant include of the Google Maps API from the admin screen.
-* Fixed a JavaScript error with the set map to address functionality of the editor.
+	* April 2, 2014
+	* Removed a redundant include of the Google Maps API from the admin screen.
+	* Fixed a JavaScript error with the set map to address functionality of the editor.
 
 = Version 2.3.3 =
-* March 12, 2014
-* Fixed a rather embarrassing error, in which several fields were left out of deleted meetings in the NAWS export. All root servers that plan to sync with NAWS should apply this update.
+	* March 12, 2014
+	* Fixed a rather embarrassing error, in which several fields were left out of deleted meetings in the NAWS export. All root servers that plan to sync with NAWS should apply this update.
 
 = Version 2.3.2 =
-* March 7, 2014
-* Removed a couple of redundant entries from the "seed" format database table.
+	* March 7, 2014
+	* Removed a couple of redundant entries from the "seed" format database table.
 
 = Version 2.3.1 =
-* March 5, 2014
-* Added the ability to convey special language formats to NAWS.
-* Fixed a bug, in which all deleted meetings in the NAWS dump had the same change date.
-* Fixed a bug, in which all deleted meetings, regardless of Service body, were sent to NAWS. It now only filters for the deleted meetings attached to the requesting Service body.
+	* March 5, 2014
+	* Added the ability to convey special language formats to NAWS.
+	* Fixed a bug, in which all deleted meetings in the NAWS dump had the same change date.
+	* Fixed a bug, in which all deleted meetings, regardless of Service body, were sent to NAWS. It now only filters for the deleted meetings attached to the requesting Service body.
 
 = Version 2.3.0 =
-* March 1, 2014
-* Added a button to the meeting editor location tab, to set the meeting long/lat to the address (people were missing the button in the map).
-* Fixed a mild bug, where the confirm dialog was shown twice when canceling a meeting edit.
-* Fixed an issue, where including double quotes (") in meeting data could cause the server to experience an AJAX hang.
-* Fixed another issue, where adding backslashes (\) to data in the editor resulted in incorrect values in the database.
+	* March 1, 2014
+	* Added a button to the meeting editor location tab, to set the meeting long/lat to the address (people were missing the button in the map).
+	* Fixed a mild bug, where the confirm dialog was shown twice when canceling a meeting edit.
+	* Fixed an issue, where including double quotes (") in meeting data could cause the server to experience an AJAX hang.
+	* Fixed another issue, where adding backslashes (\) to data in the editor resulted in incorrect values in the database.
 
 = Version 2.2.5 =
-* February 24, 2014
-* Fixed an issue that caused problems with the admin screen on IIS (Microsoft Windows) hosting servers.
+	* February 24, 2014
+	* Fixed an issue that caused problems with the admin screen on IIS (Microsoft Windows) hosting servers.
 
 = Version 2.2.4 =
-* February 23, 2014
-* Added the capability to indicate multiple meeting IDs in the search string, by separating them with commas. This allows a list of specific meetings, selected by BMLT ID, to be returned.
-* Added a field to the NAWS export to assist in future assigning NAWS Committee Codes to existing meetings.
-* Fixed some issues with non-standard TCP ports.
-* Fixed an error with validating the server version in the satellite admin page.
+	* February 23, 2014
+	* Added the capability to indicate multiple meeting IDs in the search string, by separating them with commas. This allows a list of specific meetings, selected by BMLT ID, to be returned.
+	* Added a field to the NAWS export to assist in future assigning NAWS Committee Codes to existing meetings.
+	* Fixed some issues with non-standard TCP ports.
+	* Fixed an error with validating the server version in the satellite admin page.
 
 = Version 2.2.3 =
-* February 17, 2014
-* Accidentally removed a format from the default formats (only applied during the install wizard, so this will not affect already installed deployments).
+	* February 17, 2014
+	* Accidentally removed a format from the default formats (only applied during the install wizard, so this will not affect already installed deployments).
 
 = Version 2.2.2 =
-* February 16, 2014
-* Fixed an issue that happened on a somewhat nonstandard server. This resulted in the format editor not working.
-* The GetServiceBodies XML schema (and dump) had some errors. These have been addressed. This does slightly change the semantics for the GetServiceBodies variant.
-* Made it so that you don't need to specify array brackets ([]) for the GetFormats variant of the semantic interface.
-* Changed the "id" attribute in the XML rows to "sequence_index". This helped some semantic users parse the data.
+	* February 16, 2014
+	* Fixed an issue that happened on a somewhat nonstandard server. This resulted in the format editor not working.
+	* The GetServiceBodies XML schema (and dump) had some errors. These have been addressed. This does slightly change the semantics for the GetServiceBodies variant.
+	* Made it so that you don't need to specify array brackets ([]) for the GetFormats variant of the semantic interface.
+	* Changed the "id" attribute in the XML rows to "sequence_index". This helped some semantic users parse the data.
 
 = Version 2.2.1 =
-* January 21, 2014
-* Fixed a minor warning issue with the simple output.
-* Turned off debug mode (oops).
-* Changed the value in the "Delete" column for the NAWS export to "D" (as per request from NAWS)
+	* January 21, 2014
+	* Fixed a minor warning issue with the simple output.
+	* Turned off debug mode (oops).
+	* Changed the value in the "Delete" column for the NAWS export to "D" (as per request from NAWS)
 
 = Version 2.2.0 =
-* January 20, 2014
-* Removed an erroneous French format, and added three new formats. Fixed a broken Swedish format, and made it an English format (Web).
-* Added the ability to select a NAWS format code as a translation match for an existing format code. This allows arbitrary format editing.
-* Addressed an old bug that caused agita when all formats have been deleted. "Solved" it by not allowing the last format to be deleted.
+	* January 20, 2014
+	* Removed an erroneous French format, and added three new formats. Fixed a broken Swedish format, and made it an English format (Web).
+	* Added the ability to select a NAWS format code as a translation match for an existing format code. This allows arbitrary format editing.
+	* Addressed an old bug that caused agita when all formats have been deleted. "Solved" it by not allowing the last format to be deleted.
 
 = Version 2.1.11 =
-* December 31, 2013
-* Addressed a bug that could affect the observer browser in some Internet Explorer sessions (AJAX bug).
+	* December 31, 2013
+	* Addressed a bug that could affect the observer browser in some Internet Explorer sessions (AJAX bug).
 
 = Version 2.1.10 =
-* December 29, 2013
-* Fixed a bug in the install wizard that would result in corrupted initial databases.
+	* December 29, 2013
+	* Fixed a bug in the install wizard that would result in corrupted initial databases.
 
 = Version 2.1.9 =
-* December 12, 2013
-* Fixed a very small bug in the simple output. This would only affect rare installations. If a single_meeting_id= link was provided, it would not resolve properly.
+	* December 12, 2013
+	* Fixed a very small bug in the simple output. This would only affect rare installations. If a single_meeting_id= link was provided, it would not resolve properly.
 
 = Version 2.1.8 =
-* December 11, 2013
-* Fixed a bug that could affect rare servers with security set to "11." The Observer browser did not work.
-* Fixed a bug that prevented meetings listed at noon and midnight from being displayed in simple searches (localization bug).
-* Fixed a bug that created a disorganized sort for simple meeting results.
-* Added address information to the meeting search results in the Meeting Editor. This was a request by an ASC administrator, so it had a high priority. It was a low-risk addition.
-* Added an example auto-config file.
+	* December 11, 2013
+	* Fixed a bug that could affect rare servers with security set to "11." The Observer browser did not work.
+	* Fixed a bug that prevented meetings listed at noon and midnight from being displayed in simple searches (localization bug).
+	* Fixed a bug that created a disorganized sort for simple meeting results.
+	* Added address information to the meeting search results in the Meeting Editor. This was a request by an ASC administrator, so it had a high priority. It was a low-risk addition.
+	* Added an example auto-config file.
 
 = Version 2.1.7 =
-* December 9, 2013
-* Fixed a bug in the simple meeting Map URL, caused by the localization work.
+	* December 9, 2013
+	* Fixed a bug in the simple meeting Map URL, caused by the localization work.
 
 = Version 2.1.6 =
-* December 8, 2013
-* Added More French localization.
-* Fixed a couple of PHP warnings.
+	* December 8, 2013
+	* Added More French localization.
+	* Fixed a couple of PHP warnings.
 
 = Version 2.1.5 =
-* December 7, 2013
-* Added French localization.
+	* December 7, 2013
+	* Added French localization.
 
 = Version 2.1.4 =
-* December 3, 2013
-* Fixed a syntax error in the Installer Wizard.
+	* December 3, 2013
+	* Fixed a syntax error in the Installer Wizard.
 
 = Version 2.1.3 =
-* November 30, 2013
-* Added the capability to extract only those formats used in a search to the BMLT_SIMPLE capability. This allows things like easily scalable format keys.
+	* November 30, 2013
+	* Added the capability to extract only those formats used in a search to the BMLT_SIMPLE capability. This allows things like easily scalable format keys.
 
 = Version 2.1.2 =
-* November 29, 2013
-* There was an error in the KML output. This has been fixed.
+	* November 29, 2013
+	* There was an error in the KML output. This has been fixed.
 
 = Version 2.1.1 =
-* November 29, 2013
-* Fixed a bug in the simple search, where weekdays were offset by 1 (actually caused by the localization work).
+	* November 29, 2013
+	* Fixed a bug in the simple search, where weekdays were offset by 1 (actually caused by the localization work).
 
 = Version 2.1.0 =
-* November 28, 2013
-* Consolidated and reduced the localization strings. Now, almost all the strings used in administration are in one file.
-* Removed the useless PDF generator directory.
-* Did some technical work to ensure that the server will work properly in some virtual host environments.
-* Added a couple of more choices to the default sort keys.
-* Added the capability to specify arbitrary sort keys in the semantic URIs.
-* Fixed a bug in the meeting editor, where setting the map to an address did not activate the save button.
-* Added GPX, KML and POI/CSV export options to the semantic interface.
+	* November 28, 2013
+	* Consolidated and reduced the localization strings. Now, almost all the strings used in administration are in one file.
+	* Removed the useless PDF generator directory.
+	* Did some technical work to ensure that the server will work properly in some virtual host environments.
+	* Added a couple of more choices to the default sort keys.
+	* Added the capability to specify arbitrary sort keys in the semantic URIs.
+	* Fixed a bug in the meeting editor, where setting the map to an address did not activate the save button.
+	* Added GPX, KML and POI/CSV export options to the semantic interface.
 
 = Version 2.0.34
-* October 19, 2013
-* Fixed a bug in the XML/JSON export, where empty fields could result in incorrect data.
+	* October 19, 2013
+	* Fixed a bug in the XML/JSON export, where empty fields could result in incorrect data.
 
 = Version 2.0.33 =
-* October 2, 2013
-* Added the zip code to the simple output.
-* Fixed a bug, where setting the map location would not properly enable the save button.
-* Added a German translation of the duplicate login error message.
-* Tweaked the German translations a bit.
+	* October 2, 2013
+	* Added the zip code to the simple output.
+	* Fixed a bug, where setting the map location would not properly enable the save button.
+	* Added a German translation of the duplicate login error message.
+	* Tweaked the German translations a bit.
 
 = Version 2.0.32 =
-* June 26, 2013
-* Simply added an error handler for when a duplicate user login is specified when trying to create a new user.
+	* June 26, 2013
+	* Simply added an error handler for when a duplicate user login is specified when trying to create a new user.
 
 = Version 2.0.31 =
-* June 8, 2013
-* There was actually a nasty bug in the installer wizard that was caused by some of the work to address non-MySQL databases. This has been fixed.
+	* June 8, 2013
+	* There was actually a nasty bug in the installer wizard that was caused by some of the work to address non-MySQL databases. This has been fixed.
 
 = Version 2.0.30 =
-* June 8, 2013
-* Made the TEST button more useful. Also fixed a bug in it, where it would fail for a perfectly-formed empty database.
-* Fixed a bug, where the Service body admin section would not appear properly for Server Administrators if there were no preexisting Service bodies.
+	* June 8, 2013
+	* Made the TEST button more useful. Also fixed a bug in it, where it would fail for a perfectly-formed empty database.
+	* Fixed a bug, where the Service body admin section would not appear properly for Server Administrators if there were no preexisting Service bodies.
 
 = Version 2.0.29 =
-* June 6, 2013
-* Simply trap when the TEST button is hit with no information (used to give no response). It now gives an error message.
+	* June 6, 2013
+	* Simply trap when the TEST button is hit with no information (used to give no response). It now gives an error message.
 
 = Version 2.0.28 =
-* June 4, 2013
-* Added a database connectivity test button to the installer wizard.
+	* June 4, 2013
+	* Added a database connectivity test button to the installer wizard.
 
 = Version 2.0.27 =
-* May 22, 2013
-* Fixes an obscure bug that can be caused by entry of double-quotes into the format.
+	* May 22, 2013
+	* Fixes an obscure bug that can be caused by entry of double-quotes into the format.
 
 = Version 2.0.26 =
-* May 22, 2013
-* Adds German localization to the meeting search portion (used by Observers).
+	* May 22, 2013
+	* Adds German localization to the meeting search portion (used by Observers).
 
 = Version 2.0.25 =
-* May 22, 2013
-* Removed some old code from the header that caused the AJAX responses to be a bit slow. Satellites linking to this version should render more quickly.
-* Added a 'recursive' parameter to the semantic interface. This allows the response to return an entire Service body hierarchy, based on 1 Service body.
-* Made the search parser a bit more forgiving for Service bodies and weekdays. They are no longer REQUIRED to be arrays, which makes single values easier to specify.
-* Updated to the latest CMS Base Class (has no real effect on this project).
+	* May 22, 2013
+	* Removed some old code from the header that caused the AJAX responses to be a bit slow. Satellites linking to this version should render more quickly.
+	* Added a 'recursive' parameter to the semantic interface. This allows the response to return an entire Service body hierarchy, based on 1 Service body.
+	* Made the search parser a bit more forgiving for Service bodies and weekdays. They are no longer REQUIRED to be arrays, which makes single values easier to specify.
+	* Updated to the latest CMS Base Class (has no real effect on this project).
 
 = Version 2.0.24 =
-* May 19, 2013
-* Fixed a bug, where clicking the format checkboxes with Internet Explorer did not trigger their callbacks.
+	* May 19, 2013
+	* Fixed a bug, where clicking the format checkboxes with Internet Explorer did not trigger their callbacks.
 
 = Version 2.0.23 =
-* May 18, 2013
-* Fixed an issue, where the Meeting search (Observer only) could have a bad AJAX URI.
+	* May 18, 2013
+	* Fixed an issue, where the Meeting search (Observer only) could have a bad AJAX URI.
 
 = Version 2.0.22 =
-* May 18, 2013
-* Added compensation for servers running on non-standard HTTP ports.
-* Made it so that older auto-config files will not trigger the install wizard.
+	* May 18, 2013
+	* Added compensation for servers running on non-standard HTTP ports.
+	* Made it so that older auto-config files will not trigger the install wizard.
 
 = Version 2.0.20 =
-* May 13, 2013
-* Reduced the number of times that the marker redraw is called in the standard [[bmlt]] shortcode handler.
-* Fixed an issue with CSS that caused displayed maps to get funky.
+	* May 13, 2013
+	* Reduced the number of times that the marker redraw is called in the standard [[bmlt]] shortcode handler.
+	* Fixed an issue with CSS that caused displayed maps to get funky.
 
 = Version 2.0.19 =
-* May 12, 2013
-* Fixed a JavaScript bug, in which the "Create New Meeting" button would sometimes trigger an error.
+	* May 12, 2013
+	* Fixed a JavaScript bug, in which the "Create New Meeting" button would sometimes trigger an error.
 
 = Version 2.0.18 =
-* May 10, 2013
-* Made more invisible 'belt & suspenders' tweaks to the code to ensure no warnings.
+	* May 10, 2013
+	* Made more invisible 'belt & suspenders' tweaks to the code to ensure no warnings.
 
 = Version 2.0.17 =
-* May 9, 2013
-* Made some invisible 'belt & suspenders' tweaks to the code to ensure no warnings.
+	* May 9, 2013
+	* Made some invisible 'belt & suspenders' tweaks to the code to ensure no warnings.
 
 = Version 2.0.16 =
-* May 8, 2013
-* Made it so that hitting the RETURN key in the meeting search will trigger a search. This is a big usability enhancement.
+	* May 8, 2013
+	* Made it so that hitting the RETURN key in the meeting search will trigger a search. This is a big usability enhancement.
 
 = Version 2.0.15 =
-* May 8, 2013
-* Fixed a bug, in which a Service Body Admin with no Service body privileges would be shown a Service Body Admin editor.
+	* May 8, 2013
+	* Fixed a bug, in which a Service Body Admin with no Service body privileges would be shown a Service Body Admin editor.
 
 = Version 2.0.14 =
-* May 6, 2013
-* Fixed a bug that occurred when the main_server was at the root of the domain. It would prevent JavaScript from being loaded.
-* Adding German localization.
+	* May 6, 2013
+	* Fixed a bug that occurred when the main_server was at the root of the domain. It would prevent JavaScript from being loaded.
+	* Adding German localization.
 
 = Version 2.0.12 =
-* May 4, 2013
-* Simply stopped a warning/note from showing up in strict PHP.
+	* May 4, 2013
+	* Simply stopped a warning/note from showing up in strict PHP.
 
 = Version 2.0.11 =
-* May 2, 2013
-* Fixed a bug, in which some text fields were over-HTMLing ampersands (&).
-* Fixed a bug, in which creating new Service bodies would sometimes result in a "hanging throbber."
-* Fixed a bug, in which deleting a Service body did not remove it from the popup menu.
+	* May 2, 2013
+	* Fixed a bug, in which some text fields were over-HTMLing ampersands (&).
+	* Fixed a bug, in which creating new Service bodies would sometimes result in a "hanging throbber."
+	* Fixed a bug, in which deleting a Service body did not remove it from the popup menu.
 
 = Version 2.0.10 =
-* May 1, 2013
-* Hopefully, added a workaround for servers with dicey session support.
+	* May 1, 2013
+	* Hopefully, added a workaround for servers with dicey session support.
 
 = Version 2.0.9 =
-* May 1, 2013
-* Fixed a bug, in which single-quotes (apostrophes) were causing problems in some text fields.
+	* May 1, 2013
+	* Fixed a bug, in which single-quotes (apostrophes) were causing problems in some text fields.
 
 = Version 2.0.8 =
-* April 29, 2013
-* Fixed a bug, in which blank text fields were not being saved.
+	* April 29, 2013
+	* Fixed a bug, in which blank text fields were not being saved.
 
 = Version 2.0.7 =
-* April 27, 2013
-* 2.0.6 had issues. This should REALLY fix the problem (Do you know this tune?)...
-* Fixed a fairly old bug in the root server, where creating new meetings could result in a hung screen.
+	* April 27, 2013
+	* 2.0.6 had issues. This should REALLY fix the problem (Do you know this tune?)...
+	* Fixed a fairly old bug in the root server, where creating new meetings could result in a hung screen.
 
 = Version 2.0.6 =
-* April 27, 2013
-* 2.0.5 had issues. This should REALLY fix the problem...
+	* April 27, 2013
+	* 2.0.5 had issues. This should REALLY fix the problem...
 
 = Version 2.0.5 =
-* April 27, 2013
-* Fixed a bug that appeared in some servers, where quotes were escaped. This interfered with administration.
+	* April 27, 2013
+	* Fixed a bug that appeared in some servers, where quotes were escaped. This interfered with administration.
 
 = Version 2.0.4 =
-* April 25, 2013
-* Removed the single meeting details link from the simple search results, as it points to the root server, and the root server has changed a lot.
-* Cleaned up some redundant code.
+	* April 25, 2013
+	* Removed the single meeting details link from the simple search results, as it points to the root server, and the root server has changed a lot.
+	* Cleaned up some redundant code.
 
 = Version 2.0.3 =
-* April 21, 2013
-* Rewrote the text search for non-location text. It was not handling non-Roman text properly.
-* This is the first release on Bitbucket
+	* April 21, 2013
+	* Rewrote the text search for non-location text. It was not handling non-Roman text properly.
+	* This is the first release on Bitbucket
 
 = Version 2.0.2 =
-* April 18, 2013
-* Fixed an issue where sessions were not being preserved properly across a cURL call.
-* Fixed a bug, where the "hidden" fields were having their values "mangled" by the root server.
-* Fixed a bug, where a redundant confirm dialog was shown for deleted meetings.
+	* April 18, 2013
+	* Fixed an issue where sessions were not being preserved properly across a cURL call.
+	* Fixed a bug, where the "hidden" fields were having their values "mangled" by the root server.
+	* Fixed a bug, where a redundant confirm dialog was shown for deleted meetings.
 
 = Version 2.0.1 =
-* April 17, 2013
-* Fixed two bugs in the localization of the "Observer search" feature.
-* Fixed a bug, in which the upublished meetings were unintentionally returned as valid search results.
-* Fixed some bugs that caused JavaScript issues.
+	* April 17, 2013
+	* Fixed two bugs in the localization of the "Observer search" feature.
+	* Fixed a bug, in which the upublished meetings were unintentionally returned as valid search results.
+	* Fixed some bugs that caused JavaScript issues.
 
 = Version 2.0.0 =
-* April 13, 2013
-* Official release of 2.0.0
-* There are 3 open bugs in this release that need to be addressed in a near-future "point release":
+	* April 13, 2013
+	* Official release of 2.0.0
+	* There are 3 open bugs in this release that need to be addressed in a near-future "point release":
     7) Swedish Language Ümlauts Result In Bad Location Searches
         This expresses itself in satellite searches, but is probably a root server bug.
         Search for these cities, using the Swedish root server ( http://www.nasverige.org/bmlt ):
@@ -433,39 +434,39 @@ CHANGELIST
     9) Non-MySQL databases (in particular, Postgres) don't work.
 
 = Version 2.0b15 =
-* April 9, 2013
-* Did some work to ensure that strings stored in the database would retain their UTF-8 characteristics.
+	* April 9, 2013
+	* Did some work to ensure that strings stored in the database would retain their UTF-8 characteristics.
 
 = Version 2.0b14 =
-* April 8, 2013
-* The Swedish localization is all but complete.
-* Switched the order of the long/lat fields in the NAWS export.
+	* April 8, 2013
+	* The Swedish localization is all but complete.
+	* Switched the order of the long/lat fields in the NAWS export.
 
 = Version 2.0b12 =
-* April 6, 2013
-* Added placeholders for the Swedish and Spanish localizations.
-* Fixed a bug, in which linefeeds in text entries could bork the administration interface.
+	* April 6, 2013
+	* Added placeholders for the Swedish and Spanish localizations.
+	* Fixed a bug, in which linefeeds in text entries could bork the administration interface.
 
 = Version 2.0b11 =
-* March 31, 2013
-* Fixed a JavaScript Issue, where the user level popup was not being correctly set, as a result of the removal of the useless "Editor" level.
+	* March 31, 2013
+	* Fixed a JavaScript Issue, where the user level popup was not being correctly set, as a result of the removal of the useless "Editor" level.
 
 = Version 2.0b10 =
-* March 31, 2013
-* Fixed a JavaScript Issue, where the "dirty confirm" was not being shown in some instances. It is still an issue in a couple (like closing the browser).
+	* March 31, 2013
+	* Fixed a JavaScript Issue, where the "dirty confirm" was not being shown in some instances. It is still an issue in a couple (like closing the browser).
 
 = Version 2.0b9 =
-* March 31, 2013
-* Fixed a number of small JavaScript bugs that had the annoying habit of interfering with the "dirty" flag for meetings.
+	* March 31, 2013
+	* Fixed a number of small JavaScript bugs that had the annoying habit of interfering with the "dirty" flag for meetings.
 
 = Version 2.0b8 =
-* March 31, 2013
-* Removed the useless "trainee" position of "Service Body Editor" as a choice.
-* Fixed a rather nasty bug in the new Service Body Parent functionality.
+	* March 31, 2013
+	* Removed the useless "trainee" position of "Service Body Editor" as a choice.
+	* Fixed a rather nasty bug in the new Service Body Parent functionality.
 
 = Version 2.0b7 =
-* March 30, 2013
-* Fixed this bug:
+	* March 30, 2013
+	* Fixed this bug:
     6) No Way To Nest Service Bodies
         1) Log In as a Server Administrator
         2) Open the "Service Body Administration" panel
@@ -475,13 +476,13 @@ CHANGELIST
         EXPECTED: A popup menu with a choice of other Service bodies that can be used as "parents"
 
 = Version 2.0b6 =
-* March 30, 2013
-* Fixed this bug:
+	* March 30, 2013
+	* Fixed this bug:
     If there are no Service bodies (new install), the "Service Bodies" section is not displayed (so no new ones can be created).
     
 = Version 2.0b5 =
-* March 30, 2013
-* Fixed these bugs:
+	* March 30, 2013
+	* Fixed these bugs:
     3) No default duration
         1) Log in as an Observer
         2) Select "Meeting Search"
@@ -503,12 +504,12 @@ CHANGELIST
         EXPECTED: Only one instance displayed.
 
 = Version 2.0b4 =
-* March 29, 2013
-* Added full support for observers to browse the database, and view restricted fields in a secure fashion.
+	* March 29, 2013
+	* Added full support for observers to browse the database, and view restricted fields in a secure fashion.
 
 = Version 2.0b3 =
-* March 28, 2013
-* I realized that I had completely neglected the needs of observers (logged in, but can't edit).
+	* March 28, 2013
+	* I realized that I had completely neglected the needs of observers (logged in, but can't edit).
   I added a basic search for them. Due to the way that the satellites are written, this took about
   an hour, and represents basically zero risk to the main server admin functionality. In order to
   use the new browser, you add /client_interface/html to the main_server URI. It will ask you to
@@ -519,8 +520,8 @@ CHANGELIST
   main server editor functionality was not affected.
 
 = Version 2.0b2 =
-* March 27, 2013
-* Fixed this bug:
+	* March 27, 2013
+	* Fixed this bug:
     2) Location Search Fails With Too-Tight Comma
         1)  Log in as a Service Body Admin (or Server Admin)
         2)  Open the "Meeting Editor" dropdown
@@ -533,8 +534,8 @@ CHANGELIST
         EXTRA INFO: Entering "Babylon, NY" (Note space between comma and succeeding character) works.
 
 = Version 2.0b1 =
-* March 25, 2013
-* Fixed this bug:
+	* March 25, 2013
+	* Fixed this bug:
     1) Open Two Editors Accidentally
         1)  Log in as a Service Body Admin (or Server Admin)
         2)  Open the "Meeting Editor" dropdown
@@ -546,163 +547,163 @@ CHANGELIST
     
         ANOMALY:    Both the Create Meeting And First Result dropdowns open
         EXPECTED:   Only the Create Meeting Editor dropdown opens
-* Turned off debug mode.
+	* Turned off debug mode.
 
 = Version 2.0b0 =
-* March 22, 2013
-* Official Beta Release.
+	* March 22, 2013
+	* Official Beta Release.
 
 = Version 2.0a12 =
-* March 20, 2013
-* Added alerts to display a message if the AJAX authorization fails.
+	* March 20, 2013
+	* Added alerts to display a message if the AJAX authorization fails.
 
 = Version 2.0a11 =
-* March 19, 2013
-* Fixed a bug, in which the server admin account was not being properly set in the setup install wizard.
+	* March 19, 2013
+	* Fixed a bug, in which the server admin account was not being properly set in the setup install wizard.
 
 = Version 2.0a10 =
-* March 16, 2013
-* Finished major coding for the root server, as the installer wizard was the last part.
+	* March 16, 2013
+	* Finished major coding for the root server, as the installer wizard was the last part.
 
 = Version 2.0a9 =
-* March 9, 2013
-* Fixed a rather serious issue, in which apostrophes (') in text could cause the editor to go kablooey.
-* Fixed an issue with the wizard detector, where a null-set global was misinterpreted.
+	* March 9, 2013
+	* Fixed a rather serious issue, in which apostrophes (') in text could cause the editor to go kablooey.
+	* Fixed an issue with the wizard detector, where a null-set global was misinterpreted.
 
 = Version 2.0a8 =
-* March 8, 2013
-* More work on the installer wizard.
-* The Server Admin can now change their own login and name (Other admins cannot).
+	* March 8, 2013
+	* More work on the installer wizard.
+	* The Server Admin can now change their own login and name (Other admins cannot).
 
 = Version 2.0a7 =
-* March 7, 2013
-* Fixed a bug in which the map set button was not being properly enabled.
+	* March 7, 2013
+	* Fixed a bug in which the map set button was not being properly enabled.
 
 = Version 2.0a6 =
-* March 7, 2013
-* The password setting wasn't working correctly, so I fixed it. It also forces a logout upon successful change.
-* Fixed the styling on the various warnings and admonishments.
+	* March 7, 2013
+	* The password setting wasn't working correctly, so I fixed it. It also forces a logout upon successful change.
+	* Fixed the styling on the various warnings and admonishments.
 
 = Version 2.0a5 =
-* March 6, 2013
-* Internet Explorer was displaying the wrong cursor in the meeting results list. This has been fixed.
-* There was a big issue with text fields not working properly on IE. This has been addressed. Apparently, cloning a DOM node does not properly transfer event handlers in IE.
-* Removed the now-unnecessary "supports_ajax" argument from the login.
-* Simplified the login form a bit, so that the URI will remain consistent.
-* Fixed a bug, in which changing multiple items at once in the "My Account" section triggered a JavaScript error.
+	* March 6, 2013
+	* Internet Explorer was displaying the wrong cursor in the meeting results list. This has been fixed.
+	* There was a big issue with text fields not working properly on IE. This has been addressed. Apparently, cloning a DOM node does not properly transfer event handlers in IE.
+	* Removed the now-unnecessary "supports_ajax" argument from the login.
+	* Simplified the login form a bit, so that the URI will remain consistent.
+	* Fixed a bug, in which changing multiple items at once in the "My Account" section triggered a JavaScript error.
 
 = Version 2.0a4 =
-* March 6, 2013
-* Fixed an issue where the format editor did not work properly on Internet Exploder.
+	* March 6, 2013
+	* Fixed an issue where the format editor did not work properly on Internet Exploder.
 
 = Version 2.0a3 =
-* March 4, 2013
-* Tweaked the config loader to allow the auto-config to be fetched from the old location. This will change by beta.
+	* March 4, 2013
+	* Tweaked the config loader to allow the auto-config to be fetched from the old location. This will change by beta.
 
 = Version 2.0a2 =
-* March 3, 2013
-* Reduced the size of the text in the Service Body Editor Save button.
-* Sort the languages to ensure consistency, and that the native language of the server is always first.
-* The format list is delineated by color stripes. When formats were added or deleted, these stripes could get pooched. That has been fixed.
+	* March 3, 2013
+	* Reduced the size of the text in the Service Body Editor Save button.
+	* Sort the languages to ensure consistency, and that the native language of the server is always first.
+	* The format list is delineated by color stripes. When formats were added or deleted, these stripes could get pooched. That has been fixed.
 
 = Version 2.0a1 =
-* March 3, 2013
-* Fixed a minor issue, in which the warning banners were not bing set when a format was deleted.
+	* March 3, 2013
+	* Fixed a minor issue, in which the warning banners were not bing set when a format was deleted.
 
 = Version 2.0a0 =
-* March 3, 2013
-* Major rewrite of the administration system.
-* Simplified the administration, and got rid of all client-side root server HTML. All clients are now required to communicate with the root via semantic interfaces (JSON/XML/CSV).
-* The server administration is now heavily AJAX-based, and is now a completely interactive Web app.
+	* March 3, 2013
+	* Major rewrite of the administration system.
+	* Simplified the administration, and got rid of all client-side root server HTML. All clients are now required to communicate with the root via semantic interfaces (JSON/XML/CSV).
+	* The server administration is now heavily AJAX-based, and is now a completely interactive Web app.
 
 = Version 1.10.3
-* January 16, 2013
-* Added a "GetServiceBodies" variant to the semantic export.
+	* January 16, 2013
+	* Added a "GetServiceBodies" variant to the semantic export.
 
 = Version 1.10.2
-* January 8, 2013
-* The miles from search center value was incorrect (improper conversion from Km). This has been fixed.
+	* January 8, 2013
+	* The miles from search center value was incorrect (improper conversion from Km). This has been fixed.
 
 = Version 1.10.1
-* The main change in this version is that the formats can be exported so that only the ones actually used in the search are given.
+	* The main change in this version is that the formats can be exported so that only the ones actually used in the search are given.
 
 = Version 1.9 =
-* March 24, 2012
-* Fixed a bug that did not apply localizations to PDF generation.
-* Fixed a bug in the Metaphone splitter (It was in rarely used code, and had been there forever).
-* Added some functionality to aid in syncing with the NAWS system.
-* Changed the base "primer" DB to include the new standard set of formats to be used to sync with NAWS.
-* Changed the way the "install wizard" works, in order to make it easier to "prime" the database.
+	* March 24, 2012
+	* Fixed a bug that did not apply localizations to PDF generation.
+	* Fixed a bug in the Metaphone splitter (It was in rarely used code, and had been there forever).
+	* Added some functionality to aid in syncing with the NAWS system.
+	* Changed the base "primer" DB to include the new standard set of formats to be used to sync with NAWS.
+	* Changed the way the "install wizard" works, in order to make it easier to "prime" the database.
 
 = Version 1.8.43 =
-* November 24, 2011
-* Undid the date bug fix, as it caused problems on some servers, by reporting the wrong times.
+	* November 24, 2011
+	* Undid the date bug fix, as it caused problems on some servers, by reporting the wrong times.
 
 = Version 1.8.42 =
-* November 17, 2011
-* Fixed a bug in which day/time searches were being offset improperly on some servers.
-* Fixed a bug, in which the CSV response could cause a crash.
+	* November 17, 2011
+	* Fixed a bug in which day/time searches were being offset improperly on some servers.
+	* Fixed a bug, in which the CSV response could cause a crash.
 
 = Version 1.8.41 =
-* October 22, 2011
-* Addressed a bug, in which the wrong timezone was possibly being specified. The auto-config file will now allow a timezone to be specified in a variable called $default_timezone.
-* Somehow or another, some junk characters got into the AJAX Thread Driver file. That has been fixed.
+	* October 22, 2011
+	* Addressed a bug, in which the wrong timezone was possibly being specified. The auto-config file will now allow a timezone to be specified in a variable called $default_timezone.
+	* Somehow or another, some junk characters got into the AJAX Thread Driver file. That has been fixed.
 	    
 = Version 1.8.40 =
-* October 21, 2011
-* Swedish localization added.
-* There was a minor error in the XML schema for formats that interfered with operation on the iPhone app. This has been fixed.
+	* October 21, 2011
+	* Swedish localization added.
+	* There was a minor error in the XML schema for formats that interfered with operation on the iPhone app. This has been fixed.
 	    
 = Version 1.8.39 =
-* September 5, 2011
-* NA Sweden had an error, in which their server reports that it has all the various crypt() methodologies, but can't actually deliver. This broke the FullCrypt() function. I addressed it by adding a fallback to the most primitive crypt() function.
+	* September 5, 2011
+	* NA Sweden had an error, in which their server reports that it has all the various crypt() methodologies, but can't actually deliver. This broke the FullCrypt() function. I addressed it by adding a fallback to the most primitive crypt() function.
 
 = Version 1.8.38 =
-* August 17, 2011
-* This addresses an issue where overrides of the address format strings were being ignored. It may also give a slight improvement to page load times.
+	* August 17, 2011
+	* This addresses an issue where overrides of the address format strings were being ignored. It may also give a slight improvement to page load times.
 
 = Version 1.8.37 =
-* August 15, 2011
-* Fixed a bug that prevented the "Contact Us About This Meeting" link from appearing in "More Details."
+	* August 15, 2011
+	* Fixed a bug that prevented the "Contact Us About This Meeting" link from appearing in "More Details."
 
 = Version 1.8.36 =
-* August 12, 2011
-* Fixed a bug discovered by UKNA, in which subsequent pages of a multi-page location result woul have bad links.
+	* August 12, 2011
+	* Fixed a bug discovered by UKNA, in which subsequent pages of a multi-page location result woul have bad links.
 
 = Version 1.8.35 =
-* July 11, 2011
-* Fixed a couple of minor bugs in the installer wizard.
-* Also added a change to the search spec. throbber location that should make it appear in the correct place, now.
+	* July 11, 2011
+	* Fixed a couple of minor bugs in the installer wizard.
+	* Also added a change to the search spec. throbber location that should make it appear in the correct place, now.
 
 = Version 1.8.34 =
-* July 4, 2011
-* Fixed a validation issue with the search form.
+	* July 4, 2011
+	* Fixed a validation issue with the search form.
 
 = Version 1.8.33 =
-* June 26, 2011
-* Added new fields to the CSV/JSON/XML Change response.
-* There was a minor security issue that could have occurred with the email_contact field. It may have been displayed in some change records. This has been addressed.
-* Made the changes response dig into a hierarchy of Service bodies, if a "parent" Service body ID is presented in service_body_id=
+	* June 26, 2011
+	* Added new fields to the CSV/JSON/XML Change response.
+	* There was a minor security issue that could have occurred with the email_contact field. It may have been displayed in some change records. This has been addressed.
+	* Made the changes response dig into a hierarchy of Service bodies, if a "parent" Service body ID is presented in service_body_id=
 	    
 = Version 1.8.32 =
-* June 22, 2011
-* Added the ability to filter by Service body, when looking for changes, and now only return meeting changes (previously, some Service body and user changes could also be supplied).
-* Made a minor fix in the default details address string, so that meeting locations with no name won't show an empty comma.
-* Added the address format strings to the shared local strings, which should help performance, and decouple the linking to global variables.
+	* June 22, 2011
+	* Added the ability to filter by Service body, when looking for changes, and now only return meeting changes (previously, some Service body and user changes could also be supplied).
+	* Made a minor fix in the default details address string, so that meeting locations with no name won't show an empty comma.
+	* Added the address format strings to the shared local strings, which should help performance, and decouple the linking to global variables.
 
 = Version 1.8.31 =
-* June 7, 2011
-* Added additional capability to the CSV, JSON and XML outputs, so that the Satellite Driver can extract more relevant information.
+	* June 7, 2011
+	* Added additional capability to the CSV, JSON and XML outputs, so that the Satellite Driver can extract more relevant information.
 
 = Version 1.8.30 =
-* June 5, 2011
-* Fixed a fairly minor bug, in which failed geocode lookups would result in a blank screen. They now result in a message.
+	* June 5, 2011
+	* Fixed a fairly minor bug, in which failed geocode lookups would result in a blank screen. They now result in a message.
 
 = Version 1.8.29 =
-* June 4, 2011
-* Initial check-in of GitHub project
+	* June 4, 2011
+	* Initial check-in of GitHub project
 
-************* ORIGINAL SVN CHANGELOG (From SourceForge) *************
+	************* ORIGINAL SVN CHANGELOG (From SourceForge) *************
 
 - June 2, 2011 - 1.8.28 Release
     - Fixed a bug, in which the start time was not being displayed in single meetings..
