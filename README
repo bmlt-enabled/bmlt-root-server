@@ -46,17 +46,20 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-** Version 2.6.2 **
+** Version 2.6.2**
+
 - TBD
 - Tweaked the syntax of this document's changelist slightly, to make it more readable.
 - Fixed a minor bug, where the initial Service Body Editor NAWS Dump URI was not the new publicly-accessible one.
 
-** Version 2.6.1 **
+** Version 2.6.1**
+
 - January 5, 2015
 - Made a slight change, so that the formats are not automatically read upon a server instance being created. Instead, we wait until the first call to load them. This prevents them from being loaded in cases where they are not required.
 - Fixed an issue caused by getting too fancy with radius ranges, and ended up causing problems in the hunt for radius functionality. Need to re-explore this.
 
-** Version 2.6.0 **
+** Version 2.6.0**
+
 - January 4, 2015
 - Changed the NAWS Dump Link in the Service Body Editor to use the new open semantic URI.
 - Fixed an admin bug, in which meetings that an admin can't edit can be listed in the search results.
@@ -67,50 +70,60 @@ CHANGELIST
 - Continuing to look for places where I can take security measures. Added a few "belt & suspenders" methods, like reloading the user from the DB at every opportunity.
 - Added the ability to edit meetings via an XML or JSON semantic interface.
 
-** Version 2.5.3 **
+** Version 2.5.3**
+
 - November 27, 2014 (Happy Thanksgiving!)
 - The 2.5.2 "fix" was inadequate. I needed to make the "other" field editing more robust.
 
-** Version 2.5.2 **
+** Version 2.5.2**
+
 - November 26, 2014
 - The 2.5.1 fix exposed another bug in administering the "other" fields.
 
-** Version 2.5.1 **
+** Version 2.5.1**
+
 - November 26, 2014
 - Fixed a typo that interfered with the new arbitrary fields functionality.
 
-** Version 2.5.0 **
+** Version 2.5.0**
+
 - November 23, 2014
 - Added support for arbitrary fields in meetings (had neglected to support these after the 2.0 release).
 
-** Version 2.4.10 **
+** Version 2.4.10**
+
 - October 14, 2014
 - Fixed another issue, where simple searches weren't sorting properly (again, overzealous warning compensation).
 
-** Version 2.4.9 **
+** Version 2.4.9**
+
 - October 13, 2014
 - Fixed another issue, where meeting edits were being ignored (again, overzealous warning compensation).
 
-** Version 2.4.8 **
+** Version 2.4.8**
+
 - October 12, 2014
 - Fixed an issue where low-numbered ASCs and RSCs did not have leading zeroes in the NAWS export, which could cause issues for NAWS.
 - Fixed a couple of issues with the meeting editors, where inactive anchor elements could cause "page not found" errors.
 - Fixed a bug, where searching for selected weekdays, formats or languages stopped working.
 
-** Version 2.4.7 **
+** Version 2.4.7**
+
 - October 9, 2014
 - Added an ID to the weekday sections of the simple response (allows easy linking on display pages).
 - Fixed a number of warnings.
 - Added some satellite fixes.
 - Fixed a rather nasty error in the semantic response that could have caused a lot of bad search results. I'm shocked I haven't heard anything.
 
-** Version 2.4.6 **
+** Version 2.4.6**
+
 - August 19, 2014
 - Fixed an issue with apostrophes (') causing problems.
 - Added a user-agent to the cCURL calls, as some servers filter out cURL calls.
 - Added a simpler, more direct semantic access to NAWS dumps.
 
-** Version 2.4.5 **
+** Version 2.4.5**
+
 - July 10, 2014
 - Added true Spanish localization to the Root Server.
 - Added a cookie for storing the selected language.
@@ -118,7 +131,8 @@ CHANGELIST
 - Added a weekday wrapper around block mode simple responses. This allows better integration of search results with CSS.
 - Fixed an issue with double-quotes entered on some servers.
 
-** Version 2.4.4 **
+** Version 2.4.4**
+
 - June 9, 2014
 - Fixed a bug in the semantic interfaces that caused problems with clients. If a meeting had no name, a blank name was returned. It now returns a generic "NA Meeting".
 - Fixed a bug in the administration system that prevented logins after a logout.
@@ -221,7 +235,8 @@ CHANGELIST
 
 ** Version 2.1.9 ** =
 - December 12, 2013
-- Fixed a very small bug in the simple output. This would only affect rare installations. If a single_meeting_id** link was provided, it would not resolve properly. **
+- Fixed a very small bug in the simple output. This would only affect rare installations. If a single_meeting_id** link was provided, it would not resolve properly.**
+
 
 ** Version 2.1.8 ** =
 - December 11, 2013
@@ -270,7 +285,8 @@ CHANGELIST
 - Fixed a bug in the meeting editor, where setting the map to an address did not activate the save button.
 - Added GPX, KML and POI/CSV export options to the semantic interface.
 
-** Version 2.0.34 **
+** Version 2.0.34**
+
 - October 19, 2013
 - Fixed a bug in the XML/JSON export, where empty fields could result in incorrect data.
 
@@ -616,15 +632,18 @@ CHANGELIST
 - Simplified the administration, and got rid of all client-side root server HTML. All clients are now required to communicate with the root via semantic interfaces (JSON/XML/CSV).
 - The server administration is now heavily AJAX-based, and is now a completely interactive Web app.
 
-** Version 1.10.3 **
+** Version 1.10.3**
+
 - January 16, 2013
 - Added a "GetServiceBodies" variant to the semantic export.
 
-** Version 1.10.2 **
+** Version 1.10.2**
+
 - January 8, 2013
 - The miles from search center value was incorrect (improper conversion from Km). This has been fixed.
 
-** Version 1.10.1 **
+** Version 1.10.1**
+
 - The main change in this version is that the formats can be exported so that only the ones actually used in the search are given.
 
 ** Version 1.9 ** =
