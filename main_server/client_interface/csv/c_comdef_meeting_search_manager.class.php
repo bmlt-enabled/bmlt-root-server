@@ -1420,7 +1420,7 @@ class c_comdef_meeting_search_manager
 	function GetSquareForRadius ( $in_weekday_tinyint_array	///< An array of weekdays in which to filter for.
 								)
 	{
-		$loc = null;
+		$loc = array ();
 		
 		if ( $this->_search_radius_count )
 			{

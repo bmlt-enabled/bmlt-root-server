@@ -2462,7 +2462,6 @@ class c_comdef_server
                                     )
     {
         $ret = null;
-        $current_radius = 25.0;
         
         $localized_strings = self::GetLocalStrings();
         $sql1 = "SELECT COUNT(*) FROM `".self::GetMeetingTableName_obj()."_main` WHERE";
@@ -2505,67 +2504,34 @@ class c_comdef_server
             $sql3 = ")";
             }
 
-        $count = 0;
-
-        $was_less = false;
         $ranges = $localized_strings['comdef_map_radius_ranges'];
-        $max = floatval ( $ranges[count ( $ranges ) - 1] );
-        
-        do
+        $current_radius = 0.0;
+
+        foreach ( $ranges as $radius )
             {
-            $current_hunt_value = ($current_radius > 25) ? 5 : (($current_radius > 1) ? 0.5 : .0625);
+            $radius = floatval ( $radius ) * (($localized_strings['dist_units'] == 'mi') ? 1.609344 : 1.0);
+            $current_radius = $radius;
             
-            $square = self::GetSquareForRadius ( $current_radius, $in_long_in_degrees, $in_lat_in_degrees );
+            $square = self::GetSquareForRadius ( $radius, $in_long_in_degrees, $in_lat_in_degrees );
             
             $sql2 = self::GetRadiusSQL ( $square );
             
             $sql = $sql1.$sql2.$sql3;
             
-            $rows = c_comdef_dbsingleton::preparedQuery( $sql, array() );
-
+            $rows = c_comdef_dbsingleton::preparedQuery ( $sql, array() );
+            
+            $count = 0;
+            
             if ( is_array ( $rows ) && count ( $rows ) )
                 {
                 $count = intval ( $rows[0]["count(*)"] );
-
-                if ( $in_search_result_count > $count  )
-                    {
-                    $current_radius += $current_hunt_value;
-                    $was_less = true;
-                    }
-                else
-                    {
-                    if ( $was_less )
-                        {
-                        foreach ( $ranges as $range )
-                            {
-                            $range_comp = $range;
-                            if ( $localized_strings['dist_units'] == 'mi' )
-                                {
-                                $range_comp *= 1.609344;
-                                $range *= 1.609344;
-                                }
-                            
-                            if ( $current_radius <= $range_comp )
-                                {
-                                return $range;
-                                }
-                            }
-                        break;
-                        }
-                    else
-                        {
-                        $was_less = false;
-                        $current_radius -= $current_hunt_value;
-                        }
-                    }
-                }
-            else
-                {
-                break;
-                }
             
-            } while ( ($current_radius > 0.0625) && ($current_radius < 100) );
-        
+                if ( $count > $in_search_result_count  )
+                    {
+                    break;
+                    }
+                }
+            }
         return $current_radius;
     }
     
@@ -2628,29 +2594,31 @@ class c_comdef_server
             {
             $lang_enum = $server->GetLocalLang();
             
-            if ( isset ( $_GET['lang_enum'] ) && $_GET['lang_enum'] && file_exists ( dirname ( __FILE__ ).'/../local_server/server_admin/lang/'.$_GET['lang_enum'] ) )
+            if ( isset ( $_GET['lang_enum'] ) && $_GET['lang_enum'] && file_exists ( dirname ( dirname ( __FILE__ ) ).'/local_server/server_admin/lang/'.$_GET['lang_enum'] ) )
                 {
                 $lang_enum = $_GET['lang_enum'];
                 }
         
-            if ( isset ( $_POST['lang_enum'] ) && $_POST['lang_enum'] && file_exists ( dirname ( __FILE__ ).'/../local_server/server_admin/lang/'.$_POST['lang_enum'] ) )
+            if ( isset ( $_POST['lang_enum'] ) && $_POST['lang_enum'] && file_exists ( dirname ( dirname ( __FILE__ ) ).'/local_server/server_admin/lang/'.$_POST['lang_enum'] ) )
                 {
                 $lang_enum = $_POST['lang_enum'];
                 }
             
-            if ( $in_lang_enum && file_exists ( dirname ( __FILE__ ).'/../local_server/server_admin/lang/'.$in_lang_enum ) )
+            if ( $in_lang_enum && file_exists ( dirname ( dirname ( __FILE__ ) ).'/local_server/server_admin/lang/'.$in_lang_enum ) )
                 {
                 $lang_enum = $in_lang_enum;
                 }
             include ( dirname ( __FILE__ )."/config/comdef-config.inc.php" );
-            include ( dirname ( __FILE__ ).'/../local_server/server_admin/lang/'.$lang_enum.'/server_admin_strings.inc.php' );
+            include ( dirname ( dirname ( __FILE__ ) ).'/local_server/server_admin/lang/'.$lang_enum.'/server_admin_strings.inc.php' );
 
             global  $comdef_global_more_details_address,    ///< This is a format string for the way the address line is displayed in the "more details" screen.
                     $comdef_global_list_address;            ///< The same, but for the list.
         
-            c_comdef_server::$server_local_strings['name'] = file_get_contents ( dirname ( __FILE__ ).'/../local_server/server_admin/lang/'.$lang_enum.'/name.txt' );
+            c_comdef_server::$server_local_strings['name'] = file_get_contents ( dirname ( dirname ( __FILE__ ) ).'/local_server/server_admin/lang/'.$lang_enum.'/name.txt' );
             c_comdef_server::$server_local_strings['enum'] = $lang_enum;
-            c_comdef_server::$server_local_strings['comdef_map_radius_ranges'] = (isset ( $comdef_map_radius_ranges ) && is_array ( $comdef_map_radius_ranges ) && count ( $comdef_map_radius_ranges )) ? $comdef_map_radius_ranges : array ( 0.125, 0.25, 0.5, 0.75, 1.0, 2.0, 5.0, 10.0, 15.0, 20.0, 25.0, 30.0, 40.0, 50.0, 60.0, 80.0, 100.0 );
+            c_comdef_server::$server_local_strings['comdef_map_radius_ranges'] = (isset ( $comdef_map_radius_ranges ) && is_array ( $comdef_map_radius_ranges ) && count ( $comdef_map_radius_ranges )) ?
+                                                                                    $comdef_map_radius_ranges :
+                                                                                    array ( 0.1, 100.0 );   ///< The default range (min, max), in Km.
             c_comdef_server::$server_local_strings['region_bias'] = isset ( $region_bias ) ? $region_bias : '';
             c_comdef_server::$server_local_strings['default_duration_time'] = isset ( $default_duration_time ) ? $default_duration_time : '1:00:00';
             c_comdef_server::$server_local_strings['search_spec_map_center'] = $search_spec_map_center;

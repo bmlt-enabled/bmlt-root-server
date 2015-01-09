@@ -51,7 +51,8 @@ CHANGELIST
 - TBD
 - Tweaked the syntax of this document's changelist slightly, to make it more readable.
 - Fixed a minor bug, where the initial Service Body Editor NAWS Dump URI was not the new publicly-accessible one.
-- Added a default set of distance ranges for the radius hunt, and made the radius hunt more configurable. This was a request from a largely rural community.
+- Greatly simplified the distance search functionality, and allow it to be customized. This was a request from a largely rural community.
+- Added a default set of distance ranges for the radius hunt.
 
 ** Version 2.6.1**
 
