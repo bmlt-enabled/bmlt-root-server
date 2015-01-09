@@ -48,10 +48,10 @@ CHANGELIST
 ----------
 ** Version 2.6.2**
 
-- TBD
-- Tweaked the syntax of this document's changelist slightly, to make it more readable.
+- January 9, 2015
+- Tweaked the syntax of this document's changelist to be full markdown, to make it more readable on BitBucket.
 - Fixed a minor bug, where the initial Service Body Editor NAWS Dump URI was not the new publicly-accessible one.
-- Greatly simplified the distance search functionality, and allow it to be customized. This was a request from a largely rural community.
+- Greatly simplified the distance search functionality, and now allow it to be customized. This was a request from a largely rural community.
 - Added a default set of distance ranges for the radius hunt.
 
 ** Version 2.6.1**
@@ -501,7 +501,7 @@ CHANGELIST
 - There are 3 open bugs in this release that need to be addressed in a near-future "point release":
     7) Swedish Language Ümlauts Result In Bad Location Searches
         This expresses itself in satellite searches, but is probably a root server bug.
-        Search for these cities, using the Swedish root server ( http://www.nasverige.org/bmlt ):
+        Search for these cities, using [the Swedish root server](http://www.nasverige.org/bmlt):
             Malmö
             Strängnäs
             Göteborg
@@ -987,8 +987,8 @@ CHANGELIST
     - Added an "Observer" user level. This is a "read-only" user that can see hidden fields in meetings for which they are authorized. This is how helplines can see contacts for meetings.
     - Added a "no_print" class to the "Contact Us About This Meeting" link.
     - Added the ability to specify a banner over the login. This helps to reduce confusion for "practice" servers.
-    - Fixed <a href="http://sourceforge.net/tracker/?func=detail&aid=3013722&group_id=228122&atid=1073410">a bug</a>, in which "zombie markers" could come back after a zoom.
-    - Fixed <a href="http://sourceforge.net/tracker/?func=detail&aid=3014328&group_id=228122&atid=1073410">a bug</a>, in which parentheses in meeting names caused bad map URIs.
+    - Fixed [a bug](http://sourceforge.net/tracker/?func=detail&aid=3013722&group_id=228122&atid=1073410), in which "zombie markers" could come back after a zoom.
+    - Fixed [a bug](http://sourceforge.net/tracker/?func=detail&aid=3014328&group_id=228122&atid=1073410), in which parentheses in meeting names caused bad map URIs.
     - Added "belt and suspenders" email validation to the contact form.
     
 - June 5, 2010 -1.5.12 Release
@@ -1106,7 +1106,7 @@ CHANGELIST
     - Now ensure that unauthorized sessions are destroyed.
     
 - January 1, 2010 - 1.3.7 Release
-    - Had to take out <a href="http://us2.php.net/manual/en/function.session-regenerate-id.php">session_regenerate_id()</a>. It caused problems with Chrome.
+    - Had to take out [session_regenerate_id()](http://us2.php.net/manual/en/function.session-regenerate-id.php). It caused problems with Chrome.
     - Fixed a series of sorting bugs in PHP 5.1.X
     - Removed the strings for the two awkward alerts that are no longer given when adding users or Service Bodies.
     - Fixed a bug in the format editor that could result in "clashes" with existing format IDs.
@@ -1361,7 +1361,7 @@ CHANGELIST
     - Disabled the change rollback feature for meetings. It isn't working properly, and the fix would be too drastic at this stage.
     
 - June 16, 2009 -1.0RC4 Release
-    - Changed the name of the WordPress plugin, as it is now available from <a href="http://wordpress.org/extend/plugins/bmlt-wordpress-satellite-plugin/">WordPress.org</a>. This means that any prior installs need to first, deactivate, then reinstall and reactivate the new plugin. However, after this, it will be able to be auto-updated.
+    - Changed the name of the WordPress plugin, as it is now available from [WordPress.org](http://wordpress.org/extend/plugins/bmlt-wordpress-satellite-plugin/). This means that any prior installs need to first, deactivate, then reinstall and reactivate the new plugin. However, after this, it will be able to be auto-updated.
     - Fixed a reported bug, in which some of the files used the wrong line-endings.
     
 - June 14, 2009 -1.0RC3 Release
@@ -1394,7 +1394,7 @@ CHANGELIST
     - Added a shortcut icon.
     - Fixed <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=2801941&group_id=228122&atid=1073410">a bug</a> in WebKit browsers, where the initial map in Basic mode comes up skewed.
     - Wrote an installer "wizard" to make installing a new root server fairly simple.
-    - Bundled a "raw" root server into a single <a href="http://comdef.svn.sourceforge.net/viewvc/comdef/tags/1.0b4/main_server.zip">downloadable zip file</a>.
+    - Bundled a "raw" root server into a single [downloadable zip file](http://comdef.svn.sourceforge.net/viewvc/comdef/tags/1.0b4/main_server.zip).
     
 - June 1, 2009 -1.0b3 Release
     - Fixed an admin bug that prevented a user from changing their own password or login.
@@ -1426,9 +1426,9 @@ CHANGELIST
     - Fixed a couple of more admin bugs introduced by the new setup for a standalone server.
     - Fixed a bug that was introduced by a lame attempt to spackle over another bug. Let this be a lesson: ALWAYS FIX IT -DON'T WORKAROUND!
     - Fixed a bug in which the proper JavaScript AJAX URIs were not being set up because of the new indirect index. This only affected control panel admin operations.
-    - The <a href="http://comdef.svn.sourceforge.net/viewvc/comdef/trunk/satellite_server/drupal/">Drupal Module</a> is done.
-    - The <a href="http://comdef.svn.sourceforge.net/viewvc/comdef/trunk/satellite_server/joomla/">Joomla Module</a> is done.
-    - The <a href="http://comdef.svn.sourceforge.net/viewvc/comdef/trunk/satellite_server/wordpress/">WordPress Module</a> is done.
+    - The [Drupal Module](http://comdef.svn.sourceforge.net/viewvc/comdef/trunk/satellite_server/drupal/) is done.
+    - The [Joomla Module](http://comdef.svn.sourceforge.net/viewvc/comdef/trunk/satellite_server/joomla/) is done.
+    - The [WordPress Module](http://comdef.svn.sourceforge.net/viewvc/comdef/trunk/satellite_server/wordpress/) is done.
     - Rearranged the location of the submit button in the various plugin admin pages.
     - Removed a server call in the initial form that slowed down the display of the form by about a second and a half.
     - Added a useful profiler class to the utilities.
@@ -1451,22 +1451,22 @@ CHANGELIST
     - Added an "admin bar" that allows access to the various admin areas when logged in as an admin.
     - Fixed a number of JavaScript issues for logged-in admins.
     - Fixed some IE6 issues (STILL NOT FIXED: Clicking a Region checkbox in Advanced Search does not visibly affect enclosed checkboxes).
-    - Added the meta tag <a href="http://msdn.microsoft.com/en-us/library/cc817574.aspx">as recommended by Microsoft</a>, to correct for IE8 deficiencies.
+    - Added the meta tag [as recommended by Microsoft](http://msdn.microsoft.com/en-us/library/cc817574.aspx), to correct for IE8 deficiencies.
     
 - May 15, 2009 -1.0a3 Release
     - Fixed a few WAI AAA issues.
     - Fixed a couple of XHTML 1.0 Strict violations.
     - Do an isset() check on the cookie in the login to prevent warnings.
-    - Made sure <a href="http://icab.de">iCab</a> smiles on every page.
+    - Made sure [iCab](http://icab.de) smiles on every page.
     - <a href="https://sourceforge.net/tracker/?func=detail&aid=2791909&group_id=228122&atid=1073410">Removed the Google Bar</a>. They're gonna stick ads on it, so bye-bye.
     - Fixed a bug in which the GPS POI wasn't downloading correctly for the single meeting display.
     - An older version text editor must have polluted many files with garbage characters. This is fixed.
     - Fixed some styling issues for browsers with JS disabled.
-    - Added the <a href="http://msdn.microsoft.com/en-us/library/cc817574.aspx">X-UA-Compatible Meta Tag</a> to the local server.
+    - Added the [X-UA-Compatible Meta Tag](http://msdn.microsoft.com/en-us/library/cc817574.aspx) to the local server.
     
 - May 14, 2009 -1.0a2 Release
-    - Fixed <a href="http://sourceforge.net/tracker/?func=detail&aid=2791387&group_id=228122&atid=1073410">Bug in Meeting Administration, where meetings need to reflect changes in List View</a>
-    - Fixed <a href="http://sourceforge.net/tracker/?func=detail&aid=2791843&group_id=228122&atid=1073410">Bug in Meeting Administration, where the weekday popup menu set the wrong weekday</a>
-    - Added the first iteration of the <a href="http://magshare.magnaws.com/comdef/UserManual/">User Guide</a>
+    - Fixed [a bug](http://sourceforge.net/tracker/?func=detail&aid=2791387&group_id=228122&atid=1073410) in Meeting Administration, where meetings need to reflect changes in List View</a>
+    - Fixed [a bug](http://sourceforge.net/tracker/?func=detail&aid=2791843&group_id=228122&atid=1073410) in Meeting Administration, where the weekday popup menu set the wrong weekday</a>
+    - Added the first iteration of [the User Guide](http://magshare.magnaws.com/comdef/UserManual/)
 
 - May 11, 2009 -1.0a1 Release
