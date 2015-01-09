@@ -17,14 +17,14 @@ You can find out way too much about the BMLT on [the BMLT Documentation Site](ht
 This project is the "root" server for the BMLT. It is the "server" part of the BMLT
 "client/server" architecture.
 
-The project is actually several years old. To see the pre-GitHub history, visit the
+The project is actually several years old. To see the pre-[GitHub](http://github.com) history, visit the
 original SourceForge page at [the Original SourceForge Page](https://sourceforge.net/projects/comdef/).
 
-I decided to start new on GitHub, as opposed to bringing over the SourceForge project,
+I decided to start new on [GitHub](http://github.com), as opposed to bringing over the SourceForge project,
 in order to reduce disk space usage, and because it's a pain to rearrange a standard
 SVN structure to Git.
 
-NOTE: The repository origin has been transferred to Bitbucket! GitHub is now only archival (ends at version 2.0.2).
+NOTE: The repository origin has been transferred to [Bitbucket](http://bitbucket.org)! [GitHub](http://github.com) is now only archival (ends at version 2.0.2).
 
 REQUIREMENTS
 ------------
@@ -49,7 +49,7 @@ CHANGELIST
 ** Version 2.6.2**
 
 - January 9, 2015
-- Tweaked the syntax of this document's changelist to be full markdown, to make it more readable on BitBucket.
+- Tweaked the syntax of this document's changelist to be full markdown, to make it more readable on [Bitbucket](http://bitbucket.org).
 - Fixed a minor bug, where the initial Service Body Editor NAWS Dump URI was not the new publicly-accessible one.
 - Greatly simplified the distance search functionality, and now allow it to be customized. This was a request from a largely rural community.
 - Added a default set of distance ranges for the radius hunt.
@@ -478,7 +478,7 @@ CHANGELIST
 
 - April 21, 2013
 - Rewrote the text search for non-location text. It was not handling non-Roman text properly.
-- This is the first release on Bitbucket
+- This is the first release on [Bitbucket](http://bitbucket.org)
 
 ** Version 2.0.2 **
 
@@ -826,7 +826,7 @@ CHANGELIST
 ** Version 1.8.29 **
 
 - June 4, 2011
-- Initial check-in of GitHub project
+- Initial check-in of [GitHub](http://github.com) project
 
 	************* ORIGINAL SVN CHANGELOG (From SourceForge) *************
 
@@ -1458,7 +1458,7 @@ CHANGELIST
     - Fixed a couple of XHTML 1.0 Strict violations.
     - Do an isset() check on the cookie in the login to prevent warnings.
     - Made sure [iCab](http://icab.de) smiles on every page.
-    - <a href="https://sourceforge.net/tracker/?func=detail&aid=2791909&group_id=228122&atid=1073410">Removed the Google Bar</a>. They're gonna stick ads on it, so bye-bye.
+    - [Removed the Google Bar](https://sourceforge.net/tracker/?func=detail&aid=2791909&group_id=228122&atid=1073410). They're gonna stick ads on it, so bye-bye.
     - Fixed a bug in which the GPS POI wasn't downloading correctly for the single meeting display.
     - An older version text editor must have polluted many files with garbage characters. This is fixed.
     - Fixed some styling issues for browsers with JS disabled.
