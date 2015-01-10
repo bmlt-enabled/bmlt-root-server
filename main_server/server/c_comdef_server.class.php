@@ -2398,7 +2398,7 @@ class c_comdef_server
         
         return $loc;
     }
-    
+        
     /*******************************************************************/
     /** \brief Return SQL for the given coordinates.
         
@@ -2433,6 +2433,70 @@ class c_comdef_server
     
         return $sql;
     }
+    
+    /*******************************************************************/
+    /** \brief Return SQL for a radius circle around the given coordinates.
+               This is a special function for MySQL.
+        
+        \returns a string, containing the SQL clause.
+                 This will be a prepared statement, with variable slots for:
+                 latitude of the centerpoint, in degrees (floating-point)
+                 longitude of the centerpoint, in degrees (floating point)
+                 radius, in kilometers (floating point)
+                 if $in_published is TRUE, then there will be an additional placeholder for published (0 not published, 1, published)
+                 There will be an additional 'distance' slot in the response, with the distance from the centerpoint.
+                 A limit. This should be 10 more than what we are looking for. This speeds up the query.
+    */
+    static function MySQLGetRadiusSQLClause (   
+                                                $in_published = FALSE,  ///< If TRUE, then we will have a slot for published status.
+                                                $in_weekday = NULL      ///< THis is an array of weekdays we are looking for (integers).
+                                                )
+    {
+        // I adapted this from here: http://www.plumislandmedia.net/mysql/haversine-mysql-nearest-loc/ Thanks, Ollie!
+        $sql = "SELECT COUNT(*) FROM ( SELECT  *,
+        p.distance_unit
+                 * DEGREES(ACOS(COS(RADIANS(p.latpoint))
+                 * COS(RADIANS(z.latitude))
+                 * COS(RADIANS(p.longpoint) - RADIANS(z.longitude))
+                 + SIN(RADIANS(p.latpoint))
+                 * SIN(RADIANS(z.latitude)))) AS distance
+        FROM `".self::GetMeetingTableName_obj()."_main` AS z
+        JOIN (   /* these are the query parameters */
+            SELECT  ?  AS latpoint,  ? AS longpoint,
+                    ? AS radius,      111.045 AS distance_unit
+        ) AS p ON 1=1
+        WHERE z.latitude
+         BETWEEN p.latpoint  - (p.radius / p.distance_unit)
+             AND p.latpoint  + (p.radius / p.distance_unit)
+        AND z.longitude
+         BETWEEN p.longpoint - (p.radius / (p.distance_unit * COS(RADIANS(p.latpoint))))
+             AND p.longpoint + (p.radius / (p.distance_unit * COS(RADIANS(p.latpoint))))
+        ORDER BY distance
+        ) AS d
+        WHERE (distance <= radius)";
+        
+        if ( $in_published )
+            {
+            $sql .= " AND (published = ?)";
+            }
+        
+        if (is_array ( $in_weekday ) && count ( $in_weekday ) )
+            {
+            $wd_array = array();
+            $sql .= " AND (";
+            foreach ( $in_weekday as $weekday )
+                {
+                $wd_array[] = "(weekday_tinyInt = ".intval ( $weekday ).")";
+                }
+            
+            $sql .= implode ( " OR ", $wd_array ). ")";
+            }
+        
+        $sql .= "\nORDER BY distance;";
+        
+        return $sql;
+    }
+
     /*******************************************************************/
     /** \brief Find the smallest radius that contains at least the given number of meetings.
         The way this works is that the center is set, and the optimal
@@ -2511,14 +2575,34 @@ class c_comdef_server
             {
             $radius = floatval ( $radius ) * (($localized_strings['dist_units'] == 'mi') ? 1.609344 : 1.0);
             $current_radius = $radius;
+            $arr =  array ();
             
-            $square = self::GetSquareForRadius ( $radius, $in_long_in_degrees, $in_lat_in_degrees );
+            // START: This is a special SQL query that is far more accurate than the regular one.
+            $show_published_only = (c_comdef_server::GetServer()->GetCurrentUserObj() == NULL);
+            $arr = array ( $in_lat_in_degrees, $in_long_in_degrees, $radius );
             
-            $sql2 = self::GetRadiusSQL ( $square );
+            if ( $show_published_only )
+                {
+                $arr[] = TRUE;
+                }
             
-            $sql = $sql1.$sql2.$sql3;
+            $sql = c_comdef_server::MySQLGetRadiusSQLClause ( $show_published_only, $in_weekday_tinyint_array );
+            // END: Special MySQL
             
-            $rows = c_comdef_dbsingleton::preparedQuery ( $sql, array() );
+// This code is good for non-MySQL (and MySQL).
+//             $square = self::GetSquareForRadius ( $radius, $in_long_in_degrees, $in_lat_in_degrees );
+//             
+//             $sql2 = self::GetRadiusSQL ( $square );
+//             
+//             $sql = $sql1.$sql2.$sql3;
+            
+            try {
+                $rows = c_comdef_dbsingleton::preparedQuery ( $sql, $arr );
+                }
+            catch ( Exception $e )
+                {
+                break;
+                }
             
             $count = 0;
             

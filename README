@@ -46,6 +46,11 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+** Version 2.6.3**
+
+- TBD
+- Added some special SQL sauce for the distance search that makes distance searching more accurate.
+
 ** Version 2.6.2**
 
 - January 9, 2015
