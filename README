@@ -46,10 +46,12 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+
 ** Version 2.6.3**
 
 - TBD
-- Added some special SQL sauce for the distance search that makes distance searching more accurate.
+- Added some more steps to the the default values for the "auto-range," and expanded it to up to 200 miles.
+- Added some special SQL sauce for the distance search that makes distance searching more accurate (It now uses a Haversine formula in the initial database triage). It will tend to return more meetings, but not a whole ton more. Basically, it just improves the quality of the auto-range. This works well with the new added steps.
 
 ** Version 2.6.2**
 
