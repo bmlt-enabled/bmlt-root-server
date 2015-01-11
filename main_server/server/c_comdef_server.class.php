@@ -2398,41 +2398,6 @@ class c_comdef_server
         
         return $loc;
     }
-        
-    /*******************************************************************/
-    /** \brief Return SQL for the given coordinates.
-        
-        \returns a string, containing the SQL clause.
-        
-        \throws an exception if the SQL query fails.
-    */
-    static function GetRadiusSQL ( $in_search_rect_array    /**< An array of floating-point values.
-                                                                    - ['east'] = longitude of the Eastern side of the rectangle
-                                                                    - ['west'] = longitude of the Western side of the rectangle
-                                                                    - ['north'] = latitude of the Northern side of the rectangle
-                                                                    - ['south'] = latitude of the Southern side of the rectangle
-                                                            */
-                                )
-    {
-        $east = floatval ( $in_search_rect_array['east'] );
-        $west = floatval ( $in_search_rect_array['west'] );
-        $north = floatval ( $in_search_rect_array['north'] );
-        $south = floatval ( $in_search_rect_array['south'] );
-        $sql = " (";
-            if ( $east > $west )
-                {
-                $sql .= "(longitude >= $west) AND (longitude <= $east)";
-                }
-            else
-                {
-                $sql .= "(longitude <= $west) AND (longitude >= $east)";
-                }
-            
-            $sql .= " AND (latitude <= $north) AND (latitude >= $south)";
-        $sql .= ")";
-    
-        return $sql;
-    }
     
     /*******************************************************************/
     /** \brief Return SQL for a radius circle around the given coordinates.
@@ -2462,8 +2427,8 @@ class c_comdef_server
                  * SIN(RADIANS(z.latitude)))) AS distance
         FROM `".self::GetMeetingTableName_obj()."_main` AS z
         JOIN (   /* these are the query parameters */
-            SELECT  ?  AS latpoint,  ? AS longpoint,
-                    ? AS radius,      111.045 AS distance_unit
+            SELECT  ? AS latpoint,  ? AS longpoint,
+                    ? AS radius,    111.045 AS distance_unit
         ) AS p ON 1=1
         WHERE z.latitude
          BETWEEN p.latpoint  - (p.radius / p.distance_unit)
@@ -2471,7 +2436,6 @@ class c_comdef_server
         AND z.longitude
          BETWEEN p.longpoint - (p.radius / (p.distance_unit * COS(RADIANS(p.latpoint))))
              AND p.longpoint + (p.radius / (p.distance_unit * COS(RADIANS(p.latpoint))))
-        ORDER BY distance
         ) AS d
         WHERE (distance <= radius)";
         
@@ -2577,8 +2541,7 @@ class c_comdef_server
             $current_radius = $radius;
             $arr =  array ();
             
-            // START: This is a special SQL query that is far more accurate than the regular one.
-            $show_published_only = (c_comdef_server::GetServer()->GetCurrentUserObj() == NULL);
+            $show_published_only = (c_comdef_server::GetServer()->GetCurrentUserObj() == NULL); // We only show published meetings to regular users.
             $arr = array ( $in_lat_in_degrees, $in_long_in_degrees, $radius );
             
             if ( $show_published_only )
@@ -2587,14 +2550,6 @@ class c_comdef_server
                 }
             
             $sql = c_comdef_server::MySQLGetRadiusSQLClause ( $show_published_only, $in_weekday_tinyint_array );
-            // END: Special MySQL
-            
-// This code is good for non-MySQL (and MySQL).
-//             $square = self::GetSquareForRadius ( $radius, $in_long_in_degrees, $in_lat_in_degrees );
-//             
-//             $sql2 = self::GetRadiusSQL ( $square );
-//             
-//             $sql = $sql1.$sql2.$sql3;
             
             try {
                 $rows = c_comdef_dbsingleton::preparedQuery ( $sql, $arr );
