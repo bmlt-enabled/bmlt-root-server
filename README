@@ -47,11 +47,17 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
+** Version 2.6.4**
+
+- TBD
+- Added the main table fields to the data templates in the semantic admin.
+- Now allow the language to be forced when instantiating the server object (minimally useful, but should be in place).
+
 ** Version 2.6.3**
 
 - January 11, 2015
 - Added some more steps to the the default values for the "auto-range," and expanded it to up to 200 miles.
-- Added some special SQL sauce for the distance search that makes distance searching more accurate (It now uses a Haversine formula in the initial database triage). It will tend to return more meetings, but not a whole ton more. Basically, it just improves the quality of the auto-range. This works well with the new added steps.
+- Added some special SQL sauce for the distance search that makes distance searching more accurate (It now uses a simple [Haversine](http://en.wikipedia.org/wiki/Haversine_formula) formula, executed in SQL, in the initial database triage). It will tend to return more meetings, but not a whole ton more. Basically, it just improves the quality of the auto-range. This works well with the new added steps.
 
 ** Version 2.6.2**
 

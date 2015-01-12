@@ -335,7 +335,21 @@
                                                                                                                 'Y'	    =>	'Ungdomsmöte',   
                                                                                                                 'LANG'  =>  'Alternativt språk'
                                                                                                             ),
-                                            'cookie_monster'                                        =>  'Denna sida använder cookies för att minnas ditt språkval.'
+                                            'cookie_monster'                                        =>  'Denna sida använder cookies för att minnas ditt språkval.',
+                                            'main_prompts'                                          =>  array ( 'id_bigint' => 'ID',
+                                                                                                                'worldid_mixed' => 'World ID',
+                                                                                                                'shared_group_id_bigint' => 'Unused',
+                                                                                                                'service_body_bigint' => 'Service Body ID',
+                                                                                                                'weekday_tinyint' => 'Weekday',
+                                                                                                                'start_time' => 'Start Time',
+                                                                                                                'duration_time' => 'Duration',
+                                                                                                                'formats' => 'Formats',
+                                                                                                                'lang_enum' => 'Language',
+                                                                                                                'longitude' => 'Longitude',
+                                                                                                                'latitude' => 'Latitude',
+                                                                                                                'published' => 'Published',
+                                                                                                                'email_contact' => 'Email Contact',
+                                                                                                                )
 	                                    );
 
 	$email_contact_strings = array (

@@ -782,8 +782,34 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 	*/
 	static function GetMainDataTemplate()
 	{
+	    global $comdef_global_language;
+        
+        $localized_strings = c_comdef_server::GetLocalStrings();
+        
 	    $ret = array();
 	    
+	    $ret['id_bigint']['key'] = 'id_bigint';
+	    $ret['worldid_mixed']['key'] = 'worldid_mixed';
+	    $ret['shared_group_id_bigint']['key'] = 'shared_group_id_bigint';
+	    $ret['service_body_bigint']['key'] = 'service_body_bigint';
+	    $ret['weekday_tinyint']['key'] = 'weekday_tinyint';
+	    $ret['start_time']['key'] = 'start_time';
+	    $ret['duration_time']['key'] = 'duration_time';
+	    $ret['formats']['key'] = 'formats';
+	    $ret['lang_enum']['key'] = 'lang_enum';
+	    $ret['longitude']['key'] = 'longitude';
+	    $ret['latitude']['key'] = 'latitude';
+	    $ret['published']['key'] = 'published';
+	    $ret['email_contact']['key'] = 'email_contact';
+	    
+	    // Everything gets a lang_enum (determined by global server setting).
+	    // Almost all are visibility 0 (everyone can see).
+	    foreach ( $ret as &$elem )
+	        {
+	        $elem['visibility'] = ($elem['key'] == 'email_contact') ? 1 : 0;    // Email contact is hidden.
+	        $elem['lang_enum'] = $comdef_global_language;
+	        $elem['field_prompt'] = $localized_strings['comdef_server_admin_strings']['main_prompts'][$elem['key']];
+	        }
 	    return $ret;
 	}
 	

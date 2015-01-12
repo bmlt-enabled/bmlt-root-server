@@ -334,7 +334,21 @@
                                                                                                             'Y'	    =>	'Jovenes',
                                                                                                             'LANG'  =>  'Idioma alternativo'
                                                                                                             ),
-                                            'cookie_monster'                                        =>  'Este sitio utiliza cookies para almacenar su idioma preferido.'
+                                            'cookie_monster'                                        =>  'Este sitio utiliza cookies para almacenar su idioma preferido.',
+                                            'main_prompts'                                          =>  array ( 'id_bigint' => 'ID',
+                                                                                                                'worldid_mixed' => 'World ID',
+                                                                                                                'shared_group_id_bigint' => 'Unused',
+                                                                                                                'service_body_bigint' => 'Service Body ID',
+                                                                                                                'weekday_tinyint' => 'Weekday',
+                                                                                                                'start_time' => 'Start Time',
+                                                                                                                'duration_time' => 'Duration',
+                                                                                                                'formats' => 'Formats',
+                                                                                                                'lang_enum' => 'Language',
+                                                                                                                'longitude' => 'Longitude',
+                                                                                                                'latitude' => 'Latitude',
+                                                                                                                'published' => 'Published',
+                                                                                                                'email_contact' => 'Email Contact',
+                                                                                                                )
 	                                    );
 
 	$email_contact_strings = array (

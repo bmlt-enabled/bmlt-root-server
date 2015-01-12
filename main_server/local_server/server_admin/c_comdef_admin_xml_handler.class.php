@@ -455,7 +455,7 @@ class c_comdef_admin_xml_handler
         if ( $this->basic_user_validation() )
             {
             // Get the template data from the database.
-            $template_data = c_comdef_meeting::GetDataTableTemplate();
+            $template_data = array_merge ( c_comdef_meeting::GetMainDataTemplate(), c_comdef_meeting::GetDataTableTemplate() );
             $template_longdata = c_comdef_meeting::GetLongDataTableTemplate();
 
             // We merge the two tables (data and longdata).
