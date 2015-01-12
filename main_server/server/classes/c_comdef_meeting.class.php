@@ -775,6 +775,19 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 	}
 	
 	/*******************************************************************/
+	/** \brief Returns an array that provides a template for the main table
+		values (the standard values).
+		
+		\returns an array with all of the _main values.
+	*/
+	static function GetMainDataTemplate()
+	{
+	    $ret = array();
+	    
+	    return $ret;
+	}
+	
+	/*******************************************************************/
 	/** \brief Returns an array that provides a template for the data table
 		values (the optional/additional values).
 		

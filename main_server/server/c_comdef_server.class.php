@@ -123,14 +123,19 @@ class c_comdef_server
         in all of the formats, which will be available in the
         GetFormatsObj() member function afterwards.
     */
-    function __construct()
+    function __construct (
+                            $in_lang_enum=NULL  ///< It is possible to force a different language via this parameter.
+                            )
     {
         global  $comdef_global_language;
+            
         try
             {
             self::SetServer ( $this );
             include ( dirname ( __FILE__ )."/config/get-config.php" );
             c_comdef_dbsingleton::init ( $dbType, $dbServer, $dbName, $dbUser, $dbPassword, 'utf8' );
+            
+            // These are all the base names of the SQL tables.
             $this->_format_table_name = $dbPrefix."_comdef_formats";
             $this->_meeting_table_name = $dbPrefix."_comdef_meetings";
             $this->_changes_table_name = $dbPrefix."_comdef_changes";
@@ -154,7 +159,19 @@ class c_comdef_server
             
             global  $http_vars;
             
-            if ( isset ( $http_vars ) && is_array ( $http_vars ) && count ( $http_vars ) && isset ( $http_vars['lang_enum'] ) )
+            if ( isset ( $in_lang_enum ) && $in_lang_enum ) // If a different language was specified, we force that into place now.
+                {
+                if ( isset ( $http_vars ) && is_array ( $http_vars ) )
+                    {
+                    $http_vars['lang_enum'] = $in_lang_enum;
+                    }
+                
+                if ( file_exists ( dirname ( __FILE__ )."/../local_server/server_admin/lang/".$in_lang_enum."/name.txt" ) )
+                    {
+                    $comdef_global_language = $in_lang_enum;
+                    }
+                }
+            elseif ( isset ( $http_vars ) && is_array ( $http_vars ) && count ( $http_vars ) && isset ( $http_vars['lang_enum'] ) )
                 {
                 $lang_name = $http_vars['lang_enum'];
                 
@@ -166,6 +183,11 @@ class c_comdef_server
             elseif ( isset ( $_SESSION ) && is_array ( $_SESSION ) && isset ( $_SESSION['lang_enum'] ) )
                 {
                 $lang_name = $_SESSION['lang_enum'];
+                
+                if ( isset ( $http_vars ) && is_array ( $http_vars ) )
+                    {
+                    $http_vars['lang_enum'] = $in_lang_enum;
+                    }
                 
                 if ( file_exists ( dirname ( __FILE__ )."/../local_server/server_admin/lang/".$lang_name."/name.txt" ) )
                     {
