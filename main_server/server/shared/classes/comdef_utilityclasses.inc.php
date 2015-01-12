@@ -20,7 +20,8 @@ function GetURLToMainServerDirectory(
                                         $inNoHTTPS = TRUE  ///< If TRUE (default), then the URI will be allowed to use HTTPS. If FALSE, then we explicitly disallow HTTPS.
                                         )
 {
-    $https = $inNoHTTPS && isset ( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'];
+    $https = $inNoHTTPS && isset ( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] && (strtolower ( $_SERVER['HTTPS'] ) != 'off');
+    
     $port = $_SERVER['SERVER_PORT'] ;
     
     if ( !$https && ($port == 443) )

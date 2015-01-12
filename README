@@ -52,6 +52,7 @@ CHANGELIST
 - TBD
 - Added the main table fields to the data templates in the semantic admin.
 - Now allow the language to be forced when instantiating the server object (minimally useful, but should be in place).
+- Fixed a bug with including files in a non-standard port server.
 
 ** Version 2.6.3**
 

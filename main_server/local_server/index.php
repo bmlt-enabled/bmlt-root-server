@@ -63,21 +63,19 @@ else
 		<meta http-equiv="Content-Script-Type" content="text/javascript" />
 		<meta http-equiv="Content-Style-Type" content="text/css" />
 <?php
-            $config_file_path = dirname ( __FILE__ ).'/../server/config/get-config.php';
-            $url_path = 'http'.((isset ( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS']) ? 's' : '').'://';
-            $url_path .= $_SERVER['SERVER_NAME'];
-            $url_path .= ((isset ( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] && ($_SERVER['SERVER_PORT'] != 443)) || ($_SERVER['SERVER_PORT'] != 80)) ? $_SERVER['SERVER_PORT'] : '';
-            $url_path .= '/'.dirname ( $_SERVER['PHP_SELF'] );
+            require_once ( dirname ( dirname ( __FILE__ ) ).'/server/shared/classes/comdef_utilityclasses.inc.php');
+            $config_file_path = dirname ( dirname ( __FILE__ ) ).'/server/config/get-config.php';
+            
             if ( file_exists ( $config_file_path ) )
                 {
                 include ( $config_file_path );
                 }
 
-            $shortcut_icon = "$url_path/local_server/server_admin/style/images/shortcut.png";
-            $stylesheet = "$url_path/local_server/server_admin/style".( defined( '__DEBUG_MODE__' ) ? '/' : '/style_stripper.php?filename=' )."styles.css";
+            $url_path = trim ( GetURLToMainServerDirectory (), '/' ).( trim ( dirname ( $_SERVER['PHP_SELF'] ) ) ? trim ( dirname ( $_SERVER['PHP_SELF'] ) ) : '' );
+            $shortcut_icon = $url_path."local_server/server_admin/style/images/shortcut.png";
+            $stylesheet = $url_path."local_server/server_admin/style".( defined( '__DEBUG_MODE__' ) ? '/' : '/style_stripper.php?filename=' )."styles.css";
             
-            require_once ( dirname ( __FILE__ ).'/../server/shared/classes/comdef_utilityclasses.inc.php');
-            require_once ( dirname ( __FILE__ ).'/../server/c_comdef_server.class.php');
+            require_once ( dirname ( dirname ( __FILE__ ) ).'/server/c_comdef_server.class.php');
             require_once ( dirname ( __FILE__ ).'/db_connect.php');
 
             DB_Connect_and_Upgrade ( );
