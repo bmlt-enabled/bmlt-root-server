@@ -17,10 +17,10 @@ require_once ( dirname ( __FILE__ )."/../spanish_metaphone.php" );
     \returns an HTTP URL, with the port (if necessary) and HTTPS (If necessary).
 */
 function GetURLToMainServerDirectory(
-                                        $inNoHTTPS = TRUE  ///< If TRUE (default), then the URI will be allowed to use HTTPS. If FALSE, then we explicitly disallow HTTPS.
+                                        $inAllowHTTPS = TRUE  ///< If TRUE (default), then the URI will be allowed to use HTTPS. If FALSE, then we explicitly disallow HTTPS.
                                         )
 {
-    $https = $inNoHTTPS && isset ( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] && (strtolower ( $_SERVER['HTTPS'] ) != 'off');
+    $https = $inAllowHTTPS && isset ( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] && (strtolower ( trim ( $_SERVER['HTTPS'] ) ) != 'off'); // IIS puts "off" in this field, so we need to test for that.
     
     $port = $_SERVER['SERVER_PORT'] ;
     
