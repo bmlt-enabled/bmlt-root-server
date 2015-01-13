@@ -30,9 +30,11 @@ function GetURLToMainServerDirectory(
         }
     
     $url_path = $_SERVER['SERVER_NAME'];
+    $file_path = str_replace ( '\\', '/', dirname ( dirname ( dirname ( dirname ( dirname ( __FILE__ ) ) ) ) ) );
+    $my_path = str_replace ( '\\', '/', dirname ( $_SERVER['PHP_SELF'] ) );
+    $subsequent_path = str_replace ( $file_path, '', $my_path );
     $url_path .= (($https && ($port != 443)) || ($port != 80)) ? ':'.$port : '';
-    $url_path_component = str_replace ( '\\', '/', dirname ( dirname ( dirname ( dirname ( dirname ( __FILE__ ) ) ) ) ) );
-    $url_path .= str_replace ( $url_path_component, '', str_replace ( '\\', '/', dirname ( dirname ( dirname ( dirname ( dirname ( __FILE__ ) ) ) ) ) ) ).'/';
+    $url_path .= $subsequent_path.'/';
     $url_path = 'http'.($https ? 's' : '').'://'.$url_path;
     return $url_path;
 }

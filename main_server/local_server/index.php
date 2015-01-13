@@ -71,9 +71,9 @@ else
                 include ( $config_file_path );
                 }
 
-            $url_path = trim ( GetURLToMainServerDirectory ().( trim ( dirname ( $_SERVER['PHP_SELF'] ) ) ? trim ( dirname ( $_SERVER['PHP_SELF'] ) ) : '' ), '/' );
-            $shortcut_icon = $url_path."/local_server/server_admin/style/images/shortcut.png";
-            $stylesheet = $url_path."/local_server/server_admin/style".( defined( '__DEBUG_MODE__' ) ? '/' : '/style_stripper.php?filename=' )."styles.css";
+            $url_path = GetURLToMainServerDirectory ();
+            $shortcut_icon = $url_path."local_server/server_admin/style/images/shortcut.png";
+            $stylesheet = $url_path."local_server/server_admin/style".( defined( '__DEBUG_MODE__' ) ? '/' : '/style_stripper.php?filename=' )."styles.css";
             
             require_once ( dirname ( dirname ( __FILE__ ) ).'/server/c_comdef_server.class.php');
             require_once ( dirname ( __FILE__ ).'/db_connect.php');
