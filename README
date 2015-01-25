@@ -47,6 +47,11 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
+** Version 2.6.5**
+
+- TBD
+- Addressed a couple of PHP warnings.
+
 ** Version 2.6.4**
 
 - January 13, 2015

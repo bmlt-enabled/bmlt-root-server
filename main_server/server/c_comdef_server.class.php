@@ -1323,7 +1323,7 @@ class c_comdef_server
         
         \returns an associative array, with references to the c_comdef_user objects for the relevant users as values, and the user IDs as keys. Null if not found.
     */
-    static function &GetUsersByLevelObj(
+    static function GetUsersByLevelObj(
                                         $in_user_level_bigint,  ///< An integer, containing the user level.
                                         $in_or_higher = false,  ///< A Boolean. Set this to true to get all users of the given level or higher (numerically lower). Default is false, so only users of the exact level are given.
                                         $in_include_disabled = false    ///< A Boolean. Set this to true to allow disabled users to be included.
@@ -2466,7 +2466,8 @@ class c_comdef_server
             $sql .= " AND (published = ?)";
             }
         
-        if (is_array ( $in_weekday ) && count ( $in_weekday ) )
+        // Belt and suspenders...
+        if ( isset ( $in_weekday ) && (NULL != $in_weekday) && is_array ( $in_weekday ) && count ( $in_weekday ) )
             {
             $wd_array = array();
             $sql .= " AND (";
