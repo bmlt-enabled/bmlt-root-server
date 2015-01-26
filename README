@@ -49,9 +49,9 @@ CHANGELIST
 
 ** Version 2.6.5**
 
-- TBD
+- January 26, 2015
 - Addressed a couple of PHP warnings.
-- Fixed a bug that could appear in a brand new install.
+- Fixed a nasty bug that could appear in a brand new install. The editor would display as blank after creating the first user.
 
 ** Version 2.6.4**
 
