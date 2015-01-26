@@ -51,6 +51,7 @@ CHANGELIST
 
 - TBD
 - Addressed a couple of PHP warnings.
+- Fixed a bug that could appear in a brand new install.
 
 ** Version 2.6.4**
 

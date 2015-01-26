@@ -1076,31 +1076,34 @@ class c_comdef_admin_main_console
     ************************************************************************************************************/
     function return_service_body_editor_button_panel ()
     {
-        $ret = '<div class="naws_link_div" id="service_body_editor_naws_link_div">';
-            $ret .= '<a id="service_body_editor_naws_link_a" href="client_interface/csv/?switcher=GetNAWSDump&sb_id='.intval ( $this->my_editable_service_bodies[0]->GetID() ).'">';
-                $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_uri_naws_format_text'] );
-            $ret .= '</a>';
-        $ret .= '</div>';
-        $ret .= '<div class="bmlt_admin_service_body_editor_button_div">';
-            $ret .= '<span class="bmlt_admin_meeting_editor_form_meeting_button_left_span">';
-                $ret .= '<a id="bmlt_admin_service_body_editor_form_service_body_save_button" href="javascript:admin_handler_object.saveServiceBody();" class="bmlt_admin_ajax_button button_disabled">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_save_button'] ).'</a>';
-                $ret .= '<span id="bmlt_admin_service_body_save_ajax_button_throbber_span" class="bmlt_admin_ajax_button_throbber_span item_hidden"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></span>';
-            $ret .= '</span>';
-            if ( $this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN )
-                {
-                $ret .= '<span id="service_body_editor_delete_span" class="bmlt_admin_meeting_editor_form_middle_button_single_span bmlt_admin_delete_button_span hide_in_new_service_body_admin">';
-                    $ret .= '<a id="bmlt_admin_meeting_editor_form_service_body_delete_button" href="javascript:admin_handler_object.deleteServiceBody();" class="bmlt_admin_ajax_button button">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_delete_button'] ).'</a>';
-                    $ret .= '<span id="bmlt_admin_service_body_delete_ajax_button_throbber_span" class="bmlt_admin_ajax_button_throbber_span item_hidden"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></span>';
-                    $ret .= '<span class="perm_checkbox_span">';
-                        $ret .= '<input type="checkbox" id="bmlt_admin_service_body_delete_perm_checkbox" />';
-                        $ret .= '<label for="bmlt_admin_service_body_delete_perm_checkbox">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_delete_perm_checkbox'] ).'</label>';
-                    $ret .= '</span>';
+        if ( is_array ( $this->my_editable_service_bodies ) && count ( $this->my_editable_service_bodies ) )
+            {
+            $ret = '<div class="naws_link_div" id="service_body_editor_naws_link_div">';
+                $ret .= '<a id="service_body_editor_naws_link_a" href="client_interface/csv/?switcher=GetNAWSDump&sb_id='.intval ( $this->my_editable_service_bodies[0]->GetID() ).'">';
+                    $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_uri_naws_format_text'] );
+                $ret .= '</a>';
+            $ret .= '</div>';
+            $ret .= '<div class="bmlt_admin_service_body_editor_button_div">';
+                $ret .= '<span class="bmlt_admin_meeting_editor_form_meeting_button_left_span">';
+                    $ret .= '<a id="bmlt_admin_service_body_editor_form_service_body_save_button" href="javascript:admin_handler_object.saveServiceBody();" class="bmlt_admin_ajax_button button_disabled">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_save_button'] ).'</a>';
+                    $ret .= '<span id="bmlt_admin_service_body_save_ajax_button_throbber_span" class="bmlt_admin_ajax_button_throbber_span item_hidden"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></span>';
                 $ret .= '</span>';
-                }
-            $ret .= '<span class="bmlt_admin_meeting_editor_form_meeting_button_right_span"><a id="bmlt_admin_service_body_editor_form_meeting_template_cancel_button" href="javascript:admin_handler_object.cancelServiceBodyEdit();" class="bmlt_admin_ajax_button button_disabled">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_cancel_button'] ).'</a></span>';
-            $ret .= '<div class="clear_both"></div>';
-        $ret .= '</div>';
-                    
+                if ( $this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN )
+                    {
+                    $ret .= '<span id="service_body_editor_delete_span" class="bmlt_admin_meeting_editor_form_middle_button_single_span bmlt_admin_delete_button_span hide_in_new_service_body_admin">';
+                        $ret .= '<a id="bmlt_admin_meeting_editor_form_service_body_delete_button" href="javascript:admin_handler_object.deleteServiceBody();" class="bmlt_admin_ajax_button button">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_delete_button'] ).'</a>';
+                        $ret .= '<span id="bmlt_admin_service_body_delete_ajax_button_throbber_span" class="bmlt_admin_ajax_button_throbber_span item_hidden"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></span>';
+                        $ret .= '<span class="perm_checkbox_span">';
+                            $ret .= '<input type="checkbox" id="bmlt_admin_service_body_delete_perm_checkbox" />';
+                            $ret .= '<label for="bmlt_admin_service_body_delete_perm_checkbox">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_delete_perm_checkbox'] ).'</label>';
+                        $ret .= '</span>';
+                    $ret .= '</span>';
+                    }
+                $ret .= '<span class="bmlt_admin_meeting_editor_form_meeting_button_right_span"><a id="bmlt_admin_service_body_editor_form_meeting_template_cancel_button" href="javascript:admin_handler_object.cancelServiceBodyEdit();" class="bmlt_admin_ajax_button button_disabled">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_cancel_button'] ).'</a></span>';
+                $ret .= '<div class="clear_both"></div>';
+            $ret .= '</div>';
+            }
+        
         return $ret;
     }
     
