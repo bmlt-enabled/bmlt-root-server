@@ -1077,7 +1077,7 @@ class c_comdef_admin_main_console
     function return_service_body_editor_button_panel ()
     {
         $ret = '<div class="naws_link_div" id="service_body_editor_naws_link_div">';
-            $ret .= '<a id="service_body_editor_naws_link_a" href=""></a>';
+            $ret .= '<a id="service_body_editor_naws_link_a" href="">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_uri_naws_format_text'] ).'</a>';
         $ret .= '</div>';
         $ret .= '<div class="bmlt_admin_service_body_editor_button_div">';
             $ret .= '<span class="bmlt_admin_meeting_editor_form_meeting_button_left_span">';

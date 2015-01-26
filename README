@@ -47,6 +47,11 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
+** Version 2.6.6**
+
+- January 26, 2015
+- Accidentally removed the text for the NAWS format dump in the Service Body Editor. This has been fixed.
+
 ** Version 2.6.5**
 
 - January 26, 2015
