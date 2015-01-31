@@ -47,6 +47,12 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
+** Version 2.6.7**
+- January 31, 2015
+- Fixed an issue with the extra fields display in the regular shortcode display details (browser).
+- Fixed an issue where the arbitrary fields were actually creating too many results (browser).
+- Now hide the distance_in_km/miles parameters in the meeting details (these are internal parameters -browser).
+
 ** Version 2.6.6**
 
 - January 26, 2015
