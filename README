@@ -46,25 +46,30 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+** Version 2.6.8 **
 
-** Version 2.6.7**
+- February 14, 2015 (Happy Valentine's Day!)
+- Fixed a fairly minor bug in the semantic sorter, in which blank fields were not being sorted at all (they need to be first).
+
+** Version 2.6.7 **
+
 - January 31, 2015
 - Fixed an issue with the extra fields display in the regular shortcode display details (browser).
 - Fixed an issue where the arbitrary fields were actually creating too many results (browser).
 - Now hide the distance_in_km/miles parameters in the meeting details (these are internal parameters -browser).
 
-** Version 2.6.6**
+** Version 2.6.6 **
 
 - January 26, 2015
 - Accidentally removed the text for the NAWS format dump in the Service Body Editor. This has been fixed.
 
-** Version 2.6.5**
+** Version 2.6.5 **
 
 - January 26, 2015
 - Addressed a couple of PHP warnings.
 - Fixed a nasty bug that could appear in a brand new install. The editor would display as blank after creating the first user.
 
-** Version 2.6.4**
+** Version 2.6.4 **
 
 - January 13, 2015
 - Added the main table fields to the data templates in the semantic admin.
@@ -72,13 +77,13 @@ CHANGELIST
 - Fixed a bug with including files in a non-standard port server.
 - Fixed a couple of bugs that interfered with deployment on an IIS server.
 
-** Version 2.6.3**
+** Version 2.6.3 **
 
 - January 11, 2015
 - Added some more steps to the the default values for the "auto-range," and expanded it to up to 200 miles.
 - Added some special SQL sauce for the distance search that makes distance searching more accurate (It now uses a simple [Haversine](http://en.wikipedia.org/wiki/Haversine_formula) formula, executed in SQL, in the initial database triage). It will tend to return more meetings, but not a whole ton more. Basically, it just improves the quality of the auto-range. This works well with the new added steps.
 
-** Version 2.6.2**
+** Version 2.6.2 **
 
 - January 9, 2015
 - Tweaked the syntax of this document's changelist to be full markdown, to make it more readable on [Bitbucket](http://bitbucket.org).
@@ -86,13 +91,13 @@ CHANGELIST
 - Greatly simplified the distance search functionality, and now allow it to be customized. This was a request from a largely rural community.
 - Added a default set of distance ranges for the radius hunt.
 
-** Version 2.6.1**
+** Version 2.6.1 **
 
 - January 5, 2015
 - Made a slight change, so that the formats are not automatically read upon a server instance being created. Instead, we wait until the first call to load them. This prevents them from being loaded in cases where they are not required.
 - Fixed an issue caused by getting too fancy with radius ranges, and ended up causing problems in the hunt for radius functionality. Need to re-explore this.
 
-** Version 2.6.0**
+** Version 2.6.0 **
 
 - January 4, 2015
 - Changed the NAWS Dump Link in the Service Body Editor to use the new open semantic URI.
@@ -104,44 +109,44 @@ CHANGELIST
 - Continuing to look for places where I can take security measures. Added a few "belt & suspenders" methods, like reloading the user from the DB at every opportunity.
 - Added the ability to edit meetings via an XML or JSON semantic interface.
 
-** Version 2.5.3**
+** Version 2.5.3 **
 
 - November 27, 2014 (Happy Thanksgiving!)
 - The 2.5.2 "fix" was inadequate. I needed to make the "other" field editing more robust.
 
-** Version 2.5.2**
+** Version 2.5.2 **
 
 - November 26, 2014
 - The 2.5.1 fix exposed another bug in administering the "other" fields.
 
-** Version 2.5.1**
+** Version 2.5.1 **
 
 - November 26, 2014
 - Fixed a typo that interfered with the new arbitrary fields functionality.
 
-** Version 2.5.0**
+** Version 2.5.0 **
 
 - November 23, 2014
 - Added support for arbitrary fields in meetings (had neglected to support these after the 2.0 release).
 
-** Version 2.4.10**
+** Version 2.4.10 **
 
 - October 14, 2014
 - Fixed another issue, where simple searches weren't sorting properly (again, overzealous warning compensation).
 
-** Version 2.4.9**
+** Version 2.4.9 **
 
 - October 13, 2014
 - Fixed another issue, where meeting edits were being ignored (again, overzealous warning compensation).
 
-** Version 2.4.8**
+** Version 2.4.8 **
 
 - October 12, 2014
 - Fixed an issue where low-numbered ASCs and RSCs did not have leading zeroes in the NAWS export, which could cause issues for NAWS.
 - Fixed a couple of issues with the meeting editors, where inactive anchor elements could cause "page not found" errors.
 - Fixed a bug, where searching for selected weekdays, formats or languages stopped working.
 
-** Version 2.4.7**
+** Version 2.4.7 **
 
 - October 9, 2014
 - Added an ID to the weekday sections of the simple response (allows easy linking on display pages).
@@ -149,14 +154,14 @@ CHANGELIST
 - Added some satellite fixes.
 - Fixed a rather nasty error in the semantic response that could have caused a lot of bad search results. I'm shocked I haven't heard anything.
 
-** Version 2.4.6**
+** Version 2.4.6 **
 
 - August 19, 2014
 - Fixed an issue with apostrophes (') causing problems.
 - Added a user-agent to the cCURL calls, as some servers filter out cURL calls.
 - Added a simpler, more direct semantic access to NAWS dumps.
 
-** Version 2.4.5**
+** Version 2.4.5 **
 
 - July 10, 2014
 - Added true Spanish localization to the Root Server.
@@ -165,7 +170,7 @@ CHANGELIST
 - Added a weekday wrapper around block mode simple responses. This allows better integration of search results with CSS.
 - Fixed an issue with double-quotes entered on some servers.
 
-** Version 2.4.4**
+** Version 2.4.4 **
 
 - June 9, 2014
 - Fixed a bug in the semantic interfaces that caused problems with clients. If a meeting had no name, a blank name was returned. It now returns a generic "NA Meeting".

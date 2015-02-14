@@ -913,6 +913,10 @@ class c_comdef_meetings implements i_comdef_has_parent
 										}
 									}
 								}
+							else
+							    {
+								$ret = ( isset ( $meeting_data_a[$s_key] ) && !isset ( $meeting_data_b[$s_key] ) ) ? 1 : (( !isset ( $meeting_data_a[$s_key] ) && !isset ( $meeting_data_b[$s_key] ) ) ? 0 : -1);
+							    }
 							
 							if ( $ret != 0 )
 								{
