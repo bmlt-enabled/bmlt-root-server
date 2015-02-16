@@ -455,7 +455,7 @@ class bmlt_semantic
                 {
                 $day_int = 1;
                 }
-            $name = $this->localize_string ( 'weekday'.$day_int )
+            $name = $this->localize_string ( 'weekday'.$day_int );
             $value = $day_int;
             }
         $ret .= '</fieldset>';
