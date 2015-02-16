@@ -1,0 +1,12 @@
+form.bmlt_semantic_form,
+input.bmlt_semantic_form_root_server_text_input,
+fieldset.bmlt_semantic_form_main_fieldset,
+div.bmlt_semantic_form_direct_url_div
+{
+    width:100%;
+}
+
+input.bmlt_semantic_form_disabled_text
+{
+    color: #559;
+}
