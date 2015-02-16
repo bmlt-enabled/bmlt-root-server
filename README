@@ -46,6 +46,11 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+** Version 2.6.11 **
+
+- February 16, 2015
+- Corrected a couple of bugs in the new semantic "GetFieldValues" and "GetFieldKeys" routines. These make the BMLT slightly more awesome.
+
 ** Version 2.6.10 **
 
 - February 16, 2015

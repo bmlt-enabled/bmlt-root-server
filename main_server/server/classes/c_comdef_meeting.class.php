@@ -801,17 +801,18 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 			    case    'published':
                 break;
                 
+			    case    'weekday_tinyint':
 			    case    'id_bigint':
 			    case    'worldid_mixed':
 			    case    'service_body_bigint':
-			    case    'weekday_tinyint':
 			    case    'start_time':
 			    case    'duration_time':
 			    case    'formats':
 			    case    'lang_enum':
 			    case    'longitude':
 			    case    'latitude':
-                    $sql = "SELECT * FROM `".c_comdef_server::GetMeetingTableName_obj()."_main` WHERE `id_bigint` > 0"; 
+                    $sql = "SELECT `$inKey`,`id_bigint` FROM `".c_comdef_server::GetMeetingTableName_obj()."_main` WHERE `id_bigint` > 0"; 
+                    $rows = c_comdef_dbsingleton::preparedQuery( $sql, array ( ) );
                 break;
                 
                 default:
@@ -828,21 +829,38 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                             $sql = "SELECT `meetingid_bigint`,`data_longtext`,`data_blob` FROM `".c_comdef_server::GetMeetingTableName_obj()."_longdata` WHERE (`key`=?) AND (`meetingid_bigint`>0)"; 
                             }
                         }
+                    $rows = c_comdef_dbsingleton::preparedQuery( $sql, array ( $inKey ) );
                 break;
                 }
 			
-            $rows = c_comdef_dbsingleton::preparedQuery( $sql, array ( $inKey ) );
 
 			if ( is_array ( $rows ) && count ( $rows ) )
 				{
 				foreach ( $rows as $row )
 					{
-					$id = (isset ( $row['id_bigint'] ) && intval ( $row['id_bigint'] )) ? intval ( $row['id_bigint'] ) : (isset ( $row['meetingid_bigint'] ) && intval ( $row['meetingid_bigint'] )) ? intval ( $row['meetingid_bigint'] ) : NULL;
-					$value = NULL;
+					$id = (isset ( $row['id_bigint'] ) && intval ( $row['id_bigint'] )) ? intval ( $row['id_bigint'] ) : NULL;
 					
+					if ( !$id )
+					    {
+					    $id = (isset ( $row['meetingid_bigint'] ) && intval ( $row['meetingid_bigint'] )) ? intval ( $row['meetingid_bigint'] ) : NULL;
+					    }
+					
+					$value = NULL;
 					if ( isset ( $row[$inKey] ) )
 					    {
 					    $value = $row[$inKey];
+					    
+					    if ( $inKey == 'weekday_tinyint' )
+					        {
+					        $value = intval ( $value ) + 1;
+					        }
+					    
+					    if ( $inKey == 'formats' )
+					        {
+					        $value = explode ( ',', $value );
+					        asort ( $value );
+					        $value = implode ( ' ', $value );
+					        }
 					    }
 					
 					if ( !$value && isset ( $row['data_string'] ) && trim ( $row['data_string'] ) )
@@ -920,6 +938,11 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 				}
 			throw ( $ex );
 			}
+		
+		if ( !$ret['NULL'] )
+		    {
+		    unset ( $ret['NULL'] );
+		    }
 		
 		return $ret;
 	}
