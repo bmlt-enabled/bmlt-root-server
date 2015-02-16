@@ -716,17 +716,17 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 		try
 			{
 			// The main table always has these keys.
-			$ret['id_bigint'] ='id_bigint';
-			$ret['worldid_mixed'] ='worldid_mixed';
-			$ret['shared_group_id_bigint'] ='shared_group_id_bigint';
-			$ret['service_body_bigint'] ='service_body_bigint';
-			$ret['weekday_tinyint'] ='weekday_tinyint';
-			$ret['start_time'] ='start_time';
-			$ret['duration_time'] ='duration_time';
-			$ret['formats'] ='formats';
-			$ret['lang_enum'] ='lang_enum';
-			$ret['longitude'] ='longitude';
-			$ret['latitude'] ='latitude';
+			$ret['id_bigint'] = 'id_bigint';
+			$ret['worldid_mixed'] = 'worldid_mixed';
+			$ret['shared_group_id_bigint'] = 'shared_group_id_bigint';
+			$ret['service_body_bigint'] = 'service_body_bigint';
+			$ret['weekday_tinyint'] = 'weekday_tinyint';
+			$ret['start_time'] = 'start_time';
+			$ret['duration_time'] = 'duration_time';
+			$ret['formats'] = 'formats';
+			$ret['lang_enum'] = 'lang_enum';
+			$ret['longitude'] = 'longitude';
+			$ret['latitude'] = 'latitude';
 			$ret['email_contact'] = 'email_contact';
 			$ret['distance_in_km'] = 'distance_in_km';
 			$ret['distance_in_miles'] = 'distance_in_miles';
@@ -772,6 +772,26 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 		
 		$ret['published'] = 'published';    // The last field is always the published flag.
 		return $ret;
+	}
+	
+	/*******************************************************************/
+	/** \brief Returns an array that provides a template for all tables
+		
+		\returns an array with all of the values.
+	*/
+	static function GetFullTemplate()
+	{
+	    $main = self::GetMainDataTemplate();
+	    $data = self::GetDataTableTemplate();
+	    $longData = self::GetLongDataTableTemplate();
+	    
+	    $ret = array_merge ( $main, $data );
+	    if ( isset ( $longData ) && is_array ( $longData ) && count ( $longData ) )
+	        {
+	        $ret = array_merge ( $ret, $longData );
+	        }
+	    
+	    return $ret;
 	}
 	
 	/*******************************************************************/

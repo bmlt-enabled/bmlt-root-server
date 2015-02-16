@@ -357,6 +357,41 @@ function parse_redirect (
 		    CSVHandleNawsDump ( $http_vars, $server );
 		break;
 		
+		case 'GetFieldKeys':
+            $keys = c_comdef_meeting::GetFullTemplate ( );
+            
+            if ( isset ( $keys ) && is_array ( $keys ) && count ( $keys ) )
+                {
+                $result2 = array ('"key","description"');
+            
+                foreach ( $keys as $key )
+                    {
+                    if ( ($key['visibility'] != 1) && ($key['key'] != 'published') && ($key['key'] != 'shared_group_id_bigint') )
+                        {
+                        $result2[] = '"'.$key['key'].'","'.$key['field_prompt'].'"';
+                        }
+                    }
+                
+                $result2 = implode ( "\n", $result2 );
+                
+                if ( isset ( $http_vars['xml_data'] ) )
+                    {
+                    $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+                    $xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', $_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetFieldKeys.php' ) );
+                    $result .= "<fields xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
+                    $result .= TranslateToXML ( $result2 );
+                    $result .= "</fields>";
+                    }
+                elseif ( isset ( $http_vars['json_data'] ) )
+                    {
+                    $result = TranslateToJSON ( $result2 );
+                    }
+                else
+                    {
+                    $result = $result2;
+                    }
+                }
+		break;
 		
 		default:
 			$result = HandleDefault ( $http_vars );
@@ -1071,7 +1106,7 @@ function HandleDefault (
 						$in_http_vars	///< The HTTP GET and POST parameters.
 						)
 	{
-	return "You must supply one of the following: 'switcher=GetSearchResults', 'switcher=GetFormats', 'switcher=GetChanges', 'switcher=GetNAWSDump' or 'switcher=GetServiceBodies'.";
+	return "You must supply one of the following: 'switcher=GetSearchResults', 'switcher=GetFormats', 'switcher=GetChanges', 'switcher=GetNAWSDump', 'switcher=GetFieldKeys' or 'switcher=GetServiceBodies'.";
 	}
 
 /*******************************************************************/
