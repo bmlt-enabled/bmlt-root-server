@@ -34,7 +34,7 @@ function GetURLToMainServerDirectory(
     $my_path = str_replace ( '\\', '/', dirname ( $_SERVER['PHP_SELF'] ) );
     $subsequent_path = str_replace ( $file_path, '', $my_path );
     $url_path .= (($https && ($port != 443)) || ($port != 80)) ? ':'.$port : '';
-    $url_path .= $subsequent_path.'/';
+    $url_path .= trim ( $subsequent_path, '/' ).'/';
     $url_path = 'http'.($https ? 's' : '').'://'.$url_path;
     return $url_path;
 }
