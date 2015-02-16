@@ -49,7 +49,7 @@ CHANGELIST
 ** Version 2.6.9 **
 
 - February 16, 2015
-- Added the capacity to extract the field keys semantically (only of use to administrators and semantic interfaces).
+- Added the capacity to extract the field keys and values semantically (only of use to administrators and semantic interfaces, but extremely powerful).
 
 ** Version 2.6.8 **
 

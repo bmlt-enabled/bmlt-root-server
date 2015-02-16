@@ -775,6 +775,156 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 	}
 	
 	/*******************************************************************/
+	/** \brief Returns an array of values for the given key.
+		
+		\returns an array of strings, with the key being the same as the value.
+		NOTE: This contains ALL possible keys.
+		
+		\throws a PDOException if there is a problem.
+	*/
+	static function GetAllValuesForKey(
+	                                    $inKey  ///< The key to get all the values for.
+	                                    )
+	{
+		$ret = null;
+		
+		try
+			{
+			$rows = NULL;
+			
+			switch ( $inKey )
+			    {
+			    case    'shared_group_id_bigint':
+			    case    'email_contact':
+			    case    'distance_in_km':
+			    case    'distance_in_miles':
+			    case    'published':
+                break;
+                
+			    case    'id_bigint':
+			    case    'worldid_mixed':
+			    case    'service_body_bigint':
+			    case    'weekday_tinyint':
+			    case    'start_time':
+			    case    'duration_time':
+			    case    'formats':
+			    case    'lang_enum':
+			    case    'longitude':
+			    case    'latitude':
+                    $sql = "SELECT * FROM `".c_comdef_server::GetMeetingTableName_obj()."_main` WHERE `id_bigint` > 0"; 
+                break;
+                
+                default:
+	                $temp = self::GetDataTableTemplate();
+                    if ( isset ( $temp[$inKey] ) && ($temp[$inKey]['visibility'] != 1) )
+                        {
+                        $sql = "SELECT `meetingid_bigint`,`data_string`,`data_bigint`,`data_double` FROM `".c_comdef_server::GetMeetingTableName_obj()."_data` WHERE (`key`=?) AND (`meetingid_bigint`>0)"; 
+                        }
+                    else
+                        {
+	                    $temp = self::GetLongDataTableTemplate();
+                        if ( isset ( $temp[$inKey] ) && ($temp[$inKey]['visibility'] != 1) )
+                            {
+                            $sql = "SELECT `meetingid_bigint`,`data_longtext`,`data_blob` FROM `".c_comdef_server::GetMeetingTableName_obj()."_longdata` WHERE (`key`=?) AND (`meetingid_bigint`>0)"; 
+                            }
+                        }
+                break;
+                }
+			
+            $rows = c_comdef_dbsingleton::preparedQuery( $sql, array ( $inKey ) );
+
+			if ( is_array ( $rows ) && count ( $rows ) )
+				{
+				foreach ( $rows as $row )
+					{
+					$id = (isset ( $row['id_bigint'] ) && intval ( $row['id_bigint'] )) ? intval ( $row['id_bigint'] ) : (isset ( $row['meetingid_bigint'] ) && intval ( $row['meetingid_bigint'] )) ? intval ( $row['meetingid_bigint'] ) : NULL;
+					$value = NULL;
+					
+					if ( isset ( $row[$inKey] ) )
+					    {
+					    $value = $row[$inKey];
+					    }
+					
+					if ( !$value && isset ( $row['data_string'] ) && trim ( $row['data_string'] ) )
+					    {
+					    $value = trim ( $row['data_string'] );
+					    }
+					
+					if ( !$value && isset ( $row['data_bigint'] ) )
+					    {
+					    $value = intval ( $row['data_bigint'] );
+					    }
+					
+					if ( !$value && isset ( $row['data_double'] ) )
+					    {
+					    $value = floatval ( $row['data_double'] );
+					    }
+					
+					if ( !$value && isset ( $row['data_longtext'] ) )
+					    {
+					    $value = floatval ( $row['data_longtext'] );
+					    }
+					
+					if ( !$value && isset ( $row['data_blob'] ) )
+					    {
+					    $value = floatval ( $row['data_blob'] );
+					    }
+					
+                    if ( !$ret )
+                        {
+                        $ret = array();
+                        $ret['NULL'] = '';
+                        }
+                            
+					if ( $value )
+					    {
+                        $ids = NULL;
+                        
+                        if ( isset ( $ret[$value] ) )
+                            {
+                            $ids = explode ( ',', $ret[$value] );
+                            $ids[] = $id;
+                            }
+                        else
+                            {
+                            $ids = array ( $id );
+                            }
+                        $ret[$value] = implode ( ',', $ids );
+                        }
+                    else
+                        {
+                        $ids = NULL;
+                        
+                        if ( isset ( $ret['NULL'] ) )
+                            {
+                            $ids = explode ( ',', $ret['NULL'] );
+                            $ids[] = $id;
+                            }
+                        else
+                            {
+                            $ids = array ( $id );
+                            }
+                        $ret['NULL'] = trim ( implode ( ',', $ids ) );
+                        }
+					}
+				}
+			}
+		catch ( Exception $ex )
+			{
+			global	$_COMDEF_DEBUG;
+			
+			if ( $_COMDEF_DEBUG )
+				{
+				echo "Exception Thrown in c_comdef_meeting::GetAllMeetingValues()!<br />";
+				var_dump ( $ex );
+				}
+			throw ( $ex );
+			}
+		
+		return $ret;
+	}
+	
+	/*******************************************************************/
 	/** \brief Returns an array that provides a template for all tables
 		
 		\returns an array with all of the values.

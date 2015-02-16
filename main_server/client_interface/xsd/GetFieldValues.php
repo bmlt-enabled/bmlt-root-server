@@ -1,7 +1,7 @@
 <?php
 /****************************************************************************************//**
-* \file GetFieldKeys.php																    *
-* \brief Returns an XML response, containing the schema for the Standard field keys call    *
+* \file GetFieldValues.php																    *
+* \brief Returns an XML response, containing the schema for the Standard field values call  *
 
     This file is part of the Basic Meeting List Toolbox (BMLT).
     

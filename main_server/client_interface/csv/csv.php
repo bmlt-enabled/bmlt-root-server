@@ -393,6 +393,40 @@ function parse_redirect (
                 }
 		break;
 		
+		case 'GetFieldValues':
+            $values = c_comdef_meeting::GetAllValuesForKey ( trim ( $http_vars['meeting_key'] ) );
+            if ( isset ( $values ) && is_array ( $values ) && count ( $values ) )
+                {
+                $result2 = array ('"'.trim ( $http_vars['meeting_key'] ).'","ids"');
+            
+                foreach ( $values as $value=>$ids )
+                    {
+                    $ids = explode ( ',', $ids );
+                    $ids = trim ( implode ( ' ', $ids ) );
+                    $result2[] = '"'.$value.'","'.$ids.'"';
+                    }
+                
+                $result2 = implode ( "\n", $result2 );
+                }
+            
+            if ( isset ( $http_vars['xml_data'] ) )
+                {
+                $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+                $xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', $_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetFieldValues.php' ) );
+                $result .= "<fields xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
+                $result .= TranslateToXML ( $result2 );
+                $result .= "</fields>";
+                }
+            elseif ( isset ( $http_vars['json_data'] ) )
+                {
+                $result = TranslateToJSON ( $result2 );
+                }
+            else
+                {
+                $result = $result2;
+                }
+        break;
+        		
 		default:
 			$result = HandleDefault ( $http_vars );
 		break;
@@ -1106,7 +1140,7 @@ function HandleDefault (
 						$in_http_vars	///< The HTTP GET and POST parameters.
 						)
 	{
-	return "You must supply one of the following: 'switcher=GetSearchResults', 'switcher=GetFormats', 'switcher=GetChanges', 'switcher=GetNAWSDump', 'switcher=GetFieldKeys' or 'switcher=GetServiceBodies'.";
+	return "You must supply one of the following: 'switcher=GetSearchResults', 'switcher=GetFormats', 'switcher=GetChanges', 'switcher=GetNAWSDump', 'switcher=GetFieldKeys', 'switcher=GetFieldValues' or 'switcher=GetServiceBodies'.";
 	}
 
 /*******************************************************************/
