@@ -22,6 +22,7 @@ $this->_localization = array (
                                 'weekday_section_legend'                =>  'Search for Meetings that Gather on Specific Weekdays',
                                 'format_section_legend'                 =>  'Search for Meetings with Specific Formats',
                                 'service_bodies_section_legend'         =>  'Search Only Within Certain Service Bodies',
+                                'weekday0'                              =>  'All',
                                 'weekday1'                              =>  'Sunday',
                                 'weekday2'                              =>  'Monday',
                                 'weekday3'                              =>  'Tuesday',
@@ -30,4 +31,5 @@ $this->_localization = array (
                                 'weekday6'                              =>  'Friday',
                                 'weekday7'                              =>  'Saturday',
                                 'startDay'                              =>  1,
+                                'keys_section_label'                    =>  'Search for a Specific Value of'
                             );

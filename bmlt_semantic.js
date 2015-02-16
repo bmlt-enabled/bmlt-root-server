@@ -16,6 +16,8 @@ function BMLTSemantic ( inSuffix,
     this.ajax_base_uri = inAJAXURI;
     this.format_objects = null;
     this.service_body_objects = null;
+    this.field_keys = null;
+    this.temp_service_body_objects = null;
     
     this.setUpForm();
 };
@@ -23,7 +25,9 @@ function BMLTSemantic ( inSuffix,
 BMLTSemantic.prototype.id_suffix = null;
 BMLTSemantic.prototype.ajax_base_uri = null;
 BMLTSemantic.prototype.format_objects = null;
+BMLTSemantic.prototype.field_keys = null;
 BMLTSemantic.prototype.service_body_objects = null;
+BMLTSemantic.prototype.temp_service_body_objects = null;
 
 /*******************************************************************************************/
 /**
@@ -146,6 +150,7 @@ BMLTSemantic.prototype.reloadFromServer = function ()
 {
     this.fetchFormats();
     this.fetchServiceBodies();
+    this.fetchFieldKeys();
 };
 
 /*******************************************************************************************/
@@ -159,7 +164,20 @@ BMLTSemantic.prototype.fetchFormats = function ()
     
     if ( root_server_uri.value && ((root_server_uri.type == 'hidden') || (root_server_uri.value != root_server_uri.defaultValue)) )
         {
-        this.ajaxRequest ( this.ajax_base_uri + '&GetInitialFormats', this.fetchFormatsCallback );
+        var formatContainer = this.getScopedElement ( 'bmlt_semantic_form_formats_fieldset' );
+        
+        if ( formatContainer )
+            {
+            for ( var i = formatContainer.childNodes.length; i-- > 0; )
+                {
+                if ( formatContainer.childNodes[i].className == 'bmlt_checkbox_container' )
+                    {
+                    formatContainer.removeChild ( formatContainer.childNodes[i] );
+                    };
+                };
+            };
+        
+        this.ajaxRequest ( this.ajax_base_uri + '&GetInitialFormats', this.fetchFormatsCallback, 'post', this );
         };
 };
 
@@ -174,7 +192,48 @@ BMLTSemantic.prototype.fetchServiceBodies = function ()
     
     if ( root_server_uri.value && ((root_server_uri.type == 'hidden') || (root_server_uri.value != root_server_uri.defaultValue)) )
         {
-        this.ajaxRequest ( this.ajax_base_uri + '&GetInitialServiceBodies', this.fetchServiceBodiesCallback );
+        var sbContainer = this.getScopedElement ( 'bmlt_semantic_form_sb_fieldset' );
+        
+        if ( sbContainer )
+            {
+            for ( var i = sbContainer.childNodes.length; i-- > 0; )
+                {
+                if ( sbContainer.childNodes[i].className == 'bmlt_sb_dl' )
+                    {
+                    sbContainer.removeChild ( sbContainer.childNodes[i] );
+                    };
+                };
+            };
+        
+        this.ajaxRequest ( this.ajax_base_uri + '&GetInitialServiceBodies', this.fetchServiceBodiesCallback, 'post', this );
+        };
+};
+
+/*******************************************************************************************/
+/**
+    \brief Sets up and performs an AJAX call to fetch the available field keys.
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.fetchFieldKeys = function ()
+{
+    var root_server_uri = this.getScopedElement ( 'bmlt_semantic_form_root_server_text_input' );
+    
+    if ( root_server_uri.value && ((root_server_uri.type == 'hidden') || (root_server_uri.value != root_server_uri.defaultValue)) )
+        {
+        var sbContainer = this.getScopedElement ( 'bmlt_semantic_form_keys_fieldset' );
+        
+        if ( sbContainer )
+            {
+            for ( var i = sbContainer.childNodes.length; i-- > 0; )
+                {
+                if ( sbContainer.childNodes[i].className == 'bmlt_checkbox_container' )
+                    {
+                    sbContainer.removeChild ( sbContainer.childNodes[i] );
+                    };
+                };
+            };
+        
+        this.ajaxRequest ( this.ajax_base_uri + '&GetFieldKeys', this.fetchFieldKeysCallback, 'post', this );
         };
 };
 
@@ -188,8 +247,48 @@ BMLTSemantic.prototype.fetchFormatsCallback = function (inHTTPReqObject
 {
     if ( inHTTPReqObject.responseText )
         {
-        eval ( 'this.format_objects = ' + inHTTPReqObject.responseText + ';' );
-        this.populateFormatsSection();
+        var context = inHTTPReqObject.extraData;
+        eval ( 'context.format_objects = ' + inHTTPReqObject.responseText + ';' );
+        context.populateFormatsSection();
+        };
+};
+
+/*******************************************************************************************/
+/**
+    \brief
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.populateFormatsSection = function()
+{
+    if ( this.format_objects && this.format_objects.length )
+        {
+        var formatContainer = this.getScopedElement ( 'bmlt_semantic_form_formats_fieldset' );
+            
+        for ( var i = 0; i < this.format_objects.length; i++ )
+            {
+            var formatObject = this.format_objects[i];
+            var newContainer = document.createElement ( 'div' );
+            newContainer.id = this.getScopedID ( 'bmlt_semantic_form_format_container_div_' + formatObject.id );
+            newContainer.className ='bmlt_checkbox_container';
+            
+            var newCheckbox = document.createElement ( 'input' );
+            newCheckbox.type = 'checkbox';
+            newCheckbox.id = this.getScopedID ( 'bmlt_semantic_form_format_checkbox_' + formatObject.id );
+            newCheckbox.value = formatObject.id;
+            newCheckbox.title = formatObject.name_string + ' - ' + formatObject.description_string;
+            newCheckbox.className ='bmlt_checkbox_input';
+            newContainer.appendChild ( newCheckbox );
+            
+            var newCheckboxLabel = document.createElement ( 'label' );
+            newCheckboxLabel.for = this.getScopedID ( 'bmlt_semantic_form_format_checkbox_' + formatObject.id );
+            newCheckboxLabel.id = this.getScopedID ( 'bmlt_semantic_form_format_checkbox_label_' + formatObject.id );
+            newCheckboxLabel.className = 'bmlt_checkbox_label';
+            newCheckboxLabel.title = formatObject.name_string + ' - ' + formatObject.description_string;
+            newCheckboxLabel.appendChild ( document.createTextNode ( formatObject.key_string ) );
+            newContainer.appendChild ( newCheckboxLabel );
+            
+            formatContainer.appendChild ( newContainer );
+            };
         };
 };
 
@@ -203,32 +302,196 @@ BMLTSemantic.prototype.fetchServiceBodiesCallback = function (inHTTPReqObject
 {
     if ( inHTTPReqObject.responseText )
         {
-        eval ( 'this.service_body_objects = ' + inHTTPReqObject.responseText + ';' );
-        this.populateServiceBodiesSection();
+        var context = inHTTPReqObject.extraData;
+        eval ( 'context.temp_service_body_objects = ' + inHTTPReqObject.responseText + ';' );
+        context.populateServiceBodiesSection();
         };
 };
 
 /*******************************************************************************************/
 /**
-    \brief The response.
-*/
-/*******************************************************************************************/
-BMLTSemantic.prototype.populateFormatsSection = function()
-{
-    if ( this.format_objects && this.format_objects.length )
-        {
-        };
-};
-
-/*******************************************************************************************/
-/**
-    \brief The response.
+    \brief
 */
 /*******************************************************************************************/
 BMLTSemantic.prototype.populateServiceBodiesSection = function()
 {
+    this.organizeServiceBodies();
+    
     if ( this.service_body_objects && this.service_body_objects.length )
         {
+        this.createServiceBodyList ( null, this.getScopedElement ( 'bmlt_semantic_form_sb_fieldset' ) );
+        };
+};
+
+/*******************************************************************************************/
+/**
+    \brief
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.createServiceBodyList = function(inServiceBodyObject,
+                                                        inContainerObject
+                                                        )
+{
+    var sb_array = null;
+    var id = 0;
+    var newListContainer = null;
+    
+    if ( inServiceBodyObject )
+        {
+        id = inServiceBodyObject.id;
+        
+        var checkboxElement = document.createElement ( 'dt' );
+        checkboxElement.id = this.getScopedID ( 'bmlt_sb_dt_' + id.toString() );
+        checkboxElement.className = 'bmlt_sb_dt';
+        this.createServiceBodyCheckbox ( inServiceBodyObject, checkboxElement );
+        inContainerObject.appendChild ( checkboxElement );
+        
+        if ( inServiceBodyObject.childServiceBodies )
+            {
+            newListContainer = document.createElement ( 'dd' );
+            newListContainer.id = this.getScopedID ( 'bmlt_sb_dd_' + id.toString() );
+            newListContainer.className = 'bmlt_sb_dd';
+            inContainerObject.appendChild ( newListContainer ); 
+            sb_array = inServiceBodyObject.childServiceBodies;
+            };
+        }
+    else
+        {
+        sb_array = this.service_body_objects;
+        newListContainer = inContainerObject;
+        };
+
+    if ( newListContainer && sb_array && sb_array.length )
+        {
+        var newSubList = document.createElement ( 'dl' );
+        newSubList.id = this.getScopedID ( 'bmlt_sb_dl_' + id.toString() );
+        newSubList.className = 'bmlt_sb_dl';
+        
+        for ( var i = 0; i < sb_array.length; i++ )
+            {
+            this.createServiceBodyList ( sb_array[i], newSubList );
+            };
+
+        newListContainer.appendChild ( newSubList );
+        };
+};
+
+/*******************************************************************************************/
+/**
+    \brief
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.createServiceBodyCheckbox = function(inServiceBodyObject,
+                                                            inContainerObject
+                                                            )
+{
+    var newCheckbox = document.createElement ( 'input' );
+    newCheckbox.type = 'checkbox';
+    newCheckbox.id = this.getScopedID ( 'bmlt_semantic_form_sb_checkbox_' + inServiceBodyObject.id );
+    newCheckbox.value = inServiceBodyObject.id;
+    newCheckbox.title = inServiceBodyObject.description;
+    newCheckbox.className ='bmlt_checkbox_input';
+    inContainerObject.appendChild ( newCheckbox );
+    
+    var newCheckboxLabel = document.createElement ( 'label' );
+    newCheckboxLabel.for = this.getScopedID ( 'bmlt_semantic_form_sb_checkbox_' + inServiceBodyObject.id );
+    newCheckboxLabel.id = this.getScopedID ( 'bmlt_semantic_form_sb_checkbox_label_' + inServiceBodyObject.id );
+    newCheckboxLabel.className = 'bmlt_checkbox_label';
+    newCheckboxLabel.title = inServiceBodyObject.description;
+    newCheckboxLabel.appendChild ( document.createTextNode ( inServiceBodyObject.name ) );
+    inContainerObject.appendChild ( newCheckboxLabel );
+};
+
+/*******************************************************************************************/
+/**
+    \brief
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.organizeServiceBodies = function()
+{
+    if ( this.temp_service_body_objects && this.temp_service_body_objects.length )
+        {
+        this.service_body_objects = Array();
+        
+        for ( var i = 0; i < this.temp_service_body_objects.length; i++ )
+            {
+            var service_body = this.temp_service_body_objects[i];
+            
+            if ( parseInt ( service_body.parent_id ) == 0 )
+                {
+                this.service_body_objects.push ( service_body );
+                
+                this.getChildServiceBodies ( service_body );
+                };
+            };
+            
+        this.temp_service_body_objects = null;
+        };
+};
+
+/*******************************************************************************************/
+/**
+    \brief
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.getChildServiceBodies = function(inParentObject
+                                                        )
+{
+    if ( this.temp_service_body_objects && this.temp_service_body_objects.length )
+        {
+        for ( var i = 0; i < this.temp_service_body_objects.length; i++ )
+            {
+            var service_body = this.temp_service_body_objects[i];
+            
+            if ( parseInt ( service_body.parent_id ) == parseInt ( inParentObject.id ) )
+                {
+                if ( !inParentObject.childServiceBodies )
+                    {
+                    inParentObject.childServiceBodies = Array();
+                    };
+                service_body.parentServiceBody = inParentObject;
+                inParentObject.childServiceBodies.push ( service_body );
+                this.getChildServiceBodies ( service_body );
+                };
+            };
+        };
+};
+
+/*******************************************************************************************/
+/**
+    \brief The response.
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.fetchFieldKeysCallback = function (inHTTPReqObject
+                                                        )
+{
+    if ( inHTTPReqObject.responseText )
+        {
+        var context = inHTTPReqObject.extraData;
+        eval ( 'context.field_keys = ' + inHTTPReqObject.responseText + ';' );
+        context.populateFieldSelect();
+        };
+};
+
+/*******************************************************************************************/
+/**
+    \brief The response.
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.populateFieldSelect = function ()
+{
+    var selectElement = this.getScopedElement ( 'bmlt_semantic_form_field_select' );
+    for ( var i = selectElement.childNodes.length; i-- > 0; )
+        {
+        selectElement.removeChild ( sbContainer.childNodes[i] );
+        };
+    
+    for ( var i = 0; i < this.field_keys.length; i++ )
+        {
+        var newOption = document.createElement ( 'option' );
+        newOption.value = this.field_keys[i].key;
+        newOption.appendChild ( document.createTextNode ( this.field_keys[i].description ) );
+        selectElement.appendChild ( newOption );
         };
 };
 

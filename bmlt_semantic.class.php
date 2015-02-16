@@ -104,7 +104,7 @@ class bmlt_semantic
                 {
                 $spli = explode ( "?", $in_uri, 2 );
             
-                if ( is_array ( $spli ) && count ( $spli ) )
+                if ( is_array ( $spli ) && (count ( $spli ) > 1) )
                     {
                     $in_uri = $spli[0];
                     $in_params = $spli[1];
@@ -277,6 +277,10 @@ class bmlt_semantic
                 {
                 echo ( bmlt_semantic::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetServiceBodies' ) );
                 }
+            elseif ( isset ( $this->_httpVars['GetFieldKeys'] ) )
+                {
+                echo ( bmlt_semantic::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetFieldKeys' ) );
+                }
             }
     }
     
@@ -291,7 +295,7 @@ class bmlt_semantic
     function localize_string( $in_string
                             )
     {
-        return htmlspecialchars ( $this->_localization[$in_string] );
+        return htmlspecialchars ( isset ( $this->_localization[$in_string] ) ? $this->_localization[$in_string] : $in_string );
     }
     
     /**************************************************************/
@@ -448,6 +452,7 @@ class bmlt_semantic
         $ret .= '</legend>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $iStart = intval ( $this->localize_string ( 'startDay' ) );
+        $ret .= $this->make_checkbox_html ( $this->localize_string ( 'weekday0' ), 'bmlt_semantic_form_weekday_checkbox_0', TRUE );
         for ( $i = 0; $i < 7; $i++ )
             {
             $day_int = $iStart + $i;
@@ -457,6 +462,8 @@ class bmlt_semantic
                 }
             $name = $this->localize_string ( 'weekday'.$day_int );
             $value = $day_int;
+            
+            $ret .= $this->make_checkbox_html ( $name, 'bmlt_semantic_form_weekday_checkbox_'.$value, TRUE, $value );
             }
         $ret .= '</fieldset>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';  
@@ -472,8 +479,61 @@ class bmlt_semantic
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
         $ret .= '</fieldset>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $ret .= '<fieldset id="bmlt_semantic_form_keys_fieldset'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_keys_fieldset"><legend id="bmlt_semantic_form_keys_fieldset_legend'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_keys_fieldset_legend">';
+        $ret .= $this->get_wizard_page_field_select_html();
+        $ret .= '</legend>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
+        $ret .= '</fieldset>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '</div>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        
+        return $ret;
+    }
+    
+    /**************************************************************/
+    /** \brief  
+        
+        \returns the HTML.
+    */
+    /**************************************************************/
+    function get_wizard_page_field_select_html()
+    {
+        $ret = '<label id="bmlt_semantic_form_field_select_label'.htmlspecialchars ( $this->_myJSName ).'" for="bmlt_semantic_form_field_select'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_field_select_label">'.$this->localize_string ( 'keys_section_label' ).'</label>';
+        $ret .= '<select id="bmlt_semantic_form_field_select'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_field_select"></select>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        
+        return $ret;
+    }
+    
+    /**************************************************************/
+    /** \brief  
+        
+        \returns the HTML.
+    */
+    /**************************************************************/
+    function make_checkbox_html (   $in_label_text,
+                                    $in_base_id,
+                                    $in_checked = FALSE,
+                                    $in_value = NULL
+                                )
+    {
+        $ret = '<div id="'.htmlspecialchars ( $in_base_id.'_container_div'.$this->_myJSName ).'" class="bmlt_checkbox_container">';
+        $ret .= '<input type="checkbox" id="'.htmlspecialchars ( $in_base_id.$this->_myJSName ).'" class="bmlt_checkbox_input"';
+        
+        if ( $in_checked )
+            {
+            $ret .= ' checked="checked"';
+            }
+        
+        if ( $in_value )
+            {
+            $ret .= ' value="'.htmlspecialchars ( $in_value ).'"';
+            }
+        
+        $ret .= ' /><label for="'.htmlspecialchars ( $in_base_id.$this->_myJSName ).'" id="'.htmlspecialchars ( $in_base_id.'_label'.$this->_myJSName ).'" class="bmlt_checkbox_label">'.htmlspecialchars ( $in_label_text ).'</label>';
+        $ret .= '</div>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
         
         return $ret;
     }
