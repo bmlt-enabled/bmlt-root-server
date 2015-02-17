@@ -792,7 +792,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 			{
 			$rows = NULL;
 			
-			switch ( $inKey )
+			switch ( strtolower ( trim ( $inKey ) ) )
 			    {
 			    case    'shared_group_id_bigint':
 			    case    'email_contact':
@@ -811,6 +811,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 			    case    'lang_enum':
 			    case    'longitude':
 			    case    'latitude':
+			        $inKey = strtolower ( trim ( $inKey ) );
                     $sql = "SELECT `$inKey`,`id_bigint` FROM `".c_comdef_server::GetMeetingTableName_obj()."_main` WHERE `id_bigint` > 0"; 
                     $rows = c_comdef_dbsingleton::preparedQuery( $sql, array ( ) );
                 break;
