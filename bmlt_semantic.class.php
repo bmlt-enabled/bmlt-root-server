@@ -554,6 +554,8 @@ class bmlt_semantic
         $ret .= '<option value="GetServiceBodies">'.$this->localize_string ( 'switcher_type_selector_sb' ).'</option>';
         $ret .= '<option value="GetChanges">'.$this->localize_string ( 'switcher_type_selector_changes' ).'</option>';
         $ret .= '<option id="bmlt_semantic_form_switcher_type_select_naws_option'.htmlspecialchars ( $this->_myJSName ).'" value="GetNAWSDump">'.$this->localize_string ( 'switcher_type_selector_naws' ).'</option>';
+        $ret .= '<option value="GetFieldKeys">'.$this->localize_string ( 'switcher_type_selector_field_keys' ).'</option>';
+        $ret .= '<option value="GetFieldValues">'.$this->localize_string ( 'switcher_type_selector_field_values' ).'</option>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '</select>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';

@@ -600,11 +600,19 @@ BMLTSemantic.prototype.handleMainSelectChange = function ( inSelect
 {
     var main_fieldset_direct_uri_div = this.getScopedElement ( 'bmlt_semantic_form_direct_url_div' );
     var switcher_type_select_naws_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_naws_option' );
-    var response_type_select = this.getScopedElement ( 'bmlt_semantic_form_response_type_select' );
+    var response_type_select = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select' );
+    var bmlt_semantic_form_meeting_search_div = this.getScopedElement ( 'bmlt_semantic_form_meeting_search_div' );
     
     if ( inSelect.value == 'SHORTCODE' )
         {
         main_fieldset_direct_uri_div.hide();
+        
+        if ( response_type_select.value == 'GetNAWSDump' )
+            {
+            response_type_select.selectedIndex = 0;
+            bmlt_semantic_form_meeting_search_div.show();
+            };
+        
         switcher_type_select_naws_option.disable();
         }
     else
@@ -612,6 +620,7 @@ BMLTSemantic.prototype.handleMainSelectChange = function ( inSelect
         main_fieldset_direct_uri_div.show();
         switcher_type_select_naws_option.enable();
         response_type_select.selectedIndex = 0;
+        bmlt_semantic_form_meeting_search_div.show();
         };
 };
 
@@ -649,7 +658,9 @@ BMLTSemantic.prototype.handleSwitcherSelectChange = function ( inSelect
 BMLTSemantic.prototype.handleResponseSelectChange = function ( inSelect
                                                             )
 {
+    var response_type_select = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select' );
     var switcher_type_select_naws_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_naws_option' );
+    var bmlt_semantic_form_meeting_search_div = this.getScopedElement ( 'bmlt_semantic_form_meeting_search_div' );
     
     if ( inSelect.value == 'csv' )
         {
@@ -657,12 +668,12 @@ BMLTSemantic.prototype.handleResponseSelectChange = function ( inSelect
         }
     else
         {
-        switcher_type_select_naws_option.disable();
-        
-        if ( switcher_type_select_naws_option.selected )
+        if ( response_type_select.value == 'GetNAWSDump' )
             {
+            bmlt_semantic_form_meeting_search_div.show();
             inSelect.selectedIndex = 0;
-            }
+            };
+        switcher_type_select_naws_option.disable();        
         };
 };
 
