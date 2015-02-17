@@ -46,6 +46,11 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+** Version 2.6.12 **
+
+- TBD
+- You are now able to filter for specific formats in the new semantic "GetFieldValues" call.
+
 ** Version 2.6.11 **
 
 - February 16, 2015

@@ -394,13 +394,46 @@ function parse_redirect (
 		break;
 		
 		case 'GetFieldValues':
-            $values = c_comdef_meeting::GetAllValuesForKey ( trim ( $http_vars['meeting_key'] ) );
+		    $meeting_key = trim ( $http_vars['meeting_key'] );
+            $values = c_comdef_meeting::GetAllValuesForKey ( $meeting_key );
             if ( isset ( $values ) && is_array ( $values ) && count ( $values ) )
                 {
-                $result2 = array ('"'.trim ( $http_vars['meeting_key'] ).'","ids"');
+                $result2 = array ('"'.$meeting_key.'","ids"');
             
                 foreach ( $values as $value=>$ids )
                     {
+                    if ( ($meeting_key == 'formats') && isset ( $http_vars['specific_formats'] ) && trim ( $http_vars['specific_formats'] ) )
+                        {
+                        $targeted_formats = explode ( ',', trim ( $http_vars['specific_formats'] ) );
+                        if ( is_array ( $targeted_formats ) && count ( $targeted_formats ) )
+                            {
+                            $targeted_formats = array_map ( intval, $targeted_formats );
+                            $these_formats = explode ( ' ', $value );
+                        
+                            if ( is_array ( $these_formats ) && count ( $these_formats ) )
+                                {
+                                $these_formats = array_map ( intval, $these_formats );
+                                $value = array_intersect ( $these_formats, $targeted_formats );
+                                if ( !count ( $value ) )
+                                    {
+                                    continue;
+                                    }
+                                else
+                                    {
+                                    $value = implode ( ' ', $value );
+                                    }
+                                }
+                            else
+                                {
+                                continue;
+                                }
+                            }
+                        else
+                            {
+                            break;
+                            }
+                        }
+                    
                     $ids = explode ( ',', $ids );
                     $ids = trim ( implode ( ' ', $ids ) );
                     $result2[] = '"'.$value.'","'.$ids.'"';
