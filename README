@@ -49,7 +49,7 @@ CHANGELIST
 ** Version 2.6.12 **
 
 - TBD
-- You are now able to filter for specific formats in the new semantic "GetFieldValues" call.
+- You are now able to filter for specific formats in the new semantic "GetFieldValues" call by adding a "&specific_formats=1,2,3..." to the parameter list. Also, you can make it an AND (all values) search by adding "&all_formats".
 
 ** Version 2.6.11 **
 

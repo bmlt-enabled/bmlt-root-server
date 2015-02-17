@@ -414,6 +414,15 @@ function parse_redirect (
                                 {
                                 $these_formats = array_map ( intval, $these_formats );
                                 $value = array_intersect ( $these_formats, $targeted_formats );
+                                if ( isset ( $http_vars['all_formats'] ) )
+                                    {
+                                    $diff = array_diff ( $targeted_formats, $value );
+                                    if ( isset ( $diff ) && is_array ( $diff ) && count ( $diff ) )
+                                        {
+                                        continue;
+                                        }
+                                    }
+                                    
                                 if ( !count ( $value ) )
                                     {
                                     continue;
