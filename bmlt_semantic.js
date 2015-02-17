@@ -532,6 +532,78 @@ BMLTSemantic.prototype.getScopedElement = function ( inID
 
 /*******************************************************************************************/
 /**
+    \brief This scans all the various settings, and does what is necessary.
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.mapPage = function ( inItem
+                                            )
+{
+    this.mapSelectors(inItem);
+};
+
+/*******************************************************************************************/
+/**
+    \brief This scans all the various selectors, and does what is necessary.
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.mapSelectors = function ( inItem
+                                            )
+{
+    var main_fieldset_select = this.getScopedElement ( 'bmlt_semantic_form_main_mode_select' );
+    var main_fieldset_direct_uri_div = this.getScopedElement ( 'bmlt_semantic_form_direct_url_div' );
+    var response_type_select = this.getScopedElement ( 'bmlt_semantic_form_response_type_select' );
+    var switcher_select = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select' );
+    var switcher_type_select_naws_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_naws_option' );
+    var bmlt_semantic_form_meeting_search_div = this.getScopedElement ( 'bmlt_semantic_form_meeting_search_div' );
+    
+    if ( main_fieldset_select.value == 'DOWNLOAD' )
+        {
+        if ( main_fieldset_direct_uri_div.style.display == 'none' )
+            {
+            main_fieldset_direct_uri_div.show();
+            response_type_select.selectedIndex = 0;
+            };
+        }
+    else
+        {
+        main_fieldset_direct_uri_div.hide();
+        };
+
+    if ( (inItem != response_type_select) && (switcher_select.value == 'GetNAWSDump') && ((response_type_select.value != 'csv') || (main_fieldset_select.value != 'DOWNLOAD')) )
+        {
+        response_type_select.selectedIndex = 0;
+        }
+
+    if ( (inItem != switcher_select) && (switcher_select.value == 'GetNAWSDump') && ((response_type_select.value != 'csv') || (main_fieldset_select.value != 'DOWNLOAD')) )
+        {
+        switcher_select.selectedIndex = 0;
+        }
+
+    if ( switcher_select.value == 'GetSearchResults' )
+        {
+        if ( bmlt_semantic_form_meeting_search_div.style.display == 'none' )
+            {
+            bmlt_semantic_form_meeting_search_div.show();
+            this.reloadFromServer();
+            };
+        }
+    else
+        {
+        bmlt_semantic_form_meeting_search_div.hide();
+        };
+    
+    if ( (response_type_select.value == 'csv') && (main_fieldset_select.value == 'DOWNLOAD') )
+        {
+        switcher_type_select_naws_option.enable();
+        }
+    else
+        {
+        switcher_type_select_naws_option.disable();
+        };
+};
+
+/*******************************************************************************************/
+/**
     \brief Sets the basic text handler for text items (handles switching classes).
     
     \param inID   The ID that needs to be "scoped."
@@ -598,54 +670,7 @@ BMLTSemantic.prototype.handleTextInput = function ( inTextItem,
 BMLTSemantic.prototype.handleMainSelectChange = function ( inSelect
                                                             )
 {
-    var main_fieldset_direct_uri_div = this.getScopedElement ( 'bmlt_semantic_form_direct_url_div' );
-    var switcher_type_select_naws_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_naws_option' );
-    var response_type_select = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select' );
-    var bmlt_semantic_form_meeting_search_div = this.getScopedElement ( 'bmlt_semantic_form_meeting_search_div' );
-    
-    if ( inSelect.value == 'SHORTCODE' )
-        {
-        main_fieldset_direct_uri_div.hide();
-        
-        if ( response_type_select.value == 'GetNAWSDump' )
-            {
-            response_type_select.selectedIndex = 0;
-            bmlt_semantic_form_meeting_search_div.show();
-            };
-        
-        switcher_type_select_naws_option.disable();
-        }
-    else
-        {
-        main_fieldset_direct_uri_div.show();
-        switcher_type_select_naws_option.enable();
-        response_type_select.selectedIndex = 0;
-        bmlt_semantic_form_meeting_search_div.show();
-        };
-};
-
-/*******************************************************************************************/
-/**
-    \brief
-    
-    \param inSelect   The object that experienced change.
-*/
-/*******************************************************************************************/
-BMLTSemantic.prototype.handleSwitcherSelectChange = function ( inSelect
-                                                            )
-{
-    var bmlt_semantic_form_meeting_search_div = this.getScopedElement ( 'bmlt_semantic_form_meeting_search_div' );
-    
-    if ( inSelect.value == 'GetSearchResults' )
-        {
-        bmlt_semantic_form_meeting_search_div.show();
-        this.fetchFormats();
-        this.fetchServiceBodies();
-        }
-    else
-        {
-        bmlt_semantic_form_meeting_search_div.hide();
-        };
+    this.mapPage(inSelect);
 };
 
 /*******************************************************************************************/
@@ -658,23 +683,20 @@ BMLTSemantic.prototype.handleSwitcherSelectChange = function ( inSelect
 BMLTSemantic.prototype.handleResponseSelectChange = function ( inSelect
                                                             )
 {
-    var response_type_select = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select' );
-    var switcher_type_select_naws_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_naws_option' );
-    var bmlt_semantic_form_meeting_search_div = this.getScopedElement ( 'bmlt_semantic_form_meeting_search_div' );
+    this.mapPage(inSelect);
+};
+
+/*******************************************************************************************/
+/**
+    \brief
     
-    if ( inSelect.value == 'csv' )
-        {
-        switcher_type_select_naws_option.enable();
-        }
-    else
-        {
-        if ( response_type_select.value == 'GetNAWSDump' )
-            {
-            bmlt_semantic_form_meeting_search_div.show();
-            inSelect.selectedIndex = 0;
-            };
-        switcher_type_select_naws_option.disable();        
-        };
+    \param inSelect   The object that experienced change.
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.handleSwitcherSelectChange = function ( inSelect
+                                                            )
+{
+    this.mapPage(inSelect);
 };
 
 /*******************************************************************************************/
@@ -699,9 +721,15 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     main_fieldset_select.onchange = function() { this.formHandler.handleMainSelectChange ( this ) };
     main_fieldset_select.selectedIndex = 0;
     
+    var bmlt_semantic_form_response_type_select = this.getScopedElement ( 'bmlt_semantic_form_response_type_select' );
+    bmlt_semantic_form_response_type_select.formHandler = this;
+    bmlt_semantic_form_response_type_select.onchange = function() { this.formHandler.handleResponseSelectChange ( this ) };
+    bmlt_semantic_form_response_type_select.selectedIndex = 0;
+    
     var bmlt_semantic_form_switcher_type_select = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select' );
     bmlt_semantic_form_switcher_type_select.formHandler = this;
     bmlt_semantic_form_switcher_type_select.onchange = function() { this.formHandler.handleSwitcherSelectChange ( this ) };
+    bmlt_semantic_form_switcher_type_select.selectedIndex = 0;
     
     var main_fieldset_direct_uri_div = this.getScopedElement ( 'bmlt_semantic_form_direct_url_div' );
     main_fieldset_direct_uri_div.formHandler = this;
@@ -710,12 +738,8 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     main_fieldset_direct_uri_div.show = function() { this.style.display = this.oldDisplay };
     
     var switcher_type_select_naws_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_naws_option' );
-    switcher_type_select_naws_option.disable = function() { this.disabled = true; if ( this.selected ) { this.parentNode.selectedIndex = 0 }; };
+    switcher_type_select_naws_option.disable = function() { this.disabled = true };
     switcher_type_select_naws_option.enable = function() { this.disabled = false };
-    
-    var bmlt_semantic_form_response_type_select = this.getScopedElement ( 'bmlt_semantic_form_response_type_select' );
-    bmlt_semantic_form_response_type_select.formHandler = this;
-    bmlt_semantic_form_response_type_select.onchange = function() { this.formHandler.handleResponseSelectChange ( this ) };
     
     var bmlt_semantic_form_meeting_search_div = this.getScopedElement ( 'bmlt_semantic_form_meeting_search_div' );
     bmlt_semantic_form_meeting_search_div.formHandler = this;
