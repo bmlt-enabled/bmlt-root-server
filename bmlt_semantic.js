@@ -6,12 +6,15 @@
             and will compile a resulting URI or shortcode.
 */
 /*******************************************************************************************/
-function BMLTSemanticResult ( )
+function BMLTSemanticResult ( inRootServerURI
+                            )
 {
+    this.root_server_uri = inRootServerURI;
 };
 
 BMLTSemanticResult.prototype.switcher = null;       ///< The main "?switcher=" value.
 BMLTSemanticResult.prototype.meeting_key = null;    ///< The main "meeting_key=" value.
+BMLTSemanticResult.prototype.root_server_uri = null;    ///< The main "meeting_key=" value.
 
 /*******************************************************************************************/
 /**
@@ -24,7 +27,8 @@ BMLTSemanticResult.prototype.meeting_key = null;    ///< The main "meeting_key="
 */
 /*******************************************************************************************/
 function BMLTSemantic ( inSuffix,
-                        inAJAXURI
+                        inAJAXURI,
+                        inRootServerURI
                         )
 {
     this.id_suffix = inSuffix;
@@ -33,7 +37,7 @@ function BMLTSemantic ( inSuffix,
     this.service_body_objects = null;
     this.field_keys = null;
     this.temp_service_body_objects = null;
-    this.state = new BMLTSemanticResult();
+    this.state = new BMLTSemanticResult(inRootServerURI);
     
     this.setUpForm();
 };

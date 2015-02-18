@@ -317,7 +317,7 @@ class bmlt_semantic
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= bmlt_semantic::strip_script ( 'bmlt_semantic.js' );
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
-        $ret .= 'var bmlt_semantic_js_object'.$this->_myJSName.' = new BMLTSemantic ( \''.$this->_myJSName.'\', \''.$this->_myURI.'?ajaxCall\' );';
+        $ret .= 'var bmlt_semantic_js_object'.$this->_myJSName.' = new BMLTSemantic ( \''.$this->_myJSName.'\', \''.$this->_myURI.'?ajaxCall\', \''.$this->_bmltRootServerURI.'\' );';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '</script>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
@@ -452,7 +452,6 @@ class bmlt_semantic
         $ret .= '</legend>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $iStart = intval ( $this->localize_string ( 'startDay' ) );
-        $ret .= $this->make_checkbox_html ( $this->localize_string ( 'weekday0' ), 'bmlt_semantic_form_weekday_checkbox_0', TRUE );
         for ( $i = 0; $i < 7; $i++ )
             {
             $day_int = $iStart + $i;
@@ -463,7 +462,7 @@ class bmlt_semantic
             $name = $this->localize_string ( 'weekday'.$day_int );
             $value = $day_int;
             
-            $ret .= $this->make_checkbox_html ( $name, 'bmlt_semantic_form_weekday_checkbox_'.$value, TRUE, $value );
+            $ret .= $this->make_checkbox_html ( $name, 'bmlt_semantic_form_weekday_checkbox_'.$value, FALSE, $value );
             }
         $ret .= '</fieldset>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';  
@@ -553,9 +552,9 @@ class bmlt_semantic
         $ret .= '<option value="GetFormats">'.$this->localize_string ( 'switcher_type_selector_formats' ).'</option>';
         $ret .= '<option value="GetServiceBodies">'.$this->localize_string ( 'switcher_type_selector_sb' ).'</option>';
         $ret .= '<option value="GetChanges">'.$this->localize_string ( 'switcher_type_selector_changes' ).'</option>';
-        $ret .= '<option id="bmlt_semantic_form_switcher_type_select_naws_option'.htmlspecialchars ( $this->_myJSName ).'" value="GetNAWSDump">'.$this->localize_string ( 'switcher_type_selector_naws' ).'</option>';
         $ret .= '<option value="GetFieldKeys">'.$this->localize_string ( 'switcher_type_selector_field_keys' ).'</option>';
         $ret .= '<option value="GetFieldValues">'.$this->localize_string ( 'switcher_type_selector_field_values' ).'</option>';
+        $ret .= '<option id="bmlt_semantic_form_switcher_type_select_naws_option'.htmlspecialchars ( $this->_myJSName ).'" value="GetNAWSDump">'.$this->localize_string ( 'switcher_type_selector_naws' ).'</option>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '</select>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
