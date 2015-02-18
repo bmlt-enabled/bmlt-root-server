@@ -1,3 +1,33 @@
+*
+{
+    margin:0;
+    padding:0;
+}
+
+html,
+body
+{
+    width:100%;
+}
+
+body
+{
+    font-family: Verdana;
+}
+
+dl
+{
+    margin-left:0.25em;
+    margin-top:0.5em;
+    margin-bottom:0.5em;
+}
+
+dd dl
+{
+    margin-top:0;
+    margin-left:2em;
+}
+
 form.bmlt_semantic_form,
 input.bmlt_semantic_form_root_server_text_input,
 fieldset.bmlt_semantic_form_main_fieldset,
@@ -9,4 +39,75 @@ div.bmlt_semantic_form_direct_url_div
 input.bmlt_semantic_form_disabled_text
 {
     color: #559;
+}
+
+div.bmlt_checkbox_container
+{
+    float:left;
+    width:10em;
+}
+
+div.clear_both
+{
+    float:none;
+    clear:both;
+}
+
+div.bmlt_checkbox_container label,
+dt.bmlt_sb_dt label
+{
+    padding-left:0.25em;
+    font-weight:bold;
+}
+
+fieldset.bmlt_semantic_form_formats_fieldset div.bmlt_checkbox_container
+{
+    width: 4em;
+}
+
+fieldset
+{
+    margin:0.5em;
+    padding:0.25em;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+}
+
+fieldset,
+fieldset legend
+{
+    border: 1px solid #555;
+}
+
+fieldset legend
+{
+    background-color: #ff6;
+    font-weight:bold;
+    padding-top:0.125em;
+    padding-bottom:0.125em;
+    padding-left:0.25em;
+    padding-right:0.25em;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+}
+
+fieldset legend label
+{
+    padding-right: 0.25em;
+}
+
+div.bmlt_workshop_blurb_note_div
+{
+    padding: 0.25em;
+    margin: 0.125em;
+    background-color: #fc9;
+    border: 1px solid #fc9;
+    font-style: italic;
+    font-size: small;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+    box-shadow: 2px 2px 2px #888;
 }

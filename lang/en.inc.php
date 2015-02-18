@@ -32,9 +32,10 @@ $this->_localization = array (
                                 'weekday6'                              =>  'Friday',
                                 'weekday7'                              =>  'Saturday',
                                 'startDay'                              =>  1,
+                                'defaultFieldSelect'                    =>  'Select A Field (None Selected)',
                                 'keys_section_label'                    =>  'Search for a Specific Value of',
                                 'all_unselected_note1'                  =>  'If none of these are selected, they will have no bearing at all on the search.',
                                 'all_unselected_note2'                  =>  'If any are selected, then the search will require that the selected terms match.',
                                 'and_note'                              =>  'This is an "AND" search. Every one of these have to match in order to count.',
-                                'or_note'                               =>  'This is an "OR" search. Matching any one of these will count. They don\'t all have to match.'
+                                'or_note'                               =>  'This is an "OR" search. Matching any one of these will count. They don\'t all have to match. However, you need at least one match.'
                             );

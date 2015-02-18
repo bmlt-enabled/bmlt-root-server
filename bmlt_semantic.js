@@ -310,6 +310,10 @@ BMLTSemantic.prototype.populateFormatsSection = function()
             
             formatContainer.appendChild ( newContainer );
             };
+        
+        var breakerBreakerRubberDuck = document.createElement ( 'div' );
+        breakerBreakerRubberDuck.className ='clear_both';
+        formatContainer.appendChild ( breakerBreakerRubberDuck );
         };
 };
 
@@ -502,7 +506,7 @@ BMLTSemantic.prototype.fetchFieldKeysCallback = function (inHTTPReqObject
 BMLTSemantic.prototype.populateFieldSelect = function ()
 {
     var selectElement = this.getScopedElement ( 'bmlt_semantic_form_field_select' );
-    for ( var i = selectElement.childNodes.length; i-- > 0; )
+    for ( var i = selectElement.childNodes.length; i-- > 1; )
         {
         selectElement.removeChild ( sbContainer.childNodes[i] );
         };
