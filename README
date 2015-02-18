@@ -48,8 +48,8 @@ CHANGELIST
 ----------
 ** Version 2.6.12 **
 
-- TBD
-- You are now able to filter for specific formats in the new semantic "GetFieldValues" call by adding a "&specific_formats=1,2,3..." to the parameter list. Also, you can make it an AND (all values) search by adding "&all_formats".
+- February 17, 2015
+- You are now able to filter for specific formats in the new semantic "GetFieldValues" call by adding a "&specific_formats=1,2,3..." to the parameter list. Also, you can make it an AND (all values) search by adding "&all_formats," which means that the meeting must have all of the given formats to match. Default is "OR," so any one of the formats will trigger a match.
 
 ** Version 2.6.11 **
 
