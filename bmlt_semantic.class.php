@@ -308,6 +308,8 @@ class bmlt_semantic
     {
         $ret = '<form id="bmlt_semantic_form'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form" action="'.htmlspecialchars ( $this->_myURI ).'" method="POST">';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $ret .= '<div id="bmlt_semantic_form_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_div">';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= $this->get_root_server_element();
         
         $ret .= $this->get_wizard_page_main_fieldset_html();
@@ -327,6 +329,8 @@ class bmlt_semantic
         $ret .= bmlt_semantic::strip_script ( 'bmlt_semantic.css' );
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '</style>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $ret .= '</div>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '</form>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
