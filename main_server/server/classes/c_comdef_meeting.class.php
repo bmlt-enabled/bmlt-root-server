@@ -812,7 +812,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 			    case    'longitude':
 			    case    'latitude':
 			        $inKey = strtolower ( trim ( $inKey ) );
-                    $sql = "SELECT `$inKey`,`id_bigint` FROM `".c_comdef_server::GetMeetingTableName_obj()."_main` WHERE `id_bigint` > 0"; 
+                    $sql = "SELECT `$inKey`,`id_bigint` FROM `".c_comdef_server::GetMeetingTableName_obj()."_main` WHERE (`id_bigint` > 0) AND (`published`=1)"; 
                     $rows = c_comdef_dbsingleton::preparedQuery( $sql, array ( ) );
                 break;
                 
@@ -860,7 +860,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 					        {
 					        $value = explode ( ',', $value );
 					        asort ( $value );
-					        $value = implode ( ' ', $value );
+					        $value = implode ( "\t", $value );
 					        }
 					    }
 					

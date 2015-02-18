@@ -408,7 +408,7 @@ function parse_redirect (
                         if ( is_array ( $targeted_formats ) && count ( $targeted_formats ) )
                             {
                             $targeted_formats = array_map ( intval, $targeted_formats );
-                            $these_formats = explode ( ' ', $value );
+                            $these_formats = explode ( "\t", $value );
                         
                             if ( is_array ( $these_formats ) && count ( $these_formats ) )
                                 {
@@ -429,7 +429,7 @@ function parse_redirect (
                                     }
                                 else
                                     {
-                                    $value = implode ( ' ', $value );
+                                    $value = implode ( "\t", $value );
                                     }
                                 }
                             else
@@ -444,10 +444,30 @@ function parse_redirect (
                         }
                     
                     $ids = explode ( ',', $ids );
-                    $ids = trim ( implode ( ' ', $ids ) );
+                    $ids = trim ( implode ( "\t", $ids ) );
                     $result2[] = '"'.$value.'","'.$ids.'"';
                     }
                 
+                $result3 = array();
+                
+                foreach ( $result2 as $resultRow )
+                    {
+                    list ( $key, $value ) = explode ( ',', $resultRow );
+                    
+                    $value = explode ( "\t", trim ( $value, '"' ) );
+                    $oldValue = explode ( "\t", $result3[$key] );
+                    $value = array_unique ( array_merge ( $value, $oldValue ) );
+                    asort ( $value );
+                    $value = trim ( implode ( "\t", $value ) );
+                    $result3[$key] = $value;
+                    }
+                
+                $result2 = array();
+                foreach ( $result3 as $key=>$value )
+                    {
+                    $result2[] = "$key,\"$value\"";
+                    }
+                        
                 $result2 = implode ( "\n", $result2 );
                 }
             

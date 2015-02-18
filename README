@@ -46,6 +46,12 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+** Version 2.6.13 **
+
+- TBD
+
+- Made some changes to make the new semantic responses even more powerful. They are now sorted and reduced.
+
 ** Version 2.6.12 **
 
 - February 17, 2015
