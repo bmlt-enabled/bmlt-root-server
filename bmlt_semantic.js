@@ -1,8 +1,23 @@
 /*******************************************************************************************/
 /**
+    \class  BMLTSemanticResult
+    
+    \brief  This keeps the state of the result of all that stuff going on in the workshop,
+            and will compile a resulting URI or shortcode.
+*/
+/*******************************************************************************************/
+function BMLTSemanticResult ( )
+{
+};
+
+BMLTSemanticResult.prototype.switcher = null;       ///< The main "?switcher=" value.
+BMLTSemanticResult.prototype.meeting_key = null;    ///< The main "meeting_key=" value.
+
+/*******************************************************************************************/
+/**
     \class  BMLTSemantic
     
-    \brief
+    \brief This is the controlling class for the BMLT interactive semantic workshop.
     
     \param inSuffix A constructor parameter that gives a suffix (for multiple forms).
     \param inAJAXURI The base URI for AJAX callbacks.
@@ -18,6 +33,7 @@ function BMLTSemantic ( inSuffix,
     this.service_body_objects = null;
     this.field_keys = null;
     this.temp_service_body_objects = null;
+    this.state = new BMLTSemanticResult();
     
     this.setUpForm();
 };
@@ -28,6 +44,7 @@ BMLTSemantic.prototype.format_objects = null;
 BMLTSemantic.prototype.field_keys = null;
 BMLTSemantic.prototype.service_body_objects = null;
 BMLTSemantic.prototype.temp_service_body_objects = null;
+BMLTSemantic.prototype.state = null;
 
 /*******************************************************************************************/
 /**
@@ -533,20 +550,24 @@ BMLTSemantic.prototype.getScopedElement = function ( inID
 /*******************************************************************************************/
 /**
     \brief This scans all the various settings, and does what is necessary.
+    
+    \param inItem This is the item that triggered this map.
 */
 /*******************************************************************************************/
 BMLTSemantic.prototype.mapPage = function ( inItem
                                             )
 {
-    this.mapSelectors(inItem);
+    this.mapMainSelectors(inItem);
 };
 
 /*******************************************************************************************/
 /**
-    \brief This scans all the various selectors, and does what is necessary.
+    \brief This scans the main selectors, and does what is necessary.
+    
+    \param inItem This is the item that triggered this map.
 */
 /*******************************************************************************************/
-BMLTSemantic.prototype.mapSelectors = function ( inItem
+BMLTSemantic.prototype.mapMainSelectors = function ( inItem
                                             )
 {
     var main_fieldset_select = this.getScopedElement ( 'bmlt_semantic_form_main_mode_select' );
