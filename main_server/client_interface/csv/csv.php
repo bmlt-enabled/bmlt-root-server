@@ -443,7 +443,7 @@ function parse_redirect (
                             }
                         }
                     
-                    $ids = explode ( ',', $ids );
+                    $ids = explode ( '\t', $ids );
                     $ids = trim ( implode ( "\t", $ids ) );
                     $result2[] = '"'.$value.'","'.$ids.'"';
                     }
@@ -465,7 +465,9 @@ function parse_redirect (
                 $result2 = array();
                 foreach ( $result3 as $key=>$value )
                     {
-                    $result2[] = "$key,\"$value\"";
+                    $key = str_replace ( '&APOS&', ',', trim ( $key, '"' ) );
+                    
+                    $result2[] = "\"$key\",\"$value\"";
                     }
                         
                 $result2 = implode ( "\n", $result2 );
@@ -476,7 +478,7 @@ function parse_redirect (
                 $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
                 $xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', $_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetFieldValues.php' ) );
                 $result .= "<fields xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
-                $result .= TranslateToXML ( $result2 );
+                $result .= str_replace ( "\t", ',', TranslateToXML ( $result2 ) );
                 $result .= "</fields>";
                 }
             elseif ( isset ( $http_vars['json_data'] ) )
@@ -485,7 +487,7 @@ function parse_redirect (
                 }
             else
                 {
-                $result = $result2;
+                $result = str_replace ( "\t", ',', $result2 );
                 }
         break;
         		
@@ -1241,7 +1243,7 @@ function TranslateToJSON ( $in_csv_data ///< An array of CSV data, with the firs
 				{
 				if ( isset ( $column ) )
 					{
-					$line[$keys[$index++]] = trim ( $column );
+					$line[$keys[$index++]] = str_replace ( "\t", ',', trim ( $column ) );
 					}
 				}
 			array_push ( $temp_keyed_array, $line );

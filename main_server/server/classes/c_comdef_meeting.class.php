@@ -820,14 +820,14 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 	                $temp = self::GetDataTableTemplate();
                     if ( isset ( $temp[$inKey] ) && ($temp[$inKey]['visibility'] != 1) )
                         {
-                        $sql = "SELECT `meetingid_bigint`,`data_string`,`data_bigint`,`data_double` FROM `".c_comdef_server::GetMeetingTableName_obj()."_data` WHERE (`key`=?) AND (`meetingid_bigint`>0)"; 
+                        $sql = "SELECT ".c_comdef_server::GetMeetingTableName_obj()."_main.published,".c_comdef_server::GetMeetingTableName_obj()."_data.meetingid_bigint,".c_comdef_server::GetMeetingTableName_obj()."_data.data_string,".c_comdef_server::GetMeetingTableName_obj()."_data.data_bigint,".c_comdef_server::GetMeetingTableName_obj()."_data.data_double FROM `".c_comdef_server::GetMeetingTableName_obj()."_data` INNER JOIN ".c_comdef_server::GetMeetingTableName_obj()."_main ON ".c_comdef_server::GetMeetingTableName_obj()."_main.id_bigint=".c_comdef_server::GetMeetingTableName_obj()."_data.meetingid_bigint WHERE (`key`=?) AND (`meetingid_bigint`>0) AND (".c_comdef_server::GetMeetingTableName_obj()."_main.published=1)"; 
                         }
                     else
                         {
 	                    $temp = self::GetLongDataTableTemplate();
                         if ( isset ( $temp[$inKey] ) && ($temp[$inKey]['visibility'] != 1) )
                             {
-                            $sql = "SELECT `meetingid_bigint`,`data_longtext`,`data_blob` FROM `".c_comdef_server::GetMeetingTableName_obj()."_longdata` WHERE (`key`=?) AND (`meetingid_bigint`>0)"; 
+                            $sql = "SELECT ".c_comdef_server::GetMeetingTableName_obj()."_main.published,".c_comdef_server::GetMeetingTableName_obj()."_longdata.data_longtext,".c_comdef_server::GetMeetingTableName_obj()."_longdata.data_blob FROM `".c_comdef_server::GetMeetingTableName_obj()."_longdata` INNER JOIN ".c_comdef_server::GetMeetingTableName_obj()."_main ON ".c_comdef_server::GetMeetingTableName_obj()."_main.id_bigint=".c_comdef_server::GetMeetingTableName_obj()."_longdata.meetingid_bigint WHERE (`key`=?) AND (`meetingid_bigint`>0) AND (".c_comdef_server::GetMeetingTableName_obj()."_main.published=1)"; 
                             }
                         }
                     $rows = c_comdef_dbsingleton::preparedQuery( $sql, array ( $inKey ) );
@@ -866,7 +866,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 					
 					if ( !$value && isset ( $row['data_string'] ) && trim ( $row['data_string'] ) )
 					    {
-					    $value = trim ( $row['data_string'] );
+					    $value = str_replace ( ',', '&APOS&', trim ( $row['data_string'] ) );
 					    }
 					
 					if ( !$value && isset ( $row['data_bigint'] ) )
@@ -901,14 +901,14 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                         
                         if ( isset ( $ret[$value] ) )
                             {
-                            $ids = explode ( ',', $ret[$value] );
+                            $ids = explode ( '\t', $ret[$value] );
                             $ids[] = $id;
                             }
                         else
                             {
                             $ids = array ( $id );
                             }
-                        $ret[$value] = implode ( ',', $ids );
+                        $ret[$value] = implode ( '\t', $ids );
                         }
                     else
                         {
@@ -916,14 +916,14 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                         
                         if ( isset ( $ret['NULL'] ) )
                             {
-                            $ids = explode ( ',', $ret['NULL'] );
+                            $ids = explode ( '\t', $ret['NULL'] );
                             $ids[] = $id;
                             }
                         else
                             {
                             $ids = array ( $id );
                             }
-                        $ret['NULL'] = trim ( implode ( ',', $ids ) );
+                        $ret['NULL'] = trim ( implode ( '\t', $ids ) );
                         }
 					}
 				}
