@@ -48,9 +48,11 @@ CHANGELIST
 ----------
 ** Version 2.6.13 **
 
-- TBD
+- February 17, 2015
 
 - Made some changes to make the new semantic responses even more powerful. They are now sorted and reduced.
+- Fixed a bug in the new semantic responses that reacted badly to commas in data values.
+- The internal response data from the new semantic calls is now in CSV, which makes it a lot more useful.
 
 ** Version 2.6.12 **
 
