@@ -46,4 +46,5 @@ $this->_localization = array (
                                 'default_date'                          =>  'YYYY-MM-DD',
                                 'meeting_id_changes'                    =>  'Look for changes in a meeting with this ID:',
                                 'meeting_id_changes_tooltip'            =>  'Enter the numeric ID of the meeting to check.',
+                                'no_addl_options'                       =>  'There are no additional options for this operation.',
                             );

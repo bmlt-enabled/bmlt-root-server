@@ -511,9 +511,13 @@ BMLTSemantic.prototype.fetchFieldKeysCallback = function (inHTTPReqObject
 BMLTSemantic.prototype.populateFieldSelect = function ()
 {
     var selectElement = this.getScopedElement ( 'bmlt_semantic_form_field_select' );
-    for ( var i = selectElement.childNodes.length; i-- > 1; )
+    
+    if ( selectElement && selectElement.childNodes )
         {
-        selectElement.removeChild ( sbContainer.childNodes[i] );
+        for ( var i = selectElement.childNodes.length; i-- > 1; )
+            {
+            selectElement.removeChild ( selectElement.childNodes[i] );
+            };
         };
     
     for ( var i = 0; i < this.field_keys.length; i++ )
@@ -562,31 +566,19 @@ BMLTSemantic.prototype.getScopedElement = function ( inID
 
 /*******************************************************************************************/
 /**
-    \brief This scans all the various settings, and does what is necessary.
-    
-    \param inItem This is the item that triggered this map.
-*/
-/*******************************************************************************************/
-BMLTSemantic.prototype.mapPage = function ( inItem
-                                            )
-{
-    this.mapMainSelectors(inItem);
-};
-
-/*******************************************************************************************/
-/**
     \brief This scans the main selectors, and does what is necessary.
     
     \param inItem This is the item that triggered this map.
 */
 /*******************************************************************************************/
-BMLTSemantic.prototype.mapMainSelectors = function ( inItem
+BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
                                             )
 {
     var main_fieldset_select = this.getScopedElement ( 'bmlt_semantic_form_main_mode_select' );
     var main_fieldset_direct_uri_div = this.getScopedElement ( 'bmlt_semantic_form_direct_url_div' );
     var response_type_select = this.getScopedElement ( 'bmlt_semantic_form_response_type_select' );
     var switcher_select = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select' );
+    var switcher_type_select_formats_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_formats_option' );
     var switcher_type_select_sb_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_sb_option' );
     var switcher_type_select_changes_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_changes_option' );
     var switcher_type_select_fieldkey_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_fieldkey_option' );
@@ -594,7 +586,15 @@ BMLTSemantic.prototype.mapMainSelectors = function ( inItem
     var switcher_type_select_naws_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_naws_option' );
     var bmlt_semantic_form_meeting_search_div = this.getScopedElement ( 'bmlt_semantic_form_meeting_search_div' );
     var bmlt_semantic_form_changes_div = this.getScopedElement ( 'bmlt_semantic_form_changes_div' );
+    var bmlt_switcher_div_no_options_blurb = this.getScopedElement ( 'bmlt_switcher_div_no_options_blurb' );
     
+    switcher_type_select_formats_option.enable();
+    switcher_type_select_sb_option.enable();
+    switcher_type_select_changes_option.enable();
+    switcher_type_select_fieldkey_option.enable();
+    switcher_type_select_fieldval_option.enable();
+    switcher_type_select_naws_option.enable();
+
     if ( main_fieldset_select.value == 'DOWNLOAD' )
         {
         if ( main_fieldset_direct_uri_div.style.display == 'none' )
@@ -617,9 +617,17 @@ BMLTSemantic.prototype.mapMainSelectors = function ( inItem
         {
         switcher_select.selectedIndex = 0;
         }
+    else
+        {
+        if ( (inItem != switcher_select) && (switcher_select.value != 'GetSearchResults') && ((response_type_select.value == 'kml') || (response_type_select.value == 'gpx') || (response_type_select.value == 'poi')) )
+            {
+            switcher_select.selectedIndex = 0;
+            };
+        };
 
     if ( switcher_select.value == 'GetSearchResults' )
         {
+        bmlt_switcher_div_no_options_blurb.hide();
         bmlt_semantic_form_changes_div.hide();
         if ( bmlt_semantic_form_meeting_search_div.style.display == 'none' )
             {
@@ -629,31 +637,50 @@ BMLTSemantic.prototype.mapMainSelectors = function ( inItem
         }
     else
         {
+        bmlt_semantic_form_meeting_search_div.hide();
         if ( switcher_select.value == 'GetChanges' )
             {
-            bmlt_semantic_form_changes_div.show();
+            bmlt_switcher_div_no_options_blurb.hide();
+            if ( bmlt_semantic_form_changes_div.style.display == 'none' )
+                {
+                bmlt_semantic_form_changes_div.show();
+                };
             }
         else
             {
+            if ( switcher_select.value == 'GetFieldValues' )
+                {
+                bmlt_switcher_div_no_options_blurb.hide();
+                }
+            else
+                {
+                if ( switcher_select.value == 'GetNAWSDump' )
+                    {
+                    bmlt_switcher_div_no_options_blurb.hide();
+                    }
+                else
+                    {
+                    bmlt_switcher_div_no_options_blurb.show();
+                    };
+                };
             bmlt_semantic_form_changes_div.hide();
             };
-        
-        bmlt_semantic_form_meeting_search_div.hide();
         };
     
     if ( main_fieldset_select.value == 'DOWNLOAD' )
         {
-        switcher_type_select_sb_option.enable();
-        switcher_type_select_changes_option.enable();
-        switcher_type_select_fieldkey_option.enable();
-        switcher_type_select_fieldval_option.enable();
-        switcher_type_select_naws_option.enable();
-        if ( response_type_select.value == 'csv' )
+        if ( response_type_select.value != 'csv' )
             {
-            switcher_type_select_naws_option.enable();
-            }
-        else
+            switcher_type_select_naws_option.disable();
+            };
+        
+        if ( (main_fieldset_select.value == 'DOWNLOAD') && ((response_type_select.value == 'kml') || (response_type_select.value == 'gpx') || (response_type_select.value == 'poi')) )
             {
+            switcher_type_select_formats_option.disable();
+            switcher_type_select_sb_option.disable();
+            switcher_type_select_changes_option.disable();
+            switcher_type_select_fieldkey_option.disable();
+            switcher_type_select_fieldval_option.disable();
             switcher_type_select_naws_option.disable();
             };
         }
@@ -672,28 +699,6 @@ BMLTSemantic.prototype.mapMainSelectors = function ( inItem
         switcher_type_select_fieldval_option.disable();
         switcher_type_select_naws_option.disable();
         };
-};
-
-/*******************************************************************************************/
-/**
-    \brief Sets the basic text handler for text items (handles switching classes).
-    
-    \param inID   The ID that needs to be "scoped."
-*/
-/*******************************************************************************************/
-BMLTSemantic.prototype.setTextHandlers = function ( inID
-                                                    )
-{
-    var textItem = this.getScopedElement ( inID );
-    
-    textItem.defaultValue = textItem.value;
-    textItem.defaultClass = textItem.className;
-    textItem.formHandler = this;
-    textItem.className += ' bmlt_semantic_form_disabled_text';
-    textItem.onchange = function() { this.formHandler.handleTextInput ( this, true ); };
-    textItem.onkeyup = function() { this.formHandler.handleTextInput ( this, true ); };
-    textItem.onblur = function() { this.formHandler.handleTextInput ( this, false ); };
-    textItem.onfocus = function() { this.formHandler.handleTextInput ( this, true ); };
 };
 
 /*******************************************************************************************/
@@ -761,7 +766,7 @@ BMLTSemantic.prototype.handleTextInput = function ( inTextItem,
 BMLTSemantic.prototype.handleMainSelectChange = function ( inSelect
                                                             )
 {
-    this.mapPage(inSelect);
+    this.setUpMainSelectors ( inSelect );
 };
 
 /*******************************************************************************************/
@@ -774,7 +779,7 @@ BMLTSemantic.prototype.handleMainSelectChange = function ( inSelect
 BMLTSemantic.prototype.handleResponseSelectChange = function ( inSelect
                                                             )
 {
-    this.mapPage(inSelect);
+    this.setUpMainSelectors ( inSelect );
 };
 
 /*******************************************************************************************/
@@ -787,7 +792,7 @@ BMLTSemantic.prototype.handleResponseSelectChange = function ( inSelect
 BMLTSemantic.prototype.handleSwitcherSelectChange = function ( inSelect
                                                             )
 {
-    this.mapPage(inSelect);
+    this.setUpMainSelectors ( inSelect );
 };
 
 /*******************************************************************************************/
@@ -809,78 +814,88 @@ BMLTSemantic.prototype.validateVersion = function ()
 
 /*******************************************************************************************/
 /**
+    \brief Sets the basic text handler for text items (handles switching classes).
+    
+    \param inID   The ID that needs to be "scoped."
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.setTextHandlers = function ( inID
+                                                    )
+{
+    this.setBasicFunctions ( inID );
+    var textItem = this.getScopedElement ( inID );
+    
+    textItem.className += ' bmlt_semantic_form_disabled_text';
+    textItem.onchange = function() { this.formHandler.handleTextInput ( this, true ); };
+    textItem.onkeyup = function() { this.formHandler.handleTextInput ( this, true ); };
+    textItem.onblur = function() { this.formHandler.handleTextInput ( this, false ); };
+    textItem.onfocus = function() { this.formHandler.handleTextInput ( this, true ); };
+};
+
+/*******************************************************************************************/
+/**
+    \brief Sets up simple enable/disable/show/hide functions for a given item.
+    
+    \param inItemID The ID (unscoped) of the item.
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.setBasicFunctions = function ( inItemID
+                                                    )
+{
+    var item = this.getScopedElement ( inItemID );
+    item.formHandler = this;
+    item.oldDisplay = item.style.display;
+    if ( item.oldDisplay == 'none' )
+        {
+        item.oldDisplay = 'block';
+        };
+    item.defaultValue = item.value;
+    item.defaultClass = item.className;
+    item.disable = function() { this.disabled = true };
+    item.enable = function() { this.disabled = false };
+    item.hide = function() { this.style.display = 'none' };
+    item.show = function() { this.style.display = this.oldDisplay };
+};
+
+/*******************************************************************************************/
+/**
     \brief Initialize the main fieldset.
 */
 /*******************************************************************************************/
 BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
 {
-    var main_fieldset_select = this.getScopedElement ( 'bmlt_semantic_form_main_mode_select' );
-    main_fieldset_select.formHandler = this;
-    main_fieldset_select.onchange = function() { this.formHandler.handleMainSelectChange ( this ) };
-    main_fieldset_select.selectedIndex = 0;
-    
-    var bmlt_semantic_form_response_type_select = this.getScopedElement ( 'bmlt_semantic_form_response_type_select' );
-    bmlt_semantic_form_response_type_select.formHandler = this;
-    bmlt_semantic_form_response_type_select.onchange = function() { this.formHandler.handleResponseSelectChange ( this ) };
-    bmlt_semantic_form_response_type_select.selectedIndex = 0;
-    
-    var bmlt_semantic_form_switcher_type_select = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select' );
-    bmlt_semantic_form_switcher_type_select.formHandler = this;
-    bmlt_semantic_form_switcher_type_select.onchange = function() { this.formHandler.handleSwitcherSelectChange ( this ) };
-    bmlt_semantic_form_switcher_type_select.selectedIndex = 0;
-    
-    var main_fieldset_direct_uri_div = this.getScopedElement ( 'bmlt_semantic_form_direct_url_div' );
-    main_fieldset_direct_uri_div.formHandler = this;
-    main_fieldset_direct_uri_div.oldDisplay = main_fieldset_direct_uri_div.style.display;
-    main_fieldset_direct_uri_div.hide = function() { this.style.display = 'none' };
-    main_fieldset_direct_uri_div.show = function() { this.style.display = this.oldDisplay };
-    
-    var switcher_type_select_sb_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_sb_option' );
-    switcher_type_select_sb_option.disable = function() { this.disabled = true };
-    switcher_type_select_sb_option.enable = function() { this.disabled = false };
-    
-    var switcher_type_select_changes_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_changes_option' );
-    switcher_type_select_changes_option.disable = function() { this.disabled = true };
-    switcher_type_select_changes_option.enable = function() { this.disabled = false };
-    
-    var switcher_type_select_fieldkey_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_fieldkey_option' );
-    switcher_type_select_fieldkey_option.disable = function() { this.disabled = true };
-    switcher_type_select_fieldkey_option.enable = function() { this.disabled = false };
-    
-    var switcher_type_select_fieldval_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_fieldval_option' );
-    switcher_type_select_fieldval_option.disable = function() { this.disabled = true };
-    switcher_type_select_fieldval_option.enable = function() { this.disabled = false };
-    
-    var switcher_type_select_naws_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_naws_option' );
-    switcher_type_select_naws_option.disable = function() { this.disabled = true };
-    switcher_type_select_naws_option.enable = function() { this.disabled = false };
-    
-    var response_type_select_kml_option = this.getScopedElement ( 'bmlt_semantic_form_response_type_select_kml_option' );
-    response_type_select_kml_option.disable = function() { this.disabled = true };
-    response_type_select_kml_option.enable = function() { this.disabled = false };
-    
-    var response_type_select_gpx_option = this.getScopedElement ( 'bmlt_semantic_form_response_type_select_gpx_option' );
-    response_type_select_gpx_option.disable = function() { this.disabled = true };
-    response_type_select_gpx_option.enable = function() { this.disabled = false };
-    
-    var response_type_select_poi_option = this.getScopedElement ( 'bmlt_semantic_form_response_type_select_poi_option' );
-    response_type_select_poi_option.disable = function() { this.disabled = true };
-    response_type_select_poi_option.enable = function() { this.disabled = false };
-
-    var bmlt_semantic_form_meeting_search_div = this.getScopedElement ( 'bmlt_semantic_form_meeting_search_div' );
-    bmlt_semantic_form_meeting_search_div.formHandler = this;
-    bmlt_semantic_form_meeting_search_div.oldDisplay = bmlt_semantic_form_meeting_search_div.style.display;
-    bmlt_semantic_form_meeting_search_div.hide = function() { this.style.display = 'none' };
-    bmlt_semantic_form_meeting_search_div.show = function() { this.style.display = this.oldDisplay };
-    
-    var bmlt_semantic_form_changes_div = this.getScopedElement ( 'bmlt_semantic_form_changes_div' );
-    bmlt_semantic_form_changes_div.formHandler = this;
-    bmlt_semantic_form_changes_div.hide = function() { this.style.display = 'none' };
-    bmlt_semantic_form_changes_div.show = function() { this.style.display = null };
+    this.setBasicFunctions ( 'bmlt_semantic_form_main_mode_select' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_direct_url_div' );
+    this.setBasicFunctions ( 'bmlt_switcher_div_no_options_blurb' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_meeting_search_div' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_changes_div' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_response_type_select' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_switcher_type_select' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_switcher_type_select_formats_option' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_switcher_type_select_sb_option' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_switcher_type_select_changes_option' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_switcher_type_select_fieldkey_option' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_switcher_type_select_fieldval_option' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_switcher_type_select_naws_option' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_response_type_select_kml_option' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_response_type_select_gpx_option' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_response_type_select_poi_option' );
     
     this.setTextHandlers ( 'bmlt_semantic_form_changes_from_text' );
     this.setTextHandlers ( 'bmlt_semantic_form_changes_to_text' );
     this.setTextHandlers ( 'bmlt_semantic_form_changes_id_text' );
+    
+    var main_fieldset_select = this.getScopedElement ( 'bmlt_semantic_form_main_mode_select' );
+    main_fieldset_select.onchange = function() { this.formHandler.handleMainSelectChange ( this ) };
+    main_fieldset_select.selectedIndex = 0;
+
+    var bmlt_semantic_form_response_type_select = this.getScopedElement ( 'bmlt_semantic_form_response_type_select' );
+    bmlt_semantic_form_response_type_select.onchange = function() { this.formHandler.handleResponseSelectChange ( this ) };
+    bmlt_semantic_form_response_type_select.selectedIndex = 0;
+    
+    var bmlt_semantic_form_switcher_type_select = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select' );
+    bmlt_semantic_form_switcher_type_select.onchange = function() { this.formHandler.handleSwitcherSelectChange ( this ) };
+    bmlt_semantic_form_switcher_type_select.selectedIndex = 0;
 };
 
 /*******************************************************************************************/
