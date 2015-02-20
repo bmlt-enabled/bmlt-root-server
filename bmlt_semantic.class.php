@@ -233,18 +233,15 @@ class bmlt_semantic
         $ajaxCall = isset ( $inHttpVars['ajaxCall'] );
         unset ( $inHttpVars['ajaxCall'] );
         
+        $this->_httpVars = $inHttpVars;     // Hang onto the rest.
+
         // Determine our URI for callbacks. Account for unusual ports and HTTPS.
         $https = isset ( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] && (strtolower ( trim ( $_SERVER['HTTPS'] ) ) != 'off'); // IIS puts "off" in this field, so we need to test for that.
-    
         $port = intval ( $_SERVER['SERVER_PORT'] );
-    
         $port = ($https && ($port == 443)) || (!$https && ($port == 80)) ? '' : ':'.$port;
-        
         $url_path = 'http'.($https ? 's' : '').'://'.$_SERVER['SERVER_NAME'].$port.$_SERVER['PHP_SELF'];
 
-        $this->_myURI = $url_path;      // This is the base for callbacks.
-        
-        $this->_httpVars = $inHttpVars; // Hang onto the rest.
+        $this->_myURI = $url_path;          // This is the base for callbacks.
 
         // This is the name of our JavaScript object.
         $this->_myJSName = ($this->_bmltRootServerURI ? '_'.preg_replace ( '|[^a-z0-9A-Z_]+|', '', htmlspecialchars ( $this->_bmltRootServerURI ) ) : '');
@@ -254,6 +251,54 @@ class bmlt_semantic
             $this->ajax_handler();
             exit(); // GBCW
             }
+    }
+    
+    /**************************************************************/
+    /** \brief  Query the server for its version.
+                This requires that the _bmltRootServerURI data member be valid.
+    
+        \returns an integer that will be MMMmmmfff (M = Major Version, m = Minor Version, f = Fix Version).
+    */
+    /**************************************************************/
+    function get_server_version()
+    {
+        $ret = 0;
+        $error = NULL;
+        
+        $uri = $this->_bmltRootServerURI.'/client_interface/serverInfo.xml';
+        $xml = self::call_curl ( $uri, $error );
+
+        if ( !$error && $xml )
+            {
+            $info_file = new DOMDocument;
+            if ( $info_file instanceof DOMDocument )
+                {
+                if ( @$info_file->loadXML ( $xml ) )
+                    {
+                    $has_info = $info_file->getElementsByTagName ( "bmltInfo" );
+                
+                    if ( ($has_info instanceof domnodelist) && $has_info->length )
+                        {
+                        $nodeVal = $has_info->item ( 0 )->nodeValue;
+                        $ret = explode ( '.', $nodeVal );
+                        
+                        if ( !isset ( $ret[1] ) )
+                            {
+                            $ret[1] = 0;
+                            }
+                        
+                        if ( !isset ( $ret[2] ) )
+                            {
+                            $ret[2] = 0;
+                            }
+                        
+                        $ret = (intval ( $ret[0] ) * 1000000) + (intval ( $ret[1] ) * 1000) + intval ( $ret[2] );
+                        }
+                    }
+                }
+            }
+            
+        return $ret;
     }
     
     /**************************************************************/
@@ -271,15 +316,19 @@ class bmlt_semantic
             {
             if ( isset ( $this->_httpVars['GetInitialFormats'] ) )
                 {
-                echo ( bmlt_semantic::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetFormats' ) );
+                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetFormats' ) );
                 }
             elseif ( isset ( $this->_httpVars['GetInitialServiceBodies'] ) )
                 {
-                echo ( bmlt_semantic::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetServiceBodies' ) );
+                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetServiceBodies' ) );
                 }
             elseif ( isset ( $this->_httpVars['GetFieldKeys'] ) )
                 {
-                echo ( bmlt_semantic::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetFieldKeys' ) );
+                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetFieldKeys' ) );
+                }
+            elseif ( isset ( $this->_httpVars['GetVersion'] ) )
+                {
+                echo ( $this->get_server_version() );
                 }
             }
     }
@@ -306,11 +355,17 @@ class bmlt_semantic
     /**************************************************************/
     function get_wizard_page_html()
     {
-        $ret = '<form id="bmlt_semantic_form'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form" action="'.htmlspecialchars ( $this->_myURI ).'" method="POST">';
+        $ret = '';
+        
+        if ( $this->_bmltRootServerURI )
+            {
+            $ret .= '<h1 id="bmlt_semantic_badserver_h1'.htmlspecialchars ( $this->_myJSName ).'" style="display:none">'.$this->localize_string ( 'need_good_url' ).'</h1>';
+            }
+        
+        $ret .= '<form id="bmlt_semantic_form'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form" action="'.htmlspecialchars ( $this->_myURI ).'" method="POST">';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '<div id="bmlt_semantic_form_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_div">';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
-        $ret .= $this->get_root_server_element();
         
         $ret .= $this->get_wizard_page_main_fieldset_html();
         
@@ -319,7 +374,8 @@ class bmlt_semantic
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= bmlt_semantic::strip_script ( 'bmlt_semantic.js' );
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
-        $ret .= 'var bmlt_semantic_js_object'.$this->_myJSName.' = new BMLTSemantic ( \''.$this->_myJSName.'\', \''.$this->_myURI.'?ajaxCall\', \''.$this->_bmltRootServerURI.'\' );';
+        $version = $this->get_server_version();
+        $ret .= 'var bmlt_semantic_js_object'.$this->_myJSName.' = new BMLTSemantic ( \''.$this->_myJSName.'\', \''.$this->_myURI.'?ajaxCall\', \''.$this->_bmltRootServerURI.'\', '.intval ( $version ).' );';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '</script>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
@@ -435,7 +491,39 @@ class bmlt_semantic
         $ret .= '</legend>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
         $ret .= $this->get_wizard_page_meeting_search_html();     
+        $ret .= $this->get_wizard_page_changes_html();     
         $ret .= '</fieldset>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        
+        return $ret;
+    }
+    
+    /**************************************************************/
+    /** \brief  
+        
+        \returns the HTML.
+    */
+    /**************************************************************/
+    function get_wizard_page_changes_html()
+    {
+        $ret = '<div id="bmlt_semantic_form_changes_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_changes_div" style="display:none">';
+        $ret .= '<div id="bmlt_semantic_form_changes_blurb_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_line">';
+        $ret .= '<p>'.$this->localize_string ( 'date_format1' ).'</p>';
+        $ret .= '<p>'.$this->localize_string ( 'date_format2' ).'</p>';
+        $ret .= '</div>';
+        $ret .= '<div id="bmlt_semantic_form_changes_from_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_line">';
+        $ret .= '<label for="bmlt_semantic_form_changes_from_text'.htmlspecialchars ( $this->_myJSName ).'" id="bmlt_semantic_form_changes_from_label'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_changes_from_label">';
+        $ret .= $this->localize_string ( 'changes_from' );
+        $ret .= '</label>';
+        $ret .= '<input id="bmlt_semantic_form_changes_from_text'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_changes_date_text" value="'.$this->localize_string ( 'default_date' ).'" maxlength="10" />';
+        $ret .= '</div>';
+        $ret .= '<div id="bmlt_semantic_form_changes_to_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_line">';
+        $ret .= '<label for="bmlt_semantic_form_changes_to_text'.htmlspecialchars ( $this->_myJSName ).'" id="bmlt_semantic_form_changes_to_label'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_changes_to_label">';
+        $ret .= $this->localize_string ( 'changes_to' );
+        $ret .= '</label>';
+        $ret .= '<input id="bmlt_semantic_form_changes_to_text'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_changes_date_text" value="'.$this->localize_string ( 'default_date' ).'" maxlength="10" />';
+        $ret .= '</div>';
+        $ret .= '</div>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         
         return $ret;
@@ -583,46 +671,6 @@ class bmlt_semantic
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '</select>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
-        
-        return $ret;
-    }
-    
-    /**************************************************************/
-    /** \brief  Outputs the HTML for the root server URI (either a hidden element, or a text element).
-        
-        \returns the HTML for the element.
-    */
-    /**************************************************************/
-    function get_root_server_element()
-    {
-        $ret = '<div id="bmlt_semantic_form_root_server_text_input_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_root_server_text_input_div">';
-        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
-        $ret .= '<input id="bmlt_semantic_form_root_server_text_input'.htmlspecialchars ( $this->_myJSName ).'" type="'.($this->_bmltRootServerURI ? 'hidden' : 'text').'" value="';
-        
-        if ( $this->_bmltRootServerURI )
-            {
-            $ret .= htmlspecialchars ( $this->_bmltRootServerURI );
-            }
-        else
-            {
-            $ret .= $this->localize_string ( 'root_server_prompt_text_item' );
-            }
-        
-        if ( !$this->_bmltRootServerURI )
-            {
-            $ret .= '" class="bmlt_semantic_form_root_server_text_input';
-            }
-        
-        $ret .= '" />';
-        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
-
-        if ( !$this->_bmltRootServerURI )
-            {
-            $ret .= '<input type="button" id="bmlt_semantic_form_root_server_refresh_button'.htmlspecialchars ( $this->_myJSName ).'" value="'.$this->localize_string ( 'root_server_button_title' ).'" class="bmlt_semantic_form_root_server_refresh_button" onclick="bmlt_semantic_js_object'.$this->_myJSName.'.reloadFromServer()" />';
-            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
-            }
-        
-        $ret .= '</div>';
         
         return $ret;
     }

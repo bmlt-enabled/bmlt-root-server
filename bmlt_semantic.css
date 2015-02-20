@@ -10,6 +10,18 @@ body
     text-align:center;
 }
 
+input
+{
+    color:#009;
+    border:1px solid #669;
+    background-color:#eef;
+    padding: 0.125em;
+    padding-left: 0.2em;
+    -moz-border-radius: 0.25em;
+    -webkit-border-radius: 0.25em;
+    border-radius: 0.25em;
+}
+
 dl
 {
     margin-left:0.25em;
@@ -43,7 +55,7 @@ div.bmlt_semantic_form_div
 
 input.bmlt_semantic_form_disabled_text
 {
-    color: #559;
+    color: #669;
 }
 
 div.bmlt_checkbox_container
@@ -129,4 +141,9 @@ div.bmlt_workshop_blurb_note_div
     -webkit-border-radius: 0.5em;
     border-radius: 0.5em;
     box-shadow: 0.125em 0.125em 0.125em #888;
+}
+
+input.bmlt_semantic_form_changes_date_text
+{
+    width:7em;
 }

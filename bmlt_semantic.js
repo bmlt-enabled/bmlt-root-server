@@ -24,11 +24,14 @@ BMLTSemanticResult.prototype.root_server_uri = null;    ///< The main "meeting_k
     
     \param inSuffix A constructor parameter that gives a suffix (for multiple forms).
     \param inAJAXURI The base URI for AJAX callbacks.
+    \param inRootServerURI The initial URI for the Root Server.
+    \param inVersion The initial version for the Root Server.
 */
 /*******************************************************************************************/
 function BMLTSemantic ( inSuffix,
                         inAJAXURI,
-                        inRootServerURI
+                        inRootServerURI,
+                        inVersion
                         )
 {
     this.id_suffix = inSuffix;
@@ -38,10 +41,12 @@ function BMLTSemantic ( inSuffix,
     this.field_keys = null;
     this.temp_service_body_objects = null;
     this.state = new BMLTSemanticResult(inRootServerURI);
+    this.version = inVersion;
     
     this.setUpForm();
 };
 
+BMLTSemantic.prototype.version = null;
 BMLTSemantic.prototype.id_suffix = null;
 BMLTSemantic.prototype.ajax_base_uri = null;
 BMLTSemantic.prototype.format_objects = null;
@@ -49,6 +54,7 @@ BMLTSemantic.prototype.field_keys = null;
 BMLTSemantic.prototype.service_body_objects = null;
 BMLTSemantic.prototype.temp_service_body_objects = null;
 BMLTSemantic.prototype.state = null;
+BMLTSemantic.prototype.hidden_root = null;
 
 /*******************************************************************************************/
 /**
@@ -169,6 +175,7 @@ BMLTSemantic.prototype.ajaxRequest = function (     url,
 /*******************************************************************************************/
 BMLTSemantic.prototype.reloadFromServer = function ()
 {
+    this.fetchVersion();
     this.fetchFormats();
     this.fetchServiceBodies();
     this.fetchFieldKeys();
@@ -179,27 +186,32 @@ BMLTSemantic.prototype.reloadFromServer = function ()
     \brief Sets up and performs an AJAX call to fetch the available formats.
 */
 /*******************************************************************************************/
+BMLTSemantic.prototype.fetchVersion = function ()
+{
+    this.ajaxRequest ( this.ajax_base_uri + '&GetVersion', this.fetchVersionCallback, 'post', this );
+};
+
+/*******************************************************************************************/
+/**
+    \brief Sets up and performs an AJAX call to fetch the available formats.
+*/
+/*******************************************************************************************/
 BMLTSemantic.prototype.fetchFormats = function ()
 {
-    var root_server_uri = this.getScopedElement ( 'bmlt_semantic_form_root_server_text_input' );
+    var formatContainer = this.getScopedElement ( 'bmlt_semantic_form_formats_fieldset' );
     
-    if ( root_server_uri.value && ((root_server_uri.type == 'hidden') || (root_server_uri.value != root_server_uri.defaultValue)) )
+    if ( formatContainer )
         {
-        var formatContainer = this.getScopedElement ( 'bmlt_semantic_form_formats_fieldset' );
-        
-        if ( formatContainer )
+        for ( var i = formatContainer.childNodes.length; i-- > 0; )
             {
-            for ( var i = formatContainer.childNodes.length; i-- > 0; )
+            if ( formatContainer.childNodes[i].className == 'bmlt_checkbox_container' )
                 {
-                if ( formatContainer.childNodes[i].className == 'bmlt_checkbox_container' )
-                    {
-                    formatContainer.removeChild ( formatContainer.childNodes[i] );
-                    };
+                formatContainer.removeChild ( formatContainer.childNodes[i] );
                 };
             };
-        
-        this.ajaxRequest ( this.ajax_base_uri + '&GetInitialFormats', this.fetchFormatsCallback, 'post', this );
         };
+    
+    this.ajaxRequest ( this.ajax_base_uri + '&GetInitialFormats', this.fetchFormatsCallback, 'post', this );
 };
 
 /*******************************************************************************************/
@@ -209,25 +221,20 @@ BMLTSemantic.prototype.fetchFormats = function ()
 /*******************************************************************************************/
 BMLTSemantic.prototype.fetchServiceBodies = function ()
 {
-    var root_server_uri = this.getScopedElement ( 'bmlt_semantic_form_root_server_text_input' );
-    
-    if ( root_server_uri.value && ((root_server_uri.type == 'hidden') || (root_server_uri.value != root_server_uri.defaultValue)) )
+    var sbContainer = this.getScopedElement ( 'bmlt_semantic_form_sb_fieldset' );
+
+    if ( sbContainer )
         {
-        var sbContainer = this.getScopedElement ( 'bmlt_semantic_form_sb_fieldset' );
-        
-        if ( sbContainer )
+        for ( var i = sbContainer.childNodes.length; i-- > 0; )
             {
-            for ( var i = sbContainer.childNodes.length; i-- > 0; )
+            if ( sbContainer.childNodes[i].className == 'bmlt_sb_dl' )
                 {
-                if ( sbContainer.childNodes[i].className == 'bmlt_sb_dl' )
-                    {
-                    sbContainer.removeChild ( sbContainer.childNodes[i] );
-                    };
+                sbContainer.removeChild ( sbContainer.childNodes[i] );
                 };
             };
-        
-        this.ajaxRequest ( this.ajax_base_uri + '&GetInitialServiceBodies', this.fetchServiceBodiesCallback, 'post', this );
         };
+
+    this.ajaxRequest ( this.ajax_base_uri + '&GetInitialServiceBodies', this.fetchServiceBodiesCallback, 'post', this );
 };
 
 /*******************************************************************************************/
@@ -237,24 +244,35 @@ BMLTSemantic.prototype.fetchServiceBodies = function ()
 /*******************************************************************************************/
 BMLTSemantic.prototype.fetchFieldKeys = function ()
 {
-    var root_server_uri = this.getScopedElement ( 'bmlt_semantic_form_root_server_text_input' );
+    var sbContainer = this.getScopedElement ( 'bmlt_semantic_form_keys_fieldset' );
     
-    if ( root_server_uri.value && ((root_server_uri.type == 'hidden') || (root_server_uri.value != root_server_uri.defaultValue)) )
+    if ( sbContainer )
         {
-        var sbContainer = this.getScopedElement ( 'bmlt_semantic_form_keys_fieldset' );
-        
-        if ( sbContainer )
+        for ( var i = sbContainer.childNodes.length; i-- > 0; )
             {
-            for ( var i = sbContainer.childNodes.length; i-- > 0; )
+            if ( sbContainer.childNodes[i].className == 'bmlt_checkbox_container' )
                 {
-                if ( sbContainer.childNodes[i].className == 'bmlt_checkbox_container' )
-                    {
-                    sbContainer.removeChild ( sbContainer.childNodes[i] );
-                    };
+                sbContainer.removeChild ( sbContainer.childNodes[i] );
                 };
             };
-        
-        this.ajaxRequest ( this.ajax_base_uri + '&GetFieldKeys', this.fetchFieldKeysCallback, 'post', this );
+        };
+    
+    this.ajaxRequest ( this.ajax_base_uri + '&GetFieldKeys', this.fetchFieldKeysCallback, 'post', this );
+};
+
+/*******************************************************************************************/
+/**
+    \brief The response.
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.fetchVersionCallback = function (inHTTPReqObject
+                                                        )
+{
+    if ( inHTTPReqObject.responseText )
+        {
+        var context = inHTTPReqObject.extraData;
+        eval ( 'context.version = parseInt ( ' + inHTTPReqObject.responseText + ' );' );
+        context.validateVersion();
         };
 };
 
@@ -584,6 +602,7 @@ BMLTSemantic.prototype.mapMainSelectors = function ( inItem
     var switcher_select = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select' );
     var switcher_type_select_naws_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_naws_option' );
     var bmlt_semantic_form_meeting_search_div = this.getScopedElement ( 'bmlt_semantic_form_meeting_search_div' );
+    var bmlt_semantic_form_changes_div = this.getScopedElement ( 'bmlt_semantic_form_changes_div' );
     
     if ( main_fieldset_select.value == 'DOWNLOAD' )
         {
@@ -610,6 +629,7 @@ BMLTSemantic.prototype.mapMainSelectors = function ( inItem
 
     if ( switcher_select.value == 'GetSearchResults' )
         {
+        bmlt_semantic_form_changes_div.hide();
         if ( bmlt_semantic_form_meeting_search_div.style.display == 'none' )
             {
             bmlt_semantic_form_meeting_search_div.show();
@@ -618,6 +638,15 @@ BMLTSemantic.prototype.mapMainSelectors = function ( inItem
         }
     else
         {
+        if ( switcher_select.value == 'GetChanges' )
+            {
+            bmlt_semantic_form_changes_div.show();
+            }
+        else
+            {
+            bmlt_semantic_form_changes_div.hide();
+            };
+        
         bmlt_semantic_form_meeting_search_div.hide();
         };
     
@@ -669,11 +698,11 @@ BMLTSemantic.prototype.handleTextInput = function ( inTextItem,
     
     if ( inTextItem.value == inTextItem.defaultValue )
         {
-        inTextItem.className += ' bmlt_semantic_form_disabled_text';
+        inTextItem.className = 'bmlt_semantic_form_disabled_text ' + inTextItem.className;
         }
     else
         {
-        inTextItem.className += ' bmlt_semantic_form_enabled_text';
+        inTextItem.className = 'bmlt_semantic_form_enabled_text ' + inTextItem.className;
         };
     
     if ( (inTextItem.value == '') && !inFocusState )
@@ -730,12 +759,19 @@ BMLTSemantic.prototype.handleSwitcherSelectChange = function ( inSelect
 
 /*******************************************************************************************/
 /**
-    \brief Initialize the root server form.
+    \brief Hides the form if we have a bad root server URI.
 */
 /*******************************************************************************************/
-BMLTSemantic.prototype.setUpForm_RootServerInput = function ()
+BMLTSemantic.prototype.validateVersion = function ()
 {
-    this.setTextHandlers ( 'bmlt_semantic_form_root_server_text_input' );
+    if ( this.version == 0 )
+        {
+        var bad_header = this.getScopedElement ( 'bmlt_semantic_badserver_h1' );
+        var form = this.getScopedElement ( 'bmlt_semantic_form' );
+        
+        bad_header.style.display = 'block';
+        form.style.display = 'none';
+        };
 };
 
 /*******************************************************************************************/
@@ -775,6 +811,14 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     bmlt_semantic_form_meeting_search_div.oldDisplay = bmlt_semantic_form_meeting_search_div.style.display;
     bmlt_semantic_form_meeting_search_div.hide = function() { this.style.display = 'none' };
     bmlt_semantic_form_meeting_search_div.show = function() { this.style.display = this.oldDisplay };
+    
+    var bmlt_semantic_form_changes_div = this.getScopedElement ( 'bmlt_semantic_form_changes_div' );
+    bmlt_semantic_form_changes_div.formHandler = this;
+    bmlt_semantic_form_changes_div.hide = function() { this.style.display = 'none' };
+    bmlt_semantic_form_changes_div.show = function() { this.style.display = null };
+    
+    this.setTextHandlers ( 'bmlt_semantic_form_changes_from_text' );
+    this.setTextHandlers ( 'bmlt_semantic_form_changes_to_text' );
 };
 
 /*******************************************************************************************/
@@ -784,7 +828,6 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
 /*******************************************************************************************/
 BMLTSemantic.prototype.setUpForm = function ()
 {
-    this.setUpForm_RootServerInput();
     this.setUpForm_MainFieldset();
     this.reloadFromServer();
 };
