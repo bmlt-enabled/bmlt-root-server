@@ -200,7 +200,7 @@ BMLTSemantic.prototype.fetchFormats = function ()
 {
     var formatContainer = this.getScopedElement ( 'bmlt_semantic_form_formats_fieldset' );
     
-    if ( formatContainer )
+    if ( formatContainer && formatContainer.childNodes )
         {
         for ( var i = formatContainer.childNodes.length; i-- > 0; )
             {
@@ -223,7 +223,7 @@ BMLTSemantic.prototype.fetchServiceBodies = function ()
 {
     var sbContainer = this.getScopedElement ( 'bmlt_semantic_form_sb_fieldset' );
 
-    if ( sbContainer )
+    if ( sbContainer && sbContainer.childNodes )
         {
         for ( var i = sbContainer.childNodes.length; i-- > 0; )
             {
@@ -244,19 +244,6 @@ BMLTSemantic.prototype.fetchServiceBodies = function ()
 /*******************************************************************************************/
 BMLTSemantic.prototype.fetchFieldKeys = function ()
 {
-    var sbContainer = this.getScopedElement ( 'bmlt_semantic_form_keys_fieldset' );
-    
-    if ( sbContainer )
-        {
-        for ( var i = sbContainer.childNodes.length; i-- > 0; )
-            {
-            if ( sbContainer.childNodes[i].className == 'bmlt_checkbox_container' )
-                {
-                sbContainer.removeChild ( sbContainer.childNodes[i] );
-                };
-            };
-        };
-    
     this.ajaxRequest ( this.ajax_base_uri + '&GetFieldKeys', this.fetchFieldKeysCallback, 'post', this );
 };
 
@@ -600,6 +587,10 @@ BMLTSemantic.prototype.mapMainSelectors = function ( inItem
     var main_fieldset_direct_uri_div = this.getScopedElement ( 'bmlt_semantic_form_direct_url_div' );
     var response_type_select = this.getScopedElement ( 'bmlt_semantic_form_response_type_select' );
     var switcher_select = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select' );
+    var switcher_type_select_sb_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_sb_option' );
+    var switcher_type_select_changes_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_changes_option' );
+    var switcher_type_select_fieldkey_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_fieldkey_option' );
+    var switcher_type_select_fieldval_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_fieldval_option' );
     var switcher_type_select_naws_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_naws_option' );
     var bmlt_semantic_form_meeting_search_div = this.getScopedElement ( 'bmlt_semantic_form_meeting_search_div' );
     var bmlt_semantic_form_changes_div = this.getScopedElement ( 'bmlt_semantic_form_changes_div' );
@@ -650,12 +641,35 @@ BMLTSemantic.prototype.mapMainSelectors = function ( inItem
         bmlt_semantic_form_meeting_search_div.hide();
         };
     
-    if ( (response_type_select.value == 'csv') && (main_fieldset_select.value == 'DOWNLOAD') )
+    if ( main_fieldset_select.value == 'DOWNLOAD' )
         {
+        switcher_type_select_sb_option.enable();
+        switcher_type_select_changes_option.enable();
+        switcher_type_select_fieldkey_option.enable();
+        switcher_type_select_fieldval_option.enable();
         switcher_type_select_naws_option.enable();
+        if ( response_type_select.value == 'csv' )
+            {
+            switcher_type_select_naws_option.enable();
+            }
+        else
+            {
+            switcher_type_select_naws_option.disable();
+            };
         }
     else
         {
+        if ( (switcher_select.value != 'GetSearchResults') && (switcher_select.value != 'GetFormats') )
+            {
+            switcher_select.selectedIndex = 0;
+            bmlt_semantic_form_meeting_search_div.show();
+            this.reloadFromServer();
+            };
+        
+        switcher_type_select_sb_option.disable();
+        switcher_type_select_changes_option.disable();
+        switcher_type_select_fieldkey_option.disable();
+        switcher_type_select_fieldval_option.disable();
         switcher_type_select_naws_option.disable();
         };
 };
@@ -714,8 +728,27 @@ BMLTSemantic.prototype.handleTextInput = function ( inTextItem,
         if ( (inTextItem.value == inTextItem.defaultValue) && inFocusState )
             {
             inTextItem.value = '';
+            }
+        else
+            {
+            var pattern = inTextItem.pattern;
+            
+            if ( pattern )
+                {
+                var regex = new RegExp ( pattern );
+                if ( (inTextItem.value.length > 0) && !regex.test ( inTextItem.value ) )
+                    {
+                    if ( inTextItem.value.length == 1 )
+                        {
+                        inTextItem.previousValue = '';
+                        };
+                    inTextItem.value = inTextItem.previousValue;
+                    };
+                };
             };
         };
+        
+        inTextItem.previousValue = inTextItem.value;
 };
 
 /*******************************************************************************************/
@@ -802,10 +835,38 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     main_fieldset_direct_uri_div.hide = function() { this.style.display = 'none' };
     main_fieldset_direct_uri_div.show = function() { this.style.display = this.oldDisplay };
     
+    var switcher_type_select_sb_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_sb_option' );
+    switcher_type_select_sb_option.disable = function() { this.disabled = true };
+    switcher_type_select_sb_option.enable = function() { this.disabled = false };
+    
+    var switcher_type_select_changes_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_changes_option' );
+    switcher_type_select_changes_option.disable = function() { this.disabled = true };
+    switcher_type_select_changes_option.enable = function() { this.disabled = false };
+    
+    var switcher_type_select_fieldkey_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_fieldkey_option' );
+    switcher_type_select_fieldkey_option.disable = function() { this.disabled = true };
+    switcher_type_select_fieldkey_option.enable = function() { this.disabled = false };
+    
+    var switcher_type_select_fieldval_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_fieldval_option' );
+    switcher_type_select_fieldval_option.disable = function() { this.disabled = true };
+    switcher_type_select_fieldval_option.enable = function() { this.disabled = false };
+    
     var switcher_type_select_naws_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_naws_option' );
     switcher_type_select_naws_option.disable = function() { this.disabled = true };
     switcher_type_select_naws_option.enable = function() { this.disabled = false };
     
+    var response_type_select_kml_option = this.getScopedElement ( 'bmlt_semantic_form_response_type_select_kml_option' );
+    response_type_select_kml_option.disable = function() { this.disabled = true };
+    response_type_select_kml_option.enable = function() { this.disabled = false };
+    
+    var response_type_select_gpx_option = this.getScopedElement ( 'bmlt_semantic_form_response_type_select_gpx_option' );
+    response_type_select_gpx_option.disable = function() { this.disabled = true };
+    response_type_select_gpx_option.enable = function() { this.disabled = false };
+    
+    var response_type_select_poi_option = this.getScopedElement ( 'bmlt_semantic_form_response_type_select_poi_option' );
+    response_type_select_poi_option.disable = function() { this.disabled = true };
+    response_type_select_poi_option.enable = function() { this.disabled = false };
+
     var bmlt_semantic_form_meeting_search_div = this.getScopedElement ( 'bmlt_semantic_form_meeting_search_div' );
     bmlt_semantic_form_meeting_search_div.formHandler = this;
     bmlt_semantic_form_meeting_search_div.oldDisplay = bmlt_semantic_form_meeting_search_div.style.display;
@@ -819,6 +880,7 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     
     this.setTextHandlers ( 'bmlt_semantic_form_changes_from_text' );
     this.setTextHandlers ( 'bmlt_semantic_form_changes_to_text' );
+    this.setTextHandlers ( 'bmlt_semantic_form_changes_id_text' );
 };
 
 /*******************************************************************************************/

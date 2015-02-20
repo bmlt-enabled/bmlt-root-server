@@ -467,10 +467,10 @@ class bmlt_semantic
         $ret .= '<option value="csv" selected="selected">'.$this->localize_string ( 'response_type_selector_type_csv' ).'</option>';
         $ret .= '<option value="xml">'.$this->localize_string ( 'response_type_selector_type_xml' ).'</option>';
         $ret .= '<option value="json">'.$this->localize_string ( 'response_type_selector_type_json' ).'</option>';
-        $ret .= '<option value="kml">'.$this->localize_string ( 'response_type_selector_type_kml' ).'</option>';
-        $ret .= '<option value="gpx">'.$this->localize_string ( 'response_type_selector_type_gpx' ).'</option>';
-        $ret .= '<option value="poi">'.$this->localize_string ( 'response_type_selector_type_poi' ).'</option>';
         $ret .= '<option value="simple">'.$this->localize_string ( 'response_type_selector_type_simple' ).'</option>';
+        $ret .= '<option id="bmlt_semantic_form_response_type_select_kml_option'.htmlspecialchars ( $this->_myJSName ).'" value="kml">'.$this->localize_string ( 'response_type_selector_type_kml' ).'</option>';
+        $ret .= '<option id="bmlt_semantic_form_response_type_select_gpx_option'.htmlspecialchars ( $this->_myJSName ).'" value="gpx">'.$this->localize_string ( 'response_type_selector_type_gpx' ).'</option>';
+        $ret .= '<option id="bmlt_semantic_form_response_type_select_poi_option'.htmlspecialchars ( $this->_myJSName ).'" value="poi">'.$this->localize_string ( 'response_type_selector_type_poi' ).'</option>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '</select>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
@@ -507,22 +507,29 @@ class bmlt_semantic
     function get_wizard_page_changes_html()
     {
         $ret = '<div id="bmlt_semantic_form_changes_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_changes_div" style="display:none">';
-        $ret .= '<div id="bmlt_semantic_form_changes_blurb_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_line">';
+        $ret .= '<div id="bmlt_semantic_form_changes_blurb_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_workshop_blurb_note_div">';
         $ret .= '<p>'.$this->localize_string ( 'date_format1' ).'</p>';
         $ret .= '<p>'.$this->localize_string ( 'date_format2' ).'</p>';
         $ret .= '</div>';
         $ret .= '<div id="bmlt_semantic_form_changes_from_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_line">';
-        $ret .= '<label for="bmlt_semantic_form_changes_from_text'.htmlspecialchars ( $this->_myJSName ).'" id="bmlt_semantic_form_changes_from_label'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_changes_from_label">';
+        $ret .= '<label title="'.$this->localize_string ( 'date_format1' ).'" for="bmlt_semantic_form_changes_from_text'.htmlspecialchars ( $this->_myJSName ).'" id="bmlt_semantic_form_changes_from_label'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_changes_from_label">';
         $ret .= $this->localize_string ( 'changes_from' );
         $ret .= '</label>';
-        $ret .= '<input id="bmlt_semantic_form_changes_from_text'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_changes_date_text" value="'.$this->localize_string ( 'default_date' ).'" maxlength="10" />';
+        $ret .= '<input type="text" pattern="^[0-9\-]+$" title="'.$this->localize_string ( 'date_format1' ).'" id="bmlt_semantic_form_changes_from_text'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_changes_date_text" value="'.$this->localize_string ( 'default_date' ).'" maxlength="10" />';
         $ret .= '</div>';
         $ret .= '<div id="bmlt_semantic_form_changes_to_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_line">';
-        $ret .= '<label for="bmlt_semantic_form_changes_to_text'.htmlspecialchars ( $this->_myJSName ).'" id="bmlt_semantic_form_changes_to_label'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_changes_to_label">';
+        $ret .= '<label title="'.$this->localize_string ( 'date_format1' ).'" for="bmlt_semantic_form_changes_to_text'.htmlspecialchars ( $this->_myJSName ).'" id="bmlt_semantic_form_changes_to_label'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_changes_to_label">';
         $ret .= $this->localize_string ( 'changes_to' );
         $ret .= '</label>';
-        $ret .= '<input id="bmlt_semantic_form_changes_to_text'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_changes_date_text" value="'.$this->localize_string ( 'default_date' ).'" maxlength="10" />';
+        $ret .= '<input type="text" pattern="^[0-9\-]+$" title="'.$this->localize_string ( 'date_format1' ).'" id="bmlt_semantic_form_changes_to_text'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_changes_date_text" value="'.$this->localize_string ( 'default_date' ).'" maxlength="10" />';
         $ret .= '</div>';
+        $ret .= '<div id="bmlt_semantic_form_changes_to_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_line">';
+        $ret .= '<label title="'.$this->localize_string ( 'meeting_id_changes_tooltip' ).'" for="bmlt_semantic_form_changes_id_text'.htmlspecialchars ( $this->_myJSName ).'" id="bmlt_semantic_form_changes_id_label'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_changes_id_label">';
+        $ret .= $this->localize_string ( 'meeting_id_changes' );
+        $ret .= '</label>';
+        $ret .= '<input type="text" pattern="^[0-9]+$" title="'.$this->localize_string ( 'meeting_id_changes_tooltip' ).'" id="bmlt_semantic_form_changes_id_text'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_changes_id_text" value="" maxlength="6" />';
+        $ret .= '</div>';
+        $ret .= '<div class="clear_both"></div>';
         $ret .= '</div>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         
@@ -663,10 +670,10 @@ class bmlt_semantic
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '<option value="GetSearchResults" selected="selected">'.$this->localize_string ( 'switcher_type_selector_results' ).'</option>';
         $ret .= '<option value="GetFormats">'.$this->localize_string ( 'switcher_type_selector_formats' ).'</option>';
-        $ret .= '<option value="GetServiceBodies">'.$this->localize_string ( 'switcher_type_selector_sb' ).'</option>';
-        $ret .= '<option value="GetChanges">'.$this->localize_string ( 'switcher_type_selector_changes' ).'</option>';
-        $ret .= '<option value="GetFieldKeys">'.$this->localize_string ( 'switcher_type_selector_field_keys' ).'</option>';
-        $ret .= '<option value="GetFieldValues">'.$this->localize_string ( 'switcher_type_selector_field_values' ).'</option>';
+        $ret .= '<option id="bmlt_semantic_form_switcher_type_select_sb_option'.htmlspecialchars ( $this->_myJSName ).'" value="GetServiceBodies">'.$this->localize_string ( 'switcher_type_selector_sb' ).'</option>';
+        $ret .= '<option id="bmlt_semantic_form_switcher_type_select_changes_option'.htmlspecialchars ( $this->_myJSName ).'" value="GetChanges">'.$this->localize_string ( 'switcher_type_selector_changes' ).'</option>';
+        $ret .= '<option id="bmlt_semantic_form_switcher_type_select_fieldkey_option'.htmlspecialchars ( $this->_myJSName ).'" value="GetFieldKeys">'.$this->localize_string ( 'switcher_type_selector_field_keys' ).'</option>';
+        $ret .= '<option id="bmlt_semantic_form_switcher_type_select_fieldval_option'.htmlspecialchars ( $this->_myJSName ).'" value="GetFieldValues">'.$this->localize_string ( 'switcher_type_selector_field_values' ).'</option>';
         $ret .= '<option id="bmlt_semantic_form_switcher_type_select_naws_option'.htmlspecialchars ( $this->_myJSName ).'" value="GetNAWSDump">'.$this->localize_string ( 'switcher_type_selector_naws' ).'</option>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '</select>';

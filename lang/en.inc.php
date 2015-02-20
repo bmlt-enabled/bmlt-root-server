@@ -39,9 +39,11 @@ $this->_localization = array (
                                 'all_unselected_note2'                  =>  'If any are selected, then the search will require that the selected terms match.',
                                 'and_note'                              =>  'This is an "AND" search. Every one of these have to match in order to count.',
                                 'or_note'                               =>  'This is an "OR" search. Matching any one of these will count. They don\'t all have to match. However, you need at least one match.',
-                                'date_format1'                          =>  'You Must Enter Dates In This Format: YYYY-MM-DD (separated by dashes "-")',
+                                'date_format1'                          =>  'You Must Enter Dates In This Format: YYYY-MM-DD (separated by dashes)',
                                 'date_format2'                          =>  'YYYY = 4-digit year, MM = 2-digit month (01 is January), DD = 2-digit month day (01 - 31)',
                                 'changes_from'                          =>  'Get meeting changes starting from (and including) this date:',
                                 'changes_to'                            =>  'Get meeting changes until (and inluding) this date:',
                                 'default_date'                          =>  'YYYY-MM-DD',
+                                'meeting_id_changes'                    =>  'Look for changes in a meeting with this ID:',
+                                'meeting_id_changes_tooltip'            =>  'Enter the numeric ID of the meeting to check.',
                             );

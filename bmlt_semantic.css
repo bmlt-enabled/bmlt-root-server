@@ -10,7 +10,7 @@ body
     text-align:center;
 }
 
-input
+input[type="text"]
 {
     color:#009;
     border:1px solid #669;
@@ -146,4 +146,18 @@ div.bmlt_workshop_blurb_note_div
 input.bmlt_semantic_form_changes_date_text
 {
     width:7em;
+}
+
+input.bmlt_semantic_form_changes_id_text
+{
+    width:4em;
+}
+
+div.bmlt_semantic_form_changes_div label
+{
+    display:block;
+    float:left;
+    clear:both;
+    width:40em;
+    text-align:right;
 }
