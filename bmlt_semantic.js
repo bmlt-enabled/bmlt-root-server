@@ -36,10 +36,6 @@ function BMLTSemantic ( inSuffix,
 {
     this.id_suffix = inSuffix;
     this.ajax_base_uri = inAJAXURI;
-    this.format_objects = null;
-    this.service_body_objects = null;
-    this.field_keys = null;
-    this.temp_service_body_objects = null;
     this.state = new BMLTSemanticResult(inRootServerURI);
     this.version = inVersion;
     
@@ -51,6 +47,7 @@ BMLTSemantic.prototype.id_suffix = null;
 BMLTSemantic.prototype.ajax_base_uri = null;
 BMLTSemantic.prototype.format_objects = null;
 BMLTSemantic.prototype.field_keys = null;
+BMLTSemantic.prototype.field_values = null;
 BMLTSemantic.prototype.service_body_objects = null;
 BMLTSemantic.prototype.temp_service_body_objects = null;
 BMLTSemantic.prototype.state = null;
@@ -71,10 +68,10 @@ BMLTSemantic.prototype.hidden_root = null;
     \returns a new XMLHTTPRequest object
 */
 /*******************************************************************************************/
-BMLTSemantic.prototype.ajaxRequest = function (     url,
-                                                    callback,
-                                                    method,
-                                                    extraData
+BMLTSemantic.prototype.ajaxRequest = function ( url,
+                                                callback,
+                                                method,
+                                                extraData
                                                 )
 {
     /***************************************************************************************/
@@ -245,6 +242,16 @@ BMLTSemantic.prototype.fetchServiceBodies = function ()
 BMLTSemantic.prototype.fetchFieldKeys = function ()
 {
     this.ajaxRequest ( this.ajax_base_uri + '&GetFieldKeys', this.fetchFieldKeysCallback, 'post', this );
+};
+
+/*******************************************************************************************/
+/**
+    \brief Sets up and performs an AJAX call to fetch the available field keys.
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.fetchFieldValues = function ()
+{
+    this.ajaxRequest ( this.ajax_base_uri + '&GetFieldValues&meeting_key=', this.fetchFieldValuesCallback, 'post', this );
 };
 
 /*******************************************************************************************/
@@ -510,13 +517,22 @@ BMLTSemantic.prototype.fetchFieldKeysCallback = function (inHTTPReqObject
 /*******************************************************************************************/
 BMLTSemantic.prototype.populateFieldSelect = function ()
 {
-    var selectElement = this.getScopedElement ( 'bmlt_semantic_form_field_select' );
+    var mainSelectElement = this.getScopedElement ( 'bmlt_semantic_form_field_main_select' );
+    var meetingSelectElement = this.getScopedElement ( 'bmlt_semantic_form_field_select' );
     
-    if ( selectElement && selectElement.childNodes )
+    if ( mainSelectElement && mainSelectElement.options )
         {
-        for ( var i = selectElement.childNodes.length; i-- > 1; )
+        for ( var i = (mainSelectElement.options.length - 1); i > 0; i-- )
             {
-            selectElement.removeChild ( selectElement.childNodes[i] );
+            mainSelectElement.removeChild ( mainSelectElement.options[i] );
+            };
+        };
+    
+    if ( meetingSelectElement && meetingSelectElement.options )
+        {
+        for ( var i = (meetingSelectElement.options.length - 1); i > 0; i-- )
+            {
+            meetingSelectElement.removeChild ( meetingSelectElement.options[i] );
             };
         };
     
@@ -525,7 +541,31 @@ BMLTSemantic.prototype.populateFieldSelect = function ()
         var newOption = document.createElement ( 'option' );
         newOption.value = this.field_keys[i].key;
         newOption.appendChild ( document.createTextNode ( this.field_keys[i].description ) );
-        selectElement.appendChild ( newOption );
+        mainSelectElement.appendChild ( newOption );
+        
+        newOption = document.createElement ( 'option' );
+        newOption.value = this.field_keys[i].key;
+        newOption.appendChild ( document.createTextNode ( this.field_keys[i].description ) );
+        meetingSelectElement.appendChild ( newOption );
+        };
+    
+    mainSelectElement.selectedIndex = 0;
+    meetingSelectElement.selectedIndex = 0;
+    this.state.meeting_key = null;
+};
+
+/*******************************************************************************************/
+/**
+    \brief The response.
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.fetchFieldValuesCallback = function (inHTTPReqObject
+                                                        )
+{
+    if ( inHTTPReqObject.responseText )
+        {
+        var context = inHTTPReqObject.extraData;
+        eval ( 'context.field_values = ' + inHTTPReqObject.responseText + ';' );
         };
 };
 
@@ -586,7 +626,10 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     var switcher_type_select_naws_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_naws_option' );
     var bmlt_semantic_form_meeting_search_div = this.getScopedElement ( 'bmlt_semantic_form_meeting_search_div' );
     var bmlt_semantic_form_changes_div = this.getScopedElement ( 'bmlt_semantic_form_changes_div' );
+    var bmlt_semantic_form_main_fields_fieldset = this.getScopedElement ( 'bmlt_semantic_form_main_fields_fieldset' );
     var bmlt_switcher_div_no_options_blurb = this.getScopedElement ( 'bmlt_switcher_div_no_options_blurb' );
+    var bmlt_semantic_info_div_download_line = this.getScopedElement ( 'bmlt_semantic_info_div_download_line' );
+    var bmlt_semantic_info_div_shortcode_line = this.getScopedElement ( 'bmlt_semantic_info_div_shortcode_line' );
     
     switcher_type_select_formats_option.enable();
     switcher_type_select_sb_option.enable();
@@ -594,9 +637,13 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     switcher_type_select_fieldkey_option.enable();
     switcher_type_select_fieldval_option.enable();
     switcher_type_select_naws_option.enable();
+    bmlt_semantic_info_div_download_line.hide();
+    bmlt_semantic_info_div_shortcode_line.hide();
 
     if ( main_fieldset_select.value == 'DOWNLOAD' )
         {
+        bmlt_semantic_info_div_download_line.show();
+        
         if ( main_fieldset_direct_uri_div.style.display == 'none' )
             {
             main_fieldset_direct_uri_div.show();
@@ -605,6 +652,7 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
         }
     else
         {
+        bmlt_semantic_info_div_shortcode_line.show();
         main_fieldset_direct_uri_div.hide();
         };
 
@@ -625,10 +673,16 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
             };
         };
 
+    bmlt_switcher_div_no_options_blurb.hide();
+    bmlt_semantic_form_changes_div.hide();
+    bmlt_semantic_form_main_fields_fieldset.hide();
+    bmlt_semantic_form_meeting_search_div.hide();
+    
     if ( switcher_select.value == 'GetSearchResults' )
         {
         bmlt_switcher_div_no_options_blurb.hide();
         bmlt_semantic_form_changes_div.hide();
+        bmlt_semantic_form_main_fields_fieldset.hide();
         if ( bmlt_semantic_form_meeting_search_div.style.display == 'none' )
             {
             bmlt_semantic_form_meeting_search_div.show();
@@ -640,7 +694,6 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
         bmlt_semantic_form_meeting_search_div.hide();
         if ( switcher_select.value == 'GetChanges' )
             {
-            bmlt_switcher_div_no_options_blurb.hide();
             if ( bmlt_semantic_form_changes_div.style.display == 'none' )
                 {
                 bmlt_semantic_form_changes_div.show();
@@ -650,20 +703,22 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
             {
             if ( switcher_select.value == 'GetFieldValues' )
                 {
-                bmlt_switcher_div_no_options_blurb.hide();
+                if ( bmlt_semantic_form_main_fields_fieldset.style.display == 'none' )
+                    {
+                    bmlt_semantic_form_main_fields_fieldset.show();
+                    this.reloadFromServer();
+                    };
                 }
             else
                 {
                 if ( switcher_select.value == 'GetNAWSDump' )
                     {
-                    bmlt_switcher_div_no_options_blurb.hide();
                     }
                 else
                     {
                     bmlt_switcher_div_no_options_blurb.show();
                     };
                 };
-            bmlt_semantic_form_changes_div.hide();
             };
         };
     
@@ -717,11 +772,11 @@ BMLTSemantic.prototype.handleTextInput = function ( inTextItem,
     
     if ( inTextItem.value == inTextItem.defaultValue )
         {
-        inTextItem.className = 'bmlt_semantic_form_disabled_text ' + inTextItem.className;
+        inTextItem.className += ' bmlt_semantic_form_disabled_text';
         }
     else
         {
-        inTextItem.className = 'bmlt_semantic_form_enabled_text ' + inTextItem.className;
+        inTextItem.className += ' bmlt_semantic_form_enabled_text';
         };
     
     if ( (inTextItem.value == '') && !inFocusState )
@@ -753,7 +808,7 @@ BMLTSemantic.prototype.handleTextInput = function ( inTextItem,
             };
         };
         
-        inTextItem.previousValue = inTextItem.value;
+    inTextItem.previousValue = inTextItem.value;
 };
 
 /*******************************************************************************************/
@@ -763,8 +818,7 @@ BMLTSemantic.prototype.handleTextInput = function ( inTextItem,
     \param inSelect   The object that experienced change.
 */
 /*******************************************************************************************/
-BMLTSemantic.prototype.handleMainSelectChange = function ( inSelect
-                                                            )
+BMLTSemantic.prototype.handleMainSelectChange = function ( inSelect )
 {
     this.setUpMainSelectors ( inSelect );
 };
@@ -776,8 +830,7 @@ BMLTSemantic.prototype.handleMainSelectChange = function ( inSelect
     \param inSelect   The object that experienced change.
 */
 /*******************************************************************************************/
-BMLTSemantic.prototype.handleResponseSelectChange = function ( inSelect
-                                                            )
+BMLTSemantic.prototype.handleResponseSelectChange = function ( inSelect )
 {
     this.setUpMainSelectors ( inSelect );
 };
@@ -789,10 +842,33 @@ BMLTSemantic.prototype.handleResponseSelectChange = function ( inSelect
     \param inSelect   The object that experienced change.
 */
 /*******************************************************************************************/
-BMLTSemantic.prototype.handleSwitcherSelectChange = function ( inSelect
-                                                            )
+BMLTSemantic.prototype.handleSwitcherSelectChange = function ( inSelect )
 {
     this.setUpMainSelectors ( inSelect );
+};
+
+/*******************************************************************************************/
+/**
+    \brief
+    
+    \param inSelect   The object that experienced change.
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.handleMainFieldKeySelectChange = function ( inSelect )
+{
+    this.state.meeting_key = inSelect.value;
+};
+
+/*******************************************************************************************/
+/**
+    \brief
+    
+    \param inSelect   The object that experienced change.
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.handleMeetingFieldKeySelectChange = function ( inSelect )
+{
+    this.state.meeting_key = inSelect.value;
 };
 
 /*******************************************************************************************/
@@ -869,6 +945,7 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.setBasicFunctions ( 'bmlt_switcher_div_no_options_blurb' );
     this.setBasicFunctions ( 'bmlt_semantic_form_meeting_search_div' );
     this.setBasicFunctions ( 'bmlt_semantic_form_changes_div' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_main_fields_fieldset' );
     this.setBasicFunctions ( 'bmlt_semantic_form_response_type_select' );
     this.setBasicFunctions ( 'bmlt_semantic_form_switcher_type_select' );
     this.setBasicFunctions ( 'bmlt_semantic_form_switcher_type_select_formats_option' );
@@ -880,6 +957,8 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.setBasicFunctions ( 'bmlt_semantic_form_response_type_select_kml_option' );
     this.setBasicFunctions ( 'bmlt_semantic_form_response_type_select_gpx_option' );
     this.setBasicFunctions ( 'bmlt_semantic_form_response_type_select_poi_option' );
+    this.setBasicFunctions ( 'bmlt_semantic_info_div_download_line' );
+    this.setBasicFunctions ( 'bmlt_semantic_info_div_shortcode_line' );
     
     this.setTextHandlers ( 'bmlt_semantic_form_changes_from_text' );
     this.setTextHandlers ( 'bmlt_semantic_form_changes_to_text' );

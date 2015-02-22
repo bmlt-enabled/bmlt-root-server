@@ -193,16 +193,18 @@ class bmlt_semantic
         \param inHttpVars The HTTP query associative array.
     */
     /**************************************************************/
-    function __construct (  $inBaseURI,
-                            $inHttpVars
+    function __construct (  $inHttpVars
                             )
     {
+        $inBaseURI = $inHttpVars['root_server'];
+        unset ( $inHttpVars['root_server'] );
+        
         // If we have a root server passed in, we set that to our local data member, and remove it from the parameter array.
         if ( isset ( $inBaseURI ) && $inBaseURI )
             {
             $this->_bmltRootServerURI = trim ( $inBaseURI, '/' );
             }
-        
+
         // Get any switcher.
         if ( isset ( $inHttpVars['switcher'] ) && $inHttpVars['switcher'] )
             {
@@ -357,11 +359,26 @@ class bmlt_semantic
     {
         $ret = '';
         
-        if ( $this->_bmltRootServerURI )
-            {
-            $ret .= '<h1 id="bmlt_semantic_badserver_h1'.htmlspecialchars ( $this->_myJSName ).'" style="display:none">'.$this->localize_string ( 'need_good_url' ).'</h1>';
-            }
+        $ret .= '<h1 id="bmlt_semantic_badserver_h1'.htmlspecialchars ( $this->_myJSName ).'" style="display:none">'.$this->localize_string ( 'need_good_url' ).'</h1>';
         
+        $ret .= '<div id="bmlt_semantic_info_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_info_div">';
+        $ret .= '<div id="bmlt_semantic_info_div_root_url_line'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_info_line">';
+        $ret .= '<span class="info_label">'.$this->localize_string ( 'root_url_label' ).'</span><span class="info_value"><a href="'.$this->_bmltRootServerURI.'" target="_blank">'.htmlspecialchars ( $this->_bmltRootServerURI ).'</a></span>';
+        $ret .= '</div>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $ret .= '<div id="bmlt_semantic_info_div_download_line'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_info_line">';
+        $ret .= '<span class="info_label">'.$this->localize_string ( 'result_url_label' ).'</span><span class="info_value">'.$this->localize_string ( 'result_invalid_text' ).'</span>';
+        $ret .= '</div>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $ret .= '<div id="bmlt_semantic_info_div_shortcode_line'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_info_line" style="display:none">';
+        $ret .= '<span class="info_label">'.$this->localize_string ( 'result_shortcode_label' ).'</span><span class="info_value">'.$this->localize_string ( 'result_invalid_text' ).'</span>';
+        $ret .= '</div>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $ret .= '<div class="clear_both"></div>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $ret .= '</div>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+
         $ret .= '<form id="bmlt_semantic_form'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form" action="'.htmlspecialchars ( $this->_myURI ).'" method="POST">';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '<div id="bmlt_semantic_form_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_div">';
@@ -375,7 +392,7 @@ class bmlt_semantic
         $ret .= bmlt_semantic::strip_script ( 'bmlt_semantic.js' );
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $version = $this->get_server_version();
-        $ret .= 'var bmlt_semantic_js_object'.$this->_myJSName.' = new BMLTSemantic ( \''.$this->_myJSName.'\', \''.$this->_myURI.'?ajaxCall\', \''.$this->_bmltRootServerURI.'\', '.intval ( $version ).' );';
+        $ret .= 'var bmlt_semantic_js_object'.$this->_myJSName.' = new BMLTSemantic ( \''.$this->_myJSName.'\', \''.$this->_myURI.'?ajaxCall&root_server='.urlencode ( $this->_bmltRootServerURI ).'\', \''.$this->_bmltRootServerURI.'\', '.intval ( $version ).' );';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '</script>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
@@ -493,7 +510,8 @@ class bmlt_semantic
         $ret .= '<div id="bmlt_switcher_div_no_options_blurb'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_workshop_blurb_note_div" style="display:none">'.$this->localize_string ( 'no_addl_options' ).'</div>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= $this->get_wizard_page_meeting_search_html();     
-        $ret .= $this->get_wizard_page_changes_html();     
+        $ret .= $this->get_wizard_page_changes_html(); 
+        $ret .= $this->get_wizard_page_fields_html();    
         $ret .= '</fieldset>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         
@@ -536,7 +554,26 @@ class bmlt_semantic
         $ret .= '</div>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '<div class="clear_both"></div>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '</div>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        
+        return $ret;
+    }
+    
+    /**************************************************************/
+    /** \brief  
+        
+        \returns the HTML.
+    */
+    /**************************************************************/
+    function get_wizard_page_fields_html()
+    {
+        $ret = '<fieldset id="bmlt_semantic_form_main_fields_fieldset'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_main_fields_fieldset" style="display:none"><legend id="bmlt_semantic_form_main_fields_fieldset_legend'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_main_fields_fieldset_legend">';
+        $ret .= $this->get_wizard_page_field_select_html ( 'main_' );
+        $ret .= '</legend>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
+        $ret .= '</fieldset>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         
         return $ret;
@@ -620,11 +657,21 @@ class bmlt_semantic
         \returns the HTML.
     */
     /**************************************************************/
-    function get_wizard_page_field_select_html()
+    function get_wizard_page_field_select_html( $inID = ''
+                                                )
     {
-        $ret = '<label id="bmlt_semantic_form_field_select_label'.htmlspecialchars ( $this->_myJSName ).'" for="bmlt_semantic_form_field_select'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_field_select_label">'.$this->localize_string ( 'keys_section_label' ).'</label>';
-        $ret .= '<select id="bmlt_semantic_form_field_select'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_field_select">';
-        $ret .= '<option value="" selected="selected">'.$this->localize_string ( 'defaultFieldSelect' ).'</option>';
+        $ret = '<label id="bmlt_semantic_form_field_'.htmlspecialchars ( $inID ).'select_label'.htmlspecialchars ( $this->_myJSName ).'" for="bmlt_semantic_form_field_'.htmlspecialchars ( $inID ).'select'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_field_select_label">'.$this->localize_string ( 'keys_section_label' ).'</label>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $function_string = 'bmlt_semantic_js_object'.$this->_myJSName.'.'.($inID ? 'handleMainFieldKeySelectChange' : 'handleMeetingFieldKeySelectChange' ).'(this)';
+        $ret .= '<select id="bmlt_semantic_form_field_'.htmlspecialchars ( $inID ).'select'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_field_select" onchange="'.htmlspecialchars ( $function_string ).'">';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
+        $ret .= '<option value="" selected="selected"';
+        if ( $inID )
+            {
+            $ret .= ' disabled="disabled"';
+            }
+        $ret .= '>'.$this->localize_string ( $inID ? 'defaultFieldSelect' : 'defaultMeetingFieldSelect' ).'</option>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
         $ret .= '</select>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         
