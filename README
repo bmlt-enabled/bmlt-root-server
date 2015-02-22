@@ -46,6 +46,13 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+** Version 2.6.14 **
+
+- February 22, 2015
+
+- Fixed an issue where the "Change Meeting" button wasn't being activated for some browsers when editing the "other" tab values.
+- The above fix also addresses an older issue that could cause "Other" tab values to be assigned incorrectly.
+
 ** Version 2.6.13 **
 
 - February 17, 2015
