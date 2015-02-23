@@ -18,6 +18,7 @@ BMLTSemanticResult.prototype.meeting_key_value = null;  ///< The value selected 
 BMLTSemanticResult.prototype.root_server_uri = null;    ///< The main Root Server URI.
 BMLTSemanticResult.prototype.services = null;           ///< The selected Service bodies. This is a CSV string of integer IDs.
 BMLTSemanticResult.prototype.formats = null;            ///< The selected formats. This is a CSV string of integer IDs.
+BMLTSemanticResult.prototype.weekdays = null;           ///< The selected weekdays (1-7). This is a CSV string of integer IDs.
 
 /*******************************************************************************************/
 /**
@@ -993,8 +994,6 @@ BMLTSemantic.prototype.readServiceBodies = function ( inParent )
 /*******************************************************************************************/
 /**
     \brief
-    
-    \param inParent   the parent Service body.
 */
 /*******************************************************************************************/
 BMLTSemantic.prototype.handleFormatCheckbox = function ( inCheckboxObject )
@@ -1048,6 +1047,42 @@ BMLTSemantic.prototype.handleFormatCheckbox = function ( inCheckboxObject )
         if ( inCheckboxObject.checked )
             {
             this.state.formats = inCheckboxObject.value.toString();
+            };
+        };
+};
+
+/*******************************************************************************************/
+/**
+    \brief
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.handleWeekdayCheckbox = function ( inCheckboxObject )
+{
+    this.scanWeekdays();
+};
+
+/*******************************************************************************************/
+/**
+    \brief
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.scanWeekdays = function ( )
+{
+    this.state.weekdays = null;
+
+    for ( var i = 1; i < 8; i++ )
+        {
+        var checkbox = this.getScopedElement ( 'bmlt_semantic_form_weekday_checkbox_' + i );
+        if ( checkbox.checked )
+            {
+            if ( this.state.weekdays )
+                {
+                this.state.weekdays += ',' + i.toString();
+                }
+            else
+                {
+                this.state.weekdays = i.toString();
+                };
             };
         };
 };
@@ -1142,6 +1177,11 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.setBasicFunctions ( 'bmlt_semantic_info_div_shortcode_line' );
     this.setBasicFunctions ( 'bmlt_semantic_form_main_fields_fieldset_contents_div' );
     this.setBasicFunctions ( 'bmlt_semantic_form_meeting_fields_fieldset_contents_div' );
+    
+    for ( var i = 1; i < 8; i++ )
+        {
+        this.setBasicFunctions ( 'bmlt_semantic_form_weekday_checkbox_' + i );
+        };
     
     this.setTextHandlers ( 'bmlt_semantic_form_changes_from_text' );
     this.setTextHandlers ( 'bmlt_semantic_form_changes_to_text' );

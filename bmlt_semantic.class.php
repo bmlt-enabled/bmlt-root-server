@@ -617,7 +617,7 @@ class bmlt_semantic
             $name = $this->localize_string ( 'weekday'.$day_int );
             $value = $day_int;
             
-            $ret .= $this->make_checkbox_html ( $name, 'bmlt_semantic_form_weekday_checkbox_'.$value, FALSE, $value );
+            $ret .= $this->make_checkbox_html ( $name, 'bmlt_semantic_form_weekday_checkbox_'.$value, FALSE, $value, 'handleWeekdayCheckbox' );
             }
         $ret .= '<div class="clear_both"></div>';
         $ret .= '</fieldset>';
@@ -720,7 +720,8 @@ class bmlt_semantic
     function make_checkbox_html (   $in_label_text,
                                     $in_base_id,
                                     $in_checked = FALSE,
-                                    $in_value = NULL
+                                    $in_value = NULL,
+                                    $in_onChange = NULL
                                 )
     {
         $ret = '<div id="'.htmlspecialchars ( $in_base_id.'_container_div'.$this->_myJSName ).'" class="bmlt_checkbox_container">';
@@ -734,6 +735,12 @@ class bmlt_semantic
         if ( $in_value )
             {
             $ret .= ' value="'.htmlspecialchars ( $in_value ).'"';
+            }
+            
+        if ( $in_onChange )
+            {
+            $function_string = 'bmlt_semantic_js_object'.htmlspecialchars ( $this->_myJSName ).'.'.$in_onChange.'(this)';
+            $ret .= ' onchange="'.$function_string.'"';
             }
         
         $ret .= ' /><label for="'.htmlspecialchars ( $in_base_id.$this->_myJSName ).'" id="'.htmlspecialchars ( $in_base_id.'_label'.$this->_myJSName ).'" class="bmlt_checkbox_label">'.htmlspecialchars ( $in_label_text ).'</label>';
