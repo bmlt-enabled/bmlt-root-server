@@ -17,6 +17,7 @@ BMLTSemanticResult.prototype.meeting_key = null;        ///< The main "meeting_k
 BMLTSemanticResult.prototype.meeting_key_value = null;  ///< The value selected by the field select.
 BMLTSemanticResult.prototype.root_server_uri = null;    ///< The main Root Server URI.
 BMLTSemanticResult.prototype.services = null;           ///< The selected Service bodies. This is a CSV string of integer IDs.
+BMLTSemanticResult.prototype.formats = null;            ///< The selected formats. This is a CSV string of integer IDs.
 
 /*******************************************************************************************/
 /**
@@ -313,8 +314,11 @@ BMLTSemantic.prototype.populateFormatsSection = function()
             
             var newCheckbox = document.createElement ( 'input' );
             newCheckbox.type = 'checkbox';
+            newCheckbox.formatObject = formatObject;
             newCheckbox.id = this.getScopedID ( 'bmlt_semantic_form_format_checkbox_' + formatObject.id );
             newCheckbox.value = formatObject.id;
+            newCheckbox.formHandler = this;
+            newCheckbox.onchange = function(){ this.formHandler.handleFormatCheckbox ( this ) };
             newCheckbox.title = formatObject.name_string + ' - ' + formatObject.description_string;
             newCheckbox.className ='bmlt_checkbox_input';
             newContainer.appendChild ( newCheckbox );
@@ -981,8 +985,70 @@ BMLTSemantic.prototype.readServiceBodies = function ( inParent )
             service_array[i] = parseInt ( service_array[i] );
             };
         
-        service_array.sort();
+        service_array.sort( function ( a, b ) { return parseInt ( a ) > parseInt ( b ); } );
         service_array.join();
+        };
+};
+
+/*******************************************************************************************/
+/**
+    \brief
+    
+    \param inParent   the parent Service body.
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.handleFormatCheckbox = function ( inCheckboxObject )
+{
+    if ( this.state.formats )
+        {
+        var formatsArray = this.state.formats.split(',');
+        
+        for ( var i = 0; i < formatsArray.length; i++ )
+            {
+            formatsArray[i] = parseInt ( formatsArray[i] );
+            };
+        
+        this.state.formats = null;
+        var id = parseInt ( inCheckboxObject.value );
+        
+        if ( !inCheckboxObject.checked )
+            {
+            for ( var i = 0; i < formatsArray.length; i++ )
+                {
+                if ( formatsArray[i] == id )
+                    {
+                    formatsArray[i] = 0;
+                    };
+                };
+            }
+        else
+            {
+            formatsArray.push ( id );
+            };
+        
+        // We remove formats by setting removed values to zero, doing a reverse sort, then truncating the array at the first zero.
+        // We then re-reverse what's left, and Bjorn Stronginthearm's your uncle.
+        formatsArray = formatsArray.sort ( function ( a, b ) { return parseInt ( a ) > parseInt ( b ); } ).reverse();
+        
+        for ( i = 0; i < formatsArray.length; i++ )
+            {
+            if ( formatsArray[i] == 0 )
+                {
+                formatsArray = formatsArray.slice ( 0, i );
+                break;
+                };
+            };
+        
+        formatsArray = formatsArray.reverse();
+        
+        this.state.formats = formatsArray.join ( ',' );
+        }
+    else
+        {
+        if ( inCheckboxObject.checked )
+            {
+            this.state.formats = inCheckboxObject.value.toString();
+            };
         };
 };
 
