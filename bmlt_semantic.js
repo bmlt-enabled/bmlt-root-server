@@ -12,9 +12,10 @@ function BMLTSemanticResult ( inRootServerURI
     this.root_server_uri = inRootServerURI;
 };
 
-BMLTSemanticResult.prototype.switcher = null;       ///< The main "?switcher=" value.
-BMLTSemanticResult.prototype.meeting_key = null;    ///< The main "meeting_key=" value.
-BMLTSemanticResult.prototype.root_server_uri = null;    ///< The main "meeting_key=" value.
+BMLTSemanticResult.prototype.switcher = null;           ///< The main "?switcher=" value.
+BMLTSemanticResult.prototype.meeting_key = null;        ///< The main "meeting_key=" value.
+BMLTSemanticResult.prototype.meeting_key_value = null;  ///< The value selected by the field select.
+BMLTSemanticResult.prototype.root_server_uri = null;    ///< The main Root Server URI.
 
 /*******************************************************************************************/
 /**
@@ -241,6 +242,8 @@ BMLTSemantic.prototype.fetchServiceBodies = function ()
 /*******************************************************************************************/
 BMLTSemantic.prototype.fetchFieldKeys = function ()
 {
+    this.getScopedElement ( 'bmlt_semantic_form_main_fields_fieldset_contents_div' ).hide();
+    this.getScopedElement ( 'bmlt_semantic_form_meeting_fields_fieldset_contents_div' ).hide();
     this.ajaxRequest ( this.ajax_base_uri + '&GetFieldKeys', this.fetchFieldKeysCallback, 'post', this );
 };
 
@@ -251,7 +254,10 @@ BMLTSemantic.prototype.fetchFieldKeys = function ()
 /*******************************************************************************************/
 BMLTSemantic.prototype.fetchFieldValues = function ()
 {
-    this.ajaxRequest ( this.ajax_base_uri + '&GetFieldValues&meeting_key=', this.fetchFieldValuesCallback, 'post', this );
+    this.getScopedElement ( 'bmlt_semantic_form_main_fields_fieldset_contents_div' ).hide();
+    this.getScopedElement ( 'bmlt_semantic_form_meeting_fields_fieldset_contents_div' ).hide();
+    var key = this.state.meeting_key.toString();
+    this.ajaxRequest ( this.ajax_base_uri + '&GetFieldValues&meeting_key=' + key, this.fetchFieldValuesCallback, 'post', this );
 };
 
 /*******************************************************************************************/
@@ -637,6 +643,7 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     switcher_type_select_fieldkey_option.enable();
     switcher_type_select_fieldval_option.enable();
     switcher_type_select_naws_option.enable();
+    
     bmlt_semantic_info_div_download_line.hide();
     bmlt_semantic_info_div_shortcode_line.hide();
 
@@ -854,9 +861,10 @@ BMLTSemantic.prototype.handleSwitcherSelectChange = function ( inSelect )
     \param inSelect   The object that experienced change.
 */
 /*******************************************************************************************/
-BMLTSemantic.prototype.handleMainFieldKeySelectChange = function ( inSelect )
+BMLTSemantic.prototype.handleFieldKeySelectChange = function ( inSelect )
 {
     this.state.meeting_key = inSelect.value;
+    this.fetchFieldValues();
 };
 
 /*******************************************************************************************/
@@ -866,9 +874,9 @@ BMLTSemantic.prototype.handleMainFieldKeySelectChange = function ( inSelect )
     \param inSelect   The object that experienced change.
 */
 /*******************************************************************************************/
-BMLTSemantic.prototype.handleMeetingFieldKeySelectChange = function ( inSelect )
+BMLTSemantic.prototype.handleFieldKeyValueSelectChange = function ( inSelect )
 {
-    this.state.meeting_key = inSelect.value;
+    this.state.meeting_key_value = inSelect.value;
 };
 
 /*******************************************************************************************/
@@ -959,6 +967,8 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.setBasicFunctions ( 'bmlt_semantic_form_response_type_select_poi_option' );
     this.setBasicFunctions ( 'bmlt_semantic_info_div_download_line' );
     this.setBasicFunctions ( 'bmlt_semantic_info_div_shortcode_line' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_main_fields_fieldset_contents_div' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_meeting_fields_fieldset_contents_div' );
     
     this.setTextHandlers ( 'bmlt_semantic_form_changes_from_text' );
     this.setTextHandlers ( 'bmlt_semantic_form_changes_to_text' );

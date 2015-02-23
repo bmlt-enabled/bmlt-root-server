@@ -328,6 +328,10 @@ class bmlt_semantic
                 {
                 echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetFieldKeys' ) );
                 }
+            elseif ( isset ( $this->_httpVars['GetFieldValues'] ) )
+                {
+                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetFieldValues&meeting_key='.$this->_httpVars['meeting_key'] ) );
+                }
             elseif ( isset ( $this->_httpVars['GetVersion'] ) )
                 {
                 echo ( $this->get_server_version() );
@@ -573,6 +577,10 @@ class bmlt_semantic
         $ret .= $this->get_wizard_page_field_select_html ( 'main_' );
         $ret .= '</legend>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
+        $ret .= '<div id= "bmlt_semantic_form_main_fields_fieldset_contents_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_main_fields_fieldset_contents_div" style="display:none">';
+        $ret .= $this->get_wizard_page_field_value_select_html ( 'main_' );
+        $ret .= '</div>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '</fieldset>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         
@@ -643,6 +651,9 @@ class bmlt_semantic
         $ret .= '<div id= "bmlt_semantic_form_sb_blurb_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_workshop_blurb_note_div">';
         $ret .= '<p>'.$this->localize_string ( 'all_unselected_note1' ).'</p>';
         $ret .= '</div>';
+        $ret .= '<div id= "bmlt_semantic_form_meeting_fields_fieldset_contents_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_meeting_fields_fieldset_contents_div" style="display:none">';
+        $ret .= $this->get_wizard_page_field_value_select_html();
+        $ret .= '</div>';
         $ret .= '</fieldset>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '</div>';
@@ -662,7 +673,7 @@ class bmlt_semantic
     {
         $ret = '<label id="bmlt_semantic_form_field_'.htmlspecialchars ( $inID ).'select_label'.htmlspecialchars ( $this->_myJSName ).'" for="bmlt_semantic_form_field_'.htmlspecialchars ( $inID ).'select'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_field_select_label">'.$this->localize_string ( 'keys_section_label' ).'</label>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
-        $function_string = 'bmlt_semantic_js_object'.$this->_myJSName.'.'.($inID ? 'handleMainFieldKeySelectChange' : 'handleMeetingFieldKeySelectChange' ).'(this)';
+        $function_string = 'bmlt_semantic_js_object'.htmlspecialchars ( $this->_myJSName ).'.handleFieldKeySelectChange(this)';
         $ret .= '<select id="bmlt_semantic_form_field_'.htmlspecialchars ( $inID ).'select'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_field_select" onchange="'.htmlspecialchars ( $function_string ).'">';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
         $ret .= '<option value="" selected="selected"';
@@ -671,6 +682,28 @@ class bmlt_semantic
             $ret .= ' disabled="disabled"';
             }
         $ret .= '>'.$this->localize_string ( $inID ? 'defaultFieldSelect' : 'defaultMeetingFieldSelect' ).'</option>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
+        $ret .= '</select>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        
+        return $ret;
+    }
+    
+    /**************************************************************/
+    /** \brief  
+        
+        \returns the HTML.
+    */
+    /**************************************************************/
+    function get_wizard_page_field_value_select_html( $inID = ''
+                                                    )
+    {
+        $ret = '<label id="bmlt_semantic_form_value_'.htmlspecialchars ( $inID ).'select_label'.htmlspecialchars ( $this->_myJSName ).'" for="bmlt_semantic_form_value_'.htmlspecialchars ( $inID ).'select'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_value_select_label">'.$this->localize_string ( 'values_section_label' ).'</label>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $function_string = 'bmlt_semantic_js_object'.htmlspecialchars ( $this->_myJSName ).'.handleMeetingFieldKeySelectChange(this)';
+        $ret .= '<select id="bmlt_semantic_form_value_'.htmlspecialchars ( $inID ).'select'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_value_select" onchange="'.htmlspecialchars ( $function_string ).'">';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
+        $ret .= '<option value="" selected="selected" disabled="disabled">'.$this->localize_string ( 'defaultValueSelect' ).'</option>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
         $ret .= '</select>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
