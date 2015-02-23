@@ -16,6 +16,7 @@ BMLTSemanticResult.prototype.switcher = null;           ///< The main "?switcher
 BMLTSemanticResult.prototype.meeting_key = null;        ///< The main "meeting_key=" value.
 BMLTSemanticResult.prototype.meeting_key_value = null;  ///< The value selected by the field select.
 BMLTSemanticResult.prototype.root_server_uri = null;    ///< The main Root Server URI.
+BMLTSemanticResult.prototype.services = null;           ///< The selected Service bodies. This is a CSV string of integer IDs.
 
 /*******************************************************************************************/
 /**
@@ -435,6 +436,10 @@ BMLTSemantic.prototype.createServiceBodyCheckbox = function(inServiceBodyObject,
     newCheckbox.title = inServiceBodyObject.description;
     newCheckbox.className ='bmlt_checkbox_input';
     inContainerObject.appendChild ( newCheckbox );
+    inServiceBodyObject.checkboxElement = newCheckbox;
+    newCheckbox.formHandler = this;
+    newCheckbox.serviceBody = inServiceBodyObject;
+    newCheckbox.onchange = function() { this.formHandler.handleServiceBodyCheck(this) };
     
     var newCheckboxLabel = document.createElement ( 'label' );
     newCheckboxLabel.for = this.getScopedID ( 'bmlt_semantic_form_sb_checkbox_' + inServiceBodyObject.id );
@@ -877,6 +882,108 @@ BMLTSemantic.prototype.handleFieldKeySelectChange = function ( inSelect )
 BMLTSemantic.prototype.handleFieldKeyValueSelectChange = function ( inSelect )
 {
     this.state.meeting_key_value = inSelect.value;
+};
+
+/*******************************************************************************************/
+/**
+    \brief
+    
+    \param inSelect   The object that experienced change.
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.handleServiceBodyCheck = function ( inCheckbox )
+{
+    this.updateServiceBodies ( inCheckbox );
+    this.readServiceBodies();
+};
+
+/*******************************************************************************************/
+/**
+    \brief
+    
+    \param inSelect   The object that experienced change.
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.updateServiceBodies = function ( inCheckboxObject )
+{
+    var service_body_object = inCheckboxObject.serviceBody;
+
+    var childBodies = service_body_object.childServiceBodies;
+    
+    if ( childBodies )
+        {
+        for ( var i = 0; i < childBodies.length; i++ )
+            {
+            var child = childBodies[i];
+            
+            child.checkboxElement.checked = inCheckboxObject.checked;
+            
+            this.updateServiceBodies ( child.checkboxElement );
+            };
+        };
+};
+
+/*******************************************************************************************/
+/**
+    \brief
+    
+    \param inParent   the parent Service body.
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.readServiceBodies = function ( inParent )
+{
+    var services = Array();
+    if ( inParent )
+        {
+        if ( inParent.checkboxElement.checked )
+            {
+            if ( !this.state.services )
+                {
+                this.state.services = '';
+                }
+            else
+                {
+                if ( this.state.services != '' )
+                    {
+                    this.state.services += ',';
+                    };
+                };
+                
+            this.state.services += inParent.id.toString();
+            };
+        }
+    else
+        {
+        this.state.services = null;
+        };
+    
+    var child_bodies = this.service_body_objects;
+    
+    if ( inParent )
+        {
+        child_bodies = inParent.childServiceBodies;
+        };
+    
+    if ( child_bodies )
+        {
+        for ( var i = 0; i < child_bodies.length; i++ )
+            {
+            this.readServiceBodies ( child_bodies[i] );
+            };
+        };
+    
+    if ( this.state.services )
+        {
+        var service_array = this.state.services.toString().split ( ',' );
+        
+        for ( var i = 0; i < service_array.length; i++ )
+            {
+            service_array[i] = parseInt ( service_array[i] );
+            };
+        
+        service_array.sort();
+        service_array.join();
+        };
 };
 
 /*******************************************************************************************/
