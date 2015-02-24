@@ -371,11 +371,11 @@ class bmlt_semantic
         $ret .= '</div>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '<div id="bmlt_semantic_info_div_download_line'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_info_line">';
-        $ret .= '<span class="info_label">'.$this->localize_string ( 'result_url_label' ).'</span><span class="info_value">'.$this->localize_string ( 'result_invalid_text' ).'</span>';
+        $ret .= '<span class="info_label">'.$this->localize_string ( 'result_url_label' ).'</span><span class="info_value"><span id="bmlt_semantic_info_div_url_active_span'.htmlspecialchars ( $this->_myJSName ).'"></span><span id="bmlt_semantic_info_div_url_Invalid_span'.htmlspecialchars ( $this->_myJSName ).'">'.$this->localize_string ( 'result_invalid_text' ).'</span></span>';
         $ret .= '</div>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '<div id="bmlt_semantic_info_div_shortcode_line'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_info_line" style="display:none">';
-        $ret .= '<span class="info_label">'.$this->localize_string ( 'result_shortcode_label' ).'</span><span class="info_value">'.$this->localize_string ( 'result_invalid_text' ).'</span>';
+        $ret .= '<span class="info_label">'.$this->localize_string ( 'result_shortcode_label' ).'</span><span class="info_value"><span id="bmlt_semantic_info_div_shortcode_active_span'.htmlspecialchars ( $this->_myJSName ).'"></span><span id="bmlt_semantic_info_div_shortcode_Invalid_span'.htmlspecialchars ( $this->_myJSName ).'">'.$this->localize_string ( 'result_invalid_text' ).'</span></span>';
         $ret .= '</div>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '<div class="clear_both"></div>';
@@ -491,7 +491,8 @@ class bmlt_semantic
         $ret .= '<option id="bmlt_semantic_form_response_type_select_kml_option'.htmlspecialchars ( $this->_myJSName ).'" value="kml">'.$this->localize_string ( 'response_type_selector_type_kml' ).'</option>';
         $ret .= '<option id="bmlt_semantic_form_response_type_select_gpx_option'.htmlspecialchars ( $this->_myJSName ).'" value="gpx">'.$this->localize_string ( 'response_type_selector_type_gpx' ).'</option>';
         $ret .= '<option id="bmlt_semantic_form_response_type_select_poi_option'.htmlspecialchars ( $this->_myJSName ).'" value="poi">'.$this->localize_string ( 'response_type_selector_type_poi' ).'</option>';
-        $ret .= '<option value="simple">'.$this->localize_string ( 'response_type_selector_type_simple' ).'</option>';
+        $ret .= '<option value="simple-block">'.$this->localize_string ( 'response_type_selector_type_simple_block' ).'</option>';
+        $ret .= '<option value="simple">'.$this->localize_string ( 'response_type_selector_type_simple_table' ).'</option>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '</select>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
@@ -515,7 +516,8 @@ class bmlt_semantic
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '<div id="bmlt_switcher_naws_dump_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_switcher_naws_dump_div" style="display:none">';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
-        $ret .= '<select id="bmlt_switcher_naws_dump_sb_select'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_switcher_naws_dump_sb_select">';
+        $function_string = 'bmlt_semantic_js_object'.htmlspecialchars ( $this->_myJSName ).'.handleNAWSDumpSelectChange(this)';
+        $ret .= '<select id="bmlt_switcher_naws_dump_sb_select'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_switcher_naws_dump_sb_select" onchange="'.htmlspecialchars ( $function_string ).'">';
         $ret .= '<option value="" disabled="disabled" selected="selected">'.$this->localize_string ( 'defaultSBSelect' ).'</option>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '</select>';
