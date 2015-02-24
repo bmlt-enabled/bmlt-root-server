@@ -55,7 +55,6 @@ BMLTSemantic.prototype.field_values = null;
 BMLTSemantic.prototype.service_body_objects = null;
 BMLTSemantic.prototype.temp_service_body_objects = null;
 BMLTSemantic.prototype.state = null;
-BMLTSemantic.prototype.hidden_root = null;
 
 /*******************************************************************************************/
 /**
@@ -260,7 +259,8 @@ BMLTSemantic.prototype.fetchFieldValues = function ()
     this.getScopedElement ( 'bmlt_semantic_form_main_fields_fieldset_contents_div' ).hide();
     this.getScopedElement ( 'bmlt_semantic_form_meeting_fields_fieldset_contents_div' ).hide();
     var key = this.state.meeting_key.toString();
-    this.ajaxRequest ( this.ajax_base_uri + '&GetFieldValues&meeting_key=' + key, this.fetchFieldValuesCallback, 'post', this );
+    var url = this.ajax_base_uri + '&GetFieldValues&meeting_key=' + key;
+    this.ajaxRequest ( url, this.fetchFieldValuesCallback, 'post', this );
 };
 
 /*******************************************************************************************/
@@ -582,8 +582,125 @@ BMLTSemantic.prototype.fetchFieldValuesCallback = function (inHTTPReqObject
         {
         var context = inHTTPReqObject.extraData;
         eval ( 'context.field_values = ' + inHTTPReqObject.responseText + ';' );
+        
+        context.field_values.sort ( function(a,b){
+                                                eval ( 'var textA = a.' + context.state.meeting_key.toString() + '.toString();var textB = b.' + context.state.meeting_key.toString() + '.toString();' );
+                                                ret = 0;
+                                                if ( textA == 'NULL' )
+                                                    {
+                                                    ret = -1;
+                                                    }
+                                                else
+                                                    {
+                                                    if ( textB == 'NULL' )
+                                                        {
+                                                        ret = 1;
+                                                        }
+                                                    else
+                                                        {
+                                                        eval ( 'var numA = parseFloat ( a.' + context.state.meeting_key + ' );var numB = parseFloat ( b.' + context.state.meeting_key + ' );' );
+                                                        if ( !isNaN ( numA ) && !isNaN ( numB ) &&  numA > numB )
+                                                            {
+                                                            ret = 1;
+                                                            }
+                                                        else
+                                                            {
+                                                            if ( !isNaN ( numA ) && !isNaN ( numB ) &&  numB > numA )
+                                                                {
+                                                                ret = -1;
+                                                                }
+                                                            else
+                                                                {
+                                                                eval ( 'var intA = parseInt ( a.' + context.state.meeting_key + ' );var intB = parseInt ( b.' + context.state.meeting_key + ' );' );
+                                                                if ( intA > intB )
+                                                                    {
+                                                                    ret = 1;
+                                                                    }
+                                                                else
+                                                                    {
+                                                                    if ( intB > intA )
+                                                                        {
+                                                                        ret = -1;
+                                                                        }
+                                                                    else
+                                                                        {
+                                                                        if ( textA > textB )
+                                                                            {
+                                                                            ret = 1;
+                                                                            }
+                                                                        else
+                                                                            {
+                                                                            if ( textB > textA )
+                                                                                {
+                                                                                ret = -1;
+                                                                                };
+                                                                            };
+                                                                        };
+                                                                    };
+                                                                };
+                                                            };
+                                                        };
+                                                    };
+                                                
+                                                return ret;
+                                            } );
+        
+        context.updateFieldValuesPopup();
         };
 };
+
+/*******************************************************************************************/
+/**
+    \brief
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.updateFieldValuesPopup = function ()
+{
+    var select_object1 = this.getScopedElement ( 'bmlt_semantic_form_value_main_select' );
+    var select_object2 = this.getScopedElement ( 'bmlt_semantic_form_value_select' );
+
+    for ( var i = select_object1.options.length - 1; i > 0; i-- )
+        {
+        select_object1.removeChild ( select_object1.options[i] );
+        };
+    
+    for ( var i = select_object2.options.length - 1; i > 0; i-- )
+        {
+        select_object2.removeChild ( select_object2.options[i] );
+        };
+    
+    if ( this.field_values && this.field_values.length )
+        {
+        for ( var i = 0; i < this.field_values.length; i++ )
+            {
+            var value_object = this.field_values[i];
+            eval ( 'var value_text = value_object.' + this.state.meeting_key.toString() + '.toString();' );
+            var newOption = document.createElement ( 'option' );
+            newOption.value = value_text;
+            newOption.appendChild ( document.createTextNode ( value_text ) );
+            select_object1.appendChild ( newOption );
+            
+            var newOption = document.createElement ( 'option' );
+            newOption.value = value_text;
+            newOption.appendChild ( document.createTextNode ( value_text ) );
+            select_object2.appendChild ( newOption );
+            };
+        
+        this.getScopedElement ( 'bmlt_semantic_form_main_fields_fieldset_contents_div' ).show();
+        this.getScopedElement ( 'bmlt_semantic_form_meeting_fields_fieldset_contents_div' ).show();
+        };
+};
+
+/*******************************************************************************************/
+/**
+    \brief
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.fieldValueChosen = function ( inSelect
+                                                    )
+{
+alert ( inSelect.value.toString() );
+}
 
 /*******************************************************************************************/
 /**
@@ -642,10 +759,10 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     var switcher_type_select_naws_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_naws_option' );
     var bmlt_semantic_form_meeting_search_div = this.getScopedElement ( 'bmlt_semantic_form_meeting_search_div' );
     var bmlt_semantic_form_changes_div = this.getScopedElement ( 'bmlt_semantic_form_changes_div' );
-    var bmlt_semantic_form_main_fields_fieldset = this.getScopedElement ( 'bmlt_semantic_form_main_fields_fieldset' );
     var bmlt_switcher_div_no_options_blurb = this.getScopedElement ( 'bmlt_switcher_div_no_options_blurb' );
     var bmlt_semantic_info_div_download_line = this.getScopedElement ( 'bmlt_semantic_info_div_download_line' );
     var bmlt_semantic_info_div_shortcode_line = this.getScopedElement ( 'bmlt_semantic_info_div_shortcode_line' );
+    var bmlt_semantic_form_main_fields_fieldset = this.getScopedElement ( 'bmlt_semantic_form_main_fields_fieldset' );
     
     switcher_type_select_formats_option.enable();
     switcher_type_select_sb_option.enable();
@@ -1177,6 +1294,8 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.setBasicFunctions ( 'bmlt_semantic_info_div_shortcode_line' );
     this.setBasicFunctions ( 'bmlt_semantic_form_main_fields_fieldset_contents_div' );
     this.setBasicFunctions ( 'bmlt_semantic_form_meeting_fields_fieldset_contents_div' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_value_main_select' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_value_select' );
     
     for ( var i = 1; i < 8; i++ )
         {
