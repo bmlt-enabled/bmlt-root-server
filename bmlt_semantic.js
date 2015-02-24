@@ -211,6 +211,8 @@ BMLTSemantic.prototype.fetchFormats = function ()
             };
         };
     
+    this.state.formats = null;
+    
     this.ajaxRequest ( this.ajax_base_uri + '&GetInitialFormats', this.fetchFormatsCallback, 'post', this );
 };
 
@@ -234,6 +236,8 @@ BMLTSemantic.prototype.fetchServiceBodies = function ()
             };
         };
 
+    this.state.services = null;
+    
     this.ajaxRequest ( this.ajax_base_uri + '&GetInitialServiceBodies', this.fetchServiceBodiesCallback, 'post', this );
 };
 
@@ -244,7 +248,6 @@ BMLTSemantic.prototype.fetchServiceBodies = function ()
 /*******************************************************************************************/
 BMLTSemantic.prototype.fetchFieldKeys = function ()
 {
-    this.getScopedElement ( 'bmlt_semantic_form_main_fields_fieldset_contents_div' ).hide();
     this.getScopedElement ( 'bmlt_semantic_form_meeting_fields_fieldset_contents_div' ).hide();
     this.ajaxRequest ( this.ajax_base_uri + '&GetFieldKeys', this.fetchFieldKeysCallback, 'post', this );
 };
@@ -256,7 +259,6 @@ BMLTSemantic.prototype.fetchFieldKeys = function ()
 /*******************************************************************************************/
 BMLTSemantic.prototype.fetchFieldValues = function ()
 {
-    this.getScopedElement ( 'bmlt_semantic_form_main_fields_fieldset_contents_div' ).hide();
     this.getScopedElement ( 'bmlt_semantic_form_meeting_fields_fieldset_contents_div' ).hide();
     var key = this.state.meeting_key.toString();
     var url = this.ajax_base_uri + '&GetFieldValues&meeting_key=' + key;
@@ -291,7 +293,8 @@ BMLTSemantic.prototype.fetchFormatsCallback = function (inHTTPReqObject
         {
         var context = inHTTPReqObject.extraData;
         eval ( 'context.format_objects = ' + inHTTPReqObject.responseText + ';' );
-        context.populateFormatsSection();
+        context.populateFormatsSection(context.getScopedElement ( 'bmlt_semantic_form_formats_fieldset' ));
+        context.populateFormatsSection(context.getScopedElement ( 'bmlt_switcher_field_value_div_formats' ));
         };
 };
 
@@ -300,12 +303,10 @@ BMLTSemantic.prototype.fetchFormatsCallback = function (inHTTPReqObject
     \brief
 */
 /*******************************************************************************************/
-BMLTSemantic.prototype.populateFormatsSection = function()
+BMLTSemantic.prototype.populateFormatsSection = function(formatContainer)
 {
     if ( this.format_objects && this.format_objects.length )
         {
-        var formatContainer = this.getScopedElement ( 'bmlt_semantic_form_formats_fieldset' );
-            
         for ( var i = 0; i < this.format_objects.length; i++ )
             {
             var formatObject = this.format_objects[i];
@@ -554,15 +555,20 @@ BMLTSemantic.prototype.populateFieldSelect = function ()
     
     for ( var i = 0; i < this.field_keys.length; i++ )
         {
+        var key = this.field_keys[i].key;
+        
         var newOption = document.createElement ( 'option' );
-        newOption.value = this.field_keys[i].key;
+        newOption.value = key;
         newOption.appendChild ( document.createTextNode ( this.field_keys[i].description ) );
         mainSelectElement.appendChild ( newOption );
         
-        newOption = document.createElement ( 'option' );
-        newOption.value = this.field_keys[i].key;
-        newOption.appendChild ( document.createTextNode ( this.field_keys[i].description ) );
-        meetingSelectElement.appendChild ( newOption );
+        if ( (key != 'formats') && (key != 'weekday_tinyint') && (key != 'service_body_bigint') && (key != 'id_bigint') && (key != 'longitude') && (key != 'latitude') )
+            {
+            newOption = document.createElement ( 'option' );
+            newOption.value = key;
+            newOption.appendChild ( document.createTextNode ( this.field_keys[i].description ) );
+            meetingSelectElement.appendChild ( newOption );
+            };
         };
     
     mainSelectElement.selectedIndex = 0;
@@ -586,11 +592,7 @@ BMLTSemantic.prototype.fetchFieldValuesCallback = function (inHTTPReqObject
         context.field_values.sort ( function(a,b){
                                                 eval ( 'var textA = a.' + context.state.meeting_key.toString() + '.toString();var textB = b.' + context.state.meeting_key.toString() + '.toString();' );
                                                 ret = 0;
-                                                if ( textA == 'NULL' )
-                                                    {
-                                                    ret = -1;
-                                                    }
-                                                else
+                                                if ( textA != 'NULL' )
                                                     {
                                                     if ( textB == 'NULL' )
                                                         {
@@ -656,17 +658,11 @@ BMLTSemantic.prototype.fetchFieldValuesCallback = function (inHTTPReqObject
 /*******************************************************************************************/
 BMLTSemantic.prototype.updateFieldValuesPopup = function ()
 {
-    var select_object1 = this.getScopedElement ( 'bmlt_semantic_form_value_main_select' );
-    var select_object2 = this.getScopedElement ( 'bmlt_semantic_form_value_select' );
+    var select_object = this.getScopedElement ( 'bmlt_semantic_form_value_select' );
 
-    for ( var i = select_object1.options.length - 1; i > 0; i-- )
+    for ( var i = select_object.options.length - 1; i > 0; i-- )
         {
-        select_object1.removeChild ( select_object1.options[i] );
-        };
-    
-    for ( var i = select_object2.options.length - 1; i > 0; i-- )
-        {
-        select_object2.removeChild ( select_object2.options[i] );
+        select_object.removeChild ( select_object.options[i] );
         };
     
     if ( this.field_values && this.field_values.length )
@@ -678,15 +674,9 @@ BMLTSemantic.prototype.updateFieldValuesPopup = function ()
             var newOption = document.createElement ( 'option' );
             newOption.value = value_text;
             newOption.appendChild ( document.createTextNode ( value_text ) );
-            select_object1.appendChild ( newOption );
-            
-            var newOption = document.createElement ( 'option' );
-            newOption.value = value_text;
-            newOption.appendChild ( document.createTextNode ( value_text ) );
-            select_object2.appendChild ( newOption );
+            select_object.appendChild ( newOption );
             };
         
-        this.getScopedElement ( 'bmlt_semantic_form_main_fields_fieldset_contents_div' ).show();
         this.getScopedElement ( 'bmlt_semantic_form_meeting_fields_fieldset_contents_div' ).show();
         };
 };
@@ -804,6 +794,13 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
         if ( (inItem != switcher_select) && (switcher_select.value != 'GetSearchResults') && ((response_type_select.value == 'kml') || (response_type_select.value == 'gpx') || (response_type_select.value == 'poi')) )
             {
             switcher_select.selectedIndex = 0;
+            }
+        else
+            {
+            if ( (inItem != switcher_select) && (switcher_select.value != 'GetSearchResults') && (switcher_select.value != 'GetFormats') && (response_type_select.value == 'simple') )
+                {
+                switcher_select.selectedIndex = 0;
+                };
             };
         };
 
@@ -871,6 +868,17 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
             switcher_type_select_fieldkey_option.disable();
             switcher_type_select_fieldval_option.disable();
             switcher_type_select_naws_option.disable();
+            }
+        else
+            {
+            if ( (main_fieldset_select.value == 'DOWNLOAD') && (response_type_select.value == 'simple') )
+                {
+                switcher_type_select_sb_option.disable();
+                switcher_type_select_changes_option.disable();
+                switcher_type_select_fieldkey_option.disable();
+                switcher_type_select_fieldval_option.disable();
+                switcher_type_select_naws_option.disable();
+                };
             };
         }
     else
@@ -991,7 +999,33 @@ BMLTSemantic.prototype.handleSwitcherSelectChange = function ( inSelect )
 BMLTSemantic.prototype.handleFieldKeySelectChange = function ( inSelect )
 {
     this.state.meeting_key = inSelect.value;
-    this.fetchFieldValues();
+    
+    if ( inSelect.id == this.getScopedID ( 'bmlt_semantic_form_field_select' ) )
+        {
+        this.fetchFieldValues();
+        }
+    else
+        {
+        var key = inSelect.value;
+        var blurbDiv = this.getScopedElement ( 'bmlt_switcher_field_value_div_no_options_blurb' );
+        var formatsDiv = this.getScopedElement ( 'bmlt_switcher_field_value_div_formats' );
+        var formatsBlurbDiv = this.getScopedElement ( 'bmlt_switcher_field_value_div_no_selected_formats_blurb' );
+
+        if ( key == 'formats' )
+            {
+            blurbDiv.hide();
+            formatsDiv.show();
+            formatsBlurbDiv.show();
+            formatsDiv.innerHTML = '';
+            this.fetchFormats();
+            }
+        else
+            {
+            blurbDiv.show();
+            formatsDiv.hide();
+            formatsBlurbDiv.hide();
+            };
+        };
 };
 
 /*******************************************************************************************/
@@ -1294,8 +1328,10 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.setBasicFunctions ( 'bmlt_semantic_info_div_shortcode_line' );
     this.setBasicFunctions ( 'bmlt_semantic_form_main_fields_fieldset_contents_div' );
     this.setBasicFunctions ( 'bmlt_semantic_form_meeting_fields_fieldset_contents_div' );
-    this.setBasicFunctions ( 'bmlt_semantic_form_value_main_select' );
     this.setBasicFunctions ( 'bmlt_semantic_form_value_select' );
+    this.setBasicFunctions ( 'bmlt_switcher_field_value_div_no_options_blurb' );
+    this.setBasicFunctions ( 'bmlt_switcher_field_value_div_formats' );
+    this.setBasicFunctions ( 'bmlt_switcher_field_value_div_no_selected_formats_blurb' );
     
     for ( var i = 1; i < 8; i++ )
         {

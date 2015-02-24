@@ -486,9 +486,9 @@ class bmlt_semantic
         $ret .= '<select id="bmlt_semantic_form_response_type_select'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_response_type_select">';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '<option value="csv" selected="selected">'.$this->localize_string ( 'response_type_selector_type_csv' ).'</option>';
+        $ret .= '<option value="simple">'.$this->localize_string ( 'response_type_selector_type_simple' ).'</option>';
         $ret .= '<option value="xml">'.$this->localize_string ( 'response_type_selector_type_xml' ).'</option>';
         $ret .= '<option value="json">'.$this->localize_string ( 'response_type_selector_type_json' ).'</option>';
-        $ret .= '<option value="simple">'.$this->localize_string ( 'response_type_selector_type_simple' ).'</option>';
         $ret .= '<option id="bmlt_semantic_form_response_type_select_kml_option'.htmlspecialchars ( $this->_myJSName ).'" value="kml">'.$this->localize_string ( 'response_type_selector_type_kml' ).'</option>';
         $ret .= '<option id="bmlt_semantic_form_response_type_select_gpx_option'.htmlspecialchars ( $this->_myJSName ).'" value="gpx">'.$this->localize_string ( 'response_type_selector_type_gpx' ).'</option>';
         $ret .= '<option id="bmlt_semantic_form_response_type_select_poi_option'.htmlspecialchars ( $this->_myJSName ).'" value="poi">'.$this->localize_string ( 'response_type_selector_type_poi' ).'</option>';
@@ -578,7 +578,12 @@ class bmlt_semantic
         $ret .= '</legend>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
         $ret .= '<div id="bmlt_semantic_form_main_fields_fieldset_contents_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_main_fields_fieldset_contents_div" style="display:block">';
-        $ret .= $this->get_wizard_page_field_value_select_html ( 'main_' );
+        $ret .= '<div id="bmlt_switcher_field_value_div_no_options_blurb'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_workshop_blurb_note_div" style="display:none">'.$this->localize_string ( 'no_addl_options' ).'</div>';
+        $ret .= '<div id="bmlt_switcher_field_value_div_no_selected_formats_blurb'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_workshop_blurb_note_div" style="display:none">';
+        $ret .= '<p>'.$this->localize_string ( 'no_selected_formats_blurb' ).'</p>';
+        $ret .= '<p>'.$this->localize_string ( 'or_note' ).'</p>';
+        $ret .= '</div>';
+        $ret .= '<div id="bmlt_switcher_field_value_div_formats'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_switcher_field_value_div_formats" style="display:none"></div>';
         $ret .= '</div>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '</fieldset>';
@@ -695,13 +700,12 @@ class bmlt_semantic
         \returns the HTML.
     */
     /**************************************************************/
-    function get_wizard_page_field_value_select_html( $inID = ''
-                                                    )
+    function get_wizard_page_field_value_select_html()
     {
-        $ret = '<label id="bmlt_semantic_form_value_'.htmlspecialchars ( $inID ).'select_label'.htmlspecialchars ( $this->_myJSName ).'" for="bmlt_semantic_form_value_'.htmlspecialchars ( $inID ).'select'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_value_select_label">'.$this->localize_string ( 'values_section_label' ).'</label>';
+        $ret = '<label id="bmlt_semantic_form_value_select_label'.htmlspecialchars ( $this->_myJSName ).'" for="bmlt_semantic_form_value_select'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_value_select_label">'.$this->localize_string ( 'values_section_label' ).'</label>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $function_string = 'bmlt_semantic_js_object'.htmlspecialchars ( $this->_myJSName ).'.fieldValueChosen(this)';
-        $ret .= '<select id="bmlt_semantic_form_value_'.htmlspecialchars ( $inID ).'select'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_value_select" onchange="'.htmlspecialchars ( $function_string ).'">';
+        $ret .= '<select id="bmlt_semantic_form_value_select'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_value_select" onchange="'.htmlspecialchars ( $function_string ).'">';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
         $ret .= '<option value="" selected="selected" disabled="disabled">'.$this->localize_string ( 'defaultValueSelect' ).'</option>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';   

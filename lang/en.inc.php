@@ -50,6 +50,7 @@ $this->_localization = array (
                                 'meeting_id_changes'                    =>  'Look for changes in a meeting with this ID:',
                                 'meeting_id_changes_tooltip'            =>  'Enter the numeric ID of the meeting to check.',
                                 'no_addl_options'                       =>  'There are no additional options for this operation.',
+                                'no_selected_formats_blurb'             =>  'If none of these are selected, then all formats will be returned.',
                                 'root_url_label'                        =>  'The Root Server URL Is:',
                                 'result_url_label'                      =>  'The Download URL Is:',
                                 'result_shortcode_label'                =>  'The Shortcode Is:',
