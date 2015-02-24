@@ -442,7 +442,22 @@ function parse_redirect (
                             break;
                             }
                         }
-                    
+                    elseif ( $meeting_key == 'worldid_mixed' )
+                        {
+                        if ( $value != 'NULL' )
+                            {
+                            $stripped_id = intval ( preg_replace ( '|[^0-9]*?|', '', $value ) );
+                            if ( $stripped_id == 0 )
+                                {
+                                $value = 'NULL';
+                                }
+                            else
+                                {
+                                $value = sprintf ( "G%08d", $stripped_id );
+                                }
+                            }
+                        }
+
                     $ids = explode ( '\t', $ids );
                     $ids = trim ( implode ( "\t", $ids ) );
                     $result2[] = '"'.$value.'","'.$ids.'"';

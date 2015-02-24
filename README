@@ -46,6 +46,11 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+** Version 2.6.15 **
+
+- TBD
+- Made a change in the way the WORLD IDs are returned in the semantic selectors. They are now all properly formatted.
+
 ** Version 2.6.14 **
 
 - February 22, 2015

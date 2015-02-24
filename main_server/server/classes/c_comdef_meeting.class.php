@@ -812,15 +812,15 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 			    case    'longitude':
 			    case    'latitude':
 			        $inKey = strtolower ( trim ( $inKey ) );
-                    $sql = "SELECT `$inKey`,`id_bigint` FROM `".c_comdef_server::GetMeetingTableName_obj()."_main` WHERE (`id_bigint` > 0) AND (`published`=1)"; 
-                    $rows = c_comdef_dbsingleton::preparedQuery( $sql, array ( ) );
+                    $sql = "SELECT `$inKey`,`id_bigint` FROM `".c_comdef_server::GetMeetingTableName_obj()."_main` WHERE (`id_bigint` > 0) AND (`published`=1) ORDER BY ?"; 
+                    $rows = c_comdef_dbsingleton::preparedQuery( $sql, array ( $inKey ) );
                 break;
                 
                 default:
 	                $temp = self::GetDataTableTemplate();
                     if ( isset ( $temp[$inKey] ) && ($temp[$inKey]['visibility'] != 1) )
                         {
-                        $sql = "SELECT ".c_comdef_server::GetMeetingTableName_obj()."_main.published,".c_comdef_server::GetMeetingTableName_obj()."_data.meetingid_bigint,".c_comdef_server::GetMeetingTableName_obj()."_data.data_string,".c_comdef_server::GetMeetingTableName_obj()."_data.data_bigint,".c_comdef_server::GetMeetingTableName_obj()."_data.data_double FROM `".c_comdef_server::GetMeetingTableName_obj()."_data` INNER JOIN ".c_comdef_server::GetMeetingTableName_obj()."_main ON ".c_comdef_server::GetMeetingTableName_obj()."_main.id_bigint=".c_comdef_server::GetMeetingTableName_obj()."_data.meetingid_bigint WHERE (`key`=?) AND (`meetingid_bigint`>0) AND (".c_comdef_server::GetMeetingTableName_obj()."_main.published=1)"; 
+                        $sql = "SELECT ".c_comdef_server::GetMeetingTableName_obj()."_main.published,".c_comdef_server::GetMeetingTableName_obj()."_data.meetingid_bigint,".c_comdef_server::GetMeetingTableName_obj()."_data.data_string,".c_comdef_server::GetMeetingTableName_obj()."_data.data_bigint,".c_comdef_server::GetMeetingTableName_obj()."_data.data_double FROM `".c_comdef_server::GetMeetingTableName_obj()."_data` INNER JOIN ".c_comdef_server::GetMeetingTableName_obj()."_main ON ".c_comdef_server::GetMeetingTableName_obj()."_main.id_bigint=".c_comdef_server::GetMeetingTableName_obj()."_data.meetingid_bigint WHERE (`key`=?) AND (`meetingid_bigint`>0) AND (".c_comdef_server::GetMeetingTableName_obj()."_main.published=1) ORDER BY ".c_comdef_server::GetMeetingTableName_obj()."_data.data_double, ".c_comdef_server::GetMeetingTableName_obj()."_data.data_bigint,".c_comdef_server::GetMeetingTableName_obj()."_data.data_string"; 
                         }
                     else
                         {
@@ -833,7 +833,6 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                     $rows = c_comdef_dbsingleton::preparedQuery( $sql, array ( $inKey ) );
                 break;
                 }
-			
 
 			if ( is_array ( $rows ) && count ( $rows ) )
 				{

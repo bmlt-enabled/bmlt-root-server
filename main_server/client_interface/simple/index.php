@@ -65,7 +65,8 @@ if ( $server instanceof c_comdef_server )
 		switch ( $http_vars['switcher'] )
 			{
 			case 'GetSearchResults':
-				$result = GetSimpleSearchResults ( $http_vars, isset ( $http_vars['block_mode'] ), isset ( $http_vars['container_id'] ) ? $http_vars['container_id'] : null );
+			    $container = (isset ( $http_vars['container_id'] ) && $http_vars['container_id']) ? $http_vars['container_id'] : null;
+				$result = GetSimpleSearchResults ( $http_vars, isset ( $http_vars['block_mode'] ), $container );
 			break;
 			
 			case 'GetFormats':
@@ -78,7 +79,8 @@ if ( $server instanceof c_comdef_server )
 				
 				unset ( $http_vars['lang_enum'] );
 				unset ( $http_vars['switcher'] );
-				$result = GetSimpleFormats ( $server, isset ( $http_vars['block_mode'] ), $http_vars['container_id'], $lang, $http_vars );
+			    $container = (isset ( $http_vars['container_id'] ) && $http_vars['container_id']) ? $http_vars['container_id'] : null;
+				$result = GetSimpleFormats ( $server, isset ( $http_vars['block_mode'] ), $container, $lang, $http_vars );
 			break;
 			
 			default:
