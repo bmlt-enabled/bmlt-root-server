@@ -223,18 +223,7 @@ BMLTSemantic.prototype.fetchFormats = function ()
 /*******************************************************************************************/
 BMLTSemantic.prototype.fetchServiceBodies = function ()
 {
-    var sbContainer = this.getScopedElement ( 'bmlt_semantic_form_sb_fieldset' );
-
-    if ( sbContainer && sbContainer.childNodes )
-        {
-        for ( var i = sbContainer.childNodes.length; i-- > 0; )
-            {
-            if ( sbContainer.childNodes[i].className == 'bmlt_sb_dl' )
-                {
-                sbContainer.removeChild ( sbContainer.childNodes[i] );
-                };
-            };
-        };
+    this.getScopedElement ( 'bmlt_semantic_form_sb_fieldset' ).innerHTML = '';
 
     this.state.services = null;
     
@@ -365,6 +354,21 @@ BMLTSemantic.prototype.fetchServiceBodiesCallback = function (inHTTPReqObject
 /*******************************************************************************************/
 BMLTSemantic.prototype.populateServiceBodiesSection = function()
 {
+    var sb_select = this.getScopedElement ( 'bmlt_switcher_naws_dump_sb_select' );
+    for ( var i = sb_select.options.length - 1; i > 0; i-- )
+        {
+        sb_select.removeChild ( sb_select.options[i] );
+        };
+    
+    for ( var i = 0; i < this.temp_service_body_objects.length; i++ )
+        {
+        var sb = this.temp_service_body_objects[i];
+        var newOption = document.createElement ( 'option' );
+        newOption.value = sb.id;
+        newOption.appendChild ( document.createTextNode ( sb.name ) );
+        sb_select.appendChild ( newOption );
+        };
+    
     this.organizeServiceBodies();
     
     if ( this.service_body_objects && this.service_body_objects.length )
@@ -409,6 +413,7 @@ BMLTSemantic.prototype.createServiceBodyList = function(inServiceBodyObject,
         {
         sb_array = this.service_body_objects;
         newListContainer = inContainerObject;
+        newListContainer.innerHTML = '';
         };
 
     if ( newListContainer && sb_array && sb_array.length )
@@ -750,6 +755,7 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     var bmlt_semantic_form_meeting_search_div = this.getScopedElement ( 'bmlt_semantic_form_meeting_search_div' );
     var bmlt_semantic_form_changes_div = this.getScopedElement ( 'bmlt_semantic_form_changes_div' );
     var bmlt_switcher_div_no_options_blurb = this.getScopedElement ( 'bmlt_switcher_div_no_options_blurb' );
+    var bmlt_switcher_naws_dump_div = this.getScopedElement ( 'bmlt_switcher_naws_dump_div' );
     var bmlt_semantic_info_div_download_line = this.getScopedElement ( 'bmlt_semantic_info_div_download_line' );
     var bmlt_semantic_info_div_shortcode_line = this.getScopedElement ( 'bmlt_semantic_info_div_shortcode_line' );
     var bmlt_semantic_form_main_fields_fieldset = this.getScopedElement ( 'bmlt_semantic_form_main_fields_fieldset' );
@@ -757,8 +763,11 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     switcher_type_select_formats_option.enable();
     switcher_type_select_sb_option.enable();
     switcher_type_select_changes_option.enable();
-    switcher_type_select_fieldkey_option.enable();
-    switcher_type_select_fieldval_option.enable();
+    if ( this.version >= 2006015 )
+        {
+        switcher_type_select_fieldkey_option.enable();
+        switcher_type_select_fieldval_option.enable();
+        };
     switcher_type_select_naws_option.enable();
     
     bmlt_semantic_info_div_download_line.hide();
@@ -804,6 +813,7 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
             };
         };
 
+    bmlt_switcher_naws_dump_div.hide();
     bmlt_switcher_div_no_options_blurb.hide();
     bmlt_semantic_form_changes_div.hide();
     bmlt_semantic_form_main_fields_fieldset.hide();
@@ -811,39 +821,28 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     
     if ( switcher_select.value == 'GetSearchResults' )
         {
-        bmlt_switcher_div_no_options_blurb.hide();
-        bmlt_semantic_form_changes_div.hide();
-        bmlt_semantic_form_main_fields_fieldset.hide();
-        if ( bmlt_semantic_form_meeting_search_div.style.display == 'none' )
-            {
-            bmlt_semantic_form_meeting_search_div.show();
-            this.reloadFromServer();
-            };
+        bmlt_semantic_form_meeting_search_div.show();
+        this.reloadFromServer();
         }
     else
         {
-        bmlt_semantic_form_meeting_search_div.hide();
         if ( switcher_select.value == 'GetChanges' )
             {
-            if ( bmlt_semantic_form_changes_div.style.display == 'none' )
-                {
-                bmlt_semantic_form_changes_div.show();
-                };
+            bmlt_semantic_form_changes_div.show();
             }
         else
             {
             if ( switcher_select.value == 'GetFieldValues' )
                 {
-                if ( bmlt_semantic_form_main_fields_fieldset.style.display == 'none' )
-                    {
-                    bmlt_semantic_form_main_fields_fieldset.show();
-                    this.reloadFromServer();
-                    };
+                bmlt_semantic_form_main_fields_fieldset.show();
+                this.fetchFieldKeys();
                 }
             else
                 {
                 if ( switcher_select.value == 'GetNAWSDump' )
                     {
+                    bmlt_switcher_naws_dump_div.show();
+                    this.fetchServiceBodies();
                     }
                 else
                     {
@@ -986,6 +985,7 @@ BMLTSemantic.prototype.handleResponseSelectChange = function ( inSelect )
 /*******************************************************************************************/
 BMLTSemantic.prototype.handleSwitcherSelectChange = function ( inSelect )
 {
+    this.state.switcher = inSelect.value;
     this.setUpMainSelectors ( inSelect );
 };
 
@@ -1252,6 +1252,14 @@ BMLTSemantic.prototype.validateVersion = function ()
         
         bad_header.style.display = 'block';
         form.style.display = 'none';
+        }
+    else
+        {
+        if ( this.version < 2006015 )
+            {
+            this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_fieldkey_option' ).disable();
+            this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_fieldval_option' ).disable();
+            };
         };
 };
 
@@ -1310,6 +1318,7 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.setBasicFunctions ( 'bmlt_semantic_form_main_mode_select' );
     this.setBasicFunctions ( 'bmlt_semantic_form_direct_url_div' );
     this.setBasicFunctions ( 'bmlt_switcher_div_no_options_blurb' );
+    this.setBasicFunctions ( 'bmlt_switcher_naws_dump_div' );
     this.setBasicFunctions ( 'bmlt_semantic_form_meeting_search_div' );
     this.setBasicFunctions ( 'bmlt_semantic_form_changes_div' );
     this.setBasicFunctions ( 'bmlt_semantic_form_main_fields_fieldset' );

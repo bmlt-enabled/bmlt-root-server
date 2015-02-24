@@ -35,6 +35,7 @@ $this->_localization = array (
                                 'startDay'                              =>  1,
                                 'defaultValueSelect'                    =>  'Select A Value',
                                 'defaultFieldSelect'                    =>  'Select A Field',
+                                'defaultSBSelect'                       =>  'Select A Service Body',
                                 'defaultMeetingFieldSelect'             =>  'No Field Selected',
                                 'keys_section_label'                    =>  'Search for a Specific Value of',
                                 'values_section_label'                  =>  'The Value Will Be:',
