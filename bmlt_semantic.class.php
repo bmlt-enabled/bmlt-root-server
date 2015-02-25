@@ -12,6 +12,7 @@ class bmlt_semantic
     protected $_myLang;
     protected $_localization;
     protected $_myJSName;
+    protected $_version;
     
     /**************************************************************/
     /** \brief  Class function that strips all the BS from a JS or CSS file.
@@ -156,7 +157,7 @@ class bmlt_semantic
             if ( $content === FALSE )
                 {
                 // Cram as much info into the exception as possible.
-                throw new Exception ( "curl failure calling $in_uri, ".curl_error ( $resource ).", ".curl_errno ( $resource ) );
+//                 throw new Exception ( "curl failure calling $in_uri, ".curl_error ( $resource ).", ".curl_errno ( $resource ) );
                 }
             else
                 {
@@ -196,22 +197,6 @@ class bmlt_semantic
     function __construct (  $inHttpVars
                             )
     {
-        $inBaseURI = $inHttpVars['root_server'];
-        unset ( $inHttpVars['root_server'] );
-        
-        // If we have a root server passed in, we set that to our local data member, and remove it from the parameter array.
-        if ( isset ( $inBaseURI ) && $inBaseURI )
-            {
-            $this->_bmltRootServerURI = trim ( $inBaseURI, '/' );
-            }
-
-        // Get any switcher.
-        if ( isset ( $inHttpVars['switcher'] ) && $inHttpVars['switcher'] )
-            {
-            $this->_switcher = $inHttpVars['switcher'];
-            unset ( $inHttpVars['switcher'] );
-            }
-        
         // Get any language
         $this->_myLang = 'en';
 
@@ -220,38 +205,62 @@ class bmlt_semantic
             $this->_myLang = $inHttpVars['lang'];
             unset ( $inHttpVars['lang'] );
             }
-        
+    
         // Prevent dope fiending...
         $this->_myLang = trim ( strtolower ( preg_replace ( '|[^a-z0-9A-Z]+|', '', $this->_myLang ) ) );
-        
+    
         if ( !file_exists ( dirname ( __FILE__ ) . '/lang/'.$this->_myLang.'.inc.php' ) )
             {
             $this->_myLang = 'en';
             }
-        
+    
         include ( dirname ( __FILE__ ) . '/lang/'.$this->_myLang.'.inc.php' );
         
-        // See if we are an AJAX callback.
-        $ajaxCall = isset ( $inHttpVars['ajaxCall'] );
-        unset ( $inHttpVars['ajaxCall'] );
-        
-        $this->_httpVars = $inHttpVars;     // Hang onto the rest.
-
-        // Determine our URI for callbacks. Account for unusual ports and HTTPS.
-        $https = isset ( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] && (strtolower ( trim ( $_SERVER['HTTPS'] ) ) != 'off'); // IIS puts "off" in this field, so we need to test for that.
-        $port = intval ( $_SERVER['SERVER_PORT'] );
-        $port = ($https && ($port == 443)) || (!$https && ($port == 80)) ? '' : ':'.$port;
-        $url_path = 'http'.($https ? 's' : '').'://'.$_SERVER['SERVER_NAME'].$port.$_SERVER['PHP_SELF'];
-
-        $this->_myURI = $url_path;          // This is the base for callbacks.
-
-        // This is the name of our JavaScript object.
-        $this->_myJSName = ($this->_bmltRootServerURI ? '_'.preg_replace ( '|[^a-z0-9A-Z_]+|', '', htmlspecialchars ( $this->_bmltRootServerURI ) ) : '');
-
-        if ( $ajaxCall )    // If we are an AJAX callback, then we immediately go there.
+        if ( isset ( $inHttpVars['root_server'] ) )
             {
-            $this->ajax_handler();
-            exit(); // GBCW
+            $inBaseURI = $inHttpVars['root_server'];
+            unset ( $inHttpVars['root_server'] );
+            
+            // If we have a root server passed in, we set that to our local data member, and remove it from the parameter array.
+            if ( isset ( $inBaseURI ) && $inBaseURI )
+                {
+                if ( !preg_match ( '|^http|', $inBaseURI ) )
+                    {
+                    $inBaseURI = 'http://'.$inBaseURI;
+                    }
+        
+                $this->_bmltRootServerURI = trim ( $inBaseURI, '/' );
+                }
+
+            // Get any switcher.
+            if ( isset ( $inHttpVars['switcher'] ) && $inHttpVars['switcher'] )
+                {
+                $this->_switcher = $inHttpVars['switcher'];
+                unset ( $inHttpVars['switcher'] );
+                }
+        
+            // See if we are an AJAX callback.
+            $ajaxCall = isset ( $inHttpVars['ajaxCall'] );
+            unset ( $inHttpVars['ajaxCall'] );
+        
+            $this->_httpVars = $inHttpVars;     // Hang onto the rest.
+
+            // Determine our URI for callbacks. Account for unusual ports and HTTPS.
+            $https = isset ( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] && (strtolower ( trim ( $_SERVER['HTTPS'] ) ) != 'off'); // IIS puts "off" in this field, so we need to test for that.
+            $port = intval ( $_SERVER['SERVER_PORT'] );
+            $port = ($https && ($port == 443)) || (!$https && ($port == 80)) ? '' : ':'.$port;
+            $url_path = 'http'.($https ? 's' : '').'://'.$_SERVER['SERVER_NAME'].$port.$_SERVER['PHP_SELF'];
+
+            $this->_myURI = $url_path;          // This is the base for callbacks.
+
+            // This is the name of our JavaScript object.
+            $this->_myJSName = ($this->_bmltRootServerURI ? '_'.preg_replace ( '|[^a-z0-9A-Z_]+|', '', htmlspecialchars ( $this->_bmltRootServerURI ) ) : '');
+
+            if ( $ajaxCall )    // If we are an AJAX callback, then we immediately go there.
+                {
+                $this->ajax_handler();
+                exit(); // GBCW
+                }
             }
     }
     
@@ -265,41 +274,45 @@ class bmlt_semantic
     function get_server_version()
     {
         $ret = 0;
-        $error = NULL;
         
-        $uri = $this->_bmltRootServerURI.'/client_interface/serverInfo.xml';
-        $xml = self::call_curl ( $uri, $error );
-
-        if ( !$error && $xml )
+        if ( $this->_bmltRootServerURI )
             {
-            $info_file = new DOMDocument;
-            if ( $info_file instanceof DOMDocument )
+            $error = NULL;
+        
+            $uri = $this->_bmltRootServerURI.'/client_interface/serverInfo.xml';
+            $xml = self::call_curl ( $uri, $error );
+
+            if ( !$error && $xml )
                 {
-                if ( @$info_file->loadXML ( $xml ) )
+                $info_file = new DOMDocument;
+                if ( $info_file instanceof DOMDocument )
                     {
-                    $has_info = $info_file->getElementsByTagName ( "bmltInfo" );
-                
-                    if ( ($has_info instanceof domnodelist) && $has_info->length )
+                    if ( @$info_file->loadXML ( $xml ) )
                         {
-                        $nodeVal = $has_info->item ( 0 )->nodeValue;
-                        $ret = explode ( '.', $nodeVal );
-                        
-                        if ( !isset ( $ret[1] ) )
+                        $has_info = $info_file->getElementsByTagName ( "bmltInfo" );
+                
+                        if ( ($has_info instanceof domnodelist) && $has_info->length )
                             {
-                            $ret[1] = 0;
-                            }
+                            $nodeVal = $has_info->item ( 0 )->nodeValue;
+                            $ret = explode ( '.', $nodeVal );
                         
-                        if ( !isset ( $ret[2] ) )
-                            {
-                            $ret[2] = 0;
-                            }
+                            if ( !isset ( $ret[1] ) )
+                                {
+                                $ret[1] = 0;
+                                }
                         
-                        $ret = (intval ( $ret[0] ) * 1000000) + (intval ( $ret[1] ) * 1000) + intval ( $ret[2] );
+                            if ( !isset ( $ret[2] ) )
+                                {
+                                $ret[2] = 0;
+                                }
+                        
+                            $ret = (intval ( $ret[0] ) * 1000000) + (intval ( $ret[1] ) * 1000) + intval ( $ret[2] );
+                            }
                         }
                     }
                 }
             }
-            
+        
         return $ret;
     }
     
@@ -407,6 +420,7 @@ class bmlt_semantic
         
             // Add the scoped CSS.
             $ret .= '<style type="text/css" scoped>';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
             $ret .= bmlt_semantic::strip_script ( 'bmlt_semantic.css' );
             $ret .= defined ( 'DEBUG' ) ? "\n" : '';
             $ret .= '</style>';
@@ -418,7 +432,22 @@ class bmlt_semantic
             }
         else
             {
-            $ret = '<h1>'.$this->localize_string ( 'need_good_url' ).'</h1>';
+            $ret = '<form id="enter_server_url_form" class="enter_server_url_form" action="" method="get">';
+            $ret .= '<div id="enter_server_url_form_div" class="enter_server_url_form_div">';
+            $ret .= '<style type="text/css" scoped>';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+            $ret .= bmlt_semantic::strip_script ( 'bmlt_semantic.css' );
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+            $ret .= '</style>';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+            $ret .= '<label id="enter_server_url_form_div_label" class="enter_server_url_form_div_label" for="enter_server_url_form_div_url_input">'.$this->localize_string ( 'enter_url_label' ).'</label>';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+            $ret .= '<input type="text" size="64" id="enter_server_url_form_div_url_input" class="enter_server_url_form_div_url_input" defaultValue="Enter A URL" name="root_server" />';
+            $ret .= '<input type="submit" value="Submit" />';
+            $ret .= '</div>';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+            $ret .= '</form>';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
             }
         
         return $ret;

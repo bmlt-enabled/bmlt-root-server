@@ -1,6 +1,7 @@
 <?php
 $this->_localization = array (
                                 'need_good_url'                         =>  'You must provide a valid Root Server URL in order for this to work.',
+                                'enter_url_label'                       =>  'Enter A Valid BMLT Root Server URL:',
                                 'select_option_text_prompt'             =>  'This Will Be A',
                                 'select_option_text_direct_url'         =>  'Direct Download URL',
                                 'select_option_text_cms_simple'         =>  '[[BMLT_SIMPLE]] Shortcode',
