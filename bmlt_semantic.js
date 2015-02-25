@@ -69,6 +69,41 @@ BMLTSemanticResult.prototype.compile = function()
 /*******************************************************************************************/
 BMLTSemanticResult.prototype.compileSearchResults = function()
 {
+    if ( this.services )
+        {
+        services = this.services.split ( ',' );
+        
+        if ( services.length > 1 )
+            {
+            for ( i = 0; i < services.length; i++ )
+                {
+                this.compiled_params += '&services[]=' + parseInt ( services[i] );
+                };
+            }
+        else
+            {
+            this.compiled_params += '&services=' + parseInt ( this.services );
+            };
+        };
+    
+    if ( this.weekdays )
+        {
+        weekdays = this.weekdays.split ( ',' );
+        
+        if ( weekdays.length > 1 )
+            {
+            for ( i = 0; i < weekdays.length; i++ )
+                {
+                this.compiled_params += '&weekdays[]=' + parseInt ( weekdays[i] );
+                };
+            }
+        else
+            {
+            this.compiled_params += '&weekdays=' + parseInt ( this.weekdays );
+            };
+        };
+    
+    this.valid = true;
 };
 
 /*******************************************************************************************/
@@ -333,7 +368,7 @@ BMLTSemantic.prototype.fetchFormats = function ()
 /*******************************************************************************************/
 BMLTSemantic.prototype.fetchServiceBodies = function ()
 {
-    this.getScopedElement ( 'bmlt_semantic_form_sb_fieldset' ).innerHTML = '';
+    var sb_section = this.getScopedElement ( 'bmlt_semantic_form_sb_fieldset_div' ).innerHTML = '';
 
     this.state.services = null;
     this.state.sb_id = null;
@@ -495,7 +530,7 @@ BMLTSemantic.prototype.populateServiceBodiesSection = function()
     
     if ( this.service_body_objects && this.service_body_objects.length )
         {
-        this.createServiceBodyList ( null, this.getScopedElement ( 'bmlt_semantic_form_sb_fieldset' ) );
+        this.createServiceBodyList ( null, this.getScopedElement ( 'bmlt_semantic_form_sb_fieldset_div' ) );
         };
     this.refreshURI();
 };
@@ -1350,6 +1385,7 @@ BMLTSemantic.prototype.handleFormatCheckbox = function ( inCheckboxObject )
 BMLTSemantic.prototype.handleWeekdayCheckbox = function ( inCheckboxObject )
 {
     this.scanWeekdays();
+    this.refreshURI();
 };
 
 /*******************************************************************************************/
@@ -1373,6 +1409,19 @@ BMLTSemantic.prototype.scanWeekdays = function ( )
             else
                 {
                 this.state.weekdays = i.toString();
+                };
+            };
+        
+        var checkbox = this.getScopedElement ( 'bmlt_semantic_form_un_weekday_checkbox_' + i );
+        if ( checkbox.checked )
+            {
+            if ( this.state.weekdays )
+                {
+                this.state.weekdays += ',' + (-i).toString();
+                }
+            else
+                {
+                this.state.weekdays = (-i).toString();
                 };
             };
         };

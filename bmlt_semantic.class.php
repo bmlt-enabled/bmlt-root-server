@@ -683,6 +683,28 @@ class bmlt_semantic
             }
         $ret .= '<div class="clear_both"></div>';
         $ret .= '</fieldset>';
+        $ret .= '<fieldset id="bmlt_semantic_form_weekday_fieldset'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_weekday_fieldset"><legend id="bmlt_semantic_form_weekday_fieldset_legend'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_weekday_fieldset_legend">';
+        $ret .= $this->localize_string ( 'weekday_section_negative_legend' );
+        $ret .= '</legend>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $ret .= '<div id="bmlt_semantic_form_sb_blurb_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_workshop_blurb_note_div">';
+        $ret .= '<p>'.$this->localize_string ( 'all_unselected_note3' ).'</p>';
+        $ret .= '</div>';
+        $iStart = intval ( $this->localize_string ( 'startDay' ) );
+        for ( $i = 0; $i < 7; $i++ )
+            {
+            $day_int = $iStart + $i;
+            if ( $day_int > 7 )
+                {
+                $day_int = 1;
+                }
+            $name = $this->localize_string ( 'weekday'.$day_int );
+            $value = $day_int;
+            
+            $ret .= $this->make_checkbox_html ( $name, 'bmlt_semantic_form_un_weekday_checkbox_'.$value, FALSE, $value, 'handleWeekdayCheckbox' );
+            }
+        $ret .= '<div class="clear_both"></div>';
+        $ret .= '</fieldset>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';  
         $ret .= '<fieldset id="bmlt_semantic_form_sb_fieldset'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_sb_fieldset"><legend id="bmlt_semantic_form_sb_fieldset_legend'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_sb_fieldset_legend">';
         $ret .= $this->localize_string ( 'service_bodies_section_legend' );
@@ -693,6 +715,7 @@ class bmlt_semantic
         $ret .= '<p>'.$this->localize_string ( 'all_unselected_note2' ).'</p>';
         $ret .= '<p>'.$this->localize_string ( 'or_note' ).'</p>';
         $ret .= '</div>';
+        $ret .= '<div id="bmlt_semantic_form_sb_fieldset_div'.htmlspecialchars ( $this->_myJSName ).'"></div>';
         $ret .= '</fieldset>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
         $ret .= '<fieldset id="bmlt_semantic_form_formats_fieldset'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_formats_fieldset"><legend id="bmlt_semantic_form_formats_fieldset_legend'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_formats_fieldset_legend">';
@@ -785,7 +808,7 @@ class bmlt_semantic
                                     $in_onChange = NULL
                                 )
     {
-        $ret = '<div id="'.htmlspecialchars ( $in_base_id.'_container_div'.$this->_myJSName ).'" class="bmlt_checkbox_container">';
+        $ret = '<div id="'.htmlspecialchars ( $in_base_id.'_container_div'.$this->_myJSName ).'" class="bmlt_weekday_checkbox_container">';
         $ret .= '<input type="checkbox" id="'.htmlspecialchars ( $in_base_id.$this->_myJSName ).'" class="bmlt_checkbox_input"';
         
         if ( $in_checked )

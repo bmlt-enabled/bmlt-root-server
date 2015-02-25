@@ -64,6 +64,14 @@ div.bmlt_checkbox_container
     width:10em;
 }
 
+div.bmlt_weekday_checkbox_container
+{
+    float:left;
+    width:14%;
+    min-width: 7em;
+    padding-left:0.125em;
+}
+
 div.clear_both
 {
     float:none;
