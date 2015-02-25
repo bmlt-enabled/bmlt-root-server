@@ -363,54 +363,64 @@ class bmlt_semantic
     {
         $ret = '';
         
-        $ret .= '<h1 id="bmlt_semantic_badserver_h1'.htmlspecialchars ( $this->_myJSName ).'" style="display:none">'.$this->localize_string ( 'need_good_url' ).'</h1>';
-        
-        $ret .= '<div id="bmlt_semantic_info_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_info_div">';
-        $ret .= '<div id="bmlt_semantic_info_div_root_url_line'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_info_line">';
-        $ret .= '<span class="info_label">'.$this->localize_string ( 'root_url_label' ).'</span><span class="info_value"><a href="'.$this->_bmltRootServerURI.'" target="_blank">'.htmlspecialchars ( $this->_bmltRootServerURI ).'</a></span>';
-        $ret .= '</div>';
-        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
-        $ret .= '<div id="bmlt_semantic_info_div_download_line'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_info_line">';
-        $ret .= '<span class="info_label">'.$this->localize_string ( 'result_url_label' ).'</span><span class="info_value"><span id="bmlt_semantic_info_div_url_active_span'.htmlspecialchars ( $this->_myJSName ).'"></span><span id="bmlt_semantic_info_div_url_Invalid_span'.htmlspecialchars ( $this->_myJSName ).'">'.$this->localize_string ( 'result_invalid_text' ).'</span></span>';
-        $ret .= '</div>';
-        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
-        $ret .= '<div id="bmlt_semantic_info_div_shortcode_line'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_info_line" style="display:none">';
-        $ret .= '<span class="info_label">'.$this->localize_string ( 'result_shortcode_label' ).'</span><span class="info_value"><span id="bmlt_semantic_info_div_shortcode_active_span'.htmlspecialchars ( $this->_myJSName ).'"></span><span id="bmlt_semantic_info_div_shortcode_Invalid_span'.htmlspecialchars ( $this->_myJSName ).'">'.$this->localize_string ( 'result_invalid_text' ).'</span></span>';
-        $ret .= '</div>';
-        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
-        $ret .= '<div class="clear_both"></div>';
-        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
-        $ret .= '</div>';
-        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
-
-        $ret .= '<form id="bmlt_semantic_form'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form" action="'.htmlspecialchars ( $this->_myURI ).'" method="POST">';
-        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
-        $ret .= '<div id="bmlt_semantic_form_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_div">';
-        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
-        
-        $ret .= $this->get_wizard_page_main_fieldset_html();
-        
-        // Add the JavaScript to the form.
-        $ret .= '<script type="text/javascript">';
-        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
-        $ret .= bmlt_semantic::strip_script ( 'bmlt_semantic.js' );
-        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $version = $this->get_server_version();
-        $ret .= 'var bmlt_semantic_js_object'.$this->_myJSName.' = new BMLTSemantic ( \''.$this->_myJSName.'\', \''.$this->_myURI.'?ajaxCall&root_server='.urlencode ( $this->_bmltRootServerURI ).'\', \''.$this->_bmltRootServerURI.'\', '.intval ( $version ).' );';
-        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
-        $ret .= '</script>';
-        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         
-        // Add the scoped CSS.
-        $ret .= '<style type="text/css" scoped>';
-        $ret .= bmlt_semantic::strip_script ( 'bmlt_semantic.css' );
-        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
-        $ret .= '</style>';
-        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
-        $ret .= '</div>';
-        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
-        $ret .= '</form>';
-        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        if ( $version > 2000000 )
+            {
+            $ret .= '<h1 id="bmlt_semantic_badserver_h1'.htmlspecialchars ( $this->_myJSName ).'" style="display:none">'.$this->localize_string ( 'need_good_url' ).'</h1>';
+        
+            $ret .= '<div id="bmlt_semantic_info_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_info_div">';
+            $ret .= '<div id="bmlt_semantic_info_div_root_url_line'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_info_line">';
+            $ret .= '<span class="info_label">'.$this->localize_string ( 'root_url_label' ).'</span><span class="info_value"><a href="'.$this->_bmltRootServerURI.'" target="_blank">'.htmlspecialchars ( $this->_bmltRootServerURI ).'</a></span>';
+            $ret .= '</div>';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+            $ret .= '<div id="bmlt_semantic_info_div_download_line'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_info_line">';
+            $ret .= '<span class="info_label">'.$this->localize_string ( 'result_url_label' ).'</span><span class="info_value"><span id="bmlt_semantic_info_div_url_active_span'.htmlspecialchars ( $this->_myJSName ).'"></span><span id="bmlt_semantic_info_div_url_Invalid_span'.htmlspecialchars ( $this->_myJSName ).'">'.$this->localize_string ( 'result_invalid_text' ).'</span></span>';
+            $ret .= '</div>';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+            $ret .= '<div id="bmlt_semantic_info_div_shortcode_line'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_info_line" style="display:none">';
+            $ret .= '<span class="info_label">'.$this->localize_string ( 'result_shortcode_label' ).'</span><span class="info_value"><span id="bmlt_semantic_info_div_shortcode_active_span'.htmlspecialchars ( $this->_myJSName ).'"></span><span id="bmlt_semantic_info_div_shortcode_Invalid_span'.htmlspecialchars ( $this->_myJSName ).'">'.$this->localize_string ( 'result_invalid_text' ).'</span></span>';
+            $ret .= '</div>';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+            $ret .= '<div class="clear_both"></div>';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+            $ret .= '</div>';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+
+            $ret .= '<form id="bmlt_semantic_form'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form" action="'.htmlspecialchars ( $this->_myURI ).'" method="POST">';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+            $ret .= '<div id="bmlt_semantic_form_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_div">';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        
+            $ret .= $this->get_wizard_page_main_fieldset_html();
+        
+            // Add the JavaScript to the form.
+            $ret .= '<script type="text/javascript">';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+            $ret .= bmlt_semantic::strip_script ( 'bmlt_semantic.js' );
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+
+            $ret .= 'var bmlt_semantic_js_object'.$this->_myJSName.' = new BMLTSemantic ( \''.$this->_myJSName.'\', \''.$this->_myURI.'?ajaxCall&root_server='.urlencode ( $this->_bmltRootServerURI ).'\', \''.$this->_bmltRootServerURI.'\', '.intval ( $version ).' );';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+            $ret .= '</script>';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        
+            // Add the scoped CSS.
+            $ret .= '<style type="text/css" scoped>';
+            $ret .= bmlt_semantic::strip_script ( 'bmlt_semantic.css' );
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+            $ret .= '</style>';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+            $ret .= '</div>';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+            $ret .= '</form>';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+            }
+        else
+            {
+            $ret = '<h1>'.$this->localize_string ( 'need_good_url' ).'</h1>';
+            }
+        
         return $ret;
     }
     
