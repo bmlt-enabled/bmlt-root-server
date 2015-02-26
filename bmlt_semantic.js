@@ -18,6 +18,7 @@ BMLTSemanticResult.prototype.meeting_key_value = null;  ///< The value selected 
 BMLTSemanticResult.prototype.root_server_uri = null;    ///< The main Root Server URI.
 BMLTSemanticResult.prototype.services = null;           ///< The selected Service bodies. This is a CSV string of integer IDs.
 BMLTSemanticResult.prototype.formats = null;            ///< The selected formats. This is a CSV string of integer IDs.
+BMLTSemanticResult.prototype.unformats = null;          ///< The selected non-formats (look for meetings without these formats). This is a CSV string of integer IDs.
 BMLTSemanticResult.prototype.weekdays = null;           ///< The selected weekdays (1-7). This is a CSV string of integer IDs.
 BMLTSemanticResult.prototype.sb_id = null;              ///< This contains the Service body used for the NAWS dump.
 BMLTSemanticResult.prototype.change_start = null;       ///< This will be the start date for getting changes.
@@ -100,6 +101,39 @@ BMLTSemanticResult.prototype.compileSearchResults = function()
         else
             {
             this.compiled_params += '&weekdays=' + parseInt ( this.weekdays );
+            };
+        };
+    
+    var formats_array = Array();
+    
+    if ( this.formats )
+        {
+        for ( i = 0; i < this.formats.length; i++ )
+            {
+            formats_array.push ( parseInt ( this.formats[i] ).toString() );
+            };
+        };
+    
+    if ( this.unformats )
+        {
+        for ( i = 0; i < this.unformats.length; i++ )
+            {
+            formats_array.push ( '-' + parseInt ( this.unformats[i] ).toString() );
+            };
+        };
+    
+    if ( formats_array && formats_array.length )
+        {
+        if ( formats_array.length > 1 )
+            {
+            for ( i = 0; i < formats_array.length; i++ )
+                {
+                this.compiled_params += '&formats[]=' + formats_array[i];
+                };
+            }
+        else
+            {
+            this.compiled_params += '&formats=' + formats_array[0];
             };
         };
     
@@ -305,6 +339,7 @@ BMLTSemantic.prototype.ajaxRequest = function ( url,
 BMLTSemantic.prototype.reloadFromServer = function ()
 {
     this.state.formats = null;
+    this.state.unformats = null;
     this.state.meeting_key = null;
     this.state.meeting_key_value = null;
     this.state.services = null;
@@ -357,6 +392,7 @@ BMLTSemantic.prototype.fetchFormats = function ()
         };
     
     this.state.formats = null;
+    this.state.unformats = null;
     
     this.ajaxRequest ( this.ajax_base_uri + '&GetInitialFormats', this.fetchFormatsCallback, 'post', this );
 };
@@ -434,11 +470,12 @@ BMLTSemantic.prototype.fetchFormatsCallback = function (inHTTPReqObject
         
         if ( context.getScopedElement ( 'bmlt_semantic_form_switcher_type_select' ).value == 'GetFieldValues' )
             {
-            context.populateFormatsSection(context.getScopedElement ( 'bmlt_switcher_field_value_div_formats' ));
+            context.populateFormatsSection(context.getScopedElement ( 'bmlt_switcher_field_value_div_formats' ), false );
             }
         else
             {
-            context.populateFormatsSection(context.getScopedElement ( 'bmlt_semantic_form_formats_fieldset' ));
+            context.populateFormatsSection(context.getScopedElement ( 'bmlt_semantic_form_formats_fieldset_div' ), false );
+            context.populateFormatsSection(context.getScopedElement ( 'bmlt_semantic_form_un_formats_fieldset_div' ), true );
             };
         };
 };
@@ -448,8 +485,11 @@ BMLTSemantic.prototype.fetchFormatsCallback = function (inHTTPReqObject
     \brief
 */
 /*******************************************************************************************/
-BMLTSemantic.prototype.populateFormatsSection = function(formatContainer)
+BMLTSemantic.prototype.populateFormatsSection = function(   formatContainer,
+                                                            unformat
+                                                        )
 {
+    formatContainer.innerHTML = '';
     if ( this.format_objects && this.format_objects.length )
         {
         for ( var i = 0; i < this.format_objects.length; i++ )
@@ -465,7 +505,16 @@ BMLTSemantic.prototype.populateFormatsSection = function(formatContainer)
             newCheckbox.id = this.getScopedID ( formatContainer.id + '_checkbox_' + formatObject.id );
             newCheckbox.value = formatObject.id;
             newCheckbox.formHandler = this;
-            newCheckbox.onchange = function(){ this.formHandler.handleFormatCheckbox ( this ) };
+            
+            if ( unformat )
+                {
+                newCheckbox.onchange = function(){ this.formHandler.handleUnFormatCheckbox ( this ) };
+                }
+            else
+                {
+                newCheckbox.onchange = function(){ this.formHandler.handleFormatCheckbox ( this ) };
+                };
+            
             newCheckbox.title = formatObject.name_string + ' - ' + formatObject.description_string;
             newCheckbox.className ='bmlt_checkbox_input';
             newContainer.appendChild ( newCheckbox );
@@ -1371,6 +1420,68 @@ BMLTSemantic.prototype.handleFormatCheckbox = function ( inCheckboxObject )
         if ( inCheckboxObject.checked )
             {
             this.state.formats = inCheckboxObject.value.toString();
+            };
+        };
+    
+    this.refreshURI();
+};
+
+/*******************************************************************************************/
+/**
+    \brief
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.handleUnFormatCheckbox = function ( inCheckboxObject )
+{
+    if ( this.state.unformats )
+        {
+        var formatsArray = this.state.unformats.split(',');
+        
+        for ( var i = 0; i < formatsArray.length; i++ )
+            {
+            formatsArray[i] = parseInt ( formatsArray[i] );
+            };
+        
+        this.state.unformats = null;
+        var id = parseInt ( inCheckboxObject.value );
+        
+        if ( !inCheckboxObject.checked )
+            {
+            for ( var i = 0; i < formatsArray.length; i++ )
+                {
+                if ( formatsArray[i] == id )
+                    {
+                    formatsArray[i] = 0;
+                    };
+                };
+            }
+        else
+            {
+            formatsArray.push ( id );
+            };
+        
+        // We remove formats by setting removed values to zero, doing a reverse sort, then truncating the array at the first zero.
+        // We then re-reverse what's left, and Bjorn Stronginthearm's your uncle.
+        formatsArray = formatsArray.sort ( function ( a, b ) { return parseInt ( a ) > parseInt ( b ); } ).reverse();
+        
+        for ( i = 0; i < formatsArray.length; i++ )
+            {
+            if ( formatsArray[i] == 0 )
+                {
+                formatsArray = formatsArray.slice ( 0, i );
+                break;
+                };
+            };
+        
+        formatsArray = formatsArray.reverse();
+        
+        this.state.unformats = formatsArray.join ( ',' );
+        }
+    else
+        {
+        if ( inCheckboxObject.checked )
+            {
+            this.state.unformats = inCheckboxObject.value.toString();
             };
         };
     

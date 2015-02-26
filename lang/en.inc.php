@@ -27,6 +27,7 @@ $this->_localization = array (
                                 'weekday_section_legend'                =>  'Search for Meetings that Gather on Specific Weekdays',
                                 'weekday_section_negative_legend'       =>  'Search for Meetings that DO NOT Gather on Certain Weekdays',
                                 'format_section_legend'                 =>  'Search for Meetings with Specific Formats',
+                                'un_format_section_legend'              =>  'Search for Meetings that DO NOT Have Specific Formats',
                                 'service_bodies_section_legend'         =>  'Search Only Within Certain Service Bodies',
                                 'weekday1'                              =>  'Sunday',
                                 'weekday2'                              =>  'Monday',
