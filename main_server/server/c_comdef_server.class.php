@@ -2094,7 +2094,7 @@ class c_comdef_server
                             $sql .= "NOT ";
                             }
                         
-                        $sql .= "(($column REGEXP";
+                        $sql .= "($column REGEXP";
                         
                         // Oracle uses REGEXP_LIKE
                         if ( 'oracle' == c_comdef_dbsingleton::pdoInstance()->getAttribute ( PDO::ATTR_DRIVER_NAME ) )
@@ -2102,7 +2102,7 @@ class c_comdef_server
                             $sql .= "_LIKE";
                             }
                         
-                        $sql .= "'(^|,)$format(,|\$)'))";
+                        $sql .= "'(^|,)$format(,|\$)')";
                         }
                     }
                 
@@ -2166,7 +2166,6 @@ class c_comdef_server
                     }
                 }
             }
-        
         return $ret;
     }
     

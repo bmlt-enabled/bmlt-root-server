@@ -448,12 +448,18 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 			$in_http_vars['formats'] = $in_http_vars['advanced_formats'];
 			}
 		
-		if ( isset ( $in_http_vars['formats'] ) && is_array ( $in_http_vars['formats'] ) && count ( $in_http_vars['formats'] ) )
+		if ( isset ( $in_http_vars['formats'] )  )
 			{
+			if ( !is_array ( $in_http_vars['formats'] ) )
+			    {
+			    $in_http_vars['formats'] = array ( intval ( $in_http_vars['formats'] ) );
+			    }
+			    
 			$fm =& $in_search_manager->GetFormats();
 			foreach ( $in_http_vars['formats'] as $format )
 				{
-				$fm[intval($format)] = 1;
+				$key = abs ( intval ( $format ) );
+				$fm[$key] = (intval($format) > 0) ? 1 : -1;
 				}
 			}
 		
