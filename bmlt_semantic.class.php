@@ -802,9 +802,11 @@ class bmlt_semantic
         $function_string = 'bmlt_semantic_js_object'.htmlspecialchars ( $this->_myJSName ).'.fieldValueChosen(this)';
         $ret .= '<select id="bmlt_semantic_form_value_select'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_value_select" onchange="'.htmlspecialchars ( $function_string ).'">';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
-        $ret .= '<option value="" selected="selected" disabled="disabled">'.$this->localize_string ( 'defaultValueSelect' ).'</option>';
+        $ret .= '<option value="" selected="selected" disabled="disabled">'.$this->localize_string ( 'defaultPresetValueSelect' ).'</option>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
         $ret .= '</select>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $ret .= '<input type="text" id="bmlt_semantic_form_value_text'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_value_text" value="'.$this->localize_string ( 'value_prompt_text_item' ).'" />';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         
         return $ret;

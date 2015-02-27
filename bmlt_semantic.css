@@ -169,3 +169,13 @@ div.bmlt_semantic_form_changes_div label
     width:40em;
     text-align:right;
 }
+
+select.bmlt_semantic_form_value_select
+{
+    width: 12em;
+}
+
+input.bmlt_semantic_form_value_text
+{
+    width: 50em;
+}

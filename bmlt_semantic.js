@@ -6,12 +6,15 @@
             and will compile a resulting URI or shortcode.
 */
 /*******************************************************************************************/
-function BMLTSemanticResult ( inRootServerURI
+function BMLTSemanticResult (   inRootServerURI,
+                                inOwner
                             )
 {
     this.root_server_uri = inRootServerURI;
+    this.owner = inOwner;
 };
 
+BMLTSemanticResult.prototype.owner = null;              ///< The object that "owns" this.
 BMLTSemanticResult.prototype.switcher = null;           ///< The main "?switcher=" value.
 BMLTSemanticResult.prototype.meeting_key = null;        ///< The main "meeting_key=" value.
 BMLTSemanticResult.prototype.meeting_key_value = null;  ///< The value selected by the field select.
@@ -137,6 +140,12 @@ BMLTSemanticResult.prototype.compileSearchResults = function()
             };
         };
     
+    if ( this.meeting_key && this.meeting_key_value )
+        {
+        this.compiled_params += '&meeting_key=' + this.meeting_key;
+        this.compiled_params += '&meeting_key_value=' + escape ( this.meeting_key_value );
+        };
+    
     this.valid = true;
 };
 
@@ -203,7 +212,7 @@ function BMLTSemantic ( inSuffix,
 {
     this.id_suffix = inSuffix;
     this.ajax_base_uri = inAJAXURI;
-    this.state = new BMLTSemanticResult(inRootServerURI);
+    this.state = new BMLTSemanticResult(inRootServerURI,this);
     this.version = inVersion;
     
     this.setUpForm();
@@ -882,11 +891,15 @@ BMLTSemantic.prototype.updateFieldValuesPopup = function ()
         for ( var i = 0; i < this.field_values.length; i++ )
             {
             var value_object = this.field_values[i];
+            
             eval ( 'var value_text = value_object.' + this.state.meeting_key.toString() + '.toString();' );
-            var newOption = document.createElement ( 'option' );
-            newOption.value = value_text;
-            newOption.appendChild ( document.createTextNode ( value_text ) );
-            select_object.appendChild ( newOption );
+            if ( value_text != 'NULL' )
+                {
+                var newOption = document.createElement ( 'option' );
+                newOption.value = value_text;
+                newOption.appendChild ( document.createTextNode ( value_text ) );
+                select_object.appendChild ( newOption );
+                };
             };
         
         this.getScopedElement ( 'bmlt_semantic_form_meeting_fields_fieldset_contents_div' ).show();
@@ -903,7 +916,9 @@ BMLTSemantic.prototype.updateFieldValuesPopup = function ()
 BMLTSemantic.prototype.fieldValueChosen = function ( inSelect
                                                     )
 {
-alert ( inSelect.value.toString() );
+    this.getScopedElement ( 'bmlt_semantic_form_value_text' ).value = inSelect.value;
+    this.getScopedElement ( 'bmlt_semantic_form_value_text' ).onchange ( this.getScopedElement ( 'bmlt_semantic_form_value_text' ) );
+    this.getScopedElement ( 'bmlt_semantic_form_value_text' ).focus();
     this.refreshURI();
 }
 
@@ -1138,12 +1153,14 @@ BMLTSemantic.prototype.handleTextInput = function ( inTextItem,
     if ( (inTextItem.value == '') && !inFocusState )
         {
         inTextItem.value = inTextItem.defaultValue;
+        inTextItem.className += ' bmlt_semantic_form_disabled_text';
         }
     else
         {
         if ( (inTextItem.value == inTextItem.defaultValue) && inFocusState )
             {
             inTextItem.value = '';
+            inTextItem.className += ' bmlt_semantic_form_enabled_text';
             }
         else
             {
@@ -1165,6 +1182,12 @@ BMLTSemantic.prototype.handleTextInput = function ( inTextItem,
         };
         
     inTextItem.previousValue = inTextItem.value;
+    
+    if ( inTextItem.additionalHandler )
+        {
+        inTextItem.additionalHandler ( inTextItem );
+        };
+    
     this.refreshURI();
 };
 
@@ -1221,6 +1244,8 @@ BMLTSemantic.prototype.handleFieldKeySelectChange = function ( inSelect )
     
     if ( inSelect.id == this.getScopedID ( 'bmlt_semantic_form_field_select' ) )
         {
+        this.getScopedElement ( 'bmlt_semantic_form_value_text' ).value = this.getScopedElement ( 'bmlt_semantic_form_value_text' ).defaultValue;
+        this.getScopedElement ( 'bmlt_semantic_form_value_text' ).focus();
         this.fetchFieldValues();
         }
     else
@@ -1551,6 +1576,18 @@ BMLTSemantic.prototype.handleNAWSDumpSelectChange = function ( inSelect )
 
 /*******************************************************************************************/
 /**
+    \brief 
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.handleValueText = function (inTextItem
+                                                    )
+{
+    this.state.meeting_key_value = (inTextItem.value != inTextItem.defaultValue) ? inTextItem.value : null;
+    this.getScopedElement ( 'bmlt_semantic_form_value_select' ).selectedIndex = 0;
+};
+
+/*******************************************************************************************/
+/**
     \brief Hides the form if we have a bad root server URI.
 */
 /*******************************************************************************************/
@@ -1665,6 +1702,9 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.setTextHandlers ( 'bmlt_semantic_form_changes_from_text' );
     this.setTextHandlers ( 'bmlt_semantic_form_changes_to_text' );
     this.setTextHandlers ( 'bmlt_semantic_form_changes_id_text' );
+    this.setTextHandlers ( 'bmlt_semantic_form_value_text' );
+    
+    this.getScopedElement ( 'bmlt_semantic_form_value_text' ).additionalHandler = function () { this.formHandler.handleValueText ( this ) };
     
     var main_fieldset_select = this.getScopedElement ( 'bmlt_semantic_form_main_mode_select' );
     main_fieldset_select.onchange = function() { this.formHandler.handleMainSelectChange ( this ) };
