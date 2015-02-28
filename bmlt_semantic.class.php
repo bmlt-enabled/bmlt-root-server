@@ -280,7 +280,7 @@ class bmlt_semantic
             $error = NULL;
         
             $uri = $this->_bmltRootServerURI.'/client_interface/serverInfo.xml';
-            $xml = self::call_curl ( $uri, $error );
+            $xml = self::call_curl ( $uri, 'get', $error );
 
             if ( !$error && $xml )
                 {
@@ -331,19 +331,19 @@ class bmlt_semantic
             {
             if ( isset ( $this->_httpVars['GetInitialFormats'] ) )
                 {
-                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetFormats' ) );
+                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetFormats', 'get' ) );
                 }
             elseif ( isset ( $this->_httpVars['GetInitialServiceBodies'] ) )
                 {
-                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetServiceBodies' ) );
+                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetServiceBodies', 'get' ) );
                 }
             elseif ( isset ( $this->_httpVars['GetFieldKeys'] ) )
                 {
-                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetFieldKeys' ) );
+                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetFieldKeys', 'get' ) );
                 }
             elseif ( isset ( $this->_httpVars['GetFieldValues'] ) )
                 {
-                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetFieldValues&meeting_key='.$this->_httpVars['meeting_key'] ) );
+                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetFieldValues&meeting_key='.$this->_httpVars['meeting_key'], 'get' ) );
                 }
             elseif ( isset ( $this->_httpVars['GetVersion'] ) )
                 {
@@ -400,7 +400,7 @@ class bmlt_semantic
             $ret .= '</div>';
             $ret .= defined ( 'DEBUG' ) ? "\n" : '';
 
-            $ret .= '<form id="bmlt_semantic_form'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form" action="'.htmlspecialchars ( $this->_myURI ).'" method="POST">';
+            $ret .= '<form id="bmlt_semantic_form'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form" action="'.htmlspecialchars ( $this->_myURI ).'" method="get">';
             $ret .= defined ( 'DEBUG' ) ? "\n" : '';
             $ret .= '<div id="bmlt_semantic_form_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_div">';
             $ret .= defined ( 'DEBUG' ) ? "\n" : '';
@@ -432,7 +432,12 @@ class bmlt_semantic
             }
         else
             {
-            $ret = '<form id="enter_server_url_form" class="enter_server_url_form" action="" method="get">';
+            if ( $this->_bmltRootServerURI )
+                {
+                $ret .= '<h2 id="server_url_invalid_note_h2">'.$this->localize_string ( 'need_good_url' ).'</h2>';
+                }
+            
+            $ret .= '<form id="enter_server_url_form" class="enter_server_url_form" action="" method="get">';
             $ret .= '<div id="enter_server_url_form_div" class="enter_server_url_form_div">';
             $ret .= '<style type="text/css" scoped>';
             $ret .= defined ( 'DEBUG' ) ? "\n" : '';
@@ -695,6 +700,7 @@ class bmlt_semantic
             }
         $ret .= '<div class="clear_both"></div>';
         $ret .= '</fieldset>';
+        
         $ret .= '<fieldset id="bmlt_semantic_form_weekday_fieldset'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_weekday_fieldset"><legend id="bmlt_semantic_form_weekday_fieldset_legend'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_weekday_fieldset_legend">';
         $ret .= $this->localize_string ( 'weekday_section_negative_legend' );
         $ret .= '</legend>';
@@ -717,7 +723,8 @@ class bmlt_semantic
             }
         $ret .= '<div class="clear_both"></div>';
         $ret .= '</fieldset>';
-        $ret .= defined ( 'DEBUG' ) ? "\n" : '';  
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        
         $ret .= '<fieldset id="bmlt_semantic_form_formats_fieldset'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_formats_fieldset"><legend id="bmlt_semantic_form_formats_fieldset_legend'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_formats_fieldset_legend">';
         $ret .= $this->localize_string ( 'format_section_legend' );
         $ret .= '</legend>';
@@ -731,6 +738,7 @@ class bmlt_semantic
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '</fieldset>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        
         $ret .= '<fieldset id="bmlt_semantic_form_un_formats_fieldset'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_formats_fieldset"><legend id="bmlt_semantic_form_un_formats_fieldset_legend'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_formats_fieldset_legend">';
         $ret .= $this->localize_string ( 'un_format_section_legend' );
         $ret .= '</legend>';
@@ -744,6 +752,7 @@ class bmlt_semantic
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '</fieldset>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        
         $ret .= '<fieldset id="bmlt_semantic_form_keys_fieldset'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_keys_fieldset"><legend id="bmlt_semantic_form_keys_fieldset_legend'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_keys_fieldset_legend">';
         $ret .= $this->get_wizard_page_field_select_html();
         $ret .= '</legend>';
@@ -756,6 +765,33 @@ class bmlt_semantic
         $ret .= '</div>';
         $ret .= '</fieldset>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+
+        $ret .= '<fieldset id="bmlt_semantic_form_text_search_fieldset'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_text_search_fieldset"><legend id="bmlt_semantic_form_text_search_fieldset_legend'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_text_search_fieldset_legend">';
+        $ret .= $this->localize_string ( 'text_search_section_legend' );
+        $ret .= '</legend>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $ret .= '<div id="bmlt_semantic_form_sb_blurb_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_workshop_blurb_note_div">';
+        $ret .= '<p>'.$this->localize_string ( 'text_note1' ).'</p>';
+        $ret .= '</div>';
+        $function_string = 'bmlt_semantic_js_object'.htmlspecialchars ( $this->_myJSName ).'.handleTextSearchText(this)';
+        $ret .= '<div id="bmlt_semantic_form_text_search_div'.htmlspecialchars ( $this->_myJSName ).'">';
+        $ret .= '<label for="bmlt_semantic_form_text_search_text'.htmlspecialchars ( $this->_myJSName ).'" id="bmlt_semantic_form_text_search_text_label'.htmlspecialchars ( $this->_myJSName ).'">'.$this->localize_string ( 'text_search_label' ).'</label>';
+        $ret .= '<input type="text" id="bmlt_semantic_form_text_search_text'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_text_search_text" value="'.$this->localize_string ( 'value_prompt_text_item' ).'" />';
+        $ret .= '<select id="bmlt_semantic_form_text_search_select'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_text_search_select" onchange="'.$function_string.'" disabled="disabled">';
+        $ret .= '<option value="" selected="selected">'.$this->localize_string ( 'text_search_type_select_option_0' ).'</option>';
+        $ret .= '<option value="SearchStringAll=1">'.$this->localize_string ( 'text_search_type_select_option_1' ).'</option>';
+        $ret .= '<option value="SearchStringExact=1">'.$this->localize_string ( 'text_search_type_select_option_2' ).'</option>';
+        $ret .= '<option value="StringSearchIsAnAddress=1">'.$this->localize_string ( 'text_search_type_select_option_3' ).'</option>';
+        $ret .= '</select>';
+        $ret .= '<div id="text_search_radius_input_div'.htmlspecialchars ( $this->_myJSName ).'" class="text_search_radius_input_div" style="display:none">';
+        $ret .= '<label for="bmlt_semantic_form_text_search_text_radius'.htmlspecialchars ( $this->_myJSName ).'" id="bmlt_semantic_form_text_search_text_radius_label'.htmlspecialchars ( $this->_myJSName ).'">'.$this->localize_string ( 'text_search_radius_label' ).'</label>';
+        $ret .= '<input type="text" id="bmlt_semantic_form_text_search_text_radius'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_text_search_radius_text" />';
+        $ret .= '<label for="bmlt_semantic_form_text_search_text_radius'.htmlspecialchars ( $this->_myJSName ).'" id="bmlt_semantic_form_text_search_text_radius_units_label'.htmlspecialchars ( $this->_myJSName ).'">'.$this->localize_string ( 'text_search_radius_units_label' ).'</label>';
+        $ret .= '</div>';
+        $ret .= '</div>';
+        $ret .= '</fieldset>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
+
         $ret .= '<fieldset id="bmlt_semantic_form_sb_fieldset'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_sb_fieldset"><legend id="bmlt_semantic_form_sb_fieldset_legend'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_sb_fieldset_legend">';
         $ret .= $this->localize_string ( 'service_bodies_section_legend' );
         $ret .= '</legend>';

@@ -85,7 +85,9 @@ dt.bmlt_sb_dt label
     font-weight:bold;
 }
 
-fieldset.bmlt_semantic_form_formats_fieldset div.bmlt_checkbox_container
+fieldset.bmlt_semantic_form_formats_fieldset div.bmlt_checkbox_container,
+fieldset.bmlt_semantic_form_main_fields_fieldset div.bmlt_checkbox_container,
+input.bmlt_semantic_form_text_search_radius_text
 {
     width: 4em;
 }
@@ -160,6 +162,11 @@ input.bmlt_semantic_form_changes_id_text,
 input.bmlt_semantic_form_changes_sb_id_text
 {
     width:4em;
+}
+
+input.bmlt_semantic_form_text_search_text
+{
+    width:32em;
 }
 
 div.bmlt_semantic_form_changes_div label
