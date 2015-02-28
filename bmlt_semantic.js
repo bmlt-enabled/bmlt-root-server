@@ -27,6 +27,7 @@ BMLTSemanticResult.prototype.sb_id = null;              ///< This contains the S
 BMLTSemanticResult.prototype.change_start = null;       ///< This will be the start date for getting changes.
 BMLTSemanticResult.prototype.change_end = null;         ///< This will be the end date for getting changes.
 BMLTSemanticResult.prototype.change_id = null;          ///< This will be the meeting ID for changes.
+BMLTSemanticResult.prototype.change_sb_id = null;       ///< This will be the Service body ID for changes.
 BMLTSemanticResult.prototype.compiled_params = null;    ///< This will contain the temporary compiled parameters.
 BMLTSemanticResult.prototype.valid = null;              ///< This will be non-null if the compiled result is valid (only after compile()).
 
@@ -156,6 +157,27 @@ BMLTSemanticResult.prototype.compileSearchResults = function()
 /*******************************************************************************************/
 BMLTSemanticResult.prototype.compileChanges = function()
 {
+    if ( this.change_start )
+        {
+        this.compiled_params += '&start_date=' + this.change_start;
+        };
+    
+    if ( this.change_end )
+        {
+        this.compiled_params += '&end_date=' + this.change_end;
+        };
+    
+    if ( this.change_id )
+        {
+        this.compiled_params += '&meeting_id=' + this.change_id;
+        };
+    
+    if ( this.change_sb_id )
+        {
+        this.compiled_params += '&service_body_id=' + this.change_sb_id;
+        };
+    
+    this.valid = true;
 };
 
 /*******************************************************************************************/
@@ -387,19 +409,6 @@ BMLTSemantic.prototype.fetchVersion = function ()
 /*******************************************************************************************/
 BMLTSemantic.prototype.fetchFormats = function ()
 {
-    var formatContainer = this.getScopedElement ( 'bmlt_semantic_form_formats_fieldset' );
-    
-    if ( formatContainer && formatContainer.childNodes )
-        {
-        for ( var i = formatContainer.childNodes.length; i-- > 0; )
-            {
-            if ( formatContainer.childNodes[i].className == 'bmlt_checkbox_container' )
-                {
-                formatContainer.removeChild ( formatContainer.childNodes[i] );
-                };
-            };
-        };
-    
     this.state.formats = null;
     this.state.unformats = null;
     
@@ -569,10 +578,17 @@ BMLTSemantic.prototype.fetchServiceBodiesCallback = function (inHTTPReqObject
 /*******************************************************************************************/
 BMLTSemantic.prototype.populateServiceBodiesSection = function()
 {
-    var sb_select = this.getScopedElement ( 'bmlt_switcher_naws_dump_sb_select' );
-    for ( var i = sb_select.options.length - 1; i > 0; i-- )
+    var sb_select1 = this.getScopedElement ( 'bmlt_switcher_naws_dump_sb_select' );
+    var sb_select2 = this.getScopedElement ( 'bmlt_switcher_changes_sb_select' );
+    
+    for ( var i = sb_select1.options.length - 1; i > 0; i-- )
         {
-        sb_select.removeChild ( sb_select.options[i] );
+        sb_select1.removeChild ( sb_select1.options[i] );
+        };
+    
+    for ( var i = sb_select2.options.length - 1; i > 0; i-- )
+        {
+        sb_select2.removeChild ( sb_select2.options[i] );
         };
     
     for ( var i = 0; i < this.temp_service_body_objects.length; i++ )
@@ -581,7 +597,11 @@ BMLTSemantic.prototype.populateServiceBodiesSection = function()
         var newOption = document.createElement ( 'option' );
         newOption.value = sb.id;
         newOption.appendChild ( document.createTextNode ( sb.name ) );
-        sb_select.appendChild ( newOption );
+        sb_select1.appendChild ( newOption );
+        var newOption = document.createElement ( 'option' );
+        newOption.value = sb.id;
+        newOption.appendChild ( document.createTextNode ( sb.name ) );
+        sb_select2.appendChild ( newOption );
         };
     
     this.organizeServiceBodies();
@@ -984,7 +1004,8 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     var bmlt_semantic_info_div_download_line = this.getScopedElement ( 'bmlt_semantic_info_div_download_line' );
     var bmlt_semantic_info_div_shortcode_line = this.getScopedElement ( 'bmlt_semantic_info_div_shortcode_line' );
     var bmlt_semantic_form_main_fields_fieldset = this.getScopedElement ( 'bmlt_semantic_form_main_fields_fieldset' );
-    
+    var bmlt_semantic_form_field_main_select = this.getScopedElement ( 'bmlt_semantic_form_field_main_select' );
+
     switcher_type_select_formats_option.enable();
     switcher_type_select_sb_option.enable();
     switcher_type_select_changes_option.enable();
@@ -994,6 +1015,12 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
         switcher_type_select_fieldval_option.enable();
         };
     switcher_type_select_naws_option.enable();
+    
+    if ( (inItem == switcher_select) && (switcher_select.value == 'GetFieldValues') )
+        {
+        bmlt_semantic_form_field_main_select.selectedIndex = 0;
+        bmlt_semantic_form_field_main_select.onchange(bmlt_semantic_form_field_main_select);
+        };
     
     bmlt_semantic_info_div_download_line.hide();
     bmlt_semantic_info_div_shortcode_line.hide();
@@ -1579,11 +1606,40 @@ BMLTSemantic.prototype.handleNAWSDumpSelectChange = function ( inSelect )
     \brief 
 */
 /*******************************************************************************************/
+BMLTSemantic.prototype.handleChangesSBSelectChange = function ( inSelect )
+{
+    this.state.change_sb_id = parseInt ( inSelect.value );
+    this.refreshURI();
+};
+
+/*******************************************************************************************/
+/**
+    \brief 
+*/
+/*******************************************************************************************/
 BMLTSemantic.prototype.handleValueText = function (inTextItem
                                                     )
 {
     this.state.meeting_key_value = (inTextItem.value != inTextItem.defaultValue) ? inTextItem.value : null;
     this.getScopedElement ( 'bmlt_semantic_form_value_select' ).selectedIndex = 0;
+};
+
+/*******************************************************************************************/
+/**
+    \brief 
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.handleChangeText = function ()
+{
+    var start_date = this.getScopedElement ( 'bmlt_semantic_form_changes_from_text' );
+    var end_date = this.getScopedElement ( 'bmlt_semantic_form_changes_to_text' );
+    var meeting_id = this.getScopedElement ( 'bmlt_semantic_form_changes_id_text' );
+    
+    this.state.change_start = (start_date.value && (start_date.value != start_date.defaultValue)) ? start_date.value : null;
+    this.state.change_end = (end_date.value && (end_date.value != end_date.defaultValue)) ? end_date.value : null;
+    this.state.change_id = (meeting_id.value && (meeting_id.value != meeting_id.defaultValue)) ? meeting_id.value : null;
+
+    this.refreshURI();
 };
 
 /*******************************************************************************************/
@@ -1693,6 +1749,7 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.setBasicFunctions ( 'bmlt_semantic_info_div_shortcode_Invalid_span' );
     this.setBasicFunctions ( 'bmlt_semantic_info_div_url_active_span' );
     this.setBasicFunctions ( 'bmlt_semantic_info_div_shortcode_active_span' );
+    this.setBasicFunctions ( 'bmlt_switcher_changes_sb_select' );
     
     for ( var i = 1; i < 8; i++ )
         {
@@ -1704,6 +1761,9 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.setTextHandlers ( 'bmlt_semantic_form_changes_id_text' );
     this.setTextHandlers ( 'bmlt_semantic_form_value_text' );
     
+    this.getScopedElement ( 'bmlt_semantic_form_changes_from_text' ).additionalHandler = function () { this.formHandler.handleChangeText ( this ) };
+    this.getScopedElement ( 'bmlt_semantic_form_changes_to_text' ).additionalHandler = function () { this.formHandler.handleChangeText ( this ) };
+    this.getScopedElement ( 'bmlt_semantic_form_changes_id_text' ).additionalHandler = function () { this.formHandler.handleChangeText ( this ) };
     this.getScopedElement ( 'bmlt_semantic_form_value_text' ).additionalHandler = function () { this.formHandler.handleValueText ( this ) };
     
     var main_fieldset_select = this.getScopedElement ( 'bmlt_semantic_form_main_mode_select' );

@@ -156,7 +156,8 @@ input.bmlt_semantic_form_changes_date_text
     width:7em;
 }
 
-input.bmlt_semantic_form_changes_id_text
+input.bmlt_semantic_form_changes_id_text,
+input.bmlt_semantic_form_changes_sb_id_text
 {
     width:4em;
 }
