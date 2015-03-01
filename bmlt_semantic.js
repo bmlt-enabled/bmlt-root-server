@@ -410,7 +410,7 @@ BMLTSemantic.prototype.reloadFromServer = function ()
 /*******************************************************************************************/
 BMLTSemantic.prototype.fetchVersion = function ()
 {
-    this.ajaxRequest ( this.ajax_base_uri + '&GetVersion', this.fetchVersionCallback, 'post', this );
+    this.ajaxRequest ( this.ajax_base_uri + '&GetVersion', this.fetchVersionCallback, 'get', this );
 };
 
 /*******************************************************************************************/
@@ -423,7 +423,7 @@ BMLTSemantic.prototype.fetchFormats = function ()
     this.state.formats = null;
     this.state.unformats = null;
     
-    this.ajaxRequest ( this.ajax_base_uri + '&GetInitialFormats', this.fetchFormatsCallback, 'post', this );
+    this.ajaxRequest ( this.ajax_base_uri + '&GetInitialFormats', this.fetchFormatsCallback, 'get', this );
 };
 
 /*******************************************************************************************/
@@ -438,7 +438,7 @@ BMLTSemantic.prototype.fetchServiceBodies = function ()
     this.state.services = null;
     this.state.sb_id = null;
     
-    this.ajaxRequest ( this.ajax_base_uri + '&GetInitialServiceBodies', this.fetchServiceBodiesCallback, 'post', this );
+    this.ajaxRequest ( this.ajax_base_uri + '&GetInitialServiceBodies', this.fetchServiceBodiesCallback, 'get', this );
 };
 
 /*******************************************************************************************/
@@ -451,7 +451,7 @@ BMLTSemantic.prototype.fetchFieldKeys = function ()
     this.getScopedElement ( 'bmlt_switcher_field_value_div_formats' ).innerHTML = '';
     this.getScopedElement ( 'bmlt_switcher_field_value_div_no_selected_formats_blurb' ).hide();
     this.getScopedElement ( 'bmlt_semantic_form_meeting_fields_fieldset_contents_div' ).hide();
-    this.ajaxRequest ( this.ajax_base_uri + '&GetFieldKeys', this.fetchFieldKeysCallback, 'post', this );
+    this.ajaxRequest ( this.ajax_base_uri + '&GetFieldKeys', this.fetchFieldKeysCallback, 'get', this );
 };
 
 /*******************************************************************************************/
@@ -464,7 +464,7 @@ BMLTSemantic.prototype.fetchFieldValues = function ()
     this.getScopedElement ( 'bmlt_semantic_form_meeting_fields_fieldset_contents_div' ).hide();
     var key = this.state.meeting_key.toString();
     var url = this.ajax_base_uri + '&GetFieldValues&meeting_key=' + key;
-    this.ajaxRequest ( url, this.fetchFieldValuesCallback, 'post', this );
+    this.ajaxRequest ( url, this.fetchFieldValuesCallback, 'get', this );
 };
 
 /*******************************************************************************************/

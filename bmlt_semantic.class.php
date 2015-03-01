@@ -101,26 +101,26 @@ class bmlt_semantic
                 }
         
             // If we will be POSTing this transaction, we split up the URI.
-            if ( $in_post )
-                {
-                $spli = explode ( "?", $in_uri, 2 );
-            
-                if ( is_array ( $spli ) && (count ( $spli ) > 1) )
-                    {
-                    $in_uri = $spli[0];
-                    $in_params = $spli[1];
-                    // Convert query string into an array using parse_str(). parse_str() will decode values along the way.
-                    parse_str($in_params, $temp);
-                
-                    // Now rebuild the query string using http_build_query(). It will re-encode values along the way.
-                    // It will also take original query string params that have no value and appends a "=" to them
-                    // thus giving them and empty value.
-                    $in_params = http_build_query($temp);
-            
-                    curl_setopt ( $resource, CURLOPT_POST, TRUE );
-                    curl_setopt ( $resource, CURLOPT_POSTFIELDS, $in_params );
-                    }
-                }
+//             if ( $in_post )
+//                 {
+//                 $spli = explode ( "?", $in_uri, 2 );
+//             
+//                 if ( is_array ( $spli ) && (count ( $spli ) > 1) )
+//                     {
+//                     $in_uri = $spli[0];
+//                     $in_params = $spli[1];
+//                     // Convert query string into an array using parse_str(). parse_str() will decode values along the way.
+//                     parse_str($in_params, $temp);
+//                 
+//                     // Now rebuild the query string using http_build_query(). It will re-encode values along the way.
+//                     // It will also take original query string params that have no value and appends a "=" to them
+//                     // thus giving them and empty value.
+//                     $in_params = http_build_query($temp);
+//             
+//                     curl_setopt ( $resource, CURLOPT_POST, TRUE );
+//                     curl_setopt ( $resource, CURLOPT_POSTFIELDS, $in_params );
+//                     }
+//                 }
         
             // Set url to call.
             curl_setopt ( $resource, CURLOPT_URL, $in_uri );
@@ -280,7 +280,7 @@ class bmlt_semantic
             $error = NULL;
         
             $uri = $this->_bmltRootServerURI.'/client_interface/serverInfo.xml';
-            $xml = self::call_curl ( $uri, 'get', $error );
+            $xml = self::call_curl ( $uri, FALSE, $error );
 
             if ( !$error && $xml )
                 {
@@ -327,23 +327,25 @@ class bmlt_semantic
     /**************************************************************/
     function ajax_handler()
     {
+        $error = NULL;
+        
         if ( isset ( $this->_bmltRootServerURI ) && $this->_bmltRootServerURI )
             {
             if ( isset ( $this->_httpVars['GetInitialFormats'] ) )
                 {
-                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetFormats', 'get' ) );
+                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetFormats', FALSE, $error ) );
                 }
             elseif ( isset ( $this->_httpVars['GetInitialServiceBodies'] ) )
                 {
-                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetServiceBodies', 'get' ) );
+                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetServiceBodies', FALSE, $error ) );
                 }
             elseif ( isset ( $this->_httpVars['GetFieldKeys'] ) )
                 {
-                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetFieldKeys', 'get' ) );
+                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetFieldKeys', FALSE, $error ) );
                 }
             elseif ( isset ( $this->_httpVars['GetFieldValues'] ) )
                 {
-                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetFieldValues&meeting_key='.$this->_httpVars['meeting_key'], 'get' ) );
+                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetFieldValues&meeting_key='.$this->_httpVars['meeting_key'], FALSE, $error ) );
                 }
             elseif ( isset ( $this->_httpVars['GetVersion'] ) )
                 {
