@@ -291,7 +291,14 @@ function parse_redirect (
 				$result = TranslateToJSON ( GetSearchResults ( $http_vars, $formats_ar, $meanLocationData ) );
 				if ( (isset ( $http_vars['get_used_formats'] ) || isset ( $http_vars['get_formats_only'] )) && $formats_ar && is_array ( $formats_ar ) && count ( $formats_ar ) )
 				    {
-                    $result = '{"meetings":'.$result.',"locationInfo":'.array2json ( $meanLocationData ).',"formats":'.TranslateToJSON ( GetFormats ( $server, $langs, $formats_ar ) ).'}';
+				    if ( isset ( $http_vars['get_formats_only'] ) )
+				        {
+                        $result = '"formats":'.TranslateToJSON ( GetFormats ( $server, $langs, $formats_ar ) );
+				        }
+				    else
+				        {
+                        $result = $result.',"formats":'.TranslateToJSON ( GetFormats ( $server, $langs, $formats_ar ) );
+                        }
                     }
                 else
                     {  
@@ -301,7 +308,7 @@ function parse_redirect (
                         }
                     else
                         {
-                        $result = '{"meetings":'.$result.',"locationInfo":'.array2json ( $meanLocationData ).'}';
+                        $result = $result;
                         }
                     }
 				}
