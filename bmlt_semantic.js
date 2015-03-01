@@ -21,7 +21,6 @@ BMLTSemanticResult.prototype.meeting_key_value = null;  ///< The value selected 
 BMLTSemanticResult.prototype.root_server_uri = null;    ///< The main Root Server URI.
 BMLTSemanticResult.prototype.services = null;           ///< The selected Service bodies. This is a CSV string of integer IDs.
 BMLTSemanticResult.prototype.formats = null;            ///< The selected formats. This is a CSV string of integer IDs.
-BMLTSemanticResult.prototype.unformats = null;          ///< The selected non-formats (look for meetings without these formats). This is a CSV string of integer IDs.
 BMLTSemanticResult.prototype.weekdays = null;           ///< The selected weekdays (1-7). This is a CSV string of integer IDs.
 BMLTSemanticResult.prototype.sb_id = null;              ///< This contains the Service body used for the NAWS dump.
 BMLTSemanticResult.prototype.change_start = null;       ///< This will be the start date for getting changes.
@@ -111,36 +110,28 @@ BMLTSemanticResult.prototype.compileSearchResults = function()
             };
         };
     
-    var formats_array = Array();
-    
     if ( this.formats )
         {
-        for ( i = 0; i < this.formats.length; i++ )
-            {
-            formats_array.push ( parseInt ( this.formats[i] ).toString() );
-            };
-        };
+        var formats_array = this.formats.split ( ',' );;
     
-    if ( this.unformats )
-        {
-        for ( i = 0; i < this.unformats.length; i++ )
+        if ( formats_array && formats_array.length )
             {
-            formats_array.push ( '-' + parseInt ( this.unformats[i] ).toString() );
-            };
-        };
-    
-    if ( formats_array && formats_array.length )
-        {
-        if ( formats_array.length > 1 )
-            {
-            for ( i = 0; i < formats_array.length; i++ )
+            if ( formats_array.length > 1 )
                 {
-                this.compiled_params += '&formats[]=' + formats_array[i];
+                for ( i = 0; i < formats_array.length; i++ )
+                    {
+                    var format = parseInt ( formats_array[i] );
+                
+                    if ( format )
+                        {
+                        this.compiled_params += '&formats[]=' + format.toString();
+                        };
+                    };
+                }
+            else
+                {
+                this.compiled_params += '&formats=' + parseInt ( formats_array[0] ).toString();
                 };
-            }
-        else
-            {
-            this.compiled_params += '&formats=' + formats_array[0];
             };
         };
     
@@ -386,7 +377,6 @@ BMLTSemantic.prototype.ajaxRequest = function ( url,
 BMLTSemantic.prototype.reloadFromServer = function ()
 {
     this.state.formats = null;
-    this.state.unformats = null;
     this.state.meeting_key = null;
     this.state.meeting_key_value = null;
     this.state.services = null;
@@ -396,6 +386,9 @@ BMLTSemantic.prototype.reloadFromServer = function ()
     this.state.change_end = null;
     this.state.change_id = null;
     this.state.compiled_params = null;
+    this.state.searchText = null;
+    this.state.searchTextModifier = null;
+    this.state.searchTextRadius = null;
     
     this.format_objects = null;
     this.service_body_objects = null;
@@ -406,6 +399,8 @@ BMLTSemantic.prototype.reloadFromServer = function ()
     this.fetchFormats();
     this.fetchServiceBodies();
     this.fetchFieldKeys();
+    this.clearWeekdays();
+    this.clearTextSearchItems();
 };
 
 /*******************************************************************************************/
@@ -537,17 +532,10 @@ BMLTSemantic.prototype.populateFormatsSection = function(   formatContainer,
             newCheckbox.type = 'checkbox';
             newCheckbox.formatObject = formatObject;
             newCheckbox.id = this.getScopedID ( formatContainer.id + '_checkbox_' + formatObject.id );
-            newCheckbox.value = formatObject.id;
+            newCheckbox.value = unformat ? -parseInt ( formatObject.id ) : parseInt ( formatObject.id );
             newCheckbox.formHandler = this;
             
-            if ( unformat )
-                {
-                newCheckbox.onchange = function(){ this.formHandler.handleUnFormatCheckbox ( this ) };
-                }
-            else
-                {
-                newCheckbox.onchange = function(){ this.formHandler.handleFormatCheckbox ( this ) };
-                };
+            newCheckbox.onchange = function(){ this.formHandler.handleFormatCheckbox ( this ) };
             
             newCheckbox.title = formatObject.name_string + ' - ' + formatObject.description_string;
             newCheckbox.className ='bmlt_checkbox_input';
@@ -1266,119 +1254,33 @@ BMLTSemantic.prototype.readServiceBodies = function ( inParent )
 /*******************************************************************************************/
 BMLTSemantic.prototype.handleFormatCheckbox = function ( inCheckboxObject )
 {
+    var id = parseInt ( inCheckboxObject.value );
+    var checked = inCheckboxObject.checked;
+    var formatsArray = Array();
+    
     if ( this.state.formats )
         {
-        var formatsArray = this.state.formats.split(',');
-        
-        for ( var i = 0; i < formatsArray.length; i++ )
-            {
-            formatsArray[i] = parseInt ( formatsArray[i] );
-            };
-        
+        var formatsArrayTemp = this.state.formats.split(',');
+
         this.state.formats = null;
-        var id = parseInt ( inCheckboxObject.value );
         
-        if ( !inCheckboxObject.checked )
+        for ( var i = 0; i < formatsArrayTemp.length; i++ )
             {
-            for ( var i = 0; i < formatsArray.length; i++ )
+            if ( parseInt ( formatsArrayTemp[i] ) != id )
                 {
-                if ( formatsArray[i] == id )
-                    {
-                    formatsArray[i] = 0;
-                    };
-                };
-            }
-        else
-            {
-            formatsArray.push ( id );
-            };
-        
-        // We remove formats by setting removed values to zero, doing a reverse sort, then truncating the array at the first zero.
-        // We then re-reverse what's left, and Bjorn Stronginthearm's your uncle.
-        formatsArray = formatsArray.sort ( function ( a, b ) { return parseInt ( a ) > parseInt ( b ); } ).reverse();
-        
-        for ( i = 0; i < formatsArray.length; i++ )
-            {
-            if ( formatsArray[i] == 0 )
-                {
-                formatsArray = formatsArray.slice ( 0, i );
-                break;
+                formatsArray.push ( parseInt ( formatsArrayTemp[i] ) );
                 };
             };
-        
-        formatsArray = formatsArray.reverse();
-        
-        this.state.formats = formatsArray.join ( ',' );
         }
-    else
+
+    if ( checked )
         {
-        if ( inCheckboxObject.checked )
-            {
-            this.state.formats = inCheckboxObject.value.toString();
-            };
+        formatsArray.push ( parseInt ( id ) );
         };
     
-    this.refreshURI();
-};
-
-/*******************************************************************************************/
-/**
-    \brief
-*/
-/*******************************************************************************************/
-BMLTSemantic.prototype.handleUnFormatCheckbox = function ( inCheckboxObject )
-{
-    if ( this.state.unformats )
-        {
-        var formatsArray = this.state.unformats.split(',');
-        
-        for ( var i = 0; i < formatsArray.length; i++ )
-            {
-            formatsArray[i] = parseInt ( formatsArray[i] );
-            };
-        
-        this.state.unformats = null;
-        var id = parseInt ( inCheckboxObject.value );
-        
-        if ( !inCheckboxObject.checked )
-            {
-            for ( var i = 0; i < formatsArray.length; i++ )
-                {
-                if ( formatsArray[i] == id )
-                    {
-                    formatsArray[i] = 0;
-                    };
-                };
-            }
-        else
-            {
-            formatsArray.push ( id );
-            };
-        
-        // We remove formats by setting removed values to zero, doing a reverse sort, then truncating the array at the first zero.
-        // We then re-reverse what's left, and Bjorn Stronginthearm's your uncle.
-        formatsArray = formatsArray.sort ( function ( a, b ) { return parseInt ( a ) > parseInt ( b ); } ).reverse();
-        
-        for ( i = 0; i < formatsArray.length; i++ )
-            {
-            if ( formatsArray[i] == 0 )
-                {
-                formatsArray = formatsArray.slice ( 0, i );
-                break;
-                };
-            };
-        
-        formatsArray = formatsArray.reverse();
-        
-        this.state.unformats = formatsArray.join ( ',' );
-        }
-    else
-        {
-        if ( inCheckboxObject.checked )
-            {
-            this.state.unformats = inCheckboxObject.value.toString();
-            };
-        };
+    formatsArray = formatsArray.sort ( function ( a, b ) { return Math.abs ( a ) > Math.abs ( b ); } );
+    
+    this.state.formats = formatsArray.join ( ',' );
     
     this.refreshURI();
 };
@@ -1405,8 +1307,7 @@ BMLTSemantic.prototype.scanWeekdays = function ( )
 
     for ( var i = 1; i < 8; i++ )
         {
-        var checkbox = this.getScopedElement ( 'bmlt_semantic_form_weekday_checkbox_' + i );
-        if ( checkbox.checked )
+        if ( this.getScopedElement ( 'bmlt_semantic_form_weekday_checkbox_' + i ).checked )
             {
             if ( this.state.weekdays )
                 {
@@ -1418,8 +1319,7 @@ BMLTSemantic.prototype.scanWeekdays = function ( )
                 };
             };
         
-        var checkbox = this.getScopedElement ( 'bmlt_semantic_form_un_weekday_checkbox_' + i );
-        if ( checkbox.checked )
+        if ( this.getScopedElement ( 'bmlt_semantic_form_un_weekday_checkbox_' + i ).checked )
             {
             if ( this.state.weekdays )
                 {
@@ -1431,6 +1331,45 @@ BMLTSemantic.prototype.scanWeekdays = function ( )
                 };
             };
         };
+};
+
+/*******************************************************************************************/
+/**
+    \brief
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.clearWeekdays = function ( )
+{
+    this.state.weekdays = null;
+
+    for ( var i = 1; i < 8; i++ )
+        {
+        this.getScopedElement ( 'bmlt_semantic_form_weekday_checkbox_' + i ).checked = false
+        this.getScopedElement ( 'bmlt_semantic_form_un_weekday_checkbox_' + i ).checked = false;
+        };
+};
+
+/*******************************************************************************************/
+/**
+    \brief
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.clearTextSearchItems = function ( )
+{
+    this.state.searchText = null;
+    this.state.searchTextModifier = null;
+    this.state.searchTextRadius = null;
+
+    var bmlt_semantic_form_text_search_text = this.getScopedElement ( 'bmlt_semantic_form_text_search_text' );
+    var bmlt_semantic_form_text_search_select = this.getScopedElement ( 'bmlt_semantic_form_text_search_select' );
+    var bmlt_semantic_form_text_search_text_radius = this.getScopedElement ( 'bmlt_semantic_form_text_search_text_radius' );
+    
+    bmlt_semantic_form_text_search_text.value = bmlt_semantic_form_text_search_text.defaultValue;
+    bmlt_semantic_form_text_search_text.className = bmlt_semantic_form_text_search_text.defaultClass.toString() + ' bmlt_semantic_form_disabled_text';
+    bmlt_semantic_form_text_search_select.selectedIndex = 0;
+    bmlt_semantic_form_text_search_text_radius.value = '';
+    
+    this.handleTextSearchText();
 };
 
 /*******************************************************************************************/

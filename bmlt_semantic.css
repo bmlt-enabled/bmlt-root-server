@@ -187,3 +187,15 @@ input.bmlt_semantic_form_value_text
 {
     width: 50em;
 }
+
+div.bmlt_semantic_info_div
+{
+    padding-top:1em;
+    font-size:x-small;
+}
+
+div.bmlt_semantic_info_div div
+{
+    margin-top:0.25em;
+    margin-bottom: 0.25em;
+}
