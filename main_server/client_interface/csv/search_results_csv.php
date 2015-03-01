@@ -420,19 +420,20 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 						}
 					}
 				}
-			
-            if ( c_comdef_server::GetCurrentUserObj() instanceof c_comdef_user )
-                {
-                $formats_keys_header[] = "published";
+		    
+		    if ( is_array ( $formats_keys_header ) && count ( $formats_keys_header ) )
+		        {
+                $ret .= ',"'.join ( '","', $formats_keys_header ).'"';
                 }
-		
-			$ret .= ',"'.join ( '","', $formats_keys_header ).'"'."\n";
-			$in_ar = $page_data->GetSearchResultsAsArray ( );
-			
-			if ( isset ( $return_results ) && is_array ( $return_results ) )
-			    {
-			    $return_results = $in_ar;
-			    }
+            
+            $ret .= "\n";
+       
+            $in_ar = $page_data->GetSearchResultsAsArray ( );
+        
+            if ( isset ( $return_results ) && is_array ( $return_results ) )
+                {
+                $return_results = $in_ar;
+                }
 			
 			foreach ( $in_ar as &$mtg_obj )
 				{
@@ -445,117 +446,120 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
                         $first = true;
                         foreach ( $keys as $key )
                             {
-                            $val = $mtg_obj->GetMeetingDataValue ( $key );
+                            if ( trim ( $key ) )
+                                {
+                                $val = $mtg_obj->GetMeetingDataValue ( $key );
                     
-                            if ( ($key == 'meeting_name') && !$val )    // No meeting name results in a generic "NA Meeting" as the name.
-                                {
-                                $val = $localized_strings['comdef_server_admin_strings']['Value_Prompts']['generic'];
-                                }
-                            
-                            if ( isset ( $val ) )
-                                {
-                                if ( ($key == 'formats') )
+                                if ( ($key == 'meeting_name') && !$val )    // No meeting name results in a generic "NA Meeting" as the name.
                                     {
-                                    if ( ($key == 'formats') && is_array ( $val ) && count ( $val ) )
+                                    $val = $localized_strings['comdef_server_admin_strings']['Value_Prompts']['generic'];
+                                    }
+                            
+                                if ( isset ( $val ) )
+                                    {
+                                    if ( ($key == 'formats') )
                                         {
-                                        $v_ar = array();
-                                        foreach ( $val as $format )
+                                        if ( ($key == 'formats') && is_array ( $val ) && count ( $val ) )
                                             {
-                                            if ( $format instanceof c_comdef_format )
+                                            $v_ar = array();
+                                            foreach ( $val as $format )
                                                 {
-                                                array_push ( $v_ar, $format->GetKey() );
+                                                if ( $format instanceof c_comdef_format )
+                                                    {
+                                                    array_push ( $v_ar, $format->GetKey() );
+                                                    }
+                                                }
+                                            $val = join ( ',', $v_ar );
+                                            $val = preg_replace ( '|"|', '\\"', preg_replace ( '|[\r\n\t]+|', ' ', $val ) );
+                                            }
+                                        elseif ( is_string ( $val ) )
+                                            {
+                                            $val = preg_replace ( '|"|', '\\"', preg_replace ( '|[\r\n\t]+|', ' ', $val ) );
+                                            }
+                                        }
+                        
+                                    if ( ($key == 'formats') && $val )
+                                        {
+                                        $f_list = explode ( ',', $val );
+                            
+                                        if ( is_array ( $f_list ) && count ( $f_list ) )
+                                            {
+                                            foreach ( $f_list as $format )
+                                                {
+                                                $formats_ar[$format] = 1;
                                                 }
                                             }
-                                        $val = join ( ',', $v_ar );
-                                        $val = preg_replace ( '|"|', '\\"', preg_replace ( '|[\r\n\t]+|', ' ', $val ) );
                                         }
-                                    elseif ( is_string ( $val ) )
-                                        {
-                                        $val = preg_replace ( '|"|', '\\"', preg_replace ( '|[\r\n\t]+|', ' ', $val ) );
-                                        }
-                                    }
-                        
-                                if ( ($key == 'formats') && $val )
-                                    {
-                                    $f_list = explode ( ',', $val );
                             
-                                    if ( is_array ( $f_list ) && count ( $f_list ) )
+                                    if ( $val )
                                         {
-                                        foreach ( $f_list as $format )
+                                        if ( $mtg_obj->IsItemHidden ( $key ) )
                                             {
-                                            $formats_ar[$format] = 1;
-                                            }
-                                        }
-                                    }
-                            
-                                if ( $val )
-                                    {
-                                    if ( $mtg_obj->IsItemHidden ( $key ) )
-                                        {
-                                        if ( $mtg_obj->UserCanObserve() )
-                                            {
-                                            if ( !$in_supress_hidden_concat && !isset ( $in_http_vars['simple_other_fields'] ) )
+                                            if ( $mtg_obj->UserCanObserve() )
                                                 {
-                                                $val = 'observer_only#@-@#'.$mtg_obj->GetMeetingDataPrompt ( $key ).'#@-@#'.$mtg_obj->GetMeetingDataValue ( $key );
+                                                if ( !$in_supress_hidden_concat && !isset ( $in_http_vars['simple_other_fields'] ) )
+                                                    {
+                                                    $val = 'observer_only#@-@#'.$mtg_obj->GetMeetingDataPrompt ( $key ).'#@-@#'.$mtg_obj->GetMeetingDataValue ( $key );
+                                                    }
+                                                }
+                                            else
+                                                {
+                                                $val = '';
                                                 }
                                             }
                                         else
                                             {
-                                            $val = '';
-                                            }
-                                        }
-                                    else
-                                        {
-                                        switch ( $key )
-                                            {
-                                            // We don't do anything for the standard fields.
-                                            case 'id_bigint':
-                                            case 'worldid_mixed':
-                                            case 'shared_group_id_bigint':
-                                            case 'service_body_bigint':
-                                            case 'weekday_tinyint':
-                                            case 'start_time':
-                                            case 'duration_time':
-                                            case 'formats':
-                                            case 'lang_enum':
-                                            case 'longitude':
-                                            case 'latitude':
-                                            case 'latitude':
-                                            case 'published':
-                                            case 'email_contact':
-                                            case 'meeting_name':
-                                            case 'location_text':
-                                            case 'location_info':
-                                            case 'location_street':
-                                            case 'location_city_subsection':
-                                            case 'location_neighborhood':
-                                            case 'location_municipality':
-                                            case 'location_sub_province':
-                                            case 'location_province':
-                                            case 'location_postal_code_1':
-                                            case 'location_nation':
-                                            case 'comments':
-                                            break;
+                                            switch ( $key )
+                                                {
+                                                // We don't do anything for the standard fields.
+                                                case 'id_bigint':
+                                                case 'worldid_mixed':
+                                                case 'shared_group_id_bigint':
+                                                case 'service_body_bigint':
+                                                case 'weekday_tinyint':
+                                                case 'start_time':
+                                                case 'duration_time':
+                                                case 'formats':
+                                                case 'lang_enum':
+                                                case 'longitude':
+                                                case 'latitude':
+                                                case 'latitude':
+                                                case 'published':
+                                                case 'email_contact':
+                                                case 'meeting_name':
+                                                case 'location_text':
+                                                case 'location_info':
+                                                case 'location_street':
+                                                case 'location_city_subsection':
+                                                case 'location_neighborhood':
+                                                case 'location_municipality':
+                                                case 'location_sub_province':
+                                                case 'location_province':
+                                                case 'location_postal_code_1':
+                                                case 'location_nation':
+                                                case 'comments':
+                                                break;
                                     
-                                            // The rest get the prompt/value treatment, unless otherwise requested.
-                                            default:
-                                                if ( $val && !isset ( $in_http_vars['simple_other_fields'] ) )
-                                                    {
-                                                    $val = $mtg_obj->GetMeetingDataPrompt ( $key ).'#@-@#'.$val;
-                                                    }
-                                            break;
+                                                // The rest get the prompt/value treatment, unless otherwise requested.
+                                                default:
+                                                    if ( $val && !isset ( $in_http_vars['simple_other_fields'] ) )
+                                                        {
+                                                        $val = $mtg_obj->GetMeetingDataPrompt ( $key ).'#@-@#'.$val;
+                                                        }
+                                                break;
+                                                }
                                             }
                                         }
                                     }
-                                }
-                            else
-                                {
-                                $val = '';
-                                }
+                                else
+                                    {
+                                    $val = '';
+                                    }
                     
-                            $val = trim ( preg_replace ( "|[\n\r]+|", "; ", $val ) );
+                                $val = trim ( preg_replace ( "|[\n\r]+|", "; ", $val ) );
                         
-                            $line[$key] = $val;
+                                $line[$key] = $val;
+                                }
                             }
                     
                         if ( !isset ( $line['duration_time'] ) || !$line['duration_time'] || ($line['duration_time'] == '00:00:00') )

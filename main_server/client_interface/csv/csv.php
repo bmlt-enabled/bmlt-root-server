@@ -72,37 +72,77 @@ function parse_redirect (
 	switch ( $http_vars['switcher'] )
 		{
 		case 'GetSearchResults':
-		    $formats_ar = array();
-			$result2 = GetSearchResults ( $http_vars, $formats_ar );
+		    {
+            $meanLocationData = array();
+            $formats_ar = array();
 			
 			if ( isset ( $http_vars['xml_data'] ) )
 				{
+                $result2 = GetSearchResults ( $http_vars, $formats_ar, $meanLocationData );
                 $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-				$xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', trim ( strtolower ( $_SERVER['SERVER_NAME'] ) ).(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetSearchResults.php' ) );
-				$result .= "<meetings xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
-				$result .= TranslateToXML ( $result2 );
-				if ( (isset ( $http_vars['get_used_formats'] ) || isset ( $http_vars['get_formats_only'] )) && $formats_ar && is_array ( $formats_ar ) && count ( $formats_ar ) )
-				    {
-                    if ( isset ( $http_vars['get_formats_only'] ) )
-                        {
-                        $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-                        $xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', trim ( strtolower ( $_SERVER['SERVER_NAME'] ) ).(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetFormats.php' ) );
-                        $result .= "<formats xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
-                        }
-                    else
-                        {
-                        $result .= "<formats>";
-                        }
-                    $result3 = GetFormats ( $server, $langs, $formats_ar );
-                    $result .= TranslateToXML ( $result3 );
-				    
-                    $result .= "</formats>";
-                    }
                 
-				$result .= isset ( $http_vars['get_formats_only'] ) ? "" : "</meetings>";
+                $blueMeanieXML = '<search_average>';
+                $blueMeanieXML .= '<location>';
+                $blueMeanieXML .= '<latitude>'.$meanLocationData['search_average']['location']['latitude'].'</latitude>';
+                $blueMeanieXML .= '<longitude>'.$meanLocationData['search_average']['location']['longitude'].'</longitude>';
+                $blueMeanieXML .= '</location>';
+                $blueMeanieXML .= '<radius>';
+                $blueMeanieXML .= '<miles>'.$meanLocationData['search_average']['radius']['miles'].'</miles>';
+                $blueMeanieXML .= '<kilometers>'.$meanLocationData['search_average']['radius']['kilometers'].'</kilometers>';
+                $blueMeanieXML .= '</radius>';
+                $blueMeanieXML .= '</search_average>';
+                $blueMeanieXML .= '<search_center>';
+                $blueMeanieXML .= '<location>';
+                $blueMeanieXML .= '<latitude>'.$meanLocationData['search_center']['location']['latitude'].'</latitude>';
+                $blueMeanieXML .= '<longitude>'.$meanLocationData['search_center']['location']['longitude'].'</longitude>';
+                $blueMeanieXML .= '</location>';
+                $blueMeanieXML .= '<radius>';
+                $blueMeanieXML .= '<miles>'.$meanLocationData['search_center']['radius']['miles'].'</miles>';
+                $blueMeanieXML .= '<kilometers>'.$meanLocationData['search_center']['radius']['kilometers'].'</kilometers>';
+                $blueMeanieXML .= '</radius>';
+                $blueMeanieXML .= '</search_center>';
+                
+				if ( !isset ( $http_vars['getMeanLocationData'] ) )
+				    {
+                    $xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', trim ( strtolower ( $_SERVER['SERVER_NAME'] ) ).(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetSearchResults.php' ) );
+                    $result .= "<meetings xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
+                    $result .= TranslateToXML ( $result2 );
+                    if ( (isset ( $http_vars['get_used_formats'] ) || isset ( $http_vars['get_formats_only'] )) && $formats_ar && is_array ( $formats_ar ) && count ( $formats_ar ) )
+                        {
+                        if ( isset ( $http_vars['get_formats_only'] ) )
+                            {
+                            $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+                            $xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', trim ( strtolower ( $_SERVER['SERVER_NAME'] ) ).(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetFormats.php' ) );
+                            $result .= "<formats xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
+                            }
+                        else
+                            {
+                            $result .= "<formats>";
+                            }
+                        $result3 = GetFormats ( $server, $langs, $formats_ar );
+                        $result .= TranslateToXML ( $result3 );
+                        $result .= "</formats>";
+                        }
+                    
+                    if ( !isset ( $http_vars['get_formats_only'] ) )
+                        {
+                        $result .= "<localionInfo>";
+                        $result .= $blueMeanieXML;
+                        $result .= "</localionInfo>";
+				        $result .= "</meetings>";
+                        }
+                    }
+                else
+                    {
+                    $xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', trim ( strtolower ( $_SERVER['SERVER_NAME'] ) ).(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetMeetingLocationInfo.php' ) );
+                    $result .= "<localionInfo xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
+                    $result .= $blueMeanieXML;
+				    $result .= "</localionInfo>";
+                    }
 				}
 			elseif ( isset ( $http_vars['gpx_data'] ) )
 				{
+                $result2 = GetSearchResults ( $http_vars, $formats_ar );
 				$result2 = returnArrayFromCSV ( explode ( "\n", $result2 ) );
 				if ( is_array ( $result2 ) && count ( $result2 ) )
 				    {
@@ -164,6 +204,7 @@ function parse_redirect (
 				}
 			elseif ( isset ( $http_vars['kml_data'] ) )
 				{
+                $result2 = GetSearchResults ( $http_vars, $formats_ar );
 				$result2 = returnArrayFromCSV ( explode ( "\n", $result2 ) );
 				if ( is_array ( $result2 ) && count ( $result2 ) )
 				    {
@@ -216,6 +257,7 @@ function parse_redirect (
 				}
 			elseif ( isset ( $http_vars['poi_data'] ) )
 				{
+                $result2 = GetSearchResults ( $http_vars, $formats_ar );
 				$result2 = returnArrayFromCSV ( explode ( "\n", $result2 ) );
 				if ( is_array ( $result2 ) && count ( $result2 ) )
 				    {
@@ -246,25 +288,41 @@ function parse_redirect (
 				}
 			elseif ( isset ( $http_vars['json_data'] ) )
 				{
-				$result = TranslateToJSON ( $result2 );
+				$result = TranslateToJSON ( GetSearchResults ( $http_vars, $formats_ar, $meanLocationData ) );
 				if ( (isset ( $http_vars['get_used_formats'] ) || isset ( $http_vars['get_formats_only'] )) && $formats_ar && is_array ( $formats_ar ) && count ( $formats_ar ) )
 				    {
-			        $result2 = GetFormats ( $server, $langs, $formats_ar );
-				    $result = isset ( $http_vars['get_formats_only'] ) ? TranslateToJSON ( $result2 ) : "{\"meetings\":$result,\"formats\":".TranslateToJSON ( $result2 )."}";
+                    $result = '{"meetings":'.$result.',"locationInfo":'.array2json ( $meanLocationData ).',"formats":'.TranslateToJSON ( GetFormats ( $server, $langs, $formats_ar ) ).'}';
+                    }
+                else
+                    {  
+                    if ( isset ( $http_vars['getMeanLocationData'] ) )
+                        {
+                        $result = array2json ( array ( 'locationInfo' => $meanLocationData ) );
+                        }
+                    else
+                        {
+                        $result = '{"meetings":'.$result.',"locationInfo":'.array2json ( $meanLocationData ).'}';
+                        }
                     }
 				}
 			else
 				{
 				if ( isset ( $http_vars['get_formats_only'] ) )
 				    {
-			        $result2 = GetFormats ( $server, $langs, $formats_ar );
+			        $result2 = GetFormats ( $server, $langs );
+				    }
+				else
+				    {
+                    $result2 = GetSearchResults ( $http_vars, $formats_ar );
 				    }
 				
 				$result = $result2;
 				}
+			}
 		break;
 		
 		case 'GetFormats':
+		    {
 			$result2 = GetFormats ( $server, $langs );
 			
 			if ( isset ( $http_vars['xml_data'] ) )
@@ -283,9 +341,11 @@ function parse_redirect (
 				{
 				$result = $result2;
 				}
+			}
 		break;
 		
 		case 'GetServiceBodies':
+		    {
 			$result2 = GetServiceBodies ( $server, $langs );
 			
 			if ( isset ( $http_vars['xml_data'] ) )
@@ -304,9 +364,11 @@ function parse_redirect (
 				{
 				$result = $result2;
 				}
+			}
 		break;
 		
 		case 'GetChanges':
+		    {
 			$start_date = null;
 			$end_date = null;
 			$meeting_id = null;
@@ -351,6 +413,7 @@ function parse_redirect (
 				{
 				$result = $result2;
 				}
+			}
 		break;
 		
 		case 'GetNAWSDump':
@@ -358,6 +421,7 @@ function parse_redirect (
 		break;
 		
 		case 'GetFieldKeys':
+		    {
             $keys = c_comdef_meeting::GetFullTemplate ( );
             
             if ( isset ( $keys ) && is_array ( $keys ) && count ( $keys ) )
@@ -391,9 +455,11 @@ function parse_redirect (
                     $result = $result2;
                     }
                 }
+            }
 		break;
 		
 		case 'GetFieldValues':
+		    {
 		    $meeting_key = trim ( $http_vars['meeting_key'] );
             $values = c_comdef_meeting::GetAllValuesForKey ( $meeting_key );
             if ( isset ( $values ) && is_array ( $values ) && count ( $values ) )
@@ -504,6 +570,7 @@ function parse_redirect (
                 {
                 $result = str_replace ( "\t", ',', $result2 );
                 }
+            }
         break;
         		
 		default:
@@ -712,13 +779,47 @@ function returnArrayFromCSV ( $inCSVArray   ///< A array of CSV data, split as l
 
 /*******************************************************************/
 /**
+	\brief	Calculates the distance, in Km, between two long/lat pairs.
+	        This uses the Haversine formula.
+	        Cribbed from here: http://blog.voltampmedia.com/2011/12/17/php-implementation-of-haversine-computation/
+	
+	\returns A floating-point, positive number. The distance, in miles.
+*/	
+function calcDistanceInMiles (
+                            $lat_1,     ///< The latitude of the first point, in degrees.
+                            $long_1,    ///< The longitude of the first point, in degrees.
+                            $lat_2,     ///< The latitude of the second point, in degrees.
+                            $long_2     ///< The longitude of the second point, in degrees.
+                            )
+{
+    $sin_lat = sin ( deg2rad ( $lat_2 - $lat_1 ) / 2.0);
+    $sin2_lat = $sin_lat * $sin_lat;
+
+    $sin_long = sin ( deg2rad ( $long_2 - $long_1 ) / 2.0);
+    $sin2_long = $sin_long * $sin_long;
+
+    $cos_lat_1 = cos ( $lat_1 );
+    $cos_lat_2 = cos ( $lat_2 );
+
+    $sqrt = sqrt ( $sin2_lat + ($cos_lat_1 * $cos_lat_2 * $sin2_long) );
+
+    $earth_radius = 3963.1676; // in miles
+
+    $distance = 2.0 * $earth_radius * asin($sqrt);
+
+    return $distance;
+}
+
+/*******************************************************************/
+/**
 	\brief	This returns the search results, in whatever form was requested.
 	
 	\returns CSV data, with the first row a key header.
 */	
 function GetSearchResults ( 
-							$in_http_vars,	///< The HTTP GET and POST parameters.
-							&$formats_ar    ///< This will return the formats used in this search.
+							$in_http_vars,	            ///< The HTTP GET and POST parameters.
+							&$formats_ar = null,        ///< This will return the formats used in this search.
+							&$meanLocationData = null   ///< This is a passed in receptacle for some location data calculations.
 							)
 	{
 	if ( !( isset ( $in_http_vars['geo_width'] ) && $in_http_vars['geo_width'] ) && isset ( $in_http_vars['bmlt_search_type'] ) && ($in_http_vars['bmlt_search_type'] == 'advanced') && isset ( $in_http_vars['advanced_radius'] ) && isset ( $in_http_vars['advanced_mapmode'] ) && $in_http_vars['advanced_mapmode'] && ( floatval ( $in_http_vars['advanced_radius'] != 0.0 ) ) && isset ( $in_http_vars['lat_val'] ) &&	 isset ( $in_http_vars['long_val'] ) && ( (floatval ( $in_http_vars['lat_val'] ) != 0.0) || (floatval ( $in_http_vars['long_val'] ) != 0.0) ) )
@@ -743,25 +844,83 @@ function GetSearchResults (
 	$ignore_me = null;
 	$meeting_objects = array();
 	$result = DisplaySearchResultsCSV ( $in_http_vars, $ignore_me, $geocode_results, $meeting_objects );
-
-    if ( is_array ( $meeting_objects ) && count ( $meeting_objects ) && is_array ( $formats_ar ) )
+	
+    $locationData = array ( );
+        
+    if ( is_array ( $meeting_objects ) && count ( $meeting_objects ) )
         {
 		foreach ( $meeting_objects as $one_meeting )
 		    {
-		    $formats = $one_meeting->GetMeetingDataValue('formats');
+		    if ( isset ( $in_http_vars['getMeanLocationData'] ) || (isset ( $meanLocationData )&& is_array ( $meanLocationData )) )
+		        {
+		        $locationData[] = array ( 'long' => floatval ( $one_meeting->GetMeetingDataValue ( 'longitude' ) ), 'lat' => floatval ( $one_meeting->GetMeetingDataValue ( 'latitude' ) ) );
+		        }
+		    
+		    if ( is_array ( $formats_ar ) )
+		        {
+                $formats = $one_meeting->GetMeetingDataValue ( 'formats' );
 
-            foreach ( $formats as $format )
-                {
-                if ( $format && ($format instanceof c_comdef_format) )
+                foreach ( $formats as $format )
                     {
-                    $format_shared_id = $format->GetSharedID();
-                    $formats_ar[$format_shared_id] = $format;
+                    if ( $format && ($format instanceof c_comdef_format) )
+                        {
+                        $format_shared_id = $format->GetSharedID();
+                        $formats_ar[$format_shared_id] = $format;
+                        }
                     }
                 }
 		    }
 		}
 	
-	if ( isset ( $in_http_vars['data_field_key'] ) && $in_http_vars['data_field_key'] )
+	if ( count ( $locationData ) )  // If the caller just wants an average location report, then give them that.
+	    {
+	    $avgLong = 0.0;
+	    $avgLat = 0.0;
+	    $minLong = 1000.0;
+	    $maxLong = -1000.0;
+	    $minLat = 1000.0;
+	    $maxLat = -1000.0;
+	    
+	    foreach ( $locationData as $location )
+	        {
+	        $avgLong += $location['long'];
+	        $avgLat += $location['lat'];
+	        $minLong = min ( $minLong, $location['long'] );
+	        $maxLong = max ( $maxLong, $location['long'] );
+	        $minLat = min ( $minLat, $location['lat'] );
+	        $maxLat = max ( $maxLat, $location['lat'] );
+	        }
+	    
+	    $avgLong = $avgLong / floatVal ( count ( $locationData ) );
+	    $avgLat = $avgLat / floatVal ( count ( $locationData ) );
+	    $centerLat = ($maxLat + $minLat) / 2.0;
+	    $centerLong = ($maxLong + $minLong) / 2.0;
+	    
+	    $d1 = calcDistanceInMiles ( $avgLat, $avgLong, $maxLat, $maxLong );
+	    $d2 = calcDistanceInMiles ( $avgLat, $avgLong, $minLat, $minLong );
+	    $d3 = calcDistanceInMiles ( $avgLat, $avgLong, $minLat, $maxLong );
+	    $d4 = calcDistanceInMiles ( $avgLat, $avgLong, $maxLat, $minLong );
+	    
+	    $avg_radiusMi = max ( $d1, $d2, $d3, $d4 );
+	    $avg_radiusKm = $avg_radiusMi * 1.60934;
+	    
+	    $hard_radiusMi = calcDistanceInMiles ( $centerLat, $centerLong, $maxLat, $maxLong );
+	    $hard_radiusKm = $hard_radiusMi * 1.60934;
+	    
+	    if ( isset ( $meanLocationData ) && is_array ( $meanLocationData ) )
+	        {
+            $meanLocationData = array ( 'search_average' => array ( 'location' => array ( 'latitude' => $avgLat, 'longitude' => $avgLong, ), 'radius' => array ( 'miles' => $avg_radiusMi, 'kilometers' => $avg_radiusKm ) ),
+                                        'search_center' => array ( 'location' => array ( 'latitude' => $centerLat, 'longitude' => $centerLong, ), 'radius' => array ( 'miles' => $hard_radiusMi, 'kilometers' => $hard_radiusKm ) ));
+            }
+        
+        if ( isset ( $in_http_vars['getMeanLocationData'] ) )
+            {
+            $result = '"average_center_latitude","average_center_longitude","average_radius_mi","average_radius_km","search_center_latitude","search_center_longitude","search_center_radius_mi","search_center_radius_km"'."\n";
+            $result .= '"'.$avgLat.'","'.$avgLong.'","'.$avg_radiusMi.'","'.$avg_radiusKm.'","'.$centerLat.'","'.$centerLong.'","'.$hard_radiusMi.'","'.$hard_radiusKm.'"';
+            }
+	    }
+	
+	if ( !isset ( $in_http_vars['getMeanLocationData'] ) && isset ( $in_http_vars['data_field_key'] ) && $in_http_vars['data_field_key'] )
 		{
 		// At this point, we have everything in a CSV. We separate out just the field we want.
 		$temp_keyed_array = array();
@@ -796,7 +955,6 @@ function GetSearchResults (
 		$the_keys = array_intersect ( $keys, $the_keys );
 		$result = '"'.implode ( '","', $the_keys )."\"\n".implode ( "\n", $result2 );
 		}
-	
 	return $result;
 	}
 
@@ -1276,7 +1434,7 @@ function TranslateToJSON ( $in_csv_data ///< An array of CSV data, with the firs
 	
 	\returns an XML string, with all the data in the CSV.
 */	
-function TranslateToXML (	$in_csv_data	///< An array of CSV data, with the first element being the field names.
+function TranslateToXML (	$in_csv_data	    ///< An array of CSV data, with the first element being the field names.
 						)
 	{
 	$temp_keyed_array = array();
