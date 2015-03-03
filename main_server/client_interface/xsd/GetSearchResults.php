@@ -107,15 +107,60 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"; ?>
                                         <xs:element name="id" type="xs:integer"/>
                                         <xs:element name="world_id" type="xs:string" minOccurs="0"/>
                                     </xs:sequence>
-                                    <xs:attribute name="id" use="required" type="xs:integer"/>
+                                    <xs:attribute name="sequence_index" use="required" type="xs:integer"/>
                                 </xs:complexType>
                             </xs:element>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
+                <xs:element ref='xsn:localionInfo' minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
+    <xs:element name='localionInfo'>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref='xsn:search_average'/>
+                <xs:element ref='xsn:search_center'/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name='search_average'>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref='xsn:location'/>
+                <xs:element ref='xsn:radius'/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name='search_center'>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref='xsn:location'/>
+                <xs:element ref='xsn:radius'/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name='longitude' type='xs:decimal'/>
+    <xs:element name='latitude' type='xs:decimal'/>
+    <xs:element name='location'>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref='xsn:latitude'/>
+                <xs:element ref='xsn:longitude'/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name='radius'>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref='xsn:miles'/>
+                <xs:element ref='xsn:kilometers'/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name='miles' type='xs:decimal'/>
+    <xs:element name='kilometers' type='xs:decimal'/>
 </xs:schema><?php
 	ob_end_flush();
 	}
