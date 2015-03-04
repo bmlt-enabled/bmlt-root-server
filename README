@@ -48,11 +48,13 @@ CHANGELIST
 ----------
 ** Version 2.6.15 **
 
-- TBD
+- March 4, 2015
+
 - Made a change in the way the WORLD IDs are returned in the semantic selectors. They are now all properly formatted.
-- Added a special extra field to XML and JSON meeting searches that shows an aggregate for location searches. Useful for maps.
-- Added the ability to get only this new location data.
+- Added a special extra field to XML meeting searches that shows an aggregate for location searches. Useful for maps.
+- Added the ability to get only this new location data. This applies to CSV, XML or JSON, but only XML gets it as a matter of course.
 - Reformatted the new field values return slightly.
+- Fixed an XML schema bug (minor).
 
 ** Version 2.6.14 **
 
