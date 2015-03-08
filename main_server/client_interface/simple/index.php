@@ -149,7 +149,6 @@ if ( $server instanceof c_comdef_server )
 				{
 				$ret = $in_block ? '<div class="bmlt_simple_meetings_div"'.($in_container_id ? ' id="'.c_comdef_htmlspecialchars ( $in_container_id ).'"' : '').'>' : '<table class="bmlt_simple_meetings_table"'.($in_container_id ? ' id="'.c_comdef_htmlspecialchars ( $in_container_id ).'"' : '').' cellpadding="0" cellspacing="0" summary="Meetings">';
 				$keys = preg_replace ( '|^"|', '', preg_replace ( '|"$|', '', explode ( '","', $results[0] ) ) );
-				
 				$weekday_div = FALSE;
 				
 				$alt = 1;	// This is used to provide an alternating class.
@@ -170,9 +169,13 @@ if ( $server instanceof c_comdef_server )
 							}
 						
 						$meeting = preg_replace ( '|^"|', '', preg_replace ( '|"$|', '', explode ( '","', $meeting ) ) );
-						
 						if ( is_array ( $meeting ) && count ( $meeting ) )
 							{
+							if ( count ( $meeting ) > count ( $keys ) )
+							    {
+							    $keys[] = 'unused';
+							    }
+							
 							// This is for convenience. We turn the meeting array into an associative one by adding the keys.
 							$meeting = array_combine ( $keys, $meeting );
 							$location_borough = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_city_subsection'] ) ) );

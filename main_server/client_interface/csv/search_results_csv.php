@@ -567,19 +567,17 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
                             $line['duration_time'] = $localized_strings['default_duration_time'];
                             }
                     
-                        if ( c_comdef_server::GetCurrentUserObj() instanceof c_comdef_user )
+                        if ( $mtg_obj->UserCanObserve ( c_comdef_server::GetCurrentUserObj() ) )
                             {
                             $line['published'] = $mtg_obj->IsPublished();
-                            
-                            // We don't let users without rights see meetings that are unpublished.
-                            if ( !$mtg_obj->IsPublished() && !$mtg_obj->UserCanObserve ( c_comdef_server::GetCurrentUserObj() ) )
+                            }
+                        else
+                            {
+                            unset ( $line['published'] );
+                            if ( !$mtg_obj->IsPublished() )
                                 {
                                 $line = null;
                                 }
-                            }
-                        elseif ( !$mtg_obj->IsPublished() )
-                            {
-                            $line = null;
                             }
                         
                         if ( is_array ( $line ) && count ( $line ) )
