@@ -50,7 +50,8 @@ CHANGELIST
 
 - March 16, 2015
 
-- 
+- Fixed a bug, in which the CSV output was missing its "published" column.
+- Fixed a bug, in which the JSON response data format was different from the previous version, and interfered with 3rd-party applications.
 
 ** Version 2.6.16 **
 

@@ -567,17 +567,9 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
                             $line['duration_time'] = $localized_strings['default_duration_time'];
                             }
                     
-                        if ( $mtg_obj->UserCanObserve ( c_comdef_server::GetCurrentUserObj() ) )
+                        if ( !$mtg_obj->IsPublished() && !$mtg_obj->UserCanObserve ( c_comdef_server::GetCurrentUserObj() ) )
                             {
-                            $line['published'] = $mtg_obj->IsPublished();
-                            }
-                        else
-                            {
-                            unset ( $line['published'] );
-                            if ( !$mtg_obj->IsPublished() )
-                                {
-                                $line = null;
-                                }
+                            $line = null;
                             }
                         
                         if ( is_array ( $line ) && count ( $line ) )

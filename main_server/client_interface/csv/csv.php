@@ -293,22 +293,32 @@ function parse_redirect (
 				    {
 				    if ( isset ( $http_vars['get_formats_only'] ) )
 				        {
-                        $result = '"formats":'.TranslateToJSON ( GetFormats ( $server, $langs, $formats_ar ) );
+                        $result = '{"formats":'.TranslateToJSON ( GetFormats ( $server, $langs, $formats_ar ) ).'}';
 				        }
 				    else
 				        {
-                        $result = $result.',"formats":'.TranslateToJSON ( GetFormats ( $server, $langs, $formats_ar ) );
+                        if ( isset ( $http_vars['appendMeanLocationData'] ) )
+                            {
+                            $result = '{"meetings":'.$result.',"formats":'.TranslateToJSON ( GetFormats ( $server, $langs, $formats_ar ) ).',"locationInfo":'.array2json ( $meanLocationData ).'}';
+                            }
+                        else
+                            {
+                            $result = '{"meetings":'.$result.',"formats":'.TranslateToJSON ( GetFormats ( $server, $langs, $formats_ar ) ).'}';
+                            }
                         }
                     }
                 else
                     {  
-                    if ( isset ( $http_vars['getMeanLocationData'] ) )
+                    if ( isset ( $http_vars['getMeanLocationData'] ) && is_array ( $meanLocationData ) && count ( $meanLocationData ) )
                         {
-                        $result = array2json ( array ( 'locationInfo' => $meanLocationData ) );
-                        }
-                    else
-                        {
-                        $result = $result;
+                        if ( isset ( $http_vars['appendMeanLocationData'] ) )
+                            {
+                            $result = '{"meetings":'.$result.',"locationInfo":'.array2json ( $meanLocationData ).'}';
+                            }
+                        else
+                            {
+                            $result = array2json ( array ( 'locationInfo' => $meanLocationData ) );
+                            }
                         }
                     }
 				}
