@@ -48,7 +48,7 @@ CHANGELIST
 ----------
 ** Version 2.6.17 **
 
-- March 17, 2015 (Happy St. Patrick's Day!)
+- March 18, 2015
 
 - Fixed a bug, in which the CSV output was missing its "published" column.
 - Fixed a bug, in which the JSON response data format was different from the previous version, and interfered with 3rd-party applications.
