@@ -48,7 +48,9 @@ CHANGELIST
 ----------
 ** Version 2.6.18 **
 
-- TBD
+- March 19, 2015
+
+- Fixed an old issue, where the nation can keep repeating itself ad nauseam.
 
 ** Version 2.6.17 **
 
