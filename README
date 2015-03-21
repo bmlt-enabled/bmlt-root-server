@@ -48,9 +48,9 @@ CHANGELIST
 ----------
 ** Version 2.6.19 **
 
-- TBD
+- March 21, 2015
 
-
+- Fixed an old JavaScript bug in the meeting editor, where the "Create New Meeting" screen would sometimes refuse to enable the save button.
 
 ** Version 2.6.18 **
 
