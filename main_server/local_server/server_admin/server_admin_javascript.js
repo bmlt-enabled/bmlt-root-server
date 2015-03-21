@@ -228,7 +228,7 @@ function BMLT_Server_Admin ()
     {
         var eval_str = '';
         
-        if ( !in_meeting_id )
+        if ( (null == in_meeting_id) && (null != in_item.meeting_id) )
             {
             in_meeting_id = in_item.meeting_id;
             };
@@ -238,7 +238,8 @@ function BMLT_Server_Admin ()
             in_value_field = in_item.element;
             };
         
-        var editor_object = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+        var editor_object_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id.toString() + '_div';
+        var editor_object = document.getElementById ( editor_object_id );
         
         if ( (in_item.type == 'text') || (in_item.name == 'textarea') )
             {
@@ -246,13 +247,20 @@ function BMLT_Server_Admin ()
             
             value = value.replace ( /'/g, "\\'" );  // Make sure to escape apostrophes.
             
-            if ( value != in_item.defaultValue )
+            if ( value && (value != in_item.defaultValue) )
                 {
                 eval_str = 'editor_object.meeting_object.' + in_value_field + ' = \'' + value + '\';';
                 }
             else
                 {
-                eval_str = 'delete editor_object.meeting_object.' + in_value_field + ';';
+                if ( 0 == in_meeting_id )
+                    {
+                    eval_str = 'delete editor_object.meeting_object.' + in_value_field + ';';
+                    }
+                else
+                    {
+                    eval_str = 'editor_object.meeting_object.' + in_value_field + ' = \'\';';
+                    };
                 };
             };
         
