@@ -30,7 +30,7 @@ BMLTSemanticResult.prototype.change_sb_id = null;       ///< This will be the Se
 BMLTSemanticResult.prototype.searchText = null;         ///< The text to search for in meetings.
 BMLTSemanticResult.prototype.searchTextModifier = null; ///< Any modifier for the text search.
 BMLTSemanticResult.prototype.searchTextRadius = null;   ///< A possible radius for the text (if location).
-BMLTSemanticResult.prototype.searchMapRadius = null;    ///< A radius for the map.
+BMLTSemanticResult.prototype.searchMapRadius = -10;     ///< A radius for the map. Default is auto-search 10 meetings.
 BMLTSemanticResult.prototype.searchLongitude = null;    ///< If using the map, the longitude.
 BMLTSemanticResult.prototype.searchLatitude = null;     ///< If using the map, the latitude.
 BMLTSemanticResult.prototype.compiled_params = null;    ///< This will contain the temporary compiled parameters.
@@ -1610,7 +1610,9 @@ BMLTSemantic.prototype.setUpMap = function ( )
                                                                 'draggable':    true
                                                                 } );
             var theContext = this;
+            this.mapObject.map_marker.formHandler = this;
             
+            google.maps.event.addListener ( this.mapObject.map_marker, 'dragstart', function ( in_event ) { this.formHandler.hideRadiusCircle(); } );
             google.maps.event.addListener ( this.mapObject.map_marker, 'dragend', function ( in_event ) { BMLTSemantic.prototype.mapDragEnd ( in_event, theContext ); } );
             google.maps.event.addListener ( this.mapObject, 'click', function ( in_event ) { BMLTSemantic.prototype.mapClicked ( in_event, theContext ); } );
             google.maps.event.addListener ( this.mapObject, 'zoom_changed', function ( in_event ) { BMLTSemantic.prototype.mapZoomChanged ( in_event, theContext ); } );
@@ -1621,9 +1623,6 @@ BMLTSemantic.prototype.setUpMap = function ( )
         
         longText.value = this.current_lng.toString();
         latText.value = this.current_lat.toString();
-        }
-    else
-        {
         };
 };
 
@@ -1695,6 +1694,49 @@ BMLTSemantic.prototype.handleMapRadiusUnitsChange = function ( inSelect
 
 /*******************************************************************************************/
 /**
+    \brief
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.hideRadiusCircle = function()
+{
+    if ( this.mapObject.radiusCircle )
+        {
+        this.mapObject.radiusCircle.setMap ( null );
+        this.mapObject.radiusCircle = null;
+        };
+};
+
+/*******************************************************************************************/
+/**
+    \brief
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.createRadiusCircle = function()
+{
+    this.hideRadiusCircle();
+    
+    var radius = this.getScopedElement ( 'bmlt_semantic_form_map_search_text_radius' ).value;
+    
+    if ( radius > 0 )
+        {
+        radius *= ((this.getScopedElement ( 'bmlt_semantic_form_map_search_text_radius_units' ).value == 'geo_width') ? 1.60934 : 1.0) * 1000;
+        
+        var circleOptions = {
+            strokeOpacity: 0,
+            fillColor: '#000000',
+            fillOpacity: 0.25,
+            map: this.mapObject,
+            center: new google.maps.LatLng ( parseFloat ( this.current_lat ), parseFloat ( this.current_lng ) ),
+            radius: radius
+            };
+    
+        // Add the circle for this city to the map.
+        this.mapObject.radiusCircle = new google.maps.Circle ( circleOptions );
+        };
+};
+
+/*******************************************************************************************/
+/**
     \brief Reacts to a click in the map.
     
     \param inEvent The click event
@@ -1731,6 +1773,7 @@ BMLTSemantic.prototype.mapDragEnd = function (  inEvent,
 {
 	inContext.current_lng = parseFloat ( inEvent.latLng.lng() );
 	inContext.current_lat = parseFloat ( inEvent.latLng.lat() );
+	inContext.mapObject.panTo ( inEvent.latLng );
     var longText = inContext.getScopedElement ( 'bmlt_semantic_form_map_search_longitude_text' );
     var latText = inContext.getScopedElement ( 'bmlt_semantic_form_map_search_latitude_text' );
     longText.value = inEvent.latLng.lng().toString();
@@ -2108,6 +2151,7 @@ BMLTSemantic.prototype.refreshURI = function ()
         this.state.searchMapRadius = parseFloat ( mapRadius.value );
         this.state.searchLongitude = parseFloat ( this.current_lng );
         this.state.searchLatitude = parseFloat ( this.current_lat );
+        this.createRadiusCircle();
         }
     else
         {

@@ -1003,6 +1003,13 @@ class bmlt_semantic
         $ret .= $this->localize_string ( 'schema_type_selector_legend' );
         $ret .= '</legend>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $ret .= '<div id="bmlt_semantic_form_schema_select_blurb_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_workshop_blurb_note_div">';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $ret .= '<p>'.$this->_localization['schema_type_selector_blurb1'].'</p>';
+        $ret .= '<p>'.$this->localize_string ( 'schema_type_selector_blurb2' ).'</p>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $ret .= '</div>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '<label id="bmlt_semantic_form_schema_select_label'.htmlspecialchars ( $this->_myJSName ).'" for="bmlt_semantic_form_schema_select'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_schema_select_label">'.$this->localize_string ( 'schema_type_selector_label' ).'</label>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $function_string = 'bmlt_semantic_js_object'.htmlspecialchars ( $this->_myJSName ).'.refreshURI()';
