@@ -1490,52 +1490,6 @@ BMLTSemantic.prototype.handleTextSearchText = function ()
 
 /*******************************************************************************************/
 /**
-    \brief 
-*/
-/*******************************************************************************************/
-BMLTSemantic.prototype.handleMapSearchText = function ()
-{
-    var bmlt_semantic_form_map_search_text_radius = this.getScopedElement ( 'bmlt_semantic_form_map_search_text_radius' );
-    
-    this.state.searchMapRadius = null;
-    
-    if ( bmlt_semantic_form_map_search_text_radius.value && (bmlt_semantic_form_map_search_text_radius.value != bmlt_semantic_form_map_search_text_radius.defaultValue) )
-        {
-        bmlt_semantic_form_map_search_text_radius.enable();
-        var radius = parseFloat ( bmlt_semantic_form_map_search_text_radius.value );
-        
-        if ( radius < 0 )
-            {
-            radius = parseInt ( radius );
-            if ( parseFloat ( radius ) != parseFloat ( bmlt_semantic_form_map_search_text_radius.value ) )
-                {
-                bmlt_semantic_form_map_search_text_radius.value = radius;
-                };
-            };
-        
-        this.state.searchMapRadius = radius;
-        }
-    else
-        {
-        bmlt_semantic_form_map_search_text_radius.value = '';
-        };
-    
-    this.refreshURI();
-};
-
-/*******************************************************************************************/
-/**
-    \brief
-*/
-/*******************************************************************************************/
-BMLTSemantic.prototype.handleMapRadiusUnitsChange = function ( inSelect
-                                                                )
-{
-    this.refreshURI();
-};
-
-/*******************************************************************************************/
-/**
     \brief Hides the form if we have a bad root server URI.
 */
 /*******************************************************************************************/
@@ -1661,10 +1615,82 @@ BMLTSemantic.prototype.setUpMap = function ( )
             google.maps.event.addListener ( this.mapObject, 'click', function ( in_event ) { BMLTSemantic.prototype.mapClicked ( in_event, theContext ); } );
             google.maps.event.addListener ( this.mapObject, 'zoom_changed', function ( in_event ) { BMLTSemantic.prototype.mapZoomChanged ( in_event, theContext ); } );
             };
+            
+        var longText = this.getScopedElement ( 'bmlt_semantic_form_map_search_longitude_text' );
+        var latText = this.getScopedElement ( 'bmlt_semantic_form_map_search_latitude_text' );
+        
+        longText.value = this.current_lng.toString();
+        latText.value = this.current_lat.toString();
         }
     else
         {
         };
+};
+
+/*******************************************************************************************/
+/**
+    \brief 
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.handleMapSearchText = function ()
+{
+    var bmlt_semantic_form_map_search_text_radius = this.getScopedElement ( 'bmlt_semantic_form_map_search_text_radius' );
+    
+    this.state.searchMapRadius = null;
+    
+    if ( bmlt_semantic_form_map_search_text_radius.value && (bmlt_semantic_form_map_search_text_radius.value != bmlt_semantic_form_map_search_text_radius.defaultValue) )
+        {
+        bmlt_semantic_form_map_search_text_radius.enable();
+        var radius = parseFloat ( bmlt_semantic_form_map_search_text_radius.value );
+        
+        if ( radius < 0 )
+            {
+            radius = parseInt ( radius );
+            if ( parseFloat ( radius ) != parseFloat ( bmlt_semantic_form_map_search_text_radius.value ) )
+                {
+                bmlt_semantic_form_map_search_text_radius.value = radius;
+                };
+            };
+        
+        this.state.searchMapRadius = radius;
+        }
+    else
+        {
+        bmlt_semantic_form_map_search_text_radius.value = '';
+        };
+    
+    this.refreshURI();
+};
+                                                            
+/*******************************************************************************************/
+/**
+    \brief
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.handleMapLongLatChange = function ( inTextItem
+                                                            )
+{
+    var longText = this.getScopedElement ( 'bmlt_semantic_form_map_search_longitude_text' );
+    var latText = this.getScopedElement ( 'bmlt_semantic_form_map_search_latitude_text' );
+    var position = new google.maps.LatLng ( parseFloat ( latText.value ), parseFloat ( longText.value ) );
+
+	this.mapObject.panTo ( position );
+	this.mapObject.map_marker.setPosition ( position );
+	this.current_lng = parseFloat ( parseFloat ( longText.value ) );
+	this.current_lat = parseFloat ( parseFloat ( latText.value ) );
+    
+    this.refreshURI();
+};
+                                                            
+/*******************************************************************************************/
+/**
+    \brief
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.handleMapRadiusUnitsChange = function ( inSelect
+                                                                )
+{
+    this.refreshURI();
 };
 
 /*******************************************************************************************/
@@ -1683,6 +1709,11 @@ BMLTSemantic.prototype.mapClicked = function (  inEvent,
 	inContext.mapObject.map_marker.setPosition ( inEvent.latLng );
 	inContext.current_lng = parseFloat ( inEvent.latLng.lng() );
 	inContext.current_lat = parseFloat ( inEvent.latLng.lat() );
+    var longText = inContext.getScopedElement ( 'bmlt_semantic_form_map_search_longitude_text' );
+    var latText = inContext.getScopedElement ( 'bmlt_semantic_form_map_search_latitude_text' );
+    longText.value = inContext.current_lng.toString();
+    latText.value = inContext.current_lat.toString();
+    
 	inContext.refreshURI();
 };
 
@@ -1698,8 +1729,13 @@ BMLTSemantic.prototype.mapDragEnd = function (  inEvent,
                                                 inContext
                                                 )
 {
-	inContext.current_lng = inEvent.latLng.lng().toString();
-	inContext.current_lat = inEvent.latLng.lat().toString();
+	inContext.current_lng = parseFloat ( inEvent.latLng.lng() );
+	inContext.current_lat = parseFloat ( inEvent.latLng.lat() );
+    var longText = inContext.getScopedElement ( 'bmlt_semantic_form_map_search_longitude_text' );
+    var latText = inContext.getScopedElement ( 'bmlt_semantic_form_map_search_latitude_text' );
+    longText.value = inEvent.latLng.lng().toString();
+    latText.value = inEvent.latLng.lat().toString();
+    
 	inContext.refreshURI();
 };
 
@@ -1760,6 +1796,8 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.setBasicFunctions ( 'text_search_radius_input_div' );
     this.setBasicFunctions ( 'bmlt_semantic_form_map_wrapper_div' );
     this.setBasicFunctions ( 'bmlt_semantic_form_map_search_text_radius_units' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_map_search_longitude_text' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_map_search_latitude_text' );
 
     for ( var i = 1; i < 8; i++ )
         {
@@ -1773,6 +1811,8 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.setTextHandlers ( 'bmlt_semantic_form_text_search_text' );
     this.setTextHandlers ( 'bmlt_semantic_form_text_search_text_radius' );
     this.setTextHandlers ( 'bmlt_semantic_form_map_search_text_radius' );
+    this.setTextHandlers ( 'bmlt_semantic_form_map_search_longitude_text' );
+    this.setTextHandlers ( 'bmlt_semantic_form_map_search_latitude_text' );
     
     this.getScopedElement ( 'bmlt_semantic_form_changes_from_text' ).additionalHandler = function () { this.formHandler.handleChangeText ( this ) };
     this.getScopedElement ( 'bmlt_semantic_form_changes_to_text' ).additionalHandler = function () { this.formHandler.handleChangeText ( this ) };
@@ -1782,6 +1822,8 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.getScopedElement ( 'bmlt_semantic_form_text_search_text' ).additionalHandler = function () { this.formHandler.handleTextSearchText() };
     this.getScopedElement ( 'bmlt_semantic_form_text_search_text_radius' ).additionalHandler = function () { this.formHandler.handleTextSearchText() };
     this.getScopedElement ( 'bmlt_semantic_form_map_search_text_radius' ).additionalHandler = function () { this.formHandler.handleMapSearchText() };
+    this.getScopedElement ( 'bmlt_semantic_form_map_search_longitude_text' ).additionalHandler = function () { this.formHandler.handleMapLongLatChange ( this ) };
+    this.getScopedElement ( 'bmlt_semantic_form_map_search_latitude_text' ).additionalHandler = function () { this.formHandler.handleMapLongLatChange ( this ) };
     
     this.getScopedElement ( 'bmlt_semantic_form_map_wrapper_div' ).hide = function() { this.style.display = 'none'; this.formHandler.mapObject = null; };
     this.getScopedElement ( 'bmlt_semantic_form_map_wrapper_div' ).show = function() { this.style.display = this.oldDisplay; this.formHandler.setUpMap(); };
