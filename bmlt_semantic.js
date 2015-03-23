@@ -905,7 +905,8 @@ BMLTSemantic.prototype.fetchFieldValuesCallback = function (inHTTPReqObject
                                                     };
                                                 
                                                 return ret;
-                                            } );
+                                            }
+                                        );
         
         context.updateFieldValuesPopup();
         };
@@ -959,7 +960,7 @@ BMLTSemantic.prototype.fieldValueChosen = function ( inSelect
     this.getScopedElement ( 'bmlt_semantic_form_value_text' ).onchange ( this.getScopedElement ( 'bmlt_semantic_form_value_text' ) );
     this.getScopedElement ( 'bmlt_semantic_form_value_text' ).focus();
     this.refreshURI();
-}
+};
 
 /*******************************************************************************************/
 /**
@@ -1265,7 +1266,7 @@ BMLTSemantic.prototype.handleFormatCheckbox = function ( inCheckboxObject )
                 formatsArray.push ( parseInt ( formatsArrayTemp[i] ) );
                 };
             };
-        }
+        };
 
     if ( checked )
         {
@@ -1338,7 +1339,7 @@ BMLTSemantic.prototype.clearWeekdays = function ( )
 
     for ( var i = 1; i < 8; i++ )
         {
-        this.getScopedElement ( 'bmlt_semantic_form_weekday_checkbox_' + i ).checked = false
+        this.getScopedElement ( 'bmlt_semantic_form_weekday_checkbox_' + i ).checked = false;
         this.getScopedElement ( 'bmlt_semantic_form_un_weekday_checkbox_' + i ).checked = false;
         };
 };
@@ -1699,7 +1700,7 @@ BMLTSemantic.prototype.handleMapRadiusUnitsChange = function ( inSelect
 /*******************************************************************************************/
 BMLTSemantic.prototype.hideRadiusCircle = function()
 {
-    if ( this.mapObject.radiusCircle )
+    if ( this.mapObject && this.mapObject.radiusCircle )
         {
         this.mapObject.radiusCircle.setMap ( null );
         this.mapObject.radiusCircle = null;
@@ -1726,6 +1727,7 @@ BMLTSemantic.prototype.createRadiusCircle = function()
             fillColor: '#000000',
             fillOpacity: 0.25,
             map: this.mapObject,
+            clickable: false,
             center: new google.maps.LatLng ( parseFloat ( this.current_lat ), parseFloat ( this.current_lng ) ),
             radius: radius
             };
@@ -1983,7 +1985,7 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
         bmlt_switcher_field_value_div_formats.innerHTML = '';
         bmlt_switcher_field_value_div_no_selected_formats_blurb.hide();
         bmlt_semantic_form_meeting_fields_fieldset_contents_div.hide();
-        }
+        };
 
     if ( (inItem != switcher_select) && (switcher_select.value == 'GetNAWSDump') && ((response_type_select.value != 'csv') || (main_fieldset_select.value != 'DOWNLOAD')) )
         {

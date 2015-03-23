@@ -4,7 +4,7 @@
 */
 /***************************************************************************************************************************************/
 
-define ( '__VERSION__', '1.0d0' );
+define ( '__VERSION__', '1.0d1' );
 
 class bmlt_semantic
 {
@@ -32,18 +32,15 @@ class bmlt_semantic
             {
             if ( preg_match ( "|.*?\.js$|", $in_filename ) || preg_match ( "|.*?\.css$|", $in_filename ) )
                 {
-                $in_filename = dirname ( __FILE__ )."/$in_filename";
-                $ret = file_get_contents ( $in_filename );
-                $ret = preg_replace( "|\/\/.*?[\n\r]|s", "\n", $ret );  // Block comments.
-                $ret = preg_replace( "|\/\*(.*?)\*\/|s", "", $ret );    // Line comments.
-                $ret = preg_replace( "|[\ \t]+|s", " ", $ret );         // Tabs and spaces.
-                $ret = preg_replace( "|\n[\ \t]+|s", "\n", $ret );      // Beginning line tabs and spaces.
-                
-                if ( !defined ( 'DEBUG' ) ) // If we are in release mode, we strip out all the whitespace (including line endings).
+                $ret = file_get_contents ( dirname ( __FILE__ )."/$in_filename" );
+                if ( !defined ( 'DEBUG' ) ) // If we are in release mode, we strip out all the comments and whitespace (including line endings).
                     {
-                    $ret = preg_replace( "|[\s]+|s", " ", $ret );
+                    $ret = preg_replace( "|\/\/.*?[\n\r]|s", "\n", $ret );  // Block comments.
+                    $ret = preg_replace( "|\/\*(.*?)\*\/|s", "", $ret );    // Line comments.
+                    $ret = preg_replace( "|[\ \t]+|s", " ", $ret );         // Tabs and spaces.
+                    $ret = preg_replace( "|\n[\ \t\n\r]+|s", "\n", $ret );  // Beginning line tabs and spaces.
+                    $ret = preg_replace( "|[\s]+|s", " ", $ret );           // All whitespace, including line endings, replaced by a single space.
                     }
-                // Leaving the line endings in there allows us to do inline debugging (errors point to lines).
                 }
             else
                 {
