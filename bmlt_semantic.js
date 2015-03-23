@@ -1779,6 +1779,7 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.setBasicFunctions ( 'bmlt_semantic_form_response_type_select_kml_option' );
     this.setBasicFunctions ( 'bmlt_semantic_form_response_type_select_gpx_option' );
     this.setBasicFunctions ( 'bmlt_semantic_form_response_type_select_poi_option' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_switcher_type_select_schema_option' );
     this.setBasicFunctions ( 'bmlt_semantic_info_div_download_line' );
     this.setBasicFunctions ( 'bmlt_semantic_info_div_shortcode_line' );
     this.setBasicFunctions ( 'bmlt_semantic_form_main_fields_fieldset_contents_div' );
@@ -1798,6 +1799,7 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.setBasicFunctions ( 'bmlt_semantic_form_map_search_text_radius_units' );
     this.setBasicFunctions ( 'bmlt_semantic_form_map_search_longitude_text' );
     this.setBasicFunctions ( 'bmlt_semantic_form_map_search_latitude_text' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_schema_select_fieldset' );
 
     for ( var i = 1; i < 8; i++ )
         {
@@ -1879,10 +1881,14 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     var bmlt_semantic_form_meeting_fields_fieldset_contents_div = this.getScopedElement ( 'bmlt_semantic_form_meeting_fields_fieldset_contents_div' );
     var bmlt_semantic_form_map_wrapper_div = this.getScopedElement ( 'bmlt_semantic_form_map_wrapper_div' );
     var bmlt_semantic_form_map_checkbox = this.getScopedElement ( 'bmlt_semantic_form_map_checkbox' );
+    var bmlt_semantic_form_schema_select_fieldset = this.getScopedElement ( 'bmlt_semantic_form_schema_select_fieldset' );
+    var bmlt_semantic_form_schema_select = this.getScopedElement ( 'bmlt_semantic_form_schema_select' );
+    var switcher_type_select_schema_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_schema_option' );
     
     switcher_type_select_formats_option.enable();
     switcher_type_select_sb_option.enable();
     switcher_type_select_changes_option.enable();
+    switcher_type_select_schema_option.disable();
     
     bmlt_semantic_form_map_checkbox.checked = false;
     bmlt_semantic_form_map_wrapper_div.hide();
@@ -1961,6 +1967,7 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     bmlt_semantic_form_main_fields_fieldset.hide();
     bmlt_semantic_form_meeting_search_div.hide();
     text_search_radius_input_div.hide();
+    bmlt_semantic_form_schema_select_fieldset.hide();
     
     if ( switcher_select.value == 'GetSearchResults' )
         {
@@ -1992,7 +1999,14 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
                     }
                 else
                     {
-                    bmlt_switcher_div_no_options_blurb.show();
+                    if ( switcher_select.value == 'XMLSchema' )
+                        {
+                        bmlt_semantic_form_schema_select_fieldset.show();
+                        }
+                    else
+                        {
+                        bmlt_switcher_div_no_options_blurb.show();
+                        };
                     };
                 };
             };
@@ -2039,6 +2053,19 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
         switcher_type_select_fieldkey_option.disable();
         switcher_type_select_fieldval_option.disable();
         switcher_type_select_naws_option.disable();
+        };
+        
+    if ( (main_fieldset_select.value == 'DOWNLOAD') && (response_type_select.value == 'xml') )
+        {
+        switcher_type_select_schema_option.enable();
+        }
+    else
+        {
+        if ( switcher_select.value == 'XMLSchema' )
+            {
+            switcher_select.selectedIndex = 0;
+            bmlt_semantic_form_meeting_search_div.show();
+            };
         };
     
     this.refreshURI();
@@ -2104,9 +2131,12 @@ BMLTSemantic.prototype.refreshURI = function ()
 
     this.state.switcher = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select' ).value;
     
-    var compiled_arguments = this.state.compile();
+    if ( this.state.switcher != 'XMLSchema' )
+        {
+        var compiled_arguments = this.state.compile();
+        };
     
-    if ( this.state.valid )
+    if ( (this.state.switcher == 'XMLSchema') || this.state.valid )
         {
         if ( this.getScopedElement ( 'bmlt_semantic_form_main_mode_select' ).value == 'DOWNLOAD' )
             {
@@ -2115,9 +2145,21 @@ BMLTSemantic.prototype.refreshURI = function ()
                 {
                 type = 'simple';
                 extra_sauce = '&block_mode=1'
+                };
+            
+            var uri = '';
+            
+            if ( this.state.switcher == 'XMLSchema' )
+                {
+                var schemaType = this.getScopedElement ( 'bmlt_semantic_form_schema_select' ).value;
+                
+                uri = this.state.root_server_uri + '/client_interface/xsd/' + schemaType + '.php';
                 }
-        
-            var uri = this.state.root_server_uri + '/client_interface/' + type + '/?' + compiled_arguments + extra_sauce;
+            else
+                {
+                uri = this.state.root_server_uri + '/client_interface/' + type + '/?' + compiled_arguments + extra_sauce;
+                };
+            
             var url_string = '<a target="_blank" href="' + uri + '">' + uri + '</a>';
             uri_active.innerHTML = url_string;
             uri_invalid.hide();
