@@ -30,6 +30,9 @@ BMLTSemanticResult.prototype.change_sb_id = null;       ///< This will be the Se
 BMLTSemanticResult.prototype.searchText = null;         ///< The text to search for in meetings.
 BMLTSemanticResult.prototype.searchTextModifier = null; ///< Any modifier for the text search.
 BMLTSemanticResult.prototype.searchTextRadius = null;   ///< A possible radius for the text (if location).
+BMLTSemanticResult.prototype.searchMapRadius = null;    ///< A radius for the map.
+BMLTSemanticResult.prototype.searchLongitude = null;    ///< If using the map, the longitude.
+BMLTSemanticResult.prototype.searchLatitude = null;     ///< If using the map, the latitude.
 BMLTSemanticResult.prototype.compiled_params = null;    ///< This will contain the temporary compiled parameters.
 BMLTSemanticResult.prototype.valid = null;              ///< This will be non-null if the compiled result is valid (only after compile()).
 
@@ -154,6 +157,13 @@ BMLTSemanticResult.prototype.compileSearchResults = function()
             };
         };
     
+    if ( this.searchMapRadius )
+        {
+        this.compiled_params += '&' + this.owner.getScopedElement ( 'bmlt_semantic_form_map_search_text_radius_units' ).value + '=' + escape ( this.searchMapRadius );
+        this.compiled_params += '&long_val=' + escape ( this.searchLongitude );
+        this.compiled_params += '&lat_val=' + escape ( this.searchLatitude );
+        };
+    
     this.valid = true;
 };
 
@@ -256,6 +266,10 @@ BMLTSemantic.prototype.field_values = null;
 BMLTSemantic.prototype.service_body_objects = null;
 BMLTSemantic.prototype.temp_service_body_objects = null;
 BMLTSemantic.prototype.state = null;
+BMLTSemantic.prototype.mapObject = null;
+BMLTSemantic.prototype.current_lat = 34.23592;
+BMLTSemantic.prototype.current_lng = -118.563659;
+BMLTSemantic.prototype.current_zoom = 11;
 
 /*******************************************************************************************/
 /**
@@ -389,6 +403,7 @@ BMLTSemantic.prototype.reloadFromServer = function ()
     this.state.searchText = null;
     this.state.searchTextModifier = null;
     this.state.searchTextRadius = null;
+    this.state.searchMapRadius = null;
     
     this.format_objects = null;
     this.service_body_objects = null;
@@ -496,7 +511,7 @@ BMLTSemantic.prototype.fetchFormatsCallback = function (inHTTPReqObject
         {
         var context = inHTTPReqObject.extraData;
         eval ( 'context.format_objects = ' + inHTTPReqObject.responseText + ';' );
-        
+
         if ( context.getScopedElement ( 'bmlt_semantic_form_switcher_type_select' ).value == 'GetFieldValues' )
             {
             context.populateFormatsSection(context.getScopedElement ( 'bmlt_switcher_field_value_div_formats' ), false );
@@ -1105,29 +1120,8 @@ BMLTSemantic.prototype.handleFieldKeySelectChange = function ( inSelect )
         this.getScopedElement ( 'bmlt_semantic_form_value_text' ).value = this.getScopedElement ( 'bmlt_semantic_form_value_text' ).defaultValue;
         this.getScopedElement ( 'bmlt_semantic_form_value_text' ).focus();
         this.fetchFieldValues();
-        }
-    else
-        {
-        var blurbDiv = this.getScopedElement ( 'bmlt_switcher_field_value_div_no_options_blurb' );
-        var formatsDiv = this.getScopedElement ( 'bmlt_switcher_field_value_div_formats' );
-        var formatsBlurbDiv = this.getScopedElement ( 'bmlt_switcher_field_value_div_no_selected_formats_blurb' );
-
-        if ( key == 'formats' )
-            {
-            blurbDiv.hide();
-            formatsDiv.show();
-            formatsBlurbDiv.show();
-            formatsDiv.innerHTML = '';
-            this.fetchFormats();
-            }
-        else
-            {
-            blurbDiv.show();
-            formatsDiv.hide();
-            formatsBlurbDiv.hide();
-            };
         };
-    
+
     this.refreshURI();
 };
 
@@ -1359,7 +1353,7 @@ BMLTSemantic.prototype.clearTextSearchItems = function ( )
     this.state.searchText = null;
     this.state.searchTextModifier = null;
     this.state.searchTextRadius = null;
-
+    
     var bmlt_semantic_form_text_search_text = this.getScopedElement ( 'bmlt_semantic_form_text_search_text' );
     var bmlt_semantic_form_text_search_select = this.getScopedElement ( 'bmlt_semantic_form_text_search_select' );
     var bmlt_semantic_form_text_search_text_radius = this.getScopedElement ( 'bmlt_semantic_form_text_search_text_radius' );
@@ -1429,6 +1423,28 @@ BMLTSemantic.prototype.handleChangeText = function ()
     \brief 
 */
 /*******************************************************************************************/
+BMLTSemantic.prototype.handleMapCheckboxChange = function ( inCheckbox
+                                                            )
+{
+    var mapSection = this.getScopedElement ( 'bmlt_semantic_form_map_wrapper_div' );
+    
+    if ( inCheckbox.checked )
+        {
+        mapSection.show ( );
+        }
+    else
+        {
+        mapSection.hide ( );
+        };
+
+    this.refreshURI();
+};
+
+/*******************************************************************************************/
+/**
+    \brief 
+*/
+/*******************************************************************************************/
 BMLTSemantic.prototype.handleTextSearchText = function ()
 {
     var bmlt_semantic_form_text_search_text = this.getScopedElement ( 'bmlt_semantic_form_text_search_text' );
@@ -1469,6 +1485,52 @@ BMLTSemantic.prototype.handleTextSearchText = function ()
         bmlt_semantic_form_text_search_text_radius.value = '';
         };
     
+    this.refreshURI();
+};
+
+/*******************************************************************************************/
+/**
+    \brief 
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.handleMapSearchText = function ()
+{
+    var bmlt_semantic_form_map_search_text_radius = this.getScopedElement ( 'bmlt_semantic_form_map_search_text_radius' );
+    
+    this.state.searchMapRadius = null;
+    
+    if ( bmlt_semantic_form_map_search_text_radius.value && (bmlt_semantic_form_map_search_text_radius.value != bmlt_semantic_form_map_search_text_radius.defaultValue) )
+        {
+        bmlt_semantic_form_map_search_text_radius.enable();
+        var radius = parseFloat ( bmlt_semantic_form_map_search_text_radius.value );
+        
+        if ( radius < 0 )
+            {
+            radius = parseInt ( radius );
+            if ( parseFloat ( radius ) != parseFloat ( bmlt_semantic_form_map_search_text_radius.value ) )
+                {
+                bmlt_semantic_form_map_search_text_radius.value = radius;
+                };
+            };
+        
+        this.state.searchMapRadius = radius;
+        }
+    else
+        {
+        bmlt_semantic_form_map_search_text_radius.value = '';
+        };
+    
+    this.refreshURI();
+};
+
+/*******************************************************************************************/
+/**
+    \brief
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.handleMapRadiusUnitsChange = function ( inSelect
+                                                                )
+{
     this.refreshURI();
 };
 
@@ -1552,6 +1614,112 @@ BMLTSemantic.prototype.setBasicFunctions = function ( inItemID
 
 /*******************************************************************************************/
 /**
+    \brief Sets up the map display for the instance.
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.setUpMap = function ( )
+{
+    var mapDiv = this.getScopedElement ( 'bmlt_semantic_form_map_div' );
+    this.mapObject = null;
+    mapDiv.innerHTML = '';
+    
+    var switcher_select = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select' );
+    
+    if ( switcher_select.value == 'GetSearchResults' )
+        {
+        var position = new google.maps.LatLng ( this.current_lat, this.current_lng );
+        var myOptions = {
+                        'center': position,
+                        'zoom': this.current_zoom,
+                        'mapTypeId': google.maps.MapTypeId.ROADMAP,
+                        'mapTypeControlOptions': { 'style': google.maps.MapTypeControlStyle.DROPDOWN_MENU },
+                        'zoomControl': true,
+                        'mapTypeControl': true,
+                        'disableDoubleClickZoom' : true,
+                        'draggableCursor': "crosshair",
+                        'scaleControl' : true,
+                        'cursor':  'default',
+                        'scrollwheel': false
+                        };
+
+        myOptions.zoomControlOptions = { 'style': google.maps.ZoomControlStyle.LARGE };
+
+        this.mapObject = new google.maps.Map ( mapDiv, myOptions );
+    
+        if ( this.mapObject )
+            {
+            this.mapObject.map_marker = new google.maps.Marker (
+                                                                {
+                                                                'position':     position,
+                                                                'map':		    this.mapObject,
+                                                                'clickable':	false,
+                                                                'draggable':    true
+                                                                } );
+            var theContext = this;
+            
+            google.maps.event.addListener ( this.mapObject.map_marker, 'dragend', function ( in_event ) { BMLTSemantic.prototype.mapDragEnd ( in_event, theContext ); } );
+            google.maps.event.addListener ( this.mapObject, 'click', function ( in_event ) { BMLTSemantic.prototype.mapClicked ( in_event, theContext ); } );
+            google.maps.event.addListener ( this.mapObject, 'zoom_changed', function ( in_event ) { BMLTSemantic.prototype.mapZoomChanged ( in_event, theContext ); } );
+            };
+        }
+    else
+        {
+        };
+};
+
+/*******************************************************************************************/
+/**
+    \brief Reacts to a click in the map.
+    
+    \param inEvent The click event
+    \param inContext The object that triggered the event.
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.mapClicked = function (  inEvent,
+                                                inContext
+                                                )
+{
+	inContext.mapObject.panTo ( inEvent.latLng );
+	inContext.mapObject.map_marker.setPosition ( inEvent.latLng );
+	inContext.current_lng = parseFloat ( inEvent.latLng.lng() );
+	inContext.current_lat = parseFloat ( inEvent.latLng.lat() );
+	inContext.refreshURI();
+};
+
+/*******************************************************************************************/
+/**
+    \brief Reacts to a drag in the map ending.
+    
+    \param inEvent The drag event
+    \param inContext The object that triggered the event.
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.mapDragEnd = function (  inEvent,
+                                                inContext
+                                                )
+{
+	inContext.current_lng = inEvent.latLng.lng().toString();
+	inContext.current_lat = inEvent.latLng.lat().toString();
+	inContext.refreshURI();
+};
+
+/*******************************************************************************************/
+/**
+    \brief Reacts to the map zoom changing.
+    
+    \param inEvent The drag event
+    \param inContext The object that triggered the event.
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.mapZoomChanged = function (  inEvent,
+                                                    inContext
+                                                )
+{
+	inContext.current_zoom = inContext.mapObject.getZoom();
+};
+
+/*******************************************************************************************/
+/**
     \brief Initialize the main fieldset.
 */
 /*******************************************************************************************/
@@ -1590,7 +1758,9 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.setBasicFunctions ( 'bmlt_switcher_changes_sb_select' );
     this.setBasicFunctions ( 'bmlt_semantic_form_text_search_select' );
     this.setBasicFunctions ( 'text_search_radius_input_div' );
-    
+    this.setBasicFunctions ( 'bmlt_semantic_form_map_wrapper_div' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_map_search_text_radius_units' );
+
     for ( var i = 1; i < 8; i++ )
         {
         this.setBasicFunctions ( 'bmlt_semantic_form_weekday_checkbox_' + i );
@@ -1602,6 +1772,7 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.setTextHandlers ( 'bmlt_semantic_form_value_text' );
     this.setTextHandlers ( 'bmlt_semantic_form_text_search_text' );
     this.setTextHandlers ( 'bmlt_semantic_form_text_search_text_radius' );
+    this.setTextHandlers ( 'bmlt_semantic_form_map_search_text_radius' );
     
     this.getScopedElement ( 'bmlt_semantic_form_changes_from_text' ).additionalHandler = function () { this.formHandler.handleChangeText ( this ) };
     this.getScopedElement ( 'bmlt_semantic_form_changes_to_text' ).additionalHandler = function () { this.formHandler.handleChangeText ( this ) };
@@ -1610,6 +1781,12 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.getScopedElement ( 'bmlt_semantic_form_value_text' ).additionalHandler = function () { this.formHandler.handleValueText ( this ) };
     this.getScopedElement ( 'bmlt_semantic_form_text_search_text' ).additionalHandler = function () { this.formHandler.handleTextSearchText() };
     this.getScopedElement ( 'bmlt_semantic_form_text_search_text_radius' ).additionalHandler = function () { this.formHandler.handleTextSearchText() };
+    this.getScopedElement ( 'bmlt_semantic_form_map_search_text_radius' ).additionalHandler = function () { this.formHandler.handleMapSearchText() };
+    
+    this.getScopedElement ( 'bmlt_semantic_form_map_wrapper_div' ).hide = function() { this.style.display = 'none'; this.formHandler.mapObject = null; };
+    this.getScopedElement ( 'bmlt_semantic_form_map_wrapper_div' ).show = function() { this.style.display = this.oldDisplay; this.formHandler.setUpMap(); };
+    
+    this.getScopedElement ( 'bmlt_semantic_form_map_search_text_radius' ).value = this.state.searchMapRadius;
     
     var main_fieldset_select = this.getScopedElement ( 'bmlt_semantic_form_main_mode_select' );
     main_fieldset_select.onchange = function() { this.formHandler.handleMainSelectChange ( this ) };
@@ -1653,17 +1830,27 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     var bmlt_semantic_form_main_fields_fieldset = this.getScopedElement ( 'bmlt_semantic_form_main_fields_fieldset' );
     var bmlt_semantic_form_field_main_select = this.getScopedElement ( 'bmlt_semantic_form_field_main_select' );
     var text_search_radius_input_div = this.getScopedElement ( 'text_search_radius_input_div' );
+    var map_search_radius_input_div = this.getScopedElement ( 'map_search_radius_input_div' );
     var bmlt_semantic_form_text_search_select = this.getScopedElement ( 'bmlt_semantic_form_text_search_select' );
-
+    var bmlt_switcher_field_value_div_formats = this.getScopedElement ( 'bmlt_switcher_field_value_div_formats' );
+    var bmlt_switcher_field_value_div_no_selected_formats_blurb = this.getScopedElement ( 'bmlt_switcher_field_value_div_no_selected_formats_blurb' );
+    var bmlt_semantic_form_meeting_fields_fieldset_contents_div = this.getScopedElement ( 'bmlt_semantic_form_meeting_fields_fieldset_contents_div' );
+    var bmlt_semantic_form_map_wrapper_div = this.getScopedElement ( 'bmlt_semantic_form_map_wrapper_div' );
+    var bmlt_semantic_form_map_checkbox = this.getScopedElement ( 'bmlt_semantic_form_map_checkbox' );
+    
     switcher_type_select_formats_option.enable();
     switcher_type_select_sb_option.enable();
     switcher_type_select_changes_option.enable();
     
+    bmlt_semantic_form_map_checkbox.checked = false;
+    bmlt_semantic_form_map_wrapper_div.hide();
+
     if ( this.version >= 2006015 )
         {
         switcher_type_select_fieldkey_option.enable();
         switcher_type_select_fieldval_option.enable();
         };
+    
     switcher_type_select_naws_option.enable();
     
     if ( (inItem == switcher_select) && (switcher_select.value == 'GetFieldValues') )
@@ -1683,6 +1870,9 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
             {
             main_fieldset_direct_uri_div.show();
             response_type_select.selectedIndex = 0;
+            bmlt_switcher_field_value_div_formats.innerHTML = '';
+            bmlt_switcher_field_value_div_no_selected_formats_blurb.hide();
+            bmlt_semantic_form_meeting_fields_fieldset_contents_div.hide();
             };
         }
     else
@@ -1699,6 +1889,9 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     if ( (inItem != response_type_select) && (switcher_select.value == 'GetNAWSDump') && ((response_type_select.value != 'csv') || (main_fieldset_select.value != 'DOWNLOAD')) )
         {
         response_type_select.selectedIndex = 0;
+        bmlt_switcher_field_value_div_formats.innerHTML = '';
+        bmlt_switcher_field_value_div_no_selected_formats_blurb.hide();
+        bmlt_semantic_form_meeting_fields_fieldset_contents_div.hide();
         }
 
     if ( (inItem != switcher_select) && (switcher_select.value == 'GetNAWSDump') && ((response_type_select.value != 'csv') || (main_fieldset_select.value != 'DOWNLOAD')) )
@@ -1833,7 +2026,40 @@ BMLTSemantic.prototype.refreshURI = function ()
     var shortcode_active = this.getScopedElement ( 'bmlt_semantic_info_div_shortcode_active_span' );
     var type = this.getScopedElement ( 'bmlt_semantic_form_response_type_select' ).value;
     var bmlt_semantic_form_text_search_select = this.getScopedElement ( 'bmlt_semantic_form_text_search_select' );
-        
+    var mainSelectElement = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select' );
+    var typeSelectElement = this.getScopedElement ( 'bmlt_semantic_form_field_main_select' );
+    var blurbDiv = this.getScopedElement ( 'bmlt_switcher_field_value_div_no_options_blurb' );
+    var formatsDiv = this.getScopedElement ( 'bmlt_switcher_field_value_div_formats' );
+    var formatsBlurbDiv = this.getScopedElement ( 'bmlt_switcher_field_value_div_no_selected_formats_blurb' );
+    var useMap = this.getScopedElement ( 'bmlt_semantic_form_map_checkbox' );
+    var mapRadius = this.getScopedElement ( 'bmlt_semantic_form_map_search_text_radius' );
+    
+    if ( useMap.checked )
+        {
+        this.state.searchMapRadius = parseFloat ( mapRadius.value );
+        this.state.searchLongitude = parseFloat ( this.current_lng );
+        this.state.searchLatitude = parseFloat ( this.current_lat );
+        }
+    else
+        {
+        this.state.searchMapRadius = 0;
+        this.state.searchLongitude = 0;
+        this.state.searchLatitude = 0;
+        };
+    
+    if ( (mainSelectElement.value != 'GetFieldValues') || (typeSelectElement.value != 'formats') )
+        {
+        blurbDiv.show();
+        formatsDiv.hide();
+        formatsBlurbDiv.hide();
+        }
+    else
+        {
+        blurbDiv.hide();
+        formatsDiv.show();
+        formatsBlurbDiv.show();
+        };
+
     this.state.switcher = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select' ).value;
     
     var compiled_arguments = this.state.compile();

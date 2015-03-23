@@ -188,14 +188,46 @@ input.bmlt_semantic_form_value_text
     width: 50em;
 }
 
-div.bmlt_semantic_info_div
+div.bmlt_semantic_info_div_download_line,
+div.bmlt_semantic_info_div_shortcode_line
 {
-    padding-top:1em;
-    font-size:x-small;
+    text-align:center;
 }
 
-div.bmlt_semantic_info_div div
+div.bmlt_semantic_info_div_download_line span.info_label,
+div.bmlt_semantic_info_div_shortcode_line span.info_label
 {
-    margin-top:0.25em;
-    margin-bottom: 0.25em;
+    font-weight:bold;
+    font-style:normal;
+    margin-right:0.25em;
+}
+
+div.bmlt_semantic_info_div_result_url_wrapper,
+div.bmlt_semantic_info_div_shortcode_wrapper
+{
+    padding: 0.5em;
+    margin: 0.125em;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #ffc;
+    border: 1px solid #f00;
+    font-size: small;
+    -moz-border-radius: 0.5em;
+    -webkit-border-radius: 0.5em;
+    border-radius: 0.5em;
+    box-shadow: 0.125em 0.125em 0.125em #888;
+    display:table;
+}
+
+div.bmlt_semantic_version_wrapper
+{
+    float:right;
+    margin-right:2em;
+}
+
+div.bmlt_semantic_form_map_div
+{
+    width: 100%;
+    height: 50em;
+    background-color: #ffc;
 }
