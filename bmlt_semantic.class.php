@@ -711,10 +711,33 @@ class bmlt_semantic
         $ret = '<div id="bmlt_semantic_form_meeting_search_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_meeting_search_div">';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         
+        $ret .= '<div id="bmlt_semantic_form_used_formats_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_used_formats_div" style="display:none">';
+        
+        $ret .= '<div id="bmlt_semantic_form_used_formats_checkbox_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_used_formats_checkbox_div">';
+        $function_string = 'bmlt_semantic_js_object'.htmlspecialchars ( $this->_myJSName ).'.handleUsedFormatsChange(this)';
+        $ret .= '<input type="checkbox" id="bmlt_semantic_form_used_formats_checkbox'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_used_formats_checkbox" onchange="'.$function_string.'" />';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $ret .= '<label id="bmlt_semantic_form_used_formats_checkbox_label'.htmlspecialchars ( $this->_myJSName ).'" for="bmlt_semantic_form_used_formats_checkbox'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_used_formats_checkbox_label">'.$this->localize_string ( 'used_formats_checkbox_label' ).'</label>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
+        $ret .= '</div>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        
+        $ret .= '<div id="bmlt_semantic_form_just_used_formats_checkbox_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_just_used_formats_checkbox_div">';
+        $ret .= '<input type="checkbox" id="bmlt_semantic_form_just_used_formats_checkbox'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_just_used_formats_checkbox" disabled="disabled" onchange="'.$function_string.'" />';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $ret .= '<label id="bmlt_semantic_form_just_used_formats_checkbox_label'.htmlspecialchars ( $this->_myJSName ).'" for="bmlt_semantic_form_just_used_formats_checkbox'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_used_formats_checkbox_label">'.$this->localize_string ( 'used_formats_only_checkbox_label' ).'</label>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
+        $ret .= '</div>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        
+        $ret .= '</div>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        
         $ret .= '<fieldset id="bmlt_semantic_form_weekday_fieldset'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_weekday_fieldset"><legend id="bmlt_semantic_form_weekday_fieldset_legend'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_weekday_fieldset_legend">';
         $ret .= $this->localize_string ( 'weekday_section_legend' );
         $ret .= '</legend>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+
         $ret .= '<div id="bmlt_semantic_form_sb_blurb_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_workshop_blurb_note_div">';
         $ret .= '<p>'.$this->localize_string ( 'all_unselected_note1' ).'</p>';
         $ret .= '<p>'.$this->localize_string ( 'all_unselected_note2' ).'</p>';

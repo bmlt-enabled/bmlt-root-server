@@ -79,6 +79,34 @@ BMLTSemanticResult.prototype.compile = function()
 /*******************************************************************************************/
 BMLTSemanticResult.prototype.compileSearchResults = function()
 {
+    var responseTypeSelect = this.owner.getScopedElement ( 'bmlt_semantic_form_response_type_select' );
+    var getUsedCheckbox = this.owner.getScopedElement ( 'bmlt_semantic_form_used_formats_checkbox' );
+    
+    if ( (responseTypeSelect.value == 'xml') || (responseTypeSelect.value == 'json') )
+        {
+        if ( getUsedCheckbox.checked )
+            {
+            var getOnlyUsedCheckbox = this.owner.getScopedElement ( 'bmlt_semantic_form_just_used_formats_checkbox' );
+        
+            this.compiled_params += '&get_used_formats=1';
+        
+            if ( getOnlyUsedCheckbox.checked )
+                {
+                this.compiled_params += '&get_formats_only=1';
+                };
+            };
+        }
+    else
+        {
+        if ( (responseTypeSelect.value == 'simple-block') || (responseTypeSelect.value == 'simple') )
+            {
+            if ( getUsedCheckbox.checked )
+                {
+                this.compiled_params = 'switcher=GetFormats';
+                };
+            };
+        };
+    
     if ( this.services )
         {
         services = this.services.split ( ',' );
@@ -163,7 +191,7 @@ BMLTSemanticResult.prototype.compileSearchResults = function()
         this.compiled_params += '&long_val=' + escape ( this.searchLongitude );
         this.compiled_params += '&lat_val=' + escape ( this.searchLatitude );
         };
-    
+        
     this.valid = true;
 };
 
@@ -1349,6 +1377,33 @@ BMLTSemantic.prototype.clearWeekdays = function ( )
     \brief
 */
 /*******************************************************************************************/
+BMLTSemantic.prototype.handleUsedFormatsChange = function ( inElement
+                                                            )
+{
+    var getUsedCheckbox = inElement.formHandler.getScopedElement ( 'bmlt_semantic_form_used_formats_checkbox' );
+    var getOnlyUsedCheckbox = inElement.formHandler.getScopedElement ( 'bmlt_semantic_form_just_used_formats_checkbox' );
+    
+    if ( getUsedCheckbox && getOnlyUsedCheckbox )
+        {
+        if ( !getUsedCheckbox.checked )
+            {
+            getOnlyUsedCheckbox.checked = false;
+            getOnlyUsedCheckbox.disable();
+            }
+        else
+            {
+            getOnlyUsedCheckbox.enable();
+            };
+        };
+    
+    inElement.formHandler.refreshURI();
+};
+
+/*******************************************************************************************/
+/**
+    \brief
+*/
+/*******************************************************************************************/
 BMLTSemantic.prototype.clearTextSearchItems = function ( )
 {
     this.state.searchText = null;
@@ -1845,7 +1900,11 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.setBasicFunctions ( 'bmlt_semantic_form_map_search_longitude_text' );
     this.setBasicFunctions ( 'bmlt_semantic_form_map_search_latitude_text' );
     this.setBasicFunctions ( 'bmlt_semantic_form_schema_select_fieldset' );
-
+    this.setBasicFunctions ( 'bmlt_semantic_form_used_formats_checkbox' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_just_used_formats_checkbox' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_used_formats_div' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_just_used_formats_checkbox_div' );
+    
     for ( var i = 1; i < 8; i++ )
         {
         this.setBasicFunctions ( 'bmlt_semantic_form_weekday_checkbox_' + i );
@@ -1929,6 +1988,10 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     var bmlt_semantic_form_schema_select_fieldset = this.getScopedElement ( 'bmlt_semantic_form_schema_select_fieldset' );
     var bmlt_semantic_form_schema_select = this.getScopedElement ( 'bmlt_semantic_form_schema_select' );
     var switcher_type_select_schema_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_schema_option' );
+    var getUsedCheckbox = this.getScopedElement ( 'bmlt_semantic_form_used_formats_checkbox' );
+    var getOnlyUsedCheckbox = this.getScopedElement ( 'bmlt_semantic_form_just_used_formats_checkbox' );
+    var bmlt_semantic_form_used_formats_div = this.getScopedElement ( 'bmlt_semantic_form_used_formats_div' );
+    var bmlt_semantic_form_just_used_formats_checkbox_div = this.getScopedElement ( 'bmlt_semantic_form_just_used_formats_checkbox_div' );
     
     switcher_type_select_formats_option.enable();
     switcher_type_select_sb_option.enable();
@@ -1937,7 +2000,7 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     
     bmlt_semantic_form_map_checkbox.checked = false;
     bmlt_semantic_form_map_wrapper_div.hide();
-
+    
     if ( this.version >= 2006015 )
         {
         switcher_type_select_fieldkey_option.enable();
@@ -2013,6 +2076,8 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     bmlt_semantic_form_meeting_search_div.hide();
     text_search_radius_input_div.hide();
     bmlt_semantic_form_schema_select_fieldset.hide();
+    bmlt_semantic_form_used_formats_div.hide();
+    bmlt_semantic_form_just_used_formats_checkbox_div.hide();
     
     if ( switcher_select.value == 'GetSearchResults' )
         {
@@ -2021,9 +2086,38 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
             {
             text_search_radius_input_div.show();
             };
+        
+        if ( (response_type_select.value == 'xml') || (response_type_select.value == 'json') )
+            {
+            bmlt_semantic_form_used_formats_div.show();
+            bmlt_semantic_form_just_used_formats_checkbox_div.show();
+            if ( getUsedCheckbox && getOnlyUsedCheckbox )
+                {
+                if ( !getUsedCheckbox.checked )
+                    {
+                    getOnlyUsedCheckbox.checked = false;
+                    getOnlyUsedCheckbox.disable();
+                    }
+                else
+                    {
+                    getOnlyUsedCheckbox.enable();
+                    };
+                };
+            }
+        else
+            {
+            if ( (response_type_select.value == 'simple-block') || (response_type_select.value == 'simple') )
+                {
+                bmlt_semantic_form_used_formats_div.show();
+                };
+            };
         }
     else
         {
+        getUsedCheckbox.checked = false;
+        getOnlyUsedCheckbox.checked = false;
+        getOnlyUsedCheckbox.disable();
+        
         if ( switcher_select.value == 'GetChanges' )
             {
             bmlt_semantic_form_changes_div.show();
