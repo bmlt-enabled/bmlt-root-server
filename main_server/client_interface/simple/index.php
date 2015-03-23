@@ -468,12 +468,11 @@ if ( $server instanceof c_comdef_server )
 					$alt = 1;	// This is used to provide an alternating style.
 					foreach ( $format_array as $format )
 						{
+				        $has = FALSE;
 						if ( $format instanceof c_comdef_format )
 							{
 							if ( ($formats_ar != NULL) )
 							    {
-							    $has = FALSE;
-							    
 							    foreach ( $formats_ar as $format_obj )
 							        {
 							        if ( $format->GetSharedID() && ($format_obj->GetSharedID() == $format->GetSharedID()) )
@@ -482,56 +481,54 @@ if ( $server instanceof c_comdef_server )
 							            break;
 							            }
 							        }
-							        
-							    if ( !$has )
-							        {
-							        continue;
-							        }
 							    }
 							    
-							if ( $alt == 1 )
-								{
-								$alt = 0;
-								}
-							else
-								{
-								$alt = 1;
-								}
-						
-							$ret .= $in_block ? '<div class="bmlt_simple_format_one_format_div bmlt_alt_'.intval ( $alt ).'">' : '<tr class="bmlt_simple_format_one_format_tr bmlt_alt_'.intval ( $alt ).'">';
-							foreach ( $my_keys as $ky )
-								{
-								$ret .= ($in_block ?  '<div' : '<td').' class="';
-								
-								$val = '';
-								
-								switch ( $ky )
-									{
-									case	'key_string':
-										$ret .= 'bmlt_simple_format_one_format_key';
-										$val = $format->GetKey();
-									break;
-									
-									case	'name_string':
-										$ret .= 'bmlt_simple_format_one_format_name';
-										$val = $format->GetLocalName();
-									break;
-									
-									case	'description_string':
-										$ret .= 'bmlt_simple_format_one_format_description';
-										$val = $format->GetLocalDescription();
-									break;
-									
-									default:
-										$ret .= 'bmlt_simple_format_one_format_unknown';
-									break;
-									}
-								
-								$ret .= $in_block ?  '_div">' : '_td">';
-								$ret .= c_comdef_htmlspecialchars ( trim ( $val ) );
-								$ret .= $in_block ?  '</div>' : '</td>';
-								}
-							$ret .= $in_block ? '<div class="bmlt_clear_div"></div></div>' : '</tr>';
+						    if ( $has )
+						        {
+                                if ( $alt == 1 )
+                                    {
+                                    $alt = 0;
+                                    }
+                                else
+                                    {
+                                    $alt = 1;
+                                    }
+						    
+                                $ret .= $in_block ? '<div class="bmlt_simple_format_one_format_div bmlt_alt_'.intval ( $alt ).'">' : '<tr class="bmlt_simple_format_one_format_tr bmlt_alt_'.intval ( $alt ).'">';
+                                foreach ( $my_keys as $ky )
+                                    {
+                                    $ret .= ($in_block ?  '<div' : '<td').' class="';
+                                
+                                    $val = '';
+                                
+                                    switch ( $ky )
+                                        {
+                                        case	'key_string':
+                                            $ret .= 'bmlt_simple_format_one_format_key';
+                                            $val = $format->GetKey();
+                                        break;
+                                    
+                                        case	'name_string':
+                                            $ret .= 'bmlt_simple_format_one_format_name';
+                                            $val = $format->GetLocalName();
+                                        break;
+                                    
+                                        case	'description_string':
+                                            $ret .= 'bmlt_simple_format_one_format_description';
+                                            $val = $format->GetLocalDescription();
+                                        break;
+                                    
+                                        default:
+                                            $ret .= 'bmlt_simple_format_one_format_unknown';
+                                        break;
+                                        }
+                                
+                                    $ret .= $in_block ?  '_div">' : '_td">';
+                                    $ret .= c_comdef_htmlspecialchars ( trim ( $val ) );
+                                    $ret .= $in_block ?  '</div>' : '</td>';
+                                    }
+                                $ret .= $in_block ? '<div class="bmlt_clear_div"></div></div>' : '</tr>';
+                                }
 							}
 						}
 					}
