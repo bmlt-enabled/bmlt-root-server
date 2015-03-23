@@ -481,7 +481,7 @@ class bmlt_semantic
             $ret .= '<label id="enter_server_url_form_div_label" class="enter_server_url_form_div_label" for="enter_server_url_form_div_url_input">'.$this->localize_string ( 'enter_url_label' ).'</label>';
             $ret .= defined ( 'DEBUG' ) ? "\n" : '';
             $ret .= '<input type="text" size="64" id="enter_server_url_form_div_url_input" class="enter_server_url_form_div_url_input" defaultValue="Enter A URL" name="root_server" />';
-            $ret .= '<input type="submit" value="Submit" />';
+            $ret .= '<input type="submit" value="'.$this->localize_string ( 'submit_button_name' ).'" />';
             $ret .= '</div>';
             $ret .= defined ( 'DEBUG' ) ? "\n" : '';
             $ret .= '</form>';
