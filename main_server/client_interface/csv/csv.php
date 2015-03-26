@@ -433,6 +433,26 @@ function parse_redirect (
 			}
 		break;
 		
+		case 'GetServerInfo':
+		    $result2 = GetServerInfo ( );
+			if ( isset ( $http_vars['xml_data'] ) )
+				{
+                $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+				$xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', $_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').dirname ( $_SERVER['SCRIPT_NAME'] ).'/ServerInfo.php' ) );
+				$result .= "<serverInfo xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
+				$result .= TranslateToXML ( $result2 );
+				$result .= "</serverInfo>";
+				}
+			elseif ( isset ( $http_vars['json_data'] ) )
+				{
+				$result = TranslateToJSON ( $result2 );
+				}
+			else
+				{
+				$result = $result2;
+				}
+		break;
+		
 		case 'GetNAWSDump':
 		    CSVHandleNawsDump ( $http_vars, $server );
 		break;
@@ -1138,6 +1158,86 @@ function GetServiceBodies   (
 
 	return implode ( "\n", $ret );
     }
+
+/*******************************************************************/
+/**
+	\brief	This returns a line of server info.
+	
+	\returns CSV data, with the first row a key header.
+*/	
+function GetServerInfo()
+{
+    $ret = '';
+    $version_array = GetServerVersion();
+    $version_num = (intval ( $version_array[0] ) * 1000000) + (intval ( $version_array[1] ) * 1000) + intval ( $version_array[2] );
+    $version_string = strval ( $version_array[0] ).'.'.strval ( $version_array[1] ).'.'.strval ( $version_array[0] );
+    $lang_array = c_comdef_server::GetServerLangs();
+    $lang_string = implode ( ',', array_keys ( $lang_array ) );
+    $localStrings = c_comdef_server::GetLocalStrings();
+    $default_lang = strval ( $localStrings['enum'] );
+    $centerLongLatZoom = implode ( ',', $localStrings['search_spec_map_center'] );
+    $ret = '"version","version_int","langs","nativeLang","centerLongitude","centerLatitude","centerZoom"'."\n";
+    $ret .= '"'.$version_string.'","'.strval ( $version_num ).'","'.$lang_string.'","'.$default_lang.'","'.strval( $localStrings['search_spec_map_center']['longitude'] ).'","'.strval( $localStrings['search_spec_map_center']['latitude'] ).'","'.strval( $localStrings['search_spec_map_center']['zoom'] ).'"';
+    
+    return $ret;
+}
+
+/*******************************************************************/
+/**
+	\brief	Returns the server version in an array.
+	
+	\returns an array of integers, with [0] being the main version, [1] being the minor version, and [2] being the fix version.
+*/	
+function GetServerVersion()
+{
+    $ret = array ( 0 );
+
+    $xml = file_get_contents ( dirname ( dirname ( __FILE__ ) ).'/serverInfo.xml' );
+
+    if ( $xml )
+        {
+        $info_file = new DOMDocument;
+        if ( $info_file instanceof DOMDocument )
+            {
+            if ( @$info_file->loadXML ( $xml ) )
+                {
+                $has_info = $info_file->getElementsByTagName ( "bmltInfo" );
+        
+                if ( ($has_info instanceof domnodelist) && $has_info->length )
+                    {
+                    $nodeVal = $has_info->item ( 0 )->nodeValue;
+                    $ret = explode ( '.', $nodeVal );
+                
+                    if ( !isset ( $ret[1] ) )
+                        {
+                        $ret[1] = 0;
+                        }
+                
+                    if ( !isset ( $ret[2] ) )
+                        {
+                        $ret[2] = 0;
+                        }
+                    }
+                }
+            }
+        }
+        
+    if ( !isset ( $ret[1] ) )
+        {
+        $ret[1] = 0;
+        }
+    
+    if ( !isset ( $ret[2] ) )
+        {
+        $ret[1] = 0;
+        }
+    
+    $ret[0] = intval ( $ret[0] );
+    $ret[1] = intval ( $ret[1] );
+    $ret[2] = intval ( $ret[2] );
+    
+    return $ret;
+}  
 
 /*******************************************************************/
 /**

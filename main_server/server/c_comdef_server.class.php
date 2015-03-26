@@ -1464,20 +1464,18 @@ class c_comdef_server
         $rows = c_comdef_dbsingleton::preparedQuery( $sql, array ( $in_id_bigint, $in_lang_enum ) );
         if ( is_array ( $rows ) && count ( $rows ) )
             {
-            foreach ( $rows as $rs )
-                {
-                // We use the static function in the c_comdef_meeting class to process the data for the meeting.
-                return new c_comdef_format ( self::GetServer(),
-                                                $rs['shared_id_bigint'],
-                                                $rs['format_type_enum'],
-                                                $rs['key_string'],
-                                                $rs['icon_blob'],
-                                                $rs['worldid_mixed'],
-                                                $rs['lang_enum'],
-                                                $rs['name_string'],
-                                                $rs['description_string']
-                                                );
-                }
+            $rs = $rows[0];
+            // We use the static function in the c_comdef_meeting class to process the data for the meeting.
+            return new c_comdef_format ( self::GetServer(),
+                                            $rs['shared_id_bigint'],
+                                            $rs['format_type_enum'],
+                                            $rs['key_string'],
+                                            $rs['icon_blob'],
+                                            $rs['worldid_mixed'],
+                                            $rs['lang_enum'],
+                                            $rs['name_string'],
+                                            $rs['description_string']
+                                            );
             }
         
         return null;

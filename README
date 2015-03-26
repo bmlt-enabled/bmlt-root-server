@@ -51,6 +51,7 @@ CHANGELIST
 - TBD
 
 - Fixed a bug in the simple response format fetch. Sometimes, the wrong formats were being returned.
+- Added a basic server info semantic call. This returns the version and the lang enums.
 
 ** Version 2.6.19 **
 
