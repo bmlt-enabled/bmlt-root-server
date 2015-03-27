@@ -50,9 +50,13 @@ echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
                 <xs:element name='row'>
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name='version' type='xs:NMTOKEN'/>
+                            <xs:element name='version' type='xs:string'/>
                             <xs:element name='version_int' type='xs:integer'/>
                             <xs:element name='langs' type='xs:string'/>
+                            <xs:element name='nativeLang' type='xs:string'/>
+                            <xs:element name='centerLongitude' type='xs:decimal'/>
+                            <xs:element name='centerLatitude' type='xs:decimal'/>
+                            <xs:element name='centerZoom' type='xs:integer'/>
                         </xs:sequence>
                         <xs:attribute name='sequence_index' use='required' type='xs:integer'/>
                     </xs:complexType>
