@@ -17,6 +17,7 @@ class bmlt_semantic
     protected $_myJSName;
     protected $_langs;
     protected $_version;
+    protected $_keys;
     
     /**************************************************************/
     /** \brief  Class function that strips all the BS from a JS or CSS file.
@@ -69,7 +70,6 @@ class bmlt_semantic
     */
     /**************************************************************/
     static function call_curl (	$in_uri,
-                                $in_post = TRUE,
                                 &$in_out_http_status = NULL
                                 )
     {
@@ -101,28 +101,6 @@ class bmlt_semantic
                 curl_setopt ( $resource, CURLOPT_COOKIE, $strCookie );
                 }
         
-            // If we will be POSTing this transaction, we split up the URI.
-//             if ( $in_post )
-//                 {
-//                 $spli = explode ( "?", $in_uri, 2 );
-//             
-//                 if ( is_array ( $spli ) && (count ( $spli ) > 1) )
-//                     {
-//                     $in_uri = $spli[0];
-//                     $in_params = $spli[1];
-//                     // Convert query string into an array using parse_str(). parse_str() will decode values along the way.
-//                     parse_str($in_params, $temp);
-//                 
-//                     // Now rebuild the query string using http_build_query(). It will re-encode values along the way.
-//                     // It will also take original query string params that have no value and appends a "=" to them
-//                     // thus giving them and empty value.
-//                     $in_params = http_build_query($temp);
-//             
-//                     curl_setopt ( $resource, CURLOPT_POST, TRUE );
-//                     curl_setopt ( $resource, CURLOPT_POSTFIELDS, $in_params );
-//                     }
-//                 }
-        
             // Set url to call.
             curl_setopt ( $resource, CURLOPT_URL, $in_uri );
         
@@ -134,10 +112,6 @@ class bmlt_semantic
             // Setting it to false will remove headers from beginning of string.
             // If you WANT the headers, see the Yahoo documentation on how to parse with them from the string.
             curl_setopt ( $resource, CURLOPT_HEADER, FALSE );
-        
-            // Allow  cURL to follow any 'location:' headers (redirection) sent by server (if needed set to true, else false- defaults to false anyway).
-            // Disabled, because some servers disable this for security reasons.
-//			    curl_setopt ( $resource, CURLOPT_FOLLOWLOCATION, true );
         
             // Set maximum times to allow redirection (use only if needed as per above setting. 3 is sort of arbitrary here).
             curl_setopt ( $resource, CURLOPT_MAXREDIRS, 3 );
@@ -155,12 +129,7 @@ class bmlt_semantic
             $content = curl_exec ( $resource );
         
             // Check if curl_exec() call failed (returns false on failure) and handle failure.
-            if ( $content === FALSE )
-                {
-                // Cram as much info into the exception as possible.
-//                 throw new Exception ( "curl failure calling $in_uri, ".curl_error ( $resource ).", ".curl_errno ( $resource ) );
-                }
-            else
+            if ( $content !== FALSE )
                 {
                 // Do what you want with returned content (e.g. HTML, XML, etc) here or AFTER curl_close() call below as it is stored in the $content variable.
         
@@ -285,7 +254,7 @@ class bmlt_semantic
             $error = NULL;
         
             $uri = $this->_bmltRootServerURI.'/client_interface/serverInfo.xml';
-            $xml = self::call_curl ( $uri, FALSE, $error );
+            $xml = self::call_curl ( $uri, $error );
 
             if ( !$error && $xml )
                 {
@@ -337,7 +306,7 @@ class bmlt_semantic
             $error = NULL;
         
             $uri = $this->_bmltRootServerURI.'/client_interface/xml/GetLangs.php';
-            $xml = self::call_curl ( $uri, FALSE, $error );
+            $xml = self::call_curl ( $uri, $error );
 
             if ( !$error && $xml )
                 {
@@ -369,6 +338,38 @@ class bmlt_semantic
     }
     
     /**************************************************************/
+    /** \brief  
+    
+        \returns 
+    */
+    /**************************************************************/
+    function get_server_keys()
+    {
+        if ( $this->_keys )
+            {
+            $ret = $this->_keys;
+            }
+        elseif ( $this->_bmltRootServerURI )
+            {
+            $keys = explode ( "\n", self::call_curl ( $this->_bmltRootServerURI.'/client_interface/csv/?switcher=GetFieldKeys' ) );
+            
+            $first = true;
+            
+            foreach ( $keys as $keyLine )
+                {
+                list ( $key, $name ) = explode ( ",", $keyLine );
+                if ( !$first )
+                    {
+                    $this->_keys[trim ( $key, '"' )] = trim ( $name, '"' );
+                    }
+                $first = false;
+                }
+            }
+        
+        return $this->_keys;
+    }
+    
+    /**************************************************************/
     /** \brief  Handles AJAX callbacks.
     
                 This assumes that the $this->_httpVars data member
@@ -379,37 +380,31 @@ class bmlt_semantic
     /**************************************************************/
     function ajax_handler()
     {
-        $error = NULL;
-        
         if ( isset ( $this->_bmltRootServerURI ) && $this->_bmltRootServerURI )
             {
             if ( isset ( $this->_httpVars['GetInitialFormats'] ) )
                 {
-                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetFormats', FALSE, $error ) );
+                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetFormats' ) );
                 }
             elseif ( isset ( $this->_httpVars['GetInitialServiceBodies'] ) )
                 {
-                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetServiceBodies', FALSE, $error ) );
+                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetServiceBodies' ) );
                 }
             elseif ( isset ( $this->_httpVars['GetFieldKeys'] ) )
                 {
-                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetFieldKeys', FALSE, $error ) );
+                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetFieldKeys' ) );
                 }
             elseif ( isset ( $this->_httpVars['GetFieldValues'] ) )
                 {
-                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetFieldValues&meeting_key='.$this->_httpVars['meeting_key'], FALSE, $error ) );
+                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetFieldValues&meeting_key='.$this->_httpVars['meeting_key'] ) );
                 }
             elseif ( isset ( $this->_httpVars['GetVersion'] ) )
                 {
                 echo ( $this->get_server_version() );
                 }
-            elseif ( isset ( $this->_httpVars['GetLangs'] ) )
+            elseif ( isset ( $this->_httpVars['GetLangs'] ) || isset ( $this->_httpVars['GetServerInfo'] ) )
                 {
-                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetServerInfo', FALSE, $error ) );
-                }
-            elseif ( isset ( $this->_httpVars['GetServerInfo'] ) )
-                {
-                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetServerInfo', FALSE, $error ) );
+                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetServerInfo' ) );
                 }
             }
     }
@@ -440,6 +435,7 @@ class bmlt_semantic
         
         $version = $this->get_server_version();
         $this->_langs = $this->get_server_langs();
+        $this->_keys = $this->get_server_keys();
         $ret .= '<div id="bmlt_semantic'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic">';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         // Add the scoped CSS.
@@ -978,8 +974,6 @@ class bmlt_semantic
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
-        $ret .= '<div id="bmlt_semantic_form_sb_blurb_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_workshop_blurb_note_div"><p>'.$this->localize_string ( 'radius_note' ).'</p></div>';
-        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         
         $ret .= '<div id="bmlt_semantic_form_map_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_map_div"></div>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
@@ -995,6 +989,12 @@ class bmlt_semantic
         
         $ret .= '<div id="map_search_radius_input_div'.htmlspecialchars ( $this->_myJSName ).'" class="map_search_radius_input_div">';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
+        $ret .= '<div id="bmlt_semantic_form_sb_blurb_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_workshop_blurb_note_div">';
+        $ret .= '<p>'.$this->localize_string ( 'radius_note1' ).'</p>';
+        $ret .= '<p>'.$this->localize_string ( 'radius_note2' ).'</p>';
+        $ret .= '<p>'.$this->localize_string ( 'radius_note3' ).'</p>';
+        $ret .= '</div>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '<label for="bmlt_semantic_form_map_search_text_radius'.htmlspecialchars ( $this->_myJSName ).'" id="bmlt_semantic_form_map_search_text_radius_label'.htmlspecialchars ( $this->_myJSName ).'">'.$this->localize_string ( 'text_search_radius_label' ).'</label>';
         $ret .= '<input type="text" id="bmlt_semantic_form_map_search_text_radius'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_map_search_radius_text" />';
         $function_string = 'bmlt_semantic_js_object'.htmlspecialchars ( $this->_myJSName ).'.handleMapRadiusUnitsChange(this)';
@@ -1002,14 +1002,51 @@ class bmlt_semantic
         $ret .= '<option value="geo_width" selected="selected">'.$this->localize_string ( 'text_map_radius_units_miles' ).'</option>';
         $ret .= '<option value="geo_width_km">'.$this->localize_string ( 'text_map_radius_units_km' ).'</option>';
         $ret .= '</select>';
-        $ret .= '<label for="bmlt_semantic_form_map_search_text_radius_units'.htmlspecialchars ( $this->_myJSName ).'" id="bmlt_semantic_form_map_search_text_radius_units_label'.htmlspecialchars ( $this->_myJSName ).'">'.$this->localize_string ( 'text_map_radius_units_label' ).'</label>';
         $ret .= '</div>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         
         $ret .= '</fieldset>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         
+        $ret .= $this->get_wizard_page_specific_fields_html( );
+        
         $ret .= '</div>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        
+        return $ret;
+    }
+    
+    /**************************************************************/
+    /** \brief  
+        
+        \returns the HTML.
+    */
+    /**************************************************************/
+    function get_wizard_page_specific_fields_html( )
+    {
+        $ret = '<fieldset id="bmlt_semantic_form_specific_fields_fieldset'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_specific_fields_fieldset"><legend id="bmlt_semantic_form_specific_fields_fieldset_legend'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_specific_fields_fieldset_legend">';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
+        $ret .= $this->localize_string ( 'specific_fields_legend' );
+        $ret .= '</legend>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $ret .= '<div id="bmlt_semantic_form_sb_blurb_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_workshop_blurb_note_div"><p>'.$this->localize_string ( 'specific_fields_blurb' ).'</p></div>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        
+        $function_string = 'bmlt_semantic_js_object'.htmlspecialchars ( $this->_myJSName ).'.handleSpecificFieldChange(this)';
+        
+        foreach ( $this->_keys as $key=>$name )
+            {
+            $ret .= '<div id="bmlt_semantic_form_field_key_checkbox_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_field_key_checkbox_div">';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
+            $ret .= '<input type="checkbox" id="bmlt_semantic_form_field_key_checkbox'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_field_key_checkbox" value="'.htmlspecialchars ( $key ).'" onchange="'.$function_string.'" />';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+            $ret .= '<label id="bmlt_semantic_form_field_key_checkbox_label'.htmlspecialchars ( $this->_myJSName ).'" for="bmlt_semantic_form_field_key_checkbox'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_field_key_checkbox_label">'.htmlspecialchars ( $name ).'</label>';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
+            $ret .= '</div>';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';  
+            };
+        
+        $ret .= '</fieldset>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         
         return $ret;
@@ -1141,6 +1178,7 @@ class bmlt_semantic
         $ret .= '<option value="GetLangs">'.$this->localize_string ( 'schema_type_selector_langs' ).'</option>';
         $ret .= '<option value="GetServiceBodies">'.$this->localize_string ( 'schema_type_selector_service_bodies' ).'</option>';
         $ret .= '<option value="HierServiceBodies">'.$this->localize_string ( 'schema_type_selector_hier_service_bodies' ).'</option>';
+        $ret .= '<option value="ServerInfo">'.$this->localize_string ( 'schema_type_selector_hier_server_info' ).'</option>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '</select>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';

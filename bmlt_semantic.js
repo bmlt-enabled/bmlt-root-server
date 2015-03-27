@@ -35,6 +35,7 @@ BMLTSemanticResult.prototype.searchMapRadius = -10;     ///< A radius for the ma
 BMLTSemanticResult.prototype.searchLongitude = null;    ///< If using the map, the longitude.
 BMLTSemanticResult.prototype.searchLatitude = null;     ///< If using the map, the latitude.
 BMLTSemanticResult.prototype.compiled_params = null;    ///< This will contain the temporary compiled parameters.
+BMLTSemanticResult.prototype.fields = Array();          ///< This will hold any specific fields to be returned.
 BMLTSemanticResult.prototype.valid = null;              ///< This will be non-null if the compiled result is valid (only after compile()).
 
 /*******************************************************************************************/
@@ -212,6 +213,11 @@ BMLTSemanticResult.prototype.compileSearchResults = function()
         this.compiled_params += '&' + this.owner.getScopedElement ( 'bmlt_semantic_form_map_search_text_radius_units' ).value + '=' + escape ( this.searchMapRadius );
         this.compiled_params += '&long_val=' + escape ( this.searchLongitude );
         this.compiled_params += '&lat_val=' + escape ( this.searchLatitude );
+        };
+    
+    if ( this.fields.length > 0 )
+        {
+        this.compiled_params += '&data_field_key=' + this.fields.join ( ',' );
         };
         
     this.valid = true;
@@ -1592,6 +1598,35 @@ BMLTSemantic.prototype.handleMapCheckboxChange = function ( inCheckbox
 /*******************************************************************************************/
 BMLTSemantic.prototype.handleFormatsLangSelectChange = function ( inSelect )
 {
+    this.refreshURI();
+};
+
+/*******************************************************************************************/
+/**
+    \brief 
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.handleSpecificFieldChange = function ( inCheckbox )
+{
+    var key = inCheckbox.value;
+    var oldFields = Array();
+    
+    for ( var i = 0; i < this.state.fields.length; i++ )
+        {
+        var oldKey = this.state.fields[i];
+        if ( oldKey != key )
+            {
+            oldFields.push ( oldKey );
+            };
+        };
+    
+    if ( inCheckbox.checked )
+        {
+        oldFields.push ( key );
+        };
+    
+    this.state.fields = oldFields;
+    
     this.refreshURI();
 };
 
