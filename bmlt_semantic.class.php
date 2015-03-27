@@ -15,7 +15,7 @@ class bmlt_semantic
     protected $_myLang;
     protected $_localization;
     protected $_myJSName;
-    protected $_version;
+    protected $_langs;
     
     /**************************************************************/
     /** \brief  Class function that strips all the BS from a JS or CSS file.
@@ -317,6 +317,52 @@ class bmlt_semantic
     }
     
     /**************************************************************/
+    /** \brief  
+    
+        \returns 
+    */
+    /**************************************************************/
+    function get_server_langs()
+    {
+        $ret = array ( );
+        
+        if ( $this->_bmltRootServerURI )
+            {
+            $error = NULL;
+        
+            $uri = $this->_bmltRootServerURI.'/client_interface/xml/GetLangs.php';
+            $xml = self::call_curl ( $uri, FALSE, $error );
+
+            if ( !$error && $xml )
+                {
+                $info_file = new DOMDocument;
+                if ( $info_file instanceof DOMDocument )
+                    {
+                    if ( @$info_file->loadXML ( $xml ) )
+                        {
+                        $languages = $info_file->getElementsByTagName ( "language" );
+                
+                        if ( ($languages instanceof domnodelist) && $languages->length )
+                            {
+                            for ( $index = 0; $index < $languages->length; $index++ )
+                                {
+                                $language = $languages->item ( $index );
+                                $attributes = $language->attributes;
+                                $key = $attributes->getNamedItem ( "key" )->nodeValue;
+                                $name = $language->nodeValue;
+                                
+                                $ret[$key] = $name;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        
+        return $ret;
+    }
+    
+    /**************************************************************/
     /** \brief  Handles AJAX callbacks.
     
                 This assumes that the $this->_httpVars data member
@@ -351,6 +397,14 @@ class bmlt_semantic
                 {
                 echo ( $this->get_server_version() );
                 }
+            elseif ( isset ( $this->_httpVars['GetLangs'] ) )
+                {
+                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetServerInfo', FALSE, $error ) );
+                }
+            elseif ( isset ( $this->_httpVars['GetServerInfo'] ) )
+                {
+                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetServerInfo', FALSE, $error ) );
+                }
             }
     }
     
@@ -379,7 +433,7 @@ class bmlt_semantic
         $ret = '';
         
         $version = $this->get_server_version();
-        
+        $this->_langs = $this->get_server_langs();
         $ret .= '<div id="bmlt_semantic'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic">';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         // Add the scoped CSS.
@@ -605,6 +659,7 @@ class bmlt_semantic
         $ret .= $this->get_wizard_page_changes_html(); 
         $ret .= $this->get_wizard_page_fields_html();
         $ret .= $this->get_wizard_page_schema_select_html();   
+        $ret .= $this->get_wizard_page_formats_html();
         $ret .= '</fieldset>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         
@@ -695,6 +750,38 @@ class bmlt_semantic
         $ret .= '</div>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '</fieldset>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        
+        return $ret;
+    }
+    
+    /**************************************************************/
+    /** \brief  
+        
+        \returns the HTML.
+    */
+    /**************************************************************/
+    function get_wizard_page_formats_html()
+    {
+        $ret = '<div id="bmlt_semantic_form_formats_fieldset_contents_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_formats_fieldset_contents_div" style="display:none">';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $ret .= '<label id="bmlt_semantic_formats_lang_select_label'.htmlspecialchars ( $this->_myJSName ).'select_label'.htmlspecialchars ( $this->_myJSName ).'" for="bmlt_semantic_formats_lang_select'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_formats_lang_select_label">'.$this->localize_string ( 'formats_lang_section_label' ).'</label>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $function_string = 'bmlt_semantic_js_object'.htmlspecialchars ( $this->_myJSName ).'.handleFormatsLangSelectChange(this)';
+        $ret .= '<select id="bmlt_semantic_formats_lang_select'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_formats_lang_select" onchange="'.htmlspecialchars ( $function_string ).'">';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
+        $ret .= '<option value="" selected="selected">'.$this->localize_string ( 'formats_lang_section_option' ).'</option>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        
+        foreach ( $this->_langs as $key=>$name )
+            {
+            $ret .= '<option value="'.$key.'">'.htmlspecialchars ( $name ).'</option>';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+            }
+
+        $ret .= '</select>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $ret .= '</div>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         
         return $ret;

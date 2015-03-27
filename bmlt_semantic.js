@@ -12,6 +12,7 @@ function BMLTSemanticResult (   inRootServerURI,
 {
     this.root_server_uri = inRootServerURI;
     this.owner = inOwner;
+
 };
 
 BMLTSemanticResult.prototype.owner = null;              ///< The object that "owns" this.
@@ -64,12 +65,33 @@ BMLTSemanticResult.prototype.compile = function()
             this.compileNAWSDump();
             break;
             
+        case 'GetFormats':
+            this.compileFormats();
+            break;
+            
         default:
             this.valid = true;
             break;
         };
         
     return this.compiled_params;
+};
+
+/*******************************************************************************************/
+/**
+    \brief
+*/
+/*******************************************************************************************/
+BMLTSemanticResult.prototype.compileFormats = function()
+{
+    var formatLangSelect = this.owner.getScopedElement ( 'bmlt_semantic_formats_lang_select' );
+
+    if ( formatLangSelect.value )
+        {
+        this.compiled_params += '&lang_enum=' + formatLangSelect.value;
+        };
+    
+    this.valid = true;
 };
 
 /*******************************************************************************************/
@@ -289,6 +311,7 @@ BMLTSemantic.prototype.version = null;
 BMLTSemantic.prototype.id_suffix = null;
 BMLTSemantic.prototype.ajax_base_uri = null;
 BMLTSemantic.prototype.format_objects = null;
+BMLTSemantic.prototype.languages = null;
 BMLTSemantic.prototype.field_keys = null;
 BMLTSemantic.prototype.field_values = null;
 BMLTSemantic.prototype.service_body_objects = null;
@@ -298,6 +321,7 @@ BMLTSemantic.prototype.mapObject = null;
 BMLTSemantic.prototype.current_lat = 34.23592;
 BMLTSemantic.prototype.current_lng = -118.563659;
 BMLTSemantic.prototype.current_zoom = 11;
+BMLTSemantic.prototype.serverInfo = null;
 
 /*******************************************************************************************/
 /**
@@ -434,12 +458,14 @@ BMLTSemantic.prototype.reloadFromServer = function ()
     this.state.searchMapRadius = null;
     
     this.format_objects = null;
+    this.languages = null;
     this.service_body_objects = null;
     this.field_keys = null;
     this.field_values = null;
     this.temp_service_body_objects = null;
     
     this.fetchFormats();
+    this.fetchLangs();
     this.fetchServiceBodies();
     this.fetchFieldKeys();
     this.clearWeekdays();
@@ -458,6 +484,20 @@ BMLTSemantic.prototype.fetchVersion = function ()
 
 /*******************************************************************************************/
 /**
+    \brief Sets up and performs an AJAX call to fetch the server information.
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.fetchServerInfo = function ()
+{
+    this.serverInfo = null;
+    if ( this.version >= 2006020 )
+        {
+        this.ajaxRequest ( this.ajax_base_uri + '&GetServerInfo', this.fetchServerInfoCallback, 'get', this );
+        };
+};
+
+/*******************************************************************************************/
+/**
     \brief Sets up and performs an AJAX call to fetch the available formats.
 */
 /*******************************************************************************************/
@@ -467,6 +507,20 @@ BMLTSemantic.prototype.fetchFormats = function ()
     this.state.unformats = null;
     
     this.ajaxRequest ( this.ajax_base_uri + '&GetInitialFormats', this.fetchFormatsCallback, 'get', this );
+};
+
+/*******************************************************************************************/
+/**
+    \brief Sets up and performs an AJAX call to fetch the available languages.
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.fetchLangs = function ()
+{
+    this.languages = null;
+    if ( this.version >= 2006020 )
+        {
+        this.ajaxRequest ( this.ajax_base_uri + '&GetLangs', this.fetchLangsCallback, 'get', this );
+        };
 };
 
 /*******************************************************************************************/
@@ -532,6 +586,25 @@ BMLTSemantic.prototype.fetchVersionCallback = function (inHTTPReqObject
     \brief The response.
 */
 /*******************************************************************************************/
+BMLTSemantic.prototype.fetchServerInfoCallback = function (inHTTPReqObject
+                                                            )
+{
+    if ( inHTTPReqObject.responseText )
+        {
+        var context = inHTTPReqObject.extraData;
+        eval ( 'context.serverInfo = ' + inHTTPReqObject.responseText + '[0];' );
+        context.current_lat = parseFloat ( context.serverInfo.centerLatitude );
+        context.current_lng = parseFloat ( context.serverInfo.centerLongitude );
+        context.current_zoom = parseInt ( context.serverInfo.centerZoom, 10 );
+    
+        };
+};
+
+/*******************************************************************************************/
+/**
+    \brief The response.
+*/
+/*******************************************************************************************/
 BMLTSemantic.prototype.fetchFormatsCallback = function (inHTTPReqObject
                                                         )
 {
@@ -549,6 +622,22 @@ BMLTSemantic.prototype.fetchFormatsCallback = function (inHTTPReqObject
             context.populateFormatsSection(context.getScopedElement ( 'bmlt_semantic_form_formats_fieldset_div' ), false );
             context.populateFormatsSection(context.getScopedElement ( 'bmlt_semantic_form_un_formats_fieldset_div' ), true );
             };
+        };
+};
+
+/*******************************************************************************************/
+/**
+    \brief The response.
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.fetchLangsCallback = function ( inHTTPReqObject
+                                                        )
+{
+    if ( inHTTPReqObject.responseText )
+        {
+        var context = inHTTPReqObject.extraData;
+        eval ( 'var serverInfo = ' + inHTTPReqObject.responseText + ';' );
+        context.languages = serverInfo[0].langs.toString().split ( ',' );
         };
 };
 
@@ -1501,6 +1590,16 @@ BMLTSemantic.prototype.handleMapCheckboxChange = function ( inCheckbox
     \brief 
 */
 /*******************************************************************************************/
+BMLTSemantic.prototype.handleFormatsLangSelectChange = function ( inSelect )
+{
+    this.refreshURI();
+};
+
+/*******************************************************************************************/
+/**
+    \brief 
+*/
+/*******************************************************************************************/
 BMLTSemantic.prototype.handleTextSearchText = function ()
 {
     var bmlt_semantic_form_text_search_text = this.getScopedElement ( 'bmlt_semantic_form_text_search_text' );
@@ -1904,6 +2003,7 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.setBasicFunctions ( 'bmlt_semantic_form_just_used_formats_checkbox' );
     this.setBasicFunctions ( 'bmlt_semantic_form_used_formats_div' );
     this.setBasicFunctions ( 'bmlt_semantic_form_just_used_formats_checkbox_div' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_formats_fieldset_contents_div' );
     
     for ( var i = 1; i < 8; i++ )
         {
@@ -1992,7 +2092,8 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     var getOnlyUsedCheckbox = this.getScopedElement ( 'bmlt_semantic_form_just_used_formats_checkbox' );
     var bmlt_semantic_form_used_formats_div = this.getScopedElement ( 'bmlt_semantic_form_used_formats_div' );
     var bmlt_semantic_form_just_used_formats_checkbox_div = this.getScopedElement ( 'bmlt_semantic_form_just_used_formats_checkbox_div' );
-    
+    var bmlt_semantic_form_formats_fieldset_contents_div = this.getScopedElement ( 'bmlt_semantic_form_formats_fieldset_contents_div' );
+
     switcher_type_select_formats_option.enable();
     switcher_type_select_sb_option.enable();
     switcher_type_select_changes_option.enable();
@@ -2078,6 +2179,7 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     bmlt_semantic_form_schema_select_fieldset.hide();
     bmlt_semantic_form_used_formats_div.hide();
     bmlt_semantic_form_just_used_formats_checkbox_div.hide();
+    bmlt_semantic_form_formats_fieldset_contents_div.hide();
     
     if ( switcher_select.value == 'GetSearchResults' )
         {
@@ -2138,13 +2240,20 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
                     }
                 else
                     {
-                    if ( switcher_select.value == 'XMLSchema' )
+                    if ( switcher_select.value == 'GetFormats' )
                         {
-                        bmlt_semantic_form_schema_select_fieldset.show();
+                        bmlt_semantic_form_formats_fieldset_contents_div.show();
                         }
                     else
                         {
-                        bmlt_switcher_div_no_options_blurb.show();
+                        if ( switcher_select.value == 'XMLSchema' )
+                            {
+                            bmlt_semantic_form_schema_select_fieldset.show();
+                            }
+                        else
+                            {
+                            bmlt_switcher_div_no_options_blurb.show();
+                            };
                         };
                     };
                 };
@@ -2219,6 +2328,7 @@ BMLTSemantic.prototype.setUpForm = function ()
 {
     this.setUpForm_MainFieldset();
     this.reloadFromServer();
+    this.fetchServerInfo();
 };
 
 /*******************************************************************************************/
