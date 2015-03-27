@@ -87,7 +87,7 @@ BMLTSemanticResult.prototype.compileFormats = function()
 {
     var formatLangSelect = this.owner.getScopedElement ( 'bmlt_semantic_formats_lang_select' );
 
-    if ( formatLangSelect.value )
+    if ( formatLangSelect && formatLangSelect.value )
         {
         this.compiled_params += '&lang_enum=' + formatLangSelect.value;
         };
@@ -107,13 +107,13 @@ BMLTSemanticResult.prototype.compileSearchResults = function()
     
     if ( (responseTypeSelect.value == 'xml') || (responseTypeSelect.value == 'json') )
         {
-        if ( getUsedCheckbox.checked )
+        if ( getUsedCheckbox && getUsedCheckbox.checked )
             {
             var getOnlyUsedCheckbox = this.owner.getScopedElement ( 'bmlt_semantic_form_just_used_formats_checkbox' );
         
             this.compiled_params += '&get_used_formats=1';
         
-            if ( getOnlyUsedCheckbox.checked )
+            if ( getOnlyUsedCheckbox && getOnlyUsedCheckbox.checked )
                 {
                 this.compiled_params += '&get_formats_only=1';
                 };
@@ -210,9 +210,14 @@ BMLTSemanticResult.prototype.compileSearchResults = function()
     
     if ( this.searchMapRadius )
         {
-        this.compiled_params += '&' + this.owner.getScopedElement ( 'bmlt_semantic_form_map_search_text_radius_units' ).value + '=' + escape ( this.searchMapRadius );
-        this.compiled_params += '&long_val=' + escape ( this.searchLongitude );
-        this.compiled_params += '&lat_val=' + escape ( this.searchLatitude );
+        var radiusUnitsSelect = this.owner.getScopedElement ( 'bmlt_semantic_form_map_search_text_radius_units' );
+        
+        if ( radiusUnitsSelect && radiusUnitsSelect.value )
+            {
+            this.compiled_params += '&' + radiusUnitsSelect.value + '=' + escape ( this.searchMapRadius );
+            this.compiled_params += '&long_val=' + escape ( this.searchLongitude );
+            this.compiled_params += '&lat_val=' + escape ( this.searchLatitude );
+            };
         };
     
     if ( this.fields.length > 0 )
@@ -2014,7 +2019,6 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.setBasicFunctions ( 'bmlt_semantic_form_response_type_select_gpx_option' );
     this.setBasicFunctions ( 'bmlt_semantic_form_response_type_select_poi_option' );
     this.setBasicFunctions ( 'bmlt_semantic_form_switcher_type_select_schema_option' );
-    this.setBasicFunctions ( 'bmlt_semantic_form_switcher_type_select_server_info_option' );
     this.setBasicFunctions ( 'bmlt_semantic_info_div_download_line' );
     this.setBasicFunctions ( 'bmlt_semantic_info_div_shortcode_line' );
     this.setBasicFunctions ( 'bmlt_semantic_form_main_fields_fieldset_contents_div' );
@@ -2041,6 +2045,11 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.setBasicFunctions ( 'bmlt_semantic_form_just_used_formats_checkbox_div' );
     this.setBasicFunctions ( 'bmlt_semantic_form_formats_fieldset_contents_div' );
     
+    if ( this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_server_info_option' ) )
+        {
+        this.setBasicFunctions ( 'bmlt_semantic_form_switcher_type_select_server_info_option' );
+        };
+
     for ( var i = 1; i < 8; i++ )
         {
         this.setBasicFunctions ( 'bmlt_semantic_form_weekday_checkbox_' + i );
@@ -2135,7 +2144,11 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     switcher_type_select_sb_option.enable();
     switcher_type_select_changes_option.enable();
     switcher_type_select_schema_option.disable();
-    switcher_type_select_server_info_option.disable();
+    
+    if ( switcher_type_select_server_info_option )
+        {
+        switcher_type_select_server_info_option.disable();
+        };
     
     bmlt_semantic_form_map_checkbox.checked = false;
     bmlt_semantic_form_map_wrapper_div.hide();
@@ -2305,7 +2318,7 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
             switcher_type_select_naws_option.disable();
             };
         
-        if ( (main_fieldset_select.value == 'DOWNLOAD') && ((response_type_select.value == 'csv') || (response_type_select.value == 'xml') || (response_type_select.value == 'json')) )
+        if ( switcher_type_select_server_info_option && (main_fieldset_select.value == 'DOWNLOAD') && ((response_type_select.value == 'csv') || (response_type_select.value == 'xml') || (response_type_select.value == 'json')) )
             {
             switcher_type_select_server_info_option.enable();
             };
@@ -2395,7 +2408,7 @@ BMLTSemantic.prototype.refreshURI = function ()
     var useMap = this.getScopedElement ( 'bmlt_semantic_form_map_checkbox' );
     var mapRadius = this.getScopedElement ( 'bmlt_semantic_form_map_search_text_radius' );
     
-    if ( useMap.checked )
+    if ( useMap && useMap.checked )
         {
         this.state.searchMapRadius = parseFloat ( mapRadius.value );
         this.state.searchLongitude = parseFloat ( this.current_lng );
@@ -2444,9 +2457,13 @@ BMLTSemantic.prototype.refreshURI = function ()
             
             if ( this.state.switcher == 'XMLSchema' )
                 {
-                var schemaType = this.getScopedElement ( 'bmlt_semantic_form_schema_select' ).value;
+                var schemaSelect = this.getScopedElement ( 'bmlt_semantic_form_schema_select' );
+                if ( schemaSelect )
+                    {
+                    var schemaType = this.getScopedElement ( 'bmlt_semantic_form_schema_select' ).value;
                 
-                uri = this.state.root_server_uri + '/client_interface/xsd/' + schemaType + '.php';
+                    uri = this.state.root_server_uri + '/client_interface/xsd/' + schemaType + '.php';
+                    };
                 }
             else
                 {
