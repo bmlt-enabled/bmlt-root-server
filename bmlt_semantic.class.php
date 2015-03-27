@@ -4,7 +4,7 @@
 */
 /***************************************************************************************************************************************/
 
-define ( '__VERSION__', '1.0d1' );
+define ( '__VERSION__', '1.0d2' );
 
 class bmlt_semantic
 {
@@ -16,6 +16,7 @@ class bmlt_semantic
     protected $_localization;
     protected $_myJSName;
     protected $_langs;
+    protected $_version;
     
     /**************************************************************/
     /** \brief  Class function that strips all the BS from a JS or CSS file.
@@ -275,7 +276,11 @@ class bmlt_semantic
     {
         $ret = 0;
         
-        if ( $this->_bmltRootServerURI )
+        if ( $this->_version )
+            {
+            $ret = $this->_version;
+            }
+        elseif ( $this->_bmltRootServerURI )
             {
             $error = NULL;
         
@@ -307,6 +312,7 @@ class bmlt_semantic
                                 }
                         
                             $ret = (intval ( $ret[0] ) * 1000000) + (intval ( $ret[1] ) * 1000) + intval ( $ret[2] );
+                            $this->_version = $ret;
                             }
                         }
                     }
@@ -1164,6 +1170,12 @@ class bmlt_semantic
         $ret .= '<option id="bmlt_semantic_form_switcher_type_select_fieldval_option'.htmlspecialchars ( $this->_myJSName ).'" value="GetFieldValues">'.$this->localize_string ( 'switcher_type_selector_field_values' ).'</option>';
         $ret .= '<option id="bmlt_semantic_form_switcher_type_select_naws_option'.htmlspecialchars ( $this->_myJSName ).'" value="GetNAWSDump">'.$this->localize_string ( 'switcher_type_selector_naws' ).'</option>';
         $ret .= '<option id="bmlt_semantic_form_switcher_type_select_schema_option'.htmlspecialchars ( $this->_myJSName ).'" disabled="disabled" value="XMLSchema">'.$this->localize_string ( 'switcher_type_selector_schema' ).'</option>';
+        
+        if ( $this->get_server_version() >= 2006020 )
+            {
+            $ret .= '<option id="bmlt_semantic_form_switcher_type_select_server_info_option'.htmlspecialchars ( $this->_myJSName ).'" value="GetServerInfo">'.$this->localize_string ( 'switcher_type_selector_server_info' ).'</option>';
+            }
+        
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '</select>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';

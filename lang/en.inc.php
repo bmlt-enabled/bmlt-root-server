@@ -29,6 +29,7 @@ $this->_localization = array (
                                 'switcher_type_selector_field_keys'     =>  'Get A List of Available Field Keys',
                                 'switcher_type_selector_field_values'   =>  'Get A List of Specific Field Values',
                                 'switcher_type_selector_schema'         =>  'Get XML Schema',
+                                'switcher_type_selector_server_info'    =>  'Get Server Information',
                                 'schema_type_selector_legend'	        =>	'Select An XML Schema Type',
                                 'schema_type_selector_blurb1'	        =>	'This will download <a href="http://www.w3schools.com/schema/">an XML Schema</a> document.',
                                 'schema_type_selector_blurb2'	        =>	'XML Schema is a semantic "contract" that defines what the XML response data will look like.',
