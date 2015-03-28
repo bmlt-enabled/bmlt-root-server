@@ -1010,6 +1010,8 @@ class bmlt_semantic
         
         $ret .= $this->get_wizard_page_specific_fields_html( );
         
+        $ret .= $this->get_wizard_page_sort_fields_html( );
+        
         $ret .= '</div>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         
@@ -1042,6 +1044,52 @@ class bmlt_semantic
             $ret .= defined ( 'DEBUG' ) ? "\n" : '';
             $ret .= '<label id="bmlt_semantic_form_field_key_checkbox_label'.htmlspecialchars ( $this->_myJSName ).'" for="bmlt_semantic_form_field_key_checkbox'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_field_key_checkbox_label">'.htmlspecialchars ( $name ).'</label>';
             $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
+            $ret .= '</div>';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';  
+            };
+        
+        $ret .= '</fieldset>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        
+        return $ret;
+    }
+    
+    /**************************************************************/
+    /** \brief  
+        
+        \returns the HTML.
+    */
+    /**************************************************************/
+    function get_wizard_page_sort_fields_html( )
+    {
+        $ret = '<fieldset id="bmlt_semantic_form_sort_fields_fieldset'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_sort_fields_fieldset"><legend id="bmlt_semantic_form_sort_fields_fieldset_legend'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_sort_fields_fieldset_legend">';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
+        $ret .= $this->localize_string ( 'sort_fields_legend' );
+        $ret .= '</legend>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $ret .= '<div id="bmlt_semantic_form_sb_blurb_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_workshop_blurb_note_div"><p>'.$this->localize_string ( 'sort_fields_blurb' ).'</p></div>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        
+        $function_string = 'bmlt_semantic_js_object'.htmlspecialchars ( $this->_myJSName ).'.handleSortFieldChange(this.options[this.selectedIndex])';
+        
+        foreach ( $this->_keys as $key=>$name )
+            {
+            $ret .= '<div id="bmlt_semantic_form_field_key_sort_field_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_field_key_sort_field_div">';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
+            $ret .= '<label id="bmlt_semantic_form_field_select_label'.htmlspecialchars ( $this->_myJSName ).'" for="bmlt_semantic_form_field_sort_select'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_field_select_label">'.htmlspecialchars ( $name ).'</label>';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
+            $ret .= '<select id="bmlt_semantic_form_field_sort_select_'.$key.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_field_sort_select" onchange="'.$function_string.'">';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+            
+            $ret .= '<option value="0" selected="selected" id="bmlt_semantic_form_field_sort_select_'.$key.'_0'.htmlspecialchars ( $this->_myJSName ).'">'.$this->localize_string ( 'sort_fields_no_sort_option' ).'</option>';
+            for ( $i = 1; $i <= count ( $this->_keys ); $i++ )
+                {
+                $ret .= '<option value="'.$i.'" id="bmlt_semantic_form_field_sort_select_'.$key.'_'.$i.htmlspecialchars ( $this->_myJSName ).'">'.$i.'</option>';
+                $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+                };
+            
+            $ret .= '</select>';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
             $ret .= '</div>';
             $ret .= defined ( 'DEBUG' ) ? "\n" : '';  
             };

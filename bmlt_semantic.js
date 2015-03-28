@@ -911,6 +911,8 @@ BMLTSemantic.prototype.fetchFieldKeysCallback = function (inHTTPReqObject
         {
         var context = inHTTPReqObject.extraData;
         eval ( 'context.field_keys = ' + inHTTPReqObject.responseText + ';' );
+        context.setAllSortFieldFunctions();
+        context.setAllSortFieldState();
         context.populateFieldSelect();
         };
 };
@@ -1375,6 +1377,17 @@ BMLTSemantic.prototype.readServiceBodies = function ( inParent )
     \brief
 */
 /*******************************************************************************************/
+BMLTSemantic.prototype.handleSortFieldChange= function ( inOptionObject )
+{
+    alert ( inOptionObject.fieldKey + ', ' + inOptionObject.value );
+    this.setAllSortFieldState ();
+};
+
+/*******************************************************************************************/
+/**
+    \brief
+*/
+/*******************************************************************************************/
 BMLTSemantic.prototype.handleFormatCheckbox = function ( inCheckboxObject )
 {
     var id = parseInt ( inCheckboxObject.value );
@@ -1760,6 +1773,101 @@ BMLTSemantic.prototype.setBasicFunctions = function ( inItemID
     item.hide = function() { this.style.display = 'none' };
     item.show = function() { this.style.display = this.oldDisplay };
 };
+
+/*******************************************************************************************/
+/**
+    \brief
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.getSortItemID = function ( inKey, inIndex )
+{
+    var baseID = 'bmlt_semantic_form_field_sort_select_' + inKey.toString();
+    
+    if ( null != inIndex )
+        {
+        baseID += '_' + parseInt ( inIndex ).toString();
+        };
+
+    return baseID;
+};
+
+/*******************************************************************************************/
+/**
+    \brief
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.setSortFieldFunctions = function ( inKey )
+{
+    this.setBasicFunctions ( this.getSortItemID ( inKey, null ) );
+    
+    for ( var i = 0; i <= this.field_keys.length; i++ )
+        {
+        var sortItemOptionID = this.getSortItemID ( inKey, i );
+        this.setBasicFunctions ( sortItemOptionID );
+        this.getScopedElement ( sortItemOptionID ).fieldKey = inKey;
+        };
+};
+
+/*******************************************************************************************/
+/**
+    \brief
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.setAllSortFieldFunctions = function ( )
+{
+    for ( var i = 0; i < this.field_keys.length; i++ )
+        {
+        this.setSortFieldFunctions ( this.field_keys[i].key.toString() );
+        };
+};
+
+/*******************************************************************************************/
+/**
+    \brief
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.setSortFieldState = function ( inKey, inMaxNum )
+{
+    inMaxNum++;
+    for ( var i = 1; i <= this.field_keys.length; i++ )
+        {
+        var sortItemOptionID = this.getSortItemID ( inKey, i );
+        var optionElement = this.getScopedElement ( sortItemOptionID );
+        
+        if ( optionElement.value == inMaxNum )
+            {
+            optionElement.enable();
+            }
+        else
+            {
+            optionElement.disable();
+            };
+        };
+};
+
+/*******************************************************************************************/
+/**
+    \brief
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.setAllSortFieldState = function ( )
+{
+    var maxNum = 0;
+    
+    for ( var i = 0; i < this.field_keys.length; i++ )
+        {
+        for ( var c = 0; c <= this.field_keys.length; c++ )
+            {
+            maxNum = Math.max ( maxNum, this.getScopedElement ( this.getSortItemID ( this.field_keys[i].key.toString() ) ).value );
+            };
+        };
+    
+    for ( var i = 0; i < this.field_keys.length; i++ )
+        {
+        this.setSortFieldState ( this.field_keys[i].key.toString(), maxNum );
+        };
+};
+
 
 /*******************************************************************************************/
 /**
