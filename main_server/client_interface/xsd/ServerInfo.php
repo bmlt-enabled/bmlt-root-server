@@ -51,12 +51,15 @@ echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
                     <xs:complexType>
                         <xs:sequence>
                             <xs:element name='version' type='xs:string'/>
-                            <xs:element name='version_int' type='xs:integer'/>
+                            <xs:element name='versionInt' type='xs:integer'/>
                             <xs:element name='langs' type='xs:string'/>
                             <xs:element name='nativeLang' type='xs:string'/>
                             <xs:element name='centerLongitude' type='xs:decimal'/>
                             <xs:element name='centerLatitude' type='xs:decimal'/>
                             <xs:element name='centerZoom' type='xs:integer'/>
+                            <xs:element name='defaultDuration' type='xs:string'/>
+                            <xs:element name='charSet' type='xs:string'/>
+                            <xs:element name='distanceUnits' type='xs:string'/>
                         </xs:sequence>
                         <xs:attribute name='sequence_index' use='required' type='xs:integer'/>
                     </xs:complexType>

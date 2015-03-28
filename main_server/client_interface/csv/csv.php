@@ -1176,8 +1176,8 @@ function GetServerInfo()
     $localStrings = c_comdef_server::GetLocalStrings();
     $default_lang = strval ( $localStrings['enum'] );
     $centerLongLatZoom = implode ( ',', $localStrings['search_spec_map_center'] );
-    $ret = '"version","version_int","langs","nativeLang","centerLongitude","centerLatitude","centerZoom"'."\n";
-    $ret .= '"'.$version_string.'","'.strval ( $version_num ).'","'.$lang_string.'","'.$default_lang.'","'.strval( $localStrings['search_spec_map_center']['longitude'] ).'","'.strval( $localStrings['search_spec_map_center']['latitude'] ).'","'.strval( $localStrings['search_spec_map_center']['zoom'] ).'"';
+    $ret = '"version","versionInt","langs","nativeLang","centerLongitude","centerLatitude","centerZoom","defaultDuration","regionBias","charSet","distanceUnits"'."\n";
+    $ret .= '"'.$version_string.'","'.strval ( $version_num ).'","'.$lang_string.'","'.$default_lang.'","'.strval( $localStrings['search_spec_map_center']['longitude'] ).'","'.strval( $localStrings['search_spec_map_center']['latitude'] ).'","'.strval( $localStrings['search_spec_map_center']['zoom'] ).'","'.$localStrings['default_duration_time'].'","'.$localStrings['region_bias'].'","'.$localStrings['charset'].'","'.$localStrings['dist_units'].'"';
     
     return $ret;
 }
