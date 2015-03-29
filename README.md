@@ -4,6 +4,8 @@ This is a project to create a "living document," so to speak, for the [BMLT's se
 
 It will present an interactive "worksheet" that can be used to construct a URL (or shortcode) to present alternative BMLT interfaces.
 
+View a live demo at: http://bmlt.magshare.net/workshop/
+
 This file is part of the Basic Meeting List Toolbox (BMLT).
 
 Find out more at: http://bmlt.magshare.org
@@ -23,12 +25,6 @@ See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this code.  If not, see <http://www.gnu.org/licenses/>.
-
-What is this repository for?
-----------------------------
-
-* This is the public, open-source repository for the BMLT Semantic Workshop.
-* Version 1.0
 
 CHANGELIST
 ----------
