@@ -463,11 +463,11 @@ class bmlt_semantic
         $ret .= '</style>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '<noscript>'.$this->localize_string ( 'javascript_noscript' ).'</noscript>';
+        $ret .= '<h1 id="bmlt_semantic_badserver_h1'.htmlspecialchars ( $this->_myJSName ).'" style="display:none">'.$this->localize_string ( 'need_good_url' ).'</h1>';
+        $ret .= '<h1 id="bmlt_semantic_header_h1'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_header_h1">'.$this->localize_string ( 'title_of_page' ).'</h1>';
             
         if ( $version > 2000000 )
             {
-            $ret .= '<h1 id="bmlt_semantic_badserver_h1'.htmlspecialchars ( $this->_myJSName ).'" style="display:none">'.$this->localize_string ( 'need_good_url' ).'</h1>';
-            $ret .= '<h1 id="bmlt_semantic_header_h1'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_header_h1">'.$this->localize_string ( 'title_of_page' ).'</h1>';
             $ret .= '<div id="bmlt_main_blurb'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_workshop_blurb_note_div bmlt_main_blurb">';
             $ret .= '<p>'.$this->localize_string ( 'main_blurb1' ).'</p>';
             $ret .= '<p>'.$this->localize_string ( 'main_blurb2' ).'</p>';
