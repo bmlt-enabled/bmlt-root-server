@@ -1400,6 +1400,9 @@ BMLTSemantic.prototype.handleSortFieldChange = function ( inOptionObject )
     sort.key = inOptionObject.fieldKey.toString();
     sort.order = parseInt ( inOptionObject.value );
     
+    var selectObject = inOptionObject.parentNode;
+    selectObject.className = selectObject.defaultClass;
+
     if ( !this.state.sorts )
         {
         this.state.sorts = new Array ( sort );
@@ -1455,12 +1458,20 @@ BMLTSemantic.prototype.handleSortFieldChange = function ( inOptionObject )
     
     if ( this.state.sorts.length == 1 )
         {
-        this.state.sorts[0].order = 1;
+        if ( this.state.sorts[0].order == 0 )
+            {
+            this.state.sorts = null;
+            }
+        else
+            {
+            this.state.sorts[0].order = 1;
+            };
         }
     else
         {
         if ( this.state.sorts.length > 1 )
             {
+            this.state.sorts[0].order = 1;
             for ( var i = 1; i < this.state.sorts.length; i++ )
                 {
                 this.state.sorts[i].order = (this.state.sorts[i - 1].order + 1);
@@ -1586,7 +1597,10 @@ BMLTSemantic.prototype.clearSorts = function ( )
         {
         for ( var i = 0; i < this.field_keys.length; i++ )
             {
-            this.getScopedElement ( this.getSortItemID ( this.field_keys[i].key.toString() ) ).selectedIndex = 0;
+            var selectObject = this.getScopedElement ( this.getSortItemID ( this.field_keys[i].key.toString() ) );
+
+            selectObject.selectedIndex = 0;
+            selectObject.className = selectObject.defaultClass;
             };
         };
 };
@@ -1939,8 +1953,9 @@ BMLTSemantic.prototype.setSortFieldState = function ( inKey, inMaxNum )
         {
         var sortItemOptionID = this.getSortItemID ( inKey, i );
         var optionElement = this.getScopedElement ( sortItemOptionID );
-        
-        if ( optionElement.value == inMaxNum )
+        var sortItemSelect = optionElement.parentNode;
+
+        if ( (sortItemSelect.selectedIndex == 0) && (optionElement.value == inMaxNum) )
             {
             optionElement.enable();
             }
@@ -1968,13 +1983,19 @@ BMLTSemantic.prototype.setAllSortFieldState = function ( )
             {
             var key = this.field_keys[i].key.toString();
             var selectID = this.getSortItemID ( key );
+            var selectObject = this.getScopedElement ( selectID );
+            selectObject.className = selectObject.defaultClass;
             for ( var c = 0; c < this.state.sorts.length; c++ )
                 {
                 var sortObject = this.state.sorts[c];
                 
                 if ( sortObject.key == key )
                     {
-                    this.getScopedElement ( selectID ).selectedIndex = sortObject.order;
+                    selectObject.selectedIndex = sortObject.order;
+                    if ( sortObject.order > 0 )
+                        {
+                        selectObject.className = selectObject.defaultClass + ' sortSelectHighlight';
+                        };
                     };
                 };
             };

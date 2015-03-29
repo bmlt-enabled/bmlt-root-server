@@ -238,8 +238,35 @@ div.bmlt_semantic_header
     z-index: 10001;
 }
 
+h1.bmlt_semantic_header_h1
+{
+    text-align:center;
+}
+
+div.bmlt_main_blurb
+{
+    text-align:left;
+}
+
 div.bmlt_semantic_footer
 {
+    margin-top: 1em;
     font-size:small;
     font-style:italic;
+}
+
+select.sortSelectHighlight
+{
+    background-color: #f95;
+    font-weight:bold;
+}
+
+div.enter_server_url_form_div
+{
+    margin-top: 1em;
+}
+
+input.formEntrySubmit
+{
+    margin-left: 0.5em;
 }

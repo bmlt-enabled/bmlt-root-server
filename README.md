@@ -8,7 +8,8 @@ This file is part of the Basic Meeting List Toolbox (BMLT).
 
 Find out more at: http://bmlt.magshare.org
 
-### License ###
+License
+-------
 
 BMLT is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as
@@ -23,7 +24,28 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
-### What is this repository for? ###
+What is this repository for?
+----------------------------
 
 * This is the public, open-source repository for the BMLT Semantic Workshop.
 * Version 1.0
+
+CHANGELIST
+----------
+** Version 1.0a2 **
+
+- March 29, 2015
+
+- Fixed an issue with the sort selection, where unsorting the first item with more than 3 items would not re-flow the sort order.
+- Make the selected sort items more prominent with CSS.
+- Added a JavaScript noscript declaration.
+- Added some styling to the basic URL entry form.
+- The URL entry form now allows return-key submit.
+- Prevent sort items from doing anything other than unsorting if they already have a value.
+- Added a header and a basic instruction blurb.
+
+** Version 1.0a1 **
+
+- March 28, 2015
+
+- First official "feature complete" alpha.

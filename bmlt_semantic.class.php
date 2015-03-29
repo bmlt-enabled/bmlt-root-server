@@ -4,7 +4,8 @@
 */
 /***************************************************************************************************************************************/
 
-define ( '__VERSION__', '1.0a1' );
+define ( '__VERSION__', '1.0a2' );
+define ( '__REPO_URL__', 'https://bitbucket.org/bmlt/bmlt-semantic-workshop' );
 
 class bmlt_semantic
 {
@@ -445,11 +446,19 @@ class bmlt_semantic
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '</style>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $ret .= '<noscript>'.$this->localize_string ( 'javascript_noscript' ).'</noscript>';
             
         if ( $version > 2000000 )
             {
             $ret .= '<h1 id="bmlt_semantic_badserver_h1'.htmlspecialchars ( $this->_myJSName ).'" style="display:none">'.$this->localize_string ( 'need_good_url' ).'</h1>';
-        
+            $ret .= '<h1 id="bmlt_semantic_header_h1'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_header_h1">'.$this->localize_string ( 'title_of_page' ).'</h1>';
+            $ret .= '<div id="bmlt_main_blurb'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_workshop_blurb_note_div bmlt_main_blurb">';
+            $ret .= '<p>'.$this->localize_string ( 'main_blurb1' ).'</p>';
+            $ret .= '<p>'.$this->localize_string ( 'main_blurb2' ).'</p>';
+            $ret .= '<p>'.$this->localize_string ( 'main_blurb3' ).'</p>';
+            $ret .= '<p>'.$this->localize_string ( 'main_blurb4' ).'</p>';
+            $ret .= '</div>';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
             $ret .= '<div id="bmlt_semantic_header'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_header">';
             $ret .= defined ( 'DEBUG' ) ? "\n" : '';
             $ret .= '<div id="bmlt_semantic_info_div_download_line'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_info_line bmlt_semantic_info_div_download_line">';
@@ -502,11 +511,8 @@ class bmlt_semantic
             
             $ret .= '<div id="bmlt_semantic_info_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_info_div">';
             
-            $ret .= '<div id="bmlt_semantic_info_div_root_url_line'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_info_line">';
-            $ret .= '<div id="bmlt_semantic_version_wrapper'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_version_wrapper"><span class="info_label">'.$this->localize_string ( 'version_label' ).'</span><span class="info_value">'.__VERSION__.'</span></div>';
-            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
-            $ret .= '<div id="bmlt_semantic_info_div_root_url_wrapper'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_info_div_root_url_wrapper"><span class="info_label">'.$this->localize_string ( 'root_url_label' ).'</span><span class="info_value"><a href="'.$this->_bmltRootServerURI.'" target="_blank">'.htmlspecialchars ( $this->_bmltRootServerURI ).'</a></span></div>';
-            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+            $ret .= $this->footerDiv();
+            
             $ret .= '</div>';
             $ret .= defined ( 'DEBUG' ) ? "\n" : '';
             
@@ -523,7 +529,7 @@ class bmlt_semantic
                 $ret .= '<h2 id="server_url_invalid_note_h2">'.$this->localize_string ( 'need_good_url' ).'</h2>';
                 }
             
-            $ret .= '<form id="enter_server_url_form" class="enter_server_url_form" action="" method="get">';
+            $ret .= '<form id="enter_server_url_form" class="enter_server_url_form" action="'.$_SERVER['PHP_SELF'].'" method="get">';
             $ret .= '<div id="enter_server_url_form_div" class="enter_server_url_form_div">';
             $ret .= '<style type="text/css" scoped>';
             $ret .= defined ( 'DEBUG' ) ? "\n" : '';
@@ -534,14 +540,39 @@ class bmlt_semantic
             $ret .= '<label id="enter_server_url_form_div_label" class="enter_server_url_form_div_label" for="enter_server_url_form_div_url_input">'.$this->localize_string ( 'enter_url_label' ).'</label>';
             $ret .= defined ( 'DEBUG' ) ? "\n" : '';
             $ret .= '<input type="text" size="64" id="enter_server_url_form_div_url_input" class="enter_server_url_form_div_url_input" defaultValue="Enter A URL" name="root_server" />';
-            $ret .= '<input type="submit" value="'.$this->localize_string ( 'submit_button_name' ).'" />';
+            $ret .= '<input type="submit" class="formEntrySubmit" value="'.$this->localize_string ( 'submit_button_name' ).'" />';
             $ret .= '</div>';
             $ret .= defined ( 'DEBUG' ) ? "\n" : '';
             $ret .= '</form>';
             $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+            
+            $ret .= $this->footerDiv();
             }
         
         $ret .= '</div>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        
+        return $ret;
+    }
+    
+    /**************************************************************/
+    /** \brief  Outputs the HTML for the wizard page footer.
+        
+        \returns the HTML for the div.
+    */
+    /**************************************************************/
+    function footerDiv()
+    {
+        $ret = '<div id="bmlt_semantic_info_div_root_url_line'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_info_line bmlt_semantic_footer">';
+        $ret .= '<div id="bmlt_semantic_version_wrapper'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_version_wrapper"><span class="info_label">'.$this->localize_string ( 'version_label' ).'</span><span class="info_value">'.__VERSION__.'</span></div>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        if ( $this->_bmltRootServerURI )
+            {
+            $ret .= '<div id="bmlt_semantic_info_div_root_url_wrapper'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_info_div_root_url_wrapper"><span class="info_label">'.$this->localize_string ( 'root_url_label' ).'</span><span class="info_value"><a href="'.$this->_bmltRootServerURI.'" target="_blank">'.htmlspecialchars ( $this->_bmltRootServerURI ).'</a></span></div>';
+            $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+            }
+            
+        $ret .= '<div id="bmlt_semantic_info_div_repo_url_wrapper'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_info_div_repo_url_wrapper"><span class="info_label">'.$this->localize_string ( 'repo_url_label' ).'</span><span class="info_value"><a href="'.__REPO_URL__.'" target="_blank">'.htmlspecialchars ( __REPO_URL__ ).'</a></span></div>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         
         return $ret;

@@ -1,10 +1,16 @@
 <?php
 $this->_localization = array (
+                                'title_of_page'                         =>  'BMLT Semantic Workshop',
+                                'main_blurb1'                           =>  'This workshop will help you to build a semantic URL or [[BMLT_SIMPLE(XXX)]] shortcode by interactively guiding you through the process of specifying the various options.',
+                                'main_blurb2'                           =>  'You start by selecting the main result (a shortcode or direct response URL), then select what type of data you want the server to return.',
+                                'main_blurb3'                           =>  'Depending on the choices made above, you will have a range of options available to you in generating the URL or shortcode.',
+                                'main_blurb4'                           =>  'The section just below this will have the URL or shortcode available, and will be updated "live," as you make your choices.',
+                                'javascript_noscript'                   =>  'You do not have JavaScript enabled. This site will not work without JavaScript.',
                                 'submit_button_name'                    =>  'Submit',
                                 'need_good_url'                         =>  'You must provide a valid Root Server URL in order for this to work.',
                                 'enter_url_label'                       =>  'Enter A Valid BMLT Root Server URL:',
                                 'select_option_text_prompt'             =>  'This Will Be A',
-                                'select_option_text_direct_url'         =>  'Direct Download URL',
+                                'select_option_text_direct_url'         =>  'Direct Response URL',
                                 'select_option_text_cms_simple'         =>  '[[BMLT_SIMPLE]] Shortcode',
                                 'root_server_prompt_text_item'          =>  'Enter A Root Server URL',
                                 'value_prompt_text_item'                =>  'Enter A Text String',
@@ -110,7 +116,8 @@ $this->_localization = array (
                                 'no_addl_options'                       =>  'There are no additional options for this operation.',
                                 'no_selected_formats_blurb'             =>  'If none of these are selected, then all formats will be returned.',
                                 'root_url_label'                        =>  'The Root Server URL Is:',
-                                'result_url_label'                      =>  'The Download URL Is:',
+                                'repo_url_label'                        =>  'The Source Code Is at:',
+                                'result_url_label'                      =>  'The Response URL Is:',
                                 'version_label'                         =>  'Version:',
                                 'result_shortcode_label'                =>  'The Shortcode Is:',
                                 'result_invalid_text'                   =>  '<INVALID VALUE>'
