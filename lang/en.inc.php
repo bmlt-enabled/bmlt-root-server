@@ -61,6 +61,7 @@ $this->_localization = array (
                                 'specific_fields_legend'                =>  'Return Only Specific Fields',
                                 'sort_fields_legend'                    =>  'Sort Response',
                                 'sort_fields_no_sort_option'            =>  'Don\'t Sort',
+                                'sort_fields_blurb'                     =>  'Select the order of the fields to be added to the sort.',
                                 'specific_fields_blurb'                 =>  'The order of the response will be determined by the server.',
                                 'weekday1'                              =>  'Sunday',
                                 'weekday2'                              =>  'Monday',

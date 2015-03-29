@@ -36,6 +36,7 @@ BMLTSemanticResult.prototype.searchLongitude = null;    ///< If using the map, t
 BMLTSemanticResult.prototype.searchLatitude = null;     ///< If using the map, the latitude.
 BMLTSemanticResult.prototype.compiled_params = null;    ///< This will contain the temporary compiled parameters.
 BMLTSemanticResult.prototype.fields = Array();          ///< This will hold any specific fields to be returned.
+BMLTSemanticResult.prototype.sorts = null;              ///< This holds an array of objects that will indicate a chosen sort. The object schema will be: {"key":STRING,"order",INTEGER}
 BMLTSemanticResult.prototype.valid = null;              ///< This will be non-null if the compiled result is valid (only after compile()).
 
 /*******************************************************************************************/
@@ -223,6 +224,18 @@ BMLTSemanticResult.prototype.compileSearchResults = function()
     if ( this.fields.length > 0 )
         {
         this.compiled_params += '&data_field_key=' + this.fields.join ( ',' );
+        };
+        
+    if ( this.sorts && this.sorts.length )
+        {
+        var sortKeys = Array ();
+        
+        for ( var i = 0; i < this.sorts.length; i++ )
+            {
+            sortKeys.push ( this.sorts[i].key );
+            };
+        
+        this.compiled_params += '&sort_keys=' + sortKeys.join ( ',' );
         };
         
     this.valid = true;
@@ -467,7 +480,8 @@ BMLTSemantic.prototype.reloadFromServer = function ()
     this.state.searchTextModifier = null;
     this.state.searchTextRadius = null;
     this.state.searchMapRadius = null;
-    
+    this.state.sorts = null;
+
     this.format_objects = null;
     this.languages = null;
     this.service_body_objects = null;
@@ -481,6 +495,7 @@ BMLTSemantic.prototype.reloadFromServer = function ()
     this.fetchFieldKeys();
     this.clearWeekdays();
     this.clearTextSearchItems();
+    this.clearSorts();
 };
 
 /*******************************************************************************************/
@@ -913,6 +928,7 @@ BMLTSemantic.prototype.fetchFieldKeysCallback = function (inHTTPReqObject
         eval ( 'context.field_keys = ' + inHTTPReqObject.responseText + ';' );
         context.setAllSortFieldFunctions();
         context.setAllSortFieldState();
+        context.clearSorts();
         context.populateFieldSelect();
         };
 };
@@ -1377,10 +1393,84 @@ BMLTSemantic.prototype.readServiceBodies = function ( inParent )
     \brief
 */
 /*******************************************************************************************/
-BMLTSemantic.prototype.handleSortFieldChange= function ( inOptionObject )
+BMLTSemantic.prototype.handleSortFieldChange = function ( inOptionObject )
 {
-    alert ( inOptionObject.fieldKey + ', ' + inOptionObject.value );
+    var sort = new Object();
+    
+    sort.key = inOptionObject.fieldKey.toString();
+    sort.order = parseInt ( inOptionObject.value );
+    
+    if ( !this.state.sorts )
+        {
+        this.state.sorts = new Array ( sort );
+        }
+    else
+        {
+        var found = false;
+        
+        for ( var i = 0; i < this.state.sorts.length; i++ )
+            {
+            if ( this.state.sorts[i].key == sort.key )
+                {
+                found = true;
+                if ( sort.order > 0 )
+                    {
+                    this.state.sorts[i].order = sort.order;
+                    }
+                else
+                    {
+                    this.state.sorts.splice ( i, 1 );
+                    };
+                    
+                break;
+                };
+            };
+        
+        if ( !found )
+            {
+            this.state.sorts.push ( sort );
+            };
+        };
+    
+    var sortFunc = function ( inA, inB )
+        {
+            var ret = 0;
+            
+            if ( inA.order < inB.order )
+                {
+                ret = -1;
+                }
+            else
+                {
+                if ( inB.order < inA.order )
+                    {
+                    ret = 1;
+                    };
+                };
+                
+            return ret;
+        };
+    
+    this.state.sorts.sort ( sortFunc );
+    
+    if ( this.state.sorts.length == 1 )
+        {
+        this.state.sorts[0].order = 1;
+        }
+    else
+        {
+        if ( this.state.sorts.length > 1 )
+            {
+            for ( var i = 1; i < this.state.sorts.length; i++ )
+                {
+                this.state.sorts[i].order = (this.state.sorts[i - 1].order + 1);
+                };
+            };
+        };
+    
     this.setAllSortFieldState ();
+    
+    this.refreshURI();
 };
 
 /*******************************************************************************************/
@@ -1482,6 +1572,22 @@ BMLTSemantic.prototype.clearWeekdays = function ( )
         {
         this.getScopedElement ( 'bmlt_semantic_form_weekday_checkbox_' + i ).checked = false;
         this.getScopedElement ( 'bmlt_semantic_form_un_weekday_checkbox_' + i ).checked = false;
+        };
+};
+
+/*******************************************************************************************/
+/**
+    \brief
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.clearSorts = function ( )
+{
+    if ( this.field_keys )
+        {
+        for ( var i = 0; i < this.field_keys.length; i++ )
+            {
+            this.getScopedElement ( this.getSortItemID ( this.field_keys[i].key.toString() ) ).selectedIndex = 0;
+            };
         };
 };
 
@@ -1854,11 +1960,23 @@ BMLTSemantic.prototype.setAllSortFieldState = function ( )
 {
     var maxNum = 0;
     
-    for ( var i = 0; i < this.field_keys.length; i++ )
+    if ( this.state.sorts && this.state.sorts.length )
         {
-        for ( var c = 0; c <= this.field_keys.length; c++ )
+        maxNum = this.state.sorts[this.state.sorts.length - 1].order;
+    
+        for ( var i = 0; i < this.field_keys.length; i++ )
             {
-            maxNum = Math.max ( maxNum, this.getScopedElement ( this.getSortItemID ( this.field_keys[i].key.toString() ) ).value );
+            var key = this.field_keys[i].key.toString();
+            var selectID = this.getSortItemID ( key );
+            for ( var c = 0; c < this.state.sorts.length; c++ )
+                {
+                var sortObject = this.state.sorts[c];
+                
+                if ( sortObject.key == key )
+                    {
+                    this.getScopedElement ( selectID ).selectedIndex = sortObject.order;
+                    };
+                };
             };
         };
     
@@ -1867,7 +1985,6 @@ BMLTSemantic.prototype.setAllSortFieldState = function ( )
         this.setSortFieldState ( this.field_keys[i].key.toString(), maxNum );
         };
 };
-
 
 /*******************************************************************************************/
 /**
