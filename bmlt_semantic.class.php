@@ -1087,9 +1087,9 @@ class bmlt_semantic
             {
             $ret .= '<div id="bmlt_semantic_form_field_key_checkbox_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_field_key_checkbox_div">';
             $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
-            $ret .= '<input type="checkbox" id="bmlt_semantic_form_field_key_checkbox'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_field_key_checkbox" value="'.htmlspecialchars ( $key ).'" onchange="'.$function_string.'" />';
+            $ret .= '<input type="checkbox" id="bmlt_semantic_form_field_key_checkbox_'.htmlspecialchars ( $key ).'_'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_field_key_checkbox" value="'.htmlspecialchars ( $key ).'" onchange="'.$function_string.'" />';
             $ret .= defined ( 'DEBUG' ) ? "\n" : '';
-            $ret .= '<label id="bmlt_semantic_form_field_key_checkbox_label'.htmlspecialchars ( $this->_myJSName ).'" for="bmlt_semantic_form_field_key_checkbox'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_field_key_checkbox_label">'.htmlspecialchars ( $name ).'</label>';
+            $ret .= '<label id="bmlt_semantic_form_field_key_checkbox_label_'.htmlspecialchars ( $key ).'_'.htmlspecialchars ( $this->_myJSName ).'" for="bmlt_semantic_form_field_key_checkbox_'.htmlspecialchars ( $key ).'_'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_field_key_checkbox_label">'.htmlspecialchars ( $name ).'</label>';
             $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
             $ret .= '</div>';
             $ret .= defined ( 'DEBUG' ) ? "\n" : '';  
