@@ -28,6 +28,11 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
 CHANGELIST
 ----------
+** Version 1.0a3 **
+
+- April 4, 2015
+- Fixed an issue with the way the field values checkboxes were set up in the meeting search fieldset. The labels were not properly hooked up to the checkboxes.
+
 ** Version 1.0a2 **
 
 - March 29, 2015
