@@ -20,7 +20,7 @@
 */
 /***************************************************************************************************************************************/
 
-define ( '__VERSION__', '1.0a3' );
+define ( '__VERSION__', '1.0a4' );
 define ( '__REPO_URL__', 'https://bitbucket.org/bmlt/bmlt-semantic-workshop' );
 
 class bmlt_semantic
@@ -845,6 +845,15 @@ class bmlt_semantic
     function get_wizard_page_meeting_search_html()
     {
         $ret = '<div id="bmlt_semantic_form_meeting_search_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_meeting_search_div">';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        
+        $ret .= '<div id="bmlt_semantic_form_weekday_header_checkbox_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_weekday_header_checkbox_div" style="display:none">';
+        $function_string = 'bmlt_semantic_js_object'.htmlspecialchars ( $this->_myJSName ).'.handleWeekdayHeaderChange(this)';
+        $ret .= '<input type="checkbox" id="bmlt_semantic_form_weekday_header_checkbox'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_weekday_header_checkbox" onchange="'.$function_string.'" />';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $ret .= '<label id="bmlt_semantic_form_weekday_header_checkbox_label'.htmlspecialchars ( $this->_myJSName ).'" for="bmlt_semantic_form_weekday_header_checkbox'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_weekday_header_checkbox_label">'.$this->localize_string ( 'weekday_header_checkbox_label' ).'</label>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
+        $ret .= '</div>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         
         $ret .= '<div id="bmlt_semantic_form_used_formats_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_used_formats_div" style="display:none">';

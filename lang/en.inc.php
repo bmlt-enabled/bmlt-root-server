@@ -36,6 +36,7 @@ $this->_localization = array (
                                 'root_server_button_title'              =>  'Reload From Root Server',
                                 'used_formats_checkbox_label'           =>  'Get the Formats Used In the Results of this search',
                                 'used_formats_only_checkbox_label'      =>  'Get just the formats (not the search results)',
+                                'weekday_header_checkbox_label'         =>  'Separate the Results by Weekday',
                                 'response_type_selector_prompt'         =>  'The Returned Data Will be',
                                 'response_type_selector_type_csv'       =>  'CSV',
                                 'response_type_selector_type_xml'       =>  'XML',

@@ -54,6 +54,7 @@ BMLTSemanticResult.prototype.searchLatitude = null;     ///< If using the map, t
 BMLTSemanticResult.prototype.compiled_params = null;    ///< This will contain the temporary compiled parameters.
 BMLTSemanticResult.prototype.fields = Array();          ///< This will hold any specific fields to be returned.
 BMLTSemanticResult.prototype.sorts = null;              ///< This holds an array of objects that will indicate a chosen sort. The object schema will be: {"key":STRING,"order",INTEGER}
+BMLTSemanticResult.prototype.weekdayHeader = null;      ///< This will be set to nonzero if the BMLT_SIMPLE result will be separated by weekday.
 BMLTSemanticResult.prototype.valid = null;              ///< This will be non-null if the compiled result is valid (only after compile()).
 
 /*******************************************************************************************/
@@ -121,6 +122,7 @@ BMLTSemanticResult.prototype.compileFormats = function()
 BMLTSemanticResult.prototype.compileSearchResults = function()
 {
     var responseTypeSelect = this.owner.getScopedElement ( 'bmlt_semantic_form_response_type_select' );
+    var mainSelect = this.owner.getScopedElement ( 'bmlt_semantic_form_main_mode_select' );
     var getUsedCheckbox = this.owner.getScopedElement ( 'bmlt_semantic_form_used_formats_checkbox' );
     
     if ( (responseTypeSelect.value == 'xml') || (responseTypeSelect.value == 'json') )
@@ -254,7 +256,12 @@ BMLTSemanticResult.prototype.compileSearchResults = function()
         
         this.compiled_params += '&sort_keys=' + sortKeys.join ( ',' );
         };
-        
+    
+    if ( this.weekdayHeader && (mainSelect.value == 'SHORTCODE') )
+        {
+        this.compiled_params += '&weekday_header=1';
+        };
+    
     this.valid = true;
 };
 
@@ -1306,6 +1313,19 @@ BMLTSemantic.prototype.handleFieldKeyValueSelectChange = function ( inSelect )
 /**
     \brief
     
+    \param inCheckbox   The object that experienced change.
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.handleWeekdayHeaderChange = function ( inCheckbox )
+{
+    this.state.weekdayHeader = inCheckbox.checked;
+    this.refreshURI();
+};
+
+/*******************************************************************************************/
+/**
+    \brief
+    
     \param inSelect   The object that experienced change.
 */
 /*******************************************************************************************/
@@ -2307,6 +2327,7 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.setBasicFunctions ( 'bmlt_semantic_form_used_formats_div' );
     this.setBasicFunctions ( 'bmlt_semantic_form_just_used_formats_checkbox_div' );
     this.setBasicFunctions ( 'bmlt_semantic_form_formats_fieldset_contents_div' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_weekday_header_checkbox_div' );
     
     if ( this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_server_info_option' ) )
         {
@@ -2402,6 +2423,7 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     var bmlt_semantic_form_used_formats_div = this.getScopedElement ( 'bmlt_semantic_form_used_formats_div' );
     var bmlt_semantic_form_just_used_formats_checkbox_div = this.getScopedElement ( 'bmlt_semantic_form_just_used_formats_checkbox_div' );
     var bmlt_semantic_form_formats_fieldset_contents_div = this.getScopedElement ( 'bmlt_semantic_form_formats_fieldset_contents_div' );
+    var bmlt_semantic_form_weekday_header_checkbox_div = this.getScopedElement ( 'bmlt_semantic_form_weekday_header_checkbox_div' );
 
     switcher_type_select_formats_option.enable();
     switcher_type_select_sb_option.enable();
@@ -2495,6 +2517,15 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     bmlt_semantic_form_just_used_formats_checkbox_div.hide();
     bmlt_semantic_form_formats_fieldset_contents_div.hide();
     
+    if ( (switcher_select.value == 'GetSearchResults') && (main_fieldset_select.value != 'DOWNLOAD') )
+        {
+        bmlt_semantic_form_weekday_header_checkbox_div.show();
+        }
+    else
+        {
+        bmlt_semantic_form_weekday_header_checkbox_div.hide();
+        };
+        
     if ( switcher_select.value == 'GetSearchResults' )
         {
         bmlt_semantic_form_meeting_search_div.show();
