@@ -724,7 +724,7 @@ BMLTSemantic.prototype.populateFormatsSection = function(   formatContainer,
             newContainer.appendChild ( newCheckbox );
             
             var newCheckboxLabel = document.createElement ( 'label' );
-            newCheckboxLabel.for = this.getScopedID ( formatContainer.id + '_checkbox_' + formatObject.id );
+            newCheckboxLabel.htmlFor = newCheckbox.id;
             newCheckboxLabel.id = this.getScopedID ( formatContainer.id + '_label_' + formatObject.id );
             newCheckboxLabel.className = 'bmlt_checkbox_label';
             newCheckboxLabel.title = formatObject.name_string + ' - ' + formatObject.description_string;
@@ -868,14 +868,14 @@ BMLTSemantic.prototype.createServiceBodyCheckbox = function(inServiceBodyObject,
     newCheckbox.value = inServiceBodyObject.id;
     newCheckbox.title = inServiceBodyObject.description;
     newCheckbox.className ='bmlt_checkbox_input';
-    inContainerObject.appendChild ( newCheckbox );
     inServiceBodyObject.checkboxElement = newCheckbox;
     newCheckbox.formHandler = this;
     newCheckbox.serviceBody = inServiceBodyObject;
     newCheckbox.onchange = function() { this.formHandler.handleServiceBodyCheck(this) };
+    inContainerObject.appendChild ( newCheckbox );
     
     var newCheckboxLabel = document.createElement ( 'label' );
-    newCheckboxLabel.for = this.getScopedID ( 'bmlt_semantic_form_sb_checkbox_' + inServiceBodyObject.id );
+    newCheckboxLabel.htmlFor = newCheckbox.id;
     newCheckboxLabel.id = this.getScopedID ( 'bmlt_semantic_form_sb_checkbox_label_' + inServiceBodyObject.id );
     newCheckboxLabel.className = 'bmlt_checkbox_label';
     newCheckboxLabel.title = inServiceBodyObject.description;

@@ -33,6 +33,7 @@ CHANGELIST
 - TBD
 
 - Added the weekday header code for the [[BMLT_SIMPLE]] shortcode search results.
+- Fixed an issue where the Service body and format labels were not being properly associated with their checkboxes.
 
 ** Version 1.0a3 **
 
