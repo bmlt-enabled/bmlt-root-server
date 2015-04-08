@@ -30,10 +30,11 @@ CHANGELIST
 ----------
 ** Version 1.0a4 **
 
-- TBD
+- April 8, 2015
 
 - Added the weekday header code for the [[BMLT_SIMPLE]] shortcode search results.
 - Fixed an issue where the Service body and format labels were not being properly associated with their checkboxes.
+- Changed the way that Service bodies are recorded in the state, with an eye towards adding "not" Service bodies (it is possible, but not not reflected in the UI).
 
 ** Version 1.0a3 **
 

@@ -150,15 +150,13 @@ BMLTSemanticResult.prototype.compileSearchResults = function()
             };
         };
     
-    if ( this.services )
+    if ( this.services && this.services.length )
         {
-        services = this.services.split ( ',' );
-        
-        if ( services.length > 1 )
+        if ( this.services.length > 1 )
             {
-            for ( i = 0; i < services.length; i++ )
+            for ( i = 0; i < this.services.length; i++ )
                 {
-                this.compiled_params += '&services[]=' + parseInt ( services[i] );
+                this.compiled_params += '&services[]=' + parseInt ( this.services[i] );
                 };
             }
         else
@@ -858,14 +856,15 @@ BMLTSemantic.prototype.createServiceBodyList = function(inServiceBodyObject,
     \brief
 */
 /*******************************************************************************************/
-BMLTSemantic.prototype.createServiceBodyCheckbox = function(inServiceBodyObject,
-                                                            inContainerObject
+BMLTSemantic.prototype.createServiceBodyCheckbox = function (   inServiceBodyObject,
+                                                                inContainerObject,
+                                                                inMinus
                                                             )
 {
     var newCheckbox = document.createElement ( 'input' );
     newCheckbox.type = 'checkbox';
     newCheckbox.id = this.getScopedID ( 'bmlt_semantic_form_sb_checkbox_' + inServiceBodyObject.id );
-    newCheckbox.value = inServiceBodyObject.id;
+    newCheckbox.value = (inMinus ? -1 : 1) * parseInt ( inServiceBodyObject.id );
     newCheckbox.title = inServiceBodyObject.description;
     newCheckbox.className ='bmlt_checkbox_input';
     inServiceBodyObject.checkboxElement = newCheckbox;
@@ -1332,7 +1331,6 @@ BMLTSemantic.prototype.handleWeekdayHeaderChange = function ( inCheckbox )
 BMLTSemantic.prototype.handleServiceBodyCheck = function ( inCheckbox )
 {
     this.updateServiceBodies ( inCheckbox );
-    this.readServiceBodies();
     this.refreshURI();
 };
 
@@ -1346,8 +1344,41 @@ BMLTSemantic.prototype.handleServiceBodyCheck = function ( inCheckbox )
 BMLTSemantic.prototype.updateServiceBodies = function ( inCheckboxObject )
 {
     var service_body_object = inCheckboxObject.serviceBody;
-
+    var sb_id = Math.abs ( parseInt ( inCheckboxObject.value ) );
     var childBodies = service_body_object.childServiceBodies;
+    
+    var found = false;
+    
+    if ( this.state.services && this.state.services.length )
+        {
+        for ( var i = 0; i < this.state.services.length; i++ )
+            {
+            var serviceID = Math.abs ( parseInt ( this.state.services[i] ) );
+        
+            if ( serviceID == sb_id )
+                {
+                found = true;
+                if ( inCheckboxObject.checked )
+                    {
+                    this.state.services[i] = parseInt ( inCheckboxObject.value );
+                    }
+                else
+                    {
+                    this.state.services.splice ( i, 1 );
+                    };
+                break;
+                };
+            };
+        }
+    else
+        {
+        this.state.services = Array();
+        };
+    
+    if ( !found && inCheckboxObject.checked )
+        {
+        this.state.services.push ( parseInt ( inCheckboxObject.value ) );
+        };
     
     if ( childBodies )
         {
@@ -1359,69 +1390,6 @@ BMLTSemantic.prototype.updateServiceBodies = function ( inCheckboxObject )
             
             this.updateServiceBodies ( child.checkboxElement );
             };
-        };
-};
-
-/*******************************************************************************************/
-/**
-    \brief
-    
-    \param inParent   the parent Service body.
-*/
-/*******************************************************************************************/
-BMLTSemantic.prototype.readServiceBodies = function ( inParent )
-{
-    var services = Array();
-    if ( inParent )
-        {
-        if ( inParent.checkboxElement.checked )
-            {
-            if ( !this.state.services )
-                {
-                this.state.services = '';
-                }
-            else
-                {
-                if ( this.state.services != '' )
-                    {
-                    this.state.services += ',';
-                    };
-                };
-                
-            this.state.services += inParent.id.toString();
-            };
-        }
-    else
-        {
-        this.state.services = null;
-        };
-    
-    var child_bodies = this.service_body_objects;
-    
-    if ( inParent )
-        {
-        child_bodies = inParent.childServiceBodies;
-        };
-    
-    if ( child_bodies )
-        {
-        for ( var i = 0; i < child_bodies.length; i++ )
-            {
-            this.readServiceBodies ( child_bodies[i] );
-            };
-        };
-    
-    if ( this.state.services )
-        {
-        var service_array = this.state.services.toString().split ( ',' );
-        
-        for ( var i = 0; i < service_array.length; i++ )
-            {
-            service_array[i] = parseInt ( service_array[i] );
-            };
-        
-        service_array.sort( function ( a, b ) { return parseInt ( a ) > parseInt ( b ); } );
-        service_array.join();
         };
 };
 
