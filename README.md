@@ -30,7 +30,7 @@ CHANGELIST
 ----------
 ** Version 1.0a5 **
 
-- TBD
+- April 8, 2015
 
 - Added the "NOT" Service body section.
 

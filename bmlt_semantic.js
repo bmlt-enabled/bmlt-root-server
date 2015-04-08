@@ -788,6 +788,7 @@ BMLTSemantic.prototype.populateServiceBodiesSection = function()
         sb_select2.appendChild ( newOption );
         };
     
+    this.state.services = null;
     this.organizeServiceBodies();
     
     if ( this.service_body_objects && this.service_body_objects.length )
@@ -795,6 +796,7 @@ BMLTSemantic.prototype.populateServiceBodiesSection = function()
         this.createServiceBodyList ( null, this.getScopedElement ( 'bmlt_semantic_form_sb_fieldset_div' ), false );
         this.createServiceBodyList ( null, this.getScopedElement ( 'bmlt_semantic_form_sb_not_fieldset_div' ), true );
         };
+    
     this.refreshURI();
 };
 
@@ -808,49 +810,52 @@ BMLTSemantic.prototype.createServiceBodyList = function(inServiceBodyObject,
                                                         inMinus
                                                         )
 {
-    var sb_array = null;
-    var id = 0;
-    var newListContainer = null;
-    var not_extra = inMinus ? 'not_' : '';
+    if ( inContainerObject )
+        {
+        var sb_array = null;
+        var id = 0;
+        var newListContainer = null;
+        var not_extra = inMinus ? 'not_' : '';
     
-    if ( inServiceBodyObject )
-        {
-        id = inServiceBodyObject.id;
-        
-        var checkboxElement = document.createElement ( 'dt' );
-        checkboxElement.id = this.getScopedID ( 'bmlt_sb_dt_' + not_extra + id.toString() );
-        checkboxElement.className = 'bmlt_sb_dt';
-        this.createServiceBodyCheckbox ( inServiceBodyObject, checkboxElement, inMinus );
-        inContainerObject.appendChild ( checkboxElement );
-        
-        if ( inServiceBodyObject.childServiceBodies )
+        if ( inServiceBodyObject )
             {
-            newListContainer = document.createElement ( 'dd' );
-            newListContainer.id = this.getScopedID ( 'bmlt_sb_dd_' + not_extra + id.toString() );
-            newListContainer.className = 'bmlt_sb_dd';
-            inContainerObject.appendChild ( newListContainer ); 
-            sb_array = inServiceBodyObject.childServiceBodies;
-            };
-        }
-    else
-        {
-        sb_array = this.service_body_objects;
-        newListContainer = inContainerObject;
-        newListContainer.innerHTML = '';
-        };
-
-    if ( newListContainer && sb_array && sb_array.length )
-        {
-        var newSubList = document.createElement ( 'dl' );
-        newSubList.id = this.getScopedID ( 'bmlt_sb_dl_' + not_extra + id.toString() );
-        newSubList.className = 'bmlt_sb_dl';
+            id = inServiceBodyObject.id;
         
-        for ( var i = 0; i < sb_array.length; i++ )
+            var checkboxElement = document.createElement ( 'dt' );
+            checkboxElement.id = this.getScopedID ( 'bmlt_sb_dt_' + not_extra + id.toString() );
+            checkboxElement.className = 'bmlt_sb_dt';
+            this.createServiceBodyCheckbox ( inServiceBodyObject, checkboxElement, inMinus );
+            inContainerObject.appendChild ( checkboxElement );
+        
+            if ( inServiceBodyObject.childServiceBodies )
+                {
+                newListContainer = document.createElement ( 'dd' );
+                newListContainer.id = this.getScopedID ( 'bmlt_sb_dd_' + not_extra + id.toString() );
+                newListContainer.className = 'bmlt_sb_dd';
+                inContainerObject.appendChild ( newListContainer ); 
+                sb_array = inServiceBodyObject.childServiceBodies;
+                };
+            }
+        else
             {
-            this.createServiceBodyList ( sb_array[i], newSubList, inMinus );
+            sb_array = this.service_body_objects;
+            newListContainer = inContainerObject;
+            newListContainer.innerHTML = '';
             };
 
-        newListContainer.appendChild ( newSubList );
+        if ( newListContainer && sb_array && sb_array.length )
+            {
+            var newSubList = document.createElement ( 'dl' );
+            newSubList.id = this.getScopedID ( 'bmlt_sb_dl_' + not_extra + id.toString() );
+            newSubList.className = 'bmlt_sb_dl';
+        
+            for ( var i = 0; i < sb_array.length; i++ )
+                {
+                this.createServiceBodyList ( sb_array[i], newSubList, inMinus );
+                };
+
+            newListContainer.appendChild ( newSubList );
+            };
         };
 };
 
@@ -872,7 +877,6 @@ BMLTSemantic.prototype.createServiceBodyCheckbox = function (   inServiceBodyObj
     newCheckbox.value = (inMinus ? -1 : 1) * parseInt ( inServiceBodyObject.id );
     newCheckbox.title = inServiceBodyObject.description;
     newCheckbox.className ='bmlt_checkbox_input';
-    inServiceBodyObject.checkboxElement = newCheckbox;
     newCheckbox.formHandler = this;
     newCheckbox.serviceBody = inServiceBodyObject;
     newCheckbox.onchange = function() { this.formHandler.handleServiceBodyCheck(this) };
