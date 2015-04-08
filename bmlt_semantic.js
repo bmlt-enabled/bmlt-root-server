@@ -792,7 +792,8 @@ BMLTSemantic.prototype.populateServiceBodiesSection = function()
     
     if ( this.service_body_objects && this.service_body_objects.length )
         {
-        this.createServiceBodyList ( null, this.getScopedElement ( 'bmlt_semantic_form_sb_fieldset_div' ) );
+        this.createServiceBodyList ( null, this.getScopedElement ( 'bmlt_semantic_form_sb_fieldset_div' ), false );
+        this.createServiceBodyList ( null, this.getScopedElement ( 'bmlt_semantic_form_sb_not_fieldset_div' ), true );
         };
     this.refreshURI();
 };
@@ -803,27 +804,29 @@ BMLTSemantic.prototype.populateServiceBodiesSection = function()
 */
 /*******************************************************************************************/
 BMLTSemantic.prototype.createServiceBodyList = function(inServiceBodyObject,
-                                                        inContainerObject
+                                                        inContainerObject,
+                                                        inMinus
                                                         )
 {
     var sb_array = null;
     var id = 0;
     var newListContainer = null;
+    var not_extra = inMinus ? 'not_' : '';
     
     if ( inServiceBodyObject )
         {
         id = inServiceBodyObject.id;
         
         var checkboxElement = document.createElement ( 'dt' );
-        checkboxElement.id = this.getScopedID ( 'bmlt_sb_dt_' + id.toString() );
+        checkboxElement.id = this.getScopedID ( 'bmlt_sb_dt_' + not_extra + id.toString() );
         checkboxElement.className = 'bmlt_sb_dt';
-        this.createServiceBodyCheckbox ( inServiceBodyObject, checkboxElement );
+        this.createServiceBodyCheckbox ( inServiceBodyObject, checkboxElement, inMinus );
         inContainerObject.appendChild ( checkboxElement );
         
         if ( inServiceBodyObject.childServiceBodies )
             {
             newListContainer = document.createElement ( 'dd' );
-            newListContainer.id = this.getScopedID ( 'bmlt_sb_dd_' + id.toString() );
+            newListContainer.id = this.getScopedID ( 'bmlt_sb_dd_' + not_extra + id.toString() );
             newListContainer.className = 'bmlt_sb_dd';
             inContainerObject.appendChild ( newListContainer ); 
             sb_array = inServiceBodyObject.childServiceBodies;
@@ -839,12 +842,12 @@ BMLTSemantic.prototype.createServiceBodyList = function(inServiceBodyObject,
     if ( newListContainer && sb_array && sb_array.length )
         {
         var newSubList = document.createElement ( 'dl' );
-        newSubList.id = this.getScopedID ( 'bmlt_sb_dl_' + id.toString() );
+        newSubList.id = this.getScopedID ( 'bmlt_sb_dl_' + not_extra + id.toString() );
         newSubList.className = 'bmlt_sb_dl';
         
         for ( var i = 0; i < sb_array.length; i++ )
             {
-            this.createServiceBodyList ( sb_array[i], newSubList );
+            this.createServiceBodyList ( sb_array[i], newSubList, inMinus );
             };
 
         newListContainer.appendChild ( newSubList );
@@ -861,9 +864,11 @@ BMLTSemantic.prototype.createServiceBodyCheckbox = function (   inServiceBodyObj
                                                                 inMinus
                                                             )
 {
+    var not_extra = inMinus ? 'not_' : '';
+
     var newCheckbox = document.createElement ( 'input' );
     newCheckbox.type = 'checkbox';
-    newCheckbox.id = this.getScopedID ( 'bmlt_semantic_form_sb_checkbox_' + inServiceBodyObject.id );
+    newCheckbox.id = this.getScopedID ( 'bmlt_semantic_form_sb_checkbox_' + not_extra + inServiceBodyObject.id );
     newCheckbox.value = (inMinus ? -1 : 1) * parseInt ( inServiceBodyObject.id );
     newCheckbox.title = inServiceBodyObject.description;
     newCheckbox.className ='bmlt_checkbox_input';
@@ -875,7 +880,7 @@ BMLTSemantic.prototype.createServiceBodyCheckbox = function (   inServiceBodyObj
     
     var newCheckboxLabel = document.createElement ( 'label' );
     newCheckboxLabel.htmlFor = newCheckbox.id;
-    newCheckboxLabel.id = this.getScopedID ( 'bmlt_semantic_form_sb_checkbox_label_' + inServiceBodyObject.id );
+    newCheckboxLabel.id = this.getScopedID ( 'bmlt_semantic_form_sb_checkbox_label_' + not_extra + inServiceBodyObject.id );
     newCheckboxLabel.className = 'bmlt_checkbox_label';
     newCheckboxLabel.title = inServiceBodyObject.description;
     newCheckboxLabel.appendChild ( document.createTextNode ( inServiceBodyObject.name ) );
@@ -1344,7 +1349,7 @@ BMLTSemantic.prototype.handleServiceBodyCheck = function ( inCheckbox )
 BMLTSemantic.prototype.updateServiceBodies = function ( inCheckboxObject )
 {
     var service_body_object = inCheckboxObject.serviceBody;
-    var sb_id = Math.abs ( parseInt ( inCheckboxObject.value ) );
+    var sb_id = parseInt ( inCheckboxObject.value );
     var childBodies = service_body_object.childServiceBodies;
     
     var found = false;
@@ -1353,7 +1358,7 @@ BMLTSemantic.prototype.updateServiceBodies = function ( inCheckboxObject )
         {
         for ( var i = 0; i < this.state.services.length; i++ )
             {
-            var serviceID = Math.abs ( parseInt ( this.state.services[i] ) );
+            var serviceID = parseInt ( this.state.services[i] );
         
             if ( serviceID == sb_id )
                 {
@@ -1385,10 +1390,12 @@ BMLTSemantic.prototype.updateServiceBodies = function ( inCheckboxObject )
         for ( var i = 0; i < childBodies.length; i++ )
             {
             var child = childBodies[i];
+            var not_extra = sb_id < 0 ? 'not_' : '';
+            var cb_element = this.getScopedElement ( 'bmlt_semantic_form_sb_checkbox_' + not_extra + parseInt ( childBodies[i].id ) );
             
-            child.checkboxElement.checked = inCheckboxObject.checked;
+            cb_element.checked = inCheckboxObject.checked;
             
-            this.updateServiceBodies ( child.checkboxElement );
+            this.updateServiceBodies ( cb_element );
             };
         };
 };

@@ -28,6 +28,12 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
 CHANGELIST
 ----------
+** Version 1.0a5 **
+
+- TBD
+
+- Added the "NOT" Service body section.
+
 ** Version 1.0a4 **
 
 - April 8, 2015

@@ -20,7 +20,7 @@
 */
 /***************************************************************************************************************************************/
 
-define ( '__VERSION__', '1.0a4' );
+define ( '__VERSION__', '1.0a5' );
 define ( '__REPO_URL__', 'https://bitbucket.org/bmlt/bmlt-semantic-workshop' );
 
 class bmlt_semantic
@@ -980,6 +980,19 @@ class bmlt_semantic
         $ret .= '<p>'.$this->localize_string ( 'or_note' ).'</p>';
         $ret .= '</div>';
         $ret .= '<div id="bmlt_semantic_form_sb_fieldset_div'.htmlspecialchars ( $this->_myJSName ).'"></div>';
+        $ret .= '</fieldset>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
+
+        $ret .= '<fieldset id="bmlt_semantic_form_sb_not_fieldset'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_sb_fieldset"><legend id="bmlt_semantic_form_sb_not_fieldset_legend'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_sb_fieldset_legend">';
+        $ret .= $this->localize_string ( 'service_bodies_not_section_legend' );
+        $ret .= '</legend>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $ret .= '<div id="bmlt_semantic_form_sb_not_blurb_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_workshop_blurb_note_div">';
+        $ret .= '<p>'.$this->localize_string ( 'all_unselected_note1' ).'</p>';
+        $ret .= '<p>'.$this->localize_string ( 'all_unselected_note2' ).'</p>';
+        $ret .= '<p>'.$this->localize_string ( 'or_note' ).'</p>';
+        $ret .= '</div>';
+        $ret .= '<div id="bmlt_semantic_form_sb_not_fieldset_div'.htmlspecialchars ( $this->_myJSName ).'"></div>';
         $ret .= '</fieldset>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
 
