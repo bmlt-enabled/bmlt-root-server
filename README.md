@@ -28,6 +28,12 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
 CHANGELIST
 ----------
+** Version 1.0b0 **
+
+- April 9, 2015
+
+- First Beta release. No code change from 1.0a6, except that we are no longer running debug mode.
+
 ** Version 1.0a6 **
 
 - April 9, 2015

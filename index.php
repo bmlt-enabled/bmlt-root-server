@@ -19,7 +19,7 @@
 */
 
 // Comment out for release version.
-define ( 'DEBUG', 1 );
+// define ( 'DEBUG', 1 );
 require_once ( dirname ( __FILE__ ).'/bmlt_semantic.class.php' );
 $bmlt_semantic_instance = new bmlt_semantic ( $_GET );
 ob_start();
