@@ -1170,7 +1170,7 @@ function GetServerInfo()
     $ret = '';
     $version_array = GetServerVersion();
     $version_num = (intval ( $version_array[0] ) * 1000000) + (intval ( $version_array[1] ) * 1000) + intval ( $version_array[2] );
-    $version_string = strval ( $version_array[0] ).'.'.strval ( $version_array[1] ).'.'.strval ( $version_array[0] );
+    $version_string = strval ( $version_array[0] ).'.'.strval ( $version_array[1] ).'.'.strval ( $version_array[2] );
     $lang_array = c_comdef_server::GetServerLangs();
     $lang_string = implode ( ',', array_keys ( $lang_array ) );
     $localStrings = c_comdef_server::GetLocalStrings();
@@ -1207,29 +1207,19 @@ function GetServerVersion()
                     {
                     $nodeVal = $has_info->item ( 0 )->nodeValue;
                     $ret = explode ( '.', $nodeVal );
-                
-                    if ( !isset ( $ret[1] ) )
-                        {
-                        $ret[1] = 0;
-                        }
-                
-                    if ( !isset ( $ret[2] ) )
-                        {
-                        $ret[2] = 0;
-                        }
                     }
                 }
             }
         }
-        
+    
     if ( !isset ( $ret[1] ) )
         {
-        $ret[1] = 0;
+        $ret[1] = '0';
         }
     
     if ( !isset ( $ret[2] ) )
         {
-        $ret[1] = 0;
+        $ret[1] = '0';
         }
     
     $ret[0] = intval ( $ret[0] );

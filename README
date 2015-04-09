@@ -46,6 +46,12 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+** Version 2.6.21 **
+
+- April 9, 2015
+
+- Fixed a bug in the simple response format fetch. Sometimes, the wrong formats were being returned.
+
 ** Version 2.6.20 **
 
 - March 28, 2015
