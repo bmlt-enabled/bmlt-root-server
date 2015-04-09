@@ -668,7 +668,7 @@ BMLTSemantic.prototype.fetchFormatsCallback = function (inHTTPReqObject
         else
             {
             context.populateFormatsSection(context.getScopedElement ( 'bmlt_semantic_form_formats_fieldset_div' ), false );
-            context.populateFormatsSection(context.getScopedElement ( 'bmlt_semantic_form_un_formats_fieldset_div' ), true );
+            context.populateFormatsSection(context.getScopedElement ( 'bmlt_semantic_form_not_formats_fieldset_div' ), true );
             };
         };
 };
@@ -1364,16 +1364,20 @@ BMLTSemantic.prototype.updateServiceBodies = function ( inCheckboxObject )
             {
             var serviceID = parseInt ( this.state.services[i] );
         
-            if ( serviceID == sb_id )
+            if ( Math.abs ( serviceID ) == Math.abs ( sb_id ) )
                 {
-                found = true;
                 if ( inCheckboxObject.checked )
                     {
                     this.state.services[i] = parseInt ( inCheckboxObject.value );
+                    found = true;
                     }
                 else
                     {
-                    this.state.services.splice ( i, 1 );
+                    if ( serviceID == sb_id )
+                        {
+                        this.state.services.splice ( i, 1 );
+                        found = true;
+                        };
                     };
                 break;
                 };
@@ -1387,6 +1391,12 @@ BMLTSemantic.prototype.updateServiceBodies = function ( inCheckboxObject )
     if ( !found && inCheckboxObject.checked )
         {
         this.state.services.push ( parseInt ( inCheckboxObject.value ) );
+        };
+    
+    if ( inCheckboxObject.checked )
+        {
+        var not_extra = (parseInt ( inCheckboxObject.value ) > 0) ? 'not_' : '';
+        this.getScopedElement ( 'bmlt_semantic_form_sb_checkbox_' + not_extra + Math.abs ( sb_id ) ).checked = false;
         };
     
     if ( childBodies )
@@ -1508,18 +1518,38 @@ BMLTSemantic.prototype.handleSortFieldChange = function ( inOptionObject )
 BMLTSemantic.prototype.handleFormatCheckbox = function ( inCheckboxObject )
 {
     var id = parseInt ( inCheckboxObject.value );
+    var id_abs = Math.abs ( id );
     var checked = inCheckboxObject.checked;
     var formatsArray = Array();
+    var yes_container_id = this.getScopedID ( 'bmlt_semantic_form_formats_fieldset_div' );
+    var not_container_id = this.getScopedID ( 'bmlt_semantic_form_not_formats_fieldset_div' );
+    var yes_id = this.getScopedID ( yes_container_id + '_checkbox_' + id_abs );
+    var no_id = this.getScopedID ( not_container_id + '_checkbox_' + id_abs );
     
     if ( this.state.formats )
         {
+        if ( inCheckboxObject.checked )
+            {
+            if ( inCheckboxObject.id == yes_id )
+                {
+                document.getElementById ( no_id ).checked = false;
+                }
+            else
+                {
+                if ( inCheckboxObject.id == no_id )
+                    {
+                    document.getElementById ( yes_id ).checked = false;
+                    };
+                };
+            };
+        
         var formatsArrayTemp = this.state.formats.split(',');
 
         this.state.formats = null;
         
         for ( var i = 0; i < formatsArrayTemp.length; i++ )
             {
-            if ( parseInt ( formatsArrayTemp[i] ) != id )
+            if ( parseInt ( formatsArrayTemp[i] ) && (Math.abs ( parseInt ( formatsArrayTemp[i] ) ) != id_abs) )
                 {
                 formatsArray.push ( parseInt ( formatsArrayTemp[i] ) );
                 };
@@ -1545,7 +1575,7 @@ BMLTSemantic.prototype.handleFormatCheckbox = function ( inCheckboxObject )
 /*******************************************************************************************/
 BMLTSemantic.prototype.handleWeekdayCheckbox = function ( inCheckboxObject )
 {
-    this.scanWeekdays();
+    this.scanWeekdays ( inCheckboxObject.checked ? parseInt ( inCheckboxObject.value ) : 0 );
     this.refreshURI();
 };
 
@@ -1554,14 +1584,28 @@ BMLTSemantic.prototype.handleWeekdayCheckbox = function ( inCheckboxObject )
     \brief
 */
 /*******************************************************************************************/
-BMLTSemantic.prototype.scanWeekdays = function ( )
+BMLTSemantic.prototype.scanWeekdays = function ( value )
 {
     this.state.weekdays = null;
-
+    var abs = Math.abs ( parseInt ( value ) );
+    
+    if ( value > 0 )
+        {
+        this.getScopedElement ( 'bmlt_semantic_form_not_weekday_checkbox_' + abs ).checked = false;
+        }
+    else
+        {
+        if ( value < 0 )
+            {
+            this.getScopedElement ( 'bmlt_semantic_form_weekday_checkbox_' + abs ).checked = false;
+            };
+        };
+    
     for ( var i = 1; i < 8; i++ )
         {
         if ( this.getScopedElement ( 'bmlt_semantic_form_weekday_checkbox_' + i ).checked )
             {
+            
             if ( this.state.weekdays )
                 {
                 this.state.weekdays += ',' + i.toString();
@@ -1572,8 +1616,9 @@ BMLTSemantic.prototype.scanWeekdays = function ( )
                 };
             };
         
-        if ( this.getScopedElement ( 'bmlt_semantic_form_un_weekday_checkbox_' + i ).checked )
+        if ( this.getScopedElement ( 'bmlt_semantic_form_not_weekday_checkbox_' + i ).checked )
             {
+            
             if ( this.state.weekdays )
                 {
                 this.state.weekdays += ',' + (-i).toString();
@@ -1598,7 +1643,7 @@ BMLTSemantic.prototype.clearWeekdays = function ( )
     for ( var i = 1; i < 8; i++ )
         {
         this.getScopedElement ( 'bmlt_semantic_form_weekday_checkbox_' + i ).checked = false;
-        this.getScopedElement ( 'bmlt_semantic_form_un_weekday_checkbox_' + i ).checked = false;
+        this.getScopedElement ( 'bmlt_semantic_form_not_weekday_checkbox_' + i ).checked = false;
         };
 };
 

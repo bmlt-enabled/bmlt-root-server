@@ -28,6 +28,12 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
 CHANGELIST
 ----------
+** Version 1.0a6 **
+
+- April 9, 2015
+
+- Made the NOT sections XOR with the "NOT-NOT" sections.
+
 ** Version 1.0a5 **
 
 - April 8, 2015

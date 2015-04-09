@@ -20,7 +20,7 @@
 */
 /***************************************************************************************************************************************/
 
-define ( '__VERSION__', '1.0a5' );
+define ( '__VERSION__', '1.0a6' );
 define ( '__REPO_URL__', 'https://bitbucket.org/bmlt/bmlt-semantic-workshop' );
 
 class bmlt_semantic
@@ -883,7 +883,7 @@ class bmlt_semantic
         $ret .= '</legend>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
 
-        $ret .= '<div id="bmlt_semantic_form_sb_blurb_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_workshop_blurb_note_div">';
+        $ret .= '<div id="bmlt_semantic_form_weekday_blurb_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_workshop_blurb_note_div">';
         $ret .= '<p>'.$this->localize_string ( 'all_unselected_note1' ).'</p>';
         $ret .= '<p>'.$this->localize_string ( 'all_unselected_note2' ).'</p>';
         $ret .= '<p>'.$this->localize_string ( 'or_note' ).'</p>';
@@ -905,11 +905,11 @@ class bmlt_semantic
         $ret .= '</fieldset>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         
-        $ret .= '<fieldset id="bmlt_semantic_form_weekday_fieldset'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_weekday_fieldset"><legend id="bmlt_semantic_form_weekday_fieldset_legend'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_weekday_fieldset_legend">';
+        $ret .= '<fieldset id="bmlt_semantic_form_not_weekday_fieldset'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_weekday_fieldset"><legend id="bmlt_semantic_form_not_weekday_fieldset_legend'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_weekday_fieldset_legend">';
         $ret .= $this->localize_string ( 'weekday_section_negative_legend' );
         $ret .= '</legend>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
-        $ret .= '<div id="bmlt_semantic_form_sb_blurb_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_workshop_blurb_note_div">';
+        $ret .= '<div id="bmlt_semantic_form_not_weekday_blurb_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_workshop_blurb_note_div">';
         $ret .= '<p>'.$this->localize_string ( 'all_unselected_note3' ).'</p>';
         $ret .= '</div>';
         $iStart = intval ( $this->localize_string ( 'startDay' ) );
@@ -921,9 +921,9 @@ class bmlt_semantic
                 $day_int = 1;
                 }
             $name = $this->localize_string ( 'weekday'.$day_int );
-            $value = $day_int;
+            $value = -$day_int;
             
-            $ret .= $this->make_checkbox_html ( $name, 'bmlt_semantic_form_un_weekday_checkbox_'.$value, FALSE, $value, 'handleWeekdayCheckbox' );
+            $ret .= $this->make_checkbox_html ( $name, 'bmlt_semantic_form_not_weekday_checkbox_'.abs ( $value ), FALSE, $value, 'handleWeekdayCheckbox' );
             }
         $ret .= '<div class="clear_both"></div>';
         $ret .= '</fieldset>';
@@ -952,7 +952,7 @@ class bmlt_semantic
         $ret .= '<p>'.$this->localize_string ( 'all_unselected_note2' ).'</p>';
         $ret .= '<p>'.$this->localize_string ( 'and_note' ).'</p>';
         $ret .= '</div>';
-        $ret .= '<div id="bmlt_semantic_form_un_formats_fieldset_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_formats_fieldset_div"></div>';
+        $ret .= '<div id="bmlt_semantic_form_not_formats_fieldset_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_formats_fieldset_div"></div>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '</fieldset>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
