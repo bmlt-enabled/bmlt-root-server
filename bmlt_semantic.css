@@ -288,3 +288,8 @@ input.formEntrySubmit
 {
     margin-left: 0.5em;
 }
+
+input.bmlt_semantic_form_time_text
+{
+    width:3em;
+}

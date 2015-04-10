@@ -20,7 +20,7 @@
 */
 /***************************************************************************************************************************************/
 
-define ( '__VERSION__', '1.0b0' );
+define ( '__VERSION__', '1.0b1' );
 define ( '__REPO_URL__', 'https://bitbucket.org/bmlt/bmlt-semantic-workshop' );
 
 class bmlt_semantic
@@ -1023,6 +1023,49 @@ class bmlt_semantic
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
         $ret .= '</fieldset>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
+        
+        $ret .= '<fieldset id="bmlt_semantic_form_start_time_fieldset'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_start_time_fieldset"><legend id="bmlt_semantic_form_start_time_fieldset_legend'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_start_time_fieldset_legend">';
+        $ret .= $this->localize_string ( 'start_time_legend' );
+        $ret .= '</legend>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
+        $ret .= '<div id="bmlt_semantic_form_start_time_blurb_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_workshop_blurb_note_div">';
+        $ret .= '<p>'.$this->localize_string ( 'start_time_blurb' ).'</p>';
+        $ret .= '</div>';
+        $ret .= '<div id="bmlt_semantic_form_start_time_fieldset_min_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_start_time_fieldset_div">';
+        $ret .= '<label for="bmlt_semantic_form_start_time_min_text'.htmlspecialchars ( $this->_myJSName ).'" id="bmlt_semantic_form_start_time_min_text_label'.htmlspecialchars ( $this->_myJSName ).'">'.$this->localize_string ( 'start_time_min_label' ).'</label>';
+        $ret .= '<input pattern="^[0-9\:]{0,5}$" type="text" id="bmlt_semantic_form_start_time_min_text'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_time_text" />';
+        $ret .= '</div>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $ret .= '<div id="bmlt_semantic_form_start_time_fieldset_max_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_start_time_fieldset_div">';
+        $ret .= '<label for="bmlt_semantic_form_start_time_max_text'.htmlspecialchars ( $this->_myJSName ).'" id="bmlt_semantic_form_start_time_max_text_label'.htmlspecialchars ( $this->_myJSName ).'">'.$this->localize_string ( 'start_time_max_label' ).'</label>';
+        $ret .= '<input pattern="^[0-9\:]{0,5}$" type="text" id="bmlt_semantic_form_start_time_max_text'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_time_text" />';
+        $ret .= '</div>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $ret .= '</fieldset>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        
+        $ret .= '<fieldset id="bmlt_semantic_form_duration_fieldset'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_duration_fieldset"><legend id="bmlt_semantic_form_duration_fieldset_legend'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_duration_fieldset_legend">';
+        $ret .= $this->localize_string ( 'duration_legend' );
+        $ret .= '</legend>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
+        $ret .= '<div id="bmlt_semantic_form_duration_blurb_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_workshop_blurb_note_div">';
+        $ret .= '<p>'.$this->localize_string ( 'duration_blurb' ).'</p>';
+        $ret .= '</div>';
+        $ret .= '<div id="bmlt_semantic_form_duration_fieldset_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_duration_fieldset_div">';
+        $ret .= '<div id="bmlt_semantic_form_duration_fieldset_min_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_duration_fieldset_div">';
+        $ret .= '<label for="bmlt_semantic_form_duration_min_text'.htmlspecialchars ( $this->_myJSName ).'" id="bmlt_semantic_form_duration_min_text_label'.htmlspecialchars ( $this->_myJSName ).'">'.$this->localize_string ( 'duration_min_label' ).'</label>';
+        $ret .= '<input pattern="^[0-9\:]{0,5}$" type="text" id="bmlt_semantic_form_duration_min_text'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_time_text" />';
+        $ret .= '</div>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $ret .= '<div id="bmlt_semantic_form_duration_fieldset_max_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_duration_fieldset_div">';
+        $ret .= '<label for="bmlt_semantic_form_duration_max_text'.htmlspecialchars ( $this->_myJSName ).'" id="bmlt_semantic_form_duration_max_text_label'.htmlspecialchars ( $this->_myJSName ).'">'.$this->localize_string ( 'duration_max_label' ).'</label>';
+        $ret .= '<input pattern="^[0-9\:]{0,5}$" type="text" id="bmlt_semantic_form_duration_max_text'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_time_text" />';
+        $ret .= '</div>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $ret .= '</div>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $ret .= '</fieldset>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         
         $ret .= '<fieldset id="bmlt_semantic_form_map_fieldset'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_map_fieldset"><legend id="bmlt_semantic_form_map_fieldset_legend'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_map_fieldset_legend">';
         $ret .= $this->localize_string ( 'map_search_section_legend' );

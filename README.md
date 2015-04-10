@@ -28,6 +28,12 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
 CHANGELIST
 ----------
+** Version 1.0b1 **
+
+- TBD
+
+- Oops. Forgot to add the start time/duration sections.
+
 ** Version 1.0b0 **
 
 - April 9, 2015

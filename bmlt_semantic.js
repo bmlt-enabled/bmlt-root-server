@@ -55,6 +55,10 @@ BMLTSemanticResult.prototype.compiled_params = null;    ///< This will contain t
 BMLTSemanticResult.prototype.fields = Array();          ///< This will hold any specific fields to be returned.
 BMLTSemanticResult.prototype.sorts = null;              ///< This holds an array of objects that will indicate a chosen sort. The object schema will be: {"key":STRING,"order",INTEGER}
 BMLTSemanticResult.prototype.weekdayHeader = null;      ///< This will be set to nonzero if the BMLT_SIMPLE result will be separated by weekday.
+BMLTSemanticResult.prototype.startTimeMin = null;       ///< This will have a string, containing a start time (minimum) in military time.
+BMLTSemanticResult.prototype.startTimeMax = null;       ///< This will have a string, containing a start time (maximum) in military time.
+BMLTSemanticResult.prototype.durationMin = null;        ///< This will have a string, containing a minimum duration.
+BMLTSemanticResult.prototype.durationMax = null;        ///< This will have a string, containing a maximum duration.
 BMLTSemanticResult.prototype.valid = null;              ///< This will be non-null if the compiled result is valid (only after compile()).
 
 /*******************************************************************************************/
@@ -1773,6 +1777,28 @@ BMLTSemantic.prototype.handleChangeText = function ()
     \brief 
 */
 /*******************************************************************************************/
+BMLTSemantic.prototype.handleStartText = function ( inTextItem
+                                                    )
+{
+    this.refreshURI();
+};
+
+/*******************************************************************************************/
+/**
+    \brief 
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.handleDurationText = function ( inTextItem
+                                                        )
+{
+    this.refreshURI();
+};
+
+/*******************************************************************************************/
+/**
+    \brief 
+*/
+/*******************************************************************************************/
 BMLTSemantic.prototype.handleMapCheckboxChange = function ( inCheckbox
                                                             )
 {
@@ -2352,6 +2378,10 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.setBasicFunctions ( 'bmlt_semantic_form_just_used_formats_checkbox_div' );
     this.setBasicFunctions ( 'bmlt_semantic_form_formats_fieldset_contents_div' );
     this.setBasicFunctions ( 'bmlt_semantic_form_weekday_header_checkbox_div' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_start_time_min_text' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_start_time_max_text' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_duration_min_text' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_duration_max_text' );
     
     if ( this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_server_info_option' ) )
         {
@@ -2372,7 +2402,15 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.setTextHandlers ( 'bmlt_semantic_form_map_search_text_radius' );
     this.setTextHandlers ( 'bmlt_semantic_form_map_search_longitude_text' );
     this.setTextHandlers ( 'bmlt_semantic_form_map_search_latitude_text' );
+    this.setTextHandlers ( 'bmlt_semantic_form_start_time_min_text' );
+    this.setTextHandlers ( 'bmlt_semantic_form_start_time_max_text' );
+    this.setTextHandlers ( 'bmlt_semantic_form_duration_min_text' );
+    this.setTextHandlers ( 'bmlt_semantic_form_duration_max_text' );
     
+    this.getScopedElement ( 'bmlt_semantic_form_start_time_min_text' ).additionalHandler = function () { this.formHandler.handleStartText ( this ) };
+    this.getScopedElement ( 'bmlt_semantic_form_start_time_max_text' ).additionalHandler = function () { this.formHandler.handleStartText ( this ) };
+    this.getScopedElement ( 'bmlt_semantic_form_duration_min_text' ).additionalHandler = function () { this.formHandler.handleDurationText ( this ) };
+    this.getScopedElement ( 'bmlt_semantic_form_duration_max_text' ).additionalHandler = function () { this.formHandler.handleDurationText ( this ) };
     this.getScopedElement ( 'bmlt_semantic_form_changes_from_text' ).additionalHandler = function () { this.formHandler.handleChangeText ( this ) };
     this.getScopedElement ( 'bmlt_semantic_form_changes_to_text' ).additionalHandler = function () { this.formHandler.handleChangeText ( this ) };
     this.getScopedElement ( 'bmlt_semantic_form_changes_id_text' ).additionalHandler = function () { this.formHandler.handleChangeText ( this ) };
@@ -2725,6 +2763,30 @@ BMLTSemantic.prototype.refreshURI = function ()
     var formatsBlurbDiv = this.getScopedElement ( 'bmlt_switcher_field_value_div_no_selected_formats_blurb' );
     var useMap = this.getScopedElement ( 'bmlt_semantic_form_map_checkbox' );
     var mapRadius = this.getScopedElement ( 'bmlt_semantic_form_map_search_text_radius' );
+    var startMin = this.getScopedElement ( 'bmlt_semantic_form_start_time_min_text' );
+    var startMax = this.getScopedElement ( 'bmlt_semantic_form_start_time_max_text' );
+    var durationMin = this.getScopedElement ( 'bmlt_semantic_form_duration_min_text' );
+    var durationMax = this.getScopedElement ( 'bmlt_semantic_form_duration_max_text' );
+    
+    if ( startMin && startMin.value )
+        {
+        var time = startMin.value.toString().split( ':' );
+        };
+    
+    if ( startMax && startMax.value )
+        {
+        var time = startMax.value.toString().split( ':' );
+        };
+         
+    if ( durationMin && durationMin.value )
+        {
+        var time = durationMin.value.toString().split( ':' );
+        };
+    
+    if ( durationMax && durationMax.value )
+        {
+        var time = durationMax.value.toString().split( ':' );
+        };
     
     if ( useMap && useMap.checked )
         {
