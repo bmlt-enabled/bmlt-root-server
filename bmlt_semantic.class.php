@@ -260,13 +260,9 @@ class bmlt_semantic
     /**************************************************************/
     function get_server_version()
     {
-        $ret = 0;
+        $ret = array();
         
-        if ( $this->_version )
-            {
-            $ret = $this->_version;
-            }
-        elseif ( $this->_bmltRootServerURI )
+        if ( $this->_bmltRootServerURI )
             {
             $error = NULL;
         
@@ -297,8 +293,7 @@ class bmlt_semantic
                                 $ret[2] = 0;
                                 }
                         
-                            $ret = (intval ( $ret[0] ) * 1000000) + (intval ( $ret[1] ) * 1000) + intval ( $ret[2] );
-                            $this->_version = $ret;
+                            $this->_version = (intval ( $ret[0] ) * 1000000) + (intval ( $ret[1] ) * 1000) + intval ( $ret[2] );
                             }
                         }
                     }
@@ -417,7 +412,8 @@ class bmlt_semantic
                 }
             elseif ( isset ( $this->_httpVars['GetVersion'] ) )
                 {
-                echo ( $this->get_server_version() );
+                $this->get_server_version();
+                echo ( $this->_version );
                 }
             elseif ( isset ( $this->_httpVars['GetLangs'] ) || isset ( $this->_httpVars['GetServerInfo'] ) )
                 {
@@ -450,7 +446,8 @@ class bmlt_semantic
     {
         $ret = '';
         
-        $version = $this->get_server_version();
+        $this->get_server_version();
+        $version = $this->_version;
         $this->_langs = $this->get_server_langs();
         $this->_keys = $this->get_server_keys();
         $ret .= '<div id="bmlt_semantic'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic">';
@@ -584,7 +581,8 @@ class bmlt_semantic
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         if ( $this->_bmltRootServerURI )
             {
-            $ret .= '<div id="bmlt_semantic_info_div_root_url_wrapper'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_info_div_root_url_wrapper"><span class="info_label">'.$this->localize_string ( 'root_url_label' ).'</span><span class="info_value"><a href="'.$this->_bmltRootServerURI.'" target="_blank">'.htmlspecialchars ( $this->_bmltRootServerURI ).'</a></span></div>';
+            $v_array = $this->get_server_version();
+            $ret .= '<div id="bmlt_semantic_info_div_root_url_wrapper'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_info_div_root_url_wrapper"><span class="info_label">'.$this->localize_string ( 'root_url_label' ).'</span><span class="info_value"><a href="'.$this->_bmltRootServerURI.'" target="_blank">'.htmlspecialchars ( $this->_bmltRootServerURI ).'</a> ('.$v_array[0].'.'.$v_array[1].'.'.$v_array[2].')</span></div>';
             $ret .= defined ( 'DEBUG' ) ? "\n" : '';
             }
             
@@ -1369,7 +1367,9 @@ class bmlt_semantic
         $ret .= '<option id="bmlt_semantic_form_switcher_type_select_naws_option'.htmlspecialchars ( $this->_myJSName ).'" value="GetNAWSDump">'.$this->localize_string ( 'switcher_type_selector_naws' ).'</option>';
         $ret .= '<option id="bmlt_semantic_form_switcher_type_select_schema_option'.htmlspecialchars ( $this->_myJSName ).'" disabled="disabled" value="XMLSchema">'.$this->localize_string ( 'switcher_type_selector_schema' ).'</option>';
         
-        if ( $this->get_server_version() >= 2006020 )
+        $this->get_server_version();
+        $version = $this->_version;
+        if ( $version >= 2006020 )
             {
             $ret .= '<option id="bmlt_semantic_form_switcher_type_select_server_info_option'.htmlspecialchars ( $this->_myJSName ).'" value="GetServerInfo">'.$this->localize_string ( 'switcher_type_selector_server_info' ).'</option>';
             }
