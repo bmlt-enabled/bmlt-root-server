@@ -30,7 +30,7 @@ CHANGELIST
 ----------
 ** Version 1.0b1 **
 
-- TBD
+- April 11, 2015
 
 - Oops. Forgot to add the start time/duration sections.
 

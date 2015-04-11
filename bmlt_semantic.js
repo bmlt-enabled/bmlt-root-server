@@ -55,10 +55,10 @@ BMLTSemanticResult.prototype.compiled_params = null;    ///< This will contain t
 BMLTSemanticResult.prototype.fields = Array();          ///< This will hold any specific fields to be returned.
 BMLTSemanticResult.prototype.sorts = null;              ///< This holds an array of objects that will indicate a chosen sort. The object schema will be: {"key":STRING,"order",INTEGER}
 BMLTSemanticResult.prototype.weekdayHeader = null;      ///< This will be set to nonzero if the BMLT_SIMPLE result will be separated by weekday.
-BMLTSemanticResult.prototype.startTimeMin = null;       ///< This will have a string, containing a start time (minimum) in military time.
-BMLTSemanticResult.prototype.startTimeMax = null;       ///< This will have a string, containing a start time (maximum) in military time.
-BMLTSemanticResult.prototype.durationMin = null;        ///< This will have a string, containing a minimum duration.
-BMLTSemanticResult.prototype.durationMax = null;        ///< This will have a string, containing a maximum duration.
+BMLTSemanticResult.prototype.startTimeMin = null;       ///< This will have an array, with the minimum start time. Hours will be element 0, minutes, element 1.
+BMLTSemanticResult.prototype.startTimeMax = null;       ///< This will have an array, with the maximum start time. Hours will be element 0, minutes, element 1.
+BMLTSemanticResult.prototype.durationMin = null;        ///< This will have an array, with the minimum duration. Hours will be element 0, minutes, element 1.
+BMLTSemanticResult.prototype.durationMax = null;        ///< This will have an array, with the minimum duration. Hours will be element 0, minutes, element 1.
 BMLTSemanticResult.prototype.valid = null;              ///< This will be non-null if the compiled result is valid (only after compile()).
 
 /*******************************************************************************************/
@@ -262,6 +262,54 @@ BMLTSemanticResult.prototype.compileSearchResults = function()
     if ( this.weekdayHeader && (mainSelect.value == 'SHORTCODE') )
         {
         this.compiled_params += '&weekday_header=1';
+        };
+    
+    if ( this.startTimeMin && (this.startTimeMin[0] || this.startTimeMin[1]) )
+        {
+        if ( this.startTimeMin[0] )
+            {
+            this.compiled_params += '&StartsAfterH=' + this.startTimeMin[0].toString();
+            };
+        if ( this.startTimeMin[1] )
+            {
+            this.compiled_params += '&StartsAfterM=' + this.startTimeMin[1].toString();
+            };
+        };
+    
+    if ( this.startTimeMax && (this.startTimeMax[0] || this.startTimeMax[1]) )
+        {
+        if ( this.startTimeMax[0] )
+            {
+            this.compiled_params += '&StartsBeforeH=' + this.startTimeMax[0].toString();
+            };
+        if ( this.startTimeMax[1] )
+            {
+            this.compiled_params += '&StartsBeforeM=' + this.startTimeMax[1].toString();
+            };
+        };
+    
+    if ( this.durationMin && (this.durationMin[0] || this.durationMin[1]) )
+        {
+        if ( this.durationMin[0] )
+            {
+            this.compiled_params += '&MinDurationH=' + this.durationMin[0].toString();
+            };
+        if ( this.durationMin[1] )
+            {
+            this.compiled_params += '&MinDurationM=' + this.durationMin[1].toString();
+            };
+        };
+    
+    if ( this.durationMax && (this.durationMax[0] || this.durationMax[1]) )
+        {
+        if ( this.durationMax[0] )
+            {
+            this.compiled_params += '&MaxDurationH=' + this.durationMax[0].toString();
+            };
+        if ( this.durationMax[1] )
+            {
+            this.compiled_params += '&MaxDurationM=' + this.durationMax[1].toString();
+            };
         };
     
     this.valid = true;
@@ -2768,24 +2816,116 @@ BMLTSemantic.prototype.refreshURI = function ()
     var durationMin = this.getScopedElement ( 'bmlt_semantic_form_duration_min_text' );
     var durationMax = this.getScopedElement ( 'bmlt_semantic_form_duration_max_text' );
     
+    this.state.startTimeMin = null;
+    this.state.startTimeMax = null;
+    this.state.durationMin = null;
+    this.state.durationMax = null;
+    
     if ( startMin && startMin.value )
         {
         var time = startMin.value.toString().split( ':' );
+        time[0] = Math.abs ( parseInt ( time[0] ) );
+        if ( time[0] > 23 )
+            {
+            time[0] = 23;
+            };
+            
+        if ( time[1] )
+            {
+            time[1] = Math.abs ( parseInt ( time[1] ) );
+            if ( time[1] > 59 )
+                {
+                time[1] = 59;
+                };
+            };
+        
+        if ( !time[1] )
+            {
+            time[1] = 0;
+            };
+        
+        this.state.startTimeMin = time;
         };
     
     if ( startMax && startMax.value )
         {
         var time = startMax.value.toString().split( ':' );
+
+        time[0] = Math.abs ( parseInt ( time[0] ) );
+        if ( time[0] > 23 )
+            {
+            time[0] = 23;
+            };
+            
+        if ( time[1] )
+            {
+            time[1] = Math.abs ( parseInt ( time[1] ) );
+            if ( time[1] > 59 )
+                {
+                time[1] = 59;
+                };
+            };
+        
+        if ( !time[1] )
+            {
+            time[1] = 0;
+            };
+        
+        this.state.startTimeMax = time;
         };
          
     if ( durationMin && durationMin.value )
         {
         var time = durationMin.value.toString().split( ':' );
+
+        time[0] = Math.abs ( parseInt ( time[0] ) );
+        if ( time[0] > 23 )
+            {
+            time[0] = 23;
+            };
+            
+        if ( time[1] )
+            {
+            time[1] = Math.abs ( parseInt ( time[1] ) );
+            if ( time[1] > 59 )
+                {
+                time[1] = 59;
+                };
+            };
+        
+        if ( !time[1] )
+            {
+            time[1] = 0;
+            };
+        
+        this.state.durationMin = time;
         };
     
     if ( durationMax && durationMax.value )
         {
         var time = durationMax.value.toString().split( ':' );
+
+        time[0] = Math.abs ( parseInt ( time[0] ) );
+        if ( time[0] > 23 )
+            {
+            time[0] = 23;
+            };
+            
+        if ( time[1] )
+            {
+            time[1] = Math.abs ( parseInt ( time[1] ) );
+            if ( time[1] > 59 )
+                {
+                time[1] = 59;
+                };
+            };
+        
+        if ( !time[1] )
+            {
+            time[1] = 0;
+            };
+        
+        this.state.durationMax = time;
         };
     
     if ( useMap && useMap.checked )
