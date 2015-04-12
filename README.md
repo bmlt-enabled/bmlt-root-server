@@ -28,6 +28,12 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
 CHANGELIST
 ----------
+** Version 1.0b2 **
+
+- April 11, 2015
+
+- This tool won't work on Root Server versions below 2.6.15. I now test for that.
+
 ** Version 1.0b1 **
 
 - April 11, 2015

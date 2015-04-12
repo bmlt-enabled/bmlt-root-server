@@ -27,6 +27,7 @@ $this->_localization = array (
                                 'javascript_noscript'                   =>  'You do not have JavaScript enabled. This site will not work without JavaScript.',
                                 'submit_button_name'                    =>  'Submit',
                                 'need_good_url'                         =>  'You must provide a valid Root Server URL in order for this to work.',
+                                'need_higher_version'                   =>  'You have to have a BMLT Root Server Version 2.6.15 or higher to use this tool.',
                                 'enter_url_label'                       =>  'Enter A Valid BMLT Root Server URL:',
                                 'select_option_text_prompt'             =>  'This Will Be A',
                                 'select_option_text_direct_url'         =>  'Direct Response URL',

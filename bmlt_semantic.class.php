@@ -20,7 +20,7 @@
 */
 /***************************************************************************************************************************************/
 
-define ( '__VERSION__', '1.0b1' );
+define ( '__VERSION__', '1.0b2' );
 define ( '__REPO_URL__', 'https://bitbucket.org/bmlt/bmlt-semantic-workshop' );
 
 class bmlt_semantic
@@ -463,7 +463,7 @@ class bmlt_semantic
         $ret .= '<h1 id="bmlt_semantic_badserver_h1'.htmlspecialchars ( $this->_myJSName ).'" style="display:none">'.$this->localize_string ( 'need_good_url' ).'</h1>';
         $ret .= '<h1 id="bmlt_semantic_header_h1'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_header_h1">'.$this->localize_string ( 'title_of_page' ).'</h1>';
             
-        if ( $version > 2000000 )
+        if ( $version >= 2006015 )
             {
             $ret .= '<div id="bmlt_main_blurb'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_workshop_blurb_note_div bmlt_main_blurb">';
             $ret .= '<p>'.$this->localize_string ( 'main_blurb1' ).'</p>';
@@ -539,7 +539,14 @@ class bmlt_semantic
             {
             if ( $this->_bmltRootServerURI )
                 {
-                $ret .= '<h2 id="server_url_invalid_note_h2">'.$this->localize_string ( 'need_good_url' ).'</h2>';
+                if ( $version < 2006015 )
+                    {
+                    $ret .= '<h2 id="server_url_invalid_note_h2">'.$this->localize_string ( 'need_higher_version' ).'</h2>';
+                    }
+                else
+                    {
+                    $ret .= '<h2 id="server_url_invalid_note_h2">'.$this->localize_string ( 'need_good_url' ).'</h2>';
+                    }
                 }
             
             $ret .= '<form id="enter_server_url_form" class="enter_server_url_form" action="'.$_SERVER['PHP_SELF'].'" method="get">';
