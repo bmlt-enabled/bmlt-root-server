@@ -21,6 +21,8 @@
 
         You should have received a copy of the GNU General Public License
         along with this code.  If not, see <http://www.gnu.org/licenses/>.
+        
+        Version: 1.0b3
 */
 /*******************************************************************************************/
 function BMLTSemanticResult (   inRootServerURI,
@@ -630,8 +632,6 @@ BMLTSemantic.prototype.fetchLangs = function ()
 /*******************************************************************************************/
 BMLTSemantic.prototype.fetchServiceBodies = function ()
 {
-    var sb_section = this.getScopedElement ( 'bmlt_semantic_form_sb_fieldset_div' ).innerHTML = '';
-
     this.state.services = null;
     this.state.sb_id = null;
     
@@ -696,7 +696,6 @@ BMLTSemantic.prototype.fetchServerInfoCallback = function (inHTTPReqObject
         context.current_lat = parseFloat ( context.serverInfo.centerLatitude );
         context.current_lng = parseFloat ( context.serverInfo.centerLongitude );
         context.current_zoom = parseInt ( context.serverInfo.centerZoom, 10 );
-    
         };
 };
 
@@ -816,6 +815,10 @@ BMLTSemantic.prototype.populateServiceBodiesSection = function()
 {
     var sb_select1 = this.getScopedElement ( 'bmlt_switcher_naws_dump_sb_select' );
     var sb_select2 = this.getScopedElement ( 'bmlt_switcher_changes_sb_select' );
+    var yesMen  = this.getScopedElement ( 'bmlt_semantic_form_sb_fieldset_div' );
+    var noMam  = this.getScopedElement ( 'bmlt_semantic_form_sb_not_fieldset_div' );
+    var yesMen_container  = this.getScopedElement ( 'bmlt_semantic_form_sb_fieldset' );
+    var noMam_container  = this.getScopedElement ( 'bmlt_semantic_form_sb_not_fieldset' );
     
     for ( var i = sb_select1.options.length - 1; i > 0; i-- )
         {
@@ -840,13 +843,24 @@ BMLTSemantic.prototype.populateServiceBodiesSection = function()
         sb_select2.appendChild ( newOption );
         };
     
+    if ( this.temp_service_body_objects.length < 2 )
+        {
+        yesMen_container.hide();
+        noMam_container.hide();
+        }
+    else
+        {
+        yesMen_container.show();
+        noMam_container.show();
+        };
+    
     this.state.services = null;
     this.organizeServiceBodies();
     
     if ( this.service_body_objects && this.service_body_objects.length )
         {
-        this.createServiceBodyList ( null, this.getScopedElement ( 'bmlt_semantic_form_sb_fieldset_div' ), false );
-        this.createServiceBodyList ( null, this.getScopedElement ( 'bmlt_semantic_form_sb_not_fieldset_div' ), true );
+        this.createServiceBodyList ( null, yesMen, false );
+        this.createServiceBodyList ( null, noMam, true );
         };
     
     this.refreshURI();
@@ -2430,6 +2444,8 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.setBasicFunctions ( 'bmlt_semantic_form_start_time_max_text' );
     this.setBasicFunctions ( 'bmlt_semantic_form_duration_min_text' );
     this.setBasicFunctions ( 'bmlt_semantic_form_duration_max_text' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_sb_fieldset' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_sb_not_fieldset' );
     
     if ( this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_server_info_option' ) )
         {
