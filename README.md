@@ -28,6 +28,18 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
 CHANGELIST
 ----------
+** Version 1.0 **
+
+- April 24, 2015
+
+- First official Release.
+
+** Version 1.0b3 **
+
+- April 24, 2015
+
+- Now don't display the Service body sections if only 1 Service body..
+
 ** Version 1.0b2 **
 
 - April 11, 2015
