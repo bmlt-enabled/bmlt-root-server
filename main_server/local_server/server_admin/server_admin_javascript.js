@@ -2126,9 +2126,9 @@ function BMLT_Server_Admin ()
                     hours = 23;
                     };
             
-                if ( hours < 1 )
+                if ( hours < 0 )
                     {
-                    hours = 1;
+                    hours = 0;
                     };
                 };
             };

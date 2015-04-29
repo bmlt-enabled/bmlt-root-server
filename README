@@ -46,6 +46,12 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+** Version 2.6.22 **
+
+- April 29, 2015
+
+- Fixed a bug in the meeting editor, where setting the duration hour to 0 would fail to be recognized.
+
 ** Version 2.6.21 **
 
 - April 9, 2015
