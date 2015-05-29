@@ -46,6 +46,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+** Version 2.6.24 **
+- May 29, 2015
+- Fixed an issue that borked the distance display for the iOS app and the mobile client.
+
 ** Version 2.6.23 **
 - May 25, 2015
 - Fixed some CSS issues with the Satellite Base Class. This is only reflected in the logged-in (Observer) browser.

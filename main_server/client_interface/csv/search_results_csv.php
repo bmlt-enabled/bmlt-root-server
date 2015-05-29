@@ -537,6 +537,8 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
                                                 case 'location_province':
                                                 case 'location_postal_code_1':
                                                 case 'location_nation':
+                                                case 'distance_in_miles':
+                                                case 'distance_in_km':
                                                 case 'comments':
                                                 break;
                                     
