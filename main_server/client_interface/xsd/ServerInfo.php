@@ -60,6 +60,7 @@ echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
                             <xs:element name='defaultDuration' type='xs:string'/>
                             <xs:element name='charSet' type='xs:string'/>
                             <xs:element name='distanceUnits' type='xs:string'/>
+                            <xs:element name='semanticAdmin' type='xs:integer'/>
                         </xs:sequence>
                         <xs:attribute name='sequence_index' use='required' type='xs:integer'/>
                     </xs:complexType>

@@ -46,6 +46,11 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+** Version 2.6.25 **
+
+- June 25, 2015
+- Added a flag to the serverInfo response that tells whether or not semantic administration is enabled.
+
 ** Version 2.6.24 **
 
 - May 29, 2015

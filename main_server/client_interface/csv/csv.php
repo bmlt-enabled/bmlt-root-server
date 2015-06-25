@@ -1167,6 +1167,7 @@ function GetServiceBodies   (
 */	
 function GetServerInfo()
 {
+    require ( dirname ( __FILE__ ).'/../../server/config/get-config.php' );
     $ret = '';
     $version_array = GetServerVersion();
     $version_num = (intval ( $version_array[0] ) * 1000000) + (intval ( $version_array[1] ) * 1000) + intval ( $version_array[2] );
@@ -1175,9 +1176,10 @@ function GetServerInfo()
     $lang_string = implode ( ',', array_keys ( $lang_array ) );
     $localStrings = c_comdef_server::GetLocalStrings();
     $default_lang = strval ( $localStrings['enum'] );
+    $canAdmin = $g_enable_semantic_admin ? '1' : '0';
     $centerLongLatZoom = implode ( ',', $localStrings['search_spec_map_center'] );
-    $ret = '"version","versionInt","langs","nativeLang","centerLongitude","centerLatitude","centerZoom","defaultDuration","regionBias","charSet","distanceUnits"'."\n";
-    $ret .= '"'.$version_string.'","'.strval ( $version_num ).'","'.$lang_string.'","'.$default_lang.'","'.strval( $localStrings['search_spec_map_center']['longitude'] ).'","'.strval( $localStrings['search_spec_map_center']['latitude'] ).'","'.strval( $localStrings['search_spec_map_center']['zoom'] ).'","'.$localStrings['default_duration_time'].'","'.$localStrings['region_bias'].'","'.$localStrings['charset'].'","'.$localStrings['dist_units'].'"';
+    $ret = '"version","versionInt","langs","nativeLang","centerLongitude","centerLatitude","centerZoom","defaultDuration","regionBias","charSet","distanceUnits","semanticAdmin"'."\n";
+    $ret .= '"'.$version_string.'","'.strval ( $version_num ).'","'.$lang_string.'","'.$default_lang.'","'.strval( $localStrings['search_spec_map_center']['longitude'] ).'","'.strval( $localStrings['search_spec_map_center']['latitude'] ).'","'.strval( $localStrings['search_spec_map_center']['zoom'] ).'","'.$localStrings['default_duration_time'].'","'.$localStrings['region_bias'].'","'.$localStrings['charset'].'","'.$localStrings['dist_units'].'","'.$canAdmin.'"';
     
     return $ret;
 }
