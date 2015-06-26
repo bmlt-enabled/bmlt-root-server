@@ -1178,8 +1178,17 @@ function GetServerInfo()
     $default_lang = strval ( $localStrings['enum'] );
     $canAdmin = $g_enable_semantic_admin ? '1' : '0';
     $centerLongLatZoom = implode ( ',', $localStrings['search_spec_map_center'] );
-    $ret = '"version","versionInt","langs","nativeLang","centerLongitude","centerLatitude","centerZoom","defaultDuration","regionBias","charSet","distanceUnits","semanticAdmin"'."\n";
-    $ret .= '"'.$version_string.'","'.strval ( $version_num ).'","'.$lang_string.'","'.$default_lang.'","'.strval( $localStrings['search_spec_map_center']['longitude'] ).'","'.strval( $localStrings['search_spec_map_center']['latitude'] ).'","'.strval( $localStrings['search_spec_map_center']['zoom'] ).'","'.$localStrings['default_duration_time'].'","'.$localStrings['region_bias'].'","'.$localStrings['charset'].'","'.$localStrings['dist_units'].'","'.$canAdmin.'"';
+    $canEmail = $g_enable_email_contact ? '1' : '0';
+    $includeServiceBodiesOnEmails = $include_service_body_admin_on_emails ? '1' : '0';
+    $changeDepth = strVal ( intval ( $change_depth_for_meetings ) );
+    $defaulDuration = $default_duration_time;
+    
+    $ret = '"version","versionInt","langs","nativeLang","centerLongitude","centerLatitude","centerZoom","defaultDuration","regionBias","charSet","distanceUnits","semanticAdmin","emailEnabled","emailIncludesServiceBodies","changesPerMeeting","defaultDuration"'."\n";
+    $ret .= '"'.$version_string.'","'.strval ( $version_num ).'","'.$lang_string.'","'.$default_lang.'",';
+    $ret .= '"'.strval( $localStrings['search_spec_map_center']['longitude'] ).'","'.strval( $localStrings['search_spec_map_center']['latitude'] ).'",';
+    $ret .= '"'.strval( $localStrings['search_spec_map_center']['zoom'] ).'","'.$localStrings['default_duration_time'].'",';
+    $ret .= '"'.$localStrings['region_bias'].'","'.$localStrings['charset'].'","'.$localStrings['dist_units'].'","'.$canAdmin.'",';
+    $ret .= '"'.$canEmail.'","'.$includeServiceBodiesOnEmails.'","'.$changeDepth.'","'.$defaulDuration.'"';
     
     return $ret;
 }

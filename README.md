@@ -46,6 +46,11 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+** Version 2.6.26 **
+
+- June 26, 2015
+- Added some new fields to the serverInfo response.
+
 ** Version 2.6.25 **
 
 - June 25, 2015
