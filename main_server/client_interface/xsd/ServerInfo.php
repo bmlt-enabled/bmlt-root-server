@@ -57,14 +57,14 @@ echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
                             <xs:element name='centerLongitude' type='xs:decimal'/>
                             <xs:element name='centerLatitude' type='xs:decimal'/>
                             <xs:element name='centerZoom' type='xs:integer'/>
-                            <xs:element name='defaultDuration' type='xs:string'/>
-                            <xs:element name='charSet' type='xs:string'/>
-                            <xs:element name='distanceUnits' type='xs:string'/>
-                            <xs:element name='semanticAdmin' type='xs:integer'/>
-                            <xs:element name='emailEnabled' type='xs:integer'/>
-                            <xs:element name='emailIncludesServiceBodies' type='xs:integer'/>
-                            <xs:element name='changesPerMeeting' type='xs:integer'/>
-                            <xs:element name='defaultDuration' type='xs:string'/>
+                            <xs:element minOccurs="0" name='defaultDuration' type='xs:string'/>
+                            <xs:element minOccurs="0" name='regionBias' type='xs:string'/>
+                            <xs:element minOccurs="0" name='charSet' type='xs:string'/>
+                            <xs:element minOccurs="0" name='distanceUnits' type='xs:string'/>
+                            <xs:element minOccurs="0" name='semanticAdmin' type='xs:integer'/>
+                            <xs:element minOccurs="0" name='emailEnabled' type='xs:integer'/>
+                            <xs:element minOccurs="0" name='emailIncludesServiceBodies' type='xs:integer'/>
+                            <xs:element minOccurs="0" name='changesPerMeeting' type='xs:integer'/>
                         </xs:sequence>
                         <xs:attribute name='sequence_index' use='required' type='xs:integer'/>
                     </xs:complexType>
