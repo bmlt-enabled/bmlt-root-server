@@ -20,7 +20,7 @@
 */
 /***************************************************************************************************************************************/
 
-define ( '__VERSION__', '1.0.1' );
+define ( '__VERSION__', '1.0.2' );
 define ( '__REPO_URL__', 'https://bitbucket.org/bmlt/bmlt-semantic-workshop' );
 
 class bmlt_semantic
@@ -594,6 +594,8 @@ class bmlt_semantic
             }
             
         $ret .= '<div id="bmlt_semantic_info_div_repo_url_wrapper'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_info_div_repo_url_wrapper"><span class="info_label">'.$this->localize_string ( 'repo_url_label' ).'</span><span class="info_value"><a href="'.__REPO_URL__.'" target="_blank">'.htmlspecialchars ( __REPO_URL__ ).'</a></span></div>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $ret .= htmlspecialchars_decode($this->localize_string ( 'explanation_suffix'));
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         
         return $ret;

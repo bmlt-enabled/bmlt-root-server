@@ -150,5 +150,6 @@ $this->_localization = array (
                                 'result_url_label'                      =>  'The Response URL Is:',
                                 'version_label'                         =>  'Version:',
                                 'result_shortcode_label'                =>  'The Shortcode Is:',
-                                'result_invalid_text'                   =>  '<INVALID VALUE>'
+                                'result_invalid_text'                   =>  '<INVALID VALUE>',
+                                'explanation_suffix'                    =>  'The explanation is available <a href="http://bmlt.magshare.net/semantic/semantic-workshop/">here</a>.'
                             );

@@ -28,6 +28,12 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
 CHANGELIST
 ----------
+** Version 1.0.2 **
+
+- July 1, 2015
+
+- Added a link to the documentation page.
+
 ** Version 1.0 **
 
 - April 24, 2015
