@@ -28,6 +28,12 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
 CHANGELIST
 ----------
+** Version 1.0.3 **
+
+- July 2, 2015
+
+- Corrected the text describing the start times.
+
 ** Version 1.0.2 **
 
 - July 1, 2015
