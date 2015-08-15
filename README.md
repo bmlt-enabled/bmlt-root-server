@@ -48,7 +48,7 @@ CHANGELIST
 ----------
 ** Version 2.6.27 **
 
-- TBD
+- August 15, 2015
 - Put in a fix for possible corruption of some fields that were previously hidden, but are now visible.
 - Fixed an issue where a user could not properly change their own user info (My Account).
 
