@@ -102,7 +102,10 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
 		
 		if ( $cur_user instanceof c_comdef_user )
 			{
-			if ( $this->UserCanEdit ( $cur_user ) )
+            $cur_user_clone = clone ( $cur_user );  // This little dance is to make sure that the live object wasn't changed.
+            $cur_user_clone->RestoreFromDB();
+		
+			if ( $cur_user_clone->UserCanEdit ( $cur_user ) )
 				{
 				// We take a snapshot of the user as it currently sits in the database as a "before" image.
 				$before = null;
@@ -129,7 +132,6 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
 						{
 						array_push ( $update, $this->_id_bigint );
 						}
-					
 					array_push ( $update, $this->_user_level_tinyint );
 					array_push ( $update, $this->_email_address_string );
 					

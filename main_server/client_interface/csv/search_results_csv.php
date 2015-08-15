@@ -261,6 +261,9 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
                                                                 This is a comma-separated list of sort keys. The leftmost one will be the top priority, and the rightmost the lowest.
                                                                 The sort depth will be the number of keys.
                                                                 The direction will be assumed 'asc', unless 'desc' is one of the keys (it can be anywhere in the list).
+                                                                
+                                                            - 'simple_other_fields'
+                                                                Set this to '1' in order to prevent the server from separating values with the prompt separator.
 											*/
 									&$return_array = null,	///< If this is supplied, then the result will be saved in this as an array. It must be an empty array, supplied by reference.
 								    &$return_geocode = null,    /**< If this is supplied, the response will be an associative array, with the search center and radius.
@@ -499,7 +502,8 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
                                                 {
                                                 if ( !$in_supress_hidden_concat && !isset ( $in_http_vars['simple_other_fields'] ) )
                                                     {
-                                                    $val = 'observer_only#@-@#'.$mtg_obj->GetMeetingDataPrompt ( $key ).'#@-@#'.$mtg_obj->GetMeetingDataValue ( $key );
+                                                    $val = preg_replace ( '|.*?\#\@\-\@\#|', '', $mtg_obj->GetMeetingDataValue ( $key ) );    // Strip out any old accidentally introduced separators. 
+                                                    $val = 'observer_only#@-@#'.$mtg_obj->GetMeetingDataPrompt ( $key ).'#@-@#'.$val;
                                                     }
                                                 }
                                             else
@@ -546,6 +550,7 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
                                                 default:
                                                     if ( $val && !isset ( $in_http_vars['simple_other_fields'] ) )
                                                         {
+                                                        $val = preg_replace ( '|.*?\#\@\-\@\#|', '', $val );    // Strip out any old accidentally introduced separators. 
                                                         $val = $mtg_obj->GetMeetingDataPrompt ( $key ).'#@-@#'.$val;
                                                         }
                                                 break;
