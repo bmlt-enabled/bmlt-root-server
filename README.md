@@ -46,7 +46,12 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-** Version 2.6.27 **
+** Version 2.6.29 **
+
+- TBD
+- Added an onpaste handler to the editor text fields (detects paste).
+
+** Version 2.6.28 **
 
 - August 15, 2015
 - Put in a fix for possible corruption of some fields that were previously hidden, but are now visible.
