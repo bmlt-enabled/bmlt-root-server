@@ -28,6 +28,12 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
 CHANGELIST
 ----------
+** Version 1.0.4 **
+
+- September 18, 2015
+
+- Fixed the URL/Shortcode display to better form itself around long URIs.
+
 ** Version 1.0.3 **
 
 - July 2, 2015

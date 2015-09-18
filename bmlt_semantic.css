@@ -211,6 +211,9 @@ div.bmlt_semantic_info_div_download_line,
 div.bmlt_semantic_info_div_shortcode_line
 {
     text-align:center;
+    display:inline-bock;
+    max-width:100%;
+    word-wrap:break-word;
 }
 
 div.bmlt_semantic_info_div_download_line span.info_label,
@@ -224,6 +227,7 @@ div.bmlt_semantic_info_div_shortcode_line span.info_label
 div.bmlt_semantic_info_div_result_url_wrapper,
 div.bmlt_semantic_info_div_shortcode_wrapper
 {
+    margin: auto;
     padding: 0.5em;
     margin-top: 0.125em;
     background-color: #ffc;
