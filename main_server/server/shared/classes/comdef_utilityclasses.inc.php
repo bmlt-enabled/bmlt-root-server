@@ -20,15 +20,10 @@ function GetURLToMainServerDirectory(
                                         $inAllowHTTPS = TRUE  ///< If TRUE (default), then the URI will be allowed to use HTTPS. If FALSE, then we explicitly disallow HTTPS.
                                         )
 {
-    $https = $inAllowHTTPS && isset ( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] && (strtolower ( trim ( $_SERVER['HTTPS'] ) ) != 'off'); // IIS puts "off" in this field, so we need to test for that.
-    
     $port = $_SERVER['SERVER_PORT'] ;
     
-    if ( !$https && ($port == 443) )
-        {
-        $port = 80;
-        }
-    
+    // IIS puts "off" in the HTTPS field, so we need to test for that.
+    $https = $inAllowHTTPS && (!empty ( $_SERVER['HTTPS'] ) && (($_SERVER['HTTPS'] !== 'off') || ($port == 443))); 
     $url_path = $_SERVER['SERVER_NAME'];
     $file_path = str_replace ( '\\', '/', dirname ( dirname ( dirname ( dirname ( dirname ( __FILE__ ) ) ) ) ) );
     $my_path = str_replace ( '\\', '/', dirname ( $_SERVER['PHP_SELF'] ) );

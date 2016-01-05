@@ -50,6 +50,7 @@ CHANGELIST
 
 - TBD
 - Added an onpaste handler to the editor text fields (detects paste).
+- Fixed an issue with SSL.
 
 ** Version 2.6.28 **
 

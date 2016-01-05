@@ -60,7 +60,8 @@ class c_comdef_admin_main_console
             }
 
         $this->my_users = array_values ( $this->my_server->GetServerUsersObj()->GetUsersArray() );
-        $this->my_ajax_uri = 'http://'.$_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').'/'.$_SERVER['PHP_SELF'].'?bmlt_ajax_callback=1';
+        $url_path = GetURLToMainServerDirectory ();
+        $this->my_ajax_uri = $url_path.'/'.$_SERVER['PHP_SELF'].'?bmlt_ajax_callback=1';
         
         $this->my_formats = array();
         $langs = $this->my_server->GetServerLangs();

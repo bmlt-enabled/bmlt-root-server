@@ -22,13 +22,9 @@ defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that 
 // If the single_meeting_id argument is supplied, then we switch to the browser.
 if ( isset ( $http_vars['single_meeting_id'] ) && intval ( $http_vars['single_meeting_id'] ) )
     {
-    $dirn = dirname ( ( dirname ( $_SERVER['PHP_SELF'] )) );
-    if ( '/' == $dirn )
-        {
-        $dirn = '';
-        }
-    
-    $new_location = 'http://'.$_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').$dirn.'/client_interface/html/index.php?single_meeting_id='.intval ( $http_vars['single_meeting_id'] );
+    require_once ( dirname ( dirname ( __FILE__ ) ).'/server/shared/classes/comdef_utilityclasses.inc.php' );
+    $url_path = GetURLToMainServerDirectory ();
+    $new_location = $url_path.'/client_interface/html/index.php?single_meeting_id='.intval ( $http_vars['single_meeting_id'] );
     
     header ( "Location: $new_location" );
     }
