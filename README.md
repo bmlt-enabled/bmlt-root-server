@@ -48,7 +48,7 @@ CHANGELIST
 ----------
 ** Version 2.6.29 **
 
-- TBD
+- January 5, 2016
 - Added an onpaste handler to the editor text fields (detects paste).
 - Fixed an issue with SSL.
 
