@@ -61,7 +61,7 @@ class c_comdef_admin_main_console
 
         $this->my_users = array_values ( $this->my_server->GetServerUsersObj()->GetUsersArray() );
         $url_path = GetURLToMainServerDirectory ();
-        $this->my_ajax_uri = $url_path.'/'.$_SERVER['PHP_SELF'].'?bmlt_ajax_callback=1';
+        $this->my_ajax_uri = $url_path.'?bmlt_ajax_callback=1';
         
         $this->my_formats = array();
         $langs = $this->my_server->GetServerLangs();

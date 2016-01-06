@@ -24,7 +24,7 @@ if ( isset ( $http_vars['single_meeting_id'] ) && intval ( $http_vars['single_me
     {
     require_once ( dirname ( dirname ( __FILE__ ) ).'/server/shared/classes/comdef_utilityclasses.inc.php' );
     $url_path = GetURLToMainServerDirectory ();
-    $new_location = $url_path.'/client_interface/html/index.php?single_meeting_id='.intval ( $http_vars['single_meeting_id'] );
+    $new_location = $url_path.'client_interface/html/index.php?single_meeting_id='.intval ( $http_vars['single_meeting_id'] );
     
     header ( "Location: $new_location" );
     }

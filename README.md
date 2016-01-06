@@ -46,6 +46,11 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+** Version 2.6.30 **
+
+- January 6, 2016
+- Fixed a bug introduced in .29, where the AJAX calls were being borked.
+
 ** Version 2.6.29 **
 
 - January 5, 2016
