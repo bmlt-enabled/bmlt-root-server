@@ -412,19 +412,19 @@ function parse_redirect (
 				$service_body_id = intval ( $http_vars['service_body_id'] );
 				}
 			
-			$result2 = GetChanges ( $start_date, $end_date, $meeting_id, $service_body_id );
+			$result2 = GetChanges ( $http_vars, $start_date, $end_date, $meeting_id, $service_body_id );
 			
 			if ( isset ( $http_vars['xml_data'] ) )
 				{
                 $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 				$xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', $_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetChanges.php' ) );
 				$result .= "<changes xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
-				$result .= TranslateToXML ( $result2 );
+				$result .= str_replace ( '&amp;quot;', '&quot;', str_replace ( '\\&quot;', '&quot;', TranslateToXML ( $result2 ) ) );   // HACK ALERT: Undoing the poopiness done by TranslateToXML.
 				$result .= "</changes>";
 				}
 			elseif ( isset ( $http_vars['json_data'] ) )
 				{
-				$result = TranslateToJSON ( $result2 );
+				$result = str_replace ( '\\\\\\"', '"', TranslateToJSON ( $result2 ) ); // HACK ALERT: TranslateToJSON does whacky things with my escaped quotes, so I undo that here.
 				}
 			else
 				{
@@ -1245,7 +1245,8 @@ function GetServerVersion()
 	
 	\returns CSV data, with the first row a key header.
 */	
-function GetChanges (	
+function GetChanges (
+                    $in_http_vars,          ///< The HTTP GET/POST query.
 					$in_start_date = null,	///< Optional. A start date (In PHP time() format). If supplied, then only changes on, or after this date will be returned.
 					$in_end_date = null,	///< Optional. An end date (In PHP time() format). If supplied, then only changes that occurred on, or before this date will be returned.
 					$in_meeting_id = null,	///< Optional. If supplied, an ID for a particular meeting. Only changes for that meeting will be returned.
@@ -1266,7 +1267,7 @@ function GetChanges (
 	            set_time_limit ( max ( 30, intval ( count ( $obj_array ) / 20 ) ) ); // Change requests can take a loooong time...
 				$localized_strings = c_comdef_server::GetLocalStrings();
 				include ( dirname ( __FILE__ ).'/../../server/config/get-config.php' );
-				$ret = '"date_int","date_string","change_type","meeting_id","meeting_name","user_id","user_name","service_body_id","service_body_name","meeting_exists","details"'."\n";
+				$ret = '"date_int","date_string","change_type","meeting_id","meeting_name","user_id","user_name","service_body_id","service_body_name","meeting_exists","details","json_data"'."\n";
                 
                 // If they specify a Service body, we also look in "child" Service bodies, so we need to produce a flat array of IDs.
                 if ( isset ( $in_sb_id ) && $in_sb_id )
@@ -1328,10 +1329,12 @@ function GetChanges (
                             {
                             $meeting_name = '';
                             $user_name = '';
+                            $json_data = '';
 					        
 					        if ( !is_array ( $in_sb_id ) || !count ( $in_sb_id ) || in_array ( $sb_a, $in_sb_id ) || in_array ( $sb_b, $in_sb_id ) || in_array ( $sb_c, $in_sb_id ) )
 					            {
 					            $sb_id = (intval ( $sb_c ) ? $sb_c : (intval ( $sb_b ) ? $sb_b : $sb_a));
+					            $meeting = (null != $b_obj) ? $b_obj : $a_obj;
 					            
                                 // Using str_replace, because preg_replace is pretty expensive. However, I don't think this buys us much.
                                 if ( $b_obj instanceof c_comdef_meeting )
@@ -1364,6 +1367,31 @@ function GetChanges (
                                 if ( c_comdef_server::GetOneMeeting ( $meeting_id, true ) )
                                     {
                                     $meeting_exists = 1;
+                                    $meeting = $a_obj;
+                                    }
+                                
+                                if ( $meeting )
+                                    {
+                                    $keys = $meeting->GetMeetingDataKeys();
+                                    $json_data = '';
+                                    
+                                    foreach ( $keys as $key )
+                                        {
+                                        if ( $key )
+                                            {
+                                            $value = $meeting->GetMeetingDataValue ( $key );
+                                            
+                                            if ( $value )
+                                                {
+                                                if ( $json_data )
+                                                    {
+                                                    $json_data .= ',';
+                                                    }
+                                            
+                                                $json_data .= '\\"'.str_replace ( '"', '\\"', $key ).'\\":\\"'.str_replace ( '"', '\\"', $value ).'\\"';
+                                                }
+                                            }
+                                        }
                                     }
             
                                 $details = '';
@@ -1469,7 +1497,18 @@ function GetChanges (
                                     $change_line['details'] = '';
                                     }
                                 
-                                $ret .= '"'.implode ( '","', $change_line ).'"'."\n";
+                                $ret .= '"'.implode ( '","', $change_line ).'"';
+                                    
+                                if ( $json_data )
+                                    {
+                                    $json_data = '"{'.$json_data.'}"';
+                                    }
+                                else
+                                    {
+                                    $json_data = '""';
+                                    }
+                                
+                                $ret .= ','.$json_data."\n";
                                 }
                             }
                         }
@@ -1533,7 +1572,16 @@ function TranslateToJSON ( $in_csv_data ///< An array of CSV data, with the firs
 				{
 				if ( isset ( $column ) )
 					{
-					$line[$keys[$index++]] = str_replace ( "\t", ',', trim ( $column ) );
+					$key = $keys[$index++];
+					$value = str_replace ( "\t", ',', trim ( $column ) );
+					
+					if ( $key == "json_data" )
+					    {
+					    $value = trim ( $value, '"' );
+					    $value = str_replace ( '\\"', '"', $value );
+					    }
+					
+					$line[$key] = $value;
 					}
 				}
 			array_push ( $temp_keyed_array, $line );

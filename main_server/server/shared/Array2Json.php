@@ -42,10 +42,11 @@ function array2json (
 					$arr	///< An associative string, to be encoded as JSON.
 					)
 	{
-	if(function_exists('json_encode'))
-		{
-		return json_encode($arr); //Lastest versions of PHP already has this functionality.
-		}
+// Commented out, because I want to handle the 'json_data' field separately.
+// 	if(function_exists('json_encode'))
+// 		{
+// 		return json_encode($arr); //Lastest versions of PHP already has this functionality.
+// 		}
 	
 	$parts = array();
 	$is_list = false;
@@ -83,32 +84,28 @@ function array2json (
 		else
 			{
 			$str = '';
-			if ( !$is_list )
-				{
-				$str = '"' . $key . '":';
-				}
-
-			//Custom handling for multiple data types
-			if ( is_numeric($value) )
-				{
-				$str .= $value; //Numbers
-				}
-			elseif ( $value === false )
-				{
-				$str .= 'false'; //The booleans
-				}
-			elseif ( $value === true )
-				{
-				$str .= 'true';
-				}
-			elseif ( isset ($value) && $value )
-				{
-				$str .= '"' . addslashes($value) . '"'; //All other things
-				}
+			if ( $key == "json_data" )  // JSON data is passed through without any vetting or modification (so it can easily bork the stream).
+			    {
+                $str = '"json_data":'.$value;
+			    }
 			else
-				{
-				$str .= '""'; //All other things
-				}
+			    {
+                if ( !$is_list )
+                    {
+                    $str = '"' . $key . '":';
+                    }
+
+                //Custom handling for multiple data types
+                if ( isset ($value) && $value )
+                    {
+                    $str .= '"' . str_replace ( '"', '\\"', $value ) . '"'; //All other things
+                    }
+                else
+                    {
+                    $str .= '""'; //All other things
+                    }
+                }
+            
 			// :TODO: Is there any more datatype we should be in the lookout for? (Object?)
 
 			$parts[] = $str;

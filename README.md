@@ -46,6 +46,12 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+** Version 2.6.31 **
+
+- TBD
+- Added a JSON extra data column to the GetChanges response.
+- Fixed a fairly minor cosmetic bug in the history display, where "&" was being shown as "&amp;" (over-aggressive HTML conversion).
+
 ** Version 2.6.30 **
 
 - January 6, 2016

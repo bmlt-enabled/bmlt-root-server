@@ -858,7 +858,7 @@ class c_comdef_admin_ajax_handler
                         
                         $ret .= '"id":'.$change_id.',';
                         $ret .= '"user":"'.$user_name.'",';
-                        $ret .= '"description":["'.implode ( '","', $change_description['details'] ).'"],';
+                        $ret .= '"description":["'.implode ( '","', str_replace ( '&amp;', '&', $change_description['details'] ) ).'"],';
                         $ret .= '"date":"'.$change_date.'"';
                         
                     $ret .= '}';
