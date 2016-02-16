@@ -424,7 +424,7 @@ function parse_redirect (
 				}
 			elseif ( isset ( $http_vars['json_data'] ) )
 				{
-				$result = str_replace ( '\\\\\\"', '"', TranslateToJSON ( $result2 ) ); // HACK ALERT: TranslateToJSON does whacky things with my escaped quotes, so I undo that here.
+				$result = str_replace ( '\\\\"', '"', TranslateToJSON ( $result2 ) ); // HACK ALERT: TranslateToJSON does whacky things with my escaped quotes, so I undo that here.
 				}
 			else
 				{
@@ -1380,15 +1380,49 @@ function GetChanges (
                                         if ( $key )
                                             {
                                             $value = $meeting->GetMeetingDataValue ( $key );
-                                            
+                                        
                                             if ( $value )
                                                 {
-                                                if ( $json_data )
+                                                if ( $key == 'formats' )
                                                     {
-                                                    $json_data .= ',';
+                                                    $val_temp = Array();
+                                                    $values = $value;
+                                                    
+                                                    foreach ( $values as $format )
+                                                        {
+                                                        if ( $format instanceof c_comdef_format )
+                                                            {
+                                                            $val_temp[] = $format->GetKey();
+                                                            }
+                                                        }
+                                                        
+                                                    $value = $val_temp;
                                                     }
-                                            
-                                                $json_data .= '\\"'.str_replace ( '"', '\\"', $key ).'\\":\\"'.str_replace ( '"', '\\"', $value ).'\\"';
+                                                
+                                                if ( is_array ( $value ) )
+                                                    {
+                                                    if ( count ( $value ) )
+                                                        {
+                                                        if ( $json_data )
+                                                            {
+                                                            $json_data .= ',';
+                                                            }
+                                                
+                                                        $json_data .= '\\"'.$key.'\\":'.'[\\"'.implode ( '\\",\\"', $value ).'\\"]';
+                                                        }
+                                                    }
+                                                else
+                                                    {
+                                                    $value = str_replace ( '&quot;', '"', $value );
+                                                    $value = str_replace ( '&amp;', '&', $value );
+                                                    $value = preg_replace ( "|\s+|", ' ', $value );
+                                                    $value = htmlentities ( $value );
+                                                    if ( $json_data )
+                                                        {
+                                                        $json_data .= ',';
+                                                        }
+                                                    $json_data .= '\\"'.$key.'\\":\\"'.$value.'\\"';
+                                                    }
                                                 }
                                             }
                                         }
