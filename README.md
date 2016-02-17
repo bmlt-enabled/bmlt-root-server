@@ -48,8 +48,8 @@ CHANGELIST
 ----------
 ** Version 2.6.31 **
 
-- TBD
-- Added a JSON extra data column to the GetChanges response.
+- February 17, 2016
+- Added a JSON extra data column to the GetChanges response. This means that getting a change record for a meeting will give you a lot more information about that meeting.
 - Fixed a fairly minor cosmetic bug in the history display, where "&" was being shown as "&amp;" (over-aggressive HTML conversion).
 
 ** Version 2.6.30 **
