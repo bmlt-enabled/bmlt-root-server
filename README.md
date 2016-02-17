@@ -46,6 +46,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+** Version 2.6.32 **
+
+- TBD
+
 ** Version 2.6.31 **
 
 - February 17, 2016
