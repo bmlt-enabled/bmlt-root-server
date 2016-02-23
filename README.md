@@ -44,11 +44,13 @@ satellites comprise the "client" part of the BMLT "client/server" architecture.
 
 For instructions on installing the root server, see [the page on installing a new Root Server](http://bmlt.magshare.net/installing-a-new-root-server/)
 
+### <a name="changelist"></a>
 CHANGELIST
 ----------
 ** Version 2.6.32 **
 
 - TBD
+- Added a changelist anchor to this page.
 
 ** Version 2.6.31 **
 
