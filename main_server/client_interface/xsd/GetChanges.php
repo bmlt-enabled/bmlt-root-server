@@ -68,6 +68,7 @@ echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
                                 </xs:simpleType>
                             </xs:element>
 							<xs:element minOccurs="0" maxOccurs="1" name="details" type="xs:string"/>
+							<xs:element minOccurs="0" maxOccurs="1" name="json_data" type="xs:string"/>
 						</xs:sequence>
                         <xs:attribute name="sequence_index" use="required" type="xs:integer"/>
 					</xs:complexType>

@@ -416,11 +416,8 @@ function parse_redirect (
 			
 			if ( isset ( $http_vars['xml_data'] ) )
 				{
-                $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 				$xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', $_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetChanges.php' ) );
-				$result .= "<changes xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
-				$result .= str_replace ( '&amp;quot;', '&quot;', str_replace ( '\\&quot;', '&quot;', TranslateToXML ( $result2 ) ) );   // HACK ALERT: Undoing the poopiness done by TranslateToXML.
-				$result .= "</changes>";
+                $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><changes xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">".TranslateToXML ( $result2 )."</changes>";
 				}
 			elseif ( isset ( $http_vars['json_data'] ) )
 				{
@@ -1305,11 +1302,13 @@ function GetChanges (
                         $in_sb_id = array ( $in_sb_id );
                         }
                     }
+                    
 				foreach ( $obj_array as $change )
 					{
 					$change_type = $change->GetChangeType();
 					$date_int = intval($change->GetChangeDate());
 					$date_string = date ($change_date_format, $date_int );
+					$json_data = '';
 				    
 				    if ( $change instanceof c_comdef_change )
 				        {
@@ -1329,7 +1328,6 @@ function GetChanges (
                             {
                             $meeting_name = '';
                             $user_name = '';
-                            $json_data = '';
 					        
 					        if ( !is_array ( $in_sb_id ) || !count ( $in_sb_id ) || in_array ( $sb_a, $in_sb_id ) || in_array ( $sb_b, $in_sb_id ) || in_array ( $sb_c, $in_sb_id ) )
 					            {
@@ -1367,65 +1365,6 @@ function GetChanges (
                                 if ( c_comdef_server::GetOneMeeting ( $meeting_id, true ) )
                                     {
                                     $meeting_exists = 1;
-                                    $meeting = $a_obj;
-                                    }
-                                
-                                if ( $meeting )
-                                    {
-                                    $keys = $meeting->GetMeetingDataKeys();
-                                    $json_data = '';
-                                    
-                                    foreach ( $keys as $key )
-                                        {
-                                        if ( $key )
-                                            {
-                                            $value = $meeting->GetMeetingDataValue ( $key );
-                                        
-                                            if ( $value )
-                                                {
-                                                if ( $key == 'formats' )
-                                                    {
-                                                    $val_temp = Array();
-                                                    $values = $value;
-                                                    
-                                                    foreach ( $values as $format )
-                                                        {
-                                                        if ( $format instanceof c_comdef_format )
-                                                            {
-                                                            $val_temp[] = $format->GetKey();
-                                                            }
-                                                        }
-                                                        
-                                                    $value = $val_temp;
-                                                    }
-                                                
-                                                if ( is_array ( $value ) )
-                                                    {
-                                                    if ( count ( $value ) )
-                                                        {
-                                                        if ( $json_data )
-                                                            {
-                                                            $json_data .= ',';
-                                                            }
-                                                
-                                                        $json_data .= '\\"'.$key.'\\":'.'[\\"'.implode ( '\\",\\"', $value ).'\\"]';
-                                                        }
-                                                    }
-                                                else
-                                                    {
-                                                    $value = str_replace ( '&quot;', '"', $value );
-                                                    $value = str_replace ( '&amp;', '&', $value );
-                                                    $value = preg_replace ( "|\s+|", ' ', $value );
-                                                    $value = htmlentities ( $value );
-                                                    if ( $json_data )
-                                                        {
-                                                        $json_data .= ',';
-                                                        }
-                                                    $json_data .= '\\"'.$key.'\\":\\"'.$value.'\\"';
-                                                    }
-                                                }
-                                            }
-                                        }
                                     }
             
                                 $details = '';
@@ -1530,19 +1469,19 @@ function GetChanges (
                                     {
                                     $change_line['details'] = '';
                                     }
+                        
+                                $json_data = MakeJSONDataObject ( $b_obj, 'before' );
                                 
-                                $ret .= '"'.implode ( '","', $change_line ).'"';
+                                if ( ($json_data != '') && ($a_obj instanceof c_comdef_meeting) )
+                                    {
+                                    $json_data .= ',';
+                                    }
                                     
-                                if ( $json_data )
-                                    {
-                                    $json_data = '"{'.$json_data.'}"';
-                                    }
-                                else
-                                    {
-                                    $json_data = '""';
-                                    }
+                                $json_data .= MakeJSONDataObject ( $a_obj, 'after' );
                                 
-                                $ret .= ','.$json_data."\n";
+                                $change_line['json_data'] = '{'.str_replace ( '"', '&quot;', $json_data ).'}';
+                                
+                                $ret .= '"'.implode ( '","', $change_line )."\"\n";
                                 }
                             }
                         }
@@ -1556,6 +1495,84 @@ function GetChanges (
 
 	return $ret;
 	}
+
+/*******************************************************************/
+/**
+	\brief Converts a given c_comdef_meeting object to a JSON object string.
+	
+	\returns A string, containing the JSON Data. It is blank if no JSON Data.
+*/	
+function MakeJSONDataObject(
+                            $in_meeting_object, ///< The c_comdef_meeting object to be converted.
+                            $in_object_name     ///< A name for the returned object.
+                            )
+{
+    $json_data = '';
+    
+    if ( $in_meeting_object instanceof c_comdef_meeting )
+        {
+        $keys = $in_meeting_object->GetMeetingDataKeys();
+    
+        foreach ( $keys as $key )
+            {
+            if ( $key )
+                {
+                $value = $in_meeting_object->GetMeetingDataValue ( $key );
+        
+                if ( $value )
+                    {
+                    if ( $key == 'formats' )
+                        {
+                        $val_temp = Array();
+                        $values = $value;
+                    
+                        foreach ( $values as $format )
+                            {
+                            if ( $format instanceof c_comdef_format )
+                                {
+                                $val_temp[] = $format->GetKey();
+                                }
+                            }
+                        
+                        $value = $val_temp;
+                        }
+                
+                    if ( is_array ( $value ) )
+                        {
+                        if ( count ( $value ) )
+                            {
+                            if ( $json_data )
+                                {
+                                $json_data .= ',';
+                                }
+                
+                            $json_data .= '"'.$key.'":'.'["'.implode ( '","', $value ).'"]';
+                            }
+                        }
+                    else
+                        {
+                        $value = str_replace ( '&quot;', '"', $value );
+                        $value = str_replace ( '&amp;', '&', $value );
+                        $value = preg_replace ( "|\s+|", ' ', $value );
+                        $value = htmlentities ( $value );
+                        if ( $json_data )
+                            {
+                            $json_data .= ',';
+                            }
+                        $json_data .= '"'.$key.'":"'.$value.'"';
+                        }
+                    }
+                }
+            }
+    
+        if ( $json_data && $in_object_name )
+            {
+            $json_data = '"'.$in_object_name.'":{'.$json_data.'}';
+            }
+        }
+    
+    return $json_data;
+}
 
 /*******************************************************************/
 /**
@@ -1612,7 +1629,7 @@ function TranslateToJSON ( $in_csv_data ///< An array of CSV data, with the firs
 					if ( $key == "json_data" )
 					    {
 					    $value = trim ( $value, '"' );
-					    $value = str_replace ( '\\"', '"', $value );
+					    $value = str_replace ( '&quot;', '"', $value );
 					    }
 					
 					$line[$key] = $value;
@@ -1662,6 +1679,11 @@ function TranslateToXML (	$in_csv_data	    ///< An array of CSV data, with the f
 		}
 
 	$out_xml_data = array2xml ( $temp_keyed_array, 'not_used', false );
+    // HACK ALERT: Undoing the poopiness done by TranslateToXML.
+    $out_xml_data = str_replace ( "&aamp;quot;", "&quot;", $out_xml_data);
+    $out_xml_data = str_replace ( "&amp;quot;", "&quot;", $out_xml_data);
+    $out_xml_data = str_replace ( "\\&quot;", "&quot;", $out_xml_data);
+    $out_xml_data = str_replace ( "&ququot;", "&quot;", $out_xml_data);
 
 	return $out_xml_data;
 	}
