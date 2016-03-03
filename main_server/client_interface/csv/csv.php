@@ -421,7 +421,7 @@ function parse_redirect (
 				}
 			elseif ( isset ( $http_vars['json_data'] ) )
 				{
-				$result = str_replace ( '\\\\"', '"', TranslateToJSON ( $result2 ) ); // HACK ALERT: TranslateToJSON does whacky things with my escaped quotes, so I undo that here.
+				$result = TranslateToJSON ( $result2 );
 				}
 			else
 				{
@@ -1639,7 +1639,7 @@ function TranslateToJSON ( $in_csv_data ///< An array of CSV data, with the firs
 			}
 		}
 	
-	$out_json_data = array2json ( $temp_keyed_array );
+	$out_json_data = str_replace ( '\\\\"', '"', array2json ( $temp_keyed_array ) ); // HACK ALERT: TranslateToJSON does whacky things with my escaped quotes, so I undo that here.
 
 	return $out_json_data;
 	}
