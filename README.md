@@ -46,6 +46,11 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+** Version 2.7.0 **
+
+- TBD
+- Added the semantic workshop as a submodule.
+
 ** Version 2.6.32 **
 
 - March 5, 2016
