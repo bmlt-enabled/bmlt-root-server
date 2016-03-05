@@ -28,6 +28,12 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
 CHANGELIST
 ----------
+** Version 1.0.5 **
+
+- March 5, 2016
+
+- Tweaked the project to allow embedding in the main server..
+
 ** Version 1.0.4 **
 
 - September 18, 2015

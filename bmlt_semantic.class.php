@@ -20,7 +20,7 @@
 */
 /***************************************************************************************************************************************/
 
-define ( '__VERSION__', '1.0.4' );
+define ( '__VERSION__', '1.0.5' );
 define ( '__REPO_URL__', 'https://bitbucket.org/bmlt/bmlt-semantic-workshop' );
 
 class bmlt_semantic
@@ -202,7 +202,6 @@ class bmlt_semantic
             }
     
         include ( dirname ( __FILE__ ) . '/lang/'.$this->_myLang.'.inc.php' );
-        
         if ( isset ( $inHttpVars['root_server'] ) )
             {
             $inBaseURI = $inHttpVars['root_server'];
@@ -369,12 +368,19 @@ class bmlt_semantic
             
             foreach ( $keys as $keyLine )
                 {
-                list ( $key, $name ) = explode ( ",", $keyLine );
-                if ( !$first )
+                $key_name = explode ( ",", $keyLine );
+                
+                if ( 2 == count ( $key_name ) )
                     {
-                    $this->_keys[trim ( $key, '"' )] = trim ( $name, '"' );
+                    $key = $key_name[0];
+                    $name = $key_name[1];
+                    
+                    if ( !$first )
+                        {
+                        $this->_keys[trim ( $key, '"' )] = trim ( $name, '"' );
+                        }
+                    $first = false;
                     }
-                $first = false;
                 }
             }
         
