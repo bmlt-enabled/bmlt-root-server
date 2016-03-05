@@ -42,12 +42,6 @@ function array2json (
 					$arr	///< An associative string, to be encoded as JSON.
 					)
 	{
-// Commented out, because I want to handle the 'json_data' field separately.
-// 	if(function_exists('json_encode'))
-// 		{
-// 		return json_encode($arr); //Lastest versions of PHP already has this functionality.
-// 		}
-	
 	$parts = array();
 	$is_list = false;
 
@@ -98,7 +92,7 @@ function array2json (
                 //Custom handling for multiple data types
                 if ( isset ($value) && $value )
                     {
-                    $str .= '"' . str_replace ( '"', '\\"', $value ) . '"'; //All other things
+                    $str .= '"' . trim ( json_encode ( str_replace ( '"', '\\"', $value ) ), '"' ) . '"'; //All other things
                     }
                 else
                     {

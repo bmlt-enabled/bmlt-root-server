@@ -48,10 +48,11 @@ CHANGELIST
 ----------
 ** Version 2.6.32 **
 
-- TBD
+- March 5, 2016
 - Added the JSON data field in the change response to the XML schema.
 - Changed the way the data is stored in the JSON data field. It is now kept in up to 2 objects: "before" and "after".
 - Fixed a bug with the editor paste functionality.
+- Fixed an issue with JSON special character encoding that caused issues on some servers.
 
 ** Version 2.6.31 **
 
