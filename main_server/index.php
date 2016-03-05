@@ -18,7 +18,7 @@
     along with this code.  If not, see <http://www.gnu.org/licenses/>.
 */
 ob_start();
-define ( '__DEBUG_MODE__', 1 ); // Uncomment to make the CSS and JavaScript easier to trace (and less efficient).
+# define ( '__DEBUG_MODE__', 1 ); // Uncomment to make the CSS and JavaScript easier to trace (and less efficient).
 session_start();
 define ( 'BMLT_EXEC', 1 );
 include ( dirname ( __FILE__ ).'/local_server/index.php' );

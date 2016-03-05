@@ -51,6 +51,7 @@ CHANGELIST
 - TBD
 - Added the JSON data field in the change response to the XML schema.
 - Changed the way the data is stored in the JSON data field. It is now kept in up to 2 objects: "before" and "after".
+- Fixed a bug with the editor paste functionality.
 
 ** Version 2.6.31 **
 

@@ -201,6 +201,19 @@ function BMLT_Server_Admin ()
     };
     
     /************************************************************************************//**
+    *   \brief This is called when executing a paste. It avoids leaving in the default text.*
+    ****************************************************************************************/
+    this.handleTextInputPaste = function(    in_text_item
+                                        )
+    {
+        if ( in_text_item )
+            {
+            this.setTextItemClass ( in_text_item, true );
+            this.validateAccountGoButton();
+            };
+    };
+    
+    /************************************************************************************//**
     *   \brief When a text item has its text changed, we check to see if it needs to have   *
     *          its classname changed to the default (usually won't make a difference, as    *
     *          the text item will be in focus, anyway).                                     *
@@ -1872,104 +1885,105 @@ function BMLT_Server_Admin ()
         meeting_name_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'meeting_name')};
         meeting_name_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_name_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-        meeting_name_text_item.onpaste = function(){admin_handler_object.handleTextInputBlur(this)};
+        meeting_name_text_item.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
 
         meeting_cc_text_item.value = htmlspecialchars_decode ( meeting_object.worldid_mixed ? meeting_object.worldid_mixed : meeting_cc_text_item.value );
         this.setTextItemClass ( meeting_cc_text_item );
         meeting_cc_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'worldid_mixed')};
         meeting_cc_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_cc_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-        meeting_cc_text_item.onpaste = function(){admin_handler_object.handleTextInputBlur(this)};
+        meeting_cc_text_item.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
         
         meeting_location_text_item.value = htmlspecialchars_decode ( meeting_object.location_text ? meeting_object.location_text : meeting_location_text_item.value );
         this.setTextItemClass ( meeting_location_text_item );
         meeting_location_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_text')};
         meeting_location_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_location_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-        meeting_location_text_item.onpaste = function(){admin_handler_object.handleTextInputBlur(this)};
+        meeting_location_text_item.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
         
         meeting_info_text_item.value = htmlspecialchars_decode ( meeting_object.location_info ? meeting_object.location_info : meeting_info_text_item.value );
         this.setTextItemClass ( meeting_info_text_item );
         meeting_info_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_info')};
         meeting_info_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_info_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-        meeting_info_text_item.onpaste = function(){admin_handler_object.handleTextInputBlur(this)};
+        meeting_info_text_item.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
         
         meeting_street_text_item.value = htmlspecialchars_decode ( meeting_object.location_street ? meeting_object.location_street : meeting_street_text_item.value );
         this.setTextItemClass ( meeting_street_text_item );
         meeting_street_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_street')};
         meeting_street_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_street_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-        meeting_street_text_item.onpaste = function(){admin_handler_object.handleTextInputBlur(this)};
+        meeting_street_text_item.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
         
         meeting_neighborhood_text_item.value = htmlspecialchars_decode ( meeting_object.location_neighborhood ? meeting_object.location_neighborhood : meeting_neighborhood_text_item.value );
         this.setTextItemClass ( meeting_neighborhood_text_item );
         meeting_neighborhood_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_neighborhood')};
         meeting_neighborhood_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_neighborhood_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-        meeting_neighborhood_text_item.onpaste = function(){admin_handler_object.handleTextInputBlur(this)};
+        meeting_neighborhood_text_item.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
         
         meeting_borough_text_item.value = htmlspecialchars_decode ( meeting_object.location_city_subsection ? meeting_object.location_city_subsection : meeting_borough_text_item.value );
         this.setTextItemClass ( meeting_borough_text_item );
         meeting_borough_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_city_subsection')};
         meeting_borough_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_borough_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-        meeting_borough_text_item.onpaste = function(){admin_handler_object.handleTextInputBlur(this)};
+        meeting_borough_text_item.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
         
         meeting_city_text_item.value = htmlspecialchars_decode ( meeting_object.location_municipality ? meeting_object.location_municipality : meeting_city_text_item.value );
         this.setTextItemClass ( meeting_city_text_item );
         meeting_city_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_municipality')};
         meeting_city_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_city_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
+        meeting_city_text_item.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
         
         meeting_county_text_item.value = htmlspecialchars_decode ( meeting_object.location_sub_province ? meeting_object.location_sub_province : meeting_county_text_item.value );
         this.setTextItemClass ( meeting_county_text_item );
         meeting_county_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_sub_province')};
         meeting_county_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_county_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-        meeting_county_text_item.onpaste = function(){admin_handler_object.handleTextInputBlur(this)};
+        meeting_county_text_item.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
         
         meeting_state_text_item.value = htmlspecialchars_decode ( meeting_object.location_province ? meeting_object.location_province : meeting_state_text_item.value );
         this.setTextItemClass ( meeting_state_text_item );
         meeting_state_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_province')};
         meeting_state_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_state_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-        meeting_state_text_item.onpaste = function(){admin_handler_object.handleTextInputBlur(this)};
+        meeting_state_text_item.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
         
         meeting_zip_text_item.value = htmlspecialchars_decode ( meeting_object.location_postal_code_1 ? meeting_object.location_postal_code_1 : meeting_zip_text_item.value );
         this.setTextItemClass ( meeting_zip_text_item );
         meeting_zip_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_postal_code_1')};
         meeting_zip_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_zip_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-        meeting_zip_text_item.onpaste = function(){admin_handler_object.handleTextInputBlur(this)};
+        meeting_zip_text_item.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
         
         meeting_nation_text_item.value = htmlspecialchars_decode ( meeting_object.location_nation ? meeting_object.location_nation : meeting_nation_text_item.value );
         this.setTextItemClass ( meeting_nation_text_item );
         meeting_nation_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_nation')};
         meeting_nation_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_nation_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-        meeting_nation_text_item.onpaste = function(){admin_handler_object.handleTextInputBlur(this)};
+        meeting_nation_text_item.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
         
         meeting_longitude_text_item.value = htmlspecialchars_decode ( meeting_object.longitude ? meeting_object.longitude : meeting_longitude_text_item.value );
         this.setTextItemClass ( meeting_longitude_text_item );
         meeting_longitude_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'longitude')};
         meeting_longitude_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_longitude_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-        meeting_longitude_text_item.onpaste = function(){admin_handler_object.handleTextInputBlur(this)};
+        meeting_longitude_text_item.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
         
         meeting_latitude_text_item.value = htmlspecialchars_decode ( meeting_object.latitude ? meeting_object.latitude : meeting_latitude_text_item.value );
         this.setTextItemClass ( meeting_latitude_text_item );
         meeting_latitude_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'latitude')};
         meeting_latitude_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_latitude_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-        meeting_latitude_text_item.onpaste = function(){admin_handler_object.handleTextInputBlur(this)};
+        meeting_latitude_text_item.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
         
         meeting_contact_text_item.value = htmlspecialchars_decode ( meeting_object.email_contact ? meeting_object.email_contact : meeting_contact_text_item.value );
         this.setTextItemClass ( meeting_contact_text_item );
         meeting_contact_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'email_contact')};
         meeting_contact_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_contact_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-        meeting_contact_text_item.onpaste = function(){admin_handler_object.handleTextInputBlur(this)};
+        meeting_contact_text_item.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
         
         meeting_published_checkbox.checked = (meeting_object ? true : false);
 
@@ -2883,7 +2897,7 @@ function BMLT_Server_Admin ()
             text_field.onkeyup = function(){admin_handler_object.setItemValue(this)};
             text_field.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
             text_field.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-            text_field.onpaste = function(){admin_handler_object.handleTextInputBlur(this)};
+            text_field.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
             text_field = null;
             };
     };
@@ -4583,7 +4597,7 @@ function BMLT_Server_Admin ()
             format_key_input.onfocus= function () { admin_handler_object.handleTextInputFocus(this); };
             format_key_input.onblur= function () { admin_handler_object.handleTextInputBlur(this); };
             format_key_input.onkeyup = function () { admin_handler_object.handleFormatTextInput(this); };
-            format_key_input.onpaste = function(){admin_handler_object.handleTextInputBlur(this)};
+            format_key_input.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
 
             format_key_td.appendChild ( format_key_input );
             
@@ -4602,7 +4616,7 @@ function BMLT_Server_Admin ()
             format_name_input.onfocus= function () { admin_handler_object.handleTextInputFocus(this); };
             format_name_input.onblur= function () { admin_handler_object.handleTextInputBlur(this); };
             format_name_input.onkeyup = function () { admin_handler_object.handleFormatTextInput(this); };
-            format_name_input.onpaste = function(){admin_handler_object.handleTextInputBlur(this)};
+            format_name_input.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
     
             format_name_td.appendChild ( format_name_input );
             
@@ -4619,7 +4633,7 @@ function BMLT_Server_Admin ()
             format_description_input.onfocus= function () { admin_handler_object.handleTextInputFocus(this); };
             format_description_input.onblur= function () { admin_handler_object.handleTextInputBlur(this); };
             format_description_input.onkeyup = function () { admin_handler_object.handleFormatTextInput(this); };
-            format_description_input.onpaste = function(){admin_handler_object.handleTextInputBlur(this)};
+            format_description_input.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
             
             format_description_td.appendChild ( format_description_input );
             
