@@ -33,7 +33,7 @@ if ( file_exists ( dirname ( dirname ( __FILE__ ) ).'/server/shared/classes/comd
     $file_path = str_replace ( '\\', '/', dirname ( dirname ( dirname ( dirname ( dirname ( __FILE__ ) ) ) ) ) );
     $my_path = str_replace ( '\\', '/', dirname ( dirname ( $_SERVER['PHP_SELF'] ) ) );
     $subsequent_path = str_replace ( $file_path, '', $my_path );
-    $url_path .= trim ( (($https && ($port != 443)) || ($port != 80)) ? ':'.$port : '', '/' );
+    $url_path .= trim ( (($https && ($port != 443)) || (!$https && ($port != 80))) ? ':'.$port : '', '/' );
     $url_path .= '/'.trim ( $subsequent_path, '/' );
     $uri = 'http'.($https ? 's' : '').'://'.$url_path;
     $_GET = array ( 'root_server' => $uri );
