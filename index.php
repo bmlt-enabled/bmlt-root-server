@@ -24,7 +24,7 @@ require_once ( dirname ( __FILE__ ).'/bmlt_semantic.class.php' );
 $uri = '';
 
 // If we are inside the Root Server, we simply fetch the local Root Server automatically.
-if ( file_exists ( dirname ( dirname ( __FILE__ ) ).'/server/shared/classes/comdef_utilityclasses.inc.php' ) )
+if ( file_exists ( dirname ( dirname ( __FILE__ ) ).'/server/shared/classes/comdef_utilityclasses.inc.php' ) && !isset ( $_GET['ajaxCall'] ) )
     {
     $port = $_SERVER['SERVER_PORT'] ;
     
