@@ -50,6 +50,7 @@ CHANGELIST
 
 - TBD
 - Added the semantic workshop as a submodule.
+- Fixed a minor issue with JSON responses. Numeric "0" was being sent back as an empty string ("").
 
 ** Version 2.6.32 **
 

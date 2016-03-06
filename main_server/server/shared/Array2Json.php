@@ -90,7 +90,7 @@ function array2json (
                     }
 
                 //Custom handling for multiple data types
-                if ( isset ($value) && $value )
+                if ( isset ($value) )
                     {
                     $str .= '"' . trim ( json_encode ( str_replace ( '"', '\\"', $value ) ), '"' ) . '"'; //All other things
                     }
