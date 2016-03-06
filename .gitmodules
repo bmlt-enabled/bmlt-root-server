@@ -1,6 +1,3 @@
 [submodule "main_server/client_interface/html/bmlt-basic/BMLT-Satellite-Base-Class"]
 	path = main_server/client_interface/html/bmlt-basic/BMLT-Satellite-Base-Class
 	url = git@bitbucket.org:bmlt/bmlt-satellite-base-class.git
-[submodule "main_server/semantic"]
-	path = main_server/semantic
-	url = git@bitbucket.org:bmlt/bmlt-semantic-workshop.git
