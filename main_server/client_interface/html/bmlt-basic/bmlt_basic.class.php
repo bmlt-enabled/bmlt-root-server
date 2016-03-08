@@ -2,8 +2,8 @@
 /****************************************************************************************//**
 *   \file   bmlt_basic.class.php                                                            *
 *                                                                                           *
-*   \brief  This is a standalone implementation of a BMLT satellite client.                 *
-*   \version 3.0.24                                                                         *
+*   \brief  This is a special standalone implementation of a BMLT satellite client for the  *
+*           Root Server browser.                                                            *
 *                                                                                           *
 *   In order to use this class, you need to take this entire directory and its contents,    *
 *   and place it at the same level of the file that you wish to use as your implementation. *
@@ -80,8 +80,14 @@ class bmlt_basic extends BMLTPlugin
     ****************************************************************************************/
     protected function get_ajax_base_uri()
         {
-        $ret = 'http://'.$_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').str_replace ( '\\', '/', $_SERVER['PHP_SELF'] );
-        return $ret;
+        $port = $_SERVER['SERVER_PORT'] ;
+        // IIS puts "off" in the HTTPS field, so we need to test for that.
+        $https = (!empty ( $_SERVER['HTTPS'] ) && (($_SERVER['HTTPS'] !== 'off') || ($port == 443))); 
+        $server_path = $_SERVER['SERVER_NAME'];
+        $my_path = $_SERVER['PHP_SELF'];
+        $server_path .= trim ( (($https && ($port != 443)) || (!$https && ($port != 80))) ? ':'.$port : '', '/' );
+        $server_path = 'http'.($https ? 's' : '').'://'.$server_path.$my_path;
+        return $server_path;
         }
     
     /************************************************************************************//**
