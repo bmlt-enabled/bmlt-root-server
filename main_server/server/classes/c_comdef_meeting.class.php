@@ -1460,7 +1460,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 			$this->_my_meeting_data[$in_key_enum]['value'] = null;	// Just in case of memory leaks.
 			$this->_my_meeting_data[$in_key_enum]['value'] = $in_value_mixed;
 			$this->_my_meeting_data[$in_key_enum]['lang_enum'] = $in_lang_enum;
-			$this->_my_meeting_data[$in_key_enum]['visibility'] = ( $in_visibility === null ) ? $this->_my_meeting_data[$in_key_enum]['visibility'] : intval ( $in_visibility );
+			$this->_my_meeting_data[$in_key_enum]['visibility'] = ( $in_visibility === null ) ? ((isset ( $this->_my_meeting_data[$in_key_enum] ) && isset ( $this->_my_meeting_data[$in_key_enum]['visibility'] )) ? intval ( $this->_my_meeting_data[$in_key_enum]['visibility'] ) : 0) : intval ( $in_visibility );
 			return true;
 			}
 		

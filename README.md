@@ -51,6 +51,8 @@ CHANGELIST
 - TBD
 - Added the semantic workshop as a submodule.
 - Fixed a minor issue with JSON responses. Numeric "0" was being sent back as an empty string ("").
+- Removed the ancient header stuff from the semantic interface XHTML.
+- Fixed a few warnings.
 
 ** Version 2.6.32 **
 

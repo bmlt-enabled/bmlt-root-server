@@ -69,6 +69,11 @@ function parse_redirect (
             }
         }
 
+    if ( !isset ( $http_vars['switcher'] ) )
+        {
+        $http_vars['switcher'] = '';
+        }
+    
 	switch ( $http_vars['switcher'] )
 		{
 		case 'GetSearchResults':
