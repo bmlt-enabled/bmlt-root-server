@@ -16,17 +16,19 @@
 
         You should have received a copy of the GNU General Public License
         along with this code.  If not, see <http://www.gnu.org/licenses/>.
+        
+        Version: 1.0.6
 */
 
 // Comment out for release version.
-# define ( 'DEBUG', 1 );
+// define ( 'DEBUG', 1 );
 require_once ( dirname ( __FILE__ ).'/bmlt_semantic.class.php' );
 $uri = '';
 
 // If we are inside the Root Server, we simply fetch the local Root Server automatically.
 if ( file_exists ( dirname ( dirname ( __FILE__ ) ).'/server/shared/classes/comdef_utilityclasses.inc.php' ) && !isset ( $_GET['ajaxCall'] ) )
     {
-    $port = $_SERVER['SERVER_PORT'] ;
+    $port = intval ( $_SERVER['SERVER_PORT'] );
     
     // IIS puts "off" in the HTTPS field, so we need to test for that.
     $https = (!empty ( $_SERVER['HTTPS'] ) && (($_SERVER['HTTPS'] !== 'off') || ($port == 443))); 
@@ -37,7 +39,17 @@ if ( file_exists ( dirname ( dirname ( __FILE__ ) ).'/server/shared/classes/comd
     $url_path .= trim ( (($https && ($port != 443)) || (!$https && ($port != 80))) ? ':'.$port : '', '/' );
     $url_path .= '/'.trim ( $subsequent_path, '/' );
     $uri = 'http'.($https ? 's' : '').'://'.$url_path;
-    $_GET = array ( 'root_server' => $uri );
+    $_GET = array ( 'root_server' => $uri, 'direct_workshop' => 1 );
+    
+    if ( $https )
+        {
+        $_GET['https'] = true;
+        }
+    
+    if ( ($https && ($port != 443)) || (!$https && ($port != 80)) )
+        {
+        $_GET['tcp_port'] = $port;
+        }
     }
 
 $bmlt_semantic_instance = new bmlt_semantic ( $_GET );

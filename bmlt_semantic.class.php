@@ -20,7 +20,7 @@
 */
 /***************************************************************************************************************************************/
 
-define ( '__VERSION__', '1.0.5' );
+define ( '__VERSION__', '1.0.6' );
 define ( '__REPO_URL__', 'https://bitbucket.org/bmlt/bmlt-semantic-workshop' );
 
 class bmlt_semantic
@@ -200,24 +200,81 @@ class bmlt_semantic
             {
             $this->_myLang = 'en';
             }
-    
+        
         include ( dirname ( __FILE__ ) . '/lang/'.$this->_myLang.'.inc.php' );
         if ( isset ( $inHttpVars['root_server'] ) )
             {
-            $inBaseURI = $inHttpVars['root_server'];
+            // Break the URI into its components.
+            $arr = explode ( '://', $inHttpVars['root_server'], 2 );
+            
+            $protocol = $arr[0];
+            $uri = isset ( $arr[1] ) ? $arr[1] : '';
+            
             unset ( $inHttpVars['root_server'] );
             
-            // If we have a root server passed in, we set that to our local data member, and remove it from the parameter array.
-            if ( isset ( $inBaseURI ) && $inBaseURI )
+            // In case no protocol prefix was given.
+            if ( !isset ( $uri ) || !trim ( $uri ) )
                 {
-                if ( !preg_match ( '|^http|', $inBaseURI ) )
-                    {
-                    $inBaseURI = 'http://'.$inBaseURI;
-                    }
-        
-                $this->_bmltRootServerURI = trim ( $inBaseURI, '/' );
+                $uri = trim ( $protocol);
                 }
-
+            
+            // Ignore whatever was passed in in the URI. We'll make our own, thank you very much.
+            if ( isset ( $inHttpVars['https'] ) )
+                {
+                $protocol = isset ( $inHttpVars['https'] ) ? 'https' : 'http';
+                unset ( $inHttpVars['https'] );
+                }
+            
+            // Parse out the server from the rest of the query.
+            $arr = explode ( '/', $uri, 2 );
+            
+            $server = trim ( $arr[0], '/' );
+            $query = isset ( $arr[1] ) ? trim ( $arr[1], '/' ) : '';
+            
+            // Clean up the URL. We do it this way, in case there is only 1 element.
+            if ( isset ( $query ) && !trim ( $query ) )
+                {
+                unset ( $query );
+                }
+    
+            // At this point, our URI has the protocol in $protocol, the server in $server, and anything beyond the server in $query (which may not be around).
+            // Now, we look for nonstandard ports.
+            
+            $arr = explode ( ':', $server, 2 );
+            $server = $arr[0];
+            $port = isset ( $arr[1] ) ? intval ( $arr[1] ) : 0;
+            
+            if ( isset ( $port ) && intval ( $port ) )
+                {
+                $port = intval ( $port );
+                
+                // We don't bother with standard ports.
+                if ( (($protocol == 'https' ) && ($port == 443)) || (($protocol == 'http' ) && ($port == 80)) )
+                    {
+                    $port = 0;
+                    }
+                }
+            else
+                {
+                $port = isset ( $inHttpVars['tcp_port'] ) ? intval ( $inHttpVars['tcp_port'] ) : 0;
+                }
+            
+            // At this point, our URI has the protocol in $protocol, the server in $server, the port in $port (which may be 0), and anything beyond the server in $query (which may not be around).
+            // Time to construct our Root Server URI.
+            $inBaseURI = "$protocol://$server";
+            
+            if ( $port )
+                {
+                $inBaseURI .= ":$port";
+                }
+            
+            if ( $query )
+                {
+                $inBaseURI .= "/$query";
+                }
+                
+            $this->_bmltRootServerURI = trim ( $inBaseURI, '/' );
+            
             // Get any switcher.
             if ( isset ( $inHttpVars['switcher'] ) && $inHttpVars['switcher'] )
                 {
@@ -237,7 +294,7 @@ class bmlt_semantic
             $port = ($https && ($port == 443)) || (!$https && ($port == 80)) ? '' : ':'.$port;
             $url_path = 'http'.($https ? 's' : '').'://'.$_SERVER['SERVER_NAME'].$port.$_SERVER['PHP_SELF'];
 
-            $this->_myURI = $url_path;          // This is the base for callbacks.
+            $this->_myURI = $url_path;          // This is the base for AJAX callbacks.
 
             // This is the name of our JavaScript object.
             $this->_myJSName = ($this->_bmltRootServerURI ? '_'.preg_replace ( '|[^a-z0-9A-Z_]+|', '', htmlspecialchars ( $this->_bmltRootServerURI ) ) : '');
