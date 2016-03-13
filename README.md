@@ -46,6 +46,11 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+** Version 2.7.1 **
+
+- March 12, 2016
+- Fixed an issue found immediately after release with the Observer Browser on some servers that use subdomains that point to the main directory.
+
 ** Version 2.7.0 **
 
 - March 12, 2016

@@ -8,7 +8,7 @@ require_once ( dirname ( __FILE__ ).'/bmlt-basic/bmlt_basic.class.php' ) ?><!DOC
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <title>Browse the Root Server</title>
         <?php
-            $url = dirname ( dirname ( $_SERVER['PHP_SELF'] ) );
+            $url = trim ( dirname ( dirname ( dirname ( dirname ( $_SERVER['PHP_SELF'] ) ) ) ), '/');
             $shortcut_icon = "$url/local_server/server_admin/style/images/shortcut.png";
             $stylesheet = "$url/local_server/server_admin/style".( defined( '__DEBUG_MODE__' ) ? '/' : '/style_stripper.php?filename=' )."styles.css";
         
