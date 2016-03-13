@@ -20,7 +20,6 @@
 
 $config_file_path = dirname ( dirname ( dirname ( __FILE__ ) ) ).'/server/config/get-config.php';
             
-$url_path = 'http://'.$_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').dirname ( $_SERVER['SCRIPT_NAME'] ).'/../..';
 if ( file_exists ( $config_file_path ) )
     {
     include ( $config_file_path );
@@ -124,9 +123,17 @@ if ( $server )
 
             $bmlt_basic_configuration = array();    ///< The configuration will be held in an array of associative arrays.
             $bmlt_basic_configuration_index = 0;
+            
+            $port = $_SERVER['SERVER_PORT'] ;
+            // IIS puts "off" in the HTTPS field, so we need to test for that.
+            $https = (!empty ( $_SERVER['HTTPS'] ) && (($_SERVER['HTTPS'] !== 'off') || ($port == 443))); 
+            $server_path = $_SERVER['SERVER_NAME'];
+            $my_path = dirname ( dirname ( dirname ( $_SERVER['SCRIPT_NAME'] ) ) );
+            $server_path .= trim ( (($https && ($port != 443)) || (!$https && ($port != 80))) ? ':'.$port : '', '/' );
+            $server_path = 'http'.($https ? 's' : '').'://'.$server_path.$my_path;
 
             $bmlt_basic_configuration[$bmlt_basic_configuration_index++] = array (
-                'root_server'               =>  'http://'.$_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').dirname ( dirname ( dirname ( $_SERVER['SCRIPT_NAME'] ) ) ), 
+                'root_server'               =>  $server_path, 
                 'map_center_latitude'       =>  floatval ( $localized_strings['search_spec_map_center']['latitude'] ),
                 'map_center_longitude'      =>  floatval ( $localized_strings['search_spec_map_center']['longitude'] ),
                 'map_zoom'                  =>  floatval ( $localized_strings['comdef_server_admin_strings']['meeting_editor_default_zoom'] ),

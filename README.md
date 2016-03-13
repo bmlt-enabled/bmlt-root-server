@@ -48,7 +48,7 @@ CHANGELIST
 ----------
 ** Version 2.7.0 **
 
-- March 13, 2016
+- March 12, 2016
 - Added the semantic workshop as a submodule. You can reach it by calling "/main_server/semantic".
 - Fixed a minor issue with JSON responses. Numeric "0" was being sent back as an empty string ("").
 - Removed the ancient header stuff from the semantic interface XHTML.
