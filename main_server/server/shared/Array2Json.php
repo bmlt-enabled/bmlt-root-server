@@ -92,7 +92,7 @@ function array2json (
                 //Custom handling for multiple data types
                 if ( isset ($value) )
                     {
-                    $str .= '"' . trim ( json_encode ( str_replace ( '"', '\\"', $value ) ), '"' ) . '"'; //All other things
+                    $str .= '"' . trim ( json_encode ( str_replace ( '"', '&quot;', $value ) ), '"' ) . '"'; //All other things
                     }
                 else
                     {

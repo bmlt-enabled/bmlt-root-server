@@ -49,7 +49,7 @@ $default_lang = $lang;
                         {
                         if ( count ( PDO::getAvailableDrivers() ) )
                             {
-                ?>                <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+                ?>                <script type="text/javascript" src="https://maps.google.com/maps/api/js"></script>
                 <script type="text/javascript" src="local_server/install_wizard/installer.js"></script>
                 <script type="text/javascript">
                     var g_installer_object = new BMLTInstaller ( <?php echo array2json ( $prefs_array ) ?> );

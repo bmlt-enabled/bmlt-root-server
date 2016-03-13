@@ -97,9 +97,7 @@ class bmlt_basic extends BMLTPlugin
     ****************************************************************************************/
     protected function get_plugin_path()
         {
-        $ret = isset ( $this->my_http_vars['base_url'] ) ? $this->my_http_vars['base_url'] : dirname( $this->get_ajax_base_uri() ).'/bmlt-basic/BMLT-Satellite-Base-Class/';
-    
-        return $ret;
+        return dirname( $this->get_ajax_base_uri() ).'/bmlt-basic/BMLT-Satellite-Base-Class/';
         }
     
     /************************************************************************************//**
@@ -263,32 +261,33 @@ class bmlt_basic extends BMLTPlugin
         
         $head_content .= '<link rel="stylesheet" type="text/css" href="';
         
-        $url = $this->get_plugin_path();
+        $url = trim ( $this->get_plugin_path() );
         
-        $head_content .= (!isset ( $options['theme'] ) || !$options['theme'] ) ? "" : htmlspecialchars ( $url.'themes/'.$options['theme'].'/' );
-        
-        if ( !defined ('_DEBUG_MODE_' ) )
+        if ( $url )
             {
-            $head_content .= 'style_stripper.php?filename=';
+            $head_content .= (!isset ( $options['theme'] ) || !$options['theme'] ) ? $url."themes/default/" : htmlspecialchars ( $url.'themes/'.$options['theme'].'/' );
+        
+            if ( !defined ('_DEBUG_MODE_' ) )
+                {
+                $head_content .= 'style_stripper.php?filename=';
+                }
+        
+            $head_content .= 'styles.css" />';
+        
+            $head_content .= '<link rel="stylesheet" type="text/css" href="';
+        
+            $head_content .= (!isset ( $options['theme'] ) || !$options['theme'] ) ? $url."themes/default/" : htmlspecialchars ( $url.'themes/'.$options['theme'].'/' );
+        
+            if ( !defined ('_DEBUG_MODE_' ) )
+                {
+                $head_content .= 'style_stripper.php?filename=';
+                }
+        
+            $head_content .= 'nouveau_map_styles.css" />';
             }
         
-        $head_content .= 'styles.css" />';
-        
-        $head_content .= '<link rel="stylesheet" type="text/css" href="';
-        
-        $head_content .= (!isset ( $options['theme'] ) || !$options['theme'] ) ? "" : htmlspecialchars ( $url.'themes/'.$options['theme'].'/' );
-        
-        if ( !defined ('_DEBUG_MODE_' ) )
-            {
-            $head_content .= 'style_stripper.php?filename=';
-            }
-        
-        $head_content .= 'nouveau_map_styles.css" />';
-
         if ( $root_server_root )
             {
-            $root_server = $root_server_root."/client_interface/xhtml/index.php";
-            
             $additional_css = '.bmlt_container * {margin:0;padding:0;text-align:center }';
             
             if ( isset ( $options['additional_css'] ) && $options['additional_css'] )

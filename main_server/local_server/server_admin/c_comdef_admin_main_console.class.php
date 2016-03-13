@@ -159,7 +159,7 @@ class c_comdef_admin_main_console
     {
         $ret = '<div id="bmlt_admin_main_console" class="bmlt_admin_main_console_wrapper_div">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
             // We actually include the JS directly into the HTML. This gives us a lot more flexibility as to how we deploy and gatekeep this file.
-            $ret .= '<script type="text/javascript" src="'.self::js_html ( 'http://maps.googleapis.com/maps/api/js?sensor=false&libraries=geometry' ).'"></script>';       
+            $ret .= '<script type="text/javascript" src="'.self::js_html ( 'https://maps.googleapis.com/maps/api/js?libraries=geometry' ).'"></script>';       
             $ret .= '<script type="text/javascript">';
                 $ret .= 'var g_ajax_callback_uri = \''.self::js_html ( $this->my_ajax_uri ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_current_user_id = \''.self::js_html ( $this->my_user->GetID() ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
