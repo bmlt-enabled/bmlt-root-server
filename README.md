@@ -48,8 +48,9 @@ CHANGELIST
 ----------
 ** Version 2.7.2 **
 
-- TBD
+- March 13, 2016
 - The problem with the previous fix, was that it worked ONLY on direct domains. That's fixed now.
+- This affects only the Root Browser, or the logged-in (Observer) browser functionality. The rest of the functionality is fine.
 
 ** Version 2.7.1 **
 
