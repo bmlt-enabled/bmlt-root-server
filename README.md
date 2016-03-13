@@ -30,7 +30,7 @@ CHANGELIST
 ----------
 ** Version 1.0.6 **
 
-- TBD
+- March 13, 2016
 
 - Adding better capability for SSL, cleaned URIs and integration with the Root Server.
 
