@@ -46,6 +46,11 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+** Version 2.7.2 **
+
+- TBD
+- The problem with the previous fix, was that it worked ONLY on direct domains. That's fixed now.
+
 ** Version 2.7.1 **
 
 - March 12, 2016
