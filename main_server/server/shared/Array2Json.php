@@ -43,25 +43,11 @@ function array2json (
 					)
 	{
 	$parts = array();
-	$is_list = false;
+	// See if we are an associative array.
+// 	$is_list = (count ( array_filter ( array_keys ( $arr ), 'is_string' ) ) == 0) && (array_keys ( $arr ) === range ( 0, count ( $arr ) - 1 ));
+    $is_list = false;   // The reason for this, is that the PHP version always sends it back as an object (string keys are numbers).
 
-	//Find out if the given array is a numerical array
-	$keys = array_keys($arr);
-	$max_length = count($arr)-1;
-	if(($keys[0] == 0) and ($keys[$max_length] == $max_length))
-		{//See if the first key is 0 and last key is length - 1
-		$is_list = true;
-		for ($i=0; $i<count($keys); $i++)
-			{ //See if each key correspondes to its position
-			if($i != $keys[$i])
-				{ //A key fails at position check.
-				$is_list = false; //It is an associative array.
-				break;
-				}
-			}
-		}
-
-	foreach($arr as $key=>$value)
+    foreach($arr as $key=>$value)
 		{
 		if(is_array($value))
 			{ //Custom handling for arrays
@@ -73,14 +59,14 @@ function array2json (
 				{
 				$parts[] = '"' . $key . '":' . array2json($value); /* :RECURSION: */
 				}
-				
-			}
+						
+	        }
 		else
 			{
 			$str = '';
-			if ( $key == "json_data" )  // JSON data is passed through without any vetting or modification (so it can easily bork the stream).
+			if ( $key === 'json_data' )  // JSON data is passed through without any vetting or modification (so it can easily bork the stream).
 			    {
-                $str = '"json_data":'.$value;
+                $str = '"'.$key.'":'.$value;
 			    }
 			else
 			    {

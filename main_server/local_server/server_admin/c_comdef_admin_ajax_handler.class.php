@@ -497,27 +497,27 @@ class c_comdef_admin_ajax_handler
                     if ( $user_to_change->UpdateToDB() )
                         {
                         header ( 'Content-type: application/json' );
-                        echo "{'success':true,'user':".array2json ( $the_changed_user )."}";
+                        echo '{"success":true,"user":'.array2json ( $the_changed_user )."}";
                         }
                     else
                         {
                         $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_fail_cant_update_text'] );
                         header ( 'Content-type: application/json' );
-                        echo "{'success':false,'report':'$err_string'}";
+                        echo "{\"success\":false,\"report\":\"$err_string\"}";
                         }
                     }
                 else
                     {
                     $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_fail_cant_find_sb_text'] );
                     header ( 'Content-type: application/json' );
-                    echo "{'success':false,'report':'$err_string'}";
+                    echo "{\"success\":false,\"report\":\"$err_string\"}";
                     }
                 }
             else
                 {
                 $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_fail_no_data_text'] );
                 header ( 'Content-type: application/json' );
-                echo "{'success':false,'report':'$err_string'}";
+                echo "{\"success\":false,\"report\":\"$err_string\"}";
                 }
             }
         else
