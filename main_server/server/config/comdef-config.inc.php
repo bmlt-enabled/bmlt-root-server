@@ -5,7 +5,7 @@
 */
 	defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 	defined( 'BMLT_COOKIE' ) or define ( 'BMLT_COOKIE', 'bmlt_cookie' );	// The base name for the BMLT cookie.
-    define ( '_LANG_COOKIE_NAME', 'bmlt_admin_lang_pref' );                 // The special admin language selector cookie.
+    defined ( '_LANG_COOKIE_NAME' ) or define ( '_LANG_COOKIE_NAME', 'bmlt_admin_lang_pref' );                 // The special admin language selector cookie.
 	ini_set('display_errors', 0);	// Keep it all in the family.
 	
 	global	$comdef_global_language;				///< The local server language enum (Will default to English)
