@@ -18,6 +18,8 @@
 *   along with this code.  If not, see <http://www.gnu.org/licenses/>.                      *
 ********************************************************************************************/
 
+// define ( '_DEBUG_MODE_', 1 ); //Uncomment for easier JavaScript debugging.
+
 $config_file_path = dirname ( dirname ( dirname ( __FILE__ ) ) ).'/server/config/get-config.php';
             
 if ( file_exists ( $config_file_path ) )

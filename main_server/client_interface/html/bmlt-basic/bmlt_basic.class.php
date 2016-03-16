@@ -29,8 +29,6 @@
 *   along with this code.  If not, see <http://www.gnu.org/licenses/>.                      *
 ********************************************************************************************/
 
-// define ( '_DEBUG_MODE_', 1 ); //Uncomment for easier JavaScript debugging.
-
 // Include our configuration.
 require_once ( dirname ( __FILE__ ).'/../config-bmlt-basic.inc.php' );
 // Include the satellite driver class.

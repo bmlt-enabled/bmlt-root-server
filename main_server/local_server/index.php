@@ -18,15 +18,16 @@
     along with this code.  If not, see <http://www.gnu.org/licenses/>.
 */
 defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
+define ( '_LANG_COOKIE_NAME', 'bmlt_admin_lang_pref' );
 
 global  $http_vars;
 $http_vars = array_merge ( $_GET, $_POST );
 $lang_enum = '';
 
 // We use a cookie to store the language pref.
-if ( isset ( $_COOKIE ) && isset ( $_COOKIE['bmlt_admin_lang_pref'] ) && $_COOKIE['bmlt_admin_lang_pref'] )
+if ( isset ( $_COOKIE ) && isset ( $_COOKIE[_LANG_COOKIE_NAME] ) && $_COOKIE[_LANG_COOKIE_NAME] )
     {
-    $lang_enum = $_COOKIE['bmlt_admin_lang_pref'];
+    $lang_enum = $_COOKIE[_LANG_COOKIE_NAME];
     }
 
 if ( isset ( $http_vars['lang_enum'] ) && $http_vars['lang_enum'] )
@@ -41,7 +42,7 @@ require_once ( dirname ( __FILE__ ).'/install_wizard/index.php' );  // We test f
 if ( isset ( $g_enable_language_selector ) && $g_enable_language_selector )
     {
     $expires = time() + (60 * 60 * 24 * 365);   // Expire in one year.
-    setcookie ( 'bmlt_admin_lang_pref', $lang_enum, $expires, '/' );
+    setcookie ( _LANG_COOKIE_NAME, $lang_enum, $expires, '/' );
     }
 
 if ( isset ( $http_vars ['bmlt_data_transfer'] ) )  // This checks for the transfer wizard.

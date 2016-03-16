@@ -46,6 +46,12 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+** Version 2.7.3 **
+
+- TBD
+- Made the code handling the language selector cookie a bit more generic.
+- Added some blank index.htm files for a tiny bit more security.
+
 ** Version 2.7.2 **
 
 - March 13, 2016
