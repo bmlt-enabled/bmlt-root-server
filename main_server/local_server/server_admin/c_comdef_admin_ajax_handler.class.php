@@ -478,7 +478,6 @@ class c_comdef_admin_ajax_handler
                 $email = $the_changed_user[4];
                 $user_level = intval ( $the_changed_user[5] );
                 $password = trim ( $the_changed_user[6] );
-            
                 $user_to_change = $this->my_server->GetUserByIDObj ( $id );
             
                 if ( $user_to_change instanceof c_comdef_user )
@@ -491,7 +490,12 @@ class c_comdef_admin_ajax_handler
                     
                     if ( $password )
                         {
-                        $user_to_change->SetNewPassword ( $password );
+                        if ( !$user_to_change->SetNewPassword ( $password ) )
+                            {
+                            $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_fail_cant_update_text'] );
+                            echo "{\"success\":false,\"report\":\"$err_string\"}";
+                            return;
+                            }
                         }
                 
                     if ( $user_to_change->UpdateToDB() )

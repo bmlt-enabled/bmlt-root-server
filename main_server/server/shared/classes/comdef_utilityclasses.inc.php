@@ -146,73 +146,77 @@ function FullCrypt (
 										*/
 					)
 {
-	// We only do all this stuff if a crypt method was specified, and there was no salt.
-	if ( (null != $in_salt) && (null != $crypt_method) )
-		{
-		// We just drop through if a fixed (and supported) method was requested.
-		if ( ($crypt_method == 'CRYPT_BLOWFISH') && CRYPT_BLOWFISH )
-			{
-			// No-op (for now)
-			}
-		elseif ( ($crypt_method == 'CRYPT_MD5') && CRYPT_MD5 )
-			{
-			// No-op (for now)
-			}
-		elseif ( ($crypt_method == 'CRYPT_EXT_DES') && CRYPT_MD5 )
-			{
-			// No-op (for now)
-			}
-		// A simple value of true, means use the best encryption available.
-		elseif ( (null == $in_salt) &&  (true === $crypt_method) )
-			{
-			if ( CRYPT_BLOWFISH )
-				{
-				$crypt_method = 'CRYPT_BLOWFISH';
-				}
-			elseif ( CRYPT_MD5 )
-				{
-				$crypt_method = 'CRYPT_MD5';
-				}
-			elseif ( CRYPT_EXT_DES )
-				{
-				$crypt_method = 'CRYPT_EXT_DES';
-				}
-			else
-				{
-				$crypt_method = 'CRYPT_DES';
-				}
-			}
-		elseif ( null == $in_salt )
-			{
-			$crypt_method = 'CRYPT_DES';
-			}
-	
-		// Each method is triggered by a different salt length and header. We use numbers
-		// here, just to be simple. It's not such a huge deal what the salt is, so we use
-		// a limited range to ensure proper salt length.
-		switch ( $crypt_method )
-			{
-			case 'CRYPT_BLOWFISH':
-				$salt = "$2$".strval ( rand ( 1000000000000, 9999999999999 ) );
-			break;
-			case 'CRYPT_MD5':
-				$salt = "$1$".strval ( rand ( 100000000, 999999999 ) );
-			break;
-			case 'CRYPT_EXT_DES':
-				$salt = strval ( rand ( 100000000, 999999999 ) );
-			break;
-			case 'CRYPT_DES':
-				$salt = strval ( rand ( 10, 99 ) );
-			break;
-			}
-		}
-	
-	$ret = crypt ( $in_string, $in_salt );
-	
-	if ( !$ret )    // Fallback as a last resort.
-	    {
-	    $ret = crypt ( $in_string, $in_string );
-	    }
+    $ret = null;
+    
+    if ( isset ( $in_string ) && $in_string )
+        {
+        // We only do all this stuff if a crypt method was specified, and there was no salt.
+        if ( (null == $in_salt) && (null != $crypt_method) )
+            {
+            // We just drop through if a fixed (and supported) method was requested.
+            if ( ($crypt_method == 'CRYPT_BLOWFISH') && CRYPT_BLOWFISH )
+                {
+                // No-op (for now)
+                }
+            elseif ( ($crypt_method == 'CRYPT_MD5') && CRYPT_MD5 )
+                {
+                // No-op (for now)
+                }
+            elseif ( ($crypt_method == 'CRYPT_EXT_DES') && CRYPT_MD5 )
+                {
+                // No-op (for now)
+                }
+            // A simple value of true, means use the best encryption available.
+            elseif ( (null == $in_salt) && (true === $crypt_method) )
+                {
+                if ( CRYPT_BLOWFISH )
+                    {
+                    $crypt_method = 'CRYPT_BLOWFISH';
+                    }
+                elseif ( CRYPT_MD5 )
+                    {
+                    $crypt_method = 'CRYPT_MD5';
+                    }
+                elseif ( CRYPT_EXT_DES )
+                    {
+                    $crypt_method = 'CRYPT_EXT_DES';
+                    }
+                else
+                    {
+                    $crypt_method = 'CRYPT_DES';
+                    }
+                }
+            elseif ( null == $in_salt )
+                {
+                $crypt_method = 'CRYPT_DES';
+                }
+    
+            // Each method is triggered by a different salt length and header. We use numbers
+            // here, just to be simple. It's not such a huge deal what the salt is, so we use
+            // a limited range to ensure proper salt length.
+            switch ( $crypt_method )
+                {
+                case 'CRYPT_BLOWFISH':
+                    $salt = "$2$".strval ( rand ( 1000000000000, 9999999999999 ) );
+                break;
+                case 'CRYPT_MD5':
+                    $salt = "$1$".strval ( rand ( 100000000, 999999999 ) );
+                break;
+                case 'CRYPT_EXT_DES':
+                    $salt = strval ( rand ( 100000000, 999999999 ) );
+                break;
+                case 'CRYPT_DES':
+                    $salt = strval ( rand ( 10, 99 ) );
+                break;
+                }
+        
+            $in_salt = isset ( $salt ) && $salt ? $salt : $in_string;
+            }
+    
+        $in_salt = isset ( $in_salt ) && $in_salt ? $in_salt : $in_string;
+
+        $ret = crypt ( $in_string, $in_salt );
+        }
 	    
 	return $ret;
 }

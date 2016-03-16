@@ -122,9 +122,12 @@ class c_comdef_users implements i_comdef_has_parent
 	{
 		$ret = null;
 		
-		foreach ( $this->_local_copy_of_array as &$user )
+		foreach ( $this->_local_copy_of_array as $user )
 			{
-			if ( ($in_login == $user->GetLogin()) && (FullCrypt ( $in_password, $user->GetPassword() ) == $user->GetPassword()) )
+			$previous_password = $user->GetPassword();
+			$fullcrypted_password = FullCrypt ( $in_password, $user->GetPassword() );
+			$login = $user->GetLogin();
+			if ( ($in_login == $login) && ($fullcrypted_password == $previous_password) )
 				{
 				$ret = FullCrypt ( $in_password, $user->GetPassword() );
 				break;

@@ -629,9 +629,17 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
 	{
 		if ( trim ( $in_password_unencrypted_string ) )
 			{
-			$this->SetPassword ( FullCrypt ( trim ( $in_password_unencrypted_string ) ), $this->GetPassword() );
+			$min_pw_len = c_comdef_server::GetServer()->GetLocalStrings()['min_pw_len'];
+			if ( $min_pw_len <= strlen ( trim ( $in_password_unencrypted_string ) ) )
+			    {
+                $this->SetPassword ( FullCrypt ( trim ( $in_password_unencrypted_string ) ), $this->GetPassword() );
 
-			return $this->GetPassword();
+                return $this->GetPassword();
+                }
+            else
+                {
+                return null;
+                }
 			}
 		else
 			{

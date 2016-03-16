@@ -50,7 +50,9 @@ CHANGELIST
 
 - TBD
 - Made the code handling the language selector cookie a bit more generic.
+- Added a new Root Browser that has the ability to have language selected via a cookie.
 - Added some blank index.htm files for a tiny bit more security.
+- Fixed a JSON issue that caused problems with user administration.
 
 ** Version 2.7.2 **
 
