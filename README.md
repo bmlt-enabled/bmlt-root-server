@@ -48,7 +48,7 @@ CHANGELIST
 ----------
 ** Version 2.7.4 **
 
-- TBD
+- March 17, 2016 (Happy St. Paddy's day!)
 - The JSON "fix" for 2.7.3 actually broke searches. That should really be fixed, now.
 
 ** Version 2.7.3 **
