@@ -46,6 +46,11 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+** Version 2.7.4 **
+
+- TBD
+- The JSON "fix" for 2.7.3 actually broke searches. That should really be fixed, now.
+
 ** Version 2.7.3 **
 
 - March 16, 2016

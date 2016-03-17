@@ -44,12 +44,11 @@ function array2json (
 	{
 	$parts = array();
 	// See if we are an associative array.
-// 	$is_list = (count ( array_filter ( array_keys ( $arr ), 'is_string' ) ) == 0) && (array_keys ( $arr ) === range ( 0, count ( $arr ) - 1 ));
-    $is_list = false;   // The reason for this, is that the PHP version always sends it back as an object (string keys are numbers).
+	$is_list = (count ( array_filter ( array_keys ( $arr ), 'is_numeric' ) ) == count ( $arr )) && (array_keys ( $arr ) === range ( 0, count ( $arr ) - 1 ));
 
     foreach($arr as $key=>$value)
 		{
-		if(is_array($value))
+		if(is_array ( $value ) && count ( $value ))
 			{ //Custom handling for arrays
 			if($is_list)
 				{
@@ -59,7 +58,6 @@ function array2json (
 				{
 				$parts[] = '"' . $key . '":' . array2json($value); /* :RECURSION: */
 				}
-						
 	        }
 		else
 			{
