@@ -34,6 +34,7 @@ CHANGELIST
 
 - Fixed a warning.
 - Added a selection for the XML GetLangs response.
+- Fixed an issue with the Root Server not having SSL honored.
 
 ** Version 1.0.6 **
 
