@@ -44,7 +44,15 @@ if ( $server instanceof c_comdef_server )
 			ob_start();
 			}
 		echo '<'.'?'.'xml version="1.0" encoding="UTF-8"'.'?'.'>';
-		$xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', $_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetLangs.php' ) );
+
+        $port = $_SERVER['SERVER_PORT'] ;
+        // IIS puts "off" in the HTTPS field, so we need to test for that.
+        $https = (!empty ( $_SERVER['HTTPS'] ) && (($_SERVER['HTTPS'] !== 'off') || ($port == 443))); 
+        $server_path = $_SERVER['SERVER_NAME'];
+        $my_path = dirname ( dirname ( $_SERVER['SCRIPT_NAME'] ) ).'/xsd/GetLangs.php';
+        $server_path .= trim ( (($https && ($port != 443)) || (!$https && ($port != 80))) ? ':'.$port : '', '/' );
+        $xsd_uri = 'http'.($https ? 's' : '').'://'.$server_path.$my_path;
+        
 		echo "<languages xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
 
 		foreach ( $langs as $key_string => $name_string )

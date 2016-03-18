@@ -51,9 +51,14 @@ function parse_redirect (
 	$result = null;
 	$http_vars = array_merge_recursive ( $_GET, $_POST );
 	
-	// Just to be safe, we override any root passed in. We know where our root is, and we don't need to be told.
-	$http_vars['bmlt_root'] = 'http://'.$_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').dirname ( $_SERVER['SCRIPT_NAME'] )."/../../";
-	
+    $port = $_SERVER['SERVER_PORT'] ;
+    // IIS puts "off" in the HTTPS field, so we need to test for that.
+    $https = (!empty ( $_SERVER['HTTPS'] ) && (($_SERVER['HTTPS'] !== 'off') || ($port == 443))); 
+    $server_path = $_SERVER['SERVER_NAME'];
+    $my_path = dirname ( dirname ( dirname ( $_SERVER['SCRIPT_NAME'] ) ) );
+    $server_path .= trim ( (($https && ($port != 443)) || (!$https && ($port != 80))) ? ':'.$port : '', '/' );
+    $http_vars['bmlt_root'] = 'http'.($https ? 's' : '').'://'.$server_path.$my_path;
+
     $langs = array ( $server->GetLocalLang() );
 	$localized_strings = c_comdef_server::GetLocalStrings();
     

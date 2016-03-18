@@ -46,6 +46,12 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+** Version 2.7.5 **
+
+- TBD
+- The Semantic Response for server languages was missing. That has been fixed.
+- The XSD for SSL pages had the wrong URI (Minor bug that affects no one).
+
 ** Version 2.7.4 **
 
 - March 17, 2016 (Happy St. Paddy's day!)
