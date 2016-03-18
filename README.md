@@ -54,8 +54,9 @@ CHANGELIST
 ** Version 2.7.5 **
 
 - TBD
-- The Semantic Response for server languages was missing. That has been fixed.
+- The Semantic Response for server languages (XML only) was missing. That has been fixed.
 - The XSD for SSL pages had the wrong URI (Minor bug that affects no one).
+- SSL fixes for the Semantic Workshop.
 
 ** Version 2.7.4 **
 
