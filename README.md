@@ -30,9 +30,10 @@ CHANGELIST
 ----------
 ** Version 1.0.7 **
 
-- TBD
+- March 18, 2016
 
 - Fixed a warning.
+- Added a selection for the XML GetLangs response.
 
 ** Version 1.0.6 **
 
