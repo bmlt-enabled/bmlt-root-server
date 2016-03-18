@@ -2414,6 +2414,7 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.setBasicFunctions ( 'bmlt_semantic_form_response_type_select_gpx_option' );
     this.setBasicFunctions ( 'bmlt_semantic_form_response_type_select_poi_option' );
     this.setBasicFunctions ( 'bmlt_semantic_form_switcher_type_select_schema_option' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_switcher_type_select_server_langs_option' );
     this.setBasicFunctions ( 'bmlt_semantic_info_div_download_line' );
     this.setBasicFunctions ( 'bmlt_semantic_info_div_shortcode_line' );
     this.setBasicFunctions ( 'bmlt_semantic_form_main_fields_fieldset_contents_div' );
@@ -2543,6 +2544,7 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     var bmlt_semantic_form_schema_select_fieldset = this.getScopedElement ( 'bmlt_semantic_form_schema_select_fieldset' );
     var bmlt_semantic_form_schema_select = this.getScopedElement ( 'bmlt_semantic_form_schema_select' );
     var switcher_type_select_schema_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_schema_option' );
+    var switcher_type_select_server_langs_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_server_langs_option' );
     var switcher_type_select_server_info_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_server_info_option' );
     var getUsedCheckbox = this.getScopedElement ( 'bmlt_semantic_form_used_formats_checkbox' );
     var getOnlyUsedCheckbox = this.getScopedElement ( 'bmlt_semantic_form_just_used_formats_checkbox' );
@@ -2555,6 +2557,7 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     switcher_type_select_sb_option.enable();
     switcher_type_select_changes_option.enable();
     switcher_type_select_schema_option.disable();
+    switcher_type_select_server_langs_option.disable();
     
     if ( switcher_type_select_server_info_option )
         {
@@ -2782,6 +2785,7 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     if ( (main_fieldset_select.value == 'DOWNLOAD') && (response_type_select.value == 'xml') )
         {
         switcher_type_select_schema_option.enable();
+        switcher_type_select_server_langs_option.enable();
         }
     else
         {
