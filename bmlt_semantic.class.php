@@ -20,7 +20,7 @@
 */
 /***************************************************************************************************************************************/
 
-define ( '__VERSION__', '1.0.6' );
+define ( '__VERSION__', '1.0.7' );
 define ( '__REPO_URL__', 'https://bitbucket.org/bmlt/bmlt-semantic-workshop' );
 
 class bmlt_semantic
@@ -268,7 +268,7 @@ class bmlt_semantic
                 $inBaseURI .= ":$port";
                 }
             
-            if ( $query )
+            if ( isset ( $query ) )
                 {
                 $inBaseURI .= "/$query";
                 }

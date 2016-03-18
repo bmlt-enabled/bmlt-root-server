@@ -28,6 +28,12 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
 CHANGELIST
 ----------
+** Version 1.0.7 **
+
+- TBD
+
+- Fixed a warning.
+
 ** Version 1.0.6 **
 
 - March 13, 2016
