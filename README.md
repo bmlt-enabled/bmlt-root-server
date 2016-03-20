@@ -53,8 +53,9 @@ CHANGELIST
 ----------
 ** Version 2.7.6 **
 
-- TBD
+- March 20, 2016
 - Using version 1.0.9 Semantic Workshop
+- Fixed a bug that should not be a bug, but affected some servers (The Root Server would wipe out with a parse error in the user class).
 
 ** Version 2.7.5 **
 
