@@ -82,7 +82,8 @@ if ( !isset ( $_SESSION ) )
 
 // See if we are logging in or out
 if (    (isset ( $_GET['admin_action'] ) && ($_GET['admin_action'] == 'logout'))    // No GET login.
-    ||  (isset ( $_POST['admin_action'] ) && ($_POST['admin_action'] == 'logout') || ($_POST['admin_action'] == 'login'))
+    ||  (isset ( $_POST['admin_action'] ) && ($_POST['admin_action'] == 'logout'))
+    ||  (isset ( $_POST['admin_action'] ) && ($_POST['admin_action'] == 'login'))   // Only POST login.
     )
     {
     // Belt and suspenders -nuke the stored login.

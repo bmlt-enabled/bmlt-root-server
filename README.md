@@ -51,6 +51,11 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+** Version 2.7.7 **
+
+- TBD
+- Fixed a warning in the login screen.
+
 ** Version 2.7.6 **
 
 - March 20, 2016
