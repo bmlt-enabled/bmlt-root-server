@@ -22,7 +22,7 @@
         You should have received a copy of the GNU General Public License
         along with this code.  If not, see <http://www.gnu.org/licenses/>.
         
-        Version: 1.0.8
+        Version: 1.0.9
 */
 /*******************************************************************************************/
 function BMLTSemanticResult (   inRootServerURI,
@@ -2608,6 +2608,11 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
         main_fieldset_direct_uri_div.hide();
         };
 
+    if ( (switcher_select.value == 'GetLangs') && ((response_type_select.value != 'xml') && !((response_type_select.value == 'json') && (this.version >= 2007005))) )
+        {
+        switcher_select.selectedIndex = 0;
+        };
+    
     if ( (inItem != response_type_select) && (switcher_select.value == 'GetNAWSDump') && ((response_type_select.value != 'csv') || (main_fieldset_select.value != 'DOWNLOAD')) )
         {
         response_type_select.selectedIndex = 0;

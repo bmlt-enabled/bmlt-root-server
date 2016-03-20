@@ -28,6 +28,12 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
 CHANGELIST
 ----------
+** Version 1.0.9 **
+
+- March 20, 2016
+
+- Fixed a minor bug with the new server langs, where an invalid display could happen (Select "Server Languages" in XML or JSON, then switch to a different output type).
+
 ** Version 1.0.8 **
 
 - March 20, 2016
