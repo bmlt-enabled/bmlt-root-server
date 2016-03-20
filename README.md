@@ -51,6 +51,11 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+** Version 2.7.6 **
+
+- TBD
+- Using version 1.0.9 Semantic Workshop
+
 ** Version 2.7.5 **
 
 - March 20, 2016
