@@ -22,7 +22,7 @@
         You should have received a copy of the GNU General Public License
         along with this code.  If not, see <http://www.gnu.org/licenses/>.
         
-        Version: 1.0.7
+        Version: 1.0.8
 */
 /*******************************************************************************************/
 function BMLTSemanticResult (   inRootServerURI,
@@ -2789,10 +2789,17 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
         }
     else
         {
-        if ( switcher_select.value == 'XMLSchema' )
+        if ( (main_fieldset_select.value == 'DOWNLOAD') && ((response_type_select.value == 'json') && (this.version >= 2007005)) )
             {
-            switcher_select.selectedIndex = 0;
-            bmlt_semantic_form_meeting_search_div.show();
+            switcher_type_select_server_langs_option.enable();
+            }
+        else
+            {
+            if ( switcher_select.value == 'XMLSchema' )
+                {
+                switcher_select.selectedIndex = 0;
+                bmlt_semantic_form_meeting_search_div.show();
+                };
             };
         };
     
@@ -2992,53 +2999,64 @@ BMLTSemantic.prototype.refreshURI = function ()
         }
     else
         {
-        if ( (this.state.switcher == 'XMLSchema') || this.state.valid )
+        if ( (this.state.switcher == 'GetLangs') && (type == 'json') )
             {
-            if ( this.getScopedElement ( 'bmlt_semantic_form_main_mode_select' ).value == 'DOWNLOAD' )
-                {
-                var extra_sauce = '';
-                if ( type == 'simple-block' )
-                    {
-                    type = 'simple';
-                    extra_sauce = '&block_mode=1'
-                    };
-            
-                var uri = '';
-            
-                if ( this.state.switcher == 'XMLSchema' )
-                    {
-                    var schemaSelect = this.getScopedElement ( 'bmlt_semantic_form_schema_select' );
-                    if ( schemaSelect )
-                        {
-                        var schemaType = this.getScopedElement ( 'bmlt_semantic_form_schema_select' ).value;
-                
-                        uri = this.state.root_server_uri + '/client_interface/xsd/' + schemaType + '.php';
-                        };
-                    }
-                else
-                    {
-                    uri = this.state.root_server_uri + '/client_interface/' + type + '/?' + compiled_arguments + extra_sauce;
-                    };
-            
-                var url_string = '<a target="_blank" href="' + uri + '">' + uri + '</a>';
-                uri_active.innerHTML = url_string;
-                uri_invalid.hide();
-                uri_active.show();
-                }
-            else
-                {
-                var shortcode_string = '[[BMLT_SIMPLE(' + compiled_arguments + ')]]';
-                shortcode_active.innerHTML = shortcode_string;
-                shortcode_invalid.hide();
-                shortcode_active.show();
-                };
+            uri = this.state.root_server_uri + '/client_interface/json/GetLangs.php';
+            var url_string = '<a target="_blank" href="' + uri + '">' + uri + '</a>';
+            uri_active.innerHTML = url_string;
+            uri_invalid.hide();
+            uri_active.show();
             }
         else
             {
-            uri_invalid.show();
-            uri_active.hide();
-            shortcode_invalid.show();
-            shortcode_active.hide();
+            if ( (this.state.switcher == 'XMLSchema') || this.state.valid )
+                {
+                if ( this.getScopedElement ( 'bmlt_semantic_form_main_mode_select' ).value == 'DOWNLOAD' )
+                    {
+                    var extra_sauce = '';
+                    if ( type == 'simple-block' )
+                        {
+                        type = 'simple';
+                        extra_sauce = '&block_mode=1'
+                        };
+            
+                    var uri = '';
+            
+                    if ( this.state.switcher == 'XMLSchema' )
+                        {
+                        var schemaSelect = this.getScopedElement ( 'bmlt_semantic_form_schema_select' );
+                        if ( schemaSelect )
+                            {
+                            var schemaType = this.getScopedElement ( 'bmlt_semantic_form_schema_select' ).value;
+                
+                            uri = this.state.root_server_uri + '/client_interface/xsd/' + schemaType + '.php';
+                            };
+                        }
+                    else
+                        {
+                        uri = this.state.root_server_uri + '/client_interface/' + type + '/?' + compiled_arguments + extra_sauce;
+                        };
+            
+                    var url_string = '<a target="_blank" href="' + uri + '">' + uri + '</a>';
+                    uri_active.innerHTML = url_string;
+                    uri_invalid.hide();
+                    uri_active.show();
+                    }
+                else
+                    {
+                    var shortcode_string = '[[BMLT_SIMPLE(' + compiled_arguments + ')]]';
+                    shortcode_active.innerHTML = shortcode_string;
+                    shortcode_invalid.hide();
+                    shortcode_active.show();
+                    };
+                }
+            else
+                {
+                uri_invalid.show();
+                uri_active.hide();
+                shortcode_invalid.show();
+                shortcode_active.hide();
+                };
             };
         };
 };

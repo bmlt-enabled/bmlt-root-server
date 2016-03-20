@@ -28,6 +28,12 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
 CHANGELIST
 ----------
+** Version 1.0.8 **
+
+- March 20, 2016
+
+- Added the JSON version of GetServerLangs.
+
 ** Version 1.0.7 **
 
 - March 18, 2016
