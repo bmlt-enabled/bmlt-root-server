@@ -53,10 +53,11 @@ CHANGELIST
 ----------
 ** Version 2.7.5 **
 
-- TBD
-- The Semantic Response for server languages (XML only) was missing. That has been fixed.
+- March 20, 2016
+- The Semantic Response for server languages (XML and JSON only) was missing from the Semantic Workshop. That has been added.
 - The XSD for SSL pages had the wrong URI (Minor bug that affects no one).
 - SSL fixes for the Semantic Workshop.
+- Added the JSON Version of Get Server Languages.
 
 ** Version 2.7.4 **
 
