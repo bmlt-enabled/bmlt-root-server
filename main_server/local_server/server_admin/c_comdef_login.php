@@ -86,9 +86,12 @@ if (    (isset ( $_GET['admin_action'] ) && ($_GET['admin_action'] == 'logout'))
     ||  (isset ( $_POST['admin_action'] ) && ($_POST['admin_action'] == 'login'))   // Only POST login.
     )
     {
+    session_write_open();
     // Belt and suspenders -nuke the stored login.
     $_SESSION[$admin_session_name] = null;
     unset ( $_SESSION[$admin_session_name] );
+    session_write_close();  // Close and reopen the session.
+    session_start();
 
     if ( isset ( $_POST['admin_action'] ) && ($_POST['admin_action'] == 'login') )
         {
