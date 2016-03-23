@@ -22,7 +22,7 @@
         You should have received a copy of the GNU General Public License
         along with this code.  If not, see <http://www.gnu.org/licenses/>.
         
-        Version: 1.0.9
+        Version: 1.0.10
 */
 /*******************************************************************************************/
 function BMLTSemanticResult (   inRootServerURI,
@@ -1725,9 +1725,12 @@ BMLTSemantic.prototype.clearSorts = function ( )
         for ( var i = 0; i < this.field_keys.length; i++ )
             {
             var selectObject = this.getScopedElement ( this.getSortItemID ( this.field_keys[i].key.toString() ) );
-
-            selectObject.selectedIndex = 0;
-            selectObject.className = selectObject.defaultClass;
+            
+            if ( selectObject )
+                {
+                selectObject.selectedIndex = 0;
+                selectObject.className = selectObject.defaultClass;
+                };
             };
         };
 };
@@ -2003,18 +2006,21 @@ BMLTSemantic.prototype.setTextHandlers = function ( inID
     this.setBasicFunctions ( inID );
     var textItem = this.getScopedElement ( inID );
     
-    textItem.className = textItem.defaultClass + ' bmlt_semantic_form_disabled_text';
-    
-    var oldOnChange = textItem.onchange;
-    
-    textItem.onchange = function() { this.formHandler.handleTextInput ( this, true ); };
-    textItem.onkeyup = function() { this.formHandler.handleTextInput ( this, true ); };
-    textItem.onblur = function() { this.formHandler.handleTextInput ( this, false ); };
-    textItem.onfocus = function() { this.formHandler.handleTextInput ( this, true ); };
-    
-    if ( oldOnChange )
+    if ( textItem )
         {
-        textItem.additionalHandler = oldOnChange;
+        textItem.className = textItem.defaultClass + ' bmlt_semantic_form_disabled_text';
+    
+        var oldOnChange = textItem.onchange;
+    
+        textItem.onchange = function() { this.formHandler.handleTextInput ( this, true ); };
+        textItem.onkeyup = function() { this.formHandler.handleTextInput ( this, true ); };
+        textItem.onblur = function() { this.formHandler.handleTextInput ( this, false ); };
+        textItem.onfocus = function() { this.formHandler.handleTextInput ( this, true ); };
+    
+        if ( oldOnChange )
+            {
+            textItem.additionalHandler = oldOnChange;
+            };
         };
 };
 
@@ -2029,18 +2035,22 @@ BMLTSemantic.prototype.setBasicFunctions = function ( inItemID
                                                     )
 {
     var item = this.getScopedElement ( inItemID );
-    item.formHandler = this;
-    item.oldDisplay = item.style.display;
-    if ( item.oldDisplay == 'none' )
+    
+    if ( item )
         {
-        item.oldDisplay = 'block';
+        item.formHandler = this;
+        item.oldDisplay = item.style.display;
+        if ( item.oldDisplay == 'none' )
+            {
+            item.oldDisplay = 'block';
+            };
+        item.defaultValue = item.value;
+        item.defaultClass = item.className;
+        item.disable = function() { this.disabled = true };
+        item.enable = function() { this.disabled = false };
+        item.hide = function() { this.style.display = 'none' };
+        item.show = function() { this.style.display = this.oldDisplay };
         };
-    item.defaultValue = item.value;
-    item.defaultClass = item.className;
-    item.disable = function() { this.disabled = true };
-    item.enable = function() { this.disabled = false };
-    item.hide = function() { this.style.display = 'none' };
-    item.show = function() { this.style.display = this.oldDisplay };
 };
 
 /*******************************************************************************************/
@@ -2073,7 +2083,11 @@ BMLTSemantic.prototype.setSortFieldFunctions = function ( inKey )
         {
         var sortItemOptionID = this.getSortItemID ( inKey, i );
         this.setBasicFunctions ( sortItemOptionID );
-        this.getScopedElement ( sortItemOptionID ).fieldKey = inKey;
+        var sortItem = this.getScopedElement ( sortItemOptionID );
+        if ( sortItem )
+            {
+            sortItem.fieldKey = inKey;
+            };
         };
 };
 
@@ -2102,15 +2116,22 @@ BMLTSemantic.prototype.setSortFieldState = function ( inKey, inMaxNum )
         {
         var sortItemOptionID = this.getSortItemID ( inKey, i );
         var optionElement = this.getScopedElement ( sortItemOptionID );
-        var sortItemSelect = optionElement.parentNode;
+        
+        if ( optionElement )
+            {
+            var sortItemSelect = optionElement.parentNode;
 
-        if ( (sortItemSelect.selectedIndex == 0) && (optionElement.value == inMaxNum) )
-            {
-            optionElement.enable();
-            }
-        else
-            {
-            optionElement.disable();
+            if ( sortItemSelect )
+                {
+                if ( (sortItemSelect.selectedIndex == 0) && (optionElement.value == inMaxNum) )
+                    {
+                    optionElement.enable();
+                    }
+                else
+                    {
+                    optionElement.disable();
+                    };
+                };
             };
         };
 };

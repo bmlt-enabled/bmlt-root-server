@@ -28,6 +28,12 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
 CHANGELIST
 ----------
+** Version 1.0.10 **
+
+- March 23, 2016
+
+- Fixed a JavaScript bug, in which Root Servers with reduced complements of additional meeting data could cause the sort stuff to reference null objects.
+
 ** Version 1.0.9 **
 
 - March 20, 2016
