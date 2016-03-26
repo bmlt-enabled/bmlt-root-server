@@ -407,7 +407,7 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 				{
 				if ( $formats instanceof c_comdef_formats )
 					{
-					$format_array = $formats->GetFormatsByLanguage();
+					$format_array = $formats->GetFormatsByLanguage($lang_enum);
 					
 					if ( is_array ( $format_array ) && count ( $format_array ) )
 						{
