@@ -22,7 +22,7 @@
         You should have received a copy of the GNU General Public License
         along with this code.  If not, see <http://www.gnu.org/licenses/>.
         
-        Version: 1.0.10
+        Version: 1.0.11
 */
 /*******************************************************************************************/
 function BMLTSemanticResult (   inRootServerURI,
@@ -130,6 +130,7 @@ BMLTSemanticResult.prototype.compileSearchResults = function()
     var responseTypeSelect = this.owner.getScopedElement ( 'bmlt_semantic_form_response_type_select' );
     var mainSelect = this.owner.getScopedElement ( 'bmlt_semantic_form_main_mode_select' );
     var getUsedCheckbox = this.owner.getScopedElement ( 'bmlt_semantic_form_used_formats_checkbox' );
+    var blockCheckbox = this.owner.getScopedElement ( 'block_mode_checkbox' );
     
     if ( (responseTypeSelect.value == 'xml') || (responseTypeSelect.value == 'json') )
         {
@@ -261,7 +262,7 @@ BMLTSemanticResult.prototype.compileSearchResults = function()
         this.compiled_params += '&sort_keys=' + sortKeys.join ( ',' );
         };
     
-    if ( this.weekdayHeader && (mainSelect.value == 'SHORTCODE') )
+    if ( this.weekdayHeader && (mainSelect.value == 'SHORTCODE_SIMPLE') )
         {
         this.compiled_params += '&weekday_header=1';
         };
@@ -312,6 +313,11 @@ BMLTSemanticResult.prototype.compileSearchResults = function()
             {
             this.compiled_params += '&MaxDurationM=' + this.durationMax[1].toString();
             };
+        };
+    
+    if ( blockCheckbox && blockCheckbox.checked && (mainSelect.value == 'SHORTCODE_SIMPLE') )
+        {
+        this.compiled_params += '&block_mode=1';
         };
     
     this.valid = true;
@@ -1886,6 +1892,17 @@ BMLTSemantic.prototype.handleMapCheckboxChange = function ( inCheckbox
     \brief 
 */
 /*******************************************************************************************/
+BMLTSemantic.prototype.handleBlockCheckboxChange = function ( inCheckbox
+                                                            )
+{
+    this.refreshURI();
+};
+
+/*******************************************************************************************/
+/**
+    \brief 
+*/
+/*******************************************************************************************/
 BMLTSemantic.prototype.handleFormatsLangSelectChange = function ( inSelect )
 {
     this.refreshURI();
@@ -2468,6 +2485,8 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.setBasicFunctions ( 'bmlt_semantic_form_duration_max_text' );
     this.setBasicFunctions ( 'bmlt_semantic_form_sb_fieldset' );
     this.setBasicFunctions ( 'bmlt_semantic_form_sb_not_fieldset' );
+    this.setBasicFunctions ( 'block_mode_checkbox_div' );
+    this.setBasicFunctions ( 'block_mode_checkbox' );
     
     if ( this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_server_info_option' ) )
         {
@@ -2573,6 +2592,8 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     var bmlt_semantic_form_just_used_formats_checkbox_div = this.getScopedElement ( 'bmlt_semantic_form_just_used_formats_checkbox_div' );
     var bmlt_semantic_form_formats_fieldset_contents_div = this.getScopedElement ( 'bmlt_semantic_form_formats_fieldset_contents_div' );
     var bmlt_semantic_form_weekday_header_checkbox_div = this.getScopedElement ( 'bmlt_semantic_form_weekday_header_checkbox_div' );
+    var blockModeDiv = this.getScopedElement ( 'block_mode_checkbox_div' );
+    var blockModeCheckbox = this.getScopedElement ( 'block_mode_checkbox' );
 
     switcher_type_select_formats_option.enable();
     switcher_type_select_sb_option.enable();
@@ -2671,6 +2692,7 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     bmlt_semantic_form_used_formats_div.hide();
     bmlt_semantic_form_just_used_formats_checkbox_div.hide();
     bmlt_semantic_form_formats_fieldset_contents_div.hide();
+    blockModeDiv.hide();
     
     if ( (switcher_select.value == 'GetSearchResults') && (main_fieldset_select.value != 'DOWNLOAD') )
         {
@@ -2799,6 +2821,11 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
             {
             switcher_select.selectedIndex = 0;
             bmlt_semantic_form_meeting_search_div.show();
+            };
+        
+        if ( main_fieldset_select.value == 'SHORTCODE_SIMPLE' )
+            {
+            blockModeDiv.show();
             };
         
         switcher_type_select_sb_option.disable();

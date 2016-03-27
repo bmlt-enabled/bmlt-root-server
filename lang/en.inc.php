@@ -35,6 +35,7 @@ $this->_localization = array (
                                 'root_server_prompt_text_item'          =>  'Enter A Root Server URL',
                                 'value_prompt_text_item'                =>  'Enter A Text String',
                                 'root_server_button_title'              =>  'Reload From Root Server',
+                                'block_mode_checkbox_label'             =>  'Return results as block-mode HTML elements',
                                 'used_formats_checkbox_label'           =>  'Get the Formats Used In the Results of this search',
                                 'used_formats_only_checkbox_label'      =>  'Get just the formats (not the search results)',
                                 'weekday_header_checkbox_label'         =>  'Separate the Results by Weekday',

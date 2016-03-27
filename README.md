@@ -28,6 +28,12 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
 CHANGELIST
 ----------
+** Version 1.0.11 **
+
+- TBD
+
+- Added the block mode checkbox to the shortcode searches.
+
 ** Version 1.0.10 **
 
 - March 23, 2016

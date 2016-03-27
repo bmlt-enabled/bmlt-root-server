@@ -20,7 +20,7 @@
 */
 /***************************************************************************************************************************************/
 
-define ( '__VERSION__', '1.0.10' );
+define ( '__VERSION__', '1.0.11' );
 define ( '__REPO_URL__', 'https://bitbucket.org/bmlt/bmlt-semantic-workshop' );
 
 class bmlt_semantic
@@ -692,6 +692,16 @@ class bmlt_semantic
         $ret .= $this->get_wizard_page_main_select_html();
         $ret .= '</legend>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $ret .= '<div class="block_mode_checkbox_div" id="block_mode_checkbox_div'.htmlspecialchars ( $this->_myJSName ).'" style="display:none">';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $function_string = 'bmlt_semantic_js_object'.htmlspecialchars ( $this->_myJSName ).'.handleBlockCheckboxChange(this)';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
+        $ret .= '<input type="checkbox" id="block_mode_checkbox'.htmlspecialchars ( $this->_myJSName ).'" class="block_mode_checkbox" onchange="'.$function_string.'" />';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
+        $ret .= '<label for="block_mode_checkbox'.htmlspecialchars ( $this->_myJSName ).'">'.$this->localize_string ( 'block_mode_checkbox_label' ).'</label>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
+        $ret .= '</div>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';   
         
         $ret .= $this->get_wizard_page_direct_url_html();
         $ret .= $this->get_wizard_page_switcher_fieldset_html();
@@ -714,7 +724,7 @@ class bmlt_semantic
         $ret .= '<select id="bmlt_semantic_form_main_mode_select'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_main_mode_select">';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '<option value="DOWNLOAD" selected="selected">'.$this->localize_string ( 'select_option_text_direct_url' ).'</option>';
-        $ret .= '<option value="SHORTCODE">'.$this->localize_string ( 'select_option_text_cms_simple' ).'</option>';
+        $ret .= '<option value="SHORTCODE_SIMPLE">'.$this->localize_string ( 'select_option_text_cms_simple' ).'</option>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '</select>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
