@@ -30,7 +30,7 @@ CHANGELIST
 ----------
 ** Version 1.0.11 **
 
-- TBD
+- March 27, 2016 (Happy Easter!)
 
 - Added the block mode checkbox to the shortcode searches.
 
