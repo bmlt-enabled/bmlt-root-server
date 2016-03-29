@@ -20,7 +20,7 @@
 */
 /***************************************************************************************************************************************/
 
-define ( '__VERSION__', '1.0.11' );
+define ( '__VERSION__', '1.1.0' );
 define ( '__REPO_URL__', 'https://bitbucket.org/bmlt/bmlt-semantic-workshop' );
 
 class bmlt_semantic
@@ -725,6 +725,10 @@ class bmlt_semantic
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '<option value="DOWNLOAD" selected="selected">'.$this->localize_string ( 'select_option_text_direct_url' ).'</option>';
         $ret .= '<option value="SHORTCODE_SIMPLE">'.$this->localize_string ( 'select_option_text_cms_simple' ).'</option>';
+        if ( $this->_version >= 2007007 )
+            {
+            $ret .= '<option value="SHORTCODE_TABLE">'.$this->localize_string ( 'select_option_text_cms_table' ).'</option>';
+            }
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '</select>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';

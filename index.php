@@ -17,7 +17,7 @@
         You should have received a copy of the GNU General Public License
         along with this code.  If not, see <http://www.gnu.org/licenses/>.
         
-        Version: 1.0.11
+        Version: 1.1.0
 */
 
 // Comment out for release version.

@@ -28,6 +28,11 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
 CHANGELIST
 ----------
+** Version 1.1.0 **
+
+- March 29, 2016
+- Added support for the new [[BMLT_TABLE]] shortcode.
+
 ** Version 1.0.11 **
 
 - March 27, 2016 (Happy Easter!)

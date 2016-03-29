@@ -32,6 +32,7 @@ $this->_localization = array (
                                 'select_option_text_prompt'             =>  'This Will Be A',
                                 'select_option_text_direct_url'         =>  'Direct Response URL',
                                 'select_option_text_cms_simple'         =>  '[[BMLT_SIMPLE]] Shortcode',
+                                'select_option_text_cms_table'          =>  '[[BMLT_TABLE]] Shortcode',
                                 'root_server_prompt_text_item'          =>  'Enter A Root Server URL',
                                 'value_prompt_text_item'                =>  'Enter A Text String',
                                 'root_server_button_title'              =>  'Reload From Root Server',

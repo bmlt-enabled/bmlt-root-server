@@ -22,7 +22,7 @@
         You should have received a copy of the GNU General Public License
         along with this code.  If not, see <http://www.gnu.org/licenses/>.
         
-        Version: 1.0.11
+        Version: 1.1.0
 */
 /*******************************************************************************************/
 function BMLTSemanticResult (   inRootServerURI,
@@ -70,7 +70,15 @@ BMLTSemanticResult.prototype.valid = null;              ///< This will be non-nu
 /*******************************************************************************************/
 BMLTSemanticResult.prototype.compile = function()
 {
-    this.compiled_params = 'switcher=' + this.switcher;
+    if ( this.owner.getScopedElement ( 'bmlt_semantic_form_main_mode_select' ).value == 'SHORTCODE_TABLE' )
+        {
+        this.compiled_params = '';
+        }
+    else
+        {
+        this.compiled_params = 'switcher=' + this.switcher;
+        };
+    
     this.valid = null;
     
     switch ( this.switcher )
@@ -137,12 +145,22 @@ BMLTSemanticResult.prototype.compileSearchResults = function()
         if ( getUsedCheckbox && getUsedCheckbox.checked )
             {
             var getOnlyUsedCheckbox = this.owner.getScopedElement ( 'bmlt_semantic_form_just_used_formats_checkbox' );
-        
-            this.compiled_params += '&get_used_formats=1';
+            
+            if ( this.compiled_params )
+                {
+                this.compiled_params += '&';
+                };
+            
+            this.compiled_params += 'get_used_formats=1';
         
             if ( getOnlyUsedCheckbox && getOnlyUsedCheckbox.checked )
                 {
-                this.compiled_params += '&get_formats_only=1';
+                if ( this.compiled_params )
+                    {
+                    this.compiled_params += '&';
+                    };
+            
+                this.compiled_params += 'get_formats_only=1';
                 };
             };
         }
@@ -163,12 +181,22 @@ BMLTSemanticResult.prototype.compileSearchResults = function()
             {
             for ( i = 0; i < this.services.length; i++ )
                 {
-                this.compiled_params += '&services[]=' + parseInt ( this.services[i] );
+                if ( this.compiled_params )
+                    {
+                    this.compiled_params += '&';
+                    };
+            
+                this.compiled_params += 'services[]=' + parseInt ( this.services[i] );
                 };
             }
         else
             {
-            this.compiled_params += '&services=' + parseInt ( this.services );
+            if ( this.compiled_params )
+                {
+                this.compiled_params += '&';
+                };
+            
+            this.compiled_params += 'services=' + parseInt ( this.services );
             };
         };
     
@@ -180,12 +208,22 @@ BMLTSemanticResult.prototype.compileSearchResults = function()
             {
             for ( i = 0; i < weekdays.length; i++ )
                 {
-                this.compiled_params += '&weekdays[]=' + parseInt ( weekdays[i] );
+                if ( this.compiled_params )
+                    {
+                    this.compiled_params += '&';
+                    };
+            
+                this.compiled_params += 'weekdays[]=' + parseInt ( weekdays[i] );
                 };
             }
         else
             {
-            this.compiled_params += '&weekdays=' + parseInt ( this.weekdays );
+            if ( this.compiled_params )
+                {
+                this.compiled_params += '&';
+                };
+            
+            this.compiled_params += 'weekdays=' + parseInt ( this.weekdays );
             };
         };
     
@@ -203,32 +241,62 @@ BMLTSemanticResult.prototype.compileSearchResults = function()
                 
                     if ( format )
                         {
-                        this.compiled_params += '&formats[]=' + format.toString();
+                        if ( this.compiled_params )
+                            {
+                            this.compiled_params += '&';
+                            };
+            
+                        this.compiled_params += 'formats[]=' + format.toString();
                         };
                     };
                 }
             else
                 {
-                this.compiled_params += '&formats=' + parseInt ( formats_array[0] ).toString();
+                if ( this.compiled_params )
+                    {
+                    this.compiled_params += '&';
+                    };
+            
+                this.compiled_params += 'formats=' + parseInt ( formats_array[0] ).toString();
                 };
             };
         };
     
     if ( this.meeting_key && this.meeting_key_value )
         {
-        this.compiled_params += '&meeting_key=' + this.meeting_key;
-        this.compiled_params += '&meeting_key_value=' + escape ( this.meeting_key_value );
+        if ( this.compiled_params )
+            {
+            this.compiled_params += '&';
+            };
+            
+        this.compiled_params += 'meeting_key=' + this.meeting_key + '&meeting_key_value=' + escape ( this.meeting_key_value );
         };
     
     if ( this.searchText )
         {
-        this.compiled_params += '&SearchString=' + escape ( this.searchText );
+        if ( this.compiled_params )
+            {
+            this.compiled_params += '&';
+            };
+            
+        this.compiled_params += 'SearchString=' + escape ( this.searchText );
         if ( this.searchTextModifier )
             {
-            this.compiled_params += '&' + this.searchTextModifier;
+            if ( this.compiled_params )
+                {
+                this.compiled_params += '&';
+                };
+            
+            this.compiled_params += this.searchTextModifier;
+            
             if ( this.searchTextRadius )
                 {
-                this.compiled_params += '&SearchStringRadius=' + parseFloat ( this.searchTextRadius );
+                if ( this.compiled_params )
+                    {
+                    this.compiled_params += '&';
+                    };
+            
+                this.compiled_params += 'SearchStringRadius=' + parseFloat ( this.searchTextRadius );
                 };
             };
         };
@@ -239,7 +307,12 @@ BMLTSemanticResult.prototype.compileSearchResults = function()
         
         if ( radiusUnitsSelect && radiusUnitsSelect.value )
             {
-            this.compiled_params += '&' + radiusUnitsSelect.value + '=' + escape ( this.searchMapRadius );
+            if ( this.compiled_params )
+                {
+                this.compiled_params += '&';
+                };
+            
+            this.compiled_params += radiusUnitsSelect.value + '=' + escape ( this.searchMapRadius );
             this.compiled_params += '&long_val=' + escape ( this.searchLongitude );
             this.compiled_params += '&lat_val=' + escape ( this.searchLatitude );
             };
@@ -247,7 +320,12 @@ BMLTSemanticResult.prototype.compileSearchResults = function()
     
     if ( this.fields.length > 0 )
         {
-        this.compiled_params += '&data_field_key=' + this.fields.join ( ',' );
+        if ( this.compiled_params )
+            {
+            this.compiled_params += '&';
+            };
+            
+        this.compiled_params += 'data_field_key=' + this.fields.join ( ',' );
         };
         
     if ( this.sorts && this.sorts.length )
@@ -259,23 +337,43 @@ BMLTSemanticResult.prototype.compileSearchResults = function()
             sortKeys.push ( this.sorts[i].key );
             };
         
-        this.compiled_params += '&sort_keys=' + sortKeys.join ( ',' );
+        if ( this.compiled_params )
+            {
+            this.compiled_params += '&';
+            };
+        
+        this.compiled_params += 'sort_keys=' + sortKeys.join ( ',' );
         };
     
     if ( this.weekdayHeader && (mainSelect.value == 'SHORTCODE_SIMPLE') )
         {
-        this.compiled_params += '&weekday_header=1';
+        if ( this.compiled_params )
+            {
+            this.compiled_params += '&';
+            };
+        
+        this.compiled_params += 'weekday_header=1';
         };
     
     if ( this.startTimeMin && (this.startTimeMin[0] || this.startTimeMin[1]) )
         {
         if ( this.startTimeMin[0] )
             {
-            this.compiled_params += '&StartsAfterH=' + this.startTimeMin[0].toString();
+            if ( this.compiled_params )
+                {
+                this.compiled_params += '&';
+                };
+            
+            this.compiled_params += 'StartsAfterH=' + this.startTimeMin[0].toString();
             };
         if ( this.startTimeMin[1] )
             {
-            this.compiled_params += '&StartsAfterM=' + this.startTimeMin[1].toString();
+            if ( this.compiled_params )
+                {
+                this.compiled_params += '&';
+                };
+            
+            this.compiled_params += 'StartsAfterM=' + this.startTimeMin[1].toString();
             };
         };
     
@@ -283,11 +381,21 @@ BMLTSemanticResult.prototype.compileSearchResults = function()
         {
         if ( this.startTimeMax[0] )
             {
-            this.compiled_params += '&StartsBeforeH=' + this.startTimeMax[0].toString();
+            if ( this.compiled_params )
+                {
+                this.compiled_params += '&';
+                };
+            
+            this.compiled_params += 'StartsBeforeH=' + this.startTimeMax[0].toString();
             };
         if ( this.startTimeMax[1] )
             {
-            this.compiled_params += '&StartsBeforeM=' + this.startTimeMax[1].toString();
+            if ( this.compiled_params )
+                {
+                this.compiled_params += '&';
+                };
+            
+            this.compiled_params += 'StartsBeforeM=' + this.startTimeMax[1].toString();
             };
         };
     
@@ -295,11 +403,21 @@ BMLTSemanticResult.prototype.compileSearchResults = function()
         {
         if ( this.durationMin[0] )
             {
-            this.compiled_params += '&MinDurationH=' + this.durationMin[0].toString();
+            if ( this.compiled_params )
+                {
+                this.compiled_params += '&';
+                };
+            
+            this.compiled_params += 'MinDurationH=' + this.durationMin[0].toString();
             };
         if ( this.durationMin[1] )
             {
-            this.compiled_params += '&MinDurationM=' + this.durationMin[1].toString();
+            if ( this.compiled_params )
+                {
+                this.compiled_params += '&';
+                };
+            
+            this.compiled_params += 'MinDurationM=' + this.durationMin[1].toString();
             };
         };
     
@@ -307,17 +425,32 @@ BMLTSemanticResult.prototype.compileSearchResults = function()
         {
         if ( this.durationMax[0] )
             {
-            this.compiled_params += '&MaxDurationH=' + this.durationMax[0].toString();
+            if ( this.compiled_params )
+                {
+                this.compiled_params += '&';
+                };
+            
+            this.compiled_params += 'MaxDurationH=' + this.durationMax[0].toString();
             };
         if ( this.durationMax[1] )
             {
-            this.compiled_params += '&MaxDurationM=' + this.durationMax[1].toString();
+            if ( this.compiled_params )
+                {
+                this.compiled_params += '&';
+                };
+            
+            this.compiled_params += 'MaxDurationM=' + this.durationMax[1].toString();
             };
         };
     
     if ( blockCheckbox && blockCheckbox.checked && (mainSelect.value == 'SHORTCODE_SIMPLE') )
         {
-        this.compiled_params += '&block_mode=1';
+        if ( this.compiled_params )
+            {
+            this.compiled_params += '&';
+            };
+            
+        this.compiled_params += 'block_mode=1';
         };
     
     this.valid = true;
@@ -2487,6 +2620,10 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.setBasicFunctions ( 'bmlt_semantic_form_sb_not_fieldset' );
     this.setBasicFunctions ( 'block_mode_checkbox_div' );
     this.setBasicFunctions ( 'block_mode_checkbox' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_weekday_fieldset' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_not_weekday_fieldset' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_specific_fields_fieldset' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_sort_fields_fieldset' );
     
     if ( this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_server_info_option' ) )
         {
@@ -2555,6 +2692,10 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
 BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
                                                         )
 {
+    var bmlt_semantic_form_weekday_fieldset = this.getScopedElement ( 'bmlt_semantic_form_weekday_fieldset' );
+    var bmlt_semantic_form_not_weekday_fieldset = this.getScopedElement ( 'bmlt_semantic_form_not_weekday_fieldset' );
+    var bmlt_semantic_form_specific_fields_fieldset = this.getScopedElement ( 'bmlt_semantic_form_specific_fields_fieldset' );
+    var bmlt_semantic_form_sort_fields_fieldset = this.getScopedElement ( 'bmlt_semantic_form_sort_fields_fieldset' );
     var main_fieldset_select = this.getScopedElement ( 'bmlt_semantic_form_main_mode_select' );
     var main_fieldset_direct_uri_div = this.getScopedElement ( 'bmlt_semantic_form_direct_url_div' );
     var response_type_select = this.getScopedElement ( 'bmlt_semantic_form_response_type_select' );
@@ -2835,23 +2976,38 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
         switcher_type_select_naws_option.disable();
         };
         
-    if ( (main_fieldset_select.value == 'DOWNLOAD') && (response_type_select.value == 'xml') )
+    if ( main_fieldset_select.value == 'SHORTCODE_TABLE' )
         {
-        switcher_type_select_schema_option.enable();
-        switcher_type_select_server_langs_option.enable();
+        switcher_select.selectedIndex = 0;
+        bmlt_semantic_form_meeting_search_div.show();
+        switcher_type_select_formats_option.disable();
+        bmlt_semantic_form_weekday_header_checkbox_div.hide();
+        blockModeDiv.hide();
+        bmlt_semantic_form_weekday_fieldset.hide();
+        bmlt_semantic_form_not_weekday_fieldset.hide();
+        bmlt_semantic_form_specific_fields_fieldset.hide();
+        bmlt_semantic_form_sort_fields_fieldset.hide();
         }
     else
         {
-        if ( (main_fieldset_select.value == 'DOWNLOAD') && ((response_type_select.value == 'json') && (this.version >= 2007005)) )
+        if ( (main_fieldset_select.value == 'DOWNLOAD') && (response_type_select.value == 'xml') )
             {
+            switcher_type_select_schema_option.enable();
             switcher_type_select_server_langs_option.enable();
             }
         else
             {
-            if ( switcher_select.value == 'XMLSchema' )
+            if ( (main_fieldset_select.value == 'DOWNLOAD') && ((response_type_select.value == 'json') && (this.version >= 2007005)) )
                 {
-                switcher_select.selectedIndex = 0;
-                bmlt_semantic_form_meeting_search_div.show();
+                switcher_type_select_server_langs_option.enable();
+                }
+            else
+                {
+                if ( switcher_select.value == 'XMLSchema' )
+                    {
+                    switcher_select.selectedIndex = 0;
+                    bmlt_semantic_form_meeting_search_div.show();
+                    };
                 };
             };
         };
@@ -3097,11 +3253,26 @@ BMLTSemantic.prototype.refreshURI = function ()
                     }
                 else
                     {
-                    var shortcode_string = '[[BMLT_SIMPLE(' + compiled_arguments + ')]]';
-                    shortcode_active.innerHTML = shortcode_string;
-                    shortcode_invalid.hide();
-                    shortcode_active.show();
-                    };
+                    if ( this.getScopedElement ( 'bmlt_semantic_form_main_mode_select' ).value == 'SHORTCODE_SIMPLE' )
+                        {
+                        var shortcode_string = '[[BMLT_SIMPLE(' + compiled_arguments + ')]]';
+                        shortcode_active.innerHTML = shortcode_string;
+                        shortcode_invalid.hide();
+                        shortcode_active.show();
+                        }
+                    else
+                        {
+                        var shortcode_string = '[[BMLT_TABLE';
+                        if ( compiled_arguments )
+                            {
+                            shortcode_string += '(' + compiled_arguments + ')';
+                            };
+                        shortcode_string += ']]';
+                        shortcode_active.innerHTML = shortcode_string;
+                        shortcode_invalid.hide();
+                        shortcode_active.show();
+                        };
+                    }
                 }
             else
                 {
