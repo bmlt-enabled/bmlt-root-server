@@ -55,6 +55,9 @@ CHANGELIST
 
 - TBD
 - Fixed a warning in the login screen.
+- The sort now allows boroughs to have precedence over municipalities.
+- Uses the latest satellite with the [[bmlt_table]] shortcode.
+- Uses the latest Semantic Workshop.
 
 ** Version 2.7.6 **
 
