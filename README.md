@@ -53,7 +53,7 @@ CHANGELIST
 ----------
 ** Version 2.7.7 **
 
-- TBD
+- March 29, 2016
 - Fixed a warning in the login screen.
 - The sort now allows boroughs to have precedence over municipalities.
 - Uses the latest satellite with the [[bmlt_table]] shortcode.
