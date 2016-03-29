@@ -864,111 +864,143 @@ class c_comdef_meetings implements i_comdef_has_parent
 					
 					if ( is_array ( $meeting_data_a ) && count ( $meeting_data_a ) && is_array ( $meeting_data_b) && count ( $meeting_data_b ) )
 						{
-						if ( isset ( $meeting_data_a['location_city_subsection'] ) && (!isset ( $meeting_data_b['location_city_subsection'] ) && isset ( $meeting_data_b['location_municipality'] )) )
-						    {
-                            $cmp = strcmp ( $meeting_data_a['location_city_subsection']['value'], $meeting_data_b['location_municipality']['value'] );
-                            if ( 0 > $cmp )
-                                {
-                                $ret = -1;
-                                }
-                            elseif ( 0 < $cmp )
-                                {
-                                $ret = 1;
-                                }
-						    }
-						elseif ( isset ( $meeting_data_b['location_city_subsection'] ) && (!isset ( $meeting_data_a['location_city_subsection'] ) && isset ( $meeting_data_a['location_municipality'] )) )
-						    {
-                            $cmp = strcmp ( $meeting_data_b['location_city_subsection']['value'], $meeting_data_a['location_municipality']['value'] );
-                            if ( 0 > $cmp )
-                                {
-                                $ret = 1;
-                                }
-                            elseif ( 0 < $cmp )
-                                {
-                                $ret = -1;
-                                }
-						    }
-                        else
+                        foreach ( $sort_key as $s_key )
                             {
-						    foreach ( $sort_key as $s_key )
+                            if ( (($s_key == 'location_municipality') || ($s_key == 'location_city_subsection')) && in_array ( 'location_municipality', $sort_key ) && in_array ( 'location_city_subsection', $sort_key ) )
                                 {
-                                if ( isset ( $meeting_data_a[$s_key] ) && isset ( $meeting_data_b[$s_key] ) )
+                                if ( isset ( $meeting_data_a['location_city_subsection'] ) && !isset ( $meeting_data_b['location_city_subsection'] ) )
                                     {
-                                    // This is if we have an optional field, with a "value" sub array element.
-                                    if ( is_array ( $meeting_data_a[$s_key] ) && isset ( $meeting_data_a[$s_key]['value'] ) )
+                                    if ( isset ( $meeting_data_b['location_municipality'] ) )
                                         {
-                                        $value_a = $meeting_data_a[$s_key]['value'];
-                                        }
-                                    else	// If not, we use the actual value of the parameter itself.
-                                        {
-                                        $value_a = $meeting_data_a[$s_key];
-                                        }
-                                
-                                    // We do the same for the next element.
-                                    if ( is_array ( $meeting_data_b[$s_key] ) && isset ( $meeting_data_b[$s_key]['value'] ) )
-                                        {
-                                        $value_b = $meeting_data_b[$s_key]['value'];
+                                        $value_a = $meeting_data_a['location_city_subsection']['value'];
+                                        $value_b = $meeting_data_b['location_municipality']['value'];
+                                        $cmp = strcmp ( $value_a, $value_b );
+                                        if ( 0 > $cmp )
+                                            {
+                                            $ret = -1;
+                                            }
+                                        elseif ( 0 < $cmp )
+                                            {
+                                            $ret = 1;
+                                            }
                                         }
                                     else
                                         {
-                                        $value_b = $meeting_data_b[$s_key];
+                                        $ret = -1;
                                         }
-                                
-                                    // If they are strings, we do a binary-safe comparison.
-                                    if ( is_string ( $value_a ) )
+                                    }
+                                elseif ( isset ( $meeting_data_b['location_city_subsection'] ) && !isset ( $meeting_data_a['location_city_subsection'] ) )
+                                    {
+                                    if ( isset ( $meeting_data_a['location_municipality'] ) )
                                         {
-                                        if ( ($value_a && !$value_b) || (isset($value_a) && !isset ( $value_b )) )
+                                        $value_a = $meeting_data_b['location_city_subsection']['value'];
+                                        $value_b = $meeting_data_a['location_municipality']['value'];
+                                        $cmp = strcmp ( $value_a, $value_b );
+                                        if ( 0 > $cmp )
                                             {
                                             $ret = 1;
                                             }
-                                        elseif ( ($value_b && !$value_a) || (isset($value_b) && !isset ( $value_a )) )
+                                        elseif ( 0 < $cmp )
                                             {
                                             $ret = -1;
-                                            }
-                                        else
-                                            {
-                                            $cmp = strcmp ( $value_a, $value_b );
-                                            if ( 0 > $cmp )
-                                                {
-                                                $ret = -1;
-                                                }
-                                            elseif ( 0 < $cmp )
-                                                {
-                                                $ret = 1;
-                                                }
                                             }
                                         }
-                                    else	// Otherwise, we do a simple comparison.
+                                    else
                                         {
-                                        if ( $value_a < $value_b )
-                                            {
-                                            $ret = -1;
-                                            }
-                                        elseif ( $value_a > $value_b )
-                                            {
-                                            $ret = 1;
-                                            }
+                                        $ret = 1;
                                         }
                                     }
                                 else
                                     {
-                                    $ret = ( isset ( $meeting_data_a[$s_key] ) && !isset ( $meeting_data_b[$s_key] ) ) ? 1 : (( !isset ( $meeting_data_a[$s_key] ) && !isset ( $meeting_data_b[$s_key] ) ) ? 0 : -1);
+                                    $value_a = $meeting_data_a[$s_key]['value'];
+                                    $value_b = $meeting_data_b[$s_key]['value'];
+                                    $cmp = strcmp ( $value_a, $value_b );
+                                    if ( 0 > $cmp )
+                                        {
+                                        $ret = -1;
+                                        }
+                                    elseif ( 0 < $cmp )
+                                        {
+                                        $ret = 1;
+                                        }
+                                    }
+                                }
+                            elseif ( isset ( $meeting_data_a[$s_key] ) && isset ( $meeting_data_b[$s_key] ) )
+                                {
+                                // This is if we have an optional field, with a "value" sub array element.
+                                if ( is_array ( $meeting_data_a[$s_key] ) && isset ( $meeting_data_a[$s_key]['value'] ) )
+                                    {
+                                    $value_a = $meeting_data_a[$s_key]['value'];
+                                    }
+                                else	// If not, we use the actual value of the parameter itself.
+                                    {
+                                    $value_a = $meeting_data_a[$s_key];
                                     }
                             
-                                if ( $ret != 0 )
+                                // We do the same for the next element.
+                                if ( is_array ( $meeting_data_b[$s_key] ) && isset ( $meeting_data_b[$s_key]['value'] ) )
                                     {
-                                    if ( $sort_dir == "desc" )
-                                        {
-                                        $ret = -$ret;
-                                        }
-                                    break;
+                                    $value_b = $meeting_data_b[$s_key]['value'];
                                     }
+                                else
+                                    {
+                                    $value_b = $meeting_data_b[$s_key];
+                                    }
+                            
+                                // If they are strings, we do a binary-safe comparison.
+                                if ( is_string ( $value_a ) )
+                                    {
+                                    if ( ($value_a && !$value_b) || (isset($value_a) && !isset ( $value_b )) )
+                                        {
+                                        $ret = 1;
+                                        }
+                                    elseif ( ($value_b && !$value_a) || (isset($value_b) && !isset ( $value_a )) )
+                                        {
+                                        $ret = -1;
+                                        }
+                                    else
+                                        {
+                                        $cmp = strcmp ( $value_a, $value_b );
+                                        if ( 0 > $cmp )
+                                            {
+                                            $ret = -1;
+                                            }
+                                        elseif ( 0 < $cmp )
+                                            {
+                                            $ret = 1;
+                                            }
+                                        }
+                                    }
+                                else	// Otherwise, we do a simple comparison.
+                                    {
+                                    if ( $value_a < $value_b )
+                                        {
+                                        $ret = -1;
+                                        }
+                                    elseif ( $value_a > $value_b )
+                                        {
+                                        $ret = 1;
+                                        }
+                                    }
+                                }
+                            else
+                                {
+                                $ret = ( isset ( $meeting_data_a[$s_key] ) && !isset ( $meeting_data_b[$s_key] ) ) ? -1 : (( !isset ( $meeting_data_a[$s_key] ) && isset ( $meeting_data_b[$s_key] ) ) ? 1 : 0);
+                                }
+                        
+                            if ( $ret != 0 )
+                                {
+                                if ( $sort_dir == "desc" )
+                                    {
+                                    $ret = -$ret;
+                                    }
+                                break;
                                 }
                             }
 						}
 					}
 				}
-			}
+		    }
 		
 		return $ret;
 	}
