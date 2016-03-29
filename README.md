@@ -51,6 +51,11 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+** Version 2.7.8 **
+
+- March 29, 2016
+- Fixed a javascript bug introduced in the previous release.
+
 ** Version 2.7.7 **
 
 - March 29, 2016
