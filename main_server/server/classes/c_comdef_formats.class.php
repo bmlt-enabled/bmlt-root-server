@@ -209,7 +209,7 @@ class c_comdef_formats implements i_comdef_has_parent
 			$in_lang_enum = $this->GetParentObj()->GetLocalLang();
 			}
 			
-		if ( is_array ( $this->_local_copy_of_array[$in_lang_enum] ) )
+		if ( isset ( $this->_local_copy_of_array ) && is_array ( $this->_local_copy_of_array ) && isset ( $this->_local_copy_of_array[$in_lang_enum] ) && is_array ( $this->_local_copy_of_array ) )
 			{
 			$ret = $this->_local_copy_of_array[$in_lang_enum];
 			}

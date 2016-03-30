@@ -910,7 +910,7 @@ class c_comdef_meetings implements i_comdef_has_parent
                                         $ret = 1;
                                         }
                                     }
-                                else
+                                elseif ( isset ( $meeting_data_a[$s_key] ) && is_array ( $meeting_data_a[$s_key] ) && isset ( $meeting_data_a[$s_key]['value'] ) && isset ( $meeting_data_b[$s_key] ) && is_array ( $meeting_data_b[$s_key] ) && isset ( $meeting_data_b[$s_key]['value'] ) )
                                     {
                                     $value_a = $meeting_data_a[$s_key]['value'];
                                     $value_b = $meeting_data_b[$s_key]['value'];
@@ -923,6 +923,10 @@ class c_comdef_meetings implements i_comdef_has_parent
                                         {
                                         $ret = 1;
                                         }
+                                    }
+                                else
+                                    {
+                                    $ret = ( isset ( $meeting_data_a[$s_key] ) && !isset ( $meeting_data_b[$s_key] ) ) ? -1 : (( !isset ( $meeting_data_a[$s_key] ) && isset ( $meeting_data_b[$s_key] ) ) ? 1 : 0);
                                     }
                                 }
                             elseif ( isset ( $meeting_data_a[$s_key] ) && isset ( $meeting_data_b[$s_key] ) )
