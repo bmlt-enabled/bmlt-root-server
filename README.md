@@ -51,6 +51,11 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+** Version 2.7.9 **
+
+- March 30, 2016
+- Has the latest CMS Base Class. No visible changes.
+
 ** Version 2.7.8 **
 
 - March 29, 2016
