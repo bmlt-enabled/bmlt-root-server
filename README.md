@@ -53,8 +53,9 @@ CHANGELIST
 ----------
 ** Version 2.7.10 **
 
-- TBD
+- April 1, 2016 (Happy April Fools' Day!)
 - Fixed a couple of warnings.
+- Added the latest Satellite Base Class, which won't have any noticeable effect on the Root Server.
 
 ** Version 2.7.9 **
 
