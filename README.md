@@ -30,7 +30,7 @@ CHANGELIST
 ----------
 ** Version 1.1.1 **
 
-- TBD
+- April 4, 2016
 - Fixed an issue where the specific fields list was shown for simple response. It is not actually valid, there.
 
 ** Version 1.1.0 **
