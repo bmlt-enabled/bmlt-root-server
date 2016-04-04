@@ -51,6 +51,11 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+** Version 2.7.11 **
+
+- April 4, 2016
+- Incorporated the latest Satellite Base Class and Semantic Workshop. Very little change to server itself.
+
 ** Version 2.7.10 **
 
 - April 1, 2016 (Happy April Fools' Day!)
