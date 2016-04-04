@@ -28,6 +28,11 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
 CHANGELIST
 ----------
+** Version 1.1.1 **
+
+- TBD
+- Fixed an issue where the specific fields list was shown for simple response. It is not actually valid, there.
+
 ** Version 1.1.0 **
 
 - March 29, 2016

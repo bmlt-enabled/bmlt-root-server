@@ -20,7 +20,7 @@
 */
 /***************************************************************************************************************************************/
 
-define ( '__VERSION__', '1.1.0' );
+define ( '__VERSION__', '1.1.1' );
 define ( '__REPO_URL__', 'https://bitbucket.org/bmlt/bmlt-semantic-workshop' );
 
 class bmlt_semantic

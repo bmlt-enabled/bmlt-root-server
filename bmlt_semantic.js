@@ -22,7 +22,7 @@
         You should have received a copy of the GNU General Public License
         along with this code.  If not, see <http://www.gnu.org/licenses/>.
         
-        Version: 1.1.0
+        Version: 1.1.1
 */
 /*******************************************************************************************/
 function BMLTSemanticResult (   inRootServerURI,
@@ -2925,6 +2925,12 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     
     if ( main_fieldset_select.value == 'DOWNLOAD' )
         {
+        if ( switcher_select.value == 'GetSearchResults' )
+            {
+            bmlt_semantic_form_specific_fields_fieldset.show();
+            bmlt_semantic_form_sort_fields_fieldset.show();
+            };
+        
         if ( response_type_select.value != 'csv' )
             {
             switcher_type_select_naws_option.disable();
@@ -2964,50 +2970,52 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
             bmlt_semantic_form_meeting_search_div.show();
             };
         
-        if ( main_fieldset_select.value == 'SHORTCODE_SIMPLE' )
+        if ( main_fieldset_select.value == 'SHORTCODE_TABLE' )
             {
-            blockModeDiv.show();
+            switcher_select.selectedIndex = 0;
+            bmlt_semantic_form_meeting_search_div.show();
+            switcher_type_select_formats_option.disable();
+            bmlt_semantic_form_weekday_header_checkbox_div.hide();
+            blockModeDiv.hide();
+            bmlt_semantic_form_weekday_fieldset.hide();
+            bmlt_semantic_form_not_weekday_fieldset.hide();
+            bmlt_semantic_form_specific_fields_fieldset.hide();
+            bmlt_semantic_form_sort_fields_fieldset.hide();
+            }
+        else
+            {
+            if ( main_fieldset_select.value == 'SHORTCODE_SIMPLE' )
+                {
+                blockModeDiv.show();
+                bmlt_semantic_form_specific_fields_fieldset.hide();
+                bmlt_semantic_form_sort_fields_fieldset.show();
+                };
+            
+            switcher_type_select_sb_option.disable();
+            switcher_type_select_changes_option.disable();
+            switcher_type_select_fieldkey_option.disable();
+            switcher_type_select_fieldval_option.disable();
+            switcher_type_select_naws_option.disable();
             };
-        
-        switcher_type_select_sb_option.disable();
-        switcher_type_select_changes_option.disable();
-        switcher_type_select_fieldkey_option.disable();
-        switcher_type_select_fieldval_option.disable();
-        switcher_type_select_naws_option.disable();
         };
         
-    if ( main_fieldset_select.value == 'SHORTCODE_TABLE' )
+    if ( (main_fieldset_select.value == 'DOWNLOAD') && (response_type_select.value == 'xml') )
         {
-        switcher_select.selectedIndex = 0;
-        bmlt_semantic_form_meeting_search_div.show();
-        switcher_type_select_formats_option.disable();
-        bmlt_semantic_form_weekday_header_checkbox_div.hide();
-        blockModeDiv.hide();
-        bmlt_semantic_form_weekday_fieldset.hide();
-        bmlt_semantic_form_not_weekday_fieldset.hide();
-        bmlt_semantic_form_specific_fields_fieldset.hide();
-        bmlt_semantic_form_sort_fields_fieldset.hide();
+        switcher_type_select_schema_option.enable();
+        switcher_type_select_server_langs_option.enable();
         }
     else
         {
-        if ( (main_fieldset_select.value == 'DOWNLOAD') && (response_type_select.value == 'xml') )
+        if ( (main_fieldset_select.value == 'DOWNLOAD') && ((response_type_select.value == 'json') && (this.version >= 2007005)) )
             {
-            switcher_type_select_schema_option.enable();
             switcher_type_select_server_langs_option.enable();
             }
         else
             {
-            if ( (main_fieldset_select.value == 'DOWNLOAD') && ((response_type_select.value == 'json') && (this.version >= 2007005)) )
+            if ( switcher_select.value == 'XMLSchema' )
                 {
-                switcher_type_select_server_langs_option.enable();
-                }
-            else
-                {
-                if ( switcher_select.value == 'XMLSchema' )
-                    {
-                    switcher_select.selectedIndex = 0;
-                    bmlt_semantic_form_meeting_search_div.show();
-                    };
+                switcher_select.selectedIndex = 0;
+                bmlt_semantic_form_meeting_search_div.show();
                 };
             };
         };
