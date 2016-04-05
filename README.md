@@ -51,6 +51,11 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+** Version 2.7.12 **
+
+- TBD
+- Fixes a minor issue with the Semantic Workshop, that does not re-enable the weekday and selected fields areas properly after viewing the [[bmlt_table]] shortcode options.
+
 ** Version 2.7.11 **
 
 - April 4, 2016
