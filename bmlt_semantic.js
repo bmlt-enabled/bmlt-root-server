@@ -22,7 +22,7 @@
         You should have received a copy of the GNU General Public License
         along with this code.  If not, see <http://www.gnu.org/licenses/>.
         
-        Version: 1.1.1
+        Version: 1.1.2
 */
 /*******************************************************************************************/
 function BMLTSemanticResult (   inRootServerURI,
@@ -2927,8 +2927,12 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
         {
         if ( switcher_select.value == 'GetSearchResults' )
             {
+            blockModeDiv.hide();
+            bmlt_semantic_form_weekday_header_checkbox_div.hide();
             bmlt_semantic_form_specific_fields_fieldset.show();
             bmlt_semantic_form_sort_fields_fieldset.show();
+            bmlt_semantic_form_weekday_fieldset.show();
+            bmlt_semantic_form_not_weekday_fieldset.show();
             };
         
         if ( response_type_select.value != 'csv' )
@@ -2987,8 +2991,11 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
             if ( main_fieldset_select.value == 'SHORTCODE_SIMPLE' )
                 {
                 blockModeDiv.show();
+                bmlt_semantic_form_weekday_header_checkbox_div.show();
                 bmlt_semantic_form_specific_fields_fieldset.hide();
                 bmlt_semantic_form_sort_fields_fieldset.show();
+                bmlt_semantic_form_weekday_fieldset.show();
+                bmlt_semantic_form_not_weekday_fieldset.show();
                 };
             
             switcher_type_select_sb_option.disable();

@@ -28,6 +28,11 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
 CHANGELIST
 ----------
+** Version 1.1.2 **
+
+- TBD
+- The weekday boxes were not being re-shown after the table section was displayed.
+
 ** Version 1.1.1 **
 
 - April 4, 2016
