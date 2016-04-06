@@ -866,7 +866,39 @@ class c_comdef_meetings implements i_comdef_has_parent
 						{
                         foreach ( $sort_key as $s_key )
                             {
-                            if ( (($s_key == 'location_municipality') || ($s_key == 'location_city_subsection')) && in_array ( 'location_municipality', $sort_key ) && in_array ( 'location_city_subsection', $sort_key ) )
+                            if ( $s_key == 'start_time' )
+                                {
+                                $value_a_arr = split ( ":", $meeting_data_a[$s_key] );
+                                $value_b_arr = split ( ":", $meeting_data_b[$s_key] );
+                                
+                                $value_a = (intval ( $value_a_arr[0] ) * 100) + intval ( $value_a_arr[1] );
+                                $value_b = (intval ( $value_b_arr[0] ) * 100) + intval ( $value_b_arr[1] );
+                                
+                                // Kludge to make midnight higher.
+                                if ( $value_a == 0 )
+                                    {
+                                    $value_a = 10000;
+                                    }
+                                
+                                if ( $value_b == 0 )
+                                    {
+                                    $value_b = 10000;
+                                    }
+                                
+                                if ( $value_a == $value_b )
+                                    {
+                                    $ret = 0;
+                                    }
+                                elseif ( $value_a < $value_b )
+                                    {
+                                    $ret = -1;
+                                    }
+                                elseif ( $value_a > $value_b )
+                                    {
+                                    $ret = 1;
+                                    }
+                                }
+                            elseif ( (($s_key == 'location_municipality') || ($s_key == 'location_city_subsection')) && in_array ( 'location_municipality', $sort_key ) && in_array ( 'location_city_subsection', $sort_key ) )
                                 {
                                 if ( isset ( $meeting_data_a['location_city_subsection'] ) && !isset ( $meeting_data_b['location_city_subsection'] ) )
                                     {
