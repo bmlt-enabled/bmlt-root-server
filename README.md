@@ -53,7 +53,7 @@ CHANGELIST
 ----------
 ** Version 2.7.12 **
 
-- TBD
+- April 6, 2016
 - Fixes a minor issue with the Semantic Workshop, that does not re-enable the weekday and selected fields areas properly after viewing the [[bmlt_table]] shortcode options.
 - Fixed a minor issue with the way that start times were sorted, if one of the values was midnight, specified as "00:00".
 
