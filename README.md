@@ -30,7 +30,7 @@ CHANGELIST
 ----------
 ** Version 1.1.2 **
 
-- TBD
+- April 6, 2016
 - The weekday boxes were not being re-shown after the table section was displayed.
 
 ** Version 1.1.1 **
