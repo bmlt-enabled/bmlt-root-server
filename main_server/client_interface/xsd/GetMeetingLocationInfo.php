@@ -44,7 +44,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"; ?>
 	elementFormDefault="qualified"
 	xmlns:xsn="http://<?php echo $_SERVER['SERVER_NAME'] ?>"
 	targetNamespace="http://<?php echo $_SERVER['SERVER_NAME'] ?>">
-    <xs:element name='localionInfo'>
+    <xs:element name='locationInfo'>
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref='xsn:search_average'/>

@@ -136,18 +136,18 @@ function parse_redirect (
                     
                     if ( !isset ( $http_vars['get_formats_only'] ) )
                         {
-                        $result .= "<localionInfo>";
+                        $result .= "<locationInfo>";
                         $result .= $blueMeanieXML;
-                        $result .= "</localionInfo>";
+                        $result .= "</locationInfo>";
 				        $result .= "</meetings>";
                         }
                     }
                 else
                     {
                     $xsd_uri = 'http://'.htmlspecialchars ( str_replace ( '/client_interface/xml', '/client_interface/xsd', trim ( strtolower ( $_SERVER['SERVER_NAME'] ) ).(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').dirname ( $_SERVER['SCRIPT_NAME'] ).'/GetMeetingLocationInfo.php' ) );
-                    $result .= "<localionInfo xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
+                    $result .= "<locationInfo xmlns=\"http://".$_SERVER['SERVER_NAME']."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://".$_SERVER['SERVER_NAME']." $xsd_uri\">";
                     $result .= $blueMeanieXML;
-				    $result .= "</localionInfo>";
+				    $result .= "</locationInfo>";
                     }
 				}
 			elseif ( isset ( $http_vars['gpx_data'] ) )

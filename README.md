@@ -51,6 +51,11 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+** Version 2.7.13 **
+
+- TBD
+- Fixed a typo in the "locationInfo" portion of XML and JSON semantic returns (It appears as if this was never used).
+
 ** Version 2.7.12 **
 
 - April 6, 2016

@@ -113,11 +113,11 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"; ?>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
-                <xs:element ref='xsn:localionInfo' minOccurs="0"/>
+                <xs:element ref='xsn:locationInfo' minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-    <xs:element name='localionInfo'>
+    <xs:element name='locationInfo'>
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref='xsn:search_average'/>
