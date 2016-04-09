@@ -51,6 +51,11 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+** Version 2.7.14 **
+
+- TBD
+- Added the latest base class. No changes in this.
+
 ** Version 2.7.13 **
 
 - April 9, 2016
