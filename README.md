@@ -53,8 +53,9 @@ CHANGELIST
 ----------
 ** Version 2.7.13 **
 
-- TBD
+- April 9, 2016
 - Fixed a typo in the "locationInfo" portion of XML and JSON semantic returns (It appears as if this was never used).
+- Added the latest satellite base class, which will not display any new changes to the Root Server.
 
 ** Version 2.7.12 **
 
