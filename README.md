@@ -51,9 +51,9 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.7.14** -TBD*
+***Version 2.7.14** -April 16, 2016*
 
-- Added the latest base class. No changes in this.
+- Added the latest base class. No changes to the Root Server.
 - Modified this file to have a consistent markdown format.
 - Fixed an issue with PHP 7.
 
