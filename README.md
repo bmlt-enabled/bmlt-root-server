@@ -55,6 +55,7 @@ CHANGELIST
 
 - Added the latest base class. No changes in this.
 - Modified this file to have a consistent markdown format.
+- Fixed an issue with PHP 7.
 
 ***Version 2.7.13** -April 9, 2016*
 

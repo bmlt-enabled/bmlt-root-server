@@ -757,7 +757,7 @@ class c_comdef_data_importer
             {
             global $g_validation_error; ///< This contains an array of strings, that "log" bad email addresses.
             $g_validation_error = array();
-            $addr_array = split ( ",", $in_test_address );
+            $addr_array = explode ( ",", $in_test_address );
             // Start off optimistic.
             $valid = true;
             

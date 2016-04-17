@@ -868,8 +868,8 @@ class c_comdef_meetings implements i_comdef_has_parent
                             {
                             if ( $s_key == 'start_time' )
                                 {
-                                $value_a_arr = split ( ":", $meeting_data_a[$s_key] );
-                                $value_b_arr = split ( ":", $meeting_data_b[$s_key] );
+                                $value_a_arr = explode ( ":", $meeting_data_a[$s_key] );
+                                $value_b_arr = explode ( ":", $meeting_data_b[$s_key] );
                                 
                                 $value_a = (intval ( $value_a_arr[0] ) * 100) + intval ( $value_a_arr[1] );
                                 $value_b = (intval ( $value_b_arr[0] ) * 100) + intval ( $value_b_arr[1] );
