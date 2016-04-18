@@ -112,6 +112,7 @@ class c_comdef_admin_ajax_handler
             {
             $used_formats = array();
             $returned_text = $this->TranslateToJSON ( $this->GetSearchResults ( $this->my_http_vars, $used_formats ) );
+			header ( 'Content-Type:application/json; charset=UTF-8' );
             }
         else
             {
@@ -181,7 +182,7 @@ class c_comdef_admin_ajax_handler
     
         if ( is_array ( $response_text ) && count ( $response_text ) )
             {
-            header ( 'Content-type: application/json' );
+			header ( 'Content-Type:application/json; charset=UTF-8' );
             echo ( array2json ( array ( 'ACCOUNT_CHANGED' => $response_text )));
             }
     }
@@ -320,7 +321,7 @@ class c_comdef_admin_ajax_handler
                 $ret_data = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['format_change_fader_change_fail_text'] );
                 }
         
-            header ( 'Content-type: application/json' );
+			header ( 'Content-Type:application/json; charset=UTF-8' );
             if ( $ret_data )
                 {
                 echo "{'success':false,'report':'$ret_data'}";
@@ -359,7 +360,7 @@ class c_comdef_admin_ajax_handler
                     }
                 }
 
-            header ( 'Content-type: application/json' );
+			header ( 'Content-Type:application/json; charset=UTF-8' );
             if ( $ret_data )
                 {
                 echo "{'success':false,'report':'$ret_data'}";
@@ -419,34 +420,34 @@ class c_comdef_admin_ajax_handler
                             {
                             // Get whatever ID was assigned to this User.
                             $the_new_user[0] = intval ( $user_to_create->GetID() );
-                            header ( 'Content-type: application/json' );
+			                header ( 'Content-Type:application/json; charset=UTF-8' );
                             echo "{'success':true,'user':".array2json ( $the_new_user )."}";
                             }
                         else
                             {
                             $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_create_fail_text'] );
-                            header ( 'Content-type: application/json' );
+			                header ( 'Content-Type:application/json; charset=UTF-8' );
                             echo "{'success':false,'report':'$err_string'}";
                             }
                         }
                     else
                         {
                         $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_create_fail_text'] );
-                        header ( 'Content-type: application/json' );
+			            header ( 'Content-Type:application/json; charset=UTF-8' );
                         echo "{'success':false,'report':'$err_string'}";
                         }
                     }
                 else
                     {
                     $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_create_fail_already_exists'] );
-                    header ( 'Content-type: application/json' );
+			        header ( 'Content-Type:application/json; charset=UTF-8' );
                     echo "{'success':false,'report':'$err_string'}";
                     }
                 }
             else
                 {
                 $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_create_fail_text'] );
-                header ( 'Content-type: application/json' );
+			    header ( 'Content-Type:application/json; charset=UTF-8' );
                 echo "{'success':false,'report':'$err_string'}";
                 }
             }
@@ -493,6 +494,7 @@ class c_comdef_admin_ajax_handler
                         if ( !$user_to_change->SetNewPassword ( $password ) )
                             {
                             $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_fail_cant_update_text'] );
+			                header ( 'Content-Type:application/json; charset=UTF-8' );
                             echo "{\"success\":false,\"report\":\"$err_string\"}";
                             return;
                             }
@@ -500,27 +502,27 @@ class c_comdef_admin_ajax_handler
                 
                     if ( $user_to_change->UpdateToDB() )
                         {
-                        header ( 'Content-type: application/json' );
+			            header ( 'Content-Type:application/json; charset=UTF-8' );
                         echo '{"success":true,"user":'.array2json ( $the_changed_user )."}";
                         }
                     else
                         {
                         $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_fail_cant_update_text'] );
-                        header ( 'Content-type: application/json' );
+			            header ( 'Content-Type:application/json; charset=UTF-8' );
                         echo "{\"success\":false,\"report\":\"$err_string\"}";
                         }
                     }
                 else
                     {
                     $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_fail_cant_find_sb_text'] );
-                    header ( 'Content-type: application/json' );
+			        header ( 'Content-Type:application/json; charset=UTF-8' );
                     echo "{\"success\":false,\"report\":\"$err_string\"}";
                     }
                 }
             else
                 {
                 $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_fail_no_data_text'] );
-                header ( 'Content-type: application/json' );
+			    header ( 'Content-Type:application/json; charset=UTF-8' );
                 echo "{\"success\":false,\"report\":\"$err_string\"}";
                 }
             }
@@ -554,24 +556,24 @@ class c_comdef_admin_ajax_handler
                             $this->DeleteUserChanges ( $in_user_id );
                             }
                     
-                        header ( 'Content-type: application/json' );
+			            header ( 'Content-Type:application/json; charset=UTF-8' );
                         echo "{'success':true,'report':'$in_user_id'}";
                         }
                     else
                         {
-                        header ( 'Content-type: application/json' );
+			            header ( 'Content-Type:application/json; charset=UTF-8' );
                         echo "{'success':false,'report':'$ierr_string'}";
                         }
                     }
                 else
                     {
-                    header ( 'Content-type: application/json' );
+			        header ( 'Content-Type:application/json; charset=UTF-8' );
                     echo "{'success':false,'report':'$ierr_string'}";
                     }
                 }
             catch ( Exception $e )
                 {
-                header ( 'Content-type: application/json' );
+			    header ( 'Content-Type:application/json; charset=UTF-8' );
                 echo "{'success':false,'report':'$ierr_string'}";
                 }
             }
@@ -648,27 +650,27 @@ class c_comdef_admin_ajax_handler
             
                 if ( $sb_to_change->UpdateToDB() )
                     {
-                    header ( 'Content-type: application/json' );
+			        header ( 'Content-Type:application/json; charset=UTF-8' );
                     echo "{'success':true,'service_body':".array2json ( $the_new_service_body )."}";
                     }
                 else
                     {
                     $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_fail_cant_update_text'] );
-                    header ( 'Content-type: application/json' );
+			        header ( 'Content-Type:application/json; charset=UTF-8' );
                     echo "{'success':false,'report':'$err_string'}";
                     }
                 }
             else
                 {
                 $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_fail_cant_find_sb_text'] );
-                header ( 'Content-type: application/json' );
+			    header ( 'Content-Type:application/json; charset=UTF-8' );
                 echo "{'success':false,'report':'$err_string'}";
                 }
             }
         else
             {
             $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_fail_no_data_text'] );
-            header ( 'Content-type: application/json' );
+			header ( 'Content-Type:application/json; charset=UTF-8' );
             echo "{'success':false,'report':'$err_string'}";
             }
     }
@@ -717,27 +719,27 @@ class c_comdef_admin_ajax_handler
                         {
                         // Get whatever ID was assigned to this Service Body.
                         $the_new_service_body[0] = $sb_to_create->GetID();
-                        header ( 'Content-type: application/json' );
+			            header ( 'Content-Type:application/json; charset=UTF-8' );
                         echo "{'success':true,'service_body':".array2json ( $the_new_service_body )."}";
                         }
                     else
                         {
                         $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_fail_cant_update_text'] );
-                        header ( 'Content-type: application/json' );
+			            header ( 'Content-Type:application/json; charset=UTF-8' );
                         echo "{'success':false,'report':'$err_string'}";
                         }
                     }
                 else
                     {
                     $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_fail_cant_find_sb_text'] );
-                    header ( 'Content-type: application/json' );
+			        header ( 'Content-Type:application/json; charset=UTF-8' );
                     echo "{'success':false,'report':'$err_string'}";
                     }
                 }
             else
                 {
                 $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_fail_no_data_text'] );
-                header ( 'Content-type: application/json' );
+			    header ( 'Content-Type:application/json; charset=UTF-8' );
                 echo "{'success':false,'report':'$err_string'}";
                 }
             }
@@ -772,24 +774,24 @@ class c_comdef_admin_ajax_handler
                             $this->DeleteServiceBodyChanges ( $in_sb_id );
                             }
                     
-                        header ( 'Content-type: application/json' );
+			            header ( 'Content-Type:application/json; charset=UTF-8' );
                         echo "{'success':true, 'id':$in_sb_id}";
                         }
                     else
                         {
-                        header ( 'Content-type: application/json' );
+			            header ( 'Content-Type:application/json; charset=UTF-8' );
                         echo "{'success':false,'report':'$err_string'}";
                         }
                     }
                 else
                     {
-                    header ( 'Content-type: application/json' );
+			        header ( 'Content-Type:application/json; charset=UTF-8' );
                     echo "{'success':false,'report':'$err_string'}";
                     }
                 }
             catch ( Exception $e )
                 {
-                header ( 'Content-type: application/json' );
+			    header ( 'Content-Type:application/json; charset=UTF-8' );
                 echo "{'success':false,'report':'$err_string'}";
                 }
             }
@@ -898,30 +900,30 @@ class c_comdef_admin_ajax_handler
                             $this->DeleteMeetingChanges ( $in_meeting_id );
                             }
                         
-                        header ( 'Content-type: application/json' );
+			            header ( 'Content-Type:application/json; charset=UTF-8' );
                         echo "{'success':true,'report':'$in_meeting_id'}";
                         }
                     else
                         {
-                        header ( 'Content-type: application/json' );
+			            header ( 'Content-Type:application/json; charset=UTF-8' );
                         echo "{'success':false,'report':'$in_meeting_id'}";
                         }
                     }
                 else
                     {
-                    header ( 'Content-type: application/json' );
+                    header ( 'Content-Type:application/json; charset=UTF-8' );
                     echo "{'success':false,'report':'$in_meeting_id'}";
                     }
                 }
             else
                 {
-                header ( 'Content-type: application/json' );
+                header ( 'Content-Type:application/json; charset=UTF-8' );
                 echo "{'success':false,'report':'$in_meeting_id'}";
                 }
             }
         catch ( Exception $e )
             {
-            header ( 'Content-type: application/json' );
+            header ( 'Content-Type:application/json; charset=UTF-8' );
             echo "{'success':false,'report':'$in_meeting_id'}";
             }
     }
@@ -1068,7 +1070,7 @@ class c_comdef_admin_ajax_handler
                                     else
                                         {
                                         $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['email_format_bad'] );
-                                        header ( 'Content-type: application/json' );
+                                        header ( 'Content-Type:application/json; charset=UTF-8' );
                                         die ( "{'error':true,'type':'email_format_bad','report':'$err_string','id':'".$in_meeting_data['id_bigint']."'}" );
                                         }
                                     }
@@ -1106,7 +1108,7 @@ class c_comdef_admin_ajax_handler
                         }
                     if ( $meeting->UpdateToDB() )
                         {
-                        header ( 'Content-type: application/json' );
+                        header ( 'Content-Type:application/json; charset=UTF-8' );
                         $used_formats = array();
                         echo $this->TranslateToJSON ( $this->GetSearchResults ( array ( 'meeting_ids' => array ( $meeting->GetID() ) ), $used_formats ) );
                         }
@@ -1114,7 +1116,7 @@ class c_comdef_admin_ajax_handler
                         {
                         $in_meeting_data['id_bigint'] = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_meeting_id'] ).$in_meeting_data['id_bigint'];
                         $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_auth_failure'] );
-                        header ( 'Content-type: application/json' );
+                        header ( 'Content-Type:application/json; charset=UTF-8' );
                         echo "{'error':true,'type':'auth_failure','report':'$err_string','info':'".$in_meeting_data['id_bigint']."'}";
                         }
                     }
@@ -1122,7 +1124,7 @@ class c_comdef_admin_ajax_handler
                     {
                     $in_meeting_data['id_bigint'] = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_meeting_id'] ).$in_meeting_data['id_bigint'];
                     $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_auth_failure'] );
-                    header ( 'Content-type: application/json' );
+                    header ( 'Content-Type:application/json; charset=UTF-8' );
                     echo "{'error':true,'type':'auth_failure','report':'$err_string','info':'".$in_meeting_data['id_bigint']."'}";
                     }
                 }
@@ -1130,7 +1132,7 @@ class c_comdef_admin_ajax_handler
                 {
                 $in_meeting_data['id_bigint'] = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_meeting_id'] ).$in_meeting_data['id_bigint'];
                 $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_object_not_found'] );
-                header ( 'Content-type: application/json' );
+                header ( 'Content-Type:application/json; charset=UTF-8' );
                 echo "{'error':true,'type':'object_not_found','report':'$err_string','info':'".$in_meeting_data['id_bigint']."'}";
                 }
             }
@@ -1138,7 +1140,7 @@ class c_comdef_admin_ajax_handler
             {
             $in_meeting_data['id_bigint'] = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_meeting_id'] ).$in_meeting_data['id_bigint'];
             $err_string = json_prepare ( $this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_object_not_changed'] );
-            header ( 'Content-type: application/json' );
+            header ( 'Content-Type:application/json; charset=UTF-8' );
             echo "{'error':true,'type':'object_not_changed','report':'$err_string','info':'".$in_meeting_data['id_bigint']."'}";
             }
     }

@@ -54,7 +54,7 @@ try
 			}
 		else
 			{
-			header ( 'Content-Type:text/html' );
+			header ( 'Content-Type:application/json; charset=UTF-8' );
 			ob_start();
 			}
 		
