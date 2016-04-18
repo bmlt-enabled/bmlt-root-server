@@ -51,6 +51,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.7.15** -TBD*
+
+- Made it so the banner will stretch if more than one notification is displayed.
+
 ***Version 2.7.14** -April 16, 2016*
 
 - Added the latest base class. No changes to the Root Server.

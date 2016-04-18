@@ -181,6 +181,11 @@ fieldset
 	float:right;
 }
 
+.bmlt_admin_format_editor_banner_div
+{
+    display:table;
+}
+
 .success_div,
 .fail_div
 {
