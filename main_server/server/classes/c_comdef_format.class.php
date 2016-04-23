@@ -298,7 +298,7 @@ class c_comdef_format extends t_comdef_world_type implements i_comdef_db_stored,
 	
 	*/
 	function __construct(
-							&$in_parent_obj,				///< The object that "owns" this instance.
+							$in_parent_obj,				    ///< The object that "owns" this instance.
 							$in_shared_id_bigint=null,		///< The shared ID (If this is the same as other formats -used for different languages).
 							$in_format_type_string=null,	/**<	\brief The format code type
 																	- An enumerated string value, representing the classification of the format:
