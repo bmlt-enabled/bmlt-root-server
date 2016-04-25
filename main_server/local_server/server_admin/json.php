@@ -146,7 +146,8 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
                         
                         if ( $changer instanceof PhpJsonXmlArrayStringInterchanger )
                             {
-                            $ret = $changer->convertXmlToArray ( $handler->process_commands() );  // Do what you do so well...
+                            $ret = $handler->process_commands();
+                            $ret = $changer->convertXmlToArray ( $ret );  // Do what you do so well...
                         
                             if ( isset ( $ret ) && is_array ( $ret ) && count ( $ret ) )
                                 {

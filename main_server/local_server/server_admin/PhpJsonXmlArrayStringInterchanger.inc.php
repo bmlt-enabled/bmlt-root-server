@@ -56,20 +56,28 @@ class PhpJsonXmlArrayStringInterchanger{
 	 */
     private function parseXml($ret) {
         $return=false;
-        if(is_object($ret)){
-            $ret=(array)$ret;
-            $this->parseXml($ret);
+        if($ret instanceof SimpleXMLElement){
+            $return = $this->parseXml((array)$ret);
         }
-        if(is_array($ret)){
+        elseif(is_array($ret) && count ( $ret )){
             foreach($ret as $k=>$v){
-                if(is_object($v)){
-                    $return[$k]=$this->parseXml($v);
+                if(($v instanceof SimpleXMLElement) || (is_array ( $v ) && count ( $v ))){
+                    $return[]=$this->parseXml($v);
                 }
                 else {
-                    $return[$k]=$v	;
+                    if ( is_array ( $v ) && count ( $v ) ) {
+                        $return[] = $this->parseXml($v);
+                        }
+                    else {
+                        $return[$k]=$v;
+                    }
                 }
             }
         }
+        else {
+            $return=$ret;
+        }
+        
         return $return;
     }
 
