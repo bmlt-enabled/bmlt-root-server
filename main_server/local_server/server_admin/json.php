@@ -18,12 +18,12 @@
     along with this code.  If not, see <http://www.gnu.org/licenses/>.
 */
 define ( 'BMLT_EXEC', 1 );
-require_once ( dirname ( __FILE__ ).'/../../server/config/get-config.php' );
+require_once ( dirname ( dirname ( dirname ( __FILE__ ) ) ).'/server/config/get-config.php' );
 
 // We only do this if the capability has been enabled in the auto-config file.
 if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
     {
-    require_once ( dirname ( __FILE__ ).'/../../server/c_comdef_server.class.php');
+    require_once ( dirname ( dirname ( dirname ( __FILE__ ) ) ).'/server/c_comdef_server.class.php');
 
     /***************************************************************************************************************
     ************************************************* MAIN CONTEXT *************************************************
