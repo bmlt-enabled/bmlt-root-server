@@ -275,7 +275,7 @@ if ( $server instanceof c_comdef_server )
 								$address .= '<span class="bmlt_simple_list_location_street">'
 								if ( $address )
 									{
-									$address .= ", ";
+								    $address .= '<span class="bmlt_separator bmlt_separator_comma">, </span>';
 									}
 								$address .= $street;
 								$address .= '</span>';
@@ -286,7 +286,7 @@ if ( $server instanceof c_comdef_server )
 								$address .= '<span class="bmlt_simple_list_location_info">'
 								if ( $address )
 									{
-									$address .= " ";
+								    $address .= '<span class="bmlt_separator bmlt_separator_space"> </span>';
 									}
 								$address .= "($info)";
 								$address .= '</span>';
