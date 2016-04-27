@@ -51,7 +51,7 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.7.15** -TBD*
+***Version 2.7.15** -April 27, 2016*
 
 - Made it so the banner will stretch if more than one notification is displayed.
 - Made sure that the Root Server emits 'Content-Type:application/json; charset=UTF-8' whenever JSON is returned.
