@@ -56,6 +56,7 @@ CHANGELIST
 - Made it so the banner will stretch if more than one notification is displayed.
 - Made sure that the Root Server emits 'Content-Type:application/json; charset=UTF-8' whenever JSON is returned.
 - Fixed a warning in the Root Server format class.
+- Added span elements to contain the various components of the meeting address in the bmlt_simple shortcode.
 
 ***Version 2.7.14** -April 16, 2016*
 

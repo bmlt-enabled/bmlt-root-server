@@ -267,25 +267,29 @@ if ( $server instanceof c_comdef_server )
 							
 							if ( $location_text )
 								{
-								$address .= $location_text;
+								$address .= '<span class="bmlt_simple_list_location_text">'.$location_text.'</span>';
 								}
 							
 							if ( $street )
 								{
+								$address .= '<span class="bmlt_simple_list_location_street">'
 								if ( $address )
 									{
 									$address .= ", ";
 									}
 								$address .= $street;
+								$address .= '</span>';
 								}
 							
 							if ( $info )
 								{
+								$address .= '<span class="bmlt_simple_list_location_info">'
 								if ( $address )
 									{
 									$address .= " ";
 									}
 								$address .= "($info)";
+								$address .= '</span>';
 								}
 							
 							$name = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['meeting_name'] ) ) );
