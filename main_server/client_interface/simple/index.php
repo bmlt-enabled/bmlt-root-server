@@ -190,16 +190,16 @@ if ( $server instanceof c_comdef_server )
 								if ( $location_borough )
 									{
 									// We do it this verbose way, so we will scrag the comma if we want to hide the town.
-									$town = "<span class=\"c_comdef_search_results_borough\">$location_borough</span><span class=\"c_comdef_search_results_municipality\">, ".c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_municipality'] ) ) )."</span>";
+									$town .= "<span class=\"c_comdef_search_results_borough\">$location_borough</span><span class=\"c_comdef_search_results_municipality\">, ".c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_municipality'] ) ) )."</span>";
 									}
 								else
 									{
-									$town = '<span class="c_comdef_search_results_municipality">'.c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_municipality'] ) ) )."</span>";
+									$town .= '<span class="c_comdef_search_results_municipality">'.c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_municipality'] ) ) )."</span>";
 									}
 								}
 							elseif ( $location_borough )
 								{
-								$town = "<span class=\"c_comdef_search_results_municipality_borough\">$location_borough</span>";
+								$town .= "<span class=\"c_comdef_search_results_municipality_borough\">$location_borough</span>";
 								}
 							
 							if ( $location_province )
@@ -273,7 +273,7 @@ if ( $server instanceof c_comdef_server )
 							if ( $street )
 								{
 								$address .= '<span class="bmlt_simple_list_location_street">';
-								if ( $address )
+								if ( $location_text )
 									{
 								    $address .= '<span class="bmlt_separator bmlt_separator_comma">, </span>';
 									}
@@ -284,7 +284,7 @@ if ( $server instanceof c_comdef_server )
 							if ( $info )
 								{
 								$address .= '<span class="bmlt_simple_list_location_info">';
-								if ( $address )
+								if ( $location_text || $street )
 									{
 								    $address .= '<span class="bmlt_separator bmlt_separator_space"> </span>';
 									}
