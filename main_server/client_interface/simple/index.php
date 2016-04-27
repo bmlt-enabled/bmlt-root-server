@@ -194,7 +194,7 @@ if ( $server instanceof c_comdef_server )
 									}
 								else
 									{
-									$town = "<span class=\"c_comdef_search_results_municipality\">".c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_municipality'] ) ) )."</span>";
+									$town = '<span class="c_comdef_search_results_municipality">'.c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_municipality'] ) ) )."</span>";
 									}
 								}
 							elseif ( $location_borough )
@@ -204,11 +204,11 @@ if ( $server instanceof c_comdef_server )
 							
 							if ( $location_province )
 								{
-								$town_temp = "<span class=\"c_comdef_search_results_province\">";
+								$town_temp = '<span class="c_comdef_search_results_province">';
 								
 								if ( $town )
 								    {
-								    $town_temp .= ", ";
+								    $town_temp .= '<span class="bmlt_separator bmlt_separator_comma">, </span>';
 								    }
 								
 								$town .= "$town_temp$location_province</span>";
@@ -216,11 +216,11 @@ if ( $server instanceof c_comdef_server )
 							
 							if ( $location_postal_code_1 )
 								{
-								$town_temp = "<span class=\"c_comdef_search_results_zip\">";
+								$town_temp = '<span class="c_comdef_search_results_zip">';
 								
 								if ( $town )
 								    {
-								    $town_temp .= ", ";
+								    $town_temp .= '<span class="bmlt_separator bmlt_separator_comma">, </span>';
 								    }
 								
 								$town .= "$town_temp$location_postal_code_1</span>";
@@ -228,11 +228,11 @@ if ( $server instanceof c_comdef_server )
 							
 							if ( $location_nation )
 								{
-								$town_temp = "<span class=\"c_comdef_search_results_nation\">";
+								$town_temp = '<span class="c_comdef_search_results_nation">';
 								
 								if ( $town )
 								    {
-								    $town_temp .= ", ";
+								    $town_temp .= '<span class="bmlt_separator bmlt_separator_comma">, </span>';
 								    }
 								
 								$town .= "$town_temp$location_nation</span>";
@@ -240,18 +240,18 @@ if ( $server instanceof c_comdef_server )
 							
 							if ( $location_neighborhood )
 								{
-								$town_temp = "<span class=\"c_comdef_search_results_neighborhood\">";
+								$town_temp = '<span class="c_comdef_search_results_neighborhood">';
 								
 								if ( $town )
 								    {
-								    $town_temp .= ' (';
+								    $town_temp .= '<span class="bmlt_separator bmlt_separator_open_paren"> (</span>';
 								    }
 								    
 								$town_temp .= $location_neighborhood;
 								
 								if ( $town )
 								    {
-								    $town_temp .= ')';
+								    $town_temp .= '<span class="bmlt_separator bmlt_separator_close_paren">)</span>';
 								    }
 								
 								$town .= "$town_temp</span>";
