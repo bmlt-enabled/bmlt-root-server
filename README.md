@@ -1407,7 +1407,7 @@ CHANGELIST
     
 ***Version 1.2.18* ** *- November 10, 2009*
 
-- Fixed <a href="https://sourceforge.net/tracker/?func=detail&aid=2895410&group_id=228122&atid=1073410">a nasty bug</a>, in which auto-radius within very dense urban areas could fail.
+- Fixed [a nasty bug](https://sourceforge.net/tracker/?func=detail&aid=2895410&group_id=228122&atid=1073410), in which auto-radius within very dense urban areas could fail.
     
 ***Version 1.2.17* ** *- November 9, 2009*
 
@@ -1416,11 +1416,11 @@ CHANGELIST
             
 ***Version 1.2.16* ** *- November 6, 2009*
 
-- Fixed <a href="https://sourceforge.net/tracker/?func=detail&aid=2891653&group_id=228122&atid=1073410">a bug</a>, in which a nonfunctional PDF popup was displayed on the root server.
+- Fixed [a bug](https://sourceforge.net/tracker/?func=detail&aid=2891653&group_id=228122&atid=1073410), in which a nonfunctional PDF popup was displayed on the root server.
 - Hardcoded the root PDF directory. This wasn't really a security breach, but it is possible to write bad URIs that could give ugly results. It's also a good idea to be anal by habit.
 - Added a note to the Advanced Tab formats and Service Bodies to hold the cursor over the items.
 - Made some tweaks to the styling and text of the search specification form to increase usability.
-- Fixed <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=2893015&group_id=228122&atid=1073410">a bug</a>, in which the advanced marker would disappear after a zoom.
+- Fixed [a bug](https://sourceforge.net/tracker/index.php?func=detail&aid=2893015&group_id=228122&atid=1073410), in which the advanced marker would disappear after a zoom.
     
 ***Version 1.2.15* ** *- November 3, 2009*
 
@@ -1433,15 +1433,15 @@ CHANGELIST
 ***Version 1.2.14* ** *- October 31, 2009*
 
 - Added a new behavior for the search map. If the map starts off with a zoom less than 8, the first click brings the zoom to 8, then the next click finds meetings. This helps for maps that cover wide areas. It shouldn't affect any of the implementations to date.
-- Fixed <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=2888335&group_id=228122&atid=1073410">a bug</a>, in which the overlay did not properly follow the marker in advanced search mode.
+- Fixed [a bug](https://sourceforge.net/tracker/index.php?func=detail&aid=2888335&group_id=228122&atid=1073410), in which the overlay did not properly follow the marker in advanced search mode.
 - Made "Location" into "Location Name", and "Location Information" into "Additional Location Information" for the default meeting data fields. Bit more self-explanatory.
 - Added a language parameter for the standalone satellite server.
 - Removed the "Secondary Parent" capability. The code is still there, and commented out, but it was too confusing. A basic hierarchy, with assigned additional editors is much simpler.
-- Fixed <a href="https://sourceforge.net/tracker/?func=detail&aid=2889829&group_id=228122&atid=1073410">a bug</a>, in which setting a "Parent" Service Body to none failed.
+- Fixed [a bug](https://sourceforge.net/tracker/?func=detail&aid=2889829&group_id=228122&atid=1073410), in which setting a "Parent" Service Body to none failed.
     
 ***Version 1.2.13* ** *- October 27, 2009*
 
-- Fixed <a href="https://sourceforge.net/tracker/?func=detail&atid=1073410&aid=2886043&group_id=228122">a bug</a> in the main server and the standalone satellite, in which the advanced pane could interfere with the basic pane.
+- Fixed [a bug](https://sourceforge.net/tracker/?func=detail&atid=1073410&aid=2886043&group_id=228122) in the main server and the standalone satellite, in which the advanced pane could interfere with the basic pane.
 - Added a circular overlay to the Advanced Search map. Makes it much more usable.
     
 ***Version 1.2.12* ** *- October 25, 2009*
@@ -1526,8 +1526,8 @@ CHANGELIST
 
 - Added a US-Letter-Sized list option to the printable PDF.
 - Fixed a bug in which clicking on page numbers in the list resulted in an unexpected return to map view.
-- Fixed <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=2845523&group_id=228122&atid=1073410">a bug</a>, in which entering ampersand (&) characters in any of the fields in the editors caused pretty big problems.
-- Fixed <a href="https://sourceforge.net/tracker/?func=detail&aid=2792463&group_id=228122&atid=1073410">a bug</a>, in which deleted Service bodies with nested components weren't updated properly. The 'fix' is kind of a kludge, as we simply reload the page.
+- Fixed [a bug](https://sourceforge.net/tracker/index.php?func=detail&aid=2845523&group_id=228122&atid=1073410), in which entering ampersand (&) characters in any of the fields in the editors caused pretty big problems.
+- Fixed [a bug](https://sourceforge.net/tracker/?func=detail&aid=2792463&group_id=228122&atid=1073410), in which deleted Service bodies with nested components weren't updated properly. The 'fix' is kind of a kludge, as we simply reload the page.
     
 ***Version 1.2b2* ** *- September 7, 2009*
 
@@ -1547,7 +1547,7 @@ CHANGELIST
 
 - Moving all documentation, including the user and admin manual, into the docs directory, and created a frameset to display them.
 - Tweaked the Doxygen docs to reflect the new structure.
-- Fixed <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=2846972&group_id=228122&atid=1073410">a bug</a>, in which the list wasn't working in Map view.
+- Fixed [a bug](https://sourceforge.net/tracker/index.php?func=detail&aid=2846972&group_id=228122&atid=1073410), in which the list wasn't working in Map view.
 - Fixed an unreported bug, in which zooming the map caused JavaScript slowdowns.
     
 ***Version 1.1.1* ** *- July 26, 2009*
@@ -1557,8 +1557,8 @@ CHANGELIST
 - Split up the project structure: Moving the Drupal, WordPress and Joomla! modules off into their own projects. The main satellite server will now only be the standalone and PDF generators.
 - Modified the CSV data export to better accommodate list printing.
 - Added the ability to do searches, based upon a single key/value (example: county or town).
-- Fixed <a href="https://sourceforge.net/tracker/?func=detail&aid=2827219&group_id=228122&atid=1073410">a bug</a>, in which map searches with filters didn't work properly when called from a satellite server.
-- Marked <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=2791321&group_id=228122&atid=1073410">a bug</a> as closed. Not sure how it was fixed (Hate it when that happens).
+- Fixed [a bug](https://sourceforge.net/tracker/?func=detail&aid=2827219&group_id=228122&atid=1073410), in which map searches with filters didn't work properly when called from a satellite server.
+- Marked [a bug](https://sourceforge.net/tracker/index.php?func=detail&aid=2791321&group_id=228122&atid=1073410) as closed. Not sure how it was fixed (Hate it when that happens).
 - The current server version is now discretely displayed at the bottom, right corner of the search specification screen for the main server.
 - Optimized the standalone satellite server to be even more crazy simple to implement, and wrote up some detailed docs on it.
     
@@ -1570,8 +1570,8 @@ CHANGELIST
 ***Version 1.0.1* ** *- June 26, 2009*
 
 - Made the satellite servers use POST for their cURL calls. Increases the robustness a bit.
-- Fixed <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=2809650&group_id=228122&atid=1073410">a bug</a>, in which meeting rollbacks didn't work, and re-enabled the change rollback system and meeting undelete system.
-- Fixed <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=2812707&group_id=228122&atid=1073410">a bug</a>, in which the meeting edit functions did not work in Map View.
+- Fixed [a bug](https://sourceforge.net/tracker/index.php?func=detail&aid=2809650&group_id=228122&atid=1073410), in which meeting rollbacks didn't work, and re-enabled the change rollback system and meeting undelete system.
+- Fixed [a bug](https://sourceforge.net/tracker/index.php?func=detail&aid=2812707&group_id=228122&atid=1073410), in which the meeting edit functions did not work in Map View.
     
 ***Version 1.0.0* ** *- June 25, 2009*
 
@@ -1579,18 +1579,18 @@ CHANGELIST
     
 ***Version 1.0RC6* ** *- June 23, 2009*
 
-- Fixed <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=2810067&group_id=228122&atid=1073410">a bug</a>, in which singular meeting results caused problems with administration.
+- Fixed [a bug](https://sourceforge.net/tracker/index.php?func=detail&aid=2810067&group_id=228122&atid=1073410), in which singular meeting results caused problems with administration.
 - Added a new field to the three CMS plugins, that allows you to specify a specific URL for the "New Search" link.
 - Fixed an old bug in the Joomla! plugin that prevented the support older browsers functionality from working properly.
     
 ***Version 1.0RC5* ** *- June 21, 2009*
 
 - Removed the Spanish localization. It was not complete, and was only there for testing. It should not be distributed.
-- Added a couple of notes to the <a href="../main_server/AdminManual/">Admin Manual</a> about the user interface issues that affect creating new users or Service Bodies, or deleting Service Bodies with nested Service Bodies.
+- Added a couple of notes to the [Admin Manual](../main_server/AdminManual/) about the user interface issues that affect creating new users or Service Bodies, or deleting Service Bodies with nested Service Bodies.
 - Broke the styles out from inside the WordPress plugin, and put them in their own stylesheet. This makes tweaking them easier.
 - Made the styles for the WordPress plugin far more specific, in an effort to enforce the appearance in a chaotic environment.
-- Fixed <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=2809609&group_id=228122&atid=1073410">a bug</a>, in which the '&' character caused issues with editing meetings. Addressed the same issue with format editing.
-- Fixed <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=2809622&group_id=228122&atid=1073410">a bug</a>, in which the Edit Formats AJAX functionality was broken.
+- Fixed [a bug](https://sourceforge.net/tracker/index.php?func=detail&aid=2809609&group_id=228122&atid=1073410), in which the '&' character caused issues with editing meetings. Addressed the same issue with format editing.
+- Fixed [a bug](https://sourceforge.net/tracker/index.php?func=detail&aid=2809622&group_id=228122&atid=1073410), in which the Edit Formats AJAX functionality was broken.
 - Addressed an issue in which slashes could be added to text field value display in the meeting editor.
 - Disabled the change rollback feature for meetings. It isn't working properly, and the fix would be too drastic at this stage.
     
@@ -1601,23 +1601,23 @@ CHANGELIST
     
 ***Version 1.0RC3* ** *- June 14, 2009*
 
-- Fixed <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=2806255&group_id=228122&atid=1073410">a bug</a>, in which the "Search for Text" link in the search specifier was broken for some browsers (notably, IE6).
+- Fixed [a bug](https://sourceforge.net/tracker/index.php?func=detail&aid=2806255&group_id=228122&atid=1073410), in which the "Search for Text" link in the search specifier was broken for some browsers (notably, IE6).
     
 ***Version 1.0RC2* ** *- June 13, 2009*
 
 - Tweaked the CSS for the info windows in the map results page to lessen the "overflow" caused by resized text.
 - Fixed a minor bug in the WordPress plugin, in which the tbody element wasn't being properly closed.
-- Fixed <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=2805723&group_id=228122&atid=1073410">a bug</a>, in which the throbber wasn't being displayed properly in the admin control panel.
+- Fixed [a bug](https://sourceforge.net/tracker/index.php?func=detail&aid=2805723&group_id=228122&atid=1073410), in which the throbber wasn't being displayed properly in the admin control panel.
 - Removed some redundant code in the admin files. The dangers of copy-and-paste programming...
 - Added a note to the last page of the install wizard, instructing the server admin to create first a Service Body Admin, then a Service Body, then meetings.
 - Added a style to the satellite implementations to ensure that the single meeting header starts off at a manageable size.
 - Slightly tweaked the CSS in the WordPress style to keep the "New Search" menu centered.
-- Fixed <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=2805918&group_id=228122&atid=1073410">a bug</a>, in which a long/lat of 0 was considered a valid location, even though it is the ocean off of Africa. 0,0 is now considered an empty long/lat.
+- Fixed [a bug](https://sourceforge.net/tracker/index.php?func=detail&aid=2805918&group_id=228122&atid=1073410), in which a long/lat of 0 was considered a valid location, even though it is the ocean off of Africa. 0,0 is now considered an empty long/lat.
     
 ***Version 1.0RC1* ** *- June 11, 2009*
 
 - Added a bit of CSS padding to the fieldsets in the Advanced Search.
-- Fixed <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=2803269&group_id=228122&atid=1073410">a bug</a> in the WordPress plugin, in which the "New Search" link was bad for default WordPress (non-pretty URIs) installations.
+- Fixed [a bug](https://sourceforge.net/tracker/index.php?func=detail&aid=2803269&group_id=228122&atid=1073410) in the WordPress plugin, in which the "New Search" link was bad for default WordPress (non-pretty URIs) installations.
 - Added a link to the root server in the case that JavaScript is required by satellite servers.
     
 ***Version 1.0b5* ** *- June 7, 2009*
@@ -1625,14 +1625,14 @@ CHANGELIST
 - Vastly improved the code for the standalone satellite server.
 - Added the capability for satellite servers to override the root server setting, and determine the initial view for their Basic Search.
 - Made the call_curl function a wee bit more robust.
-- Fixed <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=2800165&group_id=228122&atid=1073410">a bug</a>, in which we need to append the state to the town in List View.
-- Fixed <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=2802511&group_id=228122&atid=1073410">a bug</a>, in which the map view kept being closed whenever the search was switched between Basic and Advanced.
+- Fixed [a bug](https://sourceforge.net/tracker/index.php?func=detail&aid=2800165&group_id=228122&atid=1073410), in which we need to append the state to the town in List View.
+- Fixed [a bug](https://sourceforge.net/tracker/index.php?func=detail&aid=2802511&group_id=228122&atid=1073410), in which the map view kept being closed whenever the search was switched between Basic and Advanced.
 - Completed the Administration Guide.
     
 ***Version 1.0b4* ** *- June 5, 2009*
 
 - Added a shortcut icon.
-- Fixed <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=2801941&group_id=228122&atid=1073410">a bug</a> in WebKit browsers, where the initial map in Basic mode comes up skewed.
+- Fixed [a bug](https://sourceforge.net/tracker/index.php?func=detail&aid=2801941&group_id=228122&atid=1073410) in WebKit browsers, where the initial map in Basic mode comes up skewed.
 - Wrote an installer "wizard" to make installing a new root server fairly simple.
 - Bundled a "raw" root server into a single [downloadable zip file](http://comdef.svn.sourceforge.net/viewvc/comdef/tags/1.0b4/main_server.zip).
     
