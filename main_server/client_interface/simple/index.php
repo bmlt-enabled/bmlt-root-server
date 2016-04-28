@@ -204,36 +204,32 @@ if ( $server instanceof c_comdef_server )
 							
 							if ( $location_province )
 								{
-								$town_temp = '<span class="c_comdef_search_results_province">';
-								
 								if ( $town )
 								    {
-								    $town_temp .= '<span class="bmlt_separator bmlt_separator_comma">, </span>';
+								    $town_temp .= '<span class="bmlt_separator bmlt_separator_comma c_comdef_search_results_province_separator">, </span>';
 								    }
 								
-								$town .= "$town_temp$location_province</span>";
+								$town_temp = '<span class="c_comdef_search_results_province">'.$location_province.'</span>';
 								}
 							
 							if ( $location_postal_code_1 )
 								{
-								$town_temp = '<span class="c_comdef_search_results_zip">';
-								
 								if ( $town )
 								    {
-								    $town_temp .= '<span class="bmlt_separator bmlt_separator_comma">, </span>';
+								    $town_temp .= '<span class="bmlt_separator bmlt_separator_comma c_comdef_search_results_zip_separator">, </span>';
 								    }
 								
-								$town .= "$town_temp$location_postal_code_1</span>";
+								$town_temp = '<span class="c_comdef_search_results_zip">'.$location_postal_code_1.'</span>';
 								}
 							
 							if ( $location_nation )
 								{
-								$town_temp = '<span class="c_comdef_search_results_nation">';
-								
 								if ( $town )
 								    {
-								    $town_temp .= '<span class="bmlt_separator bmlt_separator_comma">, </span>';
+								    $town_temp .= '<span class="bmlt_separator bmlt_separator_comma c_comdef_search_results_nation_separator">, </span>';
 								    }
+								
+								$town_temp = '<span class="c_comdef_search_results_nation">';
 								
 								$town .= "$town_temp$location_nation</span>";
 								}
@@ -272,24 +268,20 @@ if ( $server instanceof c_comdef_server )
 							
 							if ( $street )
 								{
-								$address .= '<span class="bmlt_simple_list_location_street">';
 								if ( $location_text )
 									{
-								    $address .= '<span class="bmlt_separator bmlt_separator_comma">, </span>';
+								    $address .= '<span class="bmlt_separator bmlt_separator_comma bmlt_simple_list_location_street_separator">, </span>';
 									}
-								$address .= $street;
-								$address .= '</span>';
+								$address .= '<span class="bmlt_simple_list_location_street">'.$street.'</span>';
 								}
 							
 							if ( $info )
 								{
-								$address .= '<span class="bmlt_simple_list_location_info">';
 								if ( $location_text || $street )
 									{
-								    $address .= '<span class="bmlt_separator bmlt_separator_space"> </span>';
+								    $address .= '<span class="bmlt_separator bmlt_separator_space bmlt_simple_list_location_info_separator"> </span>';
 									}
-								$address .= "($info)";
-								$address .= '</span>';
+								$address .= "<span class=\"bmlt_simple_list_location_info\">($info)</span>";
 								}
 							
 							$name = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['meeting_name'] ) ) );
