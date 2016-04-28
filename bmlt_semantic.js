@@ -22,7 +22,7 @@
         You should have received a copy of the GNU General Public License
         along with this code.  If not, see <http://www.gnu.org/licenses/>.
         
-        Version: 1.1.2
+        Version: 1.1.3
 */
 /*******************************************************************************************/
 function BMLTSemanticResult (   inRootServerURI,
@@ -31,7 +31,6 @@ function BMLTSemanticResult (   inRootServerURI,
 {
     this.root_server_uri = inRootServerURI;
     this.owner = inOwner;
-
 };
 
 BMLTSemanticResult.prototype.owner = null;              ///< The object that "owns" this.

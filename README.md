@@ -28,142 +28,112 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
 CHANGELIST
 ----------
-** Version 1.1.2 **
+***Version 1.1.3* ** *- TBD*
 
-- April 6, 2016
+- Tweaked the format of this README to match the rest of the projects.
+
+***Version 1.1.2* ** *- April 6, 2016*
+
 - The weekday boxes were not being re-shown after the table section was displayed.
 
-** Version 1.1.1 **
+***Version 1.1.1* ** *- April 4, 2016*
 
-- April 4, 2016
 - Fixed an issue where the specific fields list was shown for simple response. It is not actually valid, there.
 
-** Version 1.1.0 **
+***Version 1.1.0* ** *- March 29, 2016*
 
-- March 29, 2016
 - Added support for the new [[BMLT_TABLE]] shortcode.
 
-** Version 1.0.11 **
-
-- March 27, 2016 (Happy Easter!)
+***Version 1.0.11* ** *- March 27, 2016 (Happy Easter!)*
 
 - Added the block mode checkbox to the shortcode searches.
 
-** Version 1.0.10 **
-
-- March 23, 2016
+***Version 1.0.10* ** *- March 23, 2016*
 
 - Fixed a JavaScript bug, in which Root Servers with reduced complements of additional meeting data could cause the sort stuff to reference null objects.
 
-** Version 1.0.9 **
-
-- March 20, 2016
+***Version 1.0.9* ** *- March 20, 2016*
 
 - Fixed a minor bug with the new server langs, where an invalid display could happen (Select "Server Languages" in XML or JSON, then switch to a different output type).
 
-** Version 1.0.8 **
-
-- March 20, 2016
+***Version 1.0.8* ** *- March 20, 2016*
 
 - Added the JSON version of GetServerLangs.
 
-** Version 1.0.7 **
-
-- March 18, 2016
+***Version 1.0.7* ** *- March 18, 2016*
 
 - Fixed a warning.
 - Added a selection for the XML GetLangs response.
 - Fixed an issue with the Root Server not having SSL honored.
 
-** Version 1.0.6 **
-
-- March 13, 2016
+***Version 1.0.6* ** *- March 13, 2016*
 
 - Adding better capability for SSL, cleaned URIs and integration with the Root Server.
 
-** Version 1.0.5 **
-
-- March 5, 2016
+***Version 1.0.5* ** *- March 5, 2016*
 
 - Tweaked the project to allow embedding in the main server.
 
-** Version 1.0.4 **
-
-- September 18, 2015
+***Version 1.0.4* ** *- September 18, 2015*
 
 - Fixed the URL/Shortcode display to better form itself around long URIs.
 
-** Version 1.0.3 **
-
-- July 2, 2015
+***Version 1.0.3* ** *- July 2, 2015*
 
 - Corrected the text describing the start times.
 
-** Version 1.0.2 **
-
-- July 1, 2015
+***Version 1.0.2* ** *- July 1, 2015*
 
 - Added a link to the documentation page.
 
-** Version 1.0 **
-
-- April 24, 2015
+***Version 1.0* ** *- April 24, 2015*
 
 - First official Release.
 
-** Version 1.0b3 **
+***Version 1.0b3* ** *- April 24, 2015*
 
-- April 24, 2015
 
 - Now don't display the Service body sections if only 1 Service body..
 
-** Version 1.0b2 **
+***Version 1.0b2* ** *- April 11, 2015*
 
-- April 11, 2015
 
 - This tool won't work on Root Server versions below 2.6.15. I now test for that.
 
-** Version 1.0b1 **
+***Version 1.0b1* ** *- April 11, 2015*
 
-- April 11, 2015
 
 - Oops. Forgot to add the start time/duration sections.
 
-** Version 1.0b0 **
+***Version 1.0b0* ** *- April 9, 2015*
 
-- April 9, 2015
 
 - First Beta release. No code change from 1.0a6, except that we are no longer running debug mode.
 
-** Version 1.0a6 **
+***Version 1.0a6* ** *- April 9, 2015*
 
-- April 9, 2015
 
 - Made the NOT sections XOR with the "NOT-NOT" sections.
 
-** Version 1.0a5 **
+***Version 1.0a5* ** *- April 8, 2015*
 
-- April 8, 2015
 
 - Added the "NOT" Service body section.
 
-** Version 1.0a4 **
+***Version 1.0a4* ** *- April 8, 2015*
 
-- April 8, 2015
 
 - Added the weekday header code for the [[BMLT_SIMPLE]] shortcode search results.
 - Fixed an issue where the Service body and format labels were not being properly associated with their checkboxes.
 - Changed the way that Service bodies are recorded in the state, with an eye towards adding "not" Service bodies (it is possible, but not not reflected in the UI).
 
-** Version 1.0a3 **
+***Version 1.0a3* ** *- April 4, 2015*
 
-- April 4, 2015
 
 - Fixed an issue with the way the field values checkboxes were set up in the meeting search fieldset. The labels were not properly hooked up to the checkboxes.
 
-** Version 1.0a2 **
+***Version 1.0a2* ** *- March 29, 2015*
 
-- March 29, 2015
 
 - Fixed an issue with the sort selection, where unsorting the first item with more than 3 items would not re-flow the sort order.
 - Make the selected sort items more prominent with CSS.
@@ -173,8 +143,7 @@ CHANGELIST
 - Prevent sort items from doing anything other than unsorting if they already have a value.
 - Added a header and a basic instruction blurb.
 
-** Version 1.0a1 **
+***Version 1.0a1* ** *- March 28, 2015*
 
-- March 28, 2015
 
 - First official "feature complete" alpha.
