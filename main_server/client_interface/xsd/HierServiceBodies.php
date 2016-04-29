@@ -63,7 +63,7 @@ echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
                     <xs:element ref='ns1:service_bodies' minOccurs='0' maxOccurs='1'/>
                 </xs:choice>
             </xs:sequence>
-            <xs:attribute name='id' use='required' type='xs:integer'/>
+            <xs:attribute name='id' use='required' type='xs:short'/>
             <xs:attribute name='name' use='required' type='xs:string'/>
             <xs:attribute name='type' use='required' type='xs:string'/>
         </xs:complexType>
@@ -120,8 +120,8 @@ echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
                             <xs:minLength value="1" />
                         </xs:restriction>
                     </xs:simpleType>
-                    <xs:attribute name='id' use='required' type='xs:integer'/>
-                    <xs:attribute name='type' use='required' type='xs:string'/>
+                    <xs:attribute name='id' use='required' type='xs:short'/>
+                    <xs:attribute name='admin_type' use='required' type='xs:string'/>
                 </xs:restriction>
             </xs:simpleContent>
         </xs:complexType>
@@ -136,7 +136,7 @@ echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
                             <xs:minLength value="1" />
                         </xs:restriction>
                     </xs:simpleType>
-                    <xs:attribute name='id' use='required' type='xs:integer'/>
+                    <xs:attribute name='id' use='required' type='xs:short'/>
                     <xs:attribute name='type' use='required' type='xs:string'/>
                 </xs:restriction>
             </xs:simpleContent>
@@ -152,7 +152,7 @@ echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
                             <xs:minLength value="1" />
                         </xs:restriction>
                     </xs:simpleType>
-                    <xs:attribute name='id' use='required' type='xs:integer'/>
+                    <xs:attribute name='id' use='required' type='xs:short'/>
                     <xs:attribute name='type' use='required' type='xs:string'/>
                 </xs:restriction>
             </xs:simpleContent>

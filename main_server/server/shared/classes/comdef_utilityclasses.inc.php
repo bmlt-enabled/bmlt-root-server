@@ -556,11 +556,9 @@ function c_comdef_LogoutUser()
 		{
 		setcookie ( session_name(), '', time() - 42000, '/' );
 		}
-		
-    session_write_close();  // Close the session.
 	
 	// Bye, now...
-	session_destroy();
+    session_write_close();  // Close the session.
 	}
 
 /*******************************************************************/

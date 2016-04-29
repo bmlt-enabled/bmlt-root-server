@@ -56,6 +56,8 @@ CHANGELIST
 - Changed the format of this README, as BitBucket has changed their markdown syntax a bit.
 - Changed the style wrappers for the [bmlt_simple](http://bmlt.magshare.net/satellites/simple/) shortcode a bit, so that the separators can be styled a bit more easily.
 - Changed the Semantic Admin stuff to be simpler. No one is using it (yet), so I think it should be OK.
+- Fixed an issue with the semantic admin that returned the incorrect location for the schema.
+- Fixed a warning that affected the semantic administration.
 
 ***Version 2.7.15* ** *- April 27, 2016*
 
