@@ -54,7 +54,6 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
     setcookie ( 'bmlt_admin_lang_pref', $lang_enum, $expires, '/' );
     
     require_once ( dirname ( dirname ( dirname ( __FILE__ ) ) ).'/server/shared/classes/comdef_utilityclasses.inc.php');
-    require_once ( dirname ( __FILE__ ).'/PhpJsonXmlArrayStringInterchanger.inc.php' );
     require_once ( dirname ( dirname ( dirname ( __FILE__ ) ) ).'/server/shared/Array2Json.php');
     require_once ( dirname ( dirname ( __FILE__ ) ).'/db_connect.php');
     
@@ -142,28 +141,23 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
                 
                     if ( $handler instanceof c_comdef_admin_xml_handler )
                         {
-                        $changer = new PhpJsonXmlArrayStringInterchanger;
-                        
-                        if ( $changer instanceof PhpJsonXmlArrayStringInterchanger )
+                        $ret = $handler->process_commands();
+                        $xml = simplexml_load_string ( $ret, "SimpleXMLElement", LIBXML_NOCDATA );
+                        $json = json_encode ( $xml );
+                    
+                        if ( isset ( $json ) && $json )
                             {
-                            $ret = $handler->process_commands();
-                            $ret = $changer->convertXmlToArray ( $ret );  // Do what you do so well...
-                        
-                            if ( isset ( $ret ) && is_array ( $ret ) && count ( $ret ) )
+                            header ( 'Content-Type:application/json; charset=UTF-8' );
+                            if ( zlib_get_coding_type () === false )
                                 {
-                                $ret = array2json ( $ret );
-                                header ( 'Content-Type:application/json; charset=UTF-8' );
-                                if ( zlib_get_coding_type () === false )
-                                    {
-                                    ob_start ( "ob_gzhandler" );
-                                    }
-                                else
-                                    {
-                                    ob_start();
-                                    }
-                                echo ( $ret );
-                                ob_end_flush();
+                                ob_start ( "ob_gzhandler" );
                                 }
+                            else
+                                {
+                                ob_start();
+                                }
+                            echo ( $json );
+                            ob_end_flush();
                             }
                         else
                             {

@@ -1369,19 +1369,24 @@ class c_comdef_admin_xml_handler
                 // If we can observe, then we have at least one permission for this Service body.
                 if ( isset ( $my_meeting_observer_service_bodies['sb_'.$service_body->GetID()] ) && $my_meeting_observer_service_bodies['sb_'.$service_body->GetID()] )
                     {
-                    $ret .= '<service_body id="'.$service_body->GetID().'" name="'.c_comdef_htmlspecialchars ( $service_body->GetLocalName() ).'">';
-                        $ret .= '<permission>observer</permission>';
-                        
-                        if ( isset ( $my_meeting_editor_service_bodies['sb_'.$service_body->GetID()] ) && $my_meeting_editor_service_bodies['sb_'.$service_body->GetID()] )
-                            {
-                            $ret .= '<permission>meeting_editor</permission>';
-                            }
-                        
+                    $ret .= '<service_body id="'.$service_body->GetID().'" name="'.c_comdef_htmlspecialchars ( $service_body->GetLocalName() ).'" permissions="';
                         if ( isset ( $my_editable_service_bodies['sb_'.$service_body->GetID()] ) && $my_editable_service_bodies['sb_'.$service_body->GetID()] )
                             {
-                            $ret .= '<permission>service_body_editor</permission>';
+                            $ret .= '3';
                             }
-                    $ret .= '</service_body>';
+                        elseif ( isset ( $my_meeting_editor_service_bodies['sb_'.$service_body->GetID()] ) && $my_meeting_editor_service_bodies['sb_'.$service_body->GetID()] )
+                            {
+                            $ret .= '2';
+                            }
+                        elseif ( isset ( $my_meeting_observer_service_bodies['sb_'.$service_body->GetID()] ) && $my_meeting_observer_service_bodies['sb_'.$service_body->GetID()] )
+                            {
+                            $ret .= '1';
+                            }
+                        else
+                            {
+                            $ret .= '0';
+                            }
+                    $ret .= '"/>';
                     }
                 }
             // Create a proper XML wrapper for the response data.

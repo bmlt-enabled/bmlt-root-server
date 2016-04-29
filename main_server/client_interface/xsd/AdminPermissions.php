@@ -49,11 +49,9 @@ echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
             <xs:sequence>
                 <xs:element name="service_body" maxOccurs="unbounded" minOccurs="0">
                     <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="permission" maxOccurs="3" minOccurs="0" type="xs:string"/>
-                        </xs:sequence>
                         <xs:attribute type="xs:short" name="id" use="required"/>
                         <xs:attribute type="xs:string" name="name" use="required"/>
+                        <xs:attribute type="xs:short" name="permissions" use="required"/>
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>
