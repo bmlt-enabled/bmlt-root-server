@@ -113,17 +113,9 @@ echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
     
     <xs:element name='editor'>
         <xs:complexType>
-            <xs:simpleContent>
-                <xs:restriction base="xs:anyType">
-                    <xs:simpleType>
-                        <xs:restriction base="xs:string">
-                            <xs:minLength value="1" />
-                        </xs:restriction>
-                    </xs:simpleType>
-                    <xs:attribute name='id' use='required' type='xs:short'/>
-                    <xs:attribute name='admin_type' use='required' type='xs:string'/>
-                </xs:restriction>
-            </xs:simpleContent>
+            <xs:attribute name='id' use='required' type='xs:short'/>
+            <xs:attribute name='admin_type' use='required' type='xs:string'/>
+            <xs:attribute name='admin_name' use='required' type='xs:string'/>
         </xs:complexType>
     </xs:element>
     

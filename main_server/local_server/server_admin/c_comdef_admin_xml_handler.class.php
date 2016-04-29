@@ -1246,7 +1246,7 @@ class c_comdef_admin_xml_handler
                                     foreach ( $service_body_editors as $editor )
                                         {
                                         $editor_id = intval ( $editor->GetID() );
-                                        $ret .= '<editor id="'.$editor_id.'" admin_type="'.( in_array ( $editor_id, $guest_editors ) ? 'direct' : (( $editor_id == $principal_user_id ) ? 'principal' : 'inherit')).'">'.c_comdef_htmlspecialchars ( $editor->GetLocalName() ).'</editor>';
+                                        $ret .= '<editor id="'.$editor_id.'" admin_type="'.( in_array ( $editor_id, $guest_editors ) ? 'direct' : (( $editor_id == $principal_user_id ) ? 'principal' : 'inherit')).'" admin_name="'.c_comdef_htmlspecialchars ( $editor->GetLocalName() ).'"/>';
                                         }
                                 $ret .= '</service_body_editors>';
                                 }
@@ -1258,7 +1258,7 @@ class c_comdef_admin_xml_handler
                                     foreach ( $meeting_list_editors as $editor )
                                         {
                                         $editor_id = intval ( $editor->GetID() );
-                                        $ret .= '<editor id="'.$editor_id.'" admin_type="'.( in_array ( $editor_id, $guest_editors ) ? 'direct' : (( $editor_id == $principal_user_id ) ? 'principal' : 'inherit' )).'">'.c_comdef_htmlspecialchars ( $editor->GetLocalName() ).'</editor>';
+                                        $ret .= '<editor id="'.$editor_id.'" admin_type="'.( in_array ( $editor_id, $guest_editors ) ? 'direct' : (( $editor_id == $principal_user_id ) ? 'principal' : 'inherit' )).'" admin_name="'.c_comdef_htmlspecialchars ( $editor->GetLocalName() ).'"/>';
                                         }
                                 $ret .= '</meeting_list_editors>';
                                 }
@@ -1270,7 +1270,7 @@ class c_comdef_admin_xml_handler
                                     foreach ( $observers as $editor )
                                         {
                                         $editor_id = intval ( $editor->GetID() );
-                                        $ret .= '<editor id="'.$editor_id.'" admin_type="'.( in_array ( $editor_id, $guest_editors ) ? 'direct' : (( $editor_id == $principal_user_id ) ? 'principal' : 'inherit' )).'">'.c_comdef_htmlspecialchars ( $editor->GetLocalName() ).'</editor>';
+                                        $ret .= '<editor id="'.$editor_id.'" admin_type="'.( in_array ( $editor_id, $guest_editors ) ? 'direct' : (( $editor_id == $principal_user_id ) ? 'principal' : 'inherit' )).'" admin_name="'.c_comdef_htmlspecialchars ( $editor->GetLocalName() ).'"/>';
                                         }
                                 $ret .= '</observers>';
                                 }

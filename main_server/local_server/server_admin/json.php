@@ -133,6 +133,20 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
                 }
             else    // If everything is OK, then we actually include the class, instantiate the object, and process the request.
                 {
+function XML2Array(SimpleXMLElement $parent)
+{
+    $array = array();
+
+    foreach ($parent as $name => $element) {
+        ($node = & $array[$name])
+            && (1 === count($node) ? $node = array($node) : 1)
+            && $node = & $node[];
+
+        $node = $element->count() ? XML2Array($element) : trim($element);
+    }
+
+    return $array;
+}
                 if ( isset ( $http_vars['admin_action'] ) && $http_vars['admin_action'] )   // Must have an admin_action.
                     {
                     require_once ( dirname ( __FILE__ ).'/c_comdef_admin_xml_handler.class.php' );
@@ -142,9 +156,9 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
                     if ( $handler instanceof c_comdef_admin_xml_handler )
                         {
                         $ret = $handler->process_commands();
-                        $xml = simplexml_load_string ( $ret, "SimpleXMLElement", LIBXML_NOCDATA );
-                        $json = json_encode ( $xml );
-                    
+                        $ret = simplexml_load_string ( $ret );
+                        $json = json_encode ( (Array)$ret, JSON_NUMERIC_CHECK );
+                   
                         if ( isset ( $json ) && $json )
                             {
                             header ( 'Content-Type:application/json; charset=UTF-8' );
