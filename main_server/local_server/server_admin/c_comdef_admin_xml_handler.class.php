@@ -46,6 +46,16 @@ class c_comdef_admin_xml_handler
     }
     
     /********************************************************************************************************//**
+    \brief This returns the URL to the main server. It needs extra stripping, because we're depper than usual.
+    
+    \returns the URL.
+    ************************************************************************************************************/
+    function getMainURL()
+    {
+        return dirname ( dirname ( GetURLToMainServerDirectory ( FALSE ) ) ).'/';
+    }
+    
+    /********************************************************************************************************//**
     \brief This is called to process the input and generate the output. It is the "heart" of the class.
     
     \returns XML to be returned.
@@ -166,7 +176,7 @@ class c_comdef_admin_xml_handler
             
             // We get the changes as CSV, then immediately turn them into XML.
             $ret = $this->TranslateCSVToXML ( $this->get_changes_as_csv ( $start_date, $end_date, $meeting_id, $user_id, $service_body_id ) );
-            $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<changes xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/GetChanges.php\">$ret</changes>";
+            $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<changes xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".$this->getMainURL()."client_interface/xsd/GetChanges.php\">$ret</changes>";
             }
         
         return $ret;
@@ -501,7 +511,7 @@ class c_comdef_admin_xml_handler
                 $ret .= '</field_template>';
                 }
             
-            $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<field_templates xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/FieldTemplates.php\">$ret</field_templates>";
+            $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<field_templates xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".$this->getMainURL()."client_interface/xsd/FieldTemplates.php\">$ret</field_templates>";
             }
         else
             {
@@ -539,7 +549,7 @@ class c_comdef_admin_xml_handler
                     
                     // Write out the death certificate.
                     $ret = '<meetingId>'.$id.'</meetingId><meetingName>'.$name.'</meetingName><meetingWeekday>'.$weekday.'</meetingWeekday><meetingStartTime>'.$start_time.'</meetingStartTime><meetingServiceBodyId>'.$service_body_id.'</meetingServiceBodyId>';
-                    $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<deletedMeeting xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/DeletedMeeting.php\">$ret</deletedMeeting>";
+                    $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<deletedMeeting xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".$this->getMainURL()."client_interface/xsd/DeletedMeeting.php\">$ret</deletedMeeting>";
                     }
                 else
                     {
@@ -833,7 +843,7 @@ class c_comdef_admin_xml_handler
                         
                         $ret .= $closing_tag;
                         
-                        $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<changeResponse xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/ChangeResponse.php\">$ret</changeResponse>";
+                        $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<changeResponse xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".$this->getMainURL()."client_interface/xsd/ChangeResponse.php\">$ret</changeResponse>";
                     }
                 else
                     {
@@ -939,13 +949,13 @@ class c_comdef_admin_xml_handler
             }
         
         
-        $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<meetings xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/GetSearchResults.php\">";
+        $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<meetings xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".$this->getMainURL()."client_interface/xsd/GetSearchResults.php\">";
         $result .= $this->TranslateCSVToXML ( $result2 );
         if ( (isset ( $http_vars['get_used_formats'] ) || isset ( $http_vars['get_formats_only'] )) && $formats_ar && is_array ( $formats_ar ) && count ( $formats_ar ) )
             {
             if ( isset ( $http_vars['get_formats_only'] ) )
                 {
-                $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<formats xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/GetFormats.php\">";
+                $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<formats xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".$this->getMainURL()."client_interface/xsd/GetFormats.php\">";
                 }
             else
                 {
@@ -1045,7 +1055,7 @@ class c_comdef_admin_xml_handler
                         
                 $ret .= '</row>';
                 }
-            $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<formats xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/GetFormats.php\">$ret</formats>";
+            $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<formats xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".$this->getMainURL()."client_interface/xsd/GetFormats.php\">$ret</formats>";
             }
         else
             {
@@ -1108,7 +1118,7 @@ class c_comdef_admin_xml_handler
                     }
                 }
         
-            $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<service_bodies xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/HierServiceBodies.php\">$ret</service_bodies>";
+            $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<service_bodies xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".$this->getMainURL()."client_interface/xsd/HierServiceBodies.php\">$ret</service_bodies>";
             }
         else
             {
@@ -1360,22 +1370,22 @@ class c_comdef_admin_xml_handler
                 if ( isset ( $my_meeting_observer_service_bodies['sb_'.$service_body->GetID()] ) && $my_meeting_observer_service_bodies['sb_'.$service_body->GetID()] )
                     {
                     $ret .= '<service_body id="'.$service_body->GetID().'" name="'.c_comdef_htmlspecialchars ( $service_body->GetLocalName() ).'">';
-                        $ret .= '<permission level="observer" />';
+                        $ret .= '<permission>observer</permission>';
                         
                         if ( isset ( $my_meeting_editor_service_bodies['sb_'.$service_body->GetID()] ) && $my_meeting_editor_service_bodies['sb_'.$service_body->GetID()] )
                             {
-                            $ret .= '<permission level="meeting_editor" />';
+                            $ret .= '<permission>meeting_editor</permission>';
                             }
                         
                         if ( isset ( $my_editable_service_bodies['sb_'.$service_body->GetID()] ) && $my_editable_service_bodies['sb_'.$service_body->GetID()] )
                             {
-                            $ret .= '<permission level="service_body_editor" />';
+                            $ret .= '<permission>service_body_editor</permission>';
                             }
                     $ret .= '</service_body>';
                     }
                 }
             // Create a proper XML wrapper for the response data.
-			$ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<permissions xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".GetURLToMainServerDirectory ( FALSE )."client_interface/xsd/AdminPermissions.php\">$ret</permissions>";
+			$ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<permissions xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".$this->getMainURL()."client_interface/xsd/AdminPermissions.php\">$ret</permissions>";
             // We now have XML that states the current user's permission levels in all Service bodies.
             }
         else
