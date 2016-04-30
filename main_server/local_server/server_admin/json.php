@@ -133,20 +133,6 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
                 }
             else    // If everything is OK, then we actually include the class, instantiate the object, and process the request.
                 {
-function XML2Array(SimpleXMLElement $parent)
-{
-    $array = array();
-
-    foreach ($parent as $name => $element) {
-        ($node = & $array[$name])
-            && (1 === count($node) ? $node = array($node) : 1)
-            && $node = & $node[];
-
-        $node = $element->count() ? XML2Array($element) : trim($element);
-    }
-
-    return $array;
-}
                 if ( isset ( $http_vars['admin_action'] ) && $http_vars['admin_action'] )   // Must have an admin_action.
                     {
                     require_once ( dirname ( __FILE__ ).'/c_comdef_admin_xml_handler.class.php' );
@@ -158,7 +144,23 @@ function XML2Array(SimpleXMLElement $parent)
                         $ret = $handler->process_commands();
                         $ret = simplexml_load_string ( $ret );
                         $json = json_encode ( (Array)$ret, JSON_NUMERIC_CHECK );
-                   
+                        
+                        $pattern = '/\{\"\@attributes\"\:\{(.*?)\}\}/';    // Replace attribute objects with direct objects, to remove the extra layer.
+                        $replacement = '{\1}';
+                        do
+                            {
+                            $old_json = $json;
+                            $json = preg_replace ( $pattern, $replacement, $json );
+                            } while ( $json && ($old_json != $json) );
+                        
+                        $pattern = '/\"row\"\:\{\"sequence_index\"\:(\d*?)\}\,/';    // Replace sequence index object, to remove the extra layer.
+                        $replacement = '"sequence_index":\1';
+                        do
+                            {
+                            $old_json = $json;
+                            $json = preg_replace ( $pattern, "", $json );
+                            } while ( $json && ($old_json != $json) );
+                            
                         if ( isset ( $json ) && $json )
                             {
                             header ( 'Content-Type:application/json; charset=UTF-8' );
