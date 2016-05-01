@@ -109,8 +109,6 @@
 	folks who think that you need to have MVC class hierarchies to have a "real"
 	MVC pattern. These folks seem to have a hard time grasping the concept of "pattern."
 	
-	<a href="http://www.enode.com/x/markup/tutorial/mvc.html">Note the heavy reliance on objects and classes in this description.</a>
-	
 	We're sure that PHP's OO capabilities will improve over time (it already has, by the time
 	of this writing), so maybe a future rewrite might see more OO being introduced.
 	
