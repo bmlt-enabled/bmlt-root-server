@@ -31,6 +31,7 @@ CHANGELIST
 ***Version 1.1.3* ** *- TBD*
 
 - Tweaked the format of this README to match the rest of the projects.
+- Added [Doxygen](http://doxygen.nl) documentation.
 
 ***Version 1.1.2* ** *- April 6, 2016*
 
