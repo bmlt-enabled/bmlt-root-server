@@ -238,8 +238,9 @@ class c_comdef_admin_xml_handler
                                 array_push ( $bmlt_array_gather, $in_value->GetID() );
                                 }
                             }
-                    
-                        array_walk_recursive ( c_comdef_server::GetServer()->GetNestedServiceBodyArray ( $in_sb_id ), bmlt_at_at );
+                        
+                        $array_to_walk = c_comdef_server::GetServer()->GetNestedServiceBodyArray ( $in_sb_id );
+                        array_walk_recursive ( $array_to_walk, 'bmlt_at_at' );
                     
                         if ( is_array ( $bmlt_array_gather ) && count ( $bmlt_array_gather ) )
                             {

@@ -153,14 +153,21 @@ if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
                             $json = preg_replace ( $pattern, $replacement, $json );
                             } while ( $json && ($old_json != $json) );
                         
+                        $pattern = '/\"\@attributes\"\:\{(\"sequence_index\"\:(\d+?))\}\,/';
+                        $replacement = '';
+                        do
+                            {
+                            $old_json = $json;
+                            $json = preg_replace ( $pattern, $replacement, $json );
+                            } while ( $json && ($old_json != $json) );
+                        
                         $pattern = '/\"row\"\:\{\"sequence_index\"\:(\d*?)\}\,/';    // Replace sequence index object, to remove the extra layer.
-                        $replacement = '"sequence_index":\1';
                         do
                             {
                             $old_json = $json;
                             $json = preg_replace ( $pattern, "", $json );
                             } while ( $json && ($old_json != $json) );
-                            
+                        
                         if ( isset ( $json ) && $json )
                             {
                             header ( 'Content-Type:application/json; charset=UTF-8' );

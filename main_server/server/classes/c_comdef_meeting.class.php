@@ -1764,7 +1764,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 							$meeting_row[$key]['longdata'] = false;
 							$meeting_row[$key]['prompt'] = $data_row['field_prompt'];
 							$meeting_row[$key]['lang'] = $data_row['lang_enum'];
-							$meeting_row[$key]['visibility'] = $data_row['visibility'];
+							$meeting_row[$key]['visibility'] = isset ( $data_row['visibility'] ) ? $data_row['visibility'] : 0;
 							}
 						}
 					}

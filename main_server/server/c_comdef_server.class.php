@@ -525,7 +525,7 @@ class c_comdef_server
         
         \returns A reference to an array of c_comdef_service_body objects.
     */
-    function &GetServiceBodyArray()
+    function GetServiceBodyArray()
     {
         return $this->_service_obj_array;
     }
@@ -663,7 +663,7 @@ class c_comdef_server
         \returns a reference to the array containing all the Service entity IDs.
         NOTE: These are IDs that appear in meetings, and may not reflect those in the Server.
     */
-    function &GetServiceIDs()
+    function GetServiceIDs()
     {
         return $this->_service_ids;
     }
@@ -674,7 +674,7 @@ class c_comdef_server
         \returns a reference to the array containing all the Service entity IDs. Null if none.
         NOTE: These are ALL IDs that appear (even ones not used for meetings).
     */
-    function &GetAllServiceIDs()
+    function GetAllServiceIDs()
     {
         $ret = null;
 
@@ -1162,7 +1162,7 @@ class c_comdef_server
         
         \returns a reference to the array of strings, containing the server languages in human-readable, local form.
     */
-    static function &GetServerLangs()
+    static function GetServerLangs()
     {
         return self::GetServer()->_server_lang_names;
     }
@@ -1172,7 +1172,7 @@ class c_comdef_server
         
         \returns a reference to the internal c_comdef_users object.
     */
-    static function &GetServerUsersObj()
+    static function GetServerUsersObj()
     {
         return self::GetServer()->_users_obj;
     }
@@ -1182,7 +1182,7 @@ class c_comdef_server
         
         \returns a reference to the internal c_comdef_user object for the user. Null if not found.
     */
-    static function &GetUserByIDObj(
+    static function GetUserByIDObj(
                                     $in_user_id_bigint  ///< An integer, containing the user ID.
                                     )
     {
@@ -1207,7 +1207,7 @@ class c_comdef_server
     
         \returns a reference to a c_comdef_user object. Null if none.
     */
-    static function &GetUserByLogin(    $in_login      ///< A string. The login ID.
+    static function GetUserByLogin(    $in_login      ///< A string. The login ID.
                                     )
     {
         $ret = null;
@@ -1228,7 +1228,7 @@ class c_comdef_server
     
         \returns a reference to a c_comdef_user object. Null if none.
     */
-    static function &GetUserByLoginCredentials(
+    static function GetUserByLoginCredentials(
                                                 $in_login,      ///< A string. The login ID.
                                                 $in_password    ///< A string. the ENCRYPTED password for the user.
                                                 )
@@ -1251,7 +1251,7 @@ class c_comdef_server
         \returns a reference to a c_comdef_user object, containing the user.
         Null if it failed.
     */
-    static function &GetCurrentUserObj($in_is_ajax = false  ///< If it's an AJAX handler, this is true.
+    static function GetCurrentUserObj($in_is_ajax = false  ///< If it's an AJAX handler, this is true.
                                         )
     {
     include ( dirname ( __FILE__ ).'/config/get-config.php' );
@@ -1354,7 +1354,7 @@ class c_comdef_server
         
         \returns a reference to the internal c_comdef_service_body object for the service body. Null if not found.
     */
-    static function &GetServiceBodyByIDObj(
+    static function GetServiceBodyByIDObj(
                                             $in_service_body_id_bigint  ///< An integer, containing the service body ID.
                                             )
     {
