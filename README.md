@@ -28,7 +28,7 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
 CHANGELIST
 ----------
-***Version 1.1.3* ** *- TBD*
+***Version 1.1.3* ** *- May 2, 2016*
 
 - Tweaked the format of this README to match the rest of the projects.
 - Added [Doxygen](http://doxygen.nl) documentation.
