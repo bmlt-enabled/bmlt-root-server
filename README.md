@@ -51,6 +51,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.7.17* ** *- May 2, 2016*
+
+- Patch fix. Left an unnecessary require_once in there that really hosed local searches.
+
 ***Version 2.7.16* ** *- May 2, 2016*
 
 - Changed the format of this README, as BitBucket has changed their markdown syntax a bit.
