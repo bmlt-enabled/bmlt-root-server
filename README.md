@@ -51,7 +51,7 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.7.16* ** *- TBD*
+***Version 2.7.16* ** *- May 2, 2016*
 
 - Changed the format of this README, as BitBucket has changed their markdown syntax a bit.
 - Changed the style wrappers for the [bmlt_simple](http://bmlt.magshare.net/satellites/simple/) shortcode a bit, so that the separators can be styled a bit more easily.
