@@ -58,6 +58,7 @@ CHANGELIST
 - Changed the Semantic Admin stuff to be simpler. No one is using it (yet), so I think it should be OK.
 - Fixed an issue with the semantic admin that returned the incorrect location for the schema.
 - Fixed a warning that affected the semantic administration.
+- Fixed two problems with the installer wizard. One was a JS problem exacerbated by Google changing their API, and the other was caused by the new Italian default formats.
 
 ***Version 2.7.15* ** *- April 27, 2016*
 

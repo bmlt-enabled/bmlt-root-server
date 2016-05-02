@@ -139,7 +139,7 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (1, 'NV', NULL, NULL, 'it', 'Nuovi venuti', 'Riunione concentrata principalmente sulle necessità dei nuovi membri di NA.', 'FC3'),
 (2, 'BL', NULL, NULL, 'it', 'Bilingue', 'Questa riunione può essere frequentata da membri che parlano italiano e/o inglese.', 'FC3'),
 (3, 'TB', NULL, NULL, 'it', 'Testo base', 'Riunione concentrata sulla discussione del testo base di NA.', 'FC1'),
-(4, 'Ch.', NULL, NULL, 'it', 'Chiusa', 'Riunione chiusa ai non dipendenti. Dovrebbe frequentarla soltanto chi crede di avere un problema con le sostanze d''abuso.', 'FC3'),
+(4, 'Ch.', NULL, NULL, 'it', 'Chiusa', 'Riunione chiusa ai non dipendenti. Dovrebbe frequentarla soltanto chi crede di avere un problema con le sostanze d\'abuso.', 'FC3'),
 (5, 'SF', NULL, NULL, 'it', 'Sospesa nei giorni festivi', 'Questa riunione si tiene in locali che di solito sono chiusi nei giorni festivi e di vacanza.', 'FC3'),
 (6, 'LC', NULL, NULL, 'it', 'Lume di candela', 'Questa riunione si tiene a lume di candela per favorire la meditazione.', 'FC2'),
 (7, 'BS', NULL, NULL, 'it', 'Bambini sotto supervisione', 'Sono ammessi bambini senza problemi di comportamento e sotto supervisione.', 'FC3'),
@@ -158,11 +158,11 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (33, 'SR', NULL, NULL, 'it', 'Sedia a rotelle', 'Riunione accessibile per chi ha la sedia a rotelle.', 'FC2'),
 (35, 'M', NULL, NULL, 'it', 'Maratona', 'Durata non prestabilita. La riunione prosegue finché tutti i presenti hanno da condividere.', 'FC1'),
 (37, 'NF', NULL, NULL, 'it', 'Non fumatori', 'In queste riunioni non è consentito fumare.', 'FC1'),
-(40, 'TS', NULL, NULL, 'it', 'Tema a sorpresa', 'L''argomento su cui condividere è scritto su un biglietto o altro supporto (es. un bastoncino di legno) ed estratto a caso da ciascun membro.', 'FC1'),
+(40, 'TS', NULL, NULL, 'it', 'Tema a sorpresa', 'L\'argomento su cui condividere è scritto su un biglietto o altro supporto (es. un bastoncino di legno) ed estratto a caso da ciascun membro.', 'FC1'),
 (42, 'M', NULL, NULL, 'it', 'Meditazione', 'In questa riunione sono poste restrizioni alle modalità di partecipazione.', 'FC3'),
 (43, 'D/R', NULL, NULL, 'it', 'Domande e risposteq', 'I partecipanti possono fare domande e attenderne la risposta dagli altri membri del gruppo.', 'FC1'),
 (44, 'Ba', NULL, NULL, 'it', 'Bambini', 'I bambini sono benvenuti in queste riunioni.', 'FC3'),
 (45, 'C', NULL, NULL, 'it', 'Concetti di servizio', 'Riunioni basate sulla discussione dei Dodici concetti per il servizio in NA.', 'FC1'),
 (50, 'WEB', NULL, NULL, 'it', 'Riunione online', 'Riunione che si svolge via Internet (es. Skype, Hangouts o altri sistemi tipo chat o IM in generale).', 'FC2'),
-(51, 'VP', NULL, NULL, 'it', 'Vivere puliti', 'Riunioni di discussione sul libro "Vivere puliti - Il viaggio continua".', '');
+(51, 'VP', NULL, NULL, 'it', 'Vivere puliti', 'Riunioni di discussione sul libro "Vivere puliti - Il viaggio continua".', 'FC1');
 

@@ -26,7 +26,6 @@ if ( isset ( $http_vars['ajax_req'] ) && $http_vars['ajax_req'] )
 else
     {
     require_once ( dirname ( __FILE__ ).'/../../server/shared/Array2Json.php');
-    require_once ( dirname ( __FILE__ ).'/../server_admin/PhpJsonXmlArrayStringInterchanger.inc.php' );
 
     // We do everything we can to ensure that the requested language file is loaded.
     if ( file_exists ( dirname ( __FILE__ ).'/../server_admin/lang/'.$lang.'/install_wizard_strings.php' ) )

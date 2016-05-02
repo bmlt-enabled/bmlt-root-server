@@ -218,7 +218,7 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
 
         var myOptions = {
                         'center': new google.maps.LatLng ( this.m_installer_state.search_spec_map_center.latitude, this.m_installer_state.search_spec_map_center.longitude ),
-                        'zoom': this.m_installer_state.search_spec_map_center.zoom,
+                        'zoom': parseInt ( this.m_installer_state.search_spec_map_center.zoom ),
                         'mapTypeId': google.maps.MapTypeId.ROADMAP,
                         'mapTypeControlOptions': { 'style': google.maps.MapTypeControlStyle.DROPDOWN_MENU },
                         'zoomControl': true,
