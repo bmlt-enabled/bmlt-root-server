@@ -190,48 +190,46 @@ if ( $server instanceof c_comdef_server )
 								if ( $location_borough )
 									{
 									// We do it this verbose way, so we will scrag the comma if we want to hide the town.
-									$town .= "<span class=\"c_comdef_search_results_borough\">$location_borough</span><span class=\"c_comdef_search_results_municipality\">, ".c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_municipality'] ) ) )."</span>";
+									$town = "<span class=\"c_comdef_search_results_borough\">$location_borough</span><span class=\"c_comdef_search_results_municipality\">, ".c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_municipality'] ) ) )."</span>";
 									}
 								else
 									{
-									$town .= '<span class="c_comdef_search_results_municipality">'.c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_municipality'] ) ) )."</span>";
+									$town = '<span class="c_comdef_search_results_municipality">'.c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_municipality'] ) ) )."</span>";
 									}
 								}
 							elseif ( $location_borough )
 								{
-								$town .= "<span class=\"c_comdef_search_results_municipality_borough\">$location_borough</span>";
+								$town = "<span class=\"c_comdef_search_results_municipality_borough\">$location_borough</span>";
 								}
 							
 							if ( $location_province )
 								{
 								if ( $town )
 								    {
-								    $town_temp .= '<span class="bmlt_separator bmlt_separator_comma c_comdef_search_results_province_separator">, </span>';
+								    $town .= '<span class="bmlt_separator bmlt_separator_comma c_comdef_search_results_province_separator">, </span>';
 								    }
 								
-								$town_temp = '<span class="c_comdef_search_results_province">'.$location_province.'</span>';
+								$town .= '<span class="c_comdef_search_results_province">'.$location_province.'</span>';
 								}
 							
 							if ( $location_postal_code_1 )
 								{
 								if ( $town )
 								    {
-								    $town_temp .= '<span class="bmlt_separator bmlt_separator_comma c_comdef_search_results_zip_separator">, </span>';
+								    $town .= '<span class="bmlt_separator bmlt_separator_comma c_comdef_search_results_zip_separator">, </span>';
 								    }
 								
-								$town_temp = '<span class="c_comdef_search_results_zip">'.$location_postal_code_1.'</span>';
+								$town .= '<span class="c_comdef_search_results_zip">'.$location_postal_code_1.'</span>';
 								}
 							
 							if ( $location_nation )
 								{
 								if ( $town )
 								    {
-								    $town_temp .= '<span class="bmlt_separator bmlt_separator_comma c_comdef_search_results_nation_separator">, </span>';
+								    $town .= '<span class="bmlt_separator bmlt_separator_comma c_comdef_search_results_nation_separator">, </span>';
 								    }
 								
-								$town_temp = '<span class="c_comdef_search_results_nation">';
-								
-								$town .= "$town_temp$location_nation</span>";
+								$town .= '<span class="c_comdef_search_results_nation">'.$location_nation.'</span>';
 								}
 							
 							if ( $location_neighborhood )

@@ -51,6 +51,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.7.18* ** *- May 7, 2016*
+
+- Fixes a problem in the simple table output.
+
 ***Version 2.7.17* ** *- May 2, 2016*
 
 - Patch fix. Left an unnecessary require_once in there that really hosed local searches.
