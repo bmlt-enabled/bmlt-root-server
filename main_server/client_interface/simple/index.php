@@ -183,18 +183,19 @@ if ( $server instanceof c_comdef_server )
 							$location_province = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_province'] ) ) );
 							$location_nation = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_nation'] ) ) );
 							$location_postal_code_1 = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_postal_code_1'] ) ) );
+							$location_municipality = c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_municipality'] ) ) );
 							$town = '';
 							
-							if ( trim ( stripslashes ( $meeting['location_municipality'] ) ) )
+							if ( $location_municipality )
 								{
 								if ( $location_borough )
 									{
 									// We do it this verbose way, so we will scrag the comma if we want to hide the town.
-									$town = "<span class=\"c_comdef_search_results_borough\">$location_borough</span><span class=\"c_comdef_search_results_municipality\">, ".c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_municipality'] ) ) )."</span>";
+									$town = "<span class=\"c_comdef_search_results_borough\">$location_borough</span><span class=\"bmlt_separator bmlt_separator_comma c_comdef_search_results_municipality_separator\">, </span><span class=\"c_comdef_search_results_municipality\">$location_municipality</span>";
 									}
 								else
 									{
-									$town = '<span class="c_comdef_search_results_municipality">'.c_comdef_htmlspecialchars ( trim ( stripslashes ( $meeting['location_municipality'] ) ) )."</span>";
+									$town = "<span class=\"c_comdef_search_results_municipality\">$location_municipality</span>";
 									}
 								}
 							elseif ( $location_borough )
@@ -209,7 +210,7 @@ if ( $server instanceof c_comdef_server )
 								    $town .= '<span class="bmlt_separator bmlt_separator_comma c_comdef_search_results_province_separator">, </span>';
 								    }
 								
-								$town .= '<span class="c_comdef_search_results_province">'.$location_province.'</span>';
+								$town .= "<span class=\"c_comdef_search_results_province\">$location_province</span>";
 								}
 							
 							if ( $location_postal_code_1 )
@@ -219,7 +220,7 @@ if ( $server instanceof c_comdef_server )
 								    $town .= '<span class="bmlt_separator bmlt_separator_comma c_comdef_search_results_zip_separator">, </span>';
 								    }
 								
-								$town .= '<span class="c_comdef_search_results_zip">'.$location_postal_code_1.'</span>';
+								$town .= "<span class=\"c_comdef_search_results_zip\">$location_postal_code_1</span>";
 								}
 							
 							if ( $location_nation )
@@ -229,29 +230,29 @@ if ( $server instanceof c_comdef_server )
 								    $town .= '<span class="bmlt_separator bmlt_separator_comma c_comdef_search_results_nation_separator">, </span>';
 								    }
 								
-								$town .= '<span class="c_comdef_search_results_nation">'.$location_nation.'</span>';
+								$town .= "<span class=\"c_comdef_search_results_nation\">$location_nation</span>";
 								}
 							
 							if ( $location_neighborhood )
 								{
-								$town_temp = '<span class="c_comdef_search_results_neighborhood">';
+								$town_temp = '';
 								
 								if ( $town )
 								    {
-								    $town_temp .= '<span class="bmlt_separator bmlt_separator_open_paren"> (</span>';
+								    $town_temp = '<span class="bmlt_separator bmlt_separator_paren bmlt_separator_open_paren bmlt_separator_neighborhood_open_paren"> (</span>';
 								    }
 								    
-								$town_temp .= $location_neighborhood;
+								$town_temp .= "<span class=\"c_comdef_search_results_neighborhood\">$location_neighborhood</span>";
 								
 								if ( $town )
 								    {
-								    $town_temp .= '<span class="bmlt_separator bmlt_separator_close_paren">)</span>';
+								    $town_temp .= '<span class="bmlt_separator bmlt_separator_paren bmlt_separator_close_paren bmlt_separator_neighborhood_close_paren">)</span>';
 								    }
 								
-								$town .= "$town_temp</span>";
+								$town .= $town_temp;
 								}
 	
-							$weekday = $localized_strings['weekdays'][intval ( $meeting['weekday_tinyint'] )];
+							$weekday = c_comdef_htmlspecialchars ( $localized_strings['weekdays'][intval ( $meeting['weekday_tinyint'] )] );
 							$time = BuildMeetingTime ( $meeting['start_time'] );
 							
 							$address = '';
@@ -261,24 +262,26 @@ if ( $server instanceof c_comdef_server )
 							
 							if ( $location_text )
 								{
-								$address .= '<span class="bmlt_simple_list_location_text">'.$location_text.'</span>';
+								$address = "<span class=\"bmlt_simple_list_location_text\">$location_text</span>";
 								}
 							
 							if ( $street )
 								{
-								if ( $location_text )
+								if ( $address )
 									{
 								    $address .= '<span class="bmlt_separator bmlt_separator_comma bmlt_simple_list_location_street_separator">, </span>';
 									}
-								$address .= '<span class="bmlt_simple_list_location_street">'.$street.'</span>';
+								
+								$address .= "<span class=\"bmlt_simple_list_location_street\">$street</span>";
 								}
 							
 							if ( $info )
 								{
-								if ( $location_text || $street )
+								if ( $address )
 									{
 								    $address .= '<span class="bmlt_separator bmlt_separator_space bmlt_simple_list_location_info_separator"> </span>';
 									}
+								
 								$address .= "<span class=\"bmlt_simple_list_location_info\">($info)</span>";
 								}
 							
@@ -384,7 +387,7 @@ if ( $server instanceof c_comdef_server )
 		
 		$time = null;
 		
-		if ( ($in_time == "00:00:00") || ($in_time == "23:59:00") )
+		if ( ($in_time == "00:00:00") || ($in_time >= "23:55:00") )
 			{
 			$time = c_comdef_htmlspecialchars ( $localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_midnight_label'] );
 			}

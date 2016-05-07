@@ -51,6 +51,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.7.19* ** *- TBD*
+
+- Did some work to clean up the code that generates the simple HTML response.
+
 ***Version 2.7.18* ** *- May 7, 2016*
 
 - Fixes a problem in the simple table output.
