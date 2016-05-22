@@ -51,9 +51,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.7.19* ** *- TBD*
+***Version 2.7.19* ** *- May 22, 2016*
 
 - Did some work to clean up the code that generates the simple HTML response.
+- Added the latest Satellite Base Class, which allows the dismissal of the Details window with the escape key and has better SSL support.
 
 ***Version 2.7.18* ** *- May 7, 2016*
 
