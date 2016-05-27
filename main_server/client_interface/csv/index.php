@@ -37,10 +37,10 @@ try
 	
 	if ( $server instanceof c_comdef_server )
 		{
-		if ( !isset ( $_GET['dump_ind_formats'] ) )
-		    {
-		    $_GET['dump_ind_formats'] = true;
-		    }
+// 		if ( !isset ( $_GET['dump_ind_formats'] ) )
+// 		    {
+// 		    $_GET['dump_ind_formats'] = true;
+// 		    }
 		
 		$ret = parse_redirect ( $server );
 		if ( isset ( $_GET['compress_output'] ) || isset ( $_POST['compress_output'] ) )

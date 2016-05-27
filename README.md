@@ -54,6 +54,7 @@ CHANGELIST
 ***Version 2.7.21* ** *- TBD*
 
 - There were a couple more CSV issues that needed addressing.
+- Just getting rid of the independent format dump for CSV. It was pretty useless (especially now with the format extraction), and caused problems with printed lists.
 
 ***Version 2.7.20* ** *- May 27, 2016*
 

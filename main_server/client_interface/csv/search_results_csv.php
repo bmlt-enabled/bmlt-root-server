@@ -403,29 +403,29 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 			$formats_keys = array();
 			$formats_keys_header = array();
 			
-			if ( isset ( $in_http_vars['dump_ind_formats'] ) && $in_http_vars['dump_ind_formats'] )
-				{
-				$in_http_vars['dump_ind_formats'] = false;
-				if ( $formats instanceof c_comdef_formats )
-					{
-					$format_array = $formats->GetFormatsByLanguage($lang_enum);
-					
-					if ( is_array ( $format_array ) && count ( $format_array ) )
-						{
-						foreach ( $format_array as &$format )
-							{
-							if ( $format instanceof c_comdef_format )
-								{
-								$code = $format->GetKey();
-								$formats_keys[$code] = 0;
-								$formats_keys_header[] = "format_$code";
-								$keys[] = "format_$code";
-								}
-							}
-				        $in_http_vars['dump_ind_formats'] = true;
-						}
-					}
-				}
+// 			if ( isset ( $in_http_vars['dump_ind_formats'] ) && $in_http_vars['dump_ind_formats'] )
+// 				{
+// 				$in_http_vars['dump_ind_formats'] = false;
+// 				if ( $formats instanceof c_comdef_formats )
+// 					{
+// 					$format_array = $formats->GetFormatsByLanguage($lang_enum);
+// 					
+// 					if ( is_array ( $format_array ) && count ( $format_array ) )
+// 						{
+// 						foreach ( $format_array as &$format )
+// 							{
+// 							if ( $format instanceof c_comdef_format )
+// 								{
+// 								$code = $format->GetKey();
+// 								$formats_keys[$code] = 0;
+// 								$formats_keys_header[] = "format_$code";
+// 								$keys[] = "format_$code";
+// 								}
+// 							}
+// 				        $in_http_vars['dump_ind_formats'] = true;
+// 						}
+// 					}
+// 				}
 		    
 		    if ( is_array ( $formats_keys_header ) && count ( $formats_keys_header ) )
 		        {
@@ -590,10 +590,10 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
                                 }
                 
                             $ret .= '"'.join ( '","', $line ).'"';
-                            if ( isset ( $in_http_vars['dump_ind_formats'] ) && $in_http_vars['dump_ind_formats'] && is_array ( $formats_ar ) && count ( $formats_ar ) )
-                                {
-                                $ret .= ',"'.join ( '","', $formats_ar ).'"';
-                                }
+//                             if ( isset ( $in_http_vars['dump_ind_formats'] ) && $in_http_vars['dump_ind_formats'] && is_array ( $formats_ar ) && count ( $formats_ar ) )
+//                                 {
+//                                 $ret .= ',"'.join ( '","', $formats_ar ).'"';
+//                                 }
                     
                             $ret .= "\n";
                             }
