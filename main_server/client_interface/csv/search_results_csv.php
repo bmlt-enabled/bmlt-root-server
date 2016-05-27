@@ -405,6 +405,7 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 			
 			if ( isset ( $in_http_vars['dump_ind_formats'] ) && $in_http_vars['dump_ind_formats'] )
 				{
+				$in_http_vars['dump_ind_formats'] = false;
 				if ( $formats instanceof c_comdef_formats )
 					{
 					$format_array = $formats->GetFormatsByLanguage($lang_enum);
@@ -418,8 +419,10 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 								$code = $format->GetKey();
 								$formats_keys[$code] = 0;
 								$formats_keys_header[] = "format_$code";
+								$keys[] = "format_$code";
 								}
 							}
+				        $in_http_vars['dump_ind_formats'] = true;
 						}
 					}
 				}
@@ -586,14 +589,13 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
                                 array_push ( $return_array, $line );
                                 }
                 
-                            $ret .= '"'.join ( '","', $line ).'","';
-                    
-                            if ( isset ( $in_http_vars['dump_ind_formats'] ) && $in_http_vars['dump_ind_formats'] )
+                            $ret .= '"'.join ( '","', $line ).'"';
+                            if ( isset ( $in_http_vars['dump_ind_formats'] ) && $in_http_vars['dump_ind_formats'] && is_array ( $formats_ar ) && count ( $formats_ar ) )
                                 {
-                                $ret .= join ( '","', $formats_ar );
+                                $ret .= ',"'.join ( '","', $formats_ar ).'"';
                                 }
                     
-                            $ret .= "\"\n";
+                            $ret .= "\n";
                             }
                         }
                     }

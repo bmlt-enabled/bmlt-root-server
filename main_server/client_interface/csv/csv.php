@@ -888,7 +888,6 @@ function GetSearchResults (
 	$ignore_me = null;
 	$meeting_objects = array();
 	$result = DisplaySearchResultsCSV ( $in_http_vars, $ignore_me, $geocode_results, $meeting_objects );
-	
     $locationData = array ( );
         
     if ( is_array ( $meeting_objects ) && count ( $meeting_objects ) )

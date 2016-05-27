@@ -2653,20 +2653,33 @@ class c_comdef_server
             {
             $lang_enum = $server->GetLocalLang();
             
-            if ( isset ( $_GET['lang_enum'] ) && $_GET['lang_enum'] && file_exists ( dirname ( dirname ( __FILE__ ) ).'/local_server/server_admin/lang/'.$_GET['lang_enum'] ) )
+            if ( isset ( $_GET['lang_enum'] ) && $_GET['lang_enum'] )
                 {
                 $lang_enum = $_GET['lang_enum'];
                 }
         
-            if ( isset ( $_POST['lang_enum'] ) && $_POST['lang_enum'] && file_exists ( dirname ( dirname ( __FILE__ ) ).'/local_server/server_admin/lang/'.$_POST['lang_enum'] ) )
+            if ( isset ( $_POST['lang_enum'] ) && $_POST['lang_enum'] )
                 {
                 $lang_enum = $_POST['lang_enum'];
                 }
             
-            if ( $in_lang_enum && file_exists ( dirname ( dirname ( __FILE__ ) ).'/local_server/server_admin/lang/'.$in_lang_enum ) )
+            if ( is_array ( $lang_enum ) && count ( $lang_enum ) )
+                {
+                $langs = array();
+                foreach ( $lang_enum as $lang )
+                    {
+                    if ( file_exists ( dirname ( dirname ( __FILE__ ) ).'/local_server/server_admin/lang/'.$lang ) )
+                        {
+                        array_push ( $langs, $lang );
+                        }
+                    }
+                $lang_enum = implode ( ",", $langs );
+                }
+            elseif ( $in_lang_enum && file_exists ( dirname ( dirname ( __FILE__ ) ).'/local_server/server_admin/lang/'.$in_lang_enum ) )
                 {
                 $lang_enum = $in_lang_enum;
                 }
+            
             include ( dirname ( __FILE__ )."/config/comdef-config.inc.php" );
             include ( dirname ( dirname ( __FILE__ ) ).'/local_server/server_admin/lang/'.$lang_enum.'/server_admin_strings.inc.php' );
 
