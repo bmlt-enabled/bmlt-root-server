@@ -51,6 +51,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.7.21* ** *- TBD*
+
+- There were a couple more CSV issues that needed addressing.
+
 ***Version 2.7.20* ** *- May 27, 2016*
 
 - Fixed a bug that caused some CSV dumps to fail.
