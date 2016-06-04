@@ -1336,13 +1336,13 @@ class c_comdef_admin_xml_handler
                     $my_editable_service_bodies['sb_'.$service_body->GetID()] = $service_body;
                     }
                 // Again, we keep checking credentials, over and over again.
-                elseif ( (($user_obj->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) || ($user_obj->GetUserLevel() == _USER_LEVEL_OBSERVER)) && $service_body->UserCanEditMeetings() ) // We are a "guest" editor, or an observer (depends on our user level).
+                elseif ( (($user_obj->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) || ($user_obj->GetUserLevel() == _USER_LEVEL_OBSERVER)) && $service_body->UserCanObserve() ) // We are a "guest" editor, or an observer (depends on our user level).
                     {
                     if ( $user_obj->GetUserLevel() == _USER_LEVEL_OBSERVER )
                         {
                         $my_meeting_observer_service_bodies['sb_'.$service_body->GetID()] = $service_body;
                         }
-                    else
+                    elseif ( $service_body->UserCanEditMeetings() )
                         {
                         $my_meeting_editor_service_bodies['sb_'.$service_body->GetID()] = $service_body;
                         }
