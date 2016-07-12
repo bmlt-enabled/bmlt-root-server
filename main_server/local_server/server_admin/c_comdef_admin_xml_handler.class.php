@@ -339,6 +339,15 @@ class c_comdef_admin_xml_handler
                                             // We need to prevent double-quotes, as they are the string delimiters, so we replace them with single-quotes.
                                             $details = htmlspecialchars_decode ( str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", implode ( " ", $desc['details'] ))) ), ENT_COMPAT );
                                             }
+                                        elseif ( $desc && isset ( $desc['details'] ) )
+                                            {
+                                            // We need to prevent double-quotes, as they are the string delimiters, so we replace them with single-quotes.
+                                            $details = htmlspecialchars_decode ( str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $desc['details'] )) ), ENT_COMPAT );
+                                            }
+                                        else
+                                            {
+                                            $details = htmlspecialchars_decode ( str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $desc['overall'] )) ), ENT_COMPAT );
+                                            }
                                     
                                         // We create an array, which we'll implode after we're done. Easy way to create a CSV row.
                                         $change_line = array();
@@ -590,24 +599,30 @@ class c_comdef_admin_xml_handler
         if ( $this->basic_user_validation() )
             {
             $closing_tag = '</changeMeeting>'; // We will usually be changing existing meetings.
+            $my_editable_service_bodies = array();
+        
+            $service_bodies = $this->server->GetServiceBodyArray();
+            
+            if ( $user_obj->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN )  // Must be a Service Body Admin.
+                {
+                // We cycle through all the Service bodies, and look for ones in which we have permissions.
+                // We use the Service body IDs to key them in associative arrays.
+                foreach ( $service_bodies as $service_body )
+                    {
+                    if ( $service_body->UserCanEditMeetings() ) // We are a full Service body editor, with rights to edit the Service body itself (as well as all its meetings).
+                        {
+                        $my_editable_service_bodies['sb_'.$service_body->GetID()] = $service_body;
+                        }
+                    }
+                }
+            
             // Get the meeting object, itself.
             if ( !intval ( $this->http_vars['meeting_id'] ) )  // Will we be creating a new meeting?
                 {
                 $service_bodies = $this->server->GetServiceBodyArray();
-                $my_editable_service_bodies = array();
                 
                 if ( $user_obj->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN )  // Must be a Service Body Admin.
                     {
-                    // We cycle through all the Service bodies, and look for ones in which we have permissions.
-                    // We use the Service body IDs to key them in associative arrays.
-                    foreach ( $service_bodies as $service_body )
-                        {
-                        if ( $service_body->UserCanEditMeetings() ) // We are a full Service body editor, with rights to edit the Service body itself (as well as all its meetings).
-                            {
-                            $my_editable_service_bodies['sb_'.$service_body->GetID()] = $service_body;
-                            }
-                        }
-                
                     if ( isset ( $my_editable_service_bodies ) && is_array ( $my_editable_service_bodies ) && count ( $my_editable_service_bodies ) )
                         {
                         $service_body_id = 0;
@@ -704,15 +719,37 @@ class c_comdef_admin_xml_handler
                     foreach ( $meeting_fields as $field )
                         {
                         list ( $meeting_field, $value ) = explode ( ',', $field, 2 );
-                        if ( isset ( $value ) && in_array ( $meeting_field, $keys ) )
+                        if ( isset ( $meeting_field ) && in_array ( $meeting_field, $keys ) )
                             {
                             switch ( $meeting_field )
                                 {
                                 case 'id_bigint':   // We don't currently let these get changed.
                                 case 'lang_enum':
-                                case 'service_body_bigint':
                                     $value = null;
                                     $old_value = null;
+                                break;
+                                
+                                case 'service_body_bigint':
+                                    if ( isset ( $my_editable_service_bodies ) && is_array ( $my_editable_service_bodies ) && (count ( $my_editable_service_bodies ) > 1) )
+                                        {
+                                        $before_id = intval ( $meeting_obj->GetServiceBodyID() );
+                                        $after_id = intval ( $value );
+                                        
+                                        // Have to be allowed to edit both.
+                                        if ( $my_editable_service_bodies['sb_'.$before_id] && $my_editable_service_bodies['sb_'.$after_id] )
+                                            {
+                                            $old_value = $meeting_obj->GetServiceBodyID();
+                                            $meeting_obj->SetServiceBodyID ( intval ( $value ) );
+                                            }
+                                        else
+                                            {
+                                            $ret = '<h1>NOT AUTHORIZED</h1>';
+                                            }
+                                        }
+                                    else
+                                        {
+                                        $ret = '<h1>NOT AUTHORIZED</h1>';
+                                        }
                                 break;
                     
                                 case 'email_contact':
@@ -839,12 +876,16 @@ class c_comdef_admin_xml_handler
                                 }
                             }
                         }
-                            
-                        $meeting_obj->UpdateToDB(); // Save the new data. After this, the meeting has been changed.
                         
-                        $ret .= $closing_tag;
+                        // This can short-circuit the operation.
+                        if ( $ret != '<h1>NOT AUTHORIZED</h1>' )
+                            {
+                            $meeting_obj->UpdateToDB(); // Save the new data. After this, the meeting has been changed.
                         
-                        $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<changeResponse xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".$this->getMainURL()."client_interface/xsd/ChangeResponse.php\">$ret</changeResponse>";
+                            $ret .= $closing_tag;
+                        
+                            $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<changeResponse xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".$this->getMainURL()."client_interface/xsd/ChangeResponse.php\">$ret</changeResponse>";
+                            }
                     }
                 else
                     {

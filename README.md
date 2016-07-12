@@ -56,6 +56,7 @@ CHANGELIST
 - There were a couple more CSV issues that needed addressing.
 - Just getting rid of the independent format dump for CSV. It was pretty useless (especially now with the format extraction), and caused problems with printed lists.
 - Fixed a bug that returned improper permissions for non-Service Body Admin logins for the semantic admin.
+- Fixed an issue with the semantic admin, where fields that were empty (and supposed to be) were being ignored.
 
 ***Version 2.7.20* ** *- May 27, 2016*
 
