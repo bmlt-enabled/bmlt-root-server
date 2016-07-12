@@ -57,6 +57,7 @@ CHANGELIST
 - Just getting rid of the independent format dump for CSV. It was pretty useless (especially now with the format extraction), and caused problems with printed lists.
 - Fixed a bug that returned improper permissions for non-Service Body Admin logins for the semantic admin.
 - Fixed an issue with the semantic admin, where fields that were empty (and supposed to be) were being ignored.
+- Beefed up the semantic admin to allow the Service body of a meeting to be switched (a security check is written to ensure the user can admin both bodies).
 
 ***Version 2.7.20* ** *- May 27, 2016*
 
