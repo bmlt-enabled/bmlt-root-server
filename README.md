@@ -51,13 +51,15 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.7.21* ** *- TBD*
+***Version 2.8.0* ** *- TBD*
 
 - There were a couple more CSV issues that needed addressing.
 - Just getting rid of the independent format dump for CSV. It was pretty useless (especially now with the format extraction), and caused problems with printed lists.
 - Fixed a bug that returned improper permissions for non-Service Body Admin logins for the semantic admin.
 - Fixed an issue with the semantic admin, where fields that were empty (and supposed to be) were being ignored.
 - Beefed up the semantic admin to allow the Service body of a meeting to be switched (a security check is written to ensure the user can admin both bodies).
+- Added the capability to load a list of deleted meetings in the semantic admin.
+- Added the ability to request changes across multiple Service bodies in the semantic admin (also applies to deleted meetings).
 
 ***Version 2.7.20* ** *- May 27, 2016*
 

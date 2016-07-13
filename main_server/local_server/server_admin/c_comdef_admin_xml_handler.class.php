@@ -92,6 +92,10 @@ class c_comdef_admin_xml_handler
                         $ret = $this->process_meeting_search();
                     break;
                     
+                    case 'get_deleted_meetings':
+                        $ret = $this->process_deleted_meetings();
+                    break;
+                    
                     case 'get_changes':
                         $ret = $this->process_changes();
                     break;
@@ -172,13 +176,396 @@ class c_comdef_admin_xml_handler
             $end_date = (isset ( $this->http_vars['to_date'] ) && $this->http_vars['to_date']) ? strtotime ( $this->http_vars['to_date'] ) : (isset ( $this->http_vars['end_date'] ) && intval ( $this->http_vars['end_date'] ) ? intval ( $this->http_vars['end_date'] ) : null);
             $meeting_id = isset ( $this->http_vars['meeting_id'] ) && intval ( $this->http_vars['meeting_id'] ) ? intval ( $this->http_vars['meeting_id'] ) : null;
             $user_id = isset ( $this->http_vars['user_id'] ) && intval ( $this->http_vars['user_id'] ) ? intval ( $this->http_vars['user_id'] ) : null;
-            $service_body_id = isset ( $this->http_vars['service_body_id'] ) && intval ( $this->http_vars['service_body_id'] ) ? intval ( $this->http_vars['service_body_id'] ) : null;
+            $service_body_id = NULL;
+            
+            if ( isset ( $this->http_vars['service_body_id'] ) )
+                {
+                $service_body_array = explode ( ",", $this->http_vars['service_body_id'] );
+                
+                foreach ( $service_body_array as $sb )
+                    {
+                    $sb_int = intval ( $sb );
+                    
+                    if ( $sb_int > 0 )
+                        {
+                        $sb_obj = c_comdef_server::GetServiceBodyByIDObj ( $sb_int );
+                        
+                        if ( $sb_obj instanceof c_comdef_service_body )
+                            {
+                            if ( $sb_obj->UserCanObserve() )
+                                {
+                                if ( !isset ( $service_body_id ) )
+                                    {
+                                    $service_body_id = $sb_int;
+                                    }
+                                elseif ( !is_array ( $service_body_id ) )
+                                    {
+                                    $service_body_id = Array ( $service_body_id, $sb_int );
+                                    }
+                                else
+                                    {
+                                    $service_body_id[] = $sb_int;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             
             // We get the changes as CSV, then immediately turn them into XML.
             $ret = $this->TranslateCSVToXML ( $this->get_changes_as_csv ( $start_date, $end_date, $meeting_id, $user_id, $service_body_id ) );
             $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<changes xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".$this->getMainURL()."client_interface/xsd/GetChanges.php\">$ret</changes>";
             }
         
+        return $ret;
+    }
+    
+    /********************************************************************************************************//**
+    \brief This fulfills a user request to get information on deleted meetings.
+    
+    \returns the XML for the meeting data.
+    ************************************************************************************************************/
+    function process_deleted_meetings()
+    {
+        $ret = '';
+        
+        // First, make sure the use is of the correct general type.
+        if ( $this->basic_user_validation() )
+            {
+            $start_date = (isset ( $this->http_vars['from_date'] ) && $this->http_vars['from_date']) ? strtotime ( $this->http_vars['from_date'] ) : (isset ( $this->http_vars['start_date'] ) && intval ( $this->http_vars['start_date'] ) ? intval ( $this->http_vars['start_date'] ) : null);
+            $end_date = (isset ( $this->http_vars['to_date'] ) && $this->http_vars['to_date']) ? strtotime ( $this->http_vars['to_date'] ) : (isset ( $this->http_vars['end_date'] ) && intval ( $this->http_vars['end_date'] ) ? intval ( $this->http_vars['end_date'] ) : null);
+            $meeting_id = isset ( $this->http_vars['meeting_id'] ) && intval ( $this->http_vars['meeting_id'] ) ? intval ( $this->http_vars['meeting_id'] ) : null;
+            $user_id = isset ( $this->http_vars['user_id'] ) && intval ( $this->http_vars['user_id'] ) ? intval ( $this->http_vars['user_id'] ) : null;
+            $service_body_id = NULL;
+            
+            if ( isset ( $this->http_vars['service_body_id'] ) )
+                {
+                $service_body_array = explode ( ",", $this->http_vars['service_body_id'] );
+                
+                foreach ( $service_body_array as $sb )
+                    {
+                    $sb_int = intval ( $sb );
+                    
+                    if ( $sb_int > 0 )
+                        {
+                        $sb_obj = c_comdef_server::GetServiceBodyByIDObj ( $sb_int );
+                        
+                        if ( $sb_obj instanceof c_comdef_service_body )
+                            {
+                            if ( $sb_obj->UserCanObserve() )
+                                {
+                                if ( !isset ( $service_body_id ) )
+                                    {
+                                    $service_body_id = $sb_int;
+                                    }
+                                elseif ( !is_array ( $service_body_id ) )
+                                    {
+                                    $service_body_id = Array ( $service_body_id, $sb_int );
+                                    }
+                                else
+                                    {
+                                    $service_body_id[] = $sb_int;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            
+            // We get the deleted meetings as CSV, then immediately turn them into XML.
+            $ret = $this->get_deleted_meetings_as_csv ( $start_date, $end_date, $meeting_id, $user_id, $service_body_id );
+            $ret = $this->TranslateCSVToXML ( $ret );
+            $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<meetings xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".$this->getMainURL()."client_interface/xsd/GetDeletedMeetings.php\">$ret</meetings>";
+            }
+        
+        return $ret;
+    }
+
+    /*******************************************************************/
+    /**
+        \brief	This returns deleted meeting records in CSV form (which we turn into XML).
+    
+        \returns CSV data, with the first row a key header.
+    */	
+    function get_deleted_meetings_as_csv (	
+                                    $in_start_date = null,	///< Optional. A start date (In PHP time() format). If supplied, then only deletions on, or after this date will be returned.
+                                    $in_end_date = null,	///< Optional. An end date (In PHP time() format). If supplied, then only deletions that occurred on, or before this date will be returned.
+                                    $in_meeting_id = null,	///< Optional. If supplied, an ID for a particular meeting. Only deletion for that meeting will be returned.
+                                    $in_user_id = null,	    ///< Optional. If supplied, an ID for a particular user. Only deletions made by that user will be returned.
+                                    $in_sb_id = null        ///< Optional. If supplied, an ID for a particular Service body. Only deletions for meetings in that Service body will be returned. If this is an array, then multiple Service bodies will be searched.
+                                    )
+	{
+        $ret = null;
+        try
+            {
+            $change_objects = c_comdef_server::GetChangesFromIDAndType ( 'c_comdef_meeting', null, $in_start_date, $in_end_date );
+            if ( $change_objects instanceof c_comdef_changes )
+                {
+                $obj_array = $change_objects->GetChangesObjects();
+            
+                if ( is_array ( $obj_array ) && count ( $obj_array ) )
+                    {
+                    set_time_limit ( max ( 30, intval ( count ( $obj_array ) / 20 ) ) ); // Change requests can take a loooong time...
+                    $localized_strings = c_comdef_server::GetLocalStrings();
+                    require_once ( dirname ( dirname ( dirname ( __FILE__ ) ) ).'/server/config/get-config.php');
+                    // These are our columns. This will be our header line.
+                    $ret = '"deletion_date_int","deletion_date_string","user_id","user_name","service_body_id","service_body_name","meeting_id","meeting_name","weekday_tinyint","weekday_name","start_time","town","state"'."\n";
+                
+                    // If they specify a Service body, we also look in "child" Service bodies, so we need to produce a flat array of IDs.
+                    if ( isset ( $in_sb_id ) && $in_sb_id )
+                        {
+                        // If this is not an array, then we check for children. If it is an array, then we just do exactly what is in the array, regardless of children.
+                        if ( !is_array ( $in_sb_id ) || !count ( $in_sb_id ) )
+                            {
+                            global $bmlt_array_gather;
+                    
+                            $bmlt_array_gather = array();
+                    
+                            /************************************************//**
+                            * This little internal function will simply fill    *
+                            * the $bmlt_array_gather array with a linear set of *
+                            * Service body IDs that can be used for a quick     *
+                            * comparison, later on. It is a callback function.  *
+                            ****************************************************/
+                            function bmlt_at_at ( $in_value,
+                                                  $in_key
+                                                )
+                                {
+                                global $bmlt_array_gather;
+                        
+                                if ( $in_value instanceof c_comdef_service_body )
+                                    {
+                                    array_push ( $bmlt_array_gather, $in_value->GetID() );
+                                    }
+                                }
+                        
+                            $array_to_walk = c_comdef_server::GetServer()->GetNestedServiceBodyArray ( $in_sb_id );
+                            array_walk_recursive ( $array_to_walk, 'bmlt_at_at' );
+                    
+                            if ( is_array ( $bmlt_array_gather ) && count ( $bmlt_array_gather ) )
+                                {
+                                $in_sb_id = $bmlt_array_gather;
+                                }
+                            else
+                                {
+                                $in_sb_id = array ( $in_sb_id );
+                                }
+                            }
+                        }
+                
+                    foreach ( $obj_array as $change )
+                        {
+                        $date_int = intval($change->GetChangeDate());
+                        $date_string = date ( "Y-m-d H:m:s", $date_int );
+                    
+                        if ( $change instanceof c_comdef_change )
+                            {
+                            $b_obj = $change->GetBeforeObject();
+                            
+                            if ( $change->GetAfterObject() )   // We are only interested in deleted meetings. If After exists, it was not a deletion.
+                            {
+                                continue;
+                            }
+
+                            $meeting_id = intval ( $change->GetBeforeObjectID() );  // By default, we get the meeting ID from the "before" object.
+                            $sb_b = intval ( ($b_obj instanceof c_comdef_meeting) ? $b_obj->GetServiceBodyID() : 0 );
+                            $sb_c = intval ( $change->GetServiceBodyID() );
+                        
+                            // If the meeting was newly created, then we get the ID from the "after" object.
+                            if ( !$meeting_id )
+                                {
+                                $meeting_id = intval ( $change->GetAfterObjectID() );
+                                }
+                        
+                            // If we are looking for a particular meeting, and this is it, or we don't care, then go ahead.
+                            if ( (intval ( $in_meeting_id ) && intval ( $in_meeting_id ) == intval ( $meeting_id )) || !intval ( $in_meeting_id ) )
+                                {
+                                $meeting_name = '';
+                                $user_name = '';
+                                $meeting_town = '';
+                                $meeting_state = '';
+                            
+                                // If we are looking for a particular Service body, and this is it, or we don't caer about the Service body, then go ahead.
+                                if ( !is_array ( $in_sb_id ) || !count ( $in_sb_id ) || in_array ( $sb_b, $in_sb_id ) || in_array ( $sb_c, $in_sb_id ) )
+                                    {
+                                    $sb_id = (intval ( $sb_c ) ? $sb_c : $sb_b);
+                                
+                                    $user_id = intval ( $change->GetUserID() );
+                                
+                                    // If the user was specified, we look for changes by that user only. Otherwise, we don't care.
+                                    if ( (isset ( $in_user_id ) && $in_user_id && ($in_user_id == $user_id)) || !isset ( $in_user_id ) || !$in_user_id )
+                                        {
+                                        // Get the user that created this change.
+                                        $user = c_comdef_server::GetUserByIDObj ( $user_id );
+                                
+                                        if ( $user instanceof c_comdef_user )
+                                            {
+                                            $user_name = $user->GetLocalName();
+                                            }
+                                        else
+                                            {
+                                            $user_name = '????';    // Otherwise, it's a mystery.
+                                            }
+            
+                                        // Using str_replace, because preg_replace is pretty expensive. However, I don't think this buys us much.
+                                        if ( $b_obj instanceof c_comdef_meeting )
+                                            {
+                                            $meeting_name = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $b_obj->GetMeetingDataValue ( 'meeting_name' ))) );
+                                            $meeting_town = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $b_obj->GetMeetingDataValue ( 'location_municipality' ))) );
+                                            $meeting_state = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $b_obj->GetMeetingDataValue ( 'location_province' ))) );
+                                            }
+                                
+                                        $weekday_tinyint = intval ( $b_obj->GetMeetingDataValue ( 'weekday_tinyint' ) );
+                                        $weekday_name = $localized_strings["comdef_server_admin_strings"]["meeting_search_weekdays_names"][$weekday_tinyint];
+                                
+                                        $start_time = $b_obj->GetMeetingDataValue ( 'start_time' );
+                                        
+                                        $sb = c_comdef_server::GetServiceBodyByIDObj ( $sb_id );
+                                
+                                        if ( $sb instanceof c_comdef_service_body )
+                                            {
+                                            $sb_name = $sb->GetLocalName();
+                                            }
+                                        else
+                                            {
+                                            $sb_name = '????';
+                                            }
+                                    
+                                        // We create an array, which we'll implode after we're done. Easy way to create a CSV row.
+                                        $change_line = array();
+                                    
+                                        // Create each column for this row.
+                                        if ( $date_int )
+                                            {
+                                            $change_line['deletion_date_int'] = $date_int;
+                                            }
+                                        else
+                                            {
+                                            $change_line['deletion_date_int'] = 0;
+                                            }
+                                
+                                        if ( $date_string )
+                                            {
+                                            $change_line['deletion_date_string'] = $date_string;
+                                            }
+                                        else
+                                            {
+                                            $change_line['deletion_date_string'] = '';
+                                            }
+                                
+                                        if ( $user_id )
+                                            {
+                                            $change_line['user_id'] = $user_id;
+                                            }
+                                        else
+                                            {
+                                            $change_line['user_id'] = 0;
+                                            }
+                                
+                                        if ( $user_name )
+                                            {
+                                            $change_line['user_name'] = $user_name;
+                                            }
+                                        else
+                                            {
+                                            $change_line['user_name'] = '';
+                                            }
+                                
+                                        if ( $sb_id )
+                                            {
+                                            $change_line['service_body_id'] = $sb_id;
+                                            }
+                                        else
+                                            {
+                                            $change_line['service_body_id'] = '';
+                                            }
+                                
+                                        if ( $sb_name )
+                                            {
+                                            $change_line['service_body_name'] = $sb_name;
+                                            }
+                                        else
+                                            {
+                                            $change_line['service_body_name'] = '';
+                                            }
+                                
+                                        if ( $meeting_id )
+                                            {
+                                            $change_line['meeting_id'] = $meeting_id;
+                                            }
+                                        else
+                                            {
+                                            $change_line['meeting_id'] = 0;
+                                            }
+                                
+                                        if ( $meeting_name )
+                                            {
+                                            $change_line['meeting_name'] = $meeting_name;
+                                            }
+                                        else
+                                            {
+                                            $change_line['meeting_name'] = '';
+                                            }
+                                
+                                        if ( $weekday_tinyint )
+                                            {
+                                            $change_line['weekday_tinyint'] = $weekday_tinyint;
+                                            }
+                                        else
+                                            {
+                                            $change_line['weekday_tinyint'] = '';
+                                            }
+                                
+                                        if ( $weekday_name )
+                                            {
+                                            $change_line['weekday_name'] = $weekday_name;
+                                            }
+                                        else
+                                            {
+                                            $change_line['weekday_name'] = '';
+                                            }
+                                
+                                        if ( $start_time )
+                                            {
+                                            $change_line['start_time'] = $start_time;
+                                            }
+                                        else
+                                            {
+                                            $change_line['start_time'] = '';
+                                            }
+                                
+                                        if ( $meeting_town )
+                                            {
+                                            $change_line['town'] = $meeting_town;
+                                            }
+                                        else
+                                            {
+                                            $change_line['town'] = '';
+                                            }
+                                
+                                        if ( $meeting_state )
+                                            {
+                                            $change_line['state'] = $meeting_state;
+                                            }
+                                        else
+                                            {
+                                            $change_line['state'] = '';
+                                            }
+                                
+                                        $ret .= '"'.implode ( '","', $change_line ).'"'."\n";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        catch ( Exception $e )
+            {
+            $ret = '<h1>ERROR</h1>';
+            }
+            
         return $ret;
     }
 
@@ -217,38 +604,42 @@ class c_comdef_admin_xml_handler
                     // If they specify a Service body, we also look in "child" Service bodies, so we need to produce a flat array of IDs.
                     if ( isset ( $in_sb_id ) && $in_sb_id )
                         {
-                        global $bmlt_array_gather;
-                    
-                        $bmlt_array_gather = array();
-                    
-                        /************************************************//**
-                        * This little internal function will simply fill    *
-                        * the $bmlt_array_gather array with a linear set of *
-                        * Service body IDs that can be used for a quick     *
-                        * comparison, later on. It is a callback function.  *
-                        ****************************************************/
-                        function bmlt_at_at ( $in_value,
-                                              $in_key
-                                            )
+                        // If this is not an array, then we check for children. If it is an array, then we just do exactly what is in the array, regardless of children.
+                        if ( !is_array ( $in_sb_id ) || !count ( $in_sb_id ) )
                             {
                             global $bmlt_array_gather;
-                        
-                            if ( $in_value instanceof c_comdef_service_body )
-                                {
-                                array_push ( $bmlt_array_gather, $in_value->GetID() );
-                                }
-                            }
-                        
-                        $array_to_walk = c_comdef_server::GetServer()->GetNestedServiceBodyArray ( $in_sb_id );
-                        array_walk_recursive ( $array_to_walk, 'bmlt_at_at' );
                     
-                        if ( is_array ( $bmlt_array_gather ) && count ( $bmlt_array_gather ) )
-                            {
-                            $in_sb_id = $bmlt_array_gather;
-                            }
-                        else
-                            {
-                            $in_sb_id = array ( $in_sb_id );
+                            $bmlt_array_gather = array();
+                    
+                            /************************************************//**
+                            * This little internal function will simply fill    *
+                            * the $bmlt_array_gather array with a linear set of *
+                            * Service body IDs that can be used for a quick     *
+                            * comparison, later on. It is a callback function.  *
+                            ****************************************************/
+                            function bmlt_at_at ( $in_value,
+                                                  $in_key
+                                                )
+                                {
+                                global $bmlt_array_gather;
+                        
+                                if ( $in_value instanceof c_comdef_service_body )
+                                    {
+                                    array_push ( $bmlt_array_gather, $in_value->GetID() );
+                                    }
+                                }
+                        
+                            $array_to_walk = c_comdef_server::GetServer()->GetNestedServiceBodyArray ( $in_sb_id );
+                            array_walk_recursive ( $array_to_walk, 'bmlt_at_at' );
+                    
+                            if ( is_array ( $bmlt_array_gather ) && count ( $bmlt_array_gather ) )
+                                {
+                                $in_sb_id = $bmlt_array_gather;
+                                }
+                            else
+                                {
+                                $in_sb_id = array ( $in_sb_id );
+                                }
                             }
                         }
                 
