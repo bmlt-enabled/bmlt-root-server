@@ -538,7 +538,9 @@ class c_comdef_admin_xml_handler
                                 }
                             }
                         }
-                
+                    
+                    $fetched_ids_array = Array();
+                    
                     foreach ( $obj_array as $change )
                         {
                         $date_int = intval($change->GetChangeDate());
@@ -556,13 +558,14 @@ class c_comdef_admin_xml_handler
                             $meeting_id = intval ( $change->GetBeforeObjectID() );  // By default, we get the meeting ID from the "before" object.
                             $sb_b = intval ( ($b_obj instanceof c_comdef_meeting) ? $b_obj->GetServiceBodyID() : 0 );
                             $sb_c = intval ( $change->GetServiceBodyID() );
-                        
-                            // If the meeting was newly created, then we get the ID from the "after" object.
-                            if ( !$meeting_id )
+                            
+                            if ( in_array ( $meeting_id, $fetched_ids_array ) )
                                 {
-                                $meeting_id = intval ( $change->GetAfterObjectID() );
+                                continue;
                                 }
-                        
+                            
+                            $fetched_ids_array[] = $meeting_id;
+                            
                             // If we are looking for a particular meeting, and this is it, or we don't care, then go ahead.
                             if ( (intval ( $in_meeting_id ) && intval ( $in_meeting_id ) == intval ( $meeting_id )) || !intval ( $in_meeting_id ) )
                                 {
