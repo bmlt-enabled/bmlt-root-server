@@ -55,8 +55,9 @@ echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
                             <xs:element minOccurs="0" maxOccurs="1" name="weekday_tinyint" type="xs:integer"/>
                             <xs:element minOccurs="0" maxOccurs="1" name="weekday_name" type="xs:string"/>
                             <xs:element minOccurs="0" maxOccurs="1" name="start_time" type="xs:time"/>
-                            <xs:element minOccurs="0" maxOccurs="1" name="town" type="xs:string"/>
-                            <xs:element minOccurs="0" maxOccurs="1" name="state" type="xs:string"/>
+							<xs:element minOccurs="0" maxOccurs="1" name="location_city_subsection" type="xs:string"/>
+                            <xs:element minOccurs="0" maxOccurs="1" name="location_municipality" type="xs:string"/>
+                            <xs:element minOccurs="0" maxOccurs="1" name="location_province" type="xs:string"/>
                         </xs:sequence>
                         <xs:attribute name="sequence_index" use="required" type="xs:integer"/>
                     </xs:complexType>

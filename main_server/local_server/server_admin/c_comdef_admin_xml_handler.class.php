@@ -280,10 +280,11 @@ class c_comdef_admin_xml_handler
                                                 $weekday_name = $localized_strings["comdef_server_admin_strings"]["meeting_search_weekdays_names"][$weekday_tinyint];
                                                 $start_time = $meeting_object->GetMeetingDataValue ( 'start_time' );
                                                 $meeting_name = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $meeting_object->GetMeetingDataValue ( 'meeting_name' ))) );
+                                                $meeting_borough = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $meeting_object->GetMeetingDataValue ( 'location_city_subsection' ))) );
                                                 $meeting_town = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $meeting_object->GetMeetingDataValue ( 'location_municipality' ))) );
                                                 $meeting_state = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $meeting_object->GetMeetingDataValue ( 'location_province' ))) );
                                                 
-                                                $ret = '"meeting_id","meeting_name","weekday_tinyint","weekday_name","start_time","town","state"'."\n";
+                                                $ret = '"meeting_id","meeting_name","weekday_tinyint","weekday_name","start_time","location_city_subsection","location_municipality","location_province"'."\n";
                                                 
                                                 if ( $meeting_id )
                                                     {
@@ -329,23 +330,32 @@ class c_comdef_admin_xml_handler
                                                     {
                                                     $change_line['start_time'] = '';
                                                     }
-            
-                                                if ( $meeting_town )
+                                
+                                                if ( $meeting_borough )
                                                     {
-                                                    $change_line['town'] = $meeting_town;
+                                                    $change_line['location_city_subsection'] = $meeting_borough;
                                                     }
                                                 else
                                                     {
-                                                    $change_line['town'] = '';
+                                                    $change_line['location_city_subsection'] = '';
+                                                    }
+            
+                                                if ( $meeting_town )
+                                                    {
+                                                    $change_line['location_municipality'] = $meeting_town;
+                                                    }
+                                                else
+                                                    {
+                                                    $change_line['location_municipality'] = '';
                                                     }
             
                                                 if ( $meeting_state )
                                                     {
-                                                    $change_line['state'] = $meeting_state;
+                                                    $change_line['location_province'] = $meeting_state;
                                                     }
                                                 else
                                                     {
-                                                    $change_line['state'] = '';
+                                                    $change_line['location_province'] = '';
                                                     }
             
                                                 $ret .= '"'.implode ( '","', $change_line ).'"'."\n";
@@ -495,7 +505,7 @@ class c_comdef_admin_xml_handler
                     $localized_strings = c_comdef_server::GetLocalStrings();
                     require_once ( dirname ( dirname ( dirname ( __FILE__ ) ) ).'/server/config/get-config.php');
                     // These are our columns. This will be our header line.
-                    $ret = '"deletion_date_int","deletion_date_string","user_id","user_name","service_body_id","service_body_name","meeting_id","meeting_name","weekday_tinyint","weekday_name","start_time","town","state"'."\n";
+                    $ret = '"deletion_date_int","deletion_date_string","user_id","user_name","service_body_id","service_body_name","meeting_id","meeting_name","weekday_tinyint","weekday_name","start_time","location_city_subsection","location_municipality","location_province"'."\n";
                 
                     // If they specify a Service body, we also look in "child" Service bodies, so we need to produce a flat array of IDs.
                     if ( isset ( $in_sb_id ) && $in_sb_id )
@@ -600,6 +610,7 @@ class c_comdef_admin_xml_handler
                                         if ( $b_obj instanceof c_comdef_meeting )
                                             {
                                             $meeting_name = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $b_obj->GetMeetingDataValue ( 'meeting_name' ))) );
+                                            $meeting_borough = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $b_obj->GetMeetingDataValue ( 'location_city_subsection' ))) );
                                             $meeting_town = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $b_obj->GetMeetingDataValue ( 'location_municipality' ))) );
                                             $meeting_state = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $b_obj->GetMeetingDataValue ( 'location_province' ))) );
                                             }
@@ -723,22 +734,31 @@ class c_comdef_admin_xml_handler
                                             $change_line['start_time'] = '';
                                             }
                                 
-                                        if ( $meeting_town )
+                                        if ( $meeting_borough )
                                             {
-                                            $change_line['town'] = $meeting_town;
+                                            $change_line['location_city_subsection'] = $meeting_borough;
                                             }
                                         else
                                             {
-                                            $change_line['town'] = '';
+                                            $change_line['location_city_subsection'] = '';
+                                            }
+                                
+                                        if ( $meeting_town )
+                                            {
+                                            $change_line['location_municipality'] = $meeting_town;
+                                            }
+                                        else
+                                            {
+                                            $change_line['location_municipality'] = '';
                                             }
                                 
                                         if ( $meeting_state )
                                             {
-                                            $change_line['state'] = $meeting_state;
+                                            $change_line['location_province'] = $meeting_state;
                                             }
                                         else
                                             {
-                                            $change_line['state'] = '';
+                                            $change_line['location_province'] = '';
                                             }
                                 
                                         $ret .= '"'.implode ( '","', $change_line ).'"'."\n";
