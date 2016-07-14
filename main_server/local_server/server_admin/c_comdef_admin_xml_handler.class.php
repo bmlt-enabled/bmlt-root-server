@@ -274,7 +274,83 @@ class c_comdef_admin_xml_handler
 
                                             if ( ($meeting_object instanceof c_comdef_meeting) && (intval ( $meeting_object->GetID() ) == intval ( $meeting_id )) )
                                                 {
-                                                $ret = '<h2>SUCCESS ('.$meeting_id.')</h2>';
+                                                $localized_strings = c_comdef_server::GetLocalStrings();
+                                                $meeting_id = $meeting_object->GetID();
+                                                $weekday_tinyint = intval ( $meeting_object->GetMeetingDataValue ( 'weekday_tinyint' ) );
+                                                $weekday_name = $localized_strings["comdef_server_admin_strings"]["meeting_search_weekdays_names"][$weekday_tinyint];
+                                                $start_time = $meeting_object->GetMeetingDataValue ( 'start_time' );
+                                                $meeting_name = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $meeting_object->GetMeetingDataValue ( 'meeting_name' ))) );
+                                                $meeting_town = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $meeting_object->GetMeetingDataValue ( 'location_municipality' ))) );
+                                                $meeting_state = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $meeting_object->GetMeetingDataValue ( 'location_province' ))) );
+                                                
+                                                $ret = '"meeting_id","meeting_name","weekday_tinyint","weekday_name","start_time","town","state"'."\n";
+                                                
+                                                if ( $meeting_id )
+                                                    {
+                                                    $change_line['meeting_id'] = $meeting_id;
+                                                    }
+                                                else
+                                                    {
+                                                    $change_line['meeting_id'] = 0;
+                                                    }
+            
+                                                if ( $meeting_name )
+                                                    {
+                                                    $change_line['meeting_name'] = $meeting_name;
+                                                    }
+                                                else
+                                                    {
+                                                    $change_line['meeting_name'] = '';
+                                                    }
+            
+                                                if ( $weekday_tinyint )
+                                                    {
+                                                    $change_line['weekday_tinyint'] = $weekday_tinyint;
+                                                    }
+                                                else
+                                                    {
+                                                    $change_line['weekday_tinyint'] = '';
+                                                    }
+            
+                                                if ( $weekday_name )
+                                                    {
+                                                    $change_line['weekday_name'] = $weekday_name;
+                                                    }
+                                                else
+                                                    {
+                                                    $change_line['weekday_name'] = '';
+                                                    }
+            
+                                                if ( $start_time )
+                                                    {
+                                                    $change_line['start_time'] = $start_time;
+                                                    }
+                                                else
+                                                    {
+                                                    $change_line['start_time'] = '';
+                                                    }
+            
+                                                if ( $meeting_town )
+                                                    {
+                                                    $change_line['town'] = $meeting_town;
+                                                    }
+                                                else
+                                                    {
+                                                    $change_line['town'] = '';
+                                                    }
+            
+                                                if ( $meeting_state )
+                                                    {
+                                                    $change_line['state'] = $meeting_state;
+                                                    }
+                                                else
+                                                    {
+                                                    $change_line['state'] = '';
+                                                    }
+            
+                                                $ret .= '"'.implode ( '","', $change_line ).'"'."\n";
+                                                $ret = $this->TranslateCSVToXML ( $ret );
+                                                $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<meeting xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".$this->getMainURL()."client_interface/xsd/RestoreDeletedMeeting.php\">$ret</meeting>";
                                                 }
                                             else
                                                 {
@@ -327,7 +403,7 @@ class c_comdef_admin_xml_handler
     }
     
     /********************************************************************************************************//**
-    \brief This fulfills a user request to get information on deleted meetings.
+    \brief This fulfills a user request to delete a meeting.
     
     \returns the XML for the meeting data.
     ************************************************************************************************************/
@@ -1052,15 +1128,15 @@ class c_comdef_admin_xml_handler
                     // Before we say goodbye, we take down the relevant details for the next of kin...
                     $id = intval ( $meeting_obj->GetID() );
                     $service_body_id = intval ( $meeting_obj->GetServiceBodyID() );
-                    $name = c_comdef_htmlspecialchars ( $meeting_obj->GetLocalName() );
+                    $name = c_comdef_htmlspecialchars ( str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $meeting_obj->GetMeetingDataValue ( 'meeting_name' ))) ) );
                     $weekday = intval ( $meeting_obj->GetMeetingDataValue( 'weekday_tinyint' ) );
                     $start_time = c_comdef_htmlspecialchars ( $meeting_obj->GetMeetingDataValue( 'start_time' ) );
                     
                     $meeting_obj->DeleteFromDB();   // Delete the meeting.
                     
                     // Write out the death certificate.
-                    $ret = '<meetingId>'.$id.'</meetingId><meetingName>'.$name.'</meetingName><meetingWeekday>'.$weekday.'</meetingWeekday><meetingStartTime>'.$start_time.'</meetingStartTime><meetingServiceBodyId>'.$service_body_id.'</meetingServiceBodyId>';
-                    $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<deletedMeeting xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".$this->getMainURL()."client_interface/xsd/DeletedMeeting.php\">$ret</deletedMeeting>";
+                    $ret = '<meetingId>'.$id.'</meetingId><meetingName>'.$name.'</meetingName><meetingServiceBodyId>'.$service_body_id.'</meetingServiceBodyId><meetingStartTime>'.$start_time.'</meetingStartTime><meetingWeekday>'.$weekday.'</meetingWeekday>';
+                    $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<deletedMeeting xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".$this->getMainURL()."client_interface/xsd/DeletedMeeting.php\" id=\"$id\">$ret</deletedMeeting>";
                     }
                 else
                     {

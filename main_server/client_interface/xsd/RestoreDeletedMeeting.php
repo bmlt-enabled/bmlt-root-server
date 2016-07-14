@@ -1,7 +1,7 @@
 <?php
 /****************************************************************************************//**
-* \file DeletedMeeting.php																    *
-* \brief Returns an XML response, containing the schema for the semantic editing XML call   *
+* \file GetChanges.php																		*
+* \brief Returns an XML response, containing the schema for the switcher=GetChanges XML call			*
 
     This file is part of the Basic Meeting List Toolbox (BMLT).
     
@@ -44,16 +44,25 @@ echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
 	xmlns:xsn="http://<?php echo $_SERVER['SERVER_NAME'] ?>"
 	targetNamespace="http://<?php echo $_SERVER['SERVER_NAME'] ?>"
 	elementFormDefault="qualified">
-	<xs:element name='deletedMeeting'>
-		<xs:complexType mixed='true'>
+	<xs:element name="meeting">
+		<xs:complexType>
 			<xs:sequence>
-                <xs:element name='meetingId' type='xs:integer'/>
-                <xs:element name='meetingName' type='xs:string'/>
-                <xs:element name='meetingServiceBodyId' type='xs:integer'/>
-                <xs:element name='meetingStartTime' type='xs:string'/>
-                <xs:element name='meetingWeekday' type='xs:integer'/>
+				<xs:element name="row" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType mixed="true">
+						<xs:sequence>
+                            <xs:element minOccurs="0" maxOccurs="1" name="meeting_id" type="xs:integer"/>
+                            <xs:element minOccurs="0" maxOccurs="1" name="meeting_name" type="xs:string"/>
+                            <xs:element minOccurs="0" maxOccurs="1" name="weekday_tinyint" type="xs:integer"/>
+                            <xs:element minOccurs="0" maxOccurs="1" name="weekday_name" type="xs:string"/>
+                            <xs:element minOccurs="0" maxOccurs="1" name="start_time" type="xs:time"/>
+                            <xs:element minOccurs="0" maxOccurs="1" name="town" type="xs:string"/>
+                            <xs:element minOccurs="0" maxOccurs="1" name="state" type="xs:string"/>
+                        </xs:sequence>
+                        <xs:attribute name="sequence_index" use="required" type="xs:integer"/>
+                    </xs:complexType>
+                </xs:element>
             </xs:sequence>
-            <xs:attribute name="id" use="required" type="xs:integer"/>
         </xs:complexType>
     </xs:element>
-</xs:schema><?php ob_end_flush(); ?>
+</xs:schema>
+<?php ob_end_flush(); ?>
