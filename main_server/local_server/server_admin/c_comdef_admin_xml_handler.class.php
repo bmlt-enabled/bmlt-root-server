@@ -96,6 +96,10 @@ class c_comdef_admin_xml_handler
                         $ret = $this->process_deleted_meetings();
                     break;
                     
+                    case 'restore_deleted_meeting':
+                        $ret = $this->process_restore_deleted_meeting();
+                    break;
+                    
                     case 'get_changes':
                         $ret = $this->process_changes();
                     break;
@@ -225,11 +229,113 @@ class c_comdef_admin_xml_handler
     
     \returns the XML for the meeting data.
     ************************************************************************************************************/
+    function process_restore_deleted_meeting()
+    {
+        $ret = '';
+        
+        // First, make sure the user is of the correct general type.
+        if ( $this->basic_user_validation() )
+            {
+            $meeting_id = isset ( $this->http_vars['meeting_id'] ) && intval ( $this->http_vars['meeting_id'] ) ? intval ( $this->http_vars['meeting_id'] ) : null;
+            
+            if ( $meeting_id )
+                {
+                $change_objects = c_comdef_server::GetChangesFromIDAndType ( 'c_comdef_meeting', $meeting_id );
+                
+                if ( $change_objects instanceof c_comdef_changes )
+                    {
+                    $obj_array = $change_objects->GetChangesObjects();
+            
+                    if ( is_array ( $obj_array ) && count ( $obj_array ) )
+                        {
+                        foreach ( $obj_array as $change )
+                            {
+                            if ( $change instanceof c_comdef_change )
+                                {
+                                if ( $change->GetAfterObject() )
+                                    {
+                                    continue;
+                                    }
+                                
+                                $unrestored_meeting_object = $change->GetBeforeObject();
+                            
+                                if ( $unrestored_meeting_object->UserCanEdit() )
+                                    {
+                                    $unrestored_meeting_object->UpdateToDB();
+                                
+                                    $test_meetings = c_comdef_server::GetMeetingsByID ( Array ( $meeting_id ) );
+                                    if ( $test_meetings instanceof c_comdef_meetings )
+                                        {
+                                        $obj_array = $test_meetings->GetMeetingObjects();
+                                        
+                                        if ( is_array ( $obj_array ) && (count ( $obj_array ) == 1) )
+                                            {
+                                            $meeting_object = $obj_array[$meeting_id];
+
+                                            if ( ($meeting_object instanceof c_comdef_meeting) && (intval ( $meeting_object->GetID() ) == intval ( $meeting_id )) )
+                                                {
+                                                $ret = '<h2>SUCCESS ('.$meeting_id.')</h2>';
+                                                }
+                                            else
+                                                {
+                                                $ret = '<h1>PROGRAM ERROR (RESTORE FAILED)</h1>';
+                                                }
+                                            }
+                                        else
+                                            {
+                                            $ret = '<h1>PROGRAM ERROR (RESTORE FAILED)</h1>';
+                                            }
+                                        }
+                                    else
+                                        {
+                                        $ret = '<h1>PROGRAM ERROR (RESTORE FAILED)</h1>';
+                                        }
+                                    }
+                                else
+                                    {
+                                    $ret = '<h1>NOT AUTHORIZED</h1>';
+                                    }
+                                }
+                            else
+                                {
+                                $ret = '<h1>PROGRAM ERROR (NO VALID CHANGE RECORD)</h1>';
+                                }
+                            }
+                        }
+                    else
+                        {
+                        $ret = '<h1>NO MEETING AVAILABLE</h1>';
+                        }
+                    }
+                else
+                    {
+                    $ret = '<h1>NO MEETING AVAILABLE</h1>';
+                    }
+                }
+            else
+                {
+                $ret = '<h1>NO MEETING SPECIFIED</h1>';
+                }
+            }
+        else
+            {
+            $ret = '<h1>NOT AUTHORIZED</h1>';
+            }
+        
+
+        return $ret;
+    }
+    
+    /********************************************************************************************************//**
+    \brief This fulfills a user request to get information on deleted meetings.
+    
+    \returns the XML for the meeting data.
+    ************************************************************************************************************/
     function process_deleted_meetings()
     {
         $ret = '';
         
-        // First, make sure the use is of the correct general type.
+        // First, make sure the user is of the correct general type.
         if ( $this->basic_user_validation() )
             {
             $start_date = (isset ( $this->http_vars['from_date'] ) && $this->http_vars['from_date']) ? strtotime ( $this->http_vars['from_date'] ) : (isset ( $this->http_vars['start_date'] ) && intval ( $this->http_vars['start_date'] ) ? intval ( $this->http_vars['start_date'] ) : null);
@@ -276,6 +382,10 @@ class c_comdef_admin_xml_handler
             $ret = $this->get_deleted_meetings_as_csv ( $start_date, $end_date, $meeting_id, $user_id, $service_body_id );
             $ret = $this->TranslateCSVToXML ( $ret );
             $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<meetings xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".$this->getMainURL()."client_interface/xsd/GetDeletedMeetings.php\">$ret</meetings>";
+            }
+        else
+            {
+            $ret = '<h1>NOT AUTHORIZED</h1>';
             }
         
         return $ret;
