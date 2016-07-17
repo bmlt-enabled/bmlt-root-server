@@ -357,7 +357,9 @@ class c_comdef_admin_xml_handler
                                                     {
                                                     $change_line['location_province'] = '';
                                                     }
-            
+                                                
+                                                $change_line['published'] = '0';    // New restored meetings are always unpublished.
+                                                
                                                 $ret .= '"'.implode ( '","', $change_line ).'"'."\n";
                                                 $ret = $this->TranslateCSVToXML ( $ret );
                                                 $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<meeting xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".$this->getMainURL()."client_interface/xsd/RestoreDeletedMeeting.php\">$ret</meeting>";
@@ -1270,6 +1272,7 @@ class c_comdef_admin_xml_handler
                                     {
                                     $new_meeting_id = c_comdef_server::AddNewMeeting ( $service_body_id, $weekday, $start_time, $lang );
                                     $meeting_obj = $this->server->GetOneMeeting ( intval ( $new_meeting_id ) );
+                                    $meeting_obj->SetPublished ( false );   // New meetings are always unpublished.
                                     $meeting_id = $new_meeting_id;
                                     $ret = '<newMeeting id="'.intval ( $meeting_obj->GetID() ).'">';
                                     $closing_tag = '</newMeeting>';
@@ -1372,8 +1375,11 @@ class c_comdef_admin_xml_handler
                                 break;
                     
                                 case 'published':
-                                    $old_value = $meeting_obj->IsPublished();
-                                    $meeting_obj->SetPublished ( intval ( $value ) != 0 ? true : false );
+                                    if ( !$new_meeting_id ) // New meetings are always unpublished.
+                                        {
+                                        $old_value = $meeting_obj->IsPublished();
+                                        $meeting_obj->SetPublished ( intval ( $value ) != 0 ? true : false );
+                                        }
                                 break;
                     
                                 case 'weekday_tinyint':
