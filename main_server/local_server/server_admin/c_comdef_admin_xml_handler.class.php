@@ -577,7 +577,13 @@ class c_comdef_admin_xml_handler
                                     {
                                     continue;
                                     }
-                            
+                                
+                                // If this meeting currently exists, then it doesn't qualify.
+                                if ( c_comdef_server::GetMeetingsByID ( Array ( $meeting_id ) ) )
+                                    {
+                                    continue;
+                                    }
+                                
                                 $fetched_ids_array[] = $meeting_id;
                             
                                 // If we are looking for a particular meeting, and this is it, or we don't care, then go ahead.
@@ -1221,6 +1227,8 @@ class c_comdef_admin_xml_handler
                     }
                 }
             
+            $new_meeting_id = 0;
+            
             // Get the meeting object, itself.
             if ( !intval ( $this->http_vars['meeting_id'] ) )  // Will we be creating a new meeting?
                 {
@@ -1260,8 +1268,9 @@ class c_comdef_admin_xml_handler
                                 {
                                 if ( $service_body->UserCanEditMeetings ( $user_obj ) )
                                     {
-                                    $meeting_id = c_comdef_server::AddNewMeeting ( $service_body_id, $weekday, $start_time, $lang );
-                                    $meeting_obj = $this->server->GetOneMeeting ( intval ( $meeting_id ) );
+                                    $new_meeting_id = c_comdef_server::AddNewMeeting ( $service_body_id, $weekday, $start_time, $lang );
+                                    $meeting_obj = $this->server->GetOneMeeting ( intval ( $new_meeting_id ) );
+                                    $meeting_id = $new_meeting_id;
                                     $ret = '<newMeeting id="'.intval ( $meeting_obj->GetID() ).'">';
                                     $closing_tag = '</newMeeting>';
                                     }
