@@ -1380,6 +1380,11 @@ class c_comdef_admin_xml_handler
                                         $old_value = $meeting_obj->IsPublished();
                                         $meeting_obj->SetPublished ( intval ( $value ) != 0 ? true : false );
                                         }
+                                    else
+                                        {
+                                        $old_value = 0;
+                                        $value = 0;
+                                        }
                                 break;
                     
                                 case 'weekday_tinyint':
