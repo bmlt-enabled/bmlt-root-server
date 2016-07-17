@@ -261,6 +261,7 @@ class c_comdef_admin_xml_handler
                             
                                 if ( $unrestored_meeting_object->UserCanEdit() )
                                     {
+                                    $unrestored_meeting_object->SetPublished ( false ); // Newly restored meetings are always unpublished.
                                     $unrestored_meeting_object->UpdateToDB();
                                 
                                     $test_meetings = c_comdef_server::GetMeetingsByID ( Array ( $meeting_id ) );
@@ -357,8 +358,6 @@ class c_comdef_admin_xml_handler
                                                     {
                                                     $change_line['location_province'] = '';
                                                     }
-                                                
-                                                $change_line['published'] = '0';    // New restored meetings are always unpublished.
                                                 
                                                 $ret .= '"'.implode ( '","', $change_line ).'"'."\n";
                                                 $ret = $this->TranslateCSVToXML ( $ret );
