@@ -1422,42 +1422,16 @@ class c_comdef_admin_xml_handler
                                     $formats = explode ( ",", $value );
                                     $lang = $this->server->GetLocalLang();
                                     $formats_object = $this->server->GetFormatsObj();
-                                    $old_value = $meeting_obj->GetMeetingDataValue ( $meeting_field );
-                                    $old_ids = array();
                                     
-                                    if ( isset ( $old_value ) && is_array ( $old_value ) && count ( $old_value ) )
+                                    foreach ( $formats as $key )
                                         {
-                                        foreach ( $old_value as $format_object )
-                                            {
-                                            if ( $format_object instanceof c_comdef_format )
-                                                {
-                                                $old_ids[] = $format_object->GetSharedID();
-                                                }
-                                            }
-                                        
-                                        if ( isset ( $old_ids ) && is_array ( $old_ids ) && count ( $old_ids ) )
-                                            {
-                                            $old_value = implode ( ',', $old_ids );
-                                            }
-                                        else
-                                            {
-                                            $old_value = null;
-                                            }
-                                        }
-                                    else
-                                        {
-                                        $old_value = null;
-                                        }
-                                    
-                                    foreach ( $formats as $shared_id )
-                                        {
-                                        $shared_id = intval ( $shared_id );
-                                        $object = $formats_object->GetFormatBySharedIDCodeAndLanguage ( $shared_id, $lang );
+                                        $object = $formats_object->GetFormatByKeyAndLanguage ( $key, $lang );
                                         if ( $object instanceof c_comdef_format )
                                             {
-                                            $vals[$shared_id] = $object;
+                                            $vals[$object->GetSharedID()] = $object;
                                             }
                                         }
+                                        
                                     uksort ( $vals, array ( 'c_comdef_meeting','format_sorter_simple' ) );
                                     $data =& $meeting_obj->GetMeetingData();
                                     $data[$meeting_field] = $vals;
