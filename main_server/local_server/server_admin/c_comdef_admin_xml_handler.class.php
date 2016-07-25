@@ -1251,7 +1251,7 @@ class c_comdef_admin_xml_handler
                             }
                         else    // Otherwise, it is picked for us.
                             {
-                            $service_body = array_shift ( $my_editable_service_bodies );
+                            $service_body = $my_editable_service_bodies[0];
                             if ( $service_body instanceof c_comdef_service_body )
                                 {
                                 $service_body_id = $service_body->GetID();
@@ -1346,7 +1346,7 @@ class c_comdef_admin_xml_handler
                                 break;
                                 
                                 case 'service_body_bigint':
-                                    if ( isset ( $my_editable_service_bodies ) && is_array ( $my_editable_service_bodies ) && (count ( $my_editable_service_bodies ) > 1) )
+                                    if ( isset ( $my_editable_service_bodies ) && is_array ( $my_editable_service_bodies ) && count ( $my_editable_service_bodies ) )
                                         {
                                         $before_id = intval ( $meeting_obj->GetServiceBodyID() );
                                         $after_id = intval ( $value );

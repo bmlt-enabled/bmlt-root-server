@@ -61,6 +61,7 @@ CHANGELIST
 - Added the capability to load a list of deleted meetings in the semantic admin.
 - Added the ability to request changes across multiple Service bodies in the semantic admin (also applies to deleted meetings).
 - Added the capability to easily restore deleted meetings in the semantic admin.
+- Fixed a bug in the semantic administration that prevented single-Service body admins from creating copies of meetings.
 
 ***Version 2.7.20* ** *- May 27, 2016*
 
