@@ -63,6 +63,7 @@ CHANGELIST
 - Added the capability to easily restore deleted meetings in the semantic admin.
 - Fixed a bug in the semantic administration that prevented single-Service body admins from creating copies of meetings.
 - Fixed a couple of warnings that will really only show up in improperly-configured servers.
+- Fixed an issue with saving formats in the new semantic admin.
 
 ***Version 2.7.20* ** *- May 27, 2016*
 
