@@ -1251,7 +1251,11 @@ class c_comdef_admin_xml_handler
                             }
                         else    // Otherwise, it is picked for us.
                             {
-                            $service_body = $my_editable_service_bodies[0];
+                            // We have to do this odd dance, because it's an associative array.
+                            $keys = array_keys ( $my_editable_service_bodies );
+                            
+                            $service_body = $my_editable_service_bodies[$keys[0]];
+                            
                             if ( $service_body instanceof c_comdef_service_body )
                                 {
                                 $service_body_id = $service_body->GetID();
