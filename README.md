@@ -62,6 +62,7 @@ CHANGELIST
 - Added the ability to request changes across multiple Service bodies in the semantic admin (also applies to deleted meetings).
 - Added the capability to easily restore deleted meetings in the semantic admin.
 - Fixed a bug in the semantic administration that prevented single-Service body admins from creating copies of meetings.
+- Fixed a couple of warnings that will really only show up in improperly-configured servers.
 
 ***Version 2.7.20* ** *- May 27, 2016*
 

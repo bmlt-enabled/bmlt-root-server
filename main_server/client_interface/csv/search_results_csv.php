@@ -301,7 +301,7 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 			$in_http_vars['results_per_page'] = 0;
 			}
 		
-		if ( !isset ( $in_http_vars['sort_key'] ) && !isset ($in_http_vars['sort_keys'] ) )
+		if ( isset ( $default_sort_key ) && !isset ( $in_http_vars['sort_key'] ) && !isset ($in_http_vars['sort_keys'] ) )
 			{
 			$in_http_vars['sort_key'] = $default_sort_key;
 			}
@@ -317,12 +317,16 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 			{
 			$search_manager->SetResultsPerPage ( $in_http_vars['page_display_size'] );
 			}
-		$sort_dir_desc = ($in_http_vars['sort_dir'] == "desc") ? true : false;
-	    
-	    if ( !isset ( $in_http_vars['sort_keys'] ) )
-	        {
-		    $search_manager->SetSort ( $localized_strings['default_sorts'][$in_http_vars['sort_key']], $sort_dir_desc, 0 );
-		    }
+		
+		if ( isset ( $in_http_vars['sort_dir'] ) )
+		    {
+            $sort_dir_desc = ($in_http_vars['sort_dir'] == "desc") ? true : false;
+        
+            if ( isset ( $localized_strings['default_sorts'] ) && isset ( $in_http_vars['sort_key'] ) && isset ( $sort_dir_desc ) && !isset ( $in_http_vars['sort_keys'] ) )
+                {
+                $search_manager->SetSort ( $localized_strings['default_sorts'][$in_http_vars['sort_key']], $sort_dir_desc, 0 );
+                }
+            }
 		    
 		$search_manager->DoSearch();
 		
