@@ -902,7 +902,7 @@ class c_comdef_admin_xml_handler
                     $localized_strings = c_comdef_server::GetLocalStrings();
                     require_once ( dirname ( dirname ( dirname ( __FILE__ ) ) ).'/server/config/get-config.php');
                     // These are our columns. This will be our header line.
-                    $ret = '"change_id","date_int","date_string","change_type","meeting_id","meeting_name","user_id","user_name","service_body_id","service_body_name","meeting_exists","details"'."\n";
+                    $ret = '"new_meeting","change_id","date_int","date_string","change_type","meeting_id","meeting_name","user_id","user_name","service_body_id","service_body_name","meeting_exists","details"'."\n";
                 
                     // If they specify a Service body, we also look in "child" Service bodies, so we need to produce a flat array of IDs.
                     if ( isset ( $in_sb_id ) && $in_sb_id )
@@ -1047,6 +1047,8 @@ class c_comdef_admin_xml_handler
                                         $change_line = array();
                                     
                                         // Create each column for this row.
+                                        $change_line["new_meeting"] = ($b_obj instanceof c_comdef_meeting) ? 0 : 1;
+                                        
                                         $change_line['change_id'] = $change->GetID();
                                 
                                         if ( $date_int )
