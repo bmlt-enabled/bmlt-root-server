@@ -56,6 +56,115 @@ class c_comdef_admin_xml_handler
     }
     
     /********************************************************************************************************//**
+    \brief This extracts a meeting's essential data as XML.
+    
+    \returns the XML for the meeting data.
+    ************************************************************************************************************/
+    function get_meeting_data ( $meeting_id )
+    {
+        $ret = '';
+        
+        $meeting_object = c_comdef_server::GetOneMeeting ( $meeting_id );
+        
+        if ( ($meeting_object instanceof c_comdef_meeting) && (intval ( $meeting_object->GetID() ) == intval ( $meeting_id )) )
+            {
+            $localized_strings = c_comdef_server::GetLocalStrings();
+            $meeting_id = $meeting_object->GetID();
+            $weekday_tinyint = intval ( $meeting_object->GetMeetingDataValue ( 'weekday_tinyint' ) );
+            $weekday_name = $localized_strings["comdef_server_admin_strings"]["meeting_search_weekdays_names"][$weekday_tinyint];
+            $start_time = $meeting_object->GetMeetingDataValue ( 'start_time' );
+            $meeting_name = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $meeting_object->GetMeetingDataValue ( 'meeting_name' ))) );
+            $meeting_borough = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $meeting_object->GetMeetingDataValue ( 'location_city_subsection' ))) );
+            $meeting_town = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $meeting_object->GetMeetingDataValue ( 'location_municipality' ))) );
+            $meeting_state = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $meeting_object->GetMeetingDataValue ( 'location_province' ))) );
+            
+            $ret = '"meeting_id","meeting_name","weekday_tinyint","weekday_name","start_time","location_city_subsection","location_municipality","location_province"'."\n";
+            
+            if ( $meeting_id )
+                {
+                $change_line['meeting_id'] = $meeting_id;
+                }
+            else
+                {
+                $change_line['meeting_id'] = 0;
+                }
+
+            if ( $meeting_name )
+                {
+                $change_line['meeting_name'] = $meeting_name;
+                }
+            else
+                {
+                $change_line['meeting_name'] = '';
+                }
+
+            if ( $weekday_tinyint )
+                {
+                $change_line['weekday_tinyint'] = $weekday_tinyint;
+                }
+            else
+                {
+                $change_line['weekday_tinyint'] = '';
+                }
+
+            if ( $weekday_name )
+                {
+                $change_line['weekday_name'] = $weekday_name;
+                }
+            else
+                {
+                $change_line['weekday_name'] = '';
+                }
+
+            if ( $start_time )
+                {
+                $change_line['start_time'] = $start_time;
+                }
+            else
+                {
+                $change_line['start_time'] = '';
+                }
+
+            if ( $meeting_borough )
+                {
+                $change_line['location_city_subsection'] = $meeting_borough;
+                }
+            else
+                {
+                $change_line['location_city_subsection'] = '';
+                }
+
+            if ( $meeting_town )
+                {
+                $change_line['location_municipality'] = $meeting_town;
+                }
+            else
+                {
+                $change_line['location_municipality'] = '';
+                }
+
+            if ( $meeting_state )
+                {
+                $change_line['location_province'] = $meeting_state;
+                }
+            else
+                {
+                $change_line['location_province'] = '';
+                }
+            
+            $ret .= '"'.implode ( '","', $change_line ).'"'."\n";
+            $ret = $this->TranslateCSVToXML ( $ret );
+            $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<meeting xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".$this->getMainURL()."client_interface/xsd/RestoreDeletedMeeting.php\">$ret</meeting>";
+            }
+        else
+            {
+            $ret = '<h1>PROGRAM ERROR (MEETING FETCH FAILED)</h1>';
+            }
+        
+        return $ret;
+    }
+    
+    /********************************************************************************************************//**
     \brief This is called to process the input and generate the output. It is the "heart" of the class.
     
     \returns XML to be returned.
@@ -96,12 +205,36 @@ class c_comdef_admin_xml_handler
                         $ret = $this->process_deleted_meetings();
                     break;
                     
-                    case 'restore_deleted_meeting':
-                        $ret = $this->process_restore_deleted_meeting();
-                    break;
-                    
                     case 'get_changes':
                         $ret = $this->process_changes();
+                    break;
+                    
+                    case 'add_meeting':
+                        $this->http_vars['meeting_id'] = 0;
+                        unset ( $this->http_vars['meeting_id'] );    // Make sure that we have no meeting ID. This forces an add.
+                        $ret = $this->process_meeting_modify();
+                    break;
+                    
+                    case 'rollback_meeting_to_before_change':
+                        if ( intval ( $this->http_vars['meeting_id'] ) &&  intval ( $this->http_vars['change_id'] ) )    // Make sure that we are referring to a meeting and a change.
+                            {
+                            $ret = $this->process_rollback_meeting();
+                            }
+                        else
+                            {
+                            $ret = '<h1>BAD ADMIN ACTION</h1>';
+                            }
+                    break;
+                    
+                    case 'restore_deleted_meeting':
+                        if ( intval ( $this->http_vars['meeting_id'] ) )    // Make sure that we are referring to a meeting
+                            {
+                            $ret = $this->process_restore_deleted_meeting();
+                            }
+                        else
+                            {
+                            $ret = '<h1>BAD ADMIN ACTION</h1>';
+                            }
                     break;
                     
                     case 'modify_meeting':
@@ -115,14 +248,15 @@ class c_comdef_admin_xml_handler
                             }
                     break;
                     
-                    case 'add_meeting':
-                        $this->http_vars['meeting_id'] = 0;
-                        unset ( $this->http_vars['meeting_id'] );    // Make sure that we have no meeting ID. This forces an add.
-                        $ret = $this->process_meeting_modify();
-                    break;
-                    
                     case 'delete_meeting':
-                        $ret = $this->process_meeting_delete();
+                        if ( intval ( $this->http_vars['meeting_id'] ) )    // Make sure that we are referring to a meeting
+                            {
+                            $ret = $this->process_meeting_delete();
+                            }
+                        else
+                            {
+                            $ret = '<h1>BAD ADMIN ACTION</h1>';
+                            }
                     break;
                     
                     default:
@@ -171,7 +305,7 @@ class c_comdef_admin_xml_handler
     ************************************************************************************************************/
     function process_changes()
     {
-        $ret = '';
+        $ret = '<h1>NOT AUTHORIZED</h1>';
         
         // First, make sure the use is of the correct general type.
         if ( $this->basic_user_validation() )
@@ -225,7 +359,74 @@ class c_comdef_admin_xml_handler
     }
     
     /********************************************************************************************************//**
-    \brief This fulfills a user request to get information on deleted meetings.
+    \brief This fulfills a user request to restore a single deleted meeting.
+    
+    \returns the current meeting XML, if the rollback was successful.
+    ************************************************************************************************************/
+    function process_rollback_meeting()
+    {
+        $ret = '<h1>NOT AUTHORIZED</h1>';
+        
+        // First, make sure the user is of the correct general type.
+        if ( $this->basic_user_validation() )
+            {
+            $ret = '<h1>PROGRAM ERROR (ROLLBACK FAILED)</h1>';
+            
+            $meeting_id = isset ( $this->http_vars['meeting_id'] ) && intval ( $this->http_vars['meeting_id'] ) ? intval ( $this->http_vars['meeting_id'] ) : null;
+            $change_id = isset ( $this->http_vars['change_id'] ) && intval ( $this->http_vars['change_id'] ) ? intval ( $this->http_vars['change_id'] ) : null;
+            
+            if ( $meeting_id && $change_id )
+                {
+                $change_objects = c_comdef_server::GetChangesFromIDAndType ( 'c_comdef_meeting', $meeting_id );
+                
+                if ( $change_objects instanceof c_comdef_changes )
+                    {
+                    $obj_array = $change_objects->GetChangesObjects();
+            
+                    if ( is_array ( $obj_array ) && count ( $obj_array ) )
+                        {
+                        foreach ( $obj_array as $change )
+                            {
+                            if ( $change->GetID() == $change_id )
+                                {
+                                $beforeMeetingObject = $change->GetBeforeObject();
+                                if ( $beforeMeetingObject )
+                                    {
+                                    $currentMeetingObject = c_comdef_server::GetOneMeeting ( $meeting_id );
+                                
+                                    if ( ($beforeMeetingObject instanceof c_comdef_meeting) && ($currentMeetingObject instanceof c_comdef_meeting) )
+                                        {
+                                        if ( $currentMeetingObject->UserCanEdit() && $beforeMeetingObject->UserCanEdit() )
+                                            {
+                                            if ( $change->Rollback() )
+                                                {
+                                                $meeting_object = c_comdef_server::GetOneMeeting ( $meeting_id );
+        
+                                                if ( ($meeting_object instanceof c_comdef_meeting) && (intval ( $meeting_object->GetID() ) == intval ( $meeting_id )) )
+                                                    {
+                                                    $meeting_object->SetPublished ( false ); // Newly restored meetings are always unpublished.
+                                                    $meeting_object->UpdateToDB();
+                                                    }
+                                            
+                                                $ret = $this->get_meeting_data ( $meeting_id );
+                                                }
+                                            }
+                                        }
+                                    }
+                                
+                                break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+        return $ret;
+    }
+    
+    /********************************************************************************************************//**
+    \brief This fulfills a user request to restore a single deleted meeting.
     
     \returns the XML for the meeting data.
     ************************************************************************************************************/
@@ -263,120 +464,7 @@ class c_comdef_admin_xml_handler
                                     {
                                     $unrestored_meeting_object->SetPublished ( false ); // Newly restored meetings are always unpublished.
                                     $unrestored_meeting_object->UpdateToDB();
-                                
-                                    $test_meetings = c_comdef_server::GetMeetingsByID ( Array ( $meeting_id ) );
-                                    if ( $test_meetings instanceof c_comdef_meetings )
-                                        {
-                                        $obj_array = $test_meetings->GetMeetingObjects();
-                                        
-                                        if ( is_array ( $obj_array ) && (count ( $obj_array ) == 1) )
-                                            {
-                                            $meeting_object = $obj_array[$meeting_id];
-
-                                            if ( ($meeting_object instanceof c_comdef_meeting) && (intval ( $meeting_object->GetID() ) == intval ( $meeting_id )) )
-                                                {
-                                                $localized_strings = c_comdef_server::GetLocalStrings();
-                                                $meeting_id = $meeting_object->GetID();
-                                                $weekday_tinyint = intval ( $meeting_object->GetMeetingDataValue ( 'weekday_tinyint' ) );
-                                                $weekday_name = $localized_strings["comdef_server_admin_strings"]["meeting_search_weekdays_names"][$weekday_tinyint];
-                                                $start_time = $meeting_object->GetMeetingDataValue ( 'start_time' );
-                                                $meeting_name = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $meeting_object->GetMeetingDataValue ( 'meeting_name' ))) );
-                                                $meeting_borough = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $meeting_object->GetMeetingDataValue ( 'location_city_subsection' ))) );
-                                                $meeting_town = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $meeting_object->GetMeetingDataValue ( 'location_municipality' ))) );
-                                                $meeting_state = str_replace ( '"', "'", str_replace ( "\n", " ", str_replace ( "\r", " ", $meeting_object->GetMeetingDataValue ( 'location_province' ))) );
-                                                
-                                                $ret = '"meeting_id","meeting_name","weekday_tinyint","weekday_name","start_time","location_city_subsection","location_municipality","location_province"'."\n";
-                                                
-                                                if ( $meeting_id )
-                                                    {
-                                                    $change_line['meeting_id'] = $meeting_id;
-                                                    }
-                                                else
-                                                    {
-                                                    $change_line['meeting_id'] = 0;
-                                                    }
-            
-                                                if ( $meeting_name )
-                                                    {
-                                                    $change_line['meeting_name'] = $meeting_name;
-                                                    }
-                                                else
-                                                    {
-                                                    $change_line['meeting_name'] = '';
-                                                    }
-            
-                                                if ( $weekday_tinyint )
-                                                    {
-                                                    $change_line['weekday_tinyint'] = $weekday_tinyint;
-                                                    }
-                                                else
-                                                    {
-                                                    $change_line['weekday_tinyint'] = '';
-                                                    }
-            
-                                                if ( $weekday_name )
-                                                    {
-                                                    $change_line['weekday_name'] = $weekday_name;
-                                                    }
-                                                else
-                                                    {
-                                                    $change_line['weekday_name'] = '';
-                                                    }
-            
-                                                if ( $start_time )
-                                                    {
-                                                    $change_line['start_time'] = $start_time;
-                                                    }
-                                                else
-                                                    {
-                                                    $change_line['start_time'] = '';
-                                                    }
-                                
-                                                if ( $meeting_borough )
-                                                    {
-                                                    $change_line['location_city_subsection'] = $meeting_borough;
-                                                    }
-                                                else
-                                                    {
-                                                    $change_line['location_city_subsection'] = '';
-                                                    }
-            
-                                                if ( $meeting_town )
-                                                    {
-                                                    $change_line['location_municipality'] = $meeting_town;
-                                                    }
-                                                else
-                                                    {
-                                                    $change_line['location_municipality'] = '';
-                                                    }
-            
-                                                if ( $meeting_state )
-                                                    {
-                                                    $change_line['location_province'] = $meeting_state;
-                                                    }
-                                                else
-                                                    {
-                                                    $change_line['location_province'] = '';
-                                                    }
-                                                
-                                                $ret .= '"'.implode ( '","', $change_line ).'"'."\n";
-                                                $ret = $this->TranslateCSVToXML ( $ret );
-                                                $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<meeting xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".$this->getMainURL()."client_interface/xsd/RestoreDeletedMeeting.php\">$ret</meeting>";
-                                                }
-                                            else
-                                                {
-                                                $ret = '<h1>PROGRAM ERROR (RESTORE FAILED)</h1>';
-                                                }
-                                            }
-                                        else
-                                            {
-                                            $ret = '<h1>PROGRAM ERROR (RESTORE FAILED)</h1>';
-                                            }
-                                        }
-                                    else
-                                        {
-                                        $ret = '<h1>PROGRAM ERROR (RESTORE FAILED)</h1>';
-                                        }
+                                    $ret = $this->get_meeting_data ( $meeting_id );
                                     }
                                 else
                                     {

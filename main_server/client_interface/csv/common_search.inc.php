@@ -539,7 +539,8 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 			$lat = isset ( $in_http_vars['lat_val'] ) ? floatval ( $in_http_vars['lat_val'] ) : 0;
 			$radius_in_miles = 0;
 			$radius_in_km = 0;
-			$radius_auto = 0;
+			$local_strings = c_comdef_server::GetLocalStrings();
+			$radius_auto = $local_strings['number_of_meetings_for_auto'];
 			
 			if ( isset ( $in_http_vars['geo_width'] ) && ( $in_http_vars['geo_width'] != 0 ) )
 				{
