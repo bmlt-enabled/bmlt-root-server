@@ -1298,6 +1298,7 @@ class c_comdef_admin_xml_handler
             {
             $closing_tag = '</changeMeeting>'; // We will usually be changing existing meetings.
             $my_editable_service_bodies = array();
+            $thisIsANewMeeting = false; // Set to true for new meetings.
         
             $service_bodies = $this->server->GetServiceBodyArray();
             
@@ -1364,6 +1365,7 @@ class c_comdef_admin_xml_handler
                                     $meeting_obj->SetPublished ( false );   // New meetings are always unpublished.
                                     $meeting_id = $new_meeting_id;
                                     $ret = '<newMeeting id="'.intval ( $meeting_obj->GetID() ).'">';
+                                    $thisIsANewMeeting = true;
                                     $closing_tag = '</newMeeting>';
                                     }
                                 else
@@ -1402,6 +1404,7 @@ class c_comdef_admin_xml_handler
                 if ( $meeting_obj->UserCanEdit ( $user_obj ) )    // We next make sure that we are allowed to make changes to this meeting.
                     {
                     $keys = c_comdef_meeting::GetAllMeetingKeys();  // Get all the available keys. The one passed in needs to match one of these.
+                    $localized_strings = c_comdef_server::GetLocalStrings();
 
                     // In case we need to add a new field, we get the meeting data template.
                     $template_data = c_comdef_meeting::GetDataTableTemplate();
@@ -1420,7 +1423,8 @@ class c_comdef_admin_xml_handler
                         {
                         $meeting_fields = array ( $meeting_fields );
                         }
-                
+                    
+                    $weHaveAName = false;   // Set to true if we find a name in the meeting data. Used to set a generic name.
                     // We change each of the fields passed in to the new values passed in.
                     foreach ( $meeting_fields as $field )
                         {
@@ -1529,6 +1533,13 @@ class c_comdef_admin_xml_handler
                                     $data[$meeting_field] = $value;
                                 break;
                     
+                                case 'meeting_name':
+                                    $weHaveAName = true;
+                                    if ( !isset ( $value ) || !$value )
+                                        {
+                                        $value = $localized_strings["comdef_server_admin_strings"]["Value_Prompts"]["generic"];
+                                        }
+                                    
                                 default:
                                     $old_value = $meeting_obj->GetMeetingDataValue ( $meeting_field );
                                     $data =& $meeting_obj->GetMeetingData();
@@ -1539,31 +1550,38 @@ class c_comdef_admin_xml_handler
                                 }
                                 
                             // We only indicate changes.
-                            if ( ((isset ( $old_value ) && $old_value) || (isset ( $value ) && $value)) && ($old_value != $value) )
+                            if ( isset ( $meeting_field ) && $meeting_field && !($thisIsANewMeeting && !(isset ( $value ) && $value)) && ((isset ( $old_value ) && $old_value) || (isset ( $value ) && $value)) && ($old_value != $value) )
                                 {
-                                $ret .= '<field key="'.c_comdef_htmlspecialchars ( $meeting_field ).'">';
-                                if ( isset ( $old_value ) && $old_value )
+                                $ret_temp = '';
+                                $ret_temp_internal = '';
+                                // New meetings have no old data.
+                                if ( !$thisIsANewMeeting && isset ( $old_value ) && $old_value )
                                     {
-                                    $ret .= '<oldValue>'.c_comdef_htmlspecialchars ( $old_value ).'</oldValue>';
-                                    }
-                                else
-                                    {
-                                    $ret .= '<oldValue/>';
+                                    $ret_temp_internal .= '<oldValue>'.c_comdef_htmlspecialchars ( $old_value ).'</oldValue>';
                                     }
                                     
                                 if ( isset ( $value ) && $value )
                                     {
-                                    $ret .= '<newValue>'.c_comdef_htmlspecialchars ( $value ).'</newValue>';
-                                    }
-                                else
-                                    {
-                                    $ret .= '<newValue/>';
+                                    $ret_temp_internal .= '<newValue>'.c_comdef_htmlspecialchars ( $value ).'</newValue>';
                                     }
                             
-                                $ret .= '</field>';
+                                $ret_temp .= '<field key="'.c_comdef_htmlspecialchars ( $meeting_field ).'">'.$ret_temp_internal.'</field>';
+                                
+                                // We only send back changes that were actually made. This reduces empty response data.
+                                if ( $ret_temp_internal )
+                                    {
+                                    $ret .= $ret_temp;
+                                    }
                                 }
+                                
+                                $meeting_field = NULL;
                             }
                         }
+                        
+                        if ( !$weHaveAName )
+                            {
+                            $ret .= '<field key="meeting_name"><newValue>'.c_comdef_htmlspecialchars ( $localized_strings["comdef_server_admin_strings"]["Value_Prompts"]["generic"] ).'</newValue></field>';
+                            }
                         
                         // This can short-circuit the operation.
                         if ( $ret != '<h1>NOT AUTHORIZED</h1>' )
