@@ -66,6 +66,7 @@ CHANGELIST
 - Fixed an issue with saving formats in the new semantic admin.
 - Added the capacity to rollback meetings to the semantic admin.
 - Fixed the response from the new meeting semantic admin, so we don't have empty oldValue/newValue elements.
+- Added the available keys to the server info response, so we can ensure a minimal support level.
 
 ***Version 2.7.20* ** *- May 27, 2016*
 

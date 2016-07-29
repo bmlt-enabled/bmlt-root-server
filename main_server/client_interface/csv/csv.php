@@ -1187,13 +1187,28 @@ function GetServerInfo()
     $canEmail = $g_enable_email_contact ? '1' : '0';
     $includeServiceBodiesOnEmails = $include_service_body_admin_on_emails ? '1' : '0';
     $changeDepth = strVal ( intval ( $change_depth_for_meetings ) );
+    $availableFields = "";
+    $keys = c_comdef_meeting::GetFullTemplate ( );
+    foreach ( $keys as $key )
+        {
+        if ( ($key['visibility'] != 1) && ($key['key'] != 'published') && ($key['key'] != 'shared_group_id_bigint') )
+            {
+            if ( $availableFields != "" )
+                {
+                $availableFields .= ',';
+                }
+            
+            $availableFields .= $key['key'];
+            }
+        }
     
-    $ret = '"version","versionInt","langs","nativeLang","centerLongitude","centerLatitude","centerZoom","defaultDuration","regionBias","charSet","distanceUnits","semanticAdmin","emailEnabled","emailIncludesServiceBodies","changesPerMeeting"'."\n";
+    $ret = '"version","versionInt","langs","nativeLang","centerLongitude","centerLatitude","centerZoom","defaultDuration","regionBias","charSet","distanceUnits","semanticAdmin","emailEnabled","emailIncludesServiceBodies","changesPerMeeting","available_keys"'."\n";
     $ret .= '"'.$version_string.'","'.strval ( $version_num ).'","'.$lang_string.'","'.$default_lang.'",';
     $ret .= '"'.strval( $localStrings['search_spec_map_center']['longitude'] ).'","'.strval( $localStrings['search_spec_map_center']['latitude'] ).'",';
     $ret .= '"'.strval( $localStrings['search_spec_map_center']['zoom'] ).'","'.$localStrings['default_duration_time'].'",';
     $ret .= '"'.$localStrings['region_bias'].'","'.$localStrings['charset'].'","'.$localStrings['dist_units'].'","'.$canAdmin.'",';
-    $ret .= '"'.$canEmail.'","'.$includeServiceBodiesOnEmails.'","'.$changeDepth.'"';
+    $ret .= '"'.$canEmail.'","'.$includeServiceBodiesOnEmails.'","'.$changeDepth.'",';
+    $ret .= '"'.str_replace ( '"', '\"', $availableFields ).'"';
     
     return $ret;
 }
