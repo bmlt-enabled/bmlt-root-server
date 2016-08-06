@@ -51,7 +51,7 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.8.0* ** *- TBD*
+***Version 2.8.0* ** *- August 6, 2016*
 
 - There were a couple more CSV issues that needed addressing.
 - Just getting rid of the independent format dump for CSV. It was pretty useless (especially now with the format extraction), and caused problems with printed lists.
@@ -67,6 +67,7 @@ CHANGELIST
 - Added the capacity to rollback meetings to the semantic admin.
 - Fixed the response from the new meeting semantic admin, so we don't have empty oldValue/newValue elements.
 - Added the available keys to the server info response, so we can ensure a minimal support level.
+- This is the first version to support [the BMLTAdmin app](http://bmlt.magshare.net/bmltadmin)
 
 ***Version 2.7.20* ** *- May 27, 2016*
 
