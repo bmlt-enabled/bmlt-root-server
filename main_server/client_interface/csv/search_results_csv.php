@@ -785,7 +785,7 @@ function ReturnNAWSDeletedMeetings (
 				if ( $b_obj instanceof c_comdef_meeting )
 					{
 					$line = null;
-					if ( !$server->GetOneMeeting ( $b_obj->GetID() ) && $b_obj->UserCanObserve() )	// Must be currently deleted, and the user must be able to at least observe.
+					if ( !$server->GetOneMeeting ( $b_obj->GetID() ) )	// Must be currently deleted.
 						{
 						if ( is_array ( $in_services ) && count ( $in_services ) )
 						    {

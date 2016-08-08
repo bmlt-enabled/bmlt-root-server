@@ -51,6 +51,9 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.8.1* ** *- August 8, 2016*
+- Fixed a bug that prevented deleted meetings from being listed in the NAWS dump. This was newly introduced in 2.8.0.
+
 ***Version 2.8.0* ** *- August 6, 2016*
 
 - There were a couple more CSV issues that needed addressing.
