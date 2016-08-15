@@ -1,7 +1,7 @@
 <?php
 /****************************************************************************************//**
-* \file GetChanges.php																		*
-* \brief Returns an XML response, containing the schema for the switcher=GetChanges XML call			*
+* \file RestoreDeletedMeeting.php															*
+* \brief Returns an XML response, containing the schema for the XML call			        *
 
     This file is part of the Basic Meeting List Toolbox (BMLT).
     
