@@ -66,6 +66,7 @@ echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
                             <xs:element minOccurs="0" name='emailIncludesServiceBodies' type='xs:integer'/>
                             <xs:element minOccurs="0" name='changesPerMeeting' type='xs:integer'/>
                             <xs:element minOccurs="0" name='available_keys' type='xs:string'/>
+                            <xs:element minOccurs="0" name='google_api_key' type='xs:string'/>
                         </xs:sequence>
                         <xs:attribute name='sequence_index' use='required' type='xs:integer'/>
                     </xs:complexType>

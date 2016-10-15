@@ -159,7 +159,7 @@ class c_comdef_admin_main_console
     {
         $ret = '<div id="bmlt_admin_main_console" class="bmlt_admin_main_console_wrapper_div">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
             // We actually include the JS directly into the HTML. This gives us a lot more flexibility as to how we deploy and gatekeep this file.
-            $ret .= '<script type="text/javascript" src="'.self::js_html ( 'https://maps.googleapis.com/maps/api/js?libraries=geometry' ).'"></script>';       
+            $ret .= '<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key='.$this->my_localized_strings['google_api_key'].'&libraries=geometry"></script>';       
             $ret .= '<script type="text/javascript">';
                 $ret .= 'var g_ajax_callback_uri = \''.self::js_html ( $this->my_ajax_uri ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_current_user_id = \''.self::js_html ( $this->my_user->GetID() ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
@@ -383,6 +383,7 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_format_editor_delete_button_confirm_perm = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['format_editor_delete_button_confirm_perm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_throbber_image_loc = \'local_server/server_admin/style/images/ajax-throbber-white.gif\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_min_pw_len = '.$this->my_localized_strings['min_pw_len'].';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_google_api_key = \''.self::js_html ( $this->my_localized_strings['google_api_key'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_min_password_length_string = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['min_password_length_string'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_time_values = [';
                     $ret .= '\''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_am_label'] ).'\',';

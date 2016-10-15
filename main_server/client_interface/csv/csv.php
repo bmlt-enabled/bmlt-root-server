@@ -1202,13 +1202,12 @@ function GetServerInfo()
             }
         }
     
-    $ret = '"version","versionInt","langs","nativeLang","centerLongitude","centerLatitude","centerZoom","defaultDuration","regionBias","charSet","distanceUnits","semanticAdmin","emailEnabled","emailIncludesServiceBodies","changesPerMeeting","available_keys"'."\n";
+    $ret = '"version","versionInt","langs","nativeLang","centerLongitude","centerLatitude","centerZoom","defaultDuration","regionBias","charSet","distanceUnits","semanticAdmin","emailEnabled","emailIncludesServiceBodies","changesPerMeeting","available_keys","google_api_key"'."\n";
     $ret .= '"'.$version_string.'","'.strval ( $version_num ).'","'.$lang_string.'","'.$default_lang.'",';
     $ret .= '"'.strval( $localStrings['search_spec_map_center']['longitude'] ).'","'.strval( $localStrings['search_spec_map_center']['latitude'] ).'",';
     $ret .= '"'.strval( $localStrings['search_spec_map_center']['zoom'] ).'","'.$localStrings['default_duration_time'].'",';
     $ret .= '"'.$localStrings['region_bias'].'","'.$localStrings['charset'].'","'.$localStrings['dist_units'].'","'.$canAdmin.'",';
-    $ret .= '"'.$canEmail.'","'.$includeServiceBodiesOnEmails.'","'.$changeDepth.'",';
-    $ret .= '"'.str_replace ( '"', '\"', $availableFields ).'"';
+    $ret .= '"'.$canEmail.'","'.$includeServiceBodiesOnEmails.'","'.$changeDepth.'","'.str_replace ( '"', '\"', $availableFields ).'","'.$localStrings['google_api_key'].'"';
     
     return $ret;
 }

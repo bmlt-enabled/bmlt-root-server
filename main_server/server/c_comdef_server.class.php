@@ -2691,6 +2691,7 @@ class c_comdef_server
             c_comdef_server::$server_local_strings['comdef_map_radius_ranges'] = (isset ( $comdef_map_radius_ranges ) && is_array ( $comdef_map_radius_ranges ) && count ( $comdef_map_radius_ranges )) ?
                                                                                     $comdef_map_radius_ranges :
                                                                                     array ( 0.1, 100.0 );   ///< The default range (min, max), in Km.
+            c_comdef_server::$server_local_strings['google_api_key'] = isset ( $gkey ) ? $gkey : '';
             c_comdef_server::$server_local_strings['region_bias'] = isset ( $region_bias ) ? $region_bias : '';
             c_comdef_server::$server_local_strings['default_duration_time'] = isset ( $default_duration_time ) ? $default_duration_time : '1:00:00';
             c_comdef_server::$server_local_strings['search_spec_map_center'] = $search_spec_map_center;
