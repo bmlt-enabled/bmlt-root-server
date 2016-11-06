@@ -51,6 +51,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.8.4* ** *- November 6, 2016*
+
+- Just updates the satellite base class code. No visible change.
+
 ***Version 2.8.3* ** *- October 16, 2016*
 
 - Forgot to update the BMLT-Basic module.
