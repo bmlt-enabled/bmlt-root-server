@@ -1822,7 +1822,7 @@ class c_comdef_server
             
             foreach ( $in_weekday_tinyint_array as $weekday )
                 {
-                if ( intval ( $weekday ) > 0 && intval ( $weekday ) < 8 )
+                if ( abs ( intval ( $weekday ) ) > 0 && abs ( intval ( $weekday ) ) < 8 )
                     {
                     $valid = true;
                     }
@@ -2433,7 +2433,7 @@ class c_comdef_server
     */
     static function MySQLGetRadiusSQLClause (   
                                                 $in_published = FALSE,  ///< If TRUE, then we will have a slot for published status.
-                                                $in_weekday = NULL      ///< THis is an array of weekdays we are looking for (integers).
+                                                $in_weekday = NULL      ///< This is an array of weekdays we are looking for (integers).
                                                 )
     {
         // I adapted this from here: http://www.plumislandmedia.net/mysql/haversine-mysql-nearest-loc/ Thanks, Ollie!
@@ -2466,14 +2466,33 @@ class c_comdef_server
         // Belt and suspenders...
         if ( isset ( $in_weekday ) && (NULL != $in_weekday) && is_array ( $in_weekday ) && count ( $in_weekday ) )
             {
-            $wd_array = array();
+            $wd_yes_array = array();
+            $wd_no_array = array();
+            
             $sql .= " AND (";
             foreach ( $in_weekday as $weekday )
                 {
-                $wd_array[] = "(weekday_tinyInt = ".intval ( $weekday ).")";
+                if ( 0 > intval ( $weekday ) )
+                    {
+                    $wd_no_array[] = "(weekday_tinyInt <> ".abs ( intval ( $weekday ) ).")";
+                    }
+                else
+                    {
+                    $wd_yes_array[] = "(weekday_tinyInt = ".intval ( $weekday ).")";
+                    }
                 }
             
-            $sql .= implode ( " OR ", $wd_array ). ")";
+            if ( count ( $wd_yes_array ) )
+                {
+                $sql .= implode ( " OR ", $wd_yes_array );
+                }
+            
+            if ( count ( $wd_no_array ) )
+                {
+                $sql .= implode ( " AND ", $wd_no_array );
+                }
+            
+            $sql .= ")";
             }
         
         $sql .= "\nORDER BY distance;";

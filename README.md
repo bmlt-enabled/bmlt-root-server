@@ -51,6 +51,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.8.5* ** *- November 21, 2016*
+
+- This fixes a longstanding search bug, where excluding (negative) weekdays was ignored. This mainly affected the Semantic interface.
+
 ***Version 2.8.4* ** *- November 6, 2016*
 
 - Just updates the satellite base class code. No visible change.
