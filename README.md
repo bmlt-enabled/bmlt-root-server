@@ -51,6 +51,14 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.8.5* ** *- November 21, 2016*
+
+- There was a longstanding bug in the search, where weekdays were not masking out unwanted weekdays.
+
+***Version 2.8.4* ** *- November 6, 2016*
+
+- Updated to the latest base class (no visible effect on the Root Server).
+
 ***Version 2.8.3* ** *- October 16, 2016*
 
 - Forgot to update the BMLT-Basic module.

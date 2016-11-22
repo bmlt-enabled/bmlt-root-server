@@ -46,7 +46,7 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 														    If this is set to '1', then the 'services' key will recursively follow Service bodies.
 														    
 														- 'weekdays'
-															This is an array of positive integers ( 1-7).
+															This is an array of negative or positive nonzero integers (-7 - -1, 1 - 7).
 															This is interpreted as an array of integers. Each integer represents a weekday (1 -> Sunday, 7 -> Saturday).
 															A positive integer means that the search will look specifically for meetings that occur on that weekday.
 															If the integer is negative (preceded by a minus sign -), then the criteria will be to look
@@ -425,7 +425,7 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 			$in_http_vars['weekdays'] = $in_http_vars['advanced_weekdays'];
 			}
 		
-		if ( isset ( $in_http_vars['weekdays'] ) && !is_array ( $in_http_vars['weekdays'] ) && (intval ( $in_http_vars['weekdays'] ) > 0) && (intval ( $in_http_vars['weekdays'] ) < 8) )
+		if ( isset ( $in_http_vars['weekdays'] ) && !is_array ( $in_http_vars['weekdays'] ) && (intval ( abs ( $in_http_vars['weekdays'] ) ) > 0) && (intval ( abs ( $in_http_vars['weekdays'] ) ) < 8) )
 		    {
 		    $in_http_vars['weekdays'] = array ( intval ( $in_http_vars['weekdays'] ) );
 		    }
@@ -435,15 +435,15 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 			$wd =& $in_search_manager->GetWeekdays();
 			foreach ( $in_http_vars['weekdays'] as $weekday )
 				{
-				$wd[intval($weekday)] = 1;
+				$wd[abs(intval($weekday))] = intval($weekday) > 0 ? 1 : -1;
 				}
 			}
 		elseif ( isset ( $in_http_vars['weekdays'] ) )
 			{
 			$wd =& $in_search_manager->GetWeekdays();
-			$wd[intval($in_http_vars['weekdays'])] = 1;
+			$wd[abs(intval($in_http_vars['weekdays']))] = intval(intval($in_http_vars['weekdays'])) > 0 ? 1 : -1;
 			}
-		
+
 		// Next, set up the formats.
 		
 		if ( isset ( $in_http_vars['bmlt_search_type'] ) && ($in_http_vars['bmlt_search_type'] == 'advanced') && isset ( $in_http_vars['advanced_formats'] ) && is_array ( $in_http_vars['advanced_formats'] ) && count ( $in_http_vars['advanced_formats'] ) )

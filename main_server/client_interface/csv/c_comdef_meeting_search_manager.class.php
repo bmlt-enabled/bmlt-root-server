@@ -1076,13 +1076,13 @@ class c_comdef_meeting_search_manager
 						foreach ( $this->_weekdays as $key => $value )
 							{
 							// If the value of the Weekday is 1 or -1, we add it to the list.
-							if ( abs ( $value ) == 1 )
+							if ( abs ( $value ) != 0 )
 								{
 								array_push ( $weekdays, intval ( $key ) * $value );
 								}
 							}
 						}
-					
+
 					// Set up our formats array.
 					$formats = null;
 					
