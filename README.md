@@ -51,6 +51,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.8.6* ** *- TBD*
+
+- There was an error in the XSD for deleting meetings. Added a temporary "double-dip" element to the XML response in order to avoid interfering with current implementations. Will delete the "meetingId" element in a later release.
+
 ***Version 2.8.5* ** *- November 21, 2016*
 
 - This fixes a longstanding search bug, where excluding (negative) weekdays was ignored. This mainly affected the Semantic interface.

@@ -1256,7 +1256,7 @@ class c_comdef_admin_xml_handler
                     $meeting_obj->DeleteFromDB();   // Delete the meeting.
                     
                     // Write out the death certificate.
-                    $ret = '<meetingId>'.$id.'</meetingId><meetingName>'.$name.'</meetingName><meetingServiceBodyId>'.$service_body_id.'</meetingServiceBodyId><meetingStartTime>'.$start_time.'</meetingStartTime><meetingWeekday>'.$weekday.'</meetingWeekday>';
+                    $ret = '<meetingId>'.$id.'</meetingId><meeting_id>'.$id.'</meeting_id><meetingName>'.$name.'</meetingName><meetingServiceBodyId>'.$service_body_id.'</meetingServiceBodyId><meetingStartTime>'.$start_time.'</meetingStartTime><meetingWeekday>'.$weekday.'</meetingWeekday>';
                     $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<deletedMeeting xmlns=\"http://".c_comdef_htmlspecialchars ( $_SERVER['SERVER_NAME'] )."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".$this->getMainURL()."client_interface/xsd/DeletedMeeting.php\" id=\"$id\">$ret</deletedMeeting>";
                     }
                 else

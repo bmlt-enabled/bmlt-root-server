@@ -1593,7 +1593,7 @@ function MakeJSONDataObject(
                     }
                 }
             }
-    
+        
         if ( $json_data && $in_object_name )
             {
             $json_data = '"'.$in_object_name.'":{'.$json_data.'}';

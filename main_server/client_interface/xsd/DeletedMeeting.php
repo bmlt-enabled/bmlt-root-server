@@ -47,7 +47,9 @@ echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
 	<xs:element name='deletedMeeting'>
 		<xs:complexType mixed='true'>
 			<xs:sequence>
+			    <!-- NOTE: The "meetingId" element is deprecated, and will go away. -->
                 <xs:element name='meetingId' type='xs:integer'/>
+                <xs:element name='meeting_id' type='xs:integer'/>
                 <xs:element name='meetingName' type='xs:string'/>
                 <xs:element name='meetingServiceBodyId' type='xs:integer'/>
                 <xs:element name='meetingStartTime' type='xs:string'/>
