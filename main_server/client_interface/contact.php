@@ -267,6 +267,10 @@ else
     if ( isset ( $_GET['service_body_id'] ) )
         {
         $service_body_id = intval ( $_GET['service_body_id'] );
+        if ( !$service_body_id )
+            {
+            $service_body_id = intval ( $_GET['service_body_bigint'] );
+            }
         }
 
     if ( isset ( $_GET['message'] ) )
@@ -286,7 +290,7 @@ else
         $key = strtolower ( strval ( $key ) );
     
         // Any attempt to sneak in extra fields automatically marks this as spam.        
-        if ( ($key != 'meeting_id') && ($key != 'service_body_id') && ($key != 'from_address') && ($key != 'message') )
+        if ( ($key != 'meeting_id') && ($key != 'service_body_id') && ($key != 'service_body_bigint') && ($key != 'from_address') && ($key != 'message') )
             {
             if ( $g_mail_debug )
                 {

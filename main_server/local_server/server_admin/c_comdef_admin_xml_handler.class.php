@@ -1316,7 +1316,6 @@ class c_comdef_admin_xml_handler
                 }
             
             $new_meeting_id = 0;
-            
             // Get the meeting object, itself.
             if ( !intval ( $this->http_vars['meeting_id'] ) )  // Will we be creating a new meeting?
                 {
@@ -1334,6 +1333,21 @@ class c_comdef_admin_xml_handler
                             if ( isset ( $this->http_vars['service_body_id'] ) && intval ( $this->http_vars['service_body_id'] ) )
                                 {
                                 $service_body_id = intval ( $this->http_vars['service_body_id'] );
+                                }
+                            else
+                                {
+                                $meeting_fields = $this->http_vars['meeting_field'];
+                                
+                                foreach ( $meeting_fields as $field )
+                                    {
+                                    list ( $key, $value ) = explode ( ',', $field );
+                                    
+                                    if ( $key == 'service_body_bigint' )
+                                        {
+                                        $service_body_id = intval ($value );
+                                        break;
+                                        }
+                                    }
                                 }
                             }
                         else    // Otherwise, it is picked for us.
@@ -1398,7 +1412,7 @@ class c_comdef_admin_xml_handler
                 $meeting_obj = $this->server->GetOneMeeting ( intval ( $this->http_vars['meeting_id'] ) );
                 $ret = '<changeMeeting id="'.intval ( $meeting_obj->GetID() ).'">';
                 }
-            
+
             if ( $meeting_obj instanceof c_comdef_meeting )
                 {
                 if ( $meeting_obj->UserCanEdit ( $user_obj ) )    // We next make sure that we are allowed to make changes to this meeting.
