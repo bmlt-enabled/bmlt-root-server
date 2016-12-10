@@ -365,12 +365,12 @@ else
                                                 }
                                         
                                             // We don't recurse if we aren't supposed to
-                                            $service_body = $include_every_admin_on_emails ? $service_body->GetOwnerIDObject() : NULL;
+                                            $service_body = isset ( $include_every_admin_on_emails ) && $include_every_admin_on_emails ? $service_body->GetOwnerIDObject() : NULL;
                                             } while ( $service_body );
                             
                                         // The one exception is the Server Administrator, and we get that email from the individual account.
                                     
-                                        if ( $include_every_admin_on_emails )   // The Server admin is not involved unless we are cascading.
+                                        if ( isset ( $include_every_admin_on_emails ) && $include_every_admin_on_emails )   // The Server admin is not involved unless we are cascading.
                                             {
                                             $server_admin_user = c_comdef_server::GetUserByIDObj ( 1 );
                         
