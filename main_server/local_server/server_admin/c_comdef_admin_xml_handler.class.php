@@ -1438,7 +1438,6 @@ class c_comdef_admin_xml_handler
                         $meeting_fields = array ( $meeting_fields );
                         }
                     
-                    $weHaveAName = false;   // Set to true if we find a name in the meeting data. Used to set a generic name.
                     // We change each of the fields passed in to the new values passed in.
                     foreach ( $meeting_fields as $field )
                         {
@@ -1548,7 +1547,7 @@ class c_comdef_admin_xml_handler
                                 break;
                     
                                 case 'meeting_name':
-                                    $weHaveAName = true;
+                                    $old_value = $meeting_obj->GetMeetingDataValue ( $meeting_field );
                                     if ( !isset ( $value ) || !$value )
                                         {
                                         $value = $localized_strings["comdef_server_admin_strings"]["Value_Prompts"]["generic"];
@@ -1591,12 +1590,7 @@ class c_comdef_admin_xml_handler
                                 $meeting_field = NULL;
                             }
                         }
-                        
-                        if ( !$weHaveAName )
-                            {
-                            $ret .= '<field key="meeting_name"><newValue>'.c_comdef_htmlspecialchars ( $localized_strings["comdef_server_admin_strings"]["Value_Prompts"]["generic"] ).'</newValue></field>';
-                            }
-                        
+
                         // This can short-circuit the operation.
                         if ( $ret != '<h1>NOT AUTHORIZED</h1>' )
                             {

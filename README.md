@@ -55,6 +55,7 @@ CHANGELIST
 
 - There was an error in the XSD for deleting meetings. Added a temporary "double-dip" element to the XML response in order to avoid interfering with current implementations. Will delete the "meetingId" element in a later release.
 - Fixed a legacy error. The name of the Service body field in the meeting change function was wrong. Because of the legacy issue, it can now either be 'service_body_id' or 'service_body_bigint'.
+- Removed an erroneous meeting name field in the meeting change XML/JSON response.
 
 ***Version 2.8.5* ** *- November 21, 2016*
 
