@@ -58,6 +58,7 @@ CHANGELIST
 - Removed an erroneous meeting name field in the meeting change XML/JSON response.
 - Fixed an old error in the Semantic Admin, where our special "variable" fields needed an extra layer of parsing.
 - Fixed an old error in the Semantic Admin, where the formats field was improperly examined.
+- Added a scrubber to the contact function to remove double-newlines, which bork some servers.
 
 ***Version 2.8.5* ** *- November 21, 2016*
 

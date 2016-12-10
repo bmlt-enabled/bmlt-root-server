@@ -213,6 +213,7 @@ function sendEMail ( $in_to_address,
     // Make sure our endlines are correct, and unescape any escaped quotes.
     $in_body = preg_replace ( "/\r\n/", "\n", $in_body );
     $in_body = stripslashes ( preg_replace ( "/\r/", "\n", $in_body ) );
+    $in_body = stripslashes ( preg_replace ( "/\n+/", "\n", $in_body ) );
     $subject = stripslashes ( $in_subject );
     
     // Headers precede the body.
