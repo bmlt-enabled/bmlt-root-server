@@ -1442,6 +1442,12 @@ class c_comdef_admin_xml_handler
                     foreach ( $meeting_fields as $field )
                         {
                         list ( $meeting_field, $value ) = explode ( ',', $field, 2 );
+                        if ( strpos ( $value, "##-##" ) )   // Look for our special flagged items.
+                            {
+                            $temp = explode ( "##-##", $value );
+                            $value = $temp[count ( $temp ) - 1];
+                            }
+                        
                         if ( isset ( $meeting_field ) && in_array ( $meeting_field, $keys ) )
                             {
                             switch ( $meeting_field )
@@ -1521,23 +1527,41 @@ class c_comdef_admin_xml_handler
                     
                                 case 'formats':
                                     // Formats take some extra work, because we store them in the meeting as individual objects, so we create, sort and apply those objects.
-                                    $vals = array();
-                                    $formats = explode ( ",", $value );
+                                    $old_value_array = $meeting_obj->GetMeetingDataValue ( $meeting_field );
                                     $lang = $this->server->GetLocalLang();
+                                    $vals = Array();
+                                    
+                                    foreach ( $old_value_array as $format )
+                                        {
+                                        $vals[$format->GetSharedID()] = $format;
+                                        }
+                                    
+                                    uksort ( $vals, array ( 'c_comdef_meeting','format_sorter_simple' ) );
+                                    
+                                    $keys = Array();
+                                    foreach ( $vals as $format )
+                                        {
+                                        $keys[] = $format->GetKey();
+                                        }
+                                        
+                                    $old_value = implode ( ",", $keys );
+                                    
+                                    $formats = explode ( ",", $value );
                                     $formats_object = $this->server->GetFormatsObj();
                                     
+                                    $newVals = Array();
                                     foreach ( $formats as $key )
                                         {
                                         $object = $formats_object->GetFormatByKeyAndLanguage ( $key, $lang );
                                         if ( $object instanceof c_comdef_format )
                                             {
-                                            $vals[$object->GetSharedID()] = $object;
+                                            $newVals[$object->GetSharedID()] = $object;
                                             }
                                         }
                                         
-                                    uksort ( $vals, array ( 'c_comdef_meeting','format_sorter_simple' ) );
+                                    uksort ( $newVals, array ( 'c_comdef_meeting','format_sorter_simple' ) );
                                     $data =& $meeting_obj->GetMeetingData();
-                                    $data[$meeting_field] = $vals;
+                                    $data[$meeting_field] = $newVals;
                                 break;
                                 
                                 case 'worldid_mixed':
