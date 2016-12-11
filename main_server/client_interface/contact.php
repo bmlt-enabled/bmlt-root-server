@@ -489,7 +489,7 @@ else
                 {
                 if ( $g_mail_debug )
                     {
-                    die ( "From Address Invalidm" );
+                    die ( "From Address Invalid" );
                     }
             
                 $ret = -2;
