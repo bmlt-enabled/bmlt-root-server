@@ -22,7 +22,7 @@
         You should have received a copy of the GNU General Public License
         along with this code.  If not, see <http://www.gnu.org/licenses/>.
         
-        Version: 1.1.3
+        Version: 1.1.4
 */
 /*******************************************************************************************/
 function BMLTSemanticResult (   inRootServerURI,
@@ -2978,8 +2978,14 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
             switcher_select.selectedIndex = 0;
             bmlt_semantic_form_meeting_search_div.show();
             switcher_type_select_formats_option.disable();
+            switcher_type_select_sb_option.disable();
+            switcher_type_select_changes_option.disable();
             bmlt_semantic_form_weekday_header_checkbox_div.hide();
+            switcher_type_select_fieldkey_option.disable();
+            switcher_type_select_fieldval_option.disable();
+            switcher_type_select_naws_option.disable();
             blockModeDiv.hide();
+            bmlt_semantic_form_used_formats_div.hide();
             bmlt_semantic_form_weekday_fieldset.hide();
             bmlt_semantic_form_not_weekday_fieldset.hide();
             bmlt_semantic_form_specific_fields_fieldset.hide();

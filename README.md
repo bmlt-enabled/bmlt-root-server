@@ -28,6 +28,11 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
 CHANGELIST
 ----------
+***Version 1.1.4* ** *- December 11, 2016*
+
+- Fixed a bug where certain fields were not being properly hidden, and certain menu values were left enabled when they should have been disabled, when the [[BMLT_TABLE]] shortcode was selected.
+- Added support for the Google SAPI key in the embedded (in the Root Server) version.
+
 ***Version 1.1.3* ** *- May 2, 2016*
 
 - Tweaked the format of this README to match the rest of the projects.

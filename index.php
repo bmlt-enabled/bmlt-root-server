@@ -39,7 +39,8 @@ if ( file_exists ( dirname ( dirname ( __FILE__ ) ).'/server/shared/classes/comd
     $url_path .= trim ( (($https && ($port != 443)) || (!$https && ($port != 80))) ? ':'.$port : '', '/' );
     $url_path .= '/'.trim ( $subsequent_path, '/' );
     $uri = 'http'.($https ? 's' : '').'://'.$url_path;
-    $_GET = array ( 'root_server' => $uri, 'direct_workshop' => 1 );
+    $api_key = get_api_key ( $uri );
+    $_GET = array ( 'root_server' => $uri, 'direct_workshop' => 1, 'google_api_key' => $api_key,  );
     
     if ( $https )
         {
@@ -53,6 +54,40 @@ if ( file_exists ( dirname ( dirname ( __FILE__ ) ).'/server/shared/classes/comd
     }
 
 $bmlt_semantic_instance = new bmlt_semantic ( $_GET );
+    
+/**************************************************************/
+/** \brief  Query the server for its version.
+            This requires that the _bmltRootServerURI data member be valid.
+
+    \returns an integer that will be MMMmmmfff (M = Major Version, m = Minor Version, f = Fix Version).
+*/
+/**************************************************************/
+function get_api_key ( $bmltRootServerURI )
+{
+    $ret = "";
+    
+    if ( $bmltRootServerURI )
+        {
+        $error = NULL;
+    
+        $uri = $bmltRootServerURI.'/client_interface/xml/index.php?switcher=GetServerInfo';
+        $xml = bmlt_semantic::call_curl ( $uri, $error );
+        if ( !$error && $xml )
+            {
+            $info_file = new DOMDocument;
+            if ( $info_file instanceof DOMDocument )
+                {
+                if ( @$info_file->loadXML ( $xml ) )
+                    {
+                    $api_key = $info_file->getElementsByTagName ( "google_api_key" );
+                    $ret = $api_key->item ( 0 )->nodeValue;
+                    }
+                }
+            }
+        }
+    
+    return $ret;
+}
 
 ob_start();
 ?><!DOCTYPE html>

@@ -20,7 +20,7 @@
 */
 /***************************************************************************************************************************************/
 
-define ( '__VERSION__', '1.1.3' );
+define ( '__VERSION__', '1.1.4' );
 define ( '__REPO_URL__', 'https://bitbucket.org/bmlt/bmlt-semantic-workshop' );
 
 class bmlt_semantic
@@ -35,6 +35,7 @@ class bmlt_semantic
     protected $_langs;
     protected $_version;
     protected $_keys;
+    protected $_apiKey;
     
     /**************************************************************/
     /** \brief  Class function that strips all the BS from a JS or CSS file.
@@ -191,6 +192,12 @@ class bmlt_semantic
             {
             $this->_myLang = $inHttpVars['lang'];
             unset ( $inHttpVars['lang'] );
+            }
+
+        if ( isset ( $inHttpVars['google_api_key'] ) && $inHttpVars['google_api_key'] )
+            {
+            $this->_apiKey = $inHttpVars['google_api_key'];
+            unset ( $inHttpVars['google_api_key'] );
             }
     
         // Prevent dope fiending...
@@ -586,7 +593,6 @@ class bmlt_semantic
             $ret .= defined ( 'DEBUG' ) ? "\n" : '';
             $ret .= bmlt_semantic::strip_script ( 'bmlt_semantic.js' );
             $ret .= defined ( 'DEBUG' ) ? "\n" : '';
-
             $ret .= 'var bmlt_semantic_js_object'.$this->_myJSName.' = new BMLTSemantic ( \''.$this->_myJSName.'\', \''.$this->_myURI.'?ajaxCall&root_server='.urlencode ( $this->_bmltRootServerURI ).'\', \''.$this->_bmltRootServerURI.'\', '.intval ( $version ).' );';
             $ret .= defined ( 'DEBUG' ) ? "\n" : '';
             $ret .= '</script>';
@@ -1183,7 +1189,7 @@ class bmlt_semantic
          
         $ret .= '<div id="bmlt_semantic_form_map_wrapper_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_map_wrapper_div" style="display:none">';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
-        $ret .= '<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>';
+        $ret .= '<script type="text/javascript" src="http://maps.google.com/maps/api/js?key='.$this->_apiKey.'"></script>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         
         $ret .= '<div id="bmlt_semantic_form_map_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_map_div"></div>';
