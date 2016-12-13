@@ -772,8 +772,19 @@ function CSVHandleNawsDump ($in_http_Vars,  ///< The ID of the Service Body to d
             $filename = "$cc"."_$filename";
             }
         
+        $sb_array = Array("services" => Array());
+        
+        // Make sure we all have NAWS IDs.
+        foreach ( $service_bodies["services"] as $sbID )
+            {
+            $service_body_object = $in_server->GetServiceBodyByIDObj($sbID);
+            if ( $service_body_object && $service_body_object->GetWorldID() )
+                {
+                $sb_array["services"][] = $sbID;
+                }
+            }
         header ( "Content-Disposition: attachment; filename=BMLT_$filename.csv" );
-        echo ReturnNAWSFormatCSV ( $service_bodies, $in_server );
+        echo ReturnNAWSFormatCSV ( $sb_array, $in_server );
         }
 }
 

@@ -59,6 +59,7 @@ CHANGELIST
 - Fixed an old error in the Semantic Admin, where our special "variable" fields needed an extra layer of parsing.
 - Fixed an old error in the Semantic Admin, where the formats field was improperly examined.
 - Added a scrubber to the contact functionality to remove double-newlines, which bork some servers.
+- Fixed an old bug, where Service bodies without World Committee Codes were being included in the NAWS Dump.
 
 ***Version 2.8.5* ** *- November 21, 2016*
 

@@ -702,7 +702,6 @@ function ReturnNAWSFormatCSV (
 			$in_http_vars['geo_width'] = 0;
 			}
 		}
-
 	$ret_array = array ();	// If we supply an array as a second parameter, we will get the dump returned in a two-dimensional array.
 	DisplaySearchResultsCSV ( $in_http_vars, $ret_array );	// Start off by getting the CSV dump in the same manner as the normal CSV dump.
 
