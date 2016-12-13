@@ -406,30 +406,6 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 			$formats = c_comdef_server::GetServer()->GetFormatsObj ();
 			$formats_keys = array();
 			$formats_keys_header = array();
-			
-// 			if ( isset ( $in_http_vars['dump_ind_formats'] ) && $in_http_vars['dump_ind_formats'] )
-// 				{
-// 				$in_http_vars['dump_ind_formats'] = false;
-// 				if ( $formats instanceof c_comdef_formats )
-// 					{
-// 					$format_array = $formats->GetFormatsByLanguage($lang_enum);
-// 					
-// 					if ( is_array ( $format_array ) && count ( $format_array ) )
-// 						{
-// 						foreach ( $format_array as &$format )
-// 							{
-// 							if ( $format instanceof c_comdef_format )
-// 								{
-// 								$code = $format->GetKey();
-// 								$formats_keys[$code] = 0;
-// 								$formats_keys_header[] = "format_$code";
-// 								$keys[] = "format_$code";
-// 								}
-// 							}
-// 				        $in_http_vars['dump_ind_formats'] = true;
-// 						}
-// 					}
-// 				}
 		    
 		    if ( is_array ( $formats_keys_header ) && count ( $formats_keys_header ) )
 		        {
@@ -594,10 +570,6 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
                                 }
                 
                             $ret .= '"'.join ( '","', $line ).'"';
-//                             if ( isset ( $in_http_vars['dump_ind_formats'] ) && $in_http_vars['dump_ind_formats'] && is_array ( $formats_ar ) && count ( $formats_ar ) )
-//                                 {
-//                                 $ret .= ',"'.join ( '","', $formats_ar ).'"';
-//                                 }
                     
                             $ret .= "\n";
                             }
@@ -681,7 +653,8 @@ function ReturnNAWSFormatCSV (
 									'Longitude'			=> 'longitude',
 									'Latitude'			=> 'latitude',
 									'ContactGP'			=> null,
-									'bmlt_id'           => 'id_bigint'
+									'bmlt_id'           => 'id_bigint',
+									'unpublished'       => 'BMLT_FuncNAWSReturnPublishedStatus'
 								);
 	
 	$ret = null;
@@ -845,6 +818,37 @@ function ReturnNAWSDeletedMeetings (
 		}
 	return $ret;
 	}
+
+/*******************************************************************/
+/**
+	\brief Returns '' or '1', if the meeting is unpublished or not (used for the NAWS format)
+	
+	\returns A string, '' or '1'.
+*/	
+function BMLT_FuncNAWSReturnPublishedStatus (	$in_meeting_id,	///< The ID of the meeting (internal DB ID). This can also be a meeting object.
+											    &$server		///< A reference to an instance of c_comdef_server
+										    )
+{
+	$ret = '';
+	
+	if ( $in_meeting_id instanceof c_comdef_meeting )
+		{
+		$the_meeting = $in_meeting_id;
+		}
+	else
+		{
+		$the_meeting = $server->GetOneMeeting ( $in_meeting_id );
+		}
+	
+	$id = $g_format_dictionary['OPEN'];
+
+	if ( $the_meeting instanceof c_comdef_meeting )
+		{
+		$ret = $the_meeting->IsPublished() ? '' : '1';
+		}
+		
+	return $ret;
+}
 
 /*******************************************************************/
 /**

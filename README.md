@@ -60,6 +60,9 @@ CHANGELIST
 - Fixed an old error in the Semantic Admin, where the formats field was improperly examined.
 - Added a scrubber to the contact functionality to remove double-newlines, which bork some servers.
 - Fixed an old bug, where Service bodies without World Committee Codes were being included in the NAWS Dump.
+- Added an 'unpublished' column to the NAWS export.
+- If you are logged in as a Service Body Admin, and you get a NAWS export, it will now include unpublished meetings that your login can see (marked as "unpublished"). If you are not logged in, you will not get any unpublished meetings.
+- Now include the latest Satellite Base Class.
 
 ***Version 2.8.5* ** *- November 21, 2016*
 

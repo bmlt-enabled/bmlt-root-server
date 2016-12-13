@@ -772,7 +772,7 @@ function CSVHandleNawsDump ($in_http_Vars,  ///< The ID of the Service Body to d
             $filename = "$cc"."_$filename";
             }
         
-        $sb_array = Array("services" => Array());
+        $sb_array = Array("services" => Array(), "advanced_published" => 0);
         
         // Make sure we all have NAWS IDs.
         foreach ( $service_bodies["services"] as $sbID )
