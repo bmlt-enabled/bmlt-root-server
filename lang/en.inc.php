@@ -80,6 +80,7 @@ $this->_localization = array (
                                 'schema_type_selector_hier_server_info'	=>	'Server Information',
                                 'start_time_min_label'                  =>  'Meetings start after:',
                                 'start_time_max_label'                  =>  'Meetings start before:',
+                                'end_time_max_label'                    =>  'Meetings end before:',
                                 'start_time_blurb'                      =>  'Format: HH:MM (Military time). 12:00 is Noon, 23:59 is Midnight. Leave blank to ignore.',
                                 'start_time_legend'                     =>  'Meeting Start Time',
                                 'duration_legend'                       =>  'Meeting Duration',

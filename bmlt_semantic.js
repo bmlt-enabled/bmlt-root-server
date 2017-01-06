@@ -22,7 +22,7 @@
         You should have received a copy of the GNU General Public License
         along with this code.  If not, see <http://www.gnu.org/licenses/>.
         
-        Version: 1.1.4
+        Version: 1.2.0
 */
 /*******************************************************************************************/
 function BMLTSemanticResult (   inRootServerURI,
@@ -395,6 +395,28 @@ BMLTSemanticResult.prototype.compileSearchResults = function()
                 };
             
             this.compiled_params += 'StartsBeforeM=' + this.startTimeMax[1].toString();
+            };
+        };
+    
+    if ( this.endTimeMax && (this.endTimeMax[0] || this.endTimeMax[1]) )
+        {
+        if ( this.endTimeMax[0] )
+            {
+            if ( this.compiled_params )
+                {
+                this.compiled_params += '&';
+                };
+            
+            this.compiled_params += 'EndsBeforeH=' + this.endTimeMax[0].toString();
+            };
+        if ( this.endTimeMax[1] )
+            {
+            if ( this.compiled_params )
+                {
+                this.compiled_params += '&';
+                };
+            
+            this.compiled_params += 'EndsBeforeM=' + this.endTimeMax[1].toString();
             };
         };
     
@@ -1991,6 +2013,17 @@ BMLTSemantic.prototype.handleStartText = function ( inTextItem
     \brief 
 */
 /*******************************************************************************************/
+BMLTSemantic.prototype.handleEndText = function ( inTextItem
+                                                    )
+{
+    this.refreshURI();
+};
+
+/*******************************************************************************************/
+/**
+    \brief 
+*/
+/*******************************************************************************************/
 BMLTSemantic.prototype.handleDurationText = function ( inTextItem
                                                         )
 {
@@ -2613,6 +2646,7 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.setBasicFunctions ( 'bmlt_semantic_form_weekday_header_checkbox_div' );
     this.setBasicFunctions ( 'bmlt_semantic_form_start_time_min_text' );
     this.setBasicFunctions ( 'bmlt_semantic_form_start_time_max_text' );
+    this.setBasicFunctions ( 'bmlt_semantic_form_end_time_max_text' );
     this.setBasicFunctions ( 'bmlt_semantic_form_duration_min_text' );
     this.setBasicFunctions ( 'bmlt_semantic_form_duration_max_text' );
     this.setBasicFunctions ( 'bmlt_semantic_form_sb_fieldset' );
@@ -2645,11 +2679,13 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.setTextHandlers ( 'bmlt_semantic_form_map_search_latitude_text' );
     this.setTextHandlers ( 'bmlt_semantic_form_start_time_min_text' );
     this.setTextHandlers ( 'bmlt_semantic_form_start_time_max_text' );
+    this.setTextHandlers ( 'bmlt_semantic_form_end_time_max_text' );
     this.setTextHandlers ( 'bmlt_semantic_form_duration_min_text' );
     this.setTextHandlers ( 'bmlt_semantic_form_duration_max_text' );
     
     this.getScopedElement ( 'bmlt_semantic_form_start_time_min_text' ).additionalHandler = function () { this.formHandler.handleStartText ( this ) };
     this.getScopedElement ( 'bmlt_semantic_form_start_time_max_text' ).additionalHandler = function () { this.formHandler.handleStartText ( this ) };
+    this.getScopedElement ( 'bmlt_semantic_form_end_time_max_text' ).additionalHandler = function () { this.formHandler.handleEndText ( this ) };
     this.getScopedElement ( 'bmlt_semantic_form_duration_min_text' ).additionalHandler = function () { this.formHandler.handleDurationText ( this ) };
     this.getScopedElement ( 'bmlt_semantic_form_duration_max_text' ).additionalHandler = function () { this.formHandler.handleDurationText ( this ) };
     this.getScopedElement ( 'bmlt_semantic_form_changes_from_text' ).additionalHandler = function () { this.formHandler.handleChangeText ( this ) };
@@ -3069,11 +3105,13 @@ BMLTSemantic.prototype.refreshURI = function ()
     var mapRadius = this.getScopedElement ( 'bmlt_semantic_form_map_search_text_radius' );
     var startMin = this.getScopedElement ( 'bmlt_semantic_form_start_time_min_text' );
     var startMax = this.getScopedElement ( 'bmlt_semantic_form_start_time_max_text' );
+    var endMax = this.getScopedElement ( 'bmlt_semantic_form_end_time_max_text' );
     var durationMin = this.getScopedElement ( 'bmlt_semantic_form_duration_min_text' );
     var durationMax = this.getScopedElement ( 'bmlt_semantic_form_duration_max_text' );
     
     this.state.startTimeMin = null;
     this.state.startTimeMax = null;
+    this.state.endTimeMax = null;
     this.state.durationMin = null;
     this.state.durationMax = null;
     
@@ -3128,6 +3166,33 @@ BMLTSemantic.prototype.refreshURI = function ()
             };
         
         this.state.startTimeMax = time;
+        };
+    
+    if ( endMax && endMax.value )
+        {
+        var time = endMax.value.toString().split( ':' );
+
+        time[0] = Math.abs ( parseInt ( time[0] ) );
+        if ( time[0] > 23 )
+            {
+            time[0] = 23;
+            };
+            
+        if ( time[1] )
+            {
+            time[1] = Math.abs ( parseInt ( time[1] ) );
+            if ( time[1] > 59 )
+                {
+                time[1] = 59;
+                };
+            };
+        
+        if ( !time[1] )
+            {
+            time[1] = 0;
+            };
+        
+        this.state.endTimeMax = time;
         };
          
     if ( durationMin && durationMin.value )

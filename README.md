@@ -28,6 +28,10 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
 CHANGELIST
 ----------
+***Version 1.2.0* ** *- January 5, 2017*
+
+- Added support for the new "Ends Before" time parameter.
+
 ***Version 1.1.4* ** *- December 11, 2016*
 
 - Fixed a bug where certain fields were not being properly hidden, and certain menu values were left enabled when they should have been disabled, when the [[BMLT_TABLE]] shortcode was selected.
