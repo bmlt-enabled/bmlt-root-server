@@ -1146,7 +1146,14 @@ class bmlt_semantic
         $ret .= '<input pattern="^[0-9\:]{0,5}$" type="text" id="bmlt_semantic_form_start_time_max_text'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_time_text" />';
         $ret .= '</div>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
-        $ret .= '<div id="bmlt_semantic_form_end_time_fieldset_max_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_end_time_fieldset_div">';
+        $ret .= '<div id="bmlt_semantic_form_end_time_fieldset_max_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_end_time_fieldset_div"';
+        
+        if ( $this->_version < 2008008 )
+            {
+            $ret .= ' style="display:none"';
+            }
+
+        $ret .= '>';
         $ret .= '<label for="bmlt_semantic_form_end_time_max_text'.htmlspecialchars ( $this->_myJSName ).'" id="bmlt_semantic_form_end_time_max_text_label'.htmlspecialchars ( $this->_myJSName ).'">'.$this->localize_string ( 'end_time_max_label' ).'</label>';
         $ret .= '<input pattern="^[0-9\:]{0,5}$" type="text" id="bmlt_semantic_form_end_time_max_text'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_time_text" />';
         $ret .= '</div>';
