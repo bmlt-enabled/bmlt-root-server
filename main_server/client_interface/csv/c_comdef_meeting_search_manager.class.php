@@ -99,6 +99,7 @@ class c_comdef_meeting_search_manager
 	/// These specify the start time and duration of the meeting. The start time can be specified as a "window."
 	protected	$_start_after = null;			///< An epoch time (seconds, as returned by time()), that denotes the earliest starting time allowed.
 	protected	$_start_before = null;			///< An epoch time (seconds, as returned by time()), that denotes the latest starting time allowed.
+	protected	$_end_before = null;			///< An epoch time (seconds, as returned by time()), that denotes the latest ending time allowed.
 	protected	$_min_duration = null;			///< The number of seconds a meeting should last as a minimum.
 	protected	$_max_duration = null;			///< The number of seconds a meeting can last, at most.
 	
@@ -172,6 +173,7 @@ class c_comdef_meeting_search_manager
 			$this->_weekdays = $in_parent->_weekdays;
 			$this->_start_after = $in_parent->_start_after;
 			$this->_start_before = $in_parent->_start_before;
+			$this->_end_before = $in_parent->_end_before;
 			$this->_min_duration = $in_parent->_min_duration;
 			$this->_max_duration = $in_parent->_max_duration;
 			$this->_search_radius = $in_parent->_search_radius;
@@ -767,7 +769,33 @@ class c_comdef_meeting_search_manager
 			$in_starts_before = null;
 			}
 		
+		// We don't let this be less than, or equal to, the start time.
+		if ( (null != $in_starts_after) && (null != $in_starts_before)
+			&& (intval ( $in_starts_after ) >= intval ( $in_starts_before )) )
+			{
+			$in_starts_before = null;
+			}
+		
 		$this->_start_before = $in_starts_before;
+	}
+
+	/*******************************************************************/
+	/** \brief Set a maximum end time.
+	*/
+	function SetEndTime ( $in_ends_before	    ///< An epoch time, defining that the meeting must end no later than this.
+							)
+	{
+		$this->_end_before = $in_ends_before;
+	}
+	
+	/*******************************************************************/
+	/** \brief Get the "ends before" value
+		
+		\returns an integer, containing the epoch time for the value.
+	*/
+	function GetEndsBefore ()
+	{
+		return $this->_end_before;
 	}
 	
 	/*******************************************************************/
@@ -1125,6 +1153,7 @@ class c_comdef_meeting_search_manager
 																			$formats,
 																			$this->_start_after,
 																			$this->_start_before,
+																			$this->_end_before,
 																			$this->_min_duration,
 																			$this->_max_duration,
 																			$search_rect,

@@ -508,6 +508,18 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 		
 		$in_search_manager->SetStartTime ( $start_time, $end_time );
 		
+		$end_time = null;
+
+		// Next, the maximum end time..
+		if ( isset ( $in_http_vars['EndsBeforeH'] ) || isset ( $in_http_vars['EndsBeforeM'] ) )
+			{
+			$end_hour = min ( 23, max ( 0, intval ( $in_http_vars['EndsBeforeH'] ) ) );
+			$end_minute = min ( 59, max ( 0, intval ( $in_http_vars['EndsBeforeM'] ) ) );
+			$end_time = ($end_hour * 3600) + ($end_minute * 60);
+			}
+		
+		$in_search_manager->SetEndTime ( $end_time );
+		
 		// Set the duration window.
 		$max_duration_time = null;
 		$min_duration_time = null;

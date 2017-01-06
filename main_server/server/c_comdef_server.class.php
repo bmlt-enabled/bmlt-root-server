@@ -1694,6 +1694,7 @@ class c_comdef_server
                                                                     */
                                 $in_start_after = null,             ///< An epoch time (seconds, as returned by time()), that denotes the earliest starting time allowed.
                                 $in_start_before = null,            ///< An epoch time (seconds, as returned by time()), that denotes the latest starting time allowed.
+                                $in_end_before = null,              ///< An epoch time (seconds, as returned by time()), that denotes the latest ending time allowed.
                                 $in_min_duration = null,            ///< The number of seconds a meeting should last as a minimum.
                                 $in_max_duration = null,            ///< The number of seconds a meeting can last, at most.
                                 $in_search_rect_array = null,       /**< An array of floating-point numbers, representing longitude and latitude for a rectangle. This is used
@@ -1895,6 +1896,15 @@ class c_comdef_server
             $in_start_before = "00:00:00";
             }
         
+        if ( null != $in_end_before )
+            {
+            $in_end_before = intval ( $in_end_before );
+            }
+        else
+            {
+            $in_end_before = null;
+            }
+        
         if ( null != $in_min_duration )
             {
             $in_min_duration = date ( "H:i:00", intval ( $in_min_duration ) );
@@ -1943,6 +1953,23 @@ class c_comdef_server
             $sql .= self::GetMeetingTableName_obj()."_main.start_time<?";
 
             array_push ( $ar, $in_start_before );
+            }
+        
+        if ( $in_end_before != null )
+            {
+            if ( $previous )
+                {
+                $sql .= " AND ";
+                }
+            else
+                {
+                $sql .= " WHERE ";
+                $previous = true;
+                }
+
+            $sql .= "TIME_TO_SEC(".self::GetMeetingTableName_obj()."_main.start_time+".self::GetMeetingTableName_obj()."_main.duration_time)<=?";
+
+            array_push ( $ar, $in_end_before );
             }
         
         if ( $in_min_duration != "00:00:00" )
@@ -2141,7 +2168,7 @@ class c_comdef_server
                 $in_num = intval ( $in_num );
                 $sql .= " LIMIT $in_first, $in_num";
                 }
-            
+
             $ret = self::GetMeetingsFromSQL ( $sql, $ar );
             
             if ( intval ( $in_num ) )
