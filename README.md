@@ -51,10 +51,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.8.8* ** *- TBD*
+***Version 2.8.8* ** *- January 8, 2017*
 
 - Added support for a new search criteria: "Ends Before or At." This is mostly for the new [BMLTiOSLib](https://bitbucket.org/bmlt/bmltioslib) project.
-- Fixed an obscure bug in the Change JSON Semantic Response.
+- Fixed an obscure bug in the Change JSON Semantic Response. Some change records had bad data that caused the response format to break JSON validation.
 
 ***Version 2.8.7* ** *- January 1, 2017*
 
