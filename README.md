@@ -51,6 +51,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.8.9* ** *- January 8, 2017*
+
+- There was a minor issue with the 2.8.8 release. Yes, there was data bad enough to make even that ill. Hopefully, it has been addressed.
+
 ***Version 2.8.8* ** *- January 8, 2017*
 
 - Added support for a new search criteria: "Ends Before or At." This is mostly for the new [BMLTiOSLib](https://bitbucket.org/bmlt/bmltioslib) project.
