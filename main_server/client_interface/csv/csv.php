@@ -1577,7 +1577,13 @@ function MakeJSONDataObject(
                             {
                             for ( $c = 0; $c < count ( $value ); $c++ )
                                 {
-                                $value[$c] = trim ( json_encode ( $value[$c] ), '"' );
+                                $val = trim ( json_encode ( $value[$c] ), '"' );
+                                $val = json_encode ( $val );
+                                $val = str_replace ( '&quot;', '"', $val );
+                                $val = str_replace ( '&amp;', '&', $val );
+                                $val = preg_replace ( "|\s+|", ' ', $val );
+                                $val = trim ( $val, '"' );
+                                $value[$c] = trim ( $val, "\\" );
                                 }
                                 
                             if ( $json_data )
@@ -1594,7 +1600,8 @@ function MakeJSONDataObject(
                         $value = str_replace ( '&quot;', '"', $value );
                         $value = str_replace ( '&amp;', '&', $value );
                         $value = preg_replace ( "|\s+|", ' ', $value );
-                        $value = c_comdef_htmlspecialchars ( $value );
+                        $value = trim ( $value, '"' );
+                        $value = trim ( $value, "\\" );
                         if ( $json_data )
                             {
                             $json_data .= ',';

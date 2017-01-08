@@ -54,6 +54,7 @@ CHANGELIST
 ***Version 2.8.8* ** *- TBD*
 
 - Added support for a new search criteria: "Ends Before or At." This is mostly for the new [BMLTiOSLib](https://bitbucket.org/bmlt/bmltioslib) project.
+- Fixed an obscure bug in the Change JSON Semantic Response.
 
 ***Version 2.8.7* ** *- January 1, 2017*
 
