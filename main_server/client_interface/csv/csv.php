@@ -1552,7 +1552,7 @@ function MakeJSONDataObject(
             if ( $key )
                 {
                 $value = $in_meeting_object->GetMeetingDataValue ( $key );
-        
+                
                 if ( $value )
                     {
                     if ( $key == 'formats' )
@@ -1577,13 +1577,10 @@ function MakeJSONDataObject(
                             {
                             for ( $c = 0; $c < count ( $value ); $c++ )
                                 {
-                                $val = trim ( json_encode ( $value[$c] ), '"' );
-                                $val = json_encode ( $val );
+                                $val = json_encode ( trim ( $value[$c], '"' ) );
                                 $val = str_replace ( '&quot;', '"', $val );
                                 $val = str_replace ( '&amp;', '&', $val );
-                                $val = preg_replace ( "|\s+|", ' ', $val );
-                                $val = trim ( $val, '"' );
-                                $value[$c] = trim ( $val, "\\" );
+                                $value[$c] = trim ( preg_replace ( "|\s+|", ' ', $val ), '"' );
                                 }
                                 
                             if ( $json_data )
@@ -1596,12 +1593,12 @@ function MakeJSONDataObject(
                         }
                     else
                         {
+                        $value = trim ( $value, "\\" );
+                        $value = preg_replace ( "|^\"\"|", "\"&quot;", $value );
                         $value = trim ( json_encode ( $value ), '"' );
                         $value = str_replace ( '&quot;', '"', $value );
                         $value = str_replace ( '&amp;', '&', $value );
-                        $value = preg_replace ( "|\s+|", ' ', $value );
-                        $value = trim ( $value, '"' );
-                        $value = trim ( $value, "\\" );
+                        $value = trim ( preg_replace ( "|\s+|", ' ', $value ), '"' );
                         if ( $json_data )
                             {
                             $json_data .= ',';
