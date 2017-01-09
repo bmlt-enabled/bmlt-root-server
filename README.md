@@ -53,7 +53,7 @@ CHANGELIST
 ----------
 ***Version 2.8.10* ** *- TBD*
 
-- Changes needed to return IDs.
+- Changes needed to return IDs. This is mostly for the new [BMLTiOSLib](https://bitbucket.org/bmlt/bmltioslib) project.
 
 ***Version 2.8.9* ** *- January 8, 2017*
 
