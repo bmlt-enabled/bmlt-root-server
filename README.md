@@ -51,9 +51,9 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.8.10* ** *- TBD*
+***Version 2.8.10* ** *- January 9, 2017*
 
-- Changes needed to return IDs. This is mostly for the new [BMLTiOSLib](https://bitbucket.org/bmlt/bmltioslib) project.
+- Changes needed to return IDs in the Semantic Interface. This is mostly for the new [BMLTiOSLib](https://bitbucket.org/bmlt/bmltioslib) project. Since that project is now alpha, we should release this.
 
 ***Version 2.8.9* ** *- January 8, 2017*
 
