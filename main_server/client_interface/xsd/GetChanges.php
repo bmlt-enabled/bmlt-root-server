@@ -53,6 +53,7 @@ echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
 							<xs:element minOccurs="0" maxOccurs="1" name="date_int" type="xs:integer"/>
 							<xs:element minOccurs="0" maxOccurs="1" name="date_string" type="xs:string"/>
 							<xs:element minOccurs="0" maxOccurs="1" name="change_type" type="xs:NCName"/>
+							<xs:element minOccurs="0" maxOccurs="1" name="change_id" type="xs:integer"/>
 							<xs:element minOccurs="0" maxOccurs="1" name="meeting_id" type="xs:integer"/>
 							<xs:element minOccurs="0" maxOccurs="1" name="meeting_name" type="xs:string"/>
 							<xs:element minOccurs="0" maxOccurs="1" name="user_id" type="xs:integer"/>

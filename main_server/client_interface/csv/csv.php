@@ -1298,7 +1298,7 @@ function GetChanges (
 	            set_time_limit ( max ( 30, intval ( count ( $obj_array ) / 20 ) ) ); // Change requests can take a loooong time...
 				$localized_strings = c_comdef_server::GetLocalStrings();
 				include ( dirname ( __FILE__ ).'/../../server/config/get-config.php' );
-				$ret = '"date_int","date_string","change_type","meeting_id","meeting_name","user_id","user_name","service_body_id","service_body_name","meeting_exists","details","json_data"'."\n";
+				$ret = '"date_int","date_string","change_type","change_id","meeting_id","meeting_name","user_id","user_name","service_body_id","service_body_name","meeting_exists","details","json_data"'."\n";
                 
                 // If they specify a Service body, we also look in "child" Service bodies, so we need to produce a flat array of IDs.
                 if ( isset ( $in_sb_id ) && $in_sb_id )
@@ -1341,6 +1341,7 @@ function GetChanges (
 					{
 					$change_type = $change->GetChangeType();
 					$date_int = intval($change->GetChangeDate());
+					$change_id = intval($change->GetID());
 					$date_string = date ($change_date_format, $date_int );
 					$json_data = '';
 				    
@@ -1437,6 +1438,15 @@ function GetChanges (
                                 else
                                     {
                                     $change_line['change_type'] = '';
+                                    }
+                                
+                                if ( $change_id )
+                                    {
+                                    $change_line['change_id'] = $change_id;
+                                    }
+                                else
+                                    {
+                                    $change_line['change_id'] = 0;
                                     }
                                 
                                 if ( $meeting_id )
