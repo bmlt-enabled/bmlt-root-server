@@ -51,9 +51,13 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.8.11* ** *- TBD*
+
+- Fixed a bug in the new meeting add functionality (semantic admin). This will only affect the [BMLTiOSLib](https://bmlt.magshare.net/specific-topics/bmltioslib/).
+
 ***Version 2.8.10* ** *- January 9, 2017*
 
-- Changes needed to return IDs in the Semantic Interface. This is mostly for the new [BMLTiOSLib](https://bitbucket.org/bmlt/bmltioslib) project. Since that project is now alpha, we should release this.
+- Changes needed to return IDs in the Semantic Interface. This is mostly for the new [BMLTiOSLib](https://bmlt.magshare.net/specific-topics/bmltioslib/) project. Since that project is now alpha, we should release this.
 
 ***Version 2.8.9* ** *- January 8, 2017*
 
@@ -61,7 +65,7 @@ CHANGELIST
 
 ***Version 2.8.8* ** *- January 8, 2017*
 
-- Added support for a new search criteria: "Ends Before or At." This is mostly for the new [BMLTiOSLib](https://bitbucket.org/bmlt/bmltioslib) project.
+- Added support for a new search criteria: "Ends Before or At." This is mostly for the new [BMLTiOSLib](https://bmlt.magshare.net/specific-topics/bmltioslib/) project.
 - Fixed an obscure bug in the Change JSON Semantic Response. Some change records had bad data that caused the response format to break JSON validation.
 
 ***Version 2.8.7* ** *- January 1, 2017*

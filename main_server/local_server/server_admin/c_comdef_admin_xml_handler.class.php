@@ -1533,7 +1533,10 @@ class c_comdef_admin_xml_handler
                                     
                                     foreach ( $old_value_array as $format )
                                         {
-                                        $vals[$format->GetSharedID()] = $format;
+                                        if ( $format )
+                                            {
+                                            $vals[$format->GetSharedID()] = $format;
+                                            }
                                         }
                                     
                                     uksort ( $vals, array ( 'c_comdef_meeting','format_sorter_simple' ) );
