@@ -2102,6 +2102,11 @@ function BMLT_Server_Admin ()
                 hours -= 12;
                 pm = true;
                 }
+            else if ( (hours == 0) && (minutes > 0) )
+                {
+                pm = false;
+                hours = 12;
+                }
             else if ( (hours == 12) && (minutes > 0) )
                 {
                 pm = true;
@@ -2110,8 +2115,8 @@ function BMLT_Server_Admin ()
         
         if ( midnight )
             {
-            BMLT_Admin_setSelectByValue ( time_hour_select, 0 );
             BMLT_Admin_setSelectByValue ( time_minute_select, 0 );
+            BMLT_Admin_setSelectByValue ( time_hour_select, 0 );
             }
         else if ( noon )
             {
@@ -2379,12 +2384,18 @@ function BMLT_Server_Admin ()
         else
             {
             var hour = parseInt ( time_hour_select.options[time_hour_select.selectedIndex].value, 10 );
-            if ( (time_pm_radio.checked) && (hour != 12) )
+            var minute = parseInt ( time_minute_select.options[time_minute_select.selectedIndex].value, 10 )
+            
+            if ( time_pm_radio.checked && (hour != 12) )
                 {
                 hour += 12;
-                };
+                }
+            else if ( !time_pm_radio.checked && (hour == 12) )
+                {
+                hour = 0;
+                }
             
-            timeval = sprintf ( '%02d:%02d:00', parseInt ( hour, 10 ), parseInt ( time_minute_select.options[time_minute_select.selectedIndex].value, 10 ) );
+            timeval = sprintf ( '%02d:%02d:00', hour, minute );
             };
             
         the_meeting_object.start_time = timeval;
