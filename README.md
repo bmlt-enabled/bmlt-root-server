@@ -51,7 +51,7 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.8.11* ** *- TBD*
+***Version 2.8.11* ** *- February 28, 2017*
 
 - Fixed a bug in the new meeting add functionality (semantic admin). This will only affect the [BMLTiOSLib](https://bmlt.magshare.net/specific-topics/bmltioslib/).
 - Fixed a bug, where setting time between 12:01AM (00:01) -> 12:59AM (00:59) would revert to "PM."
