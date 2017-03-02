@@ -1353,9 +1353,9 @@ class c_comdef_admin_xml_handler
                         else    // Otherwise, it is picked for us.
                             {
                             // We have to do this odd dance, because it's an associative array.
-                            $keys = array_keys ( $my_editable_service_bodies );
+                            $keys_1 = array_keys ( $my_editable_service_bodies );
                             
-                            $service_body = $my_editable_service_bodies[$keys[0]];
+                            $service_body = $my_editable_service_bodies[$keys_1[0]];
                             
                             if ( $service_body instanceof c_comdef_service_body )
                                 {
@@ -1541,13 +1541,13 @@ class c_comdef_admin_xml_handler
                                     
                                     uksort ( $vals, array ( 'c_comdef_meeting','format_sorter_simple' ) );
                                     
-                                    $keys = Array();
+                                    $keys_2 = Array();
                                     foreach ( $vals as $format )
                                         {
-                                        $keys[] = $format->GetKey();
+                                        $keys_2[] = $format->GetKey();
                                         }
                                         
-                                    $old_value = implode ( ",", $keys );
+                                    $old_value = implode ( ",", $keys_2 );
                                     
                                     $formats = explode ( ",", $value );
                                     $formats_object = $this->server->GetFormatsObj();

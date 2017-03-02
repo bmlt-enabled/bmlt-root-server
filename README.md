@@ -51,7 +51,9 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.8.12* ** *- TBD*
+***Version 2.8.12* ** *- March 2, 2017*
+
+- Fixed a rather obscure semantic admin bug that caused problems with meeting names and data when duplicating meetings.
 
 ***Version 2.8.11* ** *- February 28, 2017*
 
