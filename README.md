@@ -51,6 +51,8 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.8.12* ** *- TBD*
+
 ***Version 2.8.11* ** *- February 28, 2017*
 
 - Fixed a bug in the new meeting add functionality (semantic admin). This will only affect the [BMLTiOSLib](https://bmlt.magshare.net/specific-topics/bmltioslib/).
