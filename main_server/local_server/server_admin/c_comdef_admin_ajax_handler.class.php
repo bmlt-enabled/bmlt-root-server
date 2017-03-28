@@ -639,6 +639,7 @@ class c_comdef_admin_ajax_handler
                 {
                 $sb_to_change->SetOwnerID ( $parent_service_body_id );
                 $sb_to_change->SetLocalName ( $name );
+                $description = preg_replace ( '|[^\S]+?|', " ", $description );
                 $sb_to_change->SetLocalDescription ( $description );
                 $sb_to_change->SetPrincipalUserID ( $main_user_id );
                 $sb_to_change->SetEditors ( $editor_ids );
@@ -1031,7 +1032,7 @@ class c_comdef_admin_ajax_handler
                             uksort ( $vals, array ( 'c_comdef_meeting','format_sorter_simple' ) );
                             $value = $vals;
                             }
-                
+                        
                         switch ( $key )
                             {
                             case    'zoom':

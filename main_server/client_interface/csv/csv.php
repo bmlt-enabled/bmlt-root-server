@@ -1158,7 +1158,8 @@ function GetServiceBodies   (
                     $row[] = $sb->GetID();
                     $row[] = $sb->GetOwnerID();
                     $row[] = $sb->GetLocalName();
-                    $row[] = $sb->GetLocalDescription();
+                    $description = preg_replace ( '|[^\S]+?|', " ", $sb->GetLocalDescription() );
+                    $row[] = $description;
                     $row[] = $sb->GetSBType();
                     $row[] = $sb->GetURI();
                     $row[] = $sb->GetKMLURI();

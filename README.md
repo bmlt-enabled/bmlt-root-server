@@ -54,6 +54,7 @@ CHANGELIST
 ***Version 2.8.13* ** *- TBD*
 
 - Updated to the latest Satellite Base Class (will not make any difference in operation).
+- Added a filter for the Service Body Description. People have been pasting junk in there, and it's been causing problems.
 
 ***Version 2.8.12* ** *- March 4, 2017*
 
