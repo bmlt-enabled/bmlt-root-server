@@ -51,10 +51,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.8.13* ** *- TBD*
+***Version 2.8.13* ** *- March 30, 2017*
 
 - Updated to the latest Satellite Base Class (will not make any difference in operation).
-- Added a filter for the Service Body Description. People have been pasting junk in there, and it's been causing problems.
+- Added a filter for the Service Body Description. People have been pasting junk in there, and it's been causing problems with [the Sandwich project](https://github.com/radius314/sandwich).
 
 ***Version 2.8.12* ** *- March 4, 2017*
 
