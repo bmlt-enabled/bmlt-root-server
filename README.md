@@ -51,6 +51,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.8.14* ** *- TBD*
+
+- Updated to the latest Semantic Workshop (1.2.1).
+
 ***Version 2.8.13* ** *- March 30, 2017*
 
 - Updated to the latest Satellite Base Class (will not make any difference in operation).
