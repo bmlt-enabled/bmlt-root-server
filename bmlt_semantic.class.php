@@ -20,7 +20,7 @@
 */
 /***************************************************************************************************************************************/
 
-define ( '__VERSION__', '1.2.0' );
+define ( '__VERSION__', '1.2.1' );
 define ( '__REPO_URL__', 'https://bitbucket.org/bmlt/bmlt-semantic-workshop' );
 
 class bmlt_semantic
@@ -1201,7 +1201,7 @@ class bmlt_semantic
          
         $ret .= '<div id="bmlt_semantic_form_map_wrapper_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_map_wrapper_div" style="display:none">';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
-        $ret .= '<script type="text/javascript" src="http://maps.google.com/maps/api/js?key='.$this->_apiKey.'"></script>';
+        $ret .= '<script type="text/javascript" src="https://maps.google.com/maps/api/js?key='.$this->_apiKey.'"></script>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         
         $ret .= '<div id="bmlt_semantic_form_map_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_form_map_div"></div>';

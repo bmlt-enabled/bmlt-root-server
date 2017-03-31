@@ -28,6 +28,10 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
 CHANGELIST
 ----------
+***Version 1.2.1* ** *- March 31, 2017*
+
+- The Google Maps API include needed to be SSL.
+
 ***Version 1.2.0* ** *- January 5, 2017*
 
 - Added support for the new "Ends Before" time parameter.
