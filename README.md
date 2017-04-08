@@ -54,6 +54,8 @@ CHANGELIST
 ***Version 2.8.14* ** *- TBD*
 
 - Updated to the latest Semantic Workshop (1.2.1).
+- Fixed a couple of warnings for undefined variables.
+- Updated a file inculde to remove POSIX backreference (/../), as security software no likee.
 
 ***Version 2.8.13* ** *- March 30, 2017*
 

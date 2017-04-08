@@ -209,7 +209,7 @@ class c_comdef_server
                 {
                 while ( false !== ($enum = readdir( $dh )) )
                     {
-                    $file_path = dirname ( __FILE__ )."/../local_server/server_admin/lang/$enum/name.txt";
+                    $file_path = dirname ( dirname ( __FILE__ ) )."/local_server/server_admin/lang/$enum/name.txt";
                     if ( file_exists ( $file_path ) )
                         {
                         $server_lang_names[$enum] = trim ( file_get_contents ( $file_path ) );

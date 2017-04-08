@@ -1194,10 +1194,10 @@ function GetServerInfo()
     $lang_string = implode ( ',', array_keys ( $lang_array ) );
     $localStrings = c_comdef_server::GetLocalStrings();
     $default_lang = strval ( $localStrings['enum'] );
-    $canAdmin = $g_enable_semantic_admin ? '1' : '0';
+    $canAdmin = isset ( $g_enable_semantic_admin ) && $g_enable_semantic_admin ? '1' : '0';
     $centerLongLatZoom = implode ( ',', $localStrings['search_spec_map_center'] );
-    $canEmail = $g_enable_email_contact ? '1' : '0';
-    $includeServiceBodiesOnEmails = $include_service_body_admin_on_emails ? '1' : '0';
+    $canEmail = isset ( $g_enable_email_contact ) && $g_enable_email_contact ? '1' : '0';
+    $includeServiceBodiesOnEmails = isset ( $include_service_body_admin_on_emails ) && $include_service_body_admin_on_emails ? '1' : '0';
     $changeDepth = strVal ( intval ( $change_depth_for_meetings ) );
     $availableFields = "";
     $keys = c_comdef_meeting::GetFullTemplate ( );
