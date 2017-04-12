@@ -2770,7 +2770,7 @@ class c_comdef_server
                                                                                     c_comdef_service_body__ZFM__ => $comdef_server_admin_strings['service_body_editor_type_c_comdef_service_body__ZFM__']
                                                                                     );
 
-            
+            c_comdef_server::$server_local_strings['default_closed_status'] = (!isset ( $g_defaultClosedStatus ) || $g_defaultClosedStatus) ? 1 : ((isset ( $g_defaultClosedStatus ) && !$g_defaultClosedStatus) ? 0 : 1);
             if ( trim($comdef_distance_units) )
                 {
                 c_comdef_server::$server_local_strings['dist_units'] = strtolower(trim($comdef_distance_units));

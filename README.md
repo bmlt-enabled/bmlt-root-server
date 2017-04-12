@@ -51,11 +51,13 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.8.14* ** *- TBD*
+***Version 2.8.14* ** *- April 12, 2017*
 
 - Updated to the latest Semantic Workshop (1.2.1).
 - Fixed a couple of warnings for undefined variables.
 - Updated a file inculde to remove POSIX backreference (/../), as security software no likee.
+- Added the ability to have the default status of meetings set to "OPEN" in the case of NAWS dumps.
+- Fixed a bug that always forced meetings to be listed as "CLOSED" in the NAWS dump.
 
 ***Version 2.8.13* ** *- March 30, 2017*
 

@@ -44,31 +44,34 @@ if ( !isset ( $g_format_dictionary ) || !is_array ( $g_format_dictionary ) || !c
 	/// This is the default set.
 	/// The right side is the BMLT side, and the left side is the NAWS code. The left side should not be changed.
 	$g_format_dictionary = array (
-								'BEG'	=> 1,
-								'BT'	=> 3,
-								'CAN'	=> 6,
-								'CPT'	=> null,
-								'CW'	=> 7,
-								'DISC'	=> 8,
-								'GL'	=> 10,
-								'IP'	=> 12,
-								'IW'	=> 13,
-								'JFT'	=> 14,
-								'LIT'	=> 36,
-								'M'		=> 15,
-								'MED'	=> null,
-								'NS'	=> 37,
-								'QA'	=> null,
-								'RA'	=> null,
-								'SMOK'	=> 25,
-								'SPK'	=> 22,
-								'STEP'	=> 27,
-								'SWG'	=> 23,
-								'TOP'	=> 29,
-								'TRAD'	=> 30,
-								'VAR'	=> 19,
-								'W'		=> 32,
-								'Y'		=> 34
+								'CPT'	    => null,
+								'MED'	    => null,
+								'QA'	    => null,
+								'RA'	    => null,
+								'BEG'	    => 1,
+								'BT'	    => 3,
+								'OPEN'	    => 4,
+								'CAN'	    => 6,
+								'CW'	    => 7,
+								'DISC'	    => 8,
+								'GL'	    => 10,
+								'IP'	    => 12,
+								'IW'	    => 13,
+								'JFT'	    => 14,
+								'LIT'	    => 36,
+								'M'		    => 15,
+								'CLOSED'    => 17,
+								'NS'	    => 37,
+								'SMOK'	    => 25,
+								'SPK'	    => 22,
+								'STEP'	    => 27,
+								'SWG'	    => 23,
+								'TOP'	    => 29,
+								'TRAD'	    => 30,
+								'VAR'	    => 19,
+								'W'		    => 32,
+								'WCHR'      => 33,
+								'Y'		    => 34
 								);
 	}
 
@@ -862,7 +865,10 @@ function BMLT_FuncNAWSReturnOpenOrClosed (	$in_meeting_id,	///< The ID of the me
 {
     global $g_format_dictionary;
     
-	$ret = 'CLOSED';
+    $localized_strings = c_comdef_server::GetLocalStrings();
+
+	$ret = $localized_strings['default_closed_status'] ? 'CLOSED' : 'OPEN'; // This is the default closed/open status.
+	$opposite = $localized_strings['default_closed_status'] ? 'OPEN' : 'CLOSED';
 	
 	if ( $in_meeting_id instanceof c_comdef_meeting )
 		{
@@ -873,7 +879,7 @@ function BMLT_FuncNAWSReturnOpenOrClosed (	$in_meeting_id,	///< The ID of the me
 		$the_meeting = $server->GetOneMeeting ( $in_meeting_id );
 		}
 	
-	$id = $g_format_dictionary['OPEN'];
+	$id = $g_format_dictionary[$opposite];
 
 	if ( $the_meeting instanceof c_comdef_meeting )
 		{
@@ -881,10 +887,9 @@ function BMLT_FuncNAWSReturnOpenOrClosed (	$in_meeting_id,	///< The ID of the me
 		
 		if ( is_array ( $formats ) && count ( $formats ) )
 			{
-			
 			if ( isset ( $formats[$id] ) )
 				{
-				$ret = 'OPEN';
+				$ret = $opposite;
 				}
 			}
 		}
