@@ -51,6 +51,8 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.8.15* ** *- TBD*
+
 ***Version 2.8.14* ** *- April 12, 2017*
 
 - Updated to the latest Semantic Workshop (1.2.1).
