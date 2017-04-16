@@ -585,7 +585,7 @@ CHANGELIST
 
 ***Version 2.1.9* ** *- December 12, 2013*
 
-- Fixed a very small bug in the simple output. This would only affect rare installations. If a single_meeting_id** link was provided, it would not resolve properly.**
+- Fixed a very small bug in the simple output. This would only affect rare installations. If a "single_meeting_id=" link was provided, it would not resolve properly.
 
 
 ***Version 2.1.8* ** *- December 11, 2013*
