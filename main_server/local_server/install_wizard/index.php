@@ -19,7 +19,7 @@
 */
 defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
-$config_file_path = dirname ( __FILE__ ).'/../../server/config/get-config.php';
+$config_file_path = dirname ( dirname ( dirname ( __FILE__ ) ) ).'/server/config/get-config.php';
 
 if ( file_exists ( $config_file_path ) )
     {

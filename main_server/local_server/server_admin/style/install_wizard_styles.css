@@ -159,6 +159,8 @@ fieldset
 div.explanatory_text_div
 {
     padding:0.5em;
+    clear:both;
+    float: none;
     font-size:small;
     font-weight:medium;
     font-style:italic;
@@ -415,4 +417,24 @@ pre.result_code_pre
     -webkit-border-radius: 5px;
     border-radius: 5px;
     background-color:#efefef;
+}
+
+input.api_text_entry
+{
+    width: 30em;
+}
+
+h1.not_set_h1
+{
+    color: white;
+    text-align: center;
+    vertical-align: middle;
+    width: 100%;
+    height: 100%;
+    line-height: 200%;
+}
+
+select
+{
+    margin-right: 0.5em;
 }

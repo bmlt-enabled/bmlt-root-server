@@ -133,6 +133,22 @@ class c_comdef_server
             {
             self::SetServer ( $this );
             include ( dirname ( __FILE__ )."/config/get-config.php" );
+    
+            if ( !isset ( $dbType ) )
+                {
+                $dbType = 'mysql';
+                }
+    
+            if ( !isset ( $dbServer ) )
+                {
+                $dbServer = 'localhost';
+                }
+    
+            if ( !isset ( $dbPrefix ) )
+                {
+                $dbPrefix = 'na';
+                }
+
             c_comdef_dbsingleton::init ( $dbType, $dbServer, $dbName, $dbUser, $dbPassword, 'utf8' );
             
             // These are all the base names of the SQL tables.

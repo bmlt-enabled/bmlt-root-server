@@ -37,7 +37,9 @@ if ( isset ( $http_vars['lang_enum'] ) && $http_vars['lang_enum'] )
 
 $http_vars['lang_enum'] = $lang_enum;       // Quick and dirty way to ensure that this gets properly propagated.
 
-require_once ( dirname ( __FILE__ ).'/install_wizard/index.php' );  // We test for the install wizard, first.
+$file_loc = dirname ( __FILE__ ).'/install_wizard/index.php';
+
+require_once ( $file_loc );  // We test for the install wizard, first.
 
 if ( isset ( $g_enable_language_selector ) && $g_enable_language_selector )
     {

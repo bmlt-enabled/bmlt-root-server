@@ -25,6 +25,8 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
     var m_installer_state;
     var m_ajax_uri;
     var m_ajax_request_in_progress;
+    var m_google_api_key = "";
+    var m_google_maps_script = null;
     
     // #mark - 
     // #mark Page Selection Handlers
@@ -51,11 +53,6 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
         if ( this.m_installer_wrapper_object.className != 'page_2_wrapper' )
             {
             this.m_installer_wrapper_object.className = 'page_2_wrapper';
-            
-            if ( !this.m_map_object )
-                {
-                this.m_map_object = this.createLocationMap ( document.getElementById ('installer_map_display_div') );
-                };
             };
     };
     
@@ -209,40 +206,40 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
     
     /************************************************************************************//**
     *   \brief This creates the map for the location tab.                                   *
-    *   \returns the map object.                                                            *
     ****************************************************************************************/
-    this.createLocationMap = function(  in_parent_div   // The div element containing this map.
-                                    )
+    this.createLocationMap = function( )
     {
-        var map_object = null;
-
-        var myOptions = {
-                        'center': new google.maps.LatLng ( this.m_installer_state.search_spec_map_center.latitude, this.m_installer_state.search_spec_map_center.longitude ),
-                        'zoom': parseInt ( this.m_installer_state.search_spec_map_center.zoom ),
-                        'mapTypeId': google.maps.MapTypeId.ROADMAP,
-                        'mapTypeControlOptions': { 'style': google.maps.MapTypeControlStyle.DROPDOWN_MENU },
-                        'zoomControl': true,
-                        'mapTypeControl': true,
-                        'disableDoubleClickZoom' : true,
-                        'draggableCursor': "crosshair",
-                        'scaleControl' : true
-                        };
-
-        myOptions.zoomControlOptions = { 'style': google.maps.ZoomControlStyle.LARGE };
-
-        map_object = new google.maps.Map ( in_parent_div, myOptions );
-    
-        if ( map_object )
+        if ( !this.m_map_object )
             {
-            map_object.setOptions({'scrollwheel': false});   // For some reason, it ignores setting this in the options.
-            google.maps.event.addListener ( map_object, 'click', g_installer_object.reactToMapClick );
+            var myOptions = {
+                            'center': new google.maps.LatLng ( this.m_installer_state.search_spec_map_center.latitude, this.m_installer_state.search_spec_map_center.longitude ),
+                            'zoom': parseInt ( this.m_installer_state.search_spec_map_center.zoom ),
+                            'mapTypeId': google.maps.MapTypeId.ROADMAP,
+                            'mapTypeControlOptions': { 'style': google.maps.MapTypeControlStyle.DROPDOWN_MENU },
+                            'zoomControl': true,
+                            'mapTypeControl': true,
+                            'disableDoubleClickZoom' : true,
+                            'draggableCursor': "crosshair",
+                            'scaleControl' : true,
+                            'scrollwheel' : false
+                            };
+
+            myOptions.zoomControlOptions = { 'style': google.maps.ZoomControlStyle.LARGE };
+
+            parent_div = document.getElementById ( 'installer_map_display_div' );
+            parent_div.innerHTML = '';
+            this.m_map_object = new google.maps.Map ( parent_div, myOptions );
+            
+            google.maps.event.addListener ( this.m_map_object, 'click', g_installer_object.reactToMapClick );
+
+            this.m_map_object.setOptions ( myOptions );
             
             m_icon_image = new google.maps.MarkerImage ( "./local_server/server_admin/style/images/NACenterMarker.png", new google.maps.Size(21, 36), new google.maps.Point(0,0), new google.maps.Point(11, 36) );
             m_icon_shadow = new google.maps.MarkerImage( "./local_server/server_admin/style/images/NACenterMarkerS.png", new google.maps.Size(43, 36), new google.maps.Point(0,0), new google.maps.Point(11, 36) );
 
-            map_object.main_marker = new google.maps.Marker ({
-                                                                'position':     map_object.getCenter(),
-                                                                'map':          map_object,
+            this.m_map_object.main_marker = new google.maps.Marker ({
+                                                                'position':     this.m_map_object.getCenter(),
+                                                                'map':          this.m_map_object,
                                                                 'icon':         m_icon_image,
                                                                 'shadow':       m_icon_shadow,
                                                                 'clickable':    false,
@@ -250,10 +247,8 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
                                                                 'draggable':    true
                                                                 } );
             
-            google.maps.event.addListener ( map_object.main_marker, 'dragend', g_installer_object.reactToMapClick );
+            google.maps.event.addListener ( this.m_map_object.main_marker, 'dragend', g_installer_object.reactToMapClick );
             };
-            
-        return map_object;
     };
     
     /************************************************************************************//**
@@ -574,6 +569,8 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
         
         this.m_installer_state.region_bias = region_bias_object.options[region_bias_object.selectedIndex].value;
         
+        this.m_installer_state.api_key = document.getElementById ( 'api_text_entry' ).value;
+        
         if ( this.m_map_object )
             {
             var centerPos = this.m_map_object.main_marker.getPosition();
@@ -605,6 +602,14 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
         
         this.m_installer_state.enable_email_contact = document.getElementById ( 'installer_admin_email_contact_checkbox' ).checked;
         
+        this.m_installer_state.enable_semantic_admin = document.getElementById ( 'semantic_admin_checkbox' ).checked;
+        
+        this.m_installer_state.default_closed = document.getElementById ( 'default_closed_checkbox' ).checked;
+        
+        this.m_installer_state.send_copy_to_sba = document.getElementById ( 'installer_admin_email_sba_contact_checkbox' ).checked;
+        
+        this.m_installer_state.send_copy_to_all_admins = document.getElementById ( 'installer_admin_email_all_admins_checkbox' ).checked;
+        
         this.m_installer_state.default_duration_text = '';
     };
     
@@ -632,6 +637,7 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
 
             ret += "\n\t\t// Location and Map settings:\n";
             ret += "\t\t$region_bias = '" + this.m_installer_state.region_bias + "'; // This is a 2-letter code for a 'region bias,' which helps Google Maps to figure out ambiguous search queries.\n";
+            ret += "\t\t$gKey = '" + this.m_installer_state.api_key + "'; // This is the Google Maps JavaScript API Key, necessary for using Google Maps.\n";
             ret += "\t\t$search_spec_map_center = array ( 'longitude' => " + parseFloat ( this.m_installer_state.search_spec_map_center.longitude ).toString() + ", 'latitude' => " + parseFloat ( this.m_installer_state.search_spec_map_center.latitude ).toString() + ", 'zoom' => " + parseInt ( this.m_installer_state.search_spec_map_center.zoom, 10 ).toString() + " ); // This is the default map location for new meetings.\n";
             ret += "\t\t$comdef_distance_units = '" + this.m_installer_state.comdef_distance_units + "';\n";
 
@@ -643,18 +649,23 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
             ret += "\t\t$comdef_global_language ='" + this.m_installer_state.comdef_global_language + "'; // This is the 2-letter code for the default root server localization (will default to 'en' -English, if the localization is not available).\n";
             ret += "\t\t$min_pw_len = " + this.m_installer_state.min_pw_len + "; // The minimum number of characters in a user account password for this root server.\n";
             ret += "\t\t$number_of_meetings_for_auto = " + parseInt ( this.m_installer_state.number_of_meetings_for_auto, 10 ) + "; // This is an approximation of the number of meetings to search for in the auto-search feature. The higher the number, the wider the radius.\n";
-            ret += "\t\t$change_depth_for_meetings = " + parseInt ( this.m_installer_state.change_depth_for_meetings, 10 ) + "; // This is how many changes should be recorded for each meeting. The higher the number, the larger the database will grow, as this can become quite substantial.\n";
+            ret += "\t\t$change_depth_for_meetings = " + parseInt ( this.m_installer_state.change_depth_for_meetings, 10 ) + ";\t// This is how many changes should be recorded for each meeting.";
+            ret += "\n\t\t\t\t\t\t// The higher the number, the larger the database will grow, as this can become quite substantial.\n";
             ret += "\t\t$default_duration_time = '" + this.m_installer_state.default_duration_time + "'; // This is the default duration for meetings that have no duration specified.\n";
             ret += "\t\t$g_enable_language_selector = " + (this.m_installer_state.enable_language_selector ? 'TRUE' : 'FALSE') + "; // Set this to TRUE (or 1) to enable a popup on the login screen that allows the administrator to select their language.\n";
+            ret += "\t\t$g_enable_semantic_admin = " + (this.m_installer_state.enable_semantic_admin ? 'TRUE' : 'FALSE') + "; // If this is TRUE (or 1), then Semantic Administration for this Server is enabled (Administrators can log in using apps).\n";
+            ret += "\t\t$g_defaultClosedStatus = " + (this.m_installer_state.default_closed ? 'TRUE' : 'FALSE') + "; // If this is FALSE (or 0), then the default (unspecified) Open/Closed format for meetings reported to NAWS is OPEN. Otherwise, it is CLOSED.\n";
+            ret += "\n\t\t// These reflect the way that we handle contact emails.\n";
             ret += "\t\t$g_enable_email_contact = " + (this.m_installer_state.enable_email_contact ? 'TRUE' : 'FALSE') + "; // If this is TRUE (or 1), then this will enable the ability to contact meeting list contacts via a secure email form.\n";
+            ret += "\t\t$include_service_body_admin_on_emails = " + (this.m_installer_state.send_copy_to_sba ? 'TRUE' : 'FALSE') + ";\t// If this is TRUE (or 1), then any emails sent using the meeting contact will include the nearest Service Body Admin\n";
+            ret += "\t\t\t\t\t\t\t\t\t\t\t\t\t\t// contact for the meeting Service body (ignored, if $g_enable_email_contact is FALSE).\n";
+            ret += "\t\t$include_every_admin_on_emails = " + (this.m_installer_state.send_copy_to_all_admins ? 'TRUE' : 'FALSE') + ";\t// If this is TRUE (or 1), then any emails sent using the meeting contact will include all Service Body Admin contacts";
+            ret += "\n\t\t\t\t\t\t\t\t\t\t\t\t// (including the Server Administrator) for the meeting.";
+            ret += "\n\t\t\t\t\t\t\t\t\t\t\t\t// (ignored, if $g_enable_email_contact or $include_service_body_admin_on_emails is FALSE)\n";
             
             ret += "\n\t// These are 'hard-coded,' but can be changed later.\n";
-            
-            ret += "\n\t\t// These reflect the way that we handle contact emails.\n";
-            ret += "\n\t\t$include_service_body_admin_on_emails = FALSE; // If this is TRUE (or 1), then any emails sent using the meeting contact will include the Service Body Admin contact for the meeting Service body (ignored, if $g_enable_email_contact is FALSE).\n";
-            ret += "\n\t\t$include_every_admin_on_emails = FALSE; // If this is TRUE (or 1), then any emails sent using the meeting contact will include all Service Body Admin contacts (including the Server Administrator) for the meeting (ignored, if $g_enable_email_contact or $include_service_body_admin_on_emails is FALSE).\n";
 
-            ret += "\n\n\t\t$time_format = '" + this.m_installer_state.time_format.replace(/'/g,"\\'") + "'; // The PHP date() format for the times displayed.\n";
+            ret += "\n\t\t$time_format = '" + this.m_installer_state.time_format.replace(/'/g,"\\'") + "'; // The PHP date() format for the times displayed.\n";
             ret += "\t\t$change_date_format = '" + this.m_installer_state.change_date_format.replace(/'/g,"\\'") + "'; // The PHP date() format for times/dates displayed in the change records.\n";
             ret += "\t\t$admin_session_name = '" + this.m_installer_state.admin_session_name.replace(/'/g,"\\'") + "'; // This is merely the 'tag' used to identify the BMLT admin session.\n";
 
@@ -668,6 +679,32 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
         return ret;
     };
 
+    /************************************************************************************//**
+    *   \brief  This is run when we want to apply a new API key.                            *
+    ****************************************************************************************/
+    this.reloadApi = function()
+    {
+        this.m_google_api_key = document.getElementById ( 'api_text_entry' ).value;
+        this.loadScript();
+    };
+
+    /************************************************************************************//**
+    *   \brief  This is run when the page loads.                                            *
+    ****************************************************************************************/
+    this.loadScript = function()
+    {
+        if ( this.m_google_maps_script )
+            {
+            document.head.removeChild ( this.m_google_maps_script );
+            this.m_google_maps_script = null;
+            };
+        this.m_google_maps_script = document.createElement('script');
+        this.m_google_maps_script.type = 'text/javascript';
+        this.m_google_maps_script.context = this;
+        this.m_google_maps_script.src = 'https://maps.google.com/maps/api/js?key=' + this.m_google_api_key + '&callback=gmScriptLoadCompletion';
+        document.head.appendChild ( this.m_google_maps_script );
+    };
+
     // #mark - 
     // #mark Main Context
     // #mark -
@@ -678,6 +715,37 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
         };
     
     this.m_installer_wrapper_object = document.getElementById ( 'installer_wrapper' );
+};
+
+/************************************************************************************//**
+*   \brief A global context callback for the email checkboxes being selected.           *
+****************************************************************************************/
+function reactToEmailCheckbox()
+{
+    var enableEmailObject = document.getElementById ( 'installer_admin_email_contact_checkbox' );
+    var sbAdminEmailObject = document.getElementById ( 'installer_admin_email_sba_contact_checkbox' );
+    var allAdminsEmailCheckbox = document.getElementById ( 'installer_admin_email_all_admins_checkbox' );
+
+    if ( !enableEmailObject.checked )
+        {
+        sbAdminEmailObject.checked = false;
+        };
+
+    if ( !sbAdminEmailObject.checked )
+        {
+        allAdminsEmailCheckbox.checked = false;
+        };
+    
+    sbAdminEmailObject.disabled = !enableEmailObject.checked;
+    allAdminsEmailCheckbox.disabled = !sbAdminEmailObject.checked;
+};
+
+/****************************************************************************************//**
+*   \brief A global context callback for the script load completion.                        *
+********************************************************************************************/
+function gmScriptLoadCompletion ()
+{
+    g_installer_object.createLocationMap();
 };
 
 // #mark - 

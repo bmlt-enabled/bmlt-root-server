@@ -46,15 +46,15 @@ else
     require_once ( dirname ( __FILE__ ).'/../server_admin/lang/en/install_wizard_strings.php' );
     }
 
-if (    isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'initialize_db')
-    &&  isset ( $http_vars['dbName'] ) && $http_vars['dbName']
-    &&  isset ( $http_vars['dbUser'] ) && $http_vars['dbUser']
-    &&  isset ( $http_vars['dbPassword'] ) && $http_vars['dbPassword']
-    &&  isset ( $http_vars['dbType'] ) && $http_vars['dbType']
-    &&  isset ( $http_vars['dbServer'] ) && $http_vars['dbServer']
-    &&  isset ( $http_vars['dbPrefix'] ) && $http_vars['dbPrefix']
-    &&  isset ( $http_vars['admin_login'] ) && $http_vars['admin_login']
-    &&  isset ( $http_vars['admin_password'] ) && $http_vars['admin_password']  // This is cleartext, but that can't be helped. This is the only place in the installer where this happens.
+if (    isset ( $http_vars['ajax_req'] )        && ($http_vars['ajax_req'] == 'initialize_db')
+    &&  isset ( $http_vars['dbName'] )          && $http_vars['dbName']
+    &&  isset ( $http_vars['dbUser'] )          && $http_vars['dbUser']
+    &&  isset ( $http_vars['dbPassword'] )      && $http_vars['dbPassword']
+    &&  isset ( $http_vars['dbType'] )          && $http_vars['dbType']
+    &&  isset ( $http_vars['dbServer'] )        && $http_vars['dbServer']
+    &&  isset ( $http_vars['dbPrefix'] )        && $http_vars['dbPrefix']
+    &&  isset ( $http_vars['admin_login'] )     && $http_vars['admin_login']
+    &&  isset ( $http_vars['admin_password'] )  && $http_vars['admin_password']  // This is cleartext, but that can't be helped. This is the only place in the installer where this happens.
      )
     {
     $value_array = array();
@@ -133,13 +133,13 @@ die ( print_r ( $e, true ) );
         echo array2json ( $response );
         }
     }
-elseif (    (isset ( $http_vars['ajax_req'] ) && ($http_vars['ajax_req'] == 'test') || ($http_vars['ajax_req'] == 'test_comprehensive'))
-        &&  isset ( $http_vars['dbName'] ) && $http_vars['dbName']
-        &&  isset ( $http_vars['dbUser'] ) && $http_vars['dbUser']
-        &&  isset ( $http_vars['dbPassword'] ) && $http_vars['dbPassword']
-        &&  isset ( $http_vars['dbType'] ) && $http_vars['dbType']
-        &&  isset ( $http_vars['dbServer'] ) && $http_vars['dbServer']
-        &&  isset ( $http_vars['dbPrefix'] ) && $http_vars['dbPrefix']
+elseif (   (isset ( $http_vars['ajax_req'] )    && ($http_vars['ajax_req'] == 'test') || ($http_vars['ajax_req'] == 'test_comprehensive'))
+        &&  isset ( $http_vars['dbName'] )      && $http_vars['dbName']
+        &&  isset ( $http_vars['dbUser'] )      && $http_vars['dbUser']
+        &&  isset ( $http_vars['dbPassword'] )  && $http_vars['dbPassword']
+        &&  isset ( $http_vars['dbType'] )      && $http_vars['dbType']
+        &&  isset ( $http_vars['dbServer'] )    && $http_vars['dbServer']
+        &&  isset ( $http_vars['dbPrefix'] )    && $http_vars['dbPrefix']
         )
     {
     try
@@ -198,4 +198,5 @@ else
     }
 
 ob_end_flush();
-die();  // Make sure stop here.
+
+die();  // Make sure we stop here.

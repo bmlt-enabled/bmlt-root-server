@@ -23,6 +23,22 @@
 function DB_Connect_and_Upgrade ( )
 {
 	include ( dirname ( __FILE__ )."/../server/config/get-config.php" );
+	
+	if ( !isset ( $dbType ) )
+	    {
+	    $dbType = 'mysql';
+	    }
+	
+	if ( !isset ( $dbServer ) )
+	    {
+	    $dbServer = 'localhost';
+	    }
+	
+	if ( !isset ( $dbPrefix ) )
+	    {
+	    $dbPrefix = 'na';
+	    }
+	
 	c_comdef_dbsingleton::init ( $dbType, $dbServer, $dbName, $dbUser, $dbPassword, 'utf8' );
 
 	try

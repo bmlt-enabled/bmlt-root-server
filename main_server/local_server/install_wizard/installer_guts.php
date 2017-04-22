@@ -47,9 +47,23 @@ $default_lang = $lang;
                     {
                     if ( class_exists ( 'PDO' ) )
                         {
-                        if ( count ( PDO::getAvailableDrivers() ) )
+                        $drivers = PDO::getAvailableDrivers();
+                        
+                        $found = FALSE;
+                        
+                        foreach ( $drivers as $driver )
                             {
-                ?>                <script type="text/javascript" src="https://maps.google.com/maps/api/js"></script>
+                            if ( $driver == 'mysql' )
+                                {
+                                $found = TRUE;
+                                break;
+                                }
+                            }
+                            
+                        if ( $found  )
+                            {
+                            
+                ?>
                 <script type="text/javascript" src="local_server/install_wizard/installer.js"></script>
                 <script type="text/javascript">
                     var g_installer_object = new BMLTInstaller ( <?php echo array2json ( $prefs_array ) ?> );
@@ -119,8 +133,17 @@ $default_lang = $lang;
                             <?php echo bmlt_create_region_bias_select(); ?>
                         </div>
                     </div>
+                    <div class="explanatory_text_div"><?php echo $comdef_install_wizard_strings['Explanatory_Text_2_API_key_Intro']; ?></div>
+                    <div class="explanatory_text_div"><?php echo $comdef_install_wizard_strings['Explanatory_Text_2_API_key_2_Intro']; ?></div>
+                    <div class="one_line_div">
+                        <label class="left_right_aligned bold_char" for="api_text_entry"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Page_2_API_Key_Prompt'] ); ?></label>
+                        <div class="right_left_aligned_div">
+                            <input type="text" class="api_text_entry" id="api_text_entry" value="" />
+                            <a class="bmlt_admin_ajax_button" href="javascript:g_installer_object.reloadApi();"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Page_2_API_Key_Set_Button'] ); ?></a>
+                        </div>
+                    </div>
                     <div class="clear_both"></div>
-                    <div class="installer_map_wrapper_div"><div id="installer_map_display_div" class="installer_map_display_div"></div></div>
+                    <div class="installer_map_wrapper_div"><div id="installer_map_display_div" class="installer_map_display_div"><h1 class="not_set_h1"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Page_2_API_Key_Not_Set_Prompt'] ) ?></h1></div></div>
                     <div class="clear_both"></div>
                     <?php echo bmlt_create_next_prev_buttons(2) ?>
                 </div>
@@ -295,12 +318,48 @@ $default_lang = $lang;
                             </div>
                         </div>
                         <div class="one_line_div">
+                            <label class="left_right_aligned bold_char" for="semantic_admin_checkbox"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['SemanticAdminLabel'] ); ?></label>
+                            <div class="right_left_aligned_div">
+                                <input type="checkbox" id="semantic_admin_checkbox" value="semantic_admin_checkbox_selector" />
+                            </div>
+                            <div class="extra_text_div">
+                                <?php echo htmlspecialchars ( $comdef_install_wizard_strings['SemanticAdminExtraText'] ); ?>
+                            </div>
+                        </div>
+                        <div class="one_line_div">
+                            <label class="left_right_aligned bold_char" for="default_closed_checkbox"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['DefaultClosedStatus'] ); ?></label>
+                            <div class="right_left_aligned_div">
+                                <input type="checkbox" id="default_closed_checkbox" checked="checked" value="default_closed_checkbox_selector" />
+                            </div>
+                            <div class="extra_text_div">
+                                <?php echo htmlspecialchars ( $comdef_install_wizard_strings['DefaultClosedStatusExtraText'] ); ?>
+                            </div>
+                        </div>
+                        <div class="one_line_div">
                             <label class="left_right_aligned bold_char" for="installer_admin_email_contact_checkbox"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['EmailContactEnableLabel'] ); ?></label>
                             <div class="right_left_aligned_div">
-                                <input type="checkbox" id="installer_admin_email_contact_checkbox" value="enable_email_contact_selector" />
+                                <input type="checkbox" id="installer_admin_email_contact_checkbox" value="enable_email_contact_selector" onclick="reactToEmailCheckbox()" />
                             </div>
                             <div class="extra_text_div">
                                 <?php echo htmlspecialchars ( $comdef_install_wizard_strings['EmailContactEnableExtraText'] ); ?>
+                            </div>
+                        </div>
+                        <div class="one_line_div">
+                            <label class="left_right_aligned bold_char" for="installer_admin_email_sba_contact_checkbox"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['EmailContactAdminEnableLabel'] ); ?></label>
+                            <div class="right_left_aligned_div">
+                                <input type="checkbox" disabled="disabled" id="installer_admin_email_sba_contact_checkbox" value="enable_email_sba_contact_selector" onclick="reactToEmailCheckbox()" />
+                            </div>
+                            <div class="extra_text_div">
+                                <?php echo htmlspecialchars ( $comdef_install_wizard_strings['EmailContactAdminEnableExtraText'] ); ?>
+                            </div>
+                        </div>
+                        <div class="one_line_div">
+                            <label class="left_right_aligned bold_char" for="installer_admin_email_all_admins_checkbox"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['EmailContactAllAdminEnableLabel'] ); ?></label>
+                            <div class="right_left_aligned_div">
+                                <input type="checkbox" disabled="disabled" id="installer_admin_email_all_admins_checkbox" value="enable_email_all_admins_contact_selector" />
+                            </div>
+                            <div class="extra_text_div">
+                                <?php echo htmlspecialchars ( $comdef_install_wizard_strings['EmailContactAllAdminEnableExtraText'] ); ?>
                             </div>
                         </div>
                         <div class="clear_both"></div>
@@ -335,7 +394,9 @@ $default_lang = $lang;
                         }
                     else
                         {
-                        $ret .= '<span class="installer_error_display">'.htmlspecialchars ( $comdef_install_wizard_strings['Database_Type_Error'] ).'</span></dt>';
+                        $ret .= '<span class="installer_error_display">';
+                        $ret .= ( is_array ( $drivers ) && count ( $drivers ) ) ? htmlspecialchars ( $comdef_install_wizard_strings['Database_Type_MySQL_Error'] ) : htmlspecialchars ( $comdef_install_wizard_strings['Database_Type_Error'] );
+                        $ret .= '</span></dt>';
                         }
                     }
                 else
@@ -372,6 +433,11 @@ $default_lang = $lang;
 </div>
 
 <?php
+/*******************************************************************/
+/** \brief Creates the HTML for the next and prev buttons.
+
+    \returns a string, containing the element HTML.
+*/
 function bmlt_create_next_prev_buttons( $in_section  ///< The page we are in. An integer.
                                         )
 {
@@ -395,11 +461,16 @@ function bmlt_create_next_prev_buttons( $in_section  ///< The page we are in. An
     return $ret;
 }
 
+/*******************************************************************/
+/** \brief Creates the select element for the Server default language.
+
+    \returns a string, containing the select element HTML.
+*/
 function bmlt_create_lang_select()
 {
     $ret = '';
     
-    $basedir = dirname ( __FILE__ ).'/../server_admin/lang/';
+    $basedir = dirname ( dirname ( __FILE__ ) ).'/server_admin/lang/';
     
     $ret .= '<select onchange="g_installer_object.gatherInstallerState()" id="installer_lang_select">';
         $dh = opendir ( $basedir );
@@ -462,6 +533,11 @@ function ServerLangSortCallback( $in_lang_a,
     return $ret;
 }
 
+/*******************************************************************/
+/** \brief Creates the select element for the Region bias.
+
+    \returns a string, containing the select element HTML.
+*/
 function bmlt_create_region_bias_select()
 {
     global  $prefs_array;
@@ -492,22 +568,39 @@ function bmlt_create_region_bias_select()
     return $ret;
 }
 
+/*******************************************************************/
+/** \brief Creates the select element for the PDO driver selector.
+
+    \returns a string, containing the select element HTML.
+*/
 function bmlt_create_pdo_driver_select()
 {
     global  $prefs_array;
     $ret = '';
     
     $ret .= '<select onchange="g_installer_object.gatherInstallerState()" id="installer_db_type_select">';
+    $found = FALSE;
     foreach ( PDO::getAvailableDrivers() as $driver )
         {
-        $ret .= '<option value="'.htmlspecialchars ( $driver ).'"';
-            if ( $driver == $prefs_array['dbType'] )
-                {
-                $ret .= ' selected="selected"';
-                }
-        $ret .= '>'.htmlspecialchars ( $driver ).'</option>';
+        if ( $driver == 'mysql' )   // Currently, we only support MySQL.
+            {
+            $ret .= '<option value="'.htmlspecialchars ( $driver ).'"';
+//                 if ( $driver == $prefs_array['dbType'] )
+//                     {
+                    $ret .= ' selected="selected"';
+//                     }
+            $ret .= '>'.htmlspecialchars ( $driver ).'</option>';
+            $found = TRUE;
+            }
         }
-    $ret .= '</select>';
+    if ( $found )
+        {
+        $ret .= '</select>';
+        }
+    else
+        {
+        $ret = '<h1>ERROR!</h1>';
+        }
         
     return $ret;
 }
