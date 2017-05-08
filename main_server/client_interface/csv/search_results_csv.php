@@ -691,7 +691,7 @@ function ReturnNAWSFormatCSV (
 				$line = array();
 				foreach ( $transfer_dictionary as $key => $value )
 					{
-					// See if this is function.
+					// See if this is a function.
 					if ( function_exists ( $value ) && is_callable ( $value ) && preg_match ( '|^BMLT_FuncNAWSReturn|', $value ) )
 						{
 						$value = $value ($one_meeting['id_bigint'],$server);
@@ -702,7 +702,11 @@ function ReturnNAWSFormatCSV (
 						}
 					array_push ( $line, $value );
 					}
-				if ( is_array ( $line ) && count ( $line ) )
+					
+				// We don't send unpublished meetings unless they have a World ID.
+				if (    is_array ( $line )
+				    &&  count ( $line )
+				    &&  ($one_meeting['published'] || (isset ( $one_meeting['worldid_mixed'] ) && $one_meeting['worldid_mixed'])) )
 					{
 					$ret .= "\n".'"'.join ( '","', $line ).'"';
 					}

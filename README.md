@@ -51,6 +51,8 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.8.16* ** *- TBD*
+
 ***Version 2.8.15* ** *- April 22, 2017*
 
 - Changed the install wizard to reflect the new settings added to the auto-config.inc.php file, including the new Google API key.
