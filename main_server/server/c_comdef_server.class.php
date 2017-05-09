@@ -2310,6 +2310,48 @@ class c_comdef_server
         
         return ( $in_meetings );
     }
+    
+    /*******************************************************************/
+    /** \brief  Returns a set of two coordinates that define a rectangle
+                that encloses all of the meetings.
+        
+        \returns a dictionary, with the two coordinates.
+    */
+    static function GetCoverageArea()
+    {
+        $sql = "SELECT longitude, latitude FROM `".self::GetMeetingTableName_obj()."_main` WHERE 1";
+        
+        $ret = NULL;
+        
+        try {
+            $rows = c_comdef_dbsingleton::preparedQuery ( $sql, $arr );
+            if ( is_array ( $rows ) && count ( $rows ) )
+                {
+                $nw_corner = array ( "longitude" => 181.0, "latitude" => -181.0 );
+                $se_corner = array ( "longitude" => -181.0, "latitude" => 181.0 );
+                 
+                foreach ( $rows as $row )
+                    {
+                    $lon = floatval ( $row["longitude"] );
+                    $lat = floatval ( $row["latitude"] );
+                    
+                    $nw_corner["longitude"] = min ( $lon, $nw_corner["longitude"] );
+                    $nw_corner["latitude"] = max ( $lat, $nw_corner["latitude"] );
+                    $se_corner["longitude"] = max ( $lon, $se_corner["longitude"] );
+                    $se_corner["latitude"] = min ( $lat, $se_corner["latitude"] );
+                    }
+                }
+                
+            $ret["nw_corner"] = $nw_corner;
+            $ret["se_corner"] = $se_corner;
+            }
+        catch ( Exception $e )
+            {
+            $ret = NULL;
+            }
+            
+        return $ret;
+    }
 
     /*******************************************************************/
     /** \brief Given an SQL statement and a value array (for PDO prepared
@@ -2426,7 +2468,13 @@ class c_comdef_server
         return self::GetServer()->GetChangesFromSQL ( $sql, array ( $in_o_type, $in_change_type ) );
     }
 
-    static function getKmPerLonAtLat($dLatitude)
+    /*******************************************************************/
+    /** \brief Returns the number of Km per degree of longitude, adjusted for Latitude.
+        
+        \returns a floating point number, with the number of Km per degree longitude at the given latitude..
+    */
+    static function getKmPerLonAtLat($dLatitude ///< The latitude (in degrees).
+                                    )
     {
         return 111.321 * cos(deg2rad ( $dLatitude ));
     }

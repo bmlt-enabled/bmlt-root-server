@@ -53,6 +53,9 @@ CHANGELIST
 ----------
 ***Version 2.8.16* ** *- TBD*
 
+- The NAWS dump will now no longer send unpublished meetings that don't have World IDs.
+- Added a "GetCoverageArea" semantic selector. This returns a rectangle, encompassing the meetings served by the server.
+
 ***Version 2.8.15* ** *- April 22, 2017*
 
 - Changed the install wizard to reflect the new settings added to the auto-config.inc.php file, including the new Google API key.
