@@ -582,6 +582,7 @@ BMLTSemantic.prototype.current_lat = 34.23592;
 BMLTSemantic.prototype.current_lng = -118.563659;
 BMLTSemantic.prototype.current_zoom = 11;
 BMLTSemantic.prototype.serverInfo = null;
+BMLTSemantic.prototype.coverageArea = null;
 
 /*******************************************************************************************/
 /**
@@ -760,6 +761,20 @@ BMLTSemantic.prototype.fetchServerInfo = function ()
 
 /*******************************************************************************************/
 /**
+    \brief Sets up and performs an AJAX call to fetch the server information.
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.fetchCoverageArea = function ()
+{
+    this.serverInfo = null;
+    if ( this.version >= 2008016 )
+        {
+        this.ajaxRequest ( this.ajax_base_uri + '&GetCoverageArea', this.fetchCoverageAreaCallback, 'get', this );
+        };
+};
+
+/*******************************************************************************************/
+/**
     \brief Sets up and performs an AJAX call to fetch the available formats.
 */
 /*******************************************************************************************/
@@ -856,8 +871,29 @@ BMLTSemantic.prototype.fetchServerInfoCallback = function (inHTTPReqObject
         context.current_lat = parseFloat ( context.serverInfo.centerLatitude );
         context.current_lng = parseFloat ( context.serverInfo.centerLongitude );
         context.current_zoom = parseInt ( context.serverInfo.centerZoom, 10 );
+        context.fetchCoverageArea();
         };
 };
+
+/*******************************************************************************************/
+/**
+    \brief The response.
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.fetchCoverageAreaCallback = function (inHTTPReqObject
+                                                            )
+{
+    if ( inHTTPReqObject.responseText )
+        {
+        var context = inHTTPReqObject.extraData;
+        eval ( 'var coverageAreaRaw = ' + inHTTPReqObject.responseText + '[0];' );
+        
+        context.coverageArea = new Object();
+        context.coverageArea.nw_corner = new google.maps.LatLng ( parseFloat ( coverageAreaRaw.nw_corner_latitude ), parseFloat ( coverageAreaRaw.nw_corner_longitude ) );
+        context.coverageArea.se_corner = new google.maps.LatLng ( parseFloat ( coverageAreaRaw.se_corner_latitude ), parseFloat ( coverageAreaRaw.se_corner_longitude ) );
+        };
+};
+
 
 /*******************************************************************************************/
 /**

@@ -504,6 +504,10 @@ class bmlt_semantic
                 {
                 echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetServerInfo' ) );
                 }
+            elseif ( isset ( $this->_httpVars['GetCoverageArea'] ) )
+                {
+                echo ( self::call_curl ( $this->_bmltRootServerURI.'/client_interface/json/?switcher=GetCoverageArea' ) );
+                }
             }
     }
     
