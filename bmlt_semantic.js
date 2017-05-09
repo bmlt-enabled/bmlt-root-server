@@ -2976,6 +2976,13 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
                 {
                 switcher_select.selectedIndex = 0;
                 }
+            else
+                {
+                if ( (inItem != switcher_select) && (switcher_select.value == 'GetCoverageArea') && (response_type_select.value != 'csv') && (response_type_select.value != 'xml') && (response_type_select.value != 'json') )
+                    {
+                    switcher_select.selectedIndex = 0;
+                    };
+                };
             };
         };
 
