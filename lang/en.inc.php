@@ -80,6 +80,7 @@ $this->_localization = array (
                                 'schema_type_selector_service_bodies'	=>	'Flat Service Bodies',
                                 'schema_type_selector_hier_service_bodies'	=>	'Hierarchical Service Bodies',
                                 'schema_type_selector_hier_server_info'	=>	'Server Information',
+                                'schema_type_selector_coverage_area'	=>	'Geographic Coverage Area',
                                 'start_time_min_label'                  =>  'Meetings start after:',
                                 'start_time_max_label'                  =>  'Meetings start before:',
                                 'end_time_max_label'                    =>  'Meetings end before:',

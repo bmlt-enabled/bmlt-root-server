@@ -1481,6 +1481,7 @@ class bmlt_semantic
         $ret .= '<option value="GetServiceBodies">'.$this->localize_string ( 'schema_type_selector_service_bodies' ).'</option>';
         $ret .= '<option value="HierServiceBodies">'.$this->localize_string ( 'schema_type_selector_hier_service_bodies' ).'</option>';
         $ret .= '<option value="ServerInfo">'.$this->localize_string ( 'schema_type_selector_hier_server_info' ).'</option>';
+        $ret .= '<option value="GetCoverageArea">'.$this->localize_string ( 'schema_type_selector_coverage_area' ).'</option>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '</select>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
