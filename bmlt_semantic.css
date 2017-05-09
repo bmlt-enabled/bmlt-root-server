@@ -297,3 +297,10 @@ input.bmlt_semantic_form_time_text
 {
     width:3em;
 }
+
+div.bmlt_semantic_coverage_area_fieldset_map_div
+{
+    height: 600px;
+    width: 100%;
+}
+    

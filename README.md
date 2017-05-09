@@ -30,7 +30,7 @@ CHANGELIST
 ----------
 ***Version 1.3.0* ** *- TBD*
 
-- Added support for the Coverage Area option.
+- Added support for the Coverage Area option, which includes a map display of the coverage area.
 
 ***Version 1.2.1* ** *- March 31, 2017*
 

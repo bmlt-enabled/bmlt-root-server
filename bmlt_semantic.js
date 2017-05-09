@@ -583,6 +583,7 @@ BMLTSemantic.prototype.current_lng = -118.563659;
 BMLTSemantic.prototype.current_zoom = 11;
 BMLTSemantic.prototype.serverInfo = null;
 BMLTSemantic.prototype.coverageArea = null;
+BMLTSemantic.prototype.coverageMapObject = null;
 
 /*******************************************************************************************/
 /**
@@ -889,8 +890,8 @@ BMLTSemantic.prototype.fetchCoverageAreaCallback = function (inHTTPReqObject
         eval ( 'var coverageAreaRaw = ' + inHTTPReqObject.responseText + '[0];' );
         
         context.coverageArea = new Object();
-        context.coverageArea.nw_corner = new google.maps.LatLng ( parseFloat ( coverageAreaRaw.nw_corner_latitude ), parseFloat ( coverageAreaRaw.nw_corner_longitude ) );
-        context.coverageArea.se_corner = new google.maps.LatLng ( parseFloat ( coverageAreaRaw.se_corner_latitude ), parseFloat ( coverageAreaRaw.se_corner_longitude ) );
+        context.coverageArea.ne_corner = new google.maps.LatLng ( parseFloat ( coverageAreaRaw.nw_corner_latitude ), parseFloat ( coverageAreaRaw.se_corner_longitude ) );
+        context.coverageArea.sw_corner = new google.maps.LatLng ( parseFloat ( coverageAreaRaw.se_corner_latitude ), parseFloat ( coverageAreaRaw.nw_corner_longitude ) );
         };
 };
 
@@ -2457,6 +2458,58 @@ BMLTSemantic.prototype.setUpMap = function ( )
 
 /*******************************************************************************************/
 /**
+    \brief Sets up the map display for the instance.
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.setUpCoverageMap = function ( )
+{
+    if ( this.coverageMapObject == null )
+        {
+        var mapDiv = this.getScopedElement ( 'bmlt_semantic_coverage_area_fieldset_map_div' );
+        this.coverageMapObject = null;
+        mapDiv.innerHTML = '';
+
+        var position = new google.maps.LatLng ( this.current_lat, this.current_lng );
+        var myOptions = {
+                        'center': position,
+                        'zoom': this.current_zoom,
+                        'mapTypeId': google.maps.MapTypeId.ROADMAP,
+                        'mapTypeControlOptions': { 'style': google.maps.MapTypeControlStyle.DROPDOWN_MENU },
+                        'zoomControl': true,
+                        'mapTypeControl': true,
+                        'disableDoubleClickZoom' : true,
+                        'draggableCursor': "crosshair",
+                        'scaleControl' : true,
+                        'cursor':  'default',
+                        'scrollwheel': false
+                        };
+
+        myOptions.zoomControlOptions = { 'style': google.maps.ZoomControlStyle.LARGE };
+
+        this.coverageMapObject = new google.maps.Map ( mapDiv, myOptions );
+
+        if ( this.coverageMapObject )
+            {
+            var bounds = new google.maps.LatLngBounds();
+            bounds.extend ( this.coverageArea.ne_corner );
+            bounds.extend ( this.coverageArea.sw_corner );
+            this.coverageMapObject.fitBounds ( bounds );
+            
+            var rectangle = new google.maps.Rectangle({
+                strokeColor: '#000000',
+                strokeOpacity: 0.0,
+                strokeWeight: 0.0,
+                fillColor: '#663300',
+                fillOpacity: 0.25,
+                map: this.coverageMapObject,
+                bounds: bounds
+                });
+            };
+        };
+};
+
+/*******************************************************************************************/
+/**
     \brief 
 */
 /*******************************************************************************************/
@@ -2693,6 +2746,7 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
     this.setBasicFunctions ( 'bmlt_semantic_form_not_weekday_fieldset' );
     this.setBasicFunctions ( 'bmlt_semantic_form_specific_fields_fieldset' );
     this.setBasicFunctions ( 'bmlt_semantic_form_sort_fields_fieldset' );
+    this.setBasicFunctions ( 'bmlt_semantic_coverage_area_fieldset' );
     
     if ( this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_server_info_option' ) )
         {
@@ -2812,6 +2866,8 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     var bmlt_semantic_form_weekday_header_checkbox_div = this.getScopedElement ( 'bmlt_semantic_form_weekday_header_checkbox_div' );
     var blockModeDiv = this.getScopedElement ( 'block_mode_checkbox_div' );
     var blockModeCheckbox = this.getScopedElement ( 'block_mode_checkbox' );
+    var bmlt_switcher_coverageAreaMapFieldset = this.getScopedElement ( 'bmlt_semantic_coverage_area_fieldset' );
+    var coverageAreaMapElement = this.getScopedElement ( 'bmlt_semantic_coverage_area_fieldset_map_div' );
 
     switcher_type_select_formats_option.enable();
     switcher_type_select_sb_option.enable();
@@ -2827,6 +2883,11 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     if ( switcher_type_select_coverage_area_option )
         {
         switcher_type_select_coverage_area_option.disable();
+        };
+    
+    if ( bmlt_switcher_coverageAreaMapFieldset )
+        {
+        bmlt_switcher_coverageAreaMapFieldset.hide();
         };
     
     bmlt_semantic_form_map_checkbox.checked = false;
@@ -2868,11 +2929,11 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
             {
             switcher_select.selectedIndex = 0;
             };
-        
+    
         bmlt_semantic_info_div_shortcode_line.show();
         main_fieldset_direct_uri_div.hide();
         };
-
+    
     if ( (switcher_select.value == 'GetLangs') && ((response_type_select.value != 'xml') && !((response_type_select.value == 'json') && (this.version >= 2007005))) )
         {
         switcher_select.selectedIndex = 0;
@@ -2884,6 +2945,12 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
         bmlt_switcher_field_value_div_formats.innerHTML = '';
         bmlt_switcher_field_value_div_no_selected_formats_blurb.hide();
         bmlt_semantic_form_meeting_fields_fieldset_contents_div.hide();
+        };
+
+    if ( bmlt_switcher_coverageAreaMapFieldset && (switcher_select.value == 'GetCoverageArea') )
+        {
+        bmlt_switcher_coverageAreaMapFieldset.show();
+        this.setUpCoverageMap();
         };
 
     if ( (inItem != switcher_select) && (switcher_select.value == 'GetNAWSDump') && ((response_type_select.value != 'csv') || (main_fieldset_select.value != 'DOWNLOAD')) )
@@ -2901,7 +2968,7 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
             if ( (inItem != switcher_select) && (switcher_select.value != 'GetSearchResults') && (switcher_select.value != 'GetFormats') && (response_type_select.value == 'simple') )
                 {
                 switcher_select.selectedIndex = 0;
-                };
+                }
             };
         };
 

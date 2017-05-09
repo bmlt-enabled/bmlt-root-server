@@ -607,7 +607,7 @@ class bmlt_semantic
             
             $ret .= '</form>';
             $ret .= defined ( 'DEBUG' ) ? "\n" : '';
-            
+                        
             $ret .= '<div id="bmlt_semantic_footer'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_footer">';
             
             $ret .= '<div id="bmlt_semantic_info_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_info_div">';
@@ -818,6 +818,7 @@ class bmlt_semantic
         $ret .= $this->get_wizard_page_fields_html();
         $ret .= $this->get_wizard_page_schema_select_html();   
         $ret .= $this->get_wizard_page_formats_html();
+        $ret .= $this->get_wizard_page_coverage_area_html();
         $ret .= '</fieldset>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         
@@ -1327,6 +1328,26 @@ class bmlt_semantic
             $ret .= defined ( 'DEBUG' ) ? "\n" : '';  
             };
         
+        $ret .= '</fieldset>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        
+        return $ret;
+    }
+    
+    /**************************************************************/
+    /** \brief  
+        
+        \returns the HTML.
+    */
+    /**************************************************************/
+    function get_wizard_page_coverage_area_html( )
+    {
+        $ret = '<fieldset id="bmlt_semantic_coverage_area_fieldset'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_coverage_area_fieldset"><legend id="bmlt_semantic_coverage_area_fieldset_legend'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_coverage_area_fieldset_legend">';
+        $ret .= $this->localize_string ( 'coverage_area_legend' );
+        $ret .= '</legend>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
+        $ret .= '<div id="bmlt_semantic_coverage_area_fieldset_map_div'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_coverage_area_fieldset_map_div"></div>';
+        $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         $ret .= '</fieldset>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';
         

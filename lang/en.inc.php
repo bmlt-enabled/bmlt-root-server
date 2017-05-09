@@ -61,6 +61,7 @@ $this->_localization = array (
                                 'switcher_type_selector_server_langs'   =>  'Get Server Languages',
                                 'switcher_type_selector_server_info'    =>  'Get Server Information',
                                 'switcher_type_selector_coverage_area'  =>  'Get Geographic Coverage Area',
+                                'coverage_area_legend'                  =>  'Geographic Coverage Area',
                                 'schema_type_selector_legend'	        =>	'Select An XML Schema Type',
                                 'schema_type_selector_blurb1'	        =>	'This will download <a href="http://www.w3schools.com/schema/">an XML Schema</a> document.',
                                 'schema_type_selector_blurb2'	        =>	'XML Schema is a semantic "contract" that defines what the XML response data will look like.',
