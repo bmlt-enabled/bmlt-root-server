@@ -1342,7 +1342,7 @@ class bmlt_semantic
     /**************************************************************/
     function get_wizard_page_coverage_area_html( )
     {
-        $ret = '<fieldset id="bmlt_semantic_coverage_area_fieldset'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_coverage_area_fieldset"><legend id="bmlt_semantic_coverage_area_fieldset_legend'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_coverage_area_fieldset_legend">';
+        $ret = '<fieldset id="bmlt_semantic_coverage_area_fieldset'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_coverage_area_fieldset" style="display:none"><legend id="bmlt_semantic_coverage_area_fieldset_legend'.htmlspecialchars ( $this->_myJSName ).'" class="bmlt_semantic_coverage_area_fieldset_legend">';
         $ret .= $this->localize_string ( 'coverage_area_legend' );
         $ret .= '</legend>';
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';

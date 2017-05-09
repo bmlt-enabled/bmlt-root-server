@@ -2884,12 +2884,7 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
         {
         switcher_type_select_coverage_area_option.disable();
         };
-    
-    if ( bmlt_switcher_coverageAreaMapFieldset )
-        {
-        bmlt_switcher_coverageAreaMapFieldset.hide();
-        };
-    
+        
     bmlt_semantic_form_map_checkbox.checked = false;
     bmlt_semantic_form_map_wrapper_div.hide();
     
@@ -2959,7 +2954,7 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
             bmlt_switcher_coverageAreaMapFieldset.hide();
             };
         };
-
+    
     if ( (inItem != switcher_select) && (switcher_select.value == 'GetNAWSDump') && ((response_type_select.value != 'csv') || (main_fieldset_select.value != 'DOWNLOAD')) )
         {
         switcher_select.selectedIndex = 0;
