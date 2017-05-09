@@ -20,7 +20,7 @@
 */
 /***************************************************************************************************************************************/
 
-define ( '__VERSION__', '1.2.1' );
+define ( '__VERSION__', '1.3.0' );
 define ( '__REPO_URL__', 'https://bitbucket.org/bmlt/bmlt-semantic-workshop' );
 
 class bmlt_semantic
@@ -1492,6 +1492,11 @@ class bmlt_semantic
         if ( $version >= 2006020 )
             {
             $ret .= '<option id="bmlt_semantic_form_switcher_type_select_server_info_option'.htmlspecialchars ( $this->_myJSName ).'" value="GetServerInfo">'.$this->localize_string ( 'switcher_type_selector_server_info' ).'</option>';
+            }
+        
+        if ( $version >= 2008016 )
+            {
+            $ret .= '<option id="bmlt_semantic_form_switcher_type_select_coverage_area_option'.htmlspecialchars ( $this->_myJSName ).'" value="GetCoverageArea">'.$this->localize_string ( 'switcher_type_selector_coverage_area' ).'</option>';
             }
         
         $ret .= defined ( 'DEBUG' ) ? "\n" : '';

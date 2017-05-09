@@ -22,7 +22,7 @@
         You should have received a copy of the GNU General Public License
         along with this code.  If not, see <http://www.gnu.org/licenses/>.
         
-        Version: 1.2.0
+        Version: 1.3.0
 */
 /*******************************************************************************************/
 function BMLTSemanticResult (   inRootServerURI,
@@ -2662,6 +2662,11 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function ()
         {
         this.setBasicFunctions ( 'bmlt_semantic_form_switcher_type_select_server_info_option' );
         };
+    
+    if ( this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_coverage_area_option' ) )
+        {
+        this.setBasicFunctions ( 'bmlt_semantic_form_switcher_type_select_coverage_area_option' );
+        };
 
     for ( var i = 1; i < 8; i++ )
         {
@@ -2762,6 +2767,7 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     var switcher_type_select_schema_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_schema_option' );
     var switcher_type_select_server_langs_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_server_langs_option' );
     var switcher_type_select_server_info_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_server_info_option' );
+    var switcher_type_select_coverage_area_option = this.getScopedElement ( 'bmlt_semantic_form_switcher_type_select_coverage_area_option' );
     var getUsedCheckbox = this.getScopedElement ( 'bmlt_semantic_form_used_formats_checkbox' );
     var getOnlyUsedCheckbox = this.getScopedElement ( 'bmlt_semantic_form_just_used_formats_checkbox' );
     var bmlt_semantic_form_used_formats_div = this.getScopedElement ( 'bmlt_semantic_form_used_formats_div' );
@@ -2780,6 +2786,11 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     if ( switcher_type_select_server_info_option )
         {
         switcher_type_select_server_info_option.disable();
+        };
+    
+    if ( switcher_type_select_coverage_area_option )
+        {
+        switcher_type_select_coverage_area_option.disable();
         };
     
     bmlt_semantic_form_map_checkbox.checked = false;
@@ -2978,6 +2989,11 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
         if ( switcher_type_select_server_info_option && (main_fieldset_select.value == 'DOWNLOAD') && ((response_type_select.value == 'csv') || (response_type_select.value == 'xml') || (response_type_select.value == 'json')) )
             {
             switcher_type_select_server_info_option.enable();
+            };
+        
+        if ( switcher_type_select_coverage_area_option && (main_fieldset_select.value == 'DOWNLOAD') && ((response_type_select.value == 'csv') || (response_type_select.value == 'xml') || (response_type_select.value == 'json')) )
+            {
+            switcher_type_select_coverage_area_option.enable();
             };
         
         if ( (main_fieldset_select.value == 'DOWNLOAD') && ((response_type_select.value == 'kml') || (response_type_select.value == 'gpx') || (response_type_select.value == 'poi')) )
