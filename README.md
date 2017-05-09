@@ -28,9 +28,9 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
 CHANGELIST
 ----------
-***Version 1.3.0* ** *- TBD*
+***Version 1.3.0* ** *- May 9, 2017*
 
-- Added support for the Coverage Area option, which includes a map display of the coverage area.
+- Added support for the new Coverage Area option, which includes a map display of the coverage area.
 
 ***Version 1.2.1* ** *- March 31, 2017*
 
