@@ -2319,26 +2319,30 @@ class c_comdef_server
     */
     static function GetCoverageArea()
     {
-        $sql = "SELECT longitude, latitude FROM `".self::GetMeetingTableName_obj()."_main` WHERE 1";
+        $sql = "SELECT longitude, latitude FROM `".self::GetMeetingTableName_obj()."_main` WHERE `published`='1'";
         
         $ret = NULL;
         
         try {
+            $arr = array();
             $rows = c_comdef_dbsingleton::preparedQuery ( $sql, $arr );
             if ( is_array ( $rows ) && count ( $rows ) )
                 {
-                $nw_corner = array ( "longitude" => 181.0, "latitude" => -181.0 );
-                $se_corner = array ( "longitude" => -181.0, "latitude" => 181.0 );
-                 
+                $nw_corner = array ( "longitude" => 181.0, "latitude" => -91.0 );
+                $se_corner = array ( "longitude" => -181.0, "latitude" => 91.0 );
+
                 foreach ( $rows as $row )
                     {
-                    $lon = floatval ( $row["longitude"] );
-                    $lat = floatval ( $row["latitude"] );
+                    $lon = max ( -180.0, min ( 180.0, floatval ( $row["longitude"] ) ) );
+                    $lat = max ( -90.0, min ( 90.0, floatval ( $row["latitude"] ) ) );
                     
-                    $nw_corner["longitude"] = min ( $lon, $nw_corner["longitude"] );
-                    $nw_corner["latitude"] = max ( $lat, $nw_corner["latitude"] );
-                    $se_corner["longitude"] = max ( $lon, $se_corner["longitude"] );
-                    $se_corner["latitude"] = min ( $lat, $se_corner["latitude"] );
+                    if ( !(($lon == 0) && ($lat == 0)) && (abs ( $lat ) < 90) )
+                        {
+                        $nw_corner["longitude"] = min ( $lon, $nw_corner["longitude"] );
+                        $nw_corner["latitude"] = max ( $lat, $nw_corner["latitude"] );
+                        $se_corner["longitude"] = max ( $lon, $se_corner["longitude"] );
+                        $se_corner["latitude"] = min ( $lat, $se_corner["latitude"] );
+                        }
                     }
                 }
                 
