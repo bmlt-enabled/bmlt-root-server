@@ -51,6 +51,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.8.17* ** *- May 12, 2017*
+
+- Fixed a coverage area issue that only affected the Hawai'i Region, because it is the only Region that crosses the IDL.
+
 ***Version 2.8.16* ** *- May 10, 2017*
 
 - The NAWS dump will now no longer send unpublished meetings that don't have World IDs.

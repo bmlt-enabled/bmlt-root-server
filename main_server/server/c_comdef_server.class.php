@@ -2328,8 +2328,8 @@ class c_comdef_server
             $rows = c_comdef_dbsingleton::preparedQuery ( $sql, $arr );
             if ( is_array ( $rows ) && count ( $rows ) )
                 {
-                $nw_corner = array ( "longitude" => 181.0, "latitude" => -91.0 );
-                $se_corner = array ( "longitude" => -181.0, "latitude" => 91.0 );
+                $nw_corner = array ( "longitude" => FALSE, "latitude" => FALSE );
+                $se_corner = array ( "longitude" => FALSE, "latitude" => FALSE );
 
                 foreach ( $rows as $row )
                     {
@@ -2338,10 +2338,63 @@ class c_comdef_server
                     
                     if ( !(($lon == 0) && ($lat == 0)) && (abs ( $lat ) < 90) )
                         {
-                        $nw_corner["longitude"] = min ( $lon, $nw_corner["longitude"] );
-                        $nw_corner["latitude"] = max ( $lat, $nw_corner["latitude"] );
-                        $se_corner["longitude"] = max ( $lon, $se_corner["longitude"] );
-                        $se_corner["latitude"] = min ( $lat, $se_corner["latitude"] );
+                        if ( $nw_corner["longitude"] === FALSE )
+                            {
+                            $nw_corner["longitude"] = $lon;
+                            }
+                        else
+                            {
+                            // OK. The IDL (International Date Line) gives us gas. We need to see if the two values are on either side of it.
+                            // If so, then we'll need to reverse the longitude checks.
+                            if ( (0 <= $lon) && (0 > $nw_corner["longitude"]) )
+                                {
+                                $nw_corner["longitude"] = $lon;
+                                }
+                            else if ( (0 > $lon) && (0 <= $nw_corner["longitude"]) )
+                                {
+                                }
+                            else
+                                {
+                                $nw_corner["longitude"] = min ( $lon, $nw_corner["longitude"] );
+                                }
+                            }
+                        
+                        if ( $se_corner["longitude"] === FALSE )
+                            {
+                            $se_corner["longitude"] = $lon;
+                            }
+                        else
+                            {
+                            if ( (0 > $lon) && (0 <= $se_corner["longitude"]) )
+                                {
+                                $se_corner["longitude"] = $lon;
+                                }
+                            else if ( (0 <= $lon) && (0 > $se_corner["longitude"]) )
+                                {
+                                }
+                            else
+                                {
+                                $se_corner["longitude"] = max ( $lon, $se_corner["longitude"] );
+                                }
+                            }
+                        
+                        if ( $nw_corner["latitude"] === FALSE )
+                            {
+                            $nw_corner["latitude"] = $lat;
+                            }
+                        else
+                            {
+                            $nw_corner["latitude"] = max ( $lat, $nw_corner["latitude"] );
+                            }
+                        
+                        if ( $se_corner["latitude"] === FALSE )
+                            {
+                            $se_corner["latitude"] = $lat;
+                            }
+                        else
+                            {
+                            $se_corner["latitude"] = min ( $lat, $se_corner["latitude"] );
+                            }
                         }
                     }
                 }
