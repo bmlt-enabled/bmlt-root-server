@@ -51,6 +51,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.8.18* ** *- TBD*
+
+- Addressed some PHP warnings.
+
 ***Version 2.8.17* ** *- May 12, 2017*
 
 - Fixed a coverage area issue that only affected the Hawai'i Region, because it is the only Region that crosses the IDL.

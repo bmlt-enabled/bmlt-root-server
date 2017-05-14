@@ -1446,7 +1446,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 						)
 	{
 		// We will not operate on the principal elements.
-		if ( ($in_force && !isset ( $this->_my_meeting_data[$in_key_enum] )) || ($in_force && is_array ( $this->_my_meeting_data[$in_key_enum] )) || !is_array ( $this->_my_meeting_data[$in_key_enum] ) )
+		if ( ($in_force && !isset ( $this->_my_meeting_data[$in_key_enum] )) || ($in_force && isset ( $this->_my_meeting_data[$in_key_enum] ) && is_array ( $this->_my_meeting_data[$in_key_enum] )) || (isset ( $this->_my_meeting_data[$in_key_enum] ) && !is_array ( $this->_my_meeting_data[$in_key_enum] )) )
 			{
 			if ( !$in_lang_enum )
 				{
