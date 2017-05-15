@@ -28,6 +28,10 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
 CHANGELIST
 ----------
+***Version 1.3.1* ** *- TBD*
+
+- Added a setting to the cURL caller to allow it to work in SSL on IIS servers.
+
 ***Version 1.3.0* ** *- May 9, 2017*
 
 - Added support for the new Coverage Area option, which includes a map display of the coverage area.
