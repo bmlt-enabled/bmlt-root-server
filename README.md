@@ -28,7 +28,7 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
 CHANGELIST
 ----------
-***Version 1.3.1* ** *- TBD*
+***Version 1.3.1* ** *- May 18, 2017*
 
 - Added a setting to the cURL caller to allow it to work in SSL on IIS servers.
 
