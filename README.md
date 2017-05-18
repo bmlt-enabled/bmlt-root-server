@@ -54,6 +54,7 @@ CHANGELIST
 ***Version 2.8.18* ** *- TBD*
 
 - Addressed some PHP warnings.
+- Added the latest BMLT Satellite Base Class, which supports Region Bias.
 
 ***Version 2.8.17* ** *- May 12, 2017*
 

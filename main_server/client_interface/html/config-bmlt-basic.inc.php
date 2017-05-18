@@ -147,7 +147,8 @@ if ( $server )
                 'grace_period'              =>  15,
                 'time_offset'               =>  0,
                 'id'                        =>  $bmlt_basic_configuration_index + 1,
-                'google_api_key'            =>  $localized_strings['google_api_key']
+                'google_api_key'            =>  $localized_strings['google_api_key'],
+                'region_bias'               =>  $localized_strings['region_bias']
             );
             }
         else
