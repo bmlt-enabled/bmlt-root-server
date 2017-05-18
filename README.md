@@ -51,10 +51,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.8.18* ** *- TBD*
+***Version 2.8.18* ** *- May 18, 2017*
 
 - Addressed some PHP warnings.
-- Added the latest BMLT Satellite Base Class, which supports Region Bias.
+- Added the latest BMLT Satellite Base Class, which supports Region Bias. This also applies to the Root Browser.
 
 ***Version 2.8.17* ** *- May 12, 2017*
 
