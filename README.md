@@ -51,6 +51,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.8.19* ** *- TBD*
+
+- Fixed an issue with the formats editor that was exposed by NA Sweden.
+
 ***Version 2.8.18* ** *- May 18, 2017*
 
 - Addressed some PHP warnings.

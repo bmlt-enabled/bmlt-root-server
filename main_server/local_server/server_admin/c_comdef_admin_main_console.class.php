@@ -274,10 +274,10 @@ class c_comdef_admin_main_console
                             
                                 $ret .= '{';
                                     $ret .= '"id":'.$format['shared_id'];
-                                    $ret .= ',"key":"'.str_replace ( '"', '\"', $format['key'] ).'"';
-                                    $ret .= ',"name":"'.str_replace ( '"', '\"', $format['name'] ).'"';
-                                    $ret .= ',"description":"'.str_replace ( '"', '\"', $format['description'] ).'"';
-                                    $ret .= ',"worldid_mixed":"'.str_replace ( '"', '\"', $format['worldid_mixed'] ).'"';
+                                    $ret .= ',"key":"'.str_replace ( '"', '\"', str_replace ( "\n", ' ', $format['key'] ) ).'"';
+                                    $ret .= ',"name":"'.str_replace ( '"', '\"', str_replace ( "\n", ' ', $format['name'] ) ).'"';
+                                    $ret .= ',"description":"'.str_replace ( '"', '\"', str_replace ( "\n", ' ', $format['description'] ) ).'"';
+                                    $ret .= ',"worldid_mixed":"'.str_replace ( '"', '\"', str_replace ( "\n", ' ', $format['worldid_mixed'] ) ).'"';
                                 $ret .= '}'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                                 }
                             }
@@ -405,7 +405,7 @@ class c_comdef_admin_main_console
                             $n_first = false;
                             $ret .= (defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                             }
-                        $ret .= '{"key":"'.self::js_html ( $key ).'","value":"'.self::js_html ( $value ).'"}';
+                        $ret .= '{"key":"'.self::js_html ( str_replace ( "\n", ' ', $key ) ).'","value":"'.self::js_html ( str_replace ( "\n", ' ', $value ) ).'"}';
                         }
                 $ret .= (defined ( '__DEBUG_MODE__' ) ? "\n" : '').'];';
             $ret .= '</script>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
