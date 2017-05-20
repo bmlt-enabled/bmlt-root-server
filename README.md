@@ -51,7 +51,7 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.8.19* ** *- TBD*
+***Version 2.8.19* ** *- May 20, 2017*
 
 - Fixed an issue with the formats editor that was exposed by NA Sweden.
 - Fixed a problem where the distances were not being reported in search results.
