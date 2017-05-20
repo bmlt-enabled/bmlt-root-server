@@ -1242,6 +1242,7 @@ function GetServerInfo()
     $changeDepth = strVal ( intval ( $change_depth_for_meetings ) );
     $availableFields = "";
     $keys = c_comdef_meeting::GetFullTemplate ( );
+    
     foreach ( $keys as $key )
         {
         if ( ($key['visibility'] != 1) && ($key['key'] != 'published') && ($key['key'] != 'shared_group_id_bigint') )

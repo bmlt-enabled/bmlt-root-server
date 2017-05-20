@@ -192,9 +192,9 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 				case	'formats':
 				case	'longitude':
 				case	'latitude':
-				case	'email_contact':
 				case	'distance_in_km':
 				case	'distance_in_miles':
+				case	'email_contact':
 				break;
 				
 				// Everything else goes into one of the other tables.
@@ -727,9 +727,9 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 			$ret['lang_enum'] = 'lang_enum';
 			$ret['longitude'] = 'longitude';
 			$ret['latitude'] = 'latitude';
-			$ret['email_contact'] = 'email_contact';
 			$ret['distance_in_km'] = 'distance_in_km';
 			$ret['distance_in_miles'] = 'distance_in_miles';
+			$ret['email_contact'] = 'email_contact';
 			
 			// For the data and longdata tables, the keys can be dynamic, and we create a "0" ID version of them to establish the possibilities.
 			$sql = "SELECT * FROM `".c_comdef_server::GetMeetingTableName_obj()."_data` WHERE meetingid_bigint=0"; 

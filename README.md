@@ -54,6 +54,7 @@ CHANGELIST
 ***Version 2.8.19* ** *- TBD*
 
 - Fixed an issue with the formats editor that was exposed by NA Sweden.
+- Fixed a problem where the distances were not being reported in search results.
 
 ***Version 2.8.18* ** *- May 18, 2017*
 

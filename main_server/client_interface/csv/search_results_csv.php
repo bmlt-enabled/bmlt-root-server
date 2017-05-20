@@ -397,7 +397,6 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 		if ( $page_data instanceof c_comdef_meeting_search_manager )
 			{
 			$keys = c_comdef_meeting::GetAllMeetingKeys ( );
-			
 			// This is a required one for data export.
 			if ( !in_array ( 'meeting_name', $keys ) )
 			    {
@@ -502,6 +501,8 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
                                             switch ( $key )
                                                 {
                                                 // We don't do anything for the standard fields.
+                                                case 'distance_in_miles':
+                                                case 'distance_in_km':
                                                 case 'id_bigint':
                                                 case 'worldid_mixed':
                                                 case 'shared_group_id_bigint':
@@ -527,8 +528,6 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
                                                 case 'location_province':
                                                 case 'location_postal_code_1':
                                                 case 'location_nation':
-                                                case 'distance_in_miles':
-                                                case 'distance_in_km':
                                                 case 'comments':
                                                 break;
                                     
