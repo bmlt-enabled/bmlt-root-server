@@ -2346,11 +2346,11 @@ class c_comdef_server
                             {
                             // OK. The IDL (International Date Line) gives us gas. We need to see if the two values are on either side of it.
                             // If so, then we'll need to reverse the longitude checks.
-                            if ( (0 <= $lon) && (0 > $nw_corner["longitude"]) )
+                            if ( (abs ( $lon ) > 90) && (0 <= $lon) && (0 > $nw_corner["longitude"]) )
                                 {
                                 $nw_corner["longitude"] = $lon;
                                 }
-                            else if ( (0 > $lon) && (0 <= $nw_corner["longitude"]) )
+                            else if ( (abs ( $lon ) > 90) && (0 > $lon) && (0 <= $nw_corner["longitude"]) )
                                 {
                                 }
                             else
@@ -2365,11 +2365,11 @@ class c_comdef_server
                             }
                         else
                             {
-                            if ( (0 > $lon) && (0 <= $se_corner["longitude"]) )
+                            if ( (abs ( $lon ) > 90) && (0 > $lon) && (0 <= $se_corner["longitude"]) )
                                 {
                                 $se_corner["longitude"] = $lon;
                                 }
-                            else if ( (0 <= $lon) && (0 > $se_corner["longitude"]) )
+                            else if ( (abs ( $lon ) > 90) && (0 <= $lon) && (0 > $se_corner["longitude"]) )
                                 {
                                 }
                             else

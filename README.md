@@ -51,6 +51,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.8.20* ** *- TBD*
+
+- Fixed an issue where the coverage area misbehaved around the Prime Meridian.
+
 ***Version 2.8.19* ** *- May 20, 2017*
 
 - Fixed an issue with the formats editor that was exposed by NA Sweden.
