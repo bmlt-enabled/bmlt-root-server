@@ -51,9 +51,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.8.20* ** *- TBD*
+***Version 2.8.20* ** *- May 26, 2017*
 
 - Fixed an issue where the coverage area misbehaved around the Prime Meridian.
+- Undid a change I made that borked new meetings.
 
 ***Version 2.8.19* ** *- May 20, 2017*
 
