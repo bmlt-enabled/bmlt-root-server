@@ -51,6 +51,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.8.21* ** *- June 20, 2017*
+
+- Addressed an issue where misconfigured SSL certs could cause problems. I now just pretend they aren't misconfigured, because everyone else does the same.
+
 ***Version 2.8.20* ** *- May 26, 2017*
 
 - Fixed an issue where the coverage area misbehaved around the Prime Meridian.
