@@ -55,6 +55,7 @@ CHANGELIST
 
 - Added the NAWS "NS" format.
 - Made the fader banners in the editors a bit more attractive.
+- Added support for weeks starting on days other than sunday (for sorting).
 
 ***Version 2.8.21* ** *- June 20, 2017*
 

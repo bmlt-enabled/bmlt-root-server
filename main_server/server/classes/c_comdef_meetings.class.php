@@ -836,6 +836,11 @@ class c_comdef_meetings implements i_comdef_has_parent
 		if ( ($object_a instanceof c_comdef_meeting) && ($object_b instanceof c_comdef_meeting) && isset ( $object_a->_distance_in_km ) && isset ( $object_b->_distance_in_km ) )
 			{
 			$ret = ($object_a->_distance_in_km < $object_b->_distance_in_km) ? -1 : 1;
+			
+			if ( 0 == $ret )
+			    {
+			    $ret = $this::SortKernel ( $object_a, $object_b );
+			    }
 			}
 		
 		return $ret;
@@ -885,6 +890,36 @@ class c_comdef_meetings implements i_comdef_has_parent
                                     $value_b = 10000;
                                     }
                                 
+                                if ( $value_a == $value_b )
+                                    {
+                                    $ret = 0;
+                                    }
+                                elseif ( $value_a < $value_b )
+                                    {
+                                    $ret = -1;
+                                    }
+                                elseif ( $value_a > $value_b )
+                                    {
+                                    $ret = 1;
+                                    }
+                                }
+                            elseif ( $s_key == 'weekday_tinyint' )
+                                {
+                                $local_strings = c_comdef_server::GetLocalStrings();
+                                
+                                $value_a = intval( $meeting_data_a[$s_key] ) - ($local_strings['week_starts_on'] - 1);
+                                $value_b = intval( $meeting_data_b[$s_key] ) - ($local_strings['week_starts_on'] - 1);
+
+                                if ( 1 > $value_a )
+                                    {
+                                    $value_a += 7;
+                                    }
+                                
+                                if ( 1 > $value_b )
+                                    {
+                                    $value_b += 7;
+                                    }
+                                    
                                 if ( $value_a == $value_b )
                                     {
                                     $ret = 0;
