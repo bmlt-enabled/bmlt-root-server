@@ -319,6 +319,7 @@
                                                                                                             'LIT'	=>	'Literaturmeeting',
                                                                                                             'M'	    =>	'Männer',
                                                                                                             'MED'	=>	'Meditation',
+                                                                                                            'NS'	=>	'Non-Smoking',
                                                                                                             'QA'	=>	'Frage & Antwort',
                                                                                                             'RA'	=>	'Eingeschränkter Zutritt',
                                                                                                             'SMOK'	=>	'Raucher',

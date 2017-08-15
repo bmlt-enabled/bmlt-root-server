@@ -324,6 +324,7 @@
                                                                                                                 'MED'	=>	'Meditationsmöte',
                                                                                                                 'QA'	=>	'Frågor och svar',
                                                                                                                 'RA'	=>	'Ej publikt möte',
+                                                                                                                'NS'	=>	'Non-Smoking',
                                                                                                                 'SMOK'	=>	'Rökare',
                                                                                                                 'SPK'	=>	'Talarmöte',
                                                                                                                 'STEP'	=>	'Stegmöte',

@@ -502,8 +502,18 @@ div.bmlt_admin_user_editor_banner_div,
 div.bmlt_admin_format_editor_banner_div
 {
     height: 1.8em;
-    padding:4px;
-    margin-bottom:4px;
+    margin-top: 0px;
+    margin-right: 2px;
+    margin-left: 0px;
+    margin-bottom: 4px;
+}
+
+div.bmlt_admin_meeting_editor_banner_container_div
+{
+    display: table;
+    margin:0px;
+    width: 100%;
+    height: 100%;
     border: 1px solid white;
     background-color:white;
     -moz-border-radius: 4px;
@@ -516,6 +526,7 @@ div.bmlt_admin_fader_div
     font-size:x-large;
     font-weight:bold;
     text-align:center;
+    margin: 0;
 }
 
 span.success_text_span

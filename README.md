@@ -51,6 +51,11 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.8.22* ** *- TBD*
+
+- Added the NAWS "NS" format.
+- Made the fader banners in the editors a bit more attractive.
+
 ***Version 2.8.21* ** *- June 20, 2017*
 
 - Addressed an issue where misconfigured SSL certs could cause problems. I now just pretend they aren't misconfigured, because everyone else does the same.

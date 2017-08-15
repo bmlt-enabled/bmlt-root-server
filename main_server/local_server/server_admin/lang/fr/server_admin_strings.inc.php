@@ -321,6 +321,7 @@
                                                                                                                 'LIT'   =>	'Étude de littérature',
                                                                                                                 'M'     =>	'Hommes',
                                                                                                                 'MED'   =>	'Méditation',
+                                                                                                                'NS'	=>	'Non-Smoking',
                                                                                                                 'QA'    =>	'Questions et réponses',
                                                                                                                 'RA'    =>	'Accès limité',
                                                                                                                 'SMOK'  =>	'Fumeurs',
