@@ -294,7 +294,14 @@ if ( $server instanceof c_comdef_server )
 							
 							if ( $time && $weekday && $address )
 								{
-								if ( ($current_weekday != $meeting['weekday_tinyint']) && $in_block )
+								$meeting_weekday = $meeting['weekday_tinyint'];
+								    
+                                if ( 7 < $meeting_weekday )
+                                    {
+                                    $meeting_weekday = 1;
+                                    }
+								
+								if ( ($current_weekday != $meeting_weekday) && $in_block )
 								    {
 								    if ( $current_weekday != -1 )
 								        {
@@ -302,7 +309,7 @@ if ( $server instanceof c_comdef_server )
 								        $ret .= '</div>';
 								        }
 								    
-								    $current_weekday = $meeting['weekday_tinyint'];
+								    $current_weekday = $meeting_weekday;
 								    
 								    $ret .= '<div class="bmlt_simple_meeting_weekday_div_'.$current_weekday.'">';
 								    $weekday_div = TRUE;
