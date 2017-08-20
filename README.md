@@ -51,11 +51,15 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.8.22* ** *- TBD*
+***Version 2.8.22* ** *- August 20, 2017*
 
-- Added the NAWS "NS" format.
+- Added the NAWS "NS" format. This is actually kind of a worthless format, but NAWS does specify it.
 - Made the fader banners in the editors a bit more attractive.
-- Added support for weeks starting on days other than sunday (for sorting).
+- Added support for weeks starting on days other than sunday (for sorting). This is accomplished by adding the following line to the auto-config.inc.php file:
+    
+    ``$week_starts_on = 1;``
+    
+    With "1" being Sunday, and "7" being Saturday.
 
 ***Version 2.8.21* ** *- June 20, 2017*
 
