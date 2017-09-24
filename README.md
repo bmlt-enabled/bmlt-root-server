@@ -51,7 +51,9 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.8.23* ** *- TBD*
+***Version 2.8.23* ** *- September 24, 2017*
+
+- This uses the latest Satellite Base Class (fixes text searches for some non-Roman character sets), and also the latest Semantic Workshop (text searches were not being properly escaped).
 
 ***Version 2.8.22* ** *- August 20, 2017*
 
