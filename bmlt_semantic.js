@@ -22,7 +22,7 @@
         You should have received a copy of the GNU General Public License
         along with this code.  If not, see <http://www.gnu.org/licenses/>.
         
-        Version: 1.3.0
+        Version: 1.3.2
 */
 /*******************************************************************************************/
 function BMLTSemanticResult (   inRootServerURI,
@@ -268,7 +268,7 @@ BMLTSemanticResult.prototype.compileSearchResults = function()
             this.compiled_params += '&';
             };
             
-        this.compiled_params += 'meeting_key=' + this.meeting_key + '&meeting_key_value=' + escape ( this.meeting_key_value );
+        this.compiled_params += 'meeting_key=' + this.meeting_key + '&meeting_key_value=' + encodeURIComponent ( this.meeting_key_value );
         };
     
     if ( this.searchText )
@@ -278,7 +278,7 @@ BMLTSemanticResult.prototype.compileSearchResults = function()
             this.compiled_params += '&';
             };
             
-        this.compiled_params += 'SearchString=' + escape ( this.searchText );
+        this.compiled_params += 'SearchString=' + encodeURIComponent ( this.searchText );
         if ( this.searchTextModifier )
             {
             if ( this.compiled_params )
@@ -311,9 +311,9 @@ BMLTSemanticResult.prototype.compileSearchResults = function()
                 this.compiled_params += '&';
                 };
             
-            this.compiled_params += radiusUnitsSelect.value + '=' + escape ( this.searchMapRadius );
-            this.compiled_params += '&long_val=' + escape ( this.searchLongitude );
-            this.compiled_params += '&lat_val=' + escape ( this.searchLatitude );
+            this.compiled_params += radiusUnitsSelect.value + '=' + encodeURIComponent ( this.searchMapRadius );
+            this.compiled_params += '&long_val=' + encodeURIComponent ( this.searchLongitude );
+            this.compiled_params += '&lat_val=' + encodeURIComponent ( this.searchLatitude );
             };
         };
     
@@ -516,7 +516,7 @@ BMLTSemanticResult.prototype.compileFieldValues = function()
 {
     if ( this.meeting_key )
         {
-        this.compiled_params += '&meeting_key=' + escape ( this.meeting_key );
+        this.compiled_params += '&meeting_key=' + encodeURIComponent ( this.meeting_key );
     
         if ( (this.meeting_key == 'formats') && this.formats )
             {
