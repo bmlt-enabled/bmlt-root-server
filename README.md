@@ -51,6 +51,8 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.8.23* ** *- TBD*
+
 ***Version 2.8.22* ** *- August 20, 2017*
 
 - Added the NAWS "NS" format. This is actually kind of a worthless format, but NAWS does specify it.
