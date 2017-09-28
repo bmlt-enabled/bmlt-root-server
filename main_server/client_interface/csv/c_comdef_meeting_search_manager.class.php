@@ -124,7 +124,7 @@ class c_comdef_meeting_search_manager
 	protected	$_meeting_key_match_case = false;	/**< If true, the case must match. Default is false.
 														NOTE: As of Version 1.5, setting this to TRUE also stops the metaphone search.
 													*/
-	protected	$_meeting_key_contains = true;	///< If this is false, then the string must be complete. Default is true (contains).
+	protected	$_meeting_key_contains = false;	///< If this is false, then the string must be complete. Default is false (literal).
 	
 	/// This contains a list of IDs of individual meetings. If it is set, then all other search parameters are ignored.
 	protected	$_meeting_id_array = null;		///< An array of positive integers. The Ids of meetings to find. If this is set, all other search criteria are ignored.

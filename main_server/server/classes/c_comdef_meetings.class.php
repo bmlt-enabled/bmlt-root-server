@@ -404,7 +404,7 @@ class c_comdef_meetings implements i_comdef_has_parent
 	function GetMeetingsByKeyValue (
 									$in_key_string_array,	///< This is data item keys (an array of string). These must match exactly.
 									$in_value,				///< This is a string with a literal value to find.
-									$in_contains = true,	///< If this is false, then the entire value must match (Defalt is true).
+									$in_contains = false,	///< If this is false, then the entire value must match (Defalt is false).
 									$in_match_case = false	/**< If this is true, then the case must match (Default is false).
 																	NOTE: As of Version 1.5, the behavior has changed. This now refers to
 																	using metaphone or not. If it is true, the the string must match exactly,
@@ -453,14 +453,16 @@ class c_comdef_meetings implements i_comdef_has_parent
 									$value = mb_strtolower ( $value, 'UTF-8' );
 									}
 								
-								$preg = preg_quote ( $in_value );
-								
 								if ( $in_contains )
 									{
+								    $preg = preg_quote ( $in_value );
 									$preg = '|.*'.$preg.'.*|';
+								    $match = (1 == preg_match ( $preg, $value ));
 									}
-								
-								$match = preg_match ( $preg, $value );
+								else
+								    {
+								    $match = (0 == strcmp ( trim ( $in_value ), trim ( $value ) ));
+								    }
 							
 								if ( $match )
 									{

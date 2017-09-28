@@ -51,6 +51,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.8.24* ** *- September 28, 2017*
+
+- In some cases, searches for specific values of a meeting field (like location_municipality) could return unrelated results. This has been fixed.
+
 ***Version 2.8.23* ** *- September 24, 2017*
 
 - This uses the latest Satellite Base Class (fixes text searches for some non-Roman character sets), and also the latest Semantic Workshop (text searches were not being properly escaped).

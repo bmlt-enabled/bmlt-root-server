@@ -187,7 +187,7 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 																NOTE:	As of Version 1.5, setting this to TRUE also stops the metaphone search.
 															
 														- 'meeting_key_contains'
-															If this is false, then the string must be complete. Default is true (contains).
+															If this is true, then the string can have partial matches. Default is false (literal).
 															
 														- 'sort_results_by_distance'
 															If this is true, then, if possible, the search results will be sorted by distance from the radius center.
@@ -604,7 +604,7 @@ function SetUpSearch (	&$in_search_manager,	///< A reference to an instance of c
 			// This is true by default.
 			if ( !isset ( $in_http_vars['meeting_key_contains'] ) )
 				{
-				$in_http_vars['meeting_key_contains'] = true;
+				$in_http_vars['meeting_key_contains'] = false;
 				}
 			
 			// This is false by default.
