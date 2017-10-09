@@ -1184,7 +1184,7 @@ function GetServiceBodies   (
 					        )
     {
 	$ret = array ();
-	$ret[0] = '"id","parent_id","name","description","type","url","kml_url","world_id"';
+	$ret[0] = '"id","parent_id","name","description","type","url","helpline","world_id"';
 	
 	try
 		{
@@ -1203,7 +1203,7 @@ function GetServiceBodies   (
                     $row[] = $description;
                     $row[] = $sb->GetSBType();
                     $row[] = $sb->GetURI();
-                    $row[] = $sb->GetKMLURI();
+                    $row[] = trim ( $sb->GetHelpline() );
                     $row[] = $sb->GetWorldID();
                     $row = '"'.implode ('","', $row).'"';
                     $ret[] = $row;

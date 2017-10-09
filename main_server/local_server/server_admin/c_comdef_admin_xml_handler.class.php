@@ -1934,6 +1934,7 @@ class c_comdef_admin_xml_handler
                     $name = $service_body->GetLocalName();
                     $description = $service_body->GetLocalDescription();
                     $uri = $service_body->GetURI();
+                    $helpline = $service_body->GetHelpline();
                     $type = $service_body->GetSBType();
 
                     $parent_service_body_id = 0;
@@ -2010,6 +2011,10 @@ class c_comdef_admin_xml_handler
                         if ( isset ( $uri ) && $uri )
                             {
                             $ret .= '<uri>'.c_comdef_htmlspecialchars ( $uri ).'</uri>';
+                            }
+                        if ( isset ( $helpline ) && $helpline )
+                            {
+                            $ret .= '<helpline>'.c_comdef_htmlspecialchars ( $helpline ).'</helpline>';
                             }
                         if ( isset ( $parent_service_body ) && $parent_service_body )
                             {

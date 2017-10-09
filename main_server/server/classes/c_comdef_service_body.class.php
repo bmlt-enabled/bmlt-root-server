@@ -50,6 +50,8 @@ define ( "c_comdef_service_body__RSC__", "RS" );	// Regional Service Committee
 define ( "c_comdef_service_body__WSC__", "WS" );	// World Service Committee
 define ( "c_comdef_service_body__MAS__", "MA" );	// Metro Area Service Committee
 define ( "c_comdef_service_body__ZFM__", "ZF" );	// Zonal Forum
+define ( "c_comdef_service_body__GSU__", "GS" );	// Group Service Unit
+define ( "c_comdef_service_body__LSU__", "LS" );	// Local Service Unit
 	
 class c_comdef_service_body extends t_comdef_world_type implements i_comdef_db_stored, i_comdef_serialized, i_comdef_auth
 {
@@ -59,7 +61,7 @@ class c_comdef_service_body extends t_comdef_world_type implements i_comdef_db_s
 	private	$_principal_user_bigint = null;
 	/// A string, containing a CSV list of integers, each an ID for a user that has editor privileges for meetings for this Service Body.
 	private	$_editors_string = null;
-	/// A string, containing a URI to a KML file with Service Boundaries for the Service Body.
+	/// A string, containing the helpline (re-used KML file URI).
 	private	$_kml_file_uri_string = null;
 	/// A string, containing a URI to a site that gives further information about the Service Body.
 	private	$_uri_string = null;
@@ -71,6 +73,8 @@ class c_comdef_service_body extends t_comdef_world_type implements i_comdef_db_s
 			- c_comdef_service_body__WSC__	World Service Committee
 			- c_comdef_service_body__MAS__	Metro Area
 			- c_comdef_service_body__ZFM__	Zonal Forum
+			- c_comdef_service_body__GSU__	Group Service Unit
+			- c_comdef_service_body__LSU__	Local Service Unit
 	*/
 	private	$_sb_type = null;
 	/// An integer. The ID of the Service Body that "owns" this one.
@@ -329,6 +333,8 @@ class c_comdef_service_body extends t_comdef_world_type implements i_comdef_db_s
 																- c_comdef_service_body__WSC__	World Service Committee
 																- c_comdef_service_body__MAS__	Metro Area
 																- c_comdef_service_body__ZFM__	Zonal Forum
+																- c_comdef_service_body__GSU__	Group Service Unit
+																- c_comdef_service_body__LSU__	Local Service Unit
 														*/
 						$in_sb_owner = null,			///< An integer. The ID of the Service Body that "owns" this Service Body.
 						$in_sb_owner_2 = null,			///< An integer. The ID of the "secondary" Service Body that "owns" this Service Body.
@@ -429,6 +435,8 @@ class c_comdef_service_body extends t_comdef_world_type implements i_comdef_db_s
 					- c_comdef_service_body__WSC__	World Service Committee
 					- c_comdef_service_body__MAS__	Metro Area
 					- c_comdef_service_body__ZFM__	Zonal Forum
+                    - c_comdef_service_body__GSU__	Group Service Unit
+                    - c_comdef_service_body__LSU__	Local Service Unit
 	*/
 	function GetSBType()
 	{
@@ -447,6 +455,8 @@ class c_comdef_service_body extends t_comdef_world_type implements i_comdef_db_s
 											- c_comdef_service_body__WSC__	World Service Committee
 											- c_comdef_service_body__MAS__	Metro Area
 											- c_comdef_service_body__ZFM__	Zonal Forum
+                                            - c_comdef_service_body__GSU__	Group Service Unit
+                                            - c_comdef_service_body__LSU__	Local Service Unit
 									*/
 						)
 	{
@@ -558,11 +568,11 @@ class c_comdef_service_body extends t_comdef_world_type implements i_comdef_db_s
 	}
 	
 	/*******************************************************************/
-	/** \brief Accessor - Returns the URI of the KML file for the Service Boundaries.
+	/** \brief Accessor - Returns the helpline, as a string.
 		
 		\returns a string, containing the URI.
 	*/
-	function GetKMLURI()
+	function GetHelpline()
 	{
 		return $this->_kml_file_uri_string;
 	}
@@ -570,11 +580,11 @@ class c_comdef_service_body extends t_comdef_world_type implements i_comdef_db_s
 	/*******************************************************************/
 	/** \brief Accessor - Sets the URI of the KML file for the Service Boundaries.
 	*/
-	function SetKMLURI(
-						$in_kml_uri_string	///< A string, containing the URI
+	function SetHelpline(
+						$in_helpline_string	///< A string, containing the helpline number
 						)
 	{
-		$this->_kml_file_uri_string = $in_kml_uri_string;
+		$this->_kml_file_uri_string = $in_helpline_string;
 	}
 	
 	/*******************************************************************/

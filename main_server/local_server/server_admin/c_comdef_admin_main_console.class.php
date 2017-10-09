@@ -180,7 +180,7 @@ class c_comdef_admin_main_console
     /* Editor IDs:5 */  $ret .= '\''.implode ( ',', $service_body->GetEditors() ).'\',';
  /* Contact Email:6 */  $ret .= '\''.self::js_html ( $service_body->GetContactEmail() ).'\',';
            /* URI:7 */  $ret .= '\''.self::js_html ( $service_body->GetURI() ).'\',';
-       /* KML URI:8 */  $ret .= '\''.self::js_html ( $service_body->GetKMLURI() ).'\',';
+      /* Helpline:8 */  $ret .= '\''.self::js_html ( $service_body->GetHelpline() ).'\',';
        /* SB Type:9 */  $ret .= '\''.$service_body->GetSBType().'\',';
 /* User Can Edit:10 */  $ret .= ($service_body->UserCanEdit() ? 'true' : 'false').',';
 /* Edit Meetings:11 */  $ret .= ($service_body->UserCanEditMeetings() ? 'true' : 'false').',';
@@ -205,7 +205,7 @@ class c_comdef_admin_main_console
     /* Editor IDs:5 */  $ret .= '\''.implode ( ',', $service_body->GetEditors() ).'\',';
  /* Contact Email:6 */  $ret .= '\''.self::js_html ( $service_body->GetContactEmail() ).'\',';
            /* URI:7 */  $ret .= '\''.self::js_html ( $service_body->GetURI() ).'\',';
-       /* KML URI:8 */  $ret .= '\''.self::js_html ( $service_body->GetKMLURI() ).'\',';
+      /* Helpline:8 */  $ret .= '\''.self::js_html ( $service_body->GetHelpline() ).'\',';
        /* SB Type:9 */  $ret .= '\''.$service_body->GetSBType().'\',';
 /* User Can Edit:10 */  $ret .= 'true,';
 /* Edit Meetings:11 */  $ret .= 'true,';
@@ -355,6 +355,7 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_service_body_email_default_prompt_text = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_email_default_prompt_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_service_body_uri_default_prompt_text = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_uri_default_prompt_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_service_body_world_cc_default_prompt_text = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_world_cc_prompt'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_service_body_helpline_default_prompt_text = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_helpline_prompt'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_service_body_dirty_confirm_text = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_dirty_confirm_text'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_service_body_delete_button_confirm = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_delete_button_confirm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_service_body_delete_button_confirm_perm = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_delete_button_confirm_perm'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
@@ -835,6 +836,11 @@ class c_comdef_admin_main_console
                     $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_service_body_editor_world_cc_text_input" type="text" value="" onkeyup="admin_handler_object.handleTextInputServiceBodyChange(this, 12);" onchange="admin_handler_object.handleTextInputServiceBodyChange(this, 12);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
+                $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                    $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_helpline_label'] ).'</span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_service_body_editor_helpline_text_input" type="text" value="" onkeyup="admin_handler_object.handleTextInputServiceBodyChange(this, 8);" onchange="admin_handler_object.handleTextInputServiceBodyChange(this, 8);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
+                    $ret .= '<div class="clear_both"></div>';
+                $ret .= '</div>';
                 
                 $full_editors = $this->get_full_editor_users();
                 $basic_editors = $this->get_basic_editor_users();
@@ -1016,20 +1022,29 @@ class c_comdef_admin_main_console
             $ret .= '<option value="GR">';
                 $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_type_c_comdef_service_body__GRP__'] );
             $ret .= '</option>';
+            $ret .= '<option value="CO">';
+                $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_type_c_comdef_service_body__COP__'] );
+            $ret .= '</option>';
+            $ret .= '<option value="GS">';
+                $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_type_c_comdef_service_body__GSU__'] );
+            $ret .= '</option>';
+            $ret .= '<option value="LS">';
+                $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_type_c_comdef_service_body__LSU__'] );
+            $ret .= '</option>';
             $ret .= '<option value="AS">';
                 $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_type_c_comdef_service_body__ASC__'] );
-            $ret .= '</option>';
-            $ret .= '<option value="RS">';
-                $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_type_c_comdef_service_body__RSC__'] );
-            $ret .= '</option>';
-            $ret .= '<option value="WS">';
-                $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_type_c_comdef_service_body__WSC__'] );
             $ret .= '</option>';
             $ret .= '<option value="MA">';
                 $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_type_c_comdef_service_body__MAS__'] );
             $ret .= '</option>';
+            $ret .= '<option value="RS">';
+                $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_type_c_comdef_service_body__RSC__'] );
+            $ret .= '</option>';
             $ret .= '<option value="ZF">';
                 $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_type_c_comdef_service_body__ZFM__'] );
+            $ret .= '</option>';
+            $ret .= '<option value="WS">';
+                $ret .= htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_type_c_comdef_service_body__WSC__'] );
             $ret .= '</option>';
         $ret .= '</select>';
         

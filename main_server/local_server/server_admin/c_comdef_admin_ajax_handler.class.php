@@ -629,7 +629,7 @@ class c_comdef_admin_ajax_handler
             $editor_ids = explode ( ',', $the_new_service_body[5] );
             $email = $the_new_service_body[6];
             $uri = $the_new_service_body[7];
-            $kml_uri = $the_new_service_body[8];
+            $helpline = $the_new_service_body[8];
             $type = $the_new_service_body[9];
             $worldid = $the_new_service_body[12];
             
@@ -645,7 +645,7 @@ class c_comdef_admin_ajax_handler
                 $sb_to_change->SetEditors ( $editor_ids );
                 $sb_to_change->SetContactEmail ( $email );
                 $sb_to_change->SetURI ( $uri );
-                $sb_to_change->SetKMLURI ( $kml_uri );
+                $sb_to_change->SetHelpline ( $helpline );
                 $sb_to_change->SetSBType ( $type );
                 $sb_to_change->SetWorldID ( $worldid );
             

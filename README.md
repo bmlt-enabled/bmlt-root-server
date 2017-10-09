@@ -51,9 +51,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.9.0* ** *- TBD*
+***Version 2.9.0* ** *- October 9, 2017*
 
-- Added the ability to associate a phone number with a Service body.
+- Added the ability to associate a helpline phone number with a Service body.
+- Added support for Co-Ops, GSCs and LSCs.
 
 ***Version 2.8.24* ** *- September 28, 2017*
 

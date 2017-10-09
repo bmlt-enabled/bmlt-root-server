@@ -55,6 +55,7 @@ echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
                 <xs:element name='service_body_type' type='xs:string' minOccurs='1' maxOccurs='1'/>
                 <xs:element name='description' type='xs:string' minOccurs='0' maxOccurs='1'/>
                 <xs:element name='uri' type='xs:anyURI' minOccurs='0' maxOccurs='1'/>
+                <xs:element name='helpline' type='xs:string' minOccurs='0' maxOccurs='1'/>
                 <xs:element ref='ns1:parent_service_body' minOccurs='0' maxOccurs='1'/>
                 <xs:element name='contact_email' type='xs:string' minOccurs='0' maxOccurs='1'/>
                 <xs:element ref='ns1:editors' minOccurs='1' maxOccurs='1'/>

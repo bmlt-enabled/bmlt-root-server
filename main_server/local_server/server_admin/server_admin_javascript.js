@@ -3184,6 +3184,11 @@ function BMLT_Server_Admin ()
         world_id_text_input.value = htmlspecialchars_decode ( selected_service_body_object[12] );
         var naws_link_div = document.getElementById ( 'service_body_editor_naws_link_div' );
         var naws_link_a = document.getElementById ( 'service_body_editor_naws_link_a' );
+
+        var helpline_text_input = document.getElementById ( 'bmlt_admin_single_service_body_editor_helpline_text_input' );
+        
+        helpline_text_input.value = htmlspecialchars_decode ( selected_service_body_object[8] );
+        this.handleTextInputLoad ( helpline_text_input, g_service_body_helpline_default_prompt_text );
         
         if ( selected_service_body_object[12] ) // We only show the NAWS dump link if we have a World ID.
             {
@@ -3510,6 +3515,17 @@ function BMLT_Server_Admin ()
         else
             {
             main_service_body_editor.service_body_object[12] = '';
+            };
+
+        var helpline_text_input = document.getElementById ( 'bmlt_admin_single_service_body_editor_helpline_text_input' );
+        
+        if ( helpline_text_input && helpline_text_input.value && (helpline_text_input.value != helpline_text_input.defaultValue) )
+            {
+            main_service_body_editor.service_body_object[8] = helpline_text_input.value;
+            }
+        else
+            {
+            main_service_body_editor.service_body_object[8] = '';
             };
 
         var user_select = document.getElementById ( 'bmlt_admin_single_service_body_editor_principal_user_select' );
