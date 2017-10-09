@@ -51,6 +51,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.9.0* ** *- TBD*
+
+- Added the ability to associate a phone number with a Service body.
+
 ***Version 2.8.24* ** *- September 28, 2017*
 
 - In some cases, searches for specific values of a meeting field (like location_municipality) could return unrelated results. This has been fixed.
