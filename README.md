@@ -51,6 +51,11 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.9.1* ** *- October 17, 2017*
+
+- The CSV was returning all formats, when it should have been returning a subset. This obviously didn't have a major effect on things, but now it only returns used formats, like JSON and XML.
+- In some cases, unpublished meetings were being returned in specific field dumps. This has been fixed (affected the [[bmlt_quicksearch]] shortcode).
+
 ***Version 2.9.0* ** *- October 9, 2017*
 
 - Added the ability to associate a helpline phone number with a Service body.

@@ -812,7 +812,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 			    case    'longitude':
 			    case    'latitude':
 			        $inKey = strtolower ( trim ( $inKey ) );
-                    $sql = "SELECT `$inKey`,`id_bigint` FROM `".c_comdef_server::GetMeetingTableName_obj()."_main` WHERE (`id_bigint` > 0) AND (`published`=1) ORDER BY ?"; 
+                    $sql = "SELECT `$inKey`,`id_bigint`,`published` FROM `".c_comdef_server::GetMeetingTableName_obj()."_main` WHERE (`id_bigint` > 0) AND (`published`=1) ORDER BY ?"; 
                     $rows = c_comdef_dbsingleton::preparedQuery( $sql, array ( $inKey ) );
                 break;
                 
@@ -838,92 +838,95 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 				{
 				foreach ( $rows as $row )
 					{
-					$id = (isset ( $row['id_bigint'] ) && intval ( $row['id_bigint'] )) ? intval ( $row['id_bigint'] ) : NULL;
+					if ( isset ( $row['published'] ) && $row['published'] )
+						{
+						$id = (isset ( $row['id_bigint'] ) && intval ( $row['id_bigint'] )) ? intval ( $row['id_bigint'] ) : NULL;
 					
-					if ( !$id )
-					    {
-					    $id = (isset ( $row['meetingid_bigint'] ) && intval ( $row['meetingid_bigint'] )) ? intval ( $row['meetingid_bigint'] ) : NULL;
-					    }
+						if ( !$id )
+							{
+							$id = (isset ( $row['meetingid_bigint'] ) && intval ( $row['meetingid_bigint'] )) ? intval ( $row['meetingid_bigint'] ) : NULL;
+							}
 					
-					$value = NULL;
-					if ( isset ( $row[$inKey] ) )
-					    {
-					    $value = $row[$inKey];
-					    
-					    if ( $inKey == 'weekday_tinyint' )
-					        {
-					        $value = intval ( $value ) + 1;
-					        }
-					    
-					    if ( $inKey == 'formats' )
-					        {
-					        $value = explode ( ',', $value );
-					        asort ( $value );
-					        $value = implode ( "\t", $value );
-					        }
-					    }
+						$value = NULL;
+						if ( isset ( $row[$inKey] ) )
+							{
+							$value = $row[$inKey];
+						
+							if ( $inKey == 'weekday_tinyint' )
+								{
+								$value = intval ( $value ) + 1;
+								}
+						
+							if ( $inKey == 'formats' )
+								{
+								$value = explode ( ',', $value );
+								asort ( $value );
+								$value = implode ( "\t", $value );
+								}
+							}
 					
-					if ( !$value && isset ( $row['data_string'] ) && trim ( $row['data_string'] ) )
-					    {
-					    $value = str_replace ( ',', '&APOS&', trim ( $row['data_string'] ) );
-					    }
+						if ( !$value && isset ( $row['data_string'] ) && trim ( $row['data_string'] ) )
+							{
+							$value = str_replace ( ',', '&APOS&', trim ( $row['data_string'] ) );
+							}
 					
-					if ( !$value && isset ( $row['data_bigint'] ) )
-					    {
-					    $value = intval ( $row['data_bigint'] );
-					    }
+						if ( !$value && isset ( $row['data_bigint'] ) )
+							{
+							$value = intval ( $row['data_bigint'] );
+							}
 					
-					if ( !$value && isset ( $row['data_double'] ) )
-					    {
-					    $value = floatval ( $row['data_double'] );
-					    }
+						if ( !$value && isset ( $row['data_double'] ) )
+							{
+							$value = floatval ( $row['data_double'] );
+							}
 					
-					if ( !$value && isset ( $row['data_longtext'] ) )
-					    {
-					    $value = floatval ( $row['data_longtext'] );
-					    }
+						if ( !$value && isset ( $row['data_longtext'] ) )
+							{
+							$value = floatval ( $row['data_longtext'] );
+							}
 					
-					if ( !$value && isset ( $row['data_blob'] ) )
-					    {
-					    $value = floatval ( $row['data_blob'] );
-					    }
+						if ( !$value && isset ( $row['data_blob'] ) )
+							{
+							$value = floatval ( $row['data_blob'] );
+							}
 					
-                    if ( !$ret )
-                        {
-                        $ret = array();
-                        $ret['NULL'] = '';
-                        }
-                            
-					if ( $value )
-					    {
-                        $ids = NULL;
-                        
-                        if ( isset ( $ret[$value] ) )
-                            {
-                            $ids = explode ( '\t', $ret[$value] );
-                            $ids[] = $id;
-                            }
-                        else
-                            {
-                            $ids = array ( $id );
-                            }
-                        $ret[$value] = implode ( '\t', $ids );
-                        }
-                    else
-                        {
-                        $ids = NULL;
-                        
-                        if ( isset ( $ret['NULL'] ) )
-                            {
-                            $ids = explode ( '\t', $ret['NULL'] );
-                            $ids[] = $id;
-                            }
-                        else
-                            {
-                            $ids = array ( $id );
-                            }
-                        $ret['NULL'] = trim ( implode ( '\t', $ids ) );
-                        }
+						if ( !$ret )
+							{
+							$ret = array();
+							$ret['NULL'] = '';
+							}
+							
+						if ( $value )
+							{
+							$ids = NULL;
+						
+							if ( isset ( $ret[$value] ) )
+								{
+								$ids = explode ( '\t', $ret[$value] );
+								$ids[] = $id;
+								}
+							else
+								{
+								$ids = array ( $id );
+								}
+							$ret[$value] = implode ( '\t', $ids );
+							}
+						else
+							{
+							$ids = NULL;
+						
+							if ( isset ( $ret['NULL'] ) )
+								{
+								$ids = explode ( '\t', $ret['NULL'] );
+								$ids[] = $id;
+								}
+							else
+								{
+								$ids = array ( $id );
+								}
+							$ret['NULL'] = trim ( implode ( '\t', $ids ) );
+							}
+						}
 					}
 				}
 			}

@@ -334,13 +334,11 @@ function parse_redirect (
 				}
 			else
 				{
+               	$result2 = GetSearchResults ( $http_vars, $formats_ar );
+
 				if ( isset ( $http_vars['get_formats_only'] ) )
 				    {
-			        $result2 = GetFormats ( $server, $langs );
-				    }
-				else
-				    {
-                    $result2 = GetSearchResults ( $http_vars, $formats_ar );
+			        $result2 = GetFormats ( $server, $langs, $formats_ar );
 				    }
 				
 				$result = $result2;
