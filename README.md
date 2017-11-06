@@ -51,6 +51,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.9.2* ** *- TBD*
+
+- The installer wizard would not run properly in an SSL environment. This has been fixed.
+
 ***Version 2.9.1* ** *- October 17, 2017*
 
 - The CSV was returning all formats, when it should have been returning a subset. This obviously didn't have a major effect on things, but now it only returns used formats, like JSON and XML.

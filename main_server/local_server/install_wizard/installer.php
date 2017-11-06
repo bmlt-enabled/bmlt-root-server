@@ -68,7 +68,6 @@ else
                             'admin_session_name'            =>  'BMLT_Admin'
                             );
         
-    $url_path = dirname ( $_SERVER['PHP_SELF'] );
     ?>
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -78,7 +77,8 @@ else
             <meta http-equiv="Content-Script-Type" content="text/javascript" />
             <title>BMLT Installer</title>
             <?php
-            $url_path = 'http://'.$_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT'] != 80) ? ':'.$_SERVER['SERVER_PORT'] : '').'/'.dirname ( $_SERVER['PHP_SELF'] );
+            $https = (!empty ( $_SERVER['HTTPS'] ) && (($_SERVER['HTTPS'] !== 'off') || ($port == 443))); 
+            $url_path = 'http'.($https ? 's' : '').'://'.$_SERVER['SERVER_NAME'].((($_SERVER['SERVER_PORT'] != 80) && ($_SERVER['SERVER_PORT'] != 443)) ? ':'.$_SERVER['SERVER_PORT'] : '').'/'.dirname ( $_SERVER['PHP_SELF'] );
             $shortcut_icon = "$url_path/local_server/server_admin/style/images/shortcut.png";
             $stylesheet = "$url_path/local_server/server_admin/style/install_wizard_styles.css";
             ?>
