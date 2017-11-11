@@ -20,7 +20,7 @@
 */
 /***************************************************************************************************************************************/
 
-define ( '__VERSION__', '1.3.2' );
+define ( '__VERSION__', '1.3.3' );
 define ( '__REPO_URL__', 'https://bitbucket.org/bmlt/bmlt-semantic-workshop' );
 
 class bmlt_semantic
@@ -141,7 +141,7 @@ class bmlt_semantic
             curl_setopt ( $resource, CURLOPT_ENCODING, 'gzip,deflate' );
             
             // Pretend we're a browser, so that anti-cURL settings don't pooch us.
-            curl_setopt ( $resource, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)" ); 
+            curl_setopt ( $resource, CURLOPT_USERAGENT, "cURL Mozilla/5.0 (Windows NT 5.1; rv:21.0) Gecko/20130401 Firefox/21.0" ); 
             
             // Trust meeeee...
             curl_setopt ( $resource, CURLOPT_SSL_VERIFYPEER, FALSE);

@@ -28,6 +28,10 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
 CHANGELIST
 ----------
+***Version 1.3.3* ** *- November 11, 2017*
+
+- Added a change to the reported UA for the cURL call. Some servers' security software might have issues with the original one.
+
 ***Version 1.3.2* ** *- September 24, 2017*
 
 - Changed "escape" to "encodeURIComponent" in order to resolve issues with non-Roman character sets.
