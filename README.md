@@ -54,6 +54,7 @@ CHANGELIST
 ***Version 2.9.2* ** *- TBD*
 
 - The installer wizard would not run properly in an SSL environment. This has been fixed.
+- The call_curl() function reported an older UA, which caused some security software to choke. Hopefully, this is fixed.
 
 ***Version 2.9.1* ** *- October 17, 2017*
 
