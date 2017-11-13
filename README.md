@@ -51,10 +51,11 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.9.2* ** *- TBD*
+***Version 2.9.2* ** *- November 12, 2017*
 
 - The installer wizard would not run properly in an SSL environment. This has been fixed.
 - The call_curl() function reported an older UA, which caused some security software to choke. Hopefully, this is fixed.
+- There was a bug in creating new Service bodies. This is due to the new helpline setting. It has been fixed.
 
 ***Version 2.9.1* ** *- October 17, 2017*
 
