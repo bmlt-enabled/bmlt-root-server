@@ -2335,7 +2335,6 @@ class c_comdef_server
                     {
                     $lon = max ( -180.0, min ( 180.0, floatval ( $row["longitude"] ) ) );
                     $lat = max ( -90.0, min ( 90.0, floatval ( $row["latitude"] ) ) );
-                    
                     if ( !(($lon == 0) && ($lat == 0)) && (abs ( $lat ) < 90) )
                         {
                         if ( $nw_corner["longitude"] === FALSE )
@@ -2352,6 +2351,7 @@ class c_comdef_server
                                 }
                             else if ( (abs ( $lon ) > 90) && (0 > $lon) && (0 <= $nw_corner["longitude"]) )
                                 {
+                                continue;
                                 }
                             else
                                 {
@@ -2371,6 +2371,7 @@ class c_comdef_server
                                 }
                             else if ( (abs ( $lon ) > 90) && (0 <= $lon) && (0 > $se_corner["longitude"]) )
                                 {
+                                continue;
                                 }
                             else
                                 {

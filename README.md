@@ -51,6 +51,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.9.3* ** *- TBD*
+
+- Added code to prevent [some, but not all] severly messed-up long/lat from pooching the whole coverage area.
+
 ***Version 2.9.2* ** *- November 12, 2017*
 
 - The installer wizard would not run properly in an SSL environment. This has been fixed.
