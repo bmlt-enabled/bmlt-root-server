@@ -51,7 +51,7 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.9.3* ** *- TBD*
+***Version 2.9.3* ** *- January 4, 2018*
 
 - Added code to prevent [some, but not all] severly messed-up long/lat from pooching the whole coverage area.
 - New Italian Translation.
