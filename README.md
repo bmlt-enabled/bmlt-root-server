@@ -54,6 +54,7 @@ CHANGELIST
 ***Version 2.9.3* ** *- TBD*
 
 - Added code to prevent [some, but not all] severly messed-up long/lat from pooching the whole coverage area.
+- New Italian Translation.
 
 ***Version 2.9.2* ** *- November 12, 2017*
 
