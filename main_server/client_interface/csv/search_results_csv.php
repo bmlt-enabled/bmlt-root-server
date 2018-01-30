@@ -403,6 +403,8 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 			    $keys[] = 'meeting_name';
 			    }
 			
+			$keys[] = 'root_server_uri';
+			
 			$ret = '"'.join ( '","', $keys ).'"';
 
 			$formats = c_comdef_server::GetServer()->GetFormatsObj ();
@@ -558,6 +560,8 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
                             {
                             $line['duration_time'] = $localized_strings['default_duration_time'];
                             }
+                        
+                        $line['root_server_uri'] = dirname(dirname(GetURLToMainServerDirectory(TRUE)));
                     
                         if ( !$mtg_obj->IsPublished() && !$mtg_obj->UserCanObserve ( c_comdef_server::GetCurrentUserObj() ) )
                             {

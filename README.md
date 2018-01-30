@@ -51,6 +51,11 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+
+***Version 2.10.0* ** *- TBD*
+
+- Added the Root Server URI as a new field to meeting search results.
+
 ***Version 2.9.3* ** *- January 4, 2018*
 
 - Added code to prevent [some, but not all] severly messed-up long/lat from pooching the whole coverage area.

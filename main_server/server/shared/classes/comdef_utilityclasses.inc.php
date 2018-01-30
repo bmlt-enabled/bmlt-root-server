@@ -20,15 +20,26 @@ function GetURLToMainServerDirectory(
                                         $inAllowHTTPS = TRUE  ///< If TRUE (default), then the URI will be allowed to use HTTPS. If FALSE, then we explicitly disallow HTTPS.
                                         )
 {
-    $port = $_SERVER['SERVER_PORT'] ;
+    $port = intval ( $_SERVER['SERVER_PORT'] );
     
     // IIS puts "off" in the HTTPS field, so we need to test for that.
-    $https = $inAllowHTTPS && (!empty ( $_SERVER['HTTPS'] ) && (($_SERVER['HTTPS'] !== 'off') || ($port == 443))); 
+    $https = ($inAllowHTTPS && (!empty ( $_SERVER['HTTPS'] ) && (($_SERVER['HTTPS'] !== 'off') || ($port == 443)))) ? TRUE : FALSE;
+    
     $url_path = $_SERVER['SERVER_NAME'];
     $file_path = str_replace ( '\\', '/', dirname ( dirname ( dirname ( dirname ( dirname ( __FILE__ ) ) ) ) ) );
     $my_path = str_replace ( '\\', '/', dirname ( $_SERVER['PHP_SELF'] ) );
     $subsequent_path = str_replace ( $file_path, '', $my_path );
-    $url_path .= trim ( (($https && ($port != 443)) || ($port != 80)) ? ':'.$port : '', '/' );
+    
+    // See if we need to add an explicit port to the URI.
+    if ( !$https && ($port != 80) )
+        {
+        $url_path .= ":$port";
+        }
+    elseif ( $https && ($port != 443) )
+        {
+        $url_path .= ":$port";
+        }
+        
     $url_path .= '/'.trim ( $subsequent_path, '/' ).'/';
     $url_path = 'http'.($https ? 's' : '').'://'.$url_path;
     return $url_path;
