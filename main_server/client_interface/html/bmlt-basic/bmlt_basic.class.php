@@ -298,6 +298,27 @@ class bmlt_basic extends BMLTPlugin
                 $head_content .= '<style type="text/css">'.preg_replace ( "|\s+|", " ", $additional_css ).'</style>';
                 }
             }
+            
+        $head_content .= '<script type="text/javascript">';
+        
+        $head_content .= self::stripFile ( 'javascript.js' );
+
+        if ( $this->get_shortcode ( $in_text, 'bmlt_quicksearch' ) )
+            {
+            $head_content .= self::stripFile ( 'quicksearch.js' ) . (defined ( '_DEBUG_MODE_' ) ? "\n" : '');
+            }
+        
+        if ( $this->get_shortcode ( $in_text, 'bmlt_map' ) )
+            {
+            $head_content .= self::stripFile ( 'map_search.js' );
+            }
+        
+        if ( $this->get_shortcode ( $in_text, 'bmlt_mobile' ) )
+            {
+            $head_content .= self::stripFile ( 'fast_mobile_lookup.js' );
+            }
+    
+        $head_content .= '</script>';
 
         return $head_content;
         }
