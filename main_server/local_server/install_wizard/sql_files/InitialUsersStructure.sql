@@ -6,7 +6,7 @@ CREATE TABLE `%%PREFIX%%_comdef_users` (
   `email_address_string` varchar(255) NOT NULL,
   `login_string` varchar(255) NOT NULL,
   `password_string` varchar(255) NOT NULL,
-  `last_access_datetime` datetime NOT NULL default '0000-00-00 00:00:00',
+  `last_access_datetime` datetime NOT NULL default '1000-01-01 00:00:00',
   `lang_enum` varchar(7) NOT NULL default 'en',
   PRIMARY KEY  (`id_bigint`),
   UNIQUE KEY `login_string` (`login_string`),
