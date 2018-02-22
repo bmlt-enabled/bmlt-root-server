@@ -701,6 +701,7 @@ class c_comdef_admin_ajax_handler
                 $uri = $the_new_service_body[7];
                 $helpline = $the_new_service_body[8];
                 $type = $the_new_service_body[9];
+                $worldid = $the_new_service_body[12];
             
                 $sb_to_create = new c_comdef_service_body;
             
@@ -715,6 +716,7 @@ class c_comdef_admin_ajax_handler
                     $sb_to_create->SetURI ( $uri );
                     $sb_to_create->SetHelpline ( $helpline );
                     $sb_to_create->SetSBType ( $type );
+                    $sb_to_create->SetWorldID ( $worldid );
                 
                     if ( $sb_to_create->UpdateToDB() )
                         {

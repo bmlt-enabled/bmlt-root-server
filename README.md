@@ -52,11 +52,12 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
-***Version 2.10.0* ** *- TBD*
+***Version 2.10.0* ** *- February 22, 2018*
 
-- Added the Root Server URI as a new field to meeting search results.
-- Updated to the latest [BMLT Satellite Base Class]()
+- Added the Root Server URI as a new field to meeting search results. This will help with the new [Sandwich](http://archsearch.org/sandwich/) aggregator.
+- Updated to the latest [BMLT Satellite Base Class](https://bmlt.magshare.net/specific-topics/bmlt-satellite-base-class/).
 - Fixed an issue with the initial SQL for the installer wizard, where MySQL was not accepting the default TIMEDATE for users.
+- Fixed a bug, in which World IDs were not being set when creating new Service bodies.
 
 ***Version 2.9.3* ** *- January 4, 2018*
 
