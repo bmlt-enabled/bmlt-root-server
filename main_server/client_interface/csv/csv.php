@@ -1068,7 +1068,8 @@ function GetFormats (
 						'description_string',
 						'lang',
 						'id',
-						'world_id'
+						'world_id',
+						'root_server_uri'
 						);
 	
 	$ret = null;
@@ -1151,6 +1152,10 @@ function GetFormats (
                                     
                                     case    'world_id':
                                         $val = $localized_format->GetWorldID();
+                                    break;
+                                    
+                                    case    'root_server_uri':
+                                        $val = dirname(dirname(GetURLToMainServerDirectory(TRUE)));
                                     break;
                                     }
                                 

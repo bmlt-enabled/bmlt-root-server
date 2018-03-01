@@ -52,6 +52,10 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
+***Version 2.10.1* ** *- TBD*
+
+- Added the Root Server URI as a new field to format results. This will help with the new [Sandwich](http://archsearch.org/sandwich/) aggregator.
+
 ***Version 2.10.0* ** *- February 22, 2018*
 
 - Added the Root Server URI as a new field to meeting search results. This will help with the new [Sandwich](http://archsearch.org/sandwich/) aggregator.

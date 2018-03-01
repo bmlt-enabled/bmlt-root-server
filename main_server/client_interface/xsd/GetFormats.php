@@ -56,6 +56,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"; ?>
                             <xs:element name="lang" type="xs:string"/>
                             <xs:element name="id" type="xs:integer"/>
                             <xs:element name="world_id" type="xs:string" minOccurs="0"/>
+                            <xs:element name="root_server_uri" type="xs:string" minOccurs="0"/>
                             <xs:element name="format_used_in_database" type="xs:integer" minOccurs="0"/>
                         </xs:sequence>
                         <xs:attribute name="sequence_index" use="required" type="xs:integer"/>
