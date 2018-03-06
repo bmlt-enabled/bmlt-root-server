@@ -1460,6 +1460,16 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 			    {
 			    $this->_my_meeting_data[$in_key_enum]['prompt'] = $in_field_prompt_string;
 			    }
+			
+			// Hack to make sure there's no such thing as "pure" midnight.
+			if ( $in_key_enum == 'start_time' )
+			    {
+			    if ( ($in_value_mixed == '24:00:00') || ($in_value_mixed == '24:00') )
+			        {
+			        $in_value_mixed == '23:59:00'
+			        }
+			    }
+			
 			$this->_my_meeting_data[$in_key_enum]['value'] = null;	// Just in case of memory leaks.
 			$this->_my_meeting_data[$in_key_enum]['value'] = $in_value_mixed;
 			$this->_my_meeting_data[$in_key_enum]['lang_enum'] = $in_lang_enum;
