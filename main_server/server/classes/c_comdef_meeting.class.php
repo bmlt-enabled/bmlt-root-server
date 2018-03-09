@@ -1466,7 +1466,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 			    {
 			    if ( ($in_value_mixed == '24:00:00') || ($in_value_mixed == '24:00') )
 			        {
-			        $in_value_mixed == '23:59:00'
+			        $in_value_mixed == '23:59:00';
 			        }
 			    }
 			
