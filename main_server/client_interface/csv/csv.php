@@ -339,6 +339,11 @@ function parse_redirect (
 				if ( isset ( $http_vars['get_formats_only'] ) )
 				    {
 			        $result2 = GetFormats ( $server, $langs, $formats_ar );
+			        
+			        if ( !$result2 )
+			            {
+			            $result2 = '[]';
+			            }
 				    }
 				
 				$result = $result2;
@@ -361,6 +366,10 @@ function parse_redirect (
 			elseif ( isset ( $http_vars['json_data'] ) )
 				{
 				$result = TranslateToJSON ( $result2 );
+                if ( !$result )
+                    {
+                    $result = '[]';
+                    }
 				}
 			else
 				{
@@ -384,6 +393,10 @@ function parse_redirect (
 			elseif ( isset ( $http_vars['json_data'] ) )
 				{
 				$result = TranslateToJSON ( $result2 );
+                if ( !$result )
+                    {
+                    $result = '[]';
+                    }
 				}
 			else
 				{
@@ -430,6 +443,10 @@ function parse_redirect (
 			elseif ( isset ( $http_vars['json_data'] ) )
 				{
 				$result = TranslateToJSON ( $result2 );
+                if ( !$result )
+                    {
+                    $result = '[]';
+                    }
 				}
 			else
 				{

@@ -56,6 +56,7 @@ CHANGELIST
 
 - Added the Root Server URI as a new field to format results. This will help with the new [Sandwich](http://archsearch.org/sandwich/) aggregator.
 - If someone enters '24:00:00' as the time (midnight), then it gets changed to 23:59:00 (11:59 PM). This ensures that "midnight" is always "TONIGHT," not tomorrow AM.
+- In the semantic interface, I now return an explicit empty array ([]) for JSON, if there are no formats, Service bodies or changes.
 
 ***Version 2.10.0* ** *- February 22, 2018*
 
