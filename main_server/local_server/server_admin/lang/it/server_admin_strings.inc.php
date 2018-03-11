@@ -27,7 +27,7 @@
 	                                        'account_type_label'                                    =>  'Io sono un:',//'I Am A:',
 	                                        'account_type_1'                                        =>  'Amministratore del server',//'Server Administrator',
 	                                        'account_type_2'                                        =>  'Amministratore della struttura di servizio',//'Service Body Administrator',
-											'ServerMapsURL'                                         =>  'http://maps.googleapis.com/maps/api/geocode/xml?address=##SEARCH_STRING##&sensor=false',
+											'ServerMapsURL'                                         =>  'https://maps.googleapis.com/maps/api/geocode/xml?address=##SEARCH_STRING##&sensor=false',
 	                                        'account_type_4'                                        =>  'Patetico perdente che non dovrebbe neanche aver accesso a questa pagina - L\'Autore del software ha miseramente fallito!',//'Pathetic Luser Who Shouldn\'t Even Have Access to This Page -The Author of the Software Pooched it BAD!',
 	                                        'account_type_5'                                        =>  'Osservatore nella struttura di servizio',//'Service Body Observer',
 	                                        'change_password_label'                                 =>  'Cambia la mia password in:',//'Change My Password To:',
@@ -275,7 +275,7 @@
 	                                        'AJAX_Auth_Failure'                                     =>  'Autorizzazione fallita per questa operazione. Ci potrebbe essere un problema con la configurazione del server.', /// 'Authorization failed for this operation. There may be a problem with the server configuration.'
 	                                        'Observer_Link_Text'                                    =>  'Ricerca riunioni', /// 'Meeting Search'
 	                                        'Data_Transfer_Link_Text'                               =>  'Importazione dati delle riunioni (ATTENZIONE: i dati correnti saranno sostituiti!)', /// 'Import Meeting Data (WARNING: Replaces Current Data!)'
-											'MapsURL'                                               =>  'http://maps.google.com/maps?q=##LAT##,##LONG##+(##NAME##)&amp;ll=##LAT##,##LONG##',
+											'MapsURL'                                               =>  'https://maps.google.com/maps?q=##LAT##,##LONG##+(##NAME##)&amp;ll=##LAT##,##LONG##',
 											'hidden_value'                                          =>  'Non è possibile mostrare dati (manca l\'autorizzazione)', /// 'Cannot Display Data -Unauthorized'
 											'Value_Prompts'                                         =>  array (	'id_bigint' => 'ID riunione', /// 'Meeting ID'
                                                                                                                 'worldid_mixed' => 'ID dei Servizi Mondiali di NA', /// 'World Services ID',

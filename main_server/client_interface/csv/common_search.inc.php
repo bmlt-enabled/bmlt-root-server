@@ -831,6 +831,11 @@ function GetGeocodeFromString ( $in_string,	///< The string to be checked.
 		$geo_uri .= '&region='.$localized_strings['region_bias'];
 		}
 	
+	if ( $localized_strings['google_api_key'] )
+		{
+		$geo_uri .= '&key='.$localized_strings['google_api_key'];
+		}
+	
 	// Bit of a kludge. If the string is just a number (a postcode), then we add the region bias directly to it.
 	if ( is_numeric ( $in_string ) && $localized_strings['region_bias'] )
 	    {
@@ -844,7 +849,6 @@ function GetGeocodeFromString ( $in_string,	///< The string to be checked.
 	$bounds_ar = strval ( $localized_strings['search_spec_map_center']['latitude'] - $m_p_deg ).",". strval ( $localized_strings['search_spec_map_center']['longitude'] - $m_p_deg );		// Southwest corner
 	$bounds_ar .= "|";
 	$bounds_ar .= strval ( $localized_strings['search_spec_map_center']['latitude'] + $m_p_deg ).",".strval ( $localized_strings['search_spec_map_center']['longitude'] + $m_p_deg );		// Northeast corner
-
     $xml = simplexml_load_file ( $geo_uri );
 
     if ( $xml->status == 'OK' )
