@@ -299,7 +299,7 @@ function parse_redirect (
 			elseif ( isset ( $http_vars['json_data'] ) )
 				{
 				$result = TranslateToJSON ( GetSearchResults ( $http_vars, $formats_ar, $meanLocationData ) );
-				if ( (isset ( $http_vars['get_used_formats'] ) || isset ( $http_vars['get_formats_only'] )) && $formats_ar && is_array ( $formats_ar ) && count ( $formats_ar ) )
+				if ( (isset ( $http_vars['get_used_formats'] ) || isset ( $http_vars['get_formats_only'] )) )
 				    {
 				    if ( isset ( $http_vars['get_formats_only'] ) )
 				        {
