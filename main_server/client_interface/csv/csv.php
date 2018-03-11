@@ -303,7 +303,13 @@ function parse_redirect (
 				    {
 				    if ( isset ( $http_vars['get_formats_only'] ) )
 				        {
-                        $result = '{"formats":'.TranslateToJSON ( GetFormats ( $server, $langs, $formats_ar ) ).'}';
+                        $format_list = '[]';
+                        if ( isset ( $formats_ar ) && is_array ( $formats_ar ) && count ( $formats_ar ) )
+                            {
+                            $format_list = TranslateToJSON ( GetFormats ( $server, $langs, $formats_ar ) );
+                            }
+                        
+                        $result = '{"formats":'.$format_list.'}';
 				        }
 				    else
 				        {
@@ -313,7 +319,13 @@ function parse_redirect (
                             }
                         else
                             {
-                            $result = '{"meetings":'.$result.',"formats":'.TranslateToJSON ( GetFormats ( $server, $langs, $formats_ar ) ).'}';
+                            $format_list = '[]';
+                            if ( isset ( $formats_ar ) && is_array ( $formats_ar ) && count ( $formats_ar ) )
+                                {
+                                $format_list = TranslateToJSON ( GetFormats ( $server, $langs, $formats_ar ) );
+                                }
+                            
+                            $result = '{"meetings":'.$result.',"formats":'.$format_list.'}';
                             }
                         }
                     }
