@@ -1464,7 +1464,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 			// Hack to make sure there's no such thing as "pure" midnight.
 			if ( $in_key_enum == 'start_time' )
 			    {
-			    if ( ($in_value_mixed == '00:00:00') || ($in_value_mixed == '00:00') ($in_value_mixed == '24:00:00') || ($in_value_mixed == '24:00') )
+			    if ( ($in_value_mixed == '00:00:00') || ($in_value_mixed == '00:00') || ($in_value_mixed == '24:00:00') || ($in_value_mixed == '24:00') )
 			        {
 			        $in_value_mixed == '23:59:00';
 			        }
