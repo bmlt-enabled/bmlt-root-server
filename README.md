@@ -52,10 +52,10 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
-***Version 2.10.1* ** *- TBD*
+***Version 2.10.1* ** *- March 14, 2018*
 
 - Added the Root Server URI as a new field to format results. This will help with the new [Sandwich](http://archsearch.org/sandwich/) aggregator.
-- If someone enters '24:00:00' as the time (midnight), then it gets changed to 23:59:00 (11:59 PM). This ensures that "midnight" is always "TONIGHT," not tomorrow AM.
+- If someone enters '24:00:00' or '00:00:00' as the time (midnight), then it gets changed to 23:59:00 (11:59 PM). This ensures that "midnight" is always "TONIGHT," not tomorrow AM.
 - In the semantic interface, I now return an explicit empty array ([]) for JSON, if there are no formats, Service bodies or changes.
 - Added the API key to the location string lookups. This requires that the API also have Google Geocoding enabled.
 - The geocoding API calls now go over HTTPS.
