@@ -257,7 +257,6 @@ class c_comdef_server
                                             )
     {
         $server_lang = c_comdef_server::GetServer()->GetLocalLang();
-        
         $ret = 0;
         
         if ( $in_lang_a == $server_lang )
@@ -270,7 +269,7 @@ class c_comdef_server
             }
         else
             {
-            $ret = strncasecmp ( $in_lang_a, $in_lang_b, count ( $in_lang_a ) );
+            $ret = strncasecmp ( $in_lang_a, $in_lang_b, 3 );
             }
             
         return $ret;
@@ -2860,6 +2859,12 @@ class c_comdef_server
             c_comdef_server::$server_local_strings['comdef_map_radius_ranges'] = (isset ( $comdef_map_radius_ranges ) && is_array ( $comdef_map_radius_ranges ) && count ( $comdef_map_radius_ranges )) ?
                                                                                     $comdef_map_radius_ranges :
                                                                                     array ( 0.1, 100.0 );   ///< The default range (min, max), in Km.
+            c_comdef_server::$server_local_strings['include_service_body_email_in_semantic'] = FALSE;
+            if ( isset ( $g_include_service_body_email_in_semantic ) )
+                {
+                c_comdef_server::$server_local_strings['include_service_body_email_in_semantic'] = $g_include_service_body_email_in_semantic;
+                }
+                
             c_comdef_server::$server_local_strings['google_api_key'] = isset ( $gkey ) ? $gkey : '';
             c_comdef_server::$server_local_strings['region_bias'] = isset ( $region_bias ) ? $region_bias : 'us';
             c_comdef_server::$server_local_strings['default_duration_time'] = isset ( $default_duration_time ) ? $default_duration_time : '1:00:00';
