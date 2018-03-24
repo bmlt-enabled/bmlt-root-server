@@ -52,6 +52,10 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
+***Version 2.10.2* ** *- TBD*
+
+- Added provision for including Service body contact emails in the semantic response. This requires adding "$include_service_body_email_in_semantic = TRUE;" to the auto-config.inc.php file.
+
 ***Version 2.10.1* ** *- March 14, 2018*
 
 - Added the Root Server URI as a new field to format results. This will help with the new [Sandwich](http://archsearch.org/sandwich/) aggregator.
