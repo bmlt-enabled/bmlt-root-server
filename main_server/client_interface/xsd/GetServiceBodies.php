@@ -58,6 +58,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"; ?>
                             <xs:element name="url" type="xs:string" minOccurs="0" maxOccurs="1"/>
                             <xs:element name="helpline" type="xs:string" minOccurs="0" maxOccurs="1"/>
                             <xs:element name="world_id" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="contact_email" type="xs:string" minOccurs="0" maxOccurs="1"/>
                         </xs:sequence>
                         <xs:attribute name="sequence_index" type="xs:integer" use="required"/>
                     </xs:complexType>
