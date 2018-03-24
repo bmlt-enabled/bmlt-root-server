@@ -52,9 +52,9 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
-***Version 2.10.2* ** *- TBD*
+***Version 2.10.2* ** *- March 24, 2018*
 
-- Added provision for including Service body contact emails in the semantic response. This requires adding "$include_service_body_email_in_semantic = TRUE;" to the auto-config.inc.php file.
+- Added provision for including Service body contact emails in the semantic response. This requires adding "$g_include_service_body_email_in_semantic = TRUE;" to the auto-config.inc.php file.
 
 ***Version 2.10.1* ** *- March 14, 2018*
 
