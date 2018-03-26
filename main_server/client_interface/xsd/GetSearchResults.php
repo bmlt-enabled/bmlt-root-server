@@ -90,6 +90,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"; ?>
 								echo "\"/>\n";
 								}
 ?>
+                            <xs:element name="root_server_uri" type="xs:string" minOccurs="0"/>
 						</xs:sequence>
                         <xs:attribute name="sequence_index" use="required" type="xs:integer"/>
 					</xs:complexType>

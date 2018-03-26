@@ -52,6 +52,10 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
+***Version 2.10.3* ** *- TBD*
+
+- Added the Root Server URI to the XSD (XML Schema).
+
 ***Version 2.10.2* ** *- March 24, 2018*
 
 - Added provision for including Service body contact emails in the semantic response. This requires adding "$g_include_service_body_email_in_semantic = TRUE;" to the auto-config.inc.php file.
