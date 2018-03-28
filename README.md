@@ -55,6 +55,7 @@ CHANGELIST
 ***Version 2.10.3* ** *- TBD*
 
 - Added the Root Server URI to the XSD (XML Schema).
+- Added the Root Server URI to the available fields returned by the server info.
 
 ***Version 2.10.2* ** *- March 24, 2018*
 
