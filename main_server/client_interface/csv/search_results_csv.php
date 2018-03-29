@@ -113,10 +113,10 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 																We serve non-JavaScript content to clients that don't support AJAX, even if they support JavaScript.
 														 		
 														 The values that are important to the list paging are:
-														 	- 'page'
+														 	- 'page_num'
 														 		This is a positive integer, specifying which page of results to display.
 														 	
-														 	- 'results_per_page'
+														 	- 'page_size'
 														 		This is the number of meetings to list on one "page" of results.
 														 		The search results are paged, so that a large search is broken
 														 		into multiple pages of page_display_size results.
@@ -267,12 +267,6 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
                                                                 
                                                             - 'simple_other_fields'
                                                                 Set this to '1' in order to prevent the server from separating values with the prompt separator.
-                                                                
-                                                            - 'page_size'
-                                                                This is an integer that determines the maximum number of meetings to include in one return. If it is not specified, or set to 0 (intval), then all meetings are returned.
-                                                                
-                                                            - 'page_num'
-                                                                This is an integer (1-based) that is ignored if 'page_size' is not defined or set to 0. This is the page number offset to return. 1 or 0 is the first page. every page after 1 is the following page of results.
 											*/
 									&$return_array = null,	///< If this is supplied, then the result will be saved in this as an array. It must be an empty array, supplied by reference.
 								    &$return_geocode = null,    /**< If this is supplied, the response will be an associative array, with the search center and radius.
