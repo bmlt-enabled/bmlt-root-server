@@ -404,17 +404,13 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 			    }
 			
 			$keys[] = 'root_server_uri';
+			$keys[] = 'format_shared_id_list';
 			
 			$ret = '"'.join ( '","', $keys ).'"';
 
 			$formats = c_comdef_server::GetServer()->GetFormatsObj ();
 			$formats_keys = array();
 			$formats_keys_header = array();
-		    
-		    if ( is_array ( $formats_keys_header ) && count ( $formats_keys_header ) )
-		        {
-                $ret .= ',"'.join ( '","', $formats_keys_header ).'"';
-                }
             
             $ret .= "\n";
        
@@ -429,10 +425,12 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
 				{
 				$line = array();
 				$formats_ar = $formats_keys;
+                                    
 				if ( $mtg_obj instanceof c_comdef_meeting )
 				    {
 				    if ( !$in_editor_only || $mtg_obj->UserCanObserve() )
                         {
+                        $format_shared_id_list = Array();
                         $first = true;
                         foreach ( $keys as $key )
                             {
@@ -457,6 +455,7 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
                                                 if ( $format instanceof c_comdef_format )
                                                     {
                                                     array_push ( $v_ar, $format->GetKey() );
+                                                    array_push ( $format_shared_id_list, $format->GetSharedID() );
                                                     }
                                                 }
                                             $val = join ( ',', $v_ar );
@@ -561,6 +560,11 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
                             $line['duration_time'] = $localized_strings['default_duration_time'];
                             }
                         
+                        if ( isset($format_shared_id_list) && is_array($format_shared_id_list) && count($format_shared_id_list) )
+                            {
+                            $line['format_shared_id_list'] = implode(',', $format_shared_id_list);
+                            }
+                            
                         $line['root_server_uri'] = dirname(dirname(GetURLToMainServerDirectory(TRUE)));
                     
                         if ( !$mtg_obj->IsPublished() && !$mtg_obj->UserCanObserve ( c_comdef_server::GetCurrentUserObj() ) )
