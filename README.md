@@ -56,6 +56,7 @@ CHANGELIST
 
 - Added the Root Server URI to the XSD (XML Schema).
 - Added the Root Server URI to the available fields returned by the server info.
+- Fixed a typo in the reading for Google API key.
 - Fixed an old issue, where having two different formats with the same key could mess up in the meeting editor. HOWEVER, we should not allow this to occur.
 
 ***Version 2.10.2* ** *- March 24, 2018*
