@@ -2865,7 +2865,7 @@ class c_comdef_server
                 c_comdef_server::$server_local_strings['include_service_body_email_in_semantic'] = $g_include_service_body_email_in_semantic;
                 }
                 
-            c_comdef_server::$server_local_strings['google_api_key'] = isset ( $gKey ) ? $gKey : '';
+            c_comdef_server::$server_local_strings['google_api_key'] = isset ( $gkey ) ? $gkey : '';
             c_comdef_server::$server_local_strings['region_bias'] = isset ( $region_bias ) ? $region_bias : 'us';
             c_comdef_server::$server_local_strings['default_duration_time'] = isset ( $default_duration_time ) ? $default_duration_time : '1:00:00';
             c_comdef_server::$server_local_strings['search_spec_map_center'] = $search_spec_map_center;
