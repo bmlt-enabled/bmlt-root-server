@@ -57,7 +57,7 @@ CHANGELIST
 - Added the Root Server URI to the XSD (XML Schema).
 - Added the Root Server URI to the available fields returned by the server info.
 - Added JSONP endpoint.
-- Bundled BMLT.js for building client side applications using JSONP.
+- Bundled bmlt.js for building client side applications using JSONP.
 - Fixed an old issue, where having two different formats with the same key could mess up in the meeting editor. HOWEVER, we should not allow this to occur.
 
 ***Version 2.10.2* ** *- March 24, 2018*
