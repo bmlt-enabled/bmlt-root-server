@@ -17,13 +17,15 @@ You can find out way too much about the BMLT on [the BMLT Documentation Site](ht
 This project is the "root" server for the BMLT. It is the "server" part of the BMLT
 "client/server" architecture.
 
-The project is actually several years old. It is currently hosted on [BitBucket](https://www.bitbucket.org).
+The project is actually several years old. It is currently hosted on [GitHub](https://github.com).
 
-[Follow this link to see the Current BitBucket repository.](https://bitbucket.org/bmlt/bmlt-root-server/)
+[Follow this link to see the Current GitHub repository.](https://github.com/LittleGreenViper/BMLT-Root-Server)
 
-[Follow this link to see the GitHub repository.](https://github.com/MAGSHARE/BMLT-Root-Server)
+[Follow this link to see the legacy BitBucket repository.](https://bitbucket.org/bmlt/bmlt-root-server/)
 
-[Follow this link to see the pre-GitHub repository on SourceForge.](https://sourceforge.net/projects/comdef/).
+[Follow this link to see the legacy GitHub repository.](https://github.com/MAGSHARE/BMLT-Root-Server)
+
+[Follow this link to see the legacy antediluvian repository on SourceForge.](https://sourceforge.net/projects/comdef/).
 
 I decided to start new on [GitHub](https://github.com), as opposed to bringing over the SourceForge project,
 in order to reduce disk space usage, and because it's a pain to rearrange a standard
