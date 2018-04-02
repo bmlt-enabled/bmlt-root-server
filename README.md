@@ -54,11 +54,12 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
-***Version 2.10.3* ** *- TBD*
+***Version 2.10.3* ** *- April 2, 2018*
 
-- Added the Root Server URI to the XSD (XML Schema).
+- Added the Root Server URI and shared code list to the XSD (XML Schema).
 - Added the Root Server URI to the available fields returned by the server info.
-- Added JSONP endpoint.
+- Added a list of format shared codes to the available fields returned by the server info.
+- Added [JSONP](https://www.w3schools.com/js/js_json_jsonp.asp) as a choice for the Semantic Interface. This allows the use of the BMLT on site-builder systems, like [Wix](https://www.wix.com) and [Weebly](https://www.weebly.com).
 - Fixed an old issue, where having two different formats with the same key could mess up in the meeting editor. HOWEVER, we should not allow this to occur.
 
 ***Version 2.10.2* ** *- March 24, 2018*
