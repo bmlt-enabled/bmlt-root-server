@@ -1672,7 +1672,7 @@ function BMLT_Server_Admin ()
         var salt = new Date();
         uri += '&salt=' + salt.getTime();
         
-        new_editor.m_ajax_request_in_progress = BMLT_AjaxRequest ( uri, function(in_req,in_orig_meeting_id) { admin_handler_object.handleMeetingChangeAJAXCallback(in_req,in_orig_meeting_id); }, 'post', in_meeting_id );
+        new_editor.m_ajax_request_in_progress = BMLT_AjaxRequest ( uri, function( in_req, in_orig_meeting_id ) { admin_handler_object.handleMeetingChangeAJAXCallback ( in_req,in_orig_meeting_id ); }, 'post', in_meeting_id );
     };
     
     /************************************************************************************//**
@@ -2836,7 +2836,7 @@ function BMLT_Server_Admin ()
     this.setFormatCheckboxes = function(in_meeting_object
                                         )
     {
-        var format_keys = in_meeting_object.formats.split ( ',' );
+        var format_keys = in_meeting_object.format_shared_id_list.split ( ',' );
         var main_formats = g_format_object_array;
         for ( var c = 0; c < main_formats.length; c++ )
             {
@@ -2893,7 +2893,7 @@ function BMLT_Server_Admin ()
                 };
             };
         
-        document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' ).meeting_object.formats = format_array.join ( ',' );
+        document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' ).meeting_object.format_shared_id_list = format_array.join ( ',' );
         this.validateMeetingEditorButton(in_meeting_id);
     };
             

@@ -17,13 +17,15 @@ You can find out way too much about the BMLT on [the BMLT Documentation Site](ht
 This project is the "root" server for the BMLT. It is the "server" part of the BMLT
 "client/server" architecture.
 
-The project is actually several years old. It is currently hosted on [BitBucket](https://www.bitbucket.org).
+The project is actually several years old. It is currently hosted on [GitHub](https://github.com).
 
-[Follow this link to see the Current BitBucket repository.](https://bitbucket.org/bmlt/bmlt-root-server/)
+[Follow this link to see the Current GitHub repository.](https://github.com/LittleGreenViper/BMLT-Root-Server)
 
-[Follow this link to see the GitHub repository.](https://github.com/MAGSHARE/BMLT-Root-Server)
+[Follow this link to see the legacy BitBucket repository.](https://bitbucket.org/bmlt/bmlt-root-server/)
 
-[Follow this link to see the pre-GitHub repository on SourceForge.](https://sourceforge.net/projects/comdef/).
+[Follow this link to see the legacy GitHub repository.](https://github.com/MAGSHARE/BMLT-Root-Server)
+
+[Follow this link to see the legacy antediluvian repository on SourceForge.](https://sourceforge.net/projects/comdef/).
 
 I decided to start new on [GitHub](https://github.com), as opposed to bringing over the SourceForge project,
 in order to reduce disk space usage, and because it's a pain to rearrange a standard
@@ -51,6 +53,14 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+
+***Version 2.10.3* ** *- April 2, 2018*
+
+- Added the Root Server URI and shared code list to the XSD (XML Schema).
+- Added the Root Server URI to the available fields returned by the server info.
+- Added a list of format shared codes to the available fields returned by the server info.
+- Added [JSONP](https://www.w3schools.com/js/js_json_jsonp.asp) as a choice for the Semantic Interface. This allows the use of the BMLT on site-builder systems, like [Wix](https://www.wix.com) and [Weebly](https://www.weebly.com).
+- Fixed an old issue, where having two different formats with the same key could mess up in the meeting editor. HOWEVER, we should not allow this to occur.
 
 ***Version 2.10.2* ** *- March 24, 2018*
 

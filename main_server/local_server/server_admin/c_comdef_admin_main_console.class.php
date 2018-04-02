@@ -1743,7 +1743,7 @@ class c_comdef_admin_main_console
                         {
                         $ret .= '<div class="bmlt_admin_meeting_one_format_div">';
                             $ret .= '<label class="left_label" for="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox">'.htmlspecialchars ( $format->GetKey() ).'</label>';
-                            $ret .= '<span><input type="checkbox" value="'.$format->GetKey().'" id="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox" onchange="admin_handler_object.reactToFormatCheckbox(this, template);" onclick="admin_handler_object.reactToFormatCheckbox(this, template);" /></span>';
+                            $ret .= '<span><input type="checkbox" value="'.$format->GetSharedID().'" id="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox" onchange="admin_handler_object.reactToFormatCheckbox(this, template);" onclick="admin_handler_object.reactToFormatCheckbox(this, template);" /></span>';
                             $ret .= '<label class="right_label" for="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox">'.htmlspecialchars ( $format->GetLocalName() ).'</label>';
                         $ret .= '</div>';
                         }

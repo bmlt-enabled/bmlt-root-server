@@ -1018,21 +1018,27 @@ class c_comdef_admin_ajax_handler
                 
                     foreach ( $in_meeting_data as $key => $value )
                         {
-                        if ( $key == 'formats' )
+                        if ( $key == 'formats' ) {
+                            continue;
+                        }
+                        
+                        if ( $key == 'format_shared_id_list' )
                             {
                             $vals = array();
                             $value = explode ( ",", $value );
                             $lang = $this->my_server->GetLocalLang();
-                            foreach ( $value as $fkey )
+                            foreach ( $value as $sharedID )
                                 {
-                                $object = c_comdef_server::GetServer()->GetFormatsObj()->GetFormatByKeyAndLanguage ( $fkey, $lang );
+                                $sharedID = intval ( $sharedID );
+                                $object = c_comdef_server::GetServer()->GetFormatsObj()->GetFormatBySharedIDCodeAndLanguage ( $sharedID, $lang );
                                 if ( $object )
                                     {
-                                    $vals[$object->GetSharedID()] = $object;
+                                    $vals[$sharedID] = $object;
                                     }
                                 }
                             uksort ( $vals, array ( 'c_comdef_meeting','format_sorter_simple' ) );
                             $value = $vals;
+                            $key = 'formats';
                             }
                         
                         switch ( $key )
