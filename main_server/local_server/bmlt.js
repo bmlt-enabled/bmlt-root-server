@@ -45,15 +45,28 @@ var getMeetingsByCity = function(city, callback) {
 };
 
 var getMeetingsByServiceBodyId = function(serviceBodyId, callback) {
-    getJSON(baseURL + "&services=" + serviceBodyId + "&callback=?", callback);
+    getJSON(baseURL + getServiceBodyIdQueryString(serviceBodyId) + "&callback=?", callback);
 };
 
 var getMeetingsByServiceBodyIdAndWeekdayId = function(serviceBodyId, weekdayId, callback) {
-    getJSON(baseURL + "&services=" + serviceBodyId + "&weekdays=" + weekdayId + "&callback=?", callback);
+    getJSON(baseURL + getServiceBodyIdQueryString(serviceBodyId) + "&weekdays=" + weekdayId + "&callback=?", callback);
 };
 
 var getMeetingsByServiceBodyIdAndCity = function(serviceBodyId, city, callback) {
-    getJSON(baseURL + "&services=" + serviceBodyId + "&meeting_key=location_municipality&meeting_key_value=" + city + "&callback=?", callback);
+    getJSON(baseURL + getServiceBodyIdQueryString(serviceBodyId) + "&meeting_key=location_municipality&meeting_key_value=" + city + "&callback=?", callback);
+};
+
+var getServiceBodyIdQueryString = function(serviceBodyIds) {
+    var serviceBodyIdString = "";
+    if (Array.isArray(serviceBodyIds)) {
+        for (var i = 0; i < serviceBodyIds.length; i++) {
+            serviceBodyIdString += "&services[]=" + serviceBodyIds[i];
+        }
+    } else {
+        serviceBodyIdString = "&services=" + serviceBodyIds;
+    }
+
+    return serviceBodyIdString;
 };
 
 var getJSON = function(url, callback) {
