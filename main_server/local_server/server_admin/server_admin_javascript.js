@@ -2836,7 +2836,31 @@ function BMLT_Server_Admin ()
     this.setFormatCheckboxes = function(in_meeting_object
                                         )
     {
-        var format_keys = in_meeting_object.format_shared_id_list.split ( ',' );
+        var format_keys_string = '';
+        
+        if (in_meeting_object)
+            {
+            if (in_meeting_object.format_shared_id_list)
+                {
+                format_keys_string = in_meeting_object.format_shared_id_list;
+                };
+            };
+            
+        var format_keys = new Array();
+        
+        // God, this is such an abomination.
+        // If the format is one integer, or badly formed, then it might not split, in which case, we need to parse it.
+        if (format_keys_string)
+            {
+            var splittee = format_keys_string.split(',');
+            if (splittee && splittee.length)
+                {
+                    format_keys = splittee.map((v) => {return parseInt(v);});
+                } else {
+                    format_keys[0] = parseInt(format_keys_string);
+                };
+            };
+        
         var main_formats = g_format_object_array;
         for ( var c = 0; c < main_formats.length; c++ )
             {
