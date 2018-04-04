@@ -54,9 +54,10 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
-***Version 2.10.4* ** *- TBD*
+***Version 2.10.4* ** *- April 3, 2018*
 
 - Added the capability to specify multiple Service bodies in the JSONP interface.
+- Fixed an urgent bug caused by the new format hack.
 
 ***Version 2.10.3* ** *- April 2, 2018*
 
