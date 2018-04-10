@@ -57,6 +57,7 @@ CHANGELIST
 ***Version 2.10.5* ** *- TBD*
 
 - The Italian localization was missing the label and default text for the Helpline field in the Service Body Editor. This has been fixed.
+- Made a fix for the Italian translation to avoid text overlap.
 
 ***Version 2.10.4* ** *- April 3, 2018*
 
