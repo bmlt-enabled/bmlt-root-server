@@ -199,6 +199,8 @@
 	                                        'service_body_editor_type_c_comdef_service_body__WSC__' =>  'Conferenza dei servizi mondiali',//'World Service Conference',
 	                                        'service_body_editor_type_c_comdef_service_body__MAS__' =>  'Area metropolitana',//'Metro Area',
 	                                        'service_body_editor_type_c_comdef_service_body__ZFM__' =>  'Forum zonale',//'Zonal Forum',
+	                                        'service_body_editor_screen_helpline_label'             =>  'Helpline:',
+	                                        'service_body_editor_screen_helpline_prompt'            =>  'Enter The Helpline Telephone Number',
 	                                        'service_body_editor_uri_naws_format_text'              =>  'Scarica le riunioni di questa struttura di servizio come file compatibile con i Servizi Mondiali di NA',//'Get The Meetings For This Service Body As A NAWS-Compatible File',
 	                                        'edit_Meeting_meeting_id'                               =>  'ID della riunione:',//'Meeting ID:',
                                             'service_body_editor_create_new_sb_option'              =>  'Crea una nuova struttura di servizio',//'Create A New Service Body',
