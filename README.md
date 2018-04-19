@@ -54,6 +54,12 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
+***Version 2.10.5* ** *- April 19, 2018*
+
+- The Italian localization was missing the label and default text for the Helpline field in the Service Body Editor. This has been fixed.
+- Made a fix for the Italian translation to avoid text overlap.
+- Fixed an issue where stricter PHP 7 settings were causing problems with user admin.
+
 ***Version 2.10.4* ** *- April 3, 2018*
 
 - Added the capability to specify multiple Service bodies in the JSONP interface.
