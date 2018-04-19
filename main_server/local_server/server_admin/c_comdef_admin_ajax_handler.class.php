@@ -401,16 +401,10 @@ class c_comdef_admin_ajax_handler
             
                 if ( !$this->my_server->GetUserByLogin ( $login ) )
                     {
-                    $user_to_create = new c_comdef_user;
+                    $user_to_create = new c_comdef_user ( NULL, 0, $user_level, $email, $login, "", $this->my_server->GetLocalLang(), $name, $description, NULL);
             
                     if ( $user_to_create instanceof c_comdef_user )
                         {
-                        $user_to_create->SetLogin ( $login );
-                        $user_to_create->SetLocalName ( $name );
-                        $user_to_create->SetLocalDescription ( $description );
-                        $user_to_create->SetEmailAddress ( $email );
-                        $user_to_create->SetUserLevel ( $user_level );
-                    
                         if ( $password )
                             {
                             $user_to_create->SetNewPassword ( $password );
