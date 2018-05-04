@@ -10,29 +10,39 @@ var getDayOfWeek = function(dayint) {
 var getTodayDayOfWeek = function() {
     return (new Date()).getDay() + 1;
 };
-var militaryToStandard = function(value) {
-    if (value !== null && value !== undefined){ //If value is passed in
-        if(value.indexOf('AM') > -1 || value.indexOf('PM') > -1){ //If time is already in standard time then don't format.
-            return value;
+var militaryToStandard = function(time) {
+    if (time !== null && time !== undefined){ //If time is passed in
+        if(time.indexOf('AM') > -1 || time.indexOf('PM') > -1){ //If time is already in standard time then don't format.
+            return time;
         }
         else {
-            if(value.length == 8){ //If value is the expected length for military time then process to standard time.
-                var hour = value.substring ( 0,2 ); //Extract hour
-                var minutes = value.substring ( 3,5 ); //Extract minutes
-                var identifier = 'AM'; //Initialize AM PM identifier
+            if(time.length == 8){ //If time is the expected length for military time then process to standard time.
+				time = time.split(':'); // convert to array
+				// fetch
+				var hours = Number(time[0]);
+				var minutes = Number(time[1]);
 
-                if(hour == 12){ //If hour is 12 then should set AM PM identifier to PM
-                    identifier = 'PM';
-                }
-                if(hour == 0){ //If hour is 0 then set to 12 for standard time 12 AM
-                    hour=12;
-                }
-                if(hour > 12){ //If hour is greater than 12 then convert to standard 12 hour format and set the AM PM identifier to PM
-                    hour = hour - 12;
-                    identifier='PM';
-                }
-                return hour + ':' + minutes + ' ' + identifier; //Return the constructed standard time
-            }
+				// calculate
+				var timeValue;
+
+				if (hours > 0 && hours <= 12)
+				{
+				timeValue= "" + hours;
+				} else if (hours > 12)
+				{
+					timeValue= "" + (hours - 12);
+				}
+				else if (hours == 0)
+				{
+					timeValue= "12";
+				}
+ 
+				timeValue += (minutes < 10) ? ":0" + minutes : ":" + minutes;  // get minutes
+				timeValue += (hours >= 12) ? " PM" : " AM";  // get AM/PM
+
+				// show
+				return timeValue;
+				}
             else { //If value is not the expected length than just return the value as is
                 return value;
             }
