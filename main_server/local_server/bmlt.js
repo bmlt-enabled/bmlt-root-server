@@ -16,7 +16,7 @@ var militaryToStandard = function(value) {
             return value;
         }
         else {
-            if(value.length == 8){ //If value is the expected length for military time then process to standard time.
+            if (value.length == 8) { //If value is the expected length for military time then process to standard time.
                 value = value.split(':'); // convert to array
                 // fetch
                 var hours = Number(value[0]);
@@ -36,7 +36,7 @@ var militaryToStandard = function(value) {
                 timeValue += (hours >= 12) ? " PM" : " AM";  // get AM/PM
                 // show
                 return timeValue;
-                }
+            }
             else { //If value is not the expected length than just return the value as is
                 return value;
             }
