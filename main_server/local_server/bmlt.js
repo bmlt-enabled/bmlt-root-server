@@ -10,36 +10,30 @@ var getDayOfWeek = function(dayint) {
 var getTodayDayOfWeek = function() {
     return (new Date()).getDay() + 1;
 };
-var militaryToStandard = function(time) {
-    if (time !== null && time !== undefined){ //If time is passed in
-        if(time.indexOf('AM') > -1 || time.indexOf('PM') > -1){ //If time is already in standard time then don't format.
-            return time;
+var militaryToStandard = function(value) {
+    if (value !== null && value !== undefined){ //If value is passed in
+        if(value.indexOf('AM') > -1 || value.indexOf('PM') > -1){ //If time is already in standard time then don't format.
+            return value;
         }
         else {
-            if(time.length == 8){ //If time is the expected length for military time then process to standard time.
-				time = time.split(':'); // convert to array
+            if(value.length == 8){ //If value is the expected length for military time then process to standard time.
+				value = value.split(':'); // convert to array
 				// fetch
-				var hours = Number(time[0]);
-				var minutes = Number(time[1]);
+				var hours = Number(value[0]);
+				var minutes = Number(value[1]);
 
 				// calculate
 				var timeValue;
-
-				if (hours > 0 && hours <= 12)
-				{
-				timeValue= "" + hours;
-				} else if (hours > 12)
-				{
+				if (hours > 0 && hours <= 12) {
+					timeValue= "" + hours;
+				} else if (hours > 12) {
 					timeValue= "" + (hours - 12);
-				}
-				else if (hours == 0)
-				{
+				} else if (hours == 0) {
 					timeValue= "12";
 				}
  
 				timeValue += (minutes < 10) ? ":0" + minutes : ":" + minutes;  // get minutes
 				timeValue += (hours >= 12) ? " PM" : " AM";  // get AM/PM
-
 				// show
 				return timeValue;
 				}
