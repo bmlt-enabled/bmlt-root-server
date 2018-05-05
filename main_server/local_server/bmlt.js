@@ -24,11 +24,11 @@ var militaryToStandard = function(value) {
 
                 // calculate
                 var timeValue;
-                if (hours > 0 && hours <= 12) {
+                if (hours > 0 && hours <= 12) { // If hour is less than or equal to 12 then convert to standard 12 hour format
                     timeValue= "" + hours;
-                } else if (hours > 12) {
+                } else if (hours > 12) { //If hour is greater than 12 then convert to standard 12 hour format
                     timeValue= "" + (hours - 12);
-                } else if (hours == 0) {
+                } else if (hours == 0) { //If hour is 0 then set to 12 for standard time 12 AM
                     timeValue= "12";
                 }
                 
