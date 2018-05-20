@@ -20,7 +20,6 @@ var militaryToStandard = function(value) {
                 value = value.split(':'); // convert to array
                 // fetch
                 var hours = Number(value[0]);
-                var minutes = Number(value[1]);
 
                 // calculate
                 var timeValue;
@@ -32,7 +31,7 @@ var militaryToStandard = function(value) {
                     timeValue= "12";
                 }
                 
-                timeValue += (minutes < 10) ? ":0" + minutes : ":" + minutes;  // get minutes
+                timeValue += (Number(value[1]) < 10) ? ":0" + Number(value[1]) : ":" + Number(value[1]);  // get minutes
                 timeValue += (hours >= 12) ? " PM" : " AM";  // get AM/PM
                 // show
                 return timeValue;
