@@ -630,6 +630,7 @@ class c_comdef_admin_main_console
     function create_user_popup ()
     {
         $ret = '<select id="bmlt_admin_single_user_editor_user_select" class="bmlt_admin_single_user_editor_user_select" onchange="admin_handler_object.populateUserEditor();">';
+        sort($this->my_users);
             $first = true;
             for ( $index = 0; $index  < count ( $this->my_users ); $index++ )
                 {
@@ -978,6 +979,8 @@ class c_comdef_admin_main_console
         $ret = '<select id="bmlt_admin_single_service_body_editor_sb_select" class="bmlt_admin_single_service_body_editor_sb_select" onchange="admin_handler_object.populateServiceBodyEditor();">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
             $first = true;
 
+            sort($this->my_editable_service_bodies);
+
             for ( $index = 0; $index  < count ( $this->my_editable_service_bodies ); $index++ )
                 {
                 $service_body = $this->my_editable_service_bodies[$index];
@@ -1080,6 +1083,8 @@ class c_comdef_admin_main_console
     function create_service_body_user_popup ()
     {
         $ret = '<select id="bmlt_admin_single_service_body_editor_principal_user_select" class="bmlt_admin_single_service_body_editor_principal_user_select" onchange="admin_handler_object.recalculateServiceBody();">';
+
+        sort($this->my_users);
 
             for ( $index = 0; $index  < count ( $this->my_users ); $index++ )
                 {
@@ -1611,6 +1616,7 @@ class c_comdef_admin_main_console
                     $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_cc_text_input" type="text" value="'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_cc_prompt'] ).'" /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
+                sort($this->my_service_bodies);
                 if ( count ( $this->my_service_bodies ) > 1 )
                     {
                     $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
