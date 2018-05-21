@@ -54,6 +54,10 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
+***Version 2.10.6* ** *- Unreleased*
+- Service body and user dropdowns on the admin interface are sorted alphabetically
+- Fixed an issue where leading zeros were being left on meeting time for JSONP interface.
+
 ***Version 2.10.5* ** *- April 19, 2018*
 
 - The Italian localization was missing the label and default text for the Helpline field in the Service Body Editor. This has been fixed.
