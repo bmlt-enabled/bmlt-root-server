@@ -16,25 +16,28 @@ var militaryToStandard = function(value) {
             return value;
         }
         else {
-            if(value.length == 8){ //If value is the expected length for military time then process to standard time.
-                var hour = value.substring ( 0,2 ); //Extract hour
-                var minutes = value.substring ( 3,5 ); //Extract minutes
-                var identifier = 'AM'; //Initialize AM PM identifier
+            if (value.length == 8) { //If value is the expected length for military time then process to standard time.
+                valueconv = value.split(':'); // convert to array
+                // fetch
+                var hours = Number(valueconv[0]);
 
-                if(hour == 12){ //If hour is 12 then should set AM PM identifier to PM
-                    identifier = 'PM';
+                // calculate
+                var timeValue;
+                if (hours > 0 && hours <= 12) { // If hour is less than or equal to 12 then convert to standard 12 hour format
+                    timeValue= "" + hours;
+                } else if (hours > 12) { //If hour is greater than 12 then convert to standard 12 hour format
+                    timeValue= "" + (hours - 12);
+                } else if (hours == 0) { //If hour is 0 then set to 12 for standard time 12 AM
+                    timeValue= "12";
                 }
-                if(hour == 0){ //If hour is 0 then set to 12 for standard time 12 AM
-                    hour=12;
-                }
-                if(hour > 12){ //If hour is greater than 12 then convert to standard 12 hour format and set the AM PM identifier to PM
-                    hour = hour - 12;
-                    identifier='PM';
-                }
-                return hour + ':' + minutes + ' ' + identifier; //Return the constructed standard time
+                
+                timeValue += ":" + valueconv[1];  // get minutes
+                timeValue += (hours >= 12) ? " PM" : " AM";  // get AM/PM
+                // show
+                return timeValue;
             }
             else { //If value is not the expected length than just return the value as is
-                return value;
+                return valueconv;
             }
         }
     }
