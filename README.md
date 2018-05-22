@@ -56,6 +56,7 @@ CHANGELIST
 
 ***Version 2.10.6* ** *- Unreleased*
 - Service body and user dropdowns on the admin interface are sorted alphabetically
+- Fixed an issue where leading zeros were being left on meeting time for JSONP interface.
 
 ***Version 2.10.5* ** *- April 19, 2018*
 
