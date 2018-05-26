@@ -1439,21 +1439,27 @@ function BMLT_Server_Admin ()
                         {
                         save_a.className = 'item_hidden';
                         throbber_span.className = 'bmlt_admin_ajax_button_throbber_span';
-                        this.sendMeetingToServer ( in_meeting_id, false );
-                        meeting_sent = true;
+                        self = this;
+                        this.setMapToAddress( in_meeting_id, function(error)
+                            {
+                            self.sendMeetingToServer ( in_meeting_id, false );
+                            meeting_sent = true;
+
+                                if ( c == this.m_search_results - 1 && !meeting_sent )
+                                {
+                                    save_a.className = 'item_hidden';
+                                    throbber_span.className = 'bmlt_admin_ajax_button_throbber_span';
+                                    self.setMapToAddress( in_meeting_id, function(error) {
+                                        self.sendMeetingToServer(in_meeting_id, true );
+                                    } );
+                                };
+                            } );
                         };
                     };
                 };
-        
-            if ( !meeting_sent )
-                {
-                save_a.className = 'item_hidden';
-                throbber_span.className = 'bmlt_admin_ajax_button_throbber_span';
-                this.sendMeetingToServer ( in_meeting_id, true );
-                };
             };
     };
-    
+
     /************************************************************************************//**
     *   \brief  
     ****************************************************************************************/
@@ -2531,7 +2537,8 @@ function BMLT_Server_Admin ()
     /************************************************************************************//**
     *   \brief  
     ****************************************************************************************/
-    this.setMapToAddress = function( in_meeting_id       ///< The BMLT ID of the meeting being edited.
+    this.setMapToAddress = function( in_meeting_id, ///< The BMLT ID of the meeting being edited.
+                                     callback
                                         )
     {
         var meeting_street_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_street_text_input' );
@@ -2550,14 +2557,15 @@ function BMLT_Server_Admin ()
         
         if ( zip_text || borough_text || city_text || state_text || nation_text )
             {
-            this.lookupLocation ( in_meeting_id );
+            this.lookupLocation ( in_meeting_id, callback );
             };
     };
         
     /************************************************************************************//**
     *   \brief  
     ****************************************************************************************/
-    this.lookupLocation = function( in_meeting_id       ///< The BMLT ID of the meeting that being edited.
+    this.lookupLocation = function( in_meeting_id,       ///< The BMLT ID of the meeting that being edited.
+                                    callback
                                     )
     {
         var editor_object = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
@@ -2600,20 +2608,25 @@ function BMLT_Server_Admin ()
             
             if ( the_meeting_object.m_geocoder )
                 {
-                var status = the_meeting_object.m_geocoder.geocode ( { 'address' : address_line }, function ( in_geocode_response ) { admin_handler_object.sGeoCallback ( in_geocode_response, in_meeting_id ); } );
+                var status = the_meeting_object.m_geocoder.geocode ( { 'address' : address_line }, function ( in_geocode_response ) {
+                    admin_handler_object.sGeoCallback ( in_geocode_response, in_meeting_id, callback );
+                } );
                 if ( google.maps.OK != status )
                     {
                     alert ( g_meeting_lookup_failed );
+                    callback( g_meeting_lookup_failed );
                     };
                 }
             else
                 {
                 alert ( g_meeting_lookup_failed );
+                callback ( g_meeting_lookup_failed )
                 };
             }
         else
             {
             alert ( g_meeting_lookup_failed_not_enough_address_info );
+            callback( g_meeting_lookup_failed_not_enough_address_info )
             };
     };
     /****************************************************************************************//**
@@ -2621,7 +2634,8 @@ function BMLT_Server_Admin ()
     ********************************************************************************************/
     
     this.sGeoCallback = function (  in_geocode_response,    ///< The JSON object.
-                                    in_meeting_id           ///< The ID of the meeting.
+                                    in_meeting_id,          ///< The ID of the meeting.
+                                    callback
                                     )
     {
         var meeting_editor = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + parseInt ( in_meeting_id, 10 ) + '_div' );
@@ -2650,15 +2664,18 @@ function BMLT_Server_Admin ()
                     };
                 
                 this.validateMeetingEditorButton ( in_meeting_id );
+                callback( null );
                 }
             else
                 {
                 alert ( in_geocode_response[0].status.toString() );
+                callback( in_geocode_response[0].status.toString() );
                 };
             }
         else
             {
             alert ( g_meeting_lookup_failed );
+            callback( in_geocode_response[0].status.toString() );
             };
     };
     
