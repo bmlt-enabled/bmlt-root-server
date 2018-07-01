@@ -637,7 +637,7 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
 
             ret += "\n\t\t// Location and Map settings:\n";
             ret += "\t\t$region_bias = '" + this.m_installer_state.region_bias + "'; // This is a 2-letter code for a 'region bias,' which helps Google Maps to figure out ambiguous search queries.\n";
-            ret += "\t\t$gKey = '" + this.m_installer_state.api_key + "'; // This is the Google Maps JavaScript API Key, necessary for using Google Maps.\n";
+            ret += "\t\t$gkey = '" + this.m_installer_state.api_key + "'; // This is the Google Maps JavaScript API Key, necessary for using Google Maps.\n";
             ret += "\t\t$search_spec_map_center = array ( 'longitude' => " + parseFloat ( this.m_installer_state.search_spec_map_center.longitude ).toString() + ", 'latitude' => " + parseFloat ( this.m_installer_state.search_spec_map_center.latitude ).toString() + ", 'zoom' => " + parseInt ( this.m_installer_state.search_spec_map_center.zoom, 10 ).toString() + " ); // This is the default map location for new meetings.\n";
             ret += "\t\t$comdef_distance_units = '" + this.m_installer_state.comdef_distance_units + "';\n";
 
