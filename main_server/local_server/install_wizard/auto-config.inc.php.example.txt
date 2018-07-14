@@ -13,7 +13,7 @@ defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that 
 
 		// Location and Map settings:
 		$region_bias = 'us'; // This is a 2-letter code for a 'region bias,' which helps Google Maps to figure out ambiguous search queries.
-		$gKey = '<ENTER YOUR GOOGLE API KEY>'; // This is the Google Maps JavaScript API Key, necessary for using Google Maps.
+		$gkey = '<ENTER YOUR GOOGLE API KEY>'; // This is the Google Maps JavaScript API Key, necessary for using Google Maps.
 		$search_spec_map_center = array ( 'longitude' => -118.563659, 'latitude' => 34.235918, 'zoom' => 6 ); // This is the default map location for new meetings.
 		$comdef_distance_units = 'mi';
 
