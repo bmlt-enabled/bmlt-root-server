@@ -54,7 +54,7 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
-***Version 2.10.6* ** *- TBD*
+***Version 2.10.6* ** *- July 14, 2018*
 - Service body and user dropdowns on the admin interface are sorted alphabetically
 - Fixed an issue where leading zeros were being left on meeting time for JSONP interface.
 - Fixed an issue with the case for the installer wizard generation of the "$gKey" variable (should be "$gkey").
