@@ -21,7 +21,7 @@
 	global $comdef_install_wizard_strings;
 	
 	$comdef_install_wizard_strings = array (
-	                                        'Database_Version_Error'        =>  'ERREUR: Vous devez avoir la version de PHP 5.2 ou superieur installe sur ce serveur!',
+	                                        'Database_Version_Error'        =>  'ERREUR: Vous devez avoir la version de PHP 5.6 ou superieur installe sur ce serveur!',
 	                                        'Database_PDO_Error'            =>  'ERREUR: Vous n\'avez pas installé PHP PDO!',
 	                                        'Database_Type_Error'           =>  'ERREUR: Vous n\'avez pas Installe PHP PDO!',
 	                                        'Database_TestButton_Text'      =>  'TEST',
