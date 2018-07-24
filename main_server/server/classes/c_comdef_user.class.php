@@ -583,10 +583,12 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
 		// See if we need to encrypt the password.
 		if ( $in_pw_raw )
 			{
-			$in_password_string = FullCrypt ( $in_password_string );
+		    $password_match = password_verify( $in_password_string, $this->GetPassword() );
 			}
-		
-		$password_match = (strcmp( $this->GetPassword(), $in_password_string ) == 0);
+		else
+		    {
+			$password_match = hash_equals ( $this->GetPassword(), $in_password_string );
+		    }
 		
 		return $login_match && $password_match;
 	}

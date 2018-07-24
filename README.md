@@ -54,6 +54,10 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
+***Version 2.10.7* ** *- TBD*
+
+- Improved the password hashing algorithm.
+
 ***Version 2.10.6* ** *- July 14, 2018*
 - Service body and user dropdowns on the admin interface are sorted alphabetically
 - Fixed an issue where leading zeros were being left on meeting time for JSONP interface.
