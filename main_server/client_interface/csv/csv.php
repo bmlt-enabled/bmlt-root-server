@@ -1218,7 +1218,7 @@ function GetServiceBodies   (
 	$ret = array ();
 	$localized_strings = c_comdef_server::GetLocalStrings();
 
-	$ret[0] = '"id","parent_id","name","description","type","url","helpline","world_id"';
+	$ret[0] = '"id","parent_id","name","description","type","url","helpline","contact_email","world_id"';
 	
 	if ( $localized_strings['include_service_body_email_in_semantic'] )
 	    {
@@ -1243,6 +1243,7 @@ function GetServiceBodies   (
                     $row[] = $sb->GetSBType();
                     $row[] = $sb->GetURI();
                     $row[] = trim ( $sb->GetHelpline() );
+                    $row[] = $sb->GetContactEmail();
                     $row[] = $sb->GetWorldID();
                     if ( $localized_strings['include_service_body_email_in_semantic'] )
                         {
