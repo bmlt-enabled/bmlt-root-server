@@ -43,7 +43,7 @@ $default_lang = $lang;
     <form action="" method="post">
         <div class="page_content">
             <?php
-                if ( version_compare (PHP_VERSION,'5.2.0','>') )
+                if ( version_compare (PHP_VERSION,'5.6.0','>=') )
                     {
                     if ( class_exists ( 'PDO' ) )
                         {

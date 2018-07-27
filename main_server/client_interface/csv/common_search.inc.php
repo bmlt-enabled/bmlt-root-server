@@ -849,6 +849,7 @@ function GetGeocodeFromString ( $in_string,	///< The string to be checked.
 	$bounds_ar = strval ( $localized_strings['search_spec_map_center']['latitude'] - $m_p_deg ).",". strval ( $localized_strings['search_spec_map_center']['longitude'] - $m_p_deg );		// Southwest corner
 	$bounds_ar .= "|";
 	$bounds_ar .= strval ( $localized_strings['search_spec_map_center']['latitude'] + $m_p_deg ).",".strval ( $localized_strings['search_spec_map_center']['longitude'] + $m_p_deg );		// Northeast corner
+
     $xml = simplexml_load_file ( $geo_uri );
 
     if ( $xml->status == 'OK' )

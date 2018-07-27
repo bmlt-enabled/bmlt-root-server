@@ -21,7 +21,7 @@
 	global $comdef_install_wizard_strings;
 	
 	$comdef_install_wizard_strings = array (
-	                                        'Database_Version_Error'        =>  'ERROR: You must have PHP Version 5.2 or greater installed on this server!',
+	                                        'Database_Version_Error'        =>  'ERROR: You must have PHP Version 5.6 or greater installed on this server!',
 	                                        'Database_PDO_Error'            =>  'ERROR: You do not have PHP PDO installed!',
 	                                        'Database_Type_Error'           =>  'ERROR: Even though you have PDO, you have no database drivers installed!',
 	                                        'Database_Type_MySQL_Error'     =>  'ERROR: Even though you have PDO and you have database drivers installed, none of the are MySQL (the only supported driver)!',
