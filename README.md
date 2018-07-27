@@ -54,7 +54,7 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
-***Version 2.10.7* ** *- TBD*
+***Version 2.10.7* ** *- July 27, 2018*
 
 - Improved the password hashing algorithm.
 
