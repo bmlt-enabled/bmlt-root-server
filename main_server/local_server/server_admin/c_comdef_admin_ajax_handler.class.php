@@ -831,7 +831,6 @@ class c_comdef_admin_ajax_handler
                                 )
     {
         $ret = '[';
-        
         $changes = $this->my_server->GetChangesFromIDAndType ( 'c_comdef_meeting', $in_meeting_id );
     
         if ( $changes instanceof c_comdef_changes )
@@ -855,7 +854,15 @@ class c_comdef_admin_ajax_handler
                     
                     $ret .= '{';
                         $change_id = $change->GetID();
-                        $user_name = json_prepare ( $this->my_server->GetUserByIDObj ( $change->GetUserID() )->GetLocalName() );
+                        $user_id = $change->GetUserID();
+                        if ( $user_id )
+                            {
+                            $user_object = $this->my_server->GetUserByIDObj ( $change->GetUserID() );
+                            if ( $user_object )
+                                {
+                                $user_name = json_prepare ( $user_object->GetLocalName() );
+                                }
+                            }
                         $change_description = json_prepare ( $change->DetailedChangeDescription() );
                         $change_date = json_prepare ( date ( 'g:i A, F j Y', $change->GetChangeDate() ) );
                         
