@@ -1,12 +1,12 @@
 <?php
 /***********************************************************************/
-/** 	\file	client_interface/json/index.php
+/** 	\file	client_interface/jsonp/index.php
 
 	\brief	This file is a very simple interface that is designed to return
-	a JSON string, in response to a search.
-	In order to use this, you need to call: <ROOT SERVER BASE URI>/client_interface/json/
+	a JSONP string, in response to a search.
+	In order to use this, you need to call: <ROOT SERVER BASE URI>/client_interface/jsonp/
 	with the same parameters that you would send to an advanced search. The results
-	will be returned as a JSON file.
+	will be returned as a JSONP file.
 	
 	This file can be called from other servers.
 
