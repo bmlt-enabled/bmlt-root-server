@@ -1,7 +1,7 @@
 <?php
 /****************************************************************************************//**
-* \file GetLangs.php																		*
-* \brief Returns an XML response, containing the schema for the GetLangs XML call			*
+* \file ServerInfo.php																		*
+* \brief Returns an XML response, containing the schema for the GetServerInfo XML call			*
 
     This file is part of the Basic Meeting List Toolbox (BMLT).
     

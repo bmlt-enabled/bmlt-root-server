@@ -4,7 +4,7 @@
 
 	\brief	This file is a very simple interface that is designed to return
 	an XML string, in response to a search.
-	In order to use this, you need to call: <ROOT SERVER BASE URI>/client_interface/json/
+	In order to use this, you need to call: <ROOT SERVER BASE URI>/client_interface/xml/
 	with the same parameters that you would send to an advanced search. The results
 	will be returned as an XML file.
 	
