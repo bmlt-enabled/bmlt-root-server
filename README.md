@@ -57,6 +57,7 @@ CHANGELIST
 ***Version 2.10.8* ** *- TBD*
 
 - There was an exceedingly rare bug in the history display. If a user had been changed for a Service body, and the previous user had been deleted, it would hang the history display.
+- Improved code commenting.
 
 ***Version 2.10.7* ** *- July 27, 2018*
 
