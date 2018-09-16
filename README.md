@@ -59,6 +59,7 @@ CHANGELIST
 - There was an exceedingly rare bug in the history display. If a user had been changed for a Service body, and the previous user had been deleted, it would hang the history display.
 - Added support for disabling the forced port in the include URIs. Some VM servers misrepresent the ports when forcing SSL.
 - Improved code commenting.
+- Fixed an inconsistency in time format of defaults for duration time
 
 ***Version 2.10.7* ** *- July 27, 2018*
 
