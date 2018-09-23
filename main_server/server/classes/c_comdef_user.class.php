@@ -122,7 +122,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
 					$before_lang = $before_obj_clone->GetLocalLang();
 					$before_obj_clone = null;
 					}
-	
+
 				$this->DeleteFromDB_NoRecord();
 				
 				try
@@ -746,6 +746,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
 			{
 			$in_user_clone->RestoreFromDB();	// The reason you do this, is to ensure that the user wasn't modified "live." It's a security precaution.
 			// Only the server admin can edit users. However, users can edit themselves.
+			// This will have to be changed to allow service body admins to edit their users
 			if ( ($in_user_clone->GetUserLevel() != _USER_LEVEL_DISABLED) && ($in_user_clone->GetUserLevel() != _USER_LEVEL_OBSERVER) && (($in_user_clone->GetID() == $this->GetID()) || c_comdef_server::IsUserServerAdmin()) )
 				{
 				$ret = true;

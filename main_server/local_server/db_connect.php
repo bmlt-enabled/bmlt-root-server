@@ -108,4 +108,6 @@ function DB_Connect_and_Upgrade ( )
 		{
 		// We don't die if the thing already exists. We just mosey on along as if nothing happened.
 		}
+
+	// Schema migrations go here
 }?>

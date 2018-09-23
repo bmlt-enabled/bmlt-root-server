@@ -518,6 +518,7 @@ class c_comdef_admin_main_console
     ************************************************************************************************************/
     function return_user_admin_panel()
     {
+        // Generates DOM for user editing
         $ret = 'NOT AUTHORIZED TO EDIT USERS';
         
         if ( $this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN )
