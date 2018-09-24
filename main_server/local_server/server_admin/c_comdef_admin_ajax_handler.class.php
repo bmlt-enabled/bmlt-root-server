@@ -402,7 +402,7 @@ class c_comdef_admin_ajax_handler
             
                 if ( !$this->my_server->GetUserByLogin ( $login ) )
                     {
-                    $user_to_create = new c_comdef_user ( NULL, 0, $user_level, $email, $login, "", $this->my_server->GetLocalLang(), $name, $description, NULL);
+                    $user_to_create = new c_comdef_user ( NULL, 0, $user_level, $email, $login, "", $this->my_server->GetLocalLang(), $name, $description, -1, NULL);
             
                     if ( $user_to_create instanceof c_comdef_user )
                         {
@@ -459,8 +459,9 @@ class c_comdef_admin_ajax_handler
     function HandleUserChange ( $in_user_data   ///< A JSON object, containing the new User data.
                                 )
     {
-        // This is where users are updated
-        if ( c_comdef_server::IsUserServerAdmin(null,true) )
+        $isServerAdmin = c_comdef_server::IsUserServerAdmin(null,true);
+        $isServiceBodyAdmin = c_comdef_server::IsUserServiceBodyAdmin(null,true);
+        if ( $isServerAdmin || $isServiceBodyAdmin )
             {
             $json_tool = new PhpJsonXmlArrayStringInterchanger;
         
@@ -476,14 +477,25 @@ class c_comdef_admin_ajax_handler
                 $user_level = intval ( $the_changed_user[5] );
                 $password = trim ( $the_changed_user[6] );
                 $user_to_change = $this->my_server->GetUserByIDObj ( $id );
-            
+
                 if ( $user_to_change instanceof c_comdef_user )
                     {
+                    // Don't allow service body admins to make changes to users they don't own
+                    if ( $isServiceBodyAdmin && $user_to_change->GetOwnerID() != c_comdef_server::GetCurrentUserObj()->GetID() )
+                        {
+                        echo 'NOT AUTHORIZED';
+                        return;
+                        }
+
                     $user_to_change->SetLogin ( $login );
                     $user_to_change->SetLocalName ( $name );
                     $user_to_change->SetLocalDescription ( $description );
                     $user_to_change->SetEmailAddress ( $email );
-                    $user_to_change->SetUserLevel ( $user_level );
+                    // Only allow server admins to set user level
+                    if ( $isServerAdmin )
+                        {
+                        $user_to_change->SetUserLevel ( $user_level );
+                        }
                     
                     if ( $password )
                         {

@@ -421,14 +421,13 @@ class c_comdef_admin_main_console
                     {
                     case    _USER_LEVEL_SERVER_ADMIN:
                         $ret .= $this->return_format_editor_panel();
-                        $ret .= $this->return_user_admin_panel();
                 
                     case    _USER_LEVEL_SERVICE_BODY_ADMIN:
+                        $ret .= $this->return_user_admin_panel();
                         if ( (count ( $this->my_editable_service_bodies ) > 0) || ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) )
                             {
                             $ret .= $this->return_service_body_admin_panel();
                             }
-                
                     case    _USER_LEVEL_EDITOR:
                         $ret .= $this->return_meeting_editor_panel();
                         
@@ -518,12 +517,36 @@ class c_comdef_admin_main_console
     ************************************************************************************************************/
     function return_user_admin_panel()
     {
-        // Generates DOM for user editing
         $ret = 'NOT AUTHORIZED TO EDIT USERS';
-        
-        if ( $this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN )
+
+        $userLevel = $this->my_user->GetUserLevel();
+
+        // If service body admin, filter users down to only those owned by this user
+        if ( count($this->my_users) && $userLevel == _USER_LEVEL_SERVICE_BODY_ADMIN )
             {
-            if ( count ( $this->my_users ) )
+            $users = array();
+            for ( $index = 0; $index  < count ( $this->my_users ); $index++ )
+                {
+                $user = $this->my_users[$index];
+                if ( $user->GetID() == $this->my_user->GetID() )
+                    {
+                    continue;
+                    }
+                if ( $user->GetOwnerID() != $this->my_user->GetID() )
+                    {
+                    continue;
+                    }
+                array_push( $users, $user );
+                }
+            }
+        else
+            {
+            $users = $this->my_users;
+            }
+
+        if ( $userLevel == _USER_LEVEL_SERVER_ADMIN  || $userLevel == _USER_LEVEL_SERVICE_BODY_ADMIN )
+            {
+            if ( count ( $users ) )
                 {
                 $ret = '<div id="bmlt_admin_user_editor_disclosure_div" class="bmlt_admin_user_editor_disclosure_div bmlt_admin_user_editor_disclosure_div_closed">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                     $ret .= '<a class="bmlt_admin_user_editor_disclosure_a" href="javascript:admin_handler_object.toggleUserEditor();">';
@@ -554,9 +577,13 @@ class c_comdef_admin_main_console
                         $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                     $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                     
-                    $ret .= $this->return_single_user_editor_panel();
+                    $ret .= $this->return_single_user_editor_panel( $users );
                 $ret .= '</div>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= '<script type="text/javascript">admin_handler_object.populateUserEditor()</script>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                }
+            elseif ( $userLevel == _USER_LEVEL_SERVICE_BODY_ADMIN )
+                {
+                $ret = '';
                 }
             }
         
@@ -567,12 +594,12 @@ class c_comdef_admin_main_console
     \brief This constructs a window for the User administrator.
     \returns The HTML and JavaScript for the "User Administration" section.
     ************************************************************************************************************/
-    function return_single_user_editor_panel ()
+    function return_single_user_editor_panel ($users)
     {
         $ret = '<div id="bmlt_admin_single_user_editor_div" class="bmlt_admin_single_user_editor_div">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
             $ret .= '<fieldset id="bmlt_admin_single_user_editor_fieldset" class="bmlt_admin_single_user_editor_fieldset">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= '<legend id="bmlt_admin_single_user_editor_fieldset_legend" class="bmlt_admin_single_user_editor_fieldset_legend">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                    $ret .= $this->create_user_popup();
+                    $ret .= $this->create_user_popup( $users );
                 $ret .= '</legend>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_screen_sb_id_label'] ).'</span>';
@@ -628,26 +655,29 @@ class c_comdef_admin_main_console
     \brief This creates the HTML for a user selection popup menu.
     \returns The HTML and JavaScript for the popup menu (select element).
     ************************************************************************************************************/
-    function create_user_popup ()
+    function create_user_popup ($users)
     {
         $ret = '<select id="bmlt_admin_single_user_editor_user_select" class="bmlt_admin_single_user_editor_user_select" onchange="admin_handler_object.populateUserEditor();">';
-        sort($this->my_users);
+        sort($users);
             $first = true;
-            for ( $index = 0; $index  < count ( $this->my_users ); $index++ )
+            for ( $index = 0; $index  < count ( $users ); $index++ )
                 {
-                $user = $this->my_users[$index];
+                $user = $users[$index];
                 if ( $user->GetID() != $this->my_user->GetID() )
                     {
                     $ret .= '<option value="'.$user->GetID().'"';
                     $ret .= '>'.htmlspecialchars ( $user->GetLocalName() ).'</option>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                     }
                 }
-            if ( count ( $this->my_users ) )
+
+            if ( $this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN )
                 {
-                $ret .= '<option value="" disabled="disabled"></option>';
+                if ( count ( $users ) )
+                    {
+                    $ret .= '<option value="" disabled="disabled"></option>';
+                    }
+                $ret .= '<option value="0" selected="selected">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_create_new_user_option'] ).'</option>';
                 }
-            
-            $ret .= '<option value="0" selected="selected">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_create_new_user_option'] ).'</option>';
         $ret .= '</select>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
         
         return $ret;

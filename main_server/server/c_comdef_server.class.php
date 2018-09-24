@@ -432,6 +432,7 @@ class c_comdef_server
                                                                     $row['lang_enum'],
                                                                     $row['name_string'],
                                                                     $row['description_string'],
+                                                                    $row['owner_id_bigint'],
                                                                     $row['last_access_datetime']
                                                                     );
                 }
@@ -940,6 +941,7 @@ class c_comdef_server
         
         \returns the ID of the user. Null is it failed.
     */
+    // TODO Add an $in_owner_id_bigint parameter
     static function AddNewUser (
                                 $in_user_login,                 ///< The login for this user
                                 $in_user_unencrypted_password,  ///< The unencrypted password for this user
@@ -971,7 +973,7 @@ class c_comdef_server
         
         $encrypted_password = FullCrypt ( trim ( $in_user_unencrypted_password ) );
         
-        $user_obj = new c_comdef_user ( self::GetServer(), null, $in_user_level, $in_user_email, $in_user_login, $encrypted_password, $in_lang_enum, $in_name_string, $in_description_string );
+        $user_obj = new c_comdef_user ( self::GetServer(), null, $in_user_level, $in_user_email, $in_user_login, $encrypted_password, $in_lang_enum, $in_name_string, $in_description_string, -1 );
         
         if ( $user_obj instanceof c_comdef_user )
             {
@@ -1310,7 +1312,31 @@ class c_comdef_server
     
     return $ret;
     }
-    
+
+
+    /*******************************************************************/
+    /** \brief Find out if the user is a service body admin.
+
+    \returns a boolean. True if the user is a service body admin.
+     */
+    static function IsUserServiceBodyAdmin(  $in_user_obj = null,    ///< A reference to a c_comdef_user object instance. If null, the current user will be checked.
+                                             $in_is_ajax = false     ///< If it's an AJAX handler, we don't regenerate the session. Some browsers seem antsy about that.
+                                             )
+    {
+    $ret = false;
+
+    if ( !($in_user_obj instanceof c_comdef_user) )
+        {
+        $in_user_obj = self::GetCurrentUserObj($in_is_ajax);
+        }
+
+    if ( $in_user_obj instanceof c_comdef_user )
+        {
+        $ret = ($in_user_obj->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN);
+        }
+
+    return $ret;
+    }
     /*******************************************************************/
     /** \brief Given a login and password, looks up the user, and returns
         an encrypted password for that user.
@@ -1629,6 +1655,7 @@ class c_comdef_server
                                                 $row['lang_enum'],
                                                 $row['name_string'],
                                                 $row['description_string'],
+                                                $row['owner_id_bigint'],
                                                 $row['last_access_datetime'] );
                 }
             }

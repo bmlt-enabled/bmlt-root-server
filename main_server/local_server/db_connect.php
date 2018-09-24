@@ -109,5 +109,18 @@ function DB_Connect_and_Upgrade ( )
 		// We don't die if the thing already exists. We just mosey on along as if nothing happened.
 		}
 
-	// Schema migrations go here
+	try
+		{
+		// TODO fix version number in below comment
+		// Version x.x.x added 1 column to the users table for user ownership.
+		$table = "$dbPrefix"."_comdef_users";
+		$alter_sql = "ALTER TABLE `$table` ADD `owner_id_bigint` BIGINT NOT NULL DEFAULT -1 AFTER `lang_enum`";
+		c_comdef_dbsingleton::preparedExec($alter_sql);
+		$alter_sql = "CREATE INDEX owner_id_bigint ON $table (owner_id_bigint)";
+		c_comdef_dbsingleton::preparedExec($alter_sql);
+		}
+	catch ( Exception $e )
+		{
+		// We don't die if the thing already exists. We just mosey on along as if nothing happened.
+		}
 }?>
