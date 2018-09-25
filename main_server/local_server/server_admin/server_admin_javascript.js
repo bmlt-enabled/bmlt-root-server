@@ -4076,6 +4076,23 @@ function BMLT_Server_Admin ()
                     user_level_sa_span.className = 'bmlt_admin_value_left light_italic_display';
                     };
                 };
+
+                var user_owner_id = parseInt(selected_user_object[7]);
+                var user_owner_field = document.getElementById ( 'bmlt_admin_single_user_editor_user_owner_select' );
+                for ( var i = 0; i < user_owner_field.options.length; i++ )
+                    {
+                    var option = user_owner_field.options[i];
+                    if ( user_owner_id === -1 && parseInt(option.value) === 1 )
+                        {
+                        user_owner_field.selectedIndex = i;
+                        break;
+                        }
+                    else if ( parseInt(option.value) === user_owner_id )
+                        {
+                        user_owner_field.selectedIndex = i;
+                        break;
+                        }
+                    }
             };
         
         var perm_checkbox = document.getElementById ( 'bmlt_admin_user_delete_perm_checkbox' );
@@ -4111,7 +4128,10 @@ function BMLT_Server_Admin ()
         
         var password_field = document.getElementById ( 'bmlt_admin_user_editor_password_input' );
         main_user_editor_div.current_user_object[6] = (password_field.value && (password_field.value != password_field.defaultValue)) ? password_field.value : '';
-        
+
+        var user_owner_select = document.getElementById ( 'bmlt_admin_single_user_editor_user_owner_select' );
+        main_user_editor_div.current_user_object[7] = parseInt(user_owner_select.options[user_owner_select.selectedIndex].value, 10);
+
         this.validateUserEditorButtons();
     };
 
@@ -4483,6 +4503,7 @@ function BMLT_Server_Admin ()
         new_user_object[4] = '';
         new_user_object[5] = 4;
         new_user_object[6] = '';
+        new_user_object[7] = -1;
         
         return new_user_object;
     };

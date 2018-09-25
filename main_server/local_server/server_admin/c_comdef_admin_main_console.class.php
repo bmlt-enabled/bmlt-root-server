@@ -229,7 +229,8 @@ class c_comdef_admin_main_console
    /* Description:3 */  $ret .= '\''.self::js_html ( $user->GetLocalDescription() ).'\',';
          /* eMail:4 */  $ret .= '\''.self::js_html ( ( ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) || ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) || ($user->GetID() == $this->my_user->GetID()) ) ? $user->GetEmailAddress() : '' ).'\',';
     /* User Level:5 */  $ret .= $user->GetUserLevel().',';
-     /*  Password:6 */  $ret .= '\'\''; // We do not give a password, but one can be sent in to change the current one, so we have a placeholder.
+      /* Password:6 */  $ret .= '\'\','; // We do not give a password, but one can be sent in to change the current one, so we have a placeholder.
+    /* User Owner:7 */  $ret .= self::js_html ( $user->GetOwnerID() );
                     $ret .=']';
                     if ( $c < (count ( $this->my_users ) - 1) )
                         {
@@ -616,6 +617,13 @@ class c_comdef_admin_main_console
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                    $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_user_owner_label'] ).'</span>';
+                    $ret .= '<span class="bmlt_admin_value_left" id="user_editor_single_non_service_body_admin_display">';
+                        $ret .= $this->create_user_owner_popup( $this->my_users );
+                    $ret .= '</span>';
+                    $ret .= '<div class="clear_both"></div>';
+                $ret .= '</div>';
+                $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_login_label'] ).'</span>';
                     $ret .= '<span class="bmlt_admin_value_left"><input name="bmlt_admin_user_editor_login_input" id="bmlt_admin_user_editor_login_input" type="text" value="" onkeyup="admin_handler_object.handleTextInputChange(this);admin_handler_object.readUserEditorState();" onchange="admin_handler_object.handleTextInputChange(this);admin_handler_object.readUserEditorState();" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
                     $ret .= '<script type="text/javascript">admin_handler_object.handleTextInputLoad(document.getElementById(\'bmlt_admin_user_editor_login_input\'),\''.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_editor_login_default_text'] ).'\', true);</script>';
@@ -701,7 +709,28 @@ class c_comdef_admin_main_console
         
         return $ret;
     }
-    
+
+    /********************************************************************************************************//**
+    \brief This creates the HTML for a user owner selection popup menu.
+    \returns The HTML and JavaScript for the popup menu (select element).
+     ************************************************************************************************************/
+    function create_user_owner_popup ($users)
+    {
+        $disabled = $this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN ? '' : ' disabled';
+        $ret = '<select id="bmlt_admin_single_user_editor_user_owner_select" class="bmlt_admin_single_user_editor_user_select" onchange="admin_handler_object.readUserEditorState();"'.$disabled.'>';
+        sort($users);
+        for ( $index = 0; $index  < count ( $users ); $index++ )
+            {
+            $user = $users[$index];
+            $ret .= '<option value="'.$user->GetID().'"';
+            $ret .= '>'.htmlspecialchars ( $user->GetLocalName() ).'</option>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+            }
+
+        $ret .= '</select>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+
+        return $ret;
+    }
+
     /********************************************************************************************************//**
     \brief This constructs the User editor buttons as a div.
     \returns The HTML and JavaScript for the button panel.

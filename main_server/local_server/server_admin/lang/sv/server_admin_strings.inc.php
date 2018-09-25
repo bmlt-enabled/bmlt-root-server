@@ -215,6 +215,7 @@
 	                                        'user_editor_account_login_label'                       =>  'Användarnamn:',
 											'user_editor_login_default_text'                        =>  'Fyll i användarnamn',
 	                                        'user_editor_account_type_label'                        =>  'Användaren är en:',
+	                                        'user_editor_user_owner_label'                          =>  'Owned By: ', // TODO translate
 	                                        'user_editor_account_type_1'                            =>  'Server Administratör',
 	                                        'user_editor_account_type_2'                            =>  'Serviceenhets Administratör',
 	                                        'user_editor_account_type_3'                            =>  'Serviceenhet Redaktör',

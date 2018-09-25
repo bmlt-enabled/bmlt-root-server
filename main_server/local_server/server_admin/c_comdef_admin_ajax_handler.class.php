@@ -398,10 +398,17 @@ class c_comdef_admin_ajax_handler
                 $email = $the_new_user[4];
                 $user_level = intval ( $the_new_user[5] );
                 $password = trim ( $the_new_user[6] );
-            
+                $user_owner = intval ( $the_new_user[7] );
+
+                $user_owner_user = c_comdef_server::GetUserByIDObj( $user_owner );
+                if ( is_null($user_owner_user) || $user_owner_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN )
+                    {
+                    $user_owner = -1;
+                    }
+
                 if ( !$this->my_server->GetUserByLogin ( $login ) )
                     {
-                    $user_to_create = new c_comdef_user ( NULL, 0, $user_level, $email, $login, "", $this->my_server->GetLocalLang(), $name, $description, -1, NULL);
+                    $user_to_create = new c_comdef_user ( NULL, 0, $user_level, $email, $login, "", $this->my_server->GetLocalLang(), $name, $description, $user_owner, NULL);
             
                     if ( $user_to_create instanceof c_comdef_user )
                         {
@@ -475,7 +482,14 @@ class c_comdef_admin_ajax_handler
                 $email = $the_changed_user[4];
                 $user_level = intval ( $the_changed_user[5] );
                 $password = trim ( $the_changed_user[6] );
+                $user_owner = intval ( $the_changed_user[7] );
                 $user_to_change = $this->my_server->GetUserByIDObj ( $id );
+
+                $user_owner_user = c_comdef_server::GetUserByIDObj( $user_owner );
+                if ( is_null($user_owner_user) || $user_owner_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN )
+                    {
+                    $user_owner = -1;
+                    }
 
                 if ( $user_to_change instanceof c_comdef_user )
                     {
@@ -490,10 +504,11 @@ class c_comdef_admin_ajax_handler
                     $user_to_change->SetLocalName ( $name );
                     $user_to_change->SetLocalDescription ( $description );
                     $user_to_change->SetEmailAddress ( $email );
-                    // Only allow server admins to set user level
+                    // Only allow server admins to set user level and user owner
                     if ( $isServerAdmin )
                         {
                         $user_to_change->SetUserLevel ( $user_level );
+                        $user_to_change->SetOwnerID( $user_owner );
                         }
                     
                     if ( $password )

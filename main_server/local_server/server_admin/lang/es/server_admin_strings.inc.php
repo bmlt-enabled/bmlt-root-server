@@ -214,6 +214,7 @@
 	                                        'user_editor_account_login_label'                       =>  'Registro de usuarios:',
 											'user_editor_login_default_text'                        =>  'Introduzca el nombre de usuario',
 	                                        'user_editor_account_type_label'                        =>  'User Is A:',
+	                                        'user_editor_user_owner_label'                          =>  'Owned By: ', // TODO translate
 	                                        'user_editor_account_type_1'                            =>  'Administrador de Servicio',
 	                                        'user_editor_account_type_2'                            =>  'Administrador de cuerpo de servicior',
 	                                        'user_editor_account_type_3'                            =>  'Editor cuerpo de servicio',
