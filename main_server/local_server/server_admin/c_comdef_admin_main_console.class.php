@@ -163,7 +163,7 @@ class c_comdef_admin_main_console
             $ret .= '<script type="text/javascript">';
                 $ret .= 'var g_ajax_callback_uri = \''.self::js_html ( $this->my_ajax_uri ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_current_user_id = \''.self::js_html ( $this->my_user->GetID() ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-                $ret .= 'var g_is_server_admin = '. ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN ? 'true' : 'false' ) . ';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_is_server_admin = '. ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN ? 'true' : 'false' ).';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_formats_array = '.array2json ( $this->my_formats ).';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_langs = ["'.implode ( '","', $this->my_lang_ids ).'"];'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_lang_names = '.array2json ( $this->my_server->GetServerLangs() ).';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
