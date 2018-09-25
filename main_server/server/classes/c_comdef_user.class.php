@@ -772,8 +772,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
 		if ( $in_user_clone instanceof c_comdef_user )
 			{
 			$in_user_clone->RestoreFromDB();	// The reason you do this, is to ensure that the user wasn't modified "live." It's a security precaution.
-			// Only the server admin can edit users. However, users can edit themselves.
-			// This will have to be changed to allow service body admins to edit their users
+			// Server admins can edit users. Service body administrators can edit users they own. Any user can edit itself.
 			if ( $in_user_clone->GetUserLevel() == _USER_LEVEL_DISABLED )
 				{
 				return false;

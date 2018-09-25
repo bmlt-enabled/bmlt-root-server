@@ -383,7 +383,6 @@ class c_comdef_admin_ajax_handler
     function HandleUserCreate ( $in_user_data   ///< A JSON object, containing the new User data.
                                 )
     {
-        // This is where users are created
         if ( c_comdef_server::IsUserServerAdmin(null,true) )
             {
             $json_tool = new PhpJsonXmlArrayStringInterchanger;
