@@ -941,7 +941,6 @@ class c_comdef_server
         
         \returns the ID of the user. Null is it failed.
     */
-    // TODO Add an $in_owner_id_bigint parameter
     static function AddNewUser (
                                 $in_user_login,                 ///< The login for this user
                                 $in_user_unencrypted_password,  ///< The unencrypted password for this user
@@ -949,7 +948,8 @@ class c_comdef_server
                                 $in_user_email,                 ///< The email address for this user
                                 $in_name_string = null,         ///< The user's Name (Optional)
                                 $in_description_string = null,  ///< The description of the user (Optional)
-                                $in_lang_enum = null            ///< The language for the user (Optional -If not supplied, the server default will be used)
+                                $in_lang_enum = null,           ///< The language for the user (Optional -If not supplied, the server default will be used)
+                                $in_owner_id = -1               ///< The id of the user that owns this user
                                 )
     {
         $id = null;
@@ -973,7 +973,7 @@ class c_comdef_server
         
         $encrypted_password = FullCrypt ( trim ( $in_user_unencrypted_password ) );
         
-        $user_obj = new c_comdef_user ( self::GetServer(), null, $in_user_level, $in_user_email, $in_user_login, $encrypted_password, $in_lang_enum, $in_name_string, $in_description_string, -1 );
+        $user_obj = new c_comdef_user ( self::GetServer(), null, $in_user_level, $in_user_email, $in_user_login, $encrypted_password, $in_lang_enum, $in_name_string, $in_description_string, $in_owner_id );
         
         if ( $user_obj instanceof c_comdef_user )
             {
