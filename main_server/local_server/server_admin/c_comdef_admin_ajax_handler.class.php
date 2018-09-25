@@ -400,7 +400,7 @@ class c_comdef_admin_ajax_handler
                 $password = trim ( $the_new_user[6] );
                 $user_owner = intval ( $the_new_user[7] );
 
-                $user_owner_user = c_comdef_server::GetUserByIDObj( $user_owner );
+                $user_owner_user = $this->my_server->GetUserByIDObj( $user_owner );
                 if ( is_null($user_owner_user) || $user_owner_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN )
                     {
                     $user_owner = -1;
@@ -485,7 +485,7 @@ class c_comdef_admin_ajax_handler
                 $user_owner = intval ( $the_changed_user[7] );
                 $user_to_change = $this->my_server->GetUserByIDObj ( $id );
 
-                $user_owner_user = c_comdef_server::GetUserByIDObj( $user_owner );
+                $user_owner_user = $this->my_server->GetUserByIDObj( $user_owner );
                 if ( is_null($user_owner_user) || $user_owner_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN )
                     {
                     $user_owner = -1;
