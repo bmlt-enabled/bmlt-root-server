@@ -508,7 +508,7 @@ class c_comdef_admin_ajax_handler
                     if ( $isServerAdmin )
                         {
                         $user_to_change->SetUserLevel ( $user_level );
-                        $user_to_change->SetOwnerID( $user_owner );
+                        $user_to_change->SetOwnerID ( $user_owner );
                         }
                     
                     if ( $password )
