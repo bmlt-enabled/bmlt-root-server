@@ -163,6 +163,7 @@ class c_comdef_admin_main_console
             $ret .= '<script type="text/javascript">';
                 $ret .= 'var g_ajax_callback_uri = \''.self::js_html ( $this->my_ajax_uri ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_current_user_id = \''.self::js_html ( $this->my_user->GetID() ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_is_server_admin = '. ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN ? 'true' : 'false' ) . ';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_formats_array = '.array2json ( $this->my_formats ).';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_langs = ["'.implode ( '","', $this->my_lang_ids ).'"];'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_lang_names = '.array2json ( $this->my_server->GetServerLangs() ).';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
@@ -712,10 +713,12 @@ class c_comdef_admin_main_console
                 $ret .= '<span id="bmlt_admin_user_save_ajax_button_throbber_span" class="bmlt_admin_ajax_button_throbber_span item_hidden"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></span>';
             $ret .= '</span>';
             $ret .= '<span class="bmlt_admin_meeting_editor_form_middle_button_single_span bmlt_admin_delete_button_span hide_in_new_user_admin">';
-                $ret .= '<a id="bmlt_admin_meeting_editor_form_user_delete_button" href="javascript:admin_handler_object.deleteUser();" class="bmlt_admin_ajax_button button">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_delete_button'] ).'</a>';
+                $delete_button_href = $this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN ? 'javascript:admin_handler_object.deleteUser();' : 'javascript:void(0);';
+                $ret .= '<a id="bmlt_admin_meeting_editor_form_user_delete_button" href="'.$delete_button_href.'" class="bmlt_admin_ajax_button button">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_delete_button'] ).'</a>';
                 $ret .= '<span id="bmlt_admin_user_delete_ajax_button_throbber_span" class="bmlt_admin_ajax_button_throbber_span item_hidden"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></span>';
                 $ret .= '<span class="perm_checkbox_span">';
-                    $ret .= '<input type="checkbox" id="bmlt_admin_user_delete_perm_checkbox" />';
+                    $delete_perm_checkbox_disabled = $this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN ? '' : 'disabled ';
+                    $ret .= '<input type="checkbox" id="bmlt_admin_user_delete_perm_checkbox" '.$delete_perm_checkbox_disabled.'/>';
                     $ret .= '<label for="bmlt_admin_user_delete_perm_checkbox">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['user_delete_perm_checkbox'] ).'</label>';
                 $ret .= '</span>';
             $ret .= '</span>';

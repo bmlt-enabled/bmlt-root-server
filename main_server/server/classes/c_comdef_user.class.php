@@ -794,7 +794,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
 				return true;
 				}
 
-			if (c_comdef_server::IsUserServiceBodyAdmin() && $this->GetOwnerID() == c_comdef_server::GetCurrentUserObj()->GetID())
+			if ( c_comdef_server::IsUserServiceBodyAdmin() && $this->GetOwnerID() == c_comdef_server::GetCurrentUserObj()->GetID() )
 				{
 				return true;
 				}

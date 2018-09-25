@@ -4506,8 +4506,16 @@ function BMLT_Server_Admin ()
             save_button.className = 'bmlt_admin_ajax_button button_disabled';
             cancel_button.className = 'bmlt_admin_ajax_button button_disabled';
             };
-        
-        delete_button.className = 'bmlt_admin_ajax_button button';
+
+        if ( g_is_server_admin )
+            {
+            delete_button.className = 'bmlt_admin_ajax_button button';
+            }
+        else
+            {
+            delete_button.className = 'bmlt_admin_ajax_button button_disabled';
+            }
+
     };
     
     // #mark - 
