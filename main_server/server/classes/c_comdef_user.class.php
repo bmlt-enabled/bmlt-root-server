@@ -221,8 +221,6 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
 				{
 				$sql = "DELETE FROM `".c_comdef_server::GetUserTableName_obj()."` WHERE id_bigint=?";
 				c_comdef_dbsingleton::preparedExec($sql, array ( $this->GetID() ) );
-				$sql = "UPDATE `".c_comdef_server::GetUserTableName_obj()."` SET owner_id_bigint=-1 WHERE owner_id_bigint=?";
-				c_comdef_dbsingleton::preparedExec($sql, array ( $this->GetID() ) );
 				$ret = true;
 				}
 			catch ( Exception $ex )
@@ -278,6 +276,31 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
 				}
 			}
 		
+		return $ret;
+	}
+
+	function ResetChildUsers()
+	{
+		$ret = false;
+
+		try
+			{
+			$sql = "UPDATE `".c_comdef_server::GetUserTableName_obj()."` SET owner_id_bigint=-1 WHERE owner_id_bigint=?";
+			c_comdef_dbsingleton::preparedExec($sql, array ( $this->GetID() ) );
+			$ret = true;
+			}
+		catch ( Exception $ex )
+			{
+			global	$_COMDEF_DEBUG;
+
+			if ( $_COMDEF_DEBUG )
+				{
+				echo "Exception Thrown in c_comdef_user::ResetChildUsers()!<br />";
+				var_dump ( $ex );
+				}
+			throw ( $ex );
+			}
+
 		return $ret;
 	}
 	

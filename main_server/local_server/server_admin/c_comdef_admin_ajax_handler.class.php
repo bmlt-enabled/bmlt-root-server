@@ -573,6 +573,7 @@ class c_comdef_admin_ajax_handler
                     {
                     if ( $user_to_delete->DeleteFromDB() )
                         {
+                        $user_to_delete->ResetChildUsers();
                         if ( $in_delete_permanently )
                             {
                             $this->DeleteUserChanges ( $in_user_id );
