@@ -38,7 +38,7 @@ REQUIREMENTS
 
 The entire system is written in PHP, JavaScript, XHTML and CSS. Most of the code is PHP.
 
-PHP 5.2 or above is required to establish a root server, and 5.0 or above for a satellite.
+PHP 5.6 or above is required to establish a root server, and 5.0 or above for a satellite.
 
 For more information about server requirements, see [the page on Server Requirements](http://bmlt.magshare.net/specific-topics/server-requirements/)
  
