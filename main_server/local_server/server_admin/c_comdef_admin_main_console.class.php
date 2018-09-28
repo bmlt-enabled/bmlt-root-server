@@ -412,8 +412,8 @@ class c_comdef_admin_main_console
                         }
                 $ret .= (defined ( '__DEBUG_MODE__' ) ? "\n" : '').'];';
             $ret .= '</script>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-            $ret .= '<script type="text/javascript" src="'.(((dirname ( $_SERVER['PHP_SELF'] ) != '/') && (dirname ( $_SERVER['PHP_SELF'] ) != '\\')) ? dirname ( $_SERVER['PHP_SELF'] ) : '').'/local_server/server_admin'.(defined('__DEBUG_MODE__') ? '/' : '/js_stripper.php?filename=' ).'json2.js"></script>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
-            $ret .= '<script type="text/javascript" src="'.(((dirname ( $_SERVER['PHP_SELF'] ) != '/') && (dirname ( $_SERVER['PHP_SELF'] ) != '\\')) ? dirname ( $_SERVER['PHP_SELF'] ) : '').'/local_server/server_admin'.(defined('__DEBUG_MODE__') ? '/' : '/js_stripper.php?filename=' ).'server_admin_javascript.js"></script>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+            $ret .= '<script type="text/javascript" src="'.(((dirname ( $_SERVER['PHP_SELF'] ) != '/') && (dirname ( $_SERVER['PHP_SELF'] ) != '\\')) ? dirname ( $_SERVER['PHP_SELF'] ) : '').'/local_server/server_admin/json2.js"></script>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+            $ret .= '<script type="text/javascript" src="'.(((dirname ( $_SERVER['PHP_SELF'] ) != '/') && (dirname ( $_SERVER['PHP_SELF'] ) != '\\')) ? dirname ( $_SERVER['PHP_SELF'] ) : '').'/local_server/server_admin/server_admin_javascript.js?v='. time() .'"></script>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
             $ret .= '<noscript class="main_noscript">'.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['noscript'] ).'</noscript>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
             // Belt and suspenders. Just make sure the user is legit.
             if ( ($this->my_user instanceof c_comdef_user) && ($this->my_user->GetUserLevel() != _USER_LEVEL_DISABLED) )
