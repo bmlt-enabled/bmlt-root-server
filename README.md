@@ -54,7 +54,7 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
-***Version 2.11.0* ** *- TBD*
+***Version 2.11.0* ** *- September 28, 2018*
 
 - Added the ability to allow Service Body Administrators to edit their users.
 - Added cache busting for the server admin JavaScript, eliminating the need to clear the browser cache after an upgrade.

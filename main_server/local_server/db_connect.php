@@ -111,8 +111,7 @@ function DB_Connect_and_Upgrade ( )
 
 	try
 		{
-		// TODO fix version number in below comment
-		// Version x.x.x added 1 column to the users table for user ownership.
+		// Version 2.11.0 added 1 column to the users table for user ownership.
 		$table = "$dbPrefix"."_comdef_users";
 		$alter_sql = "ALTER TABLE `$table` ADD `owner_id_bigint` BIGINT NOT NULL DEFAULT -1 AFTER `lang_enum`";
 		c_comdef_dbsingleton::preparedExec($alter_sql);
