@@ -212,6 +212,7 @@
 	                                        'user_editor_account_login_label'                       =>  'Autenticazione dell\'utente:',//'User Login:',
 											'user_editor_login_default_text'                        =>  'Inserisci l\'autenticazione dell\'utente',//'Enter the User Login',
 	                                        'user_editor_account_type_label'                        =>  'L\'utente è un:',//'User Is A:',
+	                                        'user_editor_user_owner_label'                          =>  'Owned By: ', // TODO translate
 	                                        'user_editor_account_type_1'                            =>  'Amministratore del server',//'Server Administrator',
 	                                        'user_editor_account_type_2'                            =>  'Amministratore della struttura di servizio',//'Service Body Administrator',
 	                                        'user_editor_account_type_3'                            =>  'Editor nella struttura di servizio',//'Service Body Editor',

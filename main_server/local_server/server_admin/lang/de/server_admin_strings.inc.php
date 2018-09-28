@@ -214,6 +214,7 @@
 	                                        'user_editor_account_login_label'                       =>  'Benutzer Login:',
 											'user_editor_login_default_text'                        =>  'Trage den Benutzer Login ein',
 	                                        'user_editor_account_type_label'                        =>  'Benutzer ist ein:',
+	                                        'user_editor_user_owner_label'                          =>  'Owned By: ', // TODO translate
 	                                        'user_editor_account_type_1'                            =>  'Server Administrator',
 	                                        'user_editor_account_type_2'                            =>  'Service Body Administrator',
 	                                        'user_editor_account_type_3'                            =>  'Service Body Editor',

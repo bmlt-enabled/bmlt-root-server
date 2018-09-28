@@ -82,6 +82,9 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
 	
 	/// A time date, indicating the last time the user was active. This will be useful for administration.
 	private $_last_access = null;
+
+	/// An integer containing the id of the user that owns this user.
+	private $_owner_id_bigint = -1;
 	
 	/*******************************************************************/
 	/** \brief Updates or adds this instance to the database.
@@ -122,7 +125,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
 					$before_lang = $before_obj_clone->GetLocalLang();
 					$before_obj_clone = null;
 					}
-	
+
 				$this->DeleteFromDB_NoRecord();
 				
 				try
@@ -152,18 +155,19 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
 					array_push ( $update, $this->GetLocalName() );
 					array_push ( $update, $this->GetLocalDescription() );
 					array_push ( $update, $this->GetLocalLang() );
+					array_push ( $update, $this->GetOwnerID() );
 					
 					$sql = "INSERT INTO `".c_comdef_server::GetUserTableName_obj()."` (";
 					if ( $this->_id_bigint )
 						{
 						$sql .= "`id_bigint`,";
 						}
-					$sql .= "`user_level_tinyint`,`email_address_string`,`login_string`,`password_string`,`last_access_datetime`,`name_string`,`description_string`,`lang_enum`) VALUES (";
+					$sql .= "`user_level_tinyint`,`email_address_string`,`login_string`,`password_string`,`last_access_datetime`,`name_string`,`description_string`,`lang_enum`, `owner_id_bigint`) VALUES (";
 					if ( $this->_id_bigint )
 						{
 						$sql .= "?,";
 						}
-					$sql .= "?,?,?,?,?,?,?,?)";
+					$sql .= "?,?,?,?,?,?,?,?,?)";
 					c_comdef_dbsingleton::preparedExec($sql, $update );
 					// If this is a new user, then we'll need to fetch the ID.
 					if ( !$this->_id_bigint )
@@ -274,6 +278,31 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
 		
 		return $ret;
 	}
+
+	function ResetChildUsers()
+	{
+		$ret = false;
+
+		try
+			{
+			$sql = "UPDATE `".c_comdef_server::GetUserTableName_obj()."` SET owner_id_bigint=-1 WHERE owner_id_bigint=?";
+			c_comdef_dbsingleton::preparedExec($sql, array ( $this->GetID() ) );
+			$ret = true;
+			}
+		catch ( Exception $ex )
+			{
+			global	$_COMDEF_DEBUG;
+
+			if ( $_COMDEF_DEBUG )
+				{
+				echo "Exception Thrown in c_comdef_user::ResetChildUsers()!<br />";
+				var_dump ( $ex );
+				}
+			throw ( $ex );
+			}
+
+		return $ret;
+	}
 	
 	/*******************************************************************/
 	/** \brief Updates this instance to the current values in the DB
@@ -295,6 +324,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
 					$this->_email_address_string = $rows[0]['email_address_string'];
 					$this->_login_string = $rows[0]['login_string'];
 					$this->_password_string = $rows[0]['password_string'];
+					$this->_owner_id_bigint = $rows[0]['owner_id_bigint'];
 					$time = explode ( " ", $rows[0]['last_access_datetime'] );
 					$t0 = explode ( "-", $time[0] );
 					$t1 = explode ( ":", $time[1] );
@@ -358,7 +388,8 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
 						$in_lang_enum,				///< An enum/string, with the user's language.
 						$in_name_string,			///< A string, containing the readble name for the user.
 						$in_description_string,		///< A string, containing a description of the user.
-						$in_last_access = null		///< An epoch time, indicating the last access of this user (Optional).
+						$in_owner_id_bigint = -1,   ///< An integer containing the id of the user that owns this user.
+						$in_last_access = null	    ///< An epoch time, indicating the last access of this user (Optional).
 						)
 	{
 		// Set the four inherited values.
@@ -373,6 +404,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
 		$this->_email_address_string = $in_email_address_string;
 		$this->_login_string = $in_login_string;
 		$this->_password_string = $in_password_string;
+		$this->_owner_id_bigint = $in_owner_id_bigint;
 		$this->_last_access = $in_last_access;
 	}
 	
@@ -405,7 +437,25 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
 	{
 		$this->_id_bigint = $in_user_id_bigint;
 	}
-	
+
+	/*******************************************************************/
+	/** \brief Accessor - Gets the owner ID as an integer.
+	 */
+	function GetOwnerID()
+	{
+		return $this->_owner_id_bigint;
+	}
+
+	/*******************************************************************/
+	/** \brief Accessor - Sets the owner ID as an integer.
+	 */
+	function SetOwnerID(
+						$in_owner_id_bigint
+						)
+	{
+		$this->_owner_id_bigint = $in_owner_id_bigint;
+	}
+
 	/*******************************************************************/
 	/** \brief Accessor - Returns the user level as an integer.
 		
@@ -690,6 +740,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
 								$this->_last_access,
 								$this->GetLocalName(),
 								$this->GetLocalDescription(),
+								$this->_owner_id_bigint,
 								$this->GetLocalLang()
 								);
 		
@@ -716,9 +767,10 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
 				$_last_access,
 				$_local_name,
 				$_local_description,
+				$_owner_id_bigint,
 				$_local_lang ) = unserialize ( $serialized_string );
 				
-		return new c_comdef_user ( $in_parent, $_id_bigint, $_user_level_tinyint, $_email_address_string, $_login_string, $_password_string, $_local_lang, $_local_name, $_local_description, $_last_access );
+		return new c_comdef_user ( $in_parent, $_id_bigint, $_user_level_tinyint, $_email_address_string, $_login_string, $_password_string, $_local_lang, $_local_name, $_local_description, $_owner_id_bigint, $_last_access );
 	}
 	
 	/*******************************************************************/
@@ -745,10 +797,30 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
 		if ( $in_user_clone instanceof c_comdef_user )
 			{
 			$in_user_clone->RestoreFromDB();	// The reason you do this, is to ensure that the user wasn't modified "live." It's a security precaution.
-			// Only the server admin can edit users. However, users can edit themselves.
-			if ( ($in_user_clone->GetUserLevel() != _USER_LEVEL_DISABLED) && ($in_user_clone->GetUserLevel() != _USER_LEVEL_OBSERVER) && (($in_user_clone->GetID() == $this->GetID()) || c_comdef_server::IsUserServerAdmin()) )
+			// Server admins can edit users. Service body administrators can edit users they own. Any user can edit itself.
+			if ( $in_user_clone->GetUserLevel() == _USER_LEVEL_DISABLED )
 				{
-				$ret = true;
+				return false;
+				}
+
+			if ( $in_user_clone->GetUserLevel() == _USER_LEVEL_OBSERVER )
+				{
+				return false;
+				}
+
+			if ( $in_user_clone->GetID() == $this->GetID() )
+				{
+				return true;
+				}
+
+			if ( c_comdef_server::IsUserServerAdmin() )
+				{
+				return true;
+				}
+
+			if ( c_comdef_server::IsUserServiceBodyAdmin() && $this->GetOwnerID() == c_comdef_server::GetCurrentUserObj()->GetID() )
+				{
+				return true;
 				}
 			
 			$in_user_clone = null;

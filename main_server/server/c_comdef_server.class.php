@@ -432,6 +432,7 @@ class c_comdef_server
                                                                     $row['lang_enum'],
                                                                     $row['name_string'],
                                                                     $row['description_string'],
+                                                                    $row['owner_id_bigint'],
                                                                     $row['last_access_datetime']
                                                                     );
                 }
@@ -947,7 +948,8 @@ class c_comdef_server
                                 $in_user_email,                 ///< The email address for this user
                                 $in_name_string = null,         ///< The user's Name (Optional)
                                 $in_description_string = null,  ///< The description of the user (Optional)
-                                $in_lang_enum = null            ///< The language for the user (Optional -If not supplied, the server default will be used)
+                                $in_lang_enum = null,           ///< The language for the user (Optional -If not supplied, the server default will be used)
+                                $in_owner_id = -1               ///< The id of the user that owns this user
                                 )
     {
         $id = null;
@@ -971,7 +973,7 @@ class c_comdef_server
         
         $encrypted_password = FullCrypt ( trim ( $in_user_unencrypted_password ) );
         
-        $user_obj = new c_comdef_user ( self::GetServer(), null, $in_user_level, $in_user_email, $in_user_login, $encrypted_password, $in_lang_enum, $in_name_string, $in_description_string );
+        $user_obj = new c_comdef_user ( self::GetServer(), null, $in_user_level, $in_user_email, $in_user_login, $encrypted_password, $in_lang_enum, $in_name_string, $in_description_string, $in_owner_id );
         
         if ( $user_obj instanceof c_comdef_user )
             {
@@ -1310,7 +1312,31 @@ class c_comdef_server
     
     return $ret;
     }
-    
+
+
+    /*******************************************************************/
+    /** \brief Find out if the user is a service body admin.
+
+    \returns a boolean. True if the user is a service body admin.
+     */
+    static function IsUserServiceBodyAdmin(  $in_user_obj = null,    ///< A reference to a c_comdef_user object instance. If null, the current user will be checked.
+                                             $in_is_ajax = false     ///< If it's an AJAX handler, we don't regenerate the session. Some browsers seem antsy about that.
+                                             )
+    {
+    $ret = false;
+
+    if ( !($in_user_obj instanceof c_comdef_user) )
+        {
+        $in_user_obj = self::GetCurrentUserObj($in_is_ajax);
+        }
+
+    if ( $in_user_obj instanceof c_comdef_user )
+        {
+        $ret = ($in_user_obj->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN);
+        }
+
+    return $ret;
+    }
     /*******************************************************************/
     /** \brief Given a login and password, looks up the user, and returns
         an encrypted password for that user.
@@ -1629,6 +1655,7 @@ class c_comdef_server
                                                 $row['lang_enum'],
                                                 $row['name_string'],
                                                 $row['description_string'],
+                                                $row['owner_id_bigint'],
                                                 $row['last_access_datetime'] );
                 }
             }
@@ -2853,6 +2880,8 @@ class c_comdef_server
             global  $comdef_global_more_details_address,    ///< This is a format string for the way the address line is displayed in the "more details" screen.
                     $comdef_global_list_address;            ///< The same, but for the list.
         
+            c_comdef_server::$server_local_strings['do_not_force_port'] = isset ( $g_do_not_force_port ) && $g_do_not_force_port;
+
             c_comdef_server::$server_local_strings['week_starts_on'] = (isset ( $week_starts_on ) && (-1 < $week_starts_on) && (7 > $week_starts_on)) ? $week_starts_on : 0;
             c_comdef_server::$server_local_strings['name'] = file_get_contents ( dirname ( dirname ( __FILE__ ) ).'/local_server/server_admin/lang/'.$lang_enum.'/name.txt' );
             c_comdef_server::$server_local_strings['enum'] = $lang_enum;
@@ -2867,7 +2896,7 @@ class c_comdef_server
                 
             c_comdef_server::$server_local_strings['google_api_key'] = isset ( $gkey ) ? $gkey : '';
             c_comdef_server::$server_local_strings['region_bias'] = isset ( $region_bias ) ? $region_bias : 'us';
-            c_comdef_server::$server_local_strings['default_duration_time'] = isset ( $default_duration_time ) ? $default_duration_time : '1:00:00';
+            c_comdef_server::$server_local_strings['default_duration_time'] = isset ( $default_duration_time ) ? $default_duration_time : '01:00:00';
             c_comdef_server::$server_local_strings['search_spec_map_center'] = $search_spec_map_center;
             c_comdef_server::$server_local_strings['change_type_strings'] = $change_type_strings;
             c_comdef_server::$server_local_strings['detailed_change_strings'] = $detailed_change_strings;

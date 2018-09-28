@@ -38,7 +38,7 @@ REQUIREMENTS
 
 The entire system is written in PHP, JavaScript, XHTML and CSS. Most of the code is PHP.
 
-PHP 5.2 or above is required to establish a root server, and 5.0 or above for a satellite.
+PHP 5.6 or above is required to establish a root server, and 5.0 or above for a satellite.
 
 For more information about server requirements, see [the page on Server Requirements](http://bmlt.magshare.net/specific-topics/server-requirements/)
  
@@ -53,6 +53,15 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+
+***Version 2.11.0* ** *- September 28, 2018*
+
+- Added the ability to allow Service Body Administrators to edit their users.
+- Added cache busting for the server admin JavaScript, eliminating the need to clear the browser cache after an upgrade.
+- There was an exceedingly rare bug in the history display. If a user had been changed for a Service body, and the previous user had been deleted, it would hang the history display.
+- Added support for disabling the forced port in the include URIs. Some VM servers misrepresent the ports when forcing SSL.
+- Improved code commenting.
+- Fixed an inconsistency in time format of defaults for duration time
 
 ***Version 2.10.7* ** *- July 27, 2018*
 

@@ -1,0 +1,8 @@
+$2y$10$o8X5HsaXOZb2Kg/pJFrTKeH/m98EyRqXuuDqbAXSDLUqzir9YabjO
+
+CodYOzPtwxb4A
+
+The above are two hashes for "CoreysGoryStory", and can be used for emergency password retrieval.
+Enter one of them, verbatim, into the "pasword" column of a user, and their password becomes "CoreysGoryStory" (My demo password).
+
+DO NOT LEAVE THESE!!! IMMEDIATELY RESET THE PASSWORD TO SOMETHING GOOD!

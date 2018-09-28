@@ -59,7 +59,7 @@ if (    isset ( $http_vars['ajax_req'] )        && ($http_vars['ajax_req'] == 'i
     {
     $value_array = array();
     $db_prefix = ($http_vars['dbType'] != 'mysql') ? $http_vars['dbName'].'.' : '';
-            
+
     $sql[] = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\.\-A-Z0-9]|', '', $db_prefix.$http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/sql_files/initialMeetingsStructure.sql' ) );
     $sql[] = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\.\-A-Z0-9]|', '', $db_prefix.$http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/sql_files/initialFormatsStructure.sql' ) );
     $sql[] = str_replace ( '%%PREFIX%%', preg_replace ( '|[^a-z_\.\-A-Z0-9]|', '', $db_prefix.$http_vars['dbPrefix'] ), file_get_contents ( dirname ( __FILE__ ).'/sql_files/initialChangesStructure.sql' ) );

@@ -214,6 +214,7 @@
 	                                        'user_editor_account_login_label'                       =>  'User Login:',
 											'user_editor_login_default_text'                        =>  'Enter the User Login',
 	                                        'user_editor_account_type_label'                        =>  'User Is A:',
+	                                        'user_editor_user_owner_label'                          =>  'Owned By: ',
 	                                        'user_editor_account_type_1'                            =>  'Server Administrator',
 	                                        'user_editor_account_type_2'                            =>  'Service Body Administrator',
 	                                        'user_editor_account_type_3'                            =>  'Service Body Editor',

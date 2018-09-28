@@ -214,6 +214,7 @@
 	                                        'user_editor_account_login_label'                       =>  'Login utlisateur:',
 											'user_editor_login_default_text'                        =>  'Entrer mon login',
 	                                        'user_editor_account_type_label'                        =>  'Je suis un:',
+	                                        'user_editor_user_owner_label'                          =>  'Owned By: ', // TODO translate
 	                                        'user_editor_account_type_1'                            =>  'Administrateur du serveur',
 	                                        'user_editor_account_type_2'                            =>  'Administrateur de la composante de structure de service ',
 	                                        'user_editor_account_type_3'                            =>  'Editeur de la composante de structure de service',

@@ -1,6 +1,6 @@
 <?php
 /***********************************************************************/
-/**	\file	bmlt_import_functions.php
+/**	\file	c_comdef_data_importer.class.php
 
 	\brief  This file contains a range of functions to be used by BMLT database importing scripts.
 	Including this file instantiates a BMLT root server.

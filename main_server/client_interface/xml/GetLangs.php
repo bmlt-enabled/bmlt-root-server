@@ -1,6 +1,6 @@
 <?php
 /****************************************************************************************//**
-* \file GetLangs.php																		*
+* \file client_interface/xml/GetLangs.php																		*
 * \brief Returns an XML response, containing all the Language enumss and names.				*
 
     This file is part of the Basic Meeting List Toolbox (BMLT).

@@ -9,7 +9,8 @@
 */
 defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
-require_once ( dirname ( __FILE__ )."/../spanish_metaphone.php" );
+require_once ( dirname(dirname ( __FILE__ ))."/spanish_metaphone.php" );
+require_once ( dirname(dirname(dirname ( __FILE__ )))."/c_comdef_server.class.php" );
 
 /*******************************************************************/
 /** \brief Returns a URL (HTTP) to the main_server directory (or renamed).
@@ -21,6 +22,11 @@ function GetURLToMainServerDirectory(
                                         )
 {
     $port = intval ( $_SERVER['SERVER_PORT'] );
+    
+    if ( isset ( c_comdef_server::$server_local_strings['do_not_force_port'] ) && c_comdef_server::$server_local_strings['do_not_force_port'] )
+        {
+        $port = NULL;
+        }
     
     // IIS puts "off" in the HTTPS field, so we need to test for that.
     $https = ($inAllowHTTPS && (!empty ( $_SERVER['HTTPS'] ) && (($_SERVER['HTTPS'] !== 'off') || ($port == 443)))) ? TRUE : FALSE;
