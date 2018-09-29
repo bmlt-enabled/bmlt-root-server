@@ -57,6 +57,7 @@ CHANGELIST
 ***Version 2.11.1* ** *- TBD*
 
 - Fixed an issue where the user would erroneously receive a warning when switching between edited users and service bodies.
+- Fixed an issue with cutting/pasting into text fields in the administration UI.
 
 ***Version 2.11.0* ** *- September 28, 2018*
 
