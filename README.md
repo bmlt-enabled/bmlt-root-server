@@ -54,6 +54,10 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
+***Version 2.11.1* ** *- TBD*
+
+- Fixed an issue where the user would erroneously receive a warning when switching between edited users and service bodies.
+
 ***Version 2.11.0* ** *- September 28, 2018*
 
 - Added the ability to allow Service Body Administrators to edit their users.
