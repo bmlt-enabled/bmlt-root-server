@@ -4709,7 +4709,10 @@ function BMLT_Server_Admin ()
             format_key_input.onfocus= function () { admin_handler_object.handleTextInputFocus(this); };
             format_key_input.onblur= function () { admin_handler_object.handleTextInputBlur(this); };
             format_key_input.onkeyup = function () { admin_handler_object.handleFormatTextInput(this); };
-            format_key_input.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
+            format_key_input.onpaste = function() {
+                var input = this;
+                setTimeout(function() { admin_handler_object.handleFormatTextInput(input); }, 0);
+            };
             format_key_input.oncut = function(){admin_handler_object.handleTextInputPaste(this)};
 
 
@@ -4730,7 +4733,10 @@ function BMLT_Server_Admin ()
             format_name_input.onfocus= function () { admin_handler_object.handleTextInputFocus(this); };
             format_name_input.onblur= function () { admin_handler_object.handleTextInputBlur(this); };
             format_name_input.onkeyup = function () { admin_handler_object.handleFormatTextInput(this); };
-            format_name_input.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
+            format_name_input.onpaste = function() {
+                var input = this;
+                setTimeout(function() { admin_handler_object.handleFormatTextInput(input); }, 0);
+            };
             format_name_input.oncut = function(){admin_handler_object.handleTextInputPaste(this)};
 
     
@@ -4749,7 +4755,10 @@ function BMLT_Server_Admin ()
             format_description_input.onfocus= function () { admin_handler_object.handleTextInputFocus(this); };
             format_description_input.onblur= function () { admin_handler_object.handleTextInputBlur(this); };
             format_description_input.onkeyup = function () { admin_handler_object.handleFormatTextInput(this); };
-            format_description_input.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
+            format_description_input.onpaste = function() {
+                var input = this;
+                setTimeout(function() { admin_handler_object.handleFormatTextInput(input); }, 0);
+            };
             format_description_input.oncut = function(){admin_handler_object.handleTextInputPaste(this)};
 
             
