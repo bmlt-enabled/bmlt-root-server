@@ -4808,7 +4808,10 @@ function BMLT_Server_Admin ()
                 var input = this;
                 setTimeout(function() { admin_handler_object.handleFormatTextInput(input); }, 0);
             };
-            format_key_input.oncut = function(){admin_handler_object.handleTextInputPaste(this)};
+            format_key_input.oncut = function() {
+                var input = this;
+                setTimeout(function() { admin_handler_object.handleFormatTextInput(input); }, 0);
+            };
 
 
             format_key_td.appendChild ( format_key_input );
@@ -4832,7 +4835,10 @@ function BMLT_Server_Admin ()
                 var input = this;
                 setTimeout(function() { admin_handler_object.handleFormatTextInput(input); }, 0);
             };
-            format_name_input.oncut = function(){admin_handler_object.handleTextInputPaste(this)};
+            format_name_input.oncut = function() {
+                var input = this;
+                setTimeout(function() { admin_handler_object.handleFormatTextInput(input); }, 0);
+            };
 
     
             format_name_td.appendChild ( format_name_input );
@@ -4854,7 +4860,10 @@ function BMLT_Server_Admin ()
                 var input = this;
                 setTimeout(function() { admin_handler_object.handleFormatTextInput(input); }, 0);
             };
-            format_description_input.oncut = function(){admin_handler_object.handleTextInputPaste(this)};
+            format_description_input.oncut = function() {
+                var input = this;
+                setTimeout(function() { admin_handler_object.handleFormatTextInput(input); }, 0);
+            };
 
             
             format_description_td.appendChild ( format_description_input );
