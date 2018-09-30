@@ -1293,7 +1293,20 @@ class c_comdef_admin_ajax_handler
                 {
                 $line = null;
                 $index = 0;
-                $row = explode ( '","', trim ( $row, '",' ) );
+                $row = trim($row);
+                if (substr($row, 0, 1) == '"')
+                    { // Strip first double quote
+                    $row = substr($row, 1, strlen($row) - 1);
+                    }
+                if (substr($row, strlen($row) - 1, 1) == ',')
+                    { // Strip last comma, just in case
+                        $row = substr($row, 0, strlen($row) - 1);
+                    }
+                if (substr($row, strlen($row) - 1, 1) == '"')
+                    { // Strip last double quote
+                    $row = substr($row, 0, strlen($row) - 1);
+                    }
+                $row = explode ( '","', $row );
                 foreach ( $row as $column )
                     {
                     if ( isset ( $column ) )
