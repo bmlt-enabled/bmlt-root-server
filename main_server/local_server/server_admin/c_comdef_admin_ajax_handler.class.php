@@ -1298,6 +1298,10 @@ class c_comdef_admin_ajax_handler
                     { // Strip first double quote
                     $row = substr($row, 1, strlen($row) - 1);
                     }
+                if (substr($row, strlen($row) - 1, 1) == ',')
+                    { // Strip last comma, just in case
+                        $row = substr($row, 0, strlen($row) - 1);
+                    }
                 if (substr($row, strlen($row) - 1, 1) == '"')
                     { // Strip last double quote
                     $row = substr($row, 0, strlen($row) - 1);
