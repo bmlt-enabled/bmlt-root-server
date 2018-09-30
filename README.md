@@ -58,6 +58,7 @@ CHANGELIST
 
 - Fixed an issue where the user would erroneously receive a warning when switching between edited users and service bodies.
 - Fixed an issue with cutting/pasting into text fields in the administration UI.
+- Fixed an issue with editing meetings where the "Save" button would be enabled even if no changes had been made.
 
 ***Version 2.11.0* ** *- September 28, 2018*
 
