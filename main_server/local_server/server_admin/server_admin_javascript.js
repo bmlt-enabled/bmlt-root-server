@@ -617,6 +617,7 @@ function BMLT_Server_Admin ()
             ret.published = '0';
             ret.service_body_bigint = g_service_bodies_array[0][0].toString();
             ret.formats = '';
+            ret.format_shared_id_list = '';
             };
         
         ret.zoom = g_default_zoom;
