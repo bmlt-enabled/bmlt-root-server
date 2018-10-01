@@ -54,7 +54,7 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
-***Version 2.11.1* ** *- TBD*
+***Version 2.11.1* ** *- October 1, 2018*
 
 - Fixed an issue where the user would erroneously receive a warning when switching between edited users and service bodies.
 - Fixed an issue with cutting/pasting into text fields in the administration UI.
