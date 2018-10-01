@@ -617,6 +617,7 @@ function BMLT_Server_Admin ()
             ret.published = '0';
             ret.service_body_bigint = g_service_bodies_array[0][0].toString();
             ret.formats = '';
+            ret.format_shared_id_list = '';
             };
         
         ret.zoom = g_default_zoom;
@@ -1885,8 +1886,14 @@ function BMLT_Server_Admin ()
         meeting_name_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'meeting_name')};
         meeting_name_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_name_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-        meeting_name_text_item.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
-        meeting_name_text_item.oncut = function(){admin_handler_object.handleTextInputPaste(this)};
+        meeting_name_text_item.onpaste = function() {
+            var input = this;
+            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'meeting_name'); }, 0);
+        };
+        meeting_name_text_item.oncut = function() {
+            var input = this;
+            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'meeting_name'); }, 0);
+        };
 
 
         meeting_cc_text_item.value = htmlspecialchars_decode ( meeting_object.worldid_mixed ? meeting_object.worldid_mixed : meeting_cc_text_item.value );
@@ -1894,8 +1901,14 @@ function BMLT_Server_Admin ()
         meeting_cc_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'worldid_mixed')};
         meeting_cc_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_cc_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-        meeting_cc_text_item.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
-        meeting_cc_text_item.oncut = function(){admin_handler_object.handleTextInputPaste(this)};
+        meeting_cc_text_item.onpaste = function() {
+            var input = this;
+            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'worldid_mixed'); }, 0);
+        };
+        meeting_cc_text_item.oncut = function() {
+            var input = this;
+            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'worldid_mixed'); }, 0);
+        };
 
         
         meeting_location_text_item.value = htmlspecialchars_decode ( meeting_object.location_text ? meeting_object.location_text : meeting_location_text_item.value );
@@ -1903,8 +1916,14 @@ function BMLT_Server_Admin ()
         meeting_location_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_text')};
         meeting_location_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_location_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-        meeting_location_text_item.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
-        meeting_location_text_item.oncut = function(){admin_handler_object.handleTextInputPaste(this)};
+        meeting_location_text_item.onpaste = function() {
+            var input = this;
+            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'location_text'); }, 0);
+        };
+        meeting_location_text_item.oncut = function() {
+            var input = this;
+            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'location_text'); }, 0);
+        };
 
         
         meeting_info_text_item.value = htmlspecialchars_decode ( meeting_object.location_info ? meeting_object.location_info : meeting_info_text_item.value );
@@ -1912,17 +1931,28 @@ function BMLT_Server_Admin ()
         meeting_info_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_info')};
         meeting_info_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_info_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-        meeting_info_text_item.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
-        meeting_info_text_item.oncut = function(){admin_handler_object.handleTextInputPaste(this)};
-
+        meeting_info_text_item.onpaste = function() {
+            var input = this;
+            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'location_info'); }, 0);
+        };
+        meeting_info_text_item.oncut = function() {
+            var input = this;
+            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'location_info'); }, 0);
+        };
         
         meeting_street_text_item.value = htmlspecialchars_decode ( meeting_object.location_street ? meeting_object.location_street : meeting_street_text_item.value );
         this.setTextItemClass ( meeting_street_text_item );
         meeting_street_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_street')};
         meeting_street_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_street_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-        meeting_street_text_item.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
-        meeting_street_text_item.oncut = function(){admin_handler_object.handleTextInputPaste(this)};
+        meeting_street_text_item.onpaste = function() {
+            var input = this;
+            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'location_street'); }, 0);
+        };
+        meeting_street_text_item.oncut = function() {
+            var input = this;
+            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'location_street'); }, 0);
+        };
 
         
         meeting_neighborhood_text_item.value = htmlspecialchars_decode ( meeting_object.location_neighborhood ? meeting_object.location_neighborhood : meeting_neighborhood_text_item.value );
@@ -1930,8 +1960,14 @@ function BMLT_Server_Admin ()
         meeting_neighborhood_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_neighborhood')};
         meeting_neighborhood_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_neighborhood_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-        meeting_neighborhood_text_item.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
-        meeting_neighborhood_text_item.oncut = function(){admin_handler_object.handleTextInputPaste(this)};
+        meeting_neighborhood_text_item.onpaste = function() {
+            var input = this;
+            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'location_neighborhood'); }, 0);
+        };
+        meeting_neighborhood_text_item.oncut = function() {
+            var input = this;
+            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'location_neighborhood'); }, 0);
+        };
 
         
         meeting_borough_text_item.value = htmlspecialchars_decode ( meeting_object.location_city_subsection ? meeting_object.location_city_subsection : meeting_borough_text_item.value );
@@ -1939,8 +1975,14 @@ function BMLT_Server_Admin ()
         meeting_borough_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_city_subsection')};
         meeting_borough_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_borough_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-        meeting_borough_text_item.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
-        meeting_borough_text_item.oncut = function(){admin_handler_object.handleTextInputPaste(this)};
+        meeting_borough_text_item.onpaste = function() {
+            var input = this;
+            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'location_city_subsection'); }, 0);
+        };
+        meeting_borough_text_item.oncut = function() {
+            var input = this;
+            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'location_city_subsection'); }, 0);
+        };
 
         
         meeting_city_text_item.value = htmlspecialchars_decode ( meeting_object.location_municipality ? meeting_object.location_municipality : meeting_city_text_item.value );
@@ -1948,8 +1990,14 @@ function BMLT_Server_Admin ()
         meeting_city_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_municipality')};
         meeting_city_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_city_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-        meeting_city_text_item.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
-        meeting_city_text_item.oncut = function(){admin_handler_object.handleTextInputPaste(this)};
+        meeting_city_text_item.onpaste = function() {
+            var input = this;
+            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'location_municipality'); }, 0);
+        };
+        meeting_city_text_item.oncut = function() {
+            var input = this;
+            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'location_municipality'); }, 0);
+        };
 
         
         meeting_county_text_item.value = htmlspecialchars_decode ( meeting_object.location_sub_province ? meeting_object.location_sub_province : meeting_county_text_item.value );
@@ -1957,8 +2005,14 @@ function BMLT_Server_Admin ()
         meeting_county_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_sub_province')};
         meeting_county_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_county_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-        meeting_county_text_item.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
-        meeting_county_text_item.oncut = function(){admin_handler_object.handleTextInputPaste(this)};
+        meeting_county_text_item.onpaste = function() {
+            var input = this;
+            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'location_sub_province'); }, 0);
+        };
+        meeting_county_text_item.oncut = function() {
+            var input = this;
+            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'location_sub_province'); }, 0);
+        };
 
         
         meeting_state_text_item.value = htmlspecialchars_decode ( meeting_object.location_province ? meeting_object.location_province : meeting_state_text_item.value );
@@ -1966,8 +2020,14 @@ function BMLT_Server_Admin ()
         meeting_state_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_province')};
         meeting_state_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_state_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-        meeting_state_text_item.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
-        meeting_state_text_item.oncut = function(){admin_handler_object.handleTextInputPaste(this)};
+        meeting_state_text_item.onpaste = function() {
+            var input = this;
+            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'location_province'); }, 0);
+        };
+        meeting_state_text_item.oncut = function() {
+            var input = this;
+            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'location_province'); }, 0);
+        };
 
         
         meeting_zip_text_item.value = htmlspecialchars_decode ( meeting_object.location_postal_code_1 ? meeting_object.location_postal_code_1 : meeting_zip_text_item.value );
@@ -1975,8 +2035,14 @@ function BMLT_Server_Admin ()
         meeting_zip_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_postal_code_1')};
         meeting_zip_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_zip_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-        meeting_zip_text_item.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
-        meeting_zip_text_item.oncut = function(){admin_handler_object.handleTextInputPaste(this)};
+        meeting_zip_text_item.onpaste = function() {
+            var input = this;
+            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'location_postal_code_1'); }, 0);
+        };
+        meeting_zip_text_item.oncut = function() {
+            var input = this;
+            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'location_postal_code_1'); }, 0);
+        };
 
         
         meeting_nation_text_item.value = htmlspecialchars_decode ( meeting_object.location_nation ? meeting_object.location_nation : meeting_nation_text_item.value );
@@ -1984,8 +2050,14 @@ function BMLT_Server_Admin ()
         meeting_nation_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_nation')};
         meeting_nation_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_nation_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-        meeting_nation_text_item.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
-        meeting_nation_text_item.oncut = function(){admin_handler_object.handleTextInputPaste(this)};
+        meeting_nation_text_item.onpaste = function() {
+            var input = this;
+            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'location_nation'); }, 0);
+        };
+        meeting_nation_text_item.oncut = function() {
+            var input = this;
+            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'location_nation'); }, 0);
+        };
 
         
         meeting_longitude_text_item.value = htmlspecialchars_decode ( meeting_object.longitude ? meeting_object.longitude : meeting_longitude_text_item.value );
@@ -1993,8 +2065,14 @@ function BMLT_Server_Admin ()
         meeting_longitude_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'longitude')};
         meeting_longitude_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_longitude_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-        meeting_longitude_text_item.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
-        meeting_longitude_text_item.oncut = function(){admin_handler_object.handleTextInputPaste(this)};
+        meeting_longitude_text_item.onpaste = function() {
+            var input = this;
+            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'longitude'); }, 0);
+        };
+        meeting_longitude_text_item.oncut = function() {
+            var input = this;
+            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'longitude'); }, 0);
+        };
 
         
         meeting_latitude_text_item.value = htmlspecialchars_decode ( meeting_object.latitude ? meeting_object.latitude : meeting_latitude_text_item.value );
@@ -2002,8 +2080,14 @@ function BMLT_Server_Admin ()
         meeting_latitude_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'latitude')};
         meeting_latitude_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_latitude_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-        meeting_latitude_text_item.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
-        meeting_latitude_text_item.oncut = function(){admin_handler_object.handleTextInputPaste(this)};
+        meeting_latitude_text_item.onpaste = function() {
+            var input = this;
+            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'latitude'); }, 0);
+        };
+        meeting_latitude_text_item.oncut = function() {
+            var input = this;
+            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'latitude'); }, 0);
+        };
 
         
         meeting_contact_text_item.value = htmlspecialchars_decode ( meeting_object.email_contact ? meeting_object.email_contact : meeting_contact_text_item.value );
@@ -2011,8 +2095,14 @@ function BMLT_Server_Admin ()
         meeting_contact_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'email_contact')};
         meeting_contact_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
         meeting_contact_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-        meeting_contact_text_item.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
-        meeting_contact_text_item.oncut = function(){admin_handler_object.handleTextInputPaste(this)};
+        meeting_contact_text_item.onpaste = function() {
+            var input = this;
+            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'email_contact'); }, 0);
+        };
+        meeting_contact_text_item.oncut = function() {
+            var input = this;
+            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'email_contact'); }, 0);
+        };
 
         
         meeting_published_checkbox.checked = (meeting_object ? true : false);
@@ -2962,8 +3052,14 @@ function BMLT_Server_Admin ()
             text_field.onkeyup = function(){admin_handler_object.setItemValue(this)};
             text_field.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
             text_field.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-            text_field.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
-            text_field.oncut = function(){admin_handler_object.handleTextInputPaste(this)};
+            text_field.onpaste = function() {
+                var input = this;
+                setTimeout(function() { admin_handler_object.setItemValue(input); }, 0);
+            };
+            text_field.oncut = function() {
+                var input = this;
+                setTimeout(function() { admin_handler_object.setItemValue(input); }, 0);
+            };
 
             text_field = null;
             };
@@ -4709,8 +4805,14 @@ function BMLT_Server_Admin ()
             format_key_input.onfocus= function () { admin_handler_object.handleTextInputFocus(this); };
             format_key_input.onblur= function () { admin_handler_object.handleTextInputBlur(this); };
             format_key_input.onkeyup = function () { admin_handler_object.handleFormatTextInput(this); };
-            format_key_input.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
-            format_key_input.oncut = function(){admin_handler_object.handleTextInputPaste(this)};
+            format_key_input.onpaste = function() {
+                var input = this;
+                setTimeout(function() { admin_handler_object.handleFormatTextInput(input); }, 0);
+            };
+            format_key_input.oncut = function() {
+                var input = this;
+                setTimeout(function() { admin_handler_object.handleFormatTextInput(input); }, 0);
+            };
 
 
             format_key_td.appendChild ( format_key_input );
@@ -4730,8 +4832,14 @@ function BMLT_Server_Admin ()
             format_name_input.onfocus= function () { admin_handler_object.handleTextInputFocus(this); };
             format_name_input.onblur= function () { admin_handler_object.handleTextInputBlur(this); };
             format_name_input.onkeyup = function () { admin_handler_object.handleFormatTextInput(this); };
-            format_name_input.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
-            format_name_input.oncut = function(){admin_handler_object.handleTextInputPaste(this)};
+            format_name_input.onpaste = function() {
+                var input = this;
+                setTimeout(function() { admin_handler_object.handleFormatTextInput(input); }, 0);
+            };
+            format_name_input.oncut = function() {
+                var input = this;
+                setTimeout(function() { admin_handler_object.handleFormatTextInput(input); }, 0);
+            };
 
     
             format_name_td.appendChild ( format_name_input );
@@ -4749,8 +4857,14 @@ function BMLT_Server_Admin ()
             format_description_input.onfocus= function () { admin_handler_object.handleTextInputFocus(this); };
             format_description_input.onblur= function () { admin_handler_object.handleTextInputBlur(this); };
             format_description_input.onkeyup = function () { admin_handler_object.handleFormatTextInput(this); };
-            format_description_input.onpaste = function(){admin_handler_object.handleTextInputPaste(this)};
-            format_description_input.oncut = function(){admin_handler_object.handleTextInputPaste(this)};
+            format_description_input.onpaste = function() {
+                var input = this;
+                setTimeout(function() { admin_handler_object.handleFormatTextInput(input); }, 0);
+            };
+            format_description_input.oncut = function() {
+                var input = this;
+                setTimeout(function() { admin_handler_object.handleFormatTextInput(input); }, 0);
+            };
 
             
             format_description_td.appendChild ( format_description_input );

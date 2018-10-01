@@ -54,6 +54,13 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
+***Version 2.11.1* ** *- October 1, 2018*
+
+- Fixed an issue where the user would erroneously receive a warning when switching between edited users and service bodies.
+- Fixed an issue with cutting/pasting into text fields in the administration UI.
+- Fixed an issue with editing meetings where the "Save" button would be enabled even if no changes had been made.
+- Fixed an issue where the My Account save button would be incorrectly enabled/disabled.
+
 ***Version 2.11.0* ** *- September 28, 2018*
 
 - Added the ability to allow Service Body Administrators to edit their users.

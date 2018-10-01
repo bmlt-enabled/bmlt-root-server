@@ -562,6 +562,7 @@ function DisplaySearchResultsCSV ( $in_http_vars,	/**< The various HTTP GET and 
                         
                         if ( isset($format_shared_id_list) && is_array($format_shared_id_list) && count($format_shared_id_list) )
                             {
+                            sort($format_shared_id_list);
                             $line['format_shared_id_list'] = implode(',', $format_shared_id_list);
                             }
                             
