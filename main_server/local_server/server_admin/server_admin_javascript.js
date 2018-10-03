@@ -1789,7 +1789,6 @@ function BMLT_Server_Admin ()
             var meeting_city_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_city_text_input';
             var meeting_county_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_county_text_input';
             var meeting_state_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_state_text_input';
-            var meeting_state_select_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_state_select_input';
             var meeting_zip_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_zip_text_input';
             var meeting_nation_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_nation_text_input';
             var meeting_longitude_text_item_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_longitude_text_input';
@@ -1823,9 +1822,10 @@ function BMLT_Server_Admin ()
                 this.handleTextInputLoad(document.getElementById(meeting_latitude_text_item_id), 0, true);
 
                 var meeting_state_text_input = document.getElementById(meeting_state_text_item_id);
-                if (meeting_state_text_input !== null) {
+                if (meeting_state_text_input !== null)
+                    {
                     this.handleTextInputLoad(meeting_state_text_input);
-                }
+                    }
                 
                 var map_disclosure_a = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_map_disclosure_a' );
                 map_disclosure_a.href = 'javascript:admin_handler_object.toggleMeetingMapDisclosure(' + in_meeting_id + ')';
@@ -2021,7 +2021,8 @@ function BMLT_Server_Admin ()
         };
 
 
-        if (meeting_state_text_item !== null) {
+        if (meeting_state_text_item !== null)
+            {
             meeting_state_text_item.value = htmlspecialchars_decode(meeting_object.location_province ? meeting_object.location_province : meeting_state_text_item.value);
             this.setTextItemClass(meeting_state_text_item);
             meeting_state_text_item.onkeyup = function () {admin_handler_object.setItemValue(this, meeting_id, 'location_province')};
@@ -2039,19 +2040,22 @@ function BMLT_Server_Admin ()
                     admin_handler_object.setItemValue(input, meeting_id, 'location_province');
                 }, 0);
             };
-        } else {
-            if (meeting_object.location_province) {
-                for (var i = 0; i <= meeting_state_select_item.options.length; i++) {
+            }
+        else
+            {
+            if ( meeting_object.location_province )
+                {
+                for ( var i = 0; i <= meeting_state_select_item.options.length; i++ )
+                    {
                     var option = meeting_state_select_item.options[i];
-                    if (option.value == meeting_object.location_province) {
+                    if ( option.value === meeting_object.location_province )
+                        {
                         meeting_state_select_item.selectedIndex = i;
                         break;
+                        }
                     }
                 }
-            }
-            meeting_state_select_item.onchange = function() {
-                admin_handler_object.reactToMeetingStateSelect(meeting_id);
-            }
+            meeting_state_select_item.onchange = function() {admin_handler_object.reactToMeetingStateSelect( meeting_id );}
         }
 
         
