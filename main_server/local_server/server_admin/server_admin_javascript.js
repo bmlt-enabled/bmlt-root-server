@@ -89,7 +89,7 @@ function BMLT_Server_Admin ()
             this.m_warn_user_to_refresh = false;
             };
     };
-    
+
     // #mark - 
     // #mark Text Item Handlers
     // #mark -
@@ -1816,11 +1816,16 @@ function BMLT_Server_Admin ()
                 this.handleTextInputLoad(document.getElementById(meeting_borough_text_item_id));
                 this.handleTextInputLoad(document.getElementById(meeting_city_text_item_id));
                 this.handleTextInputLoad(document.getElementById(meeting_county_text_item_id));
-                this.handleTextInputLoad(document.getElementById(meeting_state_text_item_id));
                 this.handleTextInputLoad(document.getElementById(meeting_zip_text_item_id), null, true);
                 this.handleTextInputLoad(document.getElementById(meeting_nation_text_item_id), null, true);
                 this.handleTextInputLoad(document.getElementById(meeting_longitude_text_item_id), 0, true);
                 this.handleTextInputLoad(document.getElementById(meeting_latitude_text_item_id), 0, true);
+
+                var meeting_state_text_input = document.getElementById(meeting_state_text_item_id);
+                if (meeting_state_text_input !== null)
+                    {
+                    this.handleTextInputLoad(meeting_state_text_input);
+                    }
                 
                 var map_disclosure_a = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_map_disclosure_a' );
                 map_disclosure_a.href = 'javascript:admin_handler_object.toggleMeetingMapDisclosure(' + in_meeting_id + ')';
@@ -1875,6 +1880,7 @@ function BMLT_Server_Admin ()
         var meeting_city_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_city_text_input' );
         var meeting_county_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_county_text_input' );
         var meeting_state_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_state_text_input' );
+        var meeting_state_select_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_state_select_input' );
         var meeting_zip_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_zip_text_input' );
         var meeting_nation_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_nation_text_input' );
         var meeting_longitude_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_longitude_text_input' );
@@ -2014,20 +2020,43 @@ function BMLT_Server_Admin ()
             setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'location_sub_province'); }, 0);
         };
 
-        
-        meeting_state_text_item.value = htmlspecialchars_decode ( meeting_object.location_province ? meeting_object.location_province : meeting_state_text_item.value );
-        this.setTextItemClass ( meeting_state_text_item );
-        meeting_state_text_item.onkeyup = function(){admin_handler_object.setItemValue(this, meeting_id, 'location_province')};
-        meeting_state_text_item.onfocus = function(){admin_handler_object.handleTextInputFocus(this)};
-        meeting_state_text_item.onblur = function(){admin_handler_object.handleTextInputBlur(this)};
-        meeting_state_text_item.onpaste = function() {
-            var input = this;
-            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'location_province'); }, 0);
-        };
-        meeting_state_text_item.oncut = function() {
-            var input = this;
-            setTimeout(function() { admin_handler_object.setItemValue(input, meeting_id, 'location_province'); }, 0);
-        };
+
+        if (meeting_state_text_item !== null)
+            {
+            meeting_state_text_item.value = htmlspecialchars_decode(meeting_object.location_province ? meeting_object.location_province : meeting_state_text_item.value);
+            this.setTextItemClass(meeting_state_text_item);
+            meeting_state_text_item.onkeyup = function () {admin_handler_object.setItemValue(this, meeting_id, 'location_province')};
+            meeting_state_text_item.onfocus = function () {admin_handler_object.handleTextInputFocus(this)};
+            meeting_state_text_item.onblur = function () {admin_handler_object.handleTextInputBlur(this)};
+            meeting_state_text_item.onpaste = function () {
+                var input = this;
+                setTimeout(function () {
+                    admin_handler_object.setItemValue(input, meeting_id, 'location_province');
+                }, 0);
+            };
+            meeting_state_text_item.oncut = function () {
+                var input = this;
+                setTimeout(function () {
+                    admin_handler_object.setItemValue(input, meeting_id, 'location_province');
+                }, 0);
+            };
+            }
+        else
+            {
+            if ( meeting_object.location_province )
+                {
+                for ( var i = 0; i <= meeting_state_select_item.options.length; i++ )
+                    {
+                    var option = meeting_state_select_item.options[i];
+                    if ( option.value === meeting_object.location_province )
+                        {
+                        meeting_state_select_item.selectedIndex = i;
+                        break;
+                        }
+                    }
+                }
+            meeting_state_select_item.onchange = function() {admin_handler_object.reactToMeetingStateSelect( meeting_id );}
+        }
 
         
         meeting_zip_text_item.value = htmlspecialchars_decode ( meeting_object.location_postal_code_1 ? meeting_object.location_postal_code_1 : meeting_zip_text_item.value );
@@ -2520,7 +2549,16 @@ function BMLT_Server_Admin ()
         the_meeting_object.duration_time = timeval;
         this.validateMeetingEditorButton ( in_meeting_id );
     };
-    
+
+    this.reactToMeetingStateSelect = function(in_meeting_id) {
+        var meeting_state_select_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_state_select_input' );
+        var editor_object = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
+        var the_meeting_object = editor_object.meeting_object;
+        the_meeting_object.location_province = meeting_state_select_item.options[meeting_state_select_item.selectedIndex].value;
+        this.handleNewAddressInfo( in_meeting_id );
+        this.validateMeetingEditorButton ( in_meeting_id );
+    };
+
     /************************************************************************************//**
     *   \brief 
     ****************************************************************************************/
@@ -2580,15 +2618,16 @@ function BMLT_Server_Admin ()
         var meeting_borough_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_borough_text_input' );
         var meeting_city_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_city_text_input' );
         var meeting_state_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_state_text_input' );
+        var meeting_state_select_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_state_select_input' );
         var meeting_zip_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_zip_text_input' );
         var meeting_nation_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_nation_text_input' );
 
-        if ( meeting_street_text_item && meeting_borough_text_item && meeting_city_text_item && meeting_state_text_item && meeting_zip_text_item && meeting_nation_text_item )
+        if ( meeting_street_text_item && meeting_borough_text_item && meeting_city_text_item && ( meeting_state_text_item || meeting_state_select_item ) && meeting_zip_text_item && meeting_nation_text_item )
             {
             var street_text = meeting_street_text_item.value;
             var borough_text = meeting_borough_text_item.value;
             var city_text = meeting_city_text_item.value;
-            var state_text = meeting_state_text_item.value;
+            var state_text = meeting_state_text_item ? meeting_state_text_item.value : meeting_state_select_item.options[meeting_state_select_item.selectedIndex].value;
             var zip_text = meeting_zip_text_item.value;
             var nation_text = meeting_nation_text_item.value;
 
@@ -2628,13 +2667,14 @@ function BMLT_Server_Admin ()
         var meeting_borough_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_borough_text_input' );
         var meeting_city_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_city_text_input' );
         var meeting_state_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_state_text_input' );
+        var meeting_state_select_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_state_select_input' );
         var meeting_zip_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_zip_text_input' );
         var meeting_nation_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_nation_text_input' );
 
         var street_text = meeting_street_text_item.value;
         var borough_text = meeting_borough_text_item.value;
         var city_text = meeting_city_text_item.value;
-        var state_text = meeting_state_text_item.value;
+        var state_text = meeting_state_text_item ? meeting_state_text_item.value : meeting_state_select_item.options[meeting_state_select_item.selectedIndex].value;
         var zip_text = meeting_zip_text_item.value;
         var nation_text = meeting_nation_text_item.value;
         
@@ -2659,13 +2699,14 @@ function BMLT_Server_Admin ()
         var meeting_borough_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_borough_text_input' );
         var meeting_city_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_city_text_input' );
         var meeting_state_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_state_text_input' );
+        var meeting_state_select_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_state_select_input' );
         var meeting_zip_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_zip_text_input' );
         var meeting_nation_text_item = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_nation_text_input' );
 
         var street_text = (meeting_street_text_item.value != meeting_street_text_item.defaultValue) ? meeting_street_text_item.value : '';
         var borough_text = (meeting_borough_text_item.value != meeting_borough_text_item.defaultValue) ? meeting_borough_text_item.value : '';
         var city_text = (meeting_city_text_item.value != meeting_city_text_item.defaultValue) ? meeting_city_text_item.value : '';
-        var state_text = (meeting_state_text_item.value != meeting_state_text_item.defaultValue) ? meeting_state_text_item.value : '';
+        var state_text = meeting_state_text_item ? ((meeting_state_text_item.value != meeting_state_text_item.defaultValue) ? meeting_state_text_item.value : '') : meeting_state_select_item.options[meeting_state_select_item.selectedIndex].value;
         var zip_text = (meeting_zip_text_item.value != meeting_zip_text_item.defaultValue) ? meeting_zip_text_item.value : '';
         var nation_text = (meeting_nation_text_item.value != meeting_nation_text_item.defaultValue) ? meeting_nation_text_item.value : '';
         
