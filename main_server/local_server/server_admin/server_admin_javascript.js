@@ -2627,7 +2627,7 @@ function BMLT_Server_Admin ()
             var street_text = meeting_street_text_item.value;
             var borough_text = meeting_borough_text_item.value;
             var city_text = meeting_city_text_item.value;
-            var state_text = meeting_state_text_item !== null ? meeting_state_text_item.value : meeting_state_select_item.options[meeting_state_select_item.selectedIndex].value;
+            var state_text = meeting_state_text_item ? meeting_state_text_item.value : meeting_state_select_item.options[meeting_state_select_item.selectedIndex].value;
             var zip_text = meeting_zip_text_item.value;
             var nation_text = meeting_nation_text_item.value;
 
@@ -2674,7 +2674,7 @@ function BMLT_Server_Admin ()
         var street_text = meeting_street_text_item.value;
         var borough_text = meeting_borough_text_item.value;
         var city_text = meeting_city_text_item.value;
-        var state_text = meeting_state_text_item.value !== null ? meeting_state_text_item.value : meeting_state_select_item.options[meeting_state_select_item.selectedIndex].value;
+        var state_text = meeting_state_text_item ? meeting_state_text_item.value : meeting_state_select_item.options[meeting_state_select_item.selectedIndex].value;
         var zip_text = meeting_zip_text_item.value;
         var nation_text = meeting_nation_text_item.value;
         
@@ -2706,7 +2706,7 @@ function BMLT_Server_Admin ()
         var street_text = (meeting_street_text_item.value != meeting_street_text_item.defaultValue) ? meeting_street_text_item.value : '';
         var borough_text = (meeting_borough_text_item.value != meeting_borough_text_item.defaultValue) ? meeting_borough_text_item.value : '';
         var city_text = (meeting_city_text_item.value != meeting_city_text_item.defaultValue) ? meeting_city_text_item.value : '';
-        var state_text = meeting_state_text_item !== null ? ((meeting_state_text_item.value != meeting_state_text_item.defaultValue) ? meeting_state_text_item.value : '') : meeting_state_select_item.options[meeting_state_select_item.selectedIndex].value;
+        var state_text = meeting_state_text_item ? ((meeting_state_text_item.value != meeting_state_text_item.defaultValue) ? meeting_state_text_item.value : '') : meeting_state_select_item.options[meeting_state_select_item.selectedIndex].value;
         var zip_text = (meeting_zip_text_item.value != meeting_zip_text_item.defaultValue) ? meeting_zip_text_item.value : '';
         var nation_text = (meeting_nation_text_item.value != meeting_nation_text_item.defaultValue) ? meeting_nation_text_item.value : '';
         
