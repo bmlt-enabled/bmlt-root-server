@@ -832,6 +832,9 @@ class c_comdef_admin_main_console
                         }
                     
                 $ret .= '</legend>'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= '<div class="naws_link_div" id="service_body_editor_naws_link_div">';
+                    $ret .= '<a id="service_body_editor_naws_link_a" href="">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_uri_naws_format_text'] ).'</a>';
+                $ret .= '</div>';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_sb_id_label'] ).'</span>';
                     $ret .= '<span class="bmlt_admin_value_left light_italic_display" id="service_body_admin_id_display"></span>';
@@ -1169,10 +1172,7 @@ class c_comdef_admin_main_console
     ************************************************************************************************************/
     function return_service_body_editor_button_panel ()
     {
-        $ret = '<div class="naws_link_div" id="service_body_editor_naws_link_div">';
-            $ret .= '<a id="service_body_editor_naws_link_a" href="">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_uri_naws_format_text'] ).'</a>';
-        $ret .= '</div>';
-        $ret .= '<div class="bmlt_admin_service_body_editor_button_div">';
+        $ret = '<div class="bmlt_admin_service_body_editor_button_div">';
             $ret .= '<span class="bmlt_admin_meeting_editor_form_meeting_button_left_span">';
                 $ret .= '<a id="bmlt_admin_service_body_editor_form_service_body_save_button" href="javascript:admin_handler_object.saveServiceBody();" class="bmlt_admin_ajax_button button_disabled">'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['service_body_save_button'] ).'</a>';
                 $ret .= '<span id="bmlt_admin_service_body_save_ajax_button_throbber_span" class="bmlt_admin_ajax_button_throbber_span item_hidden"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></span>';
