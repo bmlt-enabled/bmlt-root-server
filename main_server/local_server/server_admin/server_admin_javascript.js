@@ -340,8 +340,8 @@ function BMLT_Server_Admin ()
         
         if ( email_field && password_field && ajax_button && description )
             {
-            if (    (email_field.value != email_field.original_value)
-                ||  (description.value != description.original_value)
+            if (    (email_field.value != email_field.original_value && email_field.value != email_field.defaultValue)
+                ||  (description.value != description.original_value && description.value != description.defaultValue)
                 ||  (name_field && (name_field.value != name_field.original_value))
                 ||  (login_field && (login_field.value != login_field.original_value))
                 ||  (password_field.value && (password_field.value != password_field.defaultValue)) )

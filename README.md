@@ -54,6 +54,9 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
+***Version 2.11.2* ** *- TBD*
+- Fixed an issue where the My Account save button would be incorrectly enabled/disabled (again).
+
 ***Version 2.11.1* ** *- October 1, 2018*
 
 - Fixed an issue where the user would erroneously receive a warning when switching between edited users and service bodies.
