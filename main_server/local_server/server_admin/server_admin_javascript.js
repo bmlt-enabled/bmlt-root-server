@@ -2045,7 +2045,7 @@ function BMLT_Server_Admin ()
             {
             if ( meeting_object.location_province )
                 {
-                for ( var i = 0; i <= meeting_state_select_item.options.length; i++ )
+                for ( var i = 0; i < meeting_state_select_item.options.length; i++ )
                     {
                     var option = meeting_state_select_item.options[i];
                     if ( option.value === meeting_object.location_province )
