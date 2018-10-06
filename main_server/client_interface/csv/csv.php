@@ -1304,7 +1304,7 @@ function GetServerInfo()
     $ret .= '"'.strval( $localStrings['search_spec_map_center']['longitude'] ).'","'.strval( $localStrings['search_spec_map_center']['latitude'] ).'",';
     $ret .= '"'.strval( $localStrings['search_spec_map_center']['zoom'] ).'","'.$localStrings['default_duration_time'].'",';
     $ret .= '"'.$localStrings['region_bias'].'","'.$localStrings['charset'].'","'.$localStrings['dist_units'].'","'.$canAdmin.'",';
-    $ret .= '"'.$canEmail.'","'.$includeServiceBodiesOnEmails.'","'.$changeDepth.'","'.str_replace ( '"', '\"', $availableFields ).',root_server_uri,format_shared_id_list","'.$localStrings['google_api_key'].'"';
+    $ret .= '"'.$canEmail.'","'.$includeServiceBodiesOnEmails.'","'.$changeDepth.'","'.implode(',', $localStrings['meeting_states_and_provinces']).'","'.str_replace ( '"', '\"', $availableFields ).',root_server_uri,format_shared_id_list","'.$localStrings['google_api_key'].'"';
     
     return $ret;
 }
