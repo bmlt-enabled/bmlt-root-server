@@ -1299,7 +1299,7 @@ function GetServerInfo()
             }
         }
     
-    $ret = '"version","versionInt","langs","nativeLang","centerLongitude","centerLatitude","centerZoom","defaultDuration","regionBias","charSet","distanceUnits","semanticAdmin","emailEnabled","emailIncludesServiceBodies","changesPerMeeting","available_keys","google_api_key"'."\n";
+    $ret = '"version","versionInt","langs","nativeLang","centerLongitude","centerLatitude","centerZoom","defaultDuration","regionBias","charSet","distanceUnits","semanticAdmin","emailEnabled","emailIncludesServiceBodies","changesPerMeeting","meeting_states_and_provinces","available_keys","google_api_key"'."\n";
     $ret .= '"'.$version_string.'","'.strval ( $version_num ).'","'.$lang_string.'","'.$default_lang.'",';
     $ret .= '"'.strval( $localStrings['search_spec_map_center']['longitude'] ).'","'.strval( $localStrings['search_spec_map_center']['latitude'] ).'",';
     $ret .= '"'.strval( $localStrings['search_spec_map_center']['zoom'] ).'","'.$localStrings['default_duration_time'].'",';
