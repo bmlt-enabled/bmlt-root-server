@@ -5784,7 +5784,7 @@ function BMLT_Admin_setSelectByValue (  in_select_object,
 /****************************************************************************************//**
 *	\brief This just traps the enter key for the text entry.                                *
 ********************************************************************************************/
-function BMLT_Admin_keyDown()
+function BMLT_Admin_keyDown(event)
 {
     if ( admin_handler_object.m_search_specifier_shown && (event.keyCode == 13) )
         {
