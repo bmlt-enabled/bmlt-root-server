@@ -56,6 +56,7 @@ CHANGELIST
 
 ***Version 2.12.0* ** *- TBD*
 - Added the ability to display a fixed set of states/provinces when editing meetings in a dropdown menu rather than a freeform text field with a new `$meeting_states_and_provinces` setting.
+- Fixed an issue where the Enter key would not submit the meeting search form when using Firefox.
 - Fixed a UX issue where the NAWS Export link was in close proximity to the Delete Service Body button, resulting in accidental deletion of service bodies.
 - Fixed an issue where the My Account save button would be incorrectly enabled/disabled (again).
 
