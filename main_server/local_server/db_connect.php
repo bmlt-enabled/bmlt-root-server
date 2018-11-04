@@ -113,10 +113,22 @@ function DB_Connect_and_Upgrade ( )
 		{
 		// Version 2.11.0 added 1 column to the users table for user ownership.
 		$table = "$dbPrefix"."_comdef_users";
-		$alter_sql = "ALTER TABLE `$table` ADD `owner_id_bigint` BIGINT NOT NULL DEFAULT -1 AFTER `lang_enum`";
-		c_comdef_dbsingleton::preparedExec($alter_sql);
-		$alter_sql = "CREATE INDEX owner_id_bigint ON $table (owner_id_bigint)";
-		c_comdef_dbsingleton::preparedExec($alter_sql);
+		$check_column_sql = "SELECT COUNT(*) AS count FROM information_schema.columns WHERE TABLE_SCHEMA = '$dbName' AND TABLE_NAME = '$table' AND COLUMN_NAME='owner_id_bigint'";
+		$rows = c_comdef_dbsingleton::preparedQuery($check_column_sql);
+		if ( is_array ( $rows ) && count ( $rows ) )
+			{
+			$row = $rows[0];
+			if ( intval( $row['count'] ) == 0 )
+				{
+				// Some databases in the wild have an invalid default datetime for the last_access_datetime column, which could cause this migration to fail
+				$alter_sql = "ALTER TABLE `$table` MODIFY COLUMN `last_access_datetime` datetime NOT NULL DEFAULT '1970-01-01 00:00:00'";
+				c_comdef_dbsingleton::preparedExec($alter_sql);
+				$alter_sql = "ALTER TABLE `$table` ADD `owner_id_bigint` BIGINT NOT NULL DEFAULT -1 AFTER `lang_enum`";
+				c_comdef_dbsingleton::preparedExec($alter_sql);
+				$alter_sql = "CREATE INDEX owner_id_bigint ON $table (owner_id_bigint)";
+				c_comdef_dbsingleton::preparedExec($alter_sql);
+				}
+			}
 		}
 	catch ( Exception $e )
 		{
