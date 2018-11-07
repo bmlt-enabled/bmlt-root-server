@@ -1108,10 +1108,7 @@ div.admin_page_wrapper
 
 div.bmlt_admin_google_api_key_error_bar
 {
-    margin-top:0;
-    margin-bottom:0;
-    margin-left:2px;
-    margin-right:2px;
+    margin: 0;
     border:none;
     padding:0.1em;
     height:1.5em;
@@ -1120,8 +1117,25 @@ div.bmlt_admin_google_api_key_error_bar
     left:0px;
     right:0px;
     text-align:center;
-    background-color: white;
+}
+
+div.bmlt_admin_google_api_key_error_bar a,
+div.bmlt_admin_google_api_key_error_bar a:visited
+{
+    padding:0.1em;
+    display:block;
     color: red;
+    text-decoration:underline;
+    background-color:white;
+    border-bottom:1px solid white;
+}
+
+div.bmlt_admin_google_api_key_error_bar a:hover,
+div.bmlt_admin_google_api_key_error_bar a:active
+{
+    color: #f96;
+    text-decoration:none;
+    background-color:#009;
 }
 
 div.bmlt_admin_logout_bar

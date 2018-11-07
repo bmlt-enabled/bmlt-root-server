@@ -168,7 +168,7 @@ if ( isset ( $_SESSION[$admin_session_name] ) )
             $server_info = GetServerInfo();
             echo '<div class="server_version_display_div">'.htmlspecialchars ( $server_info['version'] ).'</div>';
         echo '</div>';
-        echo '<div id="google_maps_api_error_div" class="bmlt_admin_google_api_key_error_bar item_hidden"><h4 id="google_maps_api_error_h4"></h4></div>';
+        echo '<div id="google_maps_api_error_div" class="bmlt_admin_google_api_key_error_bar item_hidden"><h4><a id="google_maps_api_error_a" href="https://bmlt.app/google-maps-api-keys-and-geolocation-issues/" target="_blank"></a></h4></div>';
         }
     }
 else
