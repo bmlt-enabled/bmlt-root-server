@@ -6019,7 +6019,7 @@ var showGoogleApiKeyError = function(message) {
     if (errorElement) {
         errorElement.className = errorElement.className.replace(/\bitem_hidden\b/g, "");
     }
-    var errorElement = document.getElementById('google_maps_api_error_a');
+    errorElement = document.getElementById('google_maps_api_error_a');
     if (errorElement) {
         errorElement.innerText = 'WARNING: There is a problem with the Google Maps API Key: ' + message;
     }
