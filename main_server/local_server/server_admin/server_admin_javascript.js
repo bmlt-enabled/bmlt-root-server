@@ -6005,3 +6005,25 @@ function sprintf()
     
     return o.join('');
 };
+
+
+var showGoogleApiKeyError = function(message) {
+    alert('There is a problem with the Google Maps API Key: ' + message);
+};
+
+if (!g_google_api_key || !g_google_api_key.trim()) {
+    showGoogleApiKeyError('The API key is not set.');
+} else {
+    var testKeyXhr = new XMLHttpRequest();
+    testKeyXhr.onreadystatechange = function() {
+        if (testKeyXhr.readyState !== 4) {
+            return;
+        }
+        var response = JSON.parse(testKeyXhr.responseText);
+        if (response.status !== 'OK') {
+            showGoogleApiKeyError(response.error_message);
+        }
+    };
+    testKeyXhr.open('GET', 'https://maps.googleapis.com/maps/api/geocode/json?key=' + g_google_api_key + '&address=27205');
+    testKeyXhr.send();
+}
