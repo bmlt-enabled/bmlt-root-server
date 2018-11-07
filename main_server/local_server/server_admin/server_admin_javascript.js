@@ -6008,7 +6008,14 @@ function sprintf()
 
 
 var showGoogleApiKeyError = function(message) {
-    alert('There is a problem with the Google Maps API Key: ' + message);
+    var errorElement = document.getElementById('google_maps_api_error_div');
+    if (errorElement) {
+        errorElement.className = errorElement.className.replace(/\bitem_hidden\b/g, "");
+    }
+    var errorElement = document.getElementById('google_maps_api_error_h4');
+    if (errorElement) {
+        errorElement.innerText = 'WARNING: There is a problem with the Google Maps API Key: ' + message;
+    }
 };
 
 if (!g_google_api_key || !g_google_api_key.trim()) {

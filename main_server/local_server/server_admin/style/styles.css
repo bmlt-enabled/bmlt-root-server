@@ -1106,12 +1106,30 @@ div.admin_page_wrapper
     top:3em;
 }
 
+div.bmlt_admin_google_api_key_error_bar
+{
+    margin-top:0;
+    margin-bottom:0;
+    margin-left:2px;
+    margin-right:2px;
+    border:none;
+    padding:0.1em;
+    height:1.5em;
+    position:absolute;
+    top:1.5em;
+    left:0px;
+    right:0px;
+    text-align:center;
+    background-color: white;
+    color: red;
+}
+
 div.bmlt_admin_logout_bar
 {
     margin:0;
     border:none;
     padding:0.1em;
-    height:3em;
+    height:1.5em;
     position:absolute;
     top:0px;
     left:0px;
