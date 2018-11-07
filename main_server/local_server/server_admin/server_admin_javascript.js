@@ -2731,6 +2731,12 @@ function BMLT_Server_Admin ()
 
     this.lookupLocation = function(in_meeting_id, successCallback)
     {
+        if (!g_google_api_key_is_good)
+            {
+            alert('Geocoding is disabled because there is a problem with the Google Maps API Key.');
+            return;
+            }
+
         var address_line = this.getAddressLine(in_meeting_id);
         var editor_object = document.getElementById ( 'bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div' );
         var the_meeting_object = editor_object.meeting_object;
@@ -6007,6 +6013,7 @@ function sprintf()
 };
 
 
+var g_google_api_key_is_good = false;
 var showGoogleApiKeyError = function(message) {
     var errorElement = document.getElementById('google_maps_api_error_div');
     if (errorElement) {
@@ -6027,7 +6034,9 @@ if (!g_google_api_key || !g_google_api_key.trim()) {
             return;
         }
         var response = JSON.parse(testKeyXhr.responseText);
-        if (response.status !== 'OK') {
+        if (response.status === 'OK') {
+            g_google_api_key_is_good = true;
+        } else {
             showGoogleApiKeyError(response.error_message);
         }
     };
