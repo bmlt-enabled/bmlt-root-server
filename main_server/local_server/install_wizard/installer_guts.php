@@ -64,6 +64,9 @@ $default_lang = $lang;
                             {
                             
                 ?>
+                <script type="text/javascript">
+                    var g_maps_api_key_warning = '<?php echo htmlspecialchars ( $comdef_install_wizard_strings['Maps_API_Key_Warning'] ); ?>';
+                </script>
                 <script type="text/javascript" src="local_server/install_wizard/installer.js"></script>
                 <script type="text/javascript">
                     var g_installer_object = new BMLTInstaller ( <?php echo array2json ( $prefs_array ) ?> );
@@ -125,7 +128,15 @@ $default_lang = $lang;
                     <?php echo bmlt_create_next_prev_buttons(2) ?>
                     <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_2_Heading']; ?></h1>
                     <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_2_Text']; ?></h2>
-                    <div class="explanatory_text_div"><?php echo $comdef_install_wizard_strings['Explanatory_Text_2_Initial_Intro']; ?></div>
+                    <div class="explanatory_text_div"><?php echo $comdef_install_wizard_strings['Explanatory_Text_2_API_key_Intro']; ?></div>
+                    <div class="explanatory_text_div"><?php echo $comdef_install_wizard_strings['Explanatory_Text_2_API_key_2_Intro']; ?></div>
+                    <div class="one_line_div">
+                        <label class="left_right_aligned bold_char" for="api_text_entry"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Page_2_API_Key_Prompt'] ); ?></label>
+                        <div class="right_left_aligned_div">
+                            <input type="text" class="api_text_entry" id="api_text_entry" value="" />
+                            <a class="bmlt_admin_ajax_button" href="javascript:g_installer_object.testMapsApiKey();"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Page_2_API_Key_Set_Button'] ); ?></a>
+                        </div>
+                    </div>
                     <div class="explanatory_text_div"><?php echo $comdef_install_wizard_strings['Explanatory_Text_2_Region_Bias_Intro']; ?></div>
                     <div class="one_line_div">
                         <label class="left_right_aligned bold_char" for="installer_region_bias_select"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['RegionBiasLabel'] ); ?></label>
@@ -133,17 +144,6 @@ $default_lang = $lang;
                             <?php echo bmlt_create_region_bias_select(); ?>
                         </div>
                     </div>
-                    <div class="explanatory_text_div"><?php echo $comdef_install_wizard_strings['Explanatory_Text_2_API_key_Intro']; ?></div>
-                    <div class="explanatory_text_div"><?php echo $comdef_install_wizard_strings['Explanatory_Text_2_API_key_2_Intro']; ?></div>
-                    <div class="one_line_div">
-                        <label class="left_right_aligned bold_char" for="api_text_entry"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Page_2_API_Key_Prompt'] ); ?></label>
-                        <div class="right_left_aligned_div">
-                            <input type="text" class="api_text_entry" id="api_text_entry" value="" />
-                            <a class="bmlt_admin_ajax_button" href="javascript:g_installer_object.reloadApi();"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Page_2_API_Key_Set_Button'] ); ?></a>
-                        </div>
-                    </div>
-                    <div class="clear_both"></div>
-                    <div class="installer_map_wrapper_div"><div id="installer_map_display_div" class="installer_map_display_div"><h1 class="not_set_h1"><?php echo htmlspecialchars ( $comdef_install_wizard_strings['Page_2_API_Key_Not_Set_Prompt'] ) ?></h1></div></div>
                     <div class="clear_both"></div>
                     <?php echo bmlt_create_next_prev_buttons(2) ?>
                 </div>
@@ -382,6 +382,7 @@ $default_lang = $lang;
                     <div class="one_line_div"><div id="admin_db_items_warning" class="extra_text_div red_char"></div></div>
                     <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_4_Heading']; ?></h1>
                     <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_4_Text']; ?></h2>
+                    <div class="one_line_div"><div id="admin_google_api_key_warning" class="extra_text_div red_char"></div></div>
                     <div class="explanatory_text_div"><?php echo $comdef_install_wizard_strings['Explanatory_Text_4_File_Intro']; ?></div>
                     <div class="explanatory_text_div"><?php echo $comdef_install_wizard_strings['Explanatory_Text_4_File_Extra']; ?></div>
                     <pre class="result_code_pre" id="file_text_pre"></pre>

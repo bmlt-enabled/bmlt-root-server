@@ -60,13 +60,15 @@
 	                                        'Database_PW'                   =>  'Database Password:',
 	                                        'Database_PW_Default_Text'      =>  'Enter A Database Password',
 	                                        'Database_PW_Additional_Text'   =>  'Make this an ugly, difficult password. It has a great deal of power, and you will never need to remember it.',
+
+	                                        'Maps_API_Key_Warning'          =>  'WARNING: There is a problem with the Google Maps API Key: ',
 	                                        
-	                                        'Page_2_Tab'                    =>  'STEP 2: Default Location',
-	                                        'Page_2_Heading'                =>  'Set The Initial Location For Meetings',
+	                                        'Page_2_Tab'                    =>  'STEP 2: Google Maps API Settings',
+	                                        'Page_2_Heading'                =>  'Google Maps API Settings',
 	                                        'Page_2_API_Key_Prompt'         =>  'Enter the Google API Key for Maps:',
-	                                        'Page_2_API_Key_Set_Button'     =>  'USE KEY',
+	                                        'Page_2_API_Key_Set_Button'     =>  'TEST KEY',
 	                                        'Page_2_API_Key_Not_Set_Prompt' =>  'SET API KEY FIRST',
-	                                        'Page_2_Text'                   =>  'When a new meeting is created, this is its initial map location, so you should choose a location that is central in your covered region.',
+	                                        'Page_2_Text'                   =>  'When saving a meeting, the BMLT Root Server uses the Google Maps API to determine the latitude and longitude for the meeting address. These settings are required to allow the BMLT Root Server to communicate with the Google Maps API.',
 
 	                                        'Page_3_Tab'                    =>  'STEP 3: Server Settings',
 	                                        'Page_3_Heading'                =>  'Set Various Global Server Settings',
@@ -137,11 +139,10 @@
                                             
                                             'Explanatory_Text_1_Initial_Intro'  =>  'This install wizard will guide you through the process of creating an initial database, as well as a configuration file. In the final step, we will create a settings file, and initialize an empty database.',
                                             'Explanatory_Text_1_DB_Intro'       =>  'The first thing that you need to do, is create a new, EMPTY database, and a database user that has full access to that database. This is usually done via your Web site Control Panel. Once you have created the database, you need to enter the information about that database into the text items on this page.',
-                                            
-                                            'Explanatory_Text_2_Initial_Intro'  =>  'In this step, we will set a location for the center of the area covered by your root server. It does not need to be any particular location, but it should allow your administrators to figure out where they are quickly, as it will be the default location for new meetings.',
+
                                             'Explanatory_Text_2_Region_Bias_Intro'  =>  'The "Region Bias" is a code that is sent to Google when a location search is done, and can help Google to make sense of ambiguous search queries.',
-                                            'Explanatory_Text_2_API_key_Intro'      =>  'The "API Key" is a key that <a target="_blank" title="Follow this link to go to a page that discusses the Google API Key." href="https://bmlt.magshare.net/google-maps-api-keys-and-geolocation-issues/">you need to register with Google</a> in order to be able to use their mapping service.',
-                                            'Explanatory_Text_2_API_key_2_Intro'    =>  'You will need to provide a valid API Key in order to display the map (or any maps in the final Root Server).',
+                                            'Explanatory_Text_2_API_key_Intro'      =>  'The "API Key" is a key that <a target="_blank" title="Follow this link to go to a page that discusses the Google API Key." href="https://bmlt.app/google-maps-api-keys-and-geolocation-issues/">you need to register with Google</a> in order to be able to use their mapping service.',
+                                            'Explanatory_Text_2_API_key_2_Intro'    =>  'You will need to provide a valid API Key in order to create new meetings in the Root Server.',
 
                                             'Explanatory_Text_3_Server_Admin_Intro' =>  'The Server Administrator is the main user for the server. It is the only account that can create new users and Service bodies, and is very powerful. You should create a login ID and a non-trivial password for this account. You\'ll be able to modify the other aspects of the account on the main server, once the database has been set up.',
                                             'Explanatory_Text_3_Misc_Intro'     =>  'These are various settings that affect how the root server behaves and appears.',

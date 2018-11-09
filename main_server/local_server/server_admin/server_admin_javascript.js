@@ -6021,7 +6021,7 @@ var showGoogleApiKeyError = function(message) {
     }
     errorElement = document.getElementById('google_maps_api_error_a');
     if (errorElement) {
-        errorElement.innerText = 'WARNING: There is a problem with the Google Maps API Key: ' + message;
+        errorElement.innerText = g_maps_api_key_warning + message;
     }
 };
 
