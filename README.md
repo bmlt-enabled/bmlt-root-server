@@ -55,6 +55,7 @@ CHANGELIST
 ----------
 
 ***Version 2.12.0* ** *- TBD*
+
 - Saving a meeting now geocodes and sets the latitude and longitude automatically.
 - Fixed an issue where the schema migration from 2.11.0 could fail.
 - Added meeting states and provinces to the available fields returned by the server info.
