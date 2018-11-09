@@ -720,7 +720,7 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
                     }
                 } else {
                     if (response.status === 'OK') {
-                        alert('Google Maps API Key is valid.')
+                        alert(g_maps_api_key_valid);
                     } else {
                         showGoogleApiKeyError(response.error_message);
                     }

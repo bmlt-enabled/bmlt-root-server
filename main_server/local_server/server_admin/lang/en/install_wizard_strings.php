@@ -63,6 +63,7 @@
 
 	                                        'Maps_API_Key_Warning'          =>  'WARNING: There is a problem with the Google Maps API Key: ',
 	                                        'Maps_API_Key_Not_Set'          =>  'The API key is not set.',
+	                                        'Maps_API_Key_Valid'            =>  'Google Maps API Key is valid.',
 	                                        
 	                                        'Page_2_Tab'                    =>  'STEP 2: Google Maps API Settings',
 	                                        'Page_2_Heading'                =>  'Google Maps API Settings',
