@@ -66,6 +66,7 @@ $default_lang = $lang;
                 ?>
                 <script type="text/javascript">
                     var g_maps_api_key_warning = '<?php echo htmlspecialchars ( $comdef_install_wizard_strings['Maps_API_Key_Warning'] ); ?>';
+                    var g_maps_api_key_not_set = '<?php echo htmlspecialchars ( $comdef_install_wizard_strings['Maps_API_Key_Not_Set'] ); ?>';
                 </script>
                 <script type="text/javascript" src="local_server/install_wizard/installer.js"></script>
                 <script type="text/javascript">

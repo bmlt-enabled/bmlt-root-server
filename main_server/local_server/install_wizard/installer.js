@@ -701,9 +701,9 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
 
         if (!this.m_google_api_key || !this.m_google_api_key.trim()) {
             if (callback) {
-                callback('The API key is not set.');
+                callback(g_maps_api_key_not_set);
             } else {
-                showGoogleApiKeyError('The API key is not set.');
+                showGoogleApiKeyError(g_maps_api_key_not_set);
             }
         } else {
             var testKeyXhr = new XMLHttpRequest();

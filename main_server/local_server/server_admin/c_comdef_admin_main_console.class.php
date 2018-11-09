@@ -169,6 +169,7 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_lang_names = '.array2json ( $this->my_server->GetServerLangs() ).';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_AJAX_Auth_Failure = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['AJAX_Auth_Failure'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_maps_api_key_warning  = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['Maps_API_Key_Warning'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
+                $ret .= 'var g_maps_api_key_not_set  = \''.self::js_html ( $this->my_localized_strings['comdef_server_admin_strings']['Maps_API_Key_Not_Set'] ).'\';'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
                 $ret .= 'var g_service_bodies_array = [';
                     for ( $c = 0; $c < count ( $this->my_service_bodies ); $c++ )
                         {

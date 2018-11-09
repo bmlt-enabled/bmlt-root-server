@@ -6026,7 +6026,7 @@ var showGoogleApiKeyError = function(message) {
 };
 
 if (!g_google_api_key || !g_google_api_key.trim()) {
-    showGoogleApiKeyError('The API key is not set.');
+    showGoogleApiKeyError(g_maps_api_key_not_set);
 } else {
     var testKeyXhr = new XMLHttpRequest();
     testKeyXhr.onreadystatechange = function() {
