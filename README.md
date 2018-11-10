@@ -63,6 +63,7 @@ CHANGELIST
 - Fixed an issue where the Enter key would not submit the meeting search form when using Firefox.
 - Fixed a UX issue where the NAWS Export link was in close proximity to the Delete Service Body button, resulting in accidental deletion of service bodies.
 - Fixed an issue where the My Account save button would be incorrectly enabled/disabled (again).
+- Added formats and unique value functions, and recursive option to bmlt.js
 
 ***Version 2.11.1* ** *- October 1, 2018*
 
