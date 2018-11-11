@@ -2733,7 +2733,7 @@ function BMLT_Server_Admin ()
     {
         if (!g_google_api_key_is_good)
             {
-            alert('Geocoding is disabled because there is a problem with the Google Maps API Key.');
+            alert("The meeting couldn't be saved because there is a problem with the Google Maps API Key.");
             return;
             }
 
