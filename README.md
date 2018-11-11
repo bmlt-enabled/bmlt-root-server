@@ -55,12 +55,15 @@ CHANGELIST
 ----------
 
 ***Version 2.12.0* ** *- TBD*
+
+- Saving a meeting now geocodes and sets the latitude and longitude automatically.
 - Fixed an issue where the schema migration from 2.11.0 could fail.
 - Added meeting states and provinces to the available fields returned by the server info.
 - Added the ability to display a fixed set of states/provinces when editing meetings in a dropdown menu rather than a freeform text field with a new `$meeting_states_and_provinces` setting.
 - Fixed an issue where the Enter key would not submit the meeting search form when using Firefox.
 - Fixed a UX issue where the NAWS Export link was in close proximity to the Delete Service Body button, resulting in accidental deletion of service bodies.
 - Fixed an issue where the My Account save button would be incorrectly enabled/disabled (again).
+- Added formats and unique value functions, and recursive option to bmlt.js
 
 ***Version 2.11.1* ** *- October 1, 2018*
 
