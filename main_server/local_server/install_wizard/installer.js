@@ -696,7 +696,7 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
     {
         this.m_google_api_key = document.getElementById ( 'api_text_entry' ).value;
         var showGoogleApiKeyError = function(message) {
-            alert(g_maps_api_key_warning + message);
+            alert(message);
         };
 
         if (!this.m_google_api_key || !this.m_google_api_key.trim()) {
@@ -713,16 +713,16 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
                 }
                 var response = JSON.parse(testKeyXhr.responseText);
                 if (callback) {
-                    if (response.status === 'OK') {
+                    if (response.status === 'OK' || (response.status === 'REQUEST_DENIED' && response.error_message.indexOf('referer restrictions') !== -1)) {
                         callback();
                     } else {
                         callback(response.error_message);
                     }
                 } else {
-                    if (response.status === 'OK') {
+                    if (response.status === 'OK' || (response.status === 'REQUEST_DENIED' && response.error_message.indexOf('referer restrictions') !== -1)) {
                         alert(g_maps_api_key_valid);
                     } else {
-                        showGoogleApiKeyError(response.error_message);
+                        showGoogleApiKeyError(g_maps_api_key_warning + ' ' + response.error_message);
                     }
                 }
             };

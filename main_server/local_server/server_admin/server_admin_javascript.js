@@ -6021,25 +6021,21 @@ var showGoogleApiKeyError = function(message) {
     }
     errorElement = document.getElementById('google_maps_api_error_a');
     if (errorElement) {
-        errorElement.innerText = g_maps_api_key_warning + message;
+        errorElement.innerText = message;
     }
 };
 
 if (!g_google_api_key || !g_google_api_key.trim()) {
     showGoogleApiKeyError(g_maps_api_key_not_set);
 } else {
-    var testKeyXhr = new XMLHttpRequest();
-    testKeyXhr.onreadystatechange = function() {
-        if (testKeyXhr.readyState !== 4) {
-            return;
+    function gm_authFailure() {
+        showGoogleApiKeyError(g_maps_api_key_warning);
+    }
+    var geocoder = new google.maps.Geocoder;
+    geocoder.geocode({'address':'27205'}, function (response, status) {
+        g_google_api_key_is_good = status === 'OK';
+        if (!g_google_api_key_is_good) {
+            showGoogleApiKeyError(g_maps_api_key_warning);
         }
-        var response = JSON.parse(testKeyXhr.responseText);
-        if (response.status === 'OK') {
-            g_google_api_key_is_good = true;
-        } else {
-            showGoogleApiKeyError(response.error_message);
-        }
-    };
-    testKeyXhr.open('GET', 'https://maps.googleapis.com/maps/api/geocode/json?key=' + g_google_api_key + '&address=27205');
-    testKeyXhr.send();
+    });
 }

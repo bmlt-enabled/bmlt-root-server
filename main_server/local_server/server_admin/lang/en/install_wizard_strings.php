@@ -61,8 +61,8 @@
 	                                        'Database_PW_Default_Text'      =>  'Enter A Database Password',
 	                                        'Database_PW_Additional_Text'   =>  'Make this an ugly, difficult password. It has a great deal of power, and you will never need to remember it.',
 
-	                                        'Maps_API_Key_Warning'          =>  'WARNING: There is a problem with the Google Maps API Key: ',
-	                                        'Maps_API_Key_Not_Set'          =>  'The API key is not set.',
+	                                        'Maps_API_Key_Warning'          =>  'WARNING: There is a problem with the Google Maps API Key.',
+	                                        'Maps_API_Key_Not_Set'          =>  'WARNING: The Google Maps API key is not set.',
 	                                        'Maps_API_Key_Valid'            =>  'Google Maps API Key is valid.',
 	                                        
 	                                        'Page_2_Tab'                    =>  'STEP 2: Google Maps API Settings',

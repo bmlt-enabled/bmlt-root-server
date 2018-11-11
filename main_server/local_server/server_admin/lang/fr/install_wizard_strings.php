@@ -60,7 +60,7 @@
 	                                        'Database_PW_Default_Text'      =>  'Entrer le Mot de Passe de la Base de Données',
 	                                        'Database_PW_Additional_Text'   =>  'Faite à ce qu\'il en soit vraiment sécuritaire.',
 
-	                                        'Maps_API_Key_Warning'          =>  'WARNING: There is a problem with the Google Maps API Key: ',
+	                                        'Maps_API_Key_Warning'          =>  'WARNING: There is a problem with the Google Maps API Key.',
 	                                        
 	                                        'Page_2_Tab'                    =>  'ÉTAPE 2: Localisation par défaut',
 	                                        'Page_2_Heading'                =>  'Regler la localisation innitiale pour les Réunions',

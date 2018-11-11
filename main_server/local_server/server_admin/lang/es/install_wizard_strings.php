@@ -60,7 +60,7 @@
 	                                        'Database_PW_Default_Text'      =>  'Enter A Database Password',
 	                                        'Database_PW_Additional_Text'   =>  'Make this an ugly, difficult password. It has a great deal of power, and you will never need to remember it.',
 
-	                                        'Maps_API_Key_Warning'          =>  'WARNING: There is a problem with the Google Maps API Key: ',
+	                                        'Maps_API_Key_Warning'          =>  'WARNING: There is a problem with the Google Maps API Key.',
 	                                        
 	                                        'Page_2_Tab'                    =>  'STEP 2: Google Maps API',
 	                                        'Page_2_Heading'                =>  'Set The Initial Location For Meetings',
