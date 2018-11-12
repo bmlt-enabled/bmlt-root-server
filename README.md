@@ -54,7 +54,7 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
-***Version 2.12.0* ** *- TBD*
+***Version 2.12.0* ** *- November 12, 2018*
 
 - Saving a meeting now geocodes and sets the latitude and longitude automatically.
 - Fixed an issue where the schema migration from 2.11.0 could fail.
