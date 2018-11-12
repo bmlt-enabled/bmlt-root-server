@@ -75,12 +75,21 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
     ****************************************************************************************/
     this.selectPage4 = function()
     {
-        if ( this.m_installer_wrapper_object.className != 'page_4_wrapper' )
-            {
+        if ( this.m_installer_wrapper_object.className != 'page_4_wrapper' ) {
             this.m_installer_wrapper_object.className = 'page_4_wrapper';
             this.testForDatabaseSetup();
-            document.getElementById ( 'file_text_pre' ).innerHTML = this.createFileData();
-            };
+            document.getElementById('file_text_pre').innerHTML = this.createFileData();
+            var apiKeyWarningDiv = document.getElementById('admin_google_api_key_warning');
+            if (apiKeyWarningDiv) {
+                this.testMapsApiKey(function (message) {
+                    if (message) {
+                        apiKeyWarningDiv.innerText = g_maps_api_key_warning + message;
+                    } else {
+                        apiKeyWarningDiv.innerText = '';
+                    }
+                });
+            }
+        }
     };
     
     // #mark - 
@@ -680,29 +689,46 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
     };
 
     /************************************************************************************//**
-    *   \brief  This is run when we want to apply a new API key.                            *
+    *   \brief  Triggered by the TEST KEY button. When no callback is provided, result is   *
+    *           displayed in an alert box.                                                  *
     ****************************************************************************************/
-    this.reloadApi = function()
+    this.testMapsApiKey = function(callback)
     {
         this.m_google_api_key = document.getElementById ( 'api_text_entry' ).value;
-        this.loadScript();
-    };
+        var showGoogleApiKeyError = function(message) {
+            alert(message);
+        };
 
-    /************************************************************************************//**
-    *   \brief  This is run when the page loads.                                            *
-    ****************************************************************************************/
-    this.loadScript = function()
-    {
-        if ( this.m_google_maps_script )
-            {
-            document.head.removeChild ( this.m_google_maps_script );
-            this.m_google_maps_script = null;
+        if (!this.m_google_api_key || !this.m_google_api_key.trim()) {
+            if (callback) {
+                callback(g_maps_api_key_not_set);
+            } else {
+                showGoogleApiKeyError(g_maps_api_key_not_set);
+            }
+        } else {
+            var testKeyXhr = new XMLHttpRequest();
+            testKeyXhr.onreadystatechange = function() {
+                if (testKeyXhr.readyState !== 4) {
+                    return;
+                }
+                var response = JSON.parse(testKeyXhr.responseText);
+                if (callback) {
+                    if (response.status === 'OK' || (response.status === 'REQUEST_DENIED' && response.error_message.indexOf('referer restrictions') !== -1)) {
+                        callback();
+                    } else {
+                        callback(response.error_message);
+                    }
+                } else {
+                    if (response.status === 'OK' || (response.status === 'REQUEST_DENIED' && response.error_message.indexOf('referer restrictions') !== -1)) {
+                        alert(g_maps_api_key_valid);
+                    } else {
+                        showGoogleApiKeyError(g_maps_api_key_warning + ' ' + response.error_message);
+                    }
+                }
             };
-        this.m_google_maps_script = document.createElement('script');
-        this.m_google_maps_script.type = 'text/javascript';
-        this.m_google_maps_script.context = this;
-        this.m_google_maps_script.src = 'https://maps.google.com/maps/api/js?key=' + this.m_google_api_key + '&callback=gmScriptLoadCompletion';
-        document.head.appendChild ( this.m_google_maps_script );
+            testKeyXhr.open('GET', 'https://maps.googleapis.com/maps/api/geocode/json?key=' + this.m_google_api_key + '&address=27205');
+            testKeyXhr.send();
+        }
     };
 
     // #mark - 

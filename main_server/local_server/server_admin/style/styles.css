@@ -1106,12 +1106,44 @@ div.admin_page_wrapper
     top:3em;
 }
 
+div.bmlt_admin_google_api_key_error_bar
+{
+    margin: 0;
+    border:none;
+    padding:0.1em;
+    height:1.5em;
+    position:absolute;
+    top:1.5em;
+    left:0px;
+    right:0px;
+    text-align:center;
+}
+
+div.bmlt_admin_google_api_key_error_bar a,
+div.bmlt_admin_google_api_key_error_bar a:visited
+{
+    padding:0.1em;
+    display:block;
+    color: red;
+    text-decoration:underline;
+    background-color:white;
+    border-bottom:1px solid white;
+}
+
+div.bmlt_admin_google_api_key_error_bar a:hover,
+div.bmlt_admin_google_api_key_error_bar a:active
+{
+    color: #f96;
+    text-decoration:none;
+    background-color:#009;
+}
+
 div.bmlt_admin_logout_bar
 {
     margin:0;
     border:none;
     padding:0.1em;
-    height:3em;
+    height:1.5em;
     position:absolute;
     top:0px;
     left:0px;

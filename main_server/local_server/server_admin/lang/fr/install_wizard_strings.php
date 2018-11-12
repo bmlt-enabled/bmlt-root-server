@@ -59,10 +59,12 @@
 	                                        'Database_PW'                   =>  'Mot de Passe de la Base de Données:',
 	                                        'Database_PW_Default_Text'      =>  'Entrer le Mot de Passe de la Base de Données',
 	                                        'Database_PW_Additional_Text'   =>  'Faite à ce qu\'il en soit vraiment sécuritaire.',
+
+	                                        'Maps_API_Key_Warning'          =>  'WARNING: There is a problem with the Google Maps API Key.',
 	                                        
 	                                        'Page_2_Tab'                    =>  'ÉTAPE 2: Localisation par défaut',
 	                                        'Page_2_Heading'                =>  'Regler la localisation innitiale pour les Réunions',
-	                                        'Page_2_Text'                   =>  'Quand une nouvelle réunion est créée, c\'est son emplacement initial de la carte, vous devez donc choisir un endroit qui est central dans votre région couverte.',
+	                                        'Page_2_Text'                   =>  'When saving a meeting, the BMLT Root Server uses the Google Maps API to determine the latitude and longitude for the meeting address. These settings are required to allow the BMLT Root Server to communicate with the Google Maps API.',
 
 	                                        'Page_3_Tab'                    =>  'ÉTAPE 3: Paramètres du serveur',
 	                                        'Page_3_Heading'                =>  'Définissez les paramètres généraux du serveur',
@@ -124,8 +126,7 @@
                                             
                                             'Explanatory_Text_1_Initial_Intro'  =>  'Cet assistant d\'installation vous guidera à travers le processus de création d\'une base de données initiale, ainsi que d\'un fichier de configuration. Dans la dernière étape, nous allons créer un fichier de paramètres, et initialiser une base de données vide.',
                                             'Explanatory_Text_1_DB_Intro'  =>  'La première chose que vous devez faire, c\'est de créer une nouvelle base de données vide, et un utilisateur de base de données qui a accès à cette base de données. Cela se fait habituellement par l\'intermédiaire de votre site Web Panneau de configuration. Une fois que vous avez créé la base de données, vous devez saisir les informations relatives à cette base de données dans les éléments de texte sur cette page.',
-                                            
-                                            'Explanatory_Text_2_Initial_Intro'  =>  'Dans cette étape, nous allons définir un emplacement pour le centre de la zone couverte par votre serveur racine. Il n\'a pas besoin d\'être un endroit particulier, mais il devrait permettre à vos administrateurs de comprendre où ils sont rapidement, car il sera l\'emplacement par défaut pour les nouvelles réunions.',
+
                                             'Explanatory_Text_2_Region_Bias_Intro'  =>  'The "Region Bias" is a code that is sent to Google when a location search is done, and can help Google to make sense of ambiguous search queries.',
 
                                             'Explanatory_Text_3_Server_Admin_Intro'  =>  'L\'administrateur du serveur est le principal utilisateur pour le serveur. Il est le seul compte qui peut créer de nouveaux utilisateurs et les organismes de service, et est très puissant. Vous devez créer un identifiant et un mot de passe non négligeable pour ce compte. Vous serez en mesure de modifier les autres aspects du compte sur le serveur principal, une fois la base de données a été mis en place.',
