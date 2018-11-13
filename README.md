@@ -58,7 +58,6 @@ CHANGELIST
 
 - Both `$gkey` and `$gKey` are now valid settings in auto-config.inc.php.
 
-
 ***Version 2.12.0* ** *- November 12, 2018*
 
 - Saving a meeting now geocodes and sets the latitude and longitude automatically.
