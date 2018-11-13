@@ -54,6 +54,10 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
+***Version 2.12.1* ** *- TBD*
+
+- Both `$gkey` and `$gKey` are now valid settings in auto-config.inc.php.
+
 ***Version 2.12.0* ** *- November 12, 2018*
 
 - Saving a meeting now geocodes and sets the latitude and longitude automatically.
