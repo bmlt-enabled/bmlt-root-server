@@ -23,3 +23,8 @@
         $basename = basename ( realpath ( dirname ( __FILE__ ).'/../../' ) );
 		die ( sprintf ( 'The auto-config.inc.php file is in the wrong location! You need to move it out of this directory, and into the %s directory (the same directory as the %s directory)!', $realpath, $basename ) );
         }
+
+    if ( isset ( $gKey ) && !isset ( $gkey ) )
+        {
+        $gkey = $gKey;
+        }
