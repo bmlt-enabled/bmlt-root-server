@@ -57,7 +57,7 @@ CHANGELIST
 ***Version 2.12.1* ** *- TBD*
 
 - Both `$gkey` and `$gKey` are now valid settings in auto-config.inc.php.
-- Fixed a minor issue where canceling a switch from an unsaved user in the user editor would leave the wrong user selected in the dropdown menu.
+- Fixed a minor issue with switching between unsaved users and service bodies in the admin UI.
 
 ***Version 2.12.0* ** *- November 12, 2018*
 
