@@ -4171,6 +4171,7 @@ function BMLT_Server_Admin ()
             || (main_user_editor_div.current_user_object && !this.isUserDirty())
             || (main_user_editor_div.current_user_object && this.isUserDirty() && confirm ( g_user_dirty_confirm_text )) )
             {
+            this.last_selected_user_index = selected_user_select.options.selectedIndex;
             var password_label = document.getElementById ( 'bmlt_admin_user_editor_password_label' );
             if ( !selected_user_object )
                 {
@@ -4252,7 +4253,11 @@ function BMLT_Server_Admin ()
                         break;
                         }
                     }
-            };
+            }
+        else if ( this.last_selected_user_index !== undefined )
+            {
+            selected_user_select.options.selectedIndex = this.last_selected_user_index;
+            }
         
         var perm_checkbox = document.getElementById ( 'bmlt_admin_user_delete_perm_checkbox' );
         if ( perm_checkbox )
