@@ -54,6 +54,10 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
+***Version 2.12.2* ** *- TBD*
+
+- Fixed an issue where formats could be wrong in a NAWS Dump for servers that were combined using lettuce.
+
 ***Version 2.12.1* ** *- November 17, 2018*
 
 - Both `$gkey` and `$gKey` are now valid settings in auto-config.inc.php.
