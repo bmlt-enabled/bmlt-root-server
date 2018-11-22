@@ -1403,7 +1403,7 @@ function BMLT_FuncNAWSReturnFormat3 (	$in_meeting_id,	///< The ID of the meeting
 					break;
 					}
 				}
-            }
+			}
 		}
 	
 	return $ret;
