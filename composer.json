@@ -1,0 +1,5 @@
+{
+    "require": {
+        "bmlt/bmlt-satellite-base-class": "^3.9"
+    }
+}
