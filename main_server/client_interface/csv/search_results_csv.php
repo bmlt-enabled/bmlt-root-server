@@ -95,7 +95,7 @@ function bmlt_populate_format_dictionary()
             $shared_id = $format->GetSharedID();
             if ( $world_id && $shared_id )
                 {
-                if ( array_key_exists( $world_id, $g_format_dictionary ) )
+                if ( is_array ( $g_format_dictionary ) && array_key_exists( $world_id, $g_format_dictionary ) )
                     {
                     array_push( $g_format_dictionary[$world_id], $shared_id );
                     }
