@@ -54,9 +54,10 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
-***Version 2.12.2* ** *- TBD*
+***Version 2.12.2* ** *- November 22, 2018*
 
 - Fixed an issue where formats could be wrong in a NAWS Dump for servers that were combined using lettuce.
+- Fixed the client_interface/html/ endpoint, which was broken by a change in dependency management in 2.12.1.
 
 ***Version 2.12.1* ** *- November 17, 2018*
 
