@@ -1,0 +1,8 @@
+{
+    "config": {
+        "vendor-dir": "main_server/vendor"
+    },
+    "require": {
+        "bmlt/bmlt-satellite-base-class": "^3.9"
+    }
+}

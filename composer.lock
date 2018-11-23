@@ -1,0 +1,81 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "645d6bd3c7c111ee195aa62b2ee0c5d7",
+    "packages": [
+        {
+            "name": "bmlt/bmlt-satellite-base-class",
+            "version": "3.9.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bmlt-enabled/bmlt-satellite-base-class.git",
+                "reference": "ba9304433033af440ef414a81b8cbadd6a8a8ea3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bmlt-enabled/bmlt-satellite-base-class/zipball/ba9304433033af440ef414a81b8cbadd6a8a8ea3",
+                "reference": "ba9304433033af440ef414a81b8cbadd6a8a8ea3",
+                "shasum": ""
+            },
+            "require": {
+                "bmlt/bmlt-satellite-driver": "1.0.19"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "littlegreenviper"
+                },
+                {
+                    "name": "radius314"
+                }
+            ],
+            "description": "This is a generic CMS plugin class for a BMLT satellite client.",
+            "time": "2018-11-16T04:40:04+00:00"
+        },
+        {
+            "name": "bmlt/bmlt-satellite-driver",
+            "version": "1.0.19",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bmlt-enabled/bmlt-satellite-driver.git",
+                "reference": "92389e83b6f3620fe4cc92538e588e2742826c83"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bmlt-enabled/bmlt-satellite-driver/zipball/92389e83b6f3620fe4cc92538e588e2742826c83",
+                "reference": "92389e83b6f3620fe4cc92538e588e2742826c83",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "littlegreenviper"
+                },
+                {
+                    "name": "radius314"
+                }
+            ],
+            "description": "Provides low-level communication to the BMLT Root Server.",
+            "time": "2018-11-16T04:23:53+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

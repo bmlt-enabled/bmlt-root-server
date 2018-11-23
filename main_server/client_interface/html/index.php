@@ -1,4 +1,5 @@
 <?php
+define('ROOTPATH', __DIR__ . '/../..');
 defined( 'BMLT_EXEC' ) or define ( 'BMLT_EXEC', 1 );
 // define ( '_DEBUG_MODE_', 1 ); //Uncomment for easier JavaScript debugging.
 require_once ( dirname ( __FILE__ ).'/bmlt-basic/bmlt_basic.class.php' ) ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
