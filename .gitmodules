@@ -1,3 +1,0 @@
-[submodule "main_server/semantic"]
-	path = main_server/semantic
-	url = git@github.com:bmlt-enabled/bmlt-semantic-workshop.git
