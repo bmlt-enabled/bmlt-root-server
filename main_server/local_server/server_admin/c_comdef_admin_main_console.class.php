@@ -134,7 +134,6 @@ class c_comdef_admin_main_console
                 }
             
             array_push ( $this->my_all_service_bodies, $service_body );
-            sort($this->my_all_service_bodies);
             }
         
         // We get all the available data fields, and create a local data member for their keys.
@@ -1409,7 +1408,7 @@ class c_comdef_admin_main_console
     {
         $service_body_content = '';
         $child_content = '';
-        
+        sort($this->my_all_service_bodies);
         foreach ( $this->my_all_service_bodies as $service_body )
             {
             if ( $in_id == $service_body->GetID() )
