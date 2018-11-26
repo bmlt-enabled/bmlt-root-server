@@ -54,6 +54,10 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
+***Version 2.12.3* ** *- UNRELEASED*
+
+- Added sort to advanced service bodies section.
+
 ***Version 2.12.2* ** *- November 22, 2018*
 
 - Fixed an issue where formats could be wrong in a NAWS Dump for servers that were combined using lettuce.

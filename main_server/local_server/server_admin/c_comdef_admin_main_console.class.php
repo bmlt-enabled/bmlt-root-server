@@ -134,6 +134,7 @@ class c_comdef_admin_main_console
                 }
             
             array_push ( $this->my_all_service_bodies, $service_body );
+            sort($this->my_all_service_bodies);
             }
         
         // We get all the available data fields, and create a local data member for their keys.
