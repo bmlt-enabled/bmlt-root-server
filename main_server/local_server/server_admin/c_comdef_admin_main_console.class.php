@@ -1399,7 +1399,7 @@ class c_comdef_admin_main_console
         
         return $ret;
     }
-        
+
     /************************************************************************************//**
     *	\brief Build the content for the Advanced Service Bodies section.                   *
     ****************************************************************************************/
@@ -1408,7 +1408,9 @@ class c_comdef_admin_main_console
     {
         $service_body_content = '';
         $child_content = '';
-        
+        usort($this->my_all_service_bodies, function($a, $b) {
+            return strcmp($a->GetLocalName(), $b->GetLocalName());
+        });
         foreach ( $this->my_all_service_bodies as $service_body )
             {
             if ( $in_id == $service_body->GetID() )
