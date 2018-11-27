@@ -2897,7 +2897,7 @@ class c_comdef_server
             c_comdef_server::$server_local_strings['meeting_states_and_provinces'] = isset ( $meeting_states_and_provinces ) ? $meeting_states_and_provinces : array();
             c_comdef_server::$server_local_strings['google_api_key'] = isset ( $gkey ) ? $gkey : '';
             c_comdef_server::$server_local_strings['region_bias'] = isset ( $region_bias ) ? $region_bias : 'us';
-            c_comdef_server::$server_local_strings['default_duration_time'] = isset ( $default_duration_time ) ? $default_duration_time : $comdef_server_admin_strings['meeting_editor_default_duration'];
+            c_comdef_server::$server_local_strings['default_duration_time'] = isset ( $default_duration_time ) ? $default_duration_time : '01:00:00';
             c_comdef_server::$server_local_strings['search_spec_map_center'] = $search_spec_map_center;
             c_comdef_server::$server_local_strings['change_type_strings'] = $change_type_strings;
             c_comdef_server::$server_local_strings['detailed_change_strings'] = $detailed_change_strings;

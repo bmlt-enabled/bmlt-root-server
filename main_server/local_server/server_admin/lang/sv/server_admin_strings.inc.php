@@ -137,7 +137,6 @@
 	                                        'meeting_editor_default_zoom'                           =>  '13',
 	                                        'meeting_editor_default_weekday'                        =>  '2',
 	                                        'meeting_editor_default_start_time'                     =>  '19:00:00',
-	                                        'meeting_editor_default_duration'                       =>  '01:30:00',
 	                                        'login_banner'                                          =>  'Basic Meeting List Toolbox',
 	                                        'login_underbanner'                                     =>  'Root Server Administrationssida',
 											'login'                                                 =>  'Användarnamn',
