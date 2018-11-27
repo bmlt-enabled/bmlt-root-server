@@ -1398,14 +1398,7 @@ class c_comdef_admin_main_console
     }
 
     /************************************************************************************//**
-    *	\brief Used to sort users and service body names.                                   *
-    ****************************************************************************************/
-    function compare_names($a, $b) {
-        return strcmp($a->GetLocalName(), $b->GetLocalName());
-    }
-
-    /************************************************************************************//**
-    *	\brief Build the content for the Advanced Service Bodies section.                   *
+    *\brief Build the content for the Advanced Service Bodies section.                      *
     ****************************************************************************************/
     function populate_service_bodies (  $in_id    ///< The ID of the Service body.
                                       )
@@ -2030,6 +2023,13 @@ class c_comdef_admin_main_console
         $ret .= '</div>';
         
         return  $ret;
+    }
+
+    /************************************************************************************//**
+    *\brief Used to sort users and service body names.                                      *
+    ****************************************************************************************/
+    function compare_names($a, $b) {
+        return strcmp($a->GetLocalName(), $b->GetLocalName());
     }
 };
 ?>
