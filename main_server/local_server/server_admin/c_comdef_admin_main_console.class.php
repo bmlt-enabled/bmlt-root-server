@@ -1400,8 +1400,8 @@ class c_comdef_admin_main_console
     /************************************************************************************//**
     *	\brief Used to sort users and service body names.                                   *
     ****************************************************************************************/
-    function compare_names($sb1, $sb2) {
-        return strcmp($sb1->GetLocalName(), $sb2->GetLocalName());
+    function compare_names($a, $b) {
+        return strcmp($a->GetLocalName(), $b->GetLocalName());
     }
 
     /************************************************************************************//**
