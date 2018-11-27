@@ -1342,7 +1342,7 @@ class c_comdef_admin_main_console
         
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief This constructs a panel that displays a choice of Service bodies for the user to choose.
     \returns The HTML and JavaScript for the Edit Meetings Search Specifier section.
@@ -1398,7 +1398,7 @@ class c_comdef_admin_main_console
     }
 
     /************************************************************************************//**
-    *\brief Build the content for the Advanced Service Bodies section.                      *
+    \brief Build the content for the Advanced Service Bodies section.
     ****************************************************************************************/
     function populate_service_bodies (  $in_id    ///< The ID of the Service body.
                                       )
@@ -2026,7 +2026,7 @@ class c_comdef_admin_main_console
     }
 
     /************************************************************************************//**
-    *\brief Used to sort users and service body names.                                      *
+    \brief Used to sort users and service body names.
     ****************************************************************************************/
     function compare_names($a, $b) {
         return strcmp($a->GetLocalName(), $b->GetLocalName());
