@@ -57,6 +57,7 @@ CHANGELIST
 ***Version 2.12.3* ** *- UNRELEASED*
 
 - Added sort to advanced service bodies section.
+- Added user sort to full meeting list editors on service body administration.
 
 ***Version 2.12.2* ** *- November 22, 2018*
 

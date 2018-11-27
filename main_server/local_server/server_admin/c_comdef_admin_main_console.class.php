@@ -60,6 +60,7 @@ class c_comdef_admin_main_console
             }
 
         $this->my_users = array_values ( $this->my_server->GetServerUsersObj()->GetUsersArray() );
+        usort($this->my_users, array("c_comdef_admin_main_console", "compare_names"));
         $url_path = GetURLToMainServerDirectory ();
         $this->my_ajax_uri = $url_path.'?bmlt_ajax_callback=1';
         
@@ -116,6 +117,7 @@ class c_comdef_admin_main_console
             }
             
         $service_bodies = $this->my_server->GetServiceBodyArray();
+        usort($service_bodies, array("c_comdef_admin_main_console", "compare_names"));
         $this->my_service_bodies = array();
         $this->my_editable_service_bodies = array();
         $this->my_all_service_bodies = array();
@@ -669,7 +671,6 @@ class c_comdef_admin_main_console
     function create_user_popup ($users)
     {
         $ret = '<select id="bmlt_admin_single_user_editor_user_select" class="bmlt_admin_single_user_editor_user_select" onchange="admin_handler_object.populateUserEditor();">';
-        sort($users);
             $first = true;
             for ( $index = 0; $index  < count ( $users ); $index++ )
                 {
@@ -720,7 +721,7 @@ class c_comdef_admin_main_console
     {
         $disabled = $this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN ? '' : ' disabled';
         $ret = '<select id="bmlt_admin_single_user_editor_user_owner_select" class="bmlt_admin_single_user_editor_user_select" onchange="admin_handler_object.readUserEditorState();"'.$disabled.'>';
-        sort($users);
+
         for ( $index = 0; $index  < count ( $users ); $index++ )
             {
             $user = $users[$index];
@@ -1048,8 +1049,6 @@ class c_comdef_admin_main_console
         $ret = '<select id="bmlt_admin_single_service_body_editor_sb_select" class="bmlt_admin_single_service_body_editor_sb_select" onchange="admin_handler_object.populateServiceBodyEditor();">'.(defined ( '__DEBUG_MODE__' ) ? "\n" : '');
             $first = true;
 
-            sort($this->my_editable_service_bodies);
-
             for ( $index = 0; $index  < count ( $this->my_editable_service_bodies ); $index++ )
                 {
                 $service_body = $this->my_editable_service_bodies[$index];
@@ -1152,8 +1151,6 @@ class c_comdef_admin_main_console
     function create_service_body_user_popup ()
     {
         $ret = '<select id="bmlt_admin_single_service_body_editor_principal_user_select" class="bmlt_admin_single_service_body_editor_principal_user_select" onchange="admin_handler_object.recalculateServiceBody();">';
-
-        sort($this->my_users);
 
             for ( $index = 0; $index  < count ( $this->my_users ); $index++ )
                 {
@@ -1345,7 +1342,7 @@ class c_comdef_admin_main_console
         
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief This constructs a panel that displays a choice of Service bodies for the user to choose.
     \returns The HTML and JavaScript for the Edit Meetings Search Specifier section.
@@ -1401,16 +1398,14 @@ class c_comdef_admin_main_console
     }
 
     /************************************************************************************//**
-    *	\brief Build the content for the Advanced Service Bodies section.                   *
+    \brief Build the content for the Advanced Service Bodies section.
     ****************************************************************************************/
     function populate_service_bodies (  $in_id    ///< The ID of the Service body.
                                       )
     {
         $service_body_content = '';
         $child_content = '';
-        usort($this->my_all_service_bodies, function($a, $b) {
-            return strcmp($a->GetLocalName(), $b->GetLocalName());
-        });
+
         foreach ( $this->my_all_service_bodies as $service_body )
             {
             if ( $in_id == $service_body->GetID() )
@@ -1684,7 +1679,7 @@ class c_comdef_admin_main_console
                     $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_cc_text_input" type="text" value="'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_cc_prompt'] ).'" /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
-                sort($this->my_service_bodies);
+
                 if ( count ( $this->my_service_bodies ) > 1 )
                     {
                     $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
@@ -2028,6 +2023,13 @@ class c_comdef_admin_main_console
         $ret .= '</div>';
         
         return  $ret;
+    }
+
+    /************************************************************************************//**
+    \brief Used to sort users and service body names.
+    ****************************************************************************************/
+    function compare_names($a, $b) {
+        return strcmp($a->GetLocalName(), $b->GetLocalName());
     }
 };
 ?>
