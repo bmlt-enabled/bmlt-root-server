@@ -136,7 +136,6 @@
 	                                        'meeting_editor_default_zoom'                           =>  '13',//'13',
 	                                        'meeting_editor_default_weekday'                        =>  '2',//'2',
 	                                        'meeting_editor_default_start_time'                     =>  '20:30:00',//'20:30:00',
-	                                        'meeting_editor_default_duration'                       =>  '01:30:00',//'01:30:00',
 	                                        'login_banner'                                          =>  'Basic Meeting List Toolbox (BMLT)',//'Basic Meeting List Toolbox',
 	                                        'login_underbanner'                                     =>  'Console di amministrazione del Root Server',//'Root Server Administration Console',
 											'login'                                                 =>  'ID di autenticazione',//'Login ID',

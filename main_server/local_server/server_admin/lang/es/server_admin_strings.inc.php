@@ -136,7 +136,6 @@
 	                                        'meeting_editor_default_zoom'                           =>  '13',
 	                                        'meeting_editor_default_weekday'                        =>  '2',
 	                                        'meeting_editor_default_start_time'                     =>  '20:30:00',
-	                                        'meeting_editor_default_duration'                       =>  '01:30:00',
 	                                        'login_banner'                                          =>  'Reuniones básica Listado de herramientas',
 	                                        'login_underbanner'                                     =>  'Raíz de la consola de administración del servid',
 											'login'                                                 =>  'Nombre de usuario ID',

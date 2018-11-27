@@ -136,7 +136,6 @@
 	                                        'meeting_editor_default_zoom'                           =>  '13',
 	                                        'meeting_editor_default_weekday'                        =>  '2',
 	                                        'meeting_editor_default_start_time'                     =>  '20:30:00',
-	                                        'meeting_editor_default_duration'                       =>  '01:30:00',
 	                                        'login_banner'                                          =>  'Basic Meeting List Toolbox',
 	                                        'login_underbanner'                                     =>  'Console d\'Administration de serveur racine',
 											'login'                                                 =>  'ID de connexion',
