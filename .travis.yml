@@ -12,7 +12,8 @@ jobs:
     - docker build . -t bmltenabled/bmlt-root-server:latest
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     - docker push bmltenabled/bmlt-root-server:latest
-    - pip install awscli
+    - pip install --user awscli
+    - export PATH=$PATH:$HOME/.local/bin
     install:
     - composer install
     after_install:
