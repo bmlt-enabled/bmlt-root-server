@@ -9,7 +9,8 @@ jobs:
     script: find . -name "*.php" ! -path '*/vendor/*' -print0 | xargs -0 -n1 -P8 php -l
   - stage: latest
     before_deploy:
-    - docker build -t bmlt-enabled/
+    - docker build -t bmltenabled/bmlt-root-server:latest
+    - docker push bmltenabled/bmlt-root-server:latest
   - stage: stable
     install:
     - composer install
