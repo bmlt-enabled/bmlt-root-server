@@ -6,8 +6,7 @@ services:
 jobs:
   include:
   - stage: lint
-    script: find . -name "*.php" ! -path '*/vendor/*' -print0 | xargs -0 -n1 -P8 php
-      -l
+    script: find . -name "*.php" ! -path '*/vendor/*' -print0 | xargs -0 -n1 -P8 php -l
   - stage: latest
     before_install:
     - docker build . -t bmltenabled/bmlt-root-server:latest
@@ -43,8 +42,9 @@ jobs:
       skip_cleanup: true
 stages:
 - lint
-- name: latest
-  if: branch = master
+- latest
+#- name: latest
+#  if: branch = master
 - name: stable
   if: tag IS present
 notifications:
