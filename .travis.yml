@@ -4,8 +4,7 @@ php:
 jobs:
   include:
   - stage: lint
-    script: find . -name "*.php" ! -path '*/vendor/*' -print0 | xargs -0 -n1 -P8 php
-      -l
+    script: find . -name "*.php" ! -path '*/vendor/*' -print0 | xargs -0 -n1 -P8 php -l
   - stage: stable
     install:
     - composer install
@@ -25,7 +24,7 @@ stages:
   if: tag IS present
 notifications:
   slack:
-    on_success: change
     rooms:
-      secure: bmoIugz9sorNakDw7LnfC3iB7a4CnhuZeZBAVxefSoqipbZAGLoA86pSaDwSK3kNsCRAUXyHJ0pBxxJuCO5jrQKhl9TNBFQQ60KPvn3LQj9OXXTSHp4qoqBytipQGyjeqySu4fJt8Lc0u8FQ0qinxn21qF7K7c54aygVKQd+nxf/+9rVzSOJIY+c6UEBb9FwKfHl9cOJy8nTHYPNl0ZbQaYVS1gvyOV2jzrlurOXb0t2xYs2W9EOAjUd2E4ZVaD8EEyRZ9zcvy8ne41qZGBLMJjHZo6TdN4x0AdEYiITst5fKj+YILNCaVQMyURu5h65RPVXyjZ/eIOUixSt1EOpMTxWcRiDn3H7B2F7eEUIXyo/c5x1AEWEQFLGK+/PEqWx/zaBG0rJJdzVbLaqet2kg5piy+f84EBCZiXm7CZIYPMSjLJo9AJDcY9iSRgvpRnkSagHZAgMILNut53aNPd8i3FoOeycPwux/KDQpSz0uIpn4xu26VY0bzxJ8N27VugUhmNhLCN05Hgw8GoDjEoh4EgPPsdNVzXT4mzpjx2GfhRZOm/78LUSDB/w3oIAEPzRFfhberBAo0l2w9T5+Ynbw9yyquYgNUOW/nMhbwqOPbWqndHa8Xume0DXp2COHEqoSZx4gDIIRRKjKdsrFjjasWB5K7IQXQfBoiGAL7EscNA=
+      - secure: bmoIugz9sorNakDw7LnfC3iB7a4CnhuZeZBAVxefSoqipbZAGLoA86pSaDwSK3kNsCRAUXyHJ0pBxxJuCO5jrQKhl9TNBFQQ60KPvn3LQj9OXXTSHp4qoqBytipQGyjeqySu4fJt8Lc0u8FQ0qinxn21qF7K7c54aygVKQd+nxf/+9rVzSOJIY+c6UEBb9FwKfHl9cOJy8nTHYPNl0ZbQaYVS1gvyOV2jzrlurOXb0t2xYs2W9EOAjUd2E4ZVaD8EEyRZ9zcvy8ne41qZGBLMJjHZo6TdN4x0AdEYiITst5fKj+YILNCaVQMyURu5h65RPVXyjZ/eIOUixSt1EOpMTxWcRiDn3H7B2F7eEUIXyo/c5x1AEWEQFLGK+/PEqWx/zaBG0rJJdzVbLaqet2kg5piy+f84EBCZiXm7CZIYPMSjLJo9AJDcY9iSRgvpRnkSagHZAgMILNut53aNPd8i3FoOeycPwux/KDQpSz0uIpn4xu26VY0bzxJ8N27VugUhmNhLCN05Hgw8GoDjEoh4EgPPsdNVzXT4mzpjx2GfhRZOm/78LUSDB/w3oIAEPzRFfhberBAo0l2w9T5+Ynbw9yyquYgNUOW/nMhbwqOPbWqndHa8Xume0DXp2COHEqoSZx4gDIIRRKjKdsrFjjasWB5K7IQXQfBoiGAL7EscNA=
+    on_success: change
   email: false
