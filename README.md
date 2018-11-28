@@ -1,3 +1,7 @@
+# Basic Meeting List Toolbox Root Server
+
+[![Build Status](https://travis-ci.org/bmlt-enabled/bmlt-root-server.svg?branch=master)](https://travis-ci.org/bmlt-enabled/bmlt-root-server)
+
 DESCRIPTION
 -----------
 
