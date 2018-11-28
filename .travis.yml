@@ -16,7 +16,7 @@ jobs:
     - export PATH=$PATH:$HOME/.local/bin
     install:
     - composer install
-    after_install:
+    script:
     - cp LICENSE.txt main_server
     - zip -r bmlt-root-server-${TRAVIS_BUILD_NUMBER}.zip main_server
     - aws s3 cp bmlt-root-server-${TRAVIS_BUILD_NUMBER}.zip s3://bmlt-enabled-artifacts/bmlt-root-server/
