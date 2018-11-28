@@ -1,10 +1,11 @@
 language: php
 php:
-- "7.1"
+- '7.1'
 jobs:
   include:
   - stage: lint
-    script: find . -name "*.php" ! -path '*/vendor/*' -print0 | xargs -0 -n1 -P8 php -l
+    script: find . -name "*.php" ! -path '*/vendor/*' -print0 | xargs -0 -n1 -P8 php
+      -l
   - stage: stable
     install:
     - composer install
@@ -13,7 +14,7 @@ jobs:
     deploy:
       provider: releases
       api_key:
-        secure: TvmwmGIIjYkvvoqETBN2Zv/UipL3ieFnE5N8eoZhXW16qeiw5uNzxzHkIABLLNh3cqtGD5CuIVyR7M6bZDig3Y98HZxToAW1Is1+2wsc29kURGT7Zbb9EVMJoFIj9P5L79UMXr1aSvabWl5oPHQsstwOWxU4onpT1Xe3AHkojc/cbIPLJBlFh+7VBEoi4RMamVf0te8gPxZ6qjbDhgTgLEcH2N7xyUtDgPMnZST3eJsFOPvEMpXLCciehWgZL1spzmaDD1bpOPFAYVqeeiLc5sz+cSFCWmyw3y+XT6G2pmVQfGzHyWJEBHYvYKBoaYw3ML/DuYXftu1BT1YhBS/6zqA0ORlWeyfYB5CM+ZT+3kPu36YHMQM5BLdUcXvY94mydiUzwX8qValVoK/19wXDk3JM57S527AjkEHcDNDWXgofftzxmWOM91VGI1xQXxZGTOdlH0kIIeJ1/Ybnwhmawb3oICQEIRdtNi8ru2cZsUDV3RLKJ0Apavbbu62yB2IBuZ/qLhJEU429t33KwJIWS7Ull2A59CKjQOyk2Qngt1lEyYs6Bo2O+iLfpLlXkZwYSbrE97CKrpd34DE5p5MusQl1njfCqkG8SD3cb+yzWEdKL0BVQGbNpNYD7MABagWdwzDvRroHF5N0RXp2xzz6JGpnlBhcgL515FFmCQNufwk=
+        secure: IU6COo9Q0JUZKxRp+tgps1ZSibpXy4gMonko0FyMwSF1GNP6JJit7JAPulK+ccl5k4y+16a5w/ho/EwGc+PI5py5SLk5+KzfJgS3YaWRptvLuX886M5egmNtgvE0SfkaQkfMipgzDc8FFENHaIFKSIDkiMNr5IKGoAz32qqr5sYHFBX5BmTBfa+sjPuZm1REri9ft2vR5zF1IZlD8BvCiMt4GD8+zYS26CiAEZjuh8tZNC/esamqunGGiu+z8Pn2vMqR3A6qwOD1GjFHXrjLB0osei6BiCQJDtzyz9ZpPCBYyDujUkDjSx7ap6PDAJZNOC1Cw78leGMW8oDEZK6iv/QRuF5EDvD986xZtJMB7tLAdDUS2NhgTeJVm4s9JJU11LO/p30PiWeYFIETxHvKOt9k+05VOV79uJKITxG6ifNrionGD2+eY0h6YnjBDb5Gg8AjFIfZ4y1xsmm5UlnEhfL2yEc0rjoWXL1Q4VtoVrZ4nwPkauC/DokuwKoslCUQ0H3G1d7y3ookmSUCV7Jfaid/Puvxmfe2TyPgVQMnQOfJbHxpn5kR5LhmAmNUaKc8Wi/72u0VNwsaLeiYcTTRu7YRe6BwUFg/S0QIdbbrhw4qtkj2xKYrknMNye3vBJLP/e7+Fq07bYYJlLlA0RQYcSqVKi6Z8E9so5dKs0KWKnw=
       file: bmlt-root-server.zip
       on:
         tags: true
@@ -24,7 +25,7 @@ stages:
   if: tag IS present
 notifications:
   slack:
-    rooms:
-      - "bmlt:ZslruaPwvC9Eqr1AFPl/p82UyH0oMy9HBWKROF+z7E/N/nlItGjojAkTBbRRAJIzi58YOeJDVbmTjHvI2MYYeYWX1zawkcjVfJa4RDmeqTmj937hBQW/bKEVN3WqNnL0OewDFVXENETzWs3I63e7par7SO7/SR5gJrMKLtK9fTyGi74hgqVWyQSCLNBgZBMPkNmoZ9sfSCgijPxkXYMNJKTgxWYXvAMevWyfQXv+SoBCQ1hh1hsM4LgT5he5id54iEZY7yVEQZkzsZ0HRDnD+JcquJTuaN2B+PNaHL4RtxhWdNjvnkrHJoB0/F3OKuGs0++6T/25jCow0svfrOk9/dDKlH0R1+deCfH0AMj2QM022Ww10iZHDZffwBkUpFayXArCbmUsEdo0IT8Ra1EUx+7E+0+3f4ihlJez6/wwkWfkKfVwNfkhmu4SnwRzf9r0Ryex/xBngDcKerkQ6xsWr3lc6+wQDWZV60224716nMoFZdZIDAvKc+/fNAIc/PtSvZixawEERLV9XyglBMUwKFqyaQtyw1KENxGKbobP9HBkd5cVzGD29Eu7z3xQyN256/NacGu7vyUawyfh0czjkcvHkrrXbmOljmQOwDf1KB/cWFdASO3VFSKfTPE4zgBzjzgN9iEnKslwfHw/z8FRYuCBdXasST+ufln4/j5u3wE=#bmlt-root-server"
     on_success: change
+    rooms:
+      secure: bmoIugz9sorNakDw7LnfC3iB7a4CnhuZeZBAVxefSoqipbZAGLoA86pSaDwSK3kNsCRAUXyHJ0pBxxJuCO5jrQKhl9TNBFQQ60KPvn3LQj9OXXTSHp4qoqBytipQGyjeqySu4fJt8Lc0u8FQ0qinxn21qF7K7c54aygVKQd+nxf/+9rVzSOJIY+c6UEBb9FwKfHl9cOJy8nTHYPNl0ZbQaYVS1gvyOV2jzrlurOXb0t2xYs2W9EOAjUd2E4ZVaD8EEyRZ9zcvy8ne41qZGBLMJjHZo6TdN4x0AdEYiITst5fKj+YILNCaVQMyURu5h65RPVXyjZ/eIOUixSt1EOpMTxWcRiDn3H7B2F7eEUIXyo/c5x1AEWEQFLGK+/PEqWx/zaBG0rJJdzVbLaqet2kg5piy+f84EBCZiXm7CZIYPMSjLJo9AJDcY9iSRgvpRnkSagHZAgMILNut53aNPd8i3FoOeycPwux/KDQpSz0uIpn4xu26VY0bzxJ8N27VugUhmNhLCN05Hgw8GoDjEoh4EgPPsdNVzXT4mzpjx2GfhRZOm/78LUSDB/w3oIAEPzRFfhberBAo0l2w9T5+Ynbw9yyquYgNUOW/nMhbwqOPbWqndHa8Xume0DXp2COHEqoSZx4gDIIRRKjKdsrFjjasWB5K7IQXQfBoiGAL7EscNA=
   email: false
