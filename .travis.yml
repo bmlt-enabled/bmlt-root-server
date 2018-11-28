@@ -17,7 +17,7 @@ jobs:
         secure: TvmwmGIIjYkvvoqETBN2Zv/UipL3ieFnE5N8eoZhXW16qeiw5uNzxzHkIABLLNh3cqtGD5CuIVyR7M6bZDig3Y98HZxToAW1Is1+2wsc29kURGT7Zbb9EVMJoFIj9P5L79UMXr1aSvabWl5oPHQsstwOWxU4onpT1Xe3AHkojc/cbIPLJBlFh+7VBEoi4RMamVf0te8gPxZ6qjbDhgTgLEcH2N7xyUtDgPMnZST3eJsFOPvEMpXLCciehWgZL1spzmaDD1bpOPFAYVqeeiLc5sz+cSFCWmyw3y+XT6G2pmVQfGzHyWJEBHYvYKBoaYw3ML/DuYXftu1BT1YhBS/6zqA0ORlWeyfYB5CM+ZT+3kPu36YHMQM5BLdUcXvY94mydiUzwX8qValVoK/19wXDk3JM57S527AjkEHcDNDWXgofftzxmWOM91VGI1xQXxZGTOdlH0kIIeJ1/Ybnwhmawb3oICQEIRdtNi8ru2cZsUDV3RLKJ0Apavbbu62yB2IBuZ/qLhJEU429t33KwJIWS7Ull2A59CKjQOyk2Qngt1lEyYs6Bo2O+iLfpLlXkZwYSbrE97CKrpd34DE5p5MusQl1njfCqkG8SD3cb+yzWEdKL0BVQGbNpNYD7MABagWdwzDvRroHF5N0RXp2xzz6JGpnlBhcgL515FFmCQNufwk=
       file: bmlt-root-server.zip
       on:
-        repo: radius314/yap
+        repo: radius314/bmlt-root-server
         tags: true
       skip_cleanup: true
 stages:
