@@ -9,6 +9,7 @@ jobs:
     install:
     - composer install
     before_deploy:
+    - cp LICENSE.txt main_server
     - zip -r bmlt-root-server.zip main_server
     deploy:
       provider: releases
