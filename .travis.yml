@@ -12,9 +12,9 @@ jobs:
     - docker build . -t bmltenabled/bmlt-root-server:latest
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     - docker push bmltenabled/bmlt-root-server:latest
-  - stage: stable
     install:
     - composer install
+  - stage: stable
     before_deploy:
     - cp LICENSE.txt main_server
     - zip -r bmlt-root-server.zip main_server
