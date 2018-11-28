@@ -9,8 +9,7 @@ jobs:
     install:
     - composer install
     before_deploy:
-    - git archive --format=zip --output=bmlt-root-server.zip ${TRAVIS_TAG}
-    - zip -ur bmlt-root-server.zip vendor
+    - zip -r bmlt-root-server.zip main_server
     deploy:
       provider: releases
       api_key:
