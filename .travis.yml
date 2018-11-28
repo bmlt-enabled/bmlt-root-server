@@ -29,6 +29,7 @@ jobs:
 stages:
 - lint
 - latest
+  if: branch = master
 - name: stable
   if: tag IS present
 notifications:
