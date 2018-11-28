@@ -10,6 +10,7 @@ jobs:
   - stage: latest
     before_install:
     - docker build . -t bmltenabled/bmlt-root-server:latest
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     - docker push bmltenabled/bmlt-root-server:latest
   - stage: stable
     install:
