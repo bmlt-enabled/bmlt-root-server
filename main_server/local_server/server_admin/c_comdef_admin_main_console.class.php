@@ -1818,6 +1818,10 @@ class c_comdef_admin_main_console
             $ret .= '<div class="format_tab_inner_div">';
                 $f_array = $this->my_server->GetFormatsArray();
                 $f_array = $f_array[$this->my_server->GetLocalLang()];
+                usort($f_array, function ($a, $b) {
+                    if ($a->GetKey() == $b->GetKey()) return 0;
+                        return $a->GetKey() < $b->GetKey() ? -1 : 1;
+                });
                 foreach ( $f_array as $format )
                     {
                     if ( $format instanceof c_comdef_format )
