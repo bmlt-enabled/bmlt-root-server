@@ -2,11 +2,12 @@ language: php
 php:
 - '7.1'
 services:
-  - docker
+- docker
 jobs:
   include:
   - stage: lint
-    script: find . -name "*.php" ! -path '*/vendor/*' -print0 | xargs -0 -n1 -P8 php -l
+    script: find . -name "*.php" ! -path '*/vendor/*' -print0 | xargs -0 -n1 -P8 php
+      -l
   - stage: latest
     before_install:
     - docker build . -t bmltenabled/bmlt-root-server:latest
@@ -14,6 +15,20 @@ jobs:
     - docker push bmltenabled/bmlt-root-server:latest
     install:
     - composer install
+    before_deploy:
+    - cp LICENSE.txt main_server
+    - zip -r bmlt-root-server-${TRAVIS_BUILD_NUMBER}.zip main_server
+    deploy:
+      provider: s3
+      access_key_id: AKIAI7JHYFA6DI3WYP5A
+      secret_access_key:
+        secure: cQg4ZCWgVdenlfi9OeWhkxiNh4qWlm8BU6BYUbseE1mf8sQPzCIem5+QsdnHfRLgrjPfhT9E4fUDRhhvMomLXy5gWLMo1beccJap2R6gYDGUOdW2ks1kv9yfzitMhZZ4+sUQ9C1SrZKKKGI+Wt1AAa8kOsSt9b1VtYHUcGb+6HoPqsrau8x/uNNAE/eDSadMdBDp11X4Z1yvEvXmsT4mJWOFAolrMmdm77kPZ/YvHYPg7KqPeFY0PBD7hssasoP/t7f/f8yThT1P1tQs5xJVT0SrcEoEewF9ljlxYzRkuK31GlIaifcWV7mR31eoe81uGS4drQaYt8KnuFGAqt4Y/nyP0BWRe6plaGolt0kHAgIbsmCxbIAIVHCpOq8F3kMgDvYsUHZHBCjvXz4NgKejglRb4PM/WhiXgcXLr0MmggdHqxEKDWGI/49acCaGm60icuRODOKRORE985bcEnIIAOtAXr6dA73Cg08PzfVc5TSBKWFvF3iET/CgIQv9mTYl3X4FdgplZVdp3G1+fBgfBj+5KyMwPBc6flphHymbc94iRWiIiHVASNCZW/IMQ6o5WNqoh8MKv6rK3EZD2VGE4z9eFrEVaDdPE7ngGnxKCET1rR9LyewzSDV9U0ENdv5mnsQRdnAat1rkKyrRHiXfw+twn1zxsbBFpzHUlndMpU8=
+      bucket: bmlt-enabled-artifacts
+      local-dir: bmlt-root-server-${TRAVIS_BUILD_NUMBER}.zip
+      upload-dir: bmlt-root-server
+      on:
+        repo: bmlt-enabled/bmlt-root-server
+      skip_cleanup: true
   - stage: stable
     before_deploy:
     - cp LICENSE.txt main_server
@@ -35,6 +50,6 @@ stages:
 notifications:
   slack:
     rooms:
-      - secure: bmoIugz9sorNakDw7LnfC3iB7a4CnhuZeZBAVxefSoqipbZAGLoA86pSaDwSK3kNsCRAUXyHJ0pBxxJuCO5jrQKhl9TNBFQQ60KPvn3LQj9OXXTSHp4qoqBytipQGyjeqySu4fJt8Lc0u8FQ0qinxn21qF7K7c54aygVKQd+nxf/+9rVzSOJIY+c6UEBb9FwKfHl9cOJy8nTHYPNl0ZbQaYVS1gvyOV2jzrlurOXb0t2xYs2W9EOAjUd2E4ZVaD8EEyRZ9zcvy8ne41qZGBLMJjHZo6TdN4x0AdEYiITst5fKj+YILNCaVQMyURu5h65RPVXyjZ/eIOUixSt1EOpMTxWcRiDn3H7B2F7eEUIXyo/c5x1AEWEQFLGK+/PEqWx/zaBG0rJJdzVbLaqet2kg5piy+f84EBCZiXm7CZIYPMSjLJo9AJDcY9iSRgvpRnkSagHZAgMILNut53aNPd8i3FoOeycPwux/KDQpSz0uIpn4xu26VY0bzxJ8N27VugUhmNhLCN05Hgw8GoDjEoh4EgPPsdNVzXT4mzpjx2GfhRZOm/78LUSDB/w3oIAEPzRFfhberBAo0l2w9T5+Ynbw9yyquYgNUOW/nMhbwqOPbWqndHa8Xume0DXp2COHEqoSZx4gDIIRRKjKdsrFjjasWB5K7IQXQfBoiGAL7EscNA=
+    - secure: bmoIugz9sorNakDw7LnfC3iB7a4CnhuZeZBAVxefSoqipbZAGLoA86pSaDwSK3kNsCRAUXyHJ0pBxxJuCO5jrQKhl9TNBFQQ60KPvn3LQj9OXXTSHp4qoqBytipQGyjeqySu4fJt8Lc0u8FQ0qinxn21qF7K7c54aygVKQd+nxf/+9rVzSOJIY+c6UEBb9FwKfHl9cOJy8nTHYPNl0ZbQaYVS1gvyOV2jzrlurOXb0t2xYs2W9EOAjUd2E4ZVaD8EEyRZ9zcvy8ne41qZGBLMJjHZo6TdN4x0AdEYiITst5fKj+YILNCaVQMyURu5h65RPVXyjZ/eIOUixSt1EOpMTxWcRiDn3H7B2F7eEUIXyo/c5x1AEWEQFLGK+/PEqWx/zaBG0rJJdzVbLaqet2kg5piy+f84EBCZiXm7CZIYPMSjLJo9AJDcY9iSRgvpRnkSagHZAgMILNut53aNPd8i3FoOeycPwux/KDQpSz0uIpn4xu26VY0bzxJ8N27VugUhmNhLCN05Hgw8GoDjEoh4EgPPsdNVzXT4mzpjx2GfhRZOm/78LUSDB/w3oIAEPzRFfhberBAo0l2w9T5+Ynbw9yyquYgNUOW/nMhbwqOPbWqndHa8Xume0DXp2COHEqoSZx4gDIIRRKjKdsrFjjasWB5K7IQXQfBoiGAL7EscNA=
     on_success: change
   email: false
