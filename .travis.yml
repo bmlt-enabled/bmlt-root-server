@@ -19,7 +19,7 @@ jobs:
     script:
     - cp LICENSE.txt main_server
     - zip -r bmlt-root-server-build${TRAVIS_BUILD_NUMBER}-{TRAVIS_COMMIT}.zip main_server
-    - aws s3 cp bmlt-root-server-build${TRAVIS_BUILD_NUMBER}-{TRAVIS_COMMIT}.zip s3://bmlt-enabled-artifacts/bmlt-root-server/
+    - aws s3 cp bmlt-root-server-build${TRAVIS_BUILD_NUMBER}-{TRAVIS_COMMIT}.zip s3://archives.bmlt.app/bmlt-root-server/
   - stage: stable
     before_deploy:
     - cp LICENSE.txt main_server
