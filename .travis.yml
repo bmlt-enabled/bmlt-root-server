@@ -34,9 +34,8 @@ jobs:
       skip_cleanup: true
 stages:
 - lint
-- latest
-#- name: latest
-#  if: branch = master
+- name: latest
+  if: branch = master
 - name: stable
   if: tag IS present
 notifications:
