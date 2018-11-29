@@ -64,6 +64,7 @@ CHANGELIST
 - Added user sort to full meeting list editors on service body administration.
 - Fix for default duration time not displaying correctly on meeting editor.
 - Added sort to meeting format checkboxes on formats page by format code.
+- Made initialize database button easier to see on installer wizard.
 
 ***Version 2.12.2* ** *- November 22, 2018*
 
