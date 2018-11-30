@@ -478,7 +478,6 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
         
         document.getElementById ( 'bmlt_installer_initialize_ajax_button_throbber_span' ).className = 'item_hidden';
         document.getElementById ( 'bmlt_installer_initialize_ajax_button' ).className = 'bmlt_admin_ajax_button';
-        document.getElementById ( 'result_code_div' ).className = 'item_shown';
     };
     
     /************************************************************************************//**
