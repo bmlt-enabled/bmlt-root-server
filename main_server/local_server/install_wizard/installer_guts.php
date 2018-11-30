@@ -69,7 +69,7 @@ $default_lang = $lang;
                     var g_maps_api_key_not_set = '<?php echo htmlspecialchars ( $comdef_install_wizard_strings['Maps_API_Key_Not_Set'] ); ?>';
                     var g_maps_api_key_valid = '<?php echo htmlspecialchars ( $comdef_install_wizard_strings['Maps_API_Key_Valid'] ); ?>';
                 </script>
-                <script type="text/javascript" src="local_server/install_wizard/installer.js"></script>
+                <script type="text/javascript" src="local_server/install_wizard/installer.js<?php echo '?v='. time(); ?>"></script>
                 <script type="text/javascript">
                     var g_installer_object = new BMLTInstaller ( <?php echo array2json ( $prefs_array ) ?> );
                 </script>
