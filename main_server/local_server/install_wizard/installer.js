@@ -460,10 +460,11 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
             
             if ( ret_val )
                 {
-                if ( ret_val.status == true )   // Hide the initialize button upon success.
+                if ( ret_val.status === true )   // Hide the initialize button upon success.
                     {
                     document.getElementById ( 'database_install_stuff_div' ).className = 'item_hidden';
                     document.getElementById ( 'admin_db_items_warning' ).innerHTML = '';
+                    document.getElementById ( 'result_code_div' ).className = 'item_shown';  // Show settings file.
                     }
                 else
                     {

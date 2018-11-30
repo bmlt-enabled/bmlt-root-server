@@ -438,3 +438,13 @@ select
 {
     margin-right: 0.5em;
 }
+
+#bmlt_installer_initialize_ajax_button.bmlt_admin_ajax_button
+{
+    font-size: large;
+}
+
+.item_shown
+{
+    display:block;
+}

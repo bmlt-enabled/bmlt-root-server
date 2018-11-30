@@ -69,7 +69,7 @@ $default_lang = $lang;
                     var g_maps_api_key_not_set = '<?php echo htmlspecialchars ( $comdef_install_wizard_strings['Maps_API_Key_Not_Set'] ); ?>';
                     var g_maps_api_key_valid = '<?php echo htmlspecialchars ( $comdef_install_wizard_strings['Maps_API_Key_Valid'] ); ?>';
                 </script>
-                <script type="text/javascript" src="local_server/install_wizard/installer.js"></script>
+                <script type="text/javascript" src="local_server/install_wizard/installer.js<?php echo '?v='. time(); ?>"></script>
                 <script type="text/javascript">
                     var g_installer_object = new BMLTInstaller ( <?php echo array2json ( $prefs_array ) ?> );
                 </script>
@@ -382,15 +382,17 @@ $default_lang = $lang;
                         </div>
                     </div>
                     <div class="one_line_div"><div id="admin_db_items_warning" class="extra_text_div red_char"></div></div>
-                    <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_4_Heading']; ?></h1>
-                    <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_4_Text']; ?></h2>
                     <div class="one_line_div"><div id="admin_google_api_key_warning" class="extra_text_div red_char"></div></div>
-                    <div class="explanatory_text_div"><?php echo $comdef_install_wizard_strings['Explanatory_Text_4_File_Intro']; ?></div>
-                    <div class="explanatory_text_div"><?php echo $comdef_install_wizard_strings['Explanatory_Text_4_File_Extra']; ?></div>
-                    <pre class="result_code_pre" id="file_text_pre"></pre>
-                    <h2 class="page_heading_h2"><?php echo sprintf ( $comdef_install_wizard_strings['Page_4_PathInfo'], $realpath, $basename ); ?></h2>
-                    <pre class="result_code_pre"><?php echo "chmod 0644 $realpath/auto-config.inc.php"; ?></pre>
-                    <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_4_Final']; ?></h2>
+                    <div id="result_code_div" class="item_hidden">
+                        <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_4_Heading']; ?></h1>
+                        <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_4_Text']; ?></h2>
+                        <div class="explanatory_text_div"><?php echo $comdef_install_wizard_strings['Explanatory_Text_4_File_Intro']; ?></div>
+                        <div class="explanatory_text_div"><?php echo $comdef_install_wizard_strings['Explanatory_Text_4_File_Extra']; ?></div>
+                        <pre class="result_code_pre" id="file_text_pre"></pre>
+                        <h2 class="page_heading_h2"><?php echo sprintf ( $comdef_install_wizard_strings['Page_4_PathInfo'], $realpath, $basename ); ?></h2>
+                        <pre class="result_code_pre"><?php echo "chmod 0644 $realpath/auto-config.inc.php"; ?></pre>
+                        <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_4_Final']; ?></h2>
+                    </div>
                     <div class="clear_both"></div>
                     <?php echo bmlt_create_next_prev_buttons(4) ?>
                 </div><?php

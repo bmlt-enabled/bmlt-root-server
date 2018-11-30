@@ -80,7 +80,7 @@ else
             $https = (!empty ( $_SERVER['HTTPS'] ) && (($_SERVER['HTTPS'] !== 'off') || ($port == 443))); 
             $url_path = 'http'.($https ? 's' : '').'://'.$_SERVER['SERVER_NAME'].((($_SERVER['SERVER_PORT'] != 80) && ($_SERVER['SERVER_PORT'] != 443)) ? ':'.$_SERVER['SERVER_PORT'] : '').'/'.dirname ( $_SERVER['PHP_SELF'] );
             $shortcut_icon = "$url_path/local_server/server_admin/style/images/shortcut.png";
-            $stylesheet = "$url_path/local_server/server_admin/style/install_wizard_styles.css";
+            $stylesheet = "$url_path/local_server/server_admin/style/install_wizard_styles.css?v=". time();
             ?>
             <link rel="stylesheet" href="<?php echo $stylesheet ?>" />
         </head>
