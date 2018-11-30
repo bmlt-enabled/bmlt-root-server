@@ -382,7 +382,7 @@ a.bmlt_admin_ajax_button:visited
     font-weight:bold;
     font-size:small;
     text-decoration:none;
-    background-color:white;
+    background-color:blue;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 3px;
@@ -439,7 +439,12 @@ select
     margin-right: 0.5em;
 }
 
-#bmlt_installer_initialize_ajax_button {
+#bmlt_installer_initialize_ajax_button.bmlt_admin_ajax_button
+{
     font-size: large;
-    border: 2px solid red;
+}
+
+.item_shown
+{
+    display:block;
 }
