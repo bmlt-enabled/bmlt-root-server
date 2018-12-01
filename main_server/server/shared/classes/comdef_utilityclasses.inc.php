@@ -158,10 +158,9 @@ function json_prepare($data, $escapeSpecialChars = false)
 		$temp = array();
 
 		reset($data);
-		while (list($key, $value) = each($data))
-			{
+		foreach($data as $key => $value) {
 			$temp[json_prepare($key, $escapeSpecialChars)] = json_prepare($value, $escapeSpecialChars);
-			}
+		}
 
 		$data = $temp;
 		}
