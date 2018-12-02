@@ -66,6 +66,7 @@ CHANGELIST
 - Added sort to meeting format checkboxes on formats page by format code.
 - Made initialize database button easier to see on installer wizard, and settings only gets displayed once button is mashed.
 - Added cache busting to installer wizard's javascript and css files.
+- Long/Lat input boxes are now read only instead of disabled.
 
 ***Version 2.12.2* ** *- November 22, 2018*
 
