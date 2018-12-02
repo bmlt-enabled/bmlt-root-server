@@ -95,7 +95,7 @@ class bmlt_basic extends BMLTPlugin
     ****************************************************************************************/
     protected function get_plugin_path()
         {
-        return dirname( $this->get_ajax_base_uri() ).'/bmlt-basic/BMLT-Satellite-Base-Class/';
+        return dirname( $this->get_ajax_base_uri() ).'/../../vendor/bmlt/bmlt-satellite-base-class/';
         }
     
     /************************************************************************************//**
