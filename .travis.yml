@@ -25,6 +25,8 @@ jobs:
     - composer install
     script:
     - cp LICENSE.txt main_server
+    - find ./main_server -type d | xargs chmod 755
+    - find ./main_server -name '*.php' | xargs chmod 644
     - mkdir $BUILD_DIR && zip -r $BUILD_DIR/$ZIP_FILENAME main_server
     before_deploy:
     - mkdir -p $DIST_DIR_S3 && cp $BUILD_DIR/$ZIP_FILENAME $DIST_DIR_S3/$ZIP_FILENAME
