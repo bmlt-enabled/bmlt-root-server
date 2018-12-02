@@ -49,6 +49,7 @@ jobs:
         tags: true
 
   - stage: docker image
+    if: branch = master
     services:
     - docker
     install:
