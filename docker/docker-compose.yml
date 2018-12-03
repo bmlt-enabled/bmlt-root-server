@@ -5,6 +5,8 @@ services:
     image: bmltenabled/bmlt-root-server:latest
     ports:
       - "8000:80"
+    env_file:
+      - bmlt.env
     depends_on:
       - db
   db:
