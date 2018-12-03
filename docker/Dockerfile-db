@@ -1,0 +1,3 @@
+FROM mariadb:10.1.21
+
+ADD docker/sample-bmlt-schema.sql /docker-entrypoint-initdb.d/sample-bmlt-schema.sql
