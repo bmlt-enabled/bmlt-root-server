@@ -1787,7 +1787,7 @@ class c_comdef_admin_main_console
                         }
                     else
                         {
-                        $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_state_text_input" type="text" value="'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_state_prompt'] ).'" /></span>';
+                        $ret .= '<input id="bmlt_admin_single_meeting_editor_template_meeting_state_text_input" type="text" value="'.htmlspecialchars ( $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_state_prompt'] ).'" />';
                         }
                     $ret .= '</span>';
                     $ret .= '<div class="clear_both"></div>';
