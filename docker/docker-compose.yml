@@ -1,0 +1,18 @@
+version: '2'
+
+services:
+  bmlt:
+    image: bmltenabled/bmlt-root-server:latest
+    ports:
+      - "8000:80"
+    depends_on:
+      - db
+  db:
+    image: bmltenabled/bmlt-root-server-sample-db:latest
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: bmlt_root_password
+      MYSQL_DATABASE: bmlt
+      MYSQL_USER: bmlt_user
+      MYSQL_PASSWORD: bmlt_password

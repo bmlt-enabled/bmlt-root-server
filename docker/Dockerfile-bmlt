@@ -10,6 +10,7 @@ ADD main_server/. /var/www/html/main_server
 RUN echo "nameserver 8.8.8.8" >> /etc/resolv.conf \
   && chown -R www-data: /var/www/html
 
-#RUN chmod 0644 /var/www/html/auto-config.inc.php
+ADD docker/auto-config.inc.php /var/www/html/auto-config.inc.php
+RUN chmod 0644 /var/www/html/auto-config.inc.php
 
 CMD ["apachectl", "-D", "FOREGROUND"]
