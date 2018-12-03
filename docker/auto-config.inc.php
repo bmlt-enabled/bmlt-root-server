@@ -43,4 +43,3 @@ defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that 
 		$admin_session_name = 'BMLT_Admin'; // This is merely the 'tag' used to identify the BMLT admin session.
 		$g_enable_semantic_admin = TRUE;
 
-?>

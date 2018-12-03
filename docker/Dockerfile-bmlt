@@ -12,5 +12,7 @@ RUN echo "nameserver 8.8.8.8" >> /etc/resolv.conf \
 
 ADD docker/auto-config.inc.php /var/www/html/auto-config.inc.php
 RUN chmod 0644 /var/www/html/auto-config.inc.php
+ADD docker/start-bmlt.sh /tmp/start-bmlt.sh
+RUN chmod +x /tmp/start-bmlt.sh
 
-CMD ["apachectl", "-D", "FOREGROUND"]
+CMD ["/bin/bash", "/tmp/start-bmlt.sh"]
