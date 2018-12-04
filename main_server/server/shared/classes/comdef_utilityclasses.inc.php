@@ -84,9 +84,8 @@ function SplitIntoMetaphone(
                 
                     if (!$in_literal && ("en" == $in_lang_enum)) {
                         $mp = metaphone($mp);
-                    }
-                    /// We also have a Spanish version of metaphone() available.
-                    elseif (!$in_literal && ("es" == $in_lang_enum)) {
+                    } elseif (!$in_literal && ("es" == $in_lang_enum)) {
+                        /// We also have a Spanish version of metaphone() available.
                         $mp = spanish_metaphone($mp);
                     }
             
@@ -444,7 +443,11 @@ function c_comdef_LogoutUser()
  *  echo bdfProfiler::html_output();
  * \endcode
  */
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:disable Squiz.Classes.ValidClassName.NotCamelCaps
 class bdfProfiler
+// phpcs:enable PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:enable Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private static $marks = array();    ///< This is an array that holds the markers.
 
@@ -531,8 +534,10 @@ class bdfProfiler
     *
     * \returns a string, containing an HTML table element with a series of rows; each containing the profile information for a marker. The table's class is "bdfProfiler_table".
     */
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     public static function html_output()
     {
+        //phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $output = '<table class="bdfProfiler_table" cellpadding="0" cellspacing="0" summary="Profiling Information Report">';
         $output .= '<thead><tr><td>Num</td><td>Diff/sec</td><td>Total/sec</td><td>Memory</td><td>Msg</td></tr></thead><tbody>';
 
@@ -546,4 +551,4 @@ class bdfProfiler
         
         return $output;
     }
-};
+}
