@@ -13,7 +13,10 @@ jobs:
   include:
 
     - stage: lint
-      script: find . -name "*.php" ! -path '*/vendor/*' -print0 | xargs -0 -n1 -P8 php -l
+      script:
+        - find . -name "*.php" ! -path '*/vendor/*' -print0 | xargs -0 -n1 -P8 php -l
+        - composer install --dev
+        - main_server/vendor/squizlabs/php_codesniffer/bin/phpcs --warning-severity=0 --standard=PSR2 --ignore=vendor --extensions=php --report=xml main_server
 
     - stage: zip file
       env:
