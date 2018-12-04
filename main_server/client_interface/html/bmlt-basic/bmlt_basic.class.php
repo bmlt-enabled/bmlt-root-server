@@ -40,10 +40,14 @@ require_once(ROOTPATH .'/vendor/bmlt/bmlt-satellite-base-class/bmlt-cms-satellit
 *   \brief
 ********************************************************************************************/
 
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:disable Squiz.Classes.ValidClassName.NotCamelCaps
 class bmlt_basic extends BMLTPlugin
+// phpcs:enable PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:enable Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    var $my_shortcode = null;           ///< This will hold the given shortcode.
-    var $m_is_logged_in_user = null;    ///< This will be true, if the user is logged in.
+    public $my_shortcode = null;           ///< This will hold the given shortcode.
+    public $m_is_logged_in_user = null;    ///< This will be true, if the user is logged in.
     
     /************************************************************************************//**
     *                                   CLIENT FUNCTIONS                                    *
@@ -52,9 +56,11 @@ class bmlt_basic extends BMLTPlugin
     /************************************************************************************//**
     *   \brief Outputs the head HTML, CSS and JavaScript.                                   *
     ****************************************************************************************/
-    function output_head( $in_shortcode = '[[bmlt]]'   ///< You need to provide a shortcode, if you want something other than the default.
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function output_head( $in_shortcode = '[[bmlt]]'   ///< You need to provide a shortcode, if you want something other than the default.
                         )
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $this->my_shortcode = $in_shortcode;  // Save this.
         echo $this->standard_head($this->my_shortcode);
     }
@@ -62,8 +68,10 @@ class bmlt_basic extends BMLTPlugin
     /************************************************************************************//**
     *   \brief Outputs the body HTML and JavaScript.                                        *
     ****************************************************************************************/
-    function output_body()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function output_body()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         echo $this->content_filter($this->my_shortcode);
     }
     
@@ -76,8 +84,10 @@ class bmlt_basic extends BMLTPlugin
     *                                                                                       *
     *   \returns a string, containing the path.                                             *
     ****************************************************************************************/
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     protected function get_ajax_base_uri()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $port = $_SERVER['SERVER_PORT'] ;
         // IIS puts "off" in the HTTPS field, so we need to test for that.
         $https = (!empty($_SERVER['HTTPS']) && (($_SERVER['HTTPS'] !== 'off') || ($port == 443)));
@@ -93,8 +103,10 @@ class bmlt_basic extends BMLTPlugin
     *                                                                                       *
     *   \returns a string, containing the path.                                             *
     ****************************************************************************************/
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     protected function get_plugin_path()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return dirname($this->get_ajax_base_uri()).'/../../vendor/bmlt/bmlt-satellite-base-class/';
     }
     
@@ -106,9 +118,11 @@ class bmlt_basic extends BMLTPlugin
     *                                                                                       *
     *   \returns a string, processed by WP.                                                 *
     ****************************************************************************************/
-    function process_text(  $in_string  ///< The string to be processed.
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function process_text(  $in_string  ///< The string to be processed.
                                     )
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $in_string = htmlspecialchars($in_string);
             
         return $in_string;
@@ -119,8 +133,10 @@ class bmlt_basic extends BMLTPlugin
     *                                                                                       *
     *   \returns an associative array, with the default option settings.                    *
     ****************************************************************************************/
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     protected function geDefaultBMLTOptions()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         global $bmlt_basic_configuration;
         // These are the defaults. If the saved option has a different value, it replaces the ones in here.
         return $bmlt_basic_configuration[0];
@@ -131,9 +147,11 @@ class bmlt_basic extends BMLTPlugin
     *                                                                                       *
     *   \returns an associative array, with the option settings.                            *
     ****************************************************************************************/
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     protected function cms_get_option( $in_option_key   ///< The name of the option
                                         )
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         global $bmlt_basic_configuration;
         global $bmlt_basic_configuration_index;
         
@@ -158,10 +176,12 @@ class bmlt_basic extends BMLTPlugin
     *                                                                                       *
     *   \returns a mixed type, with the settings ID.                                        *
     ****************************************************************************************/
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     protected function cms_get_page_settings_id(
         $in_text,                  ///< Required (for the base version) content to check.
         $in_check_mobile = false   ///< True if this includes a check for mobile. Default is false.
     ) {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $my_option_id = 0;
         
         if (!$in_check_mobile && isset($this->my_http_vars['bmlt_settings_id']) && is_array($this->getBMLTOptions($this->my_http_vars['bmlt_settings_id']))) {
@@ -198,9 +218,11 @@ class bmlt_basic extends BMLTPlugin
     /************************************************************************************//**
     *   \brief returns any necessary head content.                                          *
     ****************************************************************************************/
-    function standard_head( $in_text = null   ///< This is the page content text.
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function standard_head( $in_text = null   ///< This is the page content text.
                             )
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $this->ajax_router();
         $load_head = false;   // This is a throwback. It prevents the GM JS from being loaded if there is no directly specified settings ID.
         $head_content = "<!-- Added by the BMLT plugin 3.0. -->\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=EmulateIE7\" />\n<meta http-equiv=\"Content-Style-Type\" content=\"text/css\" />\n<meta http-equiv=\"Content-Script-Type\" content=\"text/javascript\" />\n";
@@ -302,8 +324,10 @@ class bmlt_basic extends BMLTPlugin
     *                                                                                       *
     *   \returns null                                                                       *
     ****************************************************************************************/
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     protected function get_admin_ajax_base_uri()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return null;
     }
     
@@ -312,8 +336,10 @@ class bmlt_basic extends BMLTPlugin
     *                                                                                       *
     *   \returns null                                                                       *
     ****************************************************************************************/
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     protected function get_admin_form_uri()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return null;
     }
     
@@ -322,10 +348,12 @@ class bmlt_basic extends BMLTPlugin
     *                                                                                       *
     *   \returns false                                                                      *
     ****************************************************************************************/
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     protected function cms_set_option(
         $in_option_key,   ///< The name of the option
         $in_option_value  ///< the values to be set (associative array)
     ) {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return false;
     }
     
@@ -334,9 +362,11 @@ class bmlt_basic extends BMLTPlugin
     *                                                                                       *
     *   \returns false                                                                      *
     ****************************************************************************************/
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     protected function cms_delete_option( $in_option_key   ///< The name of the option
                                         )
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return false;
     }
 
@@ -345,10 +375,12 @@ class bmlt_basic extends BMLTPlugin
     *                                                                                       *
     *   \returns null                                                                       *
     ****************************************************************************************/
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     protected function cms_get_post_meta(
         $in_page_id,    ///< The ID of the page/post
         $in_settings_id ///< The ID of the meta tag to fetch
     ) {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return null;
     }
         
@@ -357,18 +389,22 @@ class bmlt_basic extends BMLTPlugin
     *                                                                                       *
     *   \returns null                                                                       *
     ****************************************************************************************/
-    function admin_head()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function admin_head()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return null;
     }
     
     /************************************************************************************//**
     *   \brief Prevents the admin page from being shown.                                    *
     ****************************************************************************************/
-    function admin_page()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function admin_page()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     }
-};
+}
 
 /****************************************************************************************//**
 *                                      MAIN EXECUTION                                       *
