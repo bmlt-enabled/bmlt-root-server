@@ -21,16 +21,20 @@ require_once(dirname(__FILE__).'/../../server/c_comdef_server.class.php');
 $supress_header = true;
 require_once(dirname(__FILE__).'/c_comdef_login.php');
 
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:disable Squiz.Classes.ValidClassName.NotCamelCaps
 class c_comdef_data_importer
+// phpcs:enable PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:enable Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    var $m_server;
-    var $m_local_strings;
+    public $m_server;
+    public $m_local_strings;
     
     /***********************************************************************/
     /**
         \brief Object Constructor.
     */
-    function __construct()
+    public function __construct()
     {
     // We actually instantiate a root server, here.
         $this->m_server = c_comdef_server::MakeServer();
@@ -53,9 +57,11 @@ class c_comdef_data_importer
         \brief Opens a tab- or comma-delimited file, and loads it into an associative array.
         \returns an associative array with the file contents.
     */
-    function bmlt_get_delimited_file_contents( $in_default_filename = null ///< The default filename
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function bmlt_get_delimited_file_contents( $in_default_filename = null ///< The default filename
                                                 )
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if (!$in_default_filename) {
             $in_default_filename = __FILE_DUMP_DEFAULT_FILENAME__;
         }
@@ -110,10 +116,12 @@ class c_comdef_data_importer
 
         \returns a boolean. This is true if the meeting was successfully added.
     */
-    function AddOneMeeting(
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function AddOneMeeting(
         &$in_out_meeting_array,  ///< The meeting data, as an associative array. It must have the exact keys for the database table columns. No prompts, data type, etc. That will be supplied by the routine. Only a value. The 'id_bigint' field will be set to the new meeting ID.
         $in_templates_array     ///< This contains the key/value templates for the meeting data.
     ) {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = false;
         
         // We break the input array into elements destined for the main table, and elements destined for the data table(s).
@@ -297,8 +305,10 @@ class c_comdef_data_importer
                 - 'data_longtext'
                 - 'data_blob'
     */
-    function FetchTemplates()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function FetchTemplates()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
         
         $retData = array();
@@ -361,9 +371,11 @@ class c_comdef_data_importer
                 (which is an associative array). The Array element key is the World ID of
                 the Service body, so it can be used to match up with imported data.
     */
-    function extract_service_bodies(   $in_file_contents   ///< The parsed "raw" file contents.
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function extract_service_bodies(   $in_file_contents   ///< The parsed "raw" file contents.
                                     )
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
         
         try // Catch any thrown exceptions.
@@ -390,9 +402,11 @@ class c_comdef_data_importer
                 for all meeting data for the Service bodies passed in via the
                 array.
     */
-    function DeleteAllOldMeetings( $in_sb_array    ///< An array of Service body IDs. Only meetings in these IDs will be deleted
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function DeleteAllOldMeetings( $in_sb_array    ///< An array of Service body IDs. Only meetings in these IDs will be deleted
                                     )
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '';
         // We don't do this relationally, because this is not always gonna be used for MySQL, and this is more flexible (and possibly faster).
         if (is_array($in_sb_array) && count($in_sb_array)) {
@@ -498,11 +512,13 @@ class c_comdef_data_importer
                 - 'zip'
                     The postal or zip code.
     */
-    function GeocodeAddress(
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function GeocodeAddress(
         $in_address,    ///< The address, in a single string, to be sent to the geocoder.
         $in_gkey,       ///< The Google API key.
         $in_region = null ///< If there is a nation region bias, it is entered here.
     ) {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = array('original' => $in_address,'google_key' => $in_gkey);
         $status = null;
         $uri = 'http://maps.googleapis.com/maps/api/geocode/xml?address='.urlencode($in_address).'&sensor=false';
@@ -564,9 +580,11 @@ class c_comdef_data_importer
                     The postal or zip code.
 
     */
-    function xml_parser_parse_xml( $in_xml ///< The XML data, as a <a href="http://php.net/manual/en/book.simplexml.php">SimpleXML</a> object.
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function xml_parser_parse_xml( $in_xml ///< The XML data, as a <a href="http://php.net/manual/en/book.simplexml.php">SimpleXML</a> object.
                                     )
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
     
         if (isset($in_xml->geometry) && isset($in_xml->geometry->location) && isset($in_xml->geometry->location->lng) && isset($in_xml->geometry->location->lat)) {
@@ -588,9 +606,11 @@ class c_comdef_data_importer
     /***********************************************************************/
     /**
     */
-    function BuildAddress( $row    ///< A meeting data array.
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function BuildAddress( $row    ///< A meeting data array.
                             )
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $address = '';
         
         if (isset($row['_location_street_address']) && trim($row['_location_street_address'])) {
@@ -647,9 +667,11 @@ class c_comdef_data_importer
 
         \returns true, if the email is valid, false, otherwise.
     */
-    function ValidEmailAddress(    $in_test_address    ///< Either a single email address, or a list of them, comma-separated.
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function ValidEmailAddress(    $in_test_address    ///< Either a single email address, or a list of them, comma-separated.
                                     )
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $valid = false;
         
         if ($in_test_address) {
@@ -682,8 +704,10 @@ class c_comdef_data_importer
     /***********************************************************************/
     /**
     */
-    function format_sorter($a, $b)
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function format_sorter($a, $b)
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if ($a == $b) {
             return 0;
         } else {
@@ -694,8 +718,10 @@ class c_comdef_data_importer
     /***********************************************************************/
     /**
     */
-    function translate_format_code($in_code)
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function translate_format_code($in_code)
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         global $format_array;
         if (key_exists($in_code, $format_array)) {
             return $format_array[$in_code];
@@ -707,8 +733,10 @@ class c_comdef_data_importer
     /***********************************************************************/
     /**
     */
-    function microtime_float()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function microtime_float()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         list($usec, $sec) = explode(" ", microtime());
         return ((float)$usec + (float)$sec);
     }
@@ -718,9 +746,11 @@ class c_comdef_data_importer
 
         \returns an integer. 1-7 (Sun-Sat), or null, if the day was not found.
     */
-    function func_convert_from_english_full_weekday(   $in_weekday ///< The day of the week, spelled out, in English ('Sunday' -> 'Saturday').
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function func_convert_from_english_full_weekday(   $in_weekday ///< The day of the week, spelled out, in English ('Sunday' -> 'Saturday').
                                                     )
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
         
         $ret = array_search($in_weekday, $this->m_local_strings['days']);
@@ -737,13 +767,15 @@ class c_comdef_data_importer
 
         \returns a string, with the time as full military.
     */
-    function func_start_time_from_simple_military( $in_military_time   ///< The military time as an integer (100s are hours 0000 -> 2359).
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function func_start_time_from_simple_military( $in_military_time   ///< The military time as an integer (100s are hours 0000 -> 2359).
                                                     )
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $time = abs(intval($in_military_time));
         $hours = min(23, $time / 100);
         $minutes = min(59, ($time - (intval($time / 100) * 100)));
         
         return sprintf("%d:%02d:00", $hours, $minutes);
     }
-};
+}
