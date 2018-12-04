@@ -66,7 +66,11 @@ defined('BMLT_EXEC') or die('Cannot Execute Directly');    // Makes sure that th
     along with this code.  If not, see <http://www.gnu.org/licenses/>.
  */
 /// \brief This class provides a genericized interface to the <a href="http://us.php.net/pdo">PHP PDO</a> toolkit. It is a completely static class.
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:disable Squiz.Classes.ValidClassName.NotCamelCaps
 class c_comdef_dbsingleton
+// phpcs:enable PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:enable Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /// \brief Internal PDO object
     private static $pdo = null;
@@ -293,4 +297,4 @@ class c_comdef_dbsingleton
 
         return self::$pdo->lastInsertId();
     }
-};
+}
