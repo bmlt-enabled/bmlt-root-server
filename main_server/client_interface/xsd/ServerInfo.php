@@ -1,10 +1,10 @@
 <?php
 /****************************************************************************************//**
-* \file ServerInfo.php																		*
-* \brief Returns an XML response, containing the schema for the GetServerInfo XML call			*
+* \file ServerInfo.php                                                                      *
+* \brief Returns an XML response, containing the schema for the GetServerInfo XML call          *
 
     This file is part of the Basic Meeting List Toolbox (BMLT).
-    
+
     Find out more at: http://bmlt.magshare.org
 
     BMLT is free software: you can redistribute it and/or modify
@@ -22,28 +22,22 @@
 ********************************************************************************************/
 
 // The caller can request compression. Not all clients can deal with compressed replies.
-if ( isset ( $_GET['compress_xml'] ) || isset ( $_POST['compress_xml'] ) )
-	{
-    if ( zlib_get_coding_type() === false )
-        {
+if (isset($_GET['compress_xml']) || isset($_POST['compress_xml'])) {
+    if (zlib_get_coding_type() === false) {
         ob_start("ob_gzhandler");
-        }
-    else
-        {
-        header ( 'Content-Type:application/xml; charset=UTF-8' );
+    } else {
+        header('Content-Type:application/xml; charset=UTF-8');
         ob_start();
-        }
-	}
-else
-	{
-	header ( 'Content-Type:application/xml; charset=UTF-8' );
-	ob_start();
-	}
+    }
+} else {
+    header('Content-Type:application/xml; charset=UTF-8');
+    ob_start();
+}
 echo "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n"; ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:xsn="http://<?php echo $_SERVER['SERVER_NAME'] ?>"
-	targetNamespace="http://<?php echo $_SERVER['SERVER_NAME'] ?>"
-	elementFormDefault="qualified">
+    xmlns:xsn="http://<?php echo $_SERVER['SERVER_NAME'] ?>"
+    targetNamespace="http://<?php echo $_SERVER['SERVER_NAME'] ?>"
+    elementFormDefault="qualified">
     <xs:element name='serverInfo'>
         <xs:complexType>
             <xs:sequence>

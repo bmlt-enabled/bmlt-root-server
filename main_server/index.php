@@ -1,7 +1,7 @@
 <?php
 /*
     This file is part of the Basic Meeting List Toolbox (BMLT).
-    
+
     Find out more at: http://bmlt.magshare.org
 
     BMLT is free software: you can redistribute it and/or modify
@@ -18,9 +18,8 @@
     along with this code.  If not, see <http://www.gnu.org/licenses/>.
 */
 ob_start();
-define ( '__DEBUG_MODE__', 1 ); // Uncomment to make the CSS and JavaScript easier to trace (and less efficient).
+define('__DEBUG_MODE__', 1); // Uncomment to make the CSS and JavaScript easier to trace (and less efficient).
 session_start();
-define ( 'BMLT_EXEC', 1 );
-include ( dirname ( __FILE__ ).'/local_server/index.php' );
+define('BMLT_EXEC', 1);
+include(dirname(__FILE__).'/local_server/index.php');
 ob_end_flush();
-?>

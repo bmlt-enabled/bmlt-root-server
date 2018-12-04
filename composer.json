@@ -4,5 +4,8 @@
     },
     "require": {
         "bmlt/bmlt-satellite-base-class": "^3.9"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "3.*"
     }
 }

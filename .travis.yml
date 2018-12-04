@@ -13,7 +13,11 @@ jobs:
   include:
 
     - stage: lint
-      script: find . -name "*.php" ! -path '*/vendor/*' -print0 | xargs -0 -n1 -P8 php -l
+      install:
+        - composer install --dev
+      script:
+        - find . -name "*.php" ! -path '*/vendor/*' -print0 | xargs -0 -n1 -P8 php -l
+        - main_server/vendor/squizlabs/php_codesniffer/bin/phpcs --warning-severity=6 --standard=PSR2 --ignore=vendor --extensions=php --report=summary main_server
 
     - stage: zip file
       env:
@@ -22,7 +26,7 @@ jobs:
         - DIST_DIR_GITHUB=dist/github
         - GITHUB_RELEASE_FILENAME=bmlt-root-server.zip
       install:
-        - composer install
+        - composer install --no-dev
       script:
         - cp LICENSE.txt main_server
         - find ./main_server -type d | xargs chmod 755
