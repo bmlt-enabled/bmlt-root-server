@@ -29,7 +29,11 @@ require_once(dirname(__FILE__)."/c_comdef_service_body.class.php");
     \brief  A class to hold a collection of c_comdef_service_body objects.
 
 ***********************************************************************/
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:disable Squiz.Classes.ValidClassName.NotCamelCaps
 class c_comdef_service_bodies implements i_comdef_has_parent
+// phpcs:enable PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:enable Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /// This is the parent (container) object that holds this instance.
     private $_local_id_parent_obj = null;
@@ -40,7 +44,7 @@ class c_comdef_service_bodies implements i_comdef_has_parent
     */
     private $_local_copy_of_array = null;
 
-    function __construct(
+    public function __construct(
         $in_parent_object,              ///< A reference to the object that "owns" this instance.
         $in_service_body_object_array   ///< An array of references to c_comdef_service_body objects, to be stored as local references.
     ) {
@@ -56,9 +60,11 @@ class c_comdef_service_bodies implements i_comdef_has_parent
     /*******************************************************************/
     /** \brief Set the parent object of this instance.
     */
-    function SetParentObj(
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function SetParentObj(
         $in_parent_obj  ///< A reference to the parent object.
     ) {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $this->_local_id_parent_obj = null;
         $this->_local_id_parent_obj = $in_parent_obj;
     }
@@ -68,8 +74,10 @@ class c_comdef_service_bodies implements i_comdef_has_parent
 
         \returns a reference to the parent instance of the object.
     */
-    function GetParentObj()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function GetParentObj()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return $this->_local_id_parent_obj;
     }
 
@@ -78,8 +86,10 @@ class c_comdef_service_bodies implements i_comdef_has_parent
 
         \returns a reference to an array of c_comdef_service_body objects.
     */
-    function &GetServiceBodiesArray()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function &GetServiceBodiesArray()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return $this->_local_copy_of_array;
     }
-};
+}
