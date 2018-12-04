@@ -25,17 +25,21 @@ defined('BMLT_EXEC') or die('Cannot Execute Directly');    // Makes sure that th
             This class should not even be instantiated unless the user has been authorized, and an authorized seesion
             is in progress.
 ***************************************************************************************************************/
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:disable Squiz.Classes.ValidClassName.NotCamelCaps
 class c_comdef_admin_xml_handler
+// phpcs:enable PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:enable Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    var $http_vars;                     ///< This will hold the combined GET and POST parameters for this call.
-    var $server;                        ///< The BMLT server model instance.
-    var $my_localized_strings;          ///< An array of localized strings.
-    var $handled_service_body_ids;      ///< This is used to ensure that we respect the hierarchy when doing a hierarchical Service body request.
+    public $http_vars;                     ///< This will hold the combined GET and POST parameters for this call.
+    public $server;                        ///< The BMLT server model instance.
+    public $my_localized_strings;          ///< An array of localized strings.
+    public $handled_service_body_ids;      ///< This is used to ensure that we respect the hierarchy when doing a hierarchical Service body request.
     
     /********************************************************************************************************//**
     \brief The class constructor.
     ************************************************************************************************************/
-    function __construct(
+    public function __construct(
         $in_http_vars,        ///< The combined GET and POST parameters.
         $in_server            ///< The BMLT server instance.
     ) {
@@ -50,8 +54,10 @@ class c_comdef_admin_xml_handler
 
     \returns the URL.
     ************************************************************************************************************/
-    function getMainURL()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function getMainURL()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return dirname(dirname(GetURLToMainServerDirectory(false))).'/';
     }
     
@@ -60,8 +66,10 @@ class c_comdef_admin_xml_handler
 
     \returns the XML for the meeting data.
     ************************************************************************************************************/
-    function get_meeting_data($meeting_id)
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function get_meeting_data($meeting_id)
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '';
         
         $meeting_object = c_comdef_server::GetOneMeeting($meeting_id);
@@ -142,8 +150,10 @@ class c_comdef_admin_xml_handler
 
     \returns XML to be returned.
     ************************************************************************************************************/
-    function process_commands()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function process_commands()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
         // We make sure that we are allowed to access this level of functionality.
         // This is "belt and suspenders." We will constantly check user credentials.
@@ -238,8 +248,10 @@ class c_comdef_admin_xml_handler
 
     \returns TRUE, if the user is valid.
     ************************************************************************************************************/
-    function basic_user_validation()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function basic_user_validation()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = false;
         
         $user_obj = $this->server->GetCurrentUserObj();
@@ -256,8 +268,10 @@ class c_comdef_admin_xml_handler
 
     \returns the XML for the change data.
     ************************************************************************************************************/
-    function process_changes()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function process_changes()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<h1>NOT AUTHORIZED</h1>';
         
         // First, make sure the use is of the correct general type.
@@ -305,8 +319,10 @@ class c_comdef_admin_xml_handler
 
     \returns the current meeting XML, if the rollback was successful.
     ************************************************************************************************************/
-    function process_rollback_meeting()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function process_rollback_meeting()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<h1>NOT AUTHORIZED</h1>';
         
         // First, make sure the user is of the correct general type.
@@ -356,8 +372,10 @@ class c_comdef_admin_xml_handler
 
     \returns the XML for the meeting data.
     ************************************************************************************************************/
-    function process_restore_deleted_meeting()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function process_restore_deleted_meeting()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '';
         
         // First, make sure the user is of the correct general type.
@@ -412,8 +430,10 @@ class c_comdef_admin_xml_handler
 
     \returns the XML for the meeting data.
     ************************************************************************************************************/
-    function process_deleted_meetings()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function process_deleted_meetings()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '';
         
         // First, make sure the user is of the correct general type.
@@ -465,13 +485,15 @@ class c_comdef_admin_xml_handler
 
         \returns CSV data, with the first row a key header.
     */
-    function get_deleted_meetings_as_csv(
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function get_deleted_meetings_as_csv(
         $in_start_date = null,  ///< Optional. A start date (In PHP time() format). If supplied, then only deletions on, or after this date will be returned.
         $in_end_date = null,    ///< Optional. An end date (In PHP time() format). If supplied, then only deletions that occurred on, or before this date will be returned.
         $in_meeting_id = null,  ///< Optional. If supplied, an ID for a particular meeting. Only deletion for that meeting will be returned.
         $in_user_id = null,     ///< Optional. If supplied, an ID for a particular user. Only deletions made by that user will be returned.
         $in_sb_id = null        ///< Optional. If supplied, an ID for a particular Service body. Only deletions for meetings in that Service body will be returned. If this is an array, then multiple Service bodies will be searched.
     ) {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
         try {
             $change_objects = c_comdef_server::GetChangesFromIDAndType('c_comdef_meeting', null, $in_start_date, $in_end_date);
@@ -499,10 +521,12 @@ class c_comdef_admin_xml_handler
                             * Service body IDs that can be used for a quick     *
                             * comparison, later on. It is a callback function.  *
                             ****************************************************/
+                            // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
                             function bmlt_at_at(
                                 $in_value,
                                 $in_key
                             ) {
+                                // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
                                 global $bmlt_array_gather;
                         
                                 if ($in_value instanceof c_comdef_service_body) {
@@ -707,7 +731,8 @@ class c_comdef_admin_xml_handler
 
         \returns CSV data, with the first row a key header.
     */
-    function get_changes_as_csv(
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function get_changes_as_csv(
         $in_start_date = null,  ///< Optional. A start date (In PHP time() format). If supplied, then only changes on, or after this date will be returned.
         $in_end_date = null,    ///< Optional. An end date (In PHP time() format). If supplied, then only changes that occurred on, or before this date will be returned.
         $in_meeting_id = null,  ///< Optional. If supplied, an ID for a particular meeting. Only changes for that meeting will be returned.
@@ -715,6 +740,7 @@ class c_comdef_admin_xml_handler
         $in_sb_id = null,       ///< Optional. If supplied, an ID for a particular Service body. Only changes for that Service body will be returned.
         $in_change_type = 'c_comdef_meeting'    ///< This is the change type. Default is meeting change (NOTE: This function needs work to handle other types, but I figured I'd put in a hook for later).
     ) {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
         try {
             // Start by getting every meeting change between the given dates.
@@ -743,10 +769,12 @@ class c_comdef_admin_xml_handler
                             * Service body IDs that can be used for a quick     *
                             * comparison, later on. It is a callback function.  *
                             ****************************************************/
+                            // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
                             function bmlt_at_at(
                                 $in_value,
                                 $in_key
                             ) {
+                                // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
                                 global $bmlt_array_gather;
                         
                                 if ($in_value instanceof c_comdef_service_body) {
@@ -931,8 +959,10 @@ class c_comdef_admin_xml_handler
 
     \returns the XML for the template data.
     ************************************************************************************************************/
-    function process_get_field_templates()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function process_get_field_templates()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '';
         
         // First, make sure the use is of the correct general type.
@@ -990,8 +1020,10 @@ class c_comdef_admin_xml_handler
 
     \returns A very simple XML Report.
     ************************************************************************************************************/
-    function process_meeting_delete()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function process_meeting_delete()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
         
         // First, make sure the use is of the correct general type.
@@ -1035,8 +1067,10 @@ class c_comdef_admin_xml_handler
 
     \returns XML, containing the fields modified.
     ************************************************************************************************************/
-    function process_meeting_modify()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function process_meeting_modify()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
         
         $user_obj = $this->server->GetCurrentUserObj();
@@ -1271,6 +1305,7 @@ class c_comdef_admin_xml_handler
                                     if (!isset($value) || !$value) {
                                         $value = $localized_strings["comdef_server_admin_strings"]["Value_Prompts"]["generic"];
                                     }
+                                    // Assuming fallthrough is intentional here, due to lack of break statement?
                                     
                                 default:
                                     $old_value = $meeting_obj->GetMeetingDataValue($meeting_field);
@@ -1332,8 +1367,10 @@ class c_comdef_admin_xml_handler
 
     \returns XML, containing the answer.
     ************************************************************************************************************/
-    function process_meeting_search()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function process_meeting_search()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if (!( isset($this->http_vars['geo_width']) && $this->http_vars['geo_width'] ) && isset($this->http_vars['bmlt_search_type']) && ($this->http_vars['bmlt_search_type'] == 'advanced') && isset($this->http_vars['advanced_radius']) && isset($this->http_vars['advanced_mapmode']) && $this->http_vars['advanced_mapmode'] && ( floatval($this->http_vars['advanced_radius'] != 0.0) ) && isset($this->http_vars['lat_val']) &&   isset($this->http_vars['long_val']) && ( (floatval($this->http_vars['lat_val']) != 0.0) || (floatval($this->http_vars['long_val']) != 0.0) )) {
             $this->http_vars['geo_width'] = $this->http_vars['advanced_radius'];
         } elseif (!( isset($this->http_vars['geo_width']) && $this->http_vars['geo_width'] ) && isset($this->http_vars['bmlt_search_type']) && ($this->http_vars['bmlt_search_type'] == 'advanced')) {
@@ -1421,8 +1458,10 @@ class c_comdef_admin_xml_handler
 
     \returns XML, containing the answer.
     ************************************************************************************************************/
-    function process_format_info()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function process_format_info()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '';
         
         if ($this->basic_user_validation()) {
@@ -1498,8 +1537,10 @@ class c_comdef_admin_xml_handler
 
     \returns XML, containing the answer.
     ************************************************************************************************************/
-    function process_service_bodies_info_request()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function process_service_bodies_info_request()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '';
         
         if ($this->basic_user_validation()) {
@@ -1547,9 +1588,11 @@ class c_comdef_admin_xml_handler
 
     \returns XML, containing the answer.
     ************************************************************************************************************/
-    function process_service_body_info_request(    $in_service_body_id ///< The ID of the Service body being requested.
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function process_service_body_info_request(    $in_service_body_id ///< The ID of the Service body being requested.
                                                 )
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '';
         // Belt and suspenders. We need to make sure the user is authorized.
         if ($this->basic_user_validation()) {
@@ -1701,8 +1744,10 @@ class c_comdef_admin_xml_handler
 
     \returns XML, containing the answer.
     ************************************************************************************************************/
-    function process_capabilities_request()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function process_capabilities_request()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '';
         $service_bodies = $this->server->GetServiceBodyArray();
         
@@ -1718,9 +1763,8 @@ class c_comdef_admin_xml_handler
             foreach ($service_bodies as $service_body) {
                 if (($user_obj->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) && $service_body->UserCanEdit()) { // We are a full Service body editor, with rights to edit the Service body itself (as well as all its meetings).
                     $my_editable_service_bodies['sb_'.$service_body->GetID()] = $service_body;
-                }
-                // Again, we keep checking credentials, over and over again.
-                elseif ((($user_obj->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) || ($user_obj->GetUserLevel() == _USER_LEVEL_OBSERVER)) && $service_body->UserCanObserve()) { // We are a "guest" editor, or an observer (depends on our user level).
+                } elseif ((($user_obj->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) || ($user_obj->GetUserLevel() == _USER_LEVEL_OBSERVER)) && $service_body->UserCanObserve()) { // We are a "guest" editor, or an observer (depends on our user level).
+                    // Again, we keep checking credentials, over and over again.
                     if ($user_obj->GetUserLevel() == _USER_LEVEL_OBSERVER) {
                         $my_meeting_observer_service_bodies['sb_'.$service_body->GetID()] = $service_body;
                     } elseif ($service_body->UserCanEditMeetings()) {
@@ -1775,9 +1819,11 @@ class c_comdef_admin_xml_handler
 
         \returns an XML string, with all the data in the CSV.
     */
-    function TranslateCSVToXML(    $in_csv_data    ///< An array of CSV data, with the first element being the field names.
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function TranslateCSVToXML(    $in_csv_data    ///< An array of CSV data, with the first element being the field names.
                                 )
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         require_once(dirname(dirname(dirname(__FILE__))).'/server/shared/Array2XML.php');
         $temp_keyed_array = array();
         $in_csv_data = explode("\n", $in_csv_data);
@@ -1804,4 +1850,4 @@ class c_comdef_admin_xml_handler
 
         return $out_xml_data;
     }
-};
+}
