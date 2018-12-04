@@ -29,14 +29,18 @@ require_once(dirname(__FILE__)."/c_comdef_change.class.php");
     \brief  A class to hold a collection of c_comdef_change objects.
 
 ***********************************************************************/
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:disable Squiz.Classes.ValidClassName.NotCamelCaps
 class c_comdef_changes implements i_comdef_has_parent
+// phpcs:enable PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:enable Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /// A reference to the "parent" object for this instance.
     private $_local_id_parent_obj = null;
     /// An array of new c_comdef_change objects that comprises the content.
     private $_changes_objects = null;
 
-    function __construct(
+    public function __construct(
         $in_parent_object,      ///< A reference to the object that "owns" this instance.
         $in_change_data         ///< An array of data for the changes to be instantiated.
     ) {
@@ -60,17 +64,21 @@ class c_comdef_changes implements i_comdef_has_parent
 
         \returns a reference to an array of c_comdef_changes objects.
     */
-    function &GetChangesObjects()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function &GetChangesObjects()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return $this->_changes_objects;
     }
     
     /*******************************************************************/
     /** \brief Set the parent object of this instance.
     */
-    function SetParentObj(
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function SetParentObj(
         $in_parent_obj  ///< A reference to the parent object.
     ) {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $this->_local_id_parent_obj = null;
         $this->_local_id_parent_obj = $in_parent_obj;
     }
@@ -80,8 +88,10 @@ class c_comdef_changes implements i_comdef_has_parent
 
         \returns a reference to the parent instance of the object.
     */
-    function GetParentObj()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function GetParentObj()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return $this->_local_id_parent_obj;
     }
-};
+}
