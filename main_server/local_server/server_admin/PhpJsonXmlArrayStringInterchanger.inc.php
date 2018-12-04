@@ -10,7 +10,9 @@ define("ERROR_STYLE", "color:#fff;background-color:#ff0000;font-weight:bold;padd
  * @package PhpJsonXmlArrayStringInterchanger
  * @version beta
  */
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 class PhpJsonXmlArrayStringInterchanger
+// phpcs:enable PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     private $errorLog=array();
 
