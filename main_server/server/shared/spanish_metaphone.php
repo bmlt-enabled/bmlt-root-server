@@ -91,16 +91,15 @@ function spanish_metaphone(
                                   && ($current_pos == 0)) {
             $meta_key   .= $current_char;
             $current_pos += 1;
-        }
-        //Let's check for consonants  that have a single sound
-        //or already have been replaced  because they share the same
-        //sound like 'B' for 'V' and 'S' for 'Z'
-        elseif (spanish_metaphone_string_at(
+        } elseif (spanish_metaphone_string_at(
             $original_string,
             $current_pos,
             1,
             array('D','F','J','K','M','N','P','R','S','T','V')
         )) {
+            //Let's check for consonants  that have a single sound
+            //or already have been replaced  because they share the same
+            //sound like 'B' for 'V' and 'S' for 'Z'
             $meta_key   .= $current_char;
             
             //increment by two if a repeated letter is found
@@ -117,15 +116,13 @@ function spanish_metaphone(
                     //special case 'macho', chato,etc.
                     if (substr($original_string, $current_pos + 1, 1)== 'H') {
                         $current_pos += 2;
-                    }
-                    //special case 'accin', 'reaccin',etc.
-                    elseif (substr($original_string, $current_pos + 1, 1)== 'C') {
+                    } elseif (substr($original_string, $current_pos + 1, 1)== 'C') {
+                        //special case 'accin', 'reaccin',etc.
                         $meta_key   .= 'X';
                         $current_pos += 2;
                         break;
-                    }
-                    // special case 'cesar', 'cien', 'cid', 'conciencia'
-                    elseif (spanish_metaphone_string_at($original_string, $current_pos, 2, array('CE','CI'))) {
+                    } elseif (spanish_metaphone_string_at($original_string, $current_pos, 2, array('CE','CI'))) {
+                        // special case 'cesar', 'cien', 'cid', 'conciencia'
                         $meta_key   .= 'S';
                         $current_pos += 2;
                         break;
