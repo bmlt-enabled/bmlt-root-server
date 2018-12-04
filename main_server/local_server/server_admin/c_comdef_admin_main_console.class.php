@@ -27,25 +27,29 @@ require_once(dirname(__FILE__).'/../../server/shared/Array2Json.php');
     \class c_comdef_admin_main_console
     \brief Controls display of the main BMLT administration console.
 ****************************************************************************************************************/
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:disable Squiz.Classes.ValidClassName.NotCamelCaps
 class c_comdef_admin_main_console
+// phpcs:enable PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:enable Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    var $my_localized_strings;          ///< This will contain the localized strings and whatnot for display.
-    var $my_server;                     ///< This hold the server object.
-    var $my_user;                       ///< This holds the instance of the logged-in user.
-    var $my_ajax_uri;                   ///< This will be the URI for AJAX calls.
-    var $my_http_vars;                  ///< Contains the HTTP vars sent in.
-    var $my_service_bodies;             ///< This will be an array that contains all the Service bodies this user can edit.
-    var $my_users;                      ///< This will be an array of all the user objects.
-    var $my_formats;                    ///< The format objects that are available for meetings.
-    var $my_data_field_templates;       ///< This holds the keys for all the possible data fields for this server.
-    var $my_editable_service_bodies;    ///< This will contain all the Service bodies that we can actually directly edit.
-    var $my_all_service_bodies;         ///< This contains all Service bodies, cleaned for orphans.
-    var $my_lang_ids;                   ///< Contains the enumerations for all the server langs.
+    public $my_localized_strings;          ///< This will contain the localized strings and whatnot for display.
+    public $my_server;                     ///< This hold the server object.
+    public $my_user;                       ///< This holds the instance of the logged-in user.
+    public $my_ajax_uri;                   ///< This will be the URI for AJAX calls.
+    public $my_http_vars;                  ///< Contains the HTTP vars sent in.
+    public $my_service_bodies;             ///< This will be an array that contains all the Service bodies this user can edit.
+    public $my_users;                      ///< This will be an array of all the user objects.
+    public $my_formats;                    ///< The format objects that are available for meetings.
+    public $my_data_field_templates;       ///< This holds the keys for all the possible data fields for this server.
+    public $my_editable_service_bodies;    ///< This will contain all the Service bodies that we can actually directly edit.
+    public $my_all_service_bodies;         ///< This contains all Service bodies, cleaned for orphans.
+    public $my_lang_ids;                   ///< Contains the enumerations for all the server langs.
     
     /********************************************************************************************************//**
     \brief
     ************************************************************************************************************/
-    function __construct(  $in_http_vars   ///< The HTTP transaction parameters
+    public function __construct(  $in_http_vars   ///< The HTTP transaction parameters
                         )
     {
         $this->my_http_vars = $in_http_vars;
@@ -144,8 +148,10 @@ class c_comdef_admin_main_console
     \brief Returns the HTML for the main admin console.
     \returns HTML code.
     ************************************************************************************************************/
-    function return_main_console_html()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function return_main_console_html()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<div id="bmlt_admin_main_console" class="bmlt_admin_main_console_wrapper_div">'.(defined('__DEBUG_MODE__') ? "\n" : '');
             // We actually include the JS directly into the HTML. This gives us a lot more flexibility as to how we deploy and gatekeep this file.
             $ret .= '<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key='.$this->my_localized_strings['google_api_key'].'&libraries=geometry"></script>';
@@ -389,15 +395,16 @@ class c_comdef_admin_main_console
             switch ($this->my_user->GetUserLevel()) {
                 case _USER_LEVEL_SERVER_ADMIN:
                     $ret .= $this->return_format_editor_panel();
-                
+                    // Assuming fallthrough is intentional here, due to lack of break statement?
                 case _USER_LEVEL_SERVICE_BODY_ADMIN:
                     $ret .= $this->return_user_admin_panel();
                     if ((count($this->my_editable_service_bodies) > 0) || ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN)) {
                         $ret .= $this->return_service_body_admin_panel();
                     }
+                    // Assuming fallthrough is intentional here, due to lack of break statement?
                 case _USER_LEVEL_EDITOR:
                     $ret .= $this->return_meeting_editor_panel();
-                        
+                    // Assuming fallthrough is intentional here, due to lack of break statement?
                 case _USER_LEVEL_OBSERVER:
                     if ($this->my_user->GetUserLevel() == _USER_LEVEL_OBSERVER) {   // Observers get a link to the meeting search.
                         $ret .= '<div class="bmlt_admin_observer_link_div"><a href="client_interface/html" class="bmlt_admin_observer_link_a">'.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['Observer_Link_Text']).'</a></div>'.(defined('__DEBUG_MODE__') ? "\n" : '');
@@ -423,9 +430,11 @@ class c_comdef_admin_main_console
     \brief Does an HTML sub, and also "slashes" apostrophes.
     \returns "Cleaned" text
     ************************************************************************************************************/
-    static function js_html(    $in_raw_html
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public static function js_html(    $in_raw_html
                             )
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $flags = (defined('ENT_SUBSTITUTE') && defined('ENT_NOQUOTES')) ? intval(ENT_SUBSTITUTE | ENT_NOQUOTES) : null;
         return preg_replace("|[\n\r]|", " ", str_replace("'", "\'", htmlspecialchars($in_raw_html), $flags));
     }
@@ -434,8 +443,10 @@ class c_comdef_admin_main_console
     \brief This constructs the User editor panel. Only Server Admins get this one.
     \returns The HTML and JavaScript for the "Edit Users" section.
     ************************************************************************************************************/
-    function return_format_editor_panel()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function return_format_editor_panel()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = 'NOT AUTHORIZED TO EDIT USERS';
         
         if ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) {
@@ -479,8 +490,10 @@ class c_comdef_admin_main_console
     \brief This constructs the User editor panel. Only Server Admins get this one.
     \returns The HTML and JavaScript for the "Edit Users" section.
     ************************************************************************************************************/
-    function return_user_admin_panel()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function return_user_admin_panel()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = 'NOT AUTHORIZED TO EDIT USERS';
 
         $userLevel = $this->my_user->GetUserLevel();
@@ -548,8 +561,10 @@ class c_comdef_admin_main_console
     \brief This constructs a window for the User administrator.
     \returns The HTML and JavaScript for the "User Administration" section.
     ************************************************************************************************************/
-    function return_single_user_editor_panel($users)
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function return_single_user_editor_panel($users)
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<div id="bmlt_admin_single_user_editor_div" class="bmlt_admin_single_user_editor_div">'.(defined('__DEBUG_MODE__') ? "\n" : '');
             $ret .= '<fieldset id="bmlt_admin_single_user_editor_fieldset" class="bmlt_admin_single_user_editor_fieldset">'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= '<legend id="bmlt_admin_single_user_editor_fieldset_legend" class="bmlt_admin_single_user_editor_fieldset_legend">'.(defined('__DEBUG_MODE__') ? "\n" : '');
@@ -616,8 +631,10 @@ class c_comdef_admin_main_console
     \brief This creates the HTML for a user selection popup menu.
     \returns The HTML and JavaScript for the popup menu (select element).
     ************************************************************************************************************/
-    function create_user_popup($users)
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function create_user_popup($users)
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<select id="bmlt_admin_single_user_editor_user_select" class="bmlt_admin_single_user_editor_user_select" onchange="admin_handler_object.populateUserEditor();">';
             $first = true;
         for ($index = 0; $index  < count($users); $index++) {
@@ -643,8 +660,10 @@ class c_comdef_admin_main_console
     \brief This creates the HTML for a user level popup menu.
     \returns The HTML and JavaScript for the popup menu (select element).
     ************************************************************************************************************/
-    function create_user_level_popup()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function create_user_level_popup()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $disabled = $this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN ? '' : ' disabled';
         $ret = '<select id="bmlt_admin_single_user_editor_level_select" class="bmlt_admin_single_user_editor_level_select" onchange="admin_handler_object.readUserEditorState();"'.$disabled.'>';
             $first = true;
@@ -661,8 +680,10 @@ class c_comdef_admin_main_console
     \brief This creates the HTML for a user owner selection popup menu.
     \returns The HTML and JavaScript for the popup menu (select element).
      ************************************************************************************************************/
-    function create_user_owner_popup($users)
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function create_user_owner_popup($users)
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $disabled = $this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN ? '' : ' disabled';
         $ret = '<select id="bmlt_admin_single_user_editor_user_owner_select" class="bmlt_admin_single_user_editor_user_select" onchange="admin_handler_object.readUserEditorState();"'.$disabled.'>';
 
@@ -681,8 +702,10 @@ class c_comdef_admin_main_console
     \brief This constructs the User editor buttons as a div.
     \returns The HTML and JavaScript for the button panel.
     ************************************************************************************************************/
-    function return_user_editor_button_panel()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function return_user_editor_button_panel()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<div class="bmlt_admin_user_editor_button_div">';
             $ret .= '<span class="bmlt_admin_meeting_editor_form_meeting_button_left_span">';
                 $ret .= '<a id="bmlt_admin_user_editor_form_user_save_button" href="javascript:admin_handler_object.saveUser();" class="bmlt_admin_ajax_button button_disabled">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['user_save_button']).'</a>';
@@ -711,8 +734,10 @@ class c_comdef_admin_main_console
     \brief This constructs the Service body editor panel. Only Server Admins and Service Body Admins get this one.
     \returns The HTML and JavaScript for the "Service Body Administration" section.
     ************************************************************************************************************/
-    function return_service_body_admin_panel()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function return_service_body_admin_panel()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '';
         $full_editors = $this->get_full_editor_users();
 
@@ -761,8 +786,10 @@ class c_comdef_admin_main_console
     \brief This constructs a window for the Service Body administrator.
     \returns The HTML and JavaScript for the "Service Body Administration" section.
     ************************************************************************************************************/
-    function return_single_service_body_editor_panel()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function return_single_service_body_editor_panel()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<div id="bmlt_admin_single_service_body_editor_div" class="bmlt_admin_single_service_body_editor_div">'.(defined('__DEBUG_MODE__') ? "\n" : '');
             $ret .= '<fieldset id="bmlt_admin_single_service_body_editor_fieldset" class="bmlt_admin_single_service_body_editor_fieldset">'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= '<legend id="bmlt_admin_single_service_body_editor_fieldset_legend" class="bmlt_admin_single_service_body_editor_fieldset_legend">'.(defined('__DEBUG_MODE__') ? "\n" : '');
@@ -894,8 +921,10 @@ class c_comdef_admin_main_console
     \brief This gets just the Service Body Admin Users, and returns their objects in an array.
     \returns An array with the user objects (instances of c_comdef_user)
     ************************************************************************************************************/
-    function get_full_editor_users()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function get_full_editor_users()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = array ();
         
         for ($c = 0; $c < count($this->my_users); $c++) {
@@ -912,8 +941,10 @@ class c_comdef_admin_main_console
     \brief This gets just the Service Body Editor (Trainee) Users, and returns their objects in an array.
     \returns An array with the user objects (instances of c_comdef_user)
     ************************************************************************************************************/
-    function get_basic_editor_users()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function get_basic_editor_users()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = array ();
         
         for ($c = 0; $c < count($this->my_users); $c++) {
@@ -930,8 +961,10 @@ class c_comdef_admin_main_console
     \brief This gets just the Observer Users, and returns their objects in an array.
     \returns An array with the user objects (instances of c_comdef_user)
     ************************************************************************************************************/
-    function get_observer_users()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function get_observer_users()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = array ();
         
         for ($c = 0; $c < count($this->my_users); $c++) {
@@ -948,8 +981,10 @@ class c_comdef_admin_main_console
     \brief This creates the HTML for a Service body parent selection popup menu.
     \returns The HTML and JavaScript for the popup menu (select element).
     ************************************************************************************************************/
-    function create_service_body_parent_popup()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function create_service_body_parent_popup()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<select id="bmlt_admin_single_service_body_editor_parent_select" class="bmlt_admin_single_service_body_editor_parent_select" onchange="admin_handler_object.recalculateServiceBody();">'.(defined('__DEBUG_MODE__') ? "\n" : '');
 
             $ret .= '<option id="parent_popup_option_0" selected="selected" value="0">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['service_body_parent_popup_no_parent_option']).'</option>'.(defined('__DEBUG_MODE__') ? "\n" : '');
@@ -967,8 +1002,10 @@ class c_comdef_admin_main_console
     \brief This creates the HTML for a Service body selection popup menu.
     \returns The HTML and JavaScript for the popup menu (select element).
     ************************************************************************************************************/
-    function create_service_body_popup()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function create_service_body_popup()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<select id="bmlt_admin_single_service_body_editor_sb_select" class="bmlt_admin_single_service_body_editor_sb_select" onchange="admin_handler_object.populateServiceBodyEditor();">'.(defined('__DEBUG_MODE__') ? "\n" : '');
             $first = true;
 
@@ -1005,8 +1042,10 @@ class c_comdef_admin_main_console
     \brief This creates the HTML for a Service body selection popup menu.
     \returns The HTML and JavaScript for the popup menu (select element).
     ************************************************************************************************************/
-    function create_service_body_type_popup()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function create_service_body_type_popup()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<select id="bmlt_admin_single_service_body_editor_type_select" class="bmlt_admin_single_service_body_editor_type_select" onchange="admin_handler_object.recalculateServiceBody();">';
             $ret .= '<option value="GR">';
                 $ret .= htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_type_c_comdef_service_body__GRP__']);
@@ -1044,9 +1083,11 @@ class c_comdef_admin_main_console
     \brief This returns the user name for a given user ID.
     \returns a string, containing the name.
     ************************************************************************************************************/
-    function get_user_name_from_id($in_user_id  ///< The ID to look up.
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function get_user_name_from_id($in_user_id  ///< The ID to look up.
                                     )
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
         
         for ($index = 0; $index  < count($this->my_users); $index++) {
@@ -1064,8 +1105,10 @@ class c_comdef_admin_main_console
     \brief This creates the HTML for a Service body selection popup menu.
     \returns The HTML and JavaScript for the popup menu (select element).
     ************************************************************************************************************/
-    function create_service_body_user_popup()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function create_service_body_user_popup()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<select id="bmlt_admin_single_service_body_editor_principal_user_select" class="bmlt_admin_single_service_body_editor_principal_user_select" onchange="admin_handler_object.recalculateServiceBody();">';
 
         for ($index = 0; $index  < count($this->my_users); $index++) {
@@ -1083,8 +1126,10 @@ class c_comdef_admin_main_console
     \brief This constructs the Service body editor buttons as a div.
     \returns The HTML and JavaScript for the button panel.
     ************************************************************************************************************/
-    function return_service_body_editor_button_panel()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function return_service_body_editor_button_panel()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<div class="bmlt_admin_service_body_editor_button_div">';
             $ret .= '<span class="bmlt_admin_meeting_editor_form_meeting_button_left_span">';
                 $ret .= '<a id="bmlt_admin_service_body_editor_form_service_body_save_button" href="javascript:admin_handler_object.saveServiceBody();" class="bmlt_admin_ajax_button button_disabled">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['service_body_save_button']).'</a>';
@@ -1111,8 +1156,10 @@ class c_comdef_admin_main_console
     \brief This constructs the meeting editor section of the console. Most user levels (not observers) have it.
     \returns The HTML and JavaScript for the "Edit Meetings" section.
     ************************************************************************************************************/
-    function return_meeting_editor_panel()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function return_meeting_editor_panel()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '';
         
         $can_edit = false;
@@ -1173,8 +1220,10 @@ class c_comdef_admin_main_console
     \brief This constructs the tab div that allows the user to select between a search and results.
     \returns The HTML and JavaScript for the Meeting Editor Tabs
     ************************************************************************************************************/
-    function return_meeting_editor_tab_div()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function return_meeting_editor_tab_div()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret ='<div id="bmlt_admin_meeting_editor_tab_specifier_div" class="bmlt_admin_tab_div_left bmlt_admin_tab_div_selected">';  // The link for the search specifier.
             $ret .= '<a id="bmlt_admin_meeting_editor_tab_specifier_a">';
                 $ret .= htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_tab_specifier_text']);
@@ -1193,8 +1242,10 @@ class c_comdef_admin_main_console
     \brief This constructs the meeting search specification panel of the meeting editor.
     \returns The HTML and JavaScript for the Edit Meetings Search Specifier section.
     ************************************************************************************************************/
-    function return_meeting_specification_panel()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function return_meeting_specification_panel()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<div id="bmlt_admin_meeting_editor_form_specifier_div" class="bmlt_admin_meeting_editor_form_specifier_div">';
             $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                 $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_text_input_label']).'</span>';
@@ -1255,8 +1306,10 @@ class c_comdef_admin_main_console
     \brief This constructs a panel that displays a choice of Service bodies for the user to choose.
     \returns The HTML and JavaScript for the Edit Meetings Search Specifier section.
     ************************************************************************************************************/
-    function return_meeting_start_time_selection_panel()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function return_meeting_start_time_selection_panel()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<div class="bmlt_admin_one_line_in_a_form clear_both">';
             $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_search_start_time_label']).'</span>';
             $ret .= '<div class="bmlt_admin_value_left_div">';
@@ -1287,8 +1340,10 @@ class c_comdef_admin_main_console
     \brief This constructs a panel that displays a choice of Service bodies for the user to choose.
     \returns The HTML and JavaScript for the Edit Meetings Search Specifier section.
     ************************************************************************************************************/
-    function return_meeting_service_body_selection_panel()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function return_meeting_service_body_selection_panel()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = 'NOT AUTHORIZED';
         
         if (count($this->my_service_bodies)) {
@@ -1307,9 +1362,11 @@ class c_comdef_admin_main_console
     /************************************************************************************//**
     \brief Build the content for the Advanced Service Bodies section.
     ****************************************************************************************/
-    function populate_service_bodies(  $in_id    ///< The ID of the Service body.
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function populate_service_bodies(  $in_id    ///< The ID of the Service body.
                                       )
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $service_body_content = '';
         $child_content = '';
 
@@ -1349,8 +1406,10 @@ class c_comdef_admin_main_console
     \brief This constructs the combined new meetings/search results panel.
     \returns The HTML and JavaScript for the Edit Meetings Search Results section.
     ************************************************************************************************************/
-    function return_meeting_editor_meetings_panel()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function return_meeting_editor_meetings_panel()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if (($this->my_user->GetUserLevel() == _USER_LEVEL_EDITOR) || ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) || ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN)) {
             $ret = '<div id="bmlt_admin_meeting_editor_form_div" class="bmlt_admin_meeting_editor_form_div item_hidden">';
                 $ret .= '<div class="bmlt_admin_meeting_editor_form_inner_div">';
@@ -1370,8 +1429,10 @@ class c_comdef_admin_main_console
     \brief This constructs a panel for creating new meetings that goes above the results.
     \returns The HTML and JavaScript for the New Meetings section.
     ************************************************************************************************************/
-    function return_new_meeting_panel()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function return_new_meeting_panel()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<div id="bmlt_admin_meeting_editor_form_new_meetings_div" class="bmlt_admin_meeting_editor_form_new_meetings_div">';
             $ret .= '<div class="bmlt_admin_meeting_editor_form_meetings_inner_div">';
                 $ret .= '<div class="bmlt_admin_meeting_editor_form_meeting_button_div">';
@@ -1390,8 +1451,10 @@ class c_comdef_admin_main_console
     \brief This constructs the meeting search results panel of the meeting editor.
     \returns The HTML and JavaScript for the Search Results section.
     ************************************************************************************************************/
-    function return_meeting_results_panel()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function return_meeting_results_panel()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<div id="bmlt_admin_meeting_editor_form_results_div" class="bmlt_admin_meeting_editor_form_results_div item_hidden">';
             $ret .= '<div id="bmlt_admin_meeting_editor_form_results_banner_div" class="bmlt_admin_meeting_editor_form_results_banner_div"><div class="bmlt_admin_meeting_editor_banner_container_div"></div></div>';
             $ret .= '<div id="bmlt_admin_meeting_editor_form_results_inner_div" class="bmlt_admin_meeting_editor_form_results_inner_div">';
@@ -1405,8 +1468,10 @@ class c_comdef_admin_main_console
     \brief This constructs a template to be filled in for a single meeting that will be edited.
     \returns The HTML and JavaScript for the "Edit Meetings" section.
     ************************************************************************************************************/
-    function return_single_meeting_editor_template()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function return_single_meeting_editor_template()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<div id="bmlt_admin_single_meeting_editor_template_div" class="bmlt_admin_single_meeting_editor_div item_hidden">';
             $ret .= '<div class="bmlt_admin_single_meeting_outer_div">';
                 $ret .= '<div id="bmlt_admin_meeting_editor_template_meeting_header" class="bmlt_admin_meeting_editor_meeting_header"></div>';
@@ -1446,8 +1511,10 @@ class c_comdef_admin_main_console
     \brief This constructs the meeting editor buttons as a div.
     \returns The HTML and JavaScript for the button panel.
     ************************************************************************************************************/
-    function return_meeting_editor_button_panel()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function return_meeting_editor_button_panel()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<div class="bmlt_admin_meeting_editor_form_meeting_button_div">';
             $ret .= '<span class="bmlt_admin_meeting_editor_form_meeting_button_left_span">';
                 $ret .= '<a id="bmlt_admin_meeting_editor_form_meeting_template_save_button" href="javascript:admin_handler_object.saveMeeting(template);" class="bmlt_admin_ajax_button button_disabled">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_save_buttonName']).'</a>';
@@ -1478,8 +1545,10 @@ class c_comdef_admin_main_console
     \brief This constructs a template to be filled in for the basic options tab.
     \returns The HTML and JavaScript for the option sheet.
     ************************************************************************************************************/
-    function return_single_meeting_basic_template()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function return_single_meeting_basic_template()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if (($this->my_user->GetUserLevel() == _USER_LEVEL_EDITOR) || ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) || ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN)) {
             $ret = '<div id="bmlt_admin_meeting_template_basic_sheet_div" class="bmlt_admin_meeting_option_sheet_div">';
         
@@ -1598,8 +1667,10 @@ class c_comdef_admin_main_console
     \brief This constructs a template to be filled in for the location options tab.
     \returns The HTML and JavaScript for the option sheet.
     ************************************************************************************************************/
-    function return_single_meeting_location_template()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function return_single_meeting_location_template()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<div id="bmlt_admin_meeting_template_location_sheet_div" class="bmlt_admin_meeting_option_sheet_div item_hidden">';
             $ret .= '<div id="bmlt_admin_single_meeting_editor_template_map_disclosure_div" class="bmlt_admin_single_meeting_disclosure_map_div_closed">';
                 $ret .= '<a class="bmlt_admin_single_meeting_editor_map_disclosure_a" id="bmlt_admin_single_meeting_editor_template_map_disclosure_a">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_location_map_link']).'</a>';
@@ -1695,8 +1766,10 @@ class c_comdef_admin_main_console
     \brief
     \returns The HTML and JavaScript for the option sheet.
     ************************************************************************************************************/
-    function return_single_meeting_format_template()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function return_single_meeting_format_template()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<div id="bmlt_admin_meeting_template_format_sheet_div" class="bmlt_admin_meeting_option_sheet_div item_hidden">';
             $ret .= '<div class="format_tab_inner_div">';
                 $f_array = $this->my_server->GetFormatsArray();
@@ -1724,8 +1797,10 @@ class c_comdef_admin_main_console
     \brief
     \returns The HTML and JavaScript for the option sheet.
     ************************************************************************************************************/
-    function return_single_meeting_other_template()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function return_single_meeting_other_template()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<div id="bmlt_admin_meeting_template_other_sheet_div" class="bmlt_admin_meeting_option_sheet_div item_hidden">';
         foreach ($this->my_data_field_templates as $data_field) {
             $key = $data_field['key'];
@@ -1778,8 +1853,10 @@ class c_comdef_admin_main_console
     \brief
     \returns The HTML and JavaScript for the option sheet.
     ************************************************************************************************************/
-    function return_single_meeting_history_template()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function return_single_meeting_history_template()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<div id="bmlt_admin_meeting_template_history_sheet_div" class="bmlt_admin_meeting_option_sheet_div item_hidden">';
             $ret .= '<div id="bmlt_admin_history_ajax_button_template_throbber_div" class="bmlt_admin_history_ajax_button_throbber_div"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></div>';
         $ret .= '</div>';
@@ -1791,8 +1868,10 @@ class c_comdef_admin_main_console
     \brief This constructs the "My Account" section of the console. All user levels will have this.
     \returns The HTML and JavaScript for the "My Account" section.
     ************************************************************************************************************/
-    function return_user_account_settings_panel()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function return_user_account_settings_panel()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<div id="bmlt_admin_user_account_disclosure_div" class="bmlt_admin_user_account_disclosure_div bmlt_admin_user_account_disclosure_div_closed">';
             $ret .= '<a class="bmlt_admin_user_account_disclosure_a" href="javascript:admin_handler_object.toggleAccountInfo();">';
                 $ret .= htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['account_disclosure']);
@@ -1899,8 +1978,10 @@ class c_comdef_admin_main_console
     /************************************************************************************//**
     \brief Used to sort users and service body names.
     ****************************************************************************************/
-    function compare_names($a, $b)
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function compare_names($a, $b)
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return strcmp($a->GetLocalName(), $b->GetLocalName());
     }
-};
+}
