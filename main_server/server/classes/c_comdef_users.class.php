@@ -29,7 +29,11 @@ require_once(dirname(__FILE__)."/c_comdef_user.class.php");
     \brief  A class to hold a collection of c_comdef_users objects.
 
 ***********************************************************************/
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:disable Squiz.Classes.ValidClassName.NotCamelCaps
 class c_comdef_users implements i_comdef_has_parent
+// phpcs:enable PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:enable Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /// This is the parent (container) object that holds this instance.
     private $_local_id_parent_obj = null;
@@ -40,7 +44,7 @@ class c_comdef_users implements i_comdef_has_parent
     */
     private $_local_copy_of_array = null;
 
-    function __construct(
+    public function __construct(
         $in_parent_object,      ///< A reference to the object that "owns" this instance.
         $in_user_object_array   ///< An array of references to c_comdef_user objects, to be stored as local references.
     ) {
@@ -57,9 +61,11 @@ class c_comdef_users implements i_comdef_has_parent
     /*******************************************************************/
     /** \brief Set the parent object of this instance.
     */
-    function SetParentObj(
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function SetParentObj(
         $in_parent_obj  ///< A reference to the parent object.
     ) {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $this->_local_id_parent_obj = null;
         $this->_local_id_parent_obj = $in_parent_obj;
     }
@@ -69,8 +75,10 @@ class c_comdef_users implements i_comdef_has_parent
 
         \returns a reference to the parent instance of the object.
     */
-    function GetParentObj()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function GetParentObj()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return $this->_local_id_parent_obj;
     }
 
@@ -79,8 +87,10 @@ class c_comdef_users implements i_comdef_has_parent
 
         \returns a reference to an array of c_comdef_user objects.
     */
-    function &GetUsersArray()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function &GetUsersArray()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return $this->_local_copy_of_array;
     }
 
@@ -89,9 +99,11 @@ class c_comdef_users implements i_comdef_has_parent
 
         \returns a reference to a c_comdef_user object. Null if none.
     */
-    function &GetUserByID(
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function &GetUserByID(
         $in_user_id ///< An integer -The ID of the user.
     ) {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
         
         foreach ($this->_local_copy_of_array as &$user) {
@@ -110,10 +122,12 @@ class c_comdef_users implements i_comdef_has_parent
 
         \returns a string, with the encrypted password. Null if none.
     */
-    function &GetEncryptedPW(
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function &GetEncryptedPW(
         $in_login,      ///< A string. The login ID.
         $in_password    ///< A string. the UNENCRYPTED password for the user.
     ) {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
         
         foreach ($this->_local_copy_of_array as $user) {
@@ -134,9 +148,11 @@ class c_comdef_users implements i_comdef_has_parent
 
         \returns a reference to a c_comdef_user object. Null if none.
     */
-    function &GetUserByLogin(   $in_login       ///< A string. The login ID.
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function &GetUserByLogin(   $in_login       ///< A string. The login ID.
                             )
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
         
         foreach ($this->_local_copy_of_array as &$user) {
@@ -155,10 +171,12 @@ class c_comdef_users implements i_comdef_has_parent
 
         \returns a reference to a c_comdef_user object. Null if none.
     */
-    function &GetUserByLoginCredentials(
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function &GetUserByLoginCredentials(
         $in_login,      ///< A string. The login ID.
         $in_password    ///< A string. the ENCRYPTED password for the user.
     ) {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
         
         foreach ($this->_local_copy_of_array as &$user) {
@@ -178,20 +196,24 @@ class c_comdef_users implements i_comdef_has_parent
 
         \returns a reference to a c_comdef_user object for the server admin.
     */
-    function &GetServerAdminObj()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function &GetServerAdminObj()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return $this->_local_copy_of_array[1];
     }
 
     /*******************************************************************/
     /** \brief Add a user object to the end of the array.
     */
-    function AddUser(   &$in_user   ///< A reference to the user to be added.
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function AddUser(   &$in_user   ///< A reference to the user to be added.
                         )
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if ($in_user instanceof c_comdef_user) {
             $in_user->SetParentObj($this);
             array_push($this->_local_copy_of_array, $in_user);
         }
     }
-};
+}
