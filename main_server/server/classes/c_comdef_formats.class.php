@@ -47,7 +47,11 @@ require_once(dirname(__FILE__)."/../shared/classes/comdef_utilityclasses.inc.php
     the system, and we use the localization to return its key and description
     in the appropriate language.
 ***********************************************************************/
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:disable Squiz.Classes.ValidClassName.NotCamelCaps
 class c_comdef_formats implements i_comdef_has_parent
+// phpcs:enable PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:enable Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /// This is the parent (container) object that holds this instance.
     private $_local_id_parent_obj = null;
@@ -61,7 +65,7 @@ class c_comdef_formats implements i_comdef_has_parent
     /*******************************************************************/
     /** \brief Constructor. Sets the parent object.
     */
-    function __construct(
+    public function __construct(
         $in_parent_obj,
         $in_array
     ) {
@@ -74,8 +78,10 @@ class c_comdef_formats implements i_comdef_has_parent
 
         \returns a reference to an array of c_comdef_format objects.
     */
-    function GetFormatsArray()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function GetFormatsArray()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return $this->_local_copy_of_array;
     }
     
@@ -88,10 +94,12 @@ class c_comdef_formats implements i_comdef_has_parent
 
         \returns A reference to the single selected object.
     */
-    function GetFormatByKeyAndLanguage(
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function GetFormatByKeyAndLanguage(
         $in_format_key,         ///< This is the shared ID code.
         $in_lang_enum = null    ///< This is the code for the desired language. If not given, the server localization will be used.
     ) {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         /// If no language is given, we use the server's native language.
         if (null == $in_lang_enum) {
             $in_lang_enum = $this->GetParentObj()->GetLocalLang();
@@ -126,10 +134,12 @@ class c_comdef_formats implements i_comdef_has_parent
 
         \returns A reference to the single selected object.
     */
-    function GetFormatBySharedIDCodeAndLanguage(
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function GetFormatBySharedIDCodeAndLanguage(
         $in_shared_id_bigint,   ///< This is the shared ID code.
         $in_lang_enum = null    ///< This is the code for the desired language. If not given, the server localization will be used.
     ) {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         /// If no language is given, we use the server's native language.
         if (null == $in_lang_enum) {
             $in_lang_enum = $this->GetParentObj()->GetLocalLang();
@@ -155,9 +165,11 @@ class c_comdef_formats implements i_comdef_has_parent
         \returns A simple array of references to the objects for the formats
         in all languages for the given shared ID. Null if no formats fit the language.
     */
-    function GetFormatsBySharedIDCode(
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function GetFormatsBySharedIDCode(
         $in_shared_id_bigint    ///< This is the shared ID code.
     ) {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
 
         foreach ($this->_local_copy_of_array as $lang) {
@@ -180,9 +192,11 @@ class c_comdef_formats implements i_comdef_has_parent
         \returns A simple array of references to the objects for the formats
         in the given language. Null if no formats fit the language.
     */
-    function GetFormatsByLanguage(
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function GetFormatsByLanguage(
         $in_lang_enum = null    ///< This is the code for the desired language. If not given, the server localization will be used.
     ) {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
         
         /// If no language is given, we use the server's native language.
@@ -207,10 +221,12 @@ class c_comdef_formats implements i_comdef_has_parent
         \returns A simple array of references to the objects for the formats
         in all languages for the given string. Null if no formats fit.
     */
-    function GetFormatsByString(
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function GetFormatsByString(
         $in_string,             ///< This is the string to search for.
         $in_lang_enum = null    ///< This is the code for the desired language. If not given, the server localization will be used.
     ) {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
         
         /// If no language is given, we use the server's native language.
@@ -278,9 +294,11 @@ class c_comdef_formats implements i_comdef_has_parent
     /*******************************************************************/
     /** \brief Set the parent object of this instance.
     */
-    function SetParentObj(
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function SetParentObj(
         $in_parent_obj  ///< A reference to the parent object.
     ) {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $this->_local_id_parent_obj = null;
         $this->_local_id_parent_obj = $in_parent_obj;
     }
@@ -290,8 +308,10 @@ class c_comdef_formats implements i_comdef_has_parent
 
         \returns a reference to the parent instance of the object.
     */
-    function GetParentObj()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function GetParentObj()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return $this->_local_id_parent_obj;
     }
-};
+}
