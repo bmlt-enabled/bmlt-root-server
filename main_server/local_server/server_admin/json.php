@@ -1,7 +1,7 @@
 <?php
 /*
     This file is part of the Basic Meeting List Toolbox (BMLT).
-    
+
     Find out more at: http://bmlt.magshare.org
 
     BMLT is free software: you can redistribute it and/or modify
@@ -17,207 +17,168 @@
     You should have received a copy of the GNU General Public License
     along with this code.  If not, see <http://www.gnu.org/licenses/>.
 */
-define ( 'BMLT_EXEC', 1 );
-require_once ( dirname ( dirname ( dirname ( __FILE__ ) ) ).'/server/config/get-config.php' );
+define('BMLT_EXEC', 1);
+require_once(dirname(dirname(dirname(__FILE__))).'/server/config/get-config.php');
 
 // We only do this if the capability has been enabled in the auto-config file.
-if ( isset ( $g_enable_semantic_admin ) && ($g_enable_semantic_admin == TRUE) )
-    {
-    require_once ( dirname ( dirname ( dirname ( __FILE__ ) ) ).'/server/c_comdef_server.class.php');
+if (isset($g_enable_semantic_admin) && ($g_enable_semantic_admin == true)) {
+    require_once(dirname(dirname(dirname(__FILE__))).'/server/c_comdef_server.class.php');
 
     /***************************************************************************************************************
     ************************************************* MAIN CONTEXT *************************************************
     ***************************************************************************************************************/
 
-    $http_vars = array_merge ( $_GET, $_POST );
+    $http_vars = array_merge($_GET, $_POST);
     
     // Create an HTTP path to our XML file. We build it manually, in case this file is being used elsewhere, or we have a redirect in the domain.
     // We allow it to be used as HTTPS.
     $url_path = GetURLToMainServerDirectory().'local_server/server_admin/json.php';
     $lang_enum = '';
-    $login_call = FALSE;    // We only allow login with the login call. That's to prevent users constantly sending cleartext login info.
+    $login_call = false;    // We only allow login with the login call. That's to prevent users constantly sending cleartext login info.
 
     // We use a cookie to store the language pref.
-    if ( isset ( $_COOKIE ) && isset ( $_COOKIE['bmlt_admin_lang_pref'] ) && $_COOKIE['bmlt_admin_lang_pref'] )
-        {
+    if (isset($_COOKIE) && isset($_COOKIE['bmlt_admin_lang_pref']) && $_COOKIE['bmlt_admin_lang_pref']) {
         $lang_enum = $_COOKIE['bmlt_admin_lang_pref'];
-        }
+    }
 
-    if ( isset ( $http_vars['lang_enum'] ) && $http_vars['lang_enum'] )
-        {
+    if (isset($http_vars['lang_enum']) && $http_vars['lang_enum']) {
         $lang_enum = $http_vars['lang_enum'];
-        }
+    }
 
     $http_vars['lang_enum'] = $lang_enum;       // Quick and dirty way to ensure that this gets properly propagated.
 
     $expires = time() + (60 * 60 * 24 * 365);   // Expire in one year.
-    setcookie ( 'bmlt_admin_lang_pref', $lang_enum, $expires, '/' );
+    setcookie('bmlt_admin_lang_pref', $lang_enum, $expires, '/');
     
-    require_once ( dirname ( dirname ( dirname ( __FILE__ ) ) ).'/server/shared/classes/comdef_utilityclasses.inc.php');
-    require_once ( dirname ( dirname ( dirname ( __FILE__ ) ) ).'/server/shared/Array2Json.php');
-    require_once ( dirname ( dirname ( __FILE__ ) ).'/db_connect.php');
+    require_once(dirname(dirname(dirname(__FILE__))).'/server/shared/classes/comdef_utilityclasses.inc.php');
+    require_once(dirname(dirname(dirname(__FILE__))).'/server/shared/Array2Json.php');
+    require_once(dirname(dirname(__FILE__)).'/db_connect.php');
     
-    DB_Connect_and_Upgrade ( );
+    DB_Connect_and_Upgrade();
 
     $server = c_comdef_server::MakeServer();
     
-    if ( $server instanceof c_comdef_server )
-        {
-        if ( !isset ( $_SESSION ) )
-            {
+    if ($server instanceof c_comdef_server) {
+        if (!isset($_SESSION)) {
             session_start();
-            }
+        }
         
         // See if we are logging in
-        if ( isset ( $http_vars['admin_action'] ) && (($http_vars['admin_action'] == 'logout') || ($http_vars['admin_action'] == 'login')) )
-            {
-            $login_call = TRUE;
+        if (isset($http_vars['admin_action']) && (($http_vars['admin_action'] == 'logout') || ($http_vars['admin_action'] == 'login'))) {
+            $login_call = true;
             // Belt and suspenders -nuke the stored login.
             $_SESSION[$admin_session_name] = null;
-            unset ( $_SESSION[$admin_session_name] );
+            unset($_SESSION[$admin_session_name]);
 
-            if ( isset ( $http_vars['admin_action'] ) && ($http_vars['admin_action'] == 'login') )
-                {
+            if (isset($http_vars['admin_action']) && ($http_vars['admin_action'] == 'login')) {
                 $login = $http_vars['c_comdef_admin_login'];
                 $pw = $http_vars['c_comdef_admin_password'];
                 
-                if ( $login && $pw )
-                    {
+                if ($login && $pw) {
                     // If this is a valid login, we'll get an encrypted password back.
-                    $enc_password = $server->GetEncryptedPW ( $login, trim ( $pw ) );
+                    $enc_password = $server->GetEncryptedPW($login, trim($pw));
 
-                    if ( null != $enc_password )    // If we got a password, we set up the session.
-                        {
+                    if (null != $enc_password) {    // If we got a password, we set up the session.
                         $_SESSION[$admin_session_name] = "$login\t$enc_password";
                         
                         // Check to make sure this is a kosher user.
                         $user_obj = $server->GetCurrentUserObj();
-                        if ( !($user_obj instanceof c_comdef_user) || ($user_obj->GetUserLevel() == _USER_LEVEL_DISABLED) || ($user_obj->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) || ($user_obj->GetID() == 1) )
-                            {
+                        if (!($user_obj instanceof c_comdef_user) || ($user_obj->GetUserLevel() == _USER_LEVEL_DISABLED) || ($user_obj->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) || ($user_obj->GetID() == 1)) {
                             // We do not allow semantic access to Server Admin functions (because security)
-                            unset ( $user_obj );    // Goodbye, Mr. Bond...
+                            unset($user_obj);    // Goodbye, Mr. Bond...
                             c_comdef_LogoutUser();
-                            die ( 'NOT AUTHORIZED' );
-                            }
+                            die('NOT AUTHORIZED');
+                        }
                             
                         // If we are OK, we'll fall through.
-                        }
-                    else    // These seem redundant, but a basic security posture of mine is to immediatly kill execution upon discovering a security breach.
+                    } else // These seem redundant, but a basic security posture of mine is to immediatly kill execution upon discovering a security breach.
                         {
                         c_comdef_LogoutUser();
-                        die ( 'NOT AUTHORIZED' );
-                        }
+                        die('NOT AUTHORIZED');
                     }
-                else
-                    {
+                } else {
                     c_comdef_LogoutUser();
-                    die ( 'NOT AUTHORIZED' );
-                    }
+                    die('NOT AUTHORIZED');
                 }
-            else    // Logout gets a "bye".
+            } else // Logout gets a "bye".
                 {
                 c_comdef_LogoutUser();
-                die ( 'BYE' );
-                }
+                die('BYE');
             }
+        }
 
         // If we are logged in, and this isn't the login call, then we get to play in the admin playground...
-        if ( !$login_call && isset ( $_SESSION[$admin_session_name] ) )
-            {
+        if (!$login_call && isset($_SESSION[$admin_session_name])) {
             // Belt and suspenders. We just check one more time...
             $user_obj = $server->GetCurrentUserObj();
-            if ( !($user_obj instanceof c_comdef_user) || ($user_obj->GetUserLevel() == _USER_LEVEL_DISABLED) || ($user_obj->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) || ($user_obj->GetID() == 1) )
-                {
+            if (!($user_obj instanceof c_comdef_user) || ($user_obj->GetUserLevel() == _USER_LEVEL_DISABLED) || ($user_obj->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) || ($user_obj->GetID() == 1)) {
                 c_comdef_LogoutUser();
-                die ( 'NOT AUTHORIZED' );
-                }
-            else    // If everything is OK, then we actually include the class, instantiate the object, and process the request.
+                die('NOT AUTHORIZED');
+            } else // If everything is OK, then we actually include the class, instantiate the object, and process the request.
                 {
-                if ( isset ( $http_vars['admin_action'] ) && $http_vars['admin_action'] )   // Must have an admin_action.
-                    {
-                    require_once ( dirname ( __FILE__ ).'/c_comdef_admin_xml_handler.class.php' );
+                if (isset($http_vars['admin_action']) && $http_vars['admin_action']) {   // Must have an admin_action.
+                    require_once(dirname(__FILE__).'/c_comdef_admin_xml_handler.class.php');
             
-                    $handler = new c_comdef_admin_xml_handler ( $http_vars, $server );
+                    $handler = new c_comdef_admin_xml_handler($http_vars, $server);
                 
-                    if ( $handler instanceof c_comdef_admin_xml_handler )
-                        {
+                    if ($handler instanceof c_comdef_admin_xml_handler) {
                         $ret = $handler->process_commands();
-                        $ret = simplexml_load_string ( $ret );
-                        $json = json_encode ( (Array)$ret, JSON_NUMERIC_CHECK );
+                        $ret = simplexml_load_string($ret);
+                        $json = json_encode((Array)$ret, JSON_NUMERIC_CHECK);
                         
                         $pattern = '/\{\"\@attributes\"\:\{(.*?)\}\}/';    // Replace attribute objects with direct objects, to remove the extra layer.
                         $replacement = '{\1}';
-                        do
-                            {
+                        do {
                             $old_json = $json;
-                            $json = preg_replace ( $pattern, $replacement, $json );
-                            } while ( $json && ($old_json != $json) );
+                            $json = preg_replace($pattern, $replacement, $json);
+                        } while ($json && ($old_json != $json));
                         
                         $pattern = '/\"\@attributes\"\:\{(\"sequence_index\"\:(\d+?))\}\,/';
                         $replacement = '';
-                        do
-                            {
+                        do {
                             $old_json = $json;
-                            $json = preg_replace ( $pattern, $replacement, $json );
-                            } while ( $json && ($old_json != $json) );
+                            $json = preg_replace($pattern, $replacement, $json);
+                        } while ($json && ($old_json != $json));
                         
                         $pattern = '/\"row\"\:\{\"sequence_index\"\:(\d*?)\}\,/';    // Replace sequence index object, to remove the extra layer.
-                        do
-                            {
+                        do {
                             $old_json = $json;
-                            $json = preg_replace ( $pattern, "", $json );
-                            } while ( $json && ($old_json != $json) );
+                            $json = preg_replace($pattern, "", $json);
+                        } while ($json && ($old_json != $json));
                         
-                        if ( isset ( $json ) && $json )
-                            {
-                            header ( 'Content-Type:application/json; charset=UTF-8' );
-                            if ( zlib_get_coding_type () === false )
-                                {
-                                ob_start ( "ob_gzhandler" );
-                                }
-                            else
-                                {
+                        if (isset($json) && $json) {
+                            header('Content-Type:application/json; charset=UTF-8');
+                            if (zlib_get_coding_type() === false) {
+                                ob_start("ob_gzhandler");
+                            } else {
                                 ob_start();
-                                }
+                            }
                             echo ( $json );
                             ob_end_flush();
-                            }
-                        else
-                            {
+                        } else {
                             $ret = 'ERROR';
-                            }
                         }
-                    else
-                        {
+                    } else {
                         $ret = 'ERROR';
-                        }
+                    }
                     
                     // Just making sure...
-                    unset ( $handler );
-                    unset ( $server );
-                    unset ( $http_vars );
-                    }
-                else
-                    {
-                    die ( 'BAD ADMIN ACTION' );
-                    }
+                    unset($handler);
+                    unset($server);
+                    unset($http_vars);
+                } else {
+                    die('BAD ADMIN ACTION');
                 }
             }
-        elseif ( $login_call && isset ( $_SESSION[$admin_session_name] ) )  // Simple login just gets an "OK".
-            {
+        } elseif ($login_call && isset($_SESSION[$admin_session_name])) {  // Simple login just gets an "OK".
             ob_start();
             echo ( 'OK' );
             ob_end_flush();
-            }
-        else
-            {
+        } else {
             c_comdef_LogoutUser();
-            die ( 'NOT AUTHORIZED' );
-            }
+            die('NOT AUTHORIZED');
         }
-    else
-        {
-        die ( 'NO SERVER!' );
-        }
+    } else {
+        die('NO SERVER!');
     }
-?>
+}

@@ -30,14 +30,14 @@
 ********************************************************************************************/
 
 // Include our configuration.
-require_once ( dirname ( __FILE__ ).'/../config-bmlt-basic.inc.php' );
+require_once(dirname(__FILE__).'/../config-bmlt-basic.inc.php');
 // Include the satellite driver class.
-require_once ( ROOTPATH .'/vendor/bmlt/bmlt-satellite-base-class/bmlt-cms-satellite-plugin.php' );
+require_once(ROOTPATH .'/vendor/bmlt/bmlt-satellite-base-class/bmlt-cms-satellite-plugin.php');
 
 /****************************************************************************************//**
 *   \class bmlt_basic                                                                       *
 *                                                                                           *
-*   \brief 
+*   \brief
 ********************************************************************************************/
 
 class bmlt_basic extends BMLTPlugin
@@ -52,20 +52,20 @@ class bmlt_basic extends BMLTPlugin
     /************************************************************************************//**
     *   \brief Outputs the head HTML, CSS and JavaScript.                                   *
     ****************************************************************************************/
-    function output_head ( $in_shortcode = '[[bmlt]]'   ///< You need to provide a shortcode, if you want something other than the default.
+    function output_head( $in_shortcode = '[[bmlt]]'   ///< You need to provide a shortcode, if you want something other than the default.
                         )
-        {
+    {
         $this->my_shortcode = $in_shortcode;  // Save this.
-        echo $this->standard_head ( $this->my_shortcode );
-        }
+        echo $this->standard_head($this->my_shortcode);
+    }
                 
     /************************************************************************************//**
     *   \brief Outputs the body HTML and JavaScript.                                        *
     ****************************************************************************************/
-    function output_body ()
-        {
-        echo $this->content_filter ( $this->my_shortcode );
-        }
+    function output_body()
+    {
+        echo $this->content_filter($this->my_shortcode);
+    }
     
     /************************************************************************************//**
     *                    INTERNAL FUNCTIONS (NOT CALLED BY CLIENT)                          *
@@ -77,16 +77,16 @@ class bmlt_basic extends BMLTPlugin
     *   \returns a string, containing the path.                                             *
     ****************************************************************************************/
     protected function get_ajax_base_uri()
-        {
+    {
         $port = $_SERVER['SERVER_PORT'] ;
         // IIS puts "off" in the HTTPS field, so we need to test for that.
-        $https = (!empty ( $_SERVER['HTTPS'] ) && (($_SERVER['HTTPS'] !== 'off') || ($port == 443))); 
+        $https = (!empty($_SERVER['HTTPS']) && (($_SERVER['HTTPS'] !== 'off') || ($port == 443)));
         $server_path = $_SERVER['SERVER_NAME'];
         $my_path = $_SERVER['PHP_SELF'];
-        $server_path .= trim ( (($https && ($port != 443)) || (!$https && ($port != 80))) ? ':'.$port : '', '/' );
+        $server_path .= trim((($https && ($port != 443)) || (!$https && ($port != 80))) ? ':'.$port : '', '/');
         $server_path = 'http'.($https ? 's' : '').'://'.$server_path.$my_path;
         return $server_path;
-        }
+    }
     
     /************************************************************************************//**
     *   \brief Return an HTTP path to the plugin directory.                                 *
@@ -94,9 +94,9 @@ class bmlt_basic extends BMLTPlugin
     *   \returns a string, containing the path.                                             *
     ****************************************************************************************/
     protected function get_plugin_path()
-        {
-        return dirname( $this->get_ajax_base_uri() ).'/../../vendor/bmlt/bmlt-satellite-base-class/';
-        }
+    {
+        return dirname($this->get_ajax_base_uri()).'/../../vendor/bmlt/bmlt-satellite-base-class/';
+    }
     
     /************************************************************************************//**
     *   \brief This uses the CMS text processor (t) to process the given string.            *
@@ -106,52 +106,49 @@ class bmlt_basic extends BMLTPlugin
     *                                                                                       *
     *   \returns a string, processed by WP.                                                 *
     ****************************************************************************************/
-    function process_text (  $in_string  ///< The string to be processed.
+    function process_text(  $in_string  ///< The string to be processed.
                                     )
-        {
-        $in_string = htmlspecialchars ( $in_string );
+    {
+        $in_string = htmlspecialchars($in_string);
             
         return $in_string;
-        }
+    }
 
     /************************************************************************************//**
     *   \brief This gets the default admin options from the object (not the DB).            *
     *                                                                                       *
     *   \returns an associative array, with the default option settings.                    *
     ****************************************************************************************/
-    protected function geDefaultBMLTOptions ()
-        {
+    protected function geDefaultBMLTOptions()
+    {
         global $bmlt_basic_configuration;
         // These are the defaults. If the saved option has a different value, it replaces the ones in here.
         return $bmlt_basic_configuration[0];
-        }
+    }
     
     /************************************************************************************//**
     *   \brief This gets the admin options from the config file.                            *
     *                                                                                       *
     *   \returns an associative array, with the option settings.                            *
     ****************************************************************************************/
-    protected function cms_get_option ( $in_option_key   ///< The name of the option
+    protected function cms_get_option( $in_option_key   ///< The name of the option
                                         )
-        {
+    {
         global $bmlt_basic_configuration;
         global $bmlt_basic_configuration_index;
         
         $ret = null;
         
-        if ( $in_option_key != self::$admin2OptionsName )
-            {
-            $index = intval ( max ( $bmlt_basic_configuration_index - 1, intval(str_replace ( self::$adminOptionsName.'_', '', $in_option_key ) )) );
+        if ($in_option_key != self::$admin2OptionsName) {
+            $index = intval(max($bmlt_basic_configuration_index - 1, intval(str_replace(self::$adminOptionsName.'_', '', $in_option_key))));
             
             $ret = $bmlt_basic_configuration[$index];
-            }
-        else
-            {
+        } else {
             $ret = array ( 'num_servers' => $bmlt_basic_configuration_index );
-            }
+        }
 
         return $ret;
-        }
+    }
 
     /************************************************************************************//**
     *   \brief This function fetches the settings ID for a page (if there is one).          *
@@ -161,167 +158,141 @@ class bmlt_basic extends BMLTPlugin
     *                                                                                       *
     *   \returns a mixed type, with the settings ID.                                        *
     ****************************************************************************************/
-    protected function cms_get_page_settings_id ($in_text,                  ///< Required (for the base version) content to check.
-                                                 $in_check_mobile = false   ///< True if this includes a check for mobile. Default is false.
-                                                )
-        {
+    protected function cms_get_page_settings_id(
+        $in_text,                  ///< Required (for the base version) content to check.
+        $in_check_mobile = false   ///< True if this includes a check for mobile. Default is false.
+    ) {
         $my_option_id = 0;
         
-        if ( !$in_check_mobile && isset ( $this->my_http_vars['bmlt_settings_id'] ) && is_array ($this->getBMLTOptions ( $this->my_http_vars['bmlt_settings_id'] )) )
-            {
+        if (!$in_check_mobile && isset($this->my_http_vars['bmlt_settings_id']) && is_array($this->getBMLTOptions($this->my_http_vars['bmlt_settings_id']))) {
             $my_option_id = $this->my_http_vars['bmlt_settings_id'];
-            }
-        else
-            {
-            $support_mobile = self::get_shortcode ( $in_text, 'bmlt_mobile');
+        } else {
+            $support_mobile = self::get_shortcode($in_text, 'bmlt_mobile');
             
-            if ( $support_mobile === true )
-                {
-                $options = $this->getBMLTOptions ( 1 );
-                $support_mobile = (!isset ( $options['id'] ) || !$options['id'] ) ? "" : strval ( $options['id'] );
-                }
+            if ($support_mobile === true) {
+                $options = $this->getBMLTOptions(1);
+                $support_mobile = (!isset($options['id']) || !$options['id'] ) ? "" : strval($options['id']);
+            }
 
-            if ( $in_check_mobile && $support_mobile && !isset ( $this->my_http_vars['BMLTPlugin_mobile'] ) && (self::mobile_sniff_ua ($this->my_http_vars) != 'xhtml') )
-                {
+            if ($in_check_mobile && $support_mobile && !isset($this->my_http_vars['BMLTPlugin_mobile']) && (self::mobile_sniff_ua($this->my_http_vars) != 'xhtml')) {
                 $my_option_id = $support_mobile;
-                }
-            elseif ( !$in_check_mobile )
-                {
-                if ( isset ( $this->my_http_vars['bmlt_settings_id'] ) && intval ( $this->my_http_vars['bmlt_settings_id'] ) )
-                    {
-                    $my_option_id = intval ( $this->my_http_vars['bmlt_settings_id'] );
-                    }
-                elseif ( $in_text )
-                    {
-                    $my_option_id_content = parent::cms_get_page_settings_id ( $in_text, $in_check_mobile );
+            } elseif (!$in_check_mobile) {
+                if (isset($this->my_http_vars['bmlt_settings_id']) && intval($this->my_http_vars['bmlt_settings_id'])) {
+                    $my_option_id = intval($this->my_http_vars['bmlt_settings_id']);
+                } elseif ($in_text) {
+                    $my_option_id_content = parent::cms_get_page_settings_id($in_text, $in_check_mobile);
                     
                     $my_option_id = $my_option_id_content ? $my_option_id_content : $my_option_id;
-                    }
+                }
                 
-                if ( !$my_option_id )   // If nothing else gives, we go for the default (first) settings.
-                    {
-                    $options = $this->getBMLTOptions ( 1 );
-                    $my_option_id = (!isset ( $options['id'] ) || !$options['id'] ) ? "" : $options['id'];
-                    }
+                if (!$my_option_id) {   // If nothing else gives, we go for the default (first) settings.
+                    $options = $this->getBMLTOptions(1);
+                    $my_option_id = (!isset($options['id']) || !$options['id'] ) ? "" : $options['id'];
                 }
             }
+        }
 
         return $my_option_id;
-        }
+    }
         
     /************************************************************************************//**
     *   \brief returns any necessary head content.                                          *
     ****************************************************************************************/
-    function standard_head ( $in_text = null   ///< This is the page content text.
+    function standard_head( $in_text = null   ///< This is the page content text.
                             )
-        {
-        $this->ajax_router ( );
+    {
+        $this->ajax_router();
         $load_head = false;   // This is a throwback. It prevents the GM JS from being loaded if there is no directly specified settings ID.
         $head_content = "<!-- Added by the BMLT plugin 3.0. -->\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=EmulateIE7\" />\n<meta http-equiv=\"Content-Style-Type\" content=\"text/css\" />\n<meta http-equiv=\"Content-Script-Type\" content=\"text/javascript\" />\n";
         
-        $support_mobile = $this->cms_get_page_settings_id ( $in_text, true );
+        $support_mobile = $this->cms_get_page_settings_id($in_text, true);
         
-        if ( $support_mobile )
-            {
-            $mobile_options = $this->getBMLTOptions_by_id ( $support_mobile );
-            }
-        else
-            {
+        if ($support_mobile) {
+            $mobile_options = $this->getBMLTOptions_by_id($support_mobile);
+        } else {
             $support_mobile = null;
-            }
+        }
         
-        $options = $this->getBMLTOptions_by_id ( $this->cms_get_page_settings_id($in_text) );
+        $options = $this->getBMLTOptions_by_id($this->cms_get_page_settings_id($in_text));
 
-        if ( $support_mobile && is_array ( $mobile_options ) && count ( $mobile_options ) )
-            {
+        if ($support_mobile && is_array($mobile_options) && count($mobile_options)) {
             $mobile_url = $_SERVER['PHP_SELF'].'?BMLTPlugin_mobile&bmlt_settings_id='.$support_mobile;
 
-            if ( isset ( $this->my_http_vars['WML'] ) )
-                {
-                $mobile_url .= '&WML='.intval ( $this->my_http_vars['WML'] );
-                }
-            if ( isset ( $this->my_http_vars['simulate_smartphone'] ) )
-                {
-                $mobile_url .= '&simulate_smartphone';
-                }
-            ob_end_clean();
-            header ( "location: $mobile_url" );
-            die ( );
+            if (isset($this->my_http_vars['WML'])) {
+                $mobile_url .= '&WML='.intval($this->my_http_vars['WML']);
             }
+            if (isset($this->my_http_vars['simulate_smartphone'])) {
+                $mobile_url .= '&simulate_smartphone';
+            }
+            ob_end_clean();
+            header("location: $mobile_url");
+            die();
+        }
         
-        $load_server_header = $this->get_shortcode ( $in_text, 'bmlt');   // No GMAP API key or no "bmlt" shortcode, no BMLT window.
+        $load_server_header = $this->get_shortcode($in_text, 'bmlt');   // No GMAP API key or no "bmlt" shortcode, no BMLT window.
         
-        $this->my_http_vars['start_view'] = (!isset ( $options['bmlt_initial_view'] ) || !$options['bmlt_initial_view'] ) ? "" : $options['bmlt_initial_view'];
+        $this->my_http_vars['start_view'] = (!isset($options['bmlt_initial_view']) || !$options['bmlt_initial_view'] ) ? "" : $options['bmlt_initial_view'];
         
-        $this->load_params ( );
+        $this->load_params();
         
-        $root_server_root = (!isset ( $options['root_server'] ) || !$options['root_server'] ) ? "" : $options['root_server'];
+        $root_server_root = (!isset($options['root_server']) || !$options['root_server'] ) ? "" : $options['root_server'];
         
         $head_content .= '<link rel="stylesheet" type="text/css" href="';
         
-        $url = trim ( $this->get_plugin_path() );
+        $url = trim($this->get_plugin_path());
         
-        if ( $url )
-            {
-            $head_content .= (!isset ( $options['theme'] ) || !$options['theme'] ) ? $url."themes/default/" : htmlspecialchars ( $url.'themes/'.$options['theme'].'/' );
+        if ($url) {
+            $head_content .= (!isset($options['theme']) || !$options['theme'] ) ? $url."themes/default/" : htmlspecialchars($url.'themes/'.$options['theme'].'/');
         
-            if ( !defined ('_DEBUG_MODE_' ) )
-                {
+            if (!defined('_DEBUG_MODE_')) {
                 $head_content .= 'style_stripper.php?filename=';
-                }
+            }
         
             $head_content .= 'styles.css" />';
         
             $head_content .= '<link rel="stylesheet" type="text/css" href="';
         
-            $head_content .= (!isset ( $options['theme'] ) || !$options['theme'] ) ? $url."themes/default/" : htmlspecialchars ( $url.'themes/'.$options['theme'].'/' );
+            $head_content .= (!isset($options['theme']) || !$options['theme'] ) ? $url."themes/default/" : htmlspecialchars($url.'themes/'.$options['theme'].'/');
         
-            if ( !defined ('_DEBUG_MODE_' ) )
-                {
+            if (!defined('_DEBUG_MODE_')) {
                 $head_content .= 'style_stripper.php?filename=';
-                }
+            }
         
             $head_content .= 'nouveau_map_styles.css" />';
-            }
+        }
         
-        if ( $root_server_root )
-            {
+        if ($root_server_root) {
             $additional_css = '.bmlt_container * {margin:0;padding:0;text-align:center }';
             
-            if ( isset ( $options['additional_css'] ) && $options['additional_css'] )
-                {
+            if (isset($options['additional_css']) && $options['additional_css']) {
                 $additional_css .= $options['additional_css'];
-                }
-            
-            if ( $additional_css )
-                {
-                $head_content .= '<style type="text/css">'.preg_replace ( "|\s+|", " ", $additional_css ).'</style>';
-                }
             }
+            
+            if ($additional_css) {
+                $head_content .= '<style type="text/css">'.preg_replace("|\s+|", " ", $additional_css).'</style>';
+            }
+        }
             
         $head_content .= '<script type="text/javascript">';
         
-        $head_content .= self::stripFile ( 'javascript.js' );
+        $head_content .= self::stripFile('javascript.js');
 
-        if ( $this->get_shortcode ( $in_text, 'bmlt_quicksearch' ) )
-            {
-            $head_content .= self::stripFile ( 'quicksearch.js' ) . (defined ( '_DEBUG_MODE_' ) ? "\n" : '');
-            }
+        if ($this->get_shortcode($in_text, 'bmlt_quicksearch')) {
+            $head_content .= self::stripFile('quicksearch.js') . (defined('_DEBUG_MODE_') ? "\n" : '');
+        }
         
-        if ( $this->get_shortcode ( $in_text, 'bmlt_map' ) )
-            {
-            $head_content .= self::stripFile ( 'map_search.js' );
-            }
+        if ($this->get_shortcode($in_text, 'bmlt_map')) {
+            $head_content .= self::stripFile('map_search.js');
+        }
         
-        if ( $this->get_shortcode ( $in_text, 'bmlt_mobile' ) )
-            {
-            $head_content .= self::stripFile ( 'fast_mobile_lookup.js' );
-            }
+        if ($this->get_shortcode($in_text, 'bmlt_mobile')) {
+            $head_content .= self::stripFile('fast_mobile_lookup.js');
+        }
     
         $head_content .= '</script>';
 
         return $head_content;
-        }
+    }
     
     /************************************************************************************//**
     *                   THESE ARE ALL DISABLED IN THE BASIC SATELLITE                       *
@@ -332,9 +303,9 @@ class bmlt_basic extends BMLTPlugin
     *   \returns null                                                                       *
     ****************************************************************************************/
     protected function get_admin_ajax_base_uri()
-        {
+    {
         return null;
-        }
+    }
     
     /************************************************************************************//**
     *   \brief We don't do admin in this variant, so this makes that clear.                 *
@@ -342,61 +313,61 @@ class bmlt_basic extends BMLTPlugin
     *   \returns null                                                                       *
     ****************************************************************************************/
     protected function get_admin_form_uri()
-        {
+    {
         return null;
-        }
+    }
     
     /************************************************************************************//**
     *   \brief You cannot set options in this implementation.                               *
     *                                                                                       *
     *   \returns false                                                                      *
     ****************************************************************************************/
-    protected function cms_set_option ( $in_option_key,   ///< The name of the option
-                                        $in_option_value  ///< the values to be set (associative array)
-                                        )
-        {
+    protected function cms_set_option(
+        $in_option_key,   ///< The name of the option
+        $in_option_value  ///< the values to be set (associative array)
+    ) {
         return false;
-        }
+    }
     
     /************************************************************************************//**
     *   \brief You cannot delete options in this implementation.                            *
     *                                                                                       *
     *   \returns false                                                                      *
     ****************************************************************************************/
-    protected function cms_delete_option ( $in_option_key   ///< The name of the option
+    protected function cms_delete_option( $in_option_key   ///< The name of the option
                                         )
-        {
+    {
         return false;
-        }
+    }
 
     /************************************************************************************//**
     *   \brief This is declared to make it clear that we don't do post meta.                *
     *                                                                                       *
     *   \returns null                                                                       *
     ****************************************************************************************/
-    protected function cms_get_post_meta (  $in_page_id,    ///< The ID of the page/post
-                                            $in_settings_id ///< The ID of the meta tag to fetch
-                                            )
-        {
+    protected function cms_get_post_meta(
+        $in_page_id,    ///< The ID of the page/post
+        $in_settings_id ///< The ID of the meta tag to fetch
+    ) {
         return null;
-        }
+    }
         
     /************************************************************************************//**
     *   \brief No admin in this implementation.                                             *
     *                                                                                       *
     *   \returns null                                                                       *
     ****************************************************************************************/
-    function admin_head ( )
-        {            
+    function admin_head()
+    {
         return null;
-        }
+    }
     
     /************************************************************************************//**
     *   \brief Prevents the admin page from being shown.                                    *
     ****************************************************************************************/
-    function admin_page ( )
-        {
-        }
+    function admin_page()
+    {
+    }
 };
 
 /****************************************************************************************//**
@@ -405,18 +376,13 @@ class bmlt_basic extends BMLTPlugin
 
 static $basic_bmlt_object;
 
-if ( !isset ( $basic_bmlt_object ) && class_exists ( "bmlt_basic" ) )
-    {
+if (!isset($basic_bmlt_object) && class_exists("bmlt_basic")) {
     $basic_bmlt_object = new bmlt_basic();
-    }
+}
 
-if ( $basic_bmlt_object )
-    {
-    $basic_bmlt_object->m_is_logged_in_user = isset ( $server ) && ($server instanceof c_comdef_server) && ($server->GetCurrentUserObj() instanceof c_comdef_user);
+if ($basic_bmlt_object) {
+    $basic_bmlt_object->m_is_logged_in_user = isset($server) && ($server instanceof c_comdef_server) && ($server->GetCurrentUserObj() instanceof c_comdef_user);
     $basic_bmlt_object->ajax_router();
-    }
-else
-    {
+} else {
     echo 'UNABLE TO INITIALIZE THE BMLT SUBSYSTEM';
-    }
-?>
+}

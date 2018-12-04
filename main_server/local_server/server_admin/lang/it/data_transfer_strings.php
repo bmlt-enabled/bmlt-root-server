@@ -1,10 +1,10 @@
 <?php
 /***********************************************************************/
-/** \file	comdef_data_transfer_strings.inc.php
-	\brief	The strings displayed in the search results for this language (English)
-    
+/** \file   comdef_data_transfer_strings.inc.php
+    \brief  The strings displayed in the search results for this language (English)
+
     This file is part of the Basic Meeting List Toolbox (BMLT).
-    
+
     Find out more at: http://bmlt.magshare.org
 
     BMLT is free software: you can redistribute it and/or modify
@@ -19,30 +19,29 @@
 
     You should have received a copy of the GNU General Public License
     along with this code.  If not, see <http://www.gnu.org/licenses/>.*/
-	defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
-	
-	$comdef_data_transfer_strings = array ( 'key_strings'   =>  array ( 'id_bigint' => 1,
-	                                                                    'worldid_mixed' => 1,
-	                                                                    'shared_group_id_bigint' => 1,
-	                                                                    'service_body_bigint' => 1,
-	                                                                    'weekday_tinyint' => 1,
-	                                                                    'start_time' => 1,
-	                                                                    'duration_time' => 1,
-	                                                                    'formats' => 1,
-	                                                                    'lang_enum' => 1,
-	                                                                    'longitude' => 1,
-	                                                                    'latitude' => 1,
-	                                                                    'published' => 1,
-	                                                                    'email_contact' => 1
-	                                                                    ),
-	                                                                    
-	                                        'days'          =>  array ( 'Sunday',
-	                                                                    'Monday',
-	                                                                    'Tuesday',
-	                                                                    'Wednesday',
-	                                                                    'Thursday',
-	                                                                    'Friday',
-	                                                                    'Saturday'
-	                                                                    ),
-	                                        );
-?>
+    defined('BMLT_EXEC') or die('Cannot Execute Directly');    // Makes sure that this file is in the correct context.
+    
+    $comdef_data_transfer_strings = array ( 'key_strings'   =>  array ( 'id_bigint' => 1,
+                                                                        'worldid_mixed' => 1,
+                                                                        'shared_group_id_bigint' => 1,
+                                                                        'service_body_bigint' => 1,
+                                                                        'weekday_tinyint' => 1,
+                                                                        'start_time' => 1,
+                                                                        'duration_time' => 1,
+                                                                        'formats' => 1,
+                                                                        'lang_enum' => 1,
+                                                                        'longitude' => 1,
+                                                                        'latitude' => 1,
+                                                                        'published' => 1,
+                                                                        'email_contact' => 1
+                                                                        ),
+                                                                        
+                                            'days'          =>  array ( 'Sunday',
+                                                                        'Monday',
+                                                                        'Tuesday',
+                                                                        'Wednesday',
+                                                                        'Thursday',
+                                                                        'Friday',
+                                                                        'Saturday'
+                                                                        ),
+                                            );
