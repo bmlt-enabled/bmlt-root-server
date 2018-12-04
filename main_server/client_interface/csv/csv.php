@@ -75,7 +75,6 @@ function parse_redirect(
     
     switch ($http_vars['switcher']) {
         case 'GetSearchResults':
-            {
             $meanLocationData = array();
             $formats_ar = array();
             
@@ -300,11 +299,9 @@ function parse_redirect(
                 
                 $result = $result2;
             }
-        }
-        break;
+            break;
         
         case 'GetFormats':
-            {
             $result2 = GetFormats($server, $langs);
             
             if (isset($http_vars['xml_data'])) {
@@ -321,11 +318,9 @@ function parse_redirect(
             } else {
                 $result = $result2;
             }
-        }
-        break;
+            break;
         
         case 'GetServiceBodies':
-            {
             $result2 = GetServiceBodies($server, $langs);
             
             if (isset($http_vars['xml_data'])) {
@@ -342,11 +337,9 @@ function parse_redirect(
             } else {
                 $result = $result2;
             }
-        }
-        break;
+            break;
         
         case 'GetChanges':
-            {
             $start_date = null;
             $end_date = null;
             $meeting_id = null;
@@ -382,8 +375,7 @@ function parse_redirect(
             } else {
                 $result = $result2;
             }
-        }
-        break;
+            break;
         
         case 'GetServerInfo':
             $result2 = GetServerInfo();
@@ -420,7 +412,6 @@ function parse_redirect(
             break;
         
         case 'GetFieldKeys':
-            {
             $keys = c_comdef_meeting::GetFullTemplate();
             
             if (isset($keys) && is_array($keys) && count($keys)) {
@@ -446,11 +437,9 @@ function parse_redirect(
                     $result = $result2;
                 }
             }
-        }
-        break;
+            break;
         
         case 'GetFieldValues':
-            {
             $meeting_key = trim($http_vars['meeting_key']);
             $values = c_comdef_meeting::GetAllValuesForKey($meeting_key);
             if (isset($values) && is_array($values) && count($values)) {
@@ -534,8 +523,7 @@ function parse_redirect(
             } else {
                 $result = str_replace("\t", ',', $result2);
             }
-        }
-        break;
+            break;
                 
         default:
             $result = HandleDefault($http_vars);
