@@ -23,7 +23,11 @@
 define('__VERSION__', '1.3.3');
 define('__REPO_URL__', 'https://bitbucket.org/bmlt/bmlt-semantic-workshop');
 
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:disable Squiz.Classes.ValidClassName.NotCamelCaps
 class bmlt_semantic
+// phpcs:enable PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:enable Squiz.Classes.ValidClassName.NotCamelCaps
 {
     protected $_httpVars;
     protected $_bmltRootServerURI;
@@ -43,9 +47,11 @@ class bmlt_semantic
         \returns the stripped-down JS.
     */
     /**************************************************************/
-    static function strip_script( $in_filename
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public static function strip_script( $in_filename
                                 )
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
         
         if (!preg_match("|/|", $in_filename)) {
@@ -80,10 +86,12 @@ class bmlt_semantic
         \returns the content response
     */
     /**************************************************************/
-    static function call_curl(
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public static function call_curl(
         $in_uri,
         &$in_out_http_status = null
     ) {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
     
         // If the curl extension isn't loaded, we try one backdoor thing. Maybe we can use file_get_contents.
@@ -169,7 +177,7 @@ class bmlt_semantic
         \param inHttpVars The HTTP query associative array.
     */
     /**************************************************************/
-    function __construct(  $inHttpVars
+    public function __construct(  $inHttpVars
                             )
     {
         // Get any language
@@ -301,8 +309,10 @@ class bmlt_semantic
         \returns an integer that will be MMMmmmfff (M = Major Version, m = Minor Version, f = Fix Version).
     */
     /**************************************************************/
-    function get_server_version()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function get_server_version()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = array();
         
         if ($this->_bmltRootServerURI) {
@@ -345,8 +355,10 @@ class bmlt_semantic
         \returns
     */
     /**************************************************************/
-    function get_server_langs()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function get_server_langs()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = array ( );
         
         if ($this->_bmltRootServerURI) {
@@ -385,8 +397,10 @@ class bmlt_semantic
         \returns
     */
     /**************************************************************/
-    function get_server_keys()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function get_server_keys()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if ($this->_keys) {
             $ret = $this->_keys;
         } elseif ($this->_bmltRootServerURI) {
@@ -421,8 +435,10 @@ class bmlt_semantic
                 This funtion is called automatically upon instantiation.
     */
     /**************************************************************/
-    function ajax_handler()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function ajax_handler()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if (isset($this->_bmltRootServerURI) && $this->_bmltRootServerURI) {
             if (isset($this->_httpVars['GetInitialFormats'])) {
                 echo ( self::call_curl($this->_bmltRootServerURI.'/client_interface/json/?switcher=GetFormats') );
@@ -452,9 +468,11 @@ class bmlt_semantic
         \returns the localized string for the token.
     */
     /**************************************************************/
-    function localize_string( $in_string
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function localize_string( $in_string
                             )
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return htmlspecialchars(isset($this->_localization[$in_string]) ? $this->_localization[$in_string] : $in_string);
     }
     
@@ -464,8 +482,10 @@ class bmlt_semantic
         \returns the HTML for the page.
     */
     /**************************************************************/
-    function get_wizard_page_html()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function get_wizard_page_html()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '';
         
         $this->get_server_version();
@@ -595,8 +615,10 @@ class bmlt_semantic
         \returns the HTML for the div.
     */
     /**************************************************************/
-    function footerDiv()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function footerDiv()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<div id="bmlt_semantic_info_div_root_url_line'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_info_line bmlt_semantic_footer">';
         $ret .= '<div id="bmlt_semantic_version_wrapper'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_version_wrapper"><span class="info_label">'.$this->localize_string('version_label').'</span><span class="info_value">'.__VERSION__.'</span></div>';
         $ret .= defined('DEBUG') ? "\n" : '';
@@ -620,8 +642,10 @@ class bmlt_semantic
         \returns the HTML for the fieldset.
     */
     /**************************************************************/
-    function get_wizard_page_main_fieldset_html()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function get_wizard_page_main_fieldset_html()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<fieldset id="bmlt_semantic_form_main_fieldset'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_main_fieldset"><legend id="bmlt_semantic_form_main_fieldset_legend'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_main_fieldset_legend">';
         $ret .= defined('DEBUG') ? "\n" : '';
         $ret .= $this->get_wizard_page_main_select_html();
@@ -653,8 +677,10 @@ class bmlt_semantic
         \returns the HTML.
     */
     /**************************************************************/
-    function get_wizard_page_main_select_html()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function get_wizard_page_main_select_html()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<label id="bmlt_semantic_form_main_mode_select_label'.htmlspecialchars($this->_myJSName).'" for="bmlt_semantic_form_main_mode_select'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_main_mode_select_label">'.$this->localize_string('select_option_text_prompt').'</label>';
         $ret .= '<select id="bmlt_semantic_form_main_mode_select'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_main_mode_select">';
         $ret .= defined('DEBUG') ? "\n" : '';
@@ -676,8 +702,10 @@ class bmlt_semantic
         \returns the HTML.
     */
     /**************************************************************/
-    function get_wizard_page_direct_url_html()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function get_wizard_page_direct_url_html()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<div id="bmlt_semantic_form_direct_url_div'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_direct_url_div">';
         $ret .= defined('DEBUG') ? "\n" : '';
         $ret .= $this->get_wizard_page_response_type_select_html();
@@ -693,8 +721,10 @@ class bmlt_semantic
         \returns the HTML.
     */
     /**************************************************************/
-    function get_wizard_page_response_type_select_html()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function get_wizard_page_response_type_select_html()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<label id="bmlt_semantic_form_response_type_select_label'.htmlspecialchars($this->_myJSName).'" for="bmlt_semantic_form_response_type_select'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_response_type_select_label">'.$this->localize_string('response_type_selector_prompt').'</label>';
         $ret .= '<select id="bmlt_semantic_form_response_type_select'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_response_type_select">';
         $ret .= defined('DEBUG') ? "\n" : '';
@@ -719,8 +749,10 @@ class bmlt_semantic
         \returns the HTML for the fieldset.
     */
     /**************************************************************/
-    function get_wizard_page_switcher_fieldset_html()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function get_wizard_page_switcher_fieldset_html()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<fieldset id="bmlt_semantic_form_switcher_fieldset'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_switcher_fieldset"><legend id="bmlt_semantic_form_switcher_fieldset_legend'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_switcher_fieldset_legend">';
         $ret .= $this->get_wizard_page_switcher_type_select_html();
         $ret .= '</legend>';
@@ -755,8 +787,10 @@ class bmlt_semantic
         \returns the HTML.
     */
     /**************************************************************/
-    function get_wizard_page_changes_html()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function get_wizard_page_changes_html()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<div id="bmlt_semantic_form_changes_div'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_changes_div" style="display:none">';
         $ret .= '<div id="bmlt_semantic_form_changes_blurb_div'.htmlspecialchars($this->_myJSName).'" class="bmlt_workshop_blurb_note_div">';
         $ret .= '<p>'.$this->localize_string('date_format1').'</p>';
@@ -810,8 +844,10 @@ class bmlt_semantic
         \returns the HTML.
     */
     /**************************************************************/
-    function get_wizard_page_fields_html()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function get_wizard_page_fields_html()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<fieldset id="bmlt_semantic_form_main_fields_fieldset'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_main_fields_fieldset" style="display:none"><legend id="bmlt_semantic_form_main_fields_fieldset_legend'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_main_fields_fieldset_legend">';
         $ret .= $this->get_wizard_page_field_select_html('main_');
         $ret .= '</legend>';
@@ -844,8 +880,10 @@ class bmlt_semantic
         \returns the HTML.
     */
     /**************************************************************/
-    function get_wizard_page_formats_html()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function get_wizard_page_formats_html()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<div id="bmlt_semantic_form_formats_fieldset_contents_div'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_formats_fieldset_contents_div" style="display:none">';
         $ret .= defined('DEBUG') ? "\n" : '';
         $ret .= '<label id="bmlt_semantic_formats_lang_select_label'.htmlspecialchars($this->_myJSName).'select_label'.htmlspecialchars($this->_myJSName).'" for="bmlt_semantic_formats_lang_select'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_formats_lang_select_label">'.$this->localize_string('formats_lang_section_label').'</label>';
@@ -875,8 +913,10 @@ class bmlt_semantic
         \returns the HTML.
     */
     /**************************************************************/
-    function get_wizard_page_meeting_search_html()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function get_wizard_page_meeting_search_html()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<div id="bmlt_semantic_form_meeting_search_div'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_meeting_search_div">';
         $ret .= defined('DEBUG') ? "\n" : '';
         
@@ -1176,8 +1216,10 @@ class bmlt_semantic
         \returns the HTML.
     */
     /**************************************************************/
-    function get_wizard_page_specific_fields_html()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function get_wizard_page_specific_fields_html()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<fieldset id="bmlt_semantic_form_specific_fields_fieldset'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_specific_fields_fieldset"><legend id="bmlt_semantic_form_specific_fields_fieldset_legend'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_specific_fields_fieldset_legend">';
         $ret .= defined('DEBUG') ? "\n" : '';
         $ret .= $this->localize_string('specific_fields_legend');
@@ -1211,8 +1253,10 @@ class bmlt_semantic
         \returns the HTML.
     */
     /**************************************************************/
-    function get_wizard_page_sort_fields_html()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function get_wizard_page_sort_fields_html()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<fieldset id="bmlt_semantic_form_sort_fields_fieldset'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_sort_fields_fieldset"><legend id="bmlt_semantic_form_sort_fields_fieldset_legend'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_sort_fields_fieldset_legend">';
         $ret .= defined('DEBUG') ? "\n" : '';
         $ret .= $this->localize_string('sort_fields_legend');
@@ -1255,8 +1299,10 @@ class bmlt_semantic
         \returns the HTML.
     */
     /**************************************************************/
-    function get_wizard_page_coverage_area_html()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function get_wizard_page_coverage_area_html()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<fieldset id="bmlt_semantic_coverage_area_fieldset'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_coverage_area_fieldset" style="display:none"><legend id="bmlt_semantic_coverage_area_fieldset_legend'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_coverage_area_fieldset_legend">';
         $ret .= $this->localize_string('coverage_area_legend');
         $ret .= '</legend>';
@@ -1275,9 +1321,11 @@ class bmlt_semantic
         \returns the HTML.
     */
     /**************************************************************/
-    function get_wizard_page_field_select_html( $inID = ''
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function get_wizard_page_field_select_html( $inID = ''
                                                 )
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<label id="bmlt_semantic_form_field_'.htmlspecialchars($inID).'select_label'.htmlspecialchars($this->_myJSName).'" for="bmlt_semantic_form_field_'.htmlspecialchars($inID).'select'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_field_select_label">'.$this->localize_string('keys_section_label').'</label>';
         $ret .= defined('DEBUG') ? "\n" : '';
         $function_string = 'bmlt_semantic_js_object'.htmlspecialchars($this->_myJSName).'.handleFieldKeySelectChange(this)';
@@ -1301,8 +1349,10 @@ class bmlt_semantic
         \returns the HTML.
     */
     /**************************************************************/
-    function get_wizard_page_field_value_select_html()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function get_wizard_page_field_value_select_html()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<label id="bmlt_semantic_form_value_select_label'.htmlspecialchars($this->_myJSName).'" for="bmlt_semantic_form_value_select'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_value_select_label">'.$this->localize_string('values_section_label').'</label>';
         $ret .= defined('DEBUG') ? "\n" : '';
         $function_string = 'bmlt_semantic_js_object'.htmlspecialchars($this->_myJSName).'.fieldValueChosen(this)';
@@ -1324,13 +1374,15 @@ class bmlt_semantic
         \returns the HTML.
     */
     /**************************************************************/
-    function make_checkbox_html(
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function make_checkbox_html(
         $in_label_text,
         $in_base_id,
         $in_checked = false,
         $in_value = null,
         $in_onChange = null
     ) {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<div id="'.htmlspecialchars($in_base_id.'_container_div'.$this->_myJSName).'" class="bmlt_weekday_checkbox_container">';
         $ret .= '<input type="checkbox" id="'.htmlspecialchars($in_base_id.$this->_myJSName).'" class="bmlt_checkbox_input"';
         
@@ -1360,8 +1412,10 @@ class bmlt_semantic
         \returns the HTML.
     */
     /**************************************************************/
-    function get_wizard_page_schema_select_html()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function get_wizard_page_schema_select_html()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<fieldset id="bmlt_semantic_form_schema_select_fieldset'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_schema_select_fieldset" style="display:none"><legend id="bmlt_semantic_form_schema_select_fieldset_legend'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_schema_select_fieldset_legend">';
         $ret .= $this->localize_string('schema_type_selector_legend');
         $ret .= '</legend>';
@@ -1408,8 +1462,10 @@ class bmlt_semantic
         \returns the HTML.
     */
     /**************************************************************/
-    function get_wizard_page_switcher_type_select_html()
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function get_wizard_page_switcher_type_select_html()
     {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<label id="bmlt_semantic_form_switcher_type_select_label'.htmlspecialchars($this->_myJSName).'" for="bmlt_semantic_form_switcher_type_select'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_switcher_type_select_label">'.$this->localize_string('switcher_type_selector_prompt').'</label>';
         $ret .= defined('DEBUG') ? "\n" : '';
         $ret .= '<select id="bmlt_semantic_form_switcher_type_select'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_switcher_type_select">';
@@ -1440,4 +1496,4 @@ class bmlt_semantic
         
         return $ret;
     }
-};
+}
