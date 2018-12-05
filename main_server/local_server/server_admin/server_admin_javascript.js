@@ -2374,45 +2374,6 @@ function BMLT_Server_Admin()
             var state_text = meeting_state_text_item ? meeting_state_text_item.value : meeting_state_select_item.options[meeting_state_select_item.selectedIndex].value;
             var zip_text = meeting_zip_text_item.value;
             var nation_text = meeting_nation_text_item.value;
-
-            var set_map_to_address_button = document.getElementById('bmlt_admin_meeting_map_' + in_meeting_id + '_button_a');
-
-            if ( zip_text || borough_text || city_text || state_text || nation_text ) {
-                set_map_to_address_button.setAttribute('href', '');
-
-                set_map_to_address_button.href = 'javascript:admin_handler_object.setMapToAddress(' + in_meeting_id + ')';
-
-                set_map_to_address_button.className = 'bmlt_admin_ajax_button';
-            } else {
-                set_map_to_address_button.removeAttribute("href");
-
-                set_map_to_address_button.className = 'bmlt_admin_ajax_button button_disabled';
-            };
-        };
-    };
-        
-    /************************************************************************************//**
-    *   \brief
-    ****************************************************************************************/
-    this.setMapToAddress = function ( in_meeting_id       ///< The BMLT ID of the meeting being edited.
-                                        ) {
-        var meeting_street_text_item = document.getElementById('bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_street_text_input');
-        var meeting_borough_text_item = document.getElementById('bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_borough_text_input');
-        var meeting_city_text_item = document.getElementById('bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_city_text_input');
-        var meeting_state_text_item = document.getElementById('bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_state_text_input');
-        var meeting_state_select_item = document.getElementById('bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_state_select_input');
-        var meeting_zip_text_item = document.getElementById('bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_zip_text_input');
-        var meeting_nation_text_item = document.getElementById('bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_nation_text_input');
-
-        var street_text = meeting_street_text_item.value;
-        var borough_text = meeting_borough_text_item.value;
-        var city_text = meeting_city_text_item.value;
-        var state_text = meeting_state_text_item ? meeting_state_text_item.value : meeting_state_select_item.options[meeting_state_select_item.selectedIndex].value;
-        var zip_text = meeting_zip_text_item.value;
-        var nation_text = meeting_nation_text_item.value;
-        
-        if ( zip_text || borough_text || city_text || state_text || nation_text ) {
-            this.lookupLocation(in_meeting_id);
         };
     };
 

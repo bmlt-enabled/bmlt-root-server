@@ -1677,6 +1677,8 @@ class c_comdef_admin_main_console
             $ret .= '</div>';
             $ret .= '<div id="bmlt_admin_single_meeting_editor_template_map_div" class="bmlt_admin_single_meeting_map_div item_hidden">';
                 $ret .= '<div id="bmlt_admin_single_meeting_editor_template_inner_map_div" class="bmlt_admin_single_meeting_editor_inner_map_div"></div>';
+                $ret .= '<div class="bmlt_admin_single_meeting_editor_map_bottom_bar_div">';
+                $ret .= '</div>';
             $ret .= '</div>';
             $ret .= '<div class="clear_both"></div>';
             $ret .= '<div id="bmlt_admin_single_location_template_long_lat_div" class="bmlt_admin_single_location_long_lat_div">';

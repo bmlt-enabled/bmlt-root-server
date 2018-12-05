@@ -782,6 +782,11 @@ div.bmlt_admin_format_editor_wrapper_div_hidden
     display:none;
 }
 
+div.bmlt_admin_single_meeting_editor_map_bottom_bar_div
+{
+    padding:1px;
+}
+
 div.bmlt_admin_meeting_editor_service_div
 {
     float:left;
