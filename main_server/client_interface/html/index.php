@@ -17,7 +17,7 @@ require_once(dirname(__FILE__).'/bmlt-basic/bmlt_basic.class.php') ?><!DOCTYPE h
         }
             
             $shortcut_icon = "$url/local_server/server_admin/style/images/shortcut.png";
-            $stylesheet = "$url/local_server/server_admin/style".( defined('__DEBUG_MODE__') ? '/' : '/style_stripper.php?filename=' )."styles.css";
+            $stylesheet = "$url/local_server/server_admin/style/styles.css?v=" . time();
         
             $basic_bmlt_object->output_head();
         ?>

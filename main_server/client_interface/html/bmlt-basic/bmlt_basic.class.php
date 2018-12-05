@@ -265,22 +265,14 @@ class bmlt_basic extends BMLTPlugin
         
         if ($url) {
             $head_content .= (!isset($options['theme']) || !$options['theme'] ) ? $url."themes/default/" : htmlspecialchars($url.'themes/'.$options['theme'].'/');
-        
-            if (!defined('_DEBUG_MODE_')) {
-                $head_content .= 'style_stripper.php?filename=';
-            }
-        
-            $head_content .= 'styles.css" />';
+
+            $head_content .= 'styles.css?v=' . time() . '" />';
         
             $head_content .= '<link rel="stylesheet" type="text/css" href="';
-        
+
             $head_content .= (!isset($options['theme']) || !$options['theme'] ) ? $url."themes/default/" : htmlspecialchars($url.'themes/'.$options['theme'].'/');
         
-            if (!defined('_DEBUG_MODE_')) {
-                $head_content .= 'style_stripper.php?filename=';
-            }
-        
-            $head_content .= 'nouveau_map_styles.css" />';
+            $head_content .= 'nouveau_map_styles.css?v=' . time() . '" />';
         }
         
         if ($root_server_root) {
