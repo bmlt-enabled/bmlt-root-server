@@ -136,7 +136,6 @@
                                             'meeting_editor_default_zoom'                           =>  '13',
                                             'meeting_editor_default_weekday'                        =>  '2',
                                             'meeting_editor_default_start_time'                     =>  '20:30:00',
-                                            'meeting_editor_default_duration'                       =>  '01:30:00',
                                             'login_banner'                                          =>  'Basic Meeting List Toolbox',
                                             'login_underbanner'                                     =>  'Root Server Administration Console',
                                             'login'                                                 =>  'Login ID',
@@ -214,6 +213,7 @@
                                             'user_editor_account_login_label'                       =>  'Benutzer Login:',
                                             'user_editor_login_default_text'                        =>  'Trage den Benutzer Login ein',
                                             'user_editor_account_type_label'                        =>  'Benutzer ist ein:',
+                                            'user_editor_user_owner_label'                          =>  'Owned By: ', // TODO translate
                                             'user_editor_account_type_1'                            =>  'Server Administrator',
                                             'user_editor_account_type_2'                            =>  'Service Body Administrator',
                                             'user_editor_account_type_3'                            =>  'Service Body Editor',
@@ -275,6 +275,7 @@
                                             'format_editor_delete_button_confirm_perm'              =>  'Dieses Format wird dauerhaft gelöscht werden!',
                                             'min_password_length_string'                            =>  'Das Passwort ist zu kurz! Es muss mindestens %d zeichen betragen!',
                                             'AJAX_Auth_Failure'                                     =>  'Authorisation fehlgeschlagen für diese Operation. Es kann sein, dass ein Problem mit der Serverkonfiguration besteht.',
+                                            'Maps_API_Key_Warning'                                  =>   'WARNING: There is a problem with the Google Maps API Key.', // TODO translate
                                             'Observer_Link_Text'                                    =>  'Meetingssuche',
                                             'Data_Transfer_Link_Text'                               =>  'Import Meeting Data (WARNING: Replaces Current Data!)',
                                             'MapsURL'                                               =>  'http://maps.google.com/maps?q=##LAT##,##LONG##+(##NAME##)&amp;ll=##LAT##,##LONG##',
