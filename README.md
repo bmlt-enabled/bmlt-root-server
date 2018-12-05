@@ -60,15 +60,16 @@ CHANGELIST
 
 ***Version 2.12.3* ** *- UNRELEASED*
 
-- Added sort to advanced service bodies section.
-- Added user sort to full meeting list editors on service body administration.
-- Fix for default duration time not displaying correctly on meeting editor.
-- Added sort to meeting format checkboxes on formats page by format code.
-- Made initialize database button easier to see on installer wizard, and settings only gets displayed once button is mashed.
+- The service bodies list under the "Search For Meetings Tab" in the "Meeting Editor" is now sorted.
+- The users list under the "Full Meeting List Editors" section of "Service Body Administration" is now sorted.
+- Fixed an issue where the default duration time was not selected in the meeting editor.
+- The format checkboxes in the Formats tab of the meeting editor are now sorted.
+- The initialize database button in the installer wizard is now easier to see.
+- The settings in the installer wizard are now displayed only after the initialize database button is pressed.
 - Added cache busting to installer wizard's javascript and css files.
-- Long/Lat input boxes are now read only instead of disabled.
-- Fix for client_interface/html/ endpoint path to satellite base class dependency.
-- Updated German translations for server admin strings.
+- Latitude and longitude input boxes are now read only instead of disabled, allowing users to select and copy the calculated values.
+- Fixed an issue where static files in the client_interface/html/ endpoint were not being included.
+- The German translations for the administration UI were updated.
 
 ***Version 2.12.2* ** *- November 22, 2018*
 
