@@ -5325,7 +5325,7 @@ if (!g_google_api_key || !g_google_api_key.trim()) {
         showGoogleApiKeyError(g_maps_api_key_warning);
     }
     var geocoder = new google.maps.Geocoder;
-    geocoder.geocode({'address':'27205'}, function (response, status) {
+    geocoder.geocode({'address':'02539'}, function (response, status) {
         g_google_api_key_is_good = status === 'OK';
         if (!g_google_api_key_is_good) {
             showGoogleApiKeyError(g_maps_api_key_warning);

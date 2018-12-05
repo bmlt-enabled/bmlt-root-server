@@ -651,7 +651,7 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
                     }
                 }
             };
-            testKeyXhr.open('GET', 'https://maps.googleapis.com/maps/api/geocode/json?key=' + this.m_google_api_key + '&address=27205');
+            testKeyXhr.open('GET', 'https://maps.googleapis.com/maps/api/geocode/json?key=' + this.m_google_api_key + '&address=02539');
             testKeyXhr.send();
         }
     };
