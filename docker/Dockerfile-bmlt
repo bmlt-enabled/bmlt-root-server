@@ -1,18 +1,13 @@
-FROM ubuntu:16.04
+FROM bmltenabled/apache2:latest
 
-RUN apt-get update \
-  && apt-get install -yqq apache2 php libapache2-mod-php php-mcrypt php-mysql git php-dom
-
-WORKDIR /opt
+RUN apt-get update && apt-get upgrade -yqq
 
 ADD main_server/. /var/www/html/main_server
-
-RUN echo "nameserver 8.8.8.8" >> /etc/resolv.conf \
-  && chown -R www-data: /var/www/html
-
 ADD docker/auto-config.inc.php /var/www/html/auto-config.inc.php
-RUN chmod 0644 /var/www/html/auto-config.inc.php
 ADD docker/start-bmlt.sh /tmp/start-bmlt.sh
+
+RUN chown -R www-data: /var/www/html
+RUN chmod 0644 /var/www/html/auto-config.inc.php
 RUN chmod +x /tmp/start-bmlt.sh
 
 CMD ["/bin/bash", "/tmp/start-bmlt.sh"]
