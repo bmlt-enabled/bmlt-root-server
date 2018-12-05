@@ -1,6 +1,6 @@
 <?php
 /***********************************************************************/
-/** \file   search_results_strings.inc.php
+/** \file   server_admin_strings.inc.php
     \brief  The strings displayed in the search results for this language (English)
 
     This file is part of the Basic Meeting List Toolbox (BMLT).
@@ -27,7 +27,7 @@
                                             'account_type_label'                                    =>  'Ich bin ein:',
                                             'account_type_1'                                        =>  'Server Administrator',
                                             'account_type_2'                                        =>  'Service Body Administrator',
-                                            'ServerMapsURL'                                         =>  'https://maps.googleapis.com/maps/api/geocode/xml?address=##SEARCH_STRING##&sensor=false',
+                                            'ServerMapsURL'                                         =>  'http://maps.googleapis.com/maps/api/geocode/xml?address=##SEARCH_STRING##&sensor=false',
                                             'account_type_4'                                        =>  'Pathetic Luser Who Shouldn\'t Even Have Access to This Page -The Author of the Software Pooched it BAD!',
                                             'account_type_5'                                        =>  'Service Body Observer',
                                             'change_password_label'                                 =>  'Mein Passwort ändern in:',
@@ -64,8 +64,8 @@
                                             'meeting_editor_tab_editor_text'                        =>  'Meetings bearbeiten',
                                             'meeting_editor_create_new_text'                        =>  'Erstelle ein neues Meeting',
                                             'meeting_editor_location_map_link'                      =>  'Ort auf Karte',
-                                            'meeting_editor_screen_match_map_button'                =>  'Setze Karte auf Adresse',
-                                            'meeting_editor_screen_match_ll_button'                 =>  'Set Longitude and Latitude to Address',
+                                            'meeting_editor_screen_match_map_button'                =>  'Setze Koordinaten der Karte auf diese Adresse',
+                                            'meeting_editor_screen_match_ll_button'                 =>  'Setze Koordinaten der Karte auf diese Adresse',
                                             'meeting_editor_screen_default_text_prompt'             =>  'Trage einen Text oder eine Zahl ein',
                                             'meeting_is_published'                                  =>  'Meeting is veröffentlicht',
                                             'meeting_editor_screen_meeting_name_label'              =>  'Meetings-Name:',
@@ -136,6 +136,7 @@
                                             'meeting_editor_default_zoom'                           =>  '13',
                                             'meeting_editor_default_weekday'                        =>  '2',
                                             'meeting_editor_default_start_time'                     =>  '20:30:00',
+                                            'meeting_editor_default_duration'                       =>  '01:30:00',
                                             'login_banner'                                          =>  'Basic Meeting List Toolbox',
                                             'login_underbanner'                                     =>  'Root Server Administration Console',
                                             'login'                                                 =>  'Login ID',
@@ -213,7 +214,6 @@
                                             'user_editor_account_login_label'                       =>  'Benutzer Login:',
                                             'user_editor_login_default_text'                        =>  'Trage den Benutzer Login ein',
                                             'user_editor_account_type_label'                        =>  'Benutzer ist ein:',
-                                            'user_editor_user_owner_label'                          =>  'Owned By: ', // TODO translate
                                             'user_editor_account_type_1'                            =>  'Server Administrator',
                                             'user_editor_account_type_2'                            =>  'Service Body Administrator',
                                             'user_editor_account_type_3'                            =>  'Service Body Editor',
@@ -275,10 +275,9 @@
                                             'format_editor_delete_button_confirm_perm'              =>  'Dieses Format wird dauerhaft gelöscht werden!',
                                             'min_password_length_string'                            =>  'Das Passwort ist zu kurz! Es muss mindestens %d zeichen betragen!',
                                             'AJAX_Auth_Failure'                                     =>  'Authorisation fehlgeschlagen für diese Operation. Es kann sein, dass ein Problem mit der Serverkonfiguration besteht.',
-                                            'Maps_API_Key_Warning'                                  =>  'WARNING: There is a problem with the Google Maps API Key.',
                                             'Observer_Link_Text'                                    =>  'Meetingssuche',
                                             'Data_Transfer_Link_Text'                               =>  'Import Meeting Data (WARNING: Replaces Current Data!)',
-                                            'MapsURL'                                               =>  'https://maps.google.com/maps?q=##LAT##,##LONG##+(##NAME##)&amp;ll=##LAT##,##LONG##',
+                                            'MapsURL'                                               =>  'http://maps.google.com/maps?q=##LAT##,##LONG##+(##NAME##)&amp;ll=##LAT##,##LONG##',
                                             'hidden_value'                                          =>  'Cannot Display Data -Unauthorized',
                                             'Value_Prompts'                                         =>  array ( 'id_bigint' => 'Meeting ID',
                                                                                                                 'worldid_mixed' => 'World Services ID',
@@ -343,43 +342,43 @@
                                                                                                                 'worldid_mixed' => 'World ID',
                                                                                                                 'shared_group_id_bigint' => 'Unused',
                                                                                                                 'service_body_bigint' => 'Service Body ID',
-                                                                                                                'weekday_tinyint' => 'Weekday',
-                                                                                                                'start_time' => 'Start Time',
-                                                                                                                'duration_time' => 'Duration',
-                                                                                                                'formats' => 'Formats',
-                                                                                                                'lang_enum' => 'Language',
-                                                                                                                'longitude' => 'Longitude',
-                                                                                                                'latitude' => 'Latitude',
-                                                                                                                'published' => 'Published',
-                                                                                                                'email_contact' => 'Email Contact',
+                                                                                                                'weekday_tinyint' => 'Wochentag',
+                                                                                                                'start_time' => 'Start Zeit',
+                                                                                                                'duration_time' => 'Dauer',
+                                                                                                                'formats' => 'Formate',
+                                                                                                                'lang_enum' => 'Sprache',
+                                                                                                                'longitude' => 'Längengrad',
+                                                                                                                'latitude' => 'Breitengrad',
+                                                                                                                'published' => 'veröffentlicht',
+                                                                                                                'email_contact' => 'E-Mail Kontakt',
                                                                                                                 )
                                         );
 
     $email_contact_strings = array (
         'meeting_contact_form_subject_format'   =>  "[MEETING LIST CONTACT] %s",
-        'meeting_contact_message_format'        =>  "%s\n--\nThis message concerns the meeting named \"%s\", which meets at %s, on %s.\nBrowser Link: %s\nEdit Link: %s\nIt was sent directly from the meeting list web server, and the sender is not aware of your email address.\nPlease be aware that replying will expose your email address.\nIf you use \"Reply All\", and there are multiple email recipients, you may expose other people's email addresses.\nPlease respect people's privacy and anonymity; including the original sender of this message."
+        'meeting_contact_message_format'        =>  "%s\n--\nDiese Nachricht betrifft das  Meeting namens\"%s\", dzss sich trifft um %s, immer %s.\nBrowser Link: %s\nEdit Link: %s\nEs wurde direkt vom Webserver der Meetingliste gesendet, und der Absender kennt Ihre E-Mail-Adresse nicht.\nBitte beachten Sie, dass Ihre E-Mail-Adresse beim Antworten angezeigt wird.\nWenn Sie \"Reply All\" verwenden, Wenn es mehrere E-Mail-Empfänger gibt, könnten Sie die E-Mail-Adressen anderer Personen anzeigen.\nBitte respektieren Sie die Privatsphäre und Anonymität der Menschen einschließlich des ursprünglichen Absenders dieser Nachricht."
     );
 
     $change_type_strings = array (
-        '__THE_MEETING_WAS_CHANGED__' => 'The meeting was changed.',
-        '__THE_MEETING_WAS_CREATED__' => 'The meeting was created.',
-        '__THE_MEETING_WAS_DELETED__' => 'The meeting was deleted.',
-        '__THE_MEETING_WAS_ROLLED_BACK__' => 'The meeting was rolled back to a previous version.',
+        '__THE_MEETING_WAS_CHANGED__' => 'Das Meeting wurde geändert.',
+        '__THE_MEETING_WAS_CREATED__' => 'Das Meeting wurde erstellt.',
+        '__THE_MEETING_WAS_DELETED__' => 'Das Meeting wurde gelöscht.',
+        '__THE_MEETING_WAS_ROLLED_BACK__' => 'Das Meeting wurde auf die vorherige Version zurück gesetzt.',
     
-        '__THE_FORMAT_WAS_CHANGED__' => 'The format was changed.',
-        '__THE_FORMAT_WAS_CREATED__' => 'The format was created.',
-        '__THE_FORMAT_WAS_DELETED__' => 'The format was deleted.',
-        '__THE_FORMAT_WAS_ROLLED_BACK__' => 'The format was rolled back to a previous version.',
+        '__THE_FORMAT_WAS_CHANGED__' => 'Das Format wurde geändert.',
+        '__THE_FORMAT_WAS_CREATED__' => 'Das Format wurde erstellt.',
+        '__THE_FORMAT_WAS_DELETED__' => 'Das Format wurde gelöscht.',
+        '__THE_FORMAT_WAS_ROLLED_BACK__' => 'Das Format wurde auf die vorherige Version zurück gesetzt.',
     
-        '__THE_SERVICE_BODY_WAS_CHANGED__' => 'The service body was changed.',
-        '__THE_SERVICE_BODY_WAS_CREATED__' => 'The service body was created.',
-        '__THE_SERVICE_BODY_WAS_DELETED__' => 'The service body was deleted.',
-        '__THE_SERVICE_BODY_WAS_ROLLED_BACK__' => 'The service body was rolled back to a previous version.',
+        '__THE_SERVICE_BODY_WAS_CHANGED__' => 'Der service body wurde geändert.',
+        '__THE_SERVICE_BODY_WAS_CREATED__' => 'Der service body wurde erstellt.',
+        '__THE_SERVICE_BODY_WAS_DELETED__' => 'Der service body wurde gelöscht.',
+        '__THE_SERVICE_BODY_WAS_ROLLED_BACK__' => 'Der service body wurde auf die vorherige Version zurück gesetzt.',
     
-        '__THE_USER_WAS_CHANGED__' => 'The user was changed.',
-        '__THE_USER_WAS_CREATED__' => 'The user was created.',
-        '__THE_USER_WAS_DELETED__' => 'The user was deleted.',
-        '__THE_USER_WAS_ROLLED_BACK__' => 'The user was rolled back to a previous version.',
+        '__THE_USER_WAS_CHANGED__' => 'Der Benutzer  wurde geändert.',
+        '__THE_USER_WAS_CREATED__' => 'Der Benutzer wurde erstellt.',
+        '__THE_USER_WAS_DELETED__' => 'Der Benutzer wurde gelöscht.',
+        '__THE_USER_WAS_ROLLED_BACK__' => 'Der Benutzer wurde auf die vorherige Version zurück gesetzt.',
     
         '__BY__' => 'by',
         '__FOR__' => 'for'
@@ -388,23 +387,23 @@
     $detailed_change_strings = array (
         'was_changed_from' => 'was changed from',
         'to' => 'to',
-        'was_changed' => 'was changed',
-        'was_added_as' => 'was added as',
-        'was_deleted' => 'was deleted',
-        'was_published' => 'The meeting was published',
-        'was_unpublished' => 'The meeting was unpublished',
-        'formats_prompt' => 'The meeting format',
-        'duration_time' => 'The meeting duration',
-        'start_time' => 'The meeting start time',
-        'longitude' => 'The meeting longitude',
-        'latitude' => 'The meeting latitude',
-        'sb_prompt' => 'The meeting changed its Service Body from',
-        'id_bigint' => 'The meeting ID',
-        'lang_enum' => 'The meeting language',
-        'worldid_mixed' => 'The World Services ID',
-        'worldid_mixed' => 'The shared Group ID',
-        'weekday_tinyint' => 'The day of the week on which the meeting gathers',
-        'non_existent_service_body' => 'Service Body No Longer Exists',
+        'was_changed' => 'wurde geändert',
+        'was_added_as' => 'wurde hinzugefügt als',
+        'was_deleted' => 'wurde gelöscht',
+        'was_published' => 'Das Meeting wurde veröffentlicht',
+        'was_unpublished' => 'Das Meeting wurde deaktiviert',
+        'formats_prompt' => 'Das Meetings-Format',
+        'duration_time' => 'Die Meetings-Dauer',
+        'start_time' => 'Die Meetings Start-Zeit',
+        'longitude' => 'Der Meetings-Längengrad',
+        'latitude' => 'Der Meetings-Breitengrad',
+        'sb_prompt' => 'Das Meeting änderte seinen Service Body von',
+        'id_bigint' => 'Die Meetings-ID',
+        'lang_enum' => 'Die Meetings-Sprache',
+        'worldid_mixed' => 'Die World Services ID',
+        'worldid_mixed' => 'Die gemeinsame Group ID',
+        'weekday_tinyint' => 'Der Tag der Woche, an dem das Meeting stattfindet',
+        'non_existent_service_body' => 'Dieser Service Body existiert nicht mehr',
     );
     
     defined('_END_CHANGE_REPORT') or define('_END_CHANGE_REPORT', '.');

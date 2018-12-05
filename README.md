@@ -68,6 +68,7 @@ CHANGELIST
 - Added cache busting to installer wizard's javascript and css files.
 - Long/Lat input boxes are now read only instead of disabled.
 - Fix for client_interface/html/ endpoint path to satellite base class dependency.
+- Updated German translations for server admin strings.
 
 ***Version 2.12.2* ** *- November 22, 2018*
 
