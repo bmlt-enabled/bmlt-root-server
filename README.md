@@ -70,6 +70,7 @@ CHANGELIST
 - Latitude and longitude input boxes are now read only instead of disabled, allowing users to select and copy the calculated values.
 - Fixed an issue where static files in the client_interface/html/ endpoint were not being included.
 - The German translations for the administration UI were updated.
+- Removed "Set Map to Address button" in the single meeting editor as not needed anymore and messed up workflow.
 
 ***Version 2.12.2* ** *- November 22, 2018*
 
