@@ -64,7 +64,6 @@
                                             'meeting_editor_tab_editor_text'                        =>  'Meetings bearbeiten',
                                             'meeting_editor_create_new_text'                        =>  'Erstelle ein neues Meeting',
                                             'meeting_editor_location_map_link'                      =>  'Ort auf Karte',
-                                            'meeting_editor_screen_match_map_button'                =>  'Setze Koordinaten der Karte auf diese Adresse',
                                             'meeting_editor_screen_match_ll_button'                 =>  'Setze Koordinaten der Karte auf diese Adresse',
                                             'meeting_editor_screen_default_text_prompt'             =>  'Trage einen Text oder eine Zahl ein',
                                             'meeting_is_published'                                  =>  'Meeting is veröffentlicht',

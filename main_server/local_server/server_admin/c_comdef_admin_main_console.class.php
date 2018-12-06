@@ -1677,8 +1677,7 @@ class c_comdef_admin_main_console
             $ret .= '</div>';
             $ret .= '<div id="bmlt_admin_single_meeting_editor_template_map_div" class="bmlt_admin_single_meeting_map_div item_hidden">';
                 $ret .= '<div id="bmlt_admin_single_meeting_editor_template_inner_map_div" class="bmlt_admin_single_meeting_editor_inner_map_div"></div>';
-                $ret .= '<div class="bmlt_admin_single_meeting_editor_map_button_bar_div">';
-                    $ret .= '<a id="bmlt_admin_meeting_map_template_button_a" class="bmlt_admin_ajax_button button_disabled">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_match_map_button']).'</a>';
+                $ret .= '<div class="bmlt_admin_single_meeting_editor_map_bottom_bar_div">';
                 $ret .= '</div>';
             $ret .= '</div>';
             $ret .= '<div class="clear_both"></div>';

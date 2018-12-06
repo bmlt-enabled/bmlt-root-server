@@ -64,7 +64,6 @@
                                             'meeting_editor_tab_editor_text'                        =>  'Modifica riunione',//'Edit Meetings',
                                             'meeting_editor_create_new_text'                        =>  'Crea una nuova riunione',//'Create A New Meeting',
                                             'meeting_editor_location_map_link'                      =>  'Mappa delle località',//'Location Map',
-                                            'meeting_editor_screen_match_map_button'                =>  'Imposta la mappa sull\'indirizzo',//'Set Map to Address',
                                             'meeting_editor_screen_match_ll_button'                 =>  'Imposta longitudine e latitudine sull\'indirizzo',//'Set Longitude and Latitude to Address',
                                             'meeting_editor_screen_default_text_prompt'             =>  'Inserisci del testo o un numero',//'Enter Some Text or a Number',
                                             'meeting_is_published'                                  =>  'La riunione è pubblicata',//'Meeting is Published',

@@ -65,7 +65,6 @@
                                             'meeting_editor_tab_editor_text'                        =>  'Ändra möten',
                                             'meeting_editor_create_new_text'                        =>  'Skapa ett nytt möte',
                                             'meeting_editor_location_map_link'                      =>  'Karta',
-                                            'meeting_editor_screen_match_map_button'                =>  'Sätt karta för adress',
                                             'meeting_editor_screen_match_ll_button'                 =>  'Ange longitude och latitud för adressen',
                                             'meeting_editor_screen_default_text_prompt'             =>  'Fyll i text eller nummer',
                                             'meeting_is_published'                                  =>  'Mötet är nu publicerat',
