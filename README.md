@@ -58,7 +58,7 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
-***Version 2.12.3* ** *- UNRELEASED*
+***Version 2.12.3* ** *- December 7, 2018*
 
 - The service bodies list under the "Search For Meetings Tab" in the "Meeting Editor" is now sorted.
 - The users list under the "Full Meeting List Editors" section of "Service Body Administration" is now sorted.
