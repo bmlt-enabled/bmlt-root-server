@@ -1774,7 +1774,7 @@ class c_comdef_admin_main_console
                 $f_array = $this->my_server->GetFormatsArray();
                 $f_array = $f_array[$this->my_server->GetLocalLang()];
                 usort($f_array, function ($a, $b) {
-                    return strcmp($a->GetKey(), $b->GetKey());
+                    return strcasecmp($a->GetKey(), $b->GetKey());
                 });
         foreach ($f_array as $format) {
             if ($format instanceof c_comdef_format) {
@@ -1981,6 +1981,6 @@ class c_comdef_admin_main_console
     public function compare_names($a, $b)
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-        return strcmp($a->GetLocalName(), $b->GetLocalName());
+        return strcasecmp($a->GetLocalName(), $b->GetLocalName());
     }
 }
