@@ -58,6 +58,9 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
+***Version 2.12.4* ** *- UNRELEASED*
+- Made sorting case-insensitive, for users and service bodies.
+
 ***Version 2.12.3* ** *- December 7, 2018*
 
 - The service bodies list under the "Search For Meetings Tab" in the "Meeting Editor" is now sorted.
