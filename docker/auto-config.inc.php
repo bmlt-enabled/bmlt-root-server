@@ -5,11 +5,6 @@ defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that 
 
 		// Database settings:
 		$dbType = 'mysql'; // This is the PHP PDO driver name for your database.
-		$dbName = 'bmlt'; // This is the name of the database.
-		$dbUser = 'bmlt_user'; // This is the SQL user that is authorized for the above database.
-		$dbPassword = 'bmlt_password'; // This is the password for the above authorized user. Make it a big, ugly hairy one. It is powerful, and there is no need to remember it.
-		$dbServer = 'db'; // This is the host/server for accessing the database.
-		$dbPrefix = 'na'; // This is a table name prefix that can be used to differentiate tables used by different root server instances that share the same database.
 
 		// Location and Map settings:
 		$region_bias = 'us'; // This is a 2-letter code for a 'region bias,' which helps Google Maps to figure out ambiguous search queries.
