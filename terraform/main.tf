@@ -1,12 +1,11 @@
-//terraform {
-//  backend "s3" {
-//    bucket  = "bmlt-tfstate"
-//    key     = "state"
-//    region  = "us-east-1"
-//    profile = "personal"
-//  }
-//}
+terraform {
+  backend "s3" {
+    bucket  = "bmlt-terraform-remote-state"
+    key     = "state"
+    region  = "us-east-1"
+  }
+}
 
 provider "aws" {
-  region = "us-east-1"
+  region  = "us-east-1"
 }
