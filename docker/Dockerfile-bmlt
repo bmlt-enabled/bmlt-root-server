@@ -10,4 +10,7 @@ RUN chown -R www-data: /var/www/html
 RUN chmod 0644 /var/www/html/auto-config.inc.php
 RUN chmod +x /tmp/start-bmlt.sh
 
+RUN ln -sf /proc/self/fd/1 /var/log/apache2/access.log && \
+    ln -sf /proc/self/fd/1 /var/log/apache2/error.log
+
 CMD ["/bin/bash", "/tmp/start-bmlt.sh"]

@@ -8,3 +8,14 @@ This directory contains the  Dockerfiles for building images for both the BMLT R
 3. Browse to http://localhost:8000/main_server/
 4. Login with username "serveradmin" and password "CoreysGoryStory"
 5. When finished, exit by pressing ctrl+c or by running `docker-compose down`
+
+## Supported environment variables
+This is an example bmlt.env file. Each of this, on start of the container, is automatically written to the appropriate setting in auto-config.inc.php.
+```
+GKEY=
+DBNAME=bmlt
+DBUSER=bmlt_user
+DBPASSWORD=bmlt_password
+DBSERVER=db
+DBPREFIX=na
+```
