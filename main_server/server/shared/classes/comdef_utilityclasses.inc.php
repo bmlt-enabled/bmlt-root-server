@@ -20,15 +20,21 @@ require_once(dirname(dirname(dirname(__FILE__)))."/c_comdef_server.class.php");
 function GetURLToMainServerDirectory(
     $inAllowHTTPS = true  ///< If TRUE (default), then the URI will be allowed to use HTTPS. If FALSE, then we explicitly disallow HTTPS.
 ) {
+    global $g_do_not_force_port, $g_force_https_urls;
+
     $port = intval($_SERVER['SERVER_PORT']);
     
-    if (isset(c_comdef_server::$server_local_strings['do_not_force_port']) && c_comdef_server::$server_local_strings['do_not_force_port']) {
+    if (isset($g_do_not_force_port) && $g_do_not_force_port) {
         $port = null;
     }
-    
-    // IIS puts "off" in the HTTPS field, so we need to test for that.
-    $https = ($inAllowHTTPS && (!empty($_SERVER['HTTPS']) && (($_SERVER['HTTPS'] !== 'off') || ($port == 443)))) ? true : false;
-    
+
+    if ($inAllowHTTPS && isset($g_force_https_urls) && $g_force_https_urls) {
+        $https = true;
+    } else {
+        // IIS puts "off" in the HTTPS field, so we need to test for that.
+        $https = ($inAllowHTTPS && (!empty($_SERVER['HTTPS']) && (($_SERVER['HTTPS'] !== 'off') || ($port == 443)))) ? true : false;
+    }
+
     $url_path = $_SERVER['SERVER_NAME'];
     $file_path = str_replace('\\', '/', dirname(dirname(dirname(dirname(dirname(__FILE__))))));
     $my_path = str_replace('\\', '/', dirname($_SERVER['PHP_SELF']));
