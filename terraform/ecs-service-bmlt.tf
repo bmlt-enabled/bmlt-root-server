@@ -193,7 +193,7 @@ resource "aws_ecs_service" "bmlt" {
   iam_role        = "${aws_iam_role.bmlt_lb.name}"
   task_definition = "${aws_ecs_task_definition.bmlt.arn}"
 
-  deployment_minimum_healthy_percent = 0
+  deployment_minimum_healthy_percent = 100
 
   load_balancer {
     target_group_arn = "${aws_alb_target_group.bmlt.id}"
