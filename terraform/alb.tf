@@ -41,8 +41,8 @@ resource "aws_security_group" "ecs_http_load_balancers" {
 
   ingress {
     protocol    = "tcp"
-    from_port   = 80
-    to_port     = 80
+    from_port   = 443
+    to_port     = 443
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -87,13 +87,35 @@ resource "aws_alb_target_group" "bmlt" {
 
 resource "aws_alb_listener" "bmlt_https" {
   load_balancer_arn = "${aws_alb.bmlt.id}"
-  port              = 80
-  protocol          = "HTTP"
+  port              = 443
+  protocol          = "HTTPS"
 
-  //certificate_arn   = "${var.certificate_arn}"
+  certificate_arn   = "${aws_acm_certificate_validation.cert.certificate_arn}"
 
   default_action {
     target_group_arn = "${aws_alb_target_group.bmlt.id}"
     type             = "forward"
   }
+}
+
+resource "aws_acm_certificate" "cert" {
+  domain_name       = "${aws_route53_record.bmlt.fqdn}"
+  validation_method = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_route53_record" "cert_validation" {
+  name    = "${aws_acm_certificate.cert.domain_validation_options.0.resource_record_name}"
+  type    = "${aws_acm_certificate.cert.domain_validation_options.0.resource_record_type}"
+  zone_id = "${data.aws_route53_zone.bmlt.id}"
+  records = ["${aws_acm_certificate.cert.domain_validation_options.0.resource_record_value}"]
+  ttl     = 60
+}
+
+resource "aws_acm_certificate_validation" "cert" {
+  certificate_arn         = "${aws_acm_certificate.cert.arn}"
+  validation_record_fqdns = ["${aws_route53_record.cert_validation.fqdn}"]
 }
