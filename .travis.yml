@@ -72,7 +72,7 @@ jobs:
           branch: master
 
     - stage: deploy to ecs
-      if: branch = master
+      if: branch = master AND type != pull_request
       env:
         - AWS_DEFAULT_REGION=us-east-1
         - secure: "He2FsOfRQILckDqmVInhUeG743pp2baqSBOvpX+JQogDwNIMeLbSdC59bb+9twaAoWvGJzZjcxrkO3QQoPwCMFuSUE8wU/YIfDsYJY0ONaRYvAX/ZnpRKHVePBwJccOfUGnk+62EubM3n3QoiFa/h6NzQ6EzjR1fyg0q30jmpOA2H+tLhFjTd7RZKW3ZoboTUtYQUY/Ql9mmoTXOENqqtHaSaeA7v+ttwauHrsxixRx95Vlaza3VLfqM82O26IBs7MWNZbnv/MStKB/HUkJM/U79OXochnrRge/rWvKa6UoJ9Smcb65F3/yf4p4ykzp0i+hgmoWBIBQPH7DTb6KnFAAfgdSNeW9NJtxVxgOEHBXExf60jWbVEB2xspJlfnfLaXh8Cn0f83mJzYrbf55znDQhvo8e5myh+zifRuDGbMpfCJRbLbDDFx1hY0D8ZOTUpaoMLVJBmHhInaGj7hOnRYgG4QgvnNIgGuaLyuvWQPZgdTsXXZ/BM0Hv9ITT2xPiKMmQHArbjXV/cm+u7GKpRZpnvYcOPlqB/eFRpCJCro7tFYqfYzH4ReZDhnH+zKpqpI6MMwp6bAqYwcytRJWHfGzQTT0uxKe5ZYdQzBRWYV6dZmOKZt4YIwRwP2H+aSbHvfvm5mWVbZ8KX+bx0t+jQtElHditTfjM1zGOYCX6/mw="
@@ -83,14 +83,9 @@ jobs:
         - unzip terraform_0.11.10_linux_amd64.zip
         - rm -f terraform_0.11.10_linux_amd64.zip
       script:
-        - echo noop
-      deploy:
-        provider: script
-        script: ./terraform init -input=false && ./terraform taint -allow-missing aws_ecs_task_definition.bmlt && ./terraform apply -input=false -auto-approve
-        skip_cleanup: true
-        on:
-          branch: master
-
+        - ./terraform init -input=false
+        - ./terraform taint -allow-missing aws_ecs_task_definition.bmlt
+        - ./terraform apply -input=false -auto-approve
 
 notifications:
   slack:
