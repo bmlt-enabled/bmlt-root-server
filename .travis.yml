@@ -62,11 +62,12 @@ jobs:
       install:
         - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then wget https://$S3_BUCKET/$S3_KEY/$ZIP_FILENAME && rm -rf main_server && unzip $ZIP_FILENAME; fi
       script:
-        - docker build -f docker/Dockerfile-bmlt . -t bmltenabled/bmlt-root-server:latest
-        - docker build -f docker/Dockerfile-db . -t bmltenabled/bmlt-root-server-sample-db:latest
+        - export DOCKER_TAG=$(if [ -z $TRAVIS_TAG ]; then echo latest; else echo "$TRAVIS_TAG"; fi)
+        - docker build -f docker/Dockerfile-bmlt . -t bmltenabled/bmlt-root-server:$DOCKER_TAG
+        - docker build -f docker/Dockerfile-db . -t bmltenabled/bmlt-root-server-sample-db:$DOCKER_TAG
       deploy:
         provider: script
-        script: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin && docker push bmltenabled/bmlt-root-server:latest && echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin && docker push bmltenabled/bmlt-root-server-sample-db:latest
+        script: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin && docker push bmltenabled/bmlt-root-server:$DOCKER_TAG && echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin && docker push bmltenabled/bmlt-root-server-sample-db:$DOCKER_TAG
         skip_cleanup: true
         on:
           branch: master
