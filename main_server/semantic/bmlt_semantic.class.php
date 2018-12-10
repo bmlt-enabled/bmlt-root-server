@@ -202,76 +202,10 @@ class bmlt_semantic
         
         include(dirname(__FILE__) . '/lang/'.$this->_myLang.'.inc.php');
         if (isset($inHttpVars['root_server'])) {
-            // Break the URI into its components.
-            $arr = explode('://', $inHttpVars['root_server'], 2);
-            $uri = '';
-            $protocol = trim($arr[0]);
-            
-            if (!isset($arr[1]) || !$arr[1]) {
-                $uri = $protocol;
-                $protocol = '';
-            } else {
-                $uri = $arr[1];
-            }
-            
+            $this->_bmltRootServerURI = trim($inHttpVars['root_server'], '/');
+            $this->_myURI = $inHttpVars['root_server'];          // This is the base for AJAX callbacks.
             unset($inHttpVars['root_server']);
-            
-            $protocol = !isset($inHttpVars['https']) && ($protocol != 'https') ? 'http' : 'https';
 
-            unset($inHttpVars['https']);
-            
-            // Parse out the server from the rest of the query.
-            $arr = explode('/', $uri, 2);
-            
-            $server = trim($arr[0], '/');
-            $query = isset($arr[1]) ? trim($arr[1], '/') : '';
-            
-            // Clean up the URL. We do it this way, in case there is only 1 element.
-            if (isset($query) && !trim($query)) {
-                unset($query);
-            }
-    
-            // At this point, our URI has the protocol in $protocol, the server in $server, and anything beyond the server in $query (which may not be around).
-            // Now, we look for nonstandard ports.
-            
-            $arr = explode(':', $server, 2);
-            $server = $arr[0];
-            $port = isset($arr[1]) ? intval($arr[1]) : 0;
-            
-            // Always HTTPS
-            if ($port == 443) {
-                $protocol = 'https';
-            } else // Always HTTP
-                {
-                if ($port == 80) {
-                    $protocol = 'http';
-                }
-            }
-            
-            if (isset($port) && intval($port)) {
-                $port = intval($port);
-                
-                // We don't bother with standard ports.
-                if ((($protocol == 'https' ) && ($port == 443)) || (($protocol == 'http' ) && ($port == 80))) {
-                    $port = 0;
-                }
-            } else {
-                $port = isset($inHttpVars['tcp_port']) ? intval($inHttpVars['tcp_port']) : 0;
-            }
-            
-            // At this point, our URI has the protocol in $protocol, the server in $server, the port in $port (which may be 0), and anything beyond the server in $query (which may not be around).
-            // Time to construct our Root Server URI.
-            $inBaseURI = "$protocol://$server";
-            
-            if ($port) {
-                $inBaseURI .= ":$port";
-            }
-            
-            if (isset($query)) {
-                $inBaseURI .= "/$query";
-            }
-                
-            $this->_bmltRootServerURI = trim($inBaseURI, '/');
             // Get any switcher.
             if (isset($inHttpVars['switcher']) && $inHttpVars['switcher']) {
                 $this->_switcher = $inHttpVars['switcher'];
@@ -283,14 +217,6 @@ class bmlt_semantic
             unset($inHttpVars['ajaxCall']);
         
             $this->_httpVars = $inHttpVars;     // Hang onto the rest.
-
-            // Determine our URI for callbacks. Account for unusual ports and HTTPS.
-            $https = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] && (strtolower(trim($_SERVER['HTTPS'])) != 'off'); // IIS puts "off" in this field, so we need to test for that.
-            $port = intval($_SERVER['SERVER_PORT']);
-            $port = ($https && ($port == 443)) || (!$https && ($port == 80)) ? '' : ':'.$port;
-            $url_path = 'http'.($https ? 's' : '').'://'.$_SERVER['SERVER_NAME'].$port.$_SERVER['PHP_SELF'];
-
-            $this->_myURI = $url_path;          // This is the base for AJAX callbacks.
 
             // This is the name of our JavaScript object.
             $this->_myJSName = ($this->_bmltRootServerURI ? '_'.preg_replace('|[^a-z0-9A-Z_]+|', '', htmlspecialchars($this->_bmltRootServerURI)) : '');

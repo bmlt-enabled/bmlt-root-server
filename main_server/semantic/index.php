@@ -22,32 +22,39 @@
 
 // Comment out for release version.
 define('DEBUG', 1);
+define('BMLT_EXEC', 1);
 require_once(dirname(__FILE__).'/bmlt_semantic.class.php');
 $uri = '';
 
 // If we are inside the Root Server, we simply fetch the local Root Server automatically.
 if (file_exists(dirname(dirname(__FILE__)).'/server/shared/classes/comdef_utilityclasses.inc.php') && !isset($_GET['ajaxCall'])) {
+    require_once(dirname(dirname(__FILE__)).'/server/config/get-config.php');
+    global $g_do_not_force_port;
+
     $port = intval($_SERVER['SERVER_PORT']);
-    
+
+    $forwarded_https = array_key_exists("HTTP_X_FORWARDED_PROTO", $_SERVER) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == "https";
     // IIS puts "off" in the HTTPS field, so we need to test for that.
-    $https = (!empty($_SERVER['HTTPS']) && (($_SERVER['HTTPS'] !== 'off') || ($port == 443)));
+    $https = ($forwarded_https || (!empty($_SERVER['HTTPS']) && (($_SERVER['HTTPS'] !== 'off') || ($port == 443)))) ? true : false;
+
     $url_path = $_SERVER['SERVER_NAME'];
     $file_path = str_replace('\\', '/', dirname(dirname(dirname(dirname(dirname(__FILE__))))));
     $my_path = str_replace('\\', '/', dirname(dirname($_SERVER['PHP_SELF'])));
     $subsequent_path = str_replace($file_path, '', $my_path);
-    $url_path .= trim((($https && ($port != 443)) || (!$https && ($port != 80))) ? ':'.$port : '', '/');
-    $url_path .= '/'.trim($subsequent_path, '/');
+
+    // See if we need to add an explicit port to the URI.
+    if (!isset($g_do_not_force_port) || !$g_do_not_force_port) {
+        if (!$https && ($port != 80)) {
+            $url_path .= ":$port";
+        } elseif ($https && ($port != 443)) {
+            $url_path .= ":$port";
+        }
+    }
+
+    $url_path .= '/'.trim($subsequent_path, '/').'/';
     $uri = 'http'.($https ? 's' : '').'://'.$url_path;
     $api_key = get_api_key($uri);
     $_GET = array ( 'root_server' => $uri, 'direct_workshop' => 1, 'google_api_key' => $api_key,  );
-    
-    if ($https) {
-        $_GET['https'] = true;
-    }
-    
-    if (($https && ($port != 443)) || (!$https && ($port != 80))) {
-        $_GET['tcp_port'] = $port;
-    }
 }
 
 $bmlt_semantic_instance = new bmlt_semantic($_GET);
