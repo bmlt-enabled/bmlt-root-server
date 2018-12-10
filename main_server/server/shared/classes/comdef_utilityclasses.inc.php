@@ -23,9 +23,6 @@ function GetURLToMainServerDirectory(
     global $g_do_not_force_port;
 
     $port = intval($_SERVER['SERVER_PORT']);
-    if (isset($g_do_not_force_port) && $g_do_not_force_port) {
-        $port = null;
-    }
 
     $forwarded_https = array_key_exists("HTTP_X_FORWARDED_PROTO", $_SERVER) && $_SERVER['HTTP_X_FORWARDED_PROTO'];
     // IIS puts "off" in the HTTPS field, so we need to test for that.
@@ -37,10 +34,12 @@ function GetURLToMainServerDirectory(
     $subsequent_path = str_replace($file_path, '', $my_path);
     
     // See if we need to add an explicit port to the URI.
-    if (!$https && ($port != 80)) {
-        $url_path .= ":$port";
-    } elseif ($https && ($port != 443)) {
-        $url_path .= ":$port";
+    if (!isset($g_do_not_force_port) || !$g_do_not_force_port) {
+        if (!$https && ($port != 80)) {
+            $url_path .= ":$port";
+        } elseif ($https && ($port != 443)) {
+            $url_path .= ":$port";
+        }
     }
         
     $url_path .= '/'.trim($subsequent_path, '/').'/';
