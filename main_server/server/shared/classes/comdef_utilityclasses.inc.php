@@ -24,7 +24,7 @@ function GetURLToMainServerDirectory(
 
     $port = intval($_SERVER['SERVER_PORT']);
 
-    $forwarded_https = array_key_exists("HTTP_X_FORWARDED_PROTO", $_SERVER) && $_SERVER['HTTP_X_FORWARDED_PROTO'];
+    $forwarded_https = array_key_exists("HTTP_X_FORWARDED_PROTO", $_SERVER) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == "https";
     // IIS puts "off" in the HTTPS field, so we need to test for that.
     $https = $inAllowHTTPS && ($forwarded_https || (!empty($_SERVER['HTTPS']) && (($_SERVER['HTTPS'] !== 'off') || ($port == 443)))) ? true : false;
 
