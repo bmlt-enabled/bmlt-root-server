@@ -95,10 +95,6 @@ resource "aws_ecs_task_definition" "bmlt" {
         "value": "na"
       },
       {
-        "name": "FORCE_HTTPS_URLS",
-        "value": "true"
-      },
-      {
         "name": "DO_NOT_FORCE_PORT",
         "value": "true"
       }
