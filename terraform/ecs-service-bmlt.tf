@@ -44,11 +44,6 @@ resource "aws_iam_role_policy" "bmlt_lb" {
 EOF
 }
 
-resource "aws_db_subnet_group" "bmlt" {
-  name       = "bmlt"
-  subnet_ids = ["${aws_subnet.public_a.id}", "${aws_subnet.public_b.id}"]
-}
-
 resource "aws_ecs_task_definition" "bmlt" {
   family = "bmlt"
 
