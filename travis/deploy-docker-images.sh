@@ -1,3 +1,5 @@
+#!/bin/bash
+
 tag_and_push() {
     SOURCE_IMAGE=$1
     TARGET_IMAGE_NAME=$2
