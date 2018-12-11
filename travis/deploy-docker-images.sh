@@ -20,5 +20,5 @@ push() {
     docker push $1
 }
 
-push $(tag "bmlt-root-server:$TRAVIS_COMMIT" bmlt-root-server)
-push $(tag "bmlt-root-server-sample-db:$TRAVIS_COMMIT" bmlt-root-server-sample-db)
+push $(tag "bmlt-root-server:$TRAVIS_COMMIT" bmltenabled/bmlt-root-server)
+push $(tag "bmlt-root-server-sample-db:$TRAVIS_COMMIT" bmltenabled/bmlt-root-server-sample-db)
