@@ -1,21 +1,30 @@
+#!/bin/bash
+
 tag_and_push() {
     SOURCE_IMAGE=$1
     TARGET_IMAGE_NAME=$2
 
+    TARGET_IMAGE1="$TARGET_IMAGE_NAME:$TRAVIS_COMMIT"
+
     if [ ! -z $TRAVIS_TAG ]
     then
-        TARGET_IMAGE1="$TARGET_IMAGE_NAME:$TRAVIS_TAG"
-    else
-        TARGET_IMAGE1="$TARGET_IMAGE_NAME:latest"
+        TARGET_IMAGE2="$TARGET_IMAGE_NAME:$TRAVIS_TAG"
+    elif [ "$TRAVIS_BRANCH" == "unstable" ]
+    then
+        TARGET_IMAGE2="$TARGET_IMAGE_NAME:unstable"
+    elif [ "$TRAVIS_BRANCH" == "master" ]
+    then
+        TARGET_IMAGE2="$TARGET_IMAGE_NAME:latest"
     fi
 
-    TARGET_IMAGE2="$TARGET_IMAGE_NAME:$TRAVIS_COMMIT"
-
     docker tag $SOURCE_IMAGE $TARGET_IMAGE1
-    docker tag $SOURCE_IMAGE $TARGET_IMAGE2
-
     docker push $TARGET_IMAGE1
-    docker push $TARGET_IMAGE2
+
+    if [ ! -z $TARGET_IMAGE2 ]
+    then
+        docker tag $SOURCE_IMAGE $TARGET_IMAGE2
+        docker push $TARGET_IMAGE2
+    fi
 }
 
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin

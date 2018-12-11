@@ -1,51 +1,5 @@
-# IAM Role for ECS Service interaction with load balancer
-resource "aws_iam_role" "bmlt_lb" {
-  name = "bmlt-lb"
-
-  assume_role_policy = <<EOF
-{
-  "Version": "2008-10-17",
-  "Statement": [
-    {
-      "Sid": "",
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "ecs.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-EOF
-}
-
-resource "aws_iam_role_policy" "bmlt_lb" {
-  name = "${aws_iam_role.bmlt_lb.name}"
-  role = "${aws_iam_role.bmlt_lb.name}"
-
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ec2:Describe*",
-        "elasticloadbalancing:DeregisterInstancesFromLoadBalancer",
-        "elasticloadbalancing:DeregisterTargets",
-        "elasticloadbalancing:Describe*",
-        "elasticloadbalancing:RegisterInstancesWithLoadBalancer",
-        "elasticloadbalancing:RegisterTargets"
-      ],
-      "Resource": "*"
-    }
-  ]
-}
-EOF
-}
-
-resource "aws_ecs_task_definition" "bmlt" {
-  family = "bmlt"
+resource "aws_ecs_task_definition" "bmlt_latest" {
+  family = "bmlt-latest"
 
   container_definitions = <<EOF
 [
@@ -185,17 +139,17 @@ resource "aws_ecs_task_definition" "bmlt" {
 EOF
 }
 
-resource "aws_ecs_service" "bmlt" {
-  name            = "bmlt"
+resource "aws_ecs_service" "bmlt_latest" {
+  name            = "bmlt-latest"
   cluster         = "${aws_ecs_cluster.main.id}"
   desired_count   = 1
   iam_role        = "${aws_iam_role.bmlt_lb.name}"
-  task_definition = "${aws_ecs_task_definition.bmlt.arn}"
+  task_definition = "${aws_ecs_task_definition.bmlt_latest.arn}"
 
   deployment_minimum_healthy_percent = 100
 
   load_balancer {
-    target_group_arn = "${aws_alb_target_group.bmlt.id}"
+    target_group_arn = "${aws_alb_target_group.bmlt_latest.id}"
     container_name   = "bmlt-root-server"
     container_port   = 80
   }

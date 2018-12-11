@@ -71,8 +71,22 @@ resource "aws_alb" "bmlt" {
   }
 }
 
-resource "aws_alb_target_group" "bmlt" {
-  name     = "bmlt"
+resource "aws_alb_target_group" "bmlt_latest" {
+  name     = "bmlt-latest"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = "${aws_vpc.main.id}"
+
+  deregistration_delay = 60
+
+  health_check {
+    path    = "/"
+    matcher = "200"
+  }
+}
+
+resource "aws_alb_target_group" "bmlt_unstable" {
+  name     = "bmlt-unstable"
   port     = 80
   protocol = "HTTP"
   vpc_id   = "${aws_vpc.main.id}"
@@ -90,16 +104,35 @@ resource "aws_alb_listener" "bmlt_https" {
   port              = 443
   protocol          = "HTTPS"
 
-  certificate_arn   = "${aws_acm_certificate_validation.cert.certificate_arn}"
+  certificate_arn = "${aws_acm_certificate_validation.bmlt_latest.certificate_arn}"
 
   default_action {
-    target_group_arn = "${aws_alb_target_group.bmlt.id}"
+    target_group_arn = "${aws_alb_target_group.bmlt_latest.id}"
     type             = "forward"
   }
 }
 
-resource "aws_acm_certificate" "cert" {
-  domain_name       = "${aws_route53_record.bmlt.fqdn}"
+resource "aws_alb_listener_rule" "bmlt_unstable" {
+  listener_arn = "${aws_alb_listener.bmlt_https.arn}"
+
+  action {
+    type             = "forward"
+    target_group_arn = "${aws_alb_target_group.bmlt_unstable.arn}"
+  }
+
+  condition {
+    field  = "host-header"
+    values = ["${aws_route53_record.bmlt_unstable.fqdn}"]
+  }
+}
+
+resource "aws_alb_listener_certificate" "bmlt_unstable" {
+  listener_arn    = "${aws_alb_listener.bmlt_https.arn}"
+  certificate_arn = "${aws_acm_certificate_validation.bmlt_unstable.certificate_arn}"
+}
+
+resource "aws_acm_certificate" "bmlt_latest" {
+  domain_name       = "${aws_route53_record.bmlt_latest.fqdn}"
   validation_method = "DNS"
 
   lifecycle {
@@ -107,15 +140,37 @@ resource "aws_acm_certificate" "cert" {
   }
 }
 
-resource "aws_route53_record" "cert_validation" {
-  name    = "${aws_acm_certificate.cert.domain_validation_options.0.resource_record_name}"
-  type    = "${aws_acm_certificate.cert.domain_validation_options.0.resource_record_type}"
+resource "aws_route53_record" "cert_validation_bmlt_latest" {
+  name    = "${aws_acm_certificate.bmlt_latest.domain_validation_options.0.resource_record_name}"
+  type    = "${aws_acm_certificate.bmlt_latest.domain_validation_options.0.resource_record_type}"
   zone_id = "${data.aws_route53_zone.bmlt.id}"
-  records = ["${aws_acm_certificate.cert.domain_validation_options.0.resource_record_value}"]
+  records = ["${aws_acm_certificate.bmlt_latest.domain_validation_options.0.resource_record_value}"]
   ttl     = 60
 }
 
-resource "aws_acm_certificate_validation" "cert" {
-  certificate_arn         = "${aws_acm_certificate.cert.arn}"
-  validation_record_fqdns = ["${aws_route53_record.cert_validation.fqdn}"]
+resource "aws_acm_certificate_validation" "bmlt_latest" {
+  certificate_arn         = "${aws_acm_certificate.bmlt_latest.arn}"
+  validation_record_fqdns = ["${aws_route53_record.cert_validation_bmlt_latest.fqdn}"]
+}
+
+resource "aws_acm_certificate" "bmlt_unstable" {
+  domain_name       = "${aws_route53_record.bmlt_unstable.fqdn}"
+  validation_method = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_route53_record" "cert_validation_bmlt_unstable" {
+  name    = "${aws_acm_certificate.bmlt_unstable.domain_validation_options.0.resource_record_name}"
+  type    = "${aws_acm_certificate.bmlt_unstable.domain_validation_options.0.resource_record_type}"
+  zone_id = "${data.aws_route53_zone.bmlt.id}"
+  records = ["${aws_acm_certificate.bmlt_unstable.domain_validation_options.0.resource_record_value}"]
+  ttl     = 60
+}
+
+resource "aws_acm_certificate_validation" "bmlt_unstable" {
+  certificate_arn         = "${aws_acm_certificate.bmlt_unstable.arn}"
+  validation_record_fqdns = ["${aws_route53_record.cert_validation_bmlt_unstable.fqdn}"]
 }
