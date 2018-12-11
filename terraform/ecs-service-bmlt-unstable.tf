@@ -117,7 +117,7 @@ resource "aws_ecs_task_definition" "bmlt_unstable" {
     "links": [],
     "workingDirectory": "/tmp",
     "readonlyRootFilesystem": null,
-    "image": "bmltenabled/bmlt-root-server-sample-db:latest",
+    "image": "bmltenabled/bmlt-root-server-sample-db:unstable",
     "command": ["mysqld"],
     "user": null,
     "dockerLabels": null,
