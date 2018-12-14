@@ -56,7 +56,7 @@ resource "aws_ecs_task_definition" "bmlt_unstable" {
     "links": ["bmlt-db"],
     "workingDirectory": "/tmp",
     "readonlyRootFilesystem": null,
-    "image": "bmltenabled/bmlt-root-server:latest",
+    "image": "bmltenabled/bmlt-root-server:unstable",
     "command": [
       "/bin/bash",
       "/tmp/start-bmlt.sh"
