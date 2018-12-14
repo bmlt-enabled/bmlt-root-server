@@ -22,7 +22,7 @@
         You should have received a copy of the GNU General Public License
         along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
-        Version: 1.3.2
+        Version: 1.3.4
 */
 /*******************************************************************************************/
 function BMLTSemanticResult(
@@ -823,6 +823,7 @@ BMLTSemantic.prototype.populateFormatsSection = function (
     formatContainer,
     unformat
 ) {
+    this.sortByKey(this.format_objects, 'key_string');
     formatContainer.innerHTML = '';
     if ( this.format_objects && this.format_objects.length ) {
         for (var i = 0; i < this.format_objects.length; i++) {
@@ -897,7 +898,9 @@ BMLTSemantic.prototype.populateServiceBodiesSection = function () {
     for (var i = sb_select2.options.length - 1; i > 0; i--) {
         sb_select2.removeChild(sb_select2.options[i]);
     };
-    
+
+    this.sortByKey(this.temp_service_body_objects, 'name');
+
     for (var i = 0; i < this.temp_service_body_objects.length; i++) {
         var sb = this.temp_service_body_objects[i];
         var newOption = document.createElement('option');
@@ -960,9 +963,11 @@ BMLTSemantic.prototype.createServiceBodyList = function (
                 newListContainer.className = 'bmlt_sb_dd';
                 inContainerObject.appendChild(newListContainer);
                 sb_array = inServiceBodyObject.childServiceBodies;
+                this.sortByKey(sb_array, 'name');
             };
         } else {
             sb_array = this.service_body_objects;
+            this.sortByKey(sb_array, 'name');
             newListContainer = inContainerObject;
             newListContainer.innerHTML = '';
         };
@@ -979,6 +984,18 @@ BMLTSemantic.prototype.createServiceBodyList = function (
             newListContainer.appendChild(newSubList);
         };
     };
+};
+
+/*******************************************************************************************/
+/**
+ \brief Sort By Key
+ */
+/*******************************************************************************************/
+BMLTSemantic.prototype.sortByKey = function (array, key) {
+    return array.sort(function(a, b) {
+        var x = a[key].toLowerCase(); var y = b[key].toLowerCase();
+        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+    });
 };
 
 /*******************************************************************************************/
