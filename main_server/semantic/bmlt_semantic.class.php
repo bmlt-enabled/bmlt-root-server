@@ -203,7 +203,7 @@ class bmlt_semantic
         include(dirname(__FILE__) . '/lang/'.$this->_myLang.'.inc.php');
         if (isset($inHttpVars['root_server'])) {
             $this->_bmltRootServerURI = trim($inHttpVars['root_server'], '/');
-            $this->_myURI = $inHttpVars['root_server'];          // This is the base for AJAX callbacks.
+            $this->_myURI = $this->_bmltRootServerURI.'/semantic/index.php'; // This is the base for AJAX callbacks.
             unset($inHttpVars['root_server']);
 
             // Get any switcher.
