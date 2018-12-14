@@ -28,6 +28,11 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
 CHANGELIST
 ----------
+***Version 1.3.4* ** *- December 14, 2018*
+
+- When creating URLs for static content, the HTTP_X_FORWARDED_PROTO header is now inspected for determining protocol.
+- Added sorting to service bodies and formats.
+
 ***Version 1.3.3* ** *- November 11, 2017*
 
 - Added a change to the reported UA for the cURL call. Some servers' security software might have issues with the original one.
