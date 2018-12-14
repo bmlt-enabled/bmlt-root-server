@@ -991,7 +991,7 @@ BMLTSemantic.prototype.createServiceBodyList = function (
  \brief Sort By Key
  */
 /*******************************************************************************************/
-BMLTSemantic.prototype.sortByKey = function sortByKey(array, key) {
+BMLTSemantic.prototype.sortByKey = function (array, key) {
     return array.sort(function(a, b) {
         var x = a[key].toLowerCase(); var y = b[key].toLowerCase();
         return ((x < y) ? -1 : ((x > y) ? 1 : 0));
