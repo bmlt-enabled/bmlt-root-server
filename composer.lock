@@ -1,23 +1,23 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
     "content-hash": "045a5ac9de7699f046d4e2af3b8238cf",
     "packages": [
         {
             "name": "bmlt/bmlt-satellite-base-class",
-            "version": "3.9.8",
+            "version": "3.9.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bmlt-enabled/bmlt-satellite-base-class.git",
-                "reference": "713a587f2b33f05f17b86d346d4b60d33ad8640c"
+                "reference": "8e03ad696fb4f5284142685ae7402dd8182a1a14"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bmlt-enabled/bmlt-satellite-base-class/zipball/713a587f2b33f05f17b86d346d4b60d33ad8640c",
-                "reference": "713a587f2b33f05f17b86d346d4b60d33ad8640c",
+                "url": "https://api.github.com/repos/bmlt-enabled/bmlt-satellite-base-class/zipball/8e03ad696fb4f5284142685ae7402dd8182a1a14",
+                "reference": "8e03ad696fb4f5284142685ae7402dd8182a1a14",
                 "shasum": ""
             },
             "require": {
@@ -37,7 +37,7 @@
                 }
             ],
             "description": "This is a generic CMS plugin class for a BMLT satellite client.",
-            "time": "2018-12-05T13:00:41+00:00"
+            "time": "2018-12-15T02:35:21+00:00"
         },
         {
             "name": "bmlt/bmlt-satellite-driver",
