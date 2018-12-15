@@ -31,11 +31,20 @@ if (file_exists(dirname(dirname(__FILE__)).'/server/shared/classes/comdef_utilit
     require_once(dirname(dirname(__FILE__)).'/server/config/get-config.php');
     global $g_do_not_force_port;
 
-    $port = intval($_SERVER['SERVER_PORT']);
-
-    $forwarded_https = array_key_exists("HTTP_X_FORWARDED_PROTO", $_SERVER) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == "https";
-    // IIS puts "off" in the HTTPS field, so we need to test for that.
-    $https = ($forwarded_https || (!empty($_SERVER['HTTPS']) && (($_SERVER['HTTPS'] !== 'off') || ($port == 443)))) ? true : false;
+    $from_proxy = array_key_exists("HTTP_X_FORWARDED_PROTO", $_SERVER);
+    if ($from_proxy) {
+        $https = $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https';
+        if (array_key_exists("HTTP_X_FORWARDED_PORT", $_SERVER)) {
+            $port = intval($_SERVER['HTTP_X_FORWARDED_PORT']);
+        } elseif ($https) {
+            $port = 443;
+        } else {
+            $port = 80;
+        }
+    } else {
+        $port = intval($_SERVER['SERVER_PORT']);
+        $https = !empty($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] !== 'off' || $port == 443) ? true : false;
+    }
 
     $url_path = $_SERVER['SERVER_NAME'];
     $file_path = str_replace('\\', '/', dirname(dirname(dirname(dirname(dirname(__FILE__))))));
