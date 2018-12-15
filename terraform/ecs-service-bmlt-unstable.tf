@@ -47,10 +47,6 @@ resource "aws_ecs_task_definition" "bmlt_unstable" {
       {
         "name": "DBPREFIX",
         "value": "na"
-      },
-      {
-        "name": "DO_NOT_FORCE_PORT",
-        "value": "true"
       }
     ],
     "links": ["bmlt-db"],
