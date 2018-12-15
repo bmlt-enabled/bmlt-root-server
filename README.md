@@ -60,7 +60,7 @@ CHANGELIST
 
 ***Version 2.12.4* ** *- UNRELEASED*
 - Made sorting case-insensitive, for users and service bodies.
-- When creating URLs for static content, the HTTP_X_FORWARDED_PROTO header is now inspected for determining protocol.
+- When creating URLs for static content, the HTTP_X_FORWARDED_PORT and HTTP_X_FORWARDED_PROTO headers are now inspected for determining the port and protocol. 
 - Added sorting to semantic workshop for service bodies and formats.
 
 ***Version 2.12.3* ** *- December 7, 2018*
