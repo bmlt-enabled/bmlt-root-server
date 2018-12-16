@@ -148,7 +148,7 @@ if (isset($_SESSION[$admin_session_name])) {
     }
 
     if (!isset($supress_header) || !$supress_header) {
-        echo '<div class="bmlt_admin_logout_bar"><h4><a href="'.$_SERVER['PHP_SELF'].'?admin_action=logout">'.c_comdef_htmlspecialchars($localized_strings['comdef_server_admin_strings']['logout']).'</a></h4>';
+        echo '<div class="bmlt_admin_logout_bar"><h4><a href="'.$_SERVER['PHP_SELF'].'?admin_action=logout">'.c_comdef_htmlspecialchars($localized_strings['comdef_server_admin_strings']['logout']).' ('.$user_obj->GetLocalName().')</a></h4>';
             $server_info = GetServerInfo();
             echo '<div class="server_version_display_div">'.htmlspecialchars($server_info['version']).'</div>';
         echo '</div>';
