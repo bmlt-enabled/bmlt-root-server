@@ -158,5 +158,5 @@ $this->_localization = array (
                                 'version_label'                         =>  'Version:',
                                 'result_shortcode_label'                =>  'The Shortcode Is:',
                                 'result_invalid_text'                   =>  '<INVALID VALUE>',
-                                'explanation_suffix'                    =>  'The explanation is available <a href="http://bmlt.magshare.net/semantic/semantic-workshop/">here</a>.'
+                                'explanation_suffix'                    =>  'Additional info is available <a href="http://bmlt.app/semantic/semantic-workshop/">here</a>.'
                             );

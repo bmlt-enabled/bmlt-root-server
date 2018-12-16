@@ -21,7 +21,6 @@
 /***************************************************************************************************************************************/
 
 define('__VERSION__', '1.3.3');
-define('__REPO_URL__', 'https://github.com/bmlt-enabled/bmlt-root-server/tree/master/main_server/semantic');
 
 // phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 // phpcs:disable Squiz.Classes.ValidClassName.NotCamelCaps
@@ -553,8 +552,7 @@ class bmlt_semantic
             $ret .= '<div id="bmlt_semantic_info_div_root_url_wrapper'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_info_div_root_url_wrapper"><span class="info_label">'.$this->localize_string('root_url_label').'</span><span class="info_value"><a href="'.$this->_bmltRootServerURI.'" target="_blank">'.htmlspecialchars($this->_bmltRootServerURI).'</a> ('.$v_array[0].'.'.$v_array[1].'.'.$v_array[2].')</span></div>';
             $ret .= defined('DEBUG') ? "\n" : '';
         }
-            
-        $ret .= '<div id="bmlt_semantic_info_div_repo_url_wrapper'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_info_div_repo_url_wrapper"><span class="info_label">'.$this->localize_string('repo_url_label').'</span><span class="info_value"><a href="'.__REPO_URL__.'" target="_blank">'.htmlspecialchars(__REPO_URL__).'</a></span></div>';
+
         $ret .= defined('DEBUG') ? "\n" : '';
         $ret .= htmlspecialchars_decode($this->localize_string('explanation_suffix'));
         $ret .= defined('DEBUG') ? "\n" : '';
