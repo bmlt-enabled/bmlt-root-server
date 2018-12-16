@@ -2,4 +2,4 @@
 /auto-config.inc.php
 main_server/vendor
 .terraform
-
+.DS_Store
