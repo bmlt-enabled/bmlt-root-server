@@ -21,7 +21,7 @@
 /***************************************************************************************************************************************/
 
 define('__VERSION__', '1.3.3');
-define('__REPO_URL__', 'https://bitbucket.org/bmlt/bmlt-semantic-workshop');
+define('__REPO_URL__', 'https://github.com/bmlt-enabled/bmlt-root-server/tree/master/main_server/semantic');
 
 // phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 // phpcs:disable Squiz.Classes.ValidClassName.NotCamelCaps
