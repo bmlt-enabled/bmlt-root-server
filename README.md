@@ -58,6 +58,9 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
+***Version 2.12.5* ** *- UNRELEASED*
+- Added user name to sign out link for the administration UI.
+
 ***Version 2.12.4* ** *- December 15, 2018*
 - Made sorting case-insensitive, for users and service bodies.
 - When creating URLs for static content, the HTTP_X_FORWARDED_PORT and HTTP_X_FORWARDED_PROTO headers are now inspected for determining the port and protocol. 
