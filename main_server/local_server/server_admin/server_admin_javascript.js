@@ -1554,7 +1554,6 @@ function BMLT_Server_Admin()
                 this.handleTextInputLoad(document.getElementById(meeting_neighborhood_text_item_id));
                 this.handleTextInputLoad(document.getElementById(meeting_borough_text_item_id));
                 this.handleTextInputLoad(document.getElementById(meeting_city_text_item_id));
-                this.handleTextInputLoad(document.getElementById(meeting_county_text_item_id));
                 this.handleTextInputLoad(document.getElementById(meeting_zip_text_item_id), null, true);
                 this.handleTextInputLoad(document.getElementById(meeting_nation_text_item_id), null, true);
                 this.handleTextInputLoad(document.getElementById(meeting_longitude_text_item_id), 0, true);
@@ -1563,6 +1562,11 @@ function BMLT_Server_Admin()
                 var meeting_state_text_input = document.getElementById(meeting_state_text_item_id);
                 if (meeting_state_text_input !== null) {
                     this.handleTextInputLoad(meeting_state_text_input);
+                }
+
+                var meeting_county_text_input = document.getElementById(meeting_county_text_item_id);
+                if (meeting_county_text_input !== null) {
+                    this.handleTextInputLoad(meeting_county_text_input);
                 }
                 
                 var map_disclosure_a = document.getElementById('bmlt_admin_single_meeting_editor_' + in_meeting_id + '_map_disclosure_a');
@@ -1613,6 +1617,7 @@ function BMLT_Server_Admin()
         var meeting_borough_text_item = document.getElementById('bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_borough_text_input');
         var meeting_city_text_item = document.getElementById('bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_city_text_input');
         var meeting_county_text_item = document.getElementById('bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_county_text_input');
+        var meeting_county_select_item = document.getElementById('bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_county_select_input');
         var meeting_state_text_item = document.getElementById('bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_state_text_input');
         var meeting_state_select_item = document.getElementById('bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_state_select_input');
         var meeting_zip_text_item = document.getElementById('bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_zip_text_input');
@@ -1779,25 +1784,41 @@ function BMLT_Server_Admin()
                 admin_handler_object.setItemValue(input, meeting_id, 'location_municipality'); }, 0);
         };
 
-        
-        meeting_county_text_item.value = htmlspecialchars_decode(meeting_object.location_sub_province ? meeting_object.location_sub_province : meeting_county_text_item.value);
-        this.setTextItemClass(meeting_county_text_item);
-        meeting_county_text_item.onkeyup = function () {
-            admin_handler_object.setItemValue(this, meeting_id, 'location_sub_province')};
-        meeting_county_text_item.onfocus = function () {
-            admin_handler_object.handleTextInputFocus(this)};
-        meeting_county_text_item.onblur = function () {
-            admin_handler_object.handleTextInputBlur(this)};
-        meeting_county_text_item.onpaste = function () {
-            var input = this;
-            setTimeout(function () {
-                admin_handler_object.setItemValue(input, meeting_id, 'location_sub_province'); }, 0);
-        };
-        meeting_county_text_item.oncut = function () {
-            var input = this;
-            setTimeout(function () {
-                admin_handler_object.setItemValue(input, meeting_id, 'location_sub_province'); }, 0);
-        };
+
+        if (meeting_county_text_item !== null) {
+            meeting_county_text_item.value = htmlspecialchars_decode(meeting_object.location_sub_province ? meeting_object.location_sub_province : meeting_county_text_item.value);
+            this.setTextItemClass(meeting_county_text_item);
+            meeting_county_text_item.onkeyup = function () {
+                admin_handler_object.setItemValue(this, meeting_id, 'location_sub_province')};
+            meeting_county_text_item.onfocus = function () {
+                admin_handler_object.handleTextInputFocus(this)};
+            meeting_county_text_item.onblur = function () {
+                admin_handler_object.handleTextInputBlur(this)};
+            meeting_county_text_item.onpaste = function () {
+                var input = this;
+                setTimeout(function () {
+                    admin_handler_object.setItemValue(input, meeting_id, 'location_sub_province');
+                }, 0);
+            };
+            meeting_county_text_item.oncut = function () {
+                var input = this;
+                setTimeout(function () {
+                    admin_handler_object.setItemValue(input, meeting_id, 'location_sub_province');
+                }, 0);
+            };
+        } else {
+            if ( meeting_object.location_sub_province ) {
+                for (var i = 0; i < meeting_county_select_item.options.length; i++) {
+                    var option = meeting_county_select_item.options[i];
+                    if ( option.value === meeting_object.location_sub_province ) {
+                        meeting_county_select_item.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+            meeting_county_select_item.onchange = function () {
+                admin_handler_object.reactToMeetingCountySelect(meeting_id);}
+        }
 
 
         if (meeting_state_text_item !== null) {
@@ -2304,6 +2325,15 @@ function BMLT_Server_Admin()
         var editor_object = document.getElementById('bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div');
         var the_meeting_object = editor_object.meeting_object;
         the_meeting_object.location_province = meeting_state_select_item.options[meeting_state_select_item.selectedIndex].value;
+        this.handleNewAddressInfo(in_meeting_id);
+        this.validateMeetingEditorButton(in_meeting_id);
+    };
+
+    this.reactToMeetingCountySelect = function (in_meeting_id) {
+        var meeting_county_select_item = document.getElementById('bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_county_select_input');
+        var editor_object = document.getElementById('bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div');
+        var the_meeting_object = editor_object.meeting_object;
+        the_meeting_object.location_sub_province = meeting_county_select_item.options[meeting_county_select_item.selectedIndex].value;
         this.handleNewAddressInfo(in_meeting_id);
         this.validateMeetingEditorButton(in_meeting_id);
     };

@@ -1726,7 +1726,18 @@ class c_comdef_admin_main_console
                 $ret .= '</div>';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_county_label']).'</span>';
-                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_county_text_input" type="text" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_county_prompt']).'" /></span>';
+                    $ret .= '<span class="bmlt_admin_value_left">';
+        if (is_array($this->my_localized_strings['counties']) && count($this->my_localized_strings['counties'])) {
+            $ret .= '<select id="bmlt_admin_single_meeting_editor_template_meeting_county_select_input" class="bmlt_admin_single_meeting_editor_template_meeting_county_select_input">';
+            $ret .= '<option value=""></option>';
+                foreach ($this->my_localized_strings['counties'] as $value) {
+                    $ret .= '<option value="'. htmlspecialchars($value) .'">'. htmlspecialchars($value) .'</option>';
+                }
+                $ret .= '</select>';
+        } else {
+            $ret .= '<input id="bmlt_admin_single_meeting_editor_template_meeting_county_text_input" type="text" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_county_prompt']).'" />';
+        }
+                    $ret .= '</span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
