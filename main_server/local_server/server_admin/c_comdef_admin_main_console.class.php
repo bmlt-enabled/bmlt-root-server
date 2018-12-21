@@ -1727,10 +1727,10 @@ class c_comdef_admin_main_console
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_county_label']).'</span>';
                     $ret .= '<span class="bmlt_admin_value_left">';
-        if (is_array($this->my_localized_strings['counties']) && count($this->my_localized_strings['counties'])) {
+        if (is_array($this->my_localized_strings['meeting_counties_and_sub_provinces']) && count($this->my_localized_strings['meeting_counties_and_sub_provinces'])) {
             $ret .= '<select id="bmlt_admin_single_meeting_editor_template_meeting_county_select_input" class="bmlt_admin_single_meeting_editor_template_meeting_county_select_input">';
             $ret .= '<option value=""></option>';
-            foreach ($this->my_localized_strings['counties'] as $value) {
+            foreach ($this->my_localized_strings['meeting_counties_and_sub_provinces'] as $value) {
                 $ret .= '<option value="'. htmlspecialchars($value) .'">'. htmlspecialchars($value) .'</option>';
             }
                 $ret .= '</select>';
