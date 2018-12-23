@@ -76,6 +76,7 @@ $this->_localization = array (
                                 'schema_type_selector_field_templates'  =>  'Administrative Field Templates',
                                 'schema_type_selector_changes'          =>  'Meeting Changes',
                                 'schema_type_selector_formats'          =>  'Meeting Formats',
+                                'schema_type_selector_get_user_info'    =>  'User Info',
                                 'schema_type_selector_langs'            =>  'Languages',
                                 'schema_type_selector_service_bodies'   =>  'Flat Service Bodies',
                                 'schema_type_selector_hier_service_bodies'  =>  'Hierarchical Service Bodies',

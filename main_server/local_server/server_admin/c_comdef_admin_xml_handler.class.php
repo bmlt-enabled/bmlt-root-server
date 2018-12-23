@@ -226,7 +226,11 @@ class c_comdef_admin_xml_handler
                             $ret = '<h1>BAD ADMIN ACTION</h1>';
                         }
                         break;
-                    
+
+                    case 'get_user_info':
+                        $ret = $this->process_user_info();
+                        break;
+
                     default:
                         $ret = '<h1>BAD ADMIN ACTION</h1>';
                         break;
@@ -1810,6 +1814,30 @@ class c_comdef_admin_xml_handler
             $ret = '<h1>NOT AUTHORIZED</h1>';
         }
         
+        return $ret;
+    }
+
+    /********************************************************************************************************//**
+    \brief This fulfills a user request to return the current users info.
+
+    \returns XML, containing the answer.
+     ************************************************************************************************************/
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function process_user_info()
+    {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+        $ret = '';
+        $user_obj = $this->server->GetCurrentUserObj();
+
+        if ($this->basic_user_validation()) {
+            $ret = '<current_user id="'.$user_obj->GetID().'" name="'.c_comdef_htmlspecialchars($user_obj->GetLocalName()).'" type="' . $user_obj->GetUserLevel() . '"/>';
+            // Create a proper XML wrapper for the response data.
+            $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<user_info xmlns=\"http://".c_comdef_htmlspecialchars($_SERVER['SERVER_NAME'])."\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"".$this->getMainURL()."client_interface/xsd/UserInfo.php\">$ret</user_info>";
+            // We now have XML that states the current user's permission levels in all Service bodies.
+        } else {
+            $ret = '<h1>NOT AUTHORIZED</h1>';
+        }
+
         return $ret;
     }
 
