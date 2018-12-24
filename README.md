@@ -61,6 +61,7 @@ CHANGELIST
 ***Version 2.12.5* ** *- UNRELEASED*
 - Added user name to sign out link for the administration UI.
 - Added the ability to display a fixed set of counties when editing meetings in a dropdown menu rather than a freeform text field with a new `$meeting_counties_and_sub_provinces` setting.
+- Added Danish translations.
 
 ***Version 2.12.4* ** *- December 15, 2018*
 - Made sorting case-insensitive, for users and service bodies.
