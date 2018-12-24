@@ -54,7 +54,7 @@ $comdef_server_admin_strings = array (
     'meeting_text_location_label'                           =>  'Dette er en placering eller postkode',
     'meeting_search_weekdays_label'                         =>  'Søg efter udvalgte hverdage:',
     'meeting_search_weekdays_names'                         =>   array('Alle', 'Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'),
-    'meeting_search_service_bodies_label'                   =>  'Søg i valgte service Bodies:',
+    'meeting_search_service_bodies_label'                   =>  'Søg i valgte service Enhed:',
     'meeting_search_start_time_label'                       =>  'Søg efter møde Starttid:',
     'meeting_search_start_time_all_label'                   =>  'Enhver tid',
     'meeting_search_start_time_morn_label'                  =>  'Morgen',
@@ -361,7 +361,6 @@ $comdef_server_admin_strings = array (
         'email_contact' => 'Email Kontakt',
     )
 );
-
 
 $email_contact_strings = array (
     'meeting_contact_form_subject_format'   =>  "[MØDE LISTE KONTAKT] %s",
