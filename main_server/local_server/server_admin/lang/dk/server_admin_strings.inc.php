@@ -90,8 +90,7 @@ $comdef_server_admin_strings = array (
     'meeting_editor_screen_meeting_latitude_label'          =>  'Højdegrad:',
     'meeting_editor_screen_meeting_latitude_prompt'         =>  'Indtast en Højdegrad',
     'meeting_editor_screen_meeting_location_label'          =>  'Længdegrad:',
-    'meeting_editor_screen_meeting_location_prompt'         =>  'Indtast et stednavn(som et bygningsnavn) {
-    ',
+    'meeting_editor_screen_meeting_location_prompt'         =>  'Indtast et stednavn (som et bygningsnavn)',
     'meeting_editor_screen_meeting_info_label'              =>  'Ekstra Info:',
     'meeting_editor_screen_meeting_info_prompt'             =>  'Indtast eventuelle yderligere placeringsoplysninger',
     'meeting_editor_screen_meeting_street_label'            =>  'Gade Adresse:',
