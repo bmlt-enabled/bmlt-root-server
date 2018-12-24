@@ -88,9 +88,22 @@ class bmlt_basic extends BMLTPlugin
     protected function get_ajax_base_uri()
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-        $port = $_SERVER['SERVER_PORT'] ;
-        // IIS puts "off" in the HTTPS field, so we need to test for that.
-        $https = (!empty($_SERVER['HTTPS']) && (($_SERVER['HTTPS'] !== 'off') || ($port == 443)));
+
+        $from_proxy = array_key_exists("HTTP_X_FORWARDED_PROTO", $_SERVER);
+        if ($from_proxy) {
+            $https = $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https';
+            if (array_key_exists("HTTP_X_FORWARDED_PORT", $_SERVER)) {
+                $port = intval($_SERVER['HTTP_X_FORWARDED_PORT']);
+            } elseif ($https) {
+                $port = 443;
+            } else {
+                $port = 80;
+            }
+        } else {
+            $port = intval($_SERVER['SERVER_PORT']);
+            $https = !empty($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] !== 'off' || $port == 443) ? true : false;
+        }
+
         $server_path = $_SERVER['SERVER_NAME'];
         $my_path = $_SERVER['PHP_SELF'];
         $server_path .= trim((($https && ($port != 443)) || (!$https && ($port != 80))) ? ':'.$port : '', '/');
