@@ -112,10 +112,22 @@ if ($server) {
 
             $bmlt_basic_configuration = array();    ///< The configuration will be held in an array of associative arrays.
             $bmlt_basic_configuration_index = 0;
-            
-            $port = $_SERVER['SERVER_PORT'] ;
-            // IIS puts "off" in the HTTPS field, so we need to test for that.
-            $https = (!empty($_SERVER['HTTPS']) && (($_SERVER['HTTPS'] !== 'off') || ($port == 443)));
+
+            $from_proxy = array_key_exists("HTTP_X_FORWARDED_PROTO", $_SERVER);
+            if ($from_proxy) {
+                $https = $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https';
+                if (array_key_exists("HTTP_X_FORWARDED_PORT", $_SERVER)) {
+                    $port = intval($_SERVER['HTTP_X_FORWARDED_PORT']);
+                } elseif ($https) {
+                    $port = 443;
+                } else {
+                    $port = 80;
+                }
+            } else {
+                $port = intval($_SERVER['SERVER_PORT']);
+                $https = (!empty($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] !== 'off' || $port == 443)) ? true : false;
+            }
+
             $server_path = $_SERVER['SERVER_NAME'];
             $my_path = dirname(dirname(dirname($_SERVER['SCRIPT_NAME'])));
             $server_path .= trim((($https && ($port != 443)) || (!$https && ($port != 80))) ? ':'.$port : '', '/');
