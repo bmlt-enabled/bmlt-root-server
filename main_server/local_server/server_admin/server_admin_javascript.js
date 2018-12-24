@@ -1817,7 +1817,8 @@ function BMLT_Server_Admin()
                 }
             }
             meeting_county_select_item.onchange = function () {
-                admin_handler_object.reactToMeetingCountySelect(meeting_id);}
+                admin_handler_object.reactToMeetingCountySelect(meeting_id);
+            }
         }
 
 
