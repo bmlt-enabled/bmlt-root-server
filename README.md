@@ -58,10 +58,12 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
-***Version 2.12.5* ** *- UNRELEASED*
+***Version 2.12.5* ** *- December 24, 2018*
 - Added user name to sign out link for the administration UI.
 - Added the ability to display a fixed set of counties when editing meetings in a dropdown menu rather than a freeform text field with a new `$meeting_counties_and_sub_provinces` setting.
 - Added Danish translations.
+- Fixed some minor issues with the /html/ endpoint.
+- Fixed some more issues with running the root server behind a reverse proxy.
 
 ***Version 2.12.4* ** *- December 15, 2018*
 - Made sorting case-insensitive, for users and service bodies.
