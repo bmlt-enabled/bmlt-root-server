@@ -2671,6 +2671,7 @@ class c_comdef_server
                     c_comdef_server::$server_local_strings['include_service_body_email_in_semantic'] = $g_include_service_body_email_in_semantic;
                 }
 
+                c_comdef_server::$server_local_strings['do_not_sort_formats'] = isset($do_not_sort_formats) ? $do_not_sort_formats : '';
                 c_comdef_server::$server_local_strings['meeting_counties_and_sub_provinces'] = isset($meeting_counties_and_sub_provinces) ? $meeting_counties_and_sub_provinces : array();
                 c_comdef_server::$server_local_strings['meeting_states_and_provinces'] = isset($meeting_states_and_provinces) ? $meeting_states_and_provinces : array();
                 c_comdef_server::$server_local_strings['google_api_key'] = isset($gkey) ? $gkey : '';
