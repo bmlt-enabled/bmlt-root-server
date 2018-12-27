@@ -1784,7 +1784,7 @@ class c_comdef_admin_main_console
             $ret .= '<div class="format_tab_inner_div">';
                 $f_array = $this->my_server->GetFormatsArray();
                 $f_array = $f_array[$this->my_server->GetLocalLang()];
-        if (!$this->my_localized_strings['do_not_sort_formats']) {
+        if ($this->my_localized_strings['sort_formats']) {
             usort($f_array, function ($a, $b) {
                 return strnatcasecmp($a->GetKey(), $b->GetKey());
             });
