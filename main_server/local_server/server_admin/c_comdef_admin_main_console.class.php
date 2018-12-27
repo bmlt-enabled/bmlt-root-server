@@ -1784,9 +1784,11 @@ class c_comdef_admin_main_console
             $ret .= '<div class="format_tab_inner_div">';
                 $f_array = $this->my_server->GetFormatsArray();
                 $f_array = $f_array[$this->my_server->GetLocalLang()];
-                usort($f_array, function ($a, $b) {
-                    return strnatcasecmp($a->GetKey(), $b->GetKey());
-                });
+        if ($this->my_localized_strings['sort_formats']) {
+            usort($f_array, function ($a, $b) {
+                return strnatcasecmp($a->GetKey(), $b->GetKey());
+            });
+        }
         foreach ($f_array as $format) {
             if ($format instanceof c_comdef_format) {
                 $ret .= '<div class="bmlt_admin_meeting_one_format_div">';
