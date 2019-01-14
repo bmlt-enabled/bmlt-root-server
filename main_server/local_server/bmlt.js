@@ -89,6 +89,10 @@ var getServiceBodyIdQueryString = function (serviceBodyIds) {
     return serviceBodyIdString;
 };
 
+var getMeetingsByLocation = function (day, geoWidth, position, callback) {
+    getJSON(bmltbaseURL + "GetSearchResults&weekdays=" + day + "&geo_width=" + geoWidth + "&long_val=" + position.longitude + "&lat_val=" + position.latitude + "&callback=?", callback);
+};
+
 var getJSON = function (url, callback) {
     var random = Math.floor(Math.random() * 999999);
     var callbackFunctionName = "cb_" + random;
