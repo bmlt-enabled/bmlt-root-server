@@ -61,6 +61,10 @@ var getMeetingsByServiceBodyIdAndCity = function (serviceBodyId, city, callback)
     getJSON(bmltbaseURL + "GetSearchResults" + getServiceBodyIdQueryString(serviceBodyId) + "&meeting_key=location_municipality&meeting_key_value=" + city + "&callback=?", callback);
 };
 
+var getMeetingsByLocation = function (day, geoWidth, position, callback) {
+    getJSON(bmltbaseURL + "GetSearchResults&weekdays=" + day + "&geo_width=" + geoWidth + "&long_val=" + position.longitude + "&lat_val=" + position.latitude + "&callback=?", callback);
+};
+
 var getFormats = function (callback) {
     getJSON(bmltbaseURL + "GetFormats&callback=?", callback);
 };

@@ -58,6 +58,9 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
+***Version 2.12.6* ** *- UNRELEASED*
+- Added meetings by location and day option to bmlt.js.
+
 ***Version 2.12.5* ** *- December 24, 2018*
 - Added user name to sign out link for the administration UI.
 - Added the ability to display a fixed set of counties when editing meetings in a dropdown menu rather than a freeform text field with a new `$meeting_counties_and_sub_provinces` setting.
