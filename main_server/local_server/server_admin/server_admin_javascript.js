@@ -1024,8 +1024,8 @@ function BMLT_Server_Admin()
                         minutes = 0;
                     };
 
-                    if ( minutes % 5 ) {
-                        minutes += 5;
+                    if ( minutes % g_default_minute_interval ) {
+                        minutes += g_default_minute_interval;
                 
                         if ( minutes >= 60 ) {
                             hours++;
@@ -2015,8 +2015,8 @@ function BMLT_Server_Admin()
                         minutes = 0;
                     };
 
-                    if ( minutes % 5 ) {
-                        minutes += 5;
+                    if ( minutes % g_default_minute_interval ) {
+                        minutes += g_default_minute_interval;
                 
                         if ( minutes >= 60 ) {
                             hours++;
@@ -2088,8 +2088,8 @@ function BMLT_Server_Admin()
             if ( hours == 24 ) {
                 oe = true;
             } else {
-                if ( minutes % 5 ) {
-                    minutes += 5;
+                if ( minutes % g_default_minute_interval ) {
+                    minutes += g_default_minute_interval;
                 
                     if ( minutes >= 60 ) {
                         hours++;

@@ -60,6 +60,7 @@ CHANGELIST
 
 ***Version 2.12.6* ** *- UNRELEASED*
 - Added meetings by location and day option to bmlt.js.
+- Added $default_minute_interval to override the minute interval for Start Time and Interval on the Admin UI.
 
 ***Version 2.12.5* ** *- December 24, 2018*
 - Added user name to sign out link for the administration UI.

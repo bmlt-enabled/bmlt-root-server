@@ -321,6 +321,7 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_default_meeting_weekday = '.intVal($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_default_weekday']).';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_default_meeting_start_time = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_default_start_time']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_default_meeting_duration = \''.self::js_html($this->my_localized_strings['default_duration_time']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
+                $ret .= 'var g_default_minute_interval = '.self::js_html($this->my_localized_strings['default_minute_interval']).';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_no_search_results_text = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['meeting_search_no_results_text']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_new_meeting_header_text = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_create_new_text']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_meeting_lookup_failed_not_enough_address_info = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['meeting_lookup_failed_not_enough_address_info']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
@@ -1601,7 +1602,7 @@ class c_comdef_admin_main_console
                         $ret .= '</select>';
                         $ret .= '<span id="bmlt_admin_template_time_span" class="bmlt_admin_time_span">:';
                             $ret .= '<select id="bmlt_admin_single_meeting_editor_template_meeting_start_minute_select" onchange="admin_handler_object.reactToTimeSelect(template)">';
-            for ($m = 0; $m < 60; $m += 5) {
+            for ($m = 0; $m < 60; $m += $this->my_localized_strings['default_minute_interval']) {
                 $ret .= '<option value="'.$m.'">'.sprintf("%02d", $m).'</option>';
             }
                             $ret .= '</select>';
@@ -1624,7 +1625,7 @@ class c_comdef_admin_main_console
                         $ret .= '</select>';
                         $ret .= '<span id="bmlt_admin_template_duration_span" class="bmlt_admin_time_span">:';
                             $ret .= '<select id="bmlt_admin_single_meeting_editor_template_meeting_duration_minute_select" onchange="admin_handler_object.reactToDurationSelect(template)">';
-            for ($m = 0; $m < 60; $m += 5) {
+            for ($m = 0; $m < 60; $m += $this->my_localized_strings['default_minute_interval']) {
                 $ret .= '<option value="'.$m.'">'.sprintf("%02d", $m).'</option>';
             }
                             $ret .= '</select>';
