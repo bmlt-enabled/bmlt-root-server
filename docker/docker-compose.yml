@@ -9,6 +9,8 @@ services:
       - bmlt.env
     depends_on:
       - db
+    volumes:
+      - ../main_server:/var/www/html/main_server
   db:
     image: bmltenabled/bmlt-root-server-sample-db:latest
     ports:
