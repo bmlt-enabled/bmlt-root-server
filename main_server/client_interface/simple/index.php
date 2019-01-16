@@ -398,8 +398,12 @@ if ($server instanceof c_comdef_server) {
         
             foreach ($langs as $key => $value) {
                 $format_array =  $formats_obj->GetFormatsByLanguage($key);
-                
+
                 if (is_array($format_array) && count($format_array)) {
+                    usort($format_array, function ($a, $b) {
+                        return strcmp($a->GetKey(), $b->GetKey());
+                    });
+
                     $alt = 1;   // This is used to provide an alternating style.
                     foreach ($format_array as $format) {
                         $has = false;
