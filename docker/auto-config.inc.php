@@ -37,4 +37,4 @@ defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that 
 		$change_date_format = 'g:i A, n/j/Y'; // The PHP date() format for times/dates displayed in the change records.
 		$admin_session_name = 'BMLT_Admin'; // This is merely the 'tag' used to identify the BMLT admin session.
 		$g_enable_semantic_admin = TRUE;
-        $default_minute_interval = 5; // This sets the minutes interval for Start Time and Duration.
+		$default_minute_interval = 5; // This sets the minutes interval for Start Time and Duration.
