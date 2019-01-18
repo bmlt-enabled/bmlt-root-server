@@ -401,7 +401,7 @@ if ($server instanceof c_comdef_server) {
 
                 if (is_array($format_array) && count($format_array)) {
                     usort($format_array, function ($a, $b) {
-                        return strcmp($a->GetKey(), $b->GetKey());
+                        return strnatcasecmp($a->GetKey(), $b->GetKey());
                     });
 
                     $alt = 1;   // This is used to provide an alternating style.
