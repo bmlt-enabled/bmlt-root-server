@@ -62,6 +62,7 @@ CHANGELIST
 - Added meetings by location and day option to bmlt.js.
 - Simple GetFormats response is now sorted.
 - Added $default_minute_interval to override the minute interval for Start Time and Interval on the Admin UI.
+- Fixed issue with Admin UI not returning noon meetings when searching for afternoon meetings.
 
 ***Version 2.12.5* ** *- December 24, 2018*
 - Added user name to sign out link for the administration UI.

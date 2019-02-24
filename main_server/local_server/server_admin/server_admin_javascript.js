@@ -767,7 +767,7 @@ function BMLT_Server_Admin()
             starts_after = new Array(0, 0);
             starts_before = new Array(12, 0);
         } else if ( document.getElementById('bmlt_admin_meeting_search_start_time_aft_checkbox').checked ) {
-            starts_after = new Array(12, 0);
+            starts_after = new Array(11, 59);
             starts_before = new Array(18, 0);
         } else if ( document.getElementById('bmlt_admin_meeting_search_start_time_eve_checkbox').checked ) {
             starts_after = new Array(18, 0);
