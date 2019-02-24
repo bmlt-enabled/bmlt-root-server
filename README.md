@@ -58,7 +58,7 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
-***Version 2.12.6* ** *- UNRELEASED*
+***Version 2.12.6* ** *- February 24, 2019*
 - Added meetings by location and day option to bmlt.js.
 - Simple GetFormats response is now sorted.
 - Added $default_minute_interval to override the minute interval for Start Time and Interval on the Admin UI.
