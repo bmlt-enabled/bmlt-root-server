@@ -3,3 +3,4 @@
 main_server/vendor
 .terraform
 .DS_Store
+bmlt_conversion_tables.php
