@@ -62,6 +62,7 @@ $default_lang = $lang;
                     var g_maps_api_key_warning = '<?php echo htmlspecialchars($comdef_install_wizard_strings['Maps_API_Key_Warning']); ?>';
                     var g_maps_api_key_not_set = '<?php echo htmlspecialchars($comdef_install_wizard_strings['Maps_API_Key_Not_Set']); ?>';
                     var g_maps_api_key_valid = '<?php echo htmlspecialchars($comdef_install_wizard_strings['Maps_API_Key_Valid']); ?>';
+                    var g_maps_api_key_click_here = '<?php echo htmlspecialchars($comdef_install_wizard_strings['Maps_API_Key_ClickHere']); ?>';
                 </script>
                 <script type="text/javascript" src="local_server/install_wizard/installer.js<?php echo '?v='. time(); ?>"></script>
                 <script type="text/javascript">
@@ -354,10 +355,10 @@ $default_lang = $lang;
                         <?php echo bmlt_create_next_prev_buttons(4) ?>
                     <div class="explanatory_text_div"><?php echo $comdef_install_wizard_strings['Explanatory_Text_4_Main_Intro']; ?></div>
                     <div id="database_install_stuff_div" class="item_hidden">
-                        <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_4_DB_Setup_Heading']; ?></h1>
-                        <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_4_DB_Setup_Text']; ?></h2>
+                        <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_4_Initialize_Root_Server_Heading']; ?></h1>
+                        <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_4_Initialize_Root_Server_Text']; ?></h2>
                         <div class="one_line_div centered_text">
-                            <a id="bmlt_installer_initialize_ajax_button" class="bmlt_admin_ajax_button" href="javascript:g_installer_object.setUpDatabase()"><?php echo htmlspecialchars($comdef_install_wizard_strings['Set_Up_Database']) ?></a>
+                            <a id="bmlt_installer_initialize_ajax_button" class="bmlt_admin_ajax_button" href="javascript:g_installer_object.initializeRootServer()"><?php echo htmlspecialchars($comdef_install_wizard_strings['Page_4_Initialize_Root_Server_Button']) ?></a>
                             <span id="bmlt_installer_initialize_ajax_button_throbber_span" class="item_hidden">
                                 <img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" />
                             </span>
@@ -365,6 +366,7 @@ $default_lang = $lang;
                     </div>
                     <div class="one_line_div"><div id="admin_db_items_warning" class="extra_text_div red_char"></div></div>
                     <div class="one_line_div"><div id="admin_google_api_key_warning" class="extra_text_div red_char"></div></div>
+                    <div class="one_line_div"><div id="admin_server_admin_user_warning" class="extra_text_div red_char"></div></div>
                     <div id="result_code_div" class="item_hidden">
                         <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_4_Heading']; ?></h1>
                         <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_4_Text']; ?></h2>
@@ -395,7 +397,10 @@ $default_lang = $lang;
     <script type="text/javascript">
         g_pw_length_warning_text = '<?php echo htmlspecialchars($comdef_install_wizard_strings['NeedLongerPasswordNote']); ?>';
         g_db_init_no_pw_warning_text = '<?php echo htmlspecialchars($comdef_install_wizard_strings['NoDatabase_Note_PasswordIssue']); ?>';
+        g_server_settings_click_here = '<?php echo htmlspecialchars($comdef_install_wizard_strings['NoDatabase_Note_ServerSettings_ClickHere']); ?>';
         g_db_init_db_set_warning_text = '<?php echo htmlspecialchars($comdef_install_wizard_strings['NoDatabase_Note_AlreadySet']); ?>';
+        g_db_init_db_generic_db_error_text = '<?php echo htmlspecialchars($comdef_install_wizard_strings['NoDatabase_Note_GenericError']); ?>';
+        g_db_init_db_click_here = '<?php echo htmlspecialchars($comdef_install_wizard_strings['NoDatabase_Note_ClickHere']); ?>';
         
         g_installer_object.m_ajax_uri = '<?php echo htmlspecialchars($_SERVER['PHP_SELF'].'?ajax_req='); ?>';
 

@@ -277,7 +277,7 @@
                                             'format_editor_delete_button_confirm_perm'              =>  'Mötesformatet kommer kasseras permanent!',
                                             'min_password_length_string'                            =>  'Lösenordet måste vara minst %d tecken långt!',
                                             'AJAX_Auth_Failure'                                     =>  'Tillträde nekas. Det kan vara problem med serverinställningar.',
-                                            'Maps_API_Key_Warning'                                  =>  'WARNING: There is a problem with the Google Maps API Key.',
+                                            'Maps_API_Key_Warning'                                  =>  'There is a problem with the Google Maps API Key.',
                                             'Observer_Link_Text'                                    =>  'Sök möte',
                                             'Data_Transfer_Link_Text'                               =>  'Import Meeting Data (WARNING: Replaces Current Data!)',
                                             'MapsURL'                                               =>  'https://maps.google.com/maps?q=##LAT##,##LONG##+(##NAME##)&amp;ll=##LAT##,##LONG##',

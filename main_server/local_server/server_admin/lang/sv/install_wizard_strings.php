@@ -30,11 +30,11 @@
                                             'Database_TestButton_Fail2'     =>  'The database connection failed because there is already an initialized database.',
 
                                             'AJAX_Handler_DB_Connect_Error' =>  'The database connection failed! Please make sure that the database exists, IS COMPLETELY EMPTY, the user is created, and that user has full permissions on the empty database.',
-                                            'AJAX_Handler_DB_Established_Error' =>  'The database already esists, and has been set up! You cannot use this setup to overwrite an existing database!',
+                                            'AJAX_Handler_DB_Established_Error' =>  'The database already exists, and has been set up! You cannot use this setup to overwrite an existing database!',
                                             'AJAX_Handler_DB_Incomplete_Error'  =>  'There is not enough information to initialize the database!',
-                                            
-                                            'NoDatabase_Note_AlreadySet'    =>  'There is already an existing database, so you cannot initialize a new one.',
-                                            'NoDatabase_Note_PasswordIssue' =>  'You must create a Server Administrator account before the database can be initialized.',
+
+                                            'NoDatabase_Note_AlreadySet'    =>  'The database has already been initialized with the provided table prefix. Please choose a new one.',
+                                            'NoDatabase_Note_PasswordIssue' =>  'You must choose a username and password for the Server Administrator user.',
                                             'NoServerAdmin_Note_AlreadySet' =>  'There is already an existing database, so you cannot set up a Server Administrator account (One already exists).',
                                             'NeedLongerPasswordNote'        =>  'This password is too short. It must be at least %d characters long.',
                                             
@@ -60,7 +60,7 @@
                                             'Database_PW_Default_Text'      =>  'Enter A Database Password',
                                             'Database_PW_Additional_Text'   =>  'Make this an ugly, difficult password. It has a great deal of power, and you will never need to remember it.',
 
-                                            'Maps_API_Key_Warning'          =>  'WARNING: There is a problem with the Google Maps API Key.',
+                                            'Maps_API_Key_Warning'          =>  'There is a problem with the Google Maps API Key.',
                                             
                                             'Page_2_Tab'                    =>  'STEP 2: Google Maps API',
                                             'Page_2_Heading'                =>  'Set The Initial Location For Meetings',
@@ -101,9 +101,6 @@
                                             'EmailContactEnableExtraText'   =>  'If you select this, site visitors will be able to send emails from meeting records.',
                                             
                                             'Page_4_Tab'                    =>  'STEP 4: Save The Settings',
-                                            'Page_4_DB_Setup_Heading'       =>  'Initialize A New Database',
-                                            'Page_4_DB_Setup_Text'          =>  'The button below will create a new, initialized database with default formats, no Service bodies and a Server Administrator user.',
-                                            'Set_Up_Database'               =>  'Initialize Database',
                                             'Page_4_Heading'                =>  'Create the Settings File',
                                             'Page_4_Text'                   =>  'Due to security concerns (Yeah, we\'re fairly paranoid -go figure), this program will not attempt to create or modify the settings file. Instead, we ask you to create it yourself, via FTP or a control panel file manager, name it "auto-config.inc.php", and paste the following text into the file:',
                                             
