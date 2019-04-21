@@ -57,7 +57,7 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.12.7* ** *- TBD*
+***Version 2.12.7* ** *- April 21, 2019*
 
 - The installation wizard now has more intuitive error handling.
 - The installation wizard now writes `auto-config.inc.php` automatically, so you don't have to.
