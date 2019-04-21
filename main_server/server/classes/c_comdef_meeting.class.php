@@ -1265,7 +1265,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         \returns a reference to an instance of c_comdef_service_body, which is the Service Body object for this meeting.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function &GetServiceBodyObj()
+    public function GetServiceBodyObj()
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return c_comdef_server::GetServiceBodyByIDObj($this->GetServiceBodyID());
