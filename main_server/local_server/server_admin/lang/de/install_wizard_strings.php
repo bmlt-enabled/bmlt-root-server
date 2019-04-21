@@ -43,7 +43,7 @@
 
                                             'Page_1_Tab'                    =>  'STEP 1: Database',
                                             'Page_1_Heading'                =>  'Database Connection Settings',
-                                            'Page_1_Text'                   =>  'Before you can apply the settings on this page, you must set up a new COMPLETELY EMPTY database, and establish a database user that has full user rights on that database.',
+                                            'Page_1_Text'                   =>  'Before you can apply the settings on this page, you must set up a new COMPLETELY EMPTY database, and create a database user that has full user rights on that database.',
                                             
                                             'Database_Name'                 =>  'Database Name:',
                                             'Database_Name_Default_Text'    =>  'Enter A Database Name',
@@ -128,8 +128,8 @@
 
                                             'Explanatory_Text_3_Server_Admin_Intro'  =>  'The Server Administrator is the main user for the server. It is the only account that can create new users and Service bodies, and is very powerful. You should create a login ID and a non-trivial password for this account. You\'ll be able to modify the other aspects of the account on the main server, once the database has been set up.',
                                             'Explanatory_Text_3_Misc_Intro'  =>  'These are various settings that affect how the root server behaves and appears.',
-                                            
-                                            'Explanatory_Text_4_Main_Intro'  =>  'If you have entered the database information, and if you have specified the login information for the Server Administrator, then you can initialize the database here. Remember that the database must be COMPLETELY EMPTY of BMLT Root Server tables for this server (It can have tables for other servers or services).',
+
+                                            'Explanatory_Text_4_Main_Intro'     =>  'If you have entered the database information, provided a valid Google Maps API Key, and specified the login information for the Server Administrator, then you can initialize the root server here. Remember that the database must be COMPLETELY EMPTY of BMLT Root Server tables for this server (It can have tables for other servers or services).',
                                             'Explanatory_Text_4_File_Intro'  =>  'The text in the box below is the PHP source code for the main settings file. You will need to create a file on the server with this text in it. The file is at the same level as the main server directory for the root server.',
                                             'Explanatory_Text_4_File_Extra'  =>  'You also need to make sure that the file permissions are restricted (chmod 0644). This prevents the file from being written, and the root server will not run unless the file has the correct permissions.',
                                             'Page_4_PathInfo'               =>  'The file needs to be placed as %s/auto-config.inc.php, which is where your %s directory is. After the file has been created and you have put the above text into it, you should execute the following command to make sure that the permissions are correct:',
