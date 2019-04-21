@@ -255,6 +255,6 @@ function spanish_metaphone_is_vowel(
     $string,    ///< The string to search.
     $pos        ///< The position of the character to test.
 ) {
-    return ereg("[AEIOU]", substr($string, $pos, 1));
+    return preg_match("/[AEIOU]/", substr($string, $pos, 1));
 }
 // ******** end of helper functions **************************

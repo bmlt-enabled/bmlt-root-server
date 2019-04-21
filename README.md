@@ -60,6 +60,7 @@ CHANGELIST
 ***Version 2.12.8* ** *- TBD*
 
 - Fixed some PHP warnings in the POI/CSV, KML, and GPX endpoints.
+- Replaced deprecated PHP function `ereg` with `preg_match`.
 
 ***Version 2.12.7* ** *- April 21, 2019*
 
