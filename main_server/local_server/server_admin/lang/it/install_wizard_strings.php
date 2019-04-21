@@ -96,7 +96,6 @@
                                             'DurationHourLabel'             =>  'Hours',
                                             'DurationMinutesLabel'          =>  'Minutes',
                                             'LanguageSelectorEnableLabel'   =>  'Display Language Selector On Login:',
-                                            'LanguageSelectorEnableLabel'   =>  'Display Language Selector On Login:',
                                             'LanguageSelectorEnableExtraText'   =>  'If you select this, a popup menu will appear in the login screen, so administrators can select their language.',
                                             'EmailContactEnableLabel'       =>  'Allow Email Contacts From Meetings:',
                                             'EmailContactEnableExtraText'   =>  'If you select this, site visitors will be able to send emails from meeting records.',
