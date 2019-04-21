@@ -545,15 +545,15 @@ function prepareSimpleLine(
 ) {
     $localized_strings = c_comdef_server::GetLocalStrings();
 
-    $location_borough = c_comdef_htmlspecialchars(trim(stripslashes($meeting['location_city_subsection'])));
-    $location_neighborhood = c_comdef_htmlspecialchars(trim(stripslashes($meeting['location_neighborhood'])));
-    $location_province = c_comdef_htmlspecialchars(trim(stripslashes($meeting['location_province'])));
-    $location_nation = c_comdef_htmlspecialchars(trim(stripslashes($meeting['location_nation'])));
-    $location_postal_code_1 = c_comdef_htmlspecialchars(trim(stripslashes($meeting['location_postal_code_1'])));
-    $location_text = c_comdef_htmlspecialchars(trim(stripslashes($meeting['location_text'])));
-    $street = c_comdef_htmlspecialchars(trim(stripslashes($meeting['location_street'])));
-    $info = c_comdef_htmlspecialchars(trim(stripslashes($meeting['location_info'])));
-    $town = c_comdef_htmlspecialchars(trim(stripslashes($meeting['location_municipality'])));
+    $location_borough = array_key_exists('location_city_subsection', $meeting) ? c_comdef_htmlspecialchars(trim(stripslashes($meeting['location_city_subsection']))) : "";
+    $location_neighborhood = array_key_exists('location_neighborhood', $meeting) ? c_comdef_htmlspecialchars(trim(stripslashes($meeting['location_neighborhood']))) : "";
+    $location_province = array_key_exists('location_province', $meeting) ? c_comdef_htmlspecialchars(trim(stripslashes($meeting['location_province']))) : "";
+    $location_nation = array_key_exists('location_nation', $meeting) ? c_comdef_htmlspecialchars(trim(stripslashes($meeting['location_nation']))) : "";
+    $location_postal_code_1 = array_key_exists('location_postal_code_1', $meeting) ? c_comdef_htmlspecialchars(trim(stripslashes($meeting['location_postal_code_1']))) : "";
+    $location_text = array_key_exists('location_text', $meeting) ? c_comdef_htmlspecialchars(trim(stripslashes($meeting['location_text']))) : "";
+    $street = array_key_exists('location_street', $meeting) ? c_comdef_htmlspecialchars(trim(stripslashes($meeting['location_street']))) : "";
+    $info = array_key_exists('location_info', $meeting) ? c_comdef_htmlspecialchars(trim(stripslashes($meeting['location_info']))) : "";
+    $town = array_key_exists('location_municipality', $meeting) ? c_comdef_htmlspecialchars(trim(stripslashes($meeting['location_municipality']))) : "";
     $desc = $withDate ? '' : $location_text;
     
     if ($location_borough) {
