@@ -241,11 +241,7 @@
                                             'user_dirty_confirm_text'                               =>  'Hai fatto delle modifiche a questo utente. Vuoi perdere queste modifiche?', /// 'You have made changes to this User. Do you want to lose your changes?',
                                             'user_delete_button_confirm'                            =>  'Sei sicuro di voler cancellare questo utente?', /// 'Are you sure that you want to delete this user?',
                                             'user_delete_button_confirm_perm'                       =>  'Questo utente sarà cancellato definitivamente!', /// 'This user will be deleted permanently!',
-                                            'user_change_fader_create_success_text'                 =>  'L\'utente è stato creato con successo', /// 'The User Was Successfully Created',
                                             'user_create_password_alert_text'                       =>  'I nuovi utenti devono avere una password. Non hai fornito una password per questo utente.', /// 'New users must have a password. You have not supplied a password for this user.',
-                                            'user_change_fader_create_fail_text'                    =>  'Creazione utente non riuscita', /// 'The User Create Failed',
-                                            'user_change_fader_delete_success_text'                 =>  'Utente cancellato con successo', /// 'The User Was Successfully Deleted',
-                                            'user_change_fader_delete_fail_text'                    =>  'Cancellazione utente non riuscita', /// 'The User Delete Failed'
                                             'user_change_fader_fail_no_data_text'                   =>  'Modifica utente non riuscita per mancanza di dati', /// 'The User Change Failed, Because There Was No Data Supplied'
                                             'user_change_fader_fail_cant_find_sb_text'              =>  'La modifica dell\'utente non è riuscita perché l\'utente non è stato trovato', /// 'The User Change Failed, Because The User Was Not Found'
                                             'user_change_fader_fail_cant_update_text'               =>  'La modifica dell\'utente non è riuscita perché l\'utente non era aggiornato', /// 'The User Change Failed, Because The User Was Not Updated'
@@ -267,7 +263,6 @@
                                             'format_editor_change_format_button_text'               =>  'Modifica questo formato', /// 'Change This Format'
                                             'format_editor_delete_format_button_text'               =>  'Cancella questo formato', /// 'Delete This Format'
                                             'format_editor_reset_format_button_text'                =>  'Ripristina l\'originale', /// 'Restore To Original'
-                                            'format_editor_create_format_button_text'               =>  'Crea un nuovo formato', /// 'Create A New Format'
                                             'need_refresh_message_fader_text'                       =>  'Dovresti aggiornare questa pagina prima di usare questa sezione', /// 'You Should Refresh This Page Before Using This Section'
                                             'need_refresh_message_alert_text'                       =>  'Siccome hai fatto delle modifiche all\'amministrazione di questa struttura di servizio, di questo utente o di questo formato, le informazioni visualizzate in questa sezione potrebbero non esser più accurate; per questo la pagina deve essere aggiornata. Il modo più facile di farlo è disconnettersi e rifare nuovamente l\'accesso.', /// 'Because you have made changes in the Service Body Administration, User Administration or Format Administration, the information displayed in this section may no longer be accurate, so the page needs to be refreshed. The easiest way to do this, is to Sign Out, then Log In again.'
                                             'format_editor_delete_button_confirm'                   =>  'Sei sicuro di voler cancellare questo formato?', /// 'Are you sure that you want to delete this format?'
@@ -399,7 +394,6 @@
         'sb_prompt' => 'La riunione ha modificato la sua struttura di servizio da',//'The meeting changed its Service Body from',
         'id_bigint' => 'ID della riunione',//'The meeting ID',
         'lang_enum' => 'Lingua della riunione',//'The meeting language',
-        'worldid_mixed' => 'ID dei Servizi Mondiali',//'The World Services ID',
         'worldid_mixed' => 'ID del gruppo condiviso',//'The shared Group ID',
         'weekday_tinyint' => 'Il giorno della settimana in cui si tiene la riunione',//'The day of the week on which the meeting gathers',
         'non_existent_service_body' => 'La struttura di servizio non esiste più',//'Service Body No Longer Exists',

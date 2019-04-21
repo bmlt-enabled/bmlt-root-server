@@ -62,6 +62,7 @@ CHANGELIST
 - Fixed some PHP warnings in the POI/CSV, KML, and GPX endpoints.
 - Fixed some PHP warnings in the GetChanges endpoint.
 - Fixed some PHP warnings that occurred when saving meetings.
+- Fixed some PHP warnings in the server_admin_strings.
 - Replaced deprecated PHP function `ereg` with `preg_match`.
 
 ***Version 2.12.7* ** *- April 21, 2019*

@@ -103,7 +103,6 @@
                                             'DurationLabel'                 =>  'Standard Møde Varighed:',
                                             'DurationHourLabel'             =>  'Timer',
                                             'DurationMinutesLabel'          =>  'Minutter',
-                                            'LanguageSelectorEnableLabel'   =>  'Vis sprogvalg ved login',
                                             'LanguageSelectorEnableLabel'   =>  'Vis sprogvalg ved login:',
                                             'LanguageSelectorEnableExtraText'   =>  'Hvis du vælger dette, vises en pop op-menu på login-skærmen, så administratorer kan vælge deres sprog.',
                                             'SemanticAdminLabel'            =>  'Aktivér semantisk administration:',
