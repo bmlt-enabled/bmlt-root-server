@@ -60,7 +60,7 @@ CHANGELIST
 ***Version 2.12.8* ** *- TBD*
 
 - Fixed some PHP warnings in the POI/CSV, KML, and GPX endpoints.
-- Fixed a PHP warning in the GetChanges endpoint.
+- Fixed some PHP warnings in the GetChanges endpoint.
 - Fixed some PHP warnings that occurred when saving meetings.
 - Replaced deprecated PHP function `ereg` with `preg_match`.
 

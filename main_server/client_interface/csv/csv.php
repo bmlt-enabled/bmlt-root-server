@@ -1176,7 +1176,7 @@ function GetChanges(
                         }
                     }
                     
-                    array_walk_recursive(c_comdef_server::GetServer()->GetNestedServiceBodyArray($in_sb_id), bmlt_at_at);
+                    array_walk_recursive(c_comdef_server::GetServer()->GetNestedServiceBodyArray($in_sb_id), 'bmlt_at_at');
                     
                     if (is_array($bmlt_array_gather) && count($bmlt_array_gather)) {
                         $in_sb_id = $bmlt_array_gather;
