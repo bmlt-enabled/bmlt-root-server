@@ -61,6 +61,7 @@ CHANGELIST
 
 - The installation wizard now has more intuitive error handling.
 - The installation wizard now writes `auto-config.inc.php` automatically, so you don't have to.
+- Fixed a couple of warnings that show up in error logs when performing a NAWS Export.
 
 ***Version 2.12.6* ** *- February 24, 2019*
 
