@@ -864,7 +864,7 @@ class c_comdef_admin_ajax_handler
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         try {
             if ($in_meeting_data['id_bigint']) {
-                $meeting =& $this->my_server->GetOneMeeting($in_meeting_data['id_bigint']);
+                $meeting = $this->my_server->GetOneMeeting($in_meeting_data['id_bigint']);
             } else {
                 $data = array ( 'service_body_bigint' => intval($in_meeting_data['service_body_bigint']),
                                 'weekday_tinyint' => intval($in_meeting_data['weekday_tinyint']),
@@ -967,10 +967,12 @@ class c_comdef_admin_ajax_handler
                                     $data[$key]['meetingid_bigint'] = $in_meeting_data['id_bigint'];
                                     $data[$key]['value'] = $value;
                                 } else {
+                                    $template_field_prompt = array_key_exists($key, $template_data) ? $template_data[$key]['field_prompt'] : null;
+                                    $template_visibility = array_key_exists($key, $template_data) ? $template_data[$key]['visibility'] : null;
                                     $result_data['new_data']['key'] = $key;
-                                    $result_data['new_data']['field_prompt'] = $template_data[$key]['field_prompt'];
+                                    $result_data['new_data']['field_prompt'] = $template_field_prompt;
                                     $result_data['new_data']['value'] = $value;
-                                    $meeting->AddDataField($key, $template_data[$key]['field_prompt'], $value, null, intval($template_data[$key]['visibility']));
+                                    $meeting->AddDataField($key, $template_field_prompt, $value, null, intval($template_visibility));
                                 }
                                 break;
                         }
