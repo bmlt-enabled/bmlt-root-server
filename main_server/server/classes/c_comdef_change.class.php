@@ -593,7 +593,7 @@ class c_comdef_change extends t_comdef_local_type implements i_comdef_db_stored
             $localized_strings = c_comdef_server::GetLocalStrings();
 
             // This is a rather general description of the change.
-            $ret['change_desc'] = $localized_strings['change_type_strings'][$macro];
+            $ret = array('change_desc' => $localized_strings['change_type_strings'][$macro]);
             if ($this->GetLocalDescription()) {
                 $ret['description'] = $this->GetLocalDescription();
             }
