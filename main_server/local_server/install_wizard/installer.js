@@ -27,7 +27,10 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
     var m_ajax_request_in_progress;
     var m_google_api_key = "";
     var m_google_maps_script = null;
-    
+    var m_google_api_key_is_good = false;
+    var m_database_credentials_are_good = false;
+    var m_server_admin_password_is_good = false;
+
     // #mark -
     // #mark Page Selection Handlers
     // #mark -
@@ -70,16 +73,20 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
     this.selectPage4 = function () {
         if ( this.m_installer_wrapper_object.className != 'page_4_wrapper' ) {
             this.m_installer_wrapper_object.className = 'page_4_wrapper';
-            this.testForDatabaseSetup();
+            document.getElementById('database_install_stuff_div').className = 'item_hidden';
             document.getElementById('file_text_pre').innerHTML = this.createFileData();
             var apiKeyWarningDiv = document.getElementById('admin_google_api_key_warning');
+            var testForDatabaseSetup = this.testForDatabaseSetup;
             if (apiKeyWarningDiv) {
                 this.testMapsApiKey(function (message) {
                     if (message) {
-                        apiKeyWarningDiv.innerText = g_maps_api_key_warning + message;
+                        apiKeyWarningDiv.innerHTML = g_maps_api_key_warning + ' ' + message + '<br><a href="javascript:g_installer_object.selectPage2()">' + g_maps_api_key_click_here + '</a>';
+                        this.m_google_api_key_is_good = false;
                     } else {
-                        apiKeyWarningDiv.innerText = '';
+                        apiKeyWarningDiv.innerHTML = '';
+                        this.m_google_api_key_is_good = true;
                     }
+                    testForDatabaseSetup.call(g_installer_object);
                 });
             }
         }
@@ -247,7 +254,7 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
         var uri = this.m_ajax_uri;
         
         this.gatherInstallerState();
-        
+
         if ( this.m_ajax_request_in_progress ) {
             this.m_ajax_request_in_progress.abort();
             this.m_ajax_request_in_progress = null;
@@ -320,47 +327,31 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
     this.testForDatabaseSetupCallback = function (   in_http_request
                                                 ) {
         this.m_ajax_request_in_progress = null;
-
-        if ( in_http_request.responseText ) {
+        this.m_database_credentials_are_good = false;
+        if (in_http_request.responseText) {
             eval('var ret_val = parseInt ( ' + in_http_request.responseText + ', 10 );');
             document.getElementById('admin_db_items_warning').innerHTML = '';
             document.getElementById('admin_pw_warning_div_2').className = 'item_hidden';
             
-            if ( ret_val == 0 ) { // There is an existing database
+            if (ret_val == 0) { // There is an existing database
                 document.getElementById('admin_login_stuff_fieldset').className = 'item_hidden';
-                if ( document.getElementById('database_install_stuff_div') ) {
-                    document.getElementById('database_install_stuff_div').className = 'item_hidden';
-                };
                 document.getElementById('admin_pw_warning_div_2').className = 'extra_text_div red_char';
-                document.getElementById('admin_db_items_warning').innerHTML = g_db_init_db_set_warning_text;
-            } else if ( ret_val == -1 ) {   // No database
+                document.getElementById('admin_db_items_warning').innerHTML = g_db_init_db_set_warning_text + '<br><a href="javascript:g_installer_object.selectPage1()">' + g_db_init_db_click_here + '</a>';
+            } else if (ret_val == -1) {   // No database
                 document.getElementById('admin_login_stuff_fieldset').className = '';
-                if ( document.getElementById('database_install_stuff_div') ) {
-                    document.getElementById('database_install_stuff_div').className = 'item_hidden';
-                };
-                
-                document.getElementById('admin_pw_warning_div').innerHTML = '';
+                document.getElementById('admin_db_items_warning').innerHTML = g_db_init_db_generic_db_error_text + '<br><a href="javascript:g_installer_object.selectPage1()">' + g_db_init_db_click_here + '</a>';
             } else {
                 document.getElementById('admin_login_stuff_fieldset').className = '';
-                if ( document.getElementById('database_install_stuff_div') ) {
-                    document.getElementById('database_install_stuff_div').className = '';
-                };
+                this.m_database_credentials_are_good = true;
                 this.gatherInstallerState();
-            };
-        } else // Nothing to report.
-            {
-            document.getElementById('admin_pw_warning_div').innerHTML = '';
-            document.getElementById('admin_login_stuff_fieldset').className = '';
-            if ( document.getElementById('database_install_stuff_div') ) {
-                document.getElementById('database_install_stuff_div').className = 'item_hidden';
-            };
-        };
+            }
+        }
     };
     
     /************************************************************************************//**
     *   \brief
     ****************************************************************************************/
-    this.setUpDatabase = function () {
+    this.initializeRootServer = function () {
         document.getElementById('bmlt_installer_initialize_ajax_button').className = 'item_hidden';
         document.getElementById('bmlt_installer_initialize_ajax_button_throbber_span').className = 'bmlt_admin_ajax_button_throbber_span';
 
@@ -371,53 +362,82 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
         if ( this.m_ajax_request_in_progress ) {
             this.m_ajax_request_in_progress.abort();
             this.m_ajax_request_in_progress = null;
-        };
+        }
         
-        uri += 'initialize_db';
+        uri += 'initialize_server';
+        // db settings
         uri += '&dbType=' + this.m_installer_state.dbType;
         uri += '&dbName=' + this.m_installer_state.dbName;
         uri += '&dbUser=' + this.m_installer_state.dbUser;
         uri += '&dbPassword=' + this.m_installer_state.dbPassword;
         uri += '&dbServer=' + this.m_installer_state.dbServer;
         uri += '&dbPrefix=' + this.m_installer_state.dbPrefix;
-        
+
+        // admin user settings
         var admin_login_object = document.getElementById('installer_admin_login_input');
         var admin_password_object = document.getElementById('installer_admin_password_input');
-
         var admin_login = (admin_login_object.value && (admin_login_object.value != admin_login_object.defaultValue)) ? admin_login_object.value : '';
         var admin_password = (admin_password_object.value && (admin_password_object.value != admin_password_object.defaultValue)) ? admin_password_object.value : '';
-
         uri += '&admin_login=' + admin_login;
         uri += '&admin_password=' + admin_password;
-        
+
+        // auto-config.inc.php
+        uri += '&region_bias=' + this.m_installer_state.region_bias;
+        uri += '&gkey=' + this.m_installer_state.api_key;
+        uri += '&search_spec_map_center_longitude=' + parseFloat(this.m_installer_state.search_spec_map_center.longitude).toString();
+        uri += '&search_spec_map_center_latitude=' + parseFloat(this.m_installer_state.search_spec_map_center.latitude).toString();
+        uri += '&search_spec_map_center_zoom=' + parseInt(this.m_installer_state.search_spec_map_center.zoom, 10).toString();
+        uri += '&comdef_distance_units=' + this.m_installer_state.comdef_distance_units;
+        uri += '&bmlt_title=' + this.m_installer_state.bmlt_title.replace(/'/g,"\\'");
+        uri += '&banner_text=' + this.m_installer_state.banner_text.replace(/'/g,"\\'");
+        uri += '&comdef_global_language=' + this.m_installer_state.comdef_global_language ;
+        uri += '&min_pw_len=' + this.m_installer_state.min_pw_len;
+        uri += '&number_of_meetings_for_auto=' + parseInt(this.m_installer_state.number_of_meetings_for_auto, 10);
+        uri += '&change_depth_for_meetings=' + parseInt(this.m_installer_state.change_depth_for_meetings, 10);
+        uri += '&default_duration_time=' + this.m_installer_state.default_duration_time;
+        uri += '&g_enable_language_selector=' + (this.m_installer_state.enable_language_selector ? 'TRUE' : 'FALSE');
+        uri += '&g_enable_semantic_admin=' + (this.m_installer_state.enable_semantic_admin ? 'TRUE' : 'FALSE');
+        uri += '&g_defaultClosedStatus=' + (this.m_installer_state.default_closed ? 'TRUE' : 'FALSE');
+        uri += '&g_enable_email_contact=' + (this.m_installer_state.enable_email_contact ? 'TRUE' : 'FALSE');
+        uri += '&include_service_body_admin_on_emails=' + (this.m_installer_state.send_copy_to_sba ? 'TRUE' : 'FALSE');
+        uri += '&include_every_admin_on_emails=' + (this.m_installer_state.send_copy_to_all_admins ? 'TRUE' : 'FALSE');
+        uri += '&time_format=' + this.m_installer_state.time_format.replace(/'/g,"\\'");
+        uri += '&change_date_format=' + this.m_installer_state.change_date_format.replace(/'/g,"\\'");
+        uri += '&admin_session_name=' + this.m_installer_state.admin_session_name.replace(/'/g,"\\'");
+
         var salt = new Date();
         uri += '&salt=' + salt.getTime();
         
         this.m_ajax_request_in_progress = BMLT_Installer_AjaxRequest(uri, function (in_req) {
-            g_installer_object.initializeDatabaseCallback(in_req); }, 'post');
+            g_installer_object.initializeRootServerCallback(in_req); }, 'post');
     };
     
     /************************************************************************************//**
     *   \brief
     ****************************************************************************************/
-    this.initializeDatabaseCallback = function (   in_http_request
+    this.initializeRootServerCallback = function (   in_http_request
                                                 ) {
         this.m_ajax_request_in_progress = null;
-        if ( in_http_request.responseText ) {
+        if (in_http_request.responseText) {
             eval('var ret_val = ' + in_http_request.responseText + ';');
             
-            if ( ret_val ) {
-                if ( ret_val.status === true ) {   // Hide the initialize button upon success.
+            if (ret_val) {
+                if (ret_val.dbStatus === true && ret_val.configStatus === true) {   // Hide the initialize button upon success.
                     document.getElementById('database_install_stuff_div').className = 'item_hidden';
                     document.getElementById('admin_db_items_warning').innerHTML = '';
-                    document.getElementById('result_code_div').className = 'item_shown';  // Show settings file.
+                    location.reload(true);
+                } else if (!ret_val.dbStatus) {
+                    if (ret_val.dbReport) {
+                        alert(ret_val.dbReport);
+                    }
                 } else {
-                    if ( ret_val.report ) {
-                        alert(ret_val.report);
-                    };
-                };
-            };
-        };
+                    document.getElementById('database_install_stuff_div').className = 'item_hidden';
+                    document.getElementById('admin_db_items_warning').innerHTML = '';
+                    // There was a problem writing the config file, so show the config and allow the user to write it manually
+                    document.getElementById('result_code_div').className = 'item_shown';  // Show settings file.
+                }
+            }
+        }
         
         document.getElementById('bmlt_installer_initialize_ajax_button_throbber_span').className = 'item_hidden';
         document.getElementById('bmlt_installer_initialize_ajax_button').className = 'bmlt_admin_ajax_button';
@@ -445,7 +465,7 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
         var db_pw_object = document.getElementById('installer_db_pw_input');
         var db_host_object = document.getElementById('installer_db_host_input');
         var db_prefix_object = document.getElementById('installer_db_prefix_input');
-        
+
         var admin_login_object = document.getElementById('installer_admin_login_input');
         var admin_password_object = document.getElementById('installer_admin_password_input');
 
@@ -455,101 +475,87 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
         this.m_installer_state.dbPassword = (db_pw_object.value && (db_pw_object.value != db_pw_object.defaultValue)) ? db_pw_object.value : '';
         this.m_installer_state.dbServer = (db_host_object.value && (db_host_object.value != db_host_object.defaultValue)) ? db_host_object.value : '';
         this.m_installer_state.dbPrefix = (db_prefix_object.value && (db_prefix_object.value != db_prefix_object.defaultValue)) ? db_prefix_object.value : '';
-        
+
         var admin_login = (admin_login_object.value && (admin_login_object.value != admin_login_object.defaultValue)) ? admin_login_object.value : '';
         var admin_password = (admin_password_object.value && (admin_password_object.value != admin_password_object.defaultValue)) ? admin_password_object.value : '';
-        
-        if ( document.getElementById('database_install_stuff_div') ) {
-            if (    !this.m_installer_state.dbType
-                ||  !this.m_installer_state.dbName
-                ||  !this.m_installer_state.dbUser
-                ||  !this.m_installer_state.dbPassword
-                ||  !this.m_installer_state.dbServer
-                ||  !this.m_installer_state.dbPrefix
-                ||  !admin_login
-                ||  !admin_password
-                ||  (admin_password && (admin_password.length < this.geMinPasswordLength()))
-                ) {
-                document.getElementById('database_install_stuff_div').className = 'item_hidden';
-                if (    !admin_login
-                    ||  !admin_password
-                    ||  (admin_password && (admin_password.length < this.geMinPasswordLength()))
-                    ) {
-                    document.getElementById('admin_db_items_warning').innerHTML = g_db_init_no_pw_warning_text;
-                } else {
-                    document.getElementById('admin_db_items_warning').innerHTML = '';
-                };
-            } else {
-                document.getElementById('admin_db_items_warning').innerHTML = '';
-            };
-        };
-        
-        var min_pw_len = this.geMinPasswordLength();
-        
-        if ( admin_password && (admin_password.length < min_pw_len) ) {
-            document.getElementById('admin_pw_warning_div').innerHTML = sprintf(g_pw_length_warning_text, min_pw_len);
+
+        this.m_server_admin_password_is_good = false;
+        document.getElementById('admin_pw_warning_div').innerHTML = '';
+        if (!admin_login || !admin_login.trim() || !admin_password) {
+            document.getElementById('admin_server_admin_user_warning').innerHTML = g_db_init_no_pw_warning_text + '<br><a href="javascript:g_installer_object.selectPage3()">' + g_server_settings_click_here + '</a>';
+            document.getElementById('admin_server_admin_user_warning').className = 'extra_text_div red_char';
+        } else if (admin_password.length < this.geMinPasswordLength()) {
+            document.getElementById('admin_pw_warning_div').innerHTML = sprintf(g_pw_length_warning_text, this.geMinPasswordLength());
+            document.getElementById('admin_server_admin_user_warning').innerHTML = sprintf(g_pw_length_warning_text, this.geMinPasswordLength()) + '<br><a href="javascript:g_installer_object.selectPage3()">' + g_server_settings_click_here + '</a>';
+            document.getElementById('admin_server_admin_user_warning').className = 'extra_text_div red_char';
         } else {
-            document.getElementById('admin_pw_warning_div').innerHTML = '';
-        };
-        
+            document.getElementById('admin_server_admin_user_warning').innerHTML = '';
+            document.getElementById('admin_server_admin_user_warning').className = 'item_hidden';
+            this.m_server_admin_password_is_good = true;
+        }
+
         var search_count_select_object = document.getElementById('search_count_select');
-        
+
         this.m_installer_state.number_of_meetings_for_auto = search_count_select_object.options[search_count_select_object.selectedIndex].value;
-        
+
         var change_depth_for_meetings_object = document.getElementById('installer_history_select');
-        
+
         this.m_installer_state.change_depth_for_meetings = change_depth_for_meetings_object.options[change_depth_for_meetings_object.selectedIndex].value;
-        
+
         var language_object = document.getElementById('installer_lang_select');
-        
+
         this.m_installer_state.comdef_global_language = language_object.options[language_object.selectedIndex].value;
-            
+
         this.geMinPasswordLength();
-            
+
         var region_bias_object = document.getElementById('installer_region_bias_select');
-        
+
         this.m_installer_state.region_bias = region_bias_object.options[region_bias_object.selectedIndex].value;
-        
+
         this.m_installer_state.api_key = document.getElementById('api_text_entry').value;
-        
-        if ( this.m_map_object ) {
+
+        if (this.m_map_object) {
             var centerPos = this.m_map_object.main_marker.getPosition();
-            
-            if ( !this.m_installer_state.search_spec_map_center ) {
+
+            if (!this.m_installer_state.search_spec_map_center) {
                 this.m_installer_state.search_spec_map_center = new Object;
-            };
-            
+            }
+
             this.m_installer_state.search_spec_map_center.longitude = centerPos.lng();
             this.m_installer_state.search_spec_map_center.latitude = centerPos.lat();
             this.m_installer_state.search_spec_map_center.zoom = this.m_map_object.getZoom();
-        };
-        
+        }
+
         this.m_installer_state.bmlt_title = document.getElementById('installer_title_input').value;
-            
+
         this.m_installer_state.banner_text = document.getElementById('installer_banner_input').value;
-            
+
         var distance_units_object = document.getElementById('distance_units_select');
-        
+
         var duration_time_hours_object = document.getElementById('installer_duration_hour_select');
         var duration_time_minutes_object = document.getElementById('installer_duration_minutes_select');
-        
+
         this.m_installer_state.default_duration_time = sprintf("%d:%02d:00", parseInt(duration_time_hours_object.options[duration_time_hours_object.selectedIndex].value, 10), parseInt(duration_time_minutes_object.options[duration_time_minutes_object.selectedIndex].value, 10));
-        
+
         this.m_installer_state.comdef_distance_units = distance_units_object.options[distance_units_object.selectedIndex].value;
-        
+
         this.m_installer_state.enable_language_selector = document.getElementById('installer_admin_language_selector_checkbox').checked;
-        
+
         this.m_installer_state.enable_email_contact = document.getElementById('installer_admin_email_contact_checkbox').checked;
-        
+
         this.m_installer_state.enable_semantic_admin = document.getElementById('semantic_admin_checkbox').checked;
-        
+
         this.m_installer_state.default_closed = document.getElementById('default_closed_checkbox').checked;
-        
+
         this.m_installer_state.send_copy_to_sba = document.getElementById('installer_admin_email_sba_contact_checkbox').checked;
-        
+
         this.m_installer_state.send_copy_to_all_admins = document.getElementById('installer_admin_email_all_admins_checkbox').checked;
-        
+
         this.m_installer_state.default_duration_text = '';
+
+        if (this.m_google_api_key_is_good === true && this.m_database_credentials_are_good === true && this.m_server_admin_password_is_good === true) {
+            document.getElementById('database_install_stuff_div').className = '';
+        }
     };
     
     /************************************************************************************//**
@@ -626,7 +632,7 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
 
         if (!this.m_google_api_key || !this.m_google_api_key.trim()) {
             if (callback) {
-                callback(g_maps_api_key_not_set);
+                callback.call(g_installer_object, g_maps_api_key_not_set);
             } else {
                 showGoogleApiKeyError(g_maps_api_key_not_set);
             }
@@ -639,9 +645,9 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
                 var response = JSON.parse(testKeyXhr.responseText);
                 if (callback) {
                     if (response.status === 'OK' || (response.status === 'REQUEST_DENIED' && response.error_message.indexOf('referer restrictions') !== -1)) {
-                        callback();
+                        callback.call(g_installer_object);
                     } else {
-                        callback(response.error_message);
+                        callback.call(g_installer_object, response.error_message);
                     }
                 } else {
                     if (response.status === 'OK' || (response.status === 'REQUEST_DENIED' && response.error_message.indexOf('referer restrictions') !== -1)) {

@@ -31,11 +31,14 @@
                                             'Database_TestButton_Fail2'     =>  'The database connection failed because there is already an initialized database.',
 
                                             'AJAX_Handler_DB_Connect_Error' =>  'The database connection failed! Please make sure that the database exists, IS COMPLETELY EMPTY, the user is created, and that user has full permissions on the empty database.',
-                                            'AJAX_Handler_DB_Established_Error' =>  'The database already esists, and has been set up! You cannot use this setup to overwrite an existing database!',
+                                            'AJAX_Handler_DB_Established_Error' =>  'The database already exists, and has been set up! You cannot use this setup to overwrite an existing database!',
                                             'AJAX_Handler_DB_Incomplete_Error'  =>  'There is not enough information to initialize the database!',
-                                            
-                                            'NoDatabase_Note_AlreadySet'    =>  'There is already an existing database, so you cannot initialize a new one.',
-                                            'NoDatabase_Note_PasswordIssue' =>  'You must create a Server Administrator account before the database can be initialized.',
+
+                                            'NoDatabase_Note_AlreadySet'    =>  'The database has already been initialized with the provided table prefix. Please choose a new one.',
+                                            'NoDatabase_Note_GenericError'  =>  'There is an error connecting to the database. Please check your database settings.',
+                                            'NoDatabase_Note_ClickHere'     =>  'Click here to go back to the database set up page.',
+                                            'NoDatabase_Note_PasswordIssue' =>  'You must choose a username and password for the Server Administrator user.',
+                                            'NoDatabase_Note_ServerSettings_ClickHere' => 'Click here to go back to the server settings page.',
                                             'NoServerAdmin_Note_AlreadySet' =>  'There is already an existing database, so you cannot set up a Server Administrator account (One already exists).',
                                             'NeedLongerPasswordNote'        =>  'This password is too short. It must be at least %d characters long.',
                                             
@@ -44,7 +47,7 @@
 
                                             'Page_1_Tab'                    =>  'STEP 1: Database',
                                             'Page_1_Heading'                =>  'Database Connection Settings',
-                                            'Page_1_Text'                   =>  'Before you can apply the settings on this page, you must set up a new COMPLETELY EMPTY database, and establish a database user that has full user rights on that database.',
+                                            'Page_1_Text'                   =>  'Before you can apply the settings on this page, you must set up a new COMPLETELY EMPTY database, and create a database user that has full user rights on that database.',
                                             
                                             'Database_Name'                 =>  'Database Name:',
                                             'Database_Name_Default_Text'    =>  'Enter A Database Name',
@@ -61,13 +64,14 @@
                                             'Database_PW_Default_Text'      =>  'Enter A Database Password',
                                             'Database_PW_Additional_Text'   =>  'Make this an ugly, difficult password. It has a great deal of power, and you will never need to remember it.',
 
-                                            'Maps_API_Key_Warning'          =>  'WARNING: There is a problem with the Google Maps API Key.',
-                                            'Maps_API_Key_Not_Set'          =>  'WARNING: The Google Maps API key is not set.',
+                                            'Maps_API_Key_Warning'          =>  'There is a problem with the Google Maps API Key.',
+                                            'Maps_API_Key_Not_Set'          =>  'The Google Maps API key is not set.',
                                             'Maps_API_Key_Valid'            =>  'Google Maps API Key is valid.',
+                                            'Maps_API_Key_ClickHere'        =>  'Click here to go back to the Google Maps API Key set up page.',
                                             
                                             'Page_2_Tab'                    =>  'STEP 2: Google Maps API Settings',
                                             'Page_2_Heading'                =>  'Google Maps API Settings',
-                                            'Page_2_API_Key_Prompt'         =>  'Enter the Google API Key for Maps:',
+                                            'Page_2_API_Key_Prompt'         =>  'Enter the Google API Key for Geocoding:',
                                             'Page_2_API_Key_Set_Button'     =>  'TEST KEY',
                                             'Page_2_API_Key_Not_Set_Prompt' =>  'SET API KEY FIRST',
                                             'Page_2_Text'                   =>  'When saving a meeting, the BMLT Root Server uses the Google Maps API to determine the latitude and longitude for the meeting address. These settings are required to allow the BMLT Root Server to communicate with the Google Maps API.',
@@ -104,7 +108,6 @@
                                             'DurationHourLabel'             =>  'Hours',
                                             'DurationMinutesLabel'          =>  'Minutes',
                                             'LanguageSelectorEnableLabel'   =>  'Display Language Selector On Login:',
-                                            'LanguageSelectorEnableLabel'   =>  'Display Language Selector On Login:',
                                             'LanguageSelectorEnableExtraText'   =>  'If you select this, a popup menu will appear in the login screen, so administrators can select their language.',
                                             'SemanticAdminLabel'            =>  'Enable Semantic Administration:',
                                             'SemanticAdminExtraText'        =>  'If not checked, then all administration must be done via the Root Server login (No apps).',
@@ -114,13 +117,14 @@
                                             'EmailContactAdminEnableExtraText'  =>  'Sends copies of these emails to the Service Body Administrator (if they are not the primary recipient).',
                                             'EmailContactAllAdminEnableLabel'       =>  'Include All Service Body Administrators On These Emails:',
                                             'EmailContactAllAdminEnableExtraText'   =>  'Sends copies of these emails to all of the relevant Service Body Administrators.',
-                                            
+
+                                            'Page_4_Initialize_Root_Server_Heading' => 'Initialize the Root Server',
+                                            'Page_4_Initialize_Root_Server_Text'    => 'The button below will initialize the Root Server with an empty database and a Server Administrator user.',
+                                            'Page_4_Initialize_Root_Server_Button'  => 'Initialize Root Server',
+
                                             'Page_4_Tab'                    =>  'STEP 4: Save The Settings',
-                                            'Page_4_DB_Setup_Heading'       =>  'Initialize A New Database',
-                                            'Page_4_DB_Setup_Text'          =>  'The button below will create a new, initialized database with default formats, no Service bodies and a Server Administrator user.',
-                                            'Set_Up_Database'               =>  'Initialize Database',
                                             'Page_4_Heading'                =>  'Create the Settings File',
-                                            'Page_4_Text'                   =>  'Due to security concerns (Yeah, we\'re fairly paranoid -go figure), this program will not attempt to create or modify the settings file. Instead, we ask you to create it yourself, via FTP or a control panel file manager, name it "auto-config.inc.php", and paste the following text into the file:',
+                                            'Page_4_Text'                   =>  'The root server was unable to create the settings file for you. Instead, we ask you to create it yourself, via FTP or a control panel file manager, name it "auto-config.inc.php", and paste the following text into the file:',
                                             
                                             'DefaultPasswordLength'         =>  10,
                                             'DefaultMeetingCount'           =>  10,
@@ -149,7 +153,7 @@
                                             'Explanatory_Text_3_Server_Admin_Intro' =>  'The Server Administrator is the main user for the server. It is the only account that can create new users and Service bodies, and is very powerful. You should create a login ID and a non-trivial password for this account. You\'ll be able to modify the other aspects of the account on the main server, once the database has been set up.',
                                             'Explanatory_Text_3_Misc_Intro'     =>  'These are various settings that affect how the root server behaves and appears.',
                                             
-                                            'Explanatory_Text_4_Main_Intro'     =>  'If you have entered the database information, and if you have specified the login information for the Server Administrator, then you can initialize the database here. Remember that the database must be COMPLETELY EMPTY of BMLT Root Server tables for this server (It can have tables for other servers or services).',
+                                            'Explanatory_Text_4_Main_Intro'     =>  'If you have entered the database information, provided a valid Google Maps API Key, and specified the login information for the Server Administrator, then you can initialize the root server here. Remember that the database must be COMPLETELY EMPTY of BMLT Root Server tables for this server (It can have tables for other servers or services).',
                                             'Explanatory_Text_4_File_Intro'     =>  'The text in the box below is the PHP source code for the main settings file. You will need to create a file on the server with this text in it. The file is at the same level as the main server directory for the root server.',
                                             'Explanatory_Text_4_File_Extra'     =>  'You also need to make sure that the file permissions are restricted (chmod 0644). This prevents the file from being written, and the root server will not run unless the file has the correct permissions.',
                                             'Page_4_PathInfo'                   =>  'The file needs to be placed as %s/auto-config.inc.php, which is where your %s directory is. After the file has been created and you have put the above text into it, you should execute the following command to make sure that the permissions are correct:',

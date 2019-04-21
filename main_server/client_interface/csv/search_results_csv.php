@@ -697,7 +697,7 @@ function ReturnNAWSDeletedMeetings(
                     if (!$server->GetOneMeeting($b_obj->GetID())) {  // Must be currently deleted.
                         if (is_array($in_services) && count($in_services)) {
                             $found = false;
-                            rewind($in_services);
+                            reset($in_services);
                             foreach ($in_services as $sb_id) {
                                 if (!$found) {
                                     if (intval($b_obj->GetServiceBodyID()) == intval($sb_id)) {

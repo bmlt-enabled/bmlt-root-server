@@ -60,7 +60,7 @@
                                             'Database_PW_Default_Text'      =>  'Entrer le Mot de Passe de la Base de Données',
                                             'Database_PW_Additional_Text'   =>  'Faite à ce qu\'il en soit vraiment sécuritaire.',
 
-                                            'Maps_API_Key_Warning'          =>  'WARNING: There is a problem with the Google Maps API Key.',
+                                            'Maps_API_Key_Warning'          =>  'There is a problem with the Google Maps API Key.',
                                             
                                             'Page_2_Tab'                    =>  'ÉTAPE 2: Localisation par défaut',
                                             'Page_2_Heading'                =>  'Regler la localisation innitiale pour les Réunions',
@@ -101,9 +101,6 @@
                                             'EmailContactEnableExtraText'   =>  'If you select this, site visitors will be able to send emails from meeting records.',
                                             
                                             'Page_4_Tab'                    =>  'Étape 4: Enregistrer les paramètres',
-                                            'Page_4_DB_Setup_Heading'       =>  'Initialiser une nouvelle base de données',
-                                            'Page_4_DB_Setup_Text'          =>  'Le bouton ci-dessous va créer une nouvelle base de données initialisée avec les formats par défaut, pas de corps de service et un utilisateur d\'administrateur de serveur.',
-                                            'Set_Up_Database'               =>  'initialiser la base de données',
                                             'Page_4_Heading'                =>  'Créer le fichier de paramètres',
                                             'Page_4_Text'                   =>  'Pour des raisons de sécurité (Oui, nous sommes assez paranoïaque - allez figure donc..), ce programme ne tentera pas de créer ou modifier le fichier de paramètres. Au lieu de cela, nous vous demandons de créer vous-même, via FTP ou un gestionnaire de fichiers panneau de contrôle, le nommer "auto-config.inc.php", et collez le texte suivant dans le fichier:',
                                             

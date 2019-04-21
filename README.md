@@ -57,14 +57,21 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.12.7* ** *- TBD*
+
+- The installation wizard now has more intuitive error handling.
+- The installation wizard now writes `auto-config.inc.php` automatically, so you don't have to.
+- Fixed a couple of warnings that show up in error logs when performing a NAWS Export.
 
 ***Version 2.12.6* ** *- February 24, 2019*
+
 - Added meetings by location and day option to bmlt.js.
 - Simple GetFormats response is now sorted.
 - Added $default_minute_interval to override the minute interval for Start Time and Interval on the Admin UI.
 - Fixed issue with Admin UI not returning noon meetings when searching for afternoon meetings.
 
 ***Version 2.12.5* ** *- December 24, 2018*
+
 - Added user name to sign out link for the administration UI.
 - Added the ability to display a fixed set of counties when editing meetings in a dropdown menu rather than a freeform text field with a new `$meeting_counties_and_sub_provinces` setting.
 - Added Danish translations.

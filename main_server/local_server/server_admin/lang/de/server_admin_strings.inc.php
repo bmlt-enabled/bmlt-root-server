@@ -274,7 +274,7 @@
                                             'format_editor_delete_button_confirm_perm'              =>  'Dieses Format wird dauerhaft gelöscht werden!',
                                             'min_password_length_string'                            =>  'Das Passwort ist zu kurz! Es muss mindestens %d zeichen betragen!',
                                             'AJAX_Auth_Failure'                                     =>  'Authorisation fehlgeschlagen für diese Operation. Es kann sein, dass ein Problem mit der Serverkonfiguration besteht.',
-                                            'Maps_API_Key_Warning'                                  =>   'WARNING: There is a problem with the Google Maps API Key.', // TODO translate
+                                            'Maps_API_Key_Warning'                                  =>  'There is a problem with the Google Maps API Key.', // TODO translate
                                             'Observer_Link_Text'                                    =>  'Meetingssuche',
                                             'Data_Transfer_Link_Text'                               =>  'Import Meeting Data (WARNING: Replaces Current Data!)',
                                             'MapsURL'                                               =>  'http://maps.google.com/maps?q=##LAT##,##LONG##+(##NAME##)&amp;ll=##LAT##,##LONG##',

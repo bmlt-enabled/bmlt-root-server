@@ -276,7 +276,7 @@
                                             'format_editor_delete_button_confirm_perm'              =>  'Ce format sera définitivement supprimé!',
                                             'min_password_length_string'                            =>  'Le mot de passe est trop court! Il doit être au moins contenir au moins %d caractères!',
                                             'AJAX_Auth_Failure'                                     =>  'Échec de l\'autorisation pour cette opération. Il peut y avoir un problème avec la configuration du serveur.',
-                                            'Maps_API_Key_Warning'                                  =>  'WARNING: There is a problem with the Google Maps API Key.',
+                                            'Maps_API_Key_Warning'                                  =>  'There is a problem with the Google Maps API Key.',
                                             'Observer_Link_Text'                                    =>  'Recherche de réunions',
                                             'Data_Transfer_Link_Text'                               =>  'Import Meeting Data (WARNING: Replaces Current Data!)',
                                             'MapsURL'                                               =>  'https://maps.google.com/maps?q=##LAT##,##LONG##+(##NAME##)&amp;ll=##LAT##,##LONG##',

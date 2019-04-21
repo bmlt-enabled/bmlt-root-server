@@ -67,7 +67,7 @@
                                             
                                             'Page_2_Tab'                    =>  'Trin 2: Indstillinger for Google Maps API',
                                             'Page_2_Heading'                =>  'Indstillinger for Google Maps API',
-                                            'Page_2_API_Key_Prompt'         =>  'Enter the Google API Key for Maps:',
+                                            'Page_2_API_Key_Prompt'         =>  'Enter the Google API Key for Geocoding:',
                                             'Page_2_API_Key_Set_Button'     =>  'TESTSØGLE',
                                             'Page_2_API_Key_Not_Set_Prompt' =>  'SÆT API KEY FØRST',
                                             'Page_2_Text'                   =>  'Når du gemmer et møde, bruger BMLT Root Server API en til Google Maps til at bestemme bredde og længdegrad for mødeadressen. Disse indstillinger er nødvendige for at tillade, at BMLT Root Server kommunikerer med Google Maps API.',
@@ -116,9 +116,6 @@
                                             'EmailContactAllAdminEnableExtraText'   =>  'Send kopier af disse e-mails til alle relevante Service Enheds Administrators.',
                                             
                                             'Page_4_Tab'                    =>  'TRIN 4: Gem indstillingerne',
-                                            'Page_4_DB_Setup_Heading'       =>  'Initialiser en ny database',
-                                            'Page_4_DB_Setup_Text'          =>  'Knappen nedenfor vil oprette en ny, initialiseret database med standardformater, ingen service Enheder og serveradministrator bruger.',
-                                            'Set_Up_Database'               =>  'Initialiser database',
                                             'Page_4_Heading'                =>  'Opret indstillingsfilen',
                                             'Page_4_Text'                   =>  'På grund af sikkerhedsproblemer (Ja, vi er ret paranoid -go figur), vil dette program ikke forsøge at oprette eller ændre indstillingsfilen. I stedet beder vi dig om at oprette det selv, via FTP eller en kontrolpanel filhåndtering, navngiv det "auto-config.inc.php" og indsæt følgende tekst i filen:',
                                             
