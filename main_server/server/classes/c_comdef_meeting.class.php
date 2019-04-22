@@ -1314,7 +1314,8 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         // We will not operate on the principal elements.
-        if (($in_force && !isset($this->_my_meeting_data[$in_key_enum])) || ($in_force && is_array($this->_my_meeting_data[$in_key_enum])) || !is_array($this->_my_meeting_data[$in_key_enum])) {
+        $_meeting_data_value = array_key_exists($in_key_enum, $this->_my_meeting_data) ? $this->_my_meeting_data[$in_key_enum] : null;
+        if (($in_force && !isset($_meeting_data_value)) || ($in_force && is_array($_meeting_data_value)) || !is_array($_meeting_data_value)) {
             if (!$in_lang_enum) {
                 $in_lang_enum = $this->_my_meeting_data['lang_enum'];
             }
