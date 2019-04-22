@@ -63,6 +63,7 @@ CHANGELIST
 - Fixed some PHP warnings in the GetChanges endpoint.
 - Fixed some PHP warnings that occurred when saving meetings.
 - Fixed some PHP warnings in the server_admin_strings.
+- Fixed PHP warning with headers being sent twice for NAWS dump.
 - Replaced deprecated PHP function `ereg` with `preg_match`.
 
 ***Version 2.12.7* ** *- April 21, 2019*
