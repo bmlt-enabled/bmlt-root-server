@@ -638,8 +638,6 @@ function CSVHandleNawsDump(
     if ($sb) {
         require_once(dirname(__FILE__).'/search_results_csv.php');
         $service_bodies = array ( 'services' => c_comdef_server::GetServiceBodyHierarchyIDs(intval($in_http_Vars['sb_id'])) );
-            
-        header('Content-Type:text/csv');
         
         $cc = preg_replace('|[\W]|', '_', strtoupper(trim($sb->GetWorldID())));
         
