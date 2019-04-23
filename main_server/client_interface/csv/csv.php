@@ -495,7 +495,7 @@ function parse_redirect(
                     list ( $key, $value ) = explode(',', $resultRow);
                     
                     $value = explode("\t", trim($value, '"'));
-                    $oldValue = explode("\t", $result3[$key]);
+                    $oldValue =  explode("\t", array_key_exists($key, $result3) ? $result3[$key] : "");
                     $value = array_unique(array_merge($value, $oldValue));
                     asort($value);
                     $value = trim(implode("\t", $value));
