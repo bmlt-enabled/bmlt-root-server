@@ -1173,8 +1173,8 @@ function GetChanges(
                             array_push($bmlt_array_gather, $in_value->GetID());
                         }
                     }
-                    
-                    array_walk_recursive(c_comdef_server::GetServer()->GetNestedServiceBodyArray($in_sb_id), 'bmlt_at_at');
+                    $tmp = c_comdef_server::GetServer()->GetNestedServiceBodyArray($in_sb_id);
+                    array_walk_recursive($tmp, 'bmlt_at_at');
                     
                     if (is_array($bmlt_array_gather) && count($bmlt_array_gather)) {
                         $in_sb_id = $bmlt_array_gather;
