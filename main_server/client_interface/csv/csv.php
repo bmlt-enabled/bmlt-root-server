@@ -393,7 +393,7 @@ function parse_redirect(
             break;
         
         case 'GetNAWSDump':
-            CSVHandleNawsDump($http_vars, $server);
+            $result = CSVHandleNawsDump($http_vars, $server);
             break;
         
         case 'GetCoverageArea':
@@ -667,7 +667,7 @@ function CSVHandleNawsDump(
             }
         }
         header("Content-Disposition: attachment; filename=BMLT_$filename.csv");
-        echo ReturnNAWSFormatCSV($sb_array, $in_server);
+        return ReturnNAWSFormatCSV($sb_array, $in_server);
     }
 }
 
