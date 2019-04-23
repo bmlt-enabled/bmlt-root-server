@@ -346,6 +346,16 @@
                                                                                                                 'Y'     =>  'Jeunes',
                                                                                                                 'LANG'  =>  'Alternate Language'
                                                                                                             ),
+                                            'format_type_prompt'                                    =>  'Format Type:',    // TODO: Translate
+                                            'format_type_codes'                                     =>  array ( 
+                                                                                                                ''     =>  'None',    // TODO: Translate
+                                                                                                                'FC1'  =>  'Meeting Format (Speaker, Book Study, etc.)',    // TODO: Translate
+                                                                                                                'FC2'  =>  'Location Code (Wheelchair Accessible, Limited Parking, etc.)',    // TODO: Translate
+                                                                                                                'FC3'  =>  'Common Needs and Restrictions (Mens Meeting, LGTBQ, No Children, etc.)',    // TODO: Translate
+                                                                                                                'O'    =>  'Attendance by non-addicts (Open, Closed)',    // TODO: Translate
+                                                                                                                'LANG' =>  'Language', // TRANSLATE
+                                                                                                                'ALERT'=>  'Format should be especially prominent (Clean requirement, etc.)',// TODO: Translate
+                                                                                                                ),
                                             'cookie_monster'                                        =>  'Ce site contient un cookie pour emmagasiner l\'information de votre langue de préférée.',
                                             'main_prompts'                                          =>  array ( 'id_bigint' => 'ID',
                                                                                                                 'worldid_mixed' => 'World ID',

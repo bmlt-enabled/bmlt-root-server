@@ -903,7 +903,8 @@ function GetFormats(
                         'lang',
                         'id',
                         'world_id',
-                        'root_server_uri'
+                        'root_server_uri',
+                        'format_type_enum',
                         );
     
     $ret = null;
@@ -973,6 +974,10 @@ function GetFormats(
                                     
                                     case 'root_server_uri':
                                         $val = dirname(dirname(GetURLToMainServerDirectory(true)));
+                                        break;
+                                        
+                                    case 'format_type_enum':
+                                        $val = $localized_format->GetFormatType();
                                         break;
                                 }
                                 

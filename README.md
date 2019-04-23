@@ -61,6 +61,13 @@ CHANGELIST
 
 - Semantic Administration is now enabled by default on install wizard.
 - Fixed a bug with JSONP endpoint emoting incorrect mime type.
+- Added format_type to the definition of formats.  This allows satellites to distinguish between classes of formats, and handle them differently (e.g. languages displayed with flags)
+The following types are defined:
+	    'FC1'  =>  'Meeting Format (Speaker, Book Study, etc.)',
+            'FC2'  =>  'Location Code (Wheelchair Accessible, Limited Parking, etc.)',
+            'FC3'  =>  'Special Interest and Restrictions (Mens Meeting, LGTBQ, No Children, etc.)',
+            'O'    =>  'Attendance by non-addicts (Open, Closed)',
+            'LANG' =>  'Language'
 
 ***Version 2.13.0* ** *- April 28, 2019*
 
