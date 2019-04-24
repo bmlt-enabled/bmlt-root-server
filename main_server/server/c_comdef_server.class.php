@@ -393,6 +393,9 @@ class c_comdef_server
             $obj_array = array();
             /// Read in all the users, and instantiate an array of objects.
             foreach ($rows as $row) {
+                $time = explode(" ", $row['last_access_datetime']);
+                $t0 = explode("-", $time[0]);
+                $t1 = explode(":", $time[1]);
                 $obj_array[$row['id_bigint']] = new c_comdef_user(
                     $this,
                     $row['id_bigint'],
@@ -404,7 +407,7 @@ class c_comdef_server
                     $row['name_string'],
                     $row['description_string'],
                     $row['owner_id_bigint'],
-                    $row['last_access_datetime']
+                    mktime($t1[0], $t1[1], $t1[2], $t0[1], $t0[2], $t0[0])
                 );
             }
             
