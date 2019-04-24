@@ -65,6 +65,7 @@ CHANGELIST
 - Fixed some PHP warnings in the server_admin_strings.
 - Fixed a PHP warning with headers being sent twice for NAWS dump.
 - Fixed a PHP warning in the GetFieldValues endpoint.
+- Fixed a PHP warning that occurred when modifying a user.
 - Replaced deprecated PHP function `ereg` with `preg_match`.
 
 ***Version 2.12.7* ** *- April 21, 2019*
