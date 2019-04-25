@@ -57,7 +57,7 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.12.8* ** *- TBD*
+***Version 2.12.8* ** *- April 24, 2019*
 
 - Fixed some PHP warnings in the POI/CSV, KML, and GPX endpoints.
 - Fixed some PHP warnings in the GetChanges endpoint.
