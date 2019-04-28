@@ -1891,7 +1891,6 @@ class c_comdef_admin_main_console
     public function return_server_admin_panel()
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<div id="bmlt_admin_server_admin_disclosure_div" class="bmlt_admin_server_admin_disclosure_div bmlt_admin_server_admin_disclosure_div_closed">';
             $ret .= '<a class="bmlt_admin_server_admin_disclosure_a" href="javascript:admin_handler_object.toggleServerAdmin();">';
                 $ret .= htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['server_admin_disclosure']);
@@ -1900,15 +1899,6 @@ class c_comdef_admin_main_console
         $ret .= '<div id="bmlt_admin_server_admin_wrapper_div" class="bmlt_admin_server_admin_wrapper_div bmlt_admin_server_admin_wrapper_div_hidden">';
             $ret .= '<div class="bmlt_admin_server_admin_banner_div">';
                 $ret .= '<div class="bmlt_admin_meeting_editor_banner_container_div">';
-                    $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_account_warn_div">';
-                        $ret .= '<span class="warn_text_span">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['need_refresh_message_fader_text']).'</span>';
-                    $ret .= '</div>'.(defined('__DEBUG_MODE__') ? "\n" : '');
-                    $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_account_success_div">';
-                        $ret .= '<span class="success_text_span">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['account_change_fader_success_text']).'</span>';
-                    $ret .= '</div>';
-                    $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_account_fail_div">';
-                        $ret .= '<span class="failure_text_span">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['account_change_fader_failure_text']).'</span>';
-                    $ret .= '</div>';
                 $ret .= '</div>';
             $ret .= '</div>';
             $ret .= '<div class="bmlt_admin_server_admin_edit_form_inner_div">';
