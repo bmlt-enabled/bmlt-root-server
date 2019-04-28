@@ -29,6 +29,7 @@ function BMLT_Server_Admin()
     /************************************************************************************//**
     *                                     DATA MEMBERS                                      *
     ****************************************************************************************/
+    var m_server_admin_panel_shown = null;      ///< This will be true if the "Server Administration" panel is exposed.
     var m_account_panel_shown = null;           ///< This will be true if the "My Account" panel is exposed.
     var m_search_specifier_shown = null;        ///< This is true, if the meeting search specifier form is shown.
     var m_meeting_editor_panel_shown = null;    ///< This will be true if the "Edit Meetings" panel is exposed.
@@ -254,7 +255,25 @@ function BMLT_Server_Admin()
     // #mark -
     // #mark ########## Account Info Section ##########
     // #mark -
-    
+
+    /************************************************************************************//**
+    *   \brief  Toggles the visibility of the Server Administration section.                *
+    ****************************************************************************************/
+    this.toggleServerAdmin = function () {
+        this.m_server_admin_panel_shown = !this.m_server_admin_panel_shown;
+
+        var the_disclosure_div = document.getElementById('bmlt_admin_server_admin_disclosure_div');
+        var the_account_info_div = document.getElementById('bmlt_admin_server_admin_wrapper_div');
+
+        if ( this.m_server_admin_panel_shown) {
+            the_disclosure_div.className = 'bmlt_admin_server_admin_disclosure_div bmlt_admin_server_admin_disclosure_div_open';
+            the_account_info_div.className = 'bmlt_admin_server_admin_wrapper_div';
+        } else {
+            the_disclosure_div.className = 'bmlt_admin_server_admin_disclosure_div bmlt_admin_server_admin_disclosure_div_closed';
+            the_account_info_div.className = 'bmlt_admin_server_admin_wrapper_div bmlt_admin_server_admin_wrapper_div_hidden';
+        }
+    };
+
     /************************************************************************************//**
     *   \brief  Toggles the visibility of the account info section.                         *
     ****************************************************************************************/
@@ -306,7 +325,88 @@ function BMLT_Server_Admin()
             };
         };
     };
-    
+
+    /************************************************************************************//**
+    *   \brief This is called when the World ID update file input changes                   *
+    ****************************************************************************************/
+    this.handleWorldIDFileInputChange = function() {
+        var file_input = document.getElementById('bmlt_admin_naws_spreadsheet_file_input');
+        var save_button = document.getElementById('bmlt_admin_update_world_ids_ajax_button');
+
+        if (file_input.files && file_input.files.length > 0) {
+            save_button.className = 'bmlt_admin_ajax_button';
+        } else {
+            save_button.className = 'bmlt_admin_ajax_button button_disabled';
+        }
+    };
+
+    /************************************************************************************//**
+    *   \brief This is called to initiate an AJAX process to update world IDs from file     *
+    ****************************************************************************************/
+    this.handleUpdateWorldIDsFromSpreadsheet = function() {
+        var file_input = document.getElementById('bmlt_admin_naws_spreadsheet_file_input');
+        var save_button = document.getElementById('bmlt_admin_update_world_ids_ajax_button');
+        if (!file_input || !file_input.files || !file_input.files.length) {
+            return;
+        }
+
+        if ( this.m_ajax_request_in_progress ) {
+            this.m_ajax_request_in_progress.abort();
+            this.m_ajax_request_in_progress = null;
+        }
+
+        this.m_ajax_request_in_progress = BMLT_AjaxRequest_FileUpload(
+            g_ajax_callback_uri + '&do_update_world_ids=1',
+            function(response) {admin_handler_object.handleUpdateWorldIDsFromSpreadsheetCallback(response);},
+            file_input.files[0]
+        );
+        this.setUpdateWorldIDsThrobber(true);
+        save_button.className = 'bmlt_admin_ajax_button button_disabled';
+    };
+
+    this.handleUpdateWorldIDsFromSpreadsheetCallback = function(response) {
+        var file_input = document.getElementById('bmlt_admin_naws_spreadsheet_file_input');
+        var save_button = document.getElementById('bmlt_admin_update_world_ids_ajax_button');
+        this.setUpdateWorldIDsThrobber(false);
+        file_input.value = '';
+        save_button.className = 'bmlt_admin_ajax_button button_disabled';
+
+        if (response && response.responseText) {
+            if (response.responseText === 'NOT AUTHORIZED') {
+                alert(g_AJAX_Auth_Failure);
+                return;
+            }
+
+            eval('var result = ' + response.responseText + ';');
+            if (!result) {
+                return;
+            }
+
+            if (result.success) {
+                var report = g_num_meetings_updated_text + result.report.updated.length.toString() + "\n\n";
+                report += g_num_meetings_not_updated_text + result.report.not_updated.length.toString();
+                if (result.report.not_found.length) {
+                    report += "\n\n";
+                    report += g_warning_text + ": " + result.report.not_found.length.toString() + " " + g_meetings_not_found_text + result.report.not_found.join(", ");
+                }
+                alert(report);
+            } else {
+                alert(g_errors_text + ":\n" + result.errors.join("\n"));
+            }
+        }
+    };
+
+    /************************************************************************************//**
+    *   \brief Displays or hides the AJAX Throbber for the Update World IDs button          *
+    ****************************************************************************************/
+    this.setUpdateWorldIDsThrobber = function(visible) {
+        var button_span = document.getElementById('bmlt_admin_update_world_ids_ajax_button_span');
+        var throbber_span = document.getElementById('bmlt_admin_update_world_ids_ajax_button_throbber_span');
+        throbber_span.className = 'bmlt_admin_value_left' + (visible ? '' : ' item_hidden');
+        button_span.className = 'bmlt_admin_value_left' + (visible ? ' item_hidden' : '');
+    };
+
+
     /************************************************************************************//**
     *   \brief This is called to initiate an AJAX process to change the account settings.   *
     ****************************************************************************************/
@@ -4830,6 +4930,7 @@ function BMLT_Server_Admin()
     /************************************************************************************//**
     *                                     CONSTRUCTOR                                       *
     ****************************************************************************************/
+    this.m_server_admin_panel_shown = false;
     this.m_account_panel_shown = false;
     this.m_search_specifier_shown = true;
     this.m_meeting_editor_panel_shown = false;
@@ -4850,11 +4951,81 @@ var admin_handler_object = new BMLT_Server_Admin;
 // #mark -
 
 /****************************************************************************************//**
-*   \brief A simple, generic AJAX request function.                                         *
-*                                                                                           *
-*   \returns a new XMLHTTPRequest object.                                                   *
-********************************************************************************************/
-    
+ *   \brief A simple, generic AJAX file upload function.                                     *
+ *                                                                                           *
+ *   \returns a new XMLHTTPRequest object.                                                   *
+ ********************************************************************************************/
+function BMLT_AjaxRequest_FileUpload(
+    url,        ///< The URI to be called
+    callback,   ///< The success callback
+    file,       ///< The file object
+    extra_data  ///< If supplied, extra data to be delivered to the callback.
+) {
+    /************************************************************************************//**
+     *   \brief Create a generic XMLHTTPObject.                                              *
+     *                                                                                       *
+     *   This will account for the various flavors imposed by different browsers.            *
+     *                                                                                       *
+     *   \returns a new XMLHTTPRequest object.                                               *
+     ****************************************************************************************/
+
+    function createXMLHTTPObject()
+    {
+        var XMLHttpArray = [
+            function () {
+                return new XMLHttpRequest()},
+            function () {
+                return new ActiveXObject("Msxml2.XMLHTTP")},
+            function () {
+                return new ActiveXObject("Msxml2.XMLHTTP")},
+            function () {
+                return new ActiveXObject("Microsoft.XMLHTTP")}
+        ];
+
+        var xmlhttp = false;
+
+        for (var i=0; i < XMLHttpArray.length; i++) {
+            try {
+                xmlhttp = XMLHttpArray[i]();
+            } catch (e) {
+                continue;
+            };
+            break;
+        };
+
+        return xmlhttp;
+    };
+
+    var req = createXMLHTTPObject();
+    req.finalCallback = callback;
+
+    if ( extra_data != null ) {
+        req.extra_data = extra_data;
+    }
+    req.open("POST", url, true);
+    req.onreadystatechange = function() {
+        if ( req.readyState != 4 ) {
+            return;
+        }
+        if ( req.status != 200 ) {
+            return;
+        }
+        callback(req, req.extra_data);
+        req = null;
+    };
+
+    var formData = new FormData();
+    formData.append("thefile", file);
+    req.send(formData);
+
+    return req;
+};
+
+/****************************************************************************************//**
+ *   \brief A simple, generic AJAX request function.                                         *
+ *                                                                                           *
+ *   \returns a new XMLHTTPRequest object.                                                   *
+ ********************************************************************************************/
 function BMLT_AjaxRequest(
     url,        ///< The URI to be called
     callback,   ///< The success callback

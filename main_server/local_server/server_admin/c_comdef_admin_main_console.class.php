@@ -367,6 +367,11 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_min_pw_len = '.$this->my_localized_strings['min_pw_len'].';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_google_api_key = \''.self::js_html($this->my_localized_strings['google_api_key']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_min_password_length_string = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['min_password_length_string']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
+                $ret .= 'var g_num_meetings_updated_text = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['server_admin_ui_num_meetings_updated']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
+                $ret .= 'var g_num_meetings_not_updated_text = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['server_admin_ui_num_meetings_not_updated']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
+                $ret .= 'var g_warning_text = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['server_admin_ui_warning']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
+                $ret .= 'var g_errors_text = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['server_admin_ui_errors']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
+                $ret .= 'var g_meetings_not_found_text = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['server_admin_ui_meetings_not_found']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_time_values = [';
                     $ret .= '\''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_am_label']).'\',';
                     $ret .= '\''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_pm_label']).'\',';
@@ -395,6 +400,7 @@ class c_comdef_admin_main_console
             // Figure out which output will be sent, according to the user level.
             switch ($this->my_user->GetUserLevel()) {
                 case _USER_LEVEL_SERVER_ADMIN:
+                    $ret .= $this->return_server_admin_panel();
                     $ret .= $this->return_format_editor_panel();
                     // Assuming fallthrough is intentional here, due to lack of break statement?
                 case _USER_LEVEL_SERVICE_BODY_ADMIN:
@@ -439,7 +445,7 @@ class c_comdef_admin_main_console
         $flags = (defined('ENT_SUBSTITUTE') && defined('ENT_NOQUOTES')) ? intval(ENT_SUBSTITUTE | ENT_NOQUOTES) : null;
         return preg_replace("|[\n\r]|", " ", str_replace("'", "\'", htmlspecialchars($in_raw_html), $flags));
     }
-    
+
     /********************************************************************************************************//**
     \brief This constructs the User editor panel. Only Server Admins get this one.
     \returns The HTML and JavaScript for the "Edit Users" section.
@@ -1877,6 +1883,55 @@ class c_comdef_admin_main_console
         return $ret;
     }
     
+    /********************************************************************************************************//**
+    \brief This constructs the "Server Administration" esction of the console. Only server admins can see this.
+    \returns The HTML and JavaScript for the "Server Administration" section.
+    ************************************************************************************************************/
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function return_server_admin_panel()
+    {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+        $ret = '<div id="bmlt_admin_server_admin_disclosure_div" class="bmlt_admin_server_admin_disclosure_div bmlt_admin_server_admin_disclosure_div_closed">';
+            $ret .= '<a class="bmlt_admin_server_admin_disclosure_a" href="javascript:admin_handler_object.toggleServerAdmin();">';
+                $ret .= htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['server_admin_disclosure']);
+            $ret .= '</a>';
+        $ret .= '</div>';
+        $ret .= '<div id="bmlt_admin_server_admin_wrapper_div" class="bmlt_admin_server_admin_wrapper_div bmlt_admin_server_admin_wrapper_div_hidden">';
+            $ret .= '<div class="bmlt_admin_server_admin_banner_div">';
+                $ret .= '<div class="bmlt_admin_meeting_editor_banner_container_div">';
+                    $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_account_warn_div">';
+                        $ret .= '<span class="warn_text_span">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['need_refresh_message_fader_text']).'</span>';
+                    $ret .= '</div>'.(defined('__DEBUG_MODE__') ? "\n" : '');
+                    $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_account_success_div">';
+                        $ret .= '<span class="success_text_span">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['account_change_fader_success_text']).'</span>';
+                    $ret .= '</div>';
+                    $ret .= '<div class="bmlt_admin_fader_div item_hidden" id="bmlt_admin_fader_account_fail_div">';
+                        $ret .= '<span class="failure_text_span">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['account_change_fader_failure_text']).'</span>';
+                    $ret .= '</div>';
+                $ret .= '</div>';
+            $ret .= '</div>';
+            $ret .= '<div class="bmlt_admin_server_admin_edit_form_inner_div">';
+                $ret .= '<div class="bmlt_admin_server_admin_edit_form_inner_div">';
+                    $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                        $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['server_admin_naws_spreadsheet_label']).'</span>';
+                        $ret .= '<span class="bmlt_admin_value_left">';
+                            $ret .= '<input name="bmlt_admin_naws_spreadsheet_file_input" id="bmlt_admin_naws_spreadsheet_file_input" onchange="javascript:admin_handler_object.handleWorldIDFileInputChange();" type="file" />';
+                        $ret .= '</span>';
+                    $ret .= '</div>';
+                    $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                        $ret .= '<span class="bmlt_admin_med_label_right">&nbsp;</span>';
+                        $ret .= '<span id="bmlt_admin_update_world_ids_ajax_button_span" class="bmlt_admin_value_left"><a id="bmlt_admin_update_world_ids_ajax_button" href="javascript:admin_handler_object.handleUpdateWorldIDsFromSpreadsheet();" class="bmlt_admin_ajax_button button_disabled">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['update_world_ids_button_text']).'</a></span>';
+                        $ret .= '<span id="bmlt_admin_update_world_ids_ajax_button_throbber_span" class="bmlt_admin_value_left item_hidden"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></span>';
+                        $ret .= '<div class="clear_both"></div>';
+                    $ret .= '</div>';
+                $ret .= '</div>';
+            $ret .= '</div>';
+        $ret .= '</div>';
+
+        return  $ret;
+    }
+
     /********************************************************************************************************//**
     \brief This constructs the "My Account" section of the console. All user levels will have this.
     \returns The HTML and JavaScript for the "My Account" section.

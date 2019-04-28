@@ -28,7 +28,7 @@ jobs:
       install:
         - composer install --no-dev
       script:
-        - cp LICENSE.txt main_server
+        - cp LICENSE.txt main_server && cp .htaccess main_server/vendor
         - find ./main_server -type d | xargs chmod 755
         - find ./main_server -name '*.php' | xargs chmod 644
         - mkdir $BUILD_DIR && zip -r $BUILD_DIR/$ZIP_FILENAME main_server
