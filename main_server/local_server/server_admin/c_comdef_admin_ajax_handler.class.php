@@ -216,7 +216,7 @@ class c_comdef_admin_ajax_handler
             }
 
             $meeting['worldid_mixed'] = $newWorldId;
-            $this->SetMeetingDataValues($meeting);
+            $this->SetMeetingDataValues($meeting, false);
             $ret['report']['updated'][] = $bmltId;
         }
 
@@ -979,7 +979,8 @@ class c_comdef_admin_ajax_handler
         \brief
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function SetMeetingDataValues(  $in_meeting_data    ///< A JSON object, containing the new meeting data.
+    public function SetMeetingDataValues(  $in_meeting_data,    ///< A JSON object, containing the new meeting data.
+                                           $print_result = true
                                 )
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -1099,32 +1100,57 @@ class c_comdef_admin_ajax_handler
                         }
                     }
                     if ($meeting->UpdateToDB()) {
-                        header('Content-Type:application/json; charset=UTF-8');
                         $used_formats = array();
-                        echo $this->TranslateToJSON($this->GetSearchResults(array ( 'meeting_ids' => array ( $meeting->GetID() ) ), $used_formats));
+                        $result = $this->TranslateToJSON($this->GetSearchResults(array ( 'meeting_ids' => array ( $meeting->GetID() ) ), $used_formats));
+                        if ($print_result) {
+                            header('Content-Type:application/json; charset=UTF-8');
+                            echo $result;
+                        } else {
+                            return $result;
+                        }
                     } else {
                         $in_meeting_data['id_bigint'] = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_meeting_id']).$in_meeting_data['id_bigint'];
                         $err_string = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_auth_failure']);
-                        header('Content-Type:application/json; charset=UTF-8');
-                        echo "{'error':true,'type':'auth_failure','report':'$err_string','info':'".$in_meeting_data['id_bigint']."'}";
+                        $result = "{'error':true,'type':'auth_failure','report':'$err_string','info':'".$in_meeting_data['id_bigint']."'}";
+                        if ($print_result) {
+                            header('Content-Type:application/json; charset=UTF-8');
+                            echo $result;
+                        } else {
+                            return $result;
+                        }
                     }
                 } else {
                     $in_meeting_data['id_bigint'] = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_meeting_id']).$in_meeting_data['id_bigint'];
                     $err_string = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_auth_failure']);
-                    header('Content-Type:application/json; charset=UTF-8');
-                    echo "{'error':true,'type':'auth_failure','report':'$err_string','info':'".$in_meeting_data['id_bigint']."'}";
+                    $result = "{'error':true,'type':'auth_failure','report':'$err_string','info':'".$in_meeting_data['id_bigint']."'}";
+                    if ($print_result) {
+                        header('Content-Type:application/json; charset=UTF-8');
+                        echo $result;
+                    } else {
+                        return $result;
+                    }
                 }
             } else {
                 $in_meeting_data['id_bigint'] = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_meeting_id']).$in_meeting_data['id_bigint'];
                 $err_string = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_object_not_found']);
-                header('Content-Type:application/json; charset=UTF-8');
-                echo "{'error':true,'type':'object_not_found','report':'$err_string','info':'".$in_meeting_data['id_bigint']."'}";
+                $result = "{'error':true,'type':'object_not_found','report':'$err_string','info':'".$in_meeting_data['id_bigint']."'}";
+                if ($print_result) {
+                    header('Content-Type:application/json; charset=UTF-8');
+                    echo $result;
+                } else {
+                    return $result;
+                }
             }
         } catch (Exception $e) {
             $in_meeting_data['id_bigint'] = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_meeting_id']).$in_meeting_data['id_bigint'];
             $err_string = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_object_not_changed']);
-            header('Content-Type:application/json; charset=UTF-8');
-            echo "{'error':true,'type':'object_not_changed','report':'$err_string','info':'".$in_meeting_data['id_bigint']."'}";
+            $result = "{'error':true,'type':'object_not_changed','report':'$err_string','info':'".$in_meeting_data['id_bigint']."'}";
+            if ($print_result) {
+                header('Content-Type:application/json; charset=UTF-8');
+                echo $result;
+            } else {
+                return $result;
+            }
         }
     }
     
