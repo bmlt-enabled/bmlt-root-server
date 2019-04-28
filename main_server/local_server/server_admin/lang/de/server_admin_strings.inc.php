@@ -190,7 +190,7 @@
                                             'service_body_create_button'                            =>  'Erstelle diesen Service Body',
                                             'service_body_delete_button'                            =>  'Lösche diesen Service Body',
                                             'service_body_delete_perm_checkbox'                     =>  'Lösche diesen Service Body dauerhaft',
-                                            'service_body_delete_button_confirm'                    =>  'Are you sure that you want to delete this Service body?',
+                                            'service_body_delete_button_confirm'                    =>  'Are you sure that you want to delete this Service body? Make sure that all meetings are either removed or transferred to another service body before performing this function.',
                                             'service_body_delete_button_confirm_perm'               =>  'Dieser Service Body wird dauerhaft gelöscht werden!',
                                             'service_body_change_fader_create_success_text'         =>  'Der Service Body wurde erfolgreich erstellt',
                                             'service_body_change_fader_create_fail_text'            =>  'Das Erstellen des Serice Body schlug fehl',

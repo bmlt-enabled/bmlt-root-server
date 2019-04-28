@@ -190,7 +190,7 @@
                                             'service_body_create_button'                            =>  'Create This Service Body',
                                             'service_body_delete_button'                            =>  'Delete This Service Body',
                                             'service_body_delete_perm_checkbox'                     =>  'Delete This Service Body Permanently',
-                                            'service_body_delete_button_confirm'                    =>  'Are you sure that you want to delete this Service body?',
+                                            'service_body_delete_button_confirm'                    =>  'Are you sure that you want to delete this Service body? Make sure that all meetings are either removed or transferred to another service body before performing this function.',
                                             'service_body_delete_button_confirm_perm'               =>  'This Service body will be deleted permanently!',
                                             'service_body_change_fader_create_success_text'         =>  'The Service Body Was Successfully Created',
                                             'service_body_change_fader_create_fail_text'            =>  'The Service Body Create Failed',

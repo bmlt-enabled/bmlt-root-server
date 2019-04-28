@@ -190,7 +190,7 @@
                                             'service_body_create_button'                            =>  'Crea questa struttura di servizio',//'Create This Service Body',
                                             'service_body_delete_button'                            =>  'Cancella questa struttura di servizio',//'Delete This Service Body',
                                             'service_body_delete_perm_checkbox'                     =>  'Cancella definitivamente questa struttura di servizio',//'Delete This Service Body Permanently',
-                                            'service_body_delete_button_confirm'                    =>  'Sei sicuro di voler cancellare questa struttura di servizio?',//'Are you sure that you want to delete this Service body?',
+                                            'service_body_delete_button_confirm'                    =>  'Sei sicuro di voler cancellare questa struttura di servizio? Make sure that all meetings are either removed or transferred to another service body before performing this function.',//'Are you sure that you want to delete this Service body?',
                                             'service_body_delete_button_confirm_perm'               =>  'Questa struttura di servizio sarà cancellata definitivamente!',//'This Service body will be deleted permanently!',
                                             'service_body_change_fader_create_success_text'         =>  'Struttura di servizio creata con successo',//'The Service Body Was Successfully Created',
                                             'service_body_change_fader_create_fail_text'            =>  'Creazione della struttura di servizio non riuscita',//'The Service Body Create Failed',

@@ -190,7 +190,7 @@
                                             'service_body_create_button'                            =>  'Crear este cuerpo de servicio',
                                             'service_body_delete_button'                            =>  'Eliminar este cuerpo de servicio',
                                             'service_body_delete_perm_checkbox'                     =>  'Eliminar este cuerpo de servicio en forma permanente',
-                                            'service_body_delete_button_confirm'                    =>  '¿Estas seguro que quieres eliminar este cuerpo de servicio?',
+                                            'service_body_delete_button_confirm'                    =>  '¿Estas seguro que quieres eliminar este cuerpo de servicio? Make sure that all meetings are either removed or transferred to another service body before performing this function.',
                                             'service_body_delete_button_confirm_perm'               =>  'Este cuerpo de servicio será borrada para siempre!',
                                             'service_body_change_fader_create_success_text'         =>  'El cuerpo de servicio se creó correctamente',
                                             'service_body_change_fader_create_fail_text'            =>  'El Cuerpo de servicios creada no se cumplio',

@@ -190,7 +190,7 @@
                                             'service_body_create_button'                            =>  'Créer une composante de structure de service',
                                             'service_body_delete_button'                            =>  'Supprimer cette composante de structure de service',
                                             'service_body_delete_perm_checkbox'                     =>  'Supprimer cette composante de structure de service Permanently',
-                                            'service_body_delete_button_confirm'                    =>  'Are you sure that you want to delete this composante de structure de service?',
+                                            'service_body_delete_button_confirm'                    =>  'Are you sure that you want to delete this composante de structure de service? Make sure that all meetings are either removed or transferred to another service body before performing this function.',
                                             'service_body_delete_button_confirm_perm'               =>  'Cette composante de structure de service sera supprimée de façon permanante!',
                                             'service_body_change_fader_create_success_text'         =>  'The composante de structure de service a été créée avec succès',
                                             'service_body_change_fader_create_fail_text'            =>  'La création de composante de structure de service a échouée',
