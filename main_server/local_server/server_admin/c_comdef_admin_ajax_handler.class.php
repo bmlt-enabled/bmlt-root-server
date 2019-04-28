@@ -979,9 +979,7 @@ class c_comdef_admin_ajax_handler
         \brief
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function SetMeetingDataValues(  $in_meeting_data,    ///< A JSON object, containing the new meeting data.
-                                           $print_result = true
-                                )
+    public function SetMeetingDataValues($in_meeting_data, $print_result = true)
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         try {
