@@ -191,7 +191,7 @@
                                             'service_body_create_button'                            =>  'Skapa serviceenhet',
                                             'service_body_delete_button'                            =>  'Kassera serviceenhet',
                                             'service_body_delete_perm_checkbox'                     =>  'Kassera serviceenhet permanent',
-                                            'service_body_delete_button_confirm'                    =>  'Säker på att du vill kassera serviceenheten?',
+                                            'service_body_delete_button_confirm'                    =>  'Säker på att du vill kassera serviceenheten? Make sure that all meetings are either removed or transferred to another service body before performing this function.',
                                             'service_body_delete_button_confirm_perm'               =>  'Serviceenheten kasseras nu för gott!',
                                             'service_body_change_fader_create_success_text'         =>  'Serviceenhet skapad',
                                             'service_body_change_fader_create_fail_text'            =>  'Serviceenheten skapades inte!',
