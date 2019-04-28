@@ -57,6 +57,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.13.0* ** *- TBD*
+
+- Added new "Server Administration" section to the user interface, allowing server admins to upload the spreadsheet returned by NAWS to batch update the World IDs for meetings.
+
 ***Version 2.12.8* ** *- April 24, 2019*
 
 - Fixed some PHP warnings in the POI/CSV, KML, and GPX endpoints.

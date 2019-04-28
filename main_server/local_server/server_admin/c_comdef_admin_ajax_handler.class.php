@@ -96,11 +96,132 @@ class c_comdef_admin_ajax_handler
             $used_formats = array();
             $returned_text = $this->TranslateToJSON($this->GetSearchResults($this->my_http_vars, $used_formats));
             header('Content-Type:application/json; charset=UTF-8');
+        } elseif (isset($this->my_http_vars['do_update_world_ids'])) {
+            $returned_text = $this->HandleMeetingWorldIDsUpdate();
         } else {
             $this->HandleAccountChange();
         }
         
         return  $returned_text;
+    }
+
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function HandleMeetingWorldIDsUpdate()
+    {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+        $ret = array(
+            'success' => false,
+            'errors' => array(),
+            'report' => array(
+                'updated' => array(),
+                'not_updated' => array(),
+                'not_found' => array()
+            ),
+        );
+
+        if (!c_comdef_server::IsUserServerAdmin(null, true)) {
+            return 'NOT AUTHORIZED';
+        }
+
+        if (empty($_FILES)) {
+            $ret['errors'][] = $this->my_localized_strings['comdef_server_admin_strings']['server_admin_error_no_files_uploaded'];
+            return json_encode($ret);
+        }
+
+        require_once(__DIR__ .'/../../vendor/autoload.php');
+
+        $file = $_FILES['thefile'];
+        try {
+            $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($file['tmp_name']);
+            $spreadsheet = $reader->load($file['tmp_name']);
+            $rows = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+        } catch (Exception $e) {
+            $ret['errors'][] = $this->my_localized_strings['comdef_server_admin_strings']['server_admin_error_could_not_create_reader'] . $e->getMessage();
+            return json_encode($ret);
+        }
+
+        $bmltIdx = "";
+        $worldIdx = "";
+        $meetingMap = array();
+        for ($i = 1; $i <= count($rows); $i++) {
+            $row = $rows[$i];
+            if ($i == 1) {
+                foreach ($row as $key => $value) {
+                    if ($value == "bmlt_id") {
+                        $bmltIdx = $key;
+                    } elseif ($value == "Committee") {
+                        $worldIdx = $key;
+                    }
+                    if ($bmltIdx && $worldIdx) {
+                        break;
+                    }
+                }
+
+                if (!$bmltIdx || !$worldIdx) {
+                    if (!$bmltIdx) {
+                        $ret['errors'][] = $this->my_localized_strings['comdef_server_admin_strings']['server_admin_error_required_spreadsheet_column'] . "bmlt_id";
+                    }
+                    if (!$worldIdx) {
+                        $ret['errors'][] = $this->my_localized_strings['comdef_server_admin_strings']['server_admin_error_required_spreadsheet_column'] . "Committee";
+                    }
+                    return json_encode($ret);
+                }
+
+                continue;
+            }
+
+            $bmltId = trim(strval($row[$bmltIdx]));
+            $worldId = trim($row[$worldIdx]);
+            if (empty($bmltId) && empty($worldId)) {
+                continue;
+            } elseif (!is_numeric($bmltId)) {
+                $ret['errors'][] = $this->my_localized_strings['comdef_server_admin_strings']['server_admin_error_bmlt_id_not_integer'] . $bmltId;
+            } else {
+                $meetingMap[$bmltId] = $worldId;
+            }
+        }
+
+        if (!empty($ret['errors'])) {
+            return json_encode($ret);
+        }
+
+        // Attempt to save some memory, as many servers will be memory restricted
+        unset($rows);
+        unset($spreadsheet);
+        unset($reader);
+
+        $json_tool = new PhpJsonXmlArrayStringInterchanger;
+        $used_formats = array();
+        $meetings = $this->GetSearchResults(array('meeting_ids' => array_keys($meetingMap)), $used_formats);
+        $meetings = $this->TranslateToJSON($meetings);
+        $meetings = $json_tool->convertJsonToArray($meetings, true);
+        $map = array();
+        foreach ($meetings as $meeting) {
+            $bmltId = strval($meeting['id_bigint']);
+            $map[$bmltId] = $meeting;
+        }
+        $meetings = $map;
+
+        foreach ($meetingMap as $bmltId => $newWorldId) {
+            if (!array_key_exists($bmltId, $meetings)) {
+                $ret['report']['not_found'][] = $bmltId;
+                continue;
+            }
+
+            $meeting = $meetings[$bmltId];
+            $oldWorldId = $meeting['worldid_mixed'];
+            if ($oldWorldId == $newWorldId) {
+                $ret['report']['not_updated'][] = $bmltId;
+                continue;
+            }
+
+            $meeting['worldid_mixed'] = $newWorldId;
+            $this->SetMeetingDataValues($meeting, false);
+            $ret['report']['updated'][] = $bmltId;
+        }
+
+        $ret['success'] = empty($ret['errors']);
+        return json_encode($ret);
     }
 
     /*******************************************************************/
@@ -858,8 +979,7 @@ class c_comdef_admin_ajax_handler
         \brief
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function SetMeetingDataValues(  $in_meeting_data    ///< A JSON object, containing the new meeting data.
-                                )
+    public function SetMeetingDataValues($in_meeting_data, $print_result = true)
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         try {
@@ -978,32 +1098,57 @@ class c_comdef_admin_ajax_handler
                         }
                     }
                     if ($meeting->UpdateToDB()) {
-                        header('Content-Type:application/json; charset=UTF-8');
                         $used_formats = array();
-                        echo $this->TranslateToJSON($this->GetSearchResults(array ( 'meeting_ids' => array ( $meeting->GetID() ) ), $used_formats));
+                        $result = $this->TranslateToJSON($this->GetSearchResults(array ( 'meeting_ids' => array ( $meeting->GetID() ) ), $used_formats));
+                        if ($print_result) {
+                            header('Content-Type:application/json; charset=UTF-8');
+                            echo $result;
+                        } else {
+                            return $result;
+                        }
                     } else {
                         $in_meeting_data['id_bigint'] = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_meeting_id']).$in_meeting_data['id_bigint'];
                         $err_string = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_auth_failure']);
-                        header('Content-Type:application/json; charset=UTF-8');
-                        echo "{'error':true,'type':'auth_failure','report':'$err_string','info':'".$in_meeting_data['id_bigint']."'}";
+                        $result = "{'error':true,'type':'auth_failure','report':'$err_string','info':'".$in_meeting_data['id_bigint']."'}";
+                        if ($print_result) {
+                            header('Content-Type:application/json; charset=UTF-8');
+                            echo $result;
+                        } else {
+                            return $result;
+                        }
                     }
                 } else {
                     $in_meeting_data['id_bigint'] = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_meeting_id']).$in_meeting_data['id_bigint'];
                     $err_string = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_auth_failure']);
-                    header('Content-Type:application/json; charset=UTF-8');
-                    echo "{'error':true,'type':'auth_failure','report':'$err_string','info':'".$in_meeting_data['id_bigint']."'}";
+                    $result = "{'error':true,'type':'auth_failure','report':'$err_string','info':'".$in_meeting_data['id_bigint']."'}";
+                    if ($print_result) {
+                        header('Content-Type:application/json; charset=UTF-8');
+                        echo $result;
+                    } else {
+                        return $result;
+                    }
                 }
             } else {
                 $in_meeting_data['id_bigint'] = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_meeting_id']).$in_meeting_data['id_bigint'];
                 $err_string = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_object_not_found']);
-                header('Content-Type:application/json; charset=UTF-8');
-                echo "{'error':true,'type':'object_not_found','report':'$err_string','info':'".$in_meeting_data['id_bigint']."'}";
+                $result = "{'error':true,'type':'object_not_found','report':'$err_string','info':'".$in_meeting_data['id_bigint']."'}";
+                if ($print_result) {
+                    header('Content-Type:application/json; charset=UTF-8');
+                    echo $result;
+                } else {
+                    return $result;
+                }
             }
         } catch (Exception $e) {
             $in_meeting_data['id_bigint'] = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_meeting_id']).$in_meeting_data['id_bigint'];
             $err_string = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['edit_Meeting_object_not_changed']);
-            header('Content-Type:application/json; charset=UTF-8');
-            echo "{'error':true,'type':'object_not_changed','report':'$err_string','info':'".$in_meeting_data['id_bigint']."'}";
+            $result = "{'error':true,'type':'object_not_changed','report':'$err_string','info':'".$in_meeting_data['id_bigint']."'}";
+            if ($print_result) {
+                header('Content-Type:application/json; charset=UTF-8');
+                echo $result;
+            } else {
+                return $result;
+            }
         }
     }
     

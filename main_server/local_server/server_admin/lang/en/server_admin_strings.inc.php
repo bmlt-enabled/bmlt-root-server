@@ -21,7 +21,19 @@
     along with this code.  If not, see <http://www.gnu.org/licenses/>.*/
     defined('BMLT_EXEC') or die('Cannot Execute Directly');    // Makes sure that this file is in the correct context.
     
-    $comdef_server_admin_strings = array (  'account_disclosure'                                    =>  'My Account',
+    $comdef_server_admin_strings = array (  'server_admin_disclosure'                               =>  'Server Administration',
+                                            'server_admin_naws_spreadsheet_label'                   =>  'Updated World IDs Spreadsheet:',
+                                            'update_world_ids_button_text'                          =>  'Update Meeting World IDs from Spreadsheet',
+                                            'server_admin_error_required_spreadsheet_column'        =>  'Required column does not exist in the spreadsheet: ',
+                                            'server_admin_error_bmlt_id_not_integer'                =>  'The provided bmlt_id is not an integer: ',
+                                            'server_admin_error_could_not_create_reader'            =>  'Could not create reader for file: ',
+                                            'server_admin_error_no_files_uploaded'                  =>  'No files were uploaded.',
+                                            'server_admin_ui_num_meetings_updated'                  =>  'Number of meetings updated: ',
+                                            'server_admin_ui_num_meetings_not_updated'              =>  'Number of meetings that did not need updating: ',
+                                            'server_admin_ui_warning'                               =>  'WARNING',
+                                            'server_admin_ui_errors'                                =>  'Error(s)',
+                                            'server_admin_ui_meetings_not_found'                    =>  'meetings were found in the spreadsheet that did not exist in the database. This can happen when a meeting is deleted or unpublished. The missing meeting IDs are: ',
+                                            'account_disclosure'                                    =>  'My Account',
                                             'account_name_label'                                    =>  'My Account Name:',
                                             'account_login_label'                                   =>  'My Login:',
                                             'account_type_label'                                    =>  'I Am A:',
