@@ -57,7 +57,7 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.13.0* ** *- TBD*
+***Version 2.13.0* ** *- April 28, 2019*
 
 - Added new "Server Administration" section to the user interface, allowing server admins to upload the spreadsheet returned by NAWS to batch update the World IDs for meetings.
 - Added warning when attempting to delete a service body to remove any existing meetings or transfer them to another service body so they don't become "orphaned".
