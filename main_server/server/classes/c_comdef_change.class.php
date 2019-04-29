@@ -703,7 +703,8 @@ class c_comdef_change extends t_comdef_local_type implements i_comdef_db_stored
                                                     case 'published':
                                                         $change_string = c_comdef_htmlspecialchars($localized_strings['detailed_change_strings']['was_unpublished']).$localized_strings['end_change_report'];
                                                         break;
-                                                    
+                                                    case 'root_server_uri':
+                                                        break;  // Hide from change history
                                                     default:
                                                         $change_string = c_comdef_htmlspecialchars($prompt).' '.c_comdef_htmlspecialchars($localized_strings['detailed_change_strings']['was_deleted']).$localized_strings['end_change_report'];
                                                         break;
@@ -727,6 +728,8 @@ class c_comdef_change extends t_comdef_local_type implements i_comdef_db_stored
                                                         $after_value_ar = explode(':', $after_value);
                                                         $after_value = (intval($after_value_ar[0]) * 100) + intval($after_value_ar[1]);
                                                         // Not breaking on purpose?
+                                                    case 'root_server_uri':
+                                                        break;  // Hide from change history
                                                     default:
                                                         $change_string = c_comdef_htmlspecialchars($prompt).' '.c_comdef_htmlspecialchars($localized_strings['detailed_change_strings']['was_added_as']).' &quot;'.c_comdef_htmlspecialchars($after_value).'&quot; '.$localized_strings['end_change_report'];
                                                         break;
@@ -850,6 +853,8 @@ class c_comdef_change extends t_comdef_local_type implements i_comdef_db_stored
                                                             case 'id_bigint':
                                                                 $prompt = $localized_strings['detailed_change_strings'][$array_key];
                                                                 // Not breaking on purpose?
+                                                            case 'root_server_uri':
+                                                                break;  // Hide from change history
                                                             default:
                                                                 $change_string = c_comdef_htmlspecialchars($prompt).' '.c_comdef_htmlspecialchars($localized_strings['detailed_change_strings']['was_changed_from']).' &quot;'.c_comdef_htmlspecialchars($before_value).'&quot; '.c_comdef_htmlspecialchars($localized_strings['detailed_change_strings']['to']).' &quot;'.c_comdef_htmlspecialchars($after_value).'&quot;'.$localized_strings['end_change_report'];
                                                                 break;
