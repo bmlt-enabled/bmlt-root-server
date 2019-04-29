@@ -1080,7 +1080,10 @@ class c_comdef_admin_ajax_handler
                                     $data[$key] = $value ? 1 : 0;
                                 }
                                 break;
-                
+
+                            case 'root_server_uri':
+                                break;  // This should just be a calculated field, so don't save it
+
                             // These are the various "optional" fields.
                             default:
                                 if (isset($data[$key])) {

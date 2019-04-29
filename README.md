@@ -60,7 +60,8 @@ CHANGELIST
 ***Version 2.13.0* ** *- TBD*
 
 - Added new "Server Administration" section to the user interface, allowing server admins to upload the spreadsheet returned by NAWS to batch update the World IDs for meetings.
-- Added warning when attempting to delete a service body to remove any existing meetings or transfer them to another servicebody so they don't become "orphaned".
+- Added warning when attempting to delete a service body to remove any existing meetings or transfer them to another service body so they don't become "orphaned".
+- Fixed a bug where calculated field `root_server_uri` would get written to the database and subsequently reported in change history.
 
 ***Version 2.12.8* ** *- April 24, 2019*
 
