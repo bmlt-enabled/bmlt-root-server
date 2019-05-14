@@ -397,15 +397,15 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_formatType_popup_prompt = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['format_type_prompt']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= "var g_formatType_values = [";
                 $n_first = true;
-                foreach ($this->my_localized_strings['comdef_server_admin_strings']['format_type_codes'] as $key => $value) {
-                    if (!$n_first) {
-                        $ret .= ','.(defined('__DEBUG_MODE__') ? "\n" : '');
-                    } else {
-                        $n_first = false;
-                        $ret .= (defined('__DEBUG_MODE__') ? "\n" : '');
-                    }
-                    $ret .= '{"key":"'.self::js_html(str_replace("\n", ' ', $key)).'","value":"'.self::js_html(str_replace("\n", ' ', $value)).'"}';
-                }
+        foreach ($this->my_localized_strings['comdef_server_admin_strings']['format_type_codes'] as $key => $value) {
+            if (!$n_first) {
+                $ret .= ','.(defined('__DEBUG_MODE__') ? "\n" : '');
+            } else {
+                $n_first = false;
+                $ret .= (defined('__DEBUG_MODE__') ? "\n" : '');
+            }
+            $ret .= '{"key":"'.self::js_html(str_replace("\n", ' ', $key)).'","value":"'.self::js_html(str_replace("\n", ' ', $value)).'"}';
+        }
                 $ret .= (defined('__DEBUG_MODE__') ? "\n" : '').'];';
                 
             /****
