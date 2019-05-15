@@ -351,6 +351,16 @@ $comdef_server_admin_strings = array (
         'Y'     =>  'Ungdoms Møde',
         'LANG'  =>  'Alternativt sprog'
     ),
+    'format_type_prompt' =>  'Format Type:',    // TODO: Translate
+    'format_type_codes'  =>  array (
+        ''      =>  'None',    // TODO: Translate
+        'FC1'  =>  'Meeting Format (Speaker, Book Study, etc.)',    // TODO: Translate
+        'FC2'  =>  'Location Code (Wheelchair Accessible, Limited Parking, etc.)',    // TODO: Translate
+        'FC3'  =>  'Special Interest and Restrictions (Mens Meeting, LGTBQ, No Children, etc.)',    // TODO: Translate
+        'O'    =>  'Attendance by non-addicts (Open, Closed)',    // TODO: Translate
+        'LANG' =>  'Language'    // TODO: Translate
+    ),
+    
     'cookie_monster'                                        =>  'Dette websted bruger en cookie til at gemme dit foretrukne sprog.',
     'main_prompts'                                          =>  array ( 'id_bigint' => 'ID',
         'worldid_mixed' => 'Verdens ID',
