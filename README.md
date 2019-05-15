@@ -57,6 +57,16 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.13.1* ** *- April 28, 2019*
+
+- Added format_type to the definition of formats.  This allows satellites to distinguish between classes of formats, and handle them differently (e.g. languages displayed with flags)
+The following types are defined:
+	    'FC1'  =>  'Meeting Format (Speaker, Book Study, etc.)',
+            'FC2'  =>  'Location Code (Wheelchair Accessible, Limited Parking, etc.)',
+            'FC3'  =>  'Special Interest and Restrictions (Mens Meeting, LGTBQ, No Children, etc.)',
+            'O'    =>  'Attendance by non-addicts (Open, Closed)',
+            'LANG' =>  'Language'
+	    
 ***Version 2.13.0* ** *- April 28, 2019*
 
 - Added new "Server Administration" section to the user interface, allowing server admins to upload the spreadsheet returned by NAWS to batch update the World IDs for meetings.
