@@ -57,7 +57,7 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.13.1* ** *- April 28, 2019*
+***Version 2.13.1* ** *- May 13, 2019*
 
 - Added format_type to the definition of formats.  This allows satellites to distinguish between classes of formats, and handle them differently (e.g. languages displayed with flags)
 The following types are defined:
