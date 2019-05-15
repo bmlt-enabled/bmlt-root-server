@@ -351,7 +351,7 @@
             'FC3'  =>  'Special Interest and Restrictions (Mens Meeting, LGTBQ, No Children, etc.)',    // TODO: Translate
             'O'    =>  'Attendance by non-addicts (Open, Closed)',    // TODO: Translate
             'LANG' =>  'Language'    // TODO: Translate
-        ),
+        ), 
                                             'cookie_monster'                                        =>  'Questo sito usa dei cookie per conservare le impostazioni della tua lingua preferita.',//'This site uses a cookie to store your preferred language.',
                                             'main_prompts'                                          =>  array ( 'id_bigint' => 'ID',//'ID',
                                                                                                                 'worldid_mixed' => 'ID mondiale',//'World ID',
