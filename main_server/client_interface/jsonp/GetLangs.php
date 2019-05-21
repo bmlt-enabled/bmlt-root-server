@@ -35,7 +35,7 @@ if ($server instanceof c_comdef_server) {
         if (isset($_GET['compress_json']) || isset($_POST['compress_json'])) {
             ob_start('ob_gzhandler');
         } else {
-            header('Content-Type:application/json; charset=UTF-8');
+            header('Content-Type:text/javascript; charset=UTF-8');
             ob_start();
         }
 
