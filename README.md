@@ -57,6 +57,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.13.1* ** *- UNRELEASED*
+
+- Fixed a bug with JSONP endpoint emoting incorrect mime type.
+
 ***Version 2.13.0* ** *- April 28, 2019*
 
 - Added new "Server Administration" section to the user interface, allowing server admins to upload the spreadsheet returned by NAWS to batch update the World IDs for meetings.

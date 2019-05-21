@@ -46,7 +46,7 @@ try {
                 ob_start();
             }
         } else {
-            header('Content-Type:application/json; charset=UTF-8');
+            header('Content-Type:text/javascript; charset=UTF-8');
             ob_start();
         }
         
