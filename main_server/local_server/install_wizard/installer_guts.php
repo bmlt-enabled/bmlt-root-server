@@ -305,7 +305,7 @@ $default_lang = $lang;
                         <div class="one_line_div">
                             <label class="left_right_aligned bold_char" for="semantic_admin_checkbox"><?php echo htmlspecialchars($comdef_install_wizard_strings['SemanticAdminLabel']); ?></label>
                             <div class="right_left_aligned_div">
-                                <input type="checkbox" id="semantic_admin_checkbox" value="semantic_admin_checkbox_selector" />
+                                <input type="checkbox" id="semantic_admin_checkbox" checked="checked" value="semantic_admin_checkbox_selector" />
                             </div>
                             <div class="extra_text_div">
                                 <?php echo htmlspecialchars($comdef_install_wizard_strings['SemanticAdminExtraText']); ?>

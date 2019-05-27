@@ -59,6 +59,7 @@ CHANGELIST
 ----------
 ***Version 2.13.1* ** *- UNRELEASED*
 
+- Semantic Administration is now enabled by default on install wizard.
 - Fixed a bug with JSONP endpoint emoting incorrect mime type.
 
 ***Version 2.13.0* ** *- April 28, 2019*
