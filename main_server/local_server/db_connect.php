@@ -114,4 +114,36 @@ function DB_Connect_and_Upgrade()
     } catch (Exception $e) {
         // We don't die if the thing already exists. We just mosey on along as if nothing happened.
     }
+
+    try {
+        // Version 2.13.1, update format_enum_type for the default open/closed formats.
+        $table = "$dbPrefix"."_comdef_formats";
+        $check_column_sql = "SELECT COUNT(*) AS count FROM `$table` WHERE `shared_id_bigint`=4 AND `key_string`='C' AND `format_type_enum`='FC3'";
+        $rows = c_comdef_dbsingleton::preparedQuery($check_column_sql);
+        if (is_array($rows) && count($rows)) {
+            $row = $rows[0];
+            if (intval($row['count']) != 0) {
+                $update_sql = "UPDATE `$table` SET `format_type_enum`='O' WHERE `shared_id_bigint`=4 AND `key_string`='C'";
+                c_comdef_dbsingleton::preparedExec($update_sql);
+            }
+        }
+    } catch (Exception $e) {
+
+    }
+
+    try {
+        // Version 2.13.1, update format_enum_type for the default open/closed formats.
+        $table = "$dbPrefix"."_comdef_formats";
+        $check_column_sql = "SELECT COUNT(*) AS count FROM `$table` WHERE `shared_id_bigint`=17 AND `key_string`='O' AND `format_type_enum`='FC3'";
+        $rows = c_comdef_dbsingleton::preparedQuery($check_column_sql);
+        if (is_array($rows) && count($rows)) {
+            $row = $rows[0];
+            if (intval($row['count']) != 0) {
+                $update_sql = "UPDATE `$table` SET `format_type_enum`='O' WHERE `shared_id_bigint`=17 AND `key_string`='O'";
+                c_comdef_dbsingleton::preparedExec($update_sql);
+            }
+        }
+    } catch (Exception $e) {
+
+    }
 }
