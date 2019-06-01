@@ -4267,7 +4267,7 @@ function BMLT_Server_Admin()
     ) {
         in_offset = parseInt(in_offset, 10); // Just to make sure.
         var format_line_tr = null;
-
+        // The number of lines per format is the number of languages plus 2: one for NAWS code, and one for format_type
         var insertion_point = (g_formats_array.length + in_offset) * (g_langs.length + 2);
         
         if ( document.getElementById('format_create_line_tr') ) {
@@ -4500,6 +4500,7 @@ function BMLT_Server_Admin()
         };
             
         container_row = in_container_table.insertRow(insertion_point);
+        // if we're not in create_format mode
         if ( insertion_point > 0 ) {
             insertion_point++;
         };
@@ -4802,7 +4803,8 @@ function BMLT_Server_Admin()
                 } else {
                     eval('var json_object = ' + in_http_request.responseText + ';');
                 };
-            
+                console.log(in_http_request.responseText);
+                console.log(g_langs[0]);
                 if ( json_object ) {
                     if ( !json_object.success ) {
                         alert(json_object.report);
