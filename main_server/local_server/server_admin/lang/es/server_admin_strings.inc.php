@@ -346,6 +346,16 @@
                                                                                                             'Y'     =>  'Jovenes',
                                                                                                             'LANG'  =>  'Idioma alternativo'
                                                                                                             ),
+                                            'format_type_prompt'                                     =>  'Format Type:',
+                                            'format_type_codes'                                      =>  array (
+                                                                                                            ''      =>  'None',
+                                                                                                            'FC1'  =>  'Meeting Format (Speaker, Book Study, etc.)',
+                                                                                                            'FC2'  =>  'Location Code (Wheelchair Accessible, Limited Parking, etc.)',
+                                                                                                            'FC3'  =>  'Common Needs and Restrictions (Mens Meeting, LGTBQ, No Children, etc.)',
+                                                                                                            'O'    =>  'Attendance by non-addicts (Open, Closed)',
+                                                                                                            'LANG' =>  'Language',
+                                                                                                            'ALERT'=>  'Format should be especially prominent (Clean requirement, etc.)',
+                                                                                                            ),
                                             'cookie_monster'                                        =>  'Este sitio utiliza cookies para almacenar su idioma preferido.',
                                             'main_prompts'                                          =>  array ( 'id_bigint' => 'ID',
                                                                                                                 'worldid_mixed' => 'World ID',

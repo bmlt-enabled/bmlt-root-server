@@ -4267,8 +4267,8 @@ function BMLT_Server_Admin()
     ) {
         in_offset = parseInt(in_offset, 10); // Just to make sure.
         var format_line_tr = null;
-
-        var insertion_point = (g_formats_array.length + in_offset) * (g_langs.length + 1);
+        // The number of lines per format is the number of languages plus 2: one for NAWS code, and one for format_type
+        var insertion_point = (g_formats_array.length + in_offset) * (g_langs.length + 2);
         
         if ( document.getElementById('format_create_line_tr') ) {
             format_line_tr = in_container_table.insertRow(insertion_point);
@@ -4500,6 +4500,10 @@ function BMLT_Server_Admin()
         };
             
         container_row = in_container_table.insertRow(insertion_point);
+        // if we're not in create_format mode
+        if ( insertion_point > 0 ) {
+            insertion_point++;
+        };
         container_row.id = 'format_editor_naws_id_' + in_format_id + '_tr';
         var row_className = 'format_editor_naws_id_tr format_editor_format_line_' + ((in_index % 2) ? 'even' : 'odd') + '_tr';
         
@@ -4578,7 +4582,92 @@ function BMLT_Server_Admin()
         
             this.evaluateFormatState(in_select_input_object.shared_id);
         };
+        /***
+         * Begin Format-Type-Enum
+         */
+        container_row = in_container_table.insertRow(insertion_point);
+        container_row.id = 'format_editor_formatType_' + in_format_id + '_tr';
+        var row_className = 'format_editor_naws_id_tr format_editor_format_line_' + ((in_index % 2) ? 'even' : 'odd') + '_tr';
         
+        if ( in_format_id == 0 ) {
+            row_className = 'format_editor_naws_id_tr new_format_line';
+        };
+        
+        container_row.className = row_className;
+
+        var formatType_td = container_row.insertCell(-1);
+        formatType_td.id = 'format_editor_formatType_' + in_format_id + '_td';
+        formatType_td.className = 'format_editor_naws_id_td';
+        formatType_td.setAttribute('colspan', 6);
+        
+        var formatType_menu_prompt = document.createElement('label');
+        formatType_menu_prompt.id = 'format_editor_naws_id_' + in_format_id + '_label';
+        formatType_menu_prompt.className = 'format_editor_naws_id_label';
+        formatType_menu_prompt.setAttribute('for', 'format_editor_formatType_' + in_format_id + '_select');
+
+        formatType_menu_prompt.appendChild(document.createTextNode(g_formatType_popup_prompt));
+        formatType_td.appendChild(formatType_menu_prompt);
+
+        formatType_menu = document.createElement('select');
+        formatType_menu.id = 'format_editor_formatType_' + in_format_id + '_select';
+        formatType_menu.className = 'format_editor_naws_id_select';
+        formatType_menu.format_group_objects = in_format_lang_group;
+        formatType_menu.shared_id = in_format_id;
+        formatType_menu.data_member_name = 'format_type_enum';
+        formatType_menu.onchange = function () {
+            admin_handler_object.handleFormatTypeSelectInput(this); };
+        
+        for (var i = 0; i < g_formatType_values.length; i++) {
+            var val = g_formatType_values[i].value ? htmlspecialchars_decode(g_formatType_values[i].value) : '';
+            if ( val ) {
+                var key = g_formatType_values[i].key ? g_formatType_values[i].key: '';
+                var opt = document.createElement('option');
+                opt.value = htmlspecialchars_decode(key);
+                opt.appendChild(document.createTextNode(htmlspecialchars_decode(val)));
+            };
+            
+            formatType_menu.appendChild(opt);
+        };
+        
+        var key_match = false;
+        var format_type_key = in_format_lang_group.en.type ? htmlspecialchars_decode(in_format_lang_group.en.type) : null;
+
+        // Make sure the correct value is selected.
+        if ( format_type_key ) {
+            for (var i = 0; i < g_formatType_values.length; i++) {
+                var key = g_formatType_values[i].key ? htmlspecialchars_decode(g_formatType_values[i].key) : '';
+                if ( key == format_type_key ) {
+                    key_match = true;
+                    formatType_menu.selectedIndex = i;
+                    break;
+                };
+            };
+        };
+                
+        if ( !key_match ) {
+            formatType_menu.selectedIndex = 0;
+        };
+        
+        formatType_td.appendChild(formatType_menu);
+    
+    /************************************************************************************//**
+    *   \brief  Handle data input from the text items.                                      *
+    ****************************************************************************************/
+        this.handleFormatTypeSelectInput = function ( in_select_input_object ///< This will contain the affected select input
+                                            ) {
+            var new_value = in_select_input_object.options[in_select_input_object.selectedIndex].value;
+        
+            for (var c = 0; c < g_langs.length; c++) {
+                in_select_input_object.format_group_objects[g_langs[c]].type = new_value;
+            };
+        
+            this.evaluateFormatState(in_select_input_object.shared_id);
+        };
+        /***************************************
+         * End Format-Type-Enum
+         ******************************************/
+        /**********************************************/
+ 
     /************************************************************************************//**
     *   \brief  This goes through all the formats in the list, and ensures they have the    *
     *           proper styling to them.                                                     *
@@ -4591,7 +4680,8 @@ function BMLT_Server_Admin()
                     var lang_key = g_langs[c];
                     var format_row = null;
                     var format_row_2 = document.getElementById('format_editor_naws_id_' + format_id + '_tr');
-                    format_row_2.className = 'format_editor_naws_id_tr format_editor_format_line_' + ((index % 2) ? 'even' : 'odd') + '_tr';
+                    var format_row_3 = document.getElementById('format_editor_formatType_' + format_id + '_tr');
+                    format_row_3.className = format_row_2.className = 'format_editor_naws_id_tr format_editor_format_line_' + ((index % 2) ? 'even' : 'odd') + '_tr';
                 
                     if ( c == 0 ) {
                         format_row = document.getElementById('format_editor_line_' + format_id + '_tr');
@@ -4643,9 +4733,11 @@ function BMLT_Server_Admin()
                 };
                 
                 var container_row = document.getElementById('format_editor_naws_id_0_tr');
-        
                 container_row.parentNode.removeChild(container_row);
-            
+                
+                container_row = document.getElementById('format_editor_formatType_0_tr');
+                container_row.parentNode.removeChild(container_row);
+                
                 create_button.innerHTML = g_format_editor_create_format_button_text;
                 create_button.href = 'javascript:admin_handler_object.createFormatOpen()';
             };
@@ -4705,14 +4797,12 @@ function BMLT_Server_Admin()
         
             throbber_span.className = 'item_hidden';
             the_button.className = 'bmlt_admin_ajax_button';
-        
             if ( in_http_request.responseText ) {
                 if ( in_http_request.responseText == 'NOT AUTHORIZED' ) {
                     alert(g_AJAX_Auth_Failure);
                 } else {
                     eval('var json_object = ' + in_http_request.responseText + ';');
                 };
-            
                 if ( json_object ) {
                     if ( !json_object.success ) {
                         alert(json_object.report);
@@ -4830,7 +4920,9 @@ function BMLT_Server_Admin()
                                 
                                 container_row = document.getElementById('format_editor_naws_id_' + the_id + '_tr');
                                 container_row.parentNode.removeChild(container_row);
-
+                                container_row = document.getElementById('format_editor_formatType_' + the_id + '_tr');
+                                container_row.parentNode.removeChild(container_row);
+                                
                                 this.setWarningFaders();
                                 if ( g_formats_array.length > 1 ) {
                                     g_formats_array.splice(index, 1);

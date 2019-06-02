@@ -391,6 +391,26 @@ class c_comdef_admin_main_console
             $ret .= '{"key":"'.self::js_html(str_replace("\n", ' ', $key)).'","value":"'.self::js_html(str_replace("\n", ' ', $value)).'"}';
         }
                 $ret .= (defined('__DEBUG_MODE__') ? "\n" : '').'];';
+            /***
+             * Begin Format_type_enum
+             */
+                $ret .= 'var g_formatType_popup_prompt = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['format_type_prompt']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
+                $ret .= "var g_formatType_values = [";
+                $n_first = true;
+        foreach ($this->my_localized_strings['comdef_server_admin_strings']['format_type_codes'] as $key => $value) {
+            if (!$n_first) {
+                $ret .= ','.(defined('__DEBUG_MODE__') ? "\n" : '');
+            } else {
+                $n_first = false;
+                $ret .= (defined('__DEBUG_MODE__') ? "\n" : '');
+            }
+            $ret .= '{"key":"'.self::js_html(str_replace("\n", ' ', $key)).'","value":"'.self::js_html(str_replace("\n", ' ', $value)).'"}';
+        }
+                $ret .= (defined('__DEBUG_MODE__') ? "\n" : '').'];';
+                
+            /****
+             * End format_type_enum
+             */
             $ret .= '</script>'.(defined('__DEBUG_MODE__') ? "\n" : '');
             $ret .= '<script type="text/javascript" src="'.(((dirname($_SERVER['PHP_SELF']) != '/') && (dirname($_SERVER['PHP_SELF']) != '\\')) ? dirname($_SERVER['PHP_SELF']) : '').'/local_server/server_admin/json2.js"></script>'.(defined('__DEBUG_MODE__') ? "\n" : '');
             $ret .= '<script type="text/javascript" src="'.(((dirname($_SERVER['PHP_SELF']) != '/') && (dirname($_SERVER['PHP_SELF']) != '\\')) ? dirname($_SERVER['PHP_SELF']) : '').'/local_server/server_admin/server_admin_javascript.js?v='. time() .'"></script>'.(defined('__DEBUG_MODE__') ? "\n" : '');
