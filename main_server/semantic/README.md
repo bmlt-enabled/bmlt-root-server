@@ -1,14 +1,14 @@
 # README #
 
-This is a project to create a "living document," so to speak, for the [BMLT's semantic capabilities](http://bmlt.magshare.net/semantic/).
+This is a project to create a "living document," so to speak, for the [BMLT's semantic capabilities](https://bmlt.app/semantic/).
 
 It will present an interactive "worksheet" that can be used to construct a URL (or shortcode) to present alternative BMLT interfaces.
 
-View a live demo at: http://bmlt.magshare.net/workshop/
+View a live demo at: https://bmlt.app/workshop/
 
 This file is part of the Basic Meeting List Toolbox (BMLT).
 
-Find out more at: http://bmlt.magshare.org
+Find out more at: https://bmlt.app
 
 License
 -------

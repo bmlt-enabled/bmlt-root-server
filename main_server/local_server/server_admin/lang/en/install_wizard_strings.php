@@ -2,7 +2,7 @@
 /***********************************************************************/
 /** This file is part of the Basic Meeting List Toolbox (BMLT).
 
-    Find out more at: http://bmlt.magshare.org
+    Find out more at: https://bmlt.app
 
     BMLT is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

@@ -2,7 +2,7 @@
 /**
         This file is part of the Basic Meeting List Toolbox (BMLT).
 
-        Find out more at: http://bmlt.magshare.org
+        Find out more at: https://bmlt.app
 
         BMLT is free software: you can redistribute it and/or modify
         it under the terms of the GNU General Public License as
@@ -159,5 +159,5 @@ $this->_localization = array (
                                 'version_label'                         =>  'Version:',
                                 'result_shortcode_label'                =>  'The Shortcode Is:',
                                 'result_invalid_text'                   =>  '<INVALID VALUE>',
-                                'explanation_suffix'                    =>  'Additional info is available <a href="http://bmlt.app/semantic/semantic-workshop/">here</a>.'
+                                'explanation_suffix'                    =>  'Additional info is available <a href="https://bmlt.app/semantic/semantic-workshop/">here</a>.'
                             );
