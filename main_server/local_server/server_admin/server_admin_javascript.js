@@ -4803,8 +4803,6 @@ function BMLT_Server_Admin()
                 } else {
                     eval('var json_object = ' + in_http_request.responseText + ';');
                 };
-                console.log(in_http_request.responseText);
-                console.log(g_langs[0]);
                 if ( json_object ) {
                     if ( !json_object.success ) {
                         alert(json_object.report);

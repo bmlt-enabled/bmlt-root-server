@@ -128,7 +128,6 @@ function DB_Connect_and_Upgrade()
             }
         }
     } catch (Exception $e) {
-
     }
 
     try {
@@ -144,6 +143,5 @@ function DB_Connect_and_Upgrade()
             }
         }
     } catch (Exception $e) {
-
     }
 }
