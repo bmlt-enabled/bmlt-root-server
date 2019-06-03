@@ -174,14 +174,14 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
         $lines[] = '//The server languages are supported by default, the langs specified here add to them';
         $lines[] = '$format_lang_names = array(';
             $flnStr = $http_vars['format_lang_names'];
-            if (isset($flnStr) && $flnStr!='') {
-                $fln = json_decode($flnStr);
-                if (is_object($fln)) {
-                    foreach($fln as $key => $value) {
-                       $lines[] = "'".$key."' => '".$value."',";
-                    }
+        if (isset($flnStr) && $flnStr!='') {
+            $fln = json_decode($flnStr);
+            if (is_object($fln)) {
+                foreach ($fln as $key => $value) {
+                    $lines[] = "'".$key."' => '".$value."',";
                 }
             }
+        }
         $lines[] = ');';
         $lines[] = '// These are \'hard-coded,\' but can be changed later:';
         $lines[] = '$time_format = \''        . $http_vars['time_format']        . '\';  // The PHP date() format for the times displayed.';

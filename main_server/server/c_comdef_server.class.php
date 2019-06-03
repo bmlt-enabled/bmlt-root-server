@@ -1144,8 +1144,9 @@ class c_comdef_server
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return self::GetServer()->_server_lang_names;
     }
-    public static function getFormatLangs() {
-        return array_merge(self::GetServer()->_server_lang_names,self::GetServer()->_format_lang_names);
+    public static function getFormatLangs()
+    {
+        return array_merge(self::GetServer()->_server_lang_names, self::GetServer()->_format_lang_names);
     }
     /*******************************************************************/
     /** \brief Get the object list for the server's registered users.
