@@ -909,7 +909,7 @@ function GetFormats(
     
     $formats_obj = $server->GetFormatsObj();
     if ($formats_obj instanceof c_comdef_formats) {
-        $langs = $server->GetServerLangs();
+        $langs = $server->GetFormatLangs();
         $used_formats = $server->GetUsedFormatIDs();
         if (isset($in_lang) && is_array($in_lang) && count($in_lang)) {
             $langs2 = array();

@@ -351,7 +351,7 @@ class c_comdef_admin_ajax_handler
         
             if ($the_objects_to_be_changed && is_array($the_objects_to_be_changed) && count($the_objects_to_be_changed)) {
                 $new_shared_id = 0;
-                $langs = $this->my_server->GetServerLangs();
+                $langs = $this->my_server->GetFormatLangs();
 
                 foreach ($the_objects_to_be_changed as $one_format) {
                     if (!(($one_format instanceof c_comdef_format) && $one_format->UpdateToDB())) {
@@ -415,7 +415,7 @@ class c_comdef_admin_ajax_handler
         if (c_comdef_server::IsUserServerAdmin(null, true)) {
             $ret_data = '';
             
-            $langs = $this->my_server->GetServerLangs();
+            $langs = $this->my_server->GetFormatLangs();
 
             foreach ($langs as $lang_key => $lang_name) {
                 $server_format = $this->my_server->GetOneFormat($in_format_shared_id, $lang_key);

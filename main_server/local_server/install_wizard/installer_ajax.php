@@ -158,7 +158,7 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
         $lines[] = '$banner_text = \'' . $http_vars['banner_text'] . '\';';
         $lines[] = '';
         $lines[] = '// Miscellaneous settings:';
-        $lines[] = '$comdef_global_language = \''             . $http_vars['$comdef_global_language']              . '\'; // This is the 2-letter code for the default root server localization (will default to \'en\' -English, if the localization is not available).';
+        $lines[] = '$comdef_global_language = \''             . $http_vars['comdef_global_language']              . '\'; // This is the 2-letter code for the default root server localization (will default to \'en\' -English, if the localization is not available).';
         $lines[] = '$min_pw_len = '                           . $http_vars['min_pw_len']                           . ';   // The minimum number of characters in a user account password for this root server.';
         $lines[] = '$number_of_meetings_for_auto = '          . $http_vars['number_of_meetings_for_auto']          . ';   // This is an approximation of the number of meetings to search for in the auto-search feature. The higher the number, the wider the radius.';
         $lines[] = '$change_depth_for_meetings = '            . $http_vars['change_depth_for_meetings']            . ';   // This is how many changes should be recorded for each meeting. The higher the number, the larger the database will grow, as this can become quite substantial.";';
@@ -171,6 +171,18 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
         $lines[] = '$include_service_body_admin_on_emails = ' . $http_vars['include_service_body_admin_on_emails'] . ';   // If this is TRUE (or 1), then any emails sent using the meeting contact will include the Service Body Admin contact for the meeting Service body (ignored, if $g_enable_email_contact is FALSE).';
         $lines[] = '$include_every_admin_on_emails = '        . $http_vars['include_every_admin_on_emails']        . ';   // If this is TRUE (or 1), then any emails sent using the meeting contact will include all Service Body Admin contacts (including the Server Administrator) for the meeting (ignored, if $g_enable_email_contact or $include_service_body_admin_on_emails is FALSE).';
         $lines[] = '';
+        $lines[] = '//The server languages are supported by default, the langs specified here add to them';
+        $lines[] = '$format_lang_names = array(';
+            $flnStr = $http_vars['format_lang_names'];
+            if (isset($flnStr) && $flnStr!='') {
+                $fln = json_decode($flnStr);
+                if (is_object($fln)) {
+                    foreach($fln as $key => $value) {
+                       $lines[] = "'".$key."' => '".$value."',";
+                    }
+                }
+            }
+        $lines[] = ');';
         $lines[] = '// These are \'hard-coded,\' but can be changed later:';
         $lines[] = '$time_format = \''        . $http_vars['time_format']        . '\';  // The PHP date() format for the times displayed.';
         $lines[] = '$change_date_format = \'' . $http_vars['change_date_format'] . '\';  // The PHP date() format for times/dates displayed in the change records.';
