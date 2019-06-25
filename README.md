@@ -14,7 +14,7 @@ scheduled weekly, recurring events.
 The intended clientele is Narcotics Anonymous Service bodies. They implement a BMLT
 server, and provide the server to other NA Service bodies.
 
-You can find out way too much about the BMLT on [the BMLT Documentation Site](http://bmlt.magshare.net).
+You can find out way too much about the BMLT on [the BMLT Documentation Site](https://bmlt.app).
 
 [You can follow us on Twitter for release announcements](http://twitter.com/BMLT_NA).
 
@@ -23,7 +23,7 @@ This project is the "root" server for the BMLT. It is the "server" part of the B
 
 The project is actually several years old. It is currently hosted on [GitHub](https://github.com).
 
-[Follow this link to see the Current GitHub repository.](https://github.com/LittleGreenViper/BMLT-Root-Server)
+[Follow this link to see the Current GitHub repository.](https://github.com/bmlt-enabled/BMLT-Root-Server)
 
 [Follow this link to see the legacy BitBucket repository.](https://bitbucket.org/bmlt/bmlt-root-server/)
 
@@ -44,7 +44,7 @@ The entire system is written in PHP, JavaScript, XHTML and CSS. Most of the code
 
 PHP 5.6 or above is required to establish a root server, and 5.0 or above for a satellite.
 
-For more information about server requirements, see [the page on Server Requirements](http://bmlt.magshare.net/specific-topics/server-requirements/)
+For more information about server requirements, see [the page on Server Requirements](https://bmlt.app/specific-topics/server-requirements/)
  
 INSTALLATION
 ------------
@@ -53,7 +53,7 @@ You set up a root server as the central database and administration area for a B
 implementation, but most people access it through what we call "satellite servers." These
 satellites comprise the "client" part of the BMLT "client/server" architecture.
 
-For instructions on installing the root server, see [the page on installing a new Root Server](http://bmlt.magshare.net/installing-a-new-root-server/)
+For instructions on installing the root server, see [the page on installing a new Root Server](https://bmlt.app/installing-a-new-root-server/)
 
 CHANGELIST
 ----------
@@ -206,7 +206,7 @@ CHANGELIST
 ***Version 2.10.0* ** *- February 22, 2018*
 
 - Added the Root Server URI as a new field to meeting search results. This will help with the new [Sandwich](http://archsearch.org/sandwich/) aggregator.
-- Updated to the latest [BMLT Satellite Base Class](https://bmlt.magshare.net/specific-topics/bmlt-satellite-base-class/).
+- Updated to the latest [BMLT Satellite Base Class](https://bmlt.app/specific-topics/bmlt-satellite-base-class/).
 - Fixed an issue with the initial SQL for the installer wizard, where MySQL was not accepting the default TIMEDATE for users.
 - Fixed a bug, in which World IDs were not being set when creating new Service bodies.
 
@@ -300,12 +300,12 @@ CHANGELIST
 
 ***Version 2.8.11* ** *- February 28, 2017*
 
-- Fixed a bug in the new meeting add functionality (semantic admin). This will only affect the [BMLTiOSLib](https://bmlt.magshare.net/specific-topics/bmltioslib/).
+- Fixed a bug in the new meeting add functionality (semantic admin). This will only affect the [BMLTiOSLib](https://bmlt.app/specific-topics/bmltioslib/).
 - Fixed a bug, where setting time between 12:01AM (00:01) -> 12:59AM (00:59) would revert to "PM."
 
 ***Version 2.8.10* ** *- January 9, 2017*
 
-- Changes needed to return IDs in the Semantic Interface. This is mostly for the new [BMLTiOSLib](https://bmlt.magshare.net/specific-topics/bmltioslib/) project. Since that project is now alpha, we should release this.
+- Changes needed to return IDs in the Semantic Interface. This is mostly for the new [BMLTiOSLib](https://bmlt.app/specific-topics/bmltioslib/) project. Since that project is now alpha, we should release this.
 
 ***Version 2.8.9* ** *- January 8, 2017*
 
@@ -313,7 +313,7 @@ CHANGELIST
 
 ***Version 2.8.8* ** *- January 8, 2017*
 
-- Added support for a new search criteria: "Ends Before or At." This is mostly for the new [BMLTiOSLib](https://bmlt.magshare.net/specific-topics/bmltioslib/) project.
+- Added support for a new search criteria: "Ends Before or At." This is mostly for the new [BMLTiOSLib](https://bmlt.app/specific-topics/bmltioslib/) project.
 - Fixed an obscure bug in the Change JSON Semantic Response. Some change records had bad data that caused the response format to break JSON validation.
 
 ***Version 2.8.7* ** *- January 1, 2017*
@@ -369,7 +369,7 @@ CHANGELIST
 - Added the capacity to rollback meetings to the semantic admin.
 - Fixed the response from the new meeting semantic admin, so we don't have empty oldValue/newValue elements.
 - Added the available keys to the server info response, so we can ensure a minimal support level.
-- This is the first version to support [the BMLTAdmin app](http://bmlt.magshare.net/bmltadmin)
+- This is the first version to support [the BMLTAdmin app](http://bmlt.app/bmltadmin)
 
 ***Version 2.7.20* ** *- May 27, 2016*
 
@@ -391,7 +391,7 @@ CHANGELIST
 ***Version 2.7.16* ** *- May 2, 2016*
 
 - Changed the format of this README, as BitBucket has changed their markdown syntax a bit.
-- Changed the style wrappers for the [bmlt_simple](http://bmlt.magshare.net/satellites/simple/) shortcode a bit, so that the separators can be styled a bit more easily.
+- Changed the style wrappers for the [bmlt_simple](https://bmlt.app/satellites/simple/) shortcode a bit, so that the separators can be styled a bit more easily.
 - Changed the Semantic Admin stuff to be simpler. No one is using it (yet), so I think it should be OK.
 - Fixed an issue with the semantic admin that returned the incorrect location for the schema.
 - Fixed a warning that affected the semantic administration.
