@@ -14,9 +14,9 @@
     BMLT is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    MIT for more details.
+    MIT License for more details.
 
-    You should have received a copy of the MIT along with this code.
+    You should have received a copy of the MIT License along with this code.
     If not, see <https://opensource.org/licenses/MIT>.
 ********************************************************************************************/
 
