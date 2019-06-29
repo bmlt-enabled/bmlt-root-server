@@ -560,19 +560,26 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
         this.m_installer_state.format_lang_names = convertFormatLangsToJSON(document.getElementById('format_lang_names').value);
     };
 
-     function convertFormatLangsToJSON(v) {
-    	var ret = {};
-    	var langs = v.split(' ');
-    	if (!Array.isArray(langs)) {
-    		return JSON.stringify(ret);
-    	}
-    	langs.forEach(function(lang) {
-    		var parts = lang.split(':');
-    		if (parts.length == 2) {    			
-    			ret[parts[0]] = parts[1];
-    		}
-    	});
-    	return JSON.stringify(ret);
+    function convertFormatLangsToJSON(v) {
+        var ret = {};
+        var langs = v.match(/\S+/g);
+        if (!Array.isArray(langs)) {
+            return JSON.stringify(ret);
+        }
+        langs.forEach(function(lang) {
+            var parts = lang.split(':');
+            if (parts.length == 2) {  
+                parts[0] = parts[0].trim();
+                parts[1] = parts[1].trim();
+                if (parts[0]==="" || parts[1]==="") {
+                    alert("Could not parse format languages");
+                }
+                ret[parts[0].trim()] = parts[1];
+            } else {
+                alert("Could not parse format languages");
+            }
+        });
+        return JSON.stringify(ret);
     };
     
     /************************************************************************************//**

@@ -1144,7 +1144,7 @@ class c_comdef_server
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return self::GetServer()->_server_lang_names;
     }
-    public static function getFormatLangs()
+    public static function GetFormatLangs()
     {
         return array_merge(self::GetServer()->_server_lang_names, self::GetServer()->_format_lang_names);
     }

@@ -173,7 +173,7 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
         $lines[] = '';
         $lines[] = '//The server languages are supported by default, the langs specified here add to them';
         $lines[] = '$format_lang_names = array(';
-            $flnStr = $http_vars['format_lang_names'];
+        $flnStr = $http_vars['format_lang_names'];
         if (isset($flnStr) && $flnStr!='') {
             $fln = json_decode($flnStr);
             if (is_object($fln)) {
