@@ -132,4 +132,5 @@
                                             'Explanatory_Text_4_File_Extra'  =>  'Vous devez également vous assurer que les autorisations de fichiers sont limités (chmod 0644). Cela empêche le fichier d\'être écrite, et le serveur racine ne fonctionnera que si le fichier dispose des autorisations nécessaires.',
                                             'Page_4_PathInfo'               =>  'Le fichier doit être placé comme %s/auto-config.inc.php, ce qui est l\'endroit où le répertoire de votre %s est. Une fois le fichier a été créé et vous avez mis le texte ci-dessus dedans, vous devez exécuter la commande suivante pour vous assurer que les autorisations sont correctes:',
                                             'Page_4_Final'                  =>  'Une fois tout cela terminé, actualisez cette page, et vous devriez voir la page de connexion du serveur racine.',
-                                            );
+                                            'FormatLangNamesLabel'              =>  'Enter extra languages in format code1:name1 (example "fa:farsi ru:russian"):',
+                                        );

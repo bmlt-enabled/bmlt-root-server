@@ -148,4 +148,6 @@
                                             'Explanatory_Text_4_File_Extra'     =>  'Du skal også sikre dig, at filtilladelserne er begrænset (chmod 0644). Dette forhindrer filen i at blive skrevet, og rodserveren kører ikke, medmindre filen har de korrekte tilladelser.',
                                             'Page_4_PathInfo'                   =>  'Filen skal placeres som %s/auto-config.inc.php, hvor din% s-mappe er. Når filen er oprettet, og du har lagt ovenstående tekst i den, skal du udføre følgende kommando for at sikre, at tilladelserne er korrekte:',
                                             'Page_4_Final'                      =>  'Når alt dette er færdig, opdatere denne side, og du bør kunne se root serveren login siden.',
-                                            );
+                                            'FormatLangNamesLabel'              =>  'Enter extra languages in format code1:name1 (example "fa:farsi ru:russian"):',
+        
+                                        );

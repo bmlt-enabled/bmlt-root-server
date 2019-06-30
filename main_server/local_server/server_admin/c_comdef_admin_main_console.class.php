@@ -66,7 +66,7 @@ class c_comdef_admin_main_console
         $this->my_ajax_uri = $url_path.'?bmlt_ajax_callback=1';
         
         $this->my_formats = array();
-        $langs = $this->my_server->GetServerLangs();
+        $langs = $this->my_server->GetFormatLangs();
         $this->my_lang_ids = array_keys($langs);
         $server_format_array = $this->my_server->GetFormatsArray();
         $format_ids = array();
@@ -159,7 +159,7 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_is_server_admin = '. ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN ? 'true' : 'false' ).';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_formats_array = '.array2json($this->my_formats).';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_langs = ["'.implode('","', $this->my_lang_ids).'"];'.(defined('__DEBUG_MODE__') ? "\n" : '');
-                $ret .= 'var g_lang_names = '.array2json($this->my_server->GetServerLangs()).';'.(defined('__DEBUG_MODE__') ? "\n" : '');
+                $ret .= 'var g_lang_names = '.array2json($this->my_server->GetFormatLangs()).';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_AJAX_Auth_Failure = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['AJAX_Auth_Failure']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_maps_api_key_warning  = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['Maps_API_Key_Warning']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_maps_api_key_not_set  = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['Maps_API_Key_Not_Set']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');

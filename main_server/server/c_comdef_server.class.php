@@ -73,6 +73,8 @@ class c_comdef_server
     private $_service_ids = null;
     /// This contains the names of the server languages, in their languages. It is an associative array, based on the language enums.
     private $_server_lang_names = null;
+    /// This contains the names of additional languages for which formats are defined, in the main language of the server. It is an associative array, based on the language enums.
+    private $_format_lang_names = null;
     /// This contains the server namespace, which is used to uniquely identify data from this server. The default is the server URI, with "/CoMDEF" appended.
     private $_server_namespace = null;
     /// This contains the actual Service Body objects as a simple array.
@@ -219,6 +221,11 @@ class c_comdef_server
             uksort($server_lang_names, 'c_comdef_server::ServerLangSortCallback');
             
             $this->_server_lang_names = $server_lang_names;
+            if (isset($format_lang_names) && is_array($format_lang_names)) {
+                $this->_format_lang_names = $format_lang_names;
+            } else {
+                $this->_format_lang_names = [];
+            }
             $this->Initialize();
         } catch (Exception $err) {
             throw ( $err );
@@ -1137,7 +1144,11 @@ class c_comdef_server
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return self::GetServer()->_server_lang_names;
     }
-    
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public static function GetFormatLangs()
+    {
+        return array_merge(self::GetServer()->_server_lang_names, self::GetServer()->_format_lang_names);
+    }
     /*******************************************************************/
     /** \brief Get the object list for the server's registered users.
 

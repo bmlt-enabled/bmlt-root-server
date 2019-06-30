@@ -132,4 +132,6 @@
                                             'Explanatory_Text_4_File_Extra'  =>  'You also need to make sure that the file permissions are restricted (chmod 0644). This prevents the file from being written, and the root server will not run unless the file has the correct permissions.',
                                             'Page_4_PathInfo'               =>  'The file needs to be placed as %s/auto-config.inc.php, which is where your %s directory is. After the file has been created and you have put the above text into it, you should execute the following command to make sure that the permissions are correct:',
                                             'Page_4_Final'                  =>  'Once all this is complete, refresh this page, and you should see the root server login page.',
-                                            );
+                                            'FormatLangNamesLabel'              =>  'Enter extra languages in format code1:name1 (example "fa:farsi ru:russian"):',
+                                                    
+                                        );
