@@ -40,10 +40,10 @@ defined( 'BMLT_EXEC' ) or die ( 'Cannot Execute Directly' );	// Makes sure that 
 												// (including the Server Administrator) for the meeting.
 												// (ignored, if $g_enable_email_contact or $include_service_body_admin_on_emails is FALSE)
 
-	//Add any languages for which formats will be given
-    //The server languages are supported by default, the langs specified here add to them
-    //$format_lang_names = ['fa'=>'Farsi'];
-	// These are 'hard-coded,' but can be changed later.
+		//Add any languages for which formats will be given
+		//The server languages are supported by default, the langs specified here add to them
+		//$format_lang_names = ['fa'=>'Farsi'];
+		// These are 'hard-coded,' but can be changed later.
 
 		$time_format = 'g:i A'; // The PHP date() format for the times displayed.
 		$change_date_format = 'g:i A, n/j/Y'; // The PHP date() format for times/dates displayed in the change records.
