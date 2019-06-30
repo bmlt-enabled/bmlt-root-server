@@ -6,3 +6,4 @@ deny from all
 <Files ~ "\.(js|css|txt|png|gif)$">
    allow from all
 </Files>
+
