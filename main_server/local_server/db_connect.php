@@ -173,7 +173,7 @@ function DB_Connect_and_Upgrade()
     $dbMigrations = array(
         // Add database migrations here. The first item is the database version, the second item is a function to run.
         // Version 1 will never run, and is just an example. The first actual migration will begin with version 2.
-        array(1, function() {
+        array(1, function () {
             $sql = "UPDATE test SET myColumn=1";
             c_comdef_dbsingleton::preparedExec($sql);
         })
