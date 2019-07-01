@@ -295,4 +295,23 @@ class c_comdef_dbsingleton
 
         return self::$pdo->lastInsertId();
     }
+
+    public static function beginTransaction()
+    {
+        if (!self::$pdo instanceof PDO) {
+            self::connect();
+        }
+
+        return self::$pdo->beginTransaction();
+    }
+
+    public static function rollBack()
+    {
+        return self::$pdo->rollBack();
+    }
+
+    public static function commit()
+    {
+        return self::$pdo->commit();
+    }
 }
