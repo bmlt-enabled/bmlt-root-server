@@ -1064,6 +1064,7 @@ function GetServerInfo()
     $canEmail = isset($g_enable_email_contact) && $g_enable_email_contact ? '1' : '0';
     $includeServiceBodiesOnEmails = isset($include_service_body_admin_on_emails) && $include_service_body_admin_on_emails ? '1' : '0';
     $changeDepth = strVal(intval($change_depth_for_meetings));
+    $dbVersion = c_comdef_server::GetDatabaseVersion();
     $availableFields = "";
     $keys = c_comdef_meeting::GetFullTemplate();
     
@@ -1077,12 +1078,12 @@ function GetServerInfo()
         }
     }
     
-    $ret = '"version","versionInt","langs","nativeLang","centerLongitude","centerLatitude","centerZoom","defaultDuration","regionBias","charSet","distanceUnits","semanticAdmin","emailEnabled","emailIncludesServiceBodies","changesPerMeeting","meeting_states_and_provinces","meeting_counties_and_sub_provinces","available_keys","google_api_key"'."\n";
+    $ret = '"version","versionInt","langs","nativeLang","centerLongitude","centerLatitude","centerZoom","defaultDuration","regionBias","charSet","distanceUnits","semanticAdmin","emailEnabled","emailIncludesServiceBodies","changesPerMeeting","meeting_states_and_provinces","meeting_counties_and_sub_provinces","available_keys","google_api_key","dbVersion"'."\n";
     $ret .= '"'.$version_string.'","'.strval($version_num).'","'.$lang_string.'","'.$default_lang.'",';
     $ret .= '"'.strval($localStrings['search_spec_map_center']['longitude']).'","'.strval($localStrings['search_spec_map_center']['latitude']).'",';
     $ret .= '"'.strval($localStrings['search_spec_map_center']['zoom']).'","'.$localStrings['default_duration_time'].'",';
     $ret .= '"'.$localStrings['region_bias'].'","'.$localStrings['charset'].'","'.$localStrings['dist_units'].'","'.$canAdmin.'",';
-    $ret .= '"'.$canEmail.'","'.$includeServiceBodiesOnEmails.'","'.$changeDepth.'","'.implode(',', $localStrings['meeting_states_and_provinces']).'","'.implode(',', $localStrings['meeting_counties_and_sub_provinces']).'","'.str_replace('"', '\"', $availableFields).',root_server_uri,format_shared_id_list","'.$localStrings['google_api_key'].'"';
+    $ret .= '"'.$canEmail.'","'.$includeServiceBodiesOnEmails.'","'.$changeDepth.'","'.implode(',', $localStrings['meeting_states_and_provinces']).'","'.implode(',', $localStrings['meeting_counties_and_sub_provinces']).'","'.str_replace('"', '\"', $availableFields).',root_server_uri,format_shared_id_list","'.$localStrings['google_api_key'].'","'.$dbVersion.'"';
     
     return $ret;
 }
