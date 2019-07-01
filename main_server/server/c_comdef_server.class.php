@@ -1137,7 +1137,8 @@ class c_comdef_server
     }
 
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public static function GetDatabaseVersionTableName_obj() {
+    public static function GetDatabaseVersionTableName_obj()
+    {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return self::$server_instance->_db_version_table_name;
     }
