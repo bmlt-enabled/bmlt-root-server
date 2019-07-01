@@ -171,13 +171,12 @@ function DB_Connect_and_Upgrade()
 
     // New-style migrations
     $dbMigrations = array(
-        // Add database migrations here. The first item is the database version, the second item is an
-        // array of sql statements to run. Version 1 will never run, and is just an example. The first actual
-        // migration will begin with version 2.
-        array(1, array(
-            "UPDATE example SET myColumn = 1",
-            "UPDATE example SET myColumn = 2"
-        )),
+        // Add database migrations here. The first item is the database version, the second item is a function to run.
+        // Version 1 will never run, and is just an example. The first actual migration will begin with version 2.
+        array(1, function() {
+            $sql = "UPDATE test SET myColumn=1";
+            c_comdef_dbsingleton::preparedExec($sql);
+        })
     );
 
     foreach ($dbMigrations as $dbMigration) {
@@ -189,15 +188,14 @@ function DB_Connect_and_Upgrade()
         c_comdef_dbsingleton::beginTransaction();
 
         try {
-            $sqlStatements = $dbMigration[1];
-            foreach ($sqlStatements as $sqlStatement) {
-                c_comdef_dbsingleton::preparedExec($sqlStatement);
-            }
+            $func = $dbMigration[1];
+            call_user_func($func);
             $sql = "UPDATE $versionTableName SET version = $version";
             c_comdef_dbsingleton::preparedExec($sql);
         } catch (Exception $e) {
             c_comdef_dbsingleton::rollBack();
-            throw $e;
+            echo $e->getMessage();
+            die();
         }
 
         c_comdef_dbsingleton::commit();
