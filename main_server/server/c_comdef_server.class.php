@@ -61,6 +61,8 @@ class c_comdef_server
     private $_changes_table_name = null;
     /// This is the name of the user table in the database.
     private $_user_table_name = null;
+    /// This is the name of the database version table in the database.
+    private $_db_version_table_name = null;
     /// This is the name of the Service Bodies table in the database.
     private $_service_bodies_table_name = null;
     /// This is the container for the loaded formats.
@@ -158,6 +160,7 @@ class c_comdef_server
             $this->_changes_table_name = $dbPrefix."_comdef_changes";
             $this->_service_bodies_table_name = $dbPrefix."_comdef_service_bodies";
             $this->_user_table_name = $dbPrefix."_comdef_users";
+            $this->_db_version_table_name = $dbPrefix."_comdef_db_version";
 
             if (isset($serverNamespace) && (null !== $serverNamespace)) {
                 $this->_server_namespace = $serverNamespace;
@@ -1131,6 +1134,13 @@ class c_comdef_server
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return self::$server_instance->_user_table_name;
+    }
+
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public static function GetDatabaseVersionTableName_obj()
+    {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+        return self::$server_instance->_db_version_table_name;
     }
     
     /*******************************************************************/
@@ -2783,5 +2793,18 @@ class c_comdef_server
         }
         
         return $ret;
+    }
+
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public static function GetDatabaseVersion()
+    {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+        $sql = "SELECT version FROM `".self::GetDatabaseVersionTableName_obj()."`";
+        $rows = c_comdef_dbsingleton::preparedQuery($sql);
+        if (!is_array($rows) || !count($rows)) {
+            return 0;
+        }
+        $row = $rows[0];
+        return intval($row['version']);
     }
 }

@@ -69,6 +69,7 @@ CHANGELIST
     - `'O'    =>  'Attendance by non-addicts (Open, Closed)',`
     - `'LANG' =>  'Language'`
 - Added the ability to specify languages for formats that are not included in the languages for which the server admin console has been translated.  This lightweight style of adding languages allows meeting lists to be generated if a satellite has been translated (much less work than the entire server admin).
+- Added database migration system with database schema versioning, and added dbVersion to GetServerInfo endpoint.
 
 ***Version 2.13.0* ** *- April 28, 2019*
 
