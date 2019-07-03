@@ -70,7 +70,9 @@ class c_comdef_admin_main_console
         $this->my_lang_ids = array_keys($langs);
         $server_format_array = $this->my_server->GetFormatsArray();
         $format_ids = array();
-        
+        usort($server_format_array[$this->my_server->GetLocalLang()], function ($a, $b) {
+            return strnatcasecmp($a->GetKey(), $b->GetKey());
+        });
         // We will build an array of formats in the structure we'll need for our editor. We start by gathering all of the shared IDs.
         foreach ($langs as $lang_key => $lang_name) {
             if (isset($server_format_array[$lang_key])) {
@@ -379,6 +381,7 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_naws_popup_prompt = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['world_format_codes_prompt']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= "var g_naws_values = [";
                     $n_first = true;
+            sort($this->my_localized_strings['comdef_server_admin_strings']['world_format_codes']);
         foreach ($this->my_localized_strings['comdef_server_admin_strings']['world_format_codes'] as $key => $value) {
             if (!$n_first) {
                 $ret .= ','.(defined('__DEBUG_MODE__') ? "\n" : '');
