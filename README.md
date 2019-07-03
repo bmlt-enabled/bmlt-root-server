@@ -57,7 +57,7 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.13.1* ** *- UNRELEASED*
+***Version 2.13.1* ** *- July 2, 2019*
 
 - Semantic Administration is now enabled by default on install wizard.
 - Fixed a bug with JSONP endpoint emoting incorrect mime type.
