@@ -421,10 +421,10 @@ class c_comdef_admin_main_console
             // Figure out which output will be sent, according to the user level.
             switch ($this->my_user->GetUserLevel()) {
                 case _USER_LEVEL_SERVER_ADMIN:
-                    $ret .= $this->return_server_admin_panel();
                     $ret .= $this->return_format_editor_panel();
                     // Assuming fallthrough is intentional here, due to lack of break statement?
                 case _USER_LEVEL_SERVICE_BODY_ADMIN:
+                    $ret .= $this->return_server_admin_panel();
                     $ret .= $this->return_user_admin_panel();
                     if ((count($this->my_editable_service_bodies) > 0) || ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN)) {
                         $ret .= $this->return_service_body_admin_panel();
@@ -1905,7 +1905,7 @@ class c_comdef_admin_main_console
     }
     
     /********************************************************************************************************//**
-    \brief This constructs the "Server Administration" esction of the console. Only server admins can see this.
+    \brief This constructs the "Server Administration" section of the console. Server Admins and Service Body admins can see this.
     \returns The HTML and JavaScript for the "Server Administration" section.
     ************************************************************************************************************/
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps

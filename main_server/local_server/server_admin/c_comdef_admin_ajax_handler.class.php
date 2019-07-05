@@ -117,7 +117,8 @@ class c_comdef_admin_ajax_handler
             ),
         );
 
-        if (!c_comdef_server::IsUserServerAdmin(null, true)) {
+        $isServerAdmin = c_comdef_server::IsUserServerAdmin(null, true);
+        if (!$isServerAdmin && !c_comdef_server::IsUserServiceBodyAdmin(null, true)) {
             return 'NOT AUTHORIZED';
         }
 
@@ -136,6 +137,26 @@ class c_comdef_admin_ajax_handler
         } catch (Exception $e) {
             $ret['errors'][] = $this->my_localized_strings['comdef_server_admin_strings']['server_admin_error_could_not_create_reader'] . $e->getMessage();
             return json_encode($ret);
+        }
+
+        if (!$isServerAdmin) {
+            // We are a service body admin, so get the meeting IDs this admin is allowed to edit
+            $userMeetingIDs = array();
+            $userServiceBodyIDs = c_comdef_server::GetUserServiceBodies();
+            if (is_array($userServiceBodyIDs)) {
+                $userServiceBodyIDs = array_keys($userServiceBodyIDs);
+                foreach ($userServiceBodyIDs as $serviceBodyID) {
+                    $sbMeetings = c_comdef_server::GetMeetingsForAServiceBody($serviceBodyID);
+                    if ($sbMeetings) {
+                        $sbMeetings = $sbMeetings->GetMeetingObjects();
+                        if (is_array($sbMeetings)) {
+                            foreach ($sbMeetings as $meeting) {
+                                $userMeetingIDs[$meeting->GetID()] = null;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         $bmltIdx = "";
@@ -174,9 +195,13 @@ class c_comdef_admin_ajax_handler
                 continue;
             } elseif (!is_numeric($bmltId)) {
                 $ret['errors'][] = $this->my_localized_strings['comdef_server_admin_strings']['server_admin_error_bmlt_id_not_integer'] . $bmltId;
-            } else {
+            } elseif ($isServerAdmin || array_key_exists(intval($bmltId), $userMeetingIDs)) {
                 $meetingMap[$bmltId] = $worldId;
             }
+        }
+
+        if (empty($meetingMap)) {
+            $ret['errors'][] = $this->my_localized_strings['comdef_server_admin_strings']['server_admin_error_no_world_ids_updated'];
         }
 
         if (!empty($ret['errors'])) {

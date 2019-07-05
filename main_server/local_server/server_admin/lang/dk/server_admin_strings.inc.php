@@ -23,6 +23,7 @@ $comdef_server_admin_strings = array (
     'server_admin_disclosure'                               =>  'Server Administration',
     'server_admin_naws_spreadsheet_label'                   =>  'Updated World IDs Spreadsheet:',
     'update_world_ids_button_text'                          =>  'Update Meeting World IDs from Spreadsheet',
+    'server_admin_error_no_world_ids_updated'               =>  'No World IDs were updated. This could be because your user does not have permission to update the submitted meetings.',
     'server_admin_error_required_spreadsheet_column'        =>  'Required column does not exist in the spreadsheet: ',
     'server_admin_error_bmlt_id_not_integer'                =>  'The provided bmlt_id is not an integer: ',
     'server_admin_error_could_not_create_reader'            =>  'Could not create reader for file: ',
