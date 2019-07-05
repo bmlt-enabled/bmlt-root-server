@@ -3050,7 +3050,7 @@ function BMLT_Server_Admin()
                 sb_id = 0;
             };
         } else {
-            sb_id = g_service_bodies_array[0][0];
+            sb_id = g_editable_service_bodies_array[0][0];
         };
         
         var save_button_a = document.getElementById('bmlt_admin_service_body_editor_form_service_body_save_button');
