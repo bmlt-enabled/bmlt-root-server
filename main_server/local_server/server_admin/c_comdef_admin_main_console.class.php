@@ -327,7 +327,6 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_meeting_lookup_failed_not_enough_address_info = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['meeting_lookup_failed_not_enough_address_info']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_meeting_editor_result_count_format = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_result_count_format']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_meeting_editor_screen_delete_button_confirm = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_delete_button_confirm']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
-                $ret .= 'var g_meeting_editor_screen_delete_button_confirm_perm = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_delete_button_confirm_perm']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_meeting_editor_already_editing_confirm = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_already_editing_confirm']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_history_header_format = \''.str_replace('>', '&gt;', str_replace('<', '&lt;', $this->my_localized_strings['comdef_server_admin_strings']['history_header_format'])).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_history_no_history_available_text = \''.str_replace('>', '&gt;', str_replace('<', '&lt;', $this->my_localized_strings['comdef_server_admin_strings']['history_no_history_available_text'])).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
@@ -1555,12 +1554,6 @@ class c_comdef_admin_main_console
             $ret .= '<span class="bmlt_admin_meeting_editor_form_middle_button_single_span bmlt_admin_delete_button_span hide_in_new_meeting">';
                 $ret .= '<a id="bmlt_admin_meeting_editor_form_meeting_template_delete_button" href="javascript:admin_handler_object.deleteMeeting(template);" class="bmlt_admin_ajax_button button">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_delete_button']).'</a>';
                 $ret .= '<span id="bmlt_admin_template_delete_ajax_button_throbber_span" class="bmlt_admin_ajax_button_throbber_span item_hidden"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></span>';
-        if ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) {
-            $ret .= '<span class="perm_checkbox_span">';
-                $ret .= '<input type="checkbox" id="bmlt_admin_meeting_template_delete_perm_checkbox" />';
-                $ret .= '<label for="bmlt_admin_meeting_template_delete_perm_checkbox">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_delete_perm_checkbox']).'</label>';
-            $ret .= '</span>';
-        }
             $ret .= '</span>';
             $ret .= '<span class="bmlt_admin_meeting_editor_form_meeting_button_right_span"><a id="bmlt_admin_meeting_editor_form_meeting_template_cancel_button" href="javascript:admin_handler_object.cancelMeetingEdit(template);" class="bmlt_admin_ajax_button button">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_cancel_button']).'</a></span>';
             $ret .= '<div class="clear_both"></div>';

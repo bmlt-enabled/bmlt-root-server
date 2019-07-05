@@ -87,7 +87,7 @@ class c_comdef_admin_ajax_handler
         } elseif (isset($this->my_http_vars['set_meeting_change']) && $this->my_http_vars['set_meeting_change']) {
             $this->HandleMeetingUpdate($this->my_http_vars['set_meeting_change']);
         } elseif (isset($this->my_http_vars['delete_meeting']) && $this->my_http_vars['delete_meeting']) {
-            $returned_text = $this->HandleDeleteMeeting($this->my_http_vars['delete_meeting'], isset($this->my_http_vars['permanently']));
+            $returned_text = $this->HandleDeleteMeeting($this->my_http_vars['delete_meeting']);
         } elseif (isset($this->my_http_vars['get_meeting_history']) && $this->my_http_vars['get_meeting_history']) {
             $returned_text = $this->GetMeetingHistory($this->my_http_vars['get_meeting_history']);
         } elseif (isset($this->my_http_vars['do_meeting_search'])) {
@@ -922,8 +922,7 @@ class c_comdef_admin_ajax_handler
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     public function HandleDeleteMeeting(
-        $in_meeting_id,
-        $in_delete_permanently = false
+        $in_meeting_id
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         try {
@@ -932,10 +931,6 @@ class c_comdef_admin_ajax_handler
             if ($meeting instanceof c_comdef_meeting) {
                 if ($meeting->UserCanEdit()) {
                     if ($meeting->DeleteFromDB()) {
-                        if ($in_delete_permanently) {
-                            $this->DeleteMeetingChanges($in_meeting_id);
-                        }
-                        
                         header('Content-Type:application/json; charset=UTF-8');
                         echo "{'success':true,'report':'$in_meeting_id'}";
                     } else {

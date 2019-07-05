@@ -1409,8 +1409,7 @@ function BMLT_Server_Admin()
     ****************************************************************************************/
     this.deleteMeeting = function ( in_meeting_id
                                     ) {
-        var perm_check = document.getElementById('bmlt_admin_meeting_' + parseInt(in_meeting_id, 10) + '_delete_perm_checkbox');
-        var confirm_str = g_meeting_editor_screen_delete_button_confirm + (( perm_check && perm_check.checked ) ? ("\n" + g_meeting_editor_screen_delete_button_confirm_perm) : '');
+        var confirm_str = g_meeting_editor_screen_delete_button_confirm;
         
         if ( confirm(confirm_str) ) {
             var root_element = document.getElementById('bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div');
@@ -1420,7 +1419,7 @@ function BMLT_Server_Admin()
                 root_element.m_ajax_request_in_progress = null;
             };
         
-            var uri = g_ajax_callback_uri + '&delete_meeting=' + in_meeting_id + (( perm_check && perm_check.checked ) ? '&permanently=1' : '');
+            var uri = g_ajax_callback_uri + '&delete_meeting=' + in_meeting_id;
 
             var throbber_span = document.getElementById('bmlt_admin_' + in_meeting_id + '_delete_ajax_button_throbber_span');
             var delete_a = document.getElementById('bmlt_admin_meeting_editor_form_meeting_' + in_meeting_id + '_delete_button');
@@ -3840,7 +3839,7 @@ function BMLT_Server_Admin()
         if ( perm_checkbox ) {
             perm_checkbox.checked = false;
         };
-        
+
         this.validateUserEditorButtons();
     };
 
