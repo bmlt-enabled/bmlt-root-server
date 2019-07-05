@@ -59,7 +59,8 @@ CHANGELIST
 ----------
 ***Version 2.13.2* ** *- TBD*
 
-- Fixed an issue where the wrong service body could be displayed in the "Service Body Administration" section of the Admin UI when a Service Body Administrator is the Primary Admin of only one service body. 
+- Fixed an issue where the wrong service body could be displayed in the "Service Body Administration" section of the Admin UI when a Service Body Administrator is the Primary Admin of only one service body.
+- Service Body Admins can now use the new "Server Administration" section of the UI, allowing them to upload the spreadsheet returned by NAWS to batch update the World IDs for their meetings.
 
 ***Version 2.13.1* ** *- July 2, 2019*
 
