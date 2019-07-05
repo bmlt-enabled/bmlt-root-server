@@ -57,6 +57,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.13.2* ** *- TBD*
+
+- Fixed an issue where the wrong service body could be displayed in the "Service Body Administration" section of the Admin UI when a Service Body Administrator is the Primary Admin of only one service body. 
+
 ***Version 2.13.1* ** *- July 2, 2019*
 
 - Semantic Administration is now enabled by default on install wizard.
