@@ -61,6 +61,7 @@ CHANGELIST
 
 - Fixed an issue where the wrong service body could be displayed in the "Service Body Administration" section of the Admin UI when a Service Body Administrator is the Primary Admin of only one service body.
 - Service Body Admins can now use the new "Server Administration" section of the UI, allowing them to upload the spreadsheet returned by NAWS to batch update the World IDs for their meetings.
+- Removed the "Delete Permanently" capability when deleting meetings as a Server Admin. The "Delete Permanently" checkbox caused a meeting to be deleted with no change record. Abuse of this feature made it difficult for NAWS to reconcile its meeting list with the BMLT. All deleted meetings now result in a change record.
 
 ***Version 2.13.1* ** *- July 2, 2019*
 
