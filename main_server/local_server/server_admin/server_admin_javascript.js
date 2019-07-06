@@ -1549,7 +1549,7 @@ function BMLT_Server_Admin()
                 eval('var json_object = ' + in_http_request.responseText + ';');
             };
         };
-            
+
         if ( json_object ) {
             var meeting_changed = false;
             
@@ -1569,6 +1569,8 @@ function BMLT_Server_Admin()
                                 this.createOneMeetingNode(single_meeting_div, this.m_search_results[c]);
                                 meeting_changed = true;
                             };
+
+                            break;
                         };
                     };
                 };
@@ -1587,6 +1589,9 @@ function BMLT_Server_Admin()
             
             this.cancelMeetingEdit(in_orig_meeting_id, true);
             this.createMeetingList();
+            if (json_object && json_object[0] && json_object[0].id_bigint) {
+                this.toggleMeetingSingleEditor(json_object[0].id_bigint);
+            }
         } else {
             if ( in_orig_meeting_id ) {
                 BMLT_Admin_StartFader('bmlt_admin_fader_meeting_editor_fail_div', this.m_failure_fade_duration);
