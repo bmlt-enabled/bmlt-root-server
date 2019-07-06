@@ -413,7 +413,7 @@ class c_comdef_admin_main_console
              */
             $ret .= '</script>'.(defined('__DEBUG_MODE__') ? "\n" : '');
             $ret .= '<script type="text/javascript" src="'.(((dirname($_SERVER['PHP_SELF']) != '/') && (dirname($_SERVER['PHP_SELF']) != '\\')) ? dirname($_SERVER['PHP_SELF']) : '').'/local_server/server_admin/json2.js"></script>'.(defined('__DEBUG_MODE__') ? "\n" : '');
-            $ret .= '<script type="text/javascript" src="'.(((dirname($_SERVER['PHP_SELF']) != '/') && (dirname($_SERVER['PHP_SELF']) != '\\')) ? dirname($_SERVER['PHP_SELF']) : '').'/local_server/server_admin/server_admin_javascript.js?v='. time() .'"></script>'.(defined('__DEBUG_MODE__') ? "\n" : '');
+            $ret .= '<script type="text/javascript" src="'.(((dirname($_SERVER['PHP_SELF']) != '/') && (dirname($_SERVER['PHP_SELF']) != '\\')) ? dirname($_SERVER['PHP_SELF']) : '').'/local_server/server_admin/server_admin_javascript.js"></script>'.(defined('__DEBUG_MODE__') ? "\n" : '');
             $ret .= '<noscript class="main_noscript">'.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['noscript']).'</noscript>'.(defined('__DEBUG_MODE__') ? "\n" : '');
             // Belt and suspenders. Just make sure the user is legit.
         if (($this->my_user instanceof c_comdef_user) && ($this->my_user->GetUserLevel() != _USER_LEVEL_DISABLED)) {
@@ -1577,6 +1577,18 @@ class c_comdef_admin_main_console
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right"><input type="checkbox" id="bmlt_admin_meeting_template_published_checkbox" /></span>';
                     $ret .= '<label class="bmlt_admin_med_label_left" for="bmlt_admin_meeting_template_published_checkbox">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_is_published']).'</label>';
+                    $ret .= '<div class="clear_both"></div>';
+                $ret .= '</div>';
+
+                $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                    $ret .= '<span class="bmlt_admin_med_label_right">Unpublished Reason:</span>';
+                    $ret .= '<span class="bmlt_admin_value_left">';
+                        $ret .= '<select id="bmlt_admin_single_meeting_editor_template_unpublished_reason_select">';
+                            $ret .= '<option value="">Unspecified</option>';
+                            $ret .= '<option value="Holiday">Holiday</option>';
+                            $ret .= '<option value="Weather">Weather</option>';
+                        $ret .= '</select>';
+                    $ret .= '</span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
             }

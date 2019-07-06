@@ -2070,6 +2070,7 @@ function BMLT_Server_Admin()
         this.setUpOtherTab(meeting_object);
         
         this.setPublished(meeting_object);
+        this.setUnpublishedReason(meeting_object);
         this.handleNewAddressInfo(meeting_id);
         this.setFormatCheckboxHandlers(meeting_object);
     };
@@ -2277,6 +2278,21 @@ function BMLT_Server_Admin()
         published_checkbox.onclick = function () {
             admin_handler_object.reactToPublishedCheck(meeting_id); };
     };
+
+    /************************************************************************************//**
+     *   \brief
+     ****************************************************************************************/
+    this.setUnpublishedReason = function (in_meeting_object) {
+        var meeting_id = in_meeting_object.id_bigint;
+
+        var unpublishedReasonSelect = document.getElementById('bmlt_admin_single_meeting_editor_' + meeting_id + '_unpublished_reason_select');
+        unpublishedReasonSelect.value = in_meeting_object.unpublished_reason ? in_meeting_object.unpublished_reason : "";
+
+        this.reactToUnpublishReasonSelect(meeting_id);
+
+        unpublishedReasonSelect.onchange = function () {
+            admin_handler_object.reactToUnpublishReasonSelect(meeting_id); };
+    };
     
     /************************************************************************************//**
     *   \brief
@@ -2466,9 +2482,31 @@ function BMLT_Server_Admin()
         var the_meeting_object = editor_object.meeting_object;
         
         the_meeting_object.published = published_checkbox.checked ? '1' : '0';
+
+        var unpublishedReasonSelect = document.getElementById('bmlt_admin_single_meeting_editor_' + in_meeting_id + '_unpublished_reason_select');
+        var mainUnpublishedDiv = unpublishedReasonSelect.parentNode.parentNode;
+        if (published_checkbox.checked) {
+            mainUnpublishedDiv.className += ' item_hidden';
+            the_meeting_object.unpublished_reason = "";
+        } else {
+            mainUnpublishedDiv.className = mainUnpublishedDiv.className.replace(" item_hidden", "");
+            the_meeting_object.unpublished_reason = unpublishedReasonSelect.value;
+        }
+
         this.validateMeetingEditorButton(in_meeting_id);
     };
-    
+
+    /************************************************************************************//**
+     *   \brief
+     ****************************************************************************************/
+    this.reactToUnpublishReasonSelect = function (in_meeting_id) {
+        var editor_object = document.getElementById('bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div');
+        var the_meeting_object = editor_object.meeting_object;
+        var unpublishedReasonSelect = document.getElementById('bmlt_admin_single_meeting_editor_' + in_meeting_id + '_unpublished_reason_select');
+        the_meeting_object.unpublished_reason = unpublishedReasonSelect.value;
+        this.validateMeetingEditorButton(in_meeting_id);
+    };
+
     /************************************************************************************//**
     *   \brief
     ****************************************************************************************/
