@@ -80,6 +80,7 @@ $comdef_server_admin_strings = array (
     'meeting_editor_screen_match_ll_button'                 =>  'Indstil længdegrad og breddegrad til adresse',
     'meeting_editor_screen_default_text_prompt'             =>  'Indtast noget tekst eller et nummer',
     'meeting_is_published'                                  =>  'Møde er offentliggjort',
+    'meeting_unpublished_note'                              =>  'Note: Unpublishing a meeting indicates a temporary closure. If this meeting has closed permanently, please delete it.',
     'meeting_editor_screen_meeting_name_label'              =>  'Møde navn:',
     'meeting_editor_screen_meeting_name_prompt'             =>  'Indtast et mødenavn',
     'meeting_editor_screen_meeting_weekday_label'           =>  'Ugedag:',

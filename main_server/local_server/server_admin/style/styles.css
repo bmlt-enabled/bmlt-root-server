@@ -1174,6 +1174,18 @@ div.bmlt_admin_logout_bar a:active
     background-color:#009;
 }
 
+span.bmlt_admin_unpublished_note_span
+{
+    float:left;
+    display:block;
+    text-align:left;
+    padding-left:0.5em;
+    font-style:italic;
+    font-weight:normal;
+    font-size:small;
+    color:#009;
+}
+
 span.bmlt_admin_visibility_advice_span
 {
     float:left;

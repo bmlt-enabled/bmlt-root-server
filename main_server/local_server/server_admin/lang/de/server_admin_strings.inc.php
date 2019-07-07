@@ -78,6 +78,7 @@
                                             'meeting_editor_screen_match_ll_button'                 =>  'Setze Koordinaten der Karte auf diese Adresse',
                                             'meeting_editor_screen_default_text_prompt'             =>  'Trage einen Text oder eine Zahl ein',
                                             'meeting_is_published'                                  =>  'Meeting is veröffentlicht',
+                                            'meeting_unpublished_note'                              =>  'Note: Unpublishing a meeting indicates a temporary closure. If this meeting has closed permanently, please delete it.',
                                             'meeting_editor_screen_meeting_name_label'              =>  'Meetings-Name:',
                                             'meeting_editor_screen_meeting_name_prompt'             =>  'Trage einen Meetings-Namen ein',
                                             'meeting_editor_screen_meeting_weekday_label'           =>  'Wochentag:',
