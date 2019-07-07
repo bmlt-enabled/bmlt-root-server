@@ -1295,7 +1295,8 @@ class c_comdef_admin_xml_handler
                                     $data =& $meeting_obj->GetMeetingData();
                                     $data[$meeting_field] = $newVals;
                                     break;
-                                
+
+                                case 'unpublished_reason':
                                 case 'worldid_mixed':
                                     $old_value = $meeting_obj->GetMeetingDataValue($meeting_field);
                                     $data =& $meeting_obj->GetMeetingData();

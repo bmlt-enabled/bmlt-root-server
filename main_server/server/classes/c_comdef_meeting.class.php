@@ -702,6 +702,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                 case 'email_contact':
                 case 'distance_in_km':
                 case 'distance_in_miles':
+                case 'unpublished_reason':
                 case 'published':
                     break;
                 

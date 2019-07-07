@@ -558,6 +558,7 @@ class c_comdef_meetings implements i_comdef_has_parent
                             case 'longitude':
                             case 'latitude':
                             case 'published':
+                            case 'unpublished_reason':
                             case 'email_contact':
                                 break;
                             
