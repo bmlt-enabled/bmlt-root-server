@@ -416,7 +416,7 @@ function parse_redirect(
                 $result2 = array ('"key","description"');
             
                 foreach ($keys as $key) {
-                    if (($key['visibility'] != 1) && ($key['key'] != 'published') && ($key['key'] != 'shared_group_id_bigint')) {
+                    if (($key['visibility'] != 1) && ($key['key'] != 'published') && ($key['key'] != 'unpublished_reason') && ($key['key'] != 'shared_group_id_bigint')) {
                         $result2[] = '"'.$key['key'].'","'.$key['field_prompt'].'"';
                     }
                 }

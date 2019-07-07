@@ -874,6 +874,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         $ret['longitude']['key'] = 'longitude';
         $ret['latitude']['key'] = 'latitude';
         $ret['published']['key'] = 'published';
+        $ret['unpublished_reason']['key'] = 'unpublished_reason';
         $ret['email_contact']['key'] = 'email_contact';
         
         // Everything gets a lang_enum (determined by global server setting).
