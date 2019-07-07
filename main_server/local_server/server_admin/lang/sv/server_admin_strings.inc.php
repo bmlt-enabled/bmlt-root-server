@@ -79,6 +79,7 @@
                                             'meeting_editor_screen_match_ll_button'                 =>  'Ange longitude och latitud för adressen',
                                             'meeting_editor_screen_default_text_prompt'             =>  'Fyll i text eller nummer',
                                             'meeting_is_published'                                  =>  'Mötet är nu publicerat',
+                                            'meeting_unpublished_note'                              =>  'Note: Unpublishing a meeting indicates a temporary closure. If this meeting has closed permanently, please delete it.',
                                             'meeting_editor_screen_meeting_name_label'              =>  'Mötets namn:',
                                             'meeting_editor_screen_meeting_name_prompt'             =>  'Fyll i mötets namn',
                                             'meeting_editor_screen_meeting_weekday_label'           =>  'Veckodag:',

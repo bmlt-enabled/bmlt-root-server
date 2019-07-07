@@ -60,6 +60,7 @@ CHANGELIST
 ***Version 2.13.3* ** *- TBD*
 
 - When saving a change to a meeting, the edit screen for that meeting is no longer closed. This makes it easier for the user to keep their place in the user interface.
+- When the published checkbox is unchecked in the meeting editor UI, a note is displayed: "Unpublishing a meeting indicates a temporary closure. If this meeting has closed permanently, please delete it."
 
 ***Version 2.13.2* ** *- July 4, 2019*
 

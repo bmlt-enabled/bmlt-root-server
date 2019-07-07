@@ -1579,6 +1579,12 @@ class c_comdef_admin_main_console
                     $ret .= '<label class="bmlt_admin_med_label_left" for="bmlt_admin_meeting_template_published_checkbox">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_is_published']).'</label>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
+
+                $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both" id="bmlt_admin_meeting_template_unpublished_note_div">';
+                    $ret .= '<span class="bmlt_admin_med_label_right">&nbsp;</span>';
+                    $ret .= '<span class="bmlt_admin_value_left bmlt_admin_unpublished_note_span">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_unpublished_note']).'</span>';
+                    $ret .= '<div class="clear_both"></div>';
+                $ret .= '</div>';
             }
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both hide_in_new_meeting">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_id_label']).'</span>';

@@ -78,6 +78,7 @@
                                             'meeting_editor_screen_match_ll_button'                 =>  'Imposta longitudine e latitudine sull\'indirizzo',//'Set Longitude and Latitude to Address',
                                             'meeting_editor_screen_default_text_prompt'             =>  'Inserisci del testo o un numero',//'Enter Some Text or a Number',
                                             'meeting_is_published'                                  =>  'La riunione è pubblicata',//'Meeting is Published',
+                                            'meeting_unpublished_note'                              =>  'Note: Unpublishing a meeting indicates a temporary closure. If this meeting has closed permanently, please delete it.',
                                             'meeting_editor_screen_meeting_name_label'              =>  'Nome della riunione:',//'Meeting Name:',
                                             'meeting_editor_screen_meeting_name_prompt'             =>  'Inserisci un nome per la riunione',//'Enter A Meeting Name',
                                             'meeting_editor_screen_meeting_weekday_label'           =>  'Giorno della settimana:',//'Weekday:',

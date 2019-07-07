@@ -2464,8 +2464,14 @@ function BMLT_Server_Admin()
         
         var editor_object = document.getElementById('bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div');
         var the_meeting_object = editor_object.meeting_object;
-        
         the_meeting_object.published = published_checkbox.checked ? '1' : '0';
+
+        var unpublishedNoteDiv = document.getElementById('bmlt_admin_meeting_' + in_meeting_id + '_unpublished_note_div');
+        if (published_checkbox.checked) {
+            unpublishedNoteDiv.className += ' item_hidden';
+        } else {
+            unpublishedNoteDiv.className = unpublishedNoteDiv.className.replace(" item_hidden", "");
+        }
         this.validateMeetingEditorButton(in_meeting_id);
     };
     
