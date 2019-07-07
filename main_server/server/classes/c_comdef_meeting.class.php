@@ -132,6 +132,11 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         } else {
             $main_table_values['published'] = 0;
         }
+        if (isset($this->_my_meeting_data['unpublished_reason']) && !$main_table_values['published']) {
+            $main_table_values['unpublished_reason'] = $this->_my_meeting_data['unpublished_reason'];
+        } else {
+            $main_table_values['unpublished_reason'] = "";
+        }
         
         // Now, we "unwind" the formats. Remember that we made the formats into an array, and replaced the values with objects, so we just use the keys here.
         $main_table_values['formats'] = "";
@@ -149,6 +154,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         foreach ($this->_my_meeting_data as $key => $value2) {
             // We ignore the values in the main table.
             switch ($key) {
+                case 'unpublished_reason':
                 case 'published':
                 case 'id_bigint':
                 case 'worldid_mixed':
@@ -669,6 +675,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         }
         
         $ret['published'] = 'published';    // The last field is always the published flag.
+        $ret['unpublished_reason'] = 'unpublished_reason';
         return $ret;
     }
     

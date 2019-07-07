@@ -466,8 +466,8 @@ function DisplaySearchResultsCSV(
                                                 case 'lang_enum':
                                                 case 'longitude':
                                                 case 'latitude':
-                                                case 'latitude':
                                                 case 'published':
+                                                case 'unpublished_reason':
                                                 case 'email_contact':
                                                 case 'meeting_name':
                                                 case 'location_text':

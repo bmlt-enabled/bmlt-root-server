@@ -1219,7 +1219,7 @@ function BMLT_Server_Admin()
             
                         this.m_editing_window_open = null;
                     };
-                        
+
                     display_parent.meeting_editor_object = document.createElement('div');   // Create the container element.
                     display_parent.meeting_editor_object.className = 'bmlt_admin_meeting_search_results_editor_container_div';
                     display_parent.appendChild(display_parent.meeting_editor_object);
@@ -2286,7 +2286,13 @@ function BMLT_Server_Admin()
         var meeting_id = in_meeting_object.id_bigint;
 
         var unpublishedReasonSelect = document.getElementById('bmlt_admin_single_meeting_editor_' + meeting_id + '_unpublished_reason_select');
-        unpublishedReasonSelect.value = in_meeting_object.unpublished_reason ? in_meeting_object.unpublished_reason : "";
+        var unpublishedReason = in_meeting_object.unpublished_reason ? in_meeting_object.unpublished_reason : "";
+        for (var i = 0; i < unpublishedReasonSelect.options.length; i++) {
+            if (unpublishedReasonSelect.options[i].value === unpublishedReason) {
+                unpublishedReasonSelect.options[i].selected = true;
+                break;
+            }
+        }
 
         this.reactToUnpublishReasonSelect(meeting_id);
 
@@ -2487,10 +2493,8 @@ function BMLT_Server_Admin()
         var mainUnpublishedDiv = unpublishedReasonSelect.parentNode.parentNode;
         if (published_checkbox.checked) {
             mainUnpublishedDiv.className += ' item_hidden';
-            the_meeting_object.unpublished_reason = "";
         } else {
             mainUnpublishedDiv.className = mainUnpublishedDiv.className.replace(" item_hidden", "");
-            the_meeting_object.unpublished_reason = unpublishedReasonSelect.value;
         }
 
         this.validateMeetingEditorButton(in_meeting_id);

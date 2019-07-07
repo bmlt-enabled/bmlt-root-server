@@ -1062,6 +1062,7 @@ class c_comdef_admin_ajax_handler
                             case 'lang_enum':
                             case 'duration_time':
                             case 'formats':
+                            case 'unpublished_reason':
                                 $data[$key] = $value;
                                 break;
                             
