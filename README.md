@@ -60,6 +60,7 @@ CHANGELIST
 ***Version 2.13.3* ** *- TBD*
 
 - When saving a change to a meeting, the edit screen for that meeting is no longer closed. This makes it easier for the user to keep their place in the user interface.
+- Added an 'Unpublished Reason' field to the meeting editor UI to allow users to communicate why a meeting is unpublished. This will help NAWS reconcile BMLT lists with their database.
 
 ***Version 2.13.2* ** *- July 4, 2019*
 
