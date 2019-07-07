@@ -167,6 +167,14 @@ function DB_Connect_and_Upgrade()
                 }
             } catch (Exception $e) {
             }
+        }),
+        array(2, function () {
+            $dbPrefix = $GLOBALS['dbPrefix'];
+            $table = "$dbPrefix" . "_comdef_meetings_main";
+            $sql = "ALTER TABLE `$table` ADD `unpublished_reason` VARCHAR(20) NOT NULL DEFAULT '' AFTER `published`";
+            c_comdef_dbsingleton::preparedExec($sql);
+            $sql = "ALTER TABLE `$table` ADD KEY `unpublished_reason` (`unpublished_reason`)";
+            c_comdef_dbsingleton::preparedExec($sql);
         })
     );
 

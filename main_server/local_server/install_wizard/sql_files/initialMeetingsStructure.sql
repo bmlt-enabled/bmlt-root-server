@@ -11,6 +11,7 @@ CREATE TABLE `%%PREFIX%%_comdef_meetings_main` (
   `longitude` double default NULL,
   `latitude` double default NULL,
   `published` tinyint(4) NOT NULL default '0',
+  `unpublished_reason` varchar(20) NOT NULL DEFAULT '',
   `email_contact` varchar(255) default NULL,
   PRIMARY KEY  (`id_bigint`),
   KEY `weekday_tinyint` (`weekday_tinyint`),
@@ -24,6 +25,7 @@ CREATE TABLE `%%PREFIX%%_comdef_meetings_main` (
   KEY `longitude` (`longitude`),
   KEY `latitude` (`latitude`),
   KEY `published` (`published`),
+  KEY `unpublished_reason` (`unpublished_reason`),
   KEY `email_contact` (`email_contact`)
 ) DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 CREATE TABLE `%%PREFIX%%_comdef_meetings_data` (
