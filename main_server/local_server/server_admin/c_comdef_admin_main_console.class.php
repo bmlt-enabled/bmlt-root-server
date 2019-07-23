@@ -318,6 +318,7 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_style_dir = \''.self::js_html((((dirname($_SERVER['PHP_SELF']) != '/') && (dirname($_SERVER['PHP_SELF']) != '\\')) ? dirname($_SERVER['PHP_SELF']) : '').'/local_server/server_admin/style').'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_Create_new_meeting_button_name = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['meeting_create_button_name']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_Save_meeting_button_name = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['meeting_save_buttonName']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
+                $ret .= 'var g_default_meeting_published = \''.self::js_html($this->my_localized_strings['default_meeting_published']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_default_meeting_weekday = '.intVal($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_default_weekday']).';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_default_meeting_start_time = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_default_start_time']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_default_meeting_duration = \''.self::js_html($this->my_localized_strings['default_duration_time']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
