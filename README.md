@@ -57,6 +57,11 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.13.4* ** *- UNRELEASED*
+
+- Meetings are now published by default when creating a new meeting. To change this back to default to unpublished you would need to add the following to your `auto-config.inc.php`.
+    - `$default_meeting_published = false;`
+
 ***Version 2.13.3* ** *- July 7, 2019*
 
 - When saving a change to a meeting, the edit screen for that meeting is no longer closed. This makes it easier for the user to keep their place in the user interface.

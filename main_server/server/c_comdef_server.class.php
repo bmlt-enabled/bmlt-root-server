@@ -2682,6 +2682,7 @@ class c_comdef_server
                 global  $comdef_global_more_details_address,    ///< This is a format string for the way the address line is displayed in the "more details" screen.
                     $comdef_global_list_address;            ///< The same, but for the list.
 
+                c_comdef_server::$server_local_strings['default_meeting_published'] = isset($default_meeting_published) ? $default_meeting_published : true;
                 c_comdef_server::$server_local_strings['week_starts_on'] = (isset($week_starts_on) && (-1 < $week_starts_on) && (7 > $week_starts_on)) ? $week_starts_on : 0;
                 c_comdef_server::$server_local_strings['name'] = file_get_contents(dirname(dirname(__FILE__)).'/local_server/server_admin/lang/'.$lang_enum.'/name.txt');
                 c_comdef_server::$server_local_strings['enum'] = $lang_enum;

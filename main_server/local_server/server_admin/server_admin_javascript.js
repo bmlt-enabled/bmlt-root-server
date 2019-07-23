@@ -617,7 +617,7 @@ function BMLT_Server_Admin()
 
             ret.weekday_tinyint = g_default_meeting_weekday.toString();
             ret.id_bigint = 0;  // All new meetings are ID 0.
-            ret.published = '0';
+            ret.published = g_default_meeting_published;
             ret.service_body_bigint = g_service_bodies_array[0][0].toString();
             ret.formats = '';
             ret.format_shared_id_list = '';
