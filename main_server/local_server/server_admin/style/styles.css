@@ -1270,7 +1270,7 @@ div.server_version_display_login
 {
     position:absolute;
     right:8px;
-    bottom:4px;
+    top:4px;
     color:white;
     font-weight:normal;
     font-style:italic;
