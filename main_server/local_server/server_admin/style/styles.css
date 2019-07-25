@@ -1266,6 +1266,16 @@ div.server_version_display_div
     font-style:italic;
 }
 
+div.server_version_display_login
+{
+    position:absolute;
+    right:8px;
+    top:4px;
+    color:white;
+    font-weight:normal;
+    font-style:italic;
+}
+
 p.service_body_can_be_edited
 {
     font-weight:bold;
