@@ -57,7 +57,7 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.13.4* ** *- UNRELEASED*
+***Version 2.13.4* ** *- August 5, 2019*
 
 - New meetings are now published by default. This is configurable by adding `$default_meeting_published = false;` to `auto-config.inc.php`.
 - Added server version to login screen.
