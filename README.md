@@ -59,9 +59,9 @@ CHANGELIST
 ----------
 ***Version 2.13.4* ** *- UNRELEASED*
 
-- Meetings are now published by default when creating a new meeting. To change this back to default to unpublished you would need to add the following to your `auto-config.inc.php`.
-    - `$default_meeting_published = false;`
+- New meetings are now unplibhsed by default. This is configurable by adding`$default_meeting_published = false;` to `auto-config.inc.php`.
 - Added server version to login screen.
+- Fixed a bug that caused changes to meeting start times and durations to not show up in the change history.
 
 ***Version 2.13.3* ** *- July 7, 2019*
 
