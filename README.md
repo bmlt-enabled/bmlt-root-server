@@ -59,7 +59,7 @@ CHANGELIST
 ----------
 ***Version 2.13.4* ** *- UNRELEASED*
 
-- New meetings are now unplibhsed by default. This is configurable by adding`$default_meeting_published = false;` to `auto-config.inc.php`.
+- New meetings are now published by default. This is configurable by adding`$default_meeting_published = false;` to `auto-config.inc.php`.
 - Added server version to login screen.
 - Fixed a bug that caused changes to meeting start times and durations to not show up in the change history.
 
