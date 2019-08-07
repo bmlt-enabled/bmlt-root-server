@@ -114,7 +114,7 @@ jobs:
           target_branch: gh-pages
           github_token: $GITHUB_API_KEY
           on:
-            branch: unstable
+            branch: master
             
 notifications:
   slack:
