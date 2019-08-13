@@ -297,6 +297,8 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                     }
                 }
             }
+
+            $response['importStatus'] = true;
         } catch (Exception $e) {
             echo array2json($response);
             ob_end_flush();
