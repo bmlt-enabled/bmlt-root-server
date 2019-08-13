@@ -204,28 +204,11 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
     // If a NAWS CSV is provided to prime the database, import it
     if (!empty($_FILES) && isset($_FILES['thefile'])) {
         try {
-            // Create the service bodies
+            // TODO Create the service bodies
 
             // Create the meetings
-            $mainTableKeys = array(
-                'id_bigint'              => 1,
-                'worldid_mixed'          => 1,
-                'shared_group_id_bigint' => 1,
-                'service_body_bigint'    => 1,
-                'weekday_tinyint'        => 1,
-                'start_time'             => 1,
-                'duration_time'          => 1,
-                'formats'                => 1,
-                'lang_enum'              => 1,
-                'longitude'              => 1,
-                'latitude'               => 1,
-                'published'              => 1,
-                'email_contact'          => 1
-            );
-
-            $nawsDays = array('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday' );
-
             require_once(dirname(__FILE__).'../../server/c_comdef_server.class.php');
+            require_once(dirname(__FILE__).'../../server/classes/c_comdef_meeting.class.php');
             $server = c_comdef_server::MakeServer();
             if (!($server instanceof c_comdef_server)) {
                 $response['importReport'] = "Couldn't instantiate server object";
@@ -236,7 +219,6 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
             $regionBias = $localStrings['region_bias'];
 
             require_once(dirname(__DIR__).'/../../vendor/autoload.php');
-
             $file = $_FILES['thefile'];
             try {
                 $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($file['tmp_name']);
@@ -247,6 +229,7 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                 throw new Exception();
             }
 
+            $nawsDays = array('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday');
             for ($i = 1; $i <= count($rows); $i++) {
                 $row = $rows[$i];
                 if ($i == 1) {
@@ -268,45 +251,32 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                 $meeting = array();
                 foreach ($columnNames as $columnIndex => $columnName) {
                     $value = $row[$columnIndex];
-                    switch ($value) {
+                    switch ($columnName) {
                         case 'Committee':
-                            $meeting['worldid_mixed'] = $value;
                             break;
                         case 'CommitteeName':
-                            $meeting['meeting_name'] = $value;
                             break;
                         case 'AreaRegion':
                             break;
                         case 'Day':
-                            $meeting['weekday_tinyint'] = array_search(strtolower($value), $nawsDays);
                             break;
                         case 'Time':
-                            // TODO Probably needs some converting
-                            $meeting['start_time'] = $value;
                             break;
                         case 'Place':
-                            $meeting['location_text'] = $value;
                             break;
                         case 'Address':
-                            $meeting['location_street'] = $value;
                             break;
                         case 'City':
-                            $meeting['location_municipality'] = $value;
                             break;
                         case 'LocBorough':
-                            $meeting['location_municipality'] = $value;
                             break;
                         case 'State':
-                            $meeting['location_province'] = $value;
                             break;
                         case 'Zip':
-                            $meeting['location_postal_code_1'] = $value;
                             break;
                         case 'Country':
-                            $meeting['location_nation'] = $value;
                             break;
                         case 'Directions':
-                            $meeting['location_info'] = $value;
                             break;
                         case 'Institutional':
                         case 'Closed':
@@ -316,22 +286,16 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                         case 'Format3':
                         case 'Format4':
                         case 'Format5':
-                            // TODO do something with formats
                             break;
                         case 'Longitude':
-                            $meeting['latitude'] = $value;
                             break;
                         case 'Latitude':
-                            $meeting['longitude'] = $value;
                             break;
                         case 'unpublished':
-                            $meeting['published'] = $value == '1' ? 0 : 1;
                             break;
                     }
-
                 }
             }
-
         } catch (Exception $e) {
             echo array2json($response);
             ob_end_flush();
