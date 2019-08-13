@@ -239,6 +239,7 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                     foreach ($colunNames as $columnIndex => $columnName) {
                         if ($columnName == 'Delete') {
                             $deleteIndex = $columnIndex;
+                            break;
                         }
                     }
                     continue;
