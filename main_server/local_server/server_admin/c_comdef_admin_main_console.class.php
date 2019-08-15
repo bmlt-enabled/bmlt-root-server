@@ -1,4 +1,4 @@
-$this->my_localized_strings['comdef_server_admin_strings']['world_fo<?php
+<?php
 /*
     This file is part of the Basic Meeting List Toolbox (BMLT).
 
