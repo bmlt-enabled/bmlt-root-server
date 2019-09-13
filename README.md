@@ -57,6 +57,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.13.6* ** *- UNRELEASED*
+
+- Changed JSONP mime type to `application/javascript`
+
 ***Version 2.13.5* ** *- August 15, 2019*
 
 - Fix for NAWS format types not saving correctly in the root server administration.

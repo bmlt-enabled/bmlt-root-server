@@ -44,7 +44,7 @@ try {
                 ob_start();
             }
         } else {
-            header('Content-Type:text/javascript; charset=UTF-8');
+            header('Content-Type:application/javascript; charset=UTF-8');
             ob_start();
         }
         
