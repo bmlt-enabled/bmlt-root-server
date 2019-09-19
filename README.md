@@ -60,6 +60,7 @@ CHANGELIST
 ***Version 2.13.6* ** *- UNRELEASED*
 
 - Changed JSONP mime type to `application/javascript`
+- Rename "Get A NAWS Format Dump" to "Get A NAWS Format Export" in the semantic workshop
 
 ***Version 2.13.5* ** *- August 15, 2019*
 
