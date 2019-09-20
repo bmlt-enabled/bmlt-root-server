@@ -2852,10 +2852,12 @@ function BMLT_Server_Admin()
             var format_checkbox = document.getElementById('bmlt_admin_meeting_' + in_meeting_id + '_format_' + main_formats[c].id + '_checkbox');
             
             if ( format_checkbox && format_checkbox.checked ) {
-                format_array[format_array.length] = format_checkbox.value;
+                format_array[format_array.length] = parseInt(format_checkbox.value);
             };
         };
-        
+
+        format_array.sort(function(a,b) {return a-b;});
+
         document.getElementById('bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div').meeting_object.format_shared_id_list = format_array.join(',');
         this.validateMeetingEditorButton(in_meeting_id);
     };
