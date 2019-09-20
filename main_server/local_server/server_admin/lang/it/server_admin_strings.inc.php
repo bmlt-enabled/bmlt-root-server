@@ -339,7 +339,10 @@
                                                                                                             'VAR'   =>  'Formato variabile',//'VAR'//'Format Varies',
                                                                                                             'D'     =>  'Donne',//'W'//'Women',
                                                                                                             'GIO'   =>  'Giovani',//'Y'//'Young People',
-                                                                                                            'LAL'   =>  'Lingue alternate'//'LANG'//'Alternate Language'
+                                                                                                            'LAL'   =>  'Lingue alternate', //'LANG'//'Alternate Language'
+                                                                                                            'GP'    =>  'Guiding Principles', // TODO translate
+                                                                                                            'NC'    =>  'No Children', // TODO translate
+                                                                                                            'CH'    =>  'Closed Holidays' // TODO translate
                                                                                                             ),
                                             'format_type_prompt'                                    =>  'Format Type:',    // TODO: Translate
                                             'format_type_codes'                                     =>  array (

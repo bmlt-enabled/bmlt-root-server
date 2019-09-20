@@ -342,7 +342,10 @@
                                                                                                             'VAR'   =>  'Formato Varía',
                                                                                                             'W'     =>  'Mujeres',
                                                                                                             'Y'     =>  'Jovenes',
-                                                                                                            'LANG'  =>  'Idioma alternativo'
+                                                                                                            'LANG'  =>  'Idioma alternativo',
+                                                                                                            'GP'    =>  'Guiding Principles', // TODO translate
+                                                                                                            'NC'    =>  'No Children', // TODO translate
+                                                                                                            'CH'    =>  'Closed Holidays' // TODO translate
                                                                                                             ),
                                             'format_type_prompt'                                     =>  'Format Type:',
                                             'format_type_codes'                                      =>  array (

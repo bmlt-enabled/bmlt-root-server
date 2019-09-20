@@ -59,9 +59,11 @@ CHANGELIST
 ----------
 ***Version 2.13.6* ** *- UNRELEASED*
 
-- Changed JSONP mime type to `application/javascript`
-- Rename "Get A NAWS Format Dump" to "Get A NAWS Format Export" in the semantic workshop
-- Fixed an issue where the admin user interface could falsely think a meeting had been edited
+- Changed JSONP mime type to `application/javascript`.
+- Rename "Get A NAWS Format Dump" to "Get A NAWS Format Export" in the semantic workshop.
+- Fixed an issue where the admin user interface could falsely think a meeting had been edited.
+
+- Added new NAWS formats CH (Closed Holidays), GP (Guiding Principles) and NC (No Children).
 
 ***Version 2.13.5* ** *- August 15, 2019*
 
