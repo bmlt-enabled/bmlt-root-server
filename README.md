@@ -62,6 +62,7 @@ CHANGELIST
 - Changed JSONP mime type to `application/javascript`
 - Rename "Get A NAWS Format Dump" to "Get A NAWS Format Export" in the semantic workshop
 - Fixed an issue where the admin user interface could falsely think a meeting had been edited
+- Place name_strings from unmapped formats in the Room field of NAWS Exports
 
 ***Version 2.13.5* ** *- August 15, 2019*
 
