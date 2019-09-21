@@ -639,7 +639,7 @@ function ReturnNAWSFormatCSV(
                     }
                     array_push($line, $value);
                 }
-                    
+
                 // We don't send unpublished meetings unless they have a World ID.
                 if (is_array($line)
                     &&  count($line)
@@ -686,7 +686,7 @@ function ReturnNAWSDeletedMeetings(
     if ($changes instanceof c_comdef_changes) {
         $ret = array();
         $c_array = $changes->GetChangesObjects();
-        
+
         if (is_array($c_array) && count($c_array)) {
             foreach ($c_array as &$change) {
                 $b_obj = $change->GetBeforeObject();
@@ -1107,13 +1107,13 @@ function BMLT_FuncNAWSReturnNonNawsFormats(
 
         if (is_array($formats) && count($formats)) {
             foreach ($formats as $format) {
-                if (!$format->GetWorldID()) {
+                if ($format != null && !$format->GetWorldID()) {
                     $ret .= $format->GetLocalName();
-                    $ret .= '","';
+                    $ret .= ',';
                 }
             }
 
-            $ret = rtrim($ret, '","');
+            $ret = rtrim($ret, ',');
         }
     }
 
