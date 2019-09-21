@@ -387,7 +387,7 @@ class c_comdef_admin_main_console
             $top_elm = array_shift($this->my_localized_strings['comdef_server_admin_strings']['world_format_codes']);
             // Then we can sort
             asort($this->my_localized_strings['comdef_server_admin_strings']['world_format_codes']);
-            // and now we unshift it too put it back on the top element.
+            // and now we unshift it to put it back as the top element.
             array_unshift($this->my_localized_strings['comdef_server_admin_strings']['world_format_codes'], $top_elm);
         foreach ($this->my_localized_strings['comdef_server_admin_strings']['world_format_codes'] as $key => $value) {
             if (!$n_first) {
