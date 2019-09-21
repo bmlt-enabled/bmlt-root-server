@@ -63,6 +63,9 @@ CHANGELIST
 - Rename "Get A NAWS Format Dump" to "Get A NAWS Format Export" in the semantic workshop
 - Fixed an issue where the admin user interface could falsely think a meeting had been edited
 
+
+- Fix for NAWS format drop down not sorting correctly.
+
 ***Version 2.13.5* ** *- August 15, 2019*
 
 - Fix for NAWS format types not saving correctly in the root server administration.

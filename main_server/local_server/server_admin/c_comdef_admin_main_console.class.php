@@ -381,7 +381,9 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_naws_popup_prompt = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['world_format_codes_prompt']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= "var g_naws_values = [";
                     $n_first = true;
-            ksort($this->my_localized_strings['comdef_server_admin_strings']['world_format_codes']);
+            $top_elm = array_shift($this->my_localized_strings['comdef_server_admin_strings']['world_format_codes']);
+            asort($this->my_localized_strings['comdef_server_admin_strings']['world_format_codes']);
+            array_unshift($this->my_localized_strings['comdef_server_admin_strings']['world_format_codes'], $top_elm);
         foreach ($this->my_localized_strings['comdef_server_admin_strings']['world_format_codes'] as $key => $value) {
             if (!$n_first) {
                 $ret .= ','.(defined('__DEBUG_MODE__') ? "\n" : '');
