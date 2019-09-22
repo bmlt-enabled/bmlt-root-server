@@ -578,7 +578,7 @@ function ReturnNAWSFormatCSV(
                                     'ContactCountry'    => null,
                                     'ContactPhone'      => null,
                                     'MeetingID'         => null,
-                                    'Room'              => null,
+                                    'Room'              => 'BMLT_FuncNAWSReturnNonNawsFormats',
                                     'Closed'            => 'BMLT_FuncNAWSReturnOpenOrClosed',
                                     'WheelChr'          => 'BMLT_FuncNAWSReturnWheelchair',
                                     'Day'               => 'BMLT_FuncNAWSReturnWeekday',
@@ -639,7 +639,7 @@ function ReturnNAWSFormatCSV(
                     }
                     array_push($line, $value);
                 }
-                    
+
                 // We don't send unpublished meetings unless they have a World ID.
                 if (is_array($line)
                     &&  count($line)
@@ -686,7 +686,7 @@ function ReturnNAWSDeletedMeetings(
     if ($changes instanceof c_comdef_changes) {
         $ret = array();
         $c_array = $changes->GetChangesObjects();
-        
+
         if (is_array($c_array) && count($c_array)) {
             foreach ($c_array as &$change) {
                 $b_obj = $change->GetBeforeObject();
@@ -1080,6 +1080,43 @@ function BMLT_FuncNAWSReturnMeetingServiceBodyNAWSID(
         }
     }
     
+    return $ret;
+}
+
+/*******************************************************************/
+/**
+\brief Returns a string of all formats that don't map to NAWS codes.
+
+\returns A string The format codes name_string.
+ */
+function BMLT_FuncNAWSReturnNonNawsFormats(
+    $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
+    &$server        ///< A reference to an instance of c_comdef_server
+) {
+
+    $ret = "";
+
+    if ($in_meeting_id instanceof c_comdef_meeting) {
+        $the_meeting = $in_meeting_id;
+    } else {
+        $the_meeting = $server->GetOneMeeting($in_meeting_id);
+    }
+
+    if ($the_meeting instanceof c_comdef_meeting) {
+        $formats = $the_meeting->GetMeetingDataValue('formats');
+
+        if (is_array($formats) && count($formats)) {
+            foreach ($formats as $format) {
+                if ($format != null && !$format->GetWorldID()) {
+                    $ret .= $format->GetLocalName();
+                    $ret .= ',';
+                }
+            }
+
+            $ret = rtrim($ret, ',');
+        }
+    }
+
     return $ret;
 }
 
