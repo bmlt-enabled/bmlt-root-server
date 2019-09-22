@@ -37,6 +37,8 @@ global $g_format_dictionary;    ///< This is a dictionary used to translate form
 bmlt_populate_format_dictionary();
 
 /// If you wish to override this, simply set this up in your /get-config.php file. That will supersede this.
+/// Actually... this block of code never, ever gets hit because the above call to bmlt_populate_format_dictionary
+/// will always set $g_format_dictionary. We should... probably remove it?
 if (!isset($g_format_dictionary) || !is_array($g_format_dictionary) || !count($g_format_dictionary)) {
     /// This is the default set.
     /// The right side is the BMLT side, and the left side is the NAWS code. The left side should not be changed.
