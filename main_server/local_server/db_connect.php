@@ -178,6 +178,13 @@ function DB_Connect_and_Upgrade()
             c_comdef_dbsingleton::preparedExec($updateSql);
             $updateSql = sprintf($updateSqlTemplate, 'LC', '51', 'LC', 'Living Clean', 'FC1');
             c_comdef_dbsingleton::preparedExec($updateSql);
+        }),
+        array(4, function () {
+            $dbPrefix = $GLOBALS['dbPrefix'];
+            $table = "$dbPrefix" . "_comdef_formats";
+            $updateSqlTemplate =  "UPDATE `$table` SET `worldid_mixed` = '%s' WHERE `shared_id_bigint` = %s AND `key_string` = '%s' AND `lang_enum` = 'en' AND `name_string` = '%s' AND `format_type_enum` = '%s'";
+            $updateSql = sprintf($updateSqlTemplate, 'NS', '37', 'NS', 'No Smoking', 'FC1');
+            c_comdef_dbsingleton::preparedExec($updateSql);
         })
     );
     // WHEN ADDING A NEW DATABASE MIGRATION, REMEMBER TO BUMP THE VERSION IN local_server/install_wizard/sql_files/initialDbVersionData.sql
