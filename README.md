@@ -57,6 +57,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.13.7* ** *- UNRELEASED*
+
+- Fix for NAWS No Smoking format not being automatically mapped.
+
 ***Version 2.13.6* ** *- September 22, 2019*
 
 - Changed JSONP mime type to `application/javascript`.
