@@ -343,7 +343,10 @@
                                                                                                             'VAR'   =>  'Format Varies',
                                                                                                             'W'     =>  'Women',
                                                                                                             'Y'     =>  'Young People',
-                                                                                                            'LANG'  =>  'Alternate Language'
+                                                                                                            'LANG'  =>  'Alternate Language',
+                                                                                                            'GP'    =>  'Guiding Principles',
+                                                                                                            'NC'    =>  'No Children',
+                                                                                                            'CH'    =>  'Closed Holidays'
                                                                                                             ),
                                             'format_type_prompt'                                    =>  'Format Type:',
                                             'format_type_codes'                                     =>  array (

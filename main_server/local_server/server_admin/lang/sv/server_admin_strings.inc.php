@@ -343,7 +343,10 @@
                                                                                                                 'VAR'   =>  'Blandad mötesform',
                                                                                                                 'W'     =>  'Kvinnomöte',
                                                                                                                 'Y'     =>  'Ungdomsmöte',
-                                                                                                                'LANG'  =>  'Alternativt språk'
+                                                                                                                'LANG'  =>  'Alternativt språk',
+                                                                                                                'GP'    =>  'Guiding Principles', // TODO translate
+                                                                                                                'NC'    =>  'No Children', // TODO translate
+                                                                                                                'CH'    =>  'Closed Holidays' // TODO translate
                                                                                                             ),
                                             'format_type_prompt'                                    =>  'Format Type:',    // TODO: Translate
                                             'format_type_codes'                                     =>  array (

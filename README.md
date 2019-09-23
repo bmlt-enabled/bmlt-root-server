@@ -65,6 +65,7 @@ CHANGELIST
 - Place name_strings from unmapped formats in the Room field of NAWS Exports
 - Fix for NAWS format drop-down not sorting correctly in the root server administration.
 - Updated to the latest BMLT Satellite Base Class.
+- Added new NAWS formats CH (Closed Holidays), GP (Guiding Principles) and NC (No Children).
 
 ***Version 2.13.5* ** *- August 15, 2019*
 

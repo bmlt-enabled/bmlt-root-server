@@ -3,7 +3,7 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (2, 'BL', NULL, NULL, 'en', 'Bi-Lingual', 'This Meeting can be attended by speakers of English and another language.', 'FC3'),
 (3, 'BT', NULL, 'BT', 'en', 'Basic Text', 'This meeting is focused on discussion of the Basic Text of Narcotics Anonymous.', 'FC1'),
 (4, 'C', NULL, 'CLOSED', 'en', 'Closed', 'This meeting is closed to non-addicts. You should attend only if you believe that you may have a problem with substance abuse.', 'O'),
-(5, 'CH', NULL, NULL, 'en', 'Closed Holidays', 'This meeting gathers in a facility that is usually closed on holidays.', 'FC3'),
+(5, 'CH', NULL, 'CH', 'en', 'Closed Holidays', 'This meeting gathers in a facility that is usually closed on holidays.', 'FC3'),
 (6, 'CL', NULL, 'CAN', 'en', 'Candlelight', 'This meeting is held by candlelight.', 'FC2'),
 (7, 'CS', NULL, '', 'en', 'Children under Supervision', 'Well-behaved, supervised children are welcome.', 'FC3'),
 (8, 'D', NULL, 'DISC', 'en', 'Discussion', 'This meeting invites participation by all attendees.', 'FC1'),
@@ -14,7 +14,7 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (13, 'IW', NULL, 'IW', 'en', 'It Works -How and Why', 'This meeting is focused on discussion of the It Works -How and Why text.', 'FC1'),
 (14, 'JT', NULL, 'JFT', 'en', 'Just for Today', 'This meeting is focused on discussion of the Just For Today text.', 'FC1'),
 (15, 'M', NULL, 'M', 'en', 'Men', 'This meeting is meant to be attended by men only.', 'FC3'),
-(16, 'NC', NULL, NULL, 'en', 'No Children', 'Please do not bring children to this meeting.', 'FC3'),
+(16, 'NC', NULL, 'NC', 'en', 'No Children', 'Please do not bring children to this meeting.', 'FC3'),
 (17, 'O', NULL, 'OPEN', 'en', 'Open', 'This meeting is open to addicts and non-addicts alike. All are welcome.', 'O'),
 (18, 'Pi', NULL, NULL, 'en', 'Pitch', 'This meeting has a format that consists of each person who shares picking the next person.', 'FC1'),
 (19, 'RF', NULL, 'VAR', 'en', 'Rotating Format', 'This meeting has a format that changes for each meeting.', 'FC1'),
@@ -48,7 +48,8 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (48, 'PER', NULL, NULL, 'en', 'Persian', 'Persian speeking meeting', 'FC1'),
 (49, 'L/R', NULL, NULL, 'en', 'Lithuanian/Russian', 'Lithuanian/Russian Speaking Meeting', 'FC1'),
 (50, 'WEB', NULL, NULL, 'en', 'Online Meeting', 'This is a meeting that gathers on the Internet.', 'FC2'),
-(51, 'LC', NULL, 'LC', 'en', 'Living Clean', 'This is a discussion of the NA book Living Clean -The Journey Continues.', NULL),
+(51, 'LC', NULL, 'LC', 'en', 'Living Clean', 'This is a discussion of the NA book Living Clean -The Journey Continues.', 'FC1'),
+(52, 'GP', NULL, 'GP', 'en', 'Guiding Principles', 'This is a discussion of the NA book Guiding Principles - The Spirit of Our Traditions.', 'FC1'),
 (1, 'B', NULL, 'BEG', 'es', 'Para el recién llegado', 'Esta reunión se centra en las necesidades de los nuevos miembros de NA.', 'FC3'),
 (2, 'BL', NULL, NULL, 'es', 'Bilingüe', 'Esta reunión se pueden asistir personas de que hablen inglés y otro idioma.', 'FC3'),
 (3, 'BT', NULL, 'BT', 'es', 'Texto Básico', 'Esta reunión se centra en la discusión del texto básico de Narcóticos Anónimos.', 'FC1'),
@@ -165,4 +166,3 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (45, 'C', NULL, NULL, 'it', 'Concetti di servizio', 'Riunioni basate sulla discussione dei Dodici concetti per il servizio in NA.', 'FC1'),
 (50, 'WEB', NULL, NULL, 'it', 'Riunione online', 'Riunione che si svolge via Internet (es. Skype, Hangouts o altri sistemi tipo chat o IM in generale).', 'FC2'),
 (51, 'VP', NULL, NULL, 'it', 'Vivere puliti', 'Riunioni di discussione sul libro "Vivere puliti - Il viaggio continua".', 'FC1');
-

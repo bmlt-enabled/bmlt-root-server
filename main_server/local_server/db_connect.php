@@ -167,8 +167,20 @@ function DB_Connect_and_Upgrade()
                 }
             } catch (Exception $e) {
             }
+        }),
+        array(3, function () {
+            $dbPrefix = $GLOBALS['dbPrefix'];
+            $table = "$dbPrefix" . "_comdef_formats";
+            $updateSqlTemplate =  "UPDATE `$table` SET `worldid_mixed` = '%s' WHERE `shared_id_bigint` = %s AND `key_string` = '%s' AND `lang_enum` = 'en' AND `name_string` = '%s' AND `format_type_enum` = '%s'";
+            $updateSql = sprintf($updateSqlTemplate, 'CH', '5', 'CH', 'Closed Holidays', 'FC3');
+            c_comdef_dbsingleton::preparedExec($updateSql);
+            $updateSql = sprintf($updateSqlTemplate, 'NC', '16', 'NC', 'No Children', 'FC3');
+            c_comdef_dbsingleton::preparedExec($updateSql);
+            $updateSql = sprintf($updateSqlTemplate, 'LC', '51', 'LC', 'Living Clean', 'FC1');
+            c_comdef_dbsingleton::preparedExec($updateSql);
         })
     );
+    // WHEN ADDING A NEW DATABASE MIGRATION, REMEMBER TO BUMP THE VERSION IN local_server/install_wizard/sql_files/initialDbVersionData.sql
 
     foreach ($dbMigrations as $dbMigration) {
         $version = $dbMigration[0];

@@ -340,7 +340,10 @@
                                                                                                             'VAR'   =>  'Format variatiiert',
                                                                                                             'W'     =>  'Frauen',
                                                                                                             'Y'     =>  'Junge Menschen',
-                                                                                                            'LANG'  =>  'Fremdsprache'
+                                                                                                            'LANG'  =>  'Fremdsprache',
+                                                                                                            'GP'    =>  'Guiding Principles', // TODO translate
+                                                                                                            'NC'    =>  'No Children', // TODO translate
+                                                                                                            'CH'    =>  'Closed Holidays' // TODO translate
                                                                                                             ),
                                             'format_type_prompt'                                     =>  'Format Type:',
                                             'format_type_codes'                                      =>  array (
