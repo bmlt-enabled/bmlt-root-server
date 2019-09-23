@@ -1,23 +1,23 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "aa81ae3e6ce2efa2e6e7422191fa06bc",
+    "content-hash": "59b7455abbcbdd872643790d7ba46ce9",
     "packages": [
         {
             "name": "bmlt/bmlt-satellite-base-class",
-            "version": "3.9.12",
+            "version": "3.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bmlt-enabled/bmlt-satellite-base-class.git",
-                "reference": "ada224cfef10154e5ee3a811e37611414a10ad1a"
+                "reference": "1a0c5f922b88f274f5448c5a2f470eb6e8023730"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bmlt-enabled/bmlt-satellite-base-class/zipball/ada224cfef10154e5ee3a811e37611414a10ad1a",
-                "reference": "ada224cfef10154e5ee3a811e37611414a10ad1a",
+                "url": "https://api.github.com/repos/bmlt-enabled/bmlt-satellite-base-class/zipball/1a0c5f922b88f274f5448c5a2f470eb6e8023730",
+                "reference": "1a0c5f922b88f274f5448c5a2f470eb6e8023730",
                 "shasum": ""
             },
             "require": {
@@ -40,7 +40,7 @@
                 }
             ],
             "description": "This is a generic CMS plugin class for a BMLT satellite client.",
-            "time": "2018-12-25T01:32:44+00:00"
+            "time": "2019-09-22T14:45:48+00:00"
         },
         {
             "name": "bmlt/bmlt-satellite-driver",
@@ -239,16 +239,16 @@
         },
         {
             "name": "phpoffice/phpspreadsheet",
-            "version": "1.6.0",
+            "version": "1.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPOffice/PhpSpreadsheet.git",
-                "reference": "bf00f0cc5f55c354018f9a9ef15e6e3e1a229051"
+                "reference": "8dea03eaf60a349b6097e4bcad11f894668280df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/bf00f0cc5f55c354018f9a9ef15e6e3e1a229051",
-                "reference": "bf00f0cc5f55c354018f9a9ef15e6e3e1a229051",
+                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/8dea03eaf60a349b6097e4bcad11f894668280df",
+                "reference": "8dea03eaf60a349b6097e4bcad11f894668280df",
                 "shasum": ""
             },
             "require": {
@@ -267,17 +267,16 @@
                 "ext-zlib": "*",
                 "markbaker/complex": "^1.4",
                 "markbaker/matrix": "^1.1",
-                "php": "^5.6|^7.0",
+                "php": "^7.1",
                 "psr/simple-cache": "^1.0"
             },
             "require-dev": {
-                "doctrine/instantiator": "^1.0.0",
                 "dompdf/dompdf": "^0.8.0",
                 "friendsofphp/php-cs-fixer": "@stable",
                 "jpgraph/jpgraph": "^4.0",
                 "mpdf/mpdf": "^7.0.0",
                 "phpcompatibility/php-compatibility": "^8.0",
-                "phpunit/phpunit": "^5.7",
+                "phpunit/phpunit": "^7.5",
                 "squizlabs/php_codesniffer": "^3.3",
                 "tecnickcom/tcpdf": "^6.2"
             },
@@ -299,12 +298,6 @@
             ],
             "authors": [
                 {
-                    "name": "Erik Tilt"
-                },
-                {
-                    "name": "Adrien Crivelli"
-                },
-                {
                     "name": "Maarten Balliauw",
                     "homepage": "https://blog.maartenballiauw.be"
                 },
@@ -315,6 +308,12 @@
                 {
                     "name": "Franck Lefevre",
                     "homepage": "https://rootslabs.net"
+                },
+                {
+                    "name": "Erik Tilt"
+                },
+                {
+                    "name": "Adrien Crivelli"
                 }
             ],
             "description": "PHPSpreadsheet - Read, Create and Write Spreadsheet documents in PHP - Spreadsheet engine",
@@ -329,7 +328,7 @@
                 "xls",
                 "xlsx"
             ],
-            "time": "2019-01-02T04:42:54+00:00"
+            "time": "2019-08-17T22:24:35+00:00"
         },
         {
             "name": "psr/simple-cache",

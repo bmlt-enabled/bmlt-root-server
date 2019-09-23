@@ -381,7 +381,14 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_naws_popup_prompt = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['world_format_codes_prompt']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= "var g_naws_values = [";
                     $n_first = true;
-            ksort($this->my_localized_strings['comdef_server_admin_strings']['world_format_codes']);
+            // This sorts the NAWS codes in the format server admin. The drop-down menu is sorted by value and the key is the drop-down menu value.
+            // The first field key is empty and value is 'None', if we sort by key value this field will no longer be the top element.
+            // So we shift it off the array...
+            $top_elm = array_shift($this->my_localized_strings['comdef_server_admin_strings']['world_format_codes']);
+            // Then we can sort
+            asort($this->my_localized_strings['comdef_server_admin_strings']['world_format_codes']);
+            // and now we unshift it to put it back as the top element.
+            array_unshift($this->my_localized_strings['comdef_server_admin_strings']['world_format_codes'], $top_elm);
         foreach ($this->my_localized_strings['comdef_server_admin_strings']['world_format_codes'] as $key => $value) {
             if (!$n_first) {
                 $ret .= ','.(defined('__DEBUG_MODE__') ? "\n" : '');

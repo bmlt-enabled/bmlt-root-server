@@ -59,10 +59,12 @@ CHANGELIST
 ----------
 ***Version 2.13.6* ** *- UNRELEASED*
 
-- Changed JSONP mime type to `application/javascript`.
-- Rename "Get A NAWS Format Dump" to "Get A NAWS Format Export" in the semantic workshop.
-- Fixed an issue where the admin user interface could falsely think a meeting had been edited.
-
+- Changed JSONP mime type to `application/javascript`
+- Rename "Get A NAWS Format Dump" to "Get A NAWS Format Export" in the semantic workshop
+- Fixed an issue where the admin user interface could falsely think a meeting had been edited
+- Place name_strings from unmapped formats in the Room field of NAWS Exports
+- Fix for NAWS format drop-down not sorting correctly in the root server administration.
+- Updated to the latest BMLT Satellite Base Class.
 - Added new NAWS formats CH (Closed Holidays), GP (Guiding Principles) and NC (No Children).
 
 ***Version 2.13.5* ** *- August 15, 2019*
