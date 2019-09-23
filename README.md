@@ -59,7 +59,7 @@ CHANGELIST
 ----------
 ***Version 2.13.7* ** *- UNRELEASED*
 
-- Fix for NAWS No SMoking format not being automatically mapped.
+- Fix for NAWS No Smoking format not being automatically mapped.
 
 ***Version 2.13.6* ** *- September 22, 2019*
 
