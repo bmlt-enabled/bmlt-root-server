@@ -57,12 +57,12 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.13.6* ** *- UNRELEASED*
+***Version 2.13.6* ** *- September 22, 2019*
 
-- Changed JSONP mime type to `application/javascript`
-- Rename "Get A NAWS Format Dump" to "Get A NAWS Format Export" in the semantic workshop
-- Fixed an issue where the admin user interface could falsely think a meeting had been edited
-- Place name_strings from unmapped formats in the Room field of NAWS Exports
+- Changed JSONP mime type to `application/javascript`.
+- Rename "Get A NAWS Format Dump" to "Get A NAWS Format Export" in the semantic workshop.
+- Fixed an issue where the admin user interface could falsely think a meeting had been edited.
+- Place name_strings from unmapped formats in the Room field of NAWS Exports.
 - Fix for NAWS format drop-down not sorting correctly in the root server administration.
 - Updated to the latest BMLT Satellite Base Class.
 - Added new NAWS formats CH (Closed Holidays), GP (Guiding Principles) and NC (No Children).
