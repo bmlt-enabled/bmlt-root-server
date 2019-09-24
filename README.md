@@ -57,9 +57,9 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.13.7* ** *- UNRELEASED*
+***Version 2.13.7* ** *- September 23, 2019*
 
-- Fix for NAWS No Smoking format not being automatically mapped.
+- The No Smoking format is now automatically mapped to the appropriate NAWS format.
 
 ***Version 2.13.6* ** *- September 22, 2019*
 
