@@ -251,7 +251,6 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
 
                 $areaName = $row['ParentName'];
                 $areaWorldId = $row['AreaRegion'];
-
             }
 
             // TODO Create the meetings
