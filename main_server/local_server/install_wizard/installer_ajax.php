@@ -204,21 +204,16 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
     // If a NAWS CSV is provided to prime the database, import it
     if (!empty($_FILES) && isset($_FILES['thefile'])) {
         try {
-            // TODO Create the service bodies
-
-            // Create the meetings
-            require_once(dirname(__FILE__).'../../server/c_comdef_server.class.php');
-            require_once(dirname(__FILE__).'../../server/classes/c_comdef_meeting.class.php');
+            require_once(__DIR__.'/../../vendor/autoload.php');
+            require_once(__DIR__.'/../../server/c_comdef_server.class.php');
+            require_once(__DIR__.'/../../server/classes/c_comdef_meeting.class.php');
             $server = c_comdef_server::MakeServer();
             if (!($server instanceof c_comdef_server)) {
                 $response['importReport'] = "Couldn't instantiate server object";
                 throw new Exception();
             }
-
             $localStrings = $server->GetLocalStrings();
-            $regionBias = $localStrings['region_bias'];
 
-            require_once(dirname(__DIR__).'/../../vendor/autoload.php');
             $file = $_FILES['thefile'];
             try {
                 $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($file['tmp_name']);
@@ -229,19 +224,42 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                 throw new Exception();
             }
 
-            $nawsDays = array('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday');
+            $deleteIndex = -1;
+            $columnNames = null;
+
+            // TODO Create the service bodies
             for ($i = 1; $i <= count($rows); $i++) {
                 $row = $rows[$i];
                 if ($i == 1) {
                     $deleteIndex = -1;
                     $unpublishedIndex = -1;
                     $columnNames = $row;
-                    foreach ($colunNames as $columnIndex => $columnName) {
+                    // TODO Validate the required columns exist
+                    foreach ($columnNames as $columnIndex => $columnName) {
                         if ($columnName == 'Delete') {
                             $deleteIndex = $columnIndex;
                             break;
                         }
                     }
+
+                    continue;
+                }
+
+                if ($row[$deleteIndex] == 'D') {
+                    continue;
+                }
+
+                $areaName = $row['ParentName'];
+                $areaWorldId = $row['AreaRegion'];
+
+            }
+
+            // TODO Create the meetings
+
+            $nawsDays = array('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday');
+            for ($i = 1; $i <= count($rows); $i++) {
+                $row = $rows[$i];
+                if ($i == 1) {
                     continue;
                 }
 

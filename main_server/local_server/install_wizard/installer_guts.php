@@ -62,7 +62,7 @@ $default_lang = $lang;
                     var g_maps_api_key_valid = '<?php echo htmlspecialchars($comdef_install_wizard_strings['Maps_API_Key_Valid']); ?>';
                     var g_maps_api_key_click_here = '<?php echo htmlspecialchars($comdef_install_wizard_strings['Maps_API_Key_ClickHere']); ?>';
                 </script>
-                <script type="text/javascript" src="local_server/install_wizard/installer.js<?php echo '?v='. time(); ?>"></script>
+                <script type="text/javascript" src="local_server/install_wizard/installer.js"></script>
                 <script type="text/javascript">
                     var g_installer_object = new BMLTInstaller ( <?php echo array2json($prefs_array) ?> );
                 </script>
@@ -358,7 +358,9 @@ $default_lang = $lang;
                     <div class="explanatory_text_div"><?php echo $comdef_install_wizard_strings['Explanatory_Text_4_Main_Intro']; ?></div>
                     <div id="database_install_stuff_div" class="item_hidden">
                         <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_4_Initialize_Root_Server_Heading']; ?></h1>
-                        <h2 class="page_heading_h2"><?php echo $comdef_install_wizard_strings['Page_4_Initialize_Root_Server_Text']; ?></h2>
+                        <div class="one_line_div centered_text">
+                            NAWS Export Spreadsheet (Optional): <input name="bmlt_admin_naws_spreadsheet_file_input" id="bmlt_admin_naws_spreadsheet_file_input" type="file" />
+                        </div>
                         <div class="one_line_div centered_text">
                             <a id="bmlt_installer_initialize_ajax_button" class="bmlt_admin_ajax_button" href="javascript:g_installer_object.initializeRootServer()"><?php echo htmlspecialchars($comdef_install_wizard_strings['Page_4_Initialize_Root_Server_Button']) ?></a>
                             <span id="bmlt_installer_initialize_ajax_button_throbber_span" class="item_hidden">
