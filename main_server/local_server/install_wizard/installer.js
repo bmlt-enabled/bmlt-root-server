@@ -440,7 +440,9 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
                     document.getElementById('admin_db_items_warning').innerHTML = '';
                     location.reload(true);
                 } else if (!ret_val.dbStatus) {
-                    if (ret_val.dbReport) {
+                    if (importAttempted && ret_val.importReport) {
+                        alert(ret_val.importReport);
+                    } else if (ret_val.dbReport) {
                         alert(ret_val.dbReport);
                     }
                 } else if (!ret_val.configStatus) {
@@ -448,12 +450,12 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
                     document.getElementById('admin_db_items_warning').innerHTML = '';
                     // There was a problem writing the config file, so show the config and allow the user to write it manually
                     if (importAttempted) {
-                        alert('The configuration file could not be written - this is usually due to a permissions issue.')
+                        alert('The configuration file could not be written.');
                         location.reload(true);
                     }
                     document.getElementById('result_code_div').className = 'item_shown';  // Show settings file.
                 } else {
-                    alert('Error: ' + ret_val.importReport);
+                    alert(ret_val.importReport);
                     location.reload(true);
                 }
             }

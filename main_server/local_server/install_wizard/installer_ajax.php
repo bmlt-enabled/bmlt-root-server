@@ -132,11 +132,15 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
             if (count($missingValues) > 0) {
                 // TODO Test that this condition actually works
                 $response['importReport'] = 'NAWS export is missing required columns: ' . implode(', ', $missingValues);
-                return array2json($response);
+                echo array2json($response);
+                ob_end_flush();
+                die();
             }
         } catch (Exception $e) {
             $response['importReport'] = 'Unexpected error when validating columns in NAWS export: ' . $e->getMessage();
-            return array2json($response);
+            echo array2json($response);
+            ob_end_flush();
+            die();
         }
     }
 
@@ -389,7 +393,7 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                     $value = trim($row[$columnIndex]);
 
                     if (!is_bool(array_search($columnName, $requiredColumns)) && !$value) {
-                        $response['importReport'] = 'Missing required value in column ' . $columnName;
+                        $response['importReport'] = 'Missing required value in column \'' . $columnName . '\'';
                         throw new Exception();
                     }
 
@@ -407,7 +411,7 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                             $value = strtolower($value);
                             $value = array_search($value, $nawsDays);
                             if ($value == false) {
-                                $response['importReport'] = 'Invalid value in column ' . $columnName;
+                                $response['importReport'] = 'Invalid value in column \'' . $columnName . '\'';
                                 throw new Exception();
                             }
                             $meetingData['weekday_tinyint'] = $value;
