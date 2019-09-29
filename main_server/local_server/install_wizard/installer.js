@@ -430,9 +430,12 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
         this.m_ajax_request_in_progress = null;
         if (in_http_request.responseText) {
             eval('var ret_val = ' + in_http_request.responseText + ';');
-            
+
+            var file_input = document.getElementById('bmlt_admin_naws_spreadsheet_file_input');
+            var importAttempted = file_input && file_input.files && file_input.files.length;
+
             if (ret_val) {
-                if (ret_val.dbStatus === true && ret_val.configStatus === true) {   // Hide the initialize button upon success.
+                if (ret_val.dbStatus === true && ret_val.configStatus === true && (!importAttempted || ret_val.importStatus === true)) {   // Hide the initialize button upon success.
                     document.getElementById('database_install_stuff_div').className = 'item_hidden';
                     document.getElementById('admin_db_items_warning').innerHTML = '';
                     location.reload(true);
@@ -440,11 +443,18 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
                     if (ret_val.dbReport) {
                         alert(ret_val.dbReport);
                     }
-                } else {
+                } else if (!ret_val.configStatus) {
                     document.getElementById('database_install_stuff_div').className = 'item_hidden';
                     document.getElementById('admin_db_items_warning').innerHTML = '';
                     // There was a problem writing the config file, so show the config and allow the user to write it manually
+                    if (importAttempted) {
+                        alert('The configuration file could not be written - this is usually due to a permissions issue.')
+                        location.reload(true);
+                    }
                     document.getElementById('result_code_div').className = 'item_shown';  // Show settings file.
+                } else {
+                    alert('Error: ' + ret_val.importReport);
+                    location.reload(true);
                 }
             }
         }

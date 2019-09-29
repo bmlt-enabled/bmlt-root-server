@@ -35,6 +35,13 @@ function generateRandomString($length = 10)
     return substr(str_shuffle(str_repeat($x = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)))), 1, $length);
 }
 
+function dropEverything($dbPrefix)
+{
+    $dropSql = str_replace('%%PREFIX%%', preg_replace('|[^a-z_\.\-A-Z0-9]|', '', $dbPrefix), file_get_contents(dirname(__FILE__).'/sql_files/dropEverything.sql'));
+    $value_array = array();
+    c_comdef_dbsingleton::preparedExec($dropSql, $value_array);
+}
+
 // We do everything we can to ensure that the requested language file is loaded.
 if (file_exists(dirname(__FILE__).'/../server_admin/lang/'.$lang.'/install_wizard_strings.php')) {
     require_once(dirname(__FILE__).'/../server_admin/lang/'.$lang.'/install_wizard_strings.php');
@@ -258,6 +265,11 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
         chmod($config_path, 0644);
         $response['configStatus'] = true;
     } catch (Exception $e) {
+        if ($nawsExportProvided) {
+            // If the user was attempting an import, just undo the whole installation when
+            // there is a failure to write the configuration file
+            dropEverything($http_vars['dbPrefix']);
+        }
         echo array2json($response);
         ob_end_flush();
         die();
@@ -468,6 +480,12 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
 
             $response['importStatus'] = true;
         } catch (Exception $e) {
+            // Drop all the tables
+            dropEverything($http_vars['dbPrefix']);
+
+            // Delete the config file
+            unlink($config_path);
+
             if (!$response['importReport']) {
                 $response['importReport'] = 'Unknown error importing meetings: ' . $e->getMessage();
             }
