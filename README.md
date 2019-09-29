@@ -25,7 +25,7 @@ The project is actually several years old. It is currently hosted on [GitHub](ht
 
 [Follow this link to see the Current GitHub repository.](https://github.com/bmlt-enabled/BMLT-Root-Server)
 
-[Follow this link to see the legacy BitBucket repository.](https://bitbucket.org/bmlt/bmlt-root-server/)
+[Follow this link to see the legacy BitBucket repository.](https://bitbucket.org/bmlt/bmlt-root-server-deprecated/src/Release/)
 
 [Follow this link to see the legacy GitHub repository.](https://github.com/MAGSHARE/BMLT-Root-Server)
 
