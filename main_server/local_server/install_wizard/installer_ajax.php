@@ -30,6 +30,10 @@ require_once(dirname(__FILE__).'/../../server/classes/c_comdef_dbsingleton.class
 require_once(dirname(__FILE__).'/../../server/shared/classes/comdef_utilityclasses.inc.php');
 require_once(dirname(__FILE__).'/../../server/shared/Array2Json.php');
 
+function generateRandomString($length = 10) {
+    return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
+}
+
 // We do everything we can to ensure that the requested language file is loaded.
 if (file_exists(dirname(__FILE__).'/../server_admin/lang/'.$lang.'/install_wizard_strings.php')) {
     require_once(dirname(__FILE__).'/../server_admin/lang/'.$lang.'/install_wizard_strings.php');
@@ -70,6 +74,48 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
         'importStatus' => false,
         'importReport' => ''
     );
+
+    // If the NAWS Export is provided, let's validate that it has the required columns up front
+    $nawsExportProvided = !empty($_FILES) && isset($_FILES['thefile']);
+    if ($nawsExportProvided) {
+        try {
+            require_once(__DIR__ . '/../../vendor/autoload.php');
+
+            $file = $_FILES['thefile'];
+            try {
+                $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($file['tmp_name']);
+                $spreadsheet = $reader->load($file['tmp_name']);
+                $nawsExportRows = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+            } catch (Exception $e) {
+                $response['importReport'] = $this->my_localized_strings['comdef_server_admin_strings']['server_admin_error_could_not_create_reader'] . $e->getMessage();
+                throw new Exception();
+            }
+
+            $expectedColumns = array(
+                'Delete', 'ParentName', 'Committee', 'CommitteeName', 'AreaRegion', 'Day', 'Time', 'Place',
+                'Address', 'City', 'LocBorough', 'State', 'Zip', 'Country', 'Directions', 'Institutional',
+                'Closed', 'WheelChr', 'Format1', 'Format2', 'Format3', 'Format4', 'Format5', 'Longitude',
+                'Latitude', 'unpublished'
+            );
+
+            $columnNames = $nawsExportRows[1];
+            $missingValues = array();
+            foreach ($expectedColumns as $expectedColumnName) {
+                if (!in_array($expectedColumnName, $columnNames)) {
+                    array_push($missingValues, $expectedColumnName);
+                }
+            }
+
+            if (count($missingValues) > 0) {
+                // TODO Test that this condition actually works
+                $response['importReport'] = 'NAWS export is missing required columns: ' . implode(', ', $missingValues);
+                return array2json($response);
+            }
+        } catch (Exception $e) {
+            $response['importReport'] = 'Unexpected error when validating columns in  NAWS export: ' . $e->getMessage();
+            return array2json($response);
+        }
+    }
 
     // Initialize Database
     try {
@@ -202,46 +248,39 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
     }
 
     // If a NAWS CSV is provided to prime the database, import it
-    if (!empty($_FILES) && isset($_FILES['thefile'])) {
+    if ($nawsExportProvided) {
         try {
-            require_once(__DIR__.'/../../vendor/autoload.php');
             require_once(__DIR__.'/../../server/c_comdef_server.class.php');
             require_once(__DIR__.'/../../server/classes/c_comdef_meeting.class.php');
+            require_once(__DIR__.'/../../server/classes/c_comdef_service_body.class.php');
+            require_once(__DIR__.'/../../server/classes/c_comdef_user.class.php');
+
             $server = c_comdef_server::MakeServer();
             if (!($server instanceof c_comdef_server)) {
                 $response['importReport'] = "Couldn't instantiate server object";
                 throw new Exception();
             }
+            $adminLogin = $http_vars['admin_login'];
+            $encryptedPassword = $server->GetEncryptedPW($http_vars['admin_login'], $http_vars['admin_password']);
+            $_SESSION[$http_vars['admin_session_name']] = "$adminLogin\t$encryptedPassword";
             $localStrings = $server->GetLocalStrings();
 
-            $file = $_FILES['thefile'];
-            try {
-                $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($file['tmp_name']);
-                $spreadsheet = $reader->load($file['tmp_name']);
-                $rows = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
-            } catch (Exception $e) {
-                $response['importReport'] = $this->my_localized_strings['comdef_server_admin_strings']['server_admin_error_could_not_create_reader'] . $e->getMessage();
-                throw new Exception();
-            }
-
-            $deleteIndex = -1;
+            // Create the service bodies
+            $deleteIndex = null;
+            $unpublishedIndex = null;
+            $areaNameIndex = null;
+            $areaWorldIdIndex = null;
             $columnNames = null;
+            $areas = array();
+            for ($i = 1; $i <= count($nawsExportRows); $i++) {
+                $row = $nawsExportRows[$i];
 
-            // TODO Create the service bodies
-            for ($i = 1; $i <= count($rows); $i++) {
-                $row = $rows[$i];
                 if ($i == 1) {
-                    $deleteIndex = -1;
-                    $unpublishedIndex = -1;
                     $columnNames = $row;
-                    // TODO Validate the required columns exist
-                    foreach ($columnNames as $columnIndex => $columnName) {
-                        if ($columnName == 'Delete') {
-                            $deleteIndex = $columnIndex;
-                            break;
-                        }
-                    }
-
+                    $deleteIndex = array_search('Delete', $columnNames);
+                    $unpublishedIndex = array_search('unpublished', $columnNames);
+                    $areaNameIndex = array_search('ParentName', $columnNames);
+                    $areaWorldIdIndex = array_search('AreaRegion', $columnNames);
                     continue;
                 }
 
@@ -249,12 +288,43 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                     continue;
                 }
 
-                $areaName = $row['ParentName'];
-                $areaWorldId = $row['AreaRegion'];
+                $areaName = $row[$areaNameIndex];
+                $areaWorldId = $row[$areaWorldIdIndex];
+                $areas[$areaWorldId] = $areaName;
+            }
+
+            foreach ($areas as $areaWorldId => $areaName) {
+                $userName = preg_replace("/[^A-Za-z0-9]/", '', $areaName);
+                $user = new c_comdef_user(
+                    null,
+                    0,
+                    _USER_LEVEL_SERVICE_BODY_ADMIN,
+                    '',
+                    $userName,
+                    '',
+                    $server->GetLocalLang(),
+                    $userName,
+                    'User automatically created for ' . $areaName,
+                    1
+                );
+                $user->SetPassword(generateRandomString(30));
+                $user->UpdateToDB();
+
+                $serviceBody = new c_comdef_service_body;
+                $serviceBody->SetLocalName($areaName);
+                $serviceBody->SetWorldID($areaWorldId);
+                $serviceBody->SetLocalDescription($areaName);
+                $serviceBody->SetPrincipalUserID($user->GetID());
+                $serviceBody->SetEditors(array($user->GetID()));
+                if (substr($areaWorldId, 0, 2) == 'AR') {
+                    $serviceBody->SetSBType(c_comdef_service_body__ASC__);
+                } else {
+                    $serviceBody->SetSBType(c_comdef_service_body__RSC__);
+                }
+                $serviceBody->UpdateToDB();
             }
 
             // TODO Create the meetings
-
             $nawsDays = array('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday');
             for ($i = 1; $i <= count($rows); $i++) {
                 $row = $rows[$i];
