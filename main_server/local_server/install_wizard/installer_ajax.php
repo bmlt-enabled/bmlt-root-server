@@ -107,9 +107,8 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
 
             $expectedColumns = array(
                 'Delete', 'ParentName', 'Committee', 'CommitteeName', 'AreaRegion', 'Day', 'Time', 'Place',
-                'Address', 'City', 'LocBorough', 'State', 'Zip', 'Country', 'Directions', 'Institutional',
-                'Closed', 'WheelChr', 'Format1', 'Format2', 'Format3', 'Format4', 'Format5', 'Longitude',
-                'Latitude', 'unpublished'
+                'Address', 'City', 'LocBorough', 'State', 'Zip', 'Country', 'Directions',  'Closed', 'WheelChr',
+                'Format1', 'Format2', 'Format3', 'Format4', 'Format5', 'Longitude', 'Latitude', 'unpublished'
             );
 
             $columnNames = $nawsExportRows[1];
@@ -342,7 +341,21 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
 
             reset($nawsExportRows);
 
-            // TODO Create the meetings
+            $formats = array();
+            foreach ($server->GetFormatsObj()->GetFormatsArray()['en'] as $format) {
+                if ($format instanceof c_comdef_format) {
+                    $world_id = $format->GetWorldID();
+                    $shared_id = $format->GetSharedID();
+                    if ($world_id && $shared_id) {
+                        if (is_array($formats) && array_key_exists($world_id, $formats)) {
+                            array_push($formats[$world_id], $shared_id);
+                        } else {
+                            $formats[$world_id] = array($shared_id);
+                        }
+                    }
+                }
+            }
+
             $ajaxHandler = new c_comdef_admin_ajax_handler(null);
             $nawsDays = array(null, 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday');
             for ($i = 1; $i <= count($nawsExportRows); $i++) {
@@ -359,6 +372,7 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                 $meetingData['published'] = true;
                 $meetingData['lang_enum'] = $server->GetLocalLang();
                 $meetingData['duration_time'] = $http_vars['default_duration_time'];
+                $meetingData['formats'] = array();
                 foreach ($columnNames as $columnIndex => $columnName) {
                     $value = trim($row[$columnIndex]);
                     if ($value) {
@@ -407,14 +421,24 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                             case 'Directions':
                                 $meetingData['location_info'] = $value;
                                 break;
-                            case 'Institutional':
-                            case 'Closed':
                             case 'WheelChr':
+                                if ($value == 'TRUE' || $value == '1') {
+                                    $value = $formats['WCHR'];
+                                    if ($value) {
+                                        $meetingData['formats'] = array_merge($meetingData['formats'], $value);
+                                    }
+                                }
+                                break;
+                            case 'Closed':
                             case 'Format1':
                             case 'Format2':
                             case 'Format3':
                             case 'Format4':
                             case 'Format5':
+                                $value = $formats[$value];
+                                if ($value) {
+                                    $meetingData['formats'] = array_merge($meetingData['formats'], $value);
+                                }
                                 break;
                             case 'Longitude':
                                 $meetingData['longitude'] = $value;
@@ -430,6 +454,8 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                         }
                     }
                 }
+                $meetingData['format_shared_id_list'] = implode(',', $meetingData['formats']);
+                unset($meetingData['formats']);
                 $ajaxHandler->SetMeetingDataValues($meetingData, false);
             }
 
