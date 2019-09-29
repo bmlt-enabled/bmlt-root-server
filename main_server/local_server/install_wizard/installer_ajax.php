@@ -111,11 +111,14 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                 'Format1', 'Format2', 'Format3', 'Format4', 'Format5', 'Longitude', 'Latitude', 'unpublished'
             );
 
-            $columnNames = $nawsExportRows[1];
+            $columnNames = array();
             $missingValues = array();
             foreach ($expectedColumns as $expectedColumnName) {
-                if (!in_array($expectedColumnName, $columnNames)) {
+                $idx = array_search($expectedColumnName, $nawsExportRows[1]);
+                if (is_bool($idx)) {
                     array_push($missingValues, $expectedColumnName);
+                } else {
+                    $columnNames[$idx] = $expectedColumnName;
                 }
             }
 
@@ -125,7 +128,7 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                 return array2json($response);
             }
         } catch (Exception $e) {
-            $response['importReport'] = 'Unexpected error when validating columns in  NAWS export: ' . $e->getMessage();
+            $response['importReport'] = 'Unexpected error when validating columns in NAWS export: ' . $e->getMessage();
             return array2json($response);
         }
     }
@@ -270,10 +273,6 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
             require_once(__DIR__.'/../../server/classes/c_comdef_user.class.php');
 
             $server = c_comdef_server::MakeServer();
-            if (!($server instanceof c_comdef_server)) {
-                $response['importReport'] = "Couldn't instantiate server object";
-                throw new Exception();
-            }
             $adminLogin = $http_vars['admin_login'];
             $encryptedPassword = $server->GetEncryptedPW($http_vars['admin_login'], $http_vars['admin_password']);
             $_SESSION[$http_vars['admin_session_name']] = "$adminLogin\t$encryptedPassword";
@@ -368,6 +367,7 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                     continue;
                 }
 
+                $requiredColumns = array('CommitteeName', 'AreaRegion', 'Day', 'Time', 'Address', 'City', 'State');
                 $meetingData = array();
                 $meetingData['published'] = true;
                 $meetingData['lang_enum'] = $server->GetLocalLang();
@@ -375,83 +375,91 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                 $meetingData['format_shared_id_list'] = array();
                 foreach ($columnNames as $columnIndex => $columnName) {
                     $value = trim($row[$columnIndex]);
-                    if ($value) {
-                        switch ($columnName) {
-                            case 'Committee':
-                                $meetingData['worldid_mixed'] = $value;
-                                break;
-                            case 'CommitteeName':
-                                $meetingData['meeting_name'] = $value;
-                                break;
-                            case 'AreaRegion':
-                                $meetingData['service_body_bigint'] = $areas[$row[$areaWorldIdIndex]]->GetID();
-                                break;
-                            case 'Day':
-                                $value = strtolower($value);
-                                $value = array_search($value, $nawsDays);
-                                $meetingData['weekday_tinyint'] = $value;
-                                break;
-                            case 'Time':
-                                $time = abs(intval($value));
-                                $hours = min(23, $time / 100);
-                                $minutes = min(59, ($time - (intval($time / 100) * 100)));
-                                $meetingData['start_time'] = sprintf("%d:%02d:00", $hours, $minutes);
-                                break;
-                            case 'Place':
-                                $meetingData['location_text'] = $value;
-                                break;
-                            case 'Address':
-                                $meetingData['location_street'] = $value;
-                                break;
-                            case 'City':
-                                $meetingData['location_municipality'] = $value;
-                                break;
-                            case 'LocBorough':
-                                $meetingData['location_neighborhood'] = $value;
-                                break;
-                            case 'State':
-                                $meetingData['location_province'] = $value;
-                                break;
-                            case 'Zip':
-                                $meetingData['location_postal_code_1'] = $value;
-                                break;
-                            case 'Country':
-                                $meetingData['location_nation'] = $value;
-                                break;
-                            case 'Directions':
-                                $meetingData['location_info'] = $value;
-                                break;
-                            case 'WheelChr':
-                                if ($value == 'TRUE' || $value == '1') {
-                                    $value = $formats['WCHR'];
-                                    if ($value) {
-                                        $meetingData['format_shared_id_list'] = array_merge($meetingData['format_shared_id_list'], $value);
-                                    }
-                                }
-                                break;
-                            case 'Closed':
-                            case 'Format1':
-                            case 'Format2':
-                            case 'Format3':
-                            case 'Format4':
-                            case 'Format5':
-                                $value = $formats[$value];
+
+                    if (!is_bool(array_search($columnName, $requiredColumns)) && !$value) {
+                        $response['importReport'] = 'Missing required value in column ' . $columnName;
+                        throw new Exception();
+                    }
+
+                    switch ($columnName) {
+                        case 'Committee':
+                            $meetingData['worldid_mixed'] = $value;
+                            break;
+                        case 'CommitteeName':
+                            $meetingData['meeting_name'] = $value;
+                            break;
+                        case 'AreaRegion':
+                            $meetingData['service_body_bigint'] = $areas[$row[$areaWorldIdIndex]]->GetID();
+                            break;
+                        case 'Day':
+                            $value = strtolower($value);
+                            $value = array_search($value, $nawsDays);
+                            if ($value == false) {
+                                $response['importReport'] = 'Invalid value in column ' . $columnName;
+                                throw new Exception();
+                            }
+                            $meetingData['weekday_tinyint'] = $value;
+                            break;
+                        case 'Time':
+                            $time = abs(intval($value));
+                            $hours = min(23, $time / 100);
+                            $minutes = min(59, ($time - (intval($time / 100) * 100)));
+                            $meetingData['start_time'] = sprintf("%d:%02d:00", $hours, $minutes);
+                            break;
+                        case 'Place':
+                            $meetingData['location_text'] = $value;
+                            break;
+                        case 'Address':
+                            $meetingData['location_street'] = $value;
+                            break;
+                        case 'City':
+                            $meetingData['location_municipality'] = $value;
+                            break;
+                        case 'LocBorough':
+                            $meetingData['location_neighborhood'] = $value;
+                            break;
+                        case 'State':
+                            $meetingData['location_province'] = $value;
+                            break;
+                        case 'Zip':
+                            $meetingData['location_postal_code_1'] = $value;
+                            break;
+                        case 'Country':
+                            $meetingData['location_nation'] = $value;
+                            break;
+                        case 'Directions':
+                            $meetingData['location_info'] = $value;
+                            break;
+                        case 'WheelChr':
+                            if ($value == 'TRUE' || $value == '1') {
+                                $value = $formats['WCHR'];
                                 if ($value) {
                                     $meetingData['format_shared_id_list'] = array_merge($meetingData['format_shared_id_list'], $value);
                                 }
-                                break;
-                            case 'Longitude':
-                                $meetingData['longitude'] = $value;
-                                break;
-                            case 'Latitude':
-                                $meetingData['latitude'] = $value;
-                                break;
-                            case 'unpublished':
-                                if ($value == '') {
-                                    $meetingData['published'] = false;
-                                }
-                                break;
-                        }
+                            }
+                            break;
+                        case 'Closed':
+                        case 'Format1':
+                        case 'Format2':
+                        case 'Format3':
+                        case 'Format4':
+                        case 'Format5':
+                            $value = $formats[$value];
+                            if ($value) {
+                                $meetingData['format_shared_id_list'] = array_merge($meetingData['format_shared_id_list'], $value);
+                            }
+                            break;
+                        case 'Longitude':
+                            $meetingData['longitude'] = $value;
+                            break;
+                        case 'Latitude':
+                            $meetingData['latitude'] = $value;
+                            break;
+                        case 'unpublished':
+                            if ($value == '1') {
+                                $meetingData['published'] = false;
+                            }
+                            break;
                     }
                 }
                 $meetingData['format_shared_id_list'] = implode(',', $meetingData['format_shared_id_list']);
@@ -460,6 +468,9 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
 
             $response['importStatus'] = true;
         } catch (Exception $e) {
+            if (!$response['importReport']) {
+                $response['importReport'] = 'Unknown error importing meetings: ' . $e->getMessage();
+            }
             echo array2json($response);
             ob_end_flush();
             die();
