@@ -87,6 +87,19 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                 $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($file['tmp_name']);
                 $spreadsheet = $reader->load($file['tmp_name']);
                 $nawsExportRows = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+
+                // If the last row is all nulls, remove it
+                $lastRow = $nawsExportRows[count($nawsExportRows)];
+                $allNulls = true;
+                foreach ($lastRow as $columnValue) {
+                    if ($columnValue != null) {
+                        $allNulls = false;
+                        break;
+                    }
+                }
+                if ($allNulls) {
+                    array_pop($nawsExportRows);
+                }
             } catch (Exception $e) {
                 $response['importReport'] = $this->my_localized_strings['comdef_server_admin_strings']['server_admin_error_could_not_create_reader'] . $e->getMessage();
                 throw new Exception();
@@ -251,6 +264,7 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
     // If a NAWS CSV is provided to prime the database, import it
     if ($nawsExportProvided) {
         try {
+            set_time_limit(1200); // 20 minutes
             require_once(__DIR__.'/../../server/c_comdef_server.class.php');
             require_once(__DIR__.'/../../server/classes/c_comdef_meeting.class.php');
             require_once(__DIR__.'/../../server/classes/c_comdef_service_body.class.php');
@@ -264,7 +278,7 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
             $adminLogin = $http_vars['admin_login'];
             $encryptedPassword = $server->GetEncryptedPW($http_vars['admin_login'], $http_vars['admin_password']);
             $_SESSION[$http_vars['admin_session_name']] = "$adminLogin\t$encryptedPassword";
-            $localStrings = $server->GetLocalStrings();
+            require_once(__DIR__.'/../server_admin/c_comdef_admin_ajax_handler.class.php');
 
             // Create the service bodies
             $deleteIndex = null;
@@ -323,12 +337,16 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                     $serviceBody->SetSBType(c_comdef_service_body__RSC__);
                 }
                 $serviceBody->UpdateToDB();
+                $areas[$areaWorldId] = $serviceBody;
             }
 
+            reset($nawsExportRows);
+
             // TODO Create the meetings
-            $nawsDays = array('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday');
-            for ($i = 1; $i <= count($rows); $i++) {
-                $row = $rows[$i];
+            $ajaxHandler = new c_comdef_admin_ajax_handler(null);
+            $nawsDays = array(null, 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday');
+            for ($i = 1; $i <= count($nawsExportRows); $i++) {
+                $row = $nawsExportRows[$i];
                 if ($i == 1) {
                     continue;
                 }
@@ -337,53 +355,82 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                     continue;
                 }
 
-                $meeting = array();
+                $meetingData = array();
+                $meetingData['published'] = true;
+                $meetingData['lang_enum'] = $server->GetLocalLang();
+                $meetingData['duration_time'] = $http_vars['default_duration_time'];
                 foreach ($columnNames as $columnIndex => $columnName) {
-                    $value = $row[$columnIndex];
-                    switch ($columnName) {
-                        case 'Committee':
-                            break;
-                        case 'CommitteeName':
-                            break;
-                        case 'AreaRegion':
-                            break;
-                        case 'Day':
-                            break;
-                        case 'Time':
-                            break;
-                        case 'Place':
-                            break;
-                        case 'Address':
-                            break;
-                        case 'City':
-                            break;
-                        case 'LocBorough':
-                            break;
-                        case 'State':
-                            break;
-                        case 'Zip':
-                            break;
-                        case 'Country':
-                            break;
-                        case 'Directions':
-                            break;
-                        case 'Institutional':
-                        case 'Closed':
-                        case 'WheelChr':
-                        case 'Format1':
-                        case 'Format2':
-                        case 'Format3':
-                        case 'Format4':
-                        case 'Format5':
-                            break;
-                        case 'Longitude':
-                            break;
-                        case 'Latitude':
-                            break;
-                        case 'unpublished':
-                            break;
+                    $value = trim($row[$columnIndex]);
+                    if ($value) {
+                        switch ($columnName) {
+                            case 'Committee':
+                                $meetingData['worldid_mixed'] = $value;
+                                break;
+                            case 'CommitteeName':
+                                $meetingData['meeting_name'] = $value;
+                                break;
+                            case 'AreaRegion':
+                                $meetingData['service_body_bigint'] = $areas[$row[$areaWorldIdIndex]]->GetID();
+                                break;
+                            case 'Day':
+                                $value = strtolower($value);
+                                $value = array_search($value, $nawsDays);
+                                $meetingData['weekday_tinyint'] = $value;
+                                break;
+                            case 'Time':
+                                $time = abs(intval($value));
+                                $hours = min(23, $time / 100);
+                                $minutes = min(59, ($time - (intval($time / 100) * 100)));
+                                $meetingData['start_time'] = sprintf("%d:%02d:00", $hours, $minutes);
+                                break;
+                            case 'Place':
+                                $meetingData['location_text'] = $value;
+                                break;
+                            case 'Address':
+                                $meetingData['location_street'] = $value;
+                                break;
+                            case 'City':
+                                $meetingData['location_municipality'] = $value;
+                                break;
+                            case 'LocBorough':
+                                $meetingData['location_neighborhood'] = $value;
+                                break;
+                            case 'State':
+                                $meetingData['location_province'] = $value;
+                                break;
+                            case 'Zip':
+                                $meetingData['location_postal_code_1'] = $value;
+                                break;
+                            case 'Country':
+                                $meetingData['location_nation'] = $value;
+                                break;
+                            case 'Directions':
+                                $meetingData['location_info'] = $value;
+                                break;
+                            case 'Institutional':
+                            case 'Closed':
+                            case 'WheelChr':
+                            case 'Format1':
+                            case 'Format2':
+                            case 'Format3':
+                            case 'Format4':
+                            case 'Format5':
+                                break;
+                            case 'Longitude':
+                                $meetingData['longitude'] = $value;
+                                break;
+                            case 'Latitude':
+                                $meetingData['latitude'] = $value;
+                                break;
+                            case 'unpublished':
+                                if ($value == '') {
+                                    $meetingData['published'] = false;
+                                }
+                                break;
+                        }
                     }
                 }
+                $ajaxHandler->SetMeetingDataValues($meetingData, false);
             }
 
             $response['importStatus'] = true;
