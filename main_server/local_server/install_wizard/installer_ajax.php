@@ -30,8 +30,9 @@ require_once(dirname(__FILE__).'/../../server/classes/c_comdef_dbsingleton.class
 require_once(dirname(__FILE__).'/../../server/shared/classes/comdef_utilityclasses.inc.php');
 require_once(dirname(__FILE__).'/../../server/shared/Array2Json.php');
 
-function generateRandomString($length = 10) {
-    return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
+function generateRandomString($length = 10)
+{
+    return substr(str_shuffle(str_repeat($x = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)))), 1, $length);
 }
 
 // We do everything we can to ensure that the requested language file is loaded.
