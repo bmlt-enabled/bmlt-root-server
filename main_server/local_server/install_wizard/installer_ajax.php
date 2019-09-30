@@ -113,13 +113,18 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
             }
 
             $expectedColumns = array(
-                'Delete', 'ParentName', 'Committee', 'CommitteeName', 'AreaRegion', 'Day', 'Time', 'Place',
-                'Address', 'City', 'LocBorough', 'State', 'Zip', 'Country', 'Directions',  'Closed', 'WheelChr',
-                'Format1', 'Format2', 'Format3', 'Format4', 'Format5', 'Longitude', 'Latitude', 'unpublished'
+                'delete', 'parentname', 'committee', 'committeename', 'arearegion', 'day', 'time', 'place',
+                'address', 'city', 'locborough', 'state', 'zip', 'country', 'directions',  'closed', 'wheelchr',
+                'format1', 'format2', 'format3', 'format4', 'format5', 'longitude', 'latitude'
             );
 
             $columnNames = array();
             $missingValues = array();
+            foreach ($nawsExportRows[1] as $key => $value) {
+                if ($value) {
+                    $nawsExportRows[1][$key] = strtolower($value);
+                }
+            }
             foreach ($expectedColumns as $expectedColumnName) {
                 $idx = array_search($expectedColumnName, $nawsExportRows[1]);
                 if (is_bool($idx)) {
@@ -296,7 +301,6 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
 
             // Create the service bodies
             $deleteIndex = null;
-            $unpublishedIndex = null;
             $areaNameIndex = null;
             $areaWorldIdIndex = null;
             $columnNames = null;
@@ -306,10 +310,9 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
 
                 if ($i == 1) {
                     $columnNames = $row;
-                    $deleteIndex = array_search('Delete', $columnNames);
-                    $unpublishedIndex = array_search('unpublished', $columnNames);
-                    $areaNameIndex = array_search('ParentName', $columnNames);
-                    $areaWorldIdIndex = array_search('AreaRegion', $columnNames);
+                    $deleteIndex = array_search('delete', $columnNames);
+                    $areaNameIndex = array_search('parentname', $columnNames);
+                    $areaWorldIdIndex = array_search('arearegion', $columnNames);
                     continue;
                 }
 
@@ -383,7 +386,7 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                     continue;
                 }
 
-                $requiredColumns = array('CommitteeName', 'AreaRegion', 'Day', 'Time', 'Address', 'City', 'State');
+                $requiredColumns = array('committeename', 'arearegion', 'day', 'time', 'address', 'city', 'state');
                 $meetingData = array();
                 $meetingData['published'] = true;
                 $meetingData['lang_enum'] = $server->GetLocalLang();
@@ -398,16 +401,16 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                     }
 
                     switch ($columnName) {
-                        case 'Committee':
+                        case 'committee':
                             $meetingData['worldid_mixed'] = $value;
                             break;
-                        case 'CommitteeName':
+                        case 'committeename':
                             $meetingData['meeting_name'] = $value;
                             break;
-                        case 'AreaRegion':
+                        case 'arearegion':
                             $meetingData['service_body_bigint'] = $areas[$row[$areaWorldIdIndex]]->GetID();
                             break;
-                        case 'Day':
+                        case 'day':
                             $value = strtolower($value);
                             $value = array_search($value, $nawsDays);
                             if ($value == false) {
@@ -416,37 +419,37 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                             }
                             $meetingData['weekday_tinyint'] = $value;
                             break;
-                        case 'Time':
+                        case 'time':
                             $time = abs(intval($value));
                             $hours = min(23, $time / 100);
                             $minutes = min(59, ($time - (intval($time / 100) * 100)));
                             $meetingData['start_time'] = sprintf("%d:%02d:00", $hours, $minutes);
                             break;
-                        case 'Place':
+                        case 'place':
                             $meetingData['location_text'] = $value;
                             break;
-                        case 'Address':
+                        case 'address':
                             $meetingData['location_street'] = $value;
                             break;
-                        case 'City':
+                        case 'city':
                             $meetingData['location_municipality'] = $value;
                             break;
-                        case 'LocBorough':
+                        case 'locborough':
                             $meetingData['location_neighborhood'] = $value;
                             break;
-                        case 'State':
+                        case 'state':
                             $meetingData['location_province'] = $value;
                             break;
-                        case 'Zip':
+                        case 'zip':
                             $meetingData['location_postal_code_1'] = $value;
                             break;
-                        case 'Country':
+                        case 'country':
                             $meetingData['location_nation'] = $value;
                             break;
-                        case 'Directions':
+                        case 'directions':
                             $meetingData['location_info'] = $value;
                             break;
-                        case 'WheelChr':
+                        case 'wheelchr':
                             if ($value == 'TRUE' || $value == '1') {
                                 $value = $formats['WCHR'];
                                 if ($value) {
@@ -454,21 +457,22 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                                 }
                             }
                             break;
-                        case 'Closed':
-                        case 'Format1':
-                        case 'Format2':
-                        case 'Format3':
-                        case 'Format4':
-                        case 'Format5':
+                        case 'closed':
+                        case 'format1':
+                        case 'format2':
+                        case 'format3':
+                        case 'format4':
+                        case 'format5':
                             $value = $formats[$value];
                             if ($value) {
                                 $meetingData['format_shared_id_list'] = array_merge($meetingData['format_shared_id_list'], $value);
                             }
                             break;
-                        case 'Longitude':
+
+                        case 'longitude':
                             $meetingData['longitude'] = $value;
                             break;
-                        case 'Latitude':
+                        case 'latitude':
                             $meetingData['latitude'] = $value;
                             break;
                         case 'unpublished':
