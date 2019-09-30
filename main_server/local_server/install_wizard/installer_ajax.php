@@ -450,7 +450,8 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                             $meetingData['location_info'] = $value;
                             break;
                         case 'wheelchr':
-                            if ($value == 'TRUE' || $value == '1') {
+                            $value = strtolower($value);
+                            if ($value == 'true' || $value == '1') {
                                 $value = $formats['WCHR'];
                                 if ($value) {
                                     $meetingData['format_shared_id_list'] = array_merge($meetingData['format_shared_id_list'], $value);
