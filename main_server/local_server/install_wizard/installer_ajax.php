@@ -390,8 +390,6 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                     continue;
                 }
 
-
-
                 $meetingData = array();
                 $meetingData['published'] = true;
                 $meetingData['lang_enum'] = $server->GetLocalLang();
