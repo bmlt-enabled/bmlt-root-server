@@ -59,7 +59,7 @@ CHANGELIST
 ----------
 ***Version 2.14.0* ** *- September 30, 2019*
 
-- The installation wizard now allows you to prime a database with a NAWS export. All meetings and service bodies are created, and a service body administrator user is created for each service body. Meetings missing data for required fields are not imported. Required fields are: CommitteeName, AreaRegion, Day, Time, Address, City. 
+- The installation wizard now allows you to prime a database with a NAWS export. All meetings and service bodies are created, and a service body administrator user is created for each service body. Meetings that are missing data for required fields are not imported. Required fields are: CommitteeName, AreaRegion, Day, Time, Address, City. 
 
 ***Version 2.13.7* ** *- September 23, 2019*
 
