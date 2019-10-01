@@ -115,7 +115,7 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
             $expectedColumns = array(
                 'delete', 'parentname', 'committee', 'committeename', 'arearegion', 'day', 'time', 'place',
                 'address', 'city', 'locborough', 'state', 'zip', 'country', 'directions',  'closed', 'wheelchr',
-                'format1', 'format2', 'format3', 'format4', 'format5', 'longitude', 'latitude'
+                'format1', 'format2', 'format3', 'format4', 'format5', 'longitude', 'latitude', 'room'
             );
 
             $columnNames = array();
