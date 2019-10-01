@@ -454,11 +454,13 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                             break;
                         case 'room':
                         case 'directions':
-                            if ($meetingData['location_info'] && $value) {
-                                if ($columnName == 'directions') {
-                                    $meetingData['location_info'] .= ' ' . $value;
-                                } else {
-                                    $meetingData['location_info'] = $value . ' ' . $meetingData['location_info'];
+                            if ($meetingData['location_info']) {
+                                if ($value) {
+                                    if ($columnName == 'directions') {
+                                        $meetingData['location_info'] .= ', ' . $value;
+                                    } else {
+                                        $meetingData['location_info'] = $value . ', ' . $meetingData['location_info'];
+                                    }
                                 }
                             } else {
                                 $meetingData['location_info'] = $value;
