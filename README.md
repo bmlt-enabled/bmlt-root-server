@@ -57,6 +57,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.14.0* ** *- September 30, 2019*
+
+- The installation wizard now allows you to prime a database with a NAWS export. All meetings and service bodies are created, and a service body administrator user is created for each service body. Meetings missing data for required fields are not imported. Required fields are: CommitteeName, AreaRegion, Day, Time, Address, City. 
+
 ***Version 2.13.7* ** *- September 23, 2019*
 
 - The No Smoking format is now automatically mapped to the appropriate NAWS format.

@@ -123,7 +123,9 @@
                                             'Page_4_Tab'                    =>  'STEP 4: Save The Settings',
                                             'Page_4_Heading'                =>  'Create the Settings File',
                                             'Page_4_Text'                   =>  'The root server was unable to create the settings file for you. Instead, we ask you to create it yourself, via FTP or a control panel file manager, name it "auto-config.inc.php", and paste the following text into the file:',
-                                            
+
+                                            'NAWS_Export_Spreadsheet_Optional' => 'NAWS Export Spreadsheet (Optional): ',
+
                                             'DefaultPasswordLength'         =>  10,
                                             'DefaultMeetingCount'           =>  10,
                                             'DefaultChangeDepth'            =>  5,

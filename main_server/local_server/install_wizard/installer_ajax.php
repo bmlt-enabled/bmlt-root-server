@@ -30,6 +30,18 @@ require_once(dirname(__FILE__).'/../../server/classes/c_comdef_dbsingleton.class
 require_once(dirname(__FILE__).'/../../server/shared/classes/comdef_utilityclasses.inc.php');
 require_once(dirname(__FILE__).'/../../server/shared/Array2Json.php');
 
+function generateRandomString($length = 10)
+{
+    return substr(str_shuffle(str_repeat($x = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)))), 1, $length);
+}
+
+function dropEverything($dbPrefix)
+{
+    $dropSql = str_replace('%%PREFIX%%', preg_replace('|[^a-z_\.\-A-Z0-9]|', '', $dbPrefix), file_get_contents(dirname(__FILE__).'/sql_files/dropEverything.sql'));
+    $value_array = array();
+    c_comdef_dbsingleton::preparedExec($dropSql, $value_array);
+}
+
 // We do everything we can to ensure that the requested language file is loaded.
 if (file_exists(dirname(__FILE__).'/../server_admin/lang/'.$lang.'/install_wizard_strings.php')) {
     require_once(dirname(__FILE__).'/../server_admin/lang/'.$lang.'/install_wizard_strings.php');
@@ -66,8 +78,75 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
         'dbStatus' => false,
         'dbReport' => '',
         'configStatus' => false,
-        'configReport' => ''
+        'configReport' => '',
+        'importStatus' => false,
+        'importReport' => ''
     );
+
+    // If the NAWS Export is provided, let's validate that it has the required columns up front
+    $nawsExportProvided = !empty($_FILES) && isset($_FILES['thefile']);
+    if ($nawsExportProvided) {
+        try {
+            require_once(__DIR__ . '/../../vendor/autoload.php');
+
+            $file = $_FILES['thefile'];
+            try {
+                $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($file['tmp_name']);
+                $spreadsheet = $reader->load($file['tmp_name']);
+                $nawsExportRows = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+
+                // If the last row is all nulls, remove it
+                $lastRow = $nawsExportRows[count($nawsExportRows)];
+                $allNulls = true;
+                foreach ($lastRow as $columnValue) {
+                    if ($columnValue != null) {
+                        $allNulls = false;
+                        break;
+                    }
+                }
+                if ($allNulls) {
+                    array_pop($nawsExportRows);
+                }
+            } catch (Exception $e) {
+                $response['importReport'] = $this->my_localized_strings['comdef_server_admin_strings']['server_admin_error_could_not_create_reader'] . $e->getMessage();
+                throw new Exception();
+            }
+
+            $expectedColumns = array(
+                'delete', 'parentname', 'committee', 'committeename', 'arearegion', 'day', 'time', 'place',
+                'address', 'city', 'locborough', 'state', 'zip', 'country', 'directions',  'closed', 'wheelchr',
+                'format1', 'format2', 'format3', 'format4', 'format5', 'longitude', 'latitude', 'room'
+            );
+
+            $columnNames = array();
+            $missingValues = array();
+            foreach ($nawsExportRows[1] as $key => $value) {
+                if ($value) {
+                    $nawsExportRows[1][$key] = strtolower($value);
+                }
+            }
+            foreach ($expectedColumns as $expectedColumnName) {
+                $idx = array_search($expectedColumnName, $nawsExportRows[1]);
+                if (is_bool($idx)) {
+                    array_push($missingValues, $expectedColumnName);
+                } else {
+                    $columnNames[$idx] = $expectedColumnName;
+                }
+            }
+
+            if (count($missingValues) > 0) {
+                $response['importReport'] = 'NAWS export is missing required columns: ' . implode(', ', $missingValues);
+                echo array2json($response);
+                ob_end_flush();
+                die();
+            }
+        } catch (Exception $e) {
+            $response['importReport'] = 'Unexpected error when validating columns in NAWS export: ' . $e->getMessage();
+            echo array2json($response);
+            ob_end_flush();
+            die();
+        }
+    }
 
     // Initialize Database
     try {
@@ -194,9 +273,257 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
         chmod($config_path, 0644);
         $response['configStatus'] = true;
     } catch (Exception $e) {
+        if ($nawsExportProvided) {
+            // If the user was attempting an import, just undo the whole installation when
+            // there is a failure to write the configuration file
+            dropEverything($http_vars['dbPrefix']);
+        }
         echo array2json($response);
         ob_end_flush();
         die();
+    }
+
+    // If a NAWS CSV is provided to prime the database, import it
+    if ($nawsExportProvided) {
+        try {
+            set_time_limit(1200); // 20 minutes
+            require_once(__DIR__.'/../../server/c_comdef_server.class.php');
+            require_once(__DIR__.'/../../server/classes/c_comdef_meeting.class.php');
+            require_once(__DIR__.'/../../server/classes/c_comdef_service_body.class.php');
+            require_once(__DIR__.'/../../server/classes/c_comdef_user.class.php');
+
+            $server = c_comdef_server::MakeServer();
+            $adminLogin = $http_vars['admin_login'];
+            $encryptedPassword = $server->GetEncryptedPW($http_vars['admin_login'], $http_vars['admin_password']);
+            $_SESSION[$http_vars['admin_session_name']] = "$adminLogin\t$encryptedPassword";
+            require_once(__DIR__.'/../server_admin/c_comdef_admin_ajax_handler.class.php');
+
+            // Create the service bodies
+            $deleteIndex = null;
+            $areaNameIndex = null;
+            $areaWorldIdIndex = null;
+            $columnNames = null;
+            $areas = array();
+            for ($i = 1; $i <= count($nawsExportRows); $i++) {
+                $row = $nawsExportRows[$i];
+
+                if ($i == 1) {
+                    $columnNames = $row;
+                    $deleteIndex = array_search('delete', $columnNames);
+                    $areaNameIndex = array_search('parentname', $columnNames);
+                    $areaWorldIdIndex = array_search('arearegion', $columnNames);
+                    continue;
+                }
+
+                if ($row[$deleteIndex] == 'D') {
+                    continue;
+                }
+
+                $areaName = trim($row[$areaNameIndex]);
+                $areaWorldId = trim($row[$areaWorldIdIndex]);
+                if (!$areaName) {
+                    continue;
+                }
+                $areas[$areaWorldId] = $areaName;
+            }
+
+            foreach ($areas as $areaWorldId => $areaName) {
+                $userName = preg_replace("/[^A-Za-z0-9]/", '', $areaName);
+                $user = new c_comdef_user(
+                    null,
+                    0,
+                    _USER_LEVEL_SERVICE_BODY_ADMIN,
+                    '',
+                    $userName,
+                    '',
+                    $server->GetLocalLang(),
+                    $userName,
+                    'User automatically created for ' . $areaName,
+                    1
+                );
+                $user->SetPassword(generateRandomString(30));
+                $user->UpdateToDB();
+
+                $serviceBody = new c_comdef_service_body;
+                $serviceBody->SetLocalName($areaName);
+                $serviceBody->SetWorldID($areaWorldId);
+                $serviceBody->SetLocalDescription($areaName);
+                $serviceBody->SetPrincipalUserID($user->GetID());
+                $serviceBody->SetEditors(array($user->GetID()));
+                if (substr($areaWorldId, 0, 2) == 'AR') {
+                    $serviceBody->SetSBType(c_comdef_service_body__ASC__);
+                } else {
+                    $serviceBody->SetSBType(c_comdef_service_body__RSC__);
+                }
+                $serviceBody->UpdateToDB();
+                $areas[$areaWorldId] = $serviceBody;
+            }
+
+            reset($nawsExportRows);
+
+            $formats = array();
+            foreach ($server->GetFormatsObj()->GetFormatsArray()['en'] as $format) {
+                if ($format instanceof c_comdef_format) {
+                    $world_id = $format->GetWorldID();
+                    $shared_id = $format->GetSharedID();
+                    if ($world_id && $shared_id) {
+                        if (is_array($formats) && array_key_exists($world_id, $formats)) {
+                            array_push($formats[$world_id], $shared_id);
+                        } else {
+                            $formats[$world_id] = array($shared_id);
+                        }
+                    }
+                }
+            }
+
+            $ajaxHandler = new c_comdef_admin_ajax_handler(null);
+            $nawsDays = array(null, 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday');
+            // State is not a required column, because it is not always filled out for foreign countries
+            $requiredColumns = array('committeename', 'arearegion', 'day', 'time', 'address', 'city');
+            for ($i = 1; $i <= count($nawsExportRows); $i++) {
+                $row = $nawsExportRows[$i];
+                if ($i == 1) {
+                    continue;
+                }
+
+                if ($row[$deleteIndex] == 'D') {
+                    continue;
+                }
+
+                $meetingData = array();
+                $meetingData['published'] = true;
+                $meetingData['lang_enum'] = $server->GetLocalLang();
+                $meetingData['duration_time'] = $http_vars['default_duration_time'];
+                $meetingData['format_shared_id_list'] = array();
+                $skipMeeting = false;
+                foreach ($columnNames as $columnIndex => $columnName) {
+                    $value = trim($row[$columnIndex]);
+
+                    // NAWS exports sometimes contain deleted meetings, and will have empty cells
+                    // for those meetings. Just skip them.
+                    if (!is_bool(array_search($columnName, $requiredColumns)) && !$value) {
+                        $skipMeeting = true;
+                        break;
+                    }
+
+                    switch ($columnName) {
+                        case 'committee':
+                            $meetingData['worldid_mixed'] = $value;
+                            break;
+                        case 'committeename':
+                            $meetingData['meeting_name'] = $value;
+                            break;
+                        case 'arearegion':
+                            $meetingData['service_body_bigint'] = $areas[$row[$areaWorldIdIndex]]->GetID();
+                            break;
+                        case 'day':
+                            $value = strtolower($value);
+                            $value = array_search($value, $nawsDays);
+                            if ($value == false) {
+                                $response['importReport'] = 'Invalid value in column \'' . $columnName . '\'';
+                                throw new Exception();
+                            }
+                            $meetingData['weekday_tinyint'] = $value;
+                            break;
+                        case 'time':
+                            $time = abs(intval($value));
+                            $hours = min(23, $time / 100);
+                            $minutes = min(59, ($time - (intval($time / 100) * 100)));
+                            $meetingData['start_time'] = sprintf("%d:%02d:00", $hours, $minutes);
+                            break;
+                        case 'place':
+                            $meetingData['location_text'] = $value;
+                            break;
+                        case 'address':
+                            $meetingData['location_street'] = $value;
+                            break;
+                        case 'city':
+                            $meetingData['location_municipality'] = $value;
+                            break;
+                        case 'locborough':
+                            $meetingData['location_neighborhood'] = $value;
+                            break;
+                        case 'state':
+                            $meetingData['location_province'] = $value;
+                            break;
+                        case 'zip':
+                            $meetingData['location_postal_code_1'] = $value;
+                            break;
+                        case 'country':
+                            $meetingData['location_nation'] = $value;
+                            break;
+                        case 'room':
+                        case 'directions':
+                            if ($meetingData['location_info'] && $value) {
+                                if ($columnName == 'directions') {
+                                    $meetingData['location_info'] .= ' ' . $value;
+                                } else {
+                                    $meetingData['location_info'] = $value . ' ' . $meetingData['location_info'];
+                                }
+                            } else {
+                                $meetingData['location_info'] = $value;
+                            }
+                            break;
+                        case 'wheelchr':
+                            $value = strtolower($value);
+                            if ($value == 'true' || $value == '1') {
+                                $value = $formats['WCHR'];
+                                if ($value) {
+                                    $meetingData['format_shared_id_list'] = array_merge($meetingData['format_shared_id_list'], $value);
+                                }
+                            }
+                            break;
+                        case 'closed':
+                        case 'format1':
+                        case 'format2':
+                        case 'format3':
+                        case 'format4':
+                        case 'format5':
+                            $value = $formats[$value];
+                            if ($value) {
+                                $meetingData['format_shared_id_list'] = array_merge($meetingData['format_shared_id_list'], $value);
+                            }
+                            break;
+                        case 'longitude':
+                            $meetingData['longitude'] = $value;
+                            break;
+                        case 'latitude':
+                            $meetingData['latitude'] = $value;
+                            break;
+                        case 'unpublished':
+                            if ($value == '1') {
+                                $meetingData['published'] = false;
+                            }
+                            break;
+                    }
+                }
+
+                if ($skipMeeting) {
+                    continue;
+                }
+
+                $meetingData['format_shared_id_list'] = implode(',', $meetingData['format_shared_id_list']);
+                $ajaxHandler->SetMeetingDataValues($meetingData, false);
+            }
+
+            $response['importStatus'] = true;
+        } catch (Exception $e) {
+            // Drop all the tables
+            dropEverything($http_vars['dbPrefix']);
+
+            // Delete the config file
+            unlink($config_path);
+
+            if (!$response['importReport']) {
+                $response['importReport'] = 'Unknown error importing meetings: ' . $e->getMessage();
+            }
+            echo array2json($response);
+            ob_end_flush();
+            die();
+        }
+    } else {
+        $response['importStatus'] = true;
+        $response['importReport'] = 'No CSV was provided, so no meetings were imported.';
     }
 
     echo array2json($response);
