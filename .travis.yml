@@ -113,8 +113,7 @@ jobs:
           local_dir: docs
           target_branch: gh-pages
           github_token: $GITHUB_API_KEY
-          on:
-            branch: master
+      if: branch = master
             
 notifications:
   slack:
