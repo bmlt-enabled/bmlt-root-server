@@ -454,7 +454,7 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                             break;
                         case 'room':
                         case 'directions':
-                            if ($meetingsData['location_info']) {
+                            if ($meetingData['location_info']) {
                                 $meetingData['location_info'] .= ' ' . $value;
                             } else {
                                 $meetingData['location_info'] = $value;
