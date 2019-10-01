@@ -359,7 +359,7 @@ $default_lang = $lang;
                     <div id="database_install_stuff_div" class="item_hidden">
                         <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_4_Initialize_Root_Server_Heading']; ?></h1>
                         <div class="one_line_div centered_text">
-                            NAWS Export Spreadsheet (Optional): <input name="bmlt_admin_naws_spreadsheet_file_input" id="bmlt_admin_naws_spreadsheet_file_input" type="file" />
+                            <?php echo $comdef_install_wizard_strings['NAWS_Export_Spreadsheet_Optional']; ?> <input name="bmlt_admin_naws_spreadsheet_file_input" id="bmlt_admin_naws_spreadsheet_file_input" type="file" />
                         </div>
                         <div class="one_line_div centered_text">
                             <a id="bmlt_installer_initialize_ajax_button" class="bmlt_admin_ajax_button" href="javascript:g_installer_object.initializeRootServer()"><?php echo htmlspecialchars($comdef_install_wizard_strings['Page_4_Initialize_Root_Server_Button']) ?></a>
