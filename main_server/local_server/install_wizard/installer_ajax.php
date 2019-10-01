@@ -135,7 +135,6 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
             }
 
             if (count($missingValues) > 0) {
-                // TODO Test that this condition actually works
                 $response['importReport'] = 'NAWS export is missing required columns: ' . implode(', ', $missingValues);
                 echo array2json($response);
                 ob_end_flush();
@@ -320,8 +319,11 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                     continue;
                 }
 
-                $areaName = $row[$areaNameIndex];
-                $areaWorldId = $row[$areaWorldIdIndex];
+                $areaName = trim($row[$areaNameIndex]);
+                $areaWorldId = trim($row[$areaWorldIdIndex]);
+                if (!$areaName) {
+                    continue;
+                }
                 $areas[$areaWorldId] = $areaName;
             }
 
@@ -376,6 +378,8 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
 
             $ajaxHandler = new c_comdef_admin_ajax_handler(null);
             $nawsDays = array(null, 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday');
+            // State is not a required column, because it is not always filled out for foreign countries
+            $requiredColumns = array('committeename', 'arearegion', 'day', 'time', 'address', 'city');
             for ($i = 1; $i <= count($nawsExportRows); $i++) {
                 $row = $nawsExportRows[$i];
                 if ($i == 1) {
@@ -386,18 +390,22 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                     continue;
                 }
 
-                $requiredColumns = array('committeename', 'arearegion', 'day', 'time', 'address', 'city', 'state');
+
+
                 $meetingData = array();
                 $meetingData['published'] = true;
                 $meetingData['lang_enum'] = $server->GetLocalLang();
                 $meetingData['duration_time'] = $http_vars['default_duration_time'];
                 $meetingData['format_shared_id_list'] = array();
+                $skipMeeting = false;
                 foreach ($columnNames as $columnIndex => $columnName) {
                     $value = trim($row[$columnIndex]);
 
+                    // NAWS exports sometimes contain deleted meetings, and will have empty cells
+                    // for those meetings. Just skip them.
                     if (!is_bool(array_search($columnName, $requiredColumns)) && !$value) {
-                        $response['importReport'] = 'Missing required value in column \'' . $columnName . '\'';
-                        throw new Exception();
+                        $skipMeeting = true;
+                        break;
                     }
 
                     switch ($columnName) {
@@ -483,6 +491,11 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                             break;
                     }
                 }
+
+                if ($skipMeeting) {
+                    continue;
+                }
+
                 $meetingData['format_shared_id_list'] = implode(',', $meetingData['format_shared_id_list']);
                 $ajaxHandler->SetMeetingDataValues($meetingData, false);
             }
