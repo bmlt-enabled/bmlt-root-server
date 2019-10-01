@@ -455,7 +455,7 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                         case 'room':
                         case 'directions':
                             if ($meetingData['location_info'] && $value) {
-                                if ($columnName == 'room') {
+                                if ($columnName == 'directions') {
                                     $meetingData['location_info'] .= ' ' . $value;
                                 } else {
                                     $meetingData['location_info'] = $value . ' ' . $meetingData['location_info'];
