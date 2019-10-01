@@ -452,8 +452,13 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                         case 'country':
                             $meetingData['location_nation'] = $value;
                             break;
+                        case 'room':
                         case 'directions':
-                            $meetingData['location_info'] = $value;
+                            if ($meetingsData['location_info']) {
+                                $meetingData['location_info'] .= ' ' . $value;
+                            } else {
+                                $meetingData['location_info'] = $value;
+                            }
                             break;
                         case 'wheelchr':
                             $value = strtolower($value);
