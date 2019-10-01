@@ -475,7 +475,6 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
                                 $meetingData['format_shared_id_list'] = array_merge($meetingData['format_shared_id_list'], $value);
                             }
                             break;
-
                         case 'longitude':
                             $meetingData['longitude'] = $value;
                             break;
