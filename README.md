@@ -59,7 +59,7 @@ CHANGELIST
 ----------
 ***Version 2.14.1* ** *- October 11, 2019*
 
-- Fixed an issue that prevented data import from the NAWS export from working when using PHP 7.0.
+- Fixed an issue that prevented data imports from the NAWS export from working when using PHP 7.0.
 
 ***Version 2.14.0* ** *- September 30, 2019*
 
