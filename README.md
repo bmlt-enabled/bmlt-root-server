@@ -57,6 +57,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.14.1* ** *- October 11, 2019*
+
+- Fixed an issue that prevented the data import from the NAWS export from working when using PHP 7.0.
+
 ***Version 2.14.0* ** *- September 30, 2019*
 
 - The installation wizard now allows you to prime a database with a NAWS export. All meetings and service bodies are created, and a service body administrator user is created for each service body. Meetings that are missing data for required fields are not imported. Required fields are: CommitteeName, AreaRegion, Day, Time, Address, City. 
