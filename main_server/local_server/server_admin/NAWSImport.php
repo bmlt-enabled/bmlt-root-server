@@ -20,9 +20,8 @@ class NAWSImport
     private $areaNameIndex = null;
     private $areaWorldIdIndex = null;
     private $columnNames = null;
-    private $defaultDurationTime = null;
 
-    public function __construct($importFilePath, $defaultDurationTime)
+    public function __construct($importFilePath)
     {
         try {
             $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($importFilePath);
@@ -53,7 +52,6 @@ class NAWSImport
         }
 
         $this->validateRequiredColumnsExist();
-        $this->defaultDurationTime = $defaultDurationTime;
     }
 
     private function validateRequiredColumnsExist()
@@ -157,6 +155,8 @@ class NAWSImport
 
     private function createMeetings()
     {
+        $defaultDurationTime = $this->server->GetLocalStrings()['default_duration_time'];
+
         $formats = array();
         foreach ($this->server->GetFormatsObj()->GetFormatsArray()['en'] as $format) {
             if ($format instanceof c_comdef_format) {
@@ -189,7 +189,7 @@ class NAWSImport
             $meetingData = array();
             $meetingData['published'] = true;
             $meetingData['lang_enum'] = $this->server->GetLocalLang();
-            $meetingData['duration_time'] = $this->defaultDurationTime;
+            $meetingData['duration_time'] = $defaultDurationTime;
             $meetingData['format_shared_id_list'] = array();
             $skipMeeting = false;
             foreach ($this->columnNames as $columnIndex => $columnName) {

@@ -90,7 +90,7 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
         require_once(__DIR__ . '/../server_admin/NAWSImport.php');
 
         try {
-            $nawsImport = new NAWSImport($_FILES['thefile'], $http_vars['default_duration_time']);
+            $nawsImport = new NAWSImport($_FILES['thefile']);
         } catch (Exception $e) {
             $response['importReport'] = $e->getMessage();
             echo array2json($response);
