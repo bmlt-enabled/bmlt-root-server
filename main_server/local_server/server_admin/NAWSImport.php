@@ -41,9 +41,8 @@ class NAWSImport
             if ($allNulls) {
                 array_pop($this->nawsExportRows);
             }
-
         } catch (Exception $e) {
-            throw new Exception(c_comdef_server::GetLocalStrings()['comdef_server_admin_strings']['server_admin_error_could_not_create_reader'] . $e->getMessage());
+            throw new Exception('There was a problem reading the spreadsheet: ' . $e->getMessage());
         }
 
 
