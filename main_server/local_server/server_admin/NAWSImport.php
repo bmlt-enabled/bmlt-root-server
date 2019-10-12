@@ -80,9 +80,15 @@ class NAWSImport
         require_once(__DIR__ . '/../../server/classes/c_comdef_service_body.class.php');
         require_once(__DIR__ . '/../../server/classes/c_comdef_user.class.php');
         $this->server = c_comdef_server::MakeServer();
-        // TODO do all of this in a transaction
-        $this->createServiceBodiesAndUsers();
-        $this->createMeetings();
+        c_comdef_dbsingleton::beginTransaction();
+        try {
+            $this->createServiceBodiesAndUsers();
+            $this->createMeetings();
+        } catch (Exception $e) {
+            c_comdef_dbsingleton::rollBack();
+            throw new Exception($e->getMessage());
+        }
+        c_comdef_dbsingleton::commit();
     }
 
     private function createServiceBodiesAndUsers()
