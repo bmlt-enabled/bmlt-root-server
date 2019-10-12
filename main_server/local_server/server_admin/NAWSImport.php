@@ -3,6 +3,7 @@
 defined('BMLT_EXEC') or die('Cannot Execute Directly');
 
 require_once(__DIR__ . '/../../vendor/autoload.php');
+require_once(__DIR__ . '/../../server/c_comdef_server.class.php');
 
 // phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 class NAWSImport
@@ -41,54 +42,44 @@ class NAWSImport
                 array_pop($this->nawsExportRows);
             }
 
-            $this->columnNames = $this->nawsExportRows[1];
-            $this->deleteIndex = array_search('delete', $this->columnNames);
-            $this->areaNameIndex = array_search('parentname', $this->columnNames);
-            $this->areaWorldIdIndex = array_search('arearegion', $this->columnNames);
         } catch (Exception $e) {
-            // TODO throw an appropriate exception
-            //$response['importReport'] = $this->my_localized_strings['comdef_server_admin_strings']['server_admin_error_could_not_create_reader'] . $e->getMessage();
-            //throw new Exception();
+            throw new Exception(c_comdef_server::GetLocalStrings()['comdef_server_admin_strings']['server_admin_error_could_not_create_reader'] . $e->getMessage());
         }
 
-        $this->validateRequiredColumnsExist();
-    }
 
-    private function validateRequiredColumnsExist()
-    {
-        $actualColumnNames = array();
-        $missingValues = array();
+        // Lowercase all of the headings for case insensitive string matching
         foreach ($this->nawsExportRows[1] as $key => $value) {
             if ($value) {
                 $this->nawsExportRows[1][$key] = strtolower($value);
             }
         }
+
+        // Validate there are no missing columns, and set the $this->columnNames map
+        $missingValues = array();
         foreach ($this->expectedColumns as $expectedColumnName) {
             $idx = array_search($expectedColumnName, $this->nawsExportRows[1]);
             if (is_bool($idx)) {
                 array_push($missingValues, $expectedColumnName);
             } else {
-                $actualColumnNames[$idx] = $expectedColumnName;
+                $this->columnNames[$idx] = $expectedColumnName;
             }
         }
-
         if (count($missingValues) > 0) {
-            // TODO throw an appropriate exception
-            //$response['importReport'] = 'NAWS export is missing required columns: ' . implode(', ', $missingValues);
-            //echo array2json($response);
-            //ob_end_flush();
-            //die();
+            throw new Exception('NAWS export is missing required columns: ' . implode(', ', $missingValues));
         }
+
+        // Store the column index for these important columns
+        $this->deleteIndex = array_search('delete', $this->columnNames);
+        $this->areaNameIndex = array_search('parentname', $this->columnNames);
+        $this->areaWorldIdIndex = array_search('arearegion', $this->columnNames);
     }
 
     public function import()
     {
         set_time_limit(1200); // 20 minutes
-        require_once(__DIR__ . '/../../server/c_comdef_server.class.php');
         require_once(__DIR__ . '/../../server/classes/c_comdef_meeting.class.php');
         require_once(__DIR__ . '/../../server/classes/c_comdef_service_body.class.php');
         require_once(__DIR__ . '/../../server/classes/c_comdef_user.class.php');
-        require_once(__DIR__ . '/c_comdef_admin_ajax_handler.class.php');
         $this->server = c_comdef_server::MakeServer();
         // TODO do all of this in a transaction
         $this->createServiceBodiesAndUsers();
@@ -98,7 +89,6 @@ class NAWSImport
     private function createServiceBodiesAndUsers()
     {
         // Create the service bodies
-        $columnNames = null;
         for ($i = 1; $i <= count($this->nawsExportRows); $i++) {
             $row = $this->nawsExportRows[$i];
 
@@ -216,9 +206,7 @@ class NAWSImport
                         $value = strtolower($value);
                         $value = array_search($value, $nawsDays);
                         if ($value == false) {
-                            // TODO throw an appropriate exception
-                            //$response['importReport'] = 'Invalid value in column \'' . $columnName . '\'';
-                            //throw new Exception();
+                            throw new Exception('Invalid value in column \'' . $columnName . '\'');
                         }
                         $meetingData['weekday_tinyint'] = $value;
                         break;
