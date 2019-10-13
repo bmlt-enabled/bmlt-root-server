@@ -1931,14 +1931,22 @@ class c_comdef_admin_main_console
             $ret .= '</div>';
 
 
-            // World IDs
-            $ret .= '<div id="bmlt_admin_server_admin_world_ids_editor_div" class="bmlt_admin_server_admin_editor_div">';
+            $ret .= '<div id="bmlt_admin_server_admin_editor_div" class="bmlt_admin_server_admin_editor_div">';
                 $ret .= '<fieldset id="bmlt_admin_server_admin_editor_fieldset" class="bmlt_admin_server_admin_editor_fieldset">';
                     $ret .= '<legend id="bmlt_admin_server_admin_editor_fieldset_legend" class="bmlt_admin_server_admin_editor_fieldset_legend">';
                         // Put the select menu, or "popup", here
+        if ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) {
+            $ret .= '<select id="bmlt_admin_server_admin_select" class="bmlt_admin_server_admin_select" onchange="admin_handler_object.toggleServerAdminSelect();">';
+                $ret .= '<option value="update_world_ids" selected>Update Meeting World IDs from Spreadsheet</option>';
+                $ret .= '<option value="naws_import">Import Service Bodies and Meetings from NAWS Export</option>';
+            $ret .= '</select>';
+        } else {
+            $ret .= '<span class="server_admin_title_span">Update World IDs from NAWS Spreadsheet</span>';
+        }
                     $ret .= '</legend>';
 
-                    $ret .= '<div class="bmlt_admin_server_admin_edit_form_inner_div">';
+                    // World IDs update
+                    $ret .= '<div id="bmlt_admin_server_admin_update_world_ids_edit_form_inner_div" class="bmlt_admin_server_admin_update_world_ids_edit_form_inner_div">';
                         $ret .= '<div class="bmlt_admin_server_admin_edit_form_inner_div">';
                             $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                                 $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['server_admin_naws_spreadsheet_label']).'</span>';
@@ -1954,17 +1962,9 @@ class c_comdef_admin_main_console
                             $ret .= '</div>';
                         $ret .= '</div>';
                     $ret .= '</div>';
-                $ret .= '</fieldset>';
-            $ret .= '</div>';
 
-            // NAWS Import
-            $ret .= '<div id="bmlt_admin_server_admin_naws_import_editor_div" class="bmlt_admin_server_admin_editor_div">';
-                $ret .= '<fieldset id="bmlt_admin_server_admin_editor_fieldset" class="bmlt_admin_server_admin_editor_fieldset">';
-                    $ret .= '<legend id="bmlt_admin_server_admin_editor_fieldset_legend" class="bmlt_admin_server_admin_editor_fieldset_legend">';
-                        // Put the select menu, or "popup", here
-                    $ret .= '</legend>';
-
-                    $ret .= '<div class="bmlt_admin_server_admin_edit_form_inner_div">';
+                    // NAWS Import
+                    $ret .= '<div id="bmlt_admin_server_admin_naws_import_edit_form_inner_div" class="bmlt_admin_server_admin_naws_import_edit_form_inner_div item_hidden">';
                         $ret .= '<div class="bmlt_admin_server_admin_edit_form_inner_div">';
                             $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                                 $ret .= '<span class="bmlt_admin_med_label_right">NAWS Import Spreadsheet:</span>';
@@ -1980,6 +1980,9 @@ class c_comdef_admin_main_console
                             $ret .= '</div>';
                         $ret .= '</div>';
                     $ret .= '</div>';
+
+
+
                 $ret .= '</fieldset>';
             $ret .= '</div>';
 

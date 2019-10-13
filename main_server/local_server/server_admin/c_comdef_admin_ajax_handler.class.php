@@ -109,6 +109,9 @@ class c_comdef_admin_ajax_handler
     public function HandleNAWSImport()
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+        if (!c_comdef_server::IsUserServerAdmin(null, true)) {
+            return 'NOT AUTHORIZED';
+        }
         return '';
     }
 
