@@ -1941,7 +1941,7 @@ class c_comdef_admin_main_console
                 $ret .= '<option value="naws_import">Import Service Bodies and Meetings from NAWS Export</option>';
             $ret .= '</select>';
         } else {
-            $ret .= '<span class="server_admin_title_span">Update World IDs from NAWS Spreadsheet</span>';
+            $ret .= '<span class="server_admin_title_span">Update Meeting World IDs from NAWS Spreadsheet</span>';
         }
                     $ret .= '</legend>';
 
