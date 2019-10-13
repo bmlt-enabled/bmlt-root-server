@@ -755,48 +755,6 @@ class c_comdef_server
     }
     
     /*******************************************************************/
-    /** \brief Gets an unused ID from the end of the table and
-        returns it. It also sets that ID into the table AUTO_INCREMENT,
-        so it can't get re-used.
-
-        \returns an integer, containing that ID.
-    */
-    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public static function GetNewMeetingID()
-    {
-        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-        include(dirname(__FILE__)."/config/get-config.php");
-        
-        try {
-            $sql = "SHOW TABLE STATUS LIKE '".self::GetMeetingTableName_obj()."_main'";
-            $rows = c_comdef_dbsingleton::preparedQuery($sql, array());
-            if (is_array($rows) && count($rows)) {
-                $table_row = 'auto_increment';
-                
-                if (!isset($rows[0][$table_row])) {
-                    $table_row = 'Auto_increment';
-                }
-                
-                $max_id = intval($rows[0][$table_row]) + 1;
-            }
-            
-            $sql = "ALTER TABLE `".self::GetMeetingTableName_obj()."_main` AUTO_INCREMENT=". intval($max_id);
-    
-            c_comdef_dbsingleton::preparedExec($sql);
-        } catch (Exception $ex) {
-            global  $_COMDEF_DEBUG;
-            
-            if ($_COMDEF_DEBUG) {
-                echo "Exception Thrown in c_comdef_server::GetNewMeetingID()!<br />";
-                var_dump($ex);
-            }
-            throw ( $ex );
-        }
-        
-        return --$max_id;
-    }
-    
-    /*******************************************************************/
     /** \brief Creates a new, relatively empty meeting in the database,
         with no data fields and minimal information.
 

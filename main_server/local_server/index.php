@@ -42,9 +42,7 @@ if (isset($g_enable_language_selector) && $g_enable_language_selector) {
     setcookie(_LANG_COOKIE_NAME, $lang_enum, $expires, '/');
 }
 
-if (isset($http_vars ['bmlt_data_transfer'])) {  // This checks for the transfer wizard.
-    require_once(dirname(__FILE__).'/server_admin/c_comdef_data_importer.class.php');
-} elseif (isset($http_vars ['bmlt_ajax_callback'])) {
+if (isset($http_vars ['bmlt_ajax_callback'])) {
     require_once(dirname(__FILE__).'/server_admin/c_comdef_admin_ajax_handler.class.php');
 } else {
     ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"

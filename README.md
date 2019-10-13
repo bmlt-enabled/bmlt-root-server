@@ -57,6 +57,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.14.2* ** *- TBD*
+
+- Refactored NAWS import functionality, and increased its performance by using database transactions.
+
 ***Version 2.14.1* ** *- October 11, 2019*
 
 - Fixed an issue that prevented data imports from a NAWS export from working when using PHP 7.0.
