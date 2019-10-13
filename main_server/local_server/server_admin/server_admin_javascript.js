@@ -339,6 +339,20 @@ function BMLT_Server_Admin()
     };
 
     /************************************************************************************//**
+     *   \brief This is called when the NAWS Import file input changes                   *
+     ****************************************************************************************/
+    this.handleNAWSImportFileInputChange = function() {
+        var file_input = document.getElementById('bmlt_admin_naws_import_file_input');
+        var save_button = document.getElementById('bmlt_admin_naws_import_ajax_button');
+
+        if (file_input.files && file_input.files.length > 0) {
+            save_button.className = 'bmlt_admin_ajax_button';
+        } else {
+            save_button.className = 'bmlt_admin_ajax_button button_disabled';
+        }
+    };
+
+    /************************************************************************************//**
     *   \brief This is called to initiate an AJAX process to update world IDs from file     *
     ****************************************************************************************/
     this.handleUpdateWorldIDsFromSpreadsheet = function() {
@@ -395,11 +409,71 @@ function BMLT_Server_Admin()
     };
 
     /************************************************************************************//**
+     *   \brief This is called to initiate an AJAX process to update world IDs from file     *
+     ****************************************************************************************/
+    this.handleNAWSImport = function() {
+        var file_input = document.getElementById('bmlt_admin_naws_import_file_input');
+        var save_button = document.getElementById('bmlt_admin_naws_import_ajax_button');
+        if (!file_input || !file_input.files || !file_input.files.length) {
+            return;
+        }
+    
+        if ( this.m_ajax_request_in_progress ) {
+            this.m_ajax_request_in_progress.abort();
+            this.m_ajax_request_in_progress = null;
+        }
+    
+        this.m_ajax_request_in_progress = BMLT_AjaxRequest_FileUpload(
+            g_ajax_callback_uri + '&do_naws_import=1',
+            function(response) {admin_handler_object.handleNAWSImportCallback(response);},
+            file_input.files[0]
+        );
+        this.setNAWSImportThrobber(true);
+        save_button.className = 'bmlt_admin_ajax_button button_disabled';
+    };
+
+    this.handleNAWSImportCallback = function(response) {
+        var file_input = document.getElementById('bmlt_admin_naws_spreadsheet_file_input');
+        var save_button = document.getElementById('bmlt_admin_update_world_ids_ajax_button');
+        this.setNAWSImportThrobber(false);
+        file_input.value = '';
+        save_button.className = 'bmlt_admin_ajax_button button_disabled';
+
+        if (response && response.responseText) {
+            if (response.responseText === 'NOT AUTHORIZED') {
+                alert(g_AJAX_Auth_Failure);
+                return;
+            }
+
+            eval('var result = ' + response.responseText + ';');
+            if (!result) {
+                return;
+            }
+
+            if (result.success) {
+                // TODO handle success
+            } else {
+                // TODO handle errors
+            }
+        }
+    };
+
+    /************************************************************************************//**
     *   \brief Displays or hides the AJAX Throbber for the Update World IDs button          *
     ****************************************************************************************/
     this.setUpdateWorldIDsThrobber = function(visible) {
         var button_span = document.getElementById('bmlt_admin_update_world_ids_ajax_button_span');
         var throbber_span = document.getElementById('bmlt_admin_update_world_ids_ajax_button_throbber_span');
+        throbber_span.className = 'bmlt_admin_value_left' + (visible ? '' : ' item_hidden');
+        button_span.className = 'bmlt_admin_value_left' + (visible ? ' item_hidden' : '');
+    };
+
+    /************************************************************************************//**
+     *   \brief Displays or hides the AJAX Throbber for the Update World IDs button          *
+     ****************************************************************************************/
+    this.setNAWSImportThrobber = function(visible) {
+        var button_span = document.getElementById('bmlt_admin_naws_import_ajax_button_span');
+        var throbber_span = document.getElementById('bmlt_admin_naws_import_ajax_button_throbber_span');
         throbber_span.className = 'bmlt_admin_value_left' + (visible ? '' : ' item_hidden');
         button_span.className = 'bmlt_admin_value_left' + (visible ? ' item_hidden' : '');
     };

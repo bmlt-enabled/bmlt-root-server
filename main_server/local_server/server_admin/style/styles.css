@@ -773,6 +773,11 @@ div.bmlt_admin_tab_div_not_selected a:active
     text-decoration:none;
 }
 
+div.bmlt_admin_server_admin_editor_div_hidden
+{
+    display:none;
+}
+
 div.bmlt_admin_meeting_editor_form_specifier_div,
 div.bmlt_admin_server_admin_edit_form_inner_div,
 div.bmlt_admin_user_account_edit_form_inner_div,

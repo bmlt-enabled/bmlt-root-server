@@ -96,11 +96,20 @@ class c_comdef_admin_ajax_handler
             header('Content-Type:application/json; charset=UTF-8');
         } elseif (isset($this->my_http_vars['do_update_world_ids'])) {
             $returned_text = $this->HandleMeetingWorldIDsUpdate();
+        } elseif (isset($this->my_http_vars['do_naws_import'])) {
+            $returned_text = $this->HandleNAWSImport();
         } else {
             $this->HandleAccountChange();
         }
         
         return  $returned_text;
+    }
+
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function HandleNAWSImport()
+    {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+        return '';
     }
 
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
