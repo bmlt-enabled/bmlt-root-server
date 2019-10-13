@@ -225,23 +225,30 @@ class c_comdef_admin_ajax_handler
         }
         $meetings = $map;
 
-        foreach ($meetingMap as $bmltId => $newWorldId) {
-            if (!array_key_exists($bmltId, $meetings)) {
-                $ret['report']['not_found'][] = $bmltId;
-                continue;
-            }
+        c_comdef_dbsingleton::beginTransaction();
+        try {
+            foreach ($meetingMap as $bmltId => $newWorldId) {
+                if (!array_key_exists($bmltId, $meetings)) {
+                    $ret['report']['not_found'][] = $bmltId;
+                    continue;
+                }
 
-            $meeting = $meetings[$bmltId];
-            $oldWorldId = $meeting['worldid_mixed'];
-            if ($oldWorldId == $newWorldId) {
-                $ret['report']['not_updated'][] = $bmltId;
-                continue;
-            }
+                $meeting = $meetings[$bmltId];
+                $oldWorldId = $meeting['worldid_mixed'];
+                if ($oldWorldId == $newWorldId) {
+                    $ret['report']['not_updated'][] = $bmltId;
+                    continue;
+                }
 
-            $meeting['worldid_mixed'] = $newWorldId;
-            $this->SetMeetingDataValues($meeting, false);
-            $ret['report']['updated'][] = $bmltId;
+                $meeting['worldid_mixed'] = $newWorldId;
+                $this->SetMeetingDataValues($meeting, false);
+                $ret['report']['updated'][] = $bmltId;
+            }
+        } catch (Exception $e) {
+            c_comdef_dbsingleton::rollBack();
+            throw $e;
         }
+        c_comdef_dbsingleton::commit();
 
         $ret['success'] = empty($ret['errors']);
         return json_encode($ret);
@@ -986,9 +993,16 @@ class c_comdef_admin_ajax_handler
         $json_tool = new PhpJsonXmlArrayStringInterchanger;
         
         $the_new_meeting = $json_tool->convertJsonToArray($in_meeting_data, true);
-        
+
         if (is_array($the_new_meeting) && count($the_new_meeting)) {
-            $this->SetMeetingDataValues($the_new_meeting);
+            c_comdef_dbsingleton::beginTransaction();
+            try {
+                $this->SetMeetingDataValues($the_new_meeting);
+            } catch (Exception $e) {
+                c_comdef_dbsingleton::rollback();
+                throw $e;
+            }
+            c_comdef_dbsingleton::commit();
         }
     }
     
