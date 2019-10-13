@@ -37,7 +37,7 @@ class c_comdef_admin_ajax_handler
     public $my_server;                     ///< This hold the server object.
     public $my_user;                       ///< This holds the instance of the logged-in user.
     public $my_http_vars;                  ///< Contains the HTTP vars sent in.
-    
+
     /*******************************************************************************************************//**
     \brief
     ***********************************************************************************************************/
@@ -48,13 +48,13 @@ class c_comdef_admin_ajax_handler
         $this->my_localized_strings = c_comdef_server::GetLocalStrings();
         $this->my_server = c_comdef_server::MakeServer();
         $this->my_user = $this->my_server->GetCurrentUserObj();
-        
+
         // We check this every chance that we get.
         if (!$this->my_user || ($this->my_user->GetUserLevel() == _USER_LEVEL_DISABLED)) {
             die('NOT AUTHORIZED');
         }
     }
-    
+
     /*******************************************************************************************************//**
     \brief
     \returns
@@ -64,9 +64,9 @@ class c_comdef_admin_ajax_handler
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $returned_text = '';
-        
+
         $account_changed = false;
-        
+
         if (isset($this->my_http_vars['set_format_change']) && $this->my_http_vars['set_format_change']) {
             $this->HandleFormatChange($this->my_http_vars['set_format_change']);
         }
@@ -101,7 +101,7 @@ class c_comdef_admin_ajax_handler
         } else {
             $this->HandleAccountChange();
         }
-        
+
         return  $returned_text;
     }
 
@@ -112,7 +112,35 @@ class c_comdef_admin_ajax_handler
         if (!c_comdef_server::IsUserServerAdmin(null, true)) {
             return 'NOT AUTHORIZED';
         }
-        return '';
+
+        $ret = array(
+            'success' => false,
+            'errors' => array(),
+            'report' => array(
+                'num_service_bodies_created' => 0,
+                'num_users_created' => 0,
+                'num_meetings_created' => 0
+            )
+        );
+
+        if (empty($_FILES)) {
+            $ret['errors'][] = $this->my_localized_strings['comdef_server_admin_strings']['server_admin_error_no_files_uploaded'];
+            return json_encode($ret);
+        }
+
+        require_once(__DIR__.'/NAWSImport.php');
+
+        try {
+            $nawsImport = new NAWSImport($_FILES['thefile']['tmp_name']);
+            $nawsImport->import();
+        } catch (Exception $e) {
+            $ret['errors'][] = $e->getMessage();
+            return json_encode($ret);
+        }
+
+        $ret['success'] = true;
+
+        return json_encode($ret);
     }
 
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -126,7 +154,7 @@ class c_comdef_admin_ajax_handler
                 'updated' => array(),
                 'not_updated' => array(),
                 'not_found' => array()
-            ),
+            )
         );
 
         $isServerAdmin = c_comdef_server::IsUserServerAdmin(null, true);

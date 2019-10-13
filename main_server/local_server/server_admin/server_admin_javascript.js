@@ -449,8 +449,8 @@ function BMLT_Server_Admin()
     };
 
     this.handleNAWSImportCallback = function(response) {
-        var file_input = document.getElementById('bmlt_admin_naws_spreadsheet_file_input');
-        var save_button = document.getElementById('bmlt_admin_update_world_ids_ajax_button');
+        var file_input = document.getElementById('bmlt_admin_naws_import_file_input');
+        var save_button = document.getElementById('bmlt_admin_naws_import_ajax_button');
         this.setNAWSImportThrobber(false);
         file_input.value = '';
         save_button.className = 'bmlt_admin_ajax_button button_disabled';

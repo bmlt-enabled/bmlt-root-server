@@ -127,7 +127,7 @@ class NAWSImport
                 'User automatically created for ' . $areaName,
                 1
             );
-            $user->SetPassword(generateRandomString(30));
+            $user->SetPassword($this->generateRandomString(30));
             $user->UpdateToDB();
 
             $serviceBody = new c_comdef_service_body;
@@ -297,5 +297,10 @@ class NAWSImport
             $meetingData['format_shared_id_list'] = implode(',', $meetingData['format_shared_id_list']);
             $ajaxHandler->SetMeetingDataValues($meetingData, false);
         }
+    }
+
+    private function generateRandomString($length = 10)
+    {
+        return substr(str_shuffle(str_repeat($x = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)))), 1, $length);
     }
 }
