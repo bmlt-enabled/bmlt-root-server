@@ -24,6 +24,9 @@ class NAWSImport
     private $areaWorldIdIndex = null;
     private $columnNames = null;
     private $worldIdIndex = null;
+    private $numServiceBodiesCreated = 0;
+    private $numUsersCreated = 0;
+    private $numMeetingsCreated = 0;
 
     public function __construct($importFilePath)
     {
@@ -87,7 +90,7 @@ class NAWSImport
         c_comdef_dbsingleton::beginTransaction();
         try {
             if ($failOnDuplicates) {
-                //$this->throwIfDuplicateServiceBodies();
+                $this->throwIfDuplicateServiceBodies();
                 $this->throwIfDuplicateMeetings();
             }
             $this->createServiceBodiesAndUsers();
@@ -143,6 +146,7 @@ class NAWSImport
             );
             $user->SetPassword($this->generateRandomString(30));
             $user->UpdateToDB();
+            $this->numUsersCreated++;
 
             $serviceBody = new c_comdef_service_body;
             $serviceBody->SetLocalName($areaName);
@@ -156,6 +160,7 @@ class NAWSImport
                 $serviceBody->SetSBType(c_comdef_service_body__RSC__);
             }
             $serviceBody->UpdateToDB();
+            $this->numServiceBodiesCreated++;
             $this->areas[$areaWorldId] = $serviceBody;
         }
 
@@ -310,6 +315,7 @@ class NAWSImport
 
             $meetingData['format_shared_id_list'] = implode(',', $meetingData['format_shared_id_list']);
             $ajaxHandler->SetMeetingDataValues($meetingData, false);
+            $this->numMeetingsCreated++;
         }
     }
 
@@ -418,5 +424,20 @@ class NAWSImport
     private function generateRandomString($length = 10)
     {
         return substr(str_shuffle(str_repeat($x = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)))), 1, $length);
+    }
+
+    public function getNumServiceBodiesCreated()
+    {
+        return $this->numServiceBodiesCreated;
+    }
+
+    public function getNumUsersCreated()
+    {
+        return $this->numUsersCreated;
+    }
+
+    public function getNumMeetingsCreated()
+    {
+        return $this->numMeetingsCreated;
     }
 }

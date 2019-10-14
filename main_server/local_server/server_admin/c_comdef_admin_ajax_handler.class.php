@@ -141,6 +141,9 @@ class c_comdef_admin_ajax_handler
         }
 
         $ret['success'] = true;
+        $ret['report']['num_service_bodies_created'] = $nawsImport->getNumServiceBodiesCreated();
+        $ret['report']['num_users_created'] = $nawsImport->getNumUsersCreated();
+        $ret['report']['num_meetings_created'] = $nawsImport->getNumMeetingsCreated();
 
         return json_encode($ret);
     }
