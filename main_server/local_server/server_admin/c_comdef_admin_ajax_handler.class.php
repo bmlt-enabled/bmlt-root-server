@@ -37,7 +37,7 @@ class c_comdef_admin_ajax_handler
     public $my_server;                     ///< This hold the server object.
     public $my_user;                       ///< This holds the instance of the logged-in user.
     public $my_http_vars;                  ///< Contains the HTTP vars sent in.
-    
+
     /*******************************************************************************************************//**
     \brief
     ***********************************************************************************************************/
@@ -48,13 +48,13 @@ class c_comdef_admin_ajax_handler
         $this->my_localized_strings = c_comdef_server::GetLocalStrings();
         $this->my_server = c_comdef_server::MakeServer();
         $this->my_user = $this->my_server->GetCurrentUserObj();
-        
+
         // We check this every chance that we get.
         if (!$this->my_user || ($this->my_user->GetUserLevel() == _USER_LEVEL_DISABLED)) {
             die('NOT AUTHORIZED');
         }
     }
-    
+
     /*******************************************************************************************************//**
     \brief
     \returns
@@ -64,9 +64,9 @@ class c_comdef_admin_ajax_handler
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $returned_text = '';
-        
+
         $account_changed = false;
-        
+
         if (isset($this->my_http_vars['set_format_change']) && $this->my_http_vars['set_format_change']) {
             $this->HandleFormatChange($this->my_http_vars['set_format_change']);
         }
@@ -96,11 +96,62 @@ class c_comdef_admin_ajax_handler
             header('Content-Type:application/json; charset=UTF-8');
         } elseif (isset($this->my_http_vars['do_update_world_ids'])) {
             $returned_text = $this->HandleMeetingWorldIDsUpdate();
+        } elseif (isset($this->my_http_vars['do_naws_import'])) {
+            $returned_text = $this->HandleNAWSImport();
         } else {
             $this->HandleAccountChange();
         }
-        
+
         return  $returned_text;
+    }
+
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function HandleNAWSImport()
+    {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+        if (!c_comdef_server::IsUserServerAdmin(null, true)) {
+            return 'NOT AUTHORIZED';
+        }
+
+        $ret = array(
+            'success' => false,
+            'errors' => null,
+            'report' => array(
+                'num_service_bodies_created' => 0,
+                'num_users_created' => 0,
+                'num_meetings_created' => 0
+            )
+        );
+
+        if (empty($_FILES)) {
+            $ret['errors'] = $this->my_localized_strings['comdef_server_admin_strings']['server_admin_error_no_files_uploaded'];
+            return json_encode($ret);
+        }
+
+        require_once(__DIR__.'/NAWSImport.php');
+        require_once(__DIR__.'/NAWSImportServiceBodiesExistException.php');
+        require_once(__DIR__.'/NAWSImportMeetingsExistException.php');
+
+        try {
+            $nawsImport = new NAWSImport($_FILES['thefile']['tmp_name']);
+            $nawsImport->import(true);
+        } catch (NAWSImportServiceBodiesExistException $e) {
+            $ret['errors'] = $this->my_localized_strings['comdef_server_admin_strings']['server_admin_error_service_bodies_already_exist'] . implode(', ', $e->getWorldIds());
+            return json_encode($ret);
+        } catch (NAWSImportMeetingsExistException $e) {
+            $ret['errors'] = $this->my_localized_strings['comdef_server_admin_strings']['server_admin_error_meetings_already_exist'] . implode(', ', $e->getWorldIds());
+            return json_encode($ret);
+        } catch (Exception $e) {
+            $ret['errors'] = $e->getMessage();
+            return json_encode($ret);
+        }
+
+        $ret['success'] = true;
+        $ret['report']['num_service_bodies_created'] = $nawsImport->getNumServiceBodiesCreated();
+        $ret['report']['num_users_created'] = $nawsImport->getNumUsersCreated();
+        $ret['report']['num_meetings_created'] = $nawsImport->getNumMeetingsCreated();
+
+        return json_encode($ret);
     }
 
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -114,7 +165,7 @@ class c_comdef_admin_ajax_handler
                 'updated' => array(),
                 'not_updated' => array(),
                 'not_found' => array()
-            ),
+            )
         );
 
         $isServerAdmin = c_comdef_server::IsUserServerAdmin(null, true);
@@ -661,8 +712,7 @@ class c_comdef_admin_ajax_handler
     /**
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function DeleteUserChanges($in_user_id
-                                )
+    public function DeleteUserChanges($in_user_id)
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if (c_comdef_server::IsUserServerAdmin(null, true)) {
@@ -852,8 +902,7 @@ class c_comdef_admin_ajax_handler
     /**
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function DeleteServiceBodyChanges( $in_sb_id
-                                        )
+    public function DeleteServiceBodyChanges($in_sb_id)
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if (c_comdef_server::IsUserServerAdmin(null, true)) {
@@ -876,8 +925,7 @@ class c_comdef_admin_ajax_handler
         \brief
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function GetMeetingHistory(    $in_meeting_id
-                                )
+    public function GetMeetingHistory($in_meeting_id)
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '[';
@@ -962,8 +1010,7 @@ class c_comdef_admin_ajax_handler
     /**
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function DeleteMeetingChanges( $in_meeting_id
-                                    )
+    public function DeleteMeetingChanges($in_meeting_id)
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if (c_comdef_server::IsUserServerAdmin(null, true)) {

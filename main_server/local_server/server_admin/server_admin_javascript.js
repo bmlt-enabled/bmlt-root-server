@@ -23,7 +23,7 @@ function BMLT_Server_Admin()
     // #mark -
     // #mark ########## Class Declaration ##########
     // #mark -
-    
+
     /************************************************************************************//**
     *                                     DATA MEMBERS                                      *
     ****************************************************************************************/
@@ -41,15 +41,15 @@ function BMLT_Server_Admin()
     var m_user_editor_panel_shown = null;       ///< Set to true, if the user editor is open.
     var m_warn_user_to_refresh = null;          ///< If this is true, then a warning alert will be shown to the user.
     var m_format_editor_table_rows = null;      ///< This is used to track the number of rows in the format editor table.
-    
+
     /************************************************************************************//**
     *                                       METHODS                                         *
     ****************************************************************************************/
-    
+
     // #mark -
     // #mark Affects All Sections
     // #mark -
-    
+
     /************************************************************************************//**
     *   \brief If one of the upper sections has been edited, it can affect the Account,     *
     *          Meeting or Service Body sections. In this case, the user needs to log out,   *
@@ -61,18 +61,18 @@ function BMLT_Server_Admin()
         if ( document.getElementById('bmlt_admin_fader_service_body_editor_warn_div') ) {
             document.getElementById('bmlt_admin_fader_service_body_editor_warn_div').className = 'bmlt_admin_fader_div';
         };
-            
+
         if ( document.getElementById('bmlt_admin_fader_meeting_editor_warn_div') ) {
             document.getElementById('bmlt_admin_fader_meeting_editor_warn_div').className = 'bmlt_admin_fader_div';
         };
-        
+
         if ( document.getElementById('bmlt_admin_fader_account_warn_div') ) {
             document.getElementById('bmlt_admin_fader_account_warn_div').className = 'bmlt_admin_fader_div';
         };
-        
+
         this.m_warn_user_to_refresh = true;
     };
-    
+
     /************************************************************************************//**
     *   \brief This displays that alert.                                                    *
     ****************************************************************************************/
@@ -86,7 +86,7 @@ function BMLT_Server_Admin()
     // #mark -
     // #mark Text Item Handlers
     // #mark -
-    
+
     /************************************************************************************//**
     *   \brief When a text input (either <input> or <textarea> is initialized, we can set   *
     *          up a default text value that is displayed when the item is empty and not in  *
@@ -103,21 +103,21 @@ function BMLT_Server_Admin()
             if ( !in_text_item.small ) {
                 in_text_item.small = false;
             };
-            
+
             if ( !in_text_item.tiny ) {
                 in_text_item.tiny = false;
             };
-            
+
             in_text_item.small = in_text_item.small || in_small;
-            
+
             if ( in_default_value != null ) {
                 in_text_item.defaultValue = in_default_value;
             } else {
                 in_text_item.defaultValue = in_text_item.value;
             };
-            
+
             in_text_item.value = in_text_item.original_value;
-            
+
             if ( !in_text_item.value || (in_text_item.value == in_text_item.defaultValue) ) {
                 in_text_item.value = in_text_item.defaultValue;
                 in_text_item.className = 'bmlt_text_item' + (in_text_item.small ? '_small' : (in_text_item.med ? '_med' : (in_text_item.tiny ? '_tiny' : ''))) + ' bmlt_text_item_dimmed';
@@ -126,7 +126,7 @@ function BMLT_Server_Admin()
             };
         };
     };
-    
+
     /************************************************************************************//**
     *   \brief This just makes sure that the className is correct.                          *
     ****************************************************************************************/
@@ -142,7 +142,7 @@ function BMLT_Server_Admin()
             };
         };
     };
-    
+
     /************************************************************************************//**
     *   \brief When a text item receives focus, we clear any default text.                  *
     ****************************************************************************************/
@@ -152,12 +152,12 @@ function BMLT_Server_Admin()
             if ( in_text_item.value == in_text_item.defaultValue ) {
                 in_text_item.value = '';
             };
-            
+
             this.setTextItemClass(in_text_item, true);
             this.validateAccountGoButton();
         };
     };
-    
+
     /************************************************************************************//**
     *   \brief When a text item loses focus, we restore any default text, if the item was   *
     *          left empty.                                                                  *
@@ -168,12 +168,12 @@ function BMLT_Server_Admin()
             if ( !in_text_item.value ) {
                 in_text_item.value = in_text_item.defaultValue;
             };
-            
+
             this.setTextItemClass(in_text_item, false);
             this.validateAccountGoButton();
         };
     };
-    
+
     /************************************************************************************//**
     *   \brief This is called when executing a paste. It avoids leaving in the default text.*
     ****************************************************************************************/
@@ -184,7 +184,7 @@ function BMLT_Server_Admin()
             this.validateAccountGoButton();
         };
     };
-    
+
     /************************************************************************************//**
     *   \brief When a text item has its text changed, we check to see if it needs to have   *
     *          its classname changed to the default (usually won't make a difference, as    *
@@ -199,7 +199,7 @@ function BMLT_Server_Admin()
             this.validateMeetingEditorButton(in_meeting_id);
         };
     };
-    
+
     /************************************************************************************//**
     *   \brief When a text item has its text changed, we check to see if it needs to have   *
     *          its classname changed to the default (usually won't make a difference, as    *
@@ -211,23 +211,23 @@ function BMLT_Server_Admin()
         in_value_field
     ) {
         var eval_str = '';
-        
+
         if ( (null == in_meeting_id) && (null != in_item.meeting_id) ) {
             in_meeting_id = in_item.meeting_id;
         };
-            
+
         if ( !in_value_field ) {
             in_value_field = in_item.element;
         };
-        
+
         var editor_object_id = 'bmlt_admin_single_meeting_editor_' + in_meeting_id.toString() + '_div';
         var editor_object = document.getElementById(editor_object_id);
-        
+
         if ( (in_item.type == 'text') || (in_item.name == 'textarea') ) {
             var value = in_item.value.toString();
-            
+
             value = value.replace(/'/g, "\\'");  // Make sure to escape apostrophes.
-            
+
             if ( value && (value != in_item.defaultValue) ) {
                 eval_str = 'editor_object.meeting_object.' + in_value_field + ' = \'' + value + '\';';
             } else {
@@ -238,21 +238,37 @@ function BMLT_Server_Admin()
                 };
             };
         };
-        
+
         if ( eval_str ) {
             eval(eval_str);
         };
-        
+
         if ( in_item ) {
             this.validateAccountGoButton();
             this.validateMeetingEditorButton(in_meeting_id);
             this.handleNewAddressInfo(in_meeting_id);
         };
     };
-    
+
     // #mark -
     // #mark ########## Account Info Section ##########
     // #mark -
+
+    /************************************************************************************//**
+     *   \brief  Toggles the selected item of the Server Administration section.            *
+     ****************************************************************************************/
+    this.toggleServerAdminSelect = function () {
+        var selectedValue = document.getElementById('bmlt_admin_server_admin_select').value;
+        var updateWorldIdsDiv = document.getElementById('bmlt_admin_server_admin_update_world_ids_edit_form_inner_div');
+        var nawsImportDiv = document.getElementById('bmlt_admin_server_admin_naws_import_edit_form_inner_div');
+        if (selectedValue === "naws_import") {
+            updateWorldIdsDiv.className = 'bmlt_admin_server_admin_update_world_ids_edit_form_inner_div item_hidden';
+            nawsImportDiv.className = 'bmlt_admin_server_admin_naws_import_edit_form_inner_div';
+        } else {
+            updateWorldIdsDiv.className = 'bmlt_admin_server_admin_update_world_ids_edit_form_inner_div';
+            nawsImportDiv.className = 'bmlt_admin_server_admin_naws_import_edit_form_inner_div item_hidden';
+        }
+    };
 
     /************************************************************************************//**
     *   \brief  Toggles the visibility of the Server Administration section.                *
@@ -339,6 +355,20 @@ function BMLT_Server_Admin()
     };
 
     /************************************************************************************//**
+     *   \brief This is called when the NAWS Import file input changes                   *
+     ****************************************************************************************/
+    this.handleNAWSImportFileInputChange = function() {
+        var file_input = document.getElementById('bmlt_admin_naws_import_file_input');
+        var save_button = document.getElementById('bmlt_admin_naws_import_ajax_button');
+
+        if (file_input.files && file_input.files.length > 0) {
+            save_button.className = 'bmlt_admin_ajax_button';
+        } else {
+            save_button.className = 'bmlt_admin_ajax_button button_disabled';
+        }
+    };
+
+    /************************************************************************************//**
     *   \brief This is called to initiate an AJAX process to update world IDs from file     *
     ****************************************************************************************/
     this.handleUpdateWorldIDsFromSpreadsheet = function() {
@@ -395,11 +425,75 @@ function BMLT_Server_Admin()
     };
 
     /************************************************************************************//**
+     *   \brief This is called to initiate an AJAX process to update world IDs from file     *
+     ****************************************************************************************/
+    this.handleNAWSImport = function() {
+        var file_input = document.getElementById('bmlt_admin_naws_import_file_input');
+        var save_button = document.getElementById('bmlt_admin_naws_import_ajax_button');
+        if (!file_input || !file_input.files || !file_input.files.length) {
+            return;
+        }
+    
+        if ( this.m_ajax_request_in_progress ) {
+            this.m_ajax_request_in_progress.abort();
+            this.m_ajax_request_in_progress = null;
+        }
+    
+        this.m_ajax_request_in_progress = BMLT_AjaxRequest_FileUpload(
+            g_ajax_callback_uri + '&do_naws_import=1',
+            function(response) {admin_handler_object.handleNAWSImportCallback(response);},
+            file_input.files[0]
+        );
+        this.setNAWSImportThrobber(true);
+        save_button.className = 'bmlt_admin_ajax_button button_disabled';
+    };
+
+    this.handleNAWSImportCallback = function(response) {
+        var file_input = document.getElementById('bmlt_admin_naws_import_file_input');
+        var save_button = document.getElementById('bmlt_admin_naws_import_ajax_button');
+        this.setNAWSImportThrobber(false);
+        file_input.value = '';
+        save_button.className = 'bmlt_admin_ajax_button button_disabled';
+
+        if (response && response.responseText) {
+            if (response.responseText === 'NOT AUTHORIZED') {
+                alert(g_AJAX_Auth_Failure);
+                return;
+            }
+
+            eval('var result = ' + response.responseText + ';');
+            if (!result) {
+                return;
+            }
+
+            if (result.success) {
+                var report = g_service_bodies_created_text + result.report.num_service_bodies_created.toString() + "\n\n";
+                report += g_users_created_text + result.report.num_users_created.toString() + "\n\n";
+                report += g_meetings_created_text + result.report.num_meetings_created.toString() + "\n\n";
+                report += g_server_admin_ui_refresh_ui_text;
+                alert(report);
+            } else {
+                alert(g_errors_text + ": " + result.errors);
+            }
+        }
+    };
+
+    /************************************************************************************//**
     *   \brief Displays or hides the AJAX Throbber for the Update World IDs button          *
     ****************************************************************************************/
     this.setUpdateWorldIDsThrobber = function(visible) {
         var button_span = document.getElementById('bmlt_admin_update_world_ids_ajax_button_span');
         var throbber_span = document.getElementById('bmlt_admin_update_world_ids_ajax_button_throbber_span');
+        throbber_span.className = 'bmlt_admin_value_left' + (visible ? '' : ' item_hidden');
+        button_span.className = 'bmlt_admin_value_left' + (visible ? ' item_hidden' : '');
+    };
+
+    /************************************************************************************//**
+     *   \brief Displays or hides the AJAX Throbber for the Update World IDs button          *
+     ****************************************************************************************/
+    this.setNAWSImportThrobber = function(visible) {
+        var button_span = document.getElementById('bmlt_admin_naws_import_ajax_button_span');
+        var throbber_span = document.getElementById('bmlt_admin_naws_import_ajax_button_throbber_span');
         throbber_span.className = 'bmlt_admin_value_left' + (visible ? '' : ' item_hidden');
         button_span.className = 'bmlt_admin_value_left' + (visible ? ' item_hidden' : '');
     };

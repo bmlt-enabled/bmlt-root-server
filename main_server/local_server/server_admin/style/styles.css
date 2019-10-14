@@ -1231,6 +1231,7 @@ div.bmlt_admin_single_location_long_lat_div
     padding-top:4px;
 }
 
+fieldset.bmlt_admin_server_admin_editor_fieldset,
 fieldset.bmlt_admin_single_service_body_editor_fieldset,
 fieldset.bmlt_admin_single_user_editor_fieldset
 {
@@ -1242,6 +1243,7 @@ fieldset.bmlt_admin_single_user_editor_fieldset
     border-radius: 4px;
 }
 
+fieldset.bmlt_admin_server_admin_editor_fieldset legend,
 fieldset.bmlt_admin_single_service_body_editor_fieldset legend,
 fieldset.bmlt_admin_single_user_editor_fieldset legend
 {

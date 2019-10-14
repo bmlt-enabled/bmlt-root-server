@@ -4,6 +4,8 @@ defined('BMLT_EXEC') or die('Cannot Execute Directly');
 
 require_once(__DIR__ . '/../../vendor/autoload.php');
 require_once(__DIR__ . '/../../server/c_comdef_server.class.php');
+require_once(__DIR__ . '/NAWSImportMeetingsExistException.php');
+require_once(__DIR__ . '/NAWSImportServiceBodiesExistException.php');
 
 // phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 class NAWSImport
@@ -21,6 +23,10 @@ class NAWSImport
     private $areaNameIndex = null;
     private $areaWorldIdIndex = null;
     private $columnNames = null;
+    private $worldIdIndex = null;
+    private $numServiceBodiesCreated = 0;
+    private $numUsersCreated = 0;
+    private $numMeetingsCreated = 0;
 
     public function __construct($importFilePath)
     {
@@ -71,9 +77,10 @@ class NAWSImport
         $this->deleteIndex = array_search('delete', $this->columnNames);
         $this->areaNameIndex = array_search('parentname', $this->columnNames);
         $this->areaWorldIdIndex = array_search('arearegion', $this->columnNames);
+        $this->worldIdIndex = array_search('committee', $this->columnNames);
     }
 
-    public function import()
+    public function import($failOnDuplicates = false)
     {
         set_time_limit(1200); // 20 minutes
         require_once(__DIR__ . '/../../server/classes/c_comdef_meeting.class.php');
@@ -82,8 +89,18 @@ class NAWSImport
         $this->server = c_comdef_server::MakeServer();
         c_comdef_dbsingleton::beginTransaction();
         try {
+            if ($failOnDuplicates) {
+                $this->throwIfDuplicateServiceBodies();
+                $this->throwIfDuplicateMeetings();
+            }
             $this->createServiceBodiesAndUsers();
             $this->createMeetings();
+        } catch (NAWSImportServiceBodiesExistException $e) {
+            c_comdef_dbsingleton::rollBack();
+            throw $e;
+        } catch (NAWSImportMeetingsExistException $e) {
+            c_comdef_dbsingleton::rollBack();
+            throw $e;
         } catch (Exception $e) {
             c_comdef_dbsingleton::rollBack();
             throw new Exception($e->getMessage());
@@ -127,8 +144,9 @@ class NAWSImport
                 'User automatically created for ' . $areaName,
                 1
             );
-            $user->SetPassword(generateRandomString(30));
+            $user->SetPassword($this->generateRandomString(30));
             $user->UpdateToDB();
+            $this->numUsersCreated++;
 
             $serviceBody = new c_comdef_service_body;
             $serviceBody->SetLocalName($areaName);
@@ -142,6 +160,7 @@ class NAWSImport
                 $serviceBody->SetSBType(c_comdef_service_body__RSC__);
             }
             $serviceBody->UpdateToDB();
+            $this->numServiceBodiesCreated++;
             $this->areas[$areaWorldId] = $serviceBody;
         }
 
@@ -296,6 +315,129 @@ class NAWSImport
 
             $meetingData['format_shared_id_list'] = implode(',', $meetingData['format_shared_id_list']);
             $ajaxHandler->SetMeetingDataValues($meetingData, false);
+            $this->numMeetingsCreated++;
         }
+    }
+
+    private function throwIfDuplicateServiceBodies()
+    {
+        $duplicates = array();
+        $existingWorldIds = array();
+        $select = "SELECT DISTINCT `worldid_mixed` FROM `" . c_comdef_server::GetServiceBodiesTableName_obj() . "`;";
+        $rows = c_comdef_dbsingleton::preparedQuery($select);
+        if (is_array($rows) && count($rows)) {
+            foreach ($rows as $row) {
+                if (!$row['worldid_mixed']) {
+                    continue;
+                }
+                $worldId = strtoupper(trim($row['worldid_mixed']));
+                if ($worldId) {
+                    $existingWorldIds[$worldId] = null;
+                }
+            }
+        }
+
+        for ($i = 1; $i <= count($this->nawsExportRows); $i++) {
+            $row = $this->nawsExportRows[$i];
+            if ($i == 1) {
+                continue;
+            }
+
+            if ($row[$this->deleteIndex] == 'D') {
+                continue;
+            }
+
+            $worldId = $row[$this->areaWorldIdIndex];
+            if (!$worldId) {
+                continue;
+            }
+
+            $worldId = strtoupper(trim($worldId));
+            if (!$worldId) {
+                continue;
+            }
+
+            if (array_key_exists($worldId, $existingWorldIds)) {
+                $duplicates[$worldId] = null;
+            }
+        }
+
+        $duplicates = array_keys($duplicates);
+        if (count($duplicates)) {
+            throw new NAWSImportServiceBodiesExistException($duplicates);
+        }
+
+        reset($this->nawsExportRows);
+    }
+
+    private function throwIfDuplicateMeetings()
+    {
+        $duplicates = array();
+        $existingWorldIds = array();
+        $select = "SELECT DISTINCT `worldid_mixed` FROM `" . c_comdef_server::GetMeetingTableName_obj() . "_main`;";
+        $rows = c_comdef_dbsingleton::preparedQuery($select);
+        if (is_array($rows) && count($rows)) {
+            foreach ($rows as $row) {
+                if (!$row['worldid_mixed']) {
+                    continue;
+                }
+                $worldId = strtoupper(trim($row['worldid_mixed']));
+                if ($worldId) {
+                    $existingWorldIds[$worldId] = null;
+                }
+            }
+        }
+
+        for ($i = 1; $i <= count($this->nawsExportRows); $i++) {
+            $row = $this->nawsExportRows[$i];
+            if ($i == 1) {
+                continue;
+            }
+
+            if ($row[$this->deleteIndex] == 'D') {
+                continue;
+            }
+
+            $worldId = $row[$this->worldIdIndex];
+            if (!$worldId) {
+                continue;
+            }
+
+            $worldId = strtoupper(trim($worldId));
+            if (!$worldId) {
+                continue;
+            }
+
+            if (array_key_exists($worldId, $existingWorldIds)) {
+                $duplicates[$worldId] = null;
+            }
+        }
+
+        $duplicates = array_keys($duplicates);
+        if (count($duplicates)) {
+            throw new NAWSImportMeetingsExistException($duplicates);
+        }
+
+        reset($this->nawsExportRows);
+    }
+
+    private function generateRandomString($length = 10)
+    {
+        return substr(str_shuffle(str_repeat($x = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)))), 1, $length);
+    }
+
+    public function getNumServiceBodiesCreated()
+    {
+        return $this->numServiceBodiesCreated;
+    }
+
+    public function getNumUsersCreated()
+    {
+        return $this->numUsersCreated;
+    }
+
+    public function getNumMeetingsCreated()
+    {
+        return $this->numMeetingsCreated;
     }
 }
