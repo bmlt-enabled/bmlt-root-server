@@ -469,8 +469,7 @@ class c_comdef_admin_main_console
     \returns "Cleaned" text
     ************************************************************************************************************/
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public static function js_html(    $in_raw_html
-                            )
+    public static function js_html($in_raw_html)
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $flags = (defined('ENT_SUBSTITUTE') && defined('ENT_NOQUOTES')) ? intval(ENT_SUBSTITUTE | ENT_NOQUOTES) : null;

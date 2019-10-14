@@ -712,8 +712,7 @@ class c_comdef_admin_ajax_handler
     /**
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function DeleteUserChanges($in_user_id
-                                )
+    public function DeleteUserChanges($in_user_id)
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if (c_comdef_server::IsUserServerAdmin(null, true)) {
@@ -903,8 +902,7 @@ class c_comdef_admin_ajax_handler
     /**
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function DeleteServiceBodyChanges( $in_sb_id
-                                        )
+    public function DeleteServiceBodyChanges($in_sb_id)
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if (c_comdef_server::IsUserServerAdmin(null, true)) {
@@ -927,8 +925,7 @@ class c_comdef_admin_ajax_handler
         \brief
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function GetMeetingHistory(    $in_meeting_id
-                                )
+    public function GetMeetingHistory($in_meeting_id)
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '[';
@@ -1013,8 +1010,7 @@ class c_comdef_admin_ajax_handler
     /**
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function DeleteMeetingChanges( $in_meeting_id
-                                    )
+    public function DeleteMeetingChanges($in_meeting_id)
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if (c_comdef_server::IsUserServerAdmin(null, true)) {
