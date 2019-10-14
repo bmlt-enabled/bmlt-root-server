@@ -9,8 +9,7 @@ class NAWSImportServiceBodiesExistException extends Exception
     public function __construct($worldIds)
     {
         $this->worldIds = $worldIds;
-
-        parent::__construct('Service bodies with the following World IDs already exist: ' . implode(', ', $this->getWorldIds()));
+        parent::__construct();
     }
 
     public function getWorldIds()

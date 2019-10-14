@@ -135,6 +135,14 @@ class c_comdef_admin_ajax_handler
         try {
             $nawsImport = new NAWSImport($_FILES['thefile']['tmp_name']);
             $nawsImport->import(true);
+        } catch (NAWSImportServiceBodiesExistException $e) {
+            // TODO Translate
+            $ret['errors'][] = 'Service bodies with the following World IDs already exist: ' . implode(', ', $e->getWorldIds());
+            return json_encode($ret);
+        } catch (NAWSImportMeetingsExistException $e) {
+            // TODO Translate
+            $ret['errors'][] ='Meetings with the following World IDs already exist: ' . implode(', ', $e->getWorldIds());
+            return json_encode($ret);
         } catch (Exception $e) {
             $ret['errors'][] = $e->getMessage();
             return json_encode($ret);

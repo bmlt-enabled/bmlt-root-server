@@ -1967,6 +1967,7 @@ class c_comdef_admin_main_console
                     $ret .= '<div id="bmlt_admin_server_admin_naws_import_edit_form_inner_div" class="bmlt_admin_server_admin_naws_import_edit_form_inner_div item_hidden">';
                         $ret .= '<div class="bmlt_admin_server_admin_edit_form_inner_div">';
                             $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                                // TODO Translate
                                 $ret .= '<span class="bmlt_admin_med_label_right">NAWS Import Spreadsheet:</span>';
                                 $ret .= '<span class="bmlt_admin_value_left">';
                                     $ret .= '<input name="bmlt_admin_naws_import_file_input" id="bmlt_admin_naws_import_file_input" onchange="javascript:admin_handler_object.handleNAWSImportFileInputChange();" type="file" />';
@@ -1974,6 +1975,7 @@ class c_comdef_admin_main_console
                             $ret .= '</div>';
                             $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                                 $ret .= '<span class="bmlt_admin_med_label_right">&nbsp;</span>';
+                                // TODO Translate
                                 $ret .= '<span id="bmlt_admin_naws_import_ajax_button_span" class="bmlt_admin_value_left"><a id="bmlt_admin_naws_import_ajax_button" href="javascript:admin_handler_object.handleNAWSImport();" class="bmlt_admin_ajax_button button_disabled">Import Service Bodies and Meetings</a></span>';
                                 $ret .= '<span id="bmlt_admin_naws_import_ajax_button_throbber_span" class="bmlt_admin_value_left item_hidden"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></span>';
                                 $ret .= '<div class="clear_both"></div>';

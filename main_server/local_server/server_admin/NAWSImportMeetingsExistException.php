@@ -9,8 +9,7 @@ class NAWSImportMeetingsExistException extends Exception
     public function __construct($worldIds)
     {
         $this->worldIds = $worldIds;
-
-        parent::__construct('Meetings with the following World IDs already exist: ' . implode(', ', $this->getWorldIds()));
+        parent::__construct();
     }
 
     public function getWorldIds()

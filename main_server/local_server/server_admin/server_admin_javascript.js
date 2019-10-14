@@ -467,6 +467,7 @@ function BMLT_Server_Admin()
             }
 
             if (result.success) {
+                // TODO Translate
                 var report = 'Service bodies created: ' + result.report.num_service_bodies_created.toString() + "\n\n";
                 report += 'Users created: ' + result.report.num_users_created.toString() + "\n\n";
                 report += 'Meetings created: ' + result.report.num_meetings_created.toString() + "\n\n";
