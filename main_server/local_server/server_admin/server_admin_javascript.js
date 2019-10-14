@@ -473,7 +473,7 @@ function BMLT_Server_Admin()
                 report += 'Meetings created: ' + result.report.num_meetings_created.toString() + "\n\n";
                 alert(report);
             } else {
-                alert(g_errors_text + ":\n" + result.errors.join("\n"));
+                alert(g_errors_text + ": " + result.errors);
             }
         }
     };

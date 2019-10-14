@@ -115,7 +115,7 @@ class c_comdef_admin_ajax_handler
 
         $ret = array(
             'success' => false,
-            'errors' => array(),
+            'errors' => null,
             'report' => array(
                 'num_service_bodies_created' => 0,
                 'num_users_created' => 0,
@@ -124,7 +124,7 @@ class c_comdef_admin_ajax_handler
         );
 
         if (empty($_FILES)) {
-            $ret['errors'][] = $this->my_localized_strings['comdef_server_admin_strings']['server_admin_error_no_files_uploaded'];
+            $ret['errors'] = $this->my_localized_strings['comdef_server_admin_strings']['server_admin_error_no_files_uploaded'];
             return json_encode($ret);
         }
 
@@ -137,14 +137,14 @@ class c_comdef_admin_ajax_handler
             $nawsImport->import(true);
         } catch (NAWSImportServiceBodiesExistException $e) {
             // TODO Translate
-            $ret['errors'][] = 'Service bodies with the following World IDs already exist: ' . implode(', ', $e->getWorldIds());
+            $ret['errors'] = 'Service bodies with the following World IDs already exist: ' . implode(', ', $e->getWorldIds());
             return json_encode($ret);
         } catch (NAWSImportMeetingsExistException $e) {
             // TODO Translate
-            $ret['errors'][] ='Meetings with the following World IDs already exist: ' . implode(', ', $e->getWorldIds());
+            $ret['errors'] ='Meetings with the following World IDs already exist: ' . implode(', ', $e->getWorldIds());
             return json_encode($ret);
         } catch (Exception $e) {
-            $ret['errors'][] = $e->getMessage();
+            $ret['errors'] = $e->getMessage();
             return json_encode($ret);
         }
 
