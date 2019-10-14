@@ -39,6 +39,7 @@ $comdef_server_admin_strings = array (
     'server_admin_ui_service_bodies_created'                => 'Service bodies created: ',
     'server_admin_ui_meetings_created'                      => 'Meetings created: ',
     'server_admin_ui_users_created'                         => 'Users created: ',
+    'server_admin_ui_refresh_ui_text'                       => 'Sign out and then sign in again to see the new service bodies, users, and meetings.',
     'import_service_bodies_and_meetings_button_text'        => 'Import Service Bodies and Meetings',
     'import_service_bodies_and_meetings_dropdown_text'      => 'Import Service Bodies and Meetings from NAWS Export',
     'server_admin_naws_import_spreadsheet_label'            => 'NAWS Import Spreadsheet:',

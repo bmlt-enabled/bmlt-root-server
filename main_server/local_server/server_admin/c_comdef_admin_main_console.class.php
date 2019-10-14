@@ -375,6 +375,7 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_service_bodies_created_text = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['server_admin_ui_service_bodies_created']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_meetings_created_text = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['server_admin_ui_meetings_created']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_users_created_text = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['server_admin_ui_users_created']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
+                $ret .= 'var g_server_admin_ui_refresh_ui_text = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['server_admin_ui_refresh_ui_text']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_time_values = [';
                     $ret .= '\''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_am_label']).'\',';
                     $ret .= '\''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_pm_label']).'\',';

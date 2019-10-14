@@ -470,6 +470,7 @@ function BMLT_Server_Admin()
                 var report = g_service_bodies_created_text + result.report.num_service_bodies_created.toString() + "\n\n";
                 report += g_users_created_text + result.report.num_users_created.toString() + "\n\n";
                 report += g_meetings_created_text + result.report.num_meetings_created.toString() + "\n\n";
+                report += g_server_admin_ui_refresh_ui_text;
                 alert(report);
             } else {
                 alert(g_errors_text + ": " + result.errors);
