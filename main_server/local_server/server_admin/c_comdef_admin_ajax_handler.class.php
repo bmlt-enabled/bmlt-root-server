@@ -129,10 +129,12 @@ class c_comdef_admin_ajax_handler
         }
 
         require_once(__DIR__.'/NAWSImport.php');
+        require_once(__DIR__.'/NAWSImportServiceBodiesExistException.php');
+        require_once(__DIR__.'/NAWSImportMeetingsExistException.php');
 
         try {
             $nawsImport = new NAWSImport($_FILES['thefile']['tmp_name']);
-            $nawsImport->import();
+            $nawsImport->import(true);
         } catch (Exception $e) {
             $ret['errors'][] = $e->getMessage();
             return json_encode($ret);
