@@ -25,7 +25,7 @@ The project is actually several years old. It is currently hosted on [GitHub](ht
 
 [Follow this link to see the Current GitHub repository.](https://github.com/bmlt-enabled/BMLT-Root-Server)
 
-[Follow this link to see the legacy BitBucket repository.](https://bitbucket.org/bmlt/bmlt-root-server/)
+[Follow this link to see the legacy BitBucket repository.](https://bitbucket.org/bmlt/bmlt-root-server-deprecated/src/Release/)
 
 [Follow this link to see the legacy GitHub repository.](https://github.com/MAGSHARE/BMLT-Root-Server)
 
@@ -57,7 +57,56 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.13.1* ** *- UNRELEASED*
+***Version 2.14.2* ** *- October 14, 2019*
+
+- Server administrators can now import service bodies and meetings from a NAWS-provided export in the Server Administration section of the UI. Service bodies, users, and meetings are created. If any of the provided service body world IDs or meeting IDs already exist in the root server, no changes are made.
+- Refactored the installation wizard's NAWS import functionality, and increased its performance by leveraging a database transaction.
+- Fixed possible concurrency issues with meeting saves by leveraging database transactions.
+
+***Version 2.14.1* ** *- October 11, 2019*
+
+- Fixed an issue that prevented data imports from a NAWS export from working when using PHP 7.0.
+
+***Version 2.14.0* ** *- September 30, 2019*
+
+- The installation wizard now allows you to prime a database with a NAWS export. All meetings and service bodies are created, and a service body administrator user is created for each service body. Meetings that are missing data for required fields are not imported. Required fields are: CommitteeName, AreaRegion, Day, Time, Address, City. 
+
+***Version 2.13.7* ** *- September 23, 2019*
+
+- The No Smoking format is now automatically mapped to the appropriate NAWS format.
+
+***Version 2.13.6* ** *- September 22, 2019*
+
+- Changed JSONP mime type to `application/javascript`.
+- Rename "Get A NAWS Format Dump" to "Get A NAWS Format Export" in the semantic workshop.
+- Fixed an issue where the admin user interface could falsely think a meeting had been edited.
+- Place name_strings from unmapped formats in the Room field of NAWS Exports.
+- Fix for NAWS format drop-down not sorting correctly in the root server administration.
+- Updated to the latest BMLT Satellite Base Class.
+- Added new NAWS formats CH (Closed Holidays), GP (Guiding Principles) and NC (No Children).
+
+***Version 2.13.5* ** *- August 15, 2019*
+
+- Fix for NAWS format types not saving correctly in the root server administration.
+
+***Version 2.13.4* ** *- August 5, 2019*
+
+- New meetings are now published by default. This is configurable by adding `$default_meeting_published = false;` to `auto-config.inc.php`.
+- Added server version to login screen.
+- Fixed a bug that caused changes to meeting start times and durations to not show up in the change history.
+
+***Version 2.13.3* ** *- July 7, 2019*
+
+- When saving a change to a meeting, the edit screen for that meeting is no longer closed. This makes it easier for the user to keep their place in the user interface.
+- When the published checkbox is unchecked in the meeting editor UI, a note is displayed: "Unpublishing a meeting indicates a temporary closure. If this meeting has closed permanently, please delete it."
+
+***Version 2.13.2* ** *- July 4, 2019*
+
+- Fixed an issue where the wrong service body could be displayed in the "Service Body Administration" section of the Admin UI when a Service Body Administrator is the Primary Admin of only one service body.
+- Service Body Admins can now use the new "Server Administration" section of the UI, allowing them to upload the spreadsheet returned by NAWS to batch update the World IDs for their meetings.
+- Removed the "Delete Permanently" capability when deleting meetings as a Server Admin. The "Delete Permanently" checkbox caused a meeting to be deleted with no change record. Abuse of this feature made it difficult for NAWS to reconcile its meeting list with the BMLT. All deleted meetings now result in a change record.
+
+***Version 2.13.1* ** *- July 2, 2019*
 
 - Semantic Administration is now enabled by default on install wizard.
 - Fixed a bug with JSONP endpoint emoting incorrect mime type.
@@ -69,7 +118,10 @@ CHANGELIST
     - `'O'    =>  'Attendance by non-addicts (Open, Closed)',`
     - `'LANG' =>  'Language'`
 - Added the ability to specify languages for formats that are not included in the languages for which the server admin console has been translated.  This lightweight style of adding languages allows meeting lists to be generated if a satellite has been translated (much less work than the entire server admin).
+  - To do this you would add an additional setting in your `auto-config.inc.php` 
+    - Ex. `$format_lang_names = ['fa'=>'Farsi'];`
 - Added database migration system with database schema versioning, and added dbVersion to GetServerInfo endpoint.
+- Formats are now sorted alphabetically in the root server administration, as well as NAWS format dropdown.
 
 ***Version 2.13.0* ** *- April 28, 2019*
 

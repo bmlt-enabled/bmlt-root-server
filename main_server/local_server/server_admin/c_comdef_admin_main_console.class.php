@@ -70,7 +70,9 @@ class c_comdef_admin_main_console
         $this->my_lang_ids = array_keys($langs);
         $server_format_array = $this->my_server->GetFormatsArray();
         $format_ids = array();
-        
+        usort($server_format_array[$this->my_server->GetLocalLang()], function ($a, $b) {
+            return strnatcasecmp($a->GetKey(), $b->GetKey());
+        });
         // We will build an array of formats in the structure we'll need for our editor. We start by gathering all of the shared IDs.
         foreach ($langs as $lang_key => $lang_name) {
             if (isset($server_format_array[$lang_key])) {
@@ -316,6 +318,7 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_style_dir = \''.self::js_html((((dirname($_SERVER['PHP_SELF']) != '/') && (dirname($_SERVER['PHP_SELF']) != '\\')) ? dirname($_SERVER['PHP_SELF']) : '').'/local_server/server_admin/style').'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_Create_new_meeting_button_name = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['meeting_create_button_name']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_Save_meeting_button_name = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['meeting_save_buttonName']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
+                $ret .= 'var g_default_meeting_published = \''.self::js_html($this->my_localized_strings['default_meeting_published']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_default_meeting_weekday = '.intVal($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_default_weekday']).';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_default_meeting_start_time = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_default_start_time']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_default_meeting_duration = \''.self::js_html($this->my_localized_strings['default_duration_time']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
@@ -325,7 +328,6 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_meeting_lookup_failed_not_enough_address_info = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['meeting_lookup_failed_not_enough_address_info']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_meeting_editor_result_count_format = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_result_count_format']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_meeting_editor_screen_delete_button_confirm = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_delete_button_confirm']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
-                $ret .= 'var g_meeting_editor_screen_delete_button_confirm_perm = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_delete_button_confirm_perm']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_meeting_editor_already_editing_confirm = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_already_editing_confirm']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_history_header_format = \''.str_replace('>', '&gt;', str_replace('<', '&lt;', $this->my_localized_strings['comdef_server_admin_strings']['history_header_format'])).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_history_no_history_available_text = \''.str_replace('>', '&gt;', str_replace('<', '&lt;', $this->my_localized_strings['comdef_server_admin_strings']['history_no_history_available_text'])).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
@@ -370,6 +372,10 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_warning_text = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['server_admin_ui_warning']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_errors_text = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['server_admin_ui_errors']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_meetings_not_found_text = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['server_admin_ui_meetings_not_found']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
+                $ret .= 'var g_service_bodies_created_text = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['server_admin_ui_service_bodies_created']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
+                $ret .= 'var g_meetings_created_text = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['server_admin_ui_meetings_created']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
+                $ret .= 'var g_users_created_text = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['server_admin_ui_users_created']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
+                $ret .= 'var g_server_admin_ui_refresh_ui_text = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['server_admin_ui_refresh_ui_text']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_time_values = [';
                     $ret .= '\''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_am_label']).'\',';
                     $ret .= '\''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_pm_label']).'\',';
@@ -379,6 +385,14 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_naws_popup_prompt = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['world_format_codes_prompt']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= "var g_naws_values = [";
                     $n_first = true;
+            // This sorts the NAWS codes in the format server admin. The drop-down menu is sorted by value and the key is the drop-down menu value.
+            // The first field key is empty and value is 'None', if we sort by key value this field will no longer be the top element.
+            // So we shift it off the array...
+            $top_elm = array_shift($this->my_localized_strings['comdef_server_admin_strings']['world_format_codes']);
+            // Then we can sort
+            asort($this->my_localized_strings['comdef_server_admin_strings']['world_format_codes']);
+            // and now we unshift it to put it back as the top element.
+            array_unshift($this->my_localized_strings['comdef_server_admin_strings']['world_format_codes'], $top_elm);
         foreach ($this->my_localized_strings['comdef_server_admin_strings']['world_format_codes'] as $key => $value) {
             if (!$n_first) {
                 $ret .= ','.(defined('__DEBUG_MODE__') ? "\n" : '');
@@ -418,18 +432,18 @@ class c_comdef_admin_main_console
             // Figure out which output will be sent, according to the user level.
             switch ($this->my_user->GetUserLevel()) {
                 case _USER_LEVEL_SERVER_ADMIN:
-                    $ret .= $this->return_server_admin_panel();
                     $ret .= $this->return_format_editor_panel();
-                    // Assuming fallthrough is intentional here, due to lack of break statement?
+                    // Intentional fallthrough
                 case _USER_LEVEL_SERVICE_BODY_ADMIN:
+                    $ret .= $this->return_server_admin_panel();
                     $ret .= $this->return_user_admin_panel();
                     if ((count($this->my_editable_service_bodies) > 0) || ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN)) {
                         $ret .= $this->return_service_body_admin_panel();
                     }
-                    // Assuming fallthrough is intentional here, due to lack of break statement?
+                    // Intentional fallthrough
                 case _USER_LEVEL_EDITOR:
                     $ret .= $this->return_meeting_editor_panel();
-                    // Assuming fallthrough is intentional here, due to lack of break statement?
+                    // Intentional fallthrough
                 case _USER_LEVEL_OBSERVER:
                     if ($this->my_user->GetUserLevel() == _USER_LEVEL_OBSERVER) {   // Observers get a link to the meeting search.
                         $ret .= '<div class="bmlt_admin_observer_link_div"><a href="client_interface/html" class="bmlt_admin_observer_link_a">'.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['Observer_Link_Text']).'</a></div>'.(defined('__DEBUG_MODE__') ? "\n" : '');
@@ -456,8 +470,7 @@ class c_comdef_admin_main_console
     \returns "Cleaned" text
     ************************************************************************************************************/
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public static function js_html(    $in_raw_html
-                            )
+    public static function js_html($in_raw_html)
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $flags = (defined('ENT_SUBSTITUTE') && defined('ENT_NOQUOTES')) ? intval(ENT_SUBSTITUTE | ENT_NOQUOTES) : null;
@@ -754,7 +767,7 @@ class c_comdef_admin_main_console
                     
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief This constructs the Service body editor panel. Only Server Admins and Service Body Admins get this one.
     \returns The HTML and JavaScript for the "Service Body Administration" section.
@@ -1552,12 +1565,6 @@ class c_comdef_admin_main_console
             $ret .= '<span class="bmlt_admin_meeting_editor_form_middle_button_single_span bmlt_admin_delete_button_span hide_in_new_meeting">';
                 $ret .= '<a id="bmlt_admin_meeting_editor_form_meeting_template_delete_button" href="javascript:admin_handler_object.deleteMeeting(template);" class="bmlt_admin_ajax_button button">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_delete_button']).'</a>';
                 $ret .= '<span id="bmlt_admin_template_delete_ajax_button_throbber_span" class="bmlt_admin_ajax_button_throbber_span item_hidden"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></span>';
-        if ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) {
-            $ret .= '<span class="perm_checkbox_span">';
-                $ret .= '<input type="checkbox" id="bmlt_admin_meeting_template_delete_perm_checkbox" />';
-                $ret .= '<label for="bmlt_admin_meeting_template_delete_perm_checkbox">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_delete_perm_checkbox']).'</label>';
-            $ret .= '</span>';
-        }
             $ret .= '</span>';
             $ret .= '<span class="bmlt_admin_meeting_editor_form_meeting_button_right_span"><a id="bmlt_admin_meeting_editor_form_meeting_template_cancel_button" href="javascript:admin_handler_object.cancelMeetingEdit(template);" class="bmlt_admin_ajax_button button">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_cancel_button']).'</a></span>';
             $ret .= '<div class="clear_both"></div>';
@@ -1581,6 +1588,12 @@ class c_comdef_admin_main_console
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right"><input type="checkbox" id="bmlt_admin_meeting_template_published_checkbox" /></span>';
                     $ret .= '<label class="bmlt_admin_med_label_left" for="bmlt_admin_meeting_template_published_checkbox">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_is_published']).'</label>';
+                    $ret .= '<div class="clear_both"></div>';
+                $ret .= '</div>';
+
+                $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both" id="bmlt_admin_meeting_template_unpublished_note_div">';
+                    $ret .= '<span class="bmlt_admin_med_label_right">&nbsp;</span>';
+                    $ret .= '<span class="bmlt_admin_value_left bmlt_admin_unpublished_note_span">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_unpublished_note']).'</span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
             }
@@ -1900,11 +1913,11 @@ class c_comdef_admin_main_console
 
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
-    \brief This constructs the "Server Administration" esction of the console. Only server admins can see this.
+    \brief This constructs the "Server Administration" section of the console. Server Admins and Service Body admins can see this.
     \returns The HTML and JavaScript for the "Server Administration" section.
-    ************************************************************************************************************/
+     ************************************************************************************************************/
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     public function return_server_admin_panel()
     {
@@ -1919,25 +1932,66 @@ class c_comdef_admin_main_console
                 $ret .= '<div class="bmlt_admin_meeting_editor_banner_container_div">';
                 $ret .= '</div>';
             $ret .= '</div>';
-            $ret .= '<div class="bmlt_admin_server_admin_edit_form_inner_div">';
-                $ret .= '<div class="bmlt_admin_server_admin_edit_form_inner_div">';
-                    $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
-                        $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['server_admin_naws_spreadsheet_label']).'</span>';
-                        $ret .= '<span class="bmlt_admin_value_left">';
-                            $ret .= '<input name="bmlt_admin_naws_spreadsheet_file_input" id="bmlt_admin_naws_spreadsheet_file_input" onchange="javascript:admin_handler_object.handleWorldIDFileInputChange();" type="file" />';
-                        $ret .= '</span>';
+
+
+            $ret .= '<div id="bmlt_admin_server_admin_editor_div" class="bmlt_admin_server_admin_editor_div">';
+                $ret .= '<fieldset id="bmlt_admin_server_admin_editor_fieldset" class="bmlt_admin_server_admin_editor_fieldset">';
+                    $ret .= '<legend id="bmlt_admin_server_admin_editor_fieldset_legend" class="bmlt_admin_server_admin_editor_fieldset_legend">';
+                        // Put the select menu, or "popup", here
+        if ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) {
+            $ret .= '<select id="bmlt_admin_server_admin_select" class="bmlt_admin_server_admin_select" onchange="admin_handler_object.toggleServerAdminSelect();">';
+                $ret .= '<option value="update_world_ids" selected>'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['update_world_ids_from_spreadsheet_dropdown_text']).'</option>';
+                $ret .= '<option value="naws_import">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['import_service_bodies_and_meetings_dropdown_text']).'</option>';
+            $ret .= '</select>';
+        } else {
+            $ret .= '<span class="server_admin_title_span">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['update_world_ids_from_spreadsheet_dropdown_text']).'</span>';
+        }
+                    $ret .= '</legend>';
+
+                    // World IDs update
+                    $ret .= '<div id="bmlt_admin_server_admin_update_world_ids_edit_form_inner_div" class="bmlt_admin_server_admin_update_world_ids_edit_form_inner_div">';
+                        $ret .= '<div class="bmlt_admin_server_admin_edit_form_inner_div">';
+                            $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                                $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['server_admin_naws_spreadsheet_label']).'</span>';
+                                $ret .= '<span class="bmlt_admin_value_left">';
+                                    $ret .= '<input name="bmlt_admin_naws_spreadsheet_file_input" id="bmlt_admin_naws_spreadsheet_file_input" onchange="javascript:admin_handler_object.handleWorldIDFileInputChange();" type="file" />';
+                                $ret .= '</span>';
+                            $ret .= '</div>';
+                            $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                                $ret .= '<span class="bmlt_admin_med_label_right">&nbsp;</span>';
+                                $ret .= '<span id="bmlt_admin_update_world_ids_ajax_button_span" class="bmlt_admin_value_left"><a id="bmlt_admin_update_world_ids_ajax_button" href="javascript:admin_handler_object.handleUpdateWorldIDsFromSpreadsheet();" class="bmlt_admin_ajax_button button_disabled">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['update_world_ids_button_text']).'</a></span>';
+                                $ret .= '<span id="bmlt_admin_update_world_ids_ajax_button_throbber_span" class="bmlt_admin_value_left item_hidden"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></span>';
+                                $ret .= '<div class="clear_both"></div>';
+                            $ret .= '</div>';
+                        $ret .= '</div>';
                     $ret .= '</div>';
-                    $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
-                        $ret .= '<span class="bmlt_admin_med_label_right">&nbsp;</span>';
-                        $ret .= '<span id="bmlt_admin_update_world_ids_ajax_button_span" class="bmlt_admin_value_left"><a id="bmlt_admin_update_world_ids_ajax_button" href="javascript:admin_handler_object.handleUpdateWorldIDsFromSpreadsheet();" class="bmlt_admin_ajax_button button_disabled">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['update_world_ids_button_text']).'</a></span>';
-                        $ret .= '<span id="bmlt_admin_update_world_ids_ajax_button_throbber_span" class="bmlt_admin_value_left item_hidden"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></span>';
-                        $ret .= '<div class="clear_both"></div>';
+
+                    // NAWS Import
+                    $ret .= '<div id="bmlt_admin_server_admin_naws_import_edit_form_inner_div" class="bmlt_admin_server_admin_naws_import_edit_form_inner_div item_hidden">';
+                        $ret .= '<div class="bmlt_admin_server_admin_edit_form_inner_div">';
+                            $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                                $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['server_admin_naws_import_spreadsheet_label']).'</span>';
+                                $ret .= '<span class="bmlt_admin_value_left">';
+                                    $ret .= '<input name="bmlt_admin_naws_import_file_input" id="bmlt_admin_naws_import_file_input" onchange="javascript:admin_handler_object.handleNAWSImportFileInputChange();" type="file" />';
+                                $ret .= '</span>';
+                            $ret .= '</div>';
+                            $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                                $ret .= '<span class="bmlt_admin_med_label_right">&nbsp;</span>';
+                                $ret .= '<span id="bmlt_admin_naws_import_ajax_button_span" class="bmlt_admin_value_left"><a id="bmlt_admin_naws_import_ajax_button" href="javascript:admin_handler_object.handleNAWSImport();" class="bmlt_admin_ajax_button button_disabled">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['import_service_bodies_and_meetings_button_text']).'</a></span>';
+                                $ret .= '<span id="bmlt_admin_naws_import_ajax_button_throbber_span" class="bmlt_admin_value_left item_hidden"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></span>';
+                                $ret .= '<div class="clear_both"></div>';
+                            $ret .= '</div>';
+                        $ret .= '</div>';
                     $ret .= '</div>';
-                $ret .= '</div>';
+
+
+
+                $ret .= '</fieldset>';
             $ret .= '</div>';
+
         $ret .= '</div>';
 
-        return  $ret;
+        return $ret;
     }
 
     /********************************************************************************************************//**

@@ -755,48 +755,6 @@ class c_comdef_server
     }
     
     /*******************************************************************/
-    /** \brief Gets an unused ID from the end of the table and
-        returns it. It also sets that ID into the table AUTO_INCREMENT,
-        so it can't get re-used.
-
-        \returns an integer, containing that ID.
-    */
-    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public static function GetNewMeetingID()
-    {
-        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-        include(dirname(__FILE__)."/config/get-config.php");
-        
-        try {
-            $sql = "SHOW TABLE STATUS LIKE '".self::GetMeetingTableName_obj()."_main'";
-            $rows = c_comdef_dbsingleton::preparedQuery($sql, array());
-            if (is_array($rows) && count($rows)) {
-                $table_row = 'auto_increment';
-                
-                if (!isset($rows[0][$table_row])) {
-                    $table_row = 'Auto_increment';
-                }
-                
-                $max_id = intval($rows[0][$table_row]) + 1;
-            }
-            
-            $sql = "ALTER TABLE `".self::GetMeetingTableName_obj()."_main` AUTO_INCREMENT=". intval($max_id);
-    
-            c_comdef_dbsingleton::preparedExec($sql);
-        } catch (Exception $ex) {
-            global  $_COMDEF_DEBUG;
-            
-            if ($_COMDEF_DEBUG) {
-                echo "Exception Thrown in c_comdef_server::GetNewMeetingID()!<br />";
-                var_dump($ex);
-            }
-            throw ( $ex );
-        }
-        
-        return --$max_id;
-    }
-    
-    /*******************************************************************/
     /** \brief Creates a new, relatively empty meeting in the database,
         with no data fields and minimal information.
 
@@ -2682,6 +2640,7 @@ class c_comdef_server
                 global  $comdef_global_more_details_address,    ///< This is a format string for the way the address line is displayed in the "more details" screen.
                     $comdef_global_list_address;            ///< The same, but for the list.
 
+                c_comdef_server::$server_local_strings['default_meeting_published'] = isset($default_meeting_published) ? $default_meeting_published : true;
                 c_comdef_server::$server_local_strings['week_starts_on'] = (isset($week_starts_on) && (-1 < $week_starts_on) && (7 > $week_starts_on)) ? $week_starts_on : 0;
                 c_comdef_server::$server_local_strings['name'] = file_get_contents(dirname(dirname(__FILE__)).'/local_server/server_admin/lang/'.$lang_enum.'/name.txt');
                 c_comdef_server::$server_local_strings['enum'] = $lang_enum;

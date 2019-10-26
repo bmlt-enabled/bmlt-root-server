@@ -74,12 +74,12 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         $data_table_values = array();
         $longdata_table_values = array();
         
-        // If this is a new meeting, we assign it a meeting ID from the server pool.
+        // If this is a new meeting, we null it out so that the db will auto increment the value
         if (!$is_update) {
-            $this->_my_meeting_data['id_bigint'] = c_comdef_server::GetNewMeetingID();
+            $this->_my_meeting_data['id_bigint'] = null;
         }
         
-        // Load the main table first. If it is a new meeting, we need to assign it a new ID.
+        // Load the main table first.
         $main_table_values['id_bigint'] = $this->_my_meeting_data['id_bigint'];
 
         if (isset($this->_my_meeting_data['email_contact'])) {
@@ -303,7 +303,13 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                     $updateSQL .= ")";
 
                     c_comdef_dbsingleton::preparedExec($updateSQL, $vals);
-                    
+                    if (is_null($this->_my_meeting_data['id_bigint'])) {
+                        // This was a new meeting, need to get the generated id
+                        $newMeetingId = intval(c_comdef_dbsingleton::lastInsertId());
+                        $this->_my_meeting_data['id_bigint'] = $newMeetingId;
+                        list ( $main_table_values, $data_table_values, $longdata_table_values ) = $this->ReduceToArrays();
+                    }
+
                     if (is_array($data_table_values)  && count($data_table_values)) {
                         foreach ($data_table_values as $data_table_value) {
                             $first = true;

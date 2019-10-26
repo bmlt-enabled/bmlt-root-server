@@ -257,20 +257,21 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
             this.m_ajax_request_in_progress.abort();
             this.m_ajax_request_in_progress = null;
         };
-        
+
         uri += 'test_comprehensive';
-        uri += '&dbType=' + this.m_installer_state.dbType;
-        uri += '&dbName=' + this.m_installer_state.dbName;
-        uri += '&dbUser=' + this.m_installer_state.dbUser;
-        uri += '&dbPassword=' + this.m_installer_state.dbPassword;
-        uri += '&dbServer=' + this.m_installer_state.dbServer;
-        uri += '&dbPrefix=' + this.m_installer_state.dbPrefix;
+        var formData = new FormData();
+        formData.append('dbType', this.m_installer_state.dbType);
+        formData.append('dbName', this.m_installer_state.dbName);
+        formData.append('dbUser', this.m_installer_state.dbUser);
+        formData.append('dbPassword', this.m_installer_state.dbPassword);
+        formData.append('dbServer', this.m_installer_state.dbServer);
+        formData.append('dbPrefix', this.m_installer_state.dbPrefix);
         
         var salt = new Date();
         uri += '&salt=' + salt.getTime();
     
-        this.m_ajax_request_in_progress = BMLT_Installer_AjaxRequest(uri, function (in_req) {
-            g_installer_object.buttonTestForDatabaseSetupCallback(in_req); }, 'post');
+        this.m_ajax_request_in_progress = BMLT_Installer_AjaxPostRequest(uri, function (in_req) {
+            g_installer_object.buttonTestForDatabaseSetupCallback(in_req); }, formData);
     };
     
     /************************************************************************************//**
@@ -305,18 +306,19 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
         };
         
         uri += 'test';
-        uri += '&dbType=' + this.m_installer_state.dbType;
-        uri += '&dbName=' + this.m_installer_state.dbName;
-        uri += '&dbUser=' + this.m_installer_state.dbUser;
-        uri += '&dbPassword=' + this.m_installer_state.dbPassword;
-        uri += '&dbServer=' + this.m_installer_state.dbServer;
-        uri += '&dbPrefix=' + this.m_installer_state.dbPrefix;
+        var formData = new FormData();
+        formData.append('dbType', this.m_installer_state.dbType);
+        formData.append('dbName', this.m_installer_state.dbName);
+        formData.append('dbUser', this.m_installer_state.dbUser);
+        formData.append('dbPassword', this.m_installer_state.dbPassword);
+        formData.append('dbServer', this.m_installer_state.dbServer);
+        formData.append('dbPrefix', this.m_installer_state.dbPrefix);
         
         var salt = new Date();
         uri += '&salt=' + salt.getTime();
     
-        this.m_ajax_request_in_progress = BMLT_Installer_AjaxRequest(uri, function (in_req) {
-            g_installer_object.testForDatabaseSetupCallback(in_req); }, 'post');
+        this.m_ajax_request_in_progress = BMLT_Installer_AjaxPostRequest(uri, function (in_req) {
+            g_installer_object.testForDatabaseSetupCallback(in_req); }, formData);
     };
     
     /************************************************************************************//**
@@ -363,53 +365,61 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
         }
         
         uri += 'initialize_server';
+
+        var formData = new FormData();
+
         // db settings
-        uri += '&dbType=' + this.m_installer_state.dbType;
-        uri += '&dbName=' + this.m_installer_state.dbName;
-        uri += '&dbUser=' + this.m_installer_state.dbUser;
-        uri += '&dbPassword=' + this.m_installer_state.dbPassword;
-        uri += '&dbServer=' + this.m_installer_state.dbServer;
-        uri += '&dbPrefix=' + this.m_installer_state.dbPrefix;
+        formData.append('dbType', this.m_installer_state.dbType);
+        formData.append('dbName', this.m_installer_state.dbName);
+        formData.append('dbUser', this.m_installer_state.dbUser);
+        formData.append('dbPassword', this.m_installer_state.dbPassword);
+        formData.append('dbServer', this.m_installer_state.dbServer);
+        formData.append('dbPrefix', this.m_installer_state.dbPrefix);
 
         // admin user settings
         var admin_login_object = document.getElementById('installer_admin_login_input');
         var admin_password_object = document.getElementById('installer_admin_password_input');
         var admin_login = (admin_login_object.value && (admin_login_object.value != admin_login_object.defaultValue)) ? admin_login_object.value : '';
         var admin_password = (admin_password_object.value && (admin_password_object.value != admin_password_object.defaultValue)) ? admin_password_object.value : '';
-        uri += '&admin_login=' + admin_login;
-        uri += '&admin_password=' + admin_password;
+        formData.append('admin_login', admin_login);
+        formData.append('admin_password', admin_password);
 
         // auto-config.inc.php
-        uri += '&region_bias=' + this.m_installer_state.region_bias;
-        uri += '&gkey=' + this.m_installer_state.api_key;
-        uri += '&search_spec_map_center_longitude=' + parseFloat(this.m_installer_state.search_spec_map_center.longitude).toString();
-        uri += '&search_spec_map_center_latitude=' + parseFloat(this.m_installer_state.search_spec_map_center.latitude).toString();
-        uri += '&search_spec_map_center_zoom=' + parseInt(this.m_installer_state.search_spec_map_center.zoom, 10).toString();
-        uri += '&comdef_distance_units=' + this.m_installer_state.comdef_distance_units;
-        uri += '&bmlt_title=' + this.m_installer_state.bmlt_title.replace(/'/g,"\\'");
-        uri += '&banner_text=' + this.m_installer_state.banner_text.replace(/'/g,"\\'");
-        uri += '&comdef_global_language=' + this.m_installer_state.comdef_global_language ;
-        uri += '&min_pw_len=' + this.m_installer_state.min_pw_len;
-        uri += '&number_of_meetings_for_auto=' + parseInt(this.m_installer_state.number_of_meetings_for_auto, 10);
-        uri += '&change_depth_for_meetings=' + parseInt(this.m_installer_state.change_depth_for_meetings, 10);
-        uri += '&default_duration_time=' + this.m_installer_state.default_duration_time;
-        uri += '&g_enable_language_selector=' + (this.m_installer_state.enable_language_selector ? 'TRUE' : 'FALSE');
-        uri += '&g_enable_semantic_admin=' + (this.m_installer_state.enable_semantic_admin ? 'TRUE' : 'FALSE');
-        uri += '&g_defaultClosedStatus=' + (this.m_installer_state.default_closed ? 'TRUE' : 'FALSE');
-        uri += '&g_enable_email_contact=' + (this.m_installer_state.enable_email_contact ? 'TRUE' : 'FALSE');
-        uri += '&include_service_body_admin_on_emails=' + (this.m_installer_state.send_copy_to_sba ? 'TRUE' : 'FALSE');
-        uri += '&include_every_admin_on_emails=' + (this.m_installer_state.send_copy_to_all_admins ? 'TRUE' : 'FALSE');
-        uri += '&time_format=' + this.m_installer_state.time_format.replace(/'/g,"\\'");
-        uri += '&format_lang_names=' + encodeURIComponent(this.m_installer_state.format_lang_names);
-        uri += '&time_format=' + this.m_installer_state.time_format.replace(/'/g,"\\'");	
-        uri += '&change_date_format=' + this.m_installer_state.change_date_format.replace(/'/g,"\\'");
-        uri += '&admin_session_name=' + this.m_installer_state.admin_session_name.replace(/'/g,"\\'");
+        formData.append('region_bias', this.m_installer_state.region_bias);
+        formData.append('gkey', this.m_installer_state.api_key);
+        formData.append('search_spec_map_center_longitude', parseFloat(this.m_installer_state.search_spec_map_center.longitude).toString());
+        formData.append('search_spec_map_center_latitude', parseFloat(this.m_installer_state.search_spec_map_center.latitude).toString());
+        formData.append('search_spec_map_center_zoom', parseInt(this.m_installer_state.search_spec_map_center.zoom, 10).toString());
+        formData.append('comdef_distance_units', this.m_installer_state.comdef_distance_units);
+        formData.append('bmlt_title', this.m_installer_state.bmlt_title.replace(/'/g,"\\'"));
+        formData.append('banner_text', this.m_installer_state.banner_text.replace(/'/g,"\\'"));
+        formData.append('comdef_global_language', this.m_installer_state.comdef_global_language);
+        formData.append('min_pw_len', this.m_installer_state.min_pw_len);
+        formData.append('number_of_meetings_for_auto', parseInt(this.m_installer_state.number_of_meetings_for_auto, 10));
+        formData.append('change_depth_for_meetings', parseInt(this.m_installer_state.change_depth_for_meetings, 10));
+        formData.append('default_duration_time', this.m_installer_state.default_duration_time);
+        formData.append('g_enable_language_selector', (this.m_installer_state.enable_language_selector ? 'TRUE' : 'FALSE'));
+        formData.append('g_enable_semantic_admin', (this.m_installer_state.enable_semantic_admin ? 'TRUE' : 'FALSE'));
+        formData.append('g_defaultClosedStatus', (this.m_installer_state.default_closed ? 'TRUE' : 'FALSE'));
+        formData.append('g_enable_email_contact', (this.m_installer_state.enable_email_contact ? 'TRUE' : 'FALSE'));
+        formData.append('include_service_body_admin_on_emails', (this.m_installer_state.send_copy_to_sba ? 'TRUE' : 'FALSE'));
+        formData.append('include_every_admin_on_emails', (this.m_installer_state.send_copy_to_all_admins ? 'TRUE' : 'FALSE'));
+        formData.append('time_format', this.m_installer_state.time_format.replace(/'/g,"\\'"));
+        formData.append('format_lang_names', encodeURIComponent(this.m_installer_state.format_lang_names));
+        formData.append('time_format', this.m_installer_state.time_format.replace(/'/g,"\\'"));
+        formData.append('change_date_format', this.m_installer_state.change_date_format.replace(/'/g,"\\'"));
+        formData.append('admin_session_name', this.m_installer_state.admin_session_name.replace(/'/g,"\\'"));
 
         var salt = new Date();
         uri += '&salt=' + salt.getTime();
+
+        var file_input = document.getElementById('bmlt_admin_naws_spreadsheet_file_input');
+        if (file_input && file_input.files && file_input.files.length) {
+            formData.append('thefile', file_input.files[0]);
+        }
         
-        this.m_ajax_request_in_progress = BMLT_Installer_AjaxRequest(uri, function (in_req) {
-            g_installer_object.initializeRootServerCallback(in_req); }, 'post');
+        this.m_ajax_request_in_progress = BMLT_Installer_AjaxPostRequest(uri, function (in_req) {
+            g_installer_object.initializeRootServerCallback(in_req); }, formData);
     };
     
     /************************************************************************************//**
@@ -420,21 +430,33 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
         this.m_ajax_request_in_progress = null;
         if (in_http_request.responseText) {
             eval('var ret_val = ' + in_http_request.responseText + ';');
-            
+
+            var file_input = document.getElementById('bmlt_admin_naws_spreadsheet_file_input');
+            var importAttempted = file_input && file_input.files && file_input.files.length;
+
             if (ret_val) {
-                if (ret_val.dbStatus === true && ret_val.configStatus === true) {   // Hide the initialize button upon success.
+                if (ret_val.dbStatus === true && ret_val.configStatus === true && (!importAttempted || ret_val.importStatus === true)) {   // Hide the initialize button upon success.
                     document.getElementById('database_install_stuff_div').className = 'item_hidden';
                     document.getElementById('admin_db_items_warning').innerHTML = '';
                     location.reload(true);
                 } else if (!ret_val.dbStatus) {
-                    if (ret_val.dbReport) {
+                    if (importAttempted && ret_val.importReport) {
+                        alert(ret_val.importReport);
+                    } else if (ret_val.dbReport) {
                         alert(ret_val.dbReport);
                     }
-                } else {
+                } else if (!ret_val.configStatus) {
                     document.getElementById('database_install_stuff_div').className = 'item_hidden';
                     document.getElementById('admin_db_items_warning').innerHTML = '';
                     // There was a problem writing the config file, so show the config and allow the user to write it manually
+                    if (importAttempted) {
+                        alert('The configuration file could not be written.');
+                        location.reload(true);
+                    }
                     document.getElementById('result_code_div').className = 'item_shown';  // Show settings file.
+                } else {
+                    alert(ret_val.importReport);
+                    location.reload(true);
                 }
             }
         }
@@ -737,10 +759,10 @@ function gmScriptLoadCompletion()
 *   \returns a new XMLHTTPRequest object.                                                   *
 ********************************************************************************************/
     
-function BMLT_Installer_AjaxRequest(
+function BMLT_Installer_AjaxPostRequest(
     url,        ///< The URI to be called
     callback,   ///< The success callback
-    method,     ///< The method ('get' or 'post')
+    data,       ///< FormData object
     extra_data  ///< If supplied, extra data to be delivered to the callback.
 ) {
     /************************************************************************************//**
@@ -751,73 +773,47 @@ function BMLT_Installer_AjaxRequest(
     *   \returns a new XMLHTTPRequest object.                                               *
     ****************************************************************************************/
     
-    function createXMLHTTPObject()
-    {
+    function createXMLHTTPObject() {
         var XMLHttpArray = [
-            function () {
-                return new XMLHttpRequest()},
-            function () {
-                return new ActiveXObject("Msxml2.XMLHTTP")},
-            function () {
-                return new ActiveXObject("Msxml2.XMLHTTP")},
-            function () {
-                return new ActiveXObject("Microsoft.XMLHTTP")}
-            ];
-            
+            function () {return new XMLHttpRequest()},
+            function () {return new ActiveXObject("Msxml2.XMLHTTP")},
+            function () {return new ActiveXObject("Msxml2.XMLHTTP")},
+            function () {return new ActiveXObject("Microsoft.XMLHTTP")}
+        ];
+
         var xmlhttp = false;
-        
         for (var i=0; i < XMLHttpArray.length; i++) {
             try {
                 xmlhttp = XMLHttpArray[i]();
             } catch (e) {
                 continue;
-            };
+            }
             break;
-        };
+        }
         
         return xmlhttp;
-    };
+    }
     
     var req = createXMLHTTPObject();
     req.finalCallback = callback;
-    var sVars = null;
-    method = method.toString().toUpperCase();
-    var drupal_kludge = '';
-    
-    // Split the URL up, if this is a POST.
-    if ( method == "POST" ) {
-        var rmatch = /^([^\?]*)\?(.*)$/.exec(url);
-        url = rmatch[1];
-        sVars = rmatch[2];
-        // This horrible, horrible kludge, is because Drupal insists on having its q parameter in the GET list only.
-        var rmatch_kludge = /(q=admin\/settings\/bmlt)&?(.*)/.exec(rmatch[2]);
-        if ( rmatch_kludge && rmatch_kludge[1] ) {
-            url += '?'+rmatch_kludge[1];
-            sVars = rmatch_kludge[2];
-        };
-    };
-    if ( extra_data != null ) {
+    if (extra_data != null) {
         req.extra_data = extra_data;
-    };
-    req.open(method, url, true);
-    if ( method == "POST" ) {
-        req.setRequestHeader("Method", "POST "+url+" HTTP/1.1");
-        req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    };
-    req.onreadystatechange = function ( ) {
-        if ( req.readyState != 4 ) {
+    }
+    req.open("POST", url, true);
+    req.onreadystatechange = function () {
+        if (req.readyState !== 4) {
             return;
         }
-        if ( req.status != 200 ) {
+        if (req.status !== 200) {
             return;
         }
         callback(req, req.extra_data);
         req = null;
-    };
-    req.send(sVars);
+    }
+    req.send(data);
     
     return req;
-};
+}
 
 // #mark -
 // #mark ########## Third-Party Code ##########

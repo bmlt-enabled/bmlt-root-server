@@ -45,8 +45,7 @@ class bmlt_semantic
     */
     /**************************************************************/
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public static function strip_script( $in_filename
-                                )
+    public static function strip_script($in_filename)
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
@@ -174,8 +173,7 @@ class bmlt_semantic
         \param inHttpVars The HTTP query associative array.
     */
     /**************************************************************/
-    public function __construct(  $inHttpVars
-                            )
+    public function __construct($inHttpVars)
     {
         // Get any language
         $this->_myLang = 'en';
@@ -392,8 +390,7 @@ class bmlt_semantic
     */
     /**************************************************************/
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function localize_string( $in_string
-                            )
+    public function localize_string($in_string)
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return htmlspecialchars(isset($this->_localization[$in_string]) ? $this->_localization[$in_string] : $in_string);
@@ -1244,8 +1241,7 @@ class bmlt_semantic
     */
     /**************************************************************/
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function get_wizard_page_field_select_html( $inID = ''
-                                                )
+    public function get_wizard_page_field_select_html($inID = '')
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '<label id="bmlt_semantic_form_field_'.htmlspecialchars($inID).'select_label'.htmlspecialchars($this->_myJSName).'" for="bmlt_semantic_form_field_'.htmlspecialchars($inID).'select'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_field_select_label">'.$this->localize_string('keys_section_label').'</label>';

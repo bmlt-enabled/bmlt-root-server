@@ -329,6 +329,9 @@ function c_comdef_LoginForm(    &$in_server ///< A reference to an instance of c
                 $ret .= '<div class="c_comdef_admin_login_form_submit_div">';
                     $ret .= '<input type="submit" value="'.c_comdef_htmlspecialchars($localized_strings['comdef_server_admin_strings']['button']).'" />';
                 $ret .= '</div>';
+                $ret .= '<div class="server_version_display_login">';
+                    $ret .= htmlspecialchars($server_info['version']);
+                $ret .= '</div>';
             $ret .= '</div>';
         // This is how we check for JavaScript availability and enabled cookies (Cookies are required for sessions).
         // We reveal the form using JavaScript (It stays invisible if no JS), and we set a transitory cookie with JS to be read upon login.

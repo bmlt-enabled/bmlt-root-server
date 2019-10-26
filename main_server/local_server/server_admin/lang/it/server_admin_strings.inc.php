@@ -21,16 +21,27 @@
     
     $comdef_server_admin_strings = array (  'server_admin_disclosure'                               =>  'Server Administration',
                                             'server_admin_naws_spreadsheet_label'                   =>  'Updated World IDs Spreadsheet:',
-                                            'update_world_ids_button_text'                          =>  'Update Meeting World IDs from Spreadsheet',
+                                            'update_world_ids_button_text'                          =>  'Update Meeting World IDs',
+                                            'update_world_ids_from_spreadsheet_dropdown_text'       =>  'Update Meeting World IDs from NAWS Spreadsheet',
+                                            'server_admin_error_no_world_ids_updated'               =>  'No World IDs were updated. This could be because your user does not have permission to update the submitted meetings.',
                                             'server_admin_error_required_spreadsheet_column'        =>  'Required column does not exist in the spreadsheet: ',
                                             'server_admin_error_bmlt_id_not_integer'                =>  'The provided bmlt_id is not an integer: ',
                                             'server_admin_error_could_not_create_reader'            =>  'Could not create reader for file: ',
                                             'server_admin_error_no_files_uploaded'                  =>  'No files were uploaded.',
+                                            'server_admin_error_service_bodies_already_exist'       =>  'Service bodies with the following World IDs already exist: ',
+                                            'server_admin_error_meetings_already_exist'             =>  'Meetings with the following World IDs already exist: ',
                                             'server_admin_ui_num_meetings_updated'                  =>  'Number of meetings updated: ',
                                             'server_admin_ui_num_meetings_not_updated'              =>  'Number of meetings that did not need updating: ',
                                             'server_admin_ui_warning'                               =>  'WARNING',
                                             'server_admin_ui_errors'                                =>  'Error(s)',
                                             'server_admin_ui_meetings_not_found'                    =>  'meetings were found in the spreadsheet that did not exist in the database. This can happen when a meeting is deleted or unpublished. The missing meeting IDs are: ',
+                                            'server_admin_ui_service_bodies_created'                => 'Service bodies created: ',
+                                            'server_admin_ui_meetings_created'                      => 'Meetings created: ',
+                                            'server_admin_ui_users_created'                         => 'Users created: ',
+                                            'server_admin_ui_refresh_ui_text'                       => 'Sign out and then sign in again to see the new service bodies, users, and meetings.',
+                                            'import_service_bodies_and_meetings_button_text'        => 'Import Service Bodies and Meetings',
+                                            'import_service_bodies_and_meetings_dropdown_text'      => 'Import Service Bodies and Meetings from NAWS Export',
+                                            'server_admin_naws_import_spreadsheet_label'            => 'NAWS Import Spreadsheet:',
                                             'account_disclosure'                                    =>  'Il mio account',//'My Account',
                                             'account_name_label'                                    =>  'Nome del mio account:',//'My Account Name:',
                                             'account_login_label'                                   =>  'Il mio login:',//'My Login:',
@@ -77,6 +88,7 @@
                                             'meeting_editor_screen_match_ll_button'                 =>  'Imposta longitudine e latitudine sull\'indirizzo',//'Set Longitude and Latitude to Address',
                                             'meeting_editor_screen_default_text_prompt'             =>  'Inserisci del testo o un numero',//'Enter Some Text or a Number',
                                             'meeting_is_published'                                  =>  'La riunione è pubblicata',//'Meeting is Published',
+                                            'meeting_unpublished_note'                              =>  'Note: Unpublishing a meeting indicates a temporary closure. If this meeting has closed permanently, please delete it.',
                                             'meeting_editor_screen_meeting_name_label'              =>  'Nome della riunione:',//'Meeting Name:',
                                             'meeting_editor_screen_meeting_name_prompt'             =>  'Inserisci un nome per la riunione',//'Enter A Meeting Name',
                                             'meeting_editor_screen_meeting_weekday_label'           =>  'Giorno della settimana:',//'Weekday:',
@@ -124,9 +136,7 @@
                                             'meeting_editor_screen_meeting_publish_search_all'      =>  'Tutte le riunioni',//'All Meetings',
                                             'meeting_editor_screen_meeting_create_button'           =>  'Crea una nuova riunione',//'Create A New Meeting',
                                             'meeting_editor_screen_delete_button'                   =>  'Elimina questa riunione',//'Delete This Meeting',
-                                            'meeting_editor_screen_delete_perm_checkbox'            =>  'Elimina definitivamente questa riunione',//'Delete This Meeting Permanently',
                                             'meeting_editor_screen_delete_button_confirm'           =>  'Sei sicuro di voler eliminare questa riunione?',//'Are you sure that you want to delete this meeting?',
-                                            'meeting_editor_screen_delete_button_confirm_perm'      =>  'Questa riunione sarà eliminata definitivamente!',//'This meeting will be deleted permanently!',
                                             'meeting_editor_screen_cancel_button'                   =>  'Cancella',//'Cancel',
                                             'logout'                                                =>  'Esci',//'Sign Out',
                                             'meeting_editor_screen_cancel_confirm'                  =>  'Sei sicuro di voler annullare la modifica di questa riunione e perdere tutte le variazioni apportate?',//'Are you sure that you want to cancel editing this meeting, and lose all changes?',
@@ -339,7 +349,10 @@
                                                                                                             'VAR'   =>  'Formato variabile',//'VAR'//'Format Varies',
                                                                                                             'D'     =>  'Donne',//'W'//'Women',
                                                                                                             'GIO'   =>  'Giovani',//'Y'//'Young People',
-                                                                                                            'LAL'   =>  'Lingue alternate'//'LANG'//'Alternate Language'
+                                                                                                            'LAL'   =>  'Lingue alternate', //'LANG'//'Alternate Language'
+                                                                                                            'GP'    =>  'Guiding Principles', // TODO translate
+                                                                                                            'NC'    =>  'No Children', // TODO translate
+                                                                                                            'CH'    =>  'Closed Holidays' // TODO translate
                                                                                                             ),
                                             'format_type_prompt'                                    =>  'Format Type:',    // TODO: Translate
                                             'format_type_codes'                                     =>  array (

@@ -99,6 +99,23 @@ jobs:
         - ./terraform taint -allow-missing aws_ecs_task_definition.bmlt_$(if [ $TRAVIS_BRANCH == "master" ]; then echo latest; else echo unstable; fi)
         - ./terraform apply -input=false -auto-approve
 
+    - stage: deploy docs to gh-pages
+      addons:
+        apt:
+          packages:
+            - doxygen
+      script:
+        - mkdir docs && cd doc
+        - doxygen Doxyfile
+      deploy:
+        - provider: pages
+          skip_cleanup: true
+          local_dir: docs
+          target_branch: gh-pages
+          github_token: $GITHUB_API_KEY
+          on:
+            branch: master
+            
 notifications:
   slack:
     rooms:

@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "aa81ae3e6ce2efa2e6e7422191fa06bc",
+    "content-hash": "dda287fbe92bdae5fab7ddfa969c0476",
     "packages": [
         {
             "name": "bmlt/bmlt-satellite-base-class",
-            "version": "3.9.12",
+            "version": "3.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bmlt-enabled/bmlt-satellite-base-class.git",
-                "reference": "ada224cfef10154e5ee3a811e37611414a10ad1a"
+                "reference": "1a0c5f922b88f274f5448c5a2f470eb6e8023730"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bmlt-enabled/bmlt-satellite-base-class/zipball/ada224cfef10154e5ee3a811e37611414a10ad1a",
-                "reference": "ada224cfef10154e5ee3a811e37611414a10ad1a",
+                "url": "https://api.github.com/repos/bmlt-enabled/bmlt-satellite-base-class/zipball/1a0c5f922b88f274f5448c5a2f470eb6e8023730",
+                "reference": "1a0c5f922b88f274f5448c5a2f470eb6e8023730",
                 "shasum": ""
             },
             "require": {
@@ -40,7 +40,7 @@
                 }
             ],
             "description": "This is a generic CMS plugin class for a BMLT satellite client.",
-            "time": "2018-12-25T01:32:44+00:00"
+            "time": "2019-09-22T14:45:48+00:00"
         },
         {
             "name": "bmlt/bmlt-satellite-driver",
@@ -239,16 +239,16 @@
         },
         {
             "name": "phpoffice/phpspreadsheet",
-            "version": "1.6.0",
+            "version": "1.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPOffice/PhpSpreadsheet.git",
-                "reference": "bf00f0cc5f55c354018f9a9ef15e6e3e1a229051"
+                "reference": "0c1346a1956347590b7db09533966307d20cb7cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/bf00f0cc5f55c354018f9a9ef15e6e3e1a229051",
-                "reference": "bf00f0cc5f55c354018f9a9ef15e6e3e1a229051",
+                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/0c1346a1956347590b7db09533966307d20cb7cc",
+                "reference": "0c1346a1956347590b7db09533966307d20cb7cc",
                 "shasum": ""
             },
             "require": {
@@ -329,7 +329,7 @@
                 "xls",
                 "xlsx"
             ],
-            "time": "2019-01-02T04:42:54+00:00"
+            "time": "2019-07-08T21:21:25+00:00"
         },
         {
             "name": "psr/simple-cache",

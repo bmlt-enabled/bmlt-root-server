@@ -1174,6 +1174,18 @@ div.bmlt_admin_logout_bar a:active
     background-color:#009;
 }
 
+span.bmlt_admin_unpublished_note_span
+{
+    float:left;
+    display:block;
+    text-align:left;
+    padding-left:0.5em;
+    font-style:italic;
+    font-weight:normal;
+    font-size:small;
+    color:#009;
+}
+
 span.bmlt_admin_visibility_advice_span
 {
     float:left;
@@ -1219,6 +1231,7 @@ div.bmlt_admin_single_location_long_lat_div
     padding-top:4px;
 }
 
+fieldset.bmlt_admin_server_admin_editor_fieldset,
 fieldset.bmlt_admin_single_service_body_editor_fieldset,
 fieldset.bmlt_admin_single_user_editor_fieldset
 {
@@ -1230,6 +1243,7 @@ fieldset.bmlt_admin_single_user_editor_fieldset
     border-radius: 4px;
 }
 
+fieldset.bmlt_admin_server_admin_editor_fieldset legend,
 fieldset.bmlt_admin_single_service_body_editor_fieldset legend,
 fieldset.bmlt_admin_single_user_editor_fieldset legend
 {
@@ -1250,6 +1264,16 @@ div.server_version_display_div
     right:8px;
     top:4px;
     color:#009;
+    font-weight:normal;
+    font-style:italic;
+}
+
+div.server_version_display_login
+{
+    position:absolute;
+    right:8px;
+    top:4px;
+    color:white;
     font-weight:normal;
     font-style:italic;
 }

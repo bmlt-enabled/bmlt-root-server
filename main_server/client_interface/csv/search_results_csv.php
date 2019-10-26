@@ -37,6 +37,8 @@ global $g_format_dictionary;    ///< This is a dictionary used to translate form
 bmlt_populate_format_dictionary();
 
 /// If you wish to override this, simply set this up in your /get-config.php file. That will supersede this.
+/// Actually... this block of code never, ever gets hit because the above call to bmlt_populate_format_dictionary
+/// will always set $g_format_dictionary. We should... probably remove it?
 if (!isset($g_format_dictionary) || !is_array($g_format_dictionary) || !count($g_format_dictionary)) {
     /// This is the default set.
     /// The right side is the BMLT side, and the left side is the NAWS code. The left side should not be changed.
@@ -49,15 +51,18 @@ if (!isset($g_format_dictionary) || !is_array($g_format_dictionary) || !count($g
                                 'BT'        => array(3),
                                 'OPEN'      => array(4),
                                 'CAN'       => array(6),
+                                'CH'        => array(5),
                                 'CW'        => array(7),
                                 'DISC'      => array(8),
                                 'GL'        => array(10),
+                                'GP'        => array(52),
                                 'IP'        => array(12),
                                 'IW'        => array(13),
                                 'JFT'       => array(14),
                                 'LIT'       => array(36),
                                 'M'         => array(15),
                                 'CLOSED'    => array(17),
+                                'NC'        => array(16),
                                 'NS'        => array(37),
                                 'SMOK'      => array(25),
                                 'SPK'       => array(22),
@@ -578,7 +583,7 @@ function ReturnNAWSFormatCSV(
                                     'ContactCountry'    => null,
                                     'ContactPhone'      => null,
                                     'MeetingID'         => null,
-                                    'Room'              => null,
+                                    'Room'              => 'BMLT_FuncNAWSReturnNonNawsFormats',
                                     'Closed'            => 'BMLT_FuncNAWSReturnOpenOrClosed',
                                     'WheelChr'          => 'BMLT_FuncNAWSReturnWheelchair',
                                     'Day'               => 'BMLT_FuncNAWSReturnWeekday',
@@ -639,7 +644,7 @@ function ReturnNAWSFormatCSV(
                     }
                     array_push($line, $value);
                 }
-                    
+
                 // We don't send unpublished meetings unless they have a World ID.
                 if (is_array($line)
                     &&  count($line)
@@ -686,7 +691,7 @@ function ReturnNAWSDeletedMeetings(
     if ($changes instanceof c_comdef_changes) {
         $ret = array();
         $c_array = $changes->GetChangesObjects();
-        
+
         if (is_array($c_array) && count($c_array)) {
             foreach ($c_array as &$change) {
                 $b_obj = $change->GetBeforeObject();
@@ -1080,6 +1085,43 @@ function BMLT_FuncNAWSReturnMeetingServiceBodyNAWSID(
         }
     }
     
+    return $ret;
+}
+
+/*******************************************************************/
+/**
+\brief Returns a string of all formats that don't map to NAWS codes.
+
+\returns A string The format codes name_string.
+ */
+function BMLT_FuncNAWSReturnNonNawsFormats(
+    $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
+    &$server        ///< A reference to an instance of c_comdef_server
+) {
+
+    $ret = "";
+
+    if ($in_meeting_id instanceof c_comdef_meeting) {
+        $the_meeting = $in_meeting_id;
+    } else {
+        $the_meeting = $server->GetOneMeeting($in_meeting_id);
+    }
+
+    if ($the_meeting instanceof c_comdef_meeting) {
+        $formats = $the_meeting->GetMeetingDataValue('formats');
+
+        if (is_array($formats) && count($formats)) {
+            foreach ($formats as $format) {
+                if ($format != null && !$format->GetWorldID()) {
+                    $ret .= $format->GetLocalName();
+                    $ret .= ',';
+                }
+            }
+
+            $ret = rtrim($ret, ',');
+        }
+    }
+
     return $ret;
 }
 

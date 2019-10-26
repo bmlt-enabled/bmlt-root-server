@@ -30,6 +30,13 @@ require_once(dirname(__FILE__).'/../../server/classes/c_comdef_dbsingleton.class
 require_once(dirname(__FILE__).'/../../server/shared/classes/comdef_utilityclasses.inc.php');
 require_once(dirname(__FILE__).'/../../server/shared/Array2Json.php');
 
+function dropEverything($dbPrefix)
+{
+    $dropSql = str_replace('%%PREFIX%%', preg_replace('|[^a-z_\.\-A-Z0-9]|', '', $dbPrefix), file_get_contents(dirname(__FILE__).'/sql_files/dropEverything.sql'));
+    $value_array = array();
+    c_comdef_dbsingleton::preparedExec($dropSql, $value_array);
+}
+
 // We do everything we can to ensure that the requested language file is loaded.
 if (file_exists(dirname(__FILE__).'/../server_admin/lang/'.$lang.'/install_wizard_strings.php')) {
     require_once(dirname(__FILE__).'/../server_admin/lang/'.$lang.'/install_wizard_strings.php');
@@ -57,6 +64,8 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
     $sql[] = str_replace('%%PREFIX%%', preg_replace('|[^a-z_\.\-A-Z0-9]|', '', $db_prefix.$http_vars['dbPrefix']), file_get_contents(dirname(__FILE__).'/sql_files/initialServiceBodiesStructure.sql'));
     $sql[] = str_replace('%%PREFIX%%', preg_replace('|[^a-z_\.\-A-Z0-9]|', '', $db_prefix.$http_vars['dbPrefix']), file_get_contents(dirname(__FILE__).'/sql_files/InitialUsersStructure.sql'));
     $sql[] = str_replace('%%PREFIX%%', preg_replace('|[^a-z_\.\-A-Z0-9]|', '', $db_prefix.$http_vars['dbPrefix']), file_get_contents(dirname(__FILE__).'/sql_files/InitialMeetingsData.sql'));
+    $sql[] = str_replace('%%PREFIX%%', preg_replace('|[^a-z_\.\-A-Z0-9]|', '', $db_prefix.$http_vars['dbPrefix']), file_get_contents(dirname(__FILE__).'/sql_files/initialDbVersionStructure.sql'));
+    $sql[] = str_replace('%%PREFIX%%', preg_replace('|[^a-z_\.\-A-Z0-9]|', '', $db_prefix.$http_vars['dbPrefix']), file_get_contents(dirname(__FILE__).'/sql_files/initialDbVersionData.sql'));
 
     // Our SQL is now ready to be set to the server. We need to use PDO, as that is the abstraction mechanism used by the server.
 
@@ -64,8 +73,26 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
         'dbStatus' => false,
         'dbReport' => '',
         'configStatus' => false,
-        'configReport' => ''
+        'configReport' => '',
+        'importStatus' => false,
+        'importReport' => ''
     );
+
+    $nawsImport = null;
+    // If a NAWS import file is provided, instantiate the importer up front to discover
+    // any spreadsheet formatting/validation errors
+    if (!empty($_FILES) && isset($_FILES['thefile'])) {
+        require_once(__DIR__ . '/../server_admin/NAWSImport.php');
+
+        try {
+            $nawsImport = new NAWSImport($_FILES['thefile']['tmp_name']);
+        } catch (Exception $e) {
+            $response['importReport'] = $e->getMessage();
+            echo array2json($response);
+            ob_end_flush();
+            die();
+        }
+    }
 
     // Initialize Database
     try {
@@ -192,9 +219,42 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
         chmod($config_path, 0644);
         $response['configStatus'] = true;
     } catch (Exception $e) {
+        if (!is_null($nawsImport)) {
+            // If the user was attempting an import, just undo the whole installation when
+            // there is a failure to write the configuration file
+            dropEverything($http_vars['dbPrefix']);
+        }
         echo array2json($response);
         ob_end_flush();
         die();
+    }
+
+    // If a NAWS CSV is provided to prime the database, import it
+    if (!is_null($nawsImport)) {
+        require_once(__DIR__.'/../../server/c_comdef_server.class.php');
+        try {
+            $server = c_comdef_server::MakeServer();
+            $adminLogin = $http_vars['admin_login'];
+            $encryptedPassword = $server->GetEncryptedPW($http_vars['admin_login'], $http_vars['admin_password']);
+            $_SESSION[$http_vars['admin_session_name']] = "$adminLogin\t$encryptedPassword";
+            require_once(__DIR__.'/../server_admin/c_comdef_admin_ajax_handler.class.php');
+            $nawsImport->import();
+            $response['importStatus'] = true;
+        } catch (Exception $e) {
+            // Drop all the tables
+            dropEverything($http_vars['dbPrefix']);
+
+            // Delete the config file
+            unlink($config_path);
+
+            $response['importReport'] = $e->getMessage();
+            echo array2json($response);
+            ob_end_flush();
+            die();
+        }
+    } else {
+        $response['importStatus'] = true;
+        $response['importReport'] = 'No CSV was provided, so no meetings were imported.';
     }
 
     echo array2json($response);
