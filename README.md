@@ -60,6 +60,7 @@ CHANGELIST
 ***Version 2.14.3* ** *- TBD*
 
 - Fixed an issue where the install wizard could not be completed when a permissions issue prevented writing of `auto-config.inc.php`.
+- When there is a problem with the Google API Key, a more descriptive error message is now shown in the UI.
 
 ***Version 2.14.2* ** *- October 14, 2019*
 

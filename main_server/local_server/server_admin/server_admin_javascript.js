@@ -5676,13 +5676,43 @@ var showGoogleApiKeyError = function (message) {
     }
 };
 
+(function takeOverConsole() { // taken from http://tobyho.com/2012/07/27/taking-over-console-log/
+    var console = window.console;
+    if (!console) {
+        return;
+    }
+
+    function intercept(method) {
+        var original = console[method];
+        console[method] = function() {
+            // check message
+            if (arguments[0].indexOf("Google Maps") !== -1) {
+                var message = arguments[0];
+                var idx = message.indexOf("\n");
+                if (idx !== -1) {
+                    message = message.substring(0, idx);
+                }
+                showGoogleApiKeyError(message);
+            }
+
+            if (original.apply) {
+                // Do this for normal browsers
+                original.apply(console, arguments);
+            } else {
+                // Do this for IE
+                original(Array.prototype.slice.apply(arguments).join(' '));
+            }
+        }
+    }
+    var methods = ['error']; // only interested in the console.error method
+    for (var i = 0; i < methods.length; i++) {
+        intercept(methods[i]);
+    }
+}());
+
 if (!g_google_api_key || !g_google_api_key.trim()) {
     showGoogleApiKeyError(g_maps_api_key_not_set);
 } else {
-    function gm_authFailure()
-    {
-        showGoogleApiKeyError(g_maps_api_key_warning);
-    }
     var geocoder = new google.maps.Geocoder;
     geocoder.geocode({'address':'27205'}, function (response, status) {
         g_google_api_key_is_good = status === 'OK';
