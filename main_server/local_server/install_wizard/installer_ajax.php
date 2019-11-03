@@ -215,7 +215,9 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
         $lines[] = '$change_date_format = \'' . $http_vars['change_date_format'] . '\';  // The PHP date() format for times/dates displayed in the change records.';
         $lines[] = '$admin_session_name = \'' . $http_vars['admin_session_name'] . '\';  // This is merely the \'tag\' used to identify the BMLT admin session.';
         $lines[] = '';
-        file_put_contents($config_path, implode("\n", $lines));
+        if (!file_put_contents($config_path, implode("\n", $lines))) {
+            throw new Exception();
+        }
         chmod($config_path, 0644);
         $response['configStatus'] = true;
     } catch (Exception $e) {
