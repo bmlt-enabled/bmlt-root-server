@@ -58,7 +58,7 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 
-***Version 2.14.3* ** *- TBD*
+***Version 2.14.3* ** *- November 3, 2019*
 
 - Fixed an issue where the install wizard could not be completed when a permissions issue prevented writing of `auto-config.inc.php`.
 - Added Farsi formats.
