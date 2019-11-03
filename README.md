@@ -57,6 +57,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.14.3* ** *- TBD*
+
+- Fixed an issue where the install wizard could not be completed when a permissions issue prevented writing of `auto-config.inc.php`.
+
 ***Version 2.14.2* ** *- October 14, 2019*
 
 - Server administrators can now import service bodies and meetings from a NAWS-provided export in the Server Administration section of the UI. Service bodies, users, and meetings are created. If any of the provided service body world IDs or meeting IDs already exist in the root server, no changes are made.
