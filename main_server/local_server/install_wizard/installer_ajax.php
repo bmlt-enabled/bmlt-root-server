@@ -127,19 +127,19 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
 
         // Create formats
         // Formats are special. There are diacriticals that need to be escaped, so we make sure they get set into the values array.
-        $sql_temp = str_replace('%%PREFIX%%', preg_replace('|[^a-z_\.\-A-Z0-9]|', '', $db_prefix.$http_vars['dbPrefix']), file_get_contents(dirname(__FILE__).'/sql_files/InitialFormatsData.sql'));
-
-        $value_array = array();
-        $sql_temp = str_replace("\\'", "`", $sql_temp);
-        preg_match_all("|'(.*?)'|", $sql_temp, $value_array);
-        $value_array = $value_array[0];
-        for ($c = 0; $c < count($value_array); $c++) {
-            $value_array[$c] = preg_replace("|'(.*?)'|", "$1", $value_array[$c]);
-            $value_array[$c] = str_replace("`", "'", $value_array[$c]);
+        foreach (glob(dirname(__FILE__).'/sql_files/InitialFormatsData-*.sql') as $filename) {
+            $sql_temp = str_replace('%%PREFIX%%', preg_replace('|[^a-z_\.\-A-Z0-9]|', '', $db_prefix.$http_vars['dbPrefix']), file_get_contents($filename));
+            $value_array = array();
+            $sql_temp = str_replace("\\'", "`", $sql_temp);
+            preg_match_all("|'(.*?)'|", $sql_temp, $value_array);
+            $value_array = $value_array[0];
+            for ($c = 0; $c < count($value_array); $c++) {
+                $value_array[$c] = preg_replace("|'(.*?)'|", "$1", $value_array[$c]);
+                $value_array[$c] = str_replace("`", "'", $value_array[$c]);
+            }
+            $sql_temp = preg_replace("|'.*?'|", "?", $sql_temp);
+            c_comdef_dbsingleton::preparedExec($sql_temp, $value_array);
         }
-        $sql_temp = preg_replace("|'.*?'|", "?", $sql_temp);
-        c_comdef_dbsingleton::preparedExec($sql_temp, $value_array);
-
         $response['dbStatus'] = true;
     } catch (Exception $e) {
         $response['dbReport'] = $comdef_install_wizard_strings['AJAX_Handler_DB_Connect_Error'];
