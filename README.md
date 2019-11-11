@@ -57,7 +57,7 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.14.4* ** *- TBD*
+***Version 2.14.4* ** *- November 11, 2019*
 
 - Added Polish formats.
 - Added a data migration so that existing root servers will have the farsi formats.
