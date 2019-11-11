@@ -194,6 +194,10 @@ function DB_Connect_and_Upgrade()
             if (is_array($rows) && count($rows)) {
                 $row = $rows[0];
                 if (intval($row['count']) == 0) {
+                    // The SEZF db was latin1 for some reason, so let's just be safe and convert to utf8
+                    $sql = "ALTER TABLE `" . $table . "` CONVERT TO CHARACTER SET utf8";
+                    c_comdef_dbsingleton::preparedExec($sql);
+
                     $sql_temp = str_replace('%%PREFIX%%', preg_replace('|[^a-z_\.\-A-Z0-9]|', '', $dbPrefix), file_get_contents(dirname(__FILE__)."/install_wizard/sql_files/InitialFormatsData-fa.sql"));
                     $value_array = array();
                     $sql_temp = str_replace("\\'", "`", $sql_temp);
