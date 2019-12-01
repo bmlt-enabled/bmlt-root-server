@@ -1881,6 +1881,9 @@ class c_comdef_admin_main_console
                     break;
             
                 default:    // We display these ones.
+                    if (array_key_exists('meeting_editor_screen_meeting_' . $key . '_label', $this->my_localized_strings['comdef_server_admin_strings'])) {
+                        $prompt = $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_' . $key . '_label'];
+                    }
                     $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                         $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($prompt).'</span>';
                         $ret .= '<span class="bmlt_admin_value_left">';

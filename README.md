@@ -57,6 +57,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.14.5* ** *- UNRELEASED*
+
+- The "Other" tab in the meeting editor user interface can now be translated.
+
 ***Version 2.14.4* ** *- November 11, 2019*
 
 - Added Polish formats.
