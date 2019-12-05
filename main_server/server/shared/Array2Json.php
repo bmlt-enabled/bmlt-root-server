@@ -68,7 +68,7 @@ function array2json(
                     } elseif (is_bool($value)) {
                         $str .= $value ? 'true': 'false';
                     } else {
-                        $str .= '"' . trim(json_encode(str_replace('"', '&quot;', $value)), '"') . '"'; //All other things
+                        $str .= '"' . trim(json_encode(str_replace('"', '&quot;', $value), JSON_UNESCAPED_SLASHES), '"') . '"'; //All other things
                     }
                 } else {
                     $str .= '""'; //All other things
