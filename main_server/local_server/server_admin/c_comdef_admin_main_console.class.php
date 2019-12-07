@@ -163,6 +163,8 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_langs = ["'.implode('","', $this->my_lang_ids).'"];'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_lang_names = '.array2json($this->my_server->GetFormatLangs()).';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_AJAX_Auth_Failure = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['AJAX_Auth_Failure']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
+                $ret .= 'var g_check_all_text = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['check_all']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
+                $ret .= 'var g_uncheck_all_text = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['uncheck_all']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_maps_api_key_warning  = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['Maps_API_Key_Warning']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_maps_api_key_not_set  = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['Maps_API_Key_Not_Set']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_service_bodies_array = [';
@@ -1388,6 +1390,9 @@ class c_comdef_admin_main_console
             $ret = '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                 $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_search_service_bodies_label']).'</span>';
                 $ret .= '<div id="bmlt_admin_meeting_editor_service_div" class="bmlt_admin_meeting_editor_service_div">';
+                    $ret .= '<div id="bmlt_admin_meeting_editor_service_check_all_div" class="bmlt_admin_meeting_editor_service_check_all_div">';
+                        $ret .= '<button onclick="admin_handler_object.checkAllServiceBodies(this);">Uncheck All</button>';
+                    $ret .= '</div>';
                     $ret .= $this->populate_service_bodies(0);
                 $ret .= '</div>';
                 $ret .= '<div class="clear_both"></div>';

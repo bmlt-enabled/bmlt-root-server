@@ -4359,6 +4359,16 @@ function BMLT_Server_Admin()
         format_create_td.appendChild(format_create_a);
     };
 
+    this.checkAllServiceBodies = function(button) {
+        var desiredState = button.innerText == g_check_all_text;
+        for (var i = 0; i < g_service_bodies_array.length; i++) {
+            var serviceBodyId = g_service_bodies_array[i][0];
+            var checkbox = document.getElementById("bmlt_admin_meeting_search_service_body_checkbox_" + serviceBodyId);
+            checkbox.checked = desiredState;
+        }
+        button.innerText = desiredState ? g_uncheck_all_text : g_check_all_text;
+    };
+
     /************************************************************************************//**
     *   \brief  This populates the format display list                                      *
     ****************************************************************************************/

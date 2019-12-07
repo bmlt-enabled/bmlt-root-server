@@ -387,7 +387,9 @@
                                                                                                                 'latitude' => 'Latitudine',//'Latitude',
                                                                                                                 'published' => 'Pubblicato',//'Published',
                                                                                                                 'email_contact' => 'Contatto email',//'Email Contact',
-                                                                                                                )
+                                                                                                                ),
+                                            'check_all'                                             => 'Check All',
+                                            'uncheck_all'                                           => 'Uncheck All'
                                         );
 
     $email_contact_strings = array (

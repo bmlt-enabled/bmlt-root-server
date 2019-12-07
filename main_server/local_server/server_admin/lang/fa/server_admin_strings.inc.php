@@ -392,7 +392,9 @@
                                                                                                                 'latitude' => 'Latitude',
                                                                                                                 'published' => 'Published',
                                                                                                                 'email_contact' => 'Email Contact',
-                                                                                                                )
+                                                                                                                ),
+                                            'check_all'                                             => 'Check All',
+                                            'uncheck_all'                                           => 'Uncheck All'
                                         );
 
     $email_contact_strings = array (

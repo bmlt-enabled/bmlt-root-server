@@ -1438,3 +1438,9 @@ div#lang_enum_select_div
         display:none;
     }
 }
+
+div.bmlt_admin_meeting_editor_service_check_all_div
+{
+    padding-bottom:5px;
+    padding-left:5px;
+}

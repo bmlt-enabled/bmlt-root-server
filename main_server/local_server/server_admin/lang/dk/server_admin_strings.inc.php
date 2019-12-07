@@ -395,7 +395,9 @@ $comdef_server_admin_strings = array (
         'latitude' => 'Højdergrad',
         'published' => 'Udgivet',
         'email_contact' => 'Email Kontakt',
-    )
+    ),
+    'check_all'                                             => 'Check All',
+    'uncheck_all'                                           => 'Uncheck All'
 );
 
 $email_contact_strings = array (

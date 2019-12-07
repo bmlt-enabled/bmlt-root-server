@@ -380,7 +380,9 @@
                                                                                                                 'latitude' => 'Szerokość geograficzna',
                                                                                                                 'published' => 'Opublikowany',
                                                                                                                 'email_contact' => 'Kontakt e-mail',
-                                                                                                        )
+                                                                                                        ),
+                                            'check_all'                                             => 'Check All',
+                                            'uncheck_all'                                           => 'Uncheck All'
                                    );
     $email_contact_strings = array (
         'meeting_contact_form_subject_format'   =>  "[MEETING LIST CONTACT] %s",
