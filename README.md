@@ -57,7 +57,7 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.14.5* ** *- UNRELEASED*
+***Version 2.14.5* ** *- December 7, 2019*
 
 - Added Polish translations to the administration UI.
 - The "Other" tab in the meeting editor user interface can now be translated.
