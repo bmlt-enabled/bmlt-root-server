@@ -62,6 +62,7 @@ CHANGELIST
 - Added Polish translations to the administration UI.
 - The "Other" tab in the meeting editor user interface can now be translated.
 - Forward slashes are now unescaped for JSON semantic endpoints.
+- The meeting editor's meeting search page now has a "Check All" and "Uncheck All" checkbox for selecting service bodies.
 
 ***Version 2.14.4* ** *- November 11, 2019*
 
