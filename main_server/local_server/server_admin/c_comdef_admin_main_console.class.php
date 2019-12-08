@@ -165,6 +165,7 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_AJAX_Auth_Failure = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['AJAX_Auth_Failure']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_check_all_text = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['check_all']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_uncheck_all_text = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['uncheck_all']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
+                $ret .= 'var g_auto_geocoding_enabled = '.self::js_html($this->my_localized_strings['auto_geocoding_enabled'] ? 'true' : 'false').';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_maps_api_key_warning  = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['Maps_API_Key_Warning']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_maps_api_key_not_set  = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['Maps_API_Key_Not_Set']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_service_bodies_array = [';
@@ -1727,12 +1728,12 @@ class c_comdef_admin_main_console
             $ret .= '<div id="bmlt_admin_single_location_template_long_lat_div" class="bmlt_admin_single_location_long_lat_div">';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_longitude_label']).'</span>';
-                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_longitude_text_input" type="text" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_longitude_prompt']).'" readonly /></span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_longitude_text_input" type="text" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_longitude_prompt']).'" '. ($this->my_localized_strings['auto_geocoding_enabled'] ? 'readonly' : '') .' /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_latitude_label']).'</span>';
-                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_latitude_text_input" type="text" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_latitude_prompt']).'" readonly /></span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_latitude_text_input" type="text" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_latitude_prompt']).'" '. ($this->my_localized_strings['auto_geocoding_enabled'] ? 'readonly' : '') .' /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
             $ret .= '</div>';

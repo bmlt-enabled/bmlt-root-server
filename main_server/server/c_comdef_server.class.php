@@ -2652,6 +2652,7 @@ class c_comdef_server
                     c_comdef_server::$server_local_strings['include_service_body_email_in_semantic'] = $g_include_service_body_email_in_semantic;
                 }
 
+                c_comdef_server::$server_local_strings['auto_geocoding_enabled'] = isset($auto_geocoding_enabled) ? $auto_geocoding_enabled : true;
                 c_comdef_server::$server_local_strings['sort_formats'] = isset($sort_formats) ? $sort_formats : true;
                 c_comdef_server::$server_local_strings['meeting_counties_and_sub_provinces'] = isset($meeting_counties_and_sub_provinces) ? $meeting_counties_and_sub_provinces : array();
                 c_comdef_server::$server_local_strings['meeting_states_and_provinces'] = isset($meeting_states_and_provinces) ? $meeting_states_and_provinces : array();
