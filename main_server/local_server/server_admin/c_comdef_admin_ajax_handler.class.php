@@ -981,7 +981,7 @@ class c_comdef_admin_ajax_handler
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         try {
-            $meeting =& $this->my_server->GetOneMeeting($in_meeting_id);
+            $meeting = $this->my_server->GetOneMeeting($in_meeting_id);
             
             if ($meeting instanceof c_comdef_meeting) {
                 if ($meeting->UserCanEdit()) {
