@@ -57,6 +57,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.14.6* ** *- TBD*
+
+- Geocoding does not work well in all parts of the world, so automatic geocoding of meetings is now optional. It is enabled by default, and can disabled by adding `$auto_geocoding_enabled = false;` to `auto-config.inc.php`.
+
 ***Version 2.14.5* ** *- December 7, 2019*
 
 - Added Polish translations to the administration UI.
