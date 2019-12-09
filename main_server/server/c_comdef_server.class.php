@@ -2653,6 +2653,8 @@ class c_comdef_server
                 }
 
                 c_comdef_server::$server_local_strings['auto_geocoding_enabled'] = isset($auto_geocoding_enabled) ? $auto_geocoding_enabled : true;
+                c_comdef_server::$server_local_strings['zip_auto_geocoding_enabled'] = isset($zip_auto_geocoding_enabled) ? $zip_auto_geocoding_enabled : false;
+                c_comdef_server::$server_local_strings['county_auto_geocoding_enabled'] = isset($county_auto_geocoding_enabled) ? $county_auto_geocoding_enabled : false;
                 c_comdef_server::$server_local_strings['sort_formats'] = isset($sort_formats) ? $sort_formats : true;
                 c_comdef_server::$server_local_strings['meeting_counties_and_sub_provinces'] = isset($meeting_counties_and_sub_provinces) ? $meeting_counties_and_sub_provinces : array();
                 c_comdef_server::$server_local_strings['meeting_states_and_provinces'] = isset($meeting_states_and_provinces) ? $meeting_states_and_provinces : array();

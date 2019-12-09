@@ -382,7 +382,8 @@
                                                                                                                 'email_contact' => 'Kontakt e-mail',
                                                                                                         ),
                                             'check_all'                                             => 'Check All',
-                                            'uncheck_all'                                           => 'Uncheck All'
+                                            'uncheck_all'                                           => 'Uncheck All',
+                                            'automatically_calculated_on_save'                      => 'Automatically calculated on save.'
                                    );
     $email_contact_strings = array (
         'meeting_contact_form_subject_format'   =>  "[MEETING LIST CONTACT] %s",

@@ -60,6 +60,8 @@ CHANGELIST
 ***Version 2.14.6* ** *- TBD*
 
 - Geocoding does not work well in all parts of the world, so automatic geocoding of meetings is now optional. It is enabled by default, and can disabled by adding `$auto_geocoding_enabled = false;` to `auto-config.inc.php`.
+- When `$county_auto_geocoding_enabled = true;` is set in `auto-config.inc.php`, the County field becomes read-only and is automatically populated by geocoding when a meeting is saved.
+- When `$zip_auto_geocoding_enabled = true;` is set in `auto-config.inc.php`, the Zip Code field becomes read-only and is automatically populated by geocoding when a meeting is saved. 
 
 ***Version 2.14.5* ** *- December 7, 2019*
 
