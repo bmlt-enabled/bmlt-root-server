@@ -1757,12 +1757,12 @@ function BMLT_Server_Admin()
 
                 var meeting_state_text_input = document.getElementById(meeting_state_text_item_id);
                 if (meeting_state_text_input !== null) {
-                    this.handleTextInputLoad(meeting_state_text_input);
+                    this.handleTextInputLoad(meeting_state_text_input, null, g_auto_geocoding_enabled);
                 }
 
                 var meeting_county_text_input = document.getElementById(meeting_county_text_item_id);
                 if (meeting_county_text_input !== null) {
-                    this.handleTextInputLoad(meeting_county_text_input);
+                    this.handleTextInputLoad(meeting_county_text_input, null, g_auto_geocoding_enabled);
                 }
                 
                 var map_disclosure_a = document.getElementById('bmlt_admin_single_meeting_editor_' + in_meeting_id + '_map_disclosure_a');
@@ -2695,15 +2695,47 @@ function BMLT_Server_Admin()
                 delete  the_meeting_object.m_geocoder;
                 
                 var map_center = new google.maps.LatLng(lat, lng);
-
                 this.setMeetingLongLat(map_center, in_meeting_id);
-                
-                if ( meeting_editor.main_map ) {
+                if (meeting_editor.main_map) {
                     meeting_editor.main_map.panTo(map_center);
                     this.displayMainMarkerInMap(in_meeting_id);
-
                     google.maps.event.removeListener(the_meeting_object.m_geocoder);
-                };
+                }
+
+                if (g_auto_geocoding_enabled) {
+                    var meeting_county_text_item = document.getElementById('bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_county_text_input');
+                    if (meeting_county_text_item) {
+                        for (var i = 0; i < in_geocode_response[0].address_components.length; i++) {
+                            var component = in_geocode_response[0].address_components[i];
+                            if (component.types && component.types[0] === "administrative_area_level_2") {
+                                var county = component.long_name;
+                                if (county.endsWith(" County")) {
+                                    county = county.substring(0, county.length - 7);
+                                }
+                                meeting_county_text_item.value = county;
+                                this.setItemValue(meeting_county_text_item, in_meeting_id, 'location_sub_province');
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (g_auto_geocoding_enabled) {
+                    var meeting_zip_text_item = document.getElementById('bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_zip_text_input');
+                    if (meeting_zip_text_item) {
+                        if (meeting_county_text_item) {
+                            for (var i = 0; i < in_geocode_response[0].address_components.length; i++) {
+                                var component = in_geocode_response[0].address_components[i];
+                                if (component.types && component.types[0] === "postal_code") {
+                                    var zipCode = component.long_name;
+                                    meeting_zip_text_item.value = zipCode;
+                                    this.setItemValue(meeting_zip_text_item, in_meeting_id, 'location_postal_code_1');
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
                 
                 this.validateMeetingEditorButton(in_meeting_id);
             } else {

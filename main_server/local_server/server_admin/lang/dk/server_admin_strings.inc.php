@@ -397,7 +397,8 @@ $comdef_server_admin_strings = array (
         'email_contact' => 'Email Kontakt',
     ),
     'check_all'                                             => 'Check All',
-    'uncheck_all'                                           => 'Uncheck All'
+    'uncheck_all'                                           => 'Uncheck All',
+    'automatically_calculated_on_save'                      => 'Automatically calculated on save.'
 );
 
 $email_contact_strings = array (
