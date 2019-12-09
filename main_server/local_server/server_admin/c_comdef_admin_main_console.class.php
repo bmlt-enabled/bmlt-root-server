@@ -166,6 +166,8 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_check_all_text = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['check_all']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_uncheck_all_text = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['uncheck_all']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_auto_geocoding_enabled = '.self::js_html($this->my_localized_strings['auto_geocoding_enabled'] ? 'true' : 'false').';'.(defined('__DEBUG_MODE__') ? "\n" : '');
+                $ret .= 'var g_county_auto_geocoding_enabled = '.self::js_html($this->my_localized_strings['county_auto_geocoding_enabled'] ? 'true' : 'false').';'.(defined('__DEBUG_MODE__') ? "\n" : '');
+                $ret .= 'var g_zip_auto_geocoding_enabled = '.self::js_html($this->my_localized_strings['zip_auto_geocoding_enabled'] ? 'true' : 'false').';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_maps_api_key_warning  = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['Maps_API_Key_Warning']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_maps_api_key_not_set  = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['Maps_API_Key_Not_Set']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_service_bodies_array = [';
@@ -428,7 +430,7 @@ class c_comdef_admin_main_console
              */
             $ret .= '</script>'.(defined('__DEBUG_MODE__') ? "\n" : '');
             $ret .= '<script type="text/javascript" src="'.(((dirname($_SERVER['PHP_SELF']) != '/') && (dirname($_SERVER['PHP_SELF']) != '\\')) ? dirname($_SERVER['PHP_SELF']) : '').'/local_server/server_admin/json2.js"></script>'.(defined('__DEBUG_MODE__') ? "\n" : '');
-            $ret .= '<script type="text/javascript" src="'.(((dirname($_SERVER['PHP_SELF']) != '/') && (dirname($_SERVER['PHP_SELF']) != '\\')) ? dirname($_SERVER['PHP_SELF']) : '').'/local_server/server_admin/server_admin_javascript.js"></script>'.(defined('__DEBUG_MODE__') ? "\n" : '');
+            $ret .= '<script type="text/javascript" src="'.(((dirname($_SERVER['PHP_SELF']) != '/') && (dirname($_SERVER['PHP_SELF']) != '\\')) ? dirname($_SERVER['PHP_SELF']) : '').'/local_server/server_admin/server_admin_javascript.js?v='.time().'"></script>'.(defined('__DEBUG_MODE__') ? "\n" : '');
             $ret .= '<noscript class="main_noscript">'.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['noscript']).'</noscript>'.(defined('__DEBUG_MODE__') ? "\n" : '');
             // Belt and suspenders. Just make sure the user is legit.
         if (($this->my_user instanceof c_comdef_user) && ($this->my_user->GetUserLevel() != _USER_LEVEL_DISABLED)) {
@@ -1777,7 +1779,7 @@ class c_comdef_admin_main_console
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_county_label']).'</span>';
                     $ret .= '<span class="bmlt_admin_value_left">';
-        if (!$this->my_localized_strings['auto_geocoding_enabled'] && is_array($this->my_localized_strings['meeting_counties_and_sub_provinces']) && count($this->my_localized_strings['meeting_counties_and_sub_provinces'])) {
+        if ((!$this->my_localized_strings['auto_geocoding_enabled'] || !$this->my_localized_strings['county_auto_geocoding_enabled']) && is_array($this->my_localized_strings['meeting_counties_and_sub_provinces']) && count($this->my_localized_strings['meeting_counties_and_sub_provinces'])) {
             $ret .= '<select id="bmlt_admin_single_meeting_editor_template_meeting_county_select_input" class="bmlt_admin_single_meeting_editor_template_meeting_county_select_input">';
             $ret .= '<option value=""></option>';
             foreach ($this->my_localized_strings['meeting_counties_and_sub_provinces'] as $value) {
@@ -1785,10 +1787,10 @@ class c_comdef_admin_main_console
             }
                 $ret .= '</select>';
         } else {
-            $ret .= '<input id="bmlt_admin_single_meeting_editor_template_meeting_county_text_input" type="text" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_county_prompt']).'" '. ($this->my_localized_strings['auto_geocoding_enabled'] ? 'readonly' : '') .' />';
+            $ret .= '<input id="bmlt_admin_single_meeting_editor_template_meeting_county_text_input" type="text" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_county_prompt']).'" '. ($this->my_localized_strings['auto_geocoding_enabled'] && $this->my_localized_strings['county_auto_geocoding_enabled'] ? 'readonly' : '') .' />';
         }
                     $ret .= '</span>';
-        if ($this->my_localized_strings['auto_geocoding_enabled']) {
+        if ($this->my_localized_strings['auto_geocoding_enabled'] && $this->my_localized_strings['county_auto_geocoding_enabled']) {
             $ret .= '<span class="bmlt_admin_visibility_advice_span">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['automatically_calculated_on_save']).'</span>';
         }
                     $ret .= '<div class="clear_both"></div>';
@@ -1811,8 +1813,8 @@ class c_comdef_admin_main_console
                 $ret .= '</div>';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_zip_label']).'</span>';
-                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_zip_text_input" type="text" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_zip_prompt']).'" '. ($this->my_localized_strings['auto_geocoding_enabled'] ? 'readonly' : '') .' /></span>';
-        if ($this->my_localized_strings['auto_geocoding_enabled']) {
+                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_zip_text_input" type="text" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_zip_prompt']).'" '. ($this->my_localized_strings['auto_geocoding_enabled'] && $this->my_localized_strings['zip_auto_geocoding_enabled'] ? 'readonly' : '') .' /></span>';
+        if ($this->my_localized_strings['auto_geocoding_enabled'] && $this->my_localized_strings['zip_auto_geocoding_enabled']) {
             $ret .= '<span class="bmlt_admin_visibility_advice_span">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['automatically_calculated_on_save']).'</span>';
         }
                     $ret .= '<div class="clear_both"></div>';

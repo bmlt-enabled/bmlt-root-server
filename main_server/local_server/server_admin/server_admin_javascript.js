@@ -1757,12 +1757,12 @@ function BMLT_Server_Admin()
 
                 var meeting_state_text_input = document.getElementById(meeting_state_text_item_id);
                 if (meeting_state_text_input !== null) {
-                    this.handleTextInputLoad(meeting_state_text_input, null, g_auto_geocoding_enabled);
+                    this.handleTextInputLoad(meeting_state_text_input, null, g_auto_geocoding_enabled && g_county_auto_geocoding_enabled);
                 }
 
                 var meeting_county_text_input = document.getElementById(meeting_county_text_item_id);
                 if (meeting_county_text_input !== null) {
-                    this.handleTextInputLoad(meeting_county_text_input, null, g_auto_geocoding_enabled);
+                    this.handleTextInputLoad(meeting_county_text_input, null, g_auto_geocoding_enabled && g_county_auto_geocoding_enabled);
                 }
                 
                 var map_disclosure_a = document.getElementById('bmlt_admin_single_meeting_editor_' + in_meeting_id + '_map_disclosure_a');
@@ -2702,7 +2702,7 @@ function BMLT_Server_Admin()
                     google.maps.event.removeListener(the_meeting_object.m_geocoder);
                 }
 
-                if (g_auto_geocoding_enabled) {
+                if (g_auto_geocoding_enabled && g_county_auto_geocoding_enabled) {
                     var meeting_county_text_item = document.getElementById('bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_county_text_input');
                     if (meeting_county_text_item) {
                         for (var i = 0; i < in_geocode_response[0].address_components.length; i++) {
@@ -2720,7 +2720,7 @@ function BMLT_Server_Admin()
                     }
                 }
 
-                if (g_auto_geocoding_enabled) {
+                if (g_auto_geocoding_enabled && g_county_auto_geocoding_enabled) {
                     var meeting_zip_text_item = document.getElementById('bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_zip_text_input');
                     if (meeting_zip_text_item) {
                         if (meeting_county_text_item) {
