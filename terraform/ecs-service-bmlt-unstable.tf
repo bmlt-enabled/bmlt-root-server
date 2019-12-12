@@ -133,25 +133,27 @@ resource "aws_ecs_task_definition" "bmlt_unstable" {
   }
 ]
 EOF
+
 }
 
 resource "aws_ecs_service" "bmlt_unstable" {
   name            = "bmlt-unstable"
-  cluster         = "${aws_ecs_cluster.main.id}"
+  cluster         = aws_ecs_cluster.main.id
   desired_count   = 1
-  iam_role        = "${aws_iam_role.bmlt_lb.name}"
-  task_definition = "${aws_ecs_task_definition.bmlt_unstable.arn}"
+  iam_role        = aws_iam_role.bmlt_lb.name
+  task_definition = aws_ecs_task_definition.bmlt_unstable.arn
 
   deployment_minimum_healthy_percent = 100
 
   load_balancer {
-    target_group_arn = "${aws_alb_target_group.bmlt_unstable.id}"
+    target_group_arn = aws_alb_target_group.bmlt_unstable.id
     container_name   = "bmlt-root-server"
     container_port   = 80
   }
 
   depends_on = [
-    "aws_iam_role_policy.bmlt_lb",
-    "aws_alb_listener.bmlt_https",
+    aws_iam_role_policy.bmlt_lb,
+    aws_alb_listener.bmlt_https,
   ]
 }
+
