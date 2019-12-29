@@ -92,7 +92,7 @@ class c_comdef_admin_ajax_handler
             $returned_text = $this->GetMeetingHistory($this->my_http_vars['get_meeting_history']);
         } elseif (isset($this->my_http_vars['do_meeting_search'])) {
             $used_formats = array();
-            $returned_text = $this->TranslateToJSON($this->GetSearchResults($this->my_http_vars, $used_formats));
+            $returned_text = $this->CsvToJson($this->GetSearchResults($this->my_http_vars, $used_formats));
             header('Content-Type:application/json; charset=UTF-8');
         } elseif (isset($this->my_http_vars['do_update_world_ids'])) {
             $returned_text = $this->HandleMeetingWorldIDsUpdate();
@@ -267,7 +267,7 @@ class c_comdef_admin_ajax_handler
         $json_tool = new PhpJsonXmlArrayStringInterchanger;
         $used_formats = array();
         $meetings = $this->GetSearchResults(array('meeting_ids' => array_keys($meetingMap)), $used_formats);
-        $meetings = $this->TranslateToJSON($meetings);
+        $meetings = $this->CsvToJson($meetings);
         $meetings = $json_tool->convertJsonToArray($meetings, true);
         $map = array();
         foreach ($meetings as $meeting) {
@@ -358,7 +358,7 @@ class c_comdef_admin_ajax_handler
     
         if (is_array($response_text) && count($response_text)) {
             header('Content-Type:application/json; charset=UTF-8');
-            echo ( array2json(array ( 'ACCOUNT_CHANGED' => $response_text )));
+            echo ( json_encode(array ( 'ACCOUNT_CHANGED' => $response_text )));
         }
     }
 
@@ -472,14 +472,14 @@ class c_comdef_admin_ajax_handler
                     }
                 }
             } else {
-                $ret_data = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['format_change_fader_change_fail_text']);
+                $ret_data = $this->my_localized_strings['comdef_server_admin_strings']['format_change_fader_change_fail_text'];
             }
-        
+
             header('Content-Type:application/json; charset=UTF-8');
             if ($ret_data) {
-                echo "{'success':false,'report':'$ret_data'}";
+                echo json_encode(array("success" => false, "report" => $ret_data));
             } else {
-                echo "{'success':true,'report':".array2json($the_changed_objects)."}";
+                echo json_encode(array("success" => true, "report" => $the_changed_objects));
             }
         } else {
             echo 'NOT AUTHORIZED';
@@ -556,30 +556,31 @@ class c_comdef_admin_ajax_handler
                             $user_to_create->SetNewPassword($password);
                         }
                 
-                        if ($user_to_create->UpdateToDB()) {
+                        //if ($user_to_create->UpdateToDB()) {
+                        if (false) {
                             // Get whatever ID was assigned to this User.
                             $the_new_user[0] = intval($user_to_create->GetID());
                             header('Content-Type:application/json; charset=UTF-8');
-                            echo "{'success':true,'user':".array2json($the_new_user)."}";
+                            echo json_encode(array("success" => true, "user" => $the_new_user));
                         } else {
-                            $err_string = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_create_fail_text']);
+                            $err_string = $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_create_fail_text'];
                             header('Content-Type:application/json; charset=UTF-8');
-                            echo "{'success':false,'report':'$err_string'}";
+                            echo json_encode(array("success" => false, "report" => $err_string));
                         }
                     } else {
-                        $err_string = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_create_fail_text']);
+                        $err_string = $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_create_fail_text'];
                         header('Content-Type:application/json; charset=UTF-8');
-                        echo "{'success':false,'report':'$err_string'}";
+                        echo json_encode(array("success" => false, "report" => $err_string));
                     }
                 } else {
-                    $err_string = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_create_fail_already_exists']);
+                    $err_string = $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_create_fail_already_exists'];
                     header('Content-Type:application/json; charset=UTF-8');
-                    echo "{'success':false,'report':'$err_string'}";
+                    echo json_encode(array("success" => false, "report" => $err_string));
                 }
             } else {
-                $err_string = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_create_fail_text']);
+                $err_string = $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_create_fail_text'];
                 header('Content-Type:application/json; charset=UTF-8');
-                echo "{'success':false,'report':'$err_string'}";
+                echo json_encode(array("success" => false, "report" => $err_string));
             }
         } else {
             echo 'NOT AUTHORIZED';
@@ -639,28 +640,28 @@ class c_comdef_admin_ajax_handler
                         if (!$user_to_change->SetNewPassword($password)) {
                             $err_string = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_fail_cant_update_text']);
                             header('Content-Type:application/json; charset=UTF-8');
-                            echo "{\"success\":false,\"report\":\"$err_string\"}";
+                            echo json_encode(array("success" => false, "report" => $err_string));
                             return;
                         }
                     }
                 
                     if ($user_to_change->UpdateToDB()) {
                         header('Content-Type:application/json; charset=UTF-8');
-                        echo '{"success":true,"user":'.array2json($the_changed_user)."}";
+                        echo json_encode(array("success" => true, "user" => $the_changed_user));
                     } else {
-                        $err_string = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_fail_cant_update_text']);
+                        $err_string = $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_fail_cant_update_text'];
                         header('Content-Type:application/json; charset=UTF-8');
-                        echo "{\"success\":false,\"report\":\"$err_string\"}";
+                        echo json_encode(array("success" => false, "report" => $err_string));
                     }
                 } else {
-                    $err_string = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_fail_cant_find_sb_text']);
+                    $err_string = $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_fail_cant_find_sb_text'];
                     header('Content-Type:application/json; charset=UTF-8');
-                    echo "{\"success\":false,\"report\":\"$err_string\"}";
+                    echo json_encode(array("success" => false, "report" => $err_string));
                 }
             } else {
-                $err_string = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_fail_no_data_text']);
+                $err_string = $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_fail_no_data_text'];
                 header('Content-Type:application/json; charset=UTF-8');
-                echo "{\"success\":false,\"report\":\"$err_string\"}";
+                echo json_encode(array("success" => false, "report" => $err_string));
             }
         } else {
             echo 'NOT AUTHORIZED';
@@ -677,7 +678,7 @@ class c_comdef_admin_ajax_handler
         $in_delete_permanently = false
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-        $err_string = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_delete_fail_text']);
+        $err_string = $this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_delete_fail_text'];
         if (c_comdef_server::IsUserServerAdmin(null, true)) {
             try {
                 $user_to_delete = $this->my_server->GetUserByIDObj($in_user_id);
@@ -690,18 +691,18 @@ class c_comdef_admin_ajax_handler
                         }
                     
                         header('Content-Type:application/json; charset=UTF-8');
-                        echo "{'success':true,'report':'$in_user_id'}";
+                        echo json_encode(array("success" => true, "user" => $in_user_id));
                     } else {
                         header('Content-Type:application/json; charset=UTF-8');
-                        echo "{'success':false,'report':'$ierr_string'}";
+                        echo json_encode(array("success" => false, "report" => $err_string));
                     }
                 } else {
                     header('Content-Type:application/json; charset=UTF-8');
-                    echo "{'success':false,'report':'$ierr_string'}";
+                    echo json_encode(array("success" => false, "report" => $err_string));
                 }
             } catch (Exception $e) {
                 header('Content-Type:application/json; charset=UTF-8');
-                echo "{'success':false,'report':'$ierr_string'}";
+                echo json_encode(array("success" => false, "report" => $err_string));
             }
         } else {
             echo 'NOT AUTHORIZED';
@@ -773,21 +774,21 @@ class c_comdef_admin_ajax_handler
             
                 if ($sb_to_change->UpdateToDB()) {
                     header('Content-Type:application/json; charset=UTF-8');
-                    echo "{'success':true,'service_body':".array2json($the_new_service_body)."}";
+                    echo json_encode(array("success" => true, "service_body" => $the_new_service_body));
                 } else {
-                    $err_string = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_fail_cant_update_text']);
+                    $err_string = $this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_fail_cant_update_text'];
                     header('Content-Type:application/json; charset=UTF-8');
-                    echo "{'success':false,'report':'$err_string'}";
+                    echo json_encode(array("success" => false, "report" => $err_string));
                 }
             } else {
-                $err_string = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_fail_cant_find_sb_text']);
+                $err_string = $this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_fail_cant_find_sb_text'];
                 header('Content-Type:application/json; charset=UTF-8');
-                echo "{'success':false,'report':'$err_string'}";
+                echo json_encode(array("success" => false, "report" => $err_string));
             }
         } else {
-            $err_string = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_fail_no_data_text']);
+            $err_string = $this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_fail_no_data_text'];
             header('Content-Type:application/json; charset=UTF-8');
-            echo "{'success':false,'report':'$err_string'}";
+            echo json_encode(array("success" => false, "report" => $err_string));
         }
     }
                 
@@ -836,21 +837,21 @@ class c_comdef_admin_ajax_handler
                         // Get whatever ID was assigned to this Service Body.
                         $the_new_service_body[0] = $sb_to_create->GetID();
                         header('Content-Type:application/json; charset=UTF-8');
-                        echo "{'success':true,'service_body':".array2json($the_new_service_body)."}";
+                        echo json_encode(array("success" => true, "service_body" => $the_new_service_body));
                     } else {
-                        $err_string = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_fail_cant_update_text']);
+                        $err_string = $this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_fail_cant_update_text'];
                         header('Content-Type:application/json; charset=UTF-8');
-                        echo "{'success':false,'report':'$err_string'}";
+                        echo json_encode(array("success" => false, "report" => $err_string));
                     }
                 } else {
-                    $err_string = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_fail_cant_find_sb_text']);
+                    $err_string = $this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_fail_cant_find_sb_text'];
                     header('Content-Type:application/json; charset=UTF-8');
-                    echo "{'success':false,'report':'$err_string'}";
+                    echo json_encode(array("success" => false, "report" => $err_string));
                 }
             } else {
-                $err_string = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_fail_no_data_text']);
+                $err_string = $this->my_localized_strings['comdef_server_admin_strings']['service_body_change_fader_fail_no_data_text'];
                 header('Content-Type:application/json; charset=UTF-8');
-                echo "{'success':false,'report':'$err_string'}";
+                echo json_encode(array("success" => false, "report" => $err_string));
             }
         } else {
             echo 'NOT AUTHORIZED';
@@ -1181,7 +1182,7 @@ class c_comdef_admin_ajax_handler
                     }
                     if ($meeting->UpdateToDB()) {
                         $used_formats = array();
-                        $result = $this->TranslateToJSON($this->GetSearchResults(array ( 'meeting_ids' => array ( $meeting->GetID() ) ), $used_formats));
+                        $result = $this->CsvToJson($this->GetSearchResults(array ( 'meeting_ids' => array ( $meeting->GetID() ) ), $used_formats));
                         if ($print_result) {
                             header('Content-Type:application/json; charset=UTF-8');
                             echo $result;
@@ -1275,36 +1276,7 @@ class c_comdef_admin_ajax_handler
                 }
             }
         }
-    
-        if (isset($in_http_vars['data_field_key']) && $in_http_vars['data_field_key']) {
-            // At this point, we have everything in a CSV. We separate out just the field we want.
-            $temp_keyed_array = array();
-            $result = explode("\n", $result);
-            $keys = array_shift($result);
-            $keys = explode("\",\"", trim($keys, '"'));
-            $the_keys = explode(',', $in_http_vars['data_field_key']);
-        
-            $result2 = array();
-            foreach ($result as $row) {
-                if ($row) {
-                    $index = 0;
-                    $row = explode('","', trim($row, '",'));
-                    $row_columns = array();
-                    foreach ($row as $column) {
-                        if (isset($column)) {
-                            if (in_array($keys[$index++], $the_keys)) {
-                                array_push($row_columns, $column);
-                            }
-                        }
-                    }
-                    $result2[$row[0]] = '"'.implode('","', $row_columns).'"';
-                }
-            }
 
-            $the_keys = array_intersect($keys, $the_keys);
-            $result = '"'.implode('","', $the_keys)."\"\n".implode("\n", $result2);
-        }
-        
         return $result;
     }
 
@@ -1315,42 +1287,34 @@ class c_comdef_admin_ajax_handler
         \returns a JSON string, with all the data in the CSV.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function TranslateToJSON( $in_csv_data ///< An array of CSV data, with the first element being the field names.
+    public function CsvToJson($in_csv_data ///< An array of CSV data, with the first element being the field names.
                             )
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-        $temp_keyed_array = array();
-        $in_csv_data = explode("\n", $in_csv_data);
-        $keys = array_shift($in_csv_data);
-        $keys = explode("\",\"", trim($keys, '"'));
-    
-        foreach ($in_csv_data as $row) {
-            if ($row) {
-                $line = null;
-                $index = 0;
-                $row = trim($row);
-                if (substr($row, 0, 1) == '"') { // Strip first double quote
-                    $row = substr($row, 1, strlen($row) - 1);
-                }
-                if (substr($row, strlen($row) - 1, 1) == ',') { // Strip last comma, just in case
-                        $row = substr($row, 0, strlen($row) - 1);
-                }
-                if (substr($row, strlen($row) - 1, 1) == '"') { // Strip last double quote
-                    $row = substr($row, 0, strlen($row) - 1);
-                }
-                $row = explode('","', $row);
-                foreach ($row as $column) {
-                    if (isset($column)) {
-                        $line[$keys[$index++]] = $column;
-                    }
-                }
-                array_push($temp_keyed_array, $line);
+        $ret = array();
+        $first = true;
+        $columnNames = null;
+        $fp = fopen("php://memory", "r+");
+        fputs($fp, $in_csv_data);
+        rewind($fp);
+        while (($line = fgetcsv($fp)) !== false) {
+            if ($first) {
+                $first = false;
+                $columnNames = $line;
+                continue;
             }
-        }
-    
-        $out_json_data = array2json($temp_keyed_array);
 
-        return $out_json_data;
+            $values = array();
+            $idx = 0;
+            foreach ($line as $value) {
+                $columnName = $columnNames[$idx];
+                $values[$columnName] = $value;
+                $idx++;
+            }
+            array_push($ret, $values);
+        }
+        fclose($fp);
+        return json_encode($ret);
     }
 }
 

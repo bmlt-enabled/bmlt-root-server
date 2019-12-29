@@ -1,76 +1,26 @@
 <?php
-/**
-* \brief array2xml() will convert any given array into a XML structure.
-*
-* \version:     1.0
-*
-* \author:      Marcus Carver © 2008
-*
-* Email:       marcuscarver@gmail.com
-*
-* Link:        http://marcuscarver.blogspot.com/
-*
-* Arguments :  $array      - The array you wish to convert into a XML structure.
-*              $name       - The name you wish to enclose the array in, the 'parent' tag for XML.
-*              $beginning  - INTERNAL USE... DO NOT USE!
-*
-* \return:      Gives a string output in a XML structure
-*
-* Use:         echo array2xml($products,'products');
-*              die;
-
-    This file is part of the Basic Meeting List Toolbox (BMLT).
-
-    Find out more at: https://bmlt.app
-
-    BMLT is free software: you can redistribute it and/or modify
-    it under the terms of the MIT License.
-
-    BMLT is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    MIT License for more details.
-
-    You should have received a copy of the MIT License along with this code.
-    If not, see <https://opensource.org/licenses/MIT>.
-*/
-
-function array2xml(
-    $array,             ///< The input array
-    $name = 'array',      ///< The name that you want as the root element for the XML output
-    $beginning = true   ///< Used for the recursive parser. Not for external use.
-) {
-    global $nested, $s_array2xml_index;
-    
-    $output = '';
-    
-    if ($beginning) {
-        $output = '<' . htmlspecialchars($name) . '>';
-        $s_array2xml_index = 0;
-        $nested = 0;
+function array2xml($array, $ret_string = true, $xml = null)
+{
+    if (is_null($xml)) {
+        $xml = new XMLWriter();
+        $xml->openMemory();
     }
-    
-    // This is required because XML standards do not allow a tag to start with a number or symbol, you can change this value to whatever you like:
-    $ArrayNumberPrefix = 'row';
-    
+
+    $array_sequence_index = 0;
+
     foreach ($array as $root => $child) {
+        $elementName = is_string($root) ? $root : "row";
+        $xml->startElement($elementName);
         if (is_array($child)) {
-            $output .= '<' . (is_string($root) ? htmlspecialchars($root) : $ArrayNumberPrefix) . ' sequence_index="'.strval(intval($s_array2xml_index++)).'">';
-            $nested++;
-            $output .= array2xml($child, null, null, false);
-            $nested--;
-            $output .= '</' . (is_string($root) ? htmlspecialchars($root) : $ArrayNumberPrefix) . '>';
+            $xml->writeAttribute("sequence_index", strval($array_sequence_index++));
+            array2xml($child, false, $xml);
         } elseif (isset($child) && $child) {
-            $output .= '<' . (is_string($root) ? htmlspecialchars($root) : $ArrayNumberPrefix . htmlspecialchars($root)) . '>' . htmlspecialchars($child) . '</' . (is_string($root) ? htmlspecialchars($root) : $ArrayNumberPrefix) . '>';
-        } else {
-// Commented out, because we will simply not add empty elements (for now). This is to save bandwidth.
-//          $output .= '<' . (is_string($root) ? htmlspecialchars($root) : $ArrayNumberPrefix . htmlspecialchars($root)) . '/>';
+            $xml->text($child);
         }
+        $xml->endElement();
     }
-    
-    if ($beginning) {
-        $output .= '</' . htmlspecialchars($name) . '>';
+
+    if ($ret_string) {
+        return $xml->outputMemory(true);
     }
-    
-    return $output;
 }

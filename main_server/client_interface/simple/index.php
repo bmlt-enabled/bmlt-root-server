@@ -126,6 +126,7 @@ if ($server instanceof c_comdef_server) {
             }
             
             // Start by turning the CSV into an array of meeting lines.
+            // TODO Fix csv parsing
             $results = explode("\n", $results);
 
             if (is_array($results) && count($results)) {
