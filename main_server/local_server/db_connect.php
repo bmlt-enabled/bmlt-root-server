@@ -233,6 +233,28 @@ function DB_Connect_and_Upgrade()
                     c_comdef_dbsingleton::preparedExec($sql_temp, $value_array);
                 }
             }
+        }),
+        array(7, function () {
+            $dbPrefix = $GLOBALS['dbPrefix'];
+            $table = "$dbPrefix" . "_comdef_formats";
+            $check_column_sql = "SELECT COUNT(*) AS count FROM `$table` WHERE `lang_enum`='pt'";
+            $rows = c_comdef_dbsingleton::preparedQuery($check_column_sql);
+            if (is_array($rows) && count($rows)) {
+                $row = $rows[0];
+                if (intval($row['count']) == 0) {
+                    $sql_temp = str_replace('%%PREFIX%%', preg_replace('|[^a-z_\.\-A-Z0-9]|', '', $dbPrefix), file_get_contents(dirname(__FILE__)."/install_wizard/sql_files/InitialFormatsData-pt.sql"));
+                    $value_array = array();
+                    $sql_temp = str_replace("\\'", "`", $sql_temp);
+                    preg_match_all("|'(.*?)'|", $sql_temp, $value_array);
+                    $value_array = $value_array[0];
+                    for ($c = 0; $c < count($value_array); $c++) {
+                        $value_array[$c] = preg_replace("|'(.*?)'|", "$1", $value_array[$c]);
+                        $value_array[$c] = str_replace("`", "'", $value_array[$c]);
+                    }
+                    $sql_temp = preg_replace("|'.*?'|", "?", $sql_temp);
+                    c_comdef_dbsingleton::preparedExec($sql_temp, $value_array);
+                }
+            }
         })
     );
     // WHEN ADDING A NEW DATABASE MIGRATION, REMEMBER TO BUMP THE VERSION IN local_server/install_wizard/sql_files/initialDbVersionData.sql
