@@ -57,8 +57,9 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.14.7* ** *- TBD*
+***Version 2.14.7* ** *- UNRELEASED*
 - Added Portuguese translation and formats.
+- Added 255 character limit to input fields in admin ui.
 
 ***Version 2.14.6* ** *- December 10, 2019*
 

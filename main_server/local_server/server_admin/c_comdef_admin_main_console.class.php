@@ -1612,7 +1612,7 @@ class c_comdef_admin_main_console
                 $ret .= '</div>';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_name_label']).'</span>';
-                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_name_text_input" type="text" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_name_prompt']).'" /></span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_name_text_input" type="text" maxlength="255" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_name_prompt']).'" /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
@@ -1680,7 +1680,7 @@ class c_comdef_admin_main_console
                 $ret .= '</div>';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_cc_label']).'</span>';
-                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_cc_text_input" type="text" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_cc_prompt']).'" /></span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_cc_text_input" type="text" maxlength="255" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_cc_prompt']).'" /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
 
@@ -1699,7 +1699,7 @@ class c_comdef_admin_main_console
             }
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_contact_label']).'</span>';
-                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_contact_text_input" type="text" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_contact_prompt']).'" /></span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_contact_text_input" type="text" maxlength="255" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_contact_prompt']).'" /></span>';
                     $ret .= '<span class="bmlt_admin_visibility_advice_span">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_visibility_advice']).'</span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
@@ -1730,7 +1730,7 @@ class c_comdef_admin_main_console
             $ret .= '<div id="bmlt_admin_single_location_template_long_lat_div" class="bmlt_admin_single_location_long_lat_div">';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_longitude_label']).'</span>';
-                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_longitude_text_input" type="text" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_longitude_prompt']).'" '. ($this->my_localized_strings['auto_geocoding_enabled'] ? 'readonly' : '') .' /></span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_longitude_text_input" type="text"  maxlength="25" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_longitude_prompt']).'" '. ($this->my_localized_strings['auto_geocoding_enabled'] ? 'readonly' : '') .' /></span>';
         if ($this->my_localized_strings['auto_geocoding_enabled']) {
             $ret .= '<span class="bmlt_admin_visibility_advice_span">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['automatically_calculated_on_save']).'</span>';
         }
@@ -1738,7 +1738,7 @@ class c_comdef_admin_main_console
                 $ret .= '</div>';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_latitude_label']).'</span>';
-                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_latitude_text_input" type="text" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_latitude_prompt']).'" '. ($this->my_localized_strings['auto_geocoding_enabled'] ? 'readonly' : '') .' /></span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_latitude_text_input" type="text"  maxlength="25" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_latitude_prompt']).'" '. ($this->my_localized_strings['auto_geocoding_enabled'] ? 'readonly' : '') .' /></span>';
         if ($this->my_localized_strings['auto_geocoding_enabled']) {
             $ret .= '<span class="bmlt_admin_visibility_advice_span">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['automatically_calculated_on_save']).'</span>';
         }
@@ -1748,32 +1748,32 @@ class c_comdef_admin_main_console
             $ret .= '<div class="bmlt_admin_meeting_editor_address_div">';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_location_label']).'</span>';
-                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_location_text_input" type="text" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_location_prompt']).'" /></span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_location_text_input" type="text" maxlength="255" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_location_prompt']).'" /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_info_label']).'</span>';
-                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_info_text_input" type="text" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_info_prompt']).'" /></span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_info_text_input" type="text" maxlength="255" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_info_prompt']).'" /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_street_label']).'</span>';
-                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_street_text_input" type="text" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_street_prompt']).'" /></span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_street_text_input" maxlength="255" type="text" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_street_prompt']).'" /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_neighborhood_label']).'</span>';
-                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_neighborhood_text_input" type="text" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_neighborhood_prompt']).'" /></span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_neighborhood_text_input" maxlength="255" type="text" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_neighborhood_prompt']).'" /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_borough_label']).'</span>';
-                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_borough_text_input" type="text" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_borough_prompt']).'" /></span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_borough_text_input" type="text" maxlength="255" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_borough_prompt']).'" /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_city_label']).'</span>';
-                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_city_text_input" type="text" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_city_prompt']).'" /></span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_city_text_input" type="text" maxlength="255" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_city_prompt']).'" /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
@@ -1787,7 +1787,7 @@ class c_comdef_admin_main_console
             }
                 $ret .= '</select>';
         } else {
-            $ret .= '<input id="bmlt_admin_single_meeting_editor_template_meeting_county_text_input" type="text" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_county_prompt']).'" '. ($this->my_localized_strings['auto_geocoding_enabled'] && $this->my_localized_strings['county_auto_geocoding_enabled'] ? 'readonly' : '') .' />';
+            $ret .= '<input id="bmlt_admin_single_meeting_editor_template_meeting_county_text_input" type="text" maxlength="255" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_county_prompt']).'" '. ($this->my_localized_strings['auto_geocoding_enabled'] && $this->my_localized_strings['county_auto_geocoding_enabled'] ? 'readonly' : '') .' />';
         }
                     $ret .= '</span>';
         if ($this->my_localized_strings['auto_geocoding_enabled'] && $this->my_localized_strings['county_auto_geocoding_enabled']) {
@@ -1806,14 +1806,14 @@ class c_comdef_admin_main_console
             }
             $ret .= '</select>';
         } else {
-            $ret .= '<input id="bmlt_admin_single_meeting_editor_template_meeting_state_text_input" type="text" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_state_prompt']).'" />';
+            $ret .= '<input id="bmlt_admin_single_meeting_editor_template_meeting_state_text_input" type="text" maxlength="255" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_state_prompt']).'" />';
         }
                     $ret .= '</span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_zip_label']).'</span>';
-                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_zip_text_input" type="text" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_zip_prompt']).'" '. ($this->my_localized_strings['auto_geocoding_enabled'] && $this->my_localized_strings['zip_auto_geocoding_enabled'] ? 'readonly' : '') .' /></span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_zip_text_input" type="text" maxlength="255" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_zip_prompt']).'" '. ($this->my_localized_strings['auto_geocoding_enabled'] && $this->my_localized_strings['zip_auto_geocoding_enabled'] ? 'readonly' : '') .' /></span>';
         if ($this->my_localized_strings['auto_geocoding_enabled'] && $this->my_localized_strings['zip_auto_geocoding_enabled']) {
             $ret .= '<span class="bmlt_admin_visibility_advice_span">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['automatically_calculated_on_save']).'</span>';
         }
@@ -1821,7 +1821,7 @@ class c_comdef_admin_main_console
                 $ret .= '</div>';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_nation_label']).'</span>';
-                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_nation_text_input" type="text" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_nation_prompt']).'" /></span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_nation_text_input" type="text" maxlength="255" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_nation_prompt']).'" /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
             $ret .= '</div>';
@@ -1907,7 +1907,7 @@ class c_comdef_admin_main_console
                     $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                         $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($prompt).'</span>';
                         $ret .= '<span class="bmlt_admin_value_left">';
-                            $ret .= '<input id="bmlt_admin_single_meeting_editor_template_meeting_'.htmlspecialchars($key).'_text_input" type="text" onkeyup="admin_handler_object.setItemValue(this, template, \''.htmlspecialchars($key).'\');" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this, true);" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_default_text_prompt']).'" />';
+                            $ret .= '<input id="bmlt_admin_single_meeting_editor_template_meeting_'.htmlspecialchars($key).'_text_input" type="text" onkeyup="admin_handler_object.setItemValue(this, template, \''.htmlspecialchars($key).'\');" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this, true);" maxlength="255" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_default_text_prompt']).'" />';
                         $ret .= '</span>';
                     if ($data_field['visibility'] == _VISIBILITY_NONE_) {
                         $ret .= '<span class="bmlt_admin_visibility_advice_span">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_visibility_advice']).'</span>';
