@@ -645,10 +645,7 @@ function ReturnNAWSFormatCSV(
                     array_push($line, $value);
                 }
 
-                // We don't send unpublished meetings unless they have a World ID.
-                if (is_array($line)
-                    &&  count($line)
-                    &&  ($one_meeting['published'] || (isset($one_meeting['worldid_mixed']) && $one_meeting['worldid_mixed'])) ) {
+                if (is_array($line) && count($line)) {
                     $ret .= "\n".'"'.join('","', $line).'"';
                 }
             }

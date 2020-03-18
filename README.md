@@ -57,7 +57,10 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.14.7* ** *- UNRELEASED*
+***Version 2.14.8* ** *- March 17, 2020*
+- Fixed an issue that caused unpublished meetings without a World ID to be excluded from the NAWS Export. 
+
+***Version 2.14.7* ** *- March 15, 2020*
 - Added Portuguese translation and formats.
 - Added 255 character limit to input fields in admin ui.
 
