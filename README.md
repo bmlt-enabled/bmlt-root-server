@@ -57,6 +57,9 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.14.9* ** *- UNRELEASED*
+- Append comments field to direction field in NAWS Export. 
+
 ***Version 2.14.8* ** *- March 17, 2020*
 - Fixed an issue that caused unpublished meetings without a World ID to be excluded from the NAWS Export. 
 

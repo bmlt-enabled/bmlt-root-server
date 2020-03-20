@@ -599,7 +599,7 @@ function ReturnNAWSFormatCSV(
                                     'State'             => 'location_province',
                                     'Zip'               => 'location_postal_code_1',
                                     'Country'           => 'location_nation',
-                                    'Directions'        => 'location_info',
+                                    'Directions'        => 'BMLT_FuncNAWSReturnDirections',
                                     'Institutional'     => 'BMLT_FuncNAWSReturnInst',
                                     'Format1'           => 'BMLT_FuncNAWSReturnFormat1',
                                     'Format2'           => 'BMLT_FuncNAWSReturnFormat2',
@@ -1116,6 +1116,39 @@ function BMLT_FuncNAWSReturnNonNawsFormats(
             }
 
             $ret = rtrim($ret, ',');
+        }
+    }
+
+    return $ret;
+}
+
+/*******************************************************************/
+/**
+\brief Returns a string of location_info and comments fields.
+
+\returns A string The location_info and comments fields.
+ */
+function BMLT_FuncNAWSReturnDirections(
+    $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
+    &$server        ///< A reference to an instance of c_comdef_server
+) {
+
+    $ret = "";
+
+    if ($in_meeting_id instanceof c_comdef_meeting) {
+        $the_meeting = $in_meeting_id;
+    } else {
+        $the_meeting = $server->GetOneMeeting($in_meeting_id);
+    }
+
+    if ($the_meeting instanceof c_comdef_meeting) {
+        $ret = trim($the_meeting->GetMeetingDataValue('location_info'));
+
+        if ($the_meeting->GetMeetingDataValue('comments')) {
+            if ($ret) {
+                $ret .= ", ";
+            }
+            $ret .= trim($the_meeting->GetMeetingDataValue('comments'));
         }
     }
 
