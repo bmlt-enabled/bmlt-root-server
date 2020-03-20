@@ -59,6 +59,7 @@ CHANGELIST
 ----------
 ***Version 2.14.9* ** *- UNRELEASED*
 - Append comments field to direction field in NAWS Export. 
+- Fixed issue with Admin UI not returning 6:00PM meetings when searching for evening meetings.
 
 ***Version 2.14.8* ** *- March 17, 2020*
 - Fixed an issue that caused unpublished meetings without a World ID to be excluded from the NAWS Export. 
