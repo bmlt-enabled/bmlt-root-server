@@ -782,13 +782,13 @@ class c_comdef_meeting_search_manager
         
         // We don't let this be less than, or equal to, the start time.
         if ((null != $in_starts_after) && (null != $in_starts_before)
-            && (intval($in_starts_after) >= intval($in_starts_before)) ) {
+            && (intval($in_starts_after) >= intval($in_starts_before))) {
             $in_starts_before = null;
         }
         
         // We don't let this be less than, or equal to, the start time.
         if ((null != $in_starts_after) && (null != $in_starts_before)
-            && (intval($in_starts_after) >= intval($in_starts_before)) ) {
+            && (intval($in_starts_after) >= intval($in_starts_before))) {
             $in_starts_before = null;
         }
         

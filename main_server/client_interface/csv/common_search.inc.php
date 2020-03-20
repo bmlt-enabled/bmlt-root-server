@@ -474,7 +474,7 @@ function SetUpSearch(
         // Next, we deal with a geolocated search radius.
         
         if ((isset($in_http_vars['geo_width']) && ($in_http_vars['geo_width'] != 0))
-            ||  (isset($in_http_vars['geo_width_km']) && ($in_http_vars['geo_width_km'] != 0) ) ) {
+            ||  (isset($in_http_vars['geo_width_km']) && ($in_http_vars['geo_width_km'] != 0) )) {
             $long = isset($in_http_vars['long_val']) ? floatval($in_http_vars['long_val']) : 0;
             $lat = isset($in_http_vars['lat_val']) ? floatval($in_http_vars['lat_val']) : 0;
             $radius_in_miles = 0;
