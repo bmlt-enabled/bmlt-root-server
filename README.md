@@ -57,8 +57,9 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.14.10* ** *- UNRELEASED*
-- Added virtual info and link fields to other tab in admin ui.
+***Version 2.15.0* ** *- UNRELEASED*
+- Added a "Virtual Meeting Link" field to the Location tab of the Meeting Editor UI for the join link for virtual meetings.
+- Added a "Phone Meeting Number" field to the Location tab of the Meeting Editor UI for dial-in information for virtual or phone meetings.
 
 ***Version 2.14.9* ** *- March 21, 2020*
 - Append comments field to direction field in NAWS Export. 
