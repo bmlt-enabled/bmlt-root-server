@@ -486,6 +486,8 @@ function DisplaySearchResultsCSV(
                                                 case 'location_postal_code_1':
                                                 case 'location_nation':
                                                 case 'comments':
+                                                case 'virtual_meeting_link':
+                                                case 'phone_meeting_number':
                                                     break;
                                     
                                                 // The rest get the prompt/value treatment, unless otherwise requested.
