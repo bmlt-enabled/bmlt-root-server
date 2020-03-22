@@ -129,6 +129,8 @@
                                             'meeting_editor_screen_meeting_comments_label'          =>  'Komentarze:',
                                             'meeting_editor_screen_meeting_train_lines_label'       =>  'Linie pociągowe:',
                                             'meeting_editor_screen_meeting_bus_lines_label'         =>  'Linie autobusowe:',
+                                            'meeting_editor_screen_meeting_virtual_info_label'      =>  'Virtual Info:',
+                                            'meeting_editor_screen_meeting_virtual_link_label'      =>  'Virtual Link:',
                                             'meeting_editor_screen_meeting_contact_name_1_label'    =>  'Imię osoby kontaktowej:',
                                             'meeting_editor_screen_meeting_contact_email_1_label'   =>  'Email kontaktowy:',
                                             'meeting_editor_screen_meeting_contact_phone_1_label'   =>  'Telefon kontaktowy:',

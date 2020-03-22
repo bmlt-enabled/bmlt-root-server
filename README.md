@@ -57,6 +57,9 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.14.10* ** *- UNRELEASED*
+- Added virtual info and link fields to other tab in admin ui.
+
 ***Version 2.14.9* ** *- March 21, 2020*
 - Append comments field to direction field in NAWS Export. 
 - Fixed issue with Admin UI not returning 6:00PM meetings when searching for evening meetings.

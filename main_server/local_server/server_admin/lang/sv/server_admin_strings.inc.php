@@ -133,6 +133,8 @@
                                             'meeting_editor_screen_meeting_comments_label'          =>  'Comments:',
                                             'meeting_editor_screen_meeting_train_lines_label'       =>  'Train Lines:',
                                             'meeting_editor_screen_meeting_bus_lines_label'         =>  'Bus Lines:',
+                                            'meeting_editor_screen_meeting_virtual_info_label'      =>  'Virtual Info:',
+                                            'meeting_editor_screen_meeting_virtual_link_label'      =>  'Virtual Link:',
                                             'meeting_editor_screen_meeting_contact_name_1_label'    =>  'Contact 1 Name:',
                                             'meeting_editor_screen_meeting_contact_email_1_label'   =>  'Contact 1 Email:',
                                             'meeting_editor_screen_meeting_contact_phone_1_label'   =>  'Contact 1 Phone:',
