@@ -19,5 +19,5 @@ INSERT INTO `%%PREFIX%%_comdef_meetings_data` (`meetingid_bigint`, `key`, `field
 (0, 'contact_phone_1', 'Contact 1 Phone', 'en', 1, 'Contact 1 Phone', NULL, NULL),
 (0, 'contact_email_1', 'Contact 1 Email', 'en', 1, 'Contact 1 Email', NULL, NULL),
 (0, 'contact_name_1', 'Contact 1 Name', 'en', 1, 'Contact 1 Name', NULL, NULL)
-(0, 'virtual_info', 'Virtual Info', 'en', NULL, NULL, NULL, NULL),
-(0, 'virtual_link', 'Virtual Link', 'en', NULL, NULL, NULL, NULL);
+(0, 'phone_meeting_link', 'Phone Link', 'en', NULL, NULL, NULL, NULL),
+(0, 'virtual_meeting_link', 'Virtual Link', 'en', NULL, NULL, NULL, NULL);
