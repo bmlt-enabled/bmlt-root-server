@@ -567,56 +567,56 @@ function ReturnNAWSFormatCSV(
     &$server        ///< A reference to an instance of c_comdef_server
 ) {
     // This is a dictionary that is used to translate the meeting data from the BMLT format to the NAWS format.
-    $transfer_dictionary = array(   'Committee'          => 'BMLT_FuncNAWSReturnMeetingNAWSID',
-        'CommitteeName'      => 'meeting_name',
-        'AddDate'            => null,
-        'AreaRegion'         => 'BMLT_FuncNAWSReturnMeetingServiceBodyNAWSID',
-        'ParentName'         => 'BMLT_FuncNAWSReturnMeetingServiceBodyName',
-        'ComemID'            => null,
-        'ContactID'          => null,
-        'ContactName'        => null,
-        'CompanyName'        => null,
-        'ContactAddrID'      => null,
-        'ContactAddress1'    => null,
-        'ContactAddress2'    => null,
-        'ContactCity'        => null,
-        'ContactState'       => null,
-        'ContactZip'         => null,
-        'ContactCountry'     => null,
-        'ContactPhone'       => null,
-        'MeetingID'          => null,
-        'Room'               => 'BMLT_FuncNAWSReturnNonNawsFormats',
-        'Closed'             => 'BMLT_FuncNAWSReturnOpenOrClosed',
-        'WheelChr'           => 'BMLT_FuncNAWSReturnWheelchair',
-        'Day'                => 'BMLT_FuncNAWSReturnWeekday',
-        'Time'               => 'BMLT_FuncNAWSReturnTime',
-        'Language1'          => 'BMLT_FuncNAWSReturnLanguage1',
-        'Language2'          => null,
-        'Language3'          => null,
-        'LocationId'         => null,
-        'Place'              => 'location_text',
-        'Address'            => 'location_street',
-        'City'               => 'BMLT_FuncNAWSReturnMeetingTown',
-        'LocBorough'         => 'location_neighborhood',
-        'State'              => 'location_province',
-        'Zip'                => 'location_postal_code_1',
-        'Country'            => 'location_nation',
-        'Directions'         => 'BMLT_FuncNAWSReturnDirections',
-        'PhoneMeetingNumber' => 'BMLT_FuncNAWSReturnVirtualLink',
-        'VirtualLink'        => 'BMLT_FuncNAWSReturnPhoneMeetingNumber',
-        'Institutional'      => 'BMLT_FuncNAWSReturnInst',
-        'Format1'            => 'BMLT_FuncNAWSReturnFormat1',
-        'Format2'            => 'BMLT_FuncNAWSReturnFormat2',
-        'Format3'            => 'BMLT_FuncNAWSReturnFormat3',
-        'Format4'            => 'BMLT_FuncNAWSReturnFormat4',
-        'Format5'            => 'BMLT_FuncNAWSReturnFormat5',
-        'Delete'             => null,
-        'LastChanged'        => 'BMLT_FuncNAWSReturnLastMeetingChangeTime',
-        'Longitude'          => 'longitude',
-        'Latitude'           => 'latitude',
-        'ContactGP'          => null,
-        'bmlt_id'            => 'id_bigint',
-        'unpublished'        => 'BMLT_FuncNAWSReturnPublishedStatus'
+    $transfer_dictionary = array(   'Committee'         => 'BMLT_FuncNAWSReturnMeetingNAWSID',
+        'CommitteeName'     => 'meeting_name',
+        'AddDate'           => null,
+        'AreaRegion'        => 'BMLT_FuncNAWSReturnMeetingServiceBodyNAWSID',
+        'ParentName'        => 'BMLT_FuncNAWSReturnMeetingServiceBodyName',
+        'ComemID'           => null,
+        'ContactID'         => null,
+        'ContactName'       => null,
+        'CompanyName'       => null,
+        'ContactAddrID'     => null,
+        'ContactAddress1'   => null,
+        'ContactAddress2'   => null,
+        'ContactCity'       => null,
+        'ContactState'      => null,
+        'ContactZip'        => null,
+        'ContactCountry'    => null,
+        'ContactPhone'      => null,
+        'MeetingID'         => null,
+        'Room'              => 'BMLT_FuncNAWSReturnNonNawsFormats',
+        'Closed'            => 'BMLT_FuncNAWSReturnOpenOrClosed',
+        'WheelChr'          => 'BMLT_FuncNAWSReturnWheelchair',
+        'Day'               => 'BMLT_FuncNAWSReturnWeekday',
+        'Time'              => 'BMLT_FuncNAWSReturnTime',
+        'Language1'         => 'BMLT_FuncNAWSReturnLanguage1',
+        'Language2'         => null,
+        'Language3'         => null,
+        'LocationId'        => null,
+        'Place'             => 'location_text',
+        'Address'           => 'location_street',
+        'City'              => 'BMLT_FuncNAWSReturnMeetingTown',
+        'LocBorough'        => 'location_neighborhood',
+        'State'             => 'location_province',
+        'Zip'               => 'location_postal_code_1',
+        'Country'           => 'location_nation',
+        'Directions'        => 'BMLT_FuncNAWSReturnDirections',
+        'PhoneMeetingNumber' => 'phone_meeting_number',
+        'VirtualLink'        => 'virtual_meeting_link',
+        'Institutional'     => 'BMLT_FuncNAWSReturnInst',
+        'Format1'           => 'BMLT_FuncNAWSReturnFormat1',
+        'Format2'           => 'BMLT_FuncNAWSReturnFormat2',
+        'Format3'           => 'BMLT_FuncNAWSReturnFormat3',
+        'Format4'           => 'BMLT_FuncNAWSReturnFormat4',
+        'Format5'           => 'BMLT_FuncNAWSReturnFormat5',
+        'Delete'            => null,
+        'LastChanged'       => 'BMLT_FuncNAWSReturnLastMeetingChangeTime',
+        'Longitude'         => 'longitude',
+        'Latitude'          => 'latitude',
+        'ContactGP'         => null,
+        'bmlt_id'           => 'id_bigint',
+        'unpublished'       => 'BMLT_FuncNAWSReturnPublishedStatus'
     );
 
     $ret = null;
@@ -1120,62 +1120,6 @@ function BMLT_FuncNAWSReturnNonNawsFormats(
             }
 
             $ret = rtrim($ret, ',');
-        }
-    }
-
-    return $ret;
-}
-
-/*******************************************************************/
-/**
-\brief Returns a string of the phone_meeting_number.
-
-\returns A string The phone_meeting_number field.
- */
-function BMLT_FuncNAWSReturnPhoneMeetingNumber(
-    $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
-    &$server        ///< A reference to an instance of c_comdef_server
-) {
-
-    $ret = "";
-
-    if ($in_meeting_id instanceof c_comdef_meeting) {
-        $the_meeting = $in_meeting_id;
-    } else {
-        $the_meeting = $server->GetOneMeeting($in_meeting_id);
-    }
-
-    if ($the_meeting instanceof c_comdef_meeting) {
-        if ($the_meeting->GetMeetingDataValue('phone_meeting_number')) {
-            $ret = trim($the_meeting->GetMeetingDataValue('phone_meeting_number'));
-        }
-    }
-
-    return $ret;
-}
-
-/*******************************************************************/
-/**
-\brief Returns a string of the virtual_meeting_link.
-
-\returns A string The virtual_meeting_link field.
- */
-function BMLT_FuncNAWSReturnVirtualLink(
-    $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
-    &$server        ///< A reference to an instance of c_comdef_server
-) {
-
-    $ret = "";
-
-    if ($in_meeting_id instanceof c_comdef_meeting) {
-        $the_meeting = $in_meeting_id;
-    } else {
-        $the_meeting = $server->GetOneMeeting($in_meeting_id);
-    }
-
-    if ($the_meeting instanceof c_comdef_meeting) {
-        if ($the_meeting->GetMeetingDataValue('virtual_meeting_link')) {
-            $ret = trim($the_meeting->GetMeetingDataValue('virtual_meeting_link'));
         }
     }
 
