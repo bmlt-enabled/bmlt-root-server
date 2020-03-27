@@ -602,8 +602,6 @@ function ReturnNAWSFormatCSV(
                                     'Zip'                => 'location_postal_code_1',
                                     'Country'            => 'location_nation',
                                     'Directions'         => 'BMLT_FuncNAWSReturnDirections',
-                                    'PhoneMeetingNumber' => 'phone_meeting_number',
-                                    'VirtualLink'        => 'virtual_meeting_link',
                                     'Institutional'      => 'BMLT_FuncNAWSReturnInst',
                                     'Format1'            => 'BMLT_FuncNAWSReturnFormat1',
                                     'Format2'            => 'BMLT_FuncNAWSReturnFormat2',
@@ -615,6 +613,8 @@ function ReturnNAWSFormatCSV(
                                     'Longitude'          => 'longitude',
                                     'Latitude'           => 'latitude',
                                     'ContactGP'          => null,
+                                    'PhoneMeetingNumber' => 'phone_meeting_number',
+                                    'VirtualLink'        => 'virtual_meeting_link',
                                     'bmlt_id'            => 'id_bigint',
                                     'unpublished'        => 'BMLT_FuncNAWSReturnPublishedStatus'
                                 );
