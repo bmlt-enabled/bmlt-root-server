@@ -285,256 +285,40 @@ function DB_Connect_and_Upgrade()
         array(10, function () {
             $dbPrefix = $GLOBALS['dbPrefix'];
             $table = "$dbPrefix" . "_comdef_formats";
-            $get_next_id = "SELECT MAX(shared_id_bigint) as max_id FROM `$table`";
-            $ids = c_comdef_dbsingleton::preparedQuery($get_next_id);
-            $shared_id = $ids[0]["max_id"] + 1;
-            $check_column_sql = "SELECT COUNT(*) AS count FROM `$table` WHERE `key_string`='VM' AND `lang_enum`='en'";
-            $rows = c_comdef_dbsingleton::preparedQuery($check_column_sql);
-            if (is_array($rows) && count($rows)) {
-                $row = $rows[0];
-                if (intval($row['count']) == 0) {
-                    $updateSql =  "INSERT INTO `$table` (shared_id_bigint, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($shared_id, 'VM', NULL, NULL, 'en', 'Virtual Meeting', 'This is a meeting that meets online.', 'FC2')";
-                    c_comdef_dbsingleton::preparedExec($updateSql);
+            $check = "SELECT COUNT(*) AS count FROM `$table` WHERE `key_string` = 'VM'";
+            $check = c_comdef_dbsingleton::preparedQuery($check);
+            if (is_array($check) && count($check)) {
+                $check = $check[0];
+                if (intval($check['count']) == 0) {
+                    $next_id = "SELECT MAX(shared_id_bigint) + 1 AS next_id FROM `$table`";
+                    $next_id = c_comdef_dbsingleton::preparedQuery($next_id);
+                    $next_id = $next_id[0];
+                    $next_id = $next_id['next_id'];
+                    $langs = array("en", "es", "fa", "fr", "it", "pl", "pt", "sv");
+                    foreach ($langs as $lang) {
+                        $sql = "INSERT INTO `$table` (`shared_id_bigint`, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($next_id, 'VM', NULL, NULL, '$lang', 'Virtual Meeting', 'This is a meeting that meets online.', 'FC2')";
+                        c_comdef_dbsingleton::preparedExec($sql);
+                    }
                 }
             }
         }),
         array(11, function () {
             $dbPrefix = $GLOBALS['dbPrefix'];
             $table = "$dbPrefix" . "_comdef_formats";
-            $get_next_id = "SELECT MAX(shared_id_bigint) as max_id FROM `$table`";
-            $ids = c_comdef_dbsingleton::preparedQuery($get_next_id);
-            $shared_id = $ids[0]["max_id"] + 1;
-            $check_column_sql = "SELECT COUNT(*) AS count FROM `$table` WHERE `key_string`='TC' AND `lang_enum`='en'";
-            $rows = c_comdef_dbsingleton::preparedQuery($check_column_sql);
-            if (is_array($rows) && count($rows)) {
-                $row = $rows[0];
-                if (intval($row['count']) == 0) {
-                    $updateSql=  "INSERT INTO `$table` (shared_id_bigint, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($shared_id, 'TC', NULL, NULL, 'en', 'Temporarily Closed', '**** Temporarily Closed ****', 'O')";
-                    c_comdef_dbsingleton::preparedExec($updateSql);
-                }
-            }
-        }),
-        array(12, function () {
-            $dbPrefix = $GLOBALS['dbPrefix'];
-            $table = "$dbPrefix" . "_comdef_formats";
-            $get_vm_id = "SELECT `shared_id_bigint` as shared_id FROM `$table` WHERE `key_string`='VM' AND `lang_enum`='en'";
-            $vm_id = c_comdef_dbsingleton::preparedQuery($get_vm_id);
-            $shared_id = $vm_id[0]["shared_id"];
-            $check_column_sql = "SELECT COUNT(*) AS count FROM `$table` WHERE `key_string`='VM' AND `lang_enum`='es'";
-            $rows = c_comdef_dbsingleton::preparedQuery($check_column_sql);
-            if (is_array($rows) && count($rows)) {
-                $row = $rows[0];
-                if (intval($row['count']) == 0) {
-                    $updateSql=  "INSERT INTO `$table` (shared_id_bigint, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($shared_id, 'VM', NULL, NULL, 'es', 'Virtual Meeting', 'This is a meeting that meets online.', 'FC2')";
-                    c_comdef_dbsingleton::preparedExec($updateSql);
-                }
-            }
-        }),
-        array(13, function () {
-            $dbPrefix = $GLOBALS['dbPrefix'];
-            $table = "$dbPrefix" . "_comdef_formats";
-            $get_vm_id = "SELECT `shared_id_bigint` as shared_id FROM `$table` WHERE `key_string`='TC' AND `lang_enum`='en'";
-            $vm_id = c_comdef_dbsingleton::preparedQuery($get_vm_id);
-            $shared_id = $vm_id[0]["shared_id"];
-            $check_column_sql = "SELECT COUNT(*) AS count FROM `$table` WHERE `key_string`='TC' AND `lang_enum`='es'";
-            $rows = c_comdef_dbsingleton::preparedQuery($check_column_sql);
-            if (is_array($rows) && count($rows)) {
-                $row = $rows[0];
-                if (intval($row['count']) == 0) {
-                    $updateSql=  "INSERT INTO `$table` (shared_id_bigint, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($shared_id, 'TC', NULL, NULL, 'es', 'Temporarily Closed', '**** Temporarily Closed ****', 'O')";
-                    c_comdef_dbsingleton::preparedExec($updateSql);
-                }
-            }
-        }),
-        array(14, function () {
-            $dbPrefix = $GLOBALS['dbPrefix'];
-            $table = "$dbPrefix" . "_comdef_formats";
-            $get_vm_id = "SELECT `shared_id_bigint` as shared_id FROM `$table` WHERE `key_string`='VM' AND `lang_enum`='en'";
-            $vm_id = c_comdef_dbsingleton::preparedQuery($get_vm_id);
-            $shared_id = $vm_id[0]["shared_id"];
-            $check_column_sql = "SELECT COUNT(*) AS count FROM `$table` WHERE `key_string`='VM' AND `lang_enum`='fa'";
-            $rows = c_comdef_dbsingleton::preparedQuery($check_column_sql);
-            if (is_array($rows) && count($rows)) {
-                $row = $rows[0];
-                if (intval($row['count']) == 0) {
-                    $updateSql=  "INSERT INTO `$table` (shared_id_bigint, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($shared_id, 'VM', NULL, NULL, 'fa', 'Virtual Meeting', 'This is a meeting that meets online.', 'FC2')";
-                    c_comdef_dbsingleton::preparedExec($updateSql);
-                }
-            }
-        }),
-        array(15, function () {
-            $dbPrefix = $GLOBALS['dbPrefix'];
-            $table = "$dbPrefix" . "_comdef_formats";
-            $get_vm_id = "SELECT `shared_id_bigint` as shared_id FROM `$table` WHERE `key_string`='TC' AND `lang_enum`='en'";
-            $vm_id = c_comdef_dbsingleton::preparedQuery($get_vm_id);
-            $shared_id = $vm_id[0]["shared_id"];
-            $check_column_sql = "SELECT COUNT(*) AS count FROM `$table` WHERE `key_string`='TC' AND `lang_enum`='fa'";
-            $rows = c_comdef_dbsingleton::preparedQuery($check_column_sql);
-            if (is_array($rows) && count($rows)) {
-                $row = $rows[0];
-                if (intval($row['count']) == 0) {
-                    $updateSql=  "INSERT INTO `$table` (shared_id_bigint, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($shared_id, 'TC', NULL, NULL, 'fa', 'Temporarily Closed', '**** Temporarily Closed ****', 'O')";
-                    c_comdef_dbsingleton::preparedExec($updateSql);
-                }
-            }
-        }),
-        array(16, function () {
-            $dbPrefix = $GLOBALS['dbPrefix'];
-            $table = "$dbPrefix" . "_comdef_formats";
-            $get_vm_id = "SELECT `shared_id_bigint` as shared_id FROM `$table` WHERE `key_string`='VM' AND `lang_enum`='en'";
-            $vm_id = c_comdef_dbsingleton::preparedQuery($get_vm_id);
-            $shared_id = $vm_id[0]["shared_id"];
-            $check_column_sql = "SELECT COUNT(*) AS count FROM `$table` WHERE `key_string`='VM' AND `lang_enum`='fr'";
-            $rows = c_comdef_dbsingleton::preparedQuery($check_column_sql);
-            if (is_array($rows) && count($rows)) {
-                $row = $rows[0];
-                if (intval($row['count']) == 0) {
-                    $updateSql=  "INSERT INTO `$table` (shared_id_bigint, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($shared_id, 'VM', NULL, NULL, 'fr', 'Virtual Meeting', 'This is a meeting that meets online.', 'FC2')";
-                    c_comdef_dbsingleton::preparedExec($updateSql);
-                }
-            }
-        }),
-        array(17, function () {
-            $dbPrefix = $GLOBALS['dbPrefix'];
-            $table = "$dbPrefix" . "_comdef_formats";
-            $get_vm_id = "SELECT `shared_id_bigint` as shared_id FROM `$table` WHERE `key_string`='TC' AND `lang_enum`='en'";
-            $vm_id = c_comdef_dbsingleton::preparedQuery($get_vm_id);
-            $shared_id = $vm_id[0]["shared_id"];
-            $check_column_sql = "SELECT COUNT(*) AS count FROM `$table` WHERE `key_string`='TC' AND `lang_enum`='fr'";
-            $rows = c_comdef_dbsingleton::preparedQuery($check_column_sql);
-            if (is_array($rows) && count($rows)) {
-                $row = $rows[0];
-                if (intval($row['count']) == 0) {
-                    $updateSql=  "INSERT INTO `$table` (shared_id_bigint, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($shared_id, 'TC', NULL, NULL, 'fr', 'Temporarily Closed', '**** Temporarily Closed ****', 'O')";
-                    c_comdef_dbsingleton::preparedExec($updateSql);
-                }
-            }
-        }),
-        array(18, function () {
-            $dbPrefix = $GLOBALS['dbPrefix'];
-            $table = "$dbPrefix" . "_comdef_formats";
-            $get_vm_id = "SELECT `shared_id_bigint` as shared_id FROM `$table` WHERE `key_string`='VM' AND `lang_enum`='en'";
-            $vm_id = c_comdef_dbsingleton::preparedQuery($get_vm_id);
-            $shared_id = $vm_id[0]["shared_id"];
-            $check_column_sql = "SELECT COUNT(*) AS count FROM `$table` WHERE `key_string`='VM' AND `lang_enum`='it'";
-            $rows = c_comdef_dbsingleton::preparedQuery($check_column_sql);
-            if (is_array($rows) && count($rows)) {
-                $row = $rows[0];
-                if (intval($row['count']) == 0) {
-                    $updateSql=  "INSERT INTO `$table` (shared_id_bigint, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($shared_id, 'VM', NULL, NULL, 'it', 'Virtual Meeting', 'This is a meeting that meets online.', 'FC2')";
-                    c_comdef_dbsingleton::preparedExec($updateSql);
-                }
-            }
-        }),
-        array(19, function () {
-            $dbPrefix = $GLOBALS['dbPrefix'];
-            $table = "$dbPrefix" . "_comdef_formats";
-            $get_vm_id = "SELECT `shared_id_bigint` as shared_id FROM `$table` WHERE `key_string`='TC' AND `lang_enum`='en'";
-            $vm_id = c_comdef_dbsingleton::preparedQuery($get_vm_id);
-            $shared_id = $vm_id[0]["shared_id"];
-            $check_column_sql = "SELECT COUNT(*) AS count FROM `$table` WHERE `key_string`='TC' AND `lang_enum`='it'";
-            $rows = c_comdef_dbsingleton::preparedQuery($check_column_sql);
-            if (is_array($rows) && count($rows)) {
-                $row = $rows[0];
-                if (intval($row['count']) == 0) {
-                    $updateSql=  "INSERT INTO `$table` (shared_id_bigint, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($shared_id, 'TC', NULL, NULL, 'it', 'Temporarily Closed', '**** Temporarily Closed ****', 'O')";
-                    c_comdef_dbsingleton::preparedExec($updateSql);
-                }
-            }
-        }),
-        array(20, function () {
-            $dbPrefix = $GLOBALS['dbPrefix'];
-            $table = "$dbPrefix" . "_comdef_formats";
-            $get_vm_id = "SELECT `shared_id_bigint` as shared_id FROM `$table` WHERE `key_string`='VM' AND `lang_enum`='en'";
-            $vm_id = c_comdef_dbsingleton::preparedQuery($get_vm_id);
-            $shared_id = $vm_id[0]["shared_id"];
-            $check_column_sql = "SELECT COUNT(*) AS count FROM `$table` WHERE `key_string`='VM' AND `lang_enum`='pl'";
-            $rows = c_comdef_dbsingleton::preparedQuery($check_column_sql);
-            if (is_array($rows) && count($rows)) {
-                $row = $rows[0];
-                if (intval($row['count']) == 0) {
-                    $updateSql=  "INSERT INTO `$table` (shared_id_bigint, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($shared_id, 'VM', NULL, NULL, 'pl', 'Virtual Meeting', 'This is a meeting that meets online.', 'FC2')";
-                    c_comdef_dbsingleton::preparedExec($updateSql);
-                }
-            }
-        }),
-        array(21, function () {
-            $dbPrefix = $GLOBALS['dbPrefix'];
-            $table = "$dbPrefix" . "_comdef_formats";
-            $get_vm_id = "SELECT `shared_id_bigint` as shared_id FROM `$table` WHERE `key_string`='TC' AND `lang_enum`='en'";
-            $vm_id = c_comdef_dbsingleton::preparedQuery($get_vm_id);
-            $shared_id = $vm_id[0]["shared_id"];
-            $check_column_sql = "SELECT COUNT(*) AS count FROM `$table` WHERE `key_string`='TC' AND `lang_enum`='pl'";
-            $rows = c_comdef_dbsingleton::preparedQuery($check_column_sql);
-            if (is_array($rows) && count($rows)) {
-                $row = $rows[0];
-                if (intval($row['count']) == 0) {
-                    $updateSql=  "INSERT INTO `$table` (shared_id_bigint, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($shared_id, 'TC', NULL, NULL, 'pl', 'Temporarily Closed', '**** Temporarily Closed ****', 'O')";
-                    c_comdef_dbsingleton::preparedExec($updateSql);
-                }
-            }
-        }),
-        array(22, function () {
-            $dbPrefix = $GLOBALS['dbPrefix'];
-            $table = "$dbPrefix" . "_comdef_formats";
-            $get_vm_id = "SELECT `shared_id_bigint` as shared_id FROM `$table` WHERE `key_string`='VM' AND `lang_enum`='en'";
-            $vm_id = c_comdef_dbsingleton::preparedQuery($get_vm_id);
-            $shared_id = $vm_id[0]["shared_id"];
-            $check_column_sql = "SELECT COUNT(*) AS count FROM `$table` WHERE `key_string`='VM' AND `lang_enum`='pt'";
-            $rows = c_comdef_dbsingleton::preparedQuery($check_column_sql);
-            if (is_array($rows) && count($rows)) {
-                $row = $rows[0];
-                if (intval($row['count']) == 0) {
-                    $updateSql=  "INSERT INTO `$table` (shared_id_bigint, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($shared_id, 'VM', NULL, NULL, 'pt', 'Virtual Meeting', 'This is a meeting that meets online.', 'FC2')";
-                    c_comdef_dbsingleton::preparedExec($updateSql);
-                }
-            }
-        }),
-        array(23, function () {
-            $dbPrefix = $GLOBALS['dbPrefix'];
-            $table = "$dbPrefix" . "_comdef_formats";
-            $get_vm_id = "SELECT `shared_id_bigint` as shared_id FROM `$table` WHERE `key_string`='TC' AND `lang_enum`='en'";
-            $vm_id = c_comdef_dbsingleton::preparedQuery($get_vm_id);
-            $shared_id = $vm_id[0]["shared_id"];
-            $check_column_sql = "SELECT COUNT(*) AS count FROM `$table` WHERE `key_string`='TC' AND `lang_enum`='pt'";
-            $rows = c_comdef_dbsingleton::preparedQuery($check_column_sql);
-            if (is_array($rows) && count($rows)) {
-                $row = $rows[0];
-                if (intval($row['count']) == 0) {
-                    $updateSql=  "INSERT INTO `$table` (shared_id_bigint, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($shared_id, 'TC', NULL, NULL, 'pt', 'Temporarily Closed', '**** Temporarily Closed ****', 'O')";
-                    c_comdef_dbsingleton::preparedExec($updateSql);
-                }
-            }
-        }),
-        array(24, function () {
-            $dbPrefix = $GLOBALS['dbPrefix'];
-            $table = "$dbPrefix" . "_comdef_formats";
-            $get_vm_id = "SELECT `shared_id_bigint` as shared_id FROM `$table` WHERE `key_string`='VM' AND `lang_enum`='en'";
-            $vm_id = c_comdef_dbsingleton::preparedQuery($get_vm_id);
-            $shared_id = $vm_id[0]["shared_id"];
-            $check_column_sql = "SELECT COUNT(*) AS count FROM `$table` WHERE `key_string`='VM' AND `lang_enum`='sv'";
-            $rows = c_comdef_dbsingleton::preparedQuery($check_column_sql);
-            if (is_array($rows) && count($rows)) {
-                $row = $rows[0];
-                if (intval($row['count']) == 0) {
-                    $updateSql=  "INSERT INTO `$table` (shared_id_bigint, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($shared_id, 'VM', NULL, NULL, 'sv', 'Virtual Meeting', 'This is a meeting that meets online.', 'FC2')";
-                    c_comdef_dbsingleton::preparedExec($updateSql);
-                }
-            }
-        }),
-        array(25, function () {
-            $dbPrefix = $GLOBALS['dbPrefix'];
-            $table = "$dbPrefix" . "_comdef_formats";
-            $get_vm_id = "SELECT `shared_id_bigint` as shared_id FROM `$table` WHERE `key_string`='TC' AND `lang_enum`='en'";
-            $vm_id = c_comdef_dbsingleton::preparedQuery($get_vm_id);
-            $shared_id = $vm_id[0]["shared_id"];
-            $check_column_sql = "SELECT COUNT(*) AS count FROM `$table` WHERE `key_string`='TC' AND `lang_enum`='sv'";
-            $rows = c_comdef_dbsingleton::preparedQuery($check_column_sql);
-            if (is_array($rows) && count($rows)) {
-                $row = $rows[0];
-                if (intval($row['count']) == 0) {
-                    $updateSql=  "INSERT INTO `$table` (shared_id_bigint, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($shared_id, 'TC', NULL, NULL, 'sv', 'Temporarily Closed', '**** Temporarily Closed ****', 'O')";
-                    c_comdef_dbsingleton::preparedExec($updateSql);
+            $check = "SELECT COUNT(*) AS count FROM `$table` WHERE `key_string` = 'TC'";
+            $check = c_comdef_dbsingleton::preparedQuery($check);
+            if (is_array($check) && count($check)) {
+                $check = $check[0];
+                if (intval($check['count']) == 0) {
+                    $next_id = "SELECT MAX(shared_id_bigint) + 1 AS next_id FROM `$table`";
+                    $next_id = c_comdef_dbsingleton::preparedQuery($next_id);
+                    $next_id = $next_id[0];
+                    $next_id = $next_id['next_id'];
+                    $langs = array("en", "es", "fa", "fr", "it", "pl", "pt", "sv");
+                    foreach ($langs as $lang) {
+                        $sql = "INSERT INTO `$table` (`shared_id_bigint`, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($next_id, 'TC', NULL, NULL, '$lang', 'Temporarily Closed', '**** Temporarily Closed ****', 'O')";
+                        c_comdef_dbsingleton::preparedExec($sql);
+                    }
                 }
             }
         })
