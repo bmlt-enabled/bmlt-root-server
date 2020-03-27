@@ -6,4 +6,6 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (48, 'PER', NULL, NULL, 'sv', 'Persiskt', 'Persiskt möte', 'FC1'),
 (32, 'K', NULL, 'W', 'sv', 'Kvinnomöte', 'Detta möte är endast öppet för kvinnor.', 'FC3'),
 (33, 'RL', NULL, 'WCHR', 'sv', 'Rullstolsvänlig lokal', 'Detta möte är tillgängligt för rullstolsbundna.', 'FC2'),
-(47, 'ENG', NULL, NULL, 'sv', 'Engelska', 'Engelsktalande möte', 'FC3');
+(47, 'ENG', NULL, NULL, 'sv', 'Engelska', 'Engelsktalande möte', 'FC3'),
+(54, 'VM', NULL, NULL, 'sv', 'Virtual Meeting', 'This is a meeting that meets online.', 'FC2'),
+(55, 'TC', NULL, NULL, 'sv', 'Temporarily Closed', '**** Temporarily Closed ****', 'O');

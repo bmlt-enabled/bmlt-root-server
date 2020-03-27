@@ -50,5 +50,6 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (50, 'WEB', NULL, NULL, 'pt', 'Reunião Online', 'Esta reunião acontece online.', 'FC2'),
 (51, 'VL', NULL, 'LC', 'pt', 'Vivendo Limpo', 'Esta é uma reunião de discussão do livro Vivendo Limpo-A Jornada Continua.', 'FC1'),
 (52, 'GP', NULL, 'GP', 'pt', 'Guia de Princípios', 'Esta é uma reunião baseada no livro Guia de Princípios - O Espírito das Nossas Tradições .', 'FC1'),
-(53, 'CadP', NULL, 'WCHR', 'pt', 'Cadeirante Parcial', 'Esta reunião tem acesso parcial a cadeirante.', 'FC2');
-
+(53, 'CadP', NULL, 'WCHR', 'pt', 'Cadeirante Parcial', 'Esta reunião tem acesso parcial a cadeirante.', 'FC2'),
+(54, 'VM', NULL, NULL, 'pt', 'Virtual Meeting', 'This is a meeting that meets online.', 'FC2'),
+(55, 'TC', NULL, NULL, 'pt', 'Temporarily Closed', '**** Temporarily Closed ****', 'O');

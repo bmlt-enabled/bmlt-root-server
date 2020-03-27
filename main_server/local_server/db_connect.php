@@ -281,6 +281,46 @@ function DB_Connect_and_Upgrade()
                     c_comdef_dbsingleton::preparedExec($sql);
                 }
             }
+        }),
+        array(10, function () {
+            $dbPrefix = $GLOBALS['dbPrefix'];
+            $table = "$dbPrefix" . "_comdef_formats";
+            $check = "SELECT COUNT(*) AS count FROM `$table` WHERE `key_string` = 'VM'";
+            $check = c_comdef_dbsingleton::preparedQuery($check);
+            if (is_array($check) && count($check)) {
+                $check = $check[0];
+                if (intval($check['count']) == 0) {
+                    $next_id = "SELECT MAX(shared_id_bigint) + 1 AS next_id FROM `$table`";
+                    $next_id = c_comdef_dbsingleton::preparedQuery($next_id);
+                    $next_id = $next_id[0];
+                    $next_id = $next_id['next_id'];
+                    $langs = array("en", "es", "fa", "fr", "it", "pl", "pt", "sv");
+                    foreach ($langs as $lang) {
+                        $sql = "INSERT INTO `$table` (`shared_id_bigint`, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($next_id, 'VM', NULL, NULL, '$lang', 'Virtual Meeting', 'This is a meeting that meets online.', 'FC2')";
+                        c_comdef_dbsingleton::preparedExec($sql);
+                    }
+                }
+            }
+        }),
+        array(11, function () {
+            $dbPrefix = $GLOBALS['dbPrefix'];
+            $table = "$dbPrefix" . "_comdef_formats";
+            $check = "SELECT COUNT(*) AS count FROM `$table` WHERE `key_string` = 'TC'";
+            $check = c_comdef_dbsingleton::preparedQuery($check);
+            if (is_array($check) && count($check)) {
+                $check = $check[0];
+                if (intval($check['count']) == 0) {
+                    $next_id = "SELECT MAX(shared_id_bigint) + 1 AS next_id FROM `$table`";
+                    $next_id = c_comdef_dbsingleton::preparedQuery($next_id);
+                    $next_id = $next_id[0];
+                    $next_id = $next_id['next_id'];
+                    $langs = array("en", "es", "fa", "fr", "it", "pl", "pt", "sv");
+                    foreach ($langs as $lang) {
+                        $sql = "INSERT INTO `$table` (`shared_id_bigint`, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($next_id, 'TC', NULL, NULL, '$lang', 'Temporarily Closed', '**** Temporarily Closed ****', 'O')";
+                        c_comdef_dbsingleton::preparedExec($sql);
+                    }
+                }
+            }
         })
     );
     // WHEN ADDING A NEW DATABASE MIGRATION, REMEMBER TO BUMP THE VERSION IN local_server/install_wizard/sql_files/initialDbVersionData.sql
