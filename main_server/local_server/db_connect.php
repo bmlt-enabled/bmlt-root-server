@@ -281,6 +281,38 @@ function DB_Connect_and_Upgrade()
                     c_comdef_dbsingleton::preparedExec($sql);
                 }
             }
+        }),
+        array(10, function () {
+            $dbPrefix = $GLOBALS['dbPrefix'];
+            $table = "$dbPrefix" . "_comdef_formats";
+            $get_next_id = "SELECT MAX(shared_id_bigint) as max_id FROM `$table`";
+            $ids = c_comdef_dbsingleton::preparedQuery($get_next_id);
+            $shared_id = $ids[0]["max_id"] + 1;
+            $check_column_sql = "SELECT COUNT(*) AS count FROM `$table` WHERE `key_string`='VM'";
+            $rows = c_comdef_dbsingleton::preparedQuery($check_column_sql);
+            if (is_array($rows) && count($rows)) {
+                $row = $rows[0];
+                if (intval($row['count']) == 0) {
+                    $updateSql =  "INSERT INTO `$table` (shared_id_bigint, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($shared_id, 'VM', NULL, NULL, 'en', 'Virtual Meeting', 'This is a meeting that meets online.', 'FC2')";
+                    c_comdef_dbsingleton::preparedExec($updateSql);
+                }
+            }
+        }),
+        array(11, function () {
+            $dbPrefix = $GLOBALS['dbPrefix'];
+            $table = "$dbPrefix" . "_comdef_formats";
+            $get_next_id = "SELECT MAX(shared_id_bigint) as max_id FROM `$table`";
+            $ids = c_comdef_dbsingleton::preparedQuery($get_next_id);
+            $shared_id = $ids[0]["max_id"] + 1;
+            $check_column_sql = "SELECT COUNT(*) AS count FROM `$table` WHERE `key_string`='TC'";
+            $rows = c_comdef_dbsingleton::preparedQuery($check_column_sql);
+            if (is_array($rows) && count($rows)) {
+                $row = $rows[0];
+                if (intval($row['count']) == 0) {
+                    $updateSql=  "INSERT INTO `$table` (shared_id_bigint, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($shared_id, 'TC', NULL, NULL, 'en', 'Temporarily Closed', '**** Temporarily Closed ****', 'O')";
+                    c_comdef_dbsingleton::preparedExec($updateSql);
+                }
+            }
         })
     );
     // WHEN ADDING A NEW DATABASE MIGRATION, REMEMBER TO BUMP THE VERSION IN local_server/install_wizard/sql_files/initialDbVersionData.sql

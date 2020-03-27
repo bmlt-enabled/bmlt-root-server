@@ -31,4 +31,6 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (32, 'W', NULL, 'W', 'es', 'Mujeres', 'A esta reunión se supone que asistan mujeres solamente.', 'FC3'),
 (33, 'WC', NULL, 'WCHR', 'es', 'Silla de Ruedas', 'Esta reunión es accesible por silla de ruedas.', 'FC2'),
 (34, 'YP', NULL, 'Y', 'es', 'Jovenes', 'Esta reunión se centra en las necesidades de los miembros más jóvenes de NA.', 'FC3'),
-(35, 'OE', NULL, NULL, 'es', 'Sin Tiempo Fijo', 'No tiene tiempo fijo. Esta reunión continua hasta que cada miembro haya tenido la oportunidad de compartir.', 'FC1');
+(35, 'OE', NULL, NULL, 'es', 'Sin Tiempo Fijo', 'No tiene tiempo fijo. Esta reunión continua hasta que cada miembro haya tenido la oportunidad de compartir.', 'FC1'),
+(54, 'VM', NULL, 'VM', 'es', 'Virtual Meeting', 'This is a meeting that meets online.', 'FC2'),
+(55, 'TC', NULL, 'TC', 'es', 'Temporarily Closed', '**** Temporarily Closed ****', 'O');
