@@ -1128,9 +1128,9 @@ function BMLT_FuncNAWSReturnNonNawsFormats(
 
 /*******************************************************************/
 /**
-\brief Returns a string of all formats that don't map to NAWS codes.
+\brief Returns a string of the phone_meeting_number.
 
-\returns A string The format codes name_string.
+\returns A string The phone_meeting_number field.
  */
 function BMLT_FuncNAWSReturnPhoneMeetingNumber(
     $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
@@ -1156,9 +1156,9 @@ function BMLT_FuncNAWSReturnPhoneMeetingNumber(
 
 /*******************************************************************/
 /**
-\brief Returns a string of all formats that don't map to NAWS codes.
+\brief Returns a string of the virtual_meeting_link.
 
-\returns A string The format codes name_string.
+\returns A string The virtual_meeting_link field.
  */
 function BMLT_FuncNAWSReturnVirtualLink(
     $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
