@@ -50,5 +50,5 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (50, 'WEB', NULL, NULL, 'en', 'Online Meeting', 'This is a meeting that gathers on the Internet.', 'FC2'),
 (51, 'LC', NULL, 'LC', 'en', 'Living Clean', 'This is a discussion of the NA book Living Clean -The Journey Continues.', 'FC1'),
 (52, 'GP', NULL, 'GP', 'en', 'Guiding Principles', 'This is a discussion of the NA book Guiding Principles - The Spirit of Our Traditions.', 'FC1'),
-(54, 'VM', NULL, 'VM', 'en', 'Virtual Meeting', 'This is a meeting that meets online.', 'FC2'),
-(55, 'TC', NULL, 'TC', 'en', 'Temporarily Closed', '**** Temporarily Closed ****', 'O');
+(54, 'VM', NULL,  NULL, 'en', 'Virtual Meeting', 'This is a meeting that meets online.', 'FC2'),
+(55, 'TC', NULL,  NULL, 'en', 'Temporarily Closed', '**** Temporarily Closed ****', 'O');

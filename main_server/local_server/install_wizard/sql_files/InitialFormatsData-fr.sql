@@ -45,5 +45,5 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (46, 'Finlandais', NULL, NULL, 'fr', 'Finlandais', 'Cette réunion se déroule en langue finlandaisè', 'FC3'),
 (47, 'ENG', NULL, NULL, 'fr', 'Anglais', 'Cette réunion se déroule de langues anglais.', 'FC3'),
 (50, 'WEB', NULL, NULL, 'fr', 'Internet', 'Il s\'agit d\'une réunion qui se déroule sur Internet.', 'FC2'),
-(54, 'VM', NULL, 'VM', 'fr', 'Virtual Meeting', 'This is a meeting that meets online.', 'FC2'),
-(55, 'TC', NULL, 'TC', 'fr', 'Temporarily Closed', '**** Temporarily Closed ****', 'O');
+(54, 'VM', NULL, NULL, 'fr', 'Virtual Meeting', 'This is a meeting that meets online.', 'FC2'),
+(55, 'TC', NULL, NULL, 'fr', 'Temporarily Closed', '**** Temporarily Closed ****', 'O');
