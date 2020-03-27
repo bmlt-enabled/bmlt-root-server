@@ -58,8 +58,9 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 ***Version 2.15.1* ** *- UNRELEASED*
-- Added Virtual Meeting and Temporarily Closed formats.
-- Added Virtual Meeting Link and Phone Meeting Dial-in Number fields to NAWS export.
+- Added `VM` format for Virtual Meetings (pandemic response)
+- Added `TC` format for Temporarily Closed meetings (pandemic response)
+- Added the new "Virtual Meeting Link" and "Phone Meeting Dial-in Number" fields to the NAWS export
 
 ***Version 2.15.0* ** *- March 22, 2020*
 - Added a "Virtual Meeting Link" field to the Location tab of the Meeting Editor UI for the join link for virtual meetings.
