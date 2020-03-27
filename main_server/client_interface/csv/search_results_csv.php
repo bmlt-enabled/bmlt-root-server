@@ -2,30 +2,30 @@
 /***********************************************************************/
 /**     \file   search_results_csv.php
 
-    \brief  This file represents a View layer of the BMLT MVC pattern. It
-    will do a meeting search, and return the results as comma-separated
-    values (CSV). It is not an object-oriented file, and is quite simple
-    to use. For many people, the procedural View Layer files may be all
-    they need to see. The object-oriented stuff is encapsulated within.
+\brief  This file represents a View layer of the BMLT MVC pattern. It
+will do a meeting search, and return the results as comma-separated
+values (CSV). It is not an object-oriented file, and is quite simple
+to use. For many people, the procedural View Layer files may be all
+they need to see. The object-oriented stuff is encapsulated within.
 
-    The way you use this file is to call DisplaySearchResultsCSV with an
-    array that contains values that specify the search.
+The way you use this file is to call DisplaySearchResultsCSV with an
+array that contains values that specify the search.
 
-    This file is part of the Basic Meeting List Toolbox (BMLT).
+This file is part of the Basic Meeting List Toolbox (BMLT).
 
-    Find out more at: https://bmlt.app
+Find out more at: https://bmlt.app
 
-    BMLT is free software: you can redistribute it and/or modify
-    it under the terms of the MIT License.
+BMLT is free software: you can redistribute it and/or modify
+it under the terms of the MIT License.
 
-    BMLT is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    MIT License for more details.
+BMLT is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MIT License for more details.
 
-    You should have received a copy of the MIT License along with this code.
-    If not, see <https://opensource.org/licenses/MIT>.
-*/
+You should have received a copy of the MIT License along with this code.
+If not, see <https://opensource.org/licenses/MIT>.
+ */
 
 defined('BMLT_EXEC') or die('Cannot Execute Directly');    // Makes sure that this file is in the correct context.
 
@@ -43,48 +43,48 @@ if (!isset($g_format_dictionary) || !is_array($g_format_dictionary) || !count($g
     /// This is the default set.
     /// The right side is the BMLT side, and the left side is the NAWS code. The left side should not be changed.
     $g_format_dictionary = array (
-                                'CPT'       => null,
-                                'MED'       => null,
-                                'QA'        => null,
-                                'RA'        => null,
-                                'BEG'       => array(1),
-                                'BT'        => array(3),
-                                'OPEN'      => array(4),
-                                'CAN'       => array(6),
-                                'CH'        => array(5),
-                                'CW'        => array(7),
-                                'DISC'      => array(8),
-                                'GL'        => array(10),
-                                'GP'        => array(52),
-                                'IP'        => array(12),
-                                'IW'        => array(13),
-                                'JFT'       => array(14),
-                                'LIT'       => array(36),
-                                'M'         => array(15),
-                                'CLOSED'    => array(17),
-                                'NC'        => array(16),
-                                'NS'        => array(37),
-                                'SMOK'      => array(25),
-                                'SPK'       => array(22),
-                                'STEP'      => array(27),
-                                'SWG'       => array(23),
-                                'TOP'       => array(29),
-                                'TRAD'      => array(30),
-                                'VAR'       => array(19),
-                                'W'         => array(32),
-                                'WCHR'      => array(33),
-                                'Y'         => array(34)
-                                );
+        'CPT'       => null,
+        'MED'       => null,
+        'QA'        => null,
+        'RA'        => null,
+        'BEG'       => array(1),
+        'BT'        => array(3),
+        'OPEN'      => array(4),
+        'CAN'       => array(6),
+        'CH'        => array(5),
+        'CW'        => array(7),
+        'DISC'      => array(8),
+        'GL'        => array(10),
+        'GP'        => array(52),
+        'IP'        => array(12),
+        'IW'        => array(13),
+        'JFT'       => array(14),
+        'LIT'       => array(36),
+        'M'         => array(15),
+        'CLOSED'    => array(17),
+        'NC'        => array(16),
+        'NS'        => array(37),
+        'SMOK'      => array(25),
+        'SPK'       => array(22),
+        'STEP'      => array(27),
+        'SWG'       => array(23),
+        'TOP'       => array(29),
+        'TRAD'      => array(30),
+        'VAR'       => array(19),
+        'W'         => array(32),
+        'WCHR'      => array(33),
+        'Y'         => array(34)
+    );
 }
 
 /*******************************************************************/
 /** \brief This reads in the server format codes, and populates the
-           format dictionary with the NAWS IDs.
-*/
+format dictionary with the NAWS IDs.
+ */
 function bmlt_populate_format_dictionary()
 {
     global $g_format_dictionary;    ///< This is a dictionary used to translate formats to NAWS format. It uses the format shared IDs in the server's language.
-    
+
     $server = c_comdef_server::MakeServer();
     $localized_strings = c_comdef_server::GetLocalStrings();
     $formats_array = c_comdef_server::GetServer()->GetFormatsObj()->GetFormatsArray();
@@ -106,10 +106,10 @@ function bmlt_populate_format_dictionary()
 
 /*******************************************************************/
 /** \brief This function does a search, then builds a CSV result,
-    with each row being a meeting. The first row is a row of keys.
+with each row being a meeting. The first row is a row of keys.
 
-    \returns a string, containing CSV data, with the first row a key header.
-*/
+\returns a string, containing CSV data, with the first row a key header.
+ */
 function DisplaySearchResultsCSV(
     $in_http_vars,
     // The various HTTP GET and POST parameters.
@@ -287,125 +287,125 @@ function DisplaySearchResultsCSV(
     require_once(dirname(__FILE__).'/c_comdef_meeting_search_manager.class.php');
 
     $search_manager = new c_comdef_meeting_search_manager;
-    
+
     if ($search_manager instanceof c_comdef_meeting_search_manager) {
         $localized_strings = c_comdef_server::GetLocalStrings();
 
         $lang_enum = c_comdef_server::GetServer()->GetLocalLang();
-    
+
         // This can be changed in the auto config.
         include(dirname(__FILE__).'/../../server/config/get-config.php');
-    
+
         if (isset($in_http_vars['lang_enum']) && $in_http_vars['lang_enum']) {
             $lang_enum = $in_http_vars['lang_enum'];
         }
-        
+
         if (!isset($in_http_vars['results_per_page'])) {
             $in_http_vars['results_per_page'] = 0;
         }
-        
+
         if (isset($default_sort_key) && !isset($in_http_vars['sort_key']) && !isset($in_http_vars['sort_keys'])) {
             $in_http_vars['sort_key'] = $default_sort_key;
         }
-    
+
         if ((!isset($in_http_vars['sort_dir']) || ( ($in_http_vars['sort_dir'] != 'desc') && ($in_http_vars['sort_dir'] != 'asc') ) ) && !isset($in_http_vars['sort_keys'])) {
             $in_http_vars['sort_dir'] = 'asc';
         }
-    
+
         SetUpSearch($search_manager, $in_http_vars);
-        
+
         if (isset($in_http_vars['page_size'])) {
             $search_manager->SetResultsPerPage($in_http_vars['page_size']);
         }
-        
+
         if (isset($in_http_vars['sort_dir'])) {
             $sort_dir_desc = ($in_http_vars['sort_dir'] == "desc") ? true : false;
-        
+
             if (isset($localized_strings['default_sorts']) && isset($in_http_vars['sort_key']) && isset($sort_dir_desc) && !isset($in_http_vars['sort_keys'])) {
                 $search_manager->SetSort($localized_strings['default_sorts'][$in_http_vars['sort_key']], $sort_dir_desc, 0);
             }
         }
-            
+
         $search_manager->DoSearch();
-        
+
         $long = null;
         $lat = null;
-        
+
         if (isset($in_http_vars['long_val'])) {
             $long = $in_http_vars['long_val'];
         }
-        
+
         if (isset($in_http_vars['lat_val'])) {
             $lat = $in_http_vars['lat_val'];
         }
-        
+
         if (isset($in_http_vars['geo_width'])) {
             $my_radius = $in_http_vars['geo_width'];
         } elseif (isset($in_http_vars['geo_width_km'])) {
             $my_radius = $in_http_vars['geo_width_km'];
         }
-        
+
         if (isset($my_radius) && ($my_radius < 0)) {
             $my_radius = $search_manager->GetRadius($localized_strings['dist_units'] == 'mi');
         }
-        
+
         if (isset($return_geocode)) {
             $return_geocode = nil;
-            
+
             if ($search_manager->GetRadius(false)) {
                 $return_geocode['radius'] = $search_manager->GetRadius(false);
                 $return_geocode['longitude'] = $search_manager->GetLongitude();
                 $return_geocode['latitude'] = $search_manager->GetLatitude();
             }
         }
-        
+
         $num_pages = $search_manager->GetNumberOfPages();
         $num_results = $search_manager->GetNumberOfResults();
-            
+
         $page_no = 1;
-        
+
         if (isset($in_http_vars['page_num']) && (0 < intval($in_http_vars['page_num']))) {
             $page_no = intval($in_http_vars['page_num']);
         }
-        
+
         if (1 > intval($page_no)) {
             $page_no = 1;
         }
-        
+
         if ($page_no > $num_pages) {
             $page_no = $num_pages;
         }
-        
+
         $page_data = $search_manager->GetPageOfResults($page_no);
-        
+
         if ($page_data instanceof c_comdef_meeting_search_manager) {
             $keys = c_comdef_meeting::GetAllMeetingKeys();
             // This is a required one for data export.
             if (!in_array('meeting_name', $keys)) {
                 $keys[] = 'meeting_name';
             }
-            
+
             $keys[] = 'root_server_uri';
             $keys[] = 'format_shared_id_list';
-            
+
             $ret = '"'.join('","', $keys).'"';
 
             $formats = c_comdef_server::GetServer()->GetFormatsObj();
             $formats_keys = array();
             $formats_keys_header = array();
-            
+
             $ret .= "\n";
-       
+
             $in_ar = $page_data->GetSearchResultsAsArray();
-        
+
             if (isset($return_results) && is_array($return_results)) {
                 $return_results = $in_ar;
             }
-            
+
             foreach ($in_ar as &$mtg_obj) {
                 $line = array();
                 $formats_ar = $formats_keys;
-                                    
+
                 if ($mtg_obj instanceof c_comdef_meeting) {
                     if (!$in_editor_only || $mtg_obj->UserCanObserve()) {
                         $format_shared_id_list = array();
@@ -413,11 +413,11 @@ function DisplaySearchResultsCSV(
                         foreach ($keys as $key) {
                             if (trim($key)) {
                                 $val = $mtg_obj->GetMeetingDataValue($key);
-                    
+
                                 if (($key == 'meeting_name') && !$val) {    // No meeting name results in a generic "NA Meeting" as the name.
                                     $val = $localized_strings['comdef_server_admin_strings']['Value_Prompts']['generic'];
                                 }
-                            
+
                                 if (isset($val)) {
                                     if (($key == 'formats')) {
                                         if (($key == 'formats') && is_array($val) && count($val)) {
@@ -434,17 +434,17 @@ function DisplaySearchResultsCSV(
                                             $val = preg_replace('|"|', '\\"', preg_replace('|[\r\n\t]+|', ' ', $val));
                                         }
                                     }
-                        
+
                                     if (($key == 'formats') && $val) {
                                         $f_list = explode(',', $val);
-                            
+
                                         if (is_array($f_list) && count($f_list)) {
                                             foreach ($f_list as $format) {
                                                 $formats_ar[$format] = 1;
                                             }
                                         }
                                     }
-                            
+
                                     if ($val) {
                                         if ($mtg_obj->IsItemHidden($key)) {
                                             if ($mtg_obj->UserCanObserve()) {
@@ -489,7 +489,7 @@ function DisplaySearchResultsCSV(
                                                 case 'virtual_meeting_link':
                                                 case 'phone_meeting_number':
                                                     break;
-                                    
+
                                                 // The rest get the prompt/value treatment, unless otherwise requested.
                                                 default:
                                                     if ($val && !isset($in_http_vars['simple_other_fields'])) {
@@ -503,35 +503,35 @@ function DisplaySearchResultsCSV(
                                 } else {
                                     $val = '';
                                 }
-                    
+
                                 $val = trim(preg_replace("|[\n\r]+|", "; ", $val));
-                        
+
                                 $line[$key] = $val;
                             }
                         }
-                    
+
                         if (!isset($line['duration_time']) || !$line['duration_time'] || ($line['duration_time'] == '00:00:00')) {
                             $line['duration_time'] = $localized_strings['default_duration_time'];
                         }
-                        
+
                         if (isset($format_shared_id_list) && is_array($format_shared_id_list) && count($format_shared_id_list)) {
                             sort($format_shared_id_list);
                             $line['format_shared_id_list'] = implode(',', $format_shared_id_list);
                         }
-                            
+
                         $line['root_server_uri'] = dirname(dirname(GetURLToMainServerDirectory(true)));
-                    
+
                         if (!$mtg_obj->IsPublished() && !$mtg_obj->UserCanObserve(c_comdef_server::GetCurrentUserObj())) {
                             $line = null;
                         }
-                        
+
                         if (is_array($line) && count($line)) {
                             if (is_array($return_array)) {
                                 array_push($return_array, $line);
                             }
-                
+
                             $ret .= '"'.join('","', $line).'"';
-                    
+
                             $ret .= "\n";
                         }
                     }
@@ -558,65 +558,67 @@ function DisplaySearchResultsCSV(
 
 /*******************************************************************/
 /**
-    \brief Returns the CSV file in NAWS format
+\brief Returns the CSV file in NAWS format
 
-    \returns A string, consisting of a CSV file, in the format required by NAWS.
-*/
+\returns A string, consisting of a CSV file, in the format required by NAWS.
+ */
 function ReturnNAWSFormatCSV(
     $in_http_vars,  ///< The HTTP GET and POST parameters.
     &$server        ///< A reference to an instance of c_comdef_server
 ) {
     // This is a dictionary that is used to translate the meeting data from the BMLT format to the NAWS format.
-    $transfer_dictionary = array(   'Committee'         => 'BMLT_FuncNAWSReturnMeetingNAWSID',
-                                    'CommitteeName'     => 'meeting_name',
-                                    'AddDate'           => null,
-                                    'AreaRegion'        => 'BMLT_FuncNAWSReturnMeetingServiceBodyNAWSID',
-                                    'ParentName'        => 'BMLT_FuncNAWSReturnMeetingServiceBodyName',
-                                    'ComemID'           => null,
-                                    'ContactID'         => null,
-                                    'ContactName'       => null,
-                                    'CompanyName'       => null,
-                                    'ContactAddrID'     => null,
-                                    'ContactAddress1'   => null,
-                                    'ContactAddress2'   => null,
-                                    'ContactCity'       => null,
-                                    'ContactState'      => null,
-                                    'ContactZip'        => null,
-                                    'ContactCountry'    => null,
-                                    'ContactPhone'      => null,
-                                    'MeetingID'         => null,
-                                    'Room'              => 'BMLT_FuncNAWSReturnNonNawsFormats',
-                                    'Closed'            => 'BMLT_FuncNAWSReturnOpenOrClosed',
-                                    'WheelChr'          => 'BMLT_FuncNAWSReturnWheelchair',
-                                    'Day'               => 'BMLT_FuncNAWSReturnWeekday',
-                                    'Time'              => 'BMLT_FuncNAWSReturnTime',
-                                    'Language1'         => 'BMLT_FuncNAWSReturnLanguage1',
-                                    'Language2'         => null,
-                                    'Language3'         => null,
-                                    'LocationId'        => null,
-                                    'Place'             => 'location_text',
-                                    'Address'           => 'location_street',
-                                    'City'              => 'BMLT_FuncNAWSReturnMeetingTown',
-                                    'LocBorough'        => 'location_neighborhood',
-                                    'State'             => 'location_province',
-                                    'Zip'               => 'location_postal_code_1',
-                                    'Country'           => 'location_nation',
-                                    'Directions'        => 'BMLT_FuncNAWSReturnDirections',
-                                    'Institutional'     => 'BMLT_FuncNAWSReturnInst',
-                                    'Format1'           => 'BMLT_FuncNAWSReturnFormat1',
-                                    'Format2'           => 'BMLT_FuncNAWSReturnFormat2',
-                                    'Format3'           => 'BMLT_FuncNAWSReturnFormat3',
-                                    'Format4'           => 'BMLT_FuncNAWSReturnFormat4',
-                                    'Format5'           => 'BMLT_FuncNAWSReturnFormat5',
-                                    'Delete'            => null,
-                                    'LastChanged'       => 'BMLT_FuncNAWSReturnLastMeetingChangeTime',
-                                    'Longitude'         => 'longitude',
-                                    'Latitude'          => 'latitude',
-                                    'ContactGP'         => null,
-                                    'bmlt_id'           => 'id_bigint',
-                                    'unpublished'       => 'BMLT_FuncNAWSReturnPublishedStatus'
-                                );
-    
+    $transfer_dictionary = array(   'Committee'          => 'BMLT_FuncNAWSReturnMeetingNAWSID',
+        'CommitteeName'      => 'meeting_name',
+        'AddDate'            => null,
+        'AreaRegion'         => 'BMLT_FuncNAWSReturnMeetingServiceBodyNAWSID',
+        'ParentName'         => 'BMLT_FuncNAWSReturnMeetingServiceBodyName',
+        'ComemID'            => null,
+        'ContactID'          => null,
+        'ContactName'        => null,
+        'CompanyName'        => null,
+        'ContactAddrID'      => null,
+        'ContactAddress1'    => null,
+        'ContactAddress2'    => null,
+        'ContactCity'        => null,
+        'ContactState'       => null,
+        'ContactZip'         => null,
+        'ContactCountry'     => null,
+        'ContactPhone'       => null,
+        'MeetingID'          => null,
+        'Room'               => 'BMLT_FuncNAWSReturnNonNawsFormats',
+        'Closed'             => 'BMLT_FuncNAWSReturnOpenOrClosed',
+        'WheelChr'           => 'BMLT_FuncNAWSReturnWheelchair',
+        'Day'                => 'BMLT_FuncNAWSReturnWeekday',
+        'Time'               => 'BMLT_FuncNAWSReturnTime',
+        'Language1'          => 'BMLT_FuncNAWSReturnLanguage1',
+        'Language2'          => null,
+        'Language3'          => null,
+        'LocationId'         => null,
+        'Place'              => 'location_text',
+        'Address'            => 'location_street',
+        'City'               => 'BMLT_FuncNAWSReturnMeetingTown',
+        'LocBorough'         => 'location_neighborhood',
+        'State'              => 'location_province',
+        'Zip'                => 'location_postal_code_1',
+        'Country'            => 'location_nation',
+        'Directions'         => 'BMLT_FuncNAWSReturnDirections',
+        'PhoneMeetingNumber' => 'BMLT_FuncNAWSReturnVirtualLink',
+        'VirtualLink'        => 'BMLT_FuncNAWSReturnPhoneMeetingNumber',
+        'Institutional'      => 'BMLT_FuncNAWSReturnInst',
+        'Format1'            => 'BMLT_FuncNAWSReturnFormat1',
+        'Format2'            => 'BMLT_FuncNAWSReturnFormat2',
+        'Format3'            => 'BMLT_FuncNAWSReturnFormat3',
+        'Format4'            => 'BMLT_FuncNAWSReturnFormat4',
+        'Format5'            => 'BMLT_FuncNAWSReturnFormat5',
+        'Delete'             => null,
+        'LastChanged'        => 'BMLT_FuncNAWSReturnLastMeetingChangeTime',
+        'Longitude'          => 'longitude',
+        'Latitude'           => 'latitude',
+        'ContactGP'          => null,
+        'bmlt_id'            => 'id_bigint',
+        'unpublished'        => 'BMLT_FuncNAWSReturnPublishedStatus'
+    );
+
     $ret = null;
 
     if (!( isset($in_http_vars['geo_width']) && $in_http_vars['geo_width'] ) && isset($in_http_vars['bmlt_search_type']) && ($in_http_vars['bmlt_search_type'] == 'advanced') && isset($in_http_vars['advanced_radius']) && isset($in_http_vars['advanced_mapmode']) && $in_http_vars['advanced_mapmode'] && ( floatval($in_http_vars['advanced_radius'] != 0.0) ) && isset($in_http_vars['lat_val']) &&  isset($in_http_vars['long_val']) && ( (floatval($in_http_vars['lat_val']) != 0.0) || (floatval($in_http_vars['long_val']) != 0.0) )) {
@@ -655,7 +657,7 @@ function ReturnNAWSFormatCSV(
     }
 
     $del_meetings = ReturnNAWSDeletedMeetings($server, $transfer_dictionary, $in_http_vars['services']); // We append deleted meetings to the end.
-    
+
     if (is_array($del_meetings) && count($del_meetings)) {
         foreach ($del_meetings as $one_meeting) {
             if (is_array($one_meeting) && count($one_meeting)) {
@@ -663,27 +665,27 @@ function ReturnNAWSFormatCSV(
             }
         }
     }
-    
+
     return $ret;
 }
 
 /*******************************************************************/
 /**
-    \brief Returns deleted meetings with NAWS IDs.
+\brief Returns deleted meetings with NAWS IDs.
 
-    \description This queries every deleted meeting. The meetings returned are
-    not restricted to the search parameters, and may repeat from previous dumps.
-    Only meetings that had World IDs are returned.
+\description This queries every deleted meeting. The meetings returned are
+not restricted to the search parameters, and may repeat from previous dumps.
+Only meetings that had World IDs are returned.
 
-    \returns An array of World IDs and change dates. These each represent deleted meetings.
-*/
+\returns An array of World IDs and change dates. These each represent deleted meetings.
+ */
 function ReturnNAWSDeletedMeetings(
     &$server,                   ///< A reference to an instance of c_comdef_server
     $in_transfer_dictionary,    ///< The transfer dictionary
     $in_services                ///< Any Service body IDs
 ) {
     $ret = null;
-    
+
     // We start by getting all the meetings that have been deleted (Could be quite a few).
     $changes = $server->GetChangesFromOTypeAndCType('c_comdef_meeting', 'comdef_change_type_delete');
 
@@ -708,9 +710,9 @@ function ReturnNAWSDeletedMeetings(
                                 }
                             }
                         }
-                            
+
                         $value = intval(preg_replace('|\D*?|', '', $b_obj->GetMeetingDataValue('worldid_mixed')));
-                        
+
                         if ($value && $found) {
                             foreach ($in_transfer_dictionary as $key => $value2) {
                                 if (($key != 'Delete')) {
@@ -723,18 +725,18 @@ function ReturnNAWSDeletedMeetings(
                                             $value1 = $value2($b_obj, $server);
                                         }
                                     } else // See if we just transfer the value with no change.
-                                        {
+                                    {
                                         $value1 = $b_obj->GetMeetingDataValue($value2);
                                     }
                                 } else {
                                     $value1 = 'D';
                                 }
-                                
+
                                 $line[$key] = $value1;
                             }
                         }
                     }
-                    
+
                     array_push($ret, $line);
                 }
             }
@@ -745,16 +747,16 @@ function ReturnNAWSDeletedMeetings(
 
 /*******************************************************************/
 /**
-    \brief Returns '' or '1', if the meeting is unpublished or not (used for the NAWS format)
+\brief Returns '' or '1', if the meeting is unpublished or not (used for the NAWS format)
 
-    \returns A string, '' or '1'.
-*/
+\returns A string, '' or '1'.
+ */
 function BMLT_FuncNAWSReturnPublishedStatus(
     $in_meeting_id, ///< The ID of the meeting (internal DB ID). This can also be a meeting object.
     &$server        ///< A reference to an instance of c_comdef_server
 ) {
     $ret = '';
-    
+
     if ($in_meeting_id instanceof c_comdef_meeting) {
         $the_meeting = $in_meeting_id;
     } else {
@@ -764,38 +766,38 @@ function BMLT_FuncNAWSReturnPublishedStatus(
     if ($the_meeting instanceof c_comdef_meeting) {
         $ret = $the_meeting->IsPublished() ? '' : '1';
     }
-        
+
     return $ret;
 }
 
 /*******************************************************************/
 /**
-    \brief Returns 'OPEN' or 'CLOSED', if the meeting is open or closed (used for the NAWS format)
+\brief Returns 'OPEN' or 'CLOSED', if the meeting is open or closed (used for the NAWS format)
 
-    \returns A string, 'OPEN' or 'CLOSED'.
-*/
+\returns A string, 'OPEN' or 'CLOSED'.
+ */
 function BMLT_FuncNAWSReturnOpenOrClosed(
     $in_meeting_id, ///< The ID of the meeting (internal DB ID). This can also be a meeting object.
     &$server        ///< A reference to an instance of c_comdef_server
 ) {
     global $g_format_dictionary;
-    
+
     $localized_strings = c_comdef_server::GetLocalStrings();
 
     $ret = $localized_strings['default_closed_status'] ? 'CLOSED' : 'OPEN'; // This is the default closed/open status.
     $opposite = $localized_strings['default_closed_status'] ? 'OPEN' : 'CLOSED';
-    
+
     if ($in_meeting_id instanceof c_comdef_meeting) {
         $the_meeting = $in_meeting_id;
     } else {
         $the_meeting = $server->GetOneMeeting($in_meeting_id);
     }
-    
+
     $ids = $g_format_dictionary[$opposite];
 
     if ($the_meeting instanceof c_comdef_meeting) {
         $formats = $the_meeting->GetMeetingDataValue('formats');
-        
+
         if (is_array($formats) && count($formats) && is_array($ids)) {
             foreach ($ids as $id) {
                 if (isset($formats[$id])) {
@@ -805,35 +807,35 @@ function BMLT_FuncNAWSReturnOpenOrClosed(
             }
         }
     }
-    
+
     return $ret;
 }
 
 /*******************************************************************/
 /**
-    \brief Returns 'TRUE' or 'FALSE', if the meeting is or is not wheelchair-accessible (used for the NAWS format)
+\brief Returns 'TRUE' or 'FALSE', if the meeting is or is not wheelchair-accessible (used for the NAWS format)
 
-    \returns A string, 'TRUE' or 'FALSE'.
-*/
+\returns A string, 'TRUE' or 'FALSE'.
+ */
 function BMLT_FuncNAWSReturnWheelchair(
     $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
     &$server        ///< A reference to an instance of c_comdef_server
 ) {
     global $g_format_dictionary;
-    
+
     $ret = 'FALSE';
-    
+
     if ($in_meeting_id instanceof c_comdef_meeting) {
         $the_meeting = $in_meeting_id;
     } else {
         $the_meeting = $server->GetOneMeeting($in_meeting_id);
     }
-    
+
     $ids = $g_format_dictionary['WCHR'];
-            
+
     if ($the_meeting instanceof c_comdef_meeting) {
         $formats = $the_meeting->GetMeetingDataValue('formats');
-        
+
         if (is_array($formats) && count($formats) && is_array($ids)) {
             foreach ($ids as $id) {
                 if (isset($formats[$id])) {
@@ -843,86 +845,86 @@ function BMLT_FuncNAWSReturnWheelchair(
             }
         }
     }
-    
+
     return $ret;
 }
 
 /*******************************************************************/
 /**
-    \brief Returns 'TRUE' or 'FALSE', if the meeting is or is not an institution meeting (used for the NAWS format)
+\brief Returns 'TRUE' or 'FALSE', if the meeting is or is not an institution meeting (used for the NAWS format)
 
-    \returns A string, 'TRUE' or 'FALSE' (It will always be FALSE).
-*/
+\returns A string, 'TRUE' or 'FALSE' (It will always be FALSE).
+ */
 function BMLT_FuncNAWSReturnInst(
     $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
     &$server        ///< A reference to an instance of c_comdef_server
 ) {
     $ret = 'FALSE';
-    
+
     return $ret;
 }
 
 /*******************************************************************/
 /**
-    \brief Returns the string for the weekday the meeting gathers (used for the NAWS format)
+\brief Returns the string for the weekday the meeting gathers (used for the NAWS format)
 
-    \returns A string ('Monday' - 'Friday').
-*/
+\returns A string ('Monday' - 'Friday').
+ */
 function BMLT_FuncNAWSReturnWeekday(
     $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
     &$server        ///< A reference to an instance of c_comdef_server
 ) {
     $ret = null;
-    
+
     $weekdays = array ( null, 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' );
-    
+
     if ($in_meeting_id instanceof c_comdef_meeting) {
         $the_meeting = $in_meeting_id;
     } else {
         $the_meeting = $server->GetOneMeeting($in_meeting_id);
     }
-    
+
     if ($the_meeting instanceof c_comdef_meeting) {
         $ret = $weekdays[$the_meeting->GetMeetingDataValue('weekday_tinyint')];
     }
-    
+
     return $ret;
 }
 
 /*******************************************************************/
 /**
-    \brief Returns the string for the weekday the meeting gathers (used for the NAWS format)
+\brief Returns the string for the weekday the meeting gathers (used for the NAWS format)
 
-    \returns A string (the time, in pure military time - no seconds).
-*/
+\returns A string (the time, in pure military time - no seconds).
+ */
 function BMLT_FuncNAWSReturnTime(
     $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
     &$server        ///< A reference to an instance of c_comdef_server
 ) {
     $ret = null;
-    
+
     if ($in_meeting_id instanceof c_comdef_meeting) {
         $the_meeting = $in_meeting_id;
     } else {
         $the_meeting = $server->GetOneMeeting($in_meeting_id);
     }
-    
+
     if ($the_meeting instanceof c_comdef_meeting) {
         $ret = explode(':', $the_meeting->GetMeetingDataValue('start_time'));
         if (is_array($ret) && count($ret) > 1) {
             $ret = $ret[0].$ret[1];
         }
     }
-    
+
     return $ret;
 }
 
 /*******************************************************************/
 /**
-    \brief Returns the string for the first alternative lanuage (if any)
+\brief Returns the string for the first alternative lanuage (if any)
 
-    \returns A string.
-*/
+\returns A string.
+ */
 function BMLT_FuncNAWSReturnLanguage1(
     $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
     &$server        ///< A reference to an instance of c_comdef_server
@@ -938,7 +940,7 @@ function BMLT_FuncNAWSReturnLanguage1(
     if ($the_meeting instanceof c_comdef_meeting) {
         $formats = $the_meeting->GetMeetingDataValue('formats');
         $lang = $server->GetLocalLang();
-        
+
         if (is_array($formats) && count($formats)) {
             foreach ($formats as $format) {
                 if ($format instanceof c_comdef_format) {
@@ -950,16 +952,16 @@ function BMLT_FuncNAWSReturnLanguage1(
             }
         }
     }
-    
+
     return $ret;
 }
 
 /*******************************************************************/
 /**
-    \brief Returns the string for the NAWS ID for the meeting (used for the NAWS format)
+\brief Returns the string for the NAWS ID for the meeting (used for the NAWS format)
 
-    \returns A string The meeting ID, in NAWS form (G0000000).
-*/
+\returns A string The meeting ID, in NAWS form (G0000000).
+ */
 function BMLT_FuncNAWSReturnMeetingNAWSID(
     $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
     &$server        ///< A reference to an instance of c_comdef_server
@@ -970,7 +972,7 @@ function BMLT_FuncNAWSReturnMeetingNAWSID(
     } else {
         $the_meeting = $server->GetOneMeeting($in_meeting_id);
     }
-    
+
     if ($the_meeting instanceof c_comdef_meeting) {
         $ret2 = intval(preg_replace('|\D*?|', '', $the_meeting->GetMeetingDataValue('worldid_mixed')));
 
@@ -978,16 +980,16 @@ function BMLT_FuncNAWSReturnMeetingNAWSID(
             $ret = sprintf('G%08d', $ret2);
         }
     }
-    
+
     return $ret;
 }
 
 /*******************************************************************/
 /**
-    \brief Returns the string for the town field the meeting (used for the NAWS format). This may use the borough name, instead.
+\brief Returns the string for the town field the meeting (used for the NAWS format). This may use the borough name, instead.
 
-    \returns A string The meeting town.
-*/
+\returns A string The meeting town.
+ */
 function BMLT_FuncNAWSReturnMeetingTown(
     $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
     &$server        ///< A reference to an instance of c_comdef_server
@@ -998,7 +1000,7 @@ function BMLT_FuncNAWSReturnMeetingTown(
     } else {
         $the_meeting = $server->GetOneMeeting($in_meeting_id);
     }
-    
+
     if ($the_meeting instanceof c_comdef_meeting) {
         // Our first choice is the borough/ku.
         $ret = trim($the_meeting->GetMeetingDataValue('location_city_subsection'));
@@ -1006,22 +1008,22 @@ function BMLT_FuncNAWSReturnMeetingTown(
         if (!$ret) {
             $ret = trim($the_meeting->GetMeetingDataValue('location_municipality'));
         }
-        
+
         // If all else fails, we use the neighborhood.
         if (!$ret) {
             $ret = trim($the_meeting->GetMeetingDataValue('location_neighborhood'));
         }
     }
-    
+
     return $ret;
 }
 
 /*******************************************************************/
 /**
-    \brief Returns the latest changed date for the given meeting.
+\brief Returns the latest changed date for the given meeting.
 
-    \returns a date in ISO form ('2013-01-31').
-*/
+\returns a date in ISO form ('2013-01-31').
+ */
 function BMLT_FuncNAWSReturnLastMeetingChangeTime(
     $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
     &$server        ///< A reference to an instance of c_comdef_server
@@ -1029,48 +1031,48 @@ function BMLT_FuncNAWSReturnLastMeetingChangeTime(
     $ret = null;
 
     $changes_obj = $server->GetChangesFromIDAndType('c_comdef_meeting', $in_meeting_id);
-    
+
     if ($changes_obj instanceof c_comdef_changes) {
         $changes_objects = $changes_obj->GetChangesObjects();
-        
+
         if (is_array($changes_objects) && count($changes_objects)) {
             $last_date = 0;
             foreach ($changes_objects as $change) {
                 $last_date = max($last_date, $change->GetChangeDate());
             }
-                
+
             if ($last_date) {
                 $ret = date('n/j/y', $last_date);
             }
         }
     }
-    
+
     return $ret;
 }
 
 /*******************************************************************/
 /**
-    \brief Returns the string for the NAWS ID for the meeting's Service Body (used for the NAWS format)
+\brief Returns the string for the NAWS ID for the meeting's Service Body (used for the NAWS format)
 
-    \returns A string The Service Body ID, in NAWS form (RG/AR0000000).
-*/
+\returns A string The Service Body ID, in NAWS form (RG/AR0000000).
+ */
 function BMLT_FuncNAWSReturnMeetingServiceBodyNAWSID(
     $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
     &$server        ///< A reference to an instance of c_comdef_server
 ) {
     $ret = null;
-    
+
     if ($in_meeting_id instanceof c_comdef_meeting) {
         $the_meeting = $in_meeting_id;
     } else {
         $the_meeting = $server->GetOneMeeting($in_meeting_id);
     }
-    
+
     if ($the_meeting instanceof c_comdef_meeting) {
         $service_body = $the_meeting->GetServiceBodyObj();
 
         $ret2 = intval(preg_replace('|\D*?|', '', trim($service_body->GetWorldID())));
-        
+
         if ($service_body instanceof c_comdef_service_body) {
             if ($service_body->GetSBType() == c_comdef_service_body__ASC__) {
                 if ($ret2) {
@@ -1083,7 +1085,7 @@ function BMLT_FuncNAWSReturnMeetingServiceBodyNAWSID(
             }
         }
     }
-    
+
     return $ret;
 }
 
@@ -1126,6 +1128,62 @@ function BMLT_FuncNAWSReturnNonNawsFormats(
 
 /*******************************************************************/
 /**
+\brief Returns a string of all formats that don't map to NAWS codes.
+
+\returns A string The format codes name_string.
+ */
+function BMLT_FuncNAWSReturnPhoneMeetingNumber(
+    $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
+    &$server        ///< A reference to an instance of c_comdef_server
+) {
+
+    $ret = "";
+
+    if ($in_meeting_id instanceof c_comdef_meeting) {
+        $the_meeting = $in_meeting_id;
+    } else {
+        $the_meeting = $server->GetOneMeeting($in_meeting_id);
+    }
+
+    if ($the_meeting instanceof c_comdef_meeting) {
+        if ($the_meeting->GetMeetingDataValue('phone_meeting_number')) {
+            $ret = trim($the_meeting->GetMeetingDataValue('phone_meeting_number'));
+        }
+    }
+
+    return $ret;
+}
+
+/*******************************************************************/
+/**
+\brief Returns a string of all formats that don't map to NAWS codes.
+
+\returns A string The format codes name_string.
+ */
+function BMLT_FuncNAWSReturnVirtualLink(
+    $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
+    &$server        ///< A reference to an instance of c_comdef_server
+) {
+
+    $ret = "";
+
+    if ($in_meeting_id instanceof c_comdef_meeting) {
+        $the_meeting = $in_meeting_id;
+    } else {
+        $the_meeting = $server->GetOneMeeting($in_meeting_id);
+    }
+
+    if ($the_meeting instanceof c_comdef_meeting) {
+        if ($the_meeting->GetMeetingDataValue('virtual_meeting_link')) {
+            $ret = trim($the_meeting->GetMeetingDataValue('virtual_meeting_link'));
+        }
+    }
+
+    return $ret;
+}
+
+/*******************************************************************/
+/**
 \brief Returns a string of location_info and comments fields.
 
 \returns A string The location_info and comments fields.
@@ -1159,26 +1217,26 @@ function BMLT_FuncNAWSReturnDirections(
 
 /*******************************************************************/
 /**
-    \brief Returns the string for the first format (used for the NAWS format)
+\brief Returns the string for the first format (used for the NAWS format)
 
-    \returns A string The format code, in NAWS form.
-*/
+\returns A string The format code, in NAWS form.
+ */
 function BMLT_FuncNAWSReturnFormat1(
     $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
     &$server        ///< A reference to an instance of c_comdef_server
 ) {
     global $g_format_dictionary;
     $ret = null;
-    
+
     if ($in_meeting_id instanceof c_comdef_meeting) {
         $the_meeting = $in_meeting_id;
     } else {
         $the_meeting = $server->GetOneMeeting($in_meeting_id);
     }
-    
+
     if ($the_meeting instanceof c_comdef_meeting) {
         $formats = $the_meeting->GetMeetingDataValue('formats');
-        
+
         if (is_array($formats) && count($formats)) {
             foreach ($g_format_dictionary as $n_format => $b_formats) {
                 foreach ($b_formats as $b_format) {
@@ -1195,32 +1253,32 @@ function BMLT_FuncNAWSReturnFormat1(
             }
         }
     }
-    
+
     return $ret;
 }
 
 /*******************************************************************/
 /**
-    \brief Returns the string for the second format (used for the NAWS format)
+\brief Returns the string for the second format (used for the NAWS format)
 
-    \returns A string The format code, in NAWS form.
-*/
+\returns A string The format code, in NAWS form.
+ */
 function BMLT_FuncNAWSReturnFormat2(
     $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
     &$server        ///< A reference to an instance of c_comdef_server
 ) {
     global $g_format_dictionary;
     $ret = null;
-    
+
     if ($in_meeting_id instanceof c_comdef_meeting) {
         $the_meeting = $in_meeting_id;
     } else {
         $the_meeting = $server->GetOneMeeting($in_meeting_id);
     }
-    
+
     if ($the_meeting instanceof c_comdef_meeting) {
         $formats = $the_meeting->GetMeetingDataValue('formats');
-        
+
         if (is_array($formats) && count($formats)) {
             $count = 1;
             foreach ($g_format_dictionary as $n_format => $b_formats) {
@@ -1240,29 +1298,29 @@ function BMLT_FuncNAWSReturnFormat2(
             }
         }
     }
-    
+
     return $ret;
 }
 
 /*******************************************************************/
 /**
-    \brief Returns the string for the third format (used for the NAWS format)
+\brief Returns the string for the third format (used for the NAWS format)
 
-    \returns A string The format code, in NAWS form.
-*/
+\returns A string The format code, in NAWS form.
+ */
 function BMLT_FuncNAWSReturnFormat3(
     $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
     &$server        ///< A reference to an instance of c_comdef_server
 ) {
     global $g_format_dictionary;
     $ret = null;
-    
+
     if ($in_meeting_id instanceof c_comdef_meeting) {
         $the_meeting = $in_meeting_id;
     } else {
         $the_meeting = $server->GetOneMeeting($in_meeting_id);
     }
-    
+
     if ($the_meeting instanceof c_comdef_meeting) {
         $formats = $the_meeting->GetMeetingDataValue('formats');
 
@@ -1285,29 +1343,29 @@ function BMLT_FuncNAWSReturnFormat3(
             }
         }
     }
-    
+
     return $ret;
 }
 
 /*******************************************************************/
 /**
-    \brief Returns the string for the fourth format (used for the NAWS format)
+\brief Returns the string for the fourth format (used for the NAWS format)
 
-    \returns A string The format code, in NAWS form.
-*/
+\returns A string The format code, in NAWS form.
+ */
 function BMLT_FuncNAWSReturnFormat4(
     $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
     &$server        ///< A reference to an instance of c_comdef_server
 ) {
     global $g_format_dictionary;
     $ret = null;
-    
+
     if ($in_meeting_id instanceof c_comdef_meeting) {
         $the_meeting = $in_meeting_id;
     } else {
         $the_meeting = $server->GetOneMeeting($in_meeting_id);
     }
-    
+
     if ($the_meeting instanceof c_comdef_meeting) {
         $formats = $the_meeting->GetMeetingDataValue('formats');
 
@@ -1330,29 +1388,29 @@ function BMLT_FuncNAWSReturnFormat4(
             }
         }
     }
-    
+
     return $ret;
 }
 
 /*******************************************************************/
 /**
-    \brief Returns the string for the fifth format (used for the NAWS format)
+\brief Returns the string for the fifth format (used for the NAWS format)
 
-    \returns A string The format code, in NAWS form.
-*/
+\returns A string The format code, in NAWS form.
+ */
 function BMLT_FuncNAWSReturnFormat5(
     $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
     &$server        ///< A reference to an instance of c_comdef_server
 ) {
     global $g_format_dictionary;
     $ret = null;
-    
+
     if ($in_meeting_id instanceof c_comdef_meeting) {
         $the_meeting = $in_meeting_id;
     } else {
         $the_meeting = $server->GetOneMeeting($in_meeting_id);
     }
-    
+
     if ($the_meeting instanceof c_comdef_meeting) {
         $formats = $the_meeting->GetMeetingDataValue('formats');
 
@@ -1375,31 +1433,31 @@ function BMLT_FuncNAWSReturnFormat5(
             }
         }
     }
-    
+
     return $ret;
 }
 
 /*******************************************************************/
 /**
-    \brief Returns the string for the name for the meeting's Service Body (used for the NAWS format)
+\brief Returns the string for the name for the meeting's Service Body (used for the NAWS format)
 
-    \returns A string The Service Body name.
-*/
+\returns A string The Service Body name.
+ */
 function BMLT_FuncNAWSReturnMeetingServiceBodyName(
     $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
     &$server        ///< A reference to an instance of c_comdef_server
 ) {
     $ret = null;
-    
+
     if ($in_meeting_id instanceof c_comdef_meeting) {
         $the_meeting = $in_meeting_id;
     } else {
         $the_meeting = $server->GetOneMeeting($in_meeting_id);
     }
-    
+
     if ($the_meeting instanceof c_comdef_meeting) {
         $service_body = $the_meeting->GetServiceBodyObj();
-        
+
         while (!$ret && ($service_body instanceof c_comdef_service_body)) {
             if (($service_body->GetSBType() == c_comdef_service_body__ASC__) || ($service_body->GetSBType() == c_comdef_service_body__RSC__)) {
                 $ret = $service_body->GetLocalName();
@@ -1408,6 +1466,6 @@ function BMLT_FuncNAWSReturnMeetingServiceBodyName(
             }
         }
     }
-    
+
     return $ret;
 }
