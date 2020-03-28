@@ -26,7 +26,6 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (43, 'D/R', NULL, NULL, 'it', 'Domande e risposteq', 'I partecipanti possono fare domande e attenderne la risposta dagli altri membri del gruppo.', 'FC1'),
 (44, 'Ba', NULL, NULL, 'it', 'Bambini', 'I bambini sono benvenuti in queste riunioni.', 'FC3'),
 (45, 'C', NULL, NULL, 'it', 'Concetti di servizio', 'Riunioni basate sulla discussione dei Dodici concetti per il servizio in NA.', 'FC1'),
-(50, 'WEB', NULL, NULL, 'it', 'Riunione online', 'Riunione che si svolge via Internet (es. Skype, Hangouts o altri sistemi tipo chat o IM in generale).', 'FC2'),
 (51, 'VP', NULL, NULL, 'it', 'Vivere puliti', 'Riunioni di discussione sul libro "Vivere puliti - Il viaggio continua".', 'FC1'),
 (54, 'VM', NULL, NULL, 'it', 'Virtual Meeting', 'Meets Virtually', 'FC2'),
 (55, 'TC', NULL, NULL, 'it', 'Temporarily Closed', 'Facility is Temporarily Closed', 'O');
