@@ -47,7 +47,6 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (47, 'ENG', NULL, NULL, 'en', 'English speaking', 'This Meeting can be attended by speakers of English.', 'FC3'),
 (48, 'PER', NULL, NULL, 'en', 'Persian', 'Persian speeking meeting', 'FC1'),
 (49, 'L/R', NULL, NULL, 'en', 'Lithuanian/Russian', 'Lithuanian/Russian Speaking Meeting', 'FC1'),
-(50, 'WEB', NULL, NULL, 'en', 'Online Meeting', 'This is a meeting that gathers on the Internet.', 'FC2'),
 (51, 'LC', NULL, 'LC', 'en', 'Living Clean', 'This is a discussion of the NA book Living Clean -The Journey Continues.', 'FC1'),
 (52, 'GP', NULL, 'GP', 'en', 'Guiding Principles', 'This is a discussion of the NA book Guiding Principles - The Spirit of Our Traditions.', 'FC1'),
 (54, 'VM', NULL,  NULL, 'en', 'Virtual Meeting', 'Meets Virtually', 'FC2'),
