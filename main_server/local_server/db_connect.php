@@ -296,7 +296,7 @@ function DB_Connect_and_Upgrade()
                     $next_id = $next_id['next_id'];
                     $langs = array("en", "es", "fa", "fr", "it", "pl", "pt", "sv");
                     foreach ($langs as $lang) {
-                        $sql = "INSERT INTO `$table` (`shared_id_bigint`, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($next_id, 'VM', NULL, NULL, '$lang', 'Virtual Meeting', 'This is a meeting that meets online.', 'FC2')";
+                        $sql = "INSERT INTO `$table` (`shared_id_bigint`, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($next_id, 'VM', NULL, NULL, '$lang', 'Virtual Meeting', 'Meets Virtually', 'FC2')";
                         c_comdef_dbsingleton::preparedExec($sql);
                     }
                 }
@@ -316,7 +316,7 @@ function DB_Connect_and_Upgrade()
                     $next_id = $next_id['next_id'];
                     $langs = array("en", "es", "fa", "fr", "it", "pl", "pt", "sv");
                     foreach ($langs as $lang) {
-                        $sql = "INSERT INTO `$table` (`shared_id_bigint`, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($next_id, 'TC', NULL, NULL, '$lang', 'Temporarily Closed', '**** Temporarily Closed ****', 'O')";
+                        $sql = "INSERT INTO `$table` (`shared_id_bigint`, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($next_id, 'TC', NULL, NULL, '$lang', 'Temporarily Closed', 'Facility is Temporarily Closed', 'O')";
                         c_comdef_dbsingleton::preparedExec($sql);
                     }
                 }

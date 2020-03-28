@@ -50,5 +50,5 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (50, 'WEB', NULL, NULL, 'fa', 'جلسات آنلاین','این جلسه بصورت اینترنتی برگزار میگردد', 'FC2'),
 (51, 'LC', NULL, 'LC', 'fa', 'پاک زیستن','این جلسه با موضوع بررسی و بحث در مورد کتاب پاک زیستن - سفر ادامه دارد، برگزار میگردد', 'FC1'),
 (52, 'GP', NULL, 'GP', 'fa', 'روح سنت ها','این جلسه با موضوع بررسی و بحث در مورد کتاب روح سنت ها برگزار میگردد', 'FC1'),
-(54, 'VM', NULL, NULL, 'fa', 'Virtual Meeting', 'This is a meeting that meets online.', 'FC2'),
-(55, 'TC', NULL, NULL, 'fa', 'Temporarily Closed', '**** Temporarily Closed ****', 'O');
+(54, 'VM', NULL, NULL, 'fa', 'Virtual Meeting', 'Meets Virtually', 'FC2'),
+(55, 'TC', NULL, NULL, 'fa', 'Temporarily Closed', 'Facility is Temporarily Closed', 'O');
