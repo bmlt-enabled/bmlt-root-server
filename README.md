@@ -57,6 +57,9 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.15.2* ** *- UNRELEASED*
+- Added Russian translation.
+
 ***Version 2.15.1* ** *- March 28, 2020*
 - Added `VM` format for Virtual Meetings (pandemic response).
 - Added `TC` format for Temporarily Closed meetings (pandemic response).
