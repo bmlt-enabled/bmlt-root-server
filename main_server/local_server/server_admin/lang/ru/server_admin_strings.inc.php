@@ -163,7 +163,7 @@
                                             'meeting_editor_tab_bar_format_tab_text'                =>  'Формат',
                                             'meeting_editor_tab_bar_other_tab_text'                 =>  'Другое',
                                             'meeting_editor_tab_bar_history_tab_text'               =>  'История',
-                                            'meeting_editor_result_count_format'                    =>  '% Собраний найдено',
+                                            'meeting_editor_result_count_format'                    =>  '%% Собраний найдено',
                                             'meeting_id_label'                                      =>  'ID Собрания:',
                                             'meeting_editor_default_zoom'                           =>  '13',
                                             'meeting_editor_default_weekday'                        =>  '2',
