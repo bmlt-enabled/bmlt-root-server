@@ -1922,33 +1922,21 @@ class c_comdef_server
                 $sql .= " AND (latitude <= $north) AND (latitude >= $south)";
             $sql .= ")";
         }
-        
-        if (c_comdef_server::GetCurrentUserObj() instanceof c_comdef_user) {
-            // Logged-in users can see both published and unpublished meetings.
-            if ($in_published != 0) {
-                if ($previous) {
-                    $sql .= " AND ";
-                } else {
-                    $sql .= " WHERE ";
-                    $previous = true;
-                }
-                
-                if ($in_published == -1) {
-                    $sql .= "(published=0)";
-                } else {
-                    $sql .= "(published=1)";
-                }
-            }
-        } else // If we are not logged in, we can only see published meetings.
-            {
+
+        // Logged-in users can see both published and unpublished meetings.
+        if ($in_published != 0) {
             if ($previous) {
                 $sql .= " AND ";
             } else {
                 $sql .= " WHERE ";
                 $previous = true;
             }
-            
-            $sql .= "(published=1)";
+
+            if ($in_published == -1) {
+                $sql .= "(published=0)";
+            } else {
+                $sql .= "(published=1)";
+            }
         }
                 
         $ret = null;
@@ -2236,7 +2224,7 @@ class c_comdef_server
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $rows = c_comdef_dbsingleton::preparedQuery($in_sql, $in_value_array);
-        
+
         $meeting_data = array();
         $this_meetings_object = null;
         

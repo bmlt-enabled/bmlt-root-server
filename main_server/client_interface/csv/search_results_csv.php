@@ -520,10 +520,6 @@ function DisplaySearchResultsCSV(
                         }
                             
                         $line['root_server_uri'] = dirname(dirname(GetURLToMainServerDirectory(true)));
-                    
-                        if (!$mtg_obj->IsPublished() && !$mtg_obj->UserCanObserve(c_comdef_server::GetCurrentUserObj())) {
-                            $line = null;
-                        }
                         
                         if (is_array($line) && count($line)) {
                             if (is_array($return_array)) {
