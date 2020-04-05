@@ -59,6 +59,7 @@ CHANGELIST
 ----------
 ***Version 2.15.2* ** *- UNRELEASED*
 - Added Russian translation.
+- Fixed an issue with the NAWS export where unauthenticated exports would not return unpublished meetings.
 
 ***Version 2.15.1* ** *- March 28, 2020*
 - Added `VM` format for Virtual Meetings (pandemic response).

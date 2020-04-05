@@ -414,7 +414,7 @@ function SetUpSearch(
         }
         
         // Next, set up the advanced published option.
-        if (isset($in_http_vars['advanced_published']) && (c_comdef_server::GetCurrentUserObj() instanceof c_comdef_user)) {
+        if (isset($in_http_vars['advanced_published'])) {
             $in_search_manager->SetPublished(intval($in_http_vars['advanced_published']));
         } else {
             $in_search_manager->SetPublished(1);
