@@ -1075,7 +1075,8 @@ function GetServiceBodies(
     return implode("\n", $ret);
 }
 
-function GetChildServiceBodies($server, $parents) {
+function GetChildServiceBodies($server, $parents)
+{
     $ret = array();
     $children = $parents;
     while (count($children)) {
