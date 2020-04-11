@@ -319,7 +319,15 @@ function parse_redirect(
             break;
         
         case 'GetServiceBodies':
-            $result2 = GetServiceBodies($server, $langs);
+            $recursive = false;
+            if (isset($http_vars['recursive']) && $http_vars['recursive'] == '1') {
+                $recursive = true;
+            }
+            $services = null;
+            if (isset($http_vars['services'])) {
+                $services = is_array($http_vars['services']) ? $http_vars['services'] : array($http_vars['services']);
+            }
+            $result2 = GetServiceBodies($server, $services, $recursive);
             
             if (isset($http_vars['xml_data'])) {
                 $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -1002,7 +1010,9 @@ function GetFormats(
     \returns CSV data, with the first row a key header.
 */
 function GetServiceBodies(
-    &$server            ///< A reference to an instance of c_comdef_server
+    &$server,            ///< A reference to an instance of c_comdef_server
+    $services = null,
+    $recursive = false
 ) {
     $ret = array ();
     $localized_strings = c_comdef_server::GetLocalStrings();
@@ -1012,12 +1022,35 @@ function GetServiceBodies(
     if ($localized_strings['include_service_body_email_in_semantic']) {
         $ret[0] .= ',"contact_email"';
     }
-    
+
+    $servicesInclude = array();
+    $servicesExclude = array();
+    if ($services) {
+        foreach ($services as $id) {
+            if (substr($id, 0, 1) == "-") {
+                array_push($servicesExclude, substr($id, 1));
+            } else {
+                array_push($servicesInclude, $id);
+            }
+        }
+    }
+
+    if ($recursive) {
+        $servicesInclude = array_merge($servicesInclude, GetChildServiceBodies($server, $servicesInclude));
+        $servicesExclude = array_merge($servicesExclude, GetChildServiceBodies($server, $servicesExclude));
+    }
+
     try {
         $array_obj = $server->GetServiceBodyArray();
         if (is_array($array_obj) && count($array_obj)) {
             foreach ($array_obj as &$sb) {
                 if ($sb instanceof c_comdef_service_body) {
+                    if (count($servicesInclude) && !in_array($sb->GetID(), $servicesInclude)) {
+                        continue;
+                    }
+                    if (count($servicesExclude) && in_array($sb->GetID(), $servicesExclude)) {
+                        continue;
+                    }
                     $row = array();
                     $row[] = $sb->GetID();
                     $row[] = $sb->GetOwnerID();
@@ -1040,6 +1073,22 @@ function GetServiceBodies(
     }
 
     return implode("\n", $ret);
+}
+
+function GetChildServiceBodies($server, $parents) {
+    $ret = array();
+    $children = $parents;
+    while (count($children)) {
+        $newChildren = array();
+        foreach ($server->GetServiceBodyArray() as $serviceBody) {
+            if (in_array($serviceBody->GetOwnerID(), $children)) {
+                array_push($newChildren, $serviceBody->GetID());
+                array_push($ret, $serviceBody->GetID());
+            }
+        }
+        $children = $newChildren;
+    }
+    return $ret;
 }
 
 /*******************************************************************/
