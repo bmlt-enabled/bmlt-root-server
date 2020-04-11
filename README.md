@@ -57,6 +57,9 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.15.3* ** *- TBD*
+- Added `services` and `recursive` parameters to GetServiceBodies, allowing service bodies to be filtered.
+
 ***Version 2.15.2* ** *- April 5, 2020*
 - Added Russian translation.
 - Fixed an issue with the NAWS export where unauthenticated exports would not return unpublished meetings.
