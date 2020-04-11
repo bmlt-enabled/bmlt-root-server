@@ -1082,7 +1082,7 @@ function GetChildServiceBodies($server, $parents)
     while (count($children)) {
         $newChildren = array();
         foreach ($server->GetServiceBodyArray() as $serviceBody) {
-            if (in_array($serviceBody->GetOwnerID(), $children)) {
+            if (in_array($serviceBody->GetOwnerID(), $children) && !in_array($serviceBody->GetID(), $ret)) {
                 array_push($newChildren, $serviceBody->GetID());
                 array_push($ret, $serviceBody->GetID());
             }
