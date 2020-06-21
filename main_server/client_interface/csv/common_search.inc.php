@@ -91,6 +91,10 @@ function SetUpSearch(
     //           If no 'formats' values are given, then the search will not use the formats field as a
     //           search criteria.
     //
+    //       - 'formats_comparison_operator'
+    //           This is a string used to set the operator used to compare included (positive integer) formats. Valid values
+    //           and AND and OR.
+    //
     //       - 'langs'
     //           This is an array of 2-character strings.
     //           This is interpreted as an array of strings. Each string represents a language code, and is a 2-character string.
@@ -403,6 +407,10 @@ function SetUpSearch(
                 $key = abs(intval($format));
                 $fm[$key] = (intval($format) > 0) ? 1 : -1;
             }
+        }
+
+        if (isset($in_http_vars['formats_comparison_operator']) && $in_http_vars['formats_comparison_operator'] == "OR") {
+            $in_search_manager->SetFormatsComparisonOperator("OR");
         }
         
         // Next, set up the languages.

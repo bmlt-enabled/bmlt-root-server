@@ -70,6 +70,9 @@ class c_comdef_meeting_search_manager
                                                     in the meeting search. If any format is specified as 1, then ONLY meetings with the given format will be
                                                     considered in the search, and you must explicitly set any other formats you wish found.
                                                 */
+    protected $_formats_comparison_operator = "AND"; /**< A string, controls the comparison operator used for included formats. Valid values are AND and OR.
+ *                                                     */
+
     protected $_service_bodies = null;        /**< An array of integers. The key is the ID for a Service Body, and the value is one of these:
                                                         - -1    NOT (exclude all meetings that contain this Service Body from the search).
                                                         -  0    No preference (This Service Body will not be a consideration in the search).
@@ -169,6 +172,7 @@ class c_comdef_meeting_search_manager
             $this->_my_root = $in_parent;
             // These all reference the root object's values.
             $this->_formats = $in_parent->_formats;
+            $this->_formats_comparison_operator = $in_parent->_formats_comparison_operator;
             $this->_service_bodies = $in_parent->_service_bodies;
             $this->_languages = $in_parent->_languages;
             $this->_weekdays = $in_parent->_weekdays;
@@ -1192,7 +1196,8 @@ class c_comdef_meeting_search_manager
                         $search_rect,
                         null,
                         $null_me,
-                        $this->_published_search
+                        $this->_published_search,
+                        $this->_formats_comparison_operator
                     );
                     if (isset($this->_search_results) && $this->_search_results && ($this->_search_results instanceof c_comdef_meetings)) {
                         $this->_search_results->RemoveInvalidMeetings();
@@ -1474,6 +1479,17 @@ class c_comdef_meeting_search_manager
         }
         
         return $loc;
+    }
+
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function SetFormatsComparisonOperator($operator)
+    {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+        if ($operator == "OR") {
+            $this->_formats_comparison_operator = "OR";
+        } else {
+            $this->_formats_comparison_operator = "AND";
+        }
     }
     
     /// These are static functions for directly accessing meetings via ID.

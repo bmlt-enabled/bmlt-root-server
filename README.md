@@ -58,7 +58,8 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 ***Version 2.15.3* ** *- TBD*
-- Added `services` and `recursive` parameters to GetServiceBodies, allowing service bodies to be filtered.
+- Added `services` and `recursive` parameters to `GetServiceBodies`, allowing service bodies to be filtered.
+- Added `formats_comparison_operator` parameter to `GetSearchResults`. Valid values are `AND` and `OR`. Applies only to included formats, not to excluded formats.
 
 ***Version 2.15.2* ** *- April 5, 2020*
 - Added Russian translation.
