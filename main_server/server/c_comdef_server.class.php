@@ -1680,11 +1680,13 @@ class c_comdef_server
         // This will have the actual value of the number of results in the database query, so you can use this to
         // walk through the database. If you need the actual number of meetings returned, the best way to do this is
         // to do a c_comdef_meetings::GetNumMeetings() function on the returned object.
-        $in_published = 0
+        $in_published = 0,
         // Indicates whether or not to search for published meetings. This only counts if the user is logged in.
         // - -1    Search for ONLY unpublished meetings
         // -  0    Search for published and unpublished meetings.
         // -  1    Search for ONLY published meetings.
+        $formats_comparison_operator = "AND"
+        // Indicates whether formats should be searched using AND or OR logic
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $previous = false;  // This is used to tell subsequent tests to use AND instead of WHERE
@@ -1942,67 +1944,64 @@ class c_comdef_server
         $ret = null;
         
         if (is_array($in_formats) && count($in_formats)) {
-            // MySQL and Oracle allow the REGEXP test, but other DBs don't.
-            if (('mysql' == c_comdef_dbsingleton::pdoInstance()->getAttribute(PDO::ATTR_DRIVER_NAME))
-                || ('oracle' == c_comdef_dbsingleton::pdoInstance()->getAttribute(PDO::ATTR_DRIVER_NAME)) ) {
+            $column = self::GetMeetingTableName_obj()."_main.formats";
+
+            $formats_include = array();
+            $formats_exclude = array();
+            foreach ($in_formats as $format) {
+                if ($format > 0) {
+                    array_push($formats_include, $format);
+                } else {
+                    array_push($formats_exclude, abs($format));
+                }
+            }
+
+            if (count($formats_include)) {
                 if ($previous) {
                     $sql .= " AND (";
                 } else {
                     $sql .= " WHERE (";
+                    $previous = true;
                 }
-                
-                $column = self::GetMeetingTableName_obj()."_main.formats";
-                
+
                 $first = true;
-                
-                foreach ($in_formats as $format) {
-                    $format = trim($format);
-                    
-                    if ($format) {
-                        // This is why we don't need to scrub the input. No SQL injection here.
-                        $format = intval($format);
-                        if (!$first) {
-                            $sql .= " AND ";
+                foreach ($formats_include as $format) {
+                    if (!$first) {
+                        if ($formats_comparison_operator == "OR") {
+                            $sql .= " OR ";
                         } else {
-                            $first = false;
+                            $sql .= " AND ";
                         }
-                        
-                        // This is a test for if the format is a NOT.
-                        if ($format < 0) {
-                            $format = abs($format);
-                            $sql .= "NOT ";
-                        }
-                        
-                        $sql .= "($column REGEXP";
-                        
-                        // Oracle uses REGEXP_LIKE
-                        if ('oracle' == c_comdef_dbsingleton::pdoInstance()->getAttribute(PDO::ATTR_DRIVER_NAME)) {
-                            $sql .= "_LIKE";
-                        }
-                        
-                        $sql .= "'(^|,)$format(,|\$)')";
+                    } else {
+                        $first = false;
                     }
+
+                    $sql .= "($column REGEXP '(^|,)$format(,|\$)')";
                 }
-                
+
                 $sql .= ")";
-            } else // Non-MySQL, Non-Oracle servers don't have REGEX in their SQL, so we need to search by hand.
-                {
-                $sql .= " ORDER BY service_body_bigint, id_bigint";
-                if (intval($in_num)) {
-                    $in_first = intval($in_first);
-                    $in_num = intval($in_num);
-                    $sql .= " LIMIT $in_first, $in_num";
+            }
+
+            if (count($formats_exclude)) {
+                if ($previous) {
+                    $sql .= " AND (";
+                } else {
+                    $sql .= " WHERE (";
+                    $previous = true;
                 }
-                
-                $ret = self::GetMeetingsFromSQL($sql, $ar);
-                
-                if ($ret && intval($in_num)) {
-                    $in_num = $ret->GetNumMeetings();
-                } elseif (intval($in_num)) {
-                    $in_num = 0;
+
+                $first = true;
+                foreach ($formats_exclude as $format) {
+                    if (!$first) {
+                        $sql .= " AND ";
+                    } else {
+                        $first = false;
+                    }
+
+                    $sql .= "NOT ($column REGEXP '(^|,)$format(,|\$)')";
                 }
-                
-                $ret = self::ParseMeetingsByFormats($ret, $in_formats);
+
+                $sql .= ")";
             }
         }
         
