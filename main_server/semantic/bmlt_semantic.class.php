@@ -924,9 +924,16 @@ class bmlt_semantic
         $ret .= '<div id="bmlt_semantic_form_sb_blurb_div'.htmlspecialchars($this->_myJSName).'" class="bmlt_workshop_blurb_note_div">';
         $ret .= '<p>'.$this->localize_string('all_unselected_note1').'</p>';
         $ret .= '<p>'.$this->localize_string('all_unselected_note2').'</p>';
-        $ret .= '<p>'.$this->localize_string('and_note').'</p>';
+        $ret .= '<p>'.$this->localize_string('configurable_operator_note').'</p>';
         $ret .= '</div>';
         $ret .= '<div id="bmlt_semantic_form_formats_fieldset_div'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_formats_fieldset_div"></div>';
+        $ret .= '<div style="display: block; padding-top: 25px">';
+        $ret .= '<label id="bmlt_semantic_form_formats_comparison_operator_text_label_'.htmlspecialchars($this->_myJSName).'">'.$this->localize_string('formats_comparison_operator').'</label>';
+        $ret .= '<input type="radio" name="formats_comparison_operator" id="formats_comparison_operator_radio_and" value="AND" onchange="bmlt_semantic_js_object'.htmlspecialchars($this->_myJSName).'.handleFormatsComparisonOperatorRadioButton(this)" checked>';
+        $ret .= '<label>AND</label>';
+        $ret .= '<input type="radio" name="formats_comparison_operator" id="formats_comparison_operator_radio_or" value="OR" onchange="bmlt_semantic_js_object'.htmlspecialchars($this->_myJSName).'.handleFormatsComparisonOperatorRadioButton(this)">';
+        $ret .= '<label>OR</label>';
+        $ret .= '</div>';
         $ret .= defined('DEBUG') ? "\n" : '';
         $ret .= '</fieldset>';
         $ret .= defined('DEBUG') ? "\n" : '';

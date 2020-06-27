@@ -38,6 +38,7 @@ BMLTSemanticResult.prototype.meeting_key_value = null;  ///< The value selected 
 BMLTSemanticResult.prototype.root_server_uri = null;    ///< The main Root Server URI.
 BMLTSemanticResult.prototype.services = null;           ///< The selected Service bodies. This is a CSV string of integer IDs.
 BMLTSemanticResult.prototype.formats = null;            ///< The selected formats. This is a CSV string of integer IDs.
+BMLTSemanticResult.prototype.formats_comparison_operator = "AND";
 BMLTSemanticResult.prototype.weekdays = null;           ///< The selected weekdays (1-7). This is a CSV string of integer IDs.
 BMLTSemanticResult.prototype.sb_id = null;              ///< This contains the Service body used for the NAWS dump.
 BMLTSemanticResult.prototype.change_start = null;       ///< This will be the start date for getting changes.
@@ -194,14 +195,19 @@ BMLTSemanticResult.prototype.compileSearchResults = function () {
     };
     
     if ( this.formats ) {
-        var formats_array = this.formats.split(',');;
-    
+        var formats_array = this.formats.split(',');
+        var has_include_formats = false;
+
         if ( formats_array && formats_array.length ) {
             if ( formats_array.length > 1 ) {
                 for (i = 0; i < formats_array.length; i++) {
                     var format = parseInt(formats_array[i]);
                 
                     if ( format ) {
+                        if (format > 0) {
+                            has_include_formats = true;
+                        }
+
                         if ( this.compiled_params ) {
                             this.compiled_params += '&';
                         };
@@ -213,8 +219,13 @@ BMLTSemanticResult.prototype.compileSearchResults = function () {
                 if ( this.compiled_params ) {
                     this.compiled_params += '&';
                 };
-            
+
+                has_include_formats = parseInt(formats_array[0]) > 0;
                 this.compiled_params += 'formats=' + parseInt(formats_array[0]).toString();
+            };
+
+            if (this.formats_comparison_operator !== "AND" && has_include_formats) {
+                this.compiled_params += '&formats_comparison_operator=OR'
             };
         };
     };
@@ -604,6 +615,7 @@ BMLTSemantic.prototype.ajaxRequest = function (
 /*******************************************************************************************/
 BMLTSemantic.prototype.reloadFromServer = function () {
     this.state.formats = null;
+    this.state.formats_comparison_operator = "AND";
     this.state.meeting_key = null;
     this.state.meeting_key_value = null;
     this.state.services = null;
@@ -633,6 +645,7 @@ BMLTSemantic.prototype.reloadFromServer = function () {
     this.clearWeekdays();
     this.clearTextSearchItems();
     this.clearSorts();
+    this.clearFormatsComparisonOperator();
 };
 
 /*******************************************************************************************/
@@ -1593,6 +1606,18 @@ BMLTSemantic.prototype.handleFormatCheckbox = function ( inCheckboxObject ) {
     \brief
 */
 /*******************************************************************************************/
+BMLTSemantic.prototype.handleFormatsComparisonOperatorRadioButton = function ( inRadioButtonObject ) {
+    if (inRadioButtonObject) {
+        this.state.formats_comparison_operator = inRadioButtonObject.value;
+    }
+    this.refreshURI();
+};
+
+/*******************************************************************************************/
+/**
+    \brief
+*/
+/*******************************************************************************************/
 BMLTSemantic.prototype.handleWeekdayCheckbox = function ( inCheckboxObject ) {
     this.scanWeekdays(inCheckboxObject.checked ? parseInt(inCheckboxObject.value) : 0);
     this.refreshURI();
@@ -1687,6 +1712,26 @@ BMLTSemantic.prototype.handleUsedFormatsChange = function ( inElement
     
     inElement.formHandler.refreshURI();
 };
+
+/*******************************************************************************************/
+/**
+    \brief
+*/
+/*******************************************************************************************/
+BMLTSemantic.prototype.clearFormatsComparisonOperator = function ( ) {
+    this.state.formats_comparison_operator = "AND";
+
+    var radioButton = document.getElementById("formats_comparison_operator_radio_and");
+    if (radioButton) {
+        radioButton.checked = true;
+    }
+
+    radioButton = document.getElementById("formats_comparison_operator_radio_or");
+    if (radioButton) {
+        radioButton.checked = false;
+    }
+};
+
 
 /*******************************************************************************************/
 /**
