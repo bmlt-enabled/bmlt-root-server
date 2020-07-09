@@ -487,6 +487,7 @@ function DisplaySearchResultsCSV(
                                                 case 'location_nation':
                                                 case 'comments':
                                                 case 'virtual_meeting_link':
+                                                case 'virtual_meeting_additional_info':
                                                 case 'phone_meeting_number':
                                                     break;
                                     
