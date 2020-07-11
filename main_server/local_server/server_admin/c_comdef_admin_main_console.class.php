@@ -1834,6 +1834,11 @@ class c_comdef_admin_main_console
                     $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_virtual_meeting_link_text_input" type="text" maxlength="255" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_virtual_meeting_link_prompt']).'" /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
+                $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                    $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_virtual_meeting_additional_info_label']).'</span>';
+                    $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_virtual_meeting_additional_info_text_input" type="text" maxlength="255" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_virtual_meeting_additional_info_prompt']).'" /></span>';
+                    $ret .= '<div class="clear_both"></div>';
+                $ret .= '</div>';
             $ret .= '</div>';
         $ret .= '</div>';
 
@@ -1910,6 +1915,7 @@ class c_comdef_admin_main_console
                 case 'location_nation':
                 case 'phone_meeting_number':
                 case 'virtual_meeting_link':
+                case 'virtual_meeting_additional_info':
                     break;
             
                 default:    // We display these ones.

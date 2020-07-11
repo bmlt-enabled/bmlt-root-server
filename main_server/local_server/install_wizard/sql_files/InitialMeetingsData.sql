@@ -20,4 +20,5 @@ INSERT INTO `%%PREFIX%%_comdef_meetings_data` (`meetingid_bigint`, `key`, `field
 (0, 'contact_email_1', 'Contact 1 Email', 'en', 1, 'Contact 1 Email', NULL, NULL),
 (0, 'contact_name_1', 'Contact 1 Name', 'en', 1, 'Contact 1 Name', NULL, NULL),
 (0, 'phone_meeting_number', 'Phone Meeting Dial-in Number', 'en', 0, 'Phone Meeting Dial-in Number', NULL, NULL),
-(0, 'virtual_meeting_link', 'Virtual Meeting Link', 'en', 0, 'Virtual Meeting Link', NULL, NULL);
+(0, 'virtual_meeting_link', 'Virtual Meeting Link', 'en', 0, 'Virtual Meeting Link', NULL, NULL),
+(0, 'virtual_meeting_additional_info', 'Virtual Meeting Additional Info', 'en', 0, 'Virtual Meeting Additional Info', NULL, NULL);

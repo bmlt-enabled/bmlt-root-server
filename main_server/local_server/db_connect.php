@@ -266,6 +266,19 @@ function DB_Connect_and_Upgrade()
                     c_comdef_dbsingleton::preparedExec($sql);
                 }
             }
+        }),
+        array(12, function () {
+            $dbPrefix = $GLOBALS['dbPrefix'];
+            $table = "$dbPrefix" . "_comdef_meetings_data";
+            $check_column_sql = "SELECT COUNT(*) AS count FROM `$table` WHERE `key`='virtual_meeting_additional_info' AND meetingid_bigint = 0";
+            $rows = c_comdef_dbsingleton::preparedQuery($check_column_sql);
+            if (is_array($rows) && count($rows)) {
+                $row = $rows[0];
+                if (intval($row['count']) == 0) {
+                    $sql = "INSERT INTO `$table` (`meetingid_bigint`, `key`, `field_prompt`, `lang_enum`, `visibility`, `data_string`, `data_bigint`, `data_double`) VALUES (0, 'virtual_meeting_additional_info', 'Virtual Meeting Additional Info', 'en', 0, 'Virtual Meeting Additional Info', NULL, NULL)";
+                    c_comdef_dbsingleton::preparedExec($sql);
+                }
+            }
         })
     );
     // WHEN ADDING A NEW DATABASE MIGRATION, REMEMBER TO BUMP THE VERSION IN local_server/install_wizard/sql_files/initialDbVersionData.sql
