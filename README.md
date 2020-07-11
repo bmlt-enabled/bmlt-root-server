@@ -58,7 +58,7 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 ***Version 2.15.4* ** *- TBD*
-- Added the new "Virtual Meeting Additional Info" field to the NAWS export.
+- Added the new "Virtual Meeting Additional Info" field to the root server and semantic API output.
 
 ***Version 2.15.3* ** *- June 27, 2020*
 - Added `services` and `recursive` parameters to `GetServiceBodies`, allowing service bodies to be filtered.
