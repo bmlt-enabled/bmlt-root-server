@@ -11,3 +11,4 @@ provider "aws" {
   region = "us-east-1"
 }
 
+variable GOOGLE_API_KEY {}

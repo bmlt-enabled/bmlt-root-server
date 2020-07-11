@@ -26,7 +26,7 @@ resource "aws_ecs_task_definition" "bmlt_latest" {
     "environment": [
       {
         "name": "GKEY",
-        "value": "AIzaSyD4BPAvDHL4CiRcFORdoUCpqwVuVz1F9r8"
+        "value": "${var.GOOGLE_API_KEY}"
       },
       {
         "name": "DBNAME",
