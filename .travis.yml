@@ -27,6 +27,7 @@ jobs:
         - GITHUB_RELEASE_FILENAME=bmlt-root-server.zip
       install:
         - composer install --no-dev
+        - cd main_server/client_interface/html && npm install
       script:
         - cp LICENSE.txt main_server && cp .htaccess main_server/vendor
         - find ./main_server -type d | xargs chmod 755
@@ -115,7 +116,7 @@ jobs:
           github_token: $GITHUB_API_KEY
           on:
             branch: master
-            
+
 notifications:
   slack:
     rooms:
