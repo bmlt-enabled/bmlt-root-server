@@ -5,3 +5,4 @@ main_server/vendor
 .DS_Store
 bmlt_conversion_tables.php
 docs
+node_modules

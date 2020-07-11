@@ -3,7 +3,6 @@
         "vendor-dir": "main_server/vendor"
     },
     "require": {
-        "bmlt/bmlt-satellite-base-class": "^3.10",
         "phpoffice/phpspreadsheet": "1.8.2"
     },
     "require-dev": {
