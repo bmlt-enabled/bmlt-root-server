@@ -127,6 +127,10 @@ class c_comdef_admin_main_console
                 array_push($this->my_editable_service_bodies, $service_body);
             }
             
+            if ($service_body->UserCanObserve()) {
+                array_push($this->my_observable_service_bodies, $service_body);
+            }
+
             array_push($this->my_all_service_bodies, $service_body);
         }
         

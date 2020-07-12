@@ -1,6 +1,9 @@
 <?php
 define('ROOTPATH', __DIR__ . '/../..');
-defined('BMLT_EXEC') or define('BMLT_EXEC', 1);?>
+defined('BMLT_EXEC') or define('BMLT_EXEC', 1);
+require_once('../../local_server/server_admin/c_comdef_admin_main_console.class.php');
+$console_object = new c_comdef_admin_main_console($_REQUEST);
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
     <head>
@@ -10,7 +13,26 @@ defined('BMLT_EXEC') or define('BMLT_EXEC', 1);?>
         $url = dirname(dirname(dirname($_SERVER['PHP_SELF']))) !== "/" ? dirname(dirname(dirname($_SERVER['PHP_SELF']))) : '';
         $shortcut_icon = "$url/local_server/server_admin/style/images/shortcut.png";
         $stylesheet = "$url/local_server/server_admin/style/styles.css?v=" . time();
+        $my_observable_service_body_ids = [];
+        foreach ($console_object->my_observable_service_bodies as $observable_service_body_id) {
+            array_push($my_observable_service_body_ids, intval($observable_service_body_id->GetID()));
+        }
 
+        function getBCP47TagForISO631Language($code)
+        {
+            $default_bcp47_code = 'en-US';
+            $iso631_codes = ['de', 'dk', 'es', 'fa', 'fr', 'it', 'pl', 'pt', 'sv'];
+            $bcp47_codes = ['de-DE', 'da-DK', 'es-US', 'fa-IR', 'fr-CA', 'it-IT', 'pl-PL', 'pt-BR', 'sv-SE'];
+
+            for ($i = 0; $i < count($iso631_codes); $i++) {
+                $iso631_code = $iso631_codes[$i];
+                if ($iso631_code === $code) {
+                    return $bcp47_codes[$i];
+                }
+            }
+
+            return $default_bcp47_code;
+        }
         ?>
         <link rel="stylesheet" href="<?php echo $stylesheet ?>" />
         <link rel="icon" href="<?php echo $shortcut_icon ?>" />
@@ -19,16 +41,19 @@ defined('BMLT_EXEC') or define('BMLT_EXEC', 1);?>
         <script type="text/javascript">
             // Full list of parameters: https://github.com/bmlt-enabled/crouton/blob/master/croutonjs/src/js/crouton-core.js#L13
             var crouton = new Crouton({
-                custom_query: "&formats%5B%5D=-57&formats%5B%5D=-58&formats_comparison_operator=OR",
                 recurse_service_bodies: true,
-                root_server: "https://ctna.org/main_server",
-                service_body: ["1"],
+                root_server: "<?php echo str_replace('client_interface/html/', '', GetURLToMainServerDirectory()) ?>",
+                service_body: <?php echo json_encode($my_observable_service_body_ids) ?>,
                 template_path: "node_modules/@bmlt-enabled/croutonjs/templates",
                 theme: "florida-nights",
                 has_languages: "1",
                 time_format: "H:mm (h:mma) z",
-                // language: ""
+                google_api_key: "<?php echo $console_object->my_server::GetLocalStrings()["google_api_key"] ?>",
+                show_map: true,
+                language: "<?php echo getBCP47TagForISO631Language($_COOKIE["bmlt_admin_lang_pref"]) ?>"
             });
+
+            // language: "" // TODO: set as current language
             crouton.render();
         </script>
     </head>
