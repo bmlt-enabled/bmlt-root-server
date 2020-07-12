@@ -29,7 +29,10 @@ DBPREFIX=na
 5. Point to hostname "localhost" and port "8000".
 6. Add a path mapping for the first folder mapping to `/var/www/html`.
 7. Save.
-8. Set IDE key to ``
+8. Set IDE key to `ROOT_SERVER_DEBUG`.
+9. Save.
+10. Turn on remote debugging by press the button in the toolbar. ![image1](img/3.png)
+11. Set any breakpoints, and the code should pause there.
 
 ![image1](img/1.png)
 ![image2](img/2.png)
