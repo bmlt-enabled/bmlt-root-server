@@ -8,11 +8,11 @@ if (($user_obj instanceof c_comdef_user) && ($user_obj->GetUserLevel() != _USER_
 {
     $service_body_ids = [];
     $service_body_set = [];
-    if ($user_obj->GetUserLevel() === _USER_LEVEL_OBSERVER) {
+    if ($user_obj->GetUserLevel() == _USER_LEVEL_OBSERVER) {
         $service_body_set = $console_object->my_observable_service_bodies;
-    } else if ($user_obj->GetUserLevel() === _USER_LEVEL_SERVICE_BODY_ADMIN) {
+    } else if ($user_obj->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) {
         $service_body_set = $console_object->my_editable_service_bodies;
-    } else if ($user_obj->GetUserLevel() === _USER_LEVEL_SERVER_ADMIN) {
+    } else if ($user_obj->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) {
         $service_body_set = $console_object->my_all_service_bodies;
     }
 
