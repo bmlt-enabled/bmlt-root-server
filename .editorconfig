@@ -5,3 +5,8 @@ insert_final_newline = true
 [*.yml]
 end_of_line = lf
 insert_final_newline = true
+
+[Makefile]
+end_of_line = lf
+insert_final_newline = true
+indent_style = tab

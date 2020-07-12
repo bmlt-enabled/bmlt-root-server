@@ -1,6 +1,0 @@
-FROM ubuntu:16.04
-
-RUN apt-get update \
-  && apt-get install -yqq apache2 php libapache2-mod-php php-mcrypt php-mysql git php-dom php-curl php-gd php-zip php-mbstring
-
-RUN echo "nameserver 8.8.8.8" >> /etc/resolv.conf
