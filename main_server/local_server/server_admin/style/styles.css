@@ -614,7 +614,7 @@ div.bmlt_admin_user_editor_disclosure_div a:visited,
 div.bmlt_admin_format_editor_disclosure_div a,
 div.bmlt_admin_format_editor_disclosure_div a:visited
 {
-    background-image:url(images/invisible_disclosure.gif);
+    background:url(images/invisible_disclosure.gif) 5px 5px no-repeat;
 }
 
 div.bmlt_admin_single_meeting_disclosure_map_div_closed a:hover,
@@ -632,7 +632,7 @@ div.bmlt_admin_user_editor_disclosure_div a:active,
 div.bmlt_admin_format_editor_disclosure_div a:hover,
 div.bmlt_admin_format_editor_disclosure_div a:active
 {
-    background-image:url(images/invisible_disclosure_mouseover.gif);
+    background:url(images/invisible_disclosure_mouseover.gif) 5px 5px no-repeat;
 }
 
 div.bmlt_admin_single_meeting_disclosure_map_div_open a,
@@ -650,7 +650,7 @@ div.bmlt_admin_user_editor_disclosure_div_open a:visited,
 div.bmlt_admin_format_editor_disclosure_div_open a,
 div.bmlt_admin_format_editor_disclosure_div_open a:visited
 {
-    background-image:url(images/visible_disclosure.gif);
+    background:url(images/visible_disclosure.gif) 5px 5px no-repeat;
 }
 
 div.bmlt_admin_single_meeting_disclosure_map_div_open a:hover,
@@ -668,7 +668,7 @@ div.bmlt_admin_user_editor_disclosure_div_open a:active,
 div.bmlt_admin_format_editor_disclosure_div_open a:hover,
 div.bmlt_admin_format_editor_disclosure_div_open a:active
 {
-    background-image:url(images/visible_disclosure_mouseover.gif);
+    background:url(images/visible_disclosure_mouseover.gif) 5px 5px no-repeat;
 }
 
 div.bmlt_admin_meeting_editor_wrapper_div,
