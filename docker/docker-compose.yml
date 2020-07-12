@@ -1,8 +1,10 @@
-version: '2'
+version: '3'
 
 services:
   bmlt:
-    image: bmltenabled/bmlt-root-server:latest
+    build:
+      context: .
+      dockerfile: Dockerfile-bmltdebug
     ports:
       - "8000:80"
     env_file:

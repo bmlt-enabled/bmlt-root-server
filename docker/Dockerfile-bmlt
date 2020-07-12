@@ -1,6 +1,8 @@
-FROM bmltenabled/apache2:latest
+FROM php:7.0-apache
 
-RUN apt-get update && apt-get upgrade -yqq
+RUN apt-get update \
+    && apt-get -yqq install libmcrypt-dev libxml2-dev libcurl4-gnutls-dev libpng-dev \
+    && docker-php-ext-install mcrypt dom curl gd zip mbstring pdo pdo_mysql
 
 ADD main_server/. /var/www/html/main_server
 ADD docker/auto-config.inc.php /var/www/html/auto-config.inc.php
@@ -12,5 +14,7 @@ RUN chmod +x /tmp/start-bmlt.sh
 
 RUN ln -sf /proc/self/fd/1 /var/log/apache2/access.log && \
     ln -sf /proc/self/fd/1 /var/log/apache2/error.log
+
+RUN echo "nameserver 8.8.8.8" >> /etc/resolv.conf
 
 CMD ["/bin/bash", "/tmp/start-bmlt.sh"]
