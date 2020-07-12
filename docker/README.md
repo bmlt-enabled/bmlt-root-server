@@ -19,3 +19,19 @@ DBPASSWORD=bmlt_password
 DBSERVER=db
 DBPREFIX=na
 ```
+
+## To debug in IntelliJ (see screenshots below for more detail)
+
+1. Add a new configuration (ensure that you have added PHP support).
+2. Select `PHP Remote Debug`
+3. Add a new server, hitting the 3 dots to the right of the input box.
+4. Add a server called "localhost 8000".
+5. Point to hostname "localhost" and port "8000".
+6. Add a path mapping for the first folder mapping to `/var/www/html`.
+7. Save.
+8. Set IDE key to ``
+
+![image1](img/1.png)
+![image2](img/2.png)
+
+
