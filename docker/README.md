@@ -36,4 +36,3 @@ DBPREFIX=na
 
 ![image1](img/1.png)
 ![image2](img/2.png)
-
