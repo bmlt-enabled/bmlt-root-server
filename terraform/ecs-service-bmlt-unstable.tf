@@ -21,7 +21,11 @@ resource "aws_ecs_task_definition" "bmlt_unstable" {
     "essential": true,
     "entryPoint": null,
     "mountPoints": [],
-    "ulimits": null,
+    "ulimits": {
+      "softLimit": 2048,
+      "hardLimit": 2048,
+      "name": "nofile"
+    },
     "dockerSecurityOptions": null,
     "environment": [
       {
