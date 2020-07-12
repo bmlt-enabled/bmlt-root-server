@@ -52,8 +52,6 @@ $console_object = new c_comdef_admin_main_console($_REQUEST);
                 show_map: true,
                 language: "<?php echo getBCP47TagForISO631Language($_COOKIE["bmlt_admin_lang_pref"]) ?>"
             });
-
-            // language: "" // TODO: set as current language
             crouton.render();
         </script>
     </head>
