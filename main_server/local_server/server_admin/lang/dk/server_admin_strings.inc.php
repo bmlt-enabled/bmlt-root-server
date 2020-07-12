@@ -311,7 +311,7 @@ $comdef_server_admin_strings = array (
     'AJAX_Auth_Failure'                                     =>  'Autorisation mislykkedes for denne operation. Der kan være et problem med serverkonfigurationen.',
     'Maps_API_Key_Warning'                                  =>  'ADVARSEL: Der er et problem med API-nøglen til Google Maps.',
     'Maps_API_Key_Not_Set'                                  =>  'ADVARSEL: Google Maps API-nøglen er ikke angivet.',
-    'Observer_Link_Text'                                    =>  'Mødesøgning',
+    'Observer_Link_Text'                                    =>  'Meeting Browser',
     'Data_Transfer_Link_Text'                               =>  'Importer mødedata (ADVARSEL: Erstatter nuværende data!)',
     'MapsURL'                                               =>  'https://maps.google.com/maps?q=##LAT##,##LONG##+(##NAME##)&amp;ll=##LAT##,##LONG##',
     'hidden_value'                                          =>  'Kan ikke vise data - Uautoriseret',

@@ -305,7 +305,7 @@
                                             'AJAX_Auth_Failure'                                     =>  'Nie udało się autoryzować operacji. Możliwe, że istnieje problem z konfiguracją serwera.',
                                             'Maps_API_Key_Warning'                                  =>  'Wystąpił problem z kluczem Google Maps API.',
                                             'Maps_API_Key_Not_Set'                                  =>  'Nie ustalono klucza Google Maps API.',
-                                            'Observer_Link_Text'                                    =>  'Wyszukiwarka mityngów',
+                                            'Observer_Link_Text'                                    =>  'Meeting Browser',
                                             'Data_Transfer_Link_Text'                               =>  'Importuj dane mityngu (UWAGA: istniejące dane zostaną nadpisane!)',
                                             'MapsURL'                                               =>  'https://maps.google.com/maps?q=##LAT##,##LONG##+(##NAME##)&amp;ll=##LAT##,##LONG##',
                                             'hidden_value'                                          =>  'Nie można wyświetlić danych - brak autoryzacji',

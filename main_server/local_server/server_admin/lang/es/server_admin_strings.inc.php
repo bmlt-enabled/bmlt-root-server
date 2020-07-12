@@ -307,7 +307,7 @@
                                             'min_password_length_string'                            =>  'El contraseña es demasiado corta! Debe ser al menos %d caracteres!',
                                             'AJAX_Auth_Failure'                                     =>  'Error en la autorización para esta operación. Puede haber un problema con la configuración del servidor.',
                                             'Maps_API_Key_Warning'                                  =>  'There is a problem with the Google Maps API Key.',
-                                            'Observer_Link_Text'                                    =>  'Buscar reuniones',
+                                            'Observer_Link_Text'                                    =>  'Meeting Browser',
                                             'Data_Transfer_Link_Text'                               =>  'Import Meeting Data (WARNING: Replaces Current Data!)',
                                             'MapsURL'                                               =>  'https://maps.google.com/maps?q=##LAT##,##LONG##+(##NAME##)&amp;ll=##LAT##,##LONG##',
                                             'hidden_value'                                          =>  'No se puede mostrar datos-no autorizada',

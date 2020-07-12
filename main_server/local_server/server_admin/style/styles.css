@@ -413,15 +413,14 @@ div.bmlt_admin_meeting_editor_tab_bar
 
 div.bmlt_admin_observer_link_div
 {
-    height:14px;
-    padding:2px;
-    padding-left:24px;
+    height:12px;
+    padding: 2px 2px 2px 26px;
 }
 
 a.bmlt_admin_observer_link_a,
 a.bmlt_admin_observer_link_a:visited
 {
-    font-size:large;
+    font-size:16px;
     font-weight:bold;
     outline:none;
     color:#99f;

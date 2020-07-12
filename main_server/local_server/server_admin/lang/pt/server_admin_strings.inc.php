@@ -303,7 +303,7 @@
                                             'AJAX_Auth_Failure'                                     =>  'Falha de autorização para essa ação. Falha de configuração do servidor.',
                                             'Maps_API_Key_Warning'                                  =>  'Há um problema com a chave da API do Google Maps.',
                                             'Maps_API_Key_Not_Set'                                  =>  'A chave da API do Google Maps não foi configurada.',
-                                            'Observer_Link_Text'                                    =>  'Busca de Reuniões',
+                                            'Observer_Link_Text'                                    =>  'Meeting Browser',
                                             'Data_Transfer_Link_Text'                               =>  'Importar Dados de Reuniões (AVISO: Isso vai sobreescrever os dados atuais!)',
                                             'MapsURL'                                               =>  'https://maps.google.com/maps?q=##LAT##,##LONG##+(##NAME##)&amp;ll=##LAT##,##LONG##',
                                             'hidden_value'                                          =>  'Não pode mostrar dados -não autorizado',
