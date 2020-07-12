@@ -36,7 +36,7 @@ then
     echo "\$dbPrefix = \"$DBPREFIX\";" >> /var/www/html/auto-config.inc.php
 fi
 
-if [ ! -z $DO_NOT_FORCE_PORT -a "$DO_NOT_FORCE_PORT" == "true" ]
+if [ ! -z "$DO_NOT_FORCE_PORT" -a "$DO_NOT_FORCE_PORT" == "true" ]
 then
     echo "\$g_do_not_force_port = true;" >> /var/www/html/auto-config.inc.php
 fi
