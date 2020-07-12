@@ -42,7 +42,7 @@ class c_comdef_admin_main_console
     public $my_data_field_templates;       ///< This holds the keys for all the possible data fields for this server.
     public $my_editable_service_bodies;    ///< This will contain all the Service bodies that we can actually directly edit.
     public $my_all_service_bodies;         ///< This contains all Service bodies, cleaned for orphans.
-    public $my_observable_service_bodies;  ///< This containss all observable service bodies.
+    public $my_observable_service_bodies;  ///< This contains all observable service bodies.
     public $my_lang_ids;                   ///< Contains the enumerations for all the server langs.
     
     /********************************************************************************************************//**
