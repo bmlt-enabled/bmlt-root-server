@@ -612,6 +612,7 @@ function ReturnNAWSFormatCSV(
                                     'ContactGP'          => null,
                                     'PhoneMeetingNumber' => 'phone_meeting_number',
                                     'VirtualMeetingLink' => 'virtual_meeting_link',
+                                    'VirtualMeetingInfo' => 'virtual_meeting_additional_info',
                                     'bmlt_id'            => 'id_bigint',
                                     'unpublished'        => 'BMLT_FuncNAWSReturnPublishedStatus'
                                 );
