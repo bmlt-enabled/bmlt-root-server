@@ -4,6 +4,7 @@ RUN apt-get update \
     && apt-get -yqq install libmcrypt-dev libxml2-dev libcurl4-gnutls-dev libpng-dev \
     && docker-php-ext-install mcrypt dom curl gd zip mbstring pdo pdo_mysql
 
+ADD docker/index.html /var/www/html
 ADD main_server/. /var/www/html/main_server
 ADD docker/auto-config.inc.php /var/www/html/auto-config.inc.php
 ADD docker/start-bmlt.sh /tmp/start-bmlt.sh
