@@ -2681,6 +2681,7 @@ class c_comdef_server
                                                                                     );
 
                 c_comdef_server::$server_local_strings['default_closed_status'] = (!isset($g_defaultClosedStatus) || $g_defaultClosedStatus) ? 1 : ((isset($g_defaultClosedStatus) && !$g_defaultClosedStatus) ? 0 : 1);
+                c_comdef_server::$server_local_strings['meeting_browser_theme'] = isset($meeting_browser_theme) ? $meeting_browser_theme : "florida-nights";
                 if (trim($comdef_distance_units)) {
                     c_comdef_server::$server_local_strings['dist_units'] = strtolower(trim($comdef_distance_units));
                 } else {
