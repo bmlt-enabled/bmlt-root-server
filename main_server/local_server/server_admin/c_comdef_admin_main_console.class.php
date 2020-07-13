@@ -456,7 +456,7 @@ class c_comdef_admin_main_console
                     $ret .= $this->return_meeting_editor_panel();
                     // Intentional fallthrough
                 case _USER_LEVEL_OBSERVER:
-                    $ret .= '<div class="bmlt_admin_observer_link_div"><a target="_blank" href="client_interface/html" class="bmlt_admin_observer_link_a">'.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['Observer_Link_Text']).'</a></div>';
+                    $ret .= '<div class="bmlt_admin_observer_link_div"><a target="_blank" href="client_interface/html/" class="bmlt_admin_observer_link_a">'.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['Observer_Link_Text']).'</a></div>';
                     $ret .= $this->return_user_account_settings_panel();
                     break;
                 

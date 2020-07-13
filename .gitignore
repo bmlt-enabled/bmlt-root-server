@@ -6,3 +6,5 @@ main_server/vendor
 bmlt_conversion_tables.php
 docs
 node_modules
+main_server/client_interface/html/crouton*.css
+main_server/client_interface/html/crouton*.js
