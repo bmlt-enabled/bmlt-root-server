@@ -48,14 +48,14 @@ if ($user_obj instanceof c_comdef_user && $user_obj->GetUserLevel() != _USER_LEV
     ?>
         <link rel="icon" href="<?php echo sprintf("%s/local_server/server_admin/style/images/shortcut.png", $url) ?>" />
         <link rel="stylesheet" href="<?php echo sprintf("%s/local_server/server_admin/style/styles.css", $url) ?>" />
-        <link rel="stylesheet" type="text/css" href="crouton.min.css" />
-        <script type="text/javascript" src="crouton.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="croutonjs/crouton.min.css" />
+        <script type="text/javascript" src="croutonjs/crouton.min.js"></script>
         <script type="text/javascript">
             // Full list of parameters: https://github.com/bmlt-enabled/crouton/blob/master/croutonjs/src/js/crouton-core.js#L13
             var crouton = new Crouton({
                 root_server: "<?php echo str_replace('client_interface/html/', '', GetURLToMainServerDirectory()) ?>",
                 service_body: <?php echo json_encode($service_body_ids) ?>,
-                template_path: "node_modules/@bmlt-enabled/croutonjs/templates",
+                template_path: "croutonjs/templates",
                 theme: "florida-nights",
                 has_languages: "1",
                 has_areas: "1",
