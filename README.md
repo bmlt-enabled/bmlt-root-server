@@ -59,7 +59,7 @@ CHANGELIST
 ----------
 ***Version 2.15.4* ** *- TBD*
 - Added the new "Virtual Meeting Additional Info" field to the root server, semantic API output, and NAWS export.
-- Changed out Observer page to use CroutonJS which shows hidden fields now.
+- Added a new read-only meeting browser based on CroutonJS. This replaces the old Observer view, exposes the "hidden" fields to authenticated users, and is intended to allow phone line volunteers easy access to meeting/contact data when fielding calls.
 
 ***Version 2.15.3* ** *- June 27, 2020*
 - Added `services` and `recursive` parameters to `GetServiceBodies`, allowing service bodies to be filtered.
