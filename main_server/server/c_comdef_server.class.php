@@ -52,7 +52,7 @@ class c_comdef_server
     public static $server_instance = null;
     /// This contains a cache of the local strings.
     public static $server_local_strings = null;
-    
+
     /// This is the name of the Formats table in the database.
     private $_format_table_name = null;
     /// This is the name of the Meetings table in the database.
@@ -81,7 +81,7 @@ class c_comdef_server
     private $_server_namespace = null;
     /// This contains the actual Service Body objects as a simple array.
     private $_service_obj_array = null;
-    
+
     /*******************************************************************/
     /** \brief  This is the factory for the server instantiation.
                 It makes sure that only one instance exists.
@@ -95,10 +95,10 @@ class c_comdef_server
         if (!(self::$server_instance instanceof c_comdef_server)) {
             self::$server_instance = new c_comdef_server;
         }
-        
+
         return self::$server_instance;
     }
-    
+
     /*******************************************************************/
     /** \returns the Server instance.
     */
@@ -108,7 +108,7 @@ class c_comdef_server
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return self::$server_instance;
     }
-    
+
     /*******************************************************************/
     /** \brief Sets the server instance.
     */
@@ -124,7 +124,7 @@ class c_comdef_server
             self::$server_instance = $in_server_instance;
         }
     }
-    
+
     /*******************************************************************/
     /** \brief The initial setup call for the class. Part of setting up
         the server is establishing the database connection, and reading
@@ -135,25 +135,25 @@ class c_comdef_server
         $in_lang_enum = null  ///< It is possible to force a different language via this parameter.
     ) {
         global  $comdef_global_language;
-            
+
         try {
             self::SetServer($this);
             include(dirname(__FILE__)."/config/get-config.php");
-    
+
             if (!isset($dbType)) {
                 $dbType = 'mysql';
             }
-    
+
             if (!isset($dbServer)) {
                 $dbServer = 'localhost';
             }
-    
+
             if (!isset($dbPrefix)) {
                 $dbPrefix = 'na';
             }
 
             c_comdef_dbsingleton::init($dbType, $dbServer, $dbName, $dbUser, $dbPassword, 'utf8');
-            
+
             // These are all the base names of the SQL tables.
             $this->_format_table_name = $dbPrefix."_comdef_formats";
             $this->_meeting_table_name = $dbPrefix."_comdef_meetings";
@@ -167,49 +167,49 @@ class c_comdef_server
             } else {
                 $this->_server_namespace = "http://".$_SERVER['SERVER_NAME']."/CoMDEF";
             }
-            
+
             // Brute-force protection against selecting a language that isn't supported by the resources at hand.
             if (!file_exists(dirname(__FILE__)."/../local_server/server_admin/lang/".$comdef_global_language."/name.txt")) {
                 $comdef_global_language = "en";
             }
-            
+
             global  $http_vars;
-            
+
             if (isset($in_lang_enum) && $in_lang_enum) { // If a different language was specified, we force that into place now.
                 if (isset($http_vars) && is_array($http_vars)) {
                     $http_vars['lang_enum'] = $in_lang_enum;
                 }
-                
+
                 if (file_exists(dirname(__FILE__)."/../local_server/server_admin/lang/".$in_lang_enum."/name.txt")) {
                     $comdef_global_language = $in_lang_enum;
                 }
             } elseif (isset($http_vars) && is_array($http_vars) && count($http_vars) && isset($http_vars['lang_enum'])) {
                 $lang_name = $http_vars['lang_enum'];
-                
+
                 if (file_exists(dirname(__FILE__)."/../local_server/server_admin/lang/".$lang_name."/name.txt")) {
                     $comdef_global_language = $lang_name;
                 }
             } elseif (isset($_SESSION) && is_array($_SESSION) && isset($_SESSION['lang_enum'])) {
                 $lang_name = $_SESSION['lang_enum'];
-                
+
                 if (isset($http_vars) && is_array($http_vars)) {
                     $http_vars['lang_enum'] = $in_lang_enum;
                 }
-                
+
                 if (file_exists(dirname(__FILE__)."/../local_server/server_admin/lang/".$lang_name."/name.txt")) {
                     $comdef_global_language = $lang_name;
                 }
             }
-            
+
             if (isset($_SESSION) && is_array($_SESSION)) {
                 $_SESSION['lang_enum'] = $comdef_global_language;
             }
-            
+
             $this->_local_type_lang_enum = $comdef_global_language;
 
             $dh = opendir(dirname(__FILE__).'/../local_server/server_admin/lang/');
             $server_lang_names = array();
-            
+
             if ($dh) {
                 while (false !== ($enum = readdir($dh))) {
                     $file_path = dirname(dirname(__FILE__))."/local_server/server_admin/lang/$enum/name.txt";
@@ -217,12 +217,12 @@ class c_comdef_server
                         $server_lang_names[$enum] = trim(file_get_contents($file_path));
                     }
                 }
-                    
+
                 closedir($dh);
             }
-            
+
             uksort($server_lang_names, 'c_comdef_server::ServerLangSortCallback');
-            
+
             $this->_server_lang_names = $server_lang_names;
             if (isset($format_lang_names) && is_array($format_lang_names)) {
                 $this->_format_lang_names = $format_lang_names;
@@ -234,7 +234,7 @@ class c_comdef_server
             throw ( $err );
         }
     }
-    
+
     /*******************************************************************/
     /** \brief This is a callback to sort the server languages.
                The default server language will always be first, and
@@ -249,7 +249,7 @@ class c_comdef_server
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $server_lang = c_comdef_server::GetServer()->GetLocalLang();
         $ret = 0;
-        
+
         if ($in_lang_a == $server_lang) {
             $ret = -1;
         } elseif ($in_lang_b == $server_lang) {
@@ -257,10 +257,10 @@ class c_comdef_server
         } else {
             $ret = strncasecmp($in_lang_a, $in_lang_b, 3);
         }
-            
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief This reads the Formats, Meeting and Service Entity IDs.
     */
@@ -272,7 +272,7 @@ class c_comdef_server
         $this->ReadServiceBodies();
         $this->ReadServiceIDs();
     }
-    
+
     /*******************************************************************/
     /** \brief Returns the Server Local Language.
 
@@ -283,20 +283,20 @@ class c_comdef_server
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $lang_enum = $this->_local_type_lang_enum;
-        
+
         if (!$lang_enum) {
             global  $comdef_global_language;
             $lang_enum = $comdef_global_language;
         }
-        
+
         // Should never happen.
         if (!$lang_enum) {
             $lang_enum = "en";
         }
-        
+
         return $lang_enum;
     }
-    
+
     /*******************************************************************/
     /** \brief This is an internal function that reads in all of the
         stored formats, in all provided languages, and instantiates
@@ -309,9 +309,9 @@ class c_comdef_server
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $this->_used_format_ids = array ();
         $sql = "SELECT * FROM `".self::GetFormatTableName_obj()."` ORDER BY shared_id_bigint, lang_enum";
-        
+
         $rows = c_comdef_dbsingleton::preparedQuery($sql);
-        
+
         if (is_array($rows) && count($rows)) {
             $obj_array = array();
             /// Read in all the formats, and instantiate an array of objects.
@@ -332,15 +332,15 @@ class c_comdef_server
                     );
                 }
             }
-            
+
             /// Create our internal container, and give it the array.
             $this->_formats_obj = new c_comdef_formats($this, $obj_array);
-            
+
             // Now that we have all our formats, we quickly read in the formats from all the meetings, and filter out just the ones that are actually used.
             $sql = "SELECT `formats` FROM `".self::GetMeetingTableName_obj()."_main`";
-        
+
             $rows = c_comdef_dbsingleton::preparedQuery($sql);
-        
+
             if (is_array($rows) && count($rows)) {
                 $format_codes = array();
                 // Read each of the format CSV lists, split the list, and then check each one in our tracker.
@@ -355,13 +355,13 @@ class c_comdef_server
                         }
                     }
                 }
-                
+
                 // At this point format_codes is an associative array with only the formats actually used. The format code is in the key. We sort them so that the most frequent ones are at the beginning.
                 // We go through that, and extract our codes.
-                
+
                 arsort($format_codes);
                 $format_codes = array_keys($format_codes);
-                
+
                 foreach ($format_codes as $format_id) {
                     $format_id_num = intval(preg_replace("|ID\-(.*)|", "$1", $format_id));
                     if ($format_id_num) {
@@ -371,7 +371,7 @@ class c_comdef_server
             }
         }
     }
-    
+
     /*******************************************************************/
     /** \brief This is an internal function that reads in all of the
         stored users and instantiates local objects for them.
@@ -382,21 +382,21 @@ class c_comdef_server
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         // First, we make sure we explicitly delete any old ones.
-        
+
         if ($this->_users_obj instanceof c_comdef_users) {
             $ar = $this->_users_obj->GetUsersArray();
-            
+
             foreach ($ar as &$u) {
                 $u = null;
             }
-            
+
             $this->_users_obj = null;
         }
-        
+
         $sql = "SELECT * FROM `".self::GetUserTableName_obj()."` ORDER BY id_bigint";
-        
+
         $rows = c_comdef_dbsingleton::preparedQuery($sql);
-        
+
         if (is_array($rows) && count($rows)) {
             $obj_array = array();
             /// Read in all the users, and instantiate an array of objects.
@@ -418,12 +418,12 @@ class c_comdef_server
                     mktime($t1[0], $t1[1], $t1[2], $t0[1], $t0[2], $t0[0])
                 );
             }
-            
+
             /// Create our internal container, and give it the array.
             $this->_users_obj = new c_comdef_users($this, $obj_array);
         }
     }
-    
+
     /*******************************************************************/
     /** \brief This is an internal function that reads in all of the
         stored service bodies and instantiates local objects for them.
@@ -434,11 +434,11 @@ class c_comdef_server
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $this->_service_obj_array = array();
-        
+
         $sql = "SELECT * FROM `".self::GetServiceBodiesTableName_obj()."` ORDER BY id_bigint";
-        
+
         $rows = c_comdef_dbsingleton::preparedQuery($sql);
-        
+
         if (is_array($rows) && count($rows)) {
             /// Read in all the service bodies, and instantiate an array of objects.
             foreach ($rows as $row) {
@@ -459,7 +459,7 @@ class c_comdef_server
                     $row['sb_meeting_email']
                 ));
             }
-            
+
             // What we do here, is look for orphans, and assign them a parent ID of 0.
             for ($c = 0; $c < count($this->_service_obj_array); $c++) {
                 $parent_id = $this->_service_obj_array[$c]->GetOwnerID();
@@ -471,14 +471,14 @@ class c_comdef_server
                         break;
                     }
                 }
-                
+
                 if (!$found) {
                     $this->_service_obj_array[$c]->SetOwnerID(0);
                 }
             }
         }
     }
-    
+
     /*******************************************************************/
     /** \brief This gathers the IDs of all the Service bodies that appear
         in meeting records. It is NOT a dump of the Service Bodies table.
@@ -488,13 +488,13 @@ class c_comdef_server
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $sql = "SELECT service_body_bigint FROM `".self::GetMeetingTableName_obj()."_main` ORDER BY service_body_bigint";
-        
+
         $rows = c_comdef_dbsingleton::preparedQuery($sql);
-        
+
         // Just makes sure that old allocations are explicitly gone.
         $this->_service_ids = null;
         $this->_service_ids = array();
-        
+
         if (is_array($rows) && count($rows)) {
             foreach ($rows as $rs) {
                 $key = $rs['service_body_bigint'];
@@ -510,7 +510,7 @@ class c_comdef_server
             }
         }
     }
-    
+
     /*******************************************************************/
     /** \brief Simply returns a reference to the contained Service Body
         array.
@@ -523,7 +523,7 @@ class c_comdef_server
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return $this->_service_obj_array;
     }
-    
+
     /*******************************************************************/
     /** \brief Returns the Service Body objects in a nested, hierarchical
         array, with "parents" containing "children."
@@ -538,7 +538,7 @@ class c_comdef_server
         $ret_array = $this->GetNestedServiceBodyArray(0);
         return $ret_array;
     }
-    
+
     /*******************************************************************/
     /** \brief  This reads the Service bodies in hierarchical order, and
                 returns them in a multi-dimensional array that reflects
@@ -558,7 +558,7 @@ class c_comdef_server
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret_array = null;
-        
+
         if ($in_id) {
             $sb = $this->GetServiceBodyByIDObj($in_id);
             if ($sb instanceof c_comdef_service_body) {
@@ -572,16 +572,16 @@ class c_comdef_server
                 $id = $sb->GetID();
 
                 $sb_parent = intval($sb->GetOwnerID());
-                
+
                 if ($sb_parent == $in_id) {
                     $ret_array['dependents'][$id] = $this->GetNestedServiceBodyArray($id);
                 }
             }
         }
-        
+
         return $ret_array;
     }
-    
+
     /*******************************************************************/
     /** \brief Simply returns a reference to the formats container.
 
@@ -594,10 +594,10 @@ class c_comdef_server
         if (!$this->_formats_obj) {
             $this->ReadFormats();
         }
-        
+
         return $this->_formats_obj;
     }
-    
+
     /*******************************************************************/
     /** \brief Simply returns an array of the format objects.
 
@@ -609,7 +609,7 @@ class c_comdef_server
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return ($this->GetFormatsObj() instanceof c_comdef_formats) ? $this->GetFormatsObj()->GetFormatsArray() : null;
     }
-    
+
     /*******************************************************************/
     /** \brief Simply returns an array of the format objects used by the meetings (no unused ones).
 
@@ -622,20 +622,20 @@ class c_comdef_server
         $ret = null;
         $formats_array = $this->GetFormatsArray();
         $all_formats = $formats_array[$this->GetLocalLang()];
-        
+
         if (is_array($all_formats) && count($all_formats) && is_array($this->GetUsedFormatIDs()) && count($this->GetUsedFormatIDs())) {
             $ret = array();
-            
+
             foreach ($all_formats as $format) {
                 if (in_array($format->GetSharedID(), $this->GetUsedFormatIDs())) {
                     $ret[$format->GetSharedID()] = $format;
                 }
             }
         }
-            
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Return the shared IDs of the formats actually used by the contained meetings.
                This can be used to avoid showing format codes that are not relevant to the database.
@@ -649,10 +649,10 @@ class c_comdef_server
         if (!$this->_used_format_ids) {
             $this->ReadFormats();
         }
-        
+
         return $this->_used_format_ids;
     }
-    
+
     /*******************************************************************/
     /** \brief Simply returns the stored service IDs.
 
@@ -665,7 +665,7 @@ class c_comdef_server
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return $this->_service_ids;
     }
-    
+
     /*******************************************************************/
     /** \brief Simply returns the stored service IDs for ALL Service Bodies.
 
@@ -679,7 +679,7 @@ class c_comdef_server
         $ret = null;
 
         $ar = $this->GetServiceBodyArray();
-        
+
         if (is_array($ar) && count($ar)) {
             foreach ($ar as &$sb) {
                 if ($sb instanceof c_comdef_service_body) {
@@ -689,15 +689,15 @@ class c_comdef_server
                     if ($name) {
                         $key = $name;
                     }
-                        
+
                     $ret[$key] = $value;
                 }
             }
         }
-        
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief This creates a new meeting that is an exact duplicate of
         the object for the meeting whose ID is passed in. The new meeting
@@ -711,20 +711,20 @@ class c_comdef_server
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = 0;
-        
+
         $meeting_to_copy = self::GetOneMeeting($in_meeting_id);
-        
+
         if ($meeting_to_copy instanceof c_comdef_meeting) {
             $copy = self::DuplicateMeetingObj($meeting_to_copy);
-            
+
             if ($copy instanceof c_comdef_meeting) {
                 $ret = $copy->GetID();
             }
         }
-        
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief This creates a new meeting that is an exact duplicate of
         the object passed in. The new meeting has a new ID, and is unpublished.
@@ -737,23 +737,23 @@ class c_comdef_server
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $new_meeting =  null;
-        
+
         if ($in_meeting_obj instanceof c_comdef_meeting) {
             $meeting_data = $in_meeting_obj->GetMeetingData();
             $meeting_data['id_bigint'] = 0;
             $meeting_data['published'] = 0;
             $meeting_data['copy'] = $in_meeting_obj->GetID();
-            
+
             $new_meeting = new c_comdef_meeting(self::GetServer(), $meeting_data);
-            
+
             if ($new_meeting instanceof c_comdef_meeting) {
                 $new_meeting->UpdateToDB();
             }
         }
-        
+
         return $new_meeting;
     }
-    
+
     /*******************************************************************/
     /** \brief Creates a new, relatively empty meeting in the database,
         with no data fields and minimal information.
@@ -769,38 +769,38 @@ class c_comdef_server
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $id = null;
-        
+
         if (!$in_lang_enum) {
             $in_lang_enum = self::GetServer()->GetLocalLang();
         }
-        
+
         if (!$in_lang_enum) {
             global  $comdef_global_language;
             $in_lang_enum = $comdef_global_language;
         }
-        
+
         // Should never happen.
         if (!$in_lang_enum) {
             $in_lang_enum = "en";
         }
 
         $meeting_data = array ( 'service_body_bigint'=>intval($in_service_body_bigint), 'weekday_tinyint'=>intval($in_weekday_tinyint), 'start_time'=>intval($in_start_time_int), 'lang_enum'=>$in_lang_enum );
-        
+
         $new_meeting = new c_comdef_meeting(self::GetServer(), $meeting_data);
-        
+
         if ($new_meeting instanceof c_comdef_meeting) {
             $my_localized_strings = self::GetServer()->GetLocalStrings();
             $data =& $new_meeting->GetMeetingData();
             $data['longitude'] = floatval($my_localized_strings['search_spec_map_center']['longitude']);
             $data['latitude'] = floatval($my_localized_strings['search_spec_map_center']['latitude']);
-            
+
             $new_meeting->UpdateToDB();
             $id = $new_meeting->GetID();
         }
-        
+
         return $id;
     }
-    
+
     /*******************************************************************/
     /** \brief Creates a new Service Body in the Database.
 
@@ -829,38 +829,38 @@ class c_comdef_server
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $id = null;
-        
+
         if (!$in_lang_enum) {
             $in_lang_enum = self::GetServer()->GetLocalLang();
         }
-        
+
         if (!$in_lang_enum) {
             global  $comdef_global_language;
             $in_lang_enum = $comdef_global_language;
         }
-        
+
         // Should never happen.
         if (!$in_lang_enum) {
             $in_lang_enum = "en";
         }
 
         $service_body = new c_comdef_service_body(self::GetServer(), null, $in_principal_user_bigint, $in_editors_string, $in_kml_uri_string, $in_uri_string, $in_name_string, $in_description_string, $in_lang_enum, $in_worldid_mixed, $in_sb_type, $in_sb_owner);
-        
+
         if ($service_body instanceof c_comdef_service_body) {
             try {
                 $service_body->UpdateToDB();
                 $id = $service_body->GetID();
                 $service_body = null;
-                
+
                 self::GetServer()->ReadServiceBodies();
             } catch (Exception $e) {  // We just eat the exception and return null.
                 $id = null;
             }
         }
-        
+
         return $id;
     }
-    
+
     /*******************************************************************/
     /** \brief Creates a new user in the Database.
 
@@ -879,40 +879,40 @@ class c_comdef_server
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $id = null;
-        
+
         if (!$in_lang_enum) {
             $in_lang_enum = self::GetServer()->GetLocalLang();
         }
-        
+
         if (!$in_lang_enum) {
             global  $comdef_global_language;
             $in_lang_enum = $comdef_global_language;
         }
-        
+
         // Should never happen.
         if (!$in_lang_enum) {
             $in_lang_enum = "en";
         }
-        
+
         $encrypted_password = FullCrypt(trim($in_user_unencrypted_password));
-        
+
         $user_obj = new c_comdef_user(self::GetServer(), null, $in_user_level, $in_user_email, $in_user_login, $encrypted_password, $in_lang_enum, $in_name_string, $in_description_string, $in_owner_id);
-        
+
         if ($user_obj instanceof c_comdef_user) {
             try {
                 $user_obj->UpdateToDB();
                 $id = $user_obj->GetID();
                 $user_obj = null;
-            
+
                 self::GetServer()->ReadUsers();
             } catch (Exception $e) {  // We just eat the exception and return null.
                 $id = null;
             }
         }
-        
+
         return $id;
     }
-    
+
     /*******************************************************************/
     /** \brief trims the changes for the given item.
     */
@@ -929,33 +929,33 @@ class c_comdef_server
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         include(dirname(__FILE__)."/config/get-config.php");
-        
+
         $change_limit = 0;
-        
+
         if ($in_type == 'c_comdef_meeting') {
             $change_limit = $change_depth_for_meetings;
         }
-        
+
         if ($change_limit) {
             // Get rid of oldest change first.
             $changes = self::GetChangesFromIDAndType($in_type, $in_id);
 
             if ($changes instanceof c_comdef_changes) {
                 $ch_objs = $changes->GetChangesObjects();
-                
+
                 if (is_array($ch_objs)) {
                     $counted = count($ch_objs);
-                    
+
                     while ($counted-- > $change_limit) {
                         $ch_objs[$counted]->DeleteFromDB();
                     }
                 }
-                
+
                 $changes = null;
             }
         }
     }
-    
+
     /*******************************************************************/
     /** \brief Creates a new change record in the Database.
 
@@ -985,23 +985,23 @@ class c_comdef_server
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $id = null;
-        
+
         if (!$in_lang_enum) {
             $in_lang_enum = self::GetServer()->GetLocalLang();
         }
-        
+
         if (!$in_lang_enum) {
             global  $comdef_global_language;
             $in_lang_enum = $comdef_global_language;
         }
-        
+
         // Should never happen.
         if (!$in_lang_enum) {
             $in_lang_enum = "en";
         }
-        
+
         $change_obj = new c_comdef_change(self::GetServer(), $in_change_type, $in_user_id_bigint, $in_service_body_id_bigint, $in_before_string, $in_after_string, $in_object_class_string, $in_before_obj_id_bigint, $in_after_obj_id_bigint, $in_before_obj_lang_enum, $in_after_obj_lang_enum, null, $in_name_string, $in_description_string, $in_lang_enum);
-        
+
         if ($change_obj instanceof c_comdef_change) {
             try {
                 $change_obj->UpdateToDB();
@@ -1011,17 +1011,17 @@ class c_comdef_server
                 $id = null;
             }
         }
-        
+
         $cid = $in_before_obj_id_bigint;
         if (!$cid) {
             $cid = $in_after_obj_id_bigint;
         }
-        
+
         self::TrimChanges($in_object_class_string, $cid);
-        
+
         return $id;
     }
-    
+
     /*******************************************************************/
     /** \brief Simply returns the namespace of this server.
 
@@ -1033,7 +1033,7 @@ class c_comdef_server
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return self::$server_instance->_server_namespace;
     }
-    
+
     /*******************************************************************/
     /** \brief Simply returns the name of the format table.
 
@@ -1045,7 +1045,7 @@ class c_comdef_server
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return self::$server_instance->_format_table_name;
     }
-    
+
     /*******************************************************************/
     /** \brief Simply returns the name of the meetings table.
 
@@ -1057,7 +1057,7 @@ class c_comdef_server
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return self::$server_instance->_meeting_table_name;
     }
-    
+
     /*******************************************************************/
     /** \brief Simply returns the name of the changes table.
 
@@ -1069,7 +1069,7 @@ class c_comdef_server
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return self::$server_instance->_changes_table_name;
     }
-    
+
     /*******************************************************************/
     /** \brief Simply returns the name of the service bodies table.
 
@@ -1081,7 +1081,7 @@ class c_comdef_server
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return self::$server_instance->_service_bodies_table_name;
     }
-    
+
     /*******************************************************************/
     /** \brief Simply returns the name of the user table.
 
@@ -1100,7 +1100,7 @@ class c_comdef_server
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return self::$server_instance->_db_version_table_name;
     }
-    
+
     /*******************************************************************/
     /** \brief Get the local readable string for the server languages.
 
@@ -1128,7 +1128,7 @@ class c_comdef_server
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return self::GetServer()->_users_obj;
     }
-    
+
     /*******************************************************************/
     /** \brief Get the object for a single user, given an ID
 
@@ -1143,12 +1143,12 @@ class c_comdef_server
 
         if (0 < intval($in_user_id_bigint)) {
             $users_obj = self::GetServer()->_users_obj;
-            
+
             if ($users_obj instanceof c_comdef_users) {
                 $ret = $users_obj->GetUserByID($in_user_id_bigint);
             }
         }
-        
+
         return $ret;
     }
 
@@ -1164,13 +1164,13 @@ class c_comdef_server
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
-        
+
         $users_obj = self::GetServer()->_users_obj;
-        
+
         if ($users_obj instanceof c_comdef_users) {
             $ret = $users_obj->GetUserByLogin($in_login);
         }
-        
+
         return $ret;
     }
 
@@ -1187,16 +1187,16 @@ class c_comdef_server
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
-        
+
         $users_obj = self::GetServer()->_users_obj;
-        
+
         if ($users_obj instanceof c_comdef_users) {
             $ret = $users_obj->GetUserByLoginCredentials($in_login, $in_password);
         }
-        
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Get the current logged-in user, as a c_comdef_user instance.
 
@@ -1211,11 +1211,11 @@ class c_comdef_server
         include(dirname(__FILE__).'/config/get-config.php');
 
         $ret = null;
-    
+
         if (!isset($_SESSION)) {
             session_start();
         }
-    
+
         if (isset($_SESSION[$admin_session_name])) {
             list ( $login_id, $encrypted_password ) = explode("\t", $_SESSION[$admin_session_name]);
             $ret = self::GetUserByLoginCredentials($login_id, $encrypted_password);
@@ -1223,7 +1223,7 @@ class c_comdef_server
 
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Find out if the user is a server admin.
 
@@ -1236,15 +1236,15 @@ class c_comdef_server
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = false;
-    
+
         if (!($in_user_obj instanceof c_comdef_user)) {
             $in_user_obj = self::GetCurrentUserObj($in_is_ajax);
         }
-    
+
         if ($in_user_obj instanceof c_comdef_user) {
             $ret = ($in_user_obj->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN);
         }
-    
+
         return $ret;
     }
 
@@ -1285,16 +1285,16 @@ class c_comdef_server
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
-    
+
         $users_obj = self::GetServer()->_users_obj;
-    
+
         if ($users_obj instanceof c_comdef_users) {
             $ret = $users_obj->GetEncryptedPW($in_login, $in_password);
         }
-        
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Get the objects for all users of a certain user level.
 
@@ -1308,22 +1308,22 @@ class c_comdef_server
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret_array = null;
-            
+
         $users_obj = self::GetServer()->_users_obj;
-        
+
         if ($users_obj instanceof c_comdef_users) {
             $user_array = $users_obj->GetUsersArray();
-            
+
             foreach ($user_array as &$user_obj) {
                 if (($user_obj->GetUserLevel() > 0) && ($in_include_disabled || ($user_obj->GetUserLevel() != _USER_LEVEL_DISABLED)) && (($user_obj->GetUserLevel() == $in_user_level_bigint) || ($in_or_higher && ($user_obj->GetUserLevel() < $in_user_level_bigint)))) {
                     $ret_array[$user_obj->GetID()] = $user_obj;
                 }
             }
         }
-        
+
         return $ret_array;
     }
-    
+
     /*******************************************************************/
     /** \brief Get the object for a single service body, given an ID
 
@@ -1352,7 +1352,7 @@ class c_comdef_server
 
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Return the IDs of an entire Service body hierarchy.
 
@@ -1384,7 +1384,7 @@ class c_comdef_server
 
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Given an ID and a language for a format, as well as a code,
         returns true if the code does NOT appear in the DB.
@@ -1400,15 +1400,15 @@ class c_comdef_server
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $sql = "SELECT * FROM `".self::GetFormatTableName_obj()."` WHERE key_string=? AND lang_enum=?";
-        
+
         $rows = c_comdef_dbsingleton::preparedQuery($sql, array ( $in_key_string, $in_lang_enum ));
         if (is_array($rows) && count($rows)) {
             return false;
         }
-        
+
         return true;
     }
-    
+
     /*******************************************************************/
     /** \brief Given an ID and a language for a format, it returns one instance.
 
@@ -1426,7 +1426,7 @@ class c_comdef_server
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $sql = "SELECT * FROM `".self::GetFormatTableName_obj()."` WHERE shared_id_bigint=? AND lang_enum=? LIMIT 1";
-        
+
         $rows = c_comdef_dbsingleton::preparedQuery($sql, array ( $in_id_bigint, $in_lang_enum ));
         if (is_array($rows) && count($rows)) {
             $rs = $rows[0];
@@ -1443,10 +1443,10 @@ class c_comdef_server
                 $rs['description_string']
             );
         }
-        
+
         return null;
     }
-    
+
     /*******************************************************************/
     /** \brief Given an ID for a meeting, it returns true if the meeting currently exists.
 
@@ -1460,17 +1460,17 @@ class c_comdef_server
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $sql = "SELECT id_bigint FROM `".self::GetMeetingTableName_obj()."_main` WHERE ".self::GetMeetingTableName_obj()."_main.id_bigint=? LIMIT 1";
-        
+
         $ret = false;
-        
+
         $rows = c_comdef_dbsingleton::preparedQuery($sql, array ( $in_id_bigint ));
         if (is_array($rows) && count($rows)) {
             $ret = true;
         }
-        
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Given an ID for a meeting, it returns one instance.
 
@@ -1488,13 +1488,13 @@ class c_comdef_server
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $sql = "SELECT * FROM `".self::GetMeetingTableName_obj()."_main` WHERE ".self::GetMeetingTableName_obj()."_main.id_bigint=? LIMIT 1";
-        
+
         $rows = c_comdef_dbsingleton::preparedQuery($sql, array ( $in_id_bigint ));
         if (is_array($rows) && count($rows)) {
             if ($test_only) {
                 return true;
             }
-            
+
             foreach ($rows as $row) {
                 // We use the static function in the c_comdef_meeting class to process the data for the meeting.
                 $meeting_row = c_comdef_meeting::process_meeting_row($row);
@@ -1502,14 +1502,14 @@ class c_comdef_server
                 return new c_comdef_meeting(self::GetServer(), $meeting_row);
             }
         }
-        
+
         if ($test_only) {
             return false;
         }
-        
+
         return null;
     }
-    
+
     /*******************************************************************/
     /** \brief Given an ID for a change, it returns one instance.
 
@@ -1526,14 +1526,14 @@ class c_comdef_server
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
-        
+
         $sql = "SELECT * FROM `".self::GetChangesTableName_obj()."` WHERE id_bigint=? LIMIT 1";
-        
+
         $changes = self::GetServer()->GetChangesFromSQL($sql, array ( $in_id_bigint ));
-        
+
         if ($changes instanceof c_comdef_changes) {
             $c_array = $changes->GetChangesObjects();
-            
+
             if (is_array($c_array) && count($c_array)) {
                 // Just to spike an associative-only array. Silly, I know, but I've had problems in the past. PHP is wacky.
                 foreach ($c_array as $change) {
@@ -1542,10 +1542,10 @@ class c_comdef_server
                 }
             }
         }
-        
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Given an ID for a user, it returns one instance.
 
@@ -1560,9 +1560,9 @@ class c_comdef_server
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
-        
+
         $sql = "SELECT * FROM `".self::GetUserTableName_obj()."` WHERE id_bigint=? LIMIT 1";
-        
+
         $rows = c_comdef_dbsingleton::preparedQuery($sql, array ( $in_id_bigint ));
         if (is_array($rows) && count($rows)) {
             foreach ($rows as $row) {
@@ -1581,10 +1581,10 @@ class c_comdef_server
                 );
             }
         }
-        
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Get a series of meetings, each identified by an ID. This does
         not filter by any of the other major criteria. It is designed to
@@ -1598,9 +1598,9 @@ class c_comdef_server
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $sql = "SELECT * FROM `".self::GetMeetingTableName_obj()."_main` WHERE ";
-        
+
         $first = true;
-        
+
         // We don't actually care what the array contains. We're just counting them out.
         foreach ($in_id_bigint_array as $in_id_bigint) {
             if (!$first) {
@@ -1608,13 +1608,13 @@ class c_comdef_server
             } else {
                 $first = false;
             }
-            
+
             $sql .= "(".self::GetMeetingTableName_obj()."_main.id_bigint=?)";
         }
-        
+
         return self::GetMeetingsFromSQL($sql, $in_id_bigint_array);
     }
-    
+
     /*******************************************************************/
     /** \brief Given a set of one or more main criteria, returns a new
         c_comdef_meetings object with instances of those meetings, loaded
@@ -1690,10 +1690,10 @@ class c_comdef_server
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $previous = false;  // This is used to tell subsequent tests to use AND instead of WHERE
-        
+
         $sql = "SELECT * FROM `".self::GetMeetingTableName_obj()."_main`";
         $ar = array ( );
-        
+
         if (is_array($in_service_body_id_bigint_array) && count($in_service_body_id_bigint_array)) {
             $sql .= " WHERE (";
             $previous = true;
@@ -1704,11 +1704,11 @@ class c_comdef_server
                 if ($service_body_id < 0) {
                     $service_body_id = abs($service_body_id);
                     $sql_x = " NOT ";
-                    
+
                     if (!$first) {
                         $sql_x = " AND $sql_x";
                     }
-                    
+
                     $first = true;  // This makes the OR get skipped.
                 }
 
@@ -1717,13 +1717,13 @@ class c_comdef_server
                 } else {
                     $first = false;
                 }
-                    
+
                 $sql .= "$sql_x(".self::GetMeetingTableName_obj()."_main.service_body_bigint=?)";
                 array_push($ar, $service_body_id);
             }
             $sql .= ")";
         }
-        
+
         if (is_array($in_lang_filter_array) && count($in_lang_filter_array)) {
             if ($previous) {
                 $sql .= " AND ";
@@ -1731,22 +1731,22 @@ class c_comdef_server
                 $sql .= " WHERE ";
                 $previous = true;
             }
-            
+
             $sql .= "(";
-            
+
             $first = true;
             foreach ($in_lang_filter_array as $lang) {
                 $not = preg_match("|^\-(.*)|", $lang, $matches);
-                
+
                 $sql_x = "";
                 if ($not) {
                     $lang = $matches[1];
                     $sql_x = " NOT ";
-                    
+
                     if (!$first) {
                         $sql_x = " AND $sql_x";
                     }
-                    
+
                     $first = true;  // This makes the OR get skipped.
                 }
 
@@ -1755,23 +1755,23 @@ class c_comdef_server
                 } else {
                     $first = false;
                 }
-                    
+
                 $sql .= "$sql_x(".self::GetMeetingTableName_obj()."_main.lang_enum=?)";
 
                 array_push($ar, $lang);
             }
             $sql .= ")";
         }
-        
+
         if (is_array($in_weekday_tinyint_array) && count($in_weekday_tinyint_array)) {
             $valid = false;
-            
+
             foreach ($in_weekday_tinyint_array as $weekday) {
                 if (abs(intval($weekday)) > 0 && abs(intval($weekday)) < 8) {
                     $valid = true;
                 }
             }
-            
+
             if ($valid) {
                 if ($previous) {
                     $sql .= " AND ";
@@ -1779,9 +1779,9 @@ class c_comdef_server
                     $sql .= " WHERE ";
                     $previous = true;
                 }
-                
+
                 $sql .= "(";
-                
+
                 $first = true;
                 foreach ($in_weekday_tinyint_array as $weekday) {
                     $weekday = intval($weekday);
@@ -1789,20 +1789,20 @@ class c_comdef_server
                     if ($weekday < 0) {
                         $weekday = abs($weekday);
                         $sql_x = " NOT ";
-                        
+
                         if (!$first) {
                             $sql_x = " AND $sql_x";
                         }
-                        
+
                         $first = true;  // This makes the OR get skipped.
                     }
-    
+
                     if (!$first) {
                         $sql_x .= " OR ";
                     } else {
                         $first = false;
                     }
-                    
+
                     $sql .= "$sql_x(".self::GetMeetingTableName_obj()."_main.weekday_tinyint=?)";
                     array_push($ar, $weekday-1);
                 }
@@ -1816,25 +1816,25 @@ class c_comdef_server
         } else {
             $in_start_after = "00:00:00";
         }
-        
+
         if (null != $in_start_before) {
             $in_start_before = date("H:i:00", intval($in_start_before));
         } else {
             $in_start_before = "00:00:00";
         }
-        
+
         if (null != $in_end_before) {
             $in_end_before = intval($in_end_before);
         } else {
             $in_end_before = null;
         }
-        
+
         if (null != $in_min_duration) {
             $in_min_duration = date("H:i:00", intval($in_min_duration));
         } else {
             $in_min_duration = "00:00:00";
         }
-        
+
         if (null != $in_max_duration) {
             $in_max_duration = date("H:i:00", intval($in_max_duration));
         } else {
@@ -1852,7 +1852,7 @@ class c_comdef_server
 
             array_push($ar, $in_start_after);
         }
-        
+
         if ($in_start_before != "00:00:00") {
             if ($previous) {
                 $sql .= " AND ";
@@ -1864,7 +1864,7 @@ class c_comdef_server
 
             array_push($ar, $in_start_before);
         }
-        
+
         if ($in_end_before != null) {
             if ($previous) {
                 $sql .= " AND ";
@@ -1877,7 +1877,7 @@ class c_comdef_server
 
             array_push($ar, $in_end_before);
         }
-        
+
         if ($in_min_duration != "00:00:00") {
             if ($previous) {
                 $sql .= " AND ";
@@ -1886,10 +1886,10 @@ class c_comdef_server
                 $previous = true;
             }
             $sql .= self::GetMeetingTableName_obj()."_main.duration_time>=?";
-            
+
             array_push($ar, $in_min_duration);
         }
-        
+
         if ($in_max_duration != "00:00:00") {
             if ($previous) {
                 $sql .= " AND ";
@@ -1898,10 +1898,10 @@ class c_comdef_server
                 $previous = true;
             }
             $sql .= self::GetMeetingTableName_obj()."_main.duration_time<=?";
-            
+
             array_push($ar, $in_max_duration);
         }
-        
+
         if (is_array($in_search_rect_array) && isset($in_search_rect_array['east']) && isset($in_search_rect_array['west']) && isset($in_search_rect_array['north']) && isset($in_search_rect_array['south'])) {
             if ($previous) {
                 $sql .= " AND ";
@@ -1909,7 +1909,7 @@ class c_comdef_server
                 $sql .= " WHERE ";
                 $previous = true;
             }
-            
+
             $east = floatval($in_search_rect_array['east']);
             $west = floatval($in_search_rect_array['west']);
             $north = floatval($in_search_rect_array['north']);
@@ -1920,7 +1920,7 @@ class c_comdef_server
             } else {
                 $sql .= "(longitude <= $west) AND (longitude >= $east)";
             }
-                
+
                 $sql .= " AND (latitude <= $north) AND (latitude >= $south)";
             $sql .= ")";
         }
@@ -1940,9 +1940,9 @@ class c_comdef_server
                 $sql .= "(published=1)";
             }
         }
-                
+
         $ret = null;
-        
+
         if (is_array($in_formats) && count($in_formats)) {
             $column = self::GetMeetingTableName_obj()."_main.formats";
 
@@ -2004,10 +2004,10 @@ class c_comdef_server
                 $sql .= ")";
             }
         }
-        
+
         if (!$ret) {
             $sql .= " ORDER BY service_body_bigint, id_bigint";
-        
+
             if (intval($in_num)) {
                 $in_first = intval($in_first);
                 $in_num = intval($in_num);
@@ -2015,11 +2015,11 @@ class c_comdef_server
             }
 
             $ret = self::GetMeetingsFromSQL($sql, $ar);
-            
+
             if (intval($in_num)) {
                 $in_num = count($ret->GetMeetingObjects());
             }
-            
+
             if ($ret && isset($east) && isset($west) && isset($north) && isset($south)) {
                 $center_lat = ($north + $south) / 2.0;
                 $center_long = ($east + $west) / 2.0;
@@ -2035,7 +2035,7 @@ class c_comdef_server
         }
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Returns a c_comdef_meetings_object, containing all the meetings
         directly "owned" by the Service Body whose ID is submitted.
@@ -2051,10 +2051,10 @@ class c_comdef_server
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $sql = "SELECT * FROM `".self::GetMeetingTableName_obj()."_main` WHERE ".self::GetMeetingTableName_obj()."_main.service_body_bigint=? ORDER BY id_bigint";
-        
+
         return self::GetMeetingsFromSQL($sql, array ( $in_sb_id ));
     }
-    
+
     /*******************************************************************/
     /** \brief Returns a c_comdef_meetings_object, containing all the meetings (Published and unpublished).
 
@@ -2071,34 +2071,34 @@ class c_comdef_server
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $in_out_numResults = 0;
-        
+
         if (!isset($in_startIndex)) {
             $in_startIndex = 0;
         }
-        
+
         if (isset($in_numResults)) {
             $in_numResults += $in_startIndex;
         } else {
             $in_startIndex = null;
         }
-        
+
         $sql = "SELECT * FROM `".self::GetMeetingTableName_obj()."_main`";
-        
+
         if ($in_startIndex || $in_numResults) {
             $sql .= ' LIMIT ';
-            
+
             $sql .= $in_startIndex.', '.$in_numResults;
         }
 
         $ret = self::GetMeetingsFromSQL($sql);
-     
+
         if ($ret instanceof c_comdef_meetings) {
             $in_out_numResults = $ret->GetNumMeetings();
         }
-            
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief This is an alternative to the MySQL REGEXP test. It will
         go through all the meetings returned by a broad query, and remove
@@ -2122,16 +2122,16 @@ class c_comdef_server
                     $found++;
                 }
             }
-            
+
             // If we didn't find them all, we nuke the meeting.
             if ($found != count($in_formats)) {
                 $in_meetings->RemoveMeeting($meeting->GetID());
             }
         }
-        
+
         return ( $in_meetings );
     }
-    
+
     /*******************************************************************/
     /** \brief  Returns a set of two coordinates that define a rectangle
                 that encloses all of the meetings.
@@ -2143,9 +2143,9 @@ class c_comdef_server
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $sql = "SELECT longitude, latitude FROM `".self::GetMeetingTableName_obj()."_main` WHERE `published`='1'";
-        
+
         $ret = null;
-        
+
         try {
             $arr = array();
             $rows = c_comdef_dbsingleton::preparedQuery($sql, $arr);
@@ -2170,7 +2170,7 @@ class c_comdef_server
                                 $nw_corner["longitude"] = min($lon, $nw_corner["longitude"]);
                             }
                         }
-                        
+
                         if ($se_corner["longitude"] === false) {
                             $se_corner["longitude"] = $lon;
                         } else {
@@ -2182,13 +2182,13 @@ class c_comdef_server
                                 $se_corner["longitude"] = max($lon, $se_corner["longitude"]);
                             }
                         }
-                        
+
                         if ($nw_corner["latitude"] === false) {
                             $nw_corner["latitude"] = $lat;
                         } else {
                             $nw_corner["latitude"] = max($lat, $nw_corner["latitude"]);
                         }
-                        
+
                         if ($se_corner["latitude"] === false) {
                             $se_corner["latitude"] = $lat;
                         } else {
@@ -2197,13 +2197,13 @@ class c_comdef_server
                     }
                 }
             }
-                
+
             $ret["nw_corner"] = $nw_corner;
             $ret["se_corner"] = $se_corner;
         } catch (Exception $e) {
             $ret = null;
         }
-            
+
         return $ret;
     }
 
@@ -2226,7 +2226,7 @@ class c_comdef_server
 
         $meeting_data = array();
         $this_meetings_object = null;
-        
+
         if (is_array($rows) && count($rows)) {
             foreach ($rows as $row) {
                 // We use the static function in the c_comdef_meeting class to process the data for the meeting.
@@ -2235,14 +2235,14 @@ class c_comdef_server
                 // Add this to our aggregator array.
                 $meeting_data[$row['id_bigint']] = $meeting_row;
             }
-        
+
             // We now instantiate a c_comdef_meetings object, and create our c_comdef_meeting objects.
             $this_meetings_object = new c_comdef_meetings(self::GetServer(), $meeting_data);
         }
-        
+
         return $this_meetings_object;
     }
-    
+
     /*******************************************************************/
     /** \brief  Gets a list of all change objects of a certain type, or
         only one, if the change affects a certain class, and an ID is
@@ -2268,27 +2268,27 @@ class c_comdef_server
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $sql = "SELECT * FROM `".self::GetChangesTableName_obj()."` WHERE";
-        
+
         if (null != $in_id) {
             $in_id = intval($in_id);
             $sql .= " ((before_id_bigint=$in_id) OR (after_id_bigint=$in_id)) AND";
         }
-            
+
         if (intval($in_start_date)) {
             $start_date = date('Y-m-d 00:00:00', intval($in_start_date));
             $sql .= " (change_date>='$start_date') AND";
         }
-            
+
         if (intval($in_end_date)) {
             $end_date = date('Y-m-d 23:59:59', intval($in_end_date));
             $sql .= " (change_date<='$end_date') AND";
         }
-        
+
         $sql .= " (object_class_string=?) ORDER BY change_date DESC";
-        
+
         return self::GetServer()->GetChangesFromSQL($sql, array ( $in_type ));
     }
-    
+
     /*******************************************************************/
     /** \brief  This function allows you to get a list of changes by object
         type, and change type (such as all deleted meetings, or all rolled-back
@@ -2317,7 +2317,7 @@ class c_comdef_server
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $sql = "SELECT * FROM `".self::GetChangesTableName_obj()."` WHERE (object_class_string=?) AND (change_type_enum=?) ORDER BY change_date DESC";
-        
+
         return self::GetServer()->GetChangesFromSQL($sql, array ( $in_o_type, $in_change_type ));
     }
 
@@ -2333,7 +2333,7 @@ class c_comdef_server
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return 111.321 * cos(deg2rad($dLatitude));
     }
-    
+
     /*******************************************************************/
     /** \brief This is a static utility function that takes a specified
         radius and center point and calculates a square, in longitude and
@@ -2357,15 +2357,15 @@ class c_comdef_server
         $loc = null;
         $vert_radius = $in_radius / 111.000;
         $horiz_radius = $in_radius / (111.321 * cos(deg2rad($in_lat_in_degrees)));
-        
+
         $loc['east'] = $in_long_in_degrees - $horiz_radius;
         $loc['west'] = $in_long_in_degrees + $horiz_radius;
         $loc['north'] = $in_lat_in_degrees + $vert_radius;
         $loc['south'] = $in_lat_in_degrees - $vert_radius;
-        
+
         return $loc;
     }
-    
+
     /*******************************************************************/
     /** \brief Return SQL for a radius circle around the given coordinates.
                This is a special function for MySQL.
@@ -2406,16 +2406,16 @@ class c_comdef_server
              AND p.longpoint + (p.radius / (p.distance_unit * COS(RADIANS(p.latpoint))))
         ) AS d
         WHERE (distance <= radius)";
-        
+
         if ($in_published) {
             $sql .= " AND (published = ?)";
         }
-        
+
         // Belt and suspenders...
         if (isset($in_weekday) && (null != $in_weekday) && is_array($in_weekday) && count($in_weekday)) {
             $wd_yes_array = array();
             $wd_no_array = array();
-            
+
             $sql .= " AND (";
             foreach ($in_weekday as $weekday) {
                 if (0 > intval($weekday)) {
@@ -2424,20 +2424,20 @@ class c_comdef_server
                     $wd_yes_array[] = "(weekday_tinyInt = ".intval($weekday).")";
                 }
             }
-            
+
             if (count($wd_yes_array)) {
                 $sql .= implode(" OR ", $wd_yes_array);
             }
-            
+
             if (count($wd_no_array)) {
                 $sql .= implode(" AND ", $wd_no_array);
             }
-            
+
             $sql .= ")";
         }
-        
+
         $sql .= "\nORDER BY distance;";
-        
+
         return $sql;
     }
 
@@ -2471,14 +2471,14 @@ class c_comdef_server
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
-        
+
         $localized_strings = self::GetLocalStrings();
         $sql1 = "SELECT COUNT(*) FROM `".self::GetMeetingTableName_obj()."_main` WHERE";
         $sql3 = '';
-        
+
         if (is_array($in_weekday_tinyint_array) && count($in_weekday_tinyint_array)) {
             $sql1 .= " (";
-            
+
             $first = true;
             foreach ($in_weekday_tinyint_array as $weekday) {
                 $weekday = intval($weekday);
@@ -2486,11 +2486,11 @@ class c_comdef_server
                 if ($weekday < 0) {
                     $weekday = abs($weekday);
                     $sql_x = " NOT ";
-                    
+
                     if (!$first) {
                         $sql_x = " AND $sql_x";
                     }
-                    
+
                     $first = true;  // This makes the OR get skipped.
                 }
 
@@ -2499,7 +2499,7 @@ class c_comdef_server
                 } else {
                     $first = false;
                 }
-                
+
                 $sql1 .= "$sql_x(".self::GetMeetingTableName_obj()."_main.weekday_tinyint=".strval($weekday - 1).")";
             }
             $sql1 .= ") AND (";
@@ -2513,27 +2513,27 @@ class c_comdef_server
             $radius = floatval($radius) * (($localized_strings['dist_units'] == 'mi') ? 1.609344 : 1.0);
             $current_radius = $radius;
             $arr =  array ();
-            
+
             $show_published_only = (c_comdef_server::GetServer()->GetCurrentUserObj() == null); // We only show published meetings to regular users.
             $arr = array ( $in_lat_in_degrees, $in_long_in_degrees, $radius );
-            
+
             if ($show_published_only) {
                 $arr[] = true;
             }
-            
+
             $sql = c_comdef_server::MySQLGetRadiusSQLClause($show_published_only, $in_weekday_tinyint_array);
-            
+
             try {
                 $rows = c_comdef_dbsingleton::preparedQuery($sql, $arr);
             } catch (Exception $e) {
                 break;
             }
-            
+
             $count = 0;
-            
+
             if (is_array($rows) && count($rows)) {
                 $count = intval($rows[0]["count(*)"]);
-            
+
                 if ($count > $in_search_result_count) {
                     break;
                 }
@@ -2541,7 +2541,7 @@ class c_comdef_server
         }
         return $current_radius;
     }
-    
+
     /*******************************************************************/
     /** \brief Given an SQL statement and a value array (for DBO prepared
         statements), return a new c_comdef_changes object, loaded with the
@@ -2558,17 +2558,17 @@ class c_comdef_server
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $rows = c_comdef_dbsingleton::preparedQuery($in_sql, $in_value_array);
-        
+
         $this_changes_object = null;
-        
+
         if (is_array($rows) && count($rows)) {
             // We now instantiate a c_comdef_changes object, and create our c_comdef_change objects.
             $this_changes_object = new c_comdef_changes($this, $rows);
         }
-        
+
         return $this_changes_object;
     }
-    
+
     /*******************************************************************/
     /** \brief This gets the appropriate language files, and puts all the
         the strings into an associative array. If a language enum is passed in,
@@ -2597,18 +2597,18 @@ class c_comdef_server
         if (!is_array(c_comdef_server::$server_local_strings) || !count(c_comdef_server::$server_local_strings)) {
             // This will create the SINGLETON server if one does not yet exist.
             $server = self::MakeServer();
-        
+
             if ($server instanceof c_comdef_server) {
                 $lang_enum = $server->GetLocalLang();
-            
+
                 if (isset($_GET['lang_enum']) && $_GET['lang_enum']) {
                     $lang_enum = $_GET['lang_enum'];
                 }
-        
+
                 if (isset($_POST['lang_enum']) && $_POST['lang_enum']) {
                     $lang_enum = $_POST['lang_enum'];
                 }
-            
+
                 if (is_array($lang_enum) && count($lang_enum)) {
                     $langs = array();
                     foreach ($lang_enum as $lang) {
@@ -2620,7 +2620,7 @@ class c_comdef_server
                 } elseif ($in_lang_enum && file_exists(dirname(dirname(__FILE__)).'/local_server/server_admin/lang/'.$in_lang_enum)) {
                     $lang_enum = $in_lang_enum;
                 }
-            
+
                 include(dirname(__FILE__)."/config/comdef-config.inc.php");
                 include(dirname(dirname(__FILE__)).'/local_server/server_admin/lang/'.$lang_enum.'/server_admin_strings.inc.php');
 
@@ -2681,24 +2681,24 @@ class c_comdef_server
                                                                                     );
 
                 c_comdef_server::$server_local_strings['default_closed_status'] = (!isset($g_defaultClosedStatus) || $g_defaultClosedStatus) ? 1 : ((isset($g_defaultClosedStatus) && !$g_defaultClosedStatus) ? 0 : 1);
-                c_comdef_server::$server_local_strings['meeting_browser_theme'] = isset($meeting_browser_theme) ? $meeting_browser_theme : "florida-nights";
+                c_comdef_server::$server_local_strings['meeting_browser_theme'] = isset($meeting_browser_theme) ? $meeting_browser_theme : "asheboro";
                 if (trim($comdef_distance_units)) {
                     c_comdef_server::$server_local_strings['dist_units'] = strtolower(trim($comdef_distance_units));
                 } else {
                     c_comdef_server::$server_local_strings['dist_units'] = 'mi';
                 }
-            
+
                 if (isset($default_timezone) && $default_timezone) {
                     date_default_timezone_set($default_timezone);
                 }
-            
+
                 ini_set('default_charset', '');
             }
         }
-    
+
         return c_comdef_server::$server_local_strings;
     }
-    
+
     /*******************************************************************/
     /** \brief Return all the Service Bodies this user is authorized with
 
@@ -2713,36 +2713,36 @@ class c_comdef_server
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
-        
+
         if (!$in_user_id) {
             $in_user_id = self::GetCurrentUserObj()->GetID();
         }
-        
+
         $service_bodies = c_comdef_server::GetServer()->GetServiceBodyArray();
-        
+
         if (is_array($service_bodies) && count($service_bodies)) {
             foreach ($service_bodies as &$service_body) {
                 $is_editor = null;
                 if ($service_body instanceof c_comdef_service_body) {
                     $editors = $service_body->GetEditors();
-                    
+
                     if (is_array($editors) && count($editors)) {
                         if (in_array($in_user_id, $editors)) {
                             $is_editor = 'editor';
                         }
                     }
-                    
+
                     if ($service_body->GetPrincipalUserID() == $in_user_id) {
                         $is_editor = 'principal';
                     }
                 }
-                
+
                 if ($is_editor) {
                     $ret[$service_body->GetID()] = $is_editor;
                 }
             }
         }
-        
+
         return $ret;
     }
 
