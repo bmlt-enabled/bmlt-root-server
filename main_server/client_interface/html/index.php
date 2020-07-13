@@ -56,7 +56,7 @@ if ($user_obj instanceof c_comdef_user && $user_obj->GetUserLevel() != _USER_LEV
                 root_server: "<?php echo str_replace('client_interface/html/', '', GetURLToMainServerDirectory()) ?>",
                 service_body: <?php echo json_encode($service_body_ids) ?>,
                 template_path: "croutonjs/templates",
-                theme: "florida-nights",
+                theme: "<?php echo (isset($_GET["theme"]) ? html_entity_decode($_GET["theme"]) : "florida-nights") ?>",
                 has_languages: "1",
                 has_areas: "1",
                 time_format: "H:mm (h:mma) z",
