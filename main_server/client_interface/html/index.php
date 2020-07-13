@@ -3,6 +3,7 @@ define('ROOTPATH', __DIR__ . '/../..');
 defined('BMLT_EXEC') or define('BMLT_EXEC', 1);
 require_once('../../local_server/server_admin/c_comdef_admin_main_console.class.php');
 $console_object = new c_comdef_admin_main_console($_REQUEST);
+$local_strings = $console_object->my_server->GetLocalStrings();
 $user_obj = $console_object->my_server->GetCurrentUserObj();
 if ($user_obj instanceof c_comdef_user && $user_obj->GetUserLevel() != _USER_LEVEL_DISABLED) {
     $service_body_ids = [];
@@ -56,11 +57,11 @@ if ($user_obj instanceof c_comdef_user && $user_obj->GetUserLevel() != _USER_LEV
                 root_server: "<?php echo str_replace('client_interface/html/', '', GetURLToMainServerDirectory()) ?>",
                 service_body: <?php echo json_encode($service_body_ids) ?>,
                 template_path: "croutonjs/templates",
-                theme: "florida-nights",
+                theme: "<?php echo $local_strings["meeting_browser_theme"] ?>",
                 has_languages: "1",
                 has_areas: "1",
                 time_format: "H:mm (h:mma) z",
-                google_api_key: "<?php echo $console_object->my_server::GetLocalStrings()["google_api_key"] ?>",
+                google_api_key: "<?php echo $local_strings["google_api_key"] ?>",
                 show_map: true,
                 language: "<?php echo getBCP47TagForISO631Language($_COOKIE["bmlt_admin_lang_pref"]) ?>"
             });
