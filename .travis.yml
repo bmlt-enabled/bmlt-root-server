@@ -26,8 +26,7 @@ jobs:
         - DIST_DIR_GITHUB=dist/github
         - GITHUB_RELEASE_FILENAME=bmlt-root-server.zip
       install:
-        - composer install --no-dev
-        - cd main_server/client_interface/html && npm install && cd ../../../
+        - make deps
       script:
         - cp LICENSE.txt main_server && cp .htaccess main_server/vendor
         - find ./main_server -type d | xargs chmod 755
