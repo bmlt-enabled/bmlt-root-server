@@ -42,6 +42,7 @@ class c_comdef_admin_main_console
     public $my_data_field_templates;       ///< This holds the keys for all the possible data fields for this server.
     public $my_editable_service_bodies;    ///< This will contain all the Service bodies that we can actually directly edit.
     public $my_all_service_bodies;         ///< This contains all Service bodies, cleaned for orphans.
+    public $my_observable_service_bodies;  ///< This contains all observable service bodies.
     public $my_lang_ids;                   ///< Contains the enumerations for all the server langs.
     
     /********************************************************************************************************//**
@@ -116,6 +117,7 @@ class c_comdef_admin_main_console
         $this->my_service_bodies = array();
         $this->my_editable_service_bodies = array();
         $this->my_all_service_bodies = array();
+        $this->my_observable_service_bodies = array();
         
         for ($c = 0; $c < count($service_bodies); $c++) {
             $service_body = $service_bodies[$c];
@@ -127,6 +129,10 @@ class c_comdef_admin_main_console
                 array_push($this->my_editable_service_bodies, $service_body);
             }
             
+            if ($service_body->UserCanObserve()) {
+                array_push($this->my_observable_service_bodies, $service_body);
+            }
+
             array_push($this->my_all_service_bodies, $service_body);
         }
         
@@ -450,9 +456,7 @@ class c_comdef_admin_main_console
                     $ret .= $this->return_meeting_editor_panel();
                     // Intentional fallthrough
                 case _USER_LEVEL_OBSERVER:
-                    if ($this->my_user->GetUserLevel() == _USER_LEVEL_OBSERVER) {   // Observers get a link to the meeting search.
-                        $ret .= '<div class="bmlt_admin_observer_link_div"><a href="client_interface/html" class="bmlt_admin_observer_link_a">'.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['Observer_Link_Text']).'</a></div>'.(defined('__DEBUG_MODE__') ? "\n" : '');
-                    }
+                    $ret .= '<div class="bmlt_admin_observer_link_div"><a target="_blank" href="client_interface/html/" class="bmlt_admin_observer_link_a">'.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['Observer_Link_Text']).'</a></div>';
                     $ret .= $this->return_user_account_settings_panel();
                     break;
                 

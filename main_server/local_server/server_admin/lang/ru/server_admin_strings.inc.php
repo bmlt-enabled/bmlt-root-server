@@ -308,7 +308,7 @@
                                             'AJAX_Auth_Failure'                                     =>  'Авторизация не удалась для этой операции. Может быть проблема с конфигурацией сервера.',
                                             'Maps_API_Key_Warning'                                  =>  'Возникла проблема с ключом API Google Maps.',
                                             'Maps_API_Key_Not_Set'                                  =>  'Ключ API Google Maps не установлен.',
-                                            'Observer_Link_Text'                                    =>  'Поиск собраний',
+                                            'Observer_Link_Text'                                    =>  'Meeting Browser',
                                             'Data_Transfer_Link_Text'                               =>  'Импорт данных собрания (ПРЕДУПРЕЖДЕНИЕ: заменяет текущие данные!)',
                                             'MapsURL'                                               =>  'https://maps.google.com/maps?q=##LAT##,##LONG##+(##NAME##)&amp;ll=##LAT##,##LONG##',
                                             'hidden_value'                                          =>  'Невозможно отобразить данные - Несанкционированно',

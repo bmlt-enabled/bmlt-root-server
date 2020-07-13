@@ -305,7 +305,7 @@
                                             'min_password_length_string'                            =>  'La password è troppo corta! Deve essere lunga almeno %d caratteri!', /// 'The password is too short! It must be at least %d characters long!'
                                             'AJAX_Auth_Failure'                                     =>  'Autorizzazione fallita per questa operazione. Ci potrebbe essere un problema con la configurazione del server.', /// 'Authorization failed for this operation. There may be a problem with the server configuration.'
                                             'Maps_API_Key_Warning'                                  =>  'There is a problem with the Google Maps API Key.',
-                                            'Observer_Link_Text'                                    =>  'Ricerca riunioni', /// 'Meeting Search'
+                                            'Observer_Link_Text'                                    =>  'Meeting Browser',
                                             'Data_Transfer_Link_Text'                               =>  'Importazione dati delle riunioni (ATTENZIONE: i dati correnti saranno sostituiti!)', /// 'Import Meeting Data (WARNING: Replaces Current Data!)'
                                             'MapsURL'                                               =>  'https://maps.google.com/maps?q=##LAT##,##LONG##+(##NAME##)&amp;ll=##LAT##,##LONG##',
                                             'hidden_value'                                          =>  'Non è possibile mostrare dati (manca l\'autorizzazione)', /// 'Cannot Display Data -Unauthorized'

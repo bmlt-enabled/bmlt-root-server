@@ -308,7 +308,7 @@
                                             'AJAX_Auth_Failure'                                     =>  'Authorization failed for this operation. There may be a problem with the server configuration.',
                                             'Maps_API_Key_Warning'                                  =>  'There is a problem with the Google Maps API Key.',
                                             'Maps_API_Key_Not_Set'                                  =>  'The Google Maps API key is not set.',
-                                            'Observer_Link_Text'                                    =>  'Meeting Search',
+                                            'Observer_Link_Text'                                    =>  'Meeting Browser',
                                             'Data_Transfer_Link_Text'                               =>  'Import Meeting Data (WARNING: Replaces Current Data!)',
                                             'MapsURL'                                               =>  'https://maps.google.com/maps?q=##LAT##,##LONG##+(##NAME##)&amp;ll=##LAT##,##LONG##',
                                             'hidden_value'                                          =>  'Cannot Display Data -Unauthorized',
