@@ -295,11 +295,11 @@ function DB_Connect_and_Upgrade()
                     $next_id = $next_id['next_id'];
                     $langs = array("en", "es", "fa", "fr", "it", "pl", "pt", "ru", "sv");
                     foreach ($langs as $lang) {
-                        $sql = "INSERT INTO `$table` (`shared_id_bigint`, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($next_id, 'HY', NULL, 'HY', '$lang', 'Hybrid Meeting', 'Meets Virtually and In-person', 'FC2')";
+                        $sql = "INSERT INTO `$table` (`shared_id_bigint`, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($next_id, 'HY', NULL, 'HYBR', '$lang', 'Hybrid Meeting', 'Meets Virtually and In-person', 'FC2')";
                         c_comdef_dbsingleton::preparedExec($sql);
                     }
                 } else {
-                    $sql = "UPDATE `$table` SET `worldid_mixed` = 'HY' WHERE `key_string` = 'HY'";
+                    $sql = "UPDATE `$table` SET `worldid_mixed` = 'HYBR' WHERE `key_string` = 'HY'";
                     c_comdef_dbsingleton::preparedExec($sql);
                 }
             }

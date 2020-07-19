@@ -29,4 +29,4 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (51, 'VP', NULL, NULL, 'it', 'Vivere puliti', 'Riunioni di discussione sul libro "Vivere puliti - Il viaggio continua".', 'FC1'),
 (54, 'VM', NULL, 'VM', 'it', 'Virtual Meeting', 'Meets Virtually', 'FC2'),
 (55, 'TC', NULL, 'TC', 'it', 'Temporarily Closed', 'Facility is Temporarily Closed', 'O'),
-(56, 'HY', NULL,  'HY', 'en', 'Hybrid Meeting', 'Meets Virtually and In-person', 'FC2');
+(56, 'HY', NULL,  'HYBR', 'it', 'Hybrid Meeting', 'Meets Virtually and In-person', 'FC2');

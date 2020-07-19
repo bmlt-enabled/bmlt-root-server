@@ -370,7 +370,7 @@
                                                                                                                 'NC'    =>  'Bez dzieci',
                                                                                                                 'CH'    =>  'Zamknięty w święta',
                                                                                                                 'VM'    =>  'Virtual', // TODO translate
-                                                                                                                'HY'    =>  'Virtual and In-Person', // TODO translate
+                                                                                                                'HYBR'  =>  'Virtual and In-Person', // TODO translate
                                                                                                                 'TC'    =>  'Facility Temporarily Closed' // TODO translate
                                                                                                         ),
                                             'format_type_prompt'                                    =>  'Typ formatu:',

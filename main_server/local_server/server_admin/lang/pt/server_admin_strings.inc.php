@@ -368,7 +368,7 @@
                                                                                                             'NC'    =>  'Não permite crianças',
                                                                                                             'FF'    =>  'Fechado em feriados',
                                                                                                             'VM'    =>  'Virtual', // TODO translate
-                                                                                                            'HY'    =>  'Virtual and In-Person', // TODO translate
+                                                                                                            'HYBR'  =>  'Virtual and In-Person', // TODO translate
                                                                                                             'TC'    =>  'Facility Temporarily Closed' // TODO translate
                                                                                                             ),
                                             'format_type_prompt'                                    =>  'Format Type:',

@@ -50,4 +50,4 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (52, 'GP', NULL, 'GP', 'ru', 'Руководящие принципы', 'Это обсуждение книги АН «Руководящие принципы - дух наших традиций».', 'FC1'),
 (54, 'VM', NULL,  'VM', 'ru', 'Виртуальная встреча', 'Собираемся онлайн', 'FC2'),
 (55, 'TC', NULL,  'TC', 'ru', 'Временно закрыто', 'Объект временно закрыт', 'O'),
-(56, 'HY', NULL,  'HY', 'en', 'Hybrid Meeting', 'Meets Virtually and In-person', 'FC2');
+(56, 'HY', NULL,  'HYBR', 'ru', 'Hybrid Meeting', 'Meets Virtually and In-person', 'FC2');

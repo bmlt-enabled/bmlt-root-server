@@ -373,7 +373,7 @@
                                                                                                             'NC'    =>  'No Children',
                                                                                                             'CH'    =>  'Closed Holidays',
                                                                                                             'VM'    =>  'Virtual',
-                                                                                                            'HY'    =>  'Virtual and In-Person',
+                                                                                                            'HYBR'  =>  'Virtual and In-Person',
                                                                                                             'TC'    =>  'Facility Temporarily Closed'
                                                                                                             ),
                                             'format_type_prompt'                                    =>  'Format Type:',
