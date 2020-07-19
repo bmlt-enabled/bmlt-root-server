@@ -371,7 +371,10 @@
                                                                                                             'LANG'  =>  'Alternate Language',
                                                                                                             'GP'    =>  'Guiding Principles',
                                                                                                             'NC'    =>  'No Children',
-                                                                                                            'CH'    =>  'Closed Holidays'
+                                                                                                            'CH'    =>  'Closed Holidays',
+                                                                                                            'VM'    =>  'Virtual',
+                                                                                                            'HY'    =>  'Virtual and In-Person',
+                                                                                                            'TC'    =>  'Facility Temporarily Closed'
                                                                                                             ),
                                             'format_type_prompt'                                    =>  'Format Type:',
                                             'format_type_codes'                                     =>  array (

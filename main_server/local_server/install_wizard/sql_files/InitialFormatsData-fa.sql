@@ -49,5 +49,6 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (49, 'L/R', NULL, NULL, 'fa', 'لیتوانیایی/روسی','جلسه به زبان های لیتوانیایی/روسی', 'FC1'),
 (51, 'LC', NULL, 'LC', 'fa', 'پاک زیستن','این جلسه با موضوع بررسی و بحث در مورد کتاب پاک زیستن - سفر ادامه دارد، برگزار میگردد', 'FC1'),
 (52, 'GP', NULL, 'GP', 'fa', 'روح سنت ها','این جلسه با موضوع بررسی و بحث در مورد کتاب روح سنت ها برگزار میگردد', 'FC1'),
-(54, 'VM', NULL, NULL, 'fa', 'Virtual Meeting', 'Meets Virtually', 'FC2'),
-(55, 'TC', NULL, NULL, 'fa', 'Temporarily Closed', 'Facility is Temporarily Closed', 'O');
+(54, 'VM', NULL, 'VM', 'fa', 'Virtual Meeting', 'Meets Virtually', 'FC2'),
+(55, 'TC', NULL, 'TC', 'fa', 'Temporarily Closed', 'Facility is Temporarily Closed', 'O'),
+(56, 'HY', NULL,  'HY', 'en', 'Hybrid Meeting', 'Meets Virtually and In-person', 'FC2');

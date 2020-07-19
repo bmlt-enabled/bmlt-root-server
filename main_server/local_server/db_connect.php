@@ -279,6 +279,56 @@ function DB_Connect_and_Upgrade()
                     c_comdef_dbsingleton::preparedExec($sql);
                 }
             }
+        }),
+        array(13, function () {
+            // Add HY (hybrid) as an officially supported format, and map it to its NAWS format
+            $dbPrefix = $GLOBALS['dbPrefix'];
+            $table = "$dbPrefix" . "_comdef_formats";
+            $check = "SELECT COUNT(*) AS count FROM `$table` WHERE `key_string` = 'HY'";
+            $check = c_comdef_dbsingleton::preparedQuery($check);
+            if (is_array($check) && count($check)) {
+                $check = $check[0];
+                if (intval($check['count']) == 0) {
+                    $next_id = "SELECT MAX(shared_id_bigint) + 1 AS next_id FROM `$table`";
+                    $next_id = c_comdef_dbsingleton::preparedQuery($next_id);
+                    $next_id = $next_id[0];
+                    $next_id = $next_id['next_id'];
+                    $langs = array("en", "es", "fa", "fr", "it", "pl", "pt", "ru", "sv");
+                    foreach ($langs as $lang) {
+                        $sql = "INSERT INTO `$table` (`shared_id_bigint`, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($next_id, 'HY', NULL, 'HY', '$lang', 'Hybrid Meeting', 'Meets Virtually and In-person', 'FC2')";
+                        c_comdef_dbsingleton::preparedExec($sql);
+                    }
+                } else {
+                    $sql = "UPDATE `$table` SET `worldid_mixed` = 'HY' WHERE `key_string` = 'HY'";
+                    c_comdef_dbsingleton::preparedExec($sql);
+                }
+            }
+        }),
+        array(14, function () {
+            // Map existing VM formats to the new NAWS format
+            $dbPrefix = $GLOBALS['dbPrefix'];
+            $table = "$dbPrefix" . "_comdef_formats";
+            $id = "SELECT `shared_id_bigint` FROM `$table` WHERE `key_string` = 'VM' AND `lang_enum` = 'en'";
+            $id = c_comdef_dbsingleton::preparedQuery($id);
+            if (is_array($id) && count($id)) {
+                $id = $id[0];
+                $id = $id['shared_id_bigint'];
+                $sql = "UPDATE `$table` SET `worldid_mixed` = 'VM' WHERE `shared_id_bigint` = $id";
+                c_comdef_dbsingleton::preparedExec($sql);
+            }
+        }),
+        array(15, function () {
+            // Map existing TC formats to the new NAWS format
+            $dbPrefix = $GLOBALS['dbPrefix'];
+            $table = "$dbPrefix" . "_comdef_formats";
+            $id = "SELECT `shared_id_bigint` FROM `$table` WHERE `key_string` = 'TC' AND `lang_enum` = 'en'";
+            $id = c_comdef_dbsingleton::preparedQuery($id);
+            if (is_array($id) && count($id)) {
+                $id = $id[0];
+                $id = $id['shared_id_bigint'];
+                $sql = "UPDATE `$table` SET `worldid_mixed` = 'TC' WHERE `shared_id_bigint` = $id";
+                c_comdef_dbsingleton::preparedExec($sql);
+            }
         })
     );
     // WHEN ADDING A NEW DATABASE MIGRATION, REMEMBER TO BUMP THE VERSION IN local_server/install_wizard/sql_files/initialDbVersionData.sql
