@@ -368,7 +368,10 @@
                                                                                                             'LANG'  =>  'Fremdsprache',
                                                                                                             'GP'    =>  'Guiding Principles', // TODO translate
                                                                                                             'NC'    =>  'No Children', // TODO translate
-                                                                                                            'CH'    =>  'Closed Holidays' // TODO translate
+                                                                                                            'CH'    =>  'Closed Holidays', // TODO translate
+                                                                                                            'VM'    =>  'Virtual', // TODO translate
+                                                                                                            'HYBR'  =>  'Virtual and In-person', // TODO translate
+                                                                                                            'TC'    =>  'Facility Temporarily Closed' // TODO translate
                                                                                                             ),
                                             'format_type_prompt'                                     =>  'Format Type:',
                                             'format_type_codes'                                      =>  array (

@@ -371,7 +371,10 @@
                                                                                                             'LANG'  =>  'Alternate Language',
                                                                                                             'GP'    =>  'Guiding Principles',
                                                                                                             'NC'    =>  'No Children',
-                                                                                                            'CH'    =>  'Closed Holidays'
+                                                                                                            'CH'    =>  'Closed Holidays', // TODO translate
+                                                                                                            'VM'    =>  'Virtual', // TODO translate
+                                                                                                            'HYBR'  =>  'Virtual and In-Person', // TODO translate
+                                                                                                            'TC'    =>  'Facility Temporarily Closed' // TODO translate
                                                                                                             ),
                                             'format_type_prompt'                                    =>  'Format Type:',
                                             'format_type_codes'                                     =>  array (
