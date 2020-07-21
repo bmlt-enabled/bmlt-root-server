@@ -37,6 +37,14 @@ function dropEverything($dbPrefix)
     c_comdef_dbsingleton::preparedExec($dropSql, $value_array);
 }
 
+// return a string that initializes variable $v to its value stored in $vars
+// for adding to auto-config.inc.php (this is set up only for string values)
+function make_initialization($v, $vars, $comment = '')
+{
+    $c = (empty($comment)) ? '' : ' // ' . $comment;
+    return '$' . $v . ' = \'' . addcslashes($vars[$v], '\'\\') . '\';' . $c;
+}
+
 // We do everything we can to ensure that the requested language file is loaded.
 if (file_exists(dirname(__FILE__).'/../server_admin/lang/'.$lang.'/install_wizard_strings.php')) {
     require_once(dirname(__FILE__).'/../server_admin/lang/'.$lang.'/install_wizard_strings.php');
@@ -167,24 +175,26 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
         $lines[] = '// These are the settings created by the installer wizard.';
         $lines[] = '';
         $lines[] = '// Database settings:';
-        $lines[] = '$dbType = \''     . $http_vars['dbType'] .     '\'; // This is the PHP PDO driver name for your database.';
-        $lines[] = '$dbName = \''     . $http_vars['dbName'] .     '\'; // This is the name of the database.';
-        $lines[] = '$dbUser = \''     . $http_vars['dbUser'] .     '\'; // This is the SQL user that is authorized for the above database.';
-        $lines[] = '$dbPassword = \'' . $http_vars['dbPassword'] . '\'; // This is the password for the above authorized user. Make it a big, ugly hairy one. It is powerful, and there is no need to remember it.';
-        $lines[] = '$dbServer = \''   . $http_vars['dbServer'] .   '\'; // This is the host/server for accessing the database.';
-        $lines[] = '$dbPrefix = \''   . $http_vars['dbPrefix'] .   '\'; // This is a table name prefix that can be used to differentiate tables used by different root server instances that share the same database.';
+        $lines[] = make_initialization('dbType', $http_vars,'This is the PHP PDO driver name for your database.');
+        $lines[] = make_initialization('dbName', $http_vars,'This is the name of the database.');
+        $lines[] = make_initialization('dbUser', $http_vars,'This is the SQL user that is authorized for the above database.');
+        $lines[] = make_initialization('dbPassword', $http_vars,'This is the password for the above authorized user. Make it a big, ugly hairy one. It is powerful, and there is no need to remember it.');
+        $lines[] = make_initialization('dbServer', $http_vars,'This is the host/server for accessing the database.');
+        $lines[] = make_initialization('dbPrefix', $http_vars,'This is a table name prefix that can be used to differentiate tables used by different root server instances that share the same database.');
         $lines[] = '';
         $lines[] = '// Location and Map settings:';
-        $lines[] = '$region_bias = \''              . $http_vars['region_bias']           . '\';     // This is a 2-letter code for a \'region bias,\' which helps Google Maps to figure out ambiguous search queries.';
-        $lines[] = '$gkey = \''                     . $http_vars['gkey']                  . '\';     // This is the Google Maps JavaScript API Key, necessary for using Google Maps.';
+        $lines[] = make_initialization('region_bias', $http_vars, 'This is a 2-letter code for a \'region bias,\' which helps Google Maps to figure out ambiguous search queries.');
+        $lines[] = make_initialization('gkey', $http_vars, 'This is the Google Maps JavaScript API Key, necessary for using Google Maps.');
         $lines[] = '$search_spec_map_center = array(\'longitude\' => ' . $http_vars['search_spec_map_center_longitude'] . ', \'latitude\' => ' . $http_vars['search_spec_map_center_latitude'] . ', \'zoom\' => ' . $http_vars['search_spec_map_center_zoom'] . ');';
-        $lines[] = '$comdef_distance_units = \''    . $http_vars['comdef_distance_units'] . '\';';
+        $lines[] = make_initialization('comdef_distance_units', $http_vars);
         $lines[] = '';
         $lines[] = '// Display settings:';
-        $lines[] = '$bmlt_title = \''  . $http_vars['bmlt_title']  . '\';';
-        $lines[] = '$banner_text = \'' . $http_vars['banner_text'] . '\';';
+        $lines[] = make_initialization('bmlt_title', $http_vars);
+        $lines[] = make_initialization('banner_text', $http_vars);
         $lines[] = '';
         $lines[] = '// Miscellaneous settings:';
+        // the remaining statements to output settings aren't converted to use the make_initialization function since
+        // some of them are for non-string values (and none of them will ever involve strings containing single quotes)
         $lines[] = '$comdef_global_language = \''             . $http_vars['comdef_global_language']              . '\'; // This is the 2-letter code for the default root server localization (will default to \'en\' -English, if the localization is not available).';
         $lines[] = '$min_pw_len = '                           . $http_vars['min_pw_len']                           . ';   // The minimum number of characters in a user account password for this root server.';
         $lines[] = '$number_of_meetings_for_auto = '          . $http_vars['number_of_meetings_for_auto']          . ';   // This is an approximation of the number of meetings to search for in the auto-search feature. The higher the number, the wider the radius.';
@@ -280,7 +290,7 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
             } else {
                 echo '0';
             }
-        } catch (EXception $e2) {
+        } catch (Exception $e2) {
             if ($http_vars['ajax_req'] == 'test_comprehensive') {
                 echo "{'success':true, 'message':'" . str_replace("'", "\'", $comdef_install_wizard_strings['Database_TestButton_Success']) . "'}";
             } else {
