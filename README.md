@@ -57,7 +57,7 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
-***Version 2.15.5* ** *- TBD*
+***Version 2.15.5* ** *- July 25, 2020*
 - Many service bodies are already using an "HY" format for hybrid virtual and in-person meetings, so we made it official - if you don't already have the "HY" format, this release will create it for you.
 - The formats most commonly used for virtual meetings (VM, HY, TC) have received NAWS format codes. This release automatically maps VM, HY, and TC to the appropriate NAWS format code.
 
