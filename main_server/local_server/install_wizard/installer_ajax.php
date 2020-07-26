@@ -37,12 +37,29 @@ function dropEverything($dbPrefix)
     c_comdef_dbsingleton::preparedExec($dropSql, $value_array);
 }
 
-// return a string that initializes variable $v to its value stored in $vars
-// for adding to auto-config.inc.php (this is set up only for string values)
-function make_initialization($v, $vars, $comment = '')
+// return a string for adding to auto-config.inc.php that initializes variable $v
+// (this is set up only for string values)
+function make_initialization($v, $comment = '')
 {
+    global $http_vars;
     $c = (empty($comment)) ? '' : ' // ' . $comment;
-    return '$' . $v . ' = \'' . addcslashes($vars[$v], '\'\\') . '\';' . $c;
+    return '$' . $v . ' = \'' . addcslashes($http_vars[$v], '\'\\') . '\';' . $c;
+}
+
+// Check for whitespace at the beginning or end of the value provided for database information (DataBase User etc),
+// and if found return a warning that can be included in the popup notification for a failed database test.
+function whitespace_warnings()
+{
+    global $comdef_install_wizard_strings, $http_vars;
+    $warn = '';
+    foreach ([['Database_Host', 'dbServer'], ['Table_Prefix', 'dbPrefix'], ['Database_Name', 'dbName'], ['Database_User', 'dbUser'], ['Database_PW', 'dbPassword']] as $pair) {
+        $value = $http_vars[$pair[1]];
+        if ($value != trim($value)) {
+            $field_name = str_replace(':', '', $comdef_install_wizard_strings[$pair[0]]);
+            $warn .= '   ' . sprintf($comdef_install_wizard_strings['Database_Whitespace_Note'], $field_name);
+        }
+    }
+    return $warn;
 }
 
 // We do everything we can to ensure that the requested language file is loaded.
@@ -175,22 +192,22 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
         $lines[] = '// These are the settings created by the installer wizard.';
         $lines[] = '';
         $lines[] = '// Database settings:';
-        $lines[] = make_initialization('dbType', $http_vars, 'This is the PHP PDO driver name for your database.');
-        $lines[] = make_initialization('dbName', $http_vars, 'This is the name of the database.');
-        $lines[] = make_initialization('dbUser', $http_vars, 'This is the SQL user that is authorized for the above database.');
-        $lines[] = make_initialization('dbPassword', $http_vars, 'This is the password for the above authorized user. Make it a big, ugly hairy one. It is powerful, and there is no need to remember it.');
-        $lines[] = make_initialization('dbServer', $http_vars, 'This is the host/server for accessing the database.');
-        $lines[] = make_initialization('dbPrefix', $http_vars, 'This is a table name prefix that can be used to differentiate tables used by different root server instances that share the same database.');
+        $lines[] = make_initialization('dbType', 'This is the PHP PDO driver name for your database.');
+        $lines[] = make_initialization('dbName', 'This is the name of the database.');
+        $lines[] = make_initialization('dbUser', 'This is the SQL user that is authorized for the above database.');
+        $lines[] = make_initialization('dbPassword', 'This is the password for the above authorized user. Make it a big, ugly hairy one. It is powerful, and there is no need to remember it.');
+        $lines[] = make_initialization('dbServer', 'This is the host/server for accessing the database.');
+        $lines[] = make_initialization('dbPrefix', 'This is a table name prefix that can be used to differentiate tables used by different root server instances that share the same database.');
         $lines[] = '';
         $lines[] = '// Location and Map settings:';
-        $lines[] = make_initialization('region_bias', $http_vars, 'This is a 2-letter code for a \'region bias,\' which helps Google Maps to figure out ambiguous search queries.');
-        $lines[] = make_initialization('gkey', $http_vars, 'This is the Google Maps JavaScript API Key, necessary for using Google Maps.');
+        $lines[] = make_initialization('region_bias', 'This is a 2-letter code for a \'region bias,\' which helps Google Maps to figure out ambiguous search queries.');
+        $lines[] = make_initialization('gkey', 'This is the Google Maps JavaScript API Key, necessary for using Google Maps.');
         $lines[] = '$search_spec_map_center = array(\'longitude\' => ' . $http_vars['search_spec_map_center_longitude'] . ', \'latitude\' => ' . $http_vars['search_spec_map_center_latitude'] . ', \'zoom\' => ' . $http_vars['search_spec_map_center_zoom'] . ');';
-        $lines[] = make_initialization('comdef_distance_units', $http_vars);
+        $lines[] = make_initialization('comdef_distance_units');
         $lines[] = '';
         $lines[] = '// Display settings:';
-        $lines[] = make_initialization('bmlt_title', $http_vars);
-        $lines[] = make_initialization('banner_text', $http_vars);
+        $lines[] = make_initialization('bmlt_title');
+        $lines[] = make_initialization('banner_text');
         $lines[] = '';
         $lines[] = '// Miscellaneous settings:';
         // the remaining statements to output settings aren't converted to use the make_initialization function since
@@ -286,20 +303,20 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
             $db_prefix = ($http_vars['dbType'] != 'mysql') ? $http_vars['dbName'].'.' : '';
             $result = c_comdef_dbsingleton::preparedQuery('SELECT * FROM '.$db_prefix.$http_vars['dbPrefix'].'_comdef_users WHERE 1', array());
             if ($http_vars['ajax_req'] == 'test_comprehensive') {
-                echo "{'success':false, 'message':'" . str_replace("'", "\'", $comdef_install_wizard_strings['Database_TestButton_Fail2']) . "'}";
+                echo "{'success':false, 'message':'" . str_replace("'", "\'", $comdef_install_wizard_strings['Database_TestButton_Fail2']) . whitespace_warnings() . "'}";
             } else {
                 echo '0';
             }
         } catch (Exception $e2) {
             if ($http_vars['ajax_req'] == 'test_comprehensive') {
-                echo "{'success':true, 'message':'" . str_replace("'", "\'", $comdef_install_wizard_strings['Database_TestButton_Success']) . "'}";
+                echo "{'success':true, 'message':'" . str_replace("'", "\'", $comdef_install_wizard_strings['Database_TestButton_Success']) . whitespace_warnings() . "'}";
             } else {
                 echo '1';
             }
         }
     } catch (Exception $e) {
         if ($http_vars['ajax_req'] == 'test_comprehensive') {
-            echo "{'success':false, 'message':'".str_replace("'", "\'", $comdef_install_wizard_strings['Database_TestButton_Fail'].$e->getMessage())."'}";
+            echo "{'success':false, 'message':'".str_replace("'", "\'", $comdef_install_wizard_strings['Database_TestButton_Fail'].$e->getMessage()) . whitespace_warnings() . "'}";
         } else {
             echo '-1';
         }
@@ -310,7 +327,7 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
     echo array2json(array ( 'dbStatus' => false, 'report' => $comdef_install_wizard_strings['AJAX_Handler_DB_Incomplete_Error'] ));
 } else {
     if ($http_vars['ajax_req'] == 'test_comprehensive') {
-        echo "{'success':false, 'message':'".str_replace("'", "\'", $comdef_install_wizard_strings['Database_TestButton_Fail'])."'}";
+        echo "{'success':false, 'message':'".str_replace("'", "\'", $comdef_install_wizard_strings['Database_TestButton_Fail']). whitespace_warnings() . "'}";
     } else {
         echo 'ERROR';
     }

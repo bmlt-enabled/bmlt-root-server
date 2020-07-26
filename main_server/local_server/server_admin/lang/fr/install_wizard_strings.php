@@ -26,6 +26,7 @@
                                             'Database_TestButton_Success'   =>  'La connexion de base de données a reussi.',
                                             'Database_TestButton_Fail'      =>  'La connexion de base de données a echoue:',
                                             'Database_TestButton_Fail2'     =>  'La connexion de base de données a echoue car il existe deja une base de donnees initialisee.',
+                                            'Database_Whitespace_Note'      =>  'Warning: %s has whitespace at the beginning or end.',
 
                                             'AJAX_Handler_DB_Connect_Error' =>  'La connexion de base de données a échoué! S\'il vous plaît assurez-vous que la base de données existe, est complètement vide, l\'utilisateur est créé, et que l\'utilisateur dispose des autorisations complètes sur la base de données vide.',
                                             'AJAX_Handler_DB_Established_Error' =>  'La base de données esists déjà, et a été mis en place! Vous ne pouvez pas utiliser cette configuration pour écraser une base existante!',
