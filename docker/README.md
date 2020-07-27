@@ -20,10 +20,10 @@ DBSERVER=db
 DBPREFIX=na
 ```
 
-## Testing or Debugging the Install Wizard
-The Docker files automatically set up an `auto-config.inc.php` file for you. If you want to test or debug the install
-wizard, you can start with the install wizard instead of the login screen by deleting this `auto-config.inc.php` file.
-Here are modified steps to do that.
+## Testing the Install Wizard
+The Docker files automatically set up an `auto-config.inc.php` file for you. If you want to test the install wizard,
+you can start with the install wizard instead of the login screen by deleting this file. Here
+are modified steps to do that.
 1. Edit `bmlt.env` to set your google maps api key, `GKEY=API_KEY`
 2. Run the command `make run`
 3. Run `docker exec -it docker_bmlt_1 bash` to open a bash shell accessing the container's file system. You will be in
