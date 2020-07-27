@@ -58,12 +58,11 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 ***Version 2.15.6* ** *- TBD*
-- Minor improvements to install wizard. Fix bug regarding user names and passwords with single quotes or backslashes (before they would cause a cryptic error; now they are OK -- not that using them is a great idea, but the system shouldn't die strangely). Also, if there is a database access error, and one of the offending fields has whitespace at the beginning or end, give a hint to the user that might be the cause.
+- Minor improvements to install wizard. Fix bug regarding names and passwords with single quotes or backslashes (before they would cause a cryptic error; now they are OK -- not that using them is a great idea, but the system shouldn't die strangely). Also, if there is a database access error, and one of the offending fields has whitespace at the beginning or end, give a hint to the user that might be the cause.
 
 ***Version 2.15.5* ** *- July 25, 2020*
 - Many service bodies are already using an "HY" format for hybrid virtual and in-person meetings, so we made it official - if you don't already have the "HY" format, this release will create it for you.
 - The formats most commonly used for virtual meetings (VM, HY, TC) have received NAWS format codes. This release automatically maps VM, HY, and TC to the appropriate NAWS format code.
-- fix bug regarding user names and passwords with single quotes or backslashes (they would cause a silent error)
 
 ***Version 2.15.4* ** *- July 12, 2020*
 - Added the new "Virtual Meeting Additional Info" field to the root server, semantic API output, and NAWS export.

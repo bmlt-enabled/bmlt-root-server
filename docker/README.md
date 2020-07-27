@@ -10,7 +10,7 @@ This directory contains the Dockerfiles for building images for both the BMLT Ro
 5. When finished, exit by pressing ctrl+c or by running `docker-compose down`
 
 ## Supported environment variables
-This is an example `bmlt.env` file. Each of these variables, on start of the container, is automatically written to the appropriate setting in `auto-config.inc.php`.
+This is an example `bmlt.env` file. The value for each of these variables, on start of the container, is automatically written to the appropriate line in `auto-config.inc.php`.
 ```
 GKEY=
 DBNAME=bmlt
