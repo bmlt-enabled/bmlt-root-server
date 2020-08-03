@@ -63,7 +63,8 @@ if ($user_obj instanceof c_comdef_user && $user_obj->GetUserLevel() != _USER_LEV
                 time_format: "H:mm (h:mma) z",
                 google_api_key: "<?php echo $local_strings["google_api_key"] ?>",
                 show_map: true,
-                language: "<?php echo getBCP47TagForISO631Language($_COOKIE["bmlt_admin_lang_pref"]) ?>"
+                language: "<?php echo getBCP47TagForISO631Language($_COOKIE["bmlt_admin_lang_pref"]) ?>",
+                meeting_data_template: "{{#isTemporarilyClosed this}}<div class='temporarilyClosed'><span class='glyphicon glyphicon-flag'></span> {{temporarilyClosed this}}</div>{{/isTemporarilyClosed}}<div class='meeting-name'>{{this.meeting_name}}</div><div class='location-text'>{{this.location_text}}</div><div class='meeting-address'>{{this.formatted_address}}</div><div class='location-information'>{{this.formatted_location_info}}</div>{{#if this.virtual_meeting_additional_info}}<div class='meeting-additional-info'>{{this.virtual_meeting_additional_info}}</div>{{/if}}{{#if this.bus_lines}}<div class='meeting-bus-lines'>{{this.bus_lines}}</div>{{/if}}{{#if this.train_lines}}<div class='meeting-train-lines'>{{this.train_lines}}</div>{{/if}}"
             });
             crouton.render();
         </script>
