@@ -27,6 +27,7 @@
                                             'Database_TestButton_Success'   =>  'Databaseforbindelsen var vellykket.',
                                             'Database_TestButton_Fail'      =>  'Databaseforbindelsen mislykkedes: ',
                                             'Database_TestButton_Fail2'     =>  'Databaseforbindelsen mislykkedes, fordi der allerede er en initialiseret database.',
+                                            'Database_Whitespace_Note'      =>  'Warning: %s has whitespace at the beginning or end.',
 
                                             'AJAX_Handler_DB_Connect_Error' =>  'Databaseforbindelsen mislykkedes! Sørg for, at databasen eksisterer, ER HELT TOM, brugeren er oprettet, og den bruger har fuld tilladelse på den tomme database.',
                                             'AJAX_Handler_DB_Established_Error' =>  'Databasen eksisterer allerede, og er blevet oprettet! Du kan ikke bruge denne opsætning til at overskrive en eksisterende database!',

@@ -1,6 +1,24 @@
-# Docker
+# Contributing to the BMLT Root Server
 
-This directory contains the Dockerfiles for building images for both the BMLT Root Server and a MySQL database with sample data for testing purposes. These images get pushed to https://hub.docker.com/r/bmltenabled/bmlt-root-server/ and https://hub.docker.com/r/bmltenabled/bmlt-root-server-sample-db/ respectively. They can be started together using docker compose.
+For general information about BMLT, including ways to contribute to the project, please see
+[the BMLT Documentation Site](https://bmlt.app).
+
+This file contains information specifically about how to set up a development environment to work on the root server.
+We want the server code (as well as code for the other project core elements) to continue to be of high quality, so
+prospective developers should have a solid grounding in good software engineering practice. In other words, making
+changes to the server code wouldn't be the best place to start for folks new to software development -- there are, on
+the other hand, lots of other parts of the project that could very much use your time and energy! (An exception is
+that we do frequently need fluent speakers of languages other than English to translate localization strings -- even
+if the initial translation has already been done, there are often new strings added in subsequent development work
+that need translation.)
+
+There are various ways you can set up your development environment; in the directions here we use
+[Docker](https://www.docker.com). If you don't have it already, install
+[Docker Desktop](https://www.docker.com/products/docker-desktop). Then go to the `docker` directory, which contains the
+Dockerfiles for building images for both the BMLT Root Server and a MySQL database with sample data for testing
+purposes. These images get pushed to `https://hub.docker.com/r/bmltenabled/bmlt-root-server/` and 
+`https://hub.docker.com/r/bmltenabled/bmlt-root-server-sample-db/` respectively. They can be started together
+using `docker compose`.
 
 ## How to use
 1. Edit `bmlt.env` to set your google maps api key, `GKEY=API_KEY`
@@ -21,9 +39,10 @@ DBPREFIX=na
 ```
 
 ## Testing the Install Wizard
-The Docker files automatically set up an `auto-config.inc.php` file for you. If you want to test the install wizard,
-you can start with the install wizard instead of the login screen by deleting this file. Here
-are modified steps to do that.
+The Docker files automatically set up an `auto-config.inc.php` file for you. Usually this is great since it saves you
+the bother of going through the install wizard each time you restart the root server. However, if you want to test or
+change the install wizard, you can start with the install wizard instead of the login screen by deleting this file.
+Here are modified steps to do that.
 1. Edit `bmlt.env` to set your google maps api key, `GKEY=API_KEY`
 2. Run the command `make run`
 3. Run `docker exec -it docker_bmlt_1 bash` to open a bash shell accessing the container's file system. You will be in
@@ -62,5 +81,5 @@ Finally, as with the earlier directions, when finished exit by pressing ctrl+c o
 10. Turn on remote debugging by press the button in the toolbar. ![image1](img/3.png)
 11. Set any breakpoints, and the code should pause there.
 
-![image1](img/1.png)
-![image2](img/2.png)
+![image1](docker/img/1.png)
+![image2](docker/img/2.png)

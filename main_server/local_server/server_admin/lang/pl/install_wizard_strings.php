@@ -27,6 +27,7 @@
                                             'Database_TestButton_Success'   =>  'The database connection was successful.',
                                             'Database_TestButton_Fail'      =>  'The database connection failed: ',
                                             'Database_TestButton_Fail2'     =>  'The database connection failed because there is already an initialized database.',
+                                            'Database_Whitespace_Note'      =>  'Warning: %s has whitespace at the beginning or end.',
 
                                             'AJAX_Handler_DB_Connect_Error' =>  'The database connection failed! Please make sure that the database exists, IS COMPLETELY EMPTY, the user is created, and that user has full permissions on the empty database.',
                                             'AJAX_Handler_DB_Established_Error' =>  'The database already exists, and has been set up! You cannot use this setup to overwrite an existing database!',

@@ -23,6 +23,7 @@ $comdef_install_wizard_strings = array (
     'Database_TestButton_Success'   =>  'Соединение с базой данных прошло успешно.',
     'Database_TestButton_Fail'      =>  'Ошибка подключения к базе данных: ',
     'Database_TestButton_Fail2'     =>  'Не удалось подключиться к базе данных, поскольку уже существует инициализированная база данных.',
+    'Database_Whitespace_Note'      =>  'Warning: %s has whitespace at the beginning or end.',
 
     'AJAX_Handler_DB_Connect_Error' =>  'Ошибка подключения к базе данных! Убедитесь, что база данных существует, ПОЛНОСТЬЮ ПУСТАЯ, пользователь создан, и этот пользователь имеет полные права доступа к пустой базе данных.',
     'AJAX_Handler_DB_Established_Error' => 'База данных уже существует и была настроена! Вы не можете использовать эту настройку, чтобы перезаписать существующую базу данных!',
