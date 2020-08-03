@@ -142,10 +142,10 @@ resource "aws_acm_certificate" "bmlt_latest" {
 }
 
 resource "aws_route53_record" "cert_validation_bmlt_latest" {
-  name    = aws_acm_certificate.bmlt_latest.domain_validation_options[0].resource_record_name
-  type    = aws_acm_certificate.bmlt_latest.domain_validation_options[0].resource_record_type
+  name    = lookup(aws_acm_certificate.bmlt_latest.domain_validation_options[0], "resource_record_name")
+  type    = lookup(aws_acm_certificate.bmlt_latest.domain_validation_options[0], "resource_record_type")
   zone_id = data.aws_route53_zone.bmlt.id
-  records = [aws_acm_certificate.bmlt_latest.domain_validation_options[0].resource_record_value]
+  records = [lookup(aws_acm_certificate.bmlt_latest.domain_validation_options[0], "resource_record_value")]
   ttl     = 60
 }
 
@@ -164,10 +164,10 @@ resource "aws_acm_certificate" "bmlt_unstable" {
 }
 
 resource "aws_route53_record" "cert_validation_bmlt_unstable" {
-  name    = aws_acm_certificate.bmlt_unstable.domain_validation_options[0].resource_record_name
-  type    = aws_acm_certificate.bmlt_unstable.domain_validation_options[0].resource_record_type
+  name    = lookup(aws_acm_certificate.bmlt_unstable.domain_validation_options[0], "resource_record_name")
+  type    = lookup(aws_acm_certificate.bmlt_unstable.domain_validation_options[0], "resource_record_type")
   zone_id = data.aws_route53_zone.bmlt.id
-  records = [aws_acm_certificate.bmlt_unstable.domain_validation_options[0].resource_record_value]
+  records = [lookup(aws_acm_certificate.bmlt_unstable.domain_validation_options[0], "resource_record_value")]
   ttl     = 60
 }
 
