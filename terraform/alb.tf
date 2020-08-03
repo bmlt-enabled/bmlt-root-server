@@ -122,8 +122,9 @@ resource "aws_alb_listener_rule" "bmlt_unstable" {
   }
 
   condition {
-    field  = "host-header"
-    values = [aws_route53_record.bmlt_unstable.fqdn]
+    host_header {
+      values = [aws_route53_record.bmlt_unstable.fqdn]
+    }
   }
 }
 
@@ -142,16 +143,24 @@ resource "aws_acm_certificate" "bmlt_latest" {
 }
 
 resource "aws_route53_record" "cert_validation_bmlt_latest" {
-  name    = aws_acm_certificate.bmlt_latest.domain_validation_options[0].resource_record_name
-  type    = aws_acm_certificate.bmlt_latest.domain_validation_options[0].resource_record_type
-  zone_id = data.aws_route53_zone.bmlt.id
-  records = [aws_acm_certificate.bmlt_latest.domain_validation_options[0].resource_record_value]
+  for_each = {
+    for dvo in aws_acm_certificate.bmlt_latest.domain_validation_options : dvo.domain_name => {
+      name    = dvo.resource_record_name
+      record  = dvo.resource_record_value
+      type    = dvo.resource_record_type
+      zone_id = data.aws_route53_zone.bmlt.id
+    }
+  }
+  name    = each.value.name
+  records = [each.value.record]
+  type    = each.value.type
+  zone_id = each.value.zone_id
   ttl     = 60
 }
 
 resource "aws_acm_certificate_validation" "bmlt_latest" {
   certificate_arn         = aws_acm_certificate.bmlt_latest.arn
-  validation_record_fqdns = [aws_route53_record.cert_validation_bmlt_latest.fqdn]
+  validation_record_fqdns = [for record in aws_route53_record.cert_validation_bmlt_latest : record.fqdn]
 }
 
 resource "aws_acm_certificate" "bmlt_unstable" {
@@ -164,15 +173,23 @@ resource "aws_acm_certificate" "bmlt_unstable" {
 }
 
 resource "aws_route53_record" "cert_validation_bmlt_unstable" {
-  name    = aws_acm_certificate.bmlt_unstable.domain_validation_options[0].resource_record_name
-  type    = aws_acm_certificate.bmlt_unstable.domain_validation_options[0].resource_record_type
-  zone_id = data.aws_route53_zone.bmlt.id
-  records = [aws_acm_certificate.bmlt_unstable.domain_validation_options[0].resource_record_value]
+  for_each = {
+    for dvo in aws_acm_certificate.bmlt_unstable.domain_validation_options : dvo.domain_name => {
+      name    = dvo.resource_record_name
+      record  = dvo.resource_record_value
+      type    = dvo.resource_record_type
+      zone_id = data.aws_route53_zone.bmlt.id
+    }
+  }
+  name    = each.value.name
+  records = [each.value.record]
+  type    = each.value.type
+  zone_id = each.value.zone_id
   ttl     = 60
 }
 
 resource "aws_acm_certificate_validation" "bmlt_unstable" {
   certificate_arn         = aws_acm_certificate.bmlt_unstable.arn
-  validation_record_fqdns = [aws_route53_record.cert_validation_bmlt_unstable.fqdn]
+  validation_record_fqdns = [for record in aws_route53_record.cert_validation_bmlt_unstable : record.fqdn]
 }
 
