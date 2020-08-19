@@ -47,6 +47,7 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 ***Version 2.15.6* ** *- TBD*
+- Changed the initial format `SC` `Surveillance Cameras` to `Security Cameras`.
 - Minor improvements to install wizard. Fix bug regarding names and passwords with single quotes or backslashes (before they would cause a cryptic error; now they are OK -- not that using them is a great idea, but the system shouldn't die strangely). Also, if there is a database access error, and one of the offending fields has whitespace at the beginning or end, give a hint to the user that might be the cause.
 - added a CONTRIBUTING.md file that describes how to set up a dev environment for the root server.
 - Added the train and bus fields to browser view.
