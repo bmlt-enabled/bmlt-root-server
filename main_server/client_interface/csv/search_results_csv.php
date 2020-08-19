@@ -283,22 +283,16 @@ function DisplaySearchResultsCSV(
     $in_supress_hidden_concat = false,  ///< If true, then hidden fields will not have their prompts encoded
     $in_editor_only = false     ///< If true, then only meetings for which the current logged-in user can edit/observe are returned.
 ) {
-    $ret = null;
+    $handle = fopen('php://memory', 'rw');
     require_once(dirname(__FILE__).'/c_comdef_meeting_search_manager.class.php');
 
     $search_manager = new c_comdef_meeting_search_manager;
     
     if ($search_manager instanceof c_comdef_meeting_search_manager) {
         $localized_strings = c_comdef_server::GetLocalStrings();
-
-        $lang_enum = c_comdef_server::GetServer()->GetLocalLang();
     
         // This can be changed in the auto config.
         include(dirname(__FILE__).'/../../server/config/get-config.php');
-    
-        if (isset($in_http_vars['lang_enum']) && $in_http_vars['lang_enum']) {
-            $lang_enum = $in_http_vars['lang_enum'];
-        }
         
         if (!isset($in_http_vars['results_per_page'])) {
             $in_http_vars['results_per_page'] = 0;
@@ -384,18 +378,13 @@ function DisplaySearchResultsCSV(
             if (!in_array('meeting_name', $keys)) {
                 $keys[] = 'meeting_name';
             }
-            
             $keys[] = 'root_server_uri';
             $keys[] = 'format_shared_id_list';
-            
-            $ret = '"'.join('","', $keys).'"';
+            $keys = array_values($keys);
 
-            $formats = c_comdef_server::GetServer()->GetFormatsObj();
+            fputcsv($handle, $keys);
+
             $formats_keys = array();
-            $formats_keys_header = array();
-            
-            $ret .= "\n";
-       
             $in_ar = $page_data->GetSearchResultsAsArray();
         
             if (isset($return_results) && is_array($return_results)) {
@@ -409,7 +398,6 @@ function DisplaySearchResultsCSV(
                 if ($mtg_obj instanceof c_comdef_meeting) {
                     if (!$in_editor_only || $mtg_obj->UserCanObserve()) {
                         $format_shared_id_list = array();
-                        $first = true;
                         foreach ($keys as $key) {
                             if (trim($key)) {
                                 $val = $mtg_obj->GetMeetingDataValue($key);
@@ -526,10 +514,8 @@ function DisplaySearchResultsCSV(
                             if (is_array($return_array)) {
                                 array_push($return_array, $line);
                             }
-                
-                            $ret .= '"'.join('","', $line).'"';
-                    
-                            $ret .= "\n";
+
+                            fputcsv($handle, $line);
                         }
                     }
                 }
@@ -537,6 +523,9 @@ function DisplaySearchResultsCSV(
         }
     }
 
+    fseek($handle, 0);
+    $ret = stream_get_contents($handle);
+    fclose($handle);
     return $ret;
 }
 
@@ -632,8 +621,9 @@ function ReturnNAWSFormatCSV(
     $ret_array = array ();  // If we supply an array as a second parameter, we will get the dump returned in a two-dimensional array.
     DisplaySearchResultsCSV($in_http_vars, $ret_array);  // Start off by getting the CSV dump in the same manner as the normal CSV dump.
 
+    $handle = fopen('php://memory', 'rw');
     if (is_array($ret_array) && count($ret_array)) {
-        $ret = '"'.join('","', array_keys($transfer_dictionary)).'"'; // This is the header line.
+        fputcsv($handle, array_keys($transfer_dictionary));
         foreach ($ret_array as $one_meeting) {
             if (is_array($one_meeting) && count($one_meeting)) {
                 $line = array();
@@ -647,9 +637,7 @@ function ReturnNAWSFormatCSV(
                     array_push($line, $value);
                 }
 
-                if (is_array($line) && count($line)) {
-                    $ret .= "\n".'"'.join('","', $line).'"';
-                }
+                fputcsv($handle, $line);
             }
         }
     }
@@ -659,11 +647,14 @@ function ReturnNAWSFormatCSV(
     if (is_array($del_meetings) && count($del_meetings)) {
         foreach ($del_meetings as $one_meeting) {
             if (is_array($one_meeting) && count($one_meeting)) {
-                $ret .= "\n".'"'.join('","', $one_meeting).'"';
+                fputcsv($handle, $one_meeting);
             }
         }
     }
-    
+
+    fseek($handle, 0);
+    $ret = stream_get_contents($handle);
+    fclose($handle);
     return $ret;
 }
 

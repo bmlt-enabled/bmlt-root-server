@@ -184,8 +184,6 @@ class PhpJsonXmlArrayStringInterchanger
             $this->errorLog[]="The first parameter should to be string in function: ".__FUNCTION__." on line: ".__LINE__." in filename= ".__FILE__;
             return false;
         }
-        $json=str_replace("\\'", "'", $json);
-        $json=str_replace('\\"', '"', $json);
         $array=json_decode($json, true);
         if ($array===false) {
             $this->errorLog[]="Failed to decode JSON in function: ".__FUNCTION__." on line: ".__LINE__." in filename= ".__FILE__;
