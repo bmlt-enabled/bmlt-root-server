@@ -10,14 +10,16 @@ function array2xml($array, $ret_string = true, $xml = null)
 
     foreach ($array as $root => $child) {
         $elementName = is_string($root) ? $root : "row";
-        $xml->startElement($elementName);
         if (is_array($child)) {
+            $xml->startElement($elementName);
             $xml->writeAttribute("sequence_index", strval($array_sequence_index++));
             array2xml($child, false, $xml);
+            $xml->endElement();
         } elseif (isset($child) && $child) {
+            $xml->startElement($elementName);
             $xml->text($child);
+            $xml->endElement();
         }
-        $xml->endElement();
     }
 
     if ($ret_string) {
