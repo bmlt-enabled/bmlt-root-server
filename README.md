@@ -47,9 +47,9 @@ For instructions on installing the root server, see [the page on installing a ne
 CHANGELIST
 ----------
 ***Version 2.15.6* ** *- TBD*
-- Minor improvements to install wizard. Fix bug regarding names and passwords with single quotes or backslashes (before they would cause a cryptic error; now they are OK -- not that using them is a great idea, but the system shouldn't die strangely). Also, if there is a database access error, and one of the offending fields has whitespace at the beginning or end, give a hint to the user that might be the cause.
-- added a CONTRIBUTING.md file that describes how to set up a dev environment for the root server.
+- Added support for the `OLM` NAWS Format code for online meetings.
 - Added the train and bus fields to browser view.
+- Minor improvements to install wizard. Fix bug regarding names and passwords with single quotes or backslashes (before they would cause a cryptic error; now they are OK -- not that using them is a great idea, but the system shouldn't die strangely). Also, if there is a database access error, and one of the offending fields has whitespace at the beginning or end, give a hint to the user that might be the cause.
 
 ***Version 2.15.5* ** *- July 25, 2020*
 - Many service bodies are already using an "HY" format for hybrid virtual and in-person meetings, so we made it official - if you don't already have the "HY" format, this release will create it for you.

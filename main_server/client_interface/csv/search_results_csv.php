@@ -972,10 +972,16 @@ function BMLT_FuncNAWSReturnMeetingNAWSID(
     }
     
     if ($the_meeting instanceof c_comdef_meeting) {
-        $ret2 = intval(preg_replace('|\D*?|', '', $the_meeting->GetMeetingDataValue('worldid_mixed')));
-
-        if ($ret2) {
-            $ret = sprintf('G%08d', $ret2);
+        $world_id = trim($the_meeting->GetMeetingDataValue('worldid_mixed'));
+        $is_olm = (preg_match("/^OLM/", $world_id) != false);
+        $world_id = preg_replace('|\D*?|', '', $world_id);
+        $world_id = intval($world_id);
+        if ($world_id) {
+            if ($is_olm) {
+                $ret = sprintf('OLM%06d', $world_id);
+            } else {
+                $ret = sprintf('G%08d', $world_id);
+            }
         }
     }
     
