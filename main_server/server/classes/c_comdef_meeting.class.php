@@ -117,6 +117,11 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         } else {
             $main_table_values['duration_time'] = null;
         }
+        if (isset($this->_my_meeting_data['time_zone'])) {
+            $main_table_values['time_zone'] = $this->_my_meeting_data['time_zone'];
+        } else {
+            $main_table_values['time_zone'] = null;
+        }
         if (isset($this->_my_meeting_data['longitude'])) {
             $main_table_values['longitude'] = $this->_my_meeting_data['longitude'];
         } else {
@@ -157,6 +162,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                 case 'start_time':
                 case 'lang_enum':
                 case 'duration_time':
+                case 'time_zone':
                 case 'formats':
                 case 'longitude':
                 case 'latitude':
@@ -634,6 +640,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
             $ret['weekday_tinyint'] = 'weekday_tinyint';
             $ret['start_time'] = 'start_time';
             $ret['duration_time'] = 'duration_time';
+            $ret['time_zone'] = 'time_zone';
             $ret['formats'] = 'formats';
             $ret['lang_enum'] = 'lang_enum';
             $ret['longitude'] = 'longitude';
@@ -710,6 +717,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                 case 'service_body_bigint':
                 case 'start_time':
                 case 'duration_time':
+                case 'time_zone':
                 case 'formats':
                 case 'lang_enum':
                 case 'longitude':
@@ -867,6 +875,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         $ret['weekday_tinyint']['key'] = 'weekday_tinyint';
         $ret['start_time']['key'] = 'start_time';
         $ret['duration_time']['key'] = 'duration_time';
+        $ret['time_zone']['key'] = 'time_zone';
         $ret['formats']['key'] = 'formats';
         $ret['lang_enum']['key'] = 'lang_enum';
         $ret['longitude']['key'] = 'longitude';

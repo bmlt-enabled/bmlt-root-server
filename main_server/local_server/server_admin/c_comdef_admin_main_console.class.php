@@ -176,6 +176,7 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_zip_auto_geocoding_enabled = '.self::js_html($this->my_localized_strings['zip_auto_geocoding_enabled'] ? 'true' : 'false').';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_maps_api_key_warning  = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['Maps_API_Key_Warning']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_maps_api_key_not_set  = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['Maps_API_Key_Not_Set']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
+                $ret .= 'var g_meeting_time_zones_enabled = ' . ($this->my_localized_strings['meeting_time_zones_enabled'] ? 'true' : 'false') . ';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_service_bodies_array = [';
         for ($c = 0; $c < count($this->my_service_bodies); $c++) {
             $service_body = $this->my_service_bodies[$c];
@@ -1682,6 +1683,22 @@ class c_comdef_admin_main_console
                     $ret .= '</span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
+
+            if ($this->my_localized_strings['meeting_time_zones_enabled']) {
+                $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                    $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_time_zone_label']).'</span>';
+                    $ret .= '<span class="bmlt_admin_value_left">';
+                        $ret .= '<select id="bmlt_admin_single_meeting_editor_template_meeting_time_zone_select">';
+                            $ret .= '<option value=""></option>';
+                foreach ($this->my_localized_strings['time_zone_strings'] as $tzname => $tzvalue) {
+                    $ret .= '<option value="' . htmlspecialchars($tzvalue) . '">' . htmlspecialchars($tzname) . '</option>';
+                }
+                        $ret .= '</select>';
+                    $ret .= '</span>';
+                    $ret .= '<div class="clear_both"></div>';
+                $ret .= '</div>';
+            }
+
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_cc_label']).'</span>';
                     $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_cc_text_input" type="text" maxlength="255" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_cc_prompt']).'" /></span>';

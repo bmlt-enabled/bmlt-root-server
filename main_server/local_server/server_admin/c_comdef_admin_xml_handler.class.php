@@ -1254,6 +1254,7 @@ class c_comdef_admin_xml_handler
                     
                                 case 'start_time':
                                 case 'duration_time':
+                                case 'time_zone':
                                     $old_value = $meeting_obj->GetMeetingDataValue($meeting_field);
                                     $data =& $meeting_obj->GetMeetingData();
                                     $data[$meeting_field] = $value;

@@ -46,6 +46,9 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.15.7* ** *- UNRELEASED*
+- Added initial support for time zones, hidden behind feature flag.
+
 ***Version 2.15.6* ** *- September 7, 2020*
 - Added support for the `OLM` NAWS Format code for online meetings.
 - Added the train and bus fields to browser view.
