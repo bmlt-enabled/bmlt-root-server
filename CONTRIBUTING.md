@@ -38,7 +38,7 @@ DBSERVER=db
 DBPREFIX=na
 ```
 
-## Testing the Install Wizard
+## Testing the install wizard
 The Docker files automatically set up an `auto-config.inc.php` file for you. Usually this is great since it saves you
 the bother of going through the install wizard each time you restart the root server. However, if you want to test or
 change the install wizard, you can start with the install wizard instead of the login screen by deleting this file.
@@ -78,8 +78,16 @@ Finally, as with the earlier directions, when finished exit by pressing ctrl+c o
 7. Save.
 8. Set IDE key to `ROOT_SERVER_DEBUG`.
 9. Save.
-10. Turn on remote debugging by press the button in the toolbar. ![image1](img/3.png)
+10. Turn on remote debugging by press the button in the toolbar. ![image1](docker/img/3.png)
 11. Set any breakpoints, and the code should pause there.
 
 ![image1](docker/img/1.png)
+
 ![image2](docker/img/2.png)
+
+## Debugging code that uses packages in `vendor`
+xdebug may have problems if there are missing source files. So if you encounter an error when running with the debugger
+that might be due to this, copy all the files in `vendor` from a release version of the server into the `vendor`
+directory in your source code and try again. One place this problem arose was when trying to debug additions to the
+"NAWS Import" functionality; before adding the source code the server would just hang when trying to load a file
+in `vendor`.

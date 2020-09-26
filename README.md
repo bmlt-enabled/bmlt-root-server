@@ -46,6 +46,9 @@ For instructions on installing the root server, see [the page on installing a ne
 
 CHANGELIST
 ----------
+***Version 2.15.7* ** *- TBD*
+- Add a "publish" checkbox to the NAWS import functionality to allow new meetings to be either published or unpublished.
+
 ***Version 2.15.6* ** *- September 7, 2020*
 - Added support for the `OLM` NAWS Format code for online meetings.
 - Added the train and bus fields to browser view.

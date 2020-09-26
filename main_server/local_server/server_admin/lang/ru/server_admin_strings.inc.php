@@ -42,6 +42,8 @@
                                             'import_service_bodies_and_meetings_button_text'        =>  'Импорт собраний и органов обслуживания',
                                             'import_service_bodies_and_meetings_dropdown_text'      =>  'Импорт органов обслуживания и собраний из экспорта NAWS',
                                             'server_admin_naws_import_spreadsheet_label'            =>  'NAWS импортированные таблицы :',
+                                            'server_admin_naws_import_initially_publish'            =>  'Initialize imported meetings to \'published\': ',
+                                            'server_admin_naws_import_explanation'                  =>  'Uncheck the box to initialize imported meetings to \'unpublished\'. (This is useful if many of the new meetings will need to be edited or deleted, and you don\'t want them showing up in the meantime.)',
                                             'account_disclosure'                                    =>  'Мой аккаунт',
                                             'account_name_label'                                    =>  'Имя аккаунта:',
                                             'account_login_label'                                   =>  'Мой логин:',

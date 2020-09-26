@@ -37,6 +37,8 @@
                                             'import_service_bodies_and_meetings_button_text'        => 'Importar corpo de serviço e reuniões',
                                             'import_service_bodies_and_meetings_dropdown_text'      => 'Importar corpo de serviço e reuniões da exportação do NAWS (NAWS Export)',
                                             'server_admin_naws_import_spreadsheet_label'            =>  'Planilha Importada do NAWS:',
+                                            'server_admin_naws_import_initially_publish'            =>  'Initialize imported meetings to \'published\': ',
+                                            'server_admin_naws_import_explanation'                  =>  'Uncheck the box to initialize imported meetings to \'unpublished\'. (This is useful if many of the new meetings will need to be edited or deleted, and you don\'t want them showing up in the meantime.)',
                                             'account_disclosure'                                    =>  'Minha conta',
                                             'account_name_label'                                    =>  'Nome da minha conta:',
                                             'account_login_label'                                   =>  'Meu login:',
