@@ -555,6 +555,7 @@ class c_comdef_meetings implements i_comdef_has_parent
                             case 'worldid_mixed':
                             case 'start_time':
                             case 'duration_time':
+                            case 'time_zone':
                             case 'longitude':
                             case 'latitude':
                             case 'published':

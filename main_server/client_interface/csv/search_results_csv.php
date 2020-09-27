@@ -467,6 +467,7 @@ function DisplaySearchResultsCSV(
                                                 case 'weekday_tinyint':
                                                 case 'start_time':
                                                 case 'duration_time':
+                                                case 'time_zone':
                                                 case 'formats':
                                                 case 'lang_enum':
                                                 case 'longitude':
@@ -613,6 +614,7 @@ function ReturnNAWSFormatCSV(
                                     'PhoneMeetingNumber' => 'phone_meeting_number',
                                     'VirtualMeetingLink' => 'virtual_meeting_link',
                                     'VirtualMeetingInfo' => 'virtual_meeting_additional_info',
+                                    'TimeZone'           => 'time_zone',
                                     'bmlt_id'            => 'id_bigint',
                                     'unpublished'        => 'BMLT_FuncNAWSReturnPublishedStatus'
                                 );

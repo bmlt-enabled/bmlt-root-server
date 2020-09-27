@@ -2160,6 +2160,9 @@ function BMLT_Server_Admin()
         this.setWeekday(meeting_object);
         this.setMeetingStartTime(meeting_object);
         this.setMeetingDuration(meeting_object);
+        if (g_meeting_time_zones_enabled) {
+            this.setMeetingTimeZone(meeting_object);
+        }
         this.setServiceBody(meeting_object);
         this.setUpOtherTab(meeting_object);
         
@@ -2315,6 +2318,21 @@ function BMLT_Server_Admin()
         
         time_hour_select.onchange = function () {
             admin_handler_object.reactToDurationSelect(meeting_id); };
+    };
+
+    /************************************************************************************//**
+     *   \brief
+     ****************************************************************************************/
+    this.setMeetingTimeZone = function (in_meeting_object) {
+        var meeting_id = in_meeting_object.id_bigint;
+
+        var time_zone_select = document.getElementById('bmlt_admin_single_meeting_editor_' + meeting_id + '_meeting_time_zone_select');
+
+        BMLT_Admin_setSelectByStringValue(time_zone_select, in_meeting_object.time_zone);
+
+        this.reactToTimeZoneSelect(meeting_id);
+
+        time_zone_select.onchange = function () { admin_handler_object.reactToTimeZoneSelect(meeting_id); }
     };
     
     /************************************************************************************//**
@@ -2580,6 +2598,20 @@ function BMLT_Server_Admin()
         var the_meeting_object = editor_object.meeting_object;
         
         the_meeting_object.weekday_tinyint = weekday_select.value.toString();
+        this.validateMeetingEditorButton(in_meeting_id);
+    };
+
+    /************************************************************************************//**
+     *   \brief
+     ****************************************************************************************/
+    this.reactToTimeZoneSelect = function (  in_meeting_id   ///< The meeting ID
+    ) {
+        var time_zone_select = document.getElementById('bmlt_admin_single_meeting_editor_' + in_meeting_id + '_meeting_time_zone_select');
+
+        var editor_object = document.getElementById('bmlt_admin_single_meeting_editor_' + in_meeting_id + '_div');
+        var the_meeting_object = editor_object.meeting_object;
+
+        the_meeting_object.time_zone = time_zone_select.value.toString();
         this.validateMeetingEditorButton(in_meeting_id);
     };
 
@@ -5495,7 +5527,26 @@ function BMLT_Admin_changeTemplateIDToUseThisID(
     
     return ret;
 };
-        
+
+/************************************************************************************//**
+ *   \brief
+ ****************************************************************************************/
+function BMLT_Admin_setSelectByStringValue(
+    in_select_object,
+    in_value
+) {
+    var setIndex = 0;
+
+    for (var c = 0; c < in_select_object.options.length; c ++) {
+        if (in_select_object.options[c].value == in_value) {
+            setIndex = c;
+            break;
+        }
+    }
+
+    in_select_object.selectedIndex = setIndex;
+}
+
 /************************************************************************************//**
 *   \brief
 ****************************************************************************************/
