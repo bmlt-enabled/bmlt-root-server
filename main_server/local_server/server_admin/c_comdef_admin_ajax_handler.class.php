@@ -1122,6 +1122,7 @@ class c_comdef_admin_ajax_handler
                             case 'start_time':
                             case 'lang_enum':
                             case 'duration_time':
+                            case 'time_zone':
                             case 'formats':
                                 $data[$key] = $value;
                                 break;

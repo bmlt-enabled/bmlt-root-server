@@ -329,6 +329,14 @@ function DB_Connect_and_Upgrade()
                 $sql = "UPDATE `$table` SET `worldid_mixed` = 'TC' WHERE `shared_id_bigint` = $id";
                 c_comdef_dbsingleton::preparedExec($sql);
             }
+        }),
+        array(16, function () {
+            $dbPrefix = $GLOBALS['dbPrefix'];
+            $table = "$dbPrefix" . "_comdef_meetings_main";
+            $alter_sql = "ALTER TABLE $table ADD COLUMN `time_zone` VARCHAR(40) DEFAULT NULL AFTER `duration_time`";
+            c_comdef_dbsingleton::preparedExec($alter_sql);
+            $create_sql = "CREATE INDEX `time_zone` ON $table (`time_zone`)";
+            c_comdef_dbsingleton::preparedExec($create_sql);
         })
     );
     // WHEN ADDING A NEW DATABASE MIGRATION, REMEMBER TO BUMP THE VERSION IN local_server/install_wizard/sql_files/initialDbVersionData.sql
