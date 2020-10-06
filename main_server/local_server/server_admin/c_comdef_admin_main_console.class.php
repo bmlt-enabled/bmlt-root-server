@@ -2038,6 +2038,13 @@ class c_comdef_admin_main_console
                                 $ret .= '</span>';
                             $ret .= '</div>';
                             $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
+                                $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['server_admin_naws_import_initially_publish']).'</span>';
+                                $ret .= '<span class="bmlt_admin_value_left">';
+                                    $ret .= '<input type="checkbox" name="bmlt_admin_naws_import_publish_checkbox" id="bmlt_admin_naws_import_publish_checkbox"  checked="checked" onchange="javascript:admin_handler_object.handleNAWSImportFileInputChange();" />';
+                                $ret .= '</span>';
+                                $ret .= '<span class="span.bmlt_admin_unpublished_note_span"> &thinsp;'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['server_admin_naws_import_explanation']).'</span>';
+                            $ret .= '</div>';
+                            $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                                 $ret .= '<span class="bmlt_admin_med_label_right">&nbsp;</span>';
                                 $ret .= '<span id="bmlt_admin_naws_import_ajax_button_span" class="bmlt_admin_value_left"><a id="bmlt_admin_naws_import_ajax_button" href="javascript:admin_handler_object.handleNAWSImport();" class="bmlt_admin_ajax_button button_disabled">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['import_service_bodies_and_meetings_button_text']).'</a></span>';
                                 $ret .= '<span id="bmlt_admin_naws_import_ajax_button_throbber_span" class="bmlt_admin_value_left item_hidden"><img src="local_server/server_admin/style/images/ajax-throbber-white.gif" alt="AJAX Throbber" /></span>';

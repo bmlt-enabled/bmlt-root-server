@@ -425,11 +425,12 @@ function BMLT_Server_Admin()
     };
 
     /************************************************************************************//**
-     *   \brief This is called to initiate an AJAX process to update world IDs from file     *
+     *   \brief This is called to initiate an AJAX process to import meetings from file     *
      ****************************************************************************************/
     this.handleNAWSImport = function() {
         var file_input = document.getElementById('bmlt_admin_naws_import_file_input');
         var save_button = document.getElementById('bmlt_admin_naws_import_ajax_button');
+        var publish_button = document.getElementById('bmlt_admin_naws_import_publish_checkbox');
         if (!file_input || !file_input.files || !file_input.files.length) {
             return;
         }
@@ -440,7 +441,7 @@ function BMLT_Server_Admin()
         }
     
         this.m_ajax_request_in_progress = BMLT_AjaxRequest_FileUpload(
-            g_ajax_callback_uri + '&do_naws_import=1',
+            g_ajax_callback_uri + '&do_naws_import=1&initialValueForPublished=' + (publish_button.checked ? 'TRUE' : 'FALSE'),
             function(response) {admin_handler_object.handleNAWSImportCallback(response);},
             file_input.files[0]
         );
@@ -489,7 +490,7 @@ function BMLT_Server_Admin()
     };
 
     /************************************************************************************//**
-     *   \brief Displays or hides the AJAX Throbber for the Update World IDs button          *
+     *   \brief Displays or hides the AJAX Throbber for the NAWS Import button          *
      ****************************************************************************************/
     this.setNAWSImportThrobber = function(visible) {
         var button_span = document.getElementById('bmlt_admin_naws_import_ajax_button_span');

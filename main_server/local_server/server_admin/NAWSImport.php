@@ -28,12 +28,13 @@ class NAWSImport
     private $numUsersCreated = 0;
     private $numMeetingsCreated = 0;
 
-    public function __construct($importFilePath)
+    public function __construct($importFilePath, $initialValueForPublished)
     {
         try {
             $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($importFilePath);
             $spreadsheet = $reader->load($importFilePath);
             $this->nawsExportRows = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+            $this->initialValueForPublished = $initialValueForPublished;
 
             // If the last row is all nulls, remove it
             $lastRow = $this->nawsExportRows[count($this->nawsExportRows)];
@@ -201,7 +202,7 @@ class NAWSImport
             }
 
             $meetingData = array();
-            $meetingData['published'] = true;
+            $meetingData['published'] = $this->initialValueForPublished;
             $meetingData['lang_enum'] = $this->server->GetLocalLang();
             $meetingData['duration_time'] = $defaultDurationTime;
             $meetingData['format_shared_id_list'] = array();

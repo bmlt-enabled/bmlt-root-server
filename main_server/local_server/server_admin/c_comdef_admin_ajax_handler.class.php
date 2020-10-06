@@ -133,7 +133,7 @@ class c_comdef_admin_ajax_handler
         require_once(__DIR__.'/NAWSImportMeetingsExistException.php');
 
         try {
-            $nawsImport = new NAWSImport($_FILES['thefile']['tmp_name']);
+            $nawsImport = new NAWSImport($_FILES['thefile']['tmp_name'], $this->my_http_vars['initialValueForPublished'] == 'TRUE');
             $nawsImport->import(true);
         } catch (NAWSImportServiceBodiesExistException $e) {
             $ret['errors'] = $this->my_localized_strings['comdef_server_admin_strings']['server_admin_error_service_bodies_already_exist'] . implode(', ', $e->getWorldIds());

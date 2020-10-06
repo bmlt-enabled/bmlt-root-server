@@ -33,7 +33,8 @@ The entire system is written in PHP, JavaScript, XHTML and CSS. Most of the code
 
 PHP 5.6 or above is required to establish a root server, and 5.0 or above for a satellite.
 
-For more information about server requirements, see [the page on Server Requirements](https://bmlt.app/specific-topics/server-requirements/)
+For more information about server requirements, see the "Things You Will Need Before You Install" section of
+[Installing a New Root Server](https://bmlt.app/setting-up-the-bmlt/).
  
 INSTALLATION
 ------------
@@ -42,12 +43,11 @@ You set up a root server as the central database and administration area for a B
 implementation, but most people access it through what we call "satellite servers." These
 satellites comprise the "client" part of the BMLT "client/server" architecture.
 
-For instructions on installing the root server, see [the page on installing a new Root Server](https://bmlt.app/installing-a-new-root-server/)
+For instructions on installing the root server, see [Installing a New Root Server](https://bmlt.app/setting-up-the-bmlt/)
 
-CHANGELIST
-----------
 ***Version 2.15.7* ** *- UNRELEASED*
 - Added initial support for time zones, hidden behind feature flag.
+- Add a "publish" checkbox to the NAWS import functionality to allow new meetings to be either published or unpublished.
 
 ***Version 2.15.6* ** *- September 7, 2020*
 - Added support for the `OLM` NAWS Format code for online meetings.

@@ -122,6 +122,7 @@ $comdef_install_wizard_strings = array (
     'Page_4_Text'                   =>  'Root Server не смог создать файл настроек для вас. Вместо этого мы просим вас создать его самостоятельно через FTP или файловый менеджер панели управления, назовите его «auto-config.inc.php» и вставьте в файл следующий текст:',
 
     'NAWS_Export_Spreadsheet_Optional' => 'NAWS Экспорт электронных таблиц (необязательно): ',
+    'NAWS_Export_Spreadsheet_Initially_Publish' => 'Initialize imported meetings to \'published\': ',
 
     'DefaultPasswordLength'         =>  10,
     'DefaultMeetingCount'           =>  10,
@@ -151,6 +152,7 @@ $comdef_install_wizard_strings = array (
     'Explanatory_Text_3_Misc_Intro'     =>  'Это различные настройки, которые влияют на поведение и внешний вид корневого сервера.',
 
     'Explanatory_Text_4_Main_Intro'     =>  'Если вы ввели информацию базы данных, предоставили действительный ключ API Карт Google и указали регистрационную информацию для Администратора сервера, тогда вы можете инициализировать корневой сервер здесь. Помните, что база данных должна быть ПОЛНОСТЬЮ ПУСТО из таблиц корневого сервера BMLT для этого сервера (в ней могут быть таблицы для других серверов или служб).',
+    'Explanatory_Text_4_NAWS_Export'    =>  'Optionally, you can import the meetings from a NAWS export spreadsheet. Uncheck the box to initialize them to \'unpublished\'. (This is useful if many of the new meetings will need to be edited or deleted, and you don\'t want them showing up in the meantime.)',
     'Explanatory_Text_4_File_Intro'     =>  'Текст в поле ниже - это исходный код PHP для основного файла настроек. Вам нужно будет создать файл на сервере с этим текстом. Файл находится на том же уровне, что и каталог основного сервера для корневого сервера.',
     'Explanatory_Text_4_File_Extra'     =>  'Вы также должны убедиться, что права доступа к файлам ограничены (chmod 0644). Это предотвращает запись файла, и корневой сервер не будет работать, если файл не имеет правильных разрешений.',
     'Page_4_PathInfo'                   =>  'Файл должен быть размещен как %s/auto-config.inc.php, где ваш %s каталог. После того, как файл был создан и вы поместили в него вышеуказанный текст, вы должны выполнить следующую команду, чтобы убедиться, что права доступа правильные:',

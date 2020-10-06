@@ -356,10 +356,20 @@ $default_lang = $lang;
                 <div id="bmlt_installer_page_4" class="bmlt_installer_page_4">
                         <?php echo bmlt_create_next_prev_buttons(4) ?>
                     <div class="explanatory_text_div"><?php echo $comdef_install_wizard_strings['Explanatory_Text_4_Main_Intro']; ?></div>
+                    <div class="explanatory_text_div"><?php echo $comdef_install_wizard_strings['Explanatory_Text_4_NAWS_Export']; ?></div>
                     <div id="database_install_stuff_div" class="item_hidden">
                         <h1 class="page_heading_h1"><?php echo $comdef_install_wizard_strings['Page_4_Initialize_Root_Server_Heading']; ?></h1>
-                        <div class="one_line_div centered_text">
-                            <?php echo $comdef_install_wizard_strings['NAWS_Export_Spreadsheet_Optional']; ?> <input name="bmlt_admin_naws_spreadsheet_file_input" id="bmlt_admin_naws_spreadsheet_file_input" type="file" />
+                        <div class="one_line_div">
+                            <label class="left_right_aligned bold_char" for="bmlt_admin_naws_spreadsheet_file_input"><?php echo $comdef_install_wizard_strings['NAWS_Export_Spreadsheet_Optional']; ?></label>
+                            <div class="right_left_aligned_div">
+                                <input name="bmlt_admin_naws_spreadsheet_file_input" id="bmlt_admin_naws_spreadsheet_file_input" type="file" />
+                            </div>
+                        </div>
+                         <div class="one_line_div">
+                            <label class="left_right_aligned bold_char" for="bmlt_admin_naws_spreadsheet_publish_checkbox"><?php echo htmlspecialchars($comdef_install_wizard_strings['NAWS_Export_Spreadsheet_Initially_Publish']); ?></label>
+                            <div class="right_left_aligned_div">
+                                <input type="checkbox" id="bmlt_admin_naws_spreadsheet_publish_checkbox" checked="checked" />
+                            </div>
                         </div>
                         <div class="one_line_div centered_text">
                             <a id="bmlt_installer_initialize_ajax_button" class="bmlt_admin_ajax_button" href="javascript:g_installer_object.initializeRootServer()"><?php echo htmlspecialchars($comdef_install_wizard_strings['Page_4_Initialize_Root_Server_Button']) ?></a>

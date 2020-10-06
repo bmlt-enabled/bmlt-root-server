@@ -416,6 +416,7 @@ function BMLTInstaller( in_prefs    ///< A JSON object with the initial prefs.
         var file_input = document.getElementById('bmlt_admin_naws_spreadsheet_file_input');
         if (file_input && file_input.files && file_input.files.length) {
             formData.append('thefile', file_input.files[0]);
+            formData.append('initialValueForPublished', document.getElementById('bmlt_admin_naws_spreadsheet_publish_checkbox').checked ? 'TRUE' : 'FALSE');
         }
         
         this.m_ajax_request_in_progress = BMLT_Installer_AjaxPostRequest(uri, function (in_req) {
