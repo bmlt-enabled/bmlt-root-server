@@ -34,6 +34,7 @@ require_once(dirname(__FILE__)."/classes/c_comdef_meetings.class.php");
 require_once(dirname(__FILE__)."/classes/c_comdef_changes.class.php");
 require_once(dirname(__FILE__)."/classes/c_comdef_users.class.php");
 require_once(dirname(__FILE__)."/classes/c_comdef_service_bodies.class.php");
+require_once(dirname(__FILE__)."/classes/time_zone_migrator.class.php");
 require_once(dirname(__FILE__)."/shared/classes/base_templates.inc.php");
 
 /******************************************************************/
@@ -94,6 +95,8 @@ class c_comdef_server
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if (!(self::$server_instance instanceof c_comdef_server)) {
             self::$server_instance = new c_comdef_server;
+            $timeZoneMigrator = new TimeZoneMigrator();
+            $timeZoneMigrator->migrateOne();
         }
         
         return self::$server_instance;
