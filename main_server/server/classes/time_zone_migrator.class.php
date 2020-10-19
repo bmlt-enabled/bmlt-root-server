@@ -49,6 +49,8 @@ class TimeZoneMigrator
             $country = $location[4];
             if ($city && $state) {
                 $location = "$city, $state";
+                // If the country is here we will use it to help with geocoding, but
+                // the update will be by city and state
                 if ($country) {
                     $location .= ", $country";
                 }
@@ -187,8 +189,18 @@ class TimeZoneMigrator
     {
         // little bit obfuscate
         $url = base64_decode("aHR0cHM6Ly91YWE4cmRjaGcyLmV4ZWN1dGUtYXBpLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tL3Rlc3QvYm1sdC8=");
+        $location = urlencode($location);
         $url .= "?location=$location";
-        $xml = simplexml_load_file($url);
+
+        $opts = array('http' => array('timeout' => .3));
+        $context  = stream_context_create($opts);
+        $data = file_get_contents($url, false, $context);
+        if(!$data) {
+            return false;
+        }
+        $xml = simplexml_load_string($data);
+
+        //$xml = simplexml_load_file($url);
         if ($xml->status == 'OK') {
             $time_zone = strval($xml->time_zone_id);
             return $time_zone;
