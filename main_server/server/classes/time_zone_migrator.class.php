@@ -195,7 +195,7 @@ class TimeZoneMigrator
         $opts = array('http' => array('timeout' => .3));
         $context  = stream_context_create($opts);
         $data = file_get_contents($url, false, $context);
-        if(!$data) {
+        if (!$data) {
             return false;
         }
         $xml = simplexml_load_string($data);
