@@ -88,7 +88,6 @@ class TimeZoneMigrator
             } else {
                 $this->updateTimeZoneByCountryAndZipOrStateOrCounty($zip_code, $county, $state, $country, $time_zone);
             }
-
         } catch (Exception $e) {
             // do nothing
         }
@@ -147,7 +146,6 @@ class TimeZoneMigrator
         }
 
         c_comdef_dbsingleton::preparedExec($sql, $params);
-
     }
 
     private function updateTimeZoneByCityAndState($city, $state, $time_zone)
