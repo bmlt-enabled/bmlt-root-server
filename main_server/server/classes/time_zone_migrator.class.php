@@ -188,11 +188,11 @@ class TimeZoneMigrator
     private function getTimeZone($location)
     {
         // little bit obfuscate
-        $url = base64_decode("aHR0cHM6Ly91YWE4cmRjaGcyLmV4ZWN1dGUtYXBpLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tL3Rlc3QvYm1sdC8=");
+        $url = base64_decode("aHR0cHM6Ly9hcGkudHouYm1sdGVuYWJsZWQub3JnL2JtbHQv");
         $location = urlencode($location);
         $url .= "?location=$location";
 
-        $opts = array('http' => array('timeout' => .3));
+        $opts = array('http' => array('timeout' => .5));
         $context  = stream_context_create($opts);
         $data = file_get_contents($url, false, $context);
         if (!$data) {
@@ -200,7 +200,6 @@ class TimeZoneMigrator
         }
         $xml = simplexml_load_string($data);
 
-        //$xml = simplexml_load_file($url);
         if ($xml->status == 'OK') {
             $time_zone = strval($xml->time_zone_id);
             return $time_zone;
