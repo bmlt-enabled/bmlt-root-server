@@ -48,6 +48,7 @@ For instructions on installing the root server, see [Installing a New Root Serve
 ***Version 2.15.7* ** *- UNRELEASED*
 - Added initial support for time zones, hidden behind feature flag.
 - Add a "publish" checkbox to the NAWS import functionality to allow new meetings to be either published or unpublished.
+- Fixed an issue where map searches using `geo_width` could return incomplete results when filtered by service body.
 
 ***Version 2.15.6* ** *- September 7, 2020*
 - Added support for the `OLM` NAWS Format code for online meetings.
