@@ -2382,7 +2382,8 @@ class c_comdef_server
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     public static function MySQLGetRadiusSQLClause(
         $in_published = false,  ///< If TRUE, then we will have a slot for published status.
-        $in_weekday = null      ///< This is an array of weekdays we are looking for (integers).
+        $in_weekday = null,      ///< This is an array of weekdays we are looking for (integers).
+        $in_service_bodies = null ///< This is an array of service body ids we are looking for
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         // I adapted this from here: http://www.plumislandmedia.net/mysql/haversine-mysql-nearest-loc/ Thanks, Ollie!
@@ -2435,7 +2436,31 @@ class c_comdef_server
             
             $sql .= ")";
         }
-        
+
+        $include_service_body_ids = array();
+        $exclude_service_body_ids = array();
+        if (is_array($in_service_bodies)) {
+            foreach ($in_service_bodies as $service_body_id) {
+                if ($service_body_id > 0) {
+                    array_push($include_service_body_ids, intval($service_body_id));
+                } else {
+                    array_push($exclude_service_body_ids, abs(intval($service_body_id)));
+                }
+            }
+        }
+        $service_bodies_clause = array();
+        if (count($include_service_body_ids)) {
+            $include_service_body_ids = implode(",", $include_service_body_ids);
+            array_push($service_bodies_clause, "service_body_bigint IN ($include_service_body_ids)");
+        }
+        if (count($exclude_service_body_ids)) {
+            $exclude_service_body_ids = implode(",", $exclude_service_body_ids);
+            array_push($service_bodies_clause, "service_body_bigint NOT IN ($exclude_service_body_ids)");
+        }
+        if (count($service_bodies_clause)) {
+            $sql .= " AND " . implode(" AND ", $service_bodies_clause) . "\n";
+        }
+
         $sql .= "\nORDER BY distance;";
         
         return $sql;
@@ -2467,7 +2492,8 @@ class c_comdef_server
         $in_search_result_count,    ///< A positive integer. It specifies the number of meetings to find.
         $in_long_in_degrees,        ///< The longitude needs to be specified in degrees.
         $in_lat_in_degrees,         ///< The latitude needs to be specified in degrees.
-        $in_weekday_tinyint_array   ///< An array of weekdays in which to filter for.
+        $in_weekday_tinyint_array,   ///< An array of weekdays in which to filter for.
+        $in_service_bodies_array = null   ///< An array of service bodies in which ot filter for.
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
@@ -2521,7 +2547,7 @@ class c_comdef_server
                 $arr[] = true;
             }
             
-            $sql = c_comdef_server::MySQLGetRadiusSQLClause($show_published_only, $in_weekday_tinyint_array);
+            $sql = c_comdef_server::MySQLGetRadiusSQLClause($show_published_only, $in_weekday_tinyint_array, $in_service_bodies_array);
             
             try {
                 $rows = c_comdef_dbsingleton::preparedQuery($sql, $arr);

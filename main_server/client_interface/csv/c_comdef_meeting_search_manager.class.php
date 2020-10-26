@@ -1179,7 +1179,7 @@ class c_comdef_meeting_search_manager
                     }
 
                     // If we will specify a search radius, we specify a restricted area for the search.
-                    $search_rect = $this->GetSquareForRadius($weekdays);
+                    $search_rect = $this->GetSquareForRadius($weekdays, $service_bodies);
                     
                     // Do the main database search first.
                     $null_me = null;
@@ -1463,14 +1463,15 @@ class c_comdef_meeting_search_manager
              - ['south'] = latitude of the Southern side of the rectangle
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function GetSquareForRadius( $in_weekday_tinyint_array ///< An array of weekdays in which to filter for.
-                                )
-    {
+    public function GetSquareForRadius(
+        $in_weekday_tinyint_array, ///< An array of weekdays in which to filter for.
+        $in_service_bodies_array = null ///< An array of service bodies in which to filter for.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $loc = array ();
         
         if ($this->_search_radius_count) {
-            $this->_search_radius = c_comdef_server::HuntForRadius($this->_search_radius_count, $this->_search_center_long, $this->_search_center_lat, $in_weekday_tinyint_array);
+            $this->_search_radius = c_comdef_server::HuntForRadius($this->_search_radius_count, $this->_search_center_long, $this->_search_center_lat, $in_weekday_tinyint_array, $in_service_bodies_array);
             $this->_search_radius_count = null;
         }
 
