@@ -74,6 +74,8 @@ if (isset($http_vars ['bmlt_ajax_callback'])) {
     ?>
         <link rel="stylesheet" href="<?php echo c_comdef_htmlspecialchars($stylesheet) ?>" />
         <link rel="icon" href="<?php echo c_comdef_htmlspecialchars($shortcut_icon) ?>" />
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap" rel="stylesheet">
         <title>Basic Meeting List Toolbox Administration Console</title>
     </head>
     <body class="admin_body">
@@ -81,7 +83,7 @@ if (isset($http_vars ['bmlt_ajax_callback'])) {
     if ($server instanceof c_comdef_server) {
         // This throws up a tackle if someone wants to just barge in.
         require_once(dirname(__FILE__).'/server_admin/c_comdef_login.php');
-            
+        
         // We can only go past here is we are a logged-in user.
         $user_obj = $server->GetCurrentUserObj();
         if (($user_obj instanceof c_comdef_user) && ($user_obj->GetUserLevel() != _USER_LEVEL_DISABLED)) {
