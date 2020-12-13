@@ -1443,3 +1443,16 @@ div.bmlt_admin_meeting_editor_service_check_all_div
     padding-bottom:5px;
     padding-left:5px;
 }
+
+.helper_text
+{
+    font-size: 12px;
+    font-style: italic;
+}
+
+.validation_helper_text
+{
+    font-size: 12px;
+    font-style: italic;
+    color: red;
+}

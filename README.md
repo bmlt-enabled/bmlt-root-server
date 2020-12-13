@@ -45,7 +45,8 @@ satellites comprise the "client" part of the BMLT "client/server" architecture.
 
 For instructions on installing the root server, see [Installing a New Root Server](https://bmlt.app/setting-up-the-bmlt/)
 
-***Version 2.15.7* ** *- UNRELEASED*
+***Version 2.16.0* ** *- UNRELEASED*
+- Field descriptions are now displayed beneath each field to in order to support data validation changes.
 - Added initial support for time zones, hidden behind feature flag.
 - Add a "publish" checkbox to the NAWS import functionality to allow new meetings to be either published or unpublished.
 - Fixed an issue where map searches using `geo_width` could return incomplete results when filtered by service body.
