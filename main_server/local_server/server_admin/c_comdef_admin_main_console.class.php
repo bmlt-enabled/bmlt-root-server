@@ -1946,7 +1946,7 @@ class c_comdef_admin_main_console
                     $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                         $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($prompt).'</span>';
                         $ret .= '<span class="bmlt_admin_value_left">';
-                            $ret .= '<input id="bmlt_admin_single_meeting_editor_template_meeting_'.htmlspecialchars($key).'_text_input" type="text" onkeyup="admin_handler_object.setItemValue(this, template, \''.htmlspecialchars($key).'\');" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this, true);" maxlength="255" value="'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_default_text_prompt']).'" />';
+                            $ret .= '<input id="bmlt_admin_single_meeting_editor_template_meeting_'.htmlspecialchars($key).'_text_input" type="text" onkeyup="admin_handler_object.setItemValue(this, template, \''.htmlspecialchars($key).'\');" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this, true);" maxlength="255" /><div class="helper_text">' . htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_default_text_prompt']) . '</div>';
                         $ret .= '</span>';
                     if ($data_field['visibility'] == _VISIBILITY_NONE_) {
                         $ret .= '<span class="bmlt_admin_visibility_advice_span">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_visibility_advice']).'</span>';
