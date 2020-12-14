@@ -140,7 +140,7 @@
                                             'meeting_editor_screen_meeting_virtual_meeting_link_label'      =>  'Virtual Meeting Link:',
                                             'meeting_editor_screen_meeting_virtual_meeting_link_prompt'     =>  'Enter the link for a virtual meeting',
                                             'meeting_editor_screen_meeting_virtual_meeting_additional_info_label'      =>  'Virtuelles Meeting - zusätzliche Informationen:',
-                                            'meeting_editor_screen_meeting_virtual_meeting_additional_info_prompt'     =>  'Trage zusätzliche Informationen für die Teilnahme an der virtuelle Meeting ein',
+                                            'meeting_editor_screen_meeting_virtual_meeting_additional_info_prompt'     =>  'Enter any additional information for joining the virtual meeting, including directly from the app. For example, if the meeting uses Zoom, "Zoom ID: 456 033 8613, Password: 1953" would be appropriate.',
                                             'meeting_editor_screen_meeting_contact_name_1_label'    =>  'Contact 1 Name:',
                                             'meeting_editor_screen_meeting_contact_email_1_label'   =>  'Contact 1 Email:',
                                             'meeting_editor_screen_meeting_contact_phone_1_label'   =>  'Contact 1 Phone:',

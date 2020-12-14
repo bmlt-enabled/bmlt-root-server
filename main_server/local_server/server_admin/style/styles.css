@@ -1448,6 +1448,7 @@ div.bmlt_admin_meeting_editor_service_check_all_div
 {
     font-size: 12px;
     font-style: italic;
+    width: 35em;
 }
 
 .validation_helper_text
