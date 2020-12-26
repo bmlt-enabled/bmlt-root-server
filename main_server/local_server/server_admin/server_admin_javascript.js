@@ -2968,6 +2968,7 @@ function BMLT_Server_Admin()
             };
         };
 
+        var venue_type_format_selections = { "HY": false, "TC": false, "VM": false };
         var main_formats = g_format_object_array;
         for (var c = 0; c < main_formats.length; c++) {
             var format_checkbox = document.getElementById('bmlt_admin_meeting_' + in_meeting_object.id_bigint + '_format_' + main_formats[c].id + '_checkbox');
@@ -2976,21 +2977,34 @@ function BMLT_Server_Admin()
                 $(format_checkbox).closest("div.bmlt_admin_meeting_one_format_div").hide();
             }
 
-            // If HY, then Hybrid bmlt_admin_single_meeting_editor_template_meeting_venue_type_hybrid
-            // If TC + VM, then bmlt_admin_single_meeting_editor_template_meeting_venue_type_temp
-            // If VM only, bmlt_admin_single_meeting_editor_template_meeting_venue_type_virtual
-            // If neither then bmlt_admin_single_meeting_editor_template_meeting_venue_type_inperson
-
-
             if ( format_checkbox ) {
                 for (var i = 0; i < format_keys.length; i++) {
                     if ( format_checkbox.value == format_keys[i] ) {
+
+                        if (parseInt(this.venueTypeFormats['HY']['shared_id']) === main_formats[c].id) {
+                            venue_type_format_selections['HY'] = true;
+                        } else if (parseInt(this.venueTypeFormats['TC']['shared_id']) === main_formats[c].id) {
+                            venue_type_format_selections['TC'] = true;
+                        } else if (parseInt(this.venueTypeFormats['VM']['shared_id']) === main_formats[c].id) {
+                            venue_type_format_selections['VM'] = true;
+                        }
+
                         format_checkbox.checked = true;
                         break;
                     };
                 };
             };
         };
+
+        if (venue_type_format_selections['HY']) {
+            document.getElementById("bmlt_admin_single_meeting_editor_" + in_meeting_object.id_bigint + "_meeting_venue_type_hybrid").checked = true;
+        } else if (venue_type_format_selections['TC'] && venue_type_format_selections['VM']) {
+            document.getElementById("bmlt_admin_single_meeting_editor_" + in_meeting_object.id_bigint + "_meeting_venue_type_temp").checked = true;
+        } else if (venue_type_format_selections['VM']) {
+            document.getElementById("bmlt_admin_single_meeting_editor_" + in_meeting_object.id_bigint + "_meeting_venue_type_virtual").checked = true;
+        } else {
+            document.getElementById("bmlt_admin_single_meeting_editor_" + in_meeting_object.id_bigint + "_meeting_venue_type_inperson").checked = true;
+        }
 
         this.reactToFormatCheckbox(null, in_meeting_object.id_bigint);
 
