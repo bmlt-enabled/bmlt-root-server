@@ -2972,6 +2972,10 @@ function BMLT_Server_Admin()
         for (var c = 0; c < main_formats.length; c++) {
             var format_checkbox = document.getElementById('bmlt_admin_meeting_' + in_meeting_object.id_bigint + '_format_' + main_formats[c].id + '_checkbox');
 
+            if (this.isVenueTypeFormatBySharedId(main_formats[c].id)) {
+                format_checkbox.disabled = true;
+            }
+
             if ( format_checkbox ) {
                 for (var i = 0; i < format_keys.length; i++) {
                     if ( format_checkbox.value == format_keys[i] ) {
@@ -4850,11 +4854,37 @@ function BMLT_Server_Admin()
         this.getFormatForMasterId = function(format_code, language) {
             for (var index = 0; index < g_formats_array.length; index++) {
                 var format_group = g_formats_array[index];
-                if (format_group['en']['key'] === format_code) {
-                    return format_group[language]
+                if (format_group['formats']['en']['key'] === format_code) {
+                    return format_group['formats'][language]
                 }
             }
         }
+
+        this.isVenueTypeFormatByCode = function(format_code) {
+            return this.venueTypeFormats[format_code] !== undefined;
+        }
+
+        this.isVenueTypeFormatBySharedId = function(shared_id) {
+            for (var i = 0; i < this.venueTypeFormatSharedIds.length; i++) {
+                if (this.venueTypeFormatSharedIds[i] === shared_id) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        this.venueTypeFormatSharedIds = [
+            parseInt(this.getFormatForMasterId('VM', g_langs[0])['shared_id']),
+            parseInt(this.getFormatForMasterId('HY', g_langs[0])['shared_id']),
+            parseInt(this.getFormatForMasterId('TC', g_langs[0])['shared_id'])
+        ];
+
+        this.venueTypeFormats = {
+            'VM': this.getFormatForMasterId('VM', g_langs[0]),
+            'HY': this.getFormatForMasterId('HY', g_langs[0]),
+            'TC': this.getFormatForMasterId('TC', g_langs[0])
+        };
 
     /************************************************************************************//**
     *   \brief  This goes through all the formats in the list, and ensures they have the    *
