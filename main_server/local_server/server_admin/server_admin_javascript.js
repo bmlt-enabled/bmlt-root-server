@@ -4906,6 +4906,33 @@ function BMLT_Server_Admin()
             'TC': this.getFormatForMasterId('TC', g_langs[0])
         };
 
+        this.toggleVenueTypeFormat = function(id_bigint, master_format_code, checked) {
+            var checkbox = document.getElementById("bmlt_admin_meeting_" + id_bigint + "_format_" + this.venueTypeFormats[master_format_code]['shared_id'] + "_checkbox");
+            checkbox.checked = checked;
+            $(checkbox).trigger('change');
+        }
+
+        this.venueTypeClick = function(event, id_bigint) {
+            var venueType = $(event).val();
+            if (venueType === "hybrid") {
+                this.toggleVenueTypeFormat(id_bigint, 'HY', true);
+                this.toggleVenueTypeFormat(id_bigint, 'TC', false);
+                this.toggleVenueTypeFormat(id_bigint, 'VM', false);
+            } else if (venueType === "temp") {
+                this.toggleVenueTypeFormat(id_bigint, 'HY', false);
+                this.toggleVenueTypeFormat(id_bigint, 'TC', true);
+                this.toggleVenueTypeFormat(id_bigint, 'VM', true);
+            } else if (venueType === "virtual") {
+                this.toggleVenueTypeFormat(id_bigint, 'HY', false);
+                this.toggleVenueTypeFormat(id_bigint, 'TC', false);
+                this.toggleVenueTypeFormat(id_bigint, 'VM', true);
+            } else {
+                this.toggleVenueTypeFormat(id_bigint, 'HY', false);
+                this.toggleVenueTypeFormat(id_bigint, 'TC', false);
+                this.toggleVenueTypeFormat(id_bigint, 'VM', false);
+            }
+        }
+
     /************************************************************************************//**
     *   \brief  This goes through all the formats in the list, and ensures they have the    *
     *           proper styling to them.                                                     *
