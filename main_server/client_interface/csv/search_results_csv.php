@@ -84,7 +84,9 @@ if (!isset($g_format_dictionary) || !is_array($g_format_dictionary) || !count($g
 function bmlt_populate_format_dictionary()
 {
     global $g_format_dictionary;    ///< This is a dictionary used to translate formats to NAWS format. It uses the format shared IDs in the server's language.
-    
+
+    // first accumulate a local array of formats in $dict
+    $dict = [];
     $server = c_comdef_server::MakeServer();
     $localized_strings = c_comdef_server::GetLocalStrings();
     $formats_array = c_comdef_server::GetServer()->GetFormatsObj()->GetFormatsArray();
@@ -94,12 +96,27 @@ function bmlt_populate_format_dictionary()
             $world_id = $format->GetWorldID();
             $shared_id = $format->GetSharedID();
             if ($world_id && $shared_id) {
-                if (is_array($g_format_dictionary) && array_key_exists($world_id, $g_format_dictionary)) {
-                    array_push($g_format_dictionary[$world_id], $shared_id);
+                if (array_key_exists($world_id, $dict)) {
+                    array_push($dict[$world_id], $shared_id);
                 } else {
-                    $g_format_dictionary[$world_id] = array( $shared_id );
+                    $dict[$world_id] = array( $shared_id );
                 }
             }
+        }
+    }
+    // add all the formats in $dict to $g_format_dictionary, putting the preferred formats first (in the same
+    // order as in naws_export_formats_at_front)
+    $g_format_dictionary = [];
+    $local_strings = c_comdef_server::GetLocalStrings();
+    $preferred = $local_strings['naws_export_formats_at_front'];
+    foreach ($preferred as $id) {
+        if (array_key_exists($id, $dict)) {
+            $g_format_dictionary[$id] = $dict[$id];
+        }
+    }
+    foreach ($dict as $id => $val) {
+        if (!in_array($id, $preferred)) {
+            $g_format_dictionary[$id] = $dict[$id];
         }
     }
 }
