@@ -2973,8 +2973,14 @@ function BMLT_Server_Admin()
             var format_checkbox = document.getElementById('bmlt_admin_meeting_' + in_meeting_object.id_bigint + '_format_' + main_formats[c].id + '_checkbox');
 
             if (this.isVenueTypeFormatBySharedId(main_formats[c].id)) {
-                format_checkbox.disabled = true;
+                $(format_checkbox).closest("div.bmlt_admin_meeting_one_format_div").hide();
             }
+
+            // If HY, then Hybrid bmlt_admin_single_meeting_editor_template_meeting_venue_type_hybrid
+            // If TC + VM, then bmlt_admin_single_meeting_editor_template_meeting_venue_type_temp
+            // If VM only, bmlt_admin_single_meeting_editor_template_meeting_venue_type_virtual
+            // If neither then bmlt_admin_single_meeting_editor_template_meeting_venue_type_inperson
+
 
             if ( format_checkbox ) {
                 for (var i = 0; i < format_keys.length; i++) {
