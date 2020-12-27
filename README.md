@@ -50,9 +50,7 @@ For instructions on installing the root server, see [Installing a New Root Serve
 - Added initial support for time zones, hidden behind feature flag.
 - Add a "publish" checkbox to the NAWS import functionality to allow new meetings to be either published or unpublished.
 - Fixed an issue where map searches using `geo_width` could return incomplete results when filtered by service body.
-- Fixed an issue with which meeting formats are selected for a NAWS export. NAWS exports are limited to 5 formats.
-  `auto-config.inc.php` can now specify an optional variable `$naws_export_formats_at_front` that is an array of formats
-  that should be exported before others. If not present, the default value is `['VM', 'TC', 'HYBD', 'W', 'M', 'GL']`.
+- Fixed an issue with which meeting formats are selected for a NAWS export. NAWS exports are limited to 5 formats. `auto-config.inc.php` can now specify an optional variable `$naws_export_formats_at_front` that is an array of formats that should be exported before others. If not present, the default value is `['VM', 'TC', 'HYBD', 'W', 'M', 'GL']`.
 
 ***Version 2.15.6* ** *- September 7, 2020*
 - Added support for the `OLM` NAWS Format code for online meetings.
