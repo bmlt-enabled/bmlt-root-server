@@ -482,17 +482,6 @@ function parse_redirect(
                     } elseif ($meeting_key == 'worldid_mixed') {
                         if ($value != 'NULL') {
                             $value = trim($value);
-                            $is_olm = (preg_match("/^OLM/", $value) != false);
-                            $stripped_id = intval(preg_replace('|[^0-9]*?|', '', $value));
-                            if ($stripped_id == 0) {
-                                $value = 'NULL';
-                            } else {
-                                if ($is_olm) {
-                                    $value = sprintf("OLM%06d", $stripped_id);
-                                } else {
-                                    $value = sprintf("G%08d", $stripped_id);
-                                }
-                            }
                         }
                     }
 
