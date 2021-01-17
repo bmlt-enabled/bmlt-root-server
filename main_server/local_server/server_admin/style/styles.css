@@ -1457,3 +1457,8 @@ div.bmlt_admin_meeting_editor_service_check_all_div
     font-style: italic;
     color: red;
 }
+
+.bmlt_admin_virtual_section
+{
+    border: 1px solid black;
+}
