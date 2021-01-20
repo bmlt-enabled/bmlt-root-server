@@ -148,6 +148,7 @@ $comdef_server_admin_strings = array (
     'meeting_editor_screen_meeting_venue_type_virtual'      =>  'Virtual',
     'meeting_editor_screen_meeting_venue_type_temp'         =>  'Virtual (temporarily replaced an in-person)',
     'meeting_editor_screen_meeting_venue_type_hybrid'       =>  'Hybrid (both In-Person and Virtual)',
+    'meeting_editor_screen_meeting_venue_type_validation'   =>  'You must select a venue type.',
     'meeting_editor_screen_meeting_contact_name_1_label'    =>  'Contact 1 Name:',
     'meeting_editor_screen_meeting_contact_email_1_label'   =>  'Contact 1 Email:',
     'meeting_editor_screen_meeting_contact_phone_1_label'   =>  'Contact 1 Phone:',

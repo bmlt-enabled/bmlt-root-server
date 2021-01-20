@@ -162,6 +162,7 @@ class c_comdef_admin_main_console
             // We actually include the JS directly into the HTML. This gives us a lot more flexibility as to how we deploy and gatekeep this file.
             $ret .= '<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key='.$this->my_localized_strings['google_api_key'].'&libraries=geometry"></script>';
             $ret .= '<script type="text/javascript">';
+                $ret .= 'var comdef_server_admin_strings = '.json_encode($this->my_localized_strings['comdef_server_admin_strings']).';';
                 $ret .= 'var g_ajax_callback_uri = \''.self::js_html($this->my_ajax_uri).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_current_user_id = \''.self::js_html($this->my_user->GetID()).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_is_server_admin = '. ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN ? 'true' : 'false' ).';'.(defined('__DEBUG_MODE__') ? "\n" : '');

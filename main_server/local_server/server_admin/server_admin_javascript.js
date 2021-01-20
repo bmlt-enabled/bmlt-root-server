@@ -1398,7 +1398,7 @@ function BMLT_Server_Admin()
     ****************************************************************************************/
     this.validateMeetingDetails = function ( in_meeting_id ) {
         if ($("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_venue_type").find("input:radio[name=venue_type]:checked").val() == null) {
-            alert("You must specify a venue type.");
+            alert(comdef_server_admin_strings['meeting_editor_screen_meeting_venue_type_validation']);
             return false;
         }
 
