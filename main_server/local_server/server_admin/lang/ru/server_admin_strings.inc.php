@@ -147,6 +147,7 @@
                                             'meeting_editor_screen_meeting_venue_type_temp'         =>  'Virtual (temporarily replaced an in-person)',
                                             'meeting_editor_screen_meeting_venue_type_hybrid'       =>  'Hybrid (both In-Person and Virtual)',
                                             'meeting_editor_screen_meeting_venue_type_validation'   =>  'You must select a venue type.',
+                                            'meeting_editor_screen_meeting_url_validation'          =>  'Virtual Meeting Link is not a valid URL.',
                                             'meeting_editor_screen_meeting_contact_name_1_label'    =>  'Имя Контакта 1 :',
                                             'meeting_editor_screen_meeting_contact_email_1_label'   =>  'Электронная почта Контакта 1 :',
                                             'meeting_editor_screen_meeting_contact_phone_1_label'   =>  'Телефон Контакта 1 :',

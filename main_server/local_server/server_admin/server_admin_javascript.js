@@ -1396,9 +1396,29 @@ function BMLT_Server_Admin()
     /************************************************************************************//**
     *   \brief
     ****************************************************************************************/
+    this.checkURL = function(string) {
+        let url;
+        try {
+           url = new URL(string);
+        } catch (_) {
+           return false;
+        }
+        return url.protocol === "http:" || url.protocol === "https:";
+    }
+
     this.validateMeetingDetails = function ( in_meeting_id ) {
+        var errorString = '';
+        // require that one of the radio buttons for venue_type be checked
         if ($("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_venue_type").find("input:radio[name=venue_type]:checked").val() == null) {
-            alert(my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_venue_type_validation']);
+            errorString += my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_venue_type_validation'];
+        }
+        // require that the virtual meeting link contains a valid URL if it's non-empty
+        var url = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_virtual_meeting_link_text_input").val().trim();
+        if (url.length > 0 && !this.checkURL(url)) {
+          errorString += my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_url_validation'];
+        }
+        if (errorString.length>0) {
+            alert(errorString);
             return false;
         }
 
