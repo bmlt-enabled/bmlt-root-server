@@ -1410,7 +1410,7 @@ function BMLT_Server_Admin()
         var errors = '';
         var warnings = '';
         var venue_type = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_venue_type").find("input:radio[name=venue_type]:checked").val();
-        var isVirtualOrHybrid = venue_type === 'virtual' || venue_type === 'temp' || venue_type === 'hybrid';
+        var isVirtualOrHybrid = venue_type === 'virtual' || venue_type === 'virtualTC' || venue_type === 'hybrid';
         var city = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_city_text_input").val().trim();
         var state = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_state_text_input").val().trim();
         var zip = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_zip_text_input").val().trim();
@@ -3089,7 +3089,7 @@ function BMLT_Server_Admin()
         if (!venue_type_format_selections['VM'] && !venue_type_format_selections['TC'] && venue_type_format_selections['HY']) {
             document.getElementById("bmlt_admin_single_meeting_editor_" + in_meeting_object.id_bigint + "_meeting_venue_type_hybrid").checked = true;
         } else if (venue_type_format_selections['VM'] && venue_type_format_selections['TC'] && !venue_type_format_selections['HY']) {
-            document.getElementById("bmlt_admin_single_meeting_editor_" + in_meeting_object.id_bigint + "_meeting_venue_type_temp").checked = true;
+            document.getElementById("bmlt_admin_single_meeting_editor_" + in_meeting_object.id_bigint + "_meeting_venue_type_virtualTC").checked = true;
         } else if (venue_type_format_selections['VM'] && !venue_type_format_selections['TC'] && !venue_type_format_selections['HY']) {
             document.getElementById("bmlt_admin_single_meeting_editor_" + in_meeting_object.id_bigint + "_meeting_venue_type_virtual").checked = true;
         } else if (!venue_type_format_selections['VM'] && !venue_type_format_selections['TC'] && !venue_type_format_selections['HY']) {
@@ -5008,7 +5008,7 @@ function BMLT_Server_Admin()
                 this.toggleVenueTypeFormat(id_bigint, 'HY', true);
                 this.toggleVenueTypeFormat(id_bigint, 'TC', false);
                 this.toggleVenueTypeFormat(id_bigint, 'VM', false);
-            } else if (venueType === "temp") {
+            } else if (venueType === "virtualTC") {
                 this.toggleVenueTypeFormat(id_bigint, 'HY', false);
                 this.toggleVenueTypeFormat(id_bigint, 'TC', true);
                 this.toggleVenueTypeFormat(id_bigint, 'VM', true);

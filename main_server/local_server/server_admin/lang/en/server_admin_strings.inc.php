@@ -144,7 +144,7 @@
                                             'meeting_editor_screen_meeting_venue_type'              =>  'Venue Type:',
                                             'meeting_editor_screen_meeting_venue_type_inperson'     =>  'In-Person',
                                             'meeting_editor_screen_meeting_venue_type_virtual'      =>  'Virtual',
-                                            'meeting_editor_screen_meeting_venue_type_temp'         =>  'Virtual (temporarily replaced an in-person)',
+                                            'meeting_editor_screen_meeting_venue_type_virtualTC'    =>  'Virtual (temporarily replaced an in-person)',
                                             'meeting_editor_screen_meeting_venue_type_hybrid'       =>  'Hybrid (both In-Person and Virtual)',
                                             'meeting_editor_screen_error_notification'              =>  'ERROR(S). These need to be fixed before the meeting edits can be saved.',
                                             'meeting_editor_screen_warning_notification'            =>  'WARNING(S). Please fix these issues (although the meeting edits can be saved without fixing them).',
