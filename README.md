@@ -53,7 +53,12 @@ For instructions on installing the root server, see [Installing a New Root Serve
 - Fixed an issue with which meeting formats are selected for a NAWS export. NAWS exports are limited to 5 formats. `auto-config.inc.php` can now specify an optional variable `$naws_export_formats_at_front` that is an array of formats that should be exported before others. If not present, the default value is `['VM', 'TC', 'HYBD', 'W', 'M', 'GL']`.
 - Allow World IDs to be free form text, to better support current NAWS practice.
 - HY, TC, VM are now hidden from the formats tab and now are controlled through the Location tab Venue Type option.
-- Check that Virtual Meeting Link contains a valid URL if present.
+- Error if no venue type selected.
+- Error if there is a virtual or hybrid meeting, and none of Virtual Meeting Link, Phone Meeting Dial-in Number, or Virtual Meeting Additional Information is filled in.
+- Error if Virtual Meeting Link contains an invalid URL.
+- Warning if no location information filled in for meeting (minimally, we want a city/town and state/province, or a zip/postal code).
+- Warning if there is a virtual/hybrid meeting, and no Virtual Meeting Link or Phone Meeting Dial-in Number (just a warning for now though, since Virtual Meeting Additional Information might have enough information to join the meeting).
+- Warning if there is a Virtual Meeting Link but nothing in the Virtual Meeting Additional Information field.
 
 ***Version 2.15.6* ** *- September 7, 2020*
 - Added support for the `OLM` NAWS Format code for online meetings.
