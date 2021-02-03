@@ -1407,6 +1407,7 @@ function BMLT_Server_Admin()
     }
 
     this.validateMeetingDetails = function ( in_meeting_id ) {
+        var valid = true;
         var errors = '';
         var warnings = '';
         var venue_type = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_venue_type").find("input:radio[name=venue_type]:checked").val();
@@ -1417,7 +1418,21 @@ function BMLT_Server_Admin()
         var url = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_virtual_meeting_link_text_input").val().trim();
         var phone = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_phone_meeting_number_text_input").val().trim();
         var additional = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_virtual_meeting_additional_info_text_input").val().trim();
-
+        $(".validation_helper_text").remove();
+        // require that one of the radio buttons for venue_type be checked
+        var venue_type = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_venue_type").find("input:radio[name=venue_type]:checked")
+        if (venue_type.val() == null) {
+            valid = false;
+            this.setValidationMessage("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_venue_type", "meeting_editor_screen_meeting_venue_type_validation");
+            $().parent().append("<div class='validation_helper_text'>" +  + "</div>");
+        }
+        // require that the virtual meeting link contains a valid URL if it's non-empty
+        var urlField = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_virtual_meeting_link_text_input");
+        var url = urlField.val().trim();
+        if (url.length > 0 && !this.checkURL(url)) {
+            valid = false;
+            this.setValidationMessage("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_virtual_meeting_link_text_input", "meeting_editor_screen_meeting_url_validation")
+        }
         // Error checks as follows:
         //   - One of the radio buttons for venue_type must be checked
         //   - Virtual or Hybrid meetings must have at least one of a URL, phone number, or Virtual Meeting Additional Information
@@ -1477,6 +1492,10 @@ function BMLT_Server_Admin()
         }
         // pass validation if there aren't any errors (warnings don't count)
         return errors === '';
+    }
+        // pass validation if there aren't any errors (warnings don't count)
+    this.setValidationMessage = function ( selector, resource ) {
+        $(selector).parent().append("<div class='validation_helper_text'>" + my_localized_strings['comdef_server_admin_strings'][resource] + "</div>");
     }
 
     /************************************************************************************//**
