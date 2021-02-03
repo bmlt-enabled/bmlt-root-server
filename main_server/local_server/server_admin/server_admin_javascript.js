@@ -1518,6 +1518,7 @@ function BMLT_Server_Admin()
             var meeting_sent = false;
 
             if (!this.validateMeetingDetails(in_meeting_id)) {
+                this.setValidationMessage('#bmlt_admin_meeting_editor_form_meeting_' + in_meeting_id + '_save_button', 'meeting_editor_screen_meeting_validation_failed')
                 return;
             }
 
