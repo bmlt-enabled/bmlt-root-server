@@ -1394,7 +1394,7 @@ function BMLT_Server_Admin()
     };
 
     /************************************************************************************//**
-    *   \brief
+    *   \brief Validate meeting data before it can be saved.
     ****************************************************************************************/
     this.checkURL = function(string) {
         let url;
@@ -1407,22 +1407,76 @@ function BMLT_Server_Admin()
     }
 
     this.validateMeetingDetails = function ( in_meeting_id ) {
-        var errorString = '';
-        // require that one of the radio buttons for venue_type be checked
-        if ($("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_venue_type").find("input:radio[name=venue_type]:checked").val() == null) {
-            errorString += my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_venue_type_validation'];
-        }
-        // require that the virtual meeting link contains a valid URL if it's non-empty
+        var errors = '';
+        var warnings = '';
+        var venue_type = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_venue_type").find("input:radio[name=venue_type]:checked").val();
+        var isVirtualOrHybrid = venue_type === 'virtual' || venue_type === 'virtualTC' || venue_type === 'hybrid';
+        var city = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_city_text_input").val().trim();
+        var state = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_state_text_input").val().trim();
+        var zip = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_zip_text_input").val().trim();
         var url = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_virtual_meeting_link_text_input").val().trim();
-        if (url.length > 0 && !this.checkURL(url)) {
-          errorString += my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_url_validation'];
+        var phone = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_phone_meeting_number_text_input").val().trim();
+        var additional = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_virtual_meeting_additional_info_text_input").val().trim();
+
+        // Error checks as follows:
+        //   - One of the radio buttons for venue_type must be checked
+        //   - Virtual or Hybrid meetings must have at least one of a URL, phone number, or Virtual Meeting Additional Information
+        //   - Virtual Meeting Link must contains a valid URL if it's non-empty
+        if (venue_type == null) {
+            errors += my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_venue_type_validation'];
+            errors += '\n';
         }
-        if (errorString.length>0) {
-            alert(errorString);
-            return false;
+        if (isVirtualOrHybrid && url === '' && phone === '' && additional === '') {
+            errors += my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_virtual_info_missing'];
+            errors += '\n';
+         }
+        if (url !== '' && !this.checkURL(url)) {
+          errors += my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_url_validation'];
+          errors += '\n';
         }
 
-        return true;
+        // Warnings as follows:
+        //   - Every meeting should have some location information (minimally, either city/state or zip). Later this should probably be required.
+        //   - either Virtual Meeting Link or Phone Meeting Dial-in Number field should be filled in for a virtual or hybrid meeting
+        //   - Virtual Meeting Additional Information should be filled in if there is a Virtual Meeting Link (only checked for virtual meetings)
+        //
+        // Notes about warnings:
+        //   - If there is something in Virtual Meeting Additional Information, there should also be something in either Virtual Meeting Link
+        //     or Phone Meeting Dial-in Number ... but we only need to warn about this if the meeting is a virtual or hybrid meeting. So we
+        //     don't actually need a separate check for this.
+        //
+        // check that there is either a city/state or a zip
+        if ( !(city !== '' && state !== '' || zip !== '') ) {
+            warnings += my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_location_warning'];
+            warnings += '\n';
+        }
+        if (isVirtualOrHybrid) {
+            if (url === '' && phone === '') {
+                warnings += my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_url_or_phone_warning'];
+                warnings += '\n';
+            }
+            if (url !== '' && additional === '') {
+                warnings += my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_additional_warning'];
+                warnings += '\n';
+            }
+        }
+        // show an alert with both errors and warnings, if any
+        var combined = '';
+        if (errors !== '') {
+            combined += my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_error_notification'];
+            combined += '\n';
+            combined += errors;
+        }
+        if (warnings !== '') {
+            combined += my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_warning_notification'];
+            combined += '\n';
+            combined += warnings;
+        }
+        if (combined !== '') {
+            alert(combined);
+        }
+        // pass validation if there aren't any errors (warnings don't count)
+        return errors === '';
     }
 
     /************************************************************************************//**
@@ -3035,7 +3089,7 @@ function BMLT_Server_Admin()
         if (!venue_type_format_selections['VM'] && !venue_type_format_selections['TC'] && venue_type_format_selections['HY']) {
             document.getElementById("bmlt_admin_single_meeting_editor_" + in_meeting_object.id_bigint + "_meeting_venue_type_hybrid").checked = true;
         } else if (venue_type_format_selections['VM'] && venue_type_format_selections['TC'] && !venue_type_format_selections['HY']) {
-            document.getElementById("bmlt_admin_single_meeting_editor_" + in_meeting_object.id_bigint + "_meeting_venue_type_temp").checked = true;
+            document.getElementById("bmlt_admin_single_meeting_editor_" + in_meeting_object.id_bigint + "_meeting_venue_type_virtualTC").checked = true;
         } else if (venue_type_format_selections['VM'] && !venue_type_format_selections['TC'] && !venue_type_format_selections['HY']) {
             document.getElementById("bmlt_admin_single_meeting_editor_" + in_meeting_object.id_bigint + "_meeting_venue_type_virtual").checked = true;
         } else if (!venue_type_format_selections['VM'] && !venue_type_format_selections['TC'] && !venue_type_format_selections['HY']) {
@@ -4954,7 +5008,7 @@ function BMLT_Server_Admin()
                 this.toggleVenueTypeFormat(id_bigint, 'HY', true);
                 this.toggleVenueTypeFormat(id_bigint, 'TC', false);
                 this.toggleVenueTypeFormat(id_bigint, 'VM', false);
-            } else if (venueType === "temp") {
+            } else if (venueType === "virtualTC") {
                 this.toggleVenueTypeFormat(id_bigint, 'HY', false);
                 this.toggleVenueTypeFormat(id_bigint, 'TC', true);
                 this.toggleVenueTypeFormat(id_bigint, 'VM', true);
