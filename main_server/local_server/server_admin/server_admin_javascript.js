@@ -1482,10 +1482,10 @@ function BMLT_Server_Admin()
         }
 
         if (!error && warnings.length > 0) {
-            return confirm("There are some warnings, are you sure you want to continue?\n\n----------\n\n" + warnings.join("\n\n"));
+            warn = !confirm("There are some warnings, are you sure you want to continue?\n\n----------\n\n" + warnings.join("\n\n"));
         }
 
-        return !error;
+        return { "error": error, "warn": warn };
     }
 
     // pass validation if there aren't any errors (warnings don't count)
@@ -1513,8 +1513,13 @@ function BMLT_Server_Admin()
             var save_a = document.getElementById('bmlt_admin_meeting_editor_form_meeting_' + in_meeting_id + '_save_button');
             var meeting_sent = false;
 
-            if (!this.validateMeetingDetails(in_meeting_id)) {
-                this.setValidationMessage('#bmlt_admin_meeting_editor_form_meeting_' + in_meeting_id + '_save_button', 'meeting_editor_screen_meeting_validation_failed')
+            var validation = this.validateMeetingDetails(in_meeting_id)
+            if (validation.error) {
+                this.setValidationMessage('#bmlt_admin_meeting_editor_form_meeting_' + in_meeting_id + '_save_button',
+                    'meeting_editor_screen_meeting_validation_failed',
+                    this.validationMessageTypes.ERROR);
+                return;
+            } else if (validation.warn) {
                 return;
             }
 
