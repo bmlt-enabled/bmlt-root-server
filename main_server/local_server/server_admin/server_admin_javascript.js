@@ -42,6 +42,11 @@ function BMLT_Server_Admin()
     var m_warn_user_to_refresh = null;          ///< If this is true, then a warning alert will be shown to the user.
     var m_format_editor_table_rows = null;      ///< This is used to track the number of rows in the format editor table.
 
+    this.validationMessageTypes = {
+        "ERROR": "error",
+        "WARN": "warn"
+    }
+
     /************************************************************************************//**
     *                                       METHODS                                         *
     ****************************************************************************************/
@@ -1407,9 +1412,9 @@ function BMLT_Server_Admin()
     }
 
     this.validateMeetingDetails = function ( in_meeting_id ) {
-        var valid = true;
-        var errors = '';
-        var warnings = '';
+        var error = false;
+        var warn = false;
+        var warnings = [];
         var venue_type = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_venue_type").find("input:radio[name=venue_type]:checked").val();
         var isVirtualOrHybrid = venue_type === 'virtual' || venue_type === 'virtualTC' || venue_type === 'hybrid';
         var city = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_city_text_input").val().trim();
@@ -1418,36 +1423,30 @@ function BMLT_Server_Admin()
         var url = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_virtual_meeting_link_text_input").val().trim();
         var phone = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_phone_meeting_number_text_input").val().trim();
         var additional = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_virtual_meeting_additional_info_text_input").val().trim();
-        $(".validation_helper_text").remove();
-        // require that one of the radio buttons for venue_type be checked
-        var venue_type = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_venue_type").find("input:radio[name=venue_type]:checked")
-        if (venue_type.val() == null) {
-            valid = false;
-            this.setValidationMessage("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_venue_type", "meeting_editor_screen_meeting_venue_type_validation");
-            $().parent().append("<div class='validation_helper_text'>" +  + "</div>");
-        }
-        // require that the virtual meeting link contains a valid URL if it's non-empty
-        var urlField = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_virtual_meeting_link_text_input");
-        var url = urlField.val().trim();
-        if (url.length > 0 && !this.checkURL(url)) {
-            valid = false;
-            this.setValidationMessage("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_virtual_meeting_link_text_input", "meeting_editor_screen_meeting_url_validation")
-        }
+
+        $(".error_helper_text").remove();
+        $(".warn_helper_text").remove();
         // Error checks as follows:
         //   - One of the radio buttons for venue_type must be checked
         //   - Virtual or Hybrid meetings must have at least one of a URL, phone number, or Virtual Meeting Additional Information
         //   - Virtual Meeting Link must contains a valid URL if it's non-empty
         if (venue_type == null) {
-            errors += my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_venue_type_validation'];
-            errors += '\n';
+            error = this.setValidationMessage("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_venue_type",
+                "meeting_editor_screen_meeting_venue_type_validation",
+                this.validationMessageTypes.ERROR);
         }
+
         if (isVirtualOrHybrid && url === '' && phone === '' && additional === '') {
-            errors += my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_virtual_info_missing'];
-            errors += '\n';
-         }
+            error = this.setValidationMessage("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_virtual_meta",
+                "meeting_editor_screen_meeting_virtual_info_missing",
+                this.validationMessageTypes.ERROR);
+        }
+
+        // require that the virtual meeting link contains a valid URL if it's non-empty
         if (url !== '' && !this.checkURL(url)) {
-          errors += my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_url_validation'];
-          errors += '\n';
+            error = this.setValidationMessage("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_virtual_meeting_link_text_input",
+                "meeting_editor_screen_meeting_url_validation",
+                this.validationMessageTypes.ERROR)
         }
 
         // Warnings as follows:
@@ -1460,42 +1459,39 @@ function BMLT_Server_Admin()
         //     or Phone Meeting Dial-in Number ... but we only need to warn about this if the meeting is a virtual or hybrid meeting. So we
         //     don't actually need a separate check for this.
         //
+
         // check that there is either a city/state or a zip
         if ( !(city !== '' && state !== '' || zip !== '') ) {
-            warnings += my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_location_warning'];
-            warnings += '\n';
+            warnings.push(this.setValidationMessage("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_city_text_input",
+                "meeting_editor_screen_meeting_location_warning",
+                this.validationMessageTypes.WARN));
         }
+
         if (isVirtualOrHybrid) {
             if (url === '' && phone === '') {
-                warnings += my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_url_or_phone_warning'];
-                warnings += '\n';
+                warnings.push(this.setValidationMessage("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_virtual_meta",
+                    "meeting_editor_screen_meeting_url_or_phone_warning",
+                    this.validationMessageTypes.WARN));
             }
+
             if (url !== '' && additional === '') {
-                warnings += my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_additional_warning'];
-                warnings += '\n';
+                warnings.push(this.setValidationMessage("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_virtual_meta",
+                    "meeting_editor_screen_meeting_additional_warning",
+                    this.validationMessageTypes.WARN));
             }
         }
-        // show an alert with both errors and warnings, if any
-        var combined = '';
-        if (errors !== '') {
-            combined += my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_error_notification'];
-            combined += '\n';
-            combined += errors;
+
+        if (!error && warnings.length > 0) {
+            return confirm("There are some warnings, are you sure you want to continue?\n\n----------\n\n" + warnings.join("\n\n"));
         }
-        if (warnings !== '') {
-            combined += my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_warning_notification'];
-            combined += '\n';
-            combined += warnings;
-        }
-        if (combined !== '') {
-            alert(combined);
-        }
-        // pass validation if there aren't any errors (warnings don't count)
-        return errors === '';
+
+        return !error;
     }
-        // pass validation if there aren't any errors (warnings don't count)
-    this.setValidationMessage = function ( selector, resource ) {
-        $(selector).parent().append("<div class='validation_helper_text'>" + my_localized_strings['comdef_server_admin_strings'][resource] + "</div>");
+
+    // pass validation if there aren't any errors (warnings don't count)
+    this.setValidationMessage = function ( selector, resource, type ) {
+        $(selector).parent().append("<div class='" + type + "_helper_text'>" + my_localized_strings['comdef_server_admin_strings'][resource] + "</div>");
+        return my_localized_strings['comdef_server_admin_strings'][resource];
     }
 
     /************************************************************************************//**

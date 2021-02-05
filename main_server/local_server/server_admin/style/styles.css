@@ -1451,11 +1451,18 @@ div.bmlt_admin_meeting_editor_service_check_all_div
     width: 35em;
 }
 
-.validation_helper_text
+.error_helper_text
 {
     font-size: 12px;
     font-style: italic;
     color: red;
+}
+
+.warn_helper_text
+{
+    font-size: 12px;
+    font-style: italic;
+    color: orange;
 }
 
 .bmlt_admin_virtual_section
