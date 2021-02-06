@@ -154,7 +154,7 @@
                                             'meeting_editor_screen_meeting_url_validation'          =>  'Virtual Meeting Link is not a valid URL.',
                                             'meeting_editor_screen_meeting_url_or_phone_warning'    =>  'Virtual or hybrid meetings should have either a Virtual Meeting Link or a Phone Meeting Dial-in Number',
                                             'meeting_editor_screen_meeting_additional_warning'      =>  'Please also fill in Virtual Meeting Additional Information if there is a Virtual Meeting Link.',
-					    'meeting_editor_screen_meeting_validation_failed'       =>  'Unable to save, due to some input errors.  Please address them and then retry saving.',
+					                        'meeting_editor_screen_meeting_validation_failed'       =>  'Unable to save, due to some input errors.  Please address them and then retry saving.',
                                             'meeting_editor_screen_meeting_contact_name_1_label'    =>  'Contact 1 Name:',
                                             'meeting_editor_screen_meeting_contact_email_1_label'   =>  'Contact 1 Email:',
                                             'meeting_editor_screen_meeting_contact_phone_1_label'   =>  'Contact 1 Phone:',
