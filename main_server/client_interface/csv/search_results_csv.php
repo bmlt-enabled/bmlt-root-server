@@ -938,7 +938,7 @@ function BMLT_FuncNAWSReturnTime(
 
 /*******************************************************************/
 /**
-    \brief Returns the string for the first alternative lanuage (if any)
+    \brief Returns the string for the first alternative language (if any)
 
     \returns A string.
 */
@@ -1182,36 +1182,7 @@ function BMLT_FuncNAWSReturnFormat1(
     $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
     &$server        ///< A reference to an instance of c_comdef_server
 ) {
-    global $g_format_dictionary;
-    $ret = null;
-    
-    if ($in_meeting_id instanceof c_comdef_meeting) {
-        $the_meeting = $in_meeting_id;
-    } else {
-        $the_meeting = $server->GetOneMeeting($in_meeting_id);
-    }
-    
-    if ($the_meeting instanceof c_comdef_meeting) {
-        $formats = $the_meeting->GetMeetingDataValue('formats');
-        
-        if (is_array($formats) && count($formats)) {
-            foreach ($g_format_dictionary as $n_format => $b_formats) {
-                foreach ($b_formats as $b_format) {
-                    if (($n_format != 'OPEN') && ($n_format != 'CLOSED') && ($n_format != 'WCHR')) {
-                        if (isset($formats[$b_format])) {
-                            $ret = $n_format;
-                            break;
-                        }
-                    }
-                }
-                if ($ret) {
-                    break;
-                }
-            }
-        }
-    }
-    
-    return $ret;
+    return BMLT_FuncNAWSReturnFormat(1, $in_meeting_id, $server);
 }
 
 /*******************************************************************/
@@ -1224,39 +1195,7 @@ function BMLT_FuncNAWSReturnFormat2(
     $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
     &$server        ///< A reference to an instance of c_comdef_server
 ) {
-    global $g_format_dictionary;
-    $ret = null;
-    
-    if ($in_meeting_id instanceof c_comdef_meeting) {
-        $the_meeting = $in_meeting_id;
-    } else {
-        $the_meeting = $server->GetOneMeeting($in_meeting_id);
-    }
-    
-    if ($the_meeting instanceof c_comdef_meeting) {
-        $formats = $the_meeting->GetMeetingDataValue('formats');
-        
-        if (is_array($formats) && count($formats)) {
-            $count = 1;
-            foreach ($g_format_dictionary as $n_format => $b_formats) {
-                if (($n_format != 'OPEN') && ($n_format != 'CLOSED') && ($n_format != 'WCHR')) {
-                    foreach ($b_formats as $b_format) {
-                        if (isset($formats[$b_format])) {
-                            if (!$count--) {
-                                $ret = $n_format;
-                                break;
-                            }
-                        }
-                    }
-                }
-                if ($ret) {
-                    break;
-                }
-            }
-        }
-    }
-    
-    return $ret;
+    return BMLT_FuncNAWSReturnFormat(2, $in_meeting_id, $server);
 }
 
 /*******************************************************************/
@@ -1269,84 +1208,20 @@ function BMLT_FuncNAWSReturnFormat3(
     $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
     &$server        ///< A reference to an instance of c_comdef_server
 ) {
-    global $g_format_dictionary;
-    $ret = null;
-    
-    if ($in_meeting_id instanceof c_comdef_meeting) {
-        $the_meeting = $in_meeting_id;
-    } else {
-        $the_meeting = $server->GetOneMeeting($in_meeting_id);
-    }
-    
-    if ($the_meeting instanceof c_comdef_meeting) {
-        $formats = $the_meeting->GetMeetingDataValue('formats');
-
-        if (is_array($formats) && count($formats)) {
-            $count = 2;
-            foreach ($g_format_dictionary as $n_format => $b_formats) {
-                if (($n_format != 'OPEN') && ($n_format != 'CLOSED') && ($n_format != 'WCHR')) {
-                    foreach ($b_formats as $b_format) {
-                        if (isset($formats[$b_format])) {
-                            if (!$count--) {
-                                $ret = $n_format;
-                                break;
-                            }
-                        }
-                    }
-                }
-                if ($ret) {
-                    break;
-                }
-            }
-        }
-    }
-    
-    return $ret;
+    return BMLT_FuncNAWSReturnFormat(3, $in_meeting_id, $server);
 }
 
 /*******************************************************************/
 /**
-    \brief Returns the string for the fourth format (used for the NAWS format)
+\brief Returns the string for the fourth format (used for the NAWS format)
 
-    \returns A string The format code, in NAWS form.
-*/
+\returns A string The format code, in NAWS form.
+ */
 function BMLT_FuncNAWSReturnFormat4(
     $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
     &$server        ///< A reference to an instance of c_comdef_server
 ) {
-    global $g_format_dictionary;
-    $ret = null;
-    
-    if ($in_meeting_id instanceof c_comdef_meeting) {
-        $the_meeting = $in_meeting_id;
-    } else {
-        $the_meeting = $server->GetOneMeeting($in_meeting_id);
-    }
-    
-    if ($the_meeting instanceof c_comdef_meeting) {
-        $formats = $the_meeting->GetMeetingDataValue('formats');
-
-        if (is_array($formats) && count($formats)) {
-            $count = 3;
-            foreach ($g_format_dictionary as $n_format => $b_formats) {
-                if (($n_format != 'OPEN') && ($n_format != 'CLOSED') && ($n_format != 'WCHR')) {
-                    foreach ($b_formats as $b_format) {
-                        if (isset($formats[$b_format])) {
-                            if (!$count--) {
-                                $ret = $n_format;
-                                break;
-                            }
-                        }
-                    }
-                }
-                if ($ret) {
-                    break;
-                }
-            }
-        }
-    }
-    
-    return $ret;
+    return BMLT_FuncNAWSReturnFormat(4, $in_meeting_id, $server);
 }
 
 /*******************************************************************/
@@ -1359,39 +1234,53 @@ function BMLT_FuncNAWSReturnFormat5(
     $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
     &$server        ///< A reference to an instance of c_comdef_server
 ) {
+    return BMLT_FuncNAWSReturnFormat(5, $in_meeting_id, $server);
+}
+
+/*******************************************************************/
+/**
+\brief Returns the string for the n-th format (used for the NAWS format)
+
+\returns A string The format code, in NAWS form.
+ */
+function BMLT_FuncNAWSReturnFormat(
+    $n,             ///< which format
+    $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
+    &$server        ///< A reference to an instance of c_comdef_server
+) {
     global $g_format_dictionary;
-    $ret = null;
-    
     if ($in_meeting_id instanceof c_comdef_meeting) {
         $the_meeting = $in_meeting_id;
     } else {
         $the_meeting = $server->GetOneMeeting($in_meeting_id);
     }
-    
     if ($the_meeting instanceof c_comdef_meeting) {
+        // $formats is an array of the formats for this meeting as they are stored in the BMLT database.
+        // $naws_formats is an array of the NAWS versions of these formats - note that not everything in $formats
+        // will have a corresponding NAWS versions.  Also there can also be several BMLT formats that map
+        // to the same NAWS format -- in this case, only include one NAWS format.
+        // This function is a bit stupid, since it gets called up to 5 times for the 5 possible NAWS formats --
+        // more aesthetic (and slightly more efficient) would be to just call it once.  However, efficiency is not
+        // terribly important here since this just gets called when producing an export spreadsheet.
         $formats = $the_meeting->GetMeetingDataValue('formats');
-
+        $naws_formats = [];
         if (is_array($formats) && count($formats)) {
-            $count = 4;
             foreach ($g_format_dictionary as $n_format => $b_formats) {
                 if (($n_format != 'OPEN') && ($n_format != 'CLOSED') && ($n_format != 'WCHR')) {
                     foreach ($b_formats as $b_format) {
-                        if (isset($formats[$b_format])) {
-                            if (!$count--) {
-                                $ret = $n_format;
-                                break;
-                            }
+                        if (isset($formats[$b_format]) && !in_array($n_format, $naws_formats)) {
+                            array_push($naws_formats, $n_format);
                         }
                     }
                 }
-                if ($ret) {
-                    break;
-                }
             }
         }
+        if ($n > count($naws_formats)) {
+            return null;
+        } else {
+            return $naws_formats[$n-1];
+        }
     }
-    
-    return $ret;
 }
 
 /*******************************************************************/
