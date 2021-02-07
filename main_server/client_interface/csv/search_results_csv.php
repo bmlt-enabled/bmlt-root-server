@@ -1216,7 +1216,7 @@ function BMLT_FuncNAWSReturnFormat3(
     \brief Returns the string for the fourth format (used for the NAWS format)
 
     \returns A string The format code, in NAWS form.
- */
+*/
 function BMLT_FuncNAWSReturnFormat4(
     $in_meeting_id, ///< The ID of the meeting (internal DB ID) This can also be a meeting object.
     &$server        ///< A reference to an instance of c_comdef_server
