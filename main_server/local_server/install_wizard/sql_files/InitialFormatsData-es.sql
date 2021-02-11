@@ -19,7 +19,7 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (19, 'RF', NULL, 'VAR', 'es', 'Formato que Rota', 'Esta reunión tiene un formato que cambia para cada reunión.', 'FC1'),
 (20, 'Rr', NULL, NULL, 'es', 'Round Robin', 'Esta reunión tiene un orden fijo de compartir (generalmente un círculo).', 'FC1'),
 (21, 'SC', NULL, NULL, 'es', 'Cámaras de Vigilancia', 'Esta reunión se celebra en una localidad que tenga cámaras de vigilancia.', 'FC2'),
-(22, 'SD', NULL, 'SPK', 'es', 'Orador/Discusión', 'Esta reunión es conducida por un orador, después es abierta para la participación de los asistentes.', 'FC1'),
+(22, 'SD', NULL, 'S-D', 'es', 'Orador/Discusión', 'Esta reunión es conducida por un orador, después es abierta para la participación de los asistentes.', 'FC1'),
 (23, 'SG', NULL, 'SWG', 'es', 'Guia Para Trabajar los Pasos', 'Esta reunión se centra en la discusión del texto Guia Para Trabajar los Pasos.', 'FC1'),
 (24, 'SL', NULL, NULL, 'es', 'ASL', 'Esta reunión proporciona intérprete (ASL) para los sordos.', 'FC2'),
 (26, 'So', NULL, 'SPK', 'es', 'Solamente Orador', 'Esta reunión es de orador solamente. Otros asistentes no participan en la discusión.', 'FC1'),

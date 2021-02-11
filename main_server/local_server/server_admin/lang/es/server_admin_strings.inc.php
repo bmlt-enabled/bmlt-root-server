@@ -374,6 +374,7 @@
                                                                                                             'NS'    =>  'Non-Smoking',
                                                                                                             'QA'    =>  'Preguntas y Respuestas',
                                                                                                             'RA'    =>  'Acceso Restringido',
+                                                                                                            'S-D'   =>  'Speaker/Discussion', // TODO translate
                                                                                                             'SMOK'  =>  'Fumar',
                                                                                                             'SPK'   =>  'Orador',
                                                                                                             'STEP'  =>  'Pasos',

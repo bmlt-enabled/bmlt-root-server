@@ -379,6 +379,7 @@ $comdef_server_admin_strings = array (
         'NS'    =>  'Ikke Ryger',
         'QA'    =>  'Spørgsmål & Svar',
         'RA'    =>  'Restriktiv Møde',
+        'S-D'   =>  'Speaker/Discussion',  // TODO translate
         'SMOK'  =>  'Ryger',
         'SPK'   =>  'Speaker',
         'STEP'  =>  'Trin',
