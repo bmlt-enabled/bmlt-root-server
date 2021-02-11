@@ -1862,6 +1862,7 @@ class c_comdef_admin_main_console
                 $ret .= '</div>';
                 
                 $ret .= '<div class="bmlt_admin_meeting_inner_div">';
+                    $ret .= '<span id="bmlt_admin_single_meeting_editor_template_meeting_virtual_meta"></span>';
                     $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                         $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_phone_meeting_number_label']).'</span>';
                         $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_phone_meeting_number_text_input" type="text" maxlength="255" /><div class="helper_text">' . htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_phone_meeting_number_prompt']) . '</div></span>';

@@ -146,7 +146,6 @@
                                             'meeting_editor_screen_meeting_venue_type_virtual'      =>  'Virtual',
                                             'meeting_editor_screen_meeting_venue_type_virtualTC'    =>  'Virtual (temporarily replaced an in-person)',
                                             'meeting_editor_screen_meeting_venue_type_hybrid'       =>  'Hybrid (both In-Person and Virtual)',
-                                            'meeting_editor_screen_error_notification'              =>  'ERROR(S). These need to be fixed before the meeting edits can be saved.',
                                             'meeting_editor_screen_warning_notification'            =>  'WARNING(S). Please fix these issues (although the meeting edits can be saved without fixing them).',
                                             'meeting_editor_screen_meeting_venue_type_validation'   =>  'You must select a venue type.',
                                             'meeting_editor_screen_meeting_virtual_info_missing'    =>  'Virtual or hybrid meetings must have a Virtual Meeting Link, a Phone Meeting Dial-in Number, or Virtual Meeting Additional Information',
