@@ -1,3 +1,4 @@
+-- TODO: translate strings to German
 INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`, `name_string`, `description_string`, `format_type_enum`) VALUES
 (1, 'B', NULL, 'BEG', 'de', 'Beginners', 'This meeting is focused on the needs of new members of NA.', 'FC3'),
 (2, 'BL', NULL, NULL, 'de', 'Bi-Lingual', 'This Meeting can be attended by speakers of English and another language.', 'FC3'),
