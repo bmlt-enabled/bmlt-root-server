@@ -91,7 +91,13 @@ resource "aws_ecs_task_definition" "bmlt_latest" {
     "essential": true,
     "entryPoint": ["docker-entrypoint.sh"],
     "mountPoints": [],
-    "ulimits": null,
+    "ulimits": [
+        {
+          "softLimit": 2048,
+          "hardLimit": 2048,
+          "name": "nofile"
+        }
+      ],
     "dockerSecurityOptions": null,
     "environment": [
       {
