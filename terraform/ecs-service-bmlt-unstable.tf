@@ -5,6 +5,9 @@ resource "aws_ecs_task_definition" "bmlt_unstable" {
 [
   {
     "name": "bmlt-root-server",
+    "repositoryCredentials": {
+        "credentialsParameter": "${aws_secretsmanager_secret.docker_repository.arn}"
+    },
     "volumesFrom": [],
     "extraHosts": null,
     "dnsServers": null,
@@ -75,6 +78,9 @@ resource "aws_ecs_task_definition" "bmlt_unstable" {
   },
   {
     "name": "bmlt-db",
+    "repositoryCredentials": {
+        "credentialsParameter": "${aws_secretsmanager_secret.docker_repository.arn}"
+    },
     "volumesFrom": [],
     "extraHosts": null,
     "dnsServers": null,
