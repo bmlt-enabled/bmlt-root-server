@@ -177,7 +177,7 @@ resource "aws_iam_role_policy" "bmlt_lb" {
         "elasticloadbalancing:DeregisterTargets",
         "elasticloadbalancing:Describe*",
         "elasticloadbalancing:RegisterInstancesWithLoadBalancer",
-        "elasticloadbalancing:RegisterTargets"
+        "elasticloadbalancing:RegisterTargets",
         "secretsmanager:GetSecretValue",
         "kms:Decrypt"
       ],
