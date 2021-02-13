@@ -139,6 +139,58 @@ resource "aws_launch_configuration" "cluster" {
   }
 }
 
+resource "aws_iam_role" "bmlt_task_execution_role" {
+  name = "bmlt-tasks"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2008-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+
+}
+
+data "aws_iam_policy_document" "bmlt_task_execution_policy" {
+  statement {
+    effect    = "Allow"
+    actions   = ["secretsmanager:GetSecretValue"]
+    resources = [aws_secretsmanager_secret.docker_repository.arn]
+  }
+
+  statement {
+    effect    = "Allow"
+    actions   = ["kms:Decrypt"]
+    resources = [aws_kms_key.docker_repository.arn]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+      "logs:DescribeLogStreams"
+    ]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_role_policy" "bmlt_task_execution_role" {
+  name   = aws_iam_role.bmlt_task_execution_role.name
+  role   = aws_iam_role.bmlt_task_execution_role.name
+  policy = data.aws_iam_policy_document.bmlt_task_execution_policy.json
+}
+
 # IAM Role for ECS Service interaction with load balancer
 resource "aws_iam_role" "bmlt_lb" {
   name = "bmlt-lb"
@@ -177,9 +229,7 @@ resource "aws_iam_role_policy" "bmlt_lb" {
         "elasticloadbalancing:DeregisterTargets",
         "elasticloadbalancing:Describe*",
         "elasticloadbalancing:RegisterInstancesWithLoadBalancer",
-        "elasticloadbalancing:RegisterTargets",
-        "secretsmanager:GetSecretValue",
-        "kms:Decrypt"
+        "elasticloadbalancing:RegisterTargets"
       ],
       "Resource": "*"
     }
