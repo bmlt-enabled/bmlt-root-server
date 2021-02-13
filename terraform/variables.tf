@@ -1,1 +1,1 @@
-variable GOOGLE_API_KEY {}
+variable "GOOGLE_API_KEY" {}
