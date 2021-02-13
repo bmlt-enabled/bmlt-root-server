@@ -103,15 +103,14 @@ resource "aws_security_group" "cluster" {
   }
 }
 
-data "template_file" "user_data" {
-  template = file("${path.module}/templates/user_data.sh")
-
-  vars = {
-    ecs_config        = "echo '' > /etc/ecs/ecs.config"
-    ecs_logging       = "[\"json-file\",\"awslogs\"]"
-    cluster_name      = aws_ecs_cluster.main.name
-    cloudwatch_prefix = "bmlt"
-  }
+locals {
+  user_data = templatefile("${path.module}/templates/user_data.sh",
+    {
+      ecs_config        = "echo '' > /etc/ecs/ecs.config"
+      ecs_logging       = "[\"json-file\",\"awslogs\"]"
+      cluster_name      = aws_ecs_cluster.main.name
+      cloudwatch_prefix = "bmlt"
+  })
 }
 
 data "aws_ami" "ecs" {
@@ -133,7 +132,7 @@ resource "aws_launch_configuration" "cluster" {
   iam_instance_profile        = aws_iam_instance_profile.cluster.name
   associate_public_ip_address = false
 
-  user_data = data.template_file.user_data.rendered
+  user_data = local.user_data
 
   lifecycle {
     create_before_destroy = true
