@@ -1,5 +1,6 @@
 resource "aws_ecs_task_definition" "bmlt_unstable" {
-  family = "bmlt-unstable"
+  family             = "bmlt-unstable"
+  execution_role_arn = aws_iam_role.bmlt_lb.arn
 
   container_definitions = <<EOF
 [

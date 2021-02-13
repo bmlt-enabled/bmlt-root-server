@@ -1,5 +1,6 @@
 resource "aws_ecs_task_definition" "bmlt_latest" {
-  family = "bmlt-latest"
+  family             = "bmlt-latest"
+  execution_role_arn = aws_iam_role.bmlt_lb.arn
 
   container_definitions = <<EOF
 [
