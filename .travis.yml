@@ -67,6 +67,7 @@ jobs:
       install:
         - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then wget https://$S3_BUCKET/$S3_KEY/$ZIP_FILENAME && rm -rf main_server && unzip $ZIP_FILENAME; fi
       script:
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - docker build -f docker/Dockerfile-bmlt . -t bmlt-root-server:$TRAVIS_COMMIT
         - docker build -f docker/Dockerfile-db . -t bmlt-root-server-sample-db:$TRAVIS_COMMIT
       before_deploy:
