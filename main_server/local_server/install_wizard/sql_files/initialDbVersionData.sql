@@ -1,1 +1,1 @@
-INSERT INTO `%%PREFIX%%_comdef_db_version` VALUES (16);
+INSERT INTO `%%PREFIX%%_comdef_db_version` VALUES (17);

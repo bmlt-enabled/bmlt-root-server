@@ -337,6 +337,50 @@ function DB_Connect_and_Upgrade()
             c_comdef_dbsingleton::preparedExec($alter_sql);
             $create_sql = "CREATE INDEX `time_zone` ON $table (`time_zone`)";
             c_comdef_dbsingleton::preparedExec($create_sql);
+        }),
+        array(17, function () {
+            // Ensure that the database includes the 3 virtual location format types VM, HY, and TC, which are now used
+            // for the venue type radio buttons. If they aren't there, add them; and also make sure they map to the
+            // correct NAWS formats and format types. If there are multiple formats named say VM (which would be weird
+            // but possible), this code will only update the one with the smallest shared id.
+            function fix_formats ($key, $naws, $name, $descr, $type) {
+                $dbPrefix = $GLOBALS['dbPrefix'];
+                $table = "$dbPrefix" . "_comdef_formats";
+                $q = "SELECT `shared_id_bigint` FROM `$table` WHERE `key_string` = '$key' AND `lang_enum` = 'en' ORDER BY `shared_id_bigint`";
+                $result = c_comdef_dbsingleton::preparedQuery($q);
+                $langs = array('en', 'dk', 'de', 'es', 'fa', 'fr', 'it', 'pl', 'pt', 'ru', 'sv');
+                if (is_array($result) && count($result)) {
+                    // English version of the format found. Make sure there is a format for each language, and that it is mapped to the correct NAWS format.
+                    // We run through English as well as the other languages, since even for English we need to make sure it is mapped correctly.
+                    $r = $result[0];
+                    $id = $r['shared_id_bigint'];
+                    foreach ($langs as $lang) {
+                        $q1 = "SELECT `shared_id_bigint` FROM `$table` WHERE `key_string` = '$key' AND `lang_enum` = '$lang' ORDER BY `shared_id_bigint`";
+                        $result1 = c_comdef_dbsingleton::preparedQuery($q1);
+                        if (!is_array($result1) || count($result1) == 0) {
+                            $sql = "INSERT INTO `$table` (`shared_id_bigint`, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($id, '$key', NULL, '$naws', '$lang', '$name', '$descr', '$type')";
+                            c_comdef_dbsingleton::preparedExec($sql);
+                        }
+                        $sql = "UPDATE `$table` SET `worldid_mixed` = '$naws', `format_type_enum` = '$type' WHERE `shared_id_bigint` = $id";
+                        c_comdef_dbsingleton::preparedExec($sql);
+                    }
+                } else {
+                    // No English language version of the format found. Get a new shared ID and make a new format, filled in for each language.
+                    // (If there was a version of the format in some other language, this will still make a new format. Better would be to clean
+                    // up the formats before upgrading, but it should still work just with the automated migration cleanup.)
+                    $next_id = "SELECT MAX(shared_id_bigint) + 1 AS next_id FROM `$table`";
+                    $next_id = c_comdef_dbsingleton::preparedQuery($next_id);
+                    $next_id = $next_id[0];
+                    $next_id = $next_id['next_id'];
+                    foreach ($langs as $lang) {
+                        $sql = "INSERT INTO `$table` (`shared_id_bigint`, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($next_id, '$key', NULL, '$naws', '$lang', '$name', '$descr', '$type')";
+                        c_comdef_dbsingleton::preparedExec($sql);
+                    }
+                }
+            }
+            fix_formats('VM', 'VM', 'Virtual Meeting', 'Meets Virtually', 'FC2');
+            fix_formats('HY', 'HYBR', 'Hybrid Meeting', 'Meets Virtually and In-person', 'FC2');
+            fix_formats('TC', 'TC', 'Temporarily Closed', 'Facility is Temporarily Closed', 'FC2');
         })
     );
     // WHEN ADDING A NEW DATABASE MIGRATION, REMEMBER TO BUMP THE VERSION IN local_server/install_wizard/sql_files/initialDbVersionData.sql
