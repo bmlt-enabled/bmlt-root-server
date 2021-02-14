@@ -1,6 +1,6 @@
 resource "aws_ecs_task_definition" "bmlt_unstable" {
   family             = "bmlt-unstable"
-  execution_role_arn = aws_iam_role.bmlt_lb.arn
+  execution_role_arn = aws_iam_role.bmlt_task_execution_role.arn
 
   container_definitions = <<EOF
 [
@@ -132,7 +132,7 @@ resource "aws_ecs_task_definition" "bmlt_unstable" {
         "awslogs-stream-prefix": "bmlt-db"
       }
     },
-    "memoryReservation": 128,
+    "memoryReservation": 144,
     "privileged": null,
     "linuxParameters": {
       "initProcessEnabled": true

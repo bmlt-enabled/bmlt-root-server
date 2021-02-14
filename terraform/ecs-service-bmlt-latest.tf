@@ -1,11 +1,14 @@
 resource "aws_ecs_task_definition" "bmlt_latest" {
   family             = "bmlt-latest"
-  execution_role_arn = aws_iam_role.bmlt_lb.arn
+  execution_role_arn = aws_iam_role.bmlt_task_execution_role.arn
 
   container_definitions = <<EOF
 [
   {
     "name": "bmlt-root-server",
+    "repositoryCredentials": {
+        "credentialsParameter": "${aws_secretsmanager_secret.docker_repository.arn}"
+    },
     "volumesFrom": [],
     "extraHosts": null,
     "dnsServers": null,
@@ -76,6 +79,9 @@ resource "aws_ecs_task_definition" "bmlt_latest" {
   },
   {
     "name": "bmlt-db",
+    "repositoryCredentials": {
+        "credentialsParameter": "${aws_secretsmanager_secret.docker_repository.arn}"
+    },
     "volumesFrom": [],
     "extraHosts": null,
     "dnsServers": null,
@@ -126,7 +132,7 @@ resource "aws_ecs_task_definition" "bmlt_latest" {
         "awslogs-stream-prefix": "bmlt-db"
       }
     },
-    "memoryReservation": 128,
+    "memoryReservation": 144,
     "privileged": null,
     "linuxParameters": {
       "initProcessEnabled": true
