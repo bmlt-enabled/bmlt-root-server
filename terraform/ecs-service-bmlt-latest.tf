@@ -1,6 +1,7 @@
 resource "aws_ecs_task_definition" "bmlt_latest" {
   family             = "bmlt-latest"
   execution_role_arn = aws_iam_role.bmlt_lb.arn
+  task_role_arn      = aws_iam_role.bmlt_lb.arn
 
   container_definitions = <<EOF
 [
@@ -68,7 +69,7 @@ resource "aws_ecs_task_definition" "bmlt_latest" {
         "awslogs-stream-prefix": "bmlt-root"
       }
     },
-    "memoryReservation": 128,
+    "memoryReservation": 256,
     "privileged": null,
     "linuxParameters": {
       "initProcessEnabled": true
@@ -132,7 +133,7 @@ resource "aws_ecs_task_definition" "bmlt_latest" {
         "awslogs-stream-prefix": "bmlt-db"
       }
     },
-    "memoryReservation": 128,
+    "memoryReservation": 256,
     "privileged": null,
     "linuxParameters": {
       "initProcessEnabled": true

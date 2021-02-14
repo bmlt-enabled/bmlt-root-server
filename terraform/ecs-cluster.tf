@@ -120,7 +120,7 @@ data "aws_ami" "ecs" {
 
   filter {
     name   = "name"
-    values = ["amzn-ami-*-amazon-ecs-optimized"]
+    values = ["amzn2-ami-ecs-hvm-*-*-ebs"]
   }
 }
 
@@ -151,7 +151,10 @@ resource "aws_iam_role" "bmlt_lb" {
       "Sid": "",
       "Effect": "Allow",
       "Principal": {
-        "Service": "ecs.amazonaws.com"
+        "Service": [
+          "ecs.amazonaws.com",
+          "ecs-tasks.amazonaws.com"
+        ]
       },
       "Action": "sts:AssumeRole"
     }
@@ -179,7 +182,11 @@ resource "aws_iam_role_policy" "bmlt_lb" {
         "elasticloadbalancing:RegisterInstancesWithLoadBalancer",
         "elasticloadbalancing:RegisterTargets",
         "secretsmanager:GetSecretValue",
-        "kms:Decrypt"
+        "kms:Decrypt",
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "logs:DescribeLogStreams"
       ],
       "Resource": "*"
     }
