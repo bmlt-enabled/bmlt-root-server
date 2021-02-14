@@ -113,7 +113,7 @@ resource "aws_ecs_task_definition" "bmlt_latest" {
     "links": [],
     "workingDirectory": "/tmp",
     "readonlyRootFilesystem": null,
-    "image": "public.ecr.aws/m3g5z4b2/bmlt-root-server-sample-db::latest",
+    "image": "public.ecr.aws/m3g5z4b2/bmlt-root-server-sample-db:latest",
     "user": null,
     "dockerLabels": null,
     "logConfiguration": {
