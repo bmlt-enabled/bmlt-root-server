@@ -1,14 +1,10 @@
 resource "aws_ecs_task_definition" "bmlt_unstable" {
-  family             = "bmlt-unstable"
-  execution_role_arn = aws_iam_role.bmlt_task_execution_role.arn
+  family = "bmlt-unstable"
 
   container_definitions = <<EOF
 [
   {
     "name": "bmlt-root-server",
-    "repositoryCredentials": {
-        "credentialsParameter": "${aws_secretsmanager_secret.docker_repository.arn}"
-    },
     "volumesFrom": [],
     "extraHosts": null,
     "dnsServers": null,
@@ -79,9 +75,6 @@ resource "aws_ecs_task_definition" "bmlt_unstable" {
   },
   {
     "name": "bmlt-db",
-    "repositoryCredentials": {
-        "credentialsParameter": "${aws_secretsmanager_secret.docker_repository.arn}"
-    },
     "volumesFrom": [],
     "extraHosts": null,
     "dnsServers": null,
