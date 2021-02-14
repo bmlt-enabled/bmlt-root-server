@@ -73,7 +73,7 @@ jobs:
         - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then wget https://$S3_BUCKET/$S3_KEY/$ZIP_FILENAME && rm -rf main_server && unzip $ZIP_FILENAME; fi
       script:
         - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/m3g5z4b2
-        - docker build -f docker/Dockerfile-bmlt-new . -t bmlt-root-server:unstable
+        - docker build -f docker/Dockerfile-bmlt . -t bmlt-root-server:$TRAVIS_COMMIT
         - docker build -f docker/Dockerfile-db . -t bmlt-root-server-sample-db:$TRAVIS_COMMIT
       before_deploy:
         - chmod +x travis/deploy-docker-images.sh
