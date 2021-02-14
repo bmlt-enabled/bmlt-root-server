@@ -64,10 +64,15 @@ jobs:
       if: branch IN (master, unstable) OR tag IS present
       services:
         - docker
+      env:
+        - AWS_DEFAULT_REGION=us-east-1
+        - secure: "He2FsOfRQILckDqmVInhUeG743pp2baqSBOvpX+JQogDwNIMeLbSdC59bb+9twaAoWvGJzZjcxrkO3QQoPwCMFuSUE8wU/YIfDsYJY0ONaRYvAX/ZnpRKHVePBwJccOfUGnk+62EubM3n3QoiFa/h6NzQ6EzjR1fyg0q30jmpOA2H+tLhFjTd7RZKW3ZoboTUtYQUY/Ql9mmoTXOENqqtHaSaeA7v+ttwauHrsxixRx95Vlaza3VLfqM82O26IBs7MWNZbnv/MStKB/HUkJM/U79OXochnrRge/rWvKa6UoJ9Smcb65F3/yf4p4ykzp0i+hgmoWBIBQPH7DTb6KnFAAfgdSNeW9NJtxVxgOEHBXExf60jWbVEB2xspJlfnfLaXh8Cn0f83mJzYrbf55znDQhvo8e5myh+zifRuDGbMpfCJRbLbDDFx1hY0D8ZOTUpaoMLVJBmHhInaGj7hOnRYgG4QgvnNIgGuaLyuvWQPZgdTsXXZ/BM0Hv9ITT2xPiKMmQHArbjXV/cm+u7GKpRZpnvYcOPlqB/eFRpCJCro7tFYqfYzH4ReZDhnH+zKpqpI6MMwp6bAqYwcytRJWHfGzQTT0uxKe5ZYdQzBRWYV6dZmOKZt4YIwRwP2H+aSbHvfvm5mWVbZ8KX+bx0t+jQtElHditTfjM1zGOYCX6/mw="
+        - secure: "IursVz2FVP2sCdHJ/Ap/MYqV7/5Eg66XAEVwaw1YyelQlZZG5fzforR+vcY24sA1fuWnl5GFHBP6RheKU0G4rQL2CglF+SnolE1kOjL6eRSJdwRQlMH06qjPmEJdmjxHcl5MwIPI6suTwjSJqfkKfNccMkptW6BIdGvG9T4cEFyJVuRbbmKaMN7WiX8ouHN7VNns7TRMKBQ37KFLrKhwzKEyQ+6nBc5fWQUmQVsPQrvIxA5DYLzq/ZqTnABTC0sv8pjtI9zJYCn0LCu4mNXW8tdD4vKUW20mTAAYSUq/csMSF8PwnvXTcSDO2963/WoqjsG+f1jwcsD4TOedNNrV7Rgkq62lVae9edmlAyNiXvoqSK2adYALRVwC0oFsLEcDBihactPFkDNZxbbc4Wa+Rp3MesVCFFiCXTdQkE5blx5H2ghsmELlXjGOJ5YBA05cvZz3tb/sXlNzU0Zl3J/v4vjr2YMqmX7gyjW+exv/5yVoEieduu3ojnd7a8bWswq7CHuf0+fJ/hg0AJBfrT/wS1f+jY3Ru2tyIe3162cjehjZkoLBwC5GUBYn51Z692mbrY159ktcKoMybcuMAq1XahSLNPntG8ZeFxH2ywE8V1guk3t6zoB19W+w/4tYUoOUoYyi8TsLuuaLAghg9idj1KtcIJiOBFJTR/ZKQtc3ypQ="
       install:
+        - pip install awscli
         - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then wget https://$S3_BUCKET/$S3_KEY/$ZIP_FILENAME && rm -rf main_server && unzip $ZIP_FILENAME; fi
       script:
-        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/m3g5z4b2
         - docker build -f docker/Dockerfile-bmlt . -t bmlt-root-server:$TRAVIS_COMMIT
         - docker build -f docker/Dockerfile-db . -t bmlt-root-server-sample-db:$TRAVIS_COMMIT
       before_deploy:

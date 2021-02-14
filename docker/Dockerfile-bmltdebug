@@ -1,4 +1,4 @@
-FROM bmltenabled/bmlt-root-server:latest
+FROM public.ecr.aws/m3g5z4b2/bmlt-root-server:latest
 
 ENV PHP_INI_PATH "/usr/local/etc/php/php.ini"
 

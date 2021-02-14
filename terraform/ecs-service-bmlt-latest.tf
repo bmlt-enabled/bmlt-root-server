@@ -1,14 +1,10 @@
 resource "aws_ecs_task_definition" "bmlt_latest" {
-  family             = "bmlt-latest"
-  execution_role_arn = aws_iam_role.bmlt_task_execution_role.arn
+  family = "bmlt-latest"
 
   container_definitions = <<EOF
 [
   {
     "name": "bmlt-root-server",
-    "repositoryCredentials": {
-        "credentialsParameter": "${aws_secretsmanager_secret.docker_repository.arn}"
-    },
     "volumesFrom": [],
     "extraHosts": null,
     "dnsServers": null,
@@ -56,7 +52,7 @@ resource "aws_ecs_task_definition" "bmlt_latest" {
     "links": ["bmlt-db"],
     "workingDirectory": "/tmp",
     "readonlyRootFilesystem": null,
-    "image": "bmltenabled/bmlt-root-server:latest",
+    "image": "public.ecr.aws/m3g5z4b2/bmlt-root-server:latest",
     "command": [
       "/bin/bash",
       "/tmp/start-bmlt.sh"
@@ -79,9 +75,6 @@ resource "aws_ecs_task_definition" "bmlt_latest" {
   },
   {
     "name": "bmlt-db",
-    "repositoryCredentials": {
-        "credentialsParameter": "${aws_secretsmanager_secret.docker_repository.arn}"
-    },
     "volumesFrom": [],
     "extraHosts": null,
     "dnsServers": null,
@@ -95,33 +88,31 @@ resource "aws_ecs_task_definition" "bmlt_latest" {
     ],
     "hostname": null,
     "essential": true,
-    "entryPoint": ["docker-entrypoint.sh"],
     "mountPoints": [],
     "ulimits": null,
     "dockerSecurityOptions": null,
     "environment": [
       {
-        "name": "MYSQL_ROOT_PASSWORD",
+        "name": "MARIADB_ROOT_PASSWORD",
         "value": "bmlt_root_password"
       },
       {
-        "name": "MYSQL_DATABASE",
+        "name": "MARIADB_DATABASE",
         "value": "bmlt"
       },
       {
-        "name": "MYSQL_USER",
+        "name": "MARIADB_USER",
         "value": "bmlt_user"
       },
       {
-        "name": "MYSQL_PASSWORD",
+        "name": "MARIADB_PASSWORD",
         "value": "bmlt_password"
       }
     ],
     "links": [],
     "workingDirectory": "/tmp",
     "readonlyRootFilesystem": null,
-    "image": "bmltenabled/bmlt-root-server-sample-db:latest",
-    "command": ["mysqld"],
+    "image": "public.ecr.aws/m3g5z4b2/bmlt-root-server-sample-db:latest",
     "user": null,
     "dockerLabels": null,
     "logConfiguration": {
