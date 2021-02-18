@@ -50,5 +50,5 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (51, 'LC', NULL, 'LC', 'pl', 'Życie w czystości', 'Mityng koncentruje się na dyskusji nad tekstem z "Życie w czystości: Podróż trwa nadal".', 'FC1'),
 (52, 'GP', NULL, 'GP', 'pl', 'Guiding Principles', 'Mityng koncentruje się na dyskusji nad tekstem z "Guiding Principles - The Spirit of Our Traditions".', 'FC1'),
 (54, 'VM', NULL, 'VM', 'pl', 'Virtual Meeting', 'Meets Virtually', 'FC2'),
-(55, 'TC', NULL, 'TC', 'pl', 'Temporarily Closed', 'Facility is Temporarily Closed', 'O'),
+(55, 'TC', NULL, 'TC', 'pl', 'Temporarily Closed', 'Facility is Temporarily Closed', 'FC2'),
 (56, 'HY', NULL,  'HYBR', 'pl', 'Hybrid Meeting', 'Meets Virtually and In-person', 'FC2');
