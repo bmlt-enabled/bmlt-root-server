@@ -343,7 +343,8 @@ function DB_Connect_and_Upgrade()
             // for the venue type radio buttons. If they aren't there, add them; and also make sure they map to the
             // correct NAWS formats and format types. If there are multiple formats named say VM (which would be weird
             // but possible), this code will only update the one with the smallest shared id.
-            function fix_formats ($key, $naws, $name, $descr, $type) {
+            function fix_formats($key, $naws, $name, $descr, $type)
+            {
                 $dbPrefix = $GLOBALS['dbPrefix'];
                 $table = "$dbPrefix" . "_comdef_formats";
                 $q = "SELECT `shared_id_bigint` FROM `$table` WHERE `key_string` = '$key' AND `lang_enum` = 'en' ORDER BY `shared_id_bigint`";
