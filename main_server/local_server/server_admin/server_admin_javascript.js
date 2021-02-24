@@ -88,6 +88,50 @@ function BMLT_Server_Admin()
         };
     };
 
+    /************************************************************************************//**
+    *   \brief  methods and variables for venue type format codes                           *
+    ****************************************************************************************/
+    // These should disappear when the venue type is specified by an enumeration rather than a format code
+    this.getFormatForMasterId = function(format_code, language) {
+        // If there is more than one format with 'format_code', return the one with the smallest shared ID. The
+        // migrations code and menu changes are supposed to ensure that there is at least one. The migrations code
+        // should also have ensured that there is an English version of each of these venue type formats (although some
+        // of the other formats might not necessarily have an English version, hence the check).
+        var formats = null;
+        for (var index = 0; index < g_formats_array.length; index++) {
+            var f = g_formats_array[index]['formats'];
+            if ('en' in f && f['en']['key'] === format_code && (!formats || parseInt(f['en']['shared_id']) < parseInt(formats['en']['shared_id']))) {
+                formats = f;
+            }
+        }
+        return formats[language];
+    }
+
+    this.isVenueTypeFormatByCode = function(format_code) {
+        return this.venueTypeFormats[format_code] !== undefined;
+    }
+
+    this.isVenueTypeFormatBySharedId = function(shared_id) {
+        for (var i = 0; i < this.venueTypeFormatSharedIds.length; i++) {
+            if (this.venueTypeFormatSharedIds[i] === shared_id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    this.venueTypeFormatSharedIds = [
+        parseInt(this.getFormatForMasterId('VM', g_langs[0])['shared_id']),
+        parseInt(this.getFormatForMasterId('HY', g_langs[0])['shared_id']),
+        parseInt(this.getFormatForMasterId('TC', g_langs[0])['shared_id'])
+    ];
+
+    this.venueTypeFormats = {
+        'VM': this.getFormatForMasterId('VM', g_langs[0]),
+        'HY': this.getFormatForMasterId('HY', g_langs[0]),
+        'TC': this.getFormatForMasterId('TC', g_langs[0])
+    };
+
     // #mark -
     // #mark Text Item Handlers
     // #mark -
@@ -1418,7 +1462,12 @@ function BMLT_Server_Admin()
         var venue_type = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_venue_type").find("input:radio[name=venue_type]:checked").val();
         var isVirtualOrHybrid = venue_type === 'virtual' || venue_type === 'virtualTC' || venue_type === 'hybrid';
         var city = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_city_text_input").val().trim();
-        var state = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_state_text_input").val().trim();
+        // the state might be specified either as a text field, or selected from a list of options
+        var s = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_state_text_input");
+        if (s.length==0) {
+            s = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_state_select_input");
+        }
+        var state = s.val().trim();
         var zip = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_zip_text_input").val().trim();
         var url = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_virtual_meeting_link_text_input").val().trim();
         var phone = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_phone_meeting_number_text_input").val().trim();
@@ -4567,49 +4616,6 @@ function BMLT_Server_Admin()
             checkbox.checked = desiredState;
         }
         button.innerText = desiredState ? g_uncheck_all_text : g_check_all_text;
-    };
-
-    /************************************************************************************//**
-    *   \brief  auxiliary methods and variables for createFormatRow method                  *
-    ****************************************************************************************/
-    this.getFormatForMasterId = function(format_code, language) {
-        // If there is more than one format with 'format_code', return the one with the smallest shared ID. The
-        // migrations code and menu changes are supposed to ensure that there is at least one. The migrations code
-        // should also have ensured that there is an English version of each of these venue type formats (although some
-        // of the other formats might not necessarily have an English version, hence the check).
-        var formats = null;
-        for (var index = 0; index < g_formats_array.length; index++) {
-            var f = g_formats_array[index]['formats'];
-            if ('en' in f && f['en']['key'] === format_code && (!formats || parseInt(f['en']['shared_id']) < parseInt(formats['en']['shared_id']))) {
-                formats = f;
-             }
-        }
-        return formats[language];
-    }
-
-    this.isVenueTypeFormatByCode = function(format_code) {
-        return this.venueTypeFormats[format_code] !== undefined;
-    }
-
-    this.isVenueTypeFormatBySharedId = function(shared_id) {
-        for (var i = 0; i < this.venueTypeFormatSharedIds.length; i++) {
-            if (this.venueTypeFormatSharedIds[i] === shared_id) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    this.venueTypeFormatSharedIds = [
-        parseInt(this.getFormatForMasterId('VM', g_langs[0])['shared_id']),
-        parseInt(this.getFormatForMasterId('HY', g_langs[0])['shared_id']),
-        parseInt(this.getFormatForMasterId('TC', g_langs[0])['shared_id'])
-    ];
-
-    this.venueTypeFormats = {
-        'VM': this.getFormatForMasterId('VM', g_langs[0]),
-        'HY': this.getFormatForMasterId('HY', g_langs[0]),
-        'TC': this.getFormatForMasterId('TC', g_langs[0])
     };
 
     /************************************************************************************//**
