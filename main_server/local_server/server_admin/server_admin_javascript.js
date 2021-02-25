@@ -88,50 +88,6 @@ function BMLT_Server_Admin()
         };
     };
 
-    /************************************************************************************//**
-    *   \brief  methods and variables for venue type format codes                           *
-    ****************************************************************************************/
-    // These should disappear when the venue type is specified by an enumeration rather than a format code
-    this.getFormatForMasterId = function(format_code, language) {
-        // If there is more than one format with 'format_code', return the one with the smallest shared ID. The
-        // migrations code and menu changes are supposed to ensure that there is at least one. The migrations code
-        // should also have ensured that there is an English version of each of these venue type formats (although some
-        // of the other formats might not necessarily have an English version, hence the check).
-        var formats = null;
-        for (var index = 0; index < g_formats_array.length; index++) {
-            var f = g_formats_array[index]['formats'];
-            if ('en' in f && f['en']['key'] === format_code && (!formats || parseInt(f['en']['shared_id']) < parseInt(formats['en']['shared_id']))) {
-                formats = f;
-            }
-        }
-        return formats[language];
-    }
-
-    this.isVenueTypeFormatByCode = function(format_code) {
-        return this.venueTypeFormats[format_code] !== undefined;
-    }
-
-    this.isVenueTypeFormatBySharedId = function(shared_id) {
-        for (var i = 0; i < this.venueTypeFormatSharedIds.length; i++) {
-            if (this.venueTypeFormatSharedIds[i] === shared_id) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    this.venueTypeFormatSharedIds = [
-        parseInt(this.getFormatForMasterId('VM', g_langs[0])['shared_id']),
-        parseInt(this.getFormatForMasterId('HY', g_langs[0])['shared_id']),
-        parseInt(this.getFormatForMasterId('TC', g_langs[0])['shared_id'])
-    ];
-
-    this.venueTypeFormats = {
-        'VM': this.getFormatForMasterId('VM', g_langs[0]),
-        'HY': this.getFormatForMasterId('HY', g_langs[0]),
-        'TC': this.getFormatForMasterId('TC', g_langs[0])
-    };
-
     // #mark -
     // #mark Text Item Handlers
     // #mark -
@@ -4577,6 +4533,77 @@ function BMLT_Server_Admin()
     };
 
     /************************************************************************************//**
+    *   \brief  methods and variables for venue type format codes                           *
+    ****************************************************************************************/
+    // These should disappear when the venue type is specified by an enumeration rather than a format code
+    this.getFormatForMasterId = function(format_code, language) {
+        // If there is more than one format with 'format_code', return the one with the smallest shared ID. The
+        // migrations code and menu changes are supposed to ensure that there is at least one. The migrations code
+        // should also have ensured that there is an English version of each of these venue type formats (although some
+        // of the other formats might not necessarily have an English version, hence the check).
+        var formats = null;
+        for (var index = 0; index < g_formats_array.length; index++) {
+            var f = g_formats_array[index]['formats'];
+            if ('en' in f && f['en']['key'] === format_code && (!formats || parseInt(f['en']['shared_id']) < parseInt(formats['en']['shared_id']))) {
+                formats = f;
+            }
+        }
+        return formats[language];
+    }
+
+    this.isVenueTypeFormatByCode = function(format_code) {
+        return this.venueTypeFormats[format_code] !== undefined;
+    }
+
+    this.isVenueTypeFormatBySharedId = function(shared_id) {
+        for (var i = 0; i < this.venueTypeFormatSharedIds.length; i++) {
+            if (this.venueTypeFormatSharedIds[i] === shared_id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    this.venueTypeFormatSharedIds = [
+        parseInt(this.getFormatForMasterId('VM', g_langs[0])['shared_id']),
+        parseInt(this.getFormatForMasterId('HY', g_langs[0])['shared_id']),
+        parseInt(this.getFormatForMasterId('TC', g_langs[0])['shared_id'])
+    ];
+
+    this.venueTypeFormats = {
+        'VM': this.getFormatForMasterId('VM', g_langs[0]),
+        'HY': this.getFormatForMasterId('HY', g_langs[0]),
+        'TC': this.getFormatForMasterId('TC', g_langs[0])
+    };
+
+    this.toggleVenueTypeFormat = function(id_bigint, master_format_code, checked) {
+        var checkbox = document.getElementById("bmlt_admin_meeting_" + id_bigint + "_format_" + this.venueTypeFormats[master_format_code]['shared_id'] + "_checkbox");
+        checkbox.checked = checked;
+        $(checkbox).trigger('change');
+    }
+
+    this.venueTypeClick = function(event, id_bigint) {
+        var venueType = $(event).val();
+        if (venueType === "hybrid") {
+            this.toggleVenueTypeFormat(id_bigint, 'HY', true);
+            this.toggleVenueTypeFormat(id_bigint, 'TC', false);
+            this.toggleVenueTypeFormat(id_bigint, 'VM', false);
+        } else if (venueType === "virtualTC") {
+            this.toggleVenueTypeFormat(id_bigint, 'HY', false);
+            this.toggleVenueTypeFormat(id_bigint, 'TC', true);
+            this.toggleVenueTypeFormat(id_bigint, 'VM', true);
+        } else if (venueType === "virtual") {
+            this.toggleVenueTypeFormat(id_bigint, 'HY', false);
+            this.toggleVenueTypeFormat(id_bigint, 'TC', false);
+            this.toggleVenueTypeFormat(id_bigint, 'VM', true);
+        } else {
+            this.toggleVenueTypeFormat(id_bigint, 'HY', false);
+            this.toggleVenueTypeFormat(id_bigint, 'TC', false);
+            this.toggleVenueTypeFormat(id_bigint, 'VM', false);
+        }
+    }
+
+    /************************************************************************************//**
     *   \brief  This sets up the Format Editor for the selected Format.                     *
     ****************************************************************************************/
     this.populateFormatEditor = function () {
@@ -5039,37 +5066,6 @@ function BMLT_Server_Admin()
 
             this.evaluateFormatState(in_select_input_object.shared_id);
         };
-        /***************************************
-         * End Format-Type-Enum
-         ******************************************/
-        /**********************************************/
-
-        this.toggleVenueTypeFormat = function(id_bigint, master_format_code, checked) {
-            var checkbox = document.getElementById("bmlt_admin_meeting_" + id_bigint + "_format_" + this.venueTypeFormats[master_format_code]['shared_id'] + "_checkbox");
-            checkbox.checked = checked;
-            $(checkbox).trigger('change');
-        }
-
-        this.venueTypeClick = function(event, id_bigint) {
-            var venueType = $(event).val();
-            if (venueType === "hybrid") {
-                this.toggleVenueTypeFormat(id_bigint, 'HY', true);
-                this.toggleVenueTypeFormat(id_bigint, 'TC', false);
-                this.toggleVenueTypeFormat(id_bigint, 'VM', false);
-            } else if (venueType === "virtualTC") {
-                this.toggleVenueTypeFormat(id_bigint, 'HY', false);
-                this.toggleVenueTypeFormat(id_bigint, 'TC', true);
-                this.toggleVenueTypeFormat(id_bigint, 'VM', true);
-            } else if (venueType === "virtual") {
-                this.toggleVenueTypeFormat(id_bigint, 'HY', false);
-                this.toggleVenueTypeFormat(id_bigint, 'TC', false);
-                this.toggleVenueTypeFormat(id_bigint, 'VM', true);
-            } else {
-                this.toggleVenueTypeFormat(id_bigint, 'HY', false);
-                this.toggleVenueTypeFormat(id_bigint, 'TC', false);
-                this.toggleVenueTypeFormat(id_bigint, 'VM', false);
-            }
-        }
 
     /************************************************************************************//**
     *   \brief  This goes through all the formats in the list, and ensures they have the    *
