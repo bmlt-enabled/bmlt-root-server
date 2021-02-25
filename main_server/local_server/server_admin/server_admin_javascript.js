@@ -4535,7 +4535,6 @@ function BMLT_Server_Admin()
     /************************************************************************************//**
     *   \brief  methods and variables for venue type format codes                           *
     ****************************************************************************************/
-    // These should disappear when the venue type is specified by an enumeration rather than a format code
     this.getFormatForMasterId = function(format_code, language) {
         // If there is more than one format with 'format_code', return the one with the smallest shared ID. The
         // migrations code and menu changes are supposed to ensure that there is at least one. The migrations code
