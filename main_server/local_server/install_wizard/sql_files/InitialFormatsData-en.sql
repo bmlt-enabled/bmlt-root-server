@@ -20,7 +20,7 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (19, 'RF', NULL, 'VAR', 'en', 'Rotating Format', 'This meeting has a format that changes for each meeting.', 'FC1'),
 (20, 'Rr', NULL, NULL, 'en', 'Round Robin', 'This meeting has a fixed sharing order (usually a circle.)', 'FC1'),
 (21, 'SC', NULL, NULL, 'en', 'Surveillance Cameras', 'This meeting is held in a facility that has surveillance cameras.', 'FC2'),
-(22, 'SD', NULL, 'SPK', 'en', 'Speaker/Discussion', 'This meeting is lead by a speaker, then opened for participation by attendees.', 'FC1'),
+(22, 'SD', NULL, 'S-D', 'en', 'Speaker/Discussion', 'This meeting is lead by a speaker, then opened for participation by attendees.', 'FC1'),
 (23, 'SG', NULL, 'SWG', 'en', 'Step Working Guide', 'This meeting is focused on discussion of the Step Working Guide text.', 'FC1'),
 (24, 'SL', NULL, NULL, 'en', 'ASL', 'This meeting provides an American Sign Language (ASL) interpreter for the deaf.', 'FC2'),
 (26, 'So', NULL, 'SPK', 'en', 'Speaker Only', 'This meeting is a speaker-only meeting. Other attendees do not participate in the discussion.', 'FC1'),
@@ -50,5 +50,5 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (51, 'LC', NULL, 'LC', 'en', 'Living Clean', 'This is a discussion of the NA book Living Clean -The Journey Continues.', 'FC1'),
 (52, 'GP', NULL, 'GP', 'en', 'Guiding Principles', 'This is a discussion of the NA book Guiding Principles - The Spirit of Our Traditions.', 'FC1'),
 (54, 'VM', NULL, 'VM', 'en', 'Virtual Meeting', 'Meets Virtually', 'FC2'),
-(55, 'TC', NULL, 'TC', 'en', 'Temporarily Closed', 'Facility is Temporarily Closed', 'O'),
+(55, 'TC', NULL, 'TC', 'en', 'Temporarily Closed', 'Facility is Temporarily Closed', 'FC2'),
 (56, 'HY', NULL, 'HYBR', 'en', 'Hybrid Meeting', 'Meets Virtually and In-person', 'FC2');

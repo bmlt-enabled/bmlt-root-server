@@ -372,6 +372,7 @@
                                                                                                             'NS'    =>  'Non-Smoking',
                                                                                                             'QA'    =>  'Frage & Antwort',
                                                                                                             'RA'    =>  'Eingeschränkter Zutritt',
+                                                                                                            'S-D'   =>  'Sprecher / Diskussion',
                                                                                                             'SMOK'  =>  'Raucher',
                                                                                                             'SPK'   =>  'Sprecher',
                                                                                                             'STEP'  =>  'Schritte',

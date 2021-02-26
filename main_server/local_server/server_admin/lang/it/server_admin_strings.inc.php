@@ -371,6 +371,7 @@
                                                                                                             'MEDIT' =>  'Meditazione',//'MED'//'Meditation',
                                                                                                             'DR'    =>  'Domande e risposte',//'QA'//'Questions & Answers',
                                                                                                             'AL'    =>  'Accesso limitato',//'RA'//'Restricted Access',
+                                                                                                            'S-D'   =>  'Speaker/Discussion', // TODO translate
                                                                                                             'FUM'   =>  'Fumatori',//'SMOK'//'Smoking',
                                                                                                             'ORAT'  =>  'Oratore (sedia)',//'SPK'//'Speaker',
                                                                                                             '12P'   =>  'Passi',//'STEP'//'Step',

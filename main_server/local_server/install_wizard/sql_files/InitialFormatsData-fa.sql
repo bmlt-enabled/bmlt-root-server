@@ -20,7 +20,7 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (19, 'RF', NULL, 'VAR', 'fa', 'فورمت چرخشی','فورمت این جلسه در هر جلسه متغیر میباشد', 'FC1'),
 (20, 'Rr', NULL, NULL, 'fa', 'مشارکت موضوع دار','این جلسه دارای یکسری موضوعات خاص میباشد (معمولاً بصورت چرخشی)', 'FC1'),
 (21, 'SC', NULL, NULL, 'fa', 'دوربین مداربسته','این جلسه در مکانهای مجهز به دوربین مدار بسته برگزار میگردد', 'FC2'),
-(22, 'SD', NULL, 'SPK', 'fa', 'سخنرانی/بحث','این جلسه توسط یک سخنران گردانندگی میگردد', 'FC1'),
+(22, 'SD', NULL, 'S-D', 'fa', 'سخنرانی/بحث','این جلسه توسط یک سخنران گردانندگی میگردد', 'FC1'),
 (23, 'SG', NULL, 'SWG', 'fa', 'راهنمای کارکرد قدم','این جلسه با موضوع بررسی و بحث در مورد کتاب راهنمای کاکرد قدم برگزار میگردد', 'FC1'),
 (24, 'SL', NULL, NULL, 'fa', 'تفسیر به زبان انگلیسی برای ناشنوایان','این جلسه بهمراه مفسر انگلیسی برای ناشنوایان برگزار میگردد', 'FC2'),
 (26, 'So', NULL, 'SPK', 'fa', 'فقط سخنرانی','این جلسه فقط یک سخنران دارد. دیگر شرکت کنندگان حق مشارکت ندارند', 'FC1'),
@@ -50,5 +50,5 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (51, 'LC', NULL, 'LC', 'fa', 'پاک زیستن','این جلسه با موضوع بررسی و بحث در مورد کتاب پاک زیستن - سفر ادامه دارد، برگزار میگردد', 'FC1'),
 (52, 'GP', NULL, 'GP', 'fa', 'روح سنت ها','این جلسه با موضوع بررسی و بحث در مورد کتاب روح سنت ها برگزار میگردد', 'FC1'),
 (54, 'VM', NULL, 'VM', 'fa', 'Virtual Meeting', 'Meets Virtually', 'FC2'),
-(55, 'TC', NULL, 'TC', 'fa', 'Temporarily Closed', 'Facility is Temporarily Closed', 'O'),
+(55, 'TC', NULL, 'TC', 'fa', 'Temporarily Closed', 'Facility is Temporarily Closed', 'FC2'),
 (56, 'HY', NULL, 'HYBR', 'fa', 'Hybrid Meeting', 'Meets Virtually and In-person', 'FC2');

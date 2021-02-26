@@ -19,7 +19,7 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (19, 'RF', NULL, 'VAR', 'es', 'Formato que Rota', 'Esta reunión tiene un formato que cambia para cada reunión.', 'FC1'),
 (20, 'Rr', NULL, NULL, 'es', 'Round Robin', 'Esta reunión tiene un orden fijo de compartir (generalmente un círculo).', 'FC1'),
 (21, 'SC', NULL, NULL, 'es', 'Cámaras de Vigilancia', 'Esta reunión se celebra en una localidad que tenga cámaras de vigilancia.', 'FC2'),
-(22, 'SD', NULL, 'SPK', 'es', 'Orador/Discusión', 'Esta reunión es conducida por un orador, después es abierta para la participación de los asistentes.', 'FC1'),
+(22, 'SD', NULL, 'S-D', 'es', 'Orador/Discusión', 'Esta reunión es conducida por un orador, después es abierta para la participación de los asistentes.', 'FC1'),
 (23, 'SG', NULL, 'SWG', 'es', 'Guia Para Trabajar los Pasos', 'Esta reunión se centra en la discusión del texto Guia Para Trabajar los Pasos.', 'FC1'),
 (24, 'SL', NULL, NULL, 'es', 'ASL', 'Esta reunión proporciona intérprete (ASL) para los sordos.', 'FC2'),
 (26, 'So', NULL, 'SPK', 'es', 'Solamente Orador', 'Esta reunión es de orador solamente. Otros asistentes no participan en la discusión.', 'FC1'),
@@ -33,5 +33,5 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (34, 'YP', NULL, 'Y', 'es', 'Jovenes', 'Esta reunión se centra en las necesidades de los miembros más jóvenes de NA.', 'FC3'),
 (35, 'OE', NULL, NULL, 'es', 'Sin Tiempo Fijo', 'No tiene tiempo fijo. Esta reunión continua hasta que cada miembro haya tenido la oportunidad de compartir.', 'FC1'),
 (54, 'VM', NULL, 'VM', 'es', 'Virtual Meeting', 'Meets Virtually', 'FC2'),
-(55, 'TC', NULL, 'TC', 'es', 'Temporarily Closed', 'Facility is Temporarily Closed', 'O'),
+(55, 'TC', NULL, 'TC', 'es', 'Temporarily Closed', 'Facility is Temporarily Closed', 'FC2'),
 (56, 'HY', NULL, 'HYBR', 'es', 'Hybrid Meeting', 'Meets Virtually and In-person', 'FC2');

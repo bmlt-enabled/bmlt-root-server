@@ -370,6 +370,7 @@
                                                                                                             'NF'    =>  'Proibido Fumar',
                                                                                                             'PR'    =>  'Perguntas e Respostas',
                                                                                                             'AR'    =>  'Acesso Restrito',
+                                                                                                            'S-D'   =>  'Speaker/Discussion', // TODO translate
                                                                                                             'FUM'  =>  'Permitido Fumar',
                                                                                                             'TEM'   =>  'Temática',
                                                                                                             'PAS'  =>  'Passos',

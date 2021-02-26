@@ -20,7 +20,7 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (19, 'RF', NULL, 'VAR', 'pl', 'Zmienny format', 'Format tego mityngu zmienia się co mityng.', 'FC1'),
 (20, 'Rr', NULL, NULL, 'pl', 'Round Robin', 'Na tym mityngu jest ustalona kolejność dzielenia się doświadczeniem (zwykle w koło)', 'FC1'),
 (21, 'SC', NULL, NULL, 'pl', 'Kamery bezpieczeństwa', 'Mityng odbywa się w miejscu, w którym zamontowane są kamery bezpieczeństwa.', 'FC2'),
-(22, 'SD', NULL, 'SPK', 'pl', 'Spikerka/dyskusja', 'Mityng rozpoczynany jest wypowiedzią spikera, a następnie jest otwarty do dzielenia się przez resztę uczestników.', 'FC1'),
+(22, 'SD', NULL, 'S-D', 'pl', 'Spikerka/dyskusja', 'Mityng rozpoczynany jest wypowiedzią spikera, a następnie jest otwarty do dzielenia się przez resztę uczestników.', 'FC1'),
 (23, 'SG', NULL, 'SWG', 'pl', 'Przewodnik pracy nad Krokami', 'Mityng koncentruje się na dyskusji nad tekstem z "Przewodnika do pracy nad Krokami".', 'FC1'),
 (24, 'SL', NULL, NULL, 'pl', 'ASL', 'W tym mityngu bierze udział tłumacz języka migowego dla osób niesłyszących.', 'FC2'),
 (26, 'So', NULL, 'SPK', 'pl', 'Tylko spikerka', 'Mityng składa się tylko z wypowiedzi spikera. Inni uczestnicy nie dzielą się doświadczeniem.', 'FC1'),
@@ -50,5 +50,5 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (51, 'LC', NULL, 'LC', 'pl', 'Życie w czystości', 'Mityng koncentruje się na dyskusji nad tekstem z "Życie w czystości: Podróż trwa nadal".', 'FC1'),
 (52, 'GP', NULL, 'GP', 'pl', 'Guiding Principles', 'Mityng koncentruje się na dyskusji nad tekstem z "Guiding Principles - The Spirit of Our Traditions".', 'FC1'),
 (54, 'VM', NULL, 'VM', 'pl', 'Virtual Meeting', 'Meets Virtually', 'FC2'),
-(55, 'TC', NULL, 'TC', 'pl', 'Temporarily Closed', 'Facility is Temporarily Closed', 'O'),
+(55, 'TC', NULL, 'TC', 'pl', 'Temporarily Closed', 'Facility is Temporarily Closed', 'FC2'),
 (56, 'HY', NULL,  'HYBR', 'pl', 'Hybrid Meeting', 'Meets Virtually and In-person', 'FC2');

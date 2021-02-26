@@ -375,6 +375,7 @@
                                                                                                                 'QA'    =>  'Frågor och svar',
                                                                                                                 'RA'    =>  'Ej publikt möte',
                                                                                                                 'NS'    =>  'Non-Smoking',
+                                                                                                                'S-D'   =>  'Speaker/Discussion', // TODO translate
                                                                                                                 'SMOK'  =>  'Rökare',
                                                                                                                 'SPK'   =>  'Talarmöte',
                                                                                                                 'STEP'  =>  'Stegmöte',

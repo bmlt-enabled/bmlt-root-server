@@ -373,6 +373,7 @@
                                                                                                                 'NS'    =>  'Zakaz palenia',
                                                                                                                 'QA'    =>  'Pytania i ODpowiedzi',
                                                                                                                 'RA'    =>  'Ograniczone uczestnicwo',
+                                                                                                                'S-D'   =>  'Speaker/Discussion', // TODO translate
                                                                                                                 'SMOK'  =>  'Palenie',
                                                                                                                 'SPK'   =>  'Spiker',
                                                                                                                 'STEP'  =>  'Krok',

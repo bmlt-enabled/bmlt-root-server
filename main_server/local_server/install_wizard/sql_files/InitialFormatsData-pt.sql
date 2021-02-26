@@ -20,7 +20,7 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (19, 'FR', NULL, 'VAR', 'pt', 'Formato Rotativo', 'Esta reunião muda seu formato a cada reunião.', 'FC1'),
 (20, 'Rr', NULL, NULL, 'pt', 'Round Robin', 'Esta reunião tem um formato fixo de partilha (geralmente em círculo.)', 'FC1'),
 (21, 'CV', NULL, NULL, 'pt', 'Câmera de vigilância', 'Esta reunião acontece em ambiente que tem câmeras de vigilância.', 'FC2'),
-(22, 'TD', NULL, 'SPK', 'pt', 'Temática/Discussão', 'Esta reunião tem um orador, em seguida é aberta a participação dos membros', 'FC1'),
+(22, 'TD', NULL, 'S-D', 'pt', 'Temática/Discussão', 'Esta reunião tem um orador, em seguida é aberta a participação dos membros', 'FC1'),
 (23, 'EP', NULL, 'SWG', 'pt', 'Estudo de Passos', 'Esta reunião é de estudo dos passos através do Guia Para Trabalhar os Passos de NA.', 'FC1'),
 (24, 'LS', NULL, NULL, 'pt', 'LSB', 'Esta reunião acontece com ajuda de intérprete de LIBRAS (Língua Brasileira de Sinais).', 'FC2'),
 (26, 'TM', NULL, 'SPK', 'pt', 'Temática', 'Esta reunião é do tipo temática. Não há participação dos membros na discussão.', 'FC1'),
@@ -51,5 +51,5 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (52, 'GP', NULL, 'GP', 'pt', 'Guia de Princípios', 'Esta é uma reunião baseada no livro Guia de Princípios - O Espírito das Nossas Tradições .', 'FC1'),
 (53, 'CadP', NULL, 'WCHR', 'pt', 'Cadeirante Parcial', 'Esta reunião tem acesso parcial a cadeirante.', 'FC2'),
 (54, 'VM', NULL, 'VM', 'pt', 'Virtual Meeting', 'Meets Virtually', 'FC2'),
-(55, 'TC', NULL, 'TC', 'pt', 'Temporarily Closed', 'Facility is Temporarily Closed', 'O'),
+(55, 'TC', NULL, 'TC', 'pt', 'Temporarily Closed', 'Facility is Temporarily Closed', 'FC2'),
 (56, 'HY', NULL,  'HYBR', 'pt', 'Hybrid Meeting', 'Meets Virtually and In-person', 'FC2');
