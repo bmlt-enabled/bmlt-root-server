@@ -15,6 +15,8 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
     php-zip \
     php-pdo \
     php-mbstring \
+    php-dev \
+    php-pear \
     unzip \
     libmcrypt-dev \
     libxml2-dev \
