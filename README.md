@@ -57,6 +57,7 @@ For instructions on installing the root server, see [Installing a New Root Serve
 - Error if there is a virtual or hybrid meeting, and none of Virtual Meeting Link, Phone Meeting Dial-in Number, or Virtual Meeting Additional Information is filled in.
 - Error if Virtual Meeting Link contains an invalid URL.
 - Warning if no location information filled in for meeting (minimally, we want a city/town and state/province, or a zip/postal code).
+- Warning if no street information for an in-person or hybrid meeting.
 - Warning if there is a virtual/hybrid meeting, and no Virtual Meeting Link or Phone Meeting Dial-in Number (just a warning for now though, since Virtual Meeting Additional Information might have enough information to join the meeting).
 - Warning if there is a Virtual Meeting Link but nothing in the Virtual Meeting Additional Information field.
 
