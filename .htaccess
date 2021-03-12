@@ -1,0 +1,9 @@
+# First deny all then follow allow rules
+Order Deny,Allow
+deny from all
+
+# Allow access to only certain files
+<Files ~ "\.(js|css|txt|png|gif)$">
+   allow from all
+</Files>
+
