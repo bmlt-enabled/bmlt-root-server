@@ -18,7 +18,7 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: bmlt_root_password
-      MYSQL_DATABASE: bmlt
-      MYSQL_USER: bmlt_user
-      MYSQL_PASSWORD: bmlt_password
+      MARIADB_ROOT_PASSWORD: bmlt_root_password
+      MARIADB_DATABASE: bmlt
+      MARIADB_USER: bmlt_user
+      MARIADB_PASSWORD: bmlt_password
