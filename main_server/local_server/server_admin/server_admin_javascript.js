@@ -1414,7 +1414,7 @@ function BMLT_Server_Admin()
     this.validateMeetingDetails = function ( in_meeting_id ) {
         var errors = [];
         var warnings = [];
-        var ignore_warnings = false;
+        var show_warnings = false;
         var venue_type = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_venue_type").find("input:radio[name=venue_type]:checked").val();
         var isInpersonOrHybrid = venue_type === 'inperson' || venue_type === 'hybrid';
         var isVirtualOrHybrid = venue_type === 'virtual' || venue_type === 'virtualTC' || venue_type === 'hybrid';
@@ -1444,9 +1444,11 @@ function BMLT_Server_Admin()
         }
 
         if (isVirtualOrHybrid && url === '' && phone === '' && additional === '') {
+            // use "_meeting_virtual_meeting_additional_info_text_input" instead of "_meeting_virtual_meta" to position this error under the additional info field
             errors.push(this.setValidationMessage("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_virtual_meta",
                 "meeting_editor_screen_meeting_virtual_info_missing",
-                this.validationMessageTypes.ERROR));
+                this.validationMessageTypes.ERROR,
+                true));
         }
 
         // require that the virtual meeting link contains a valid URL if it's non-empty
@@ -1485,13 +1487,15 @@ function BMLT_Server_Admin()
 
         if (isVirtualOrHybrid) {
             if (url === '' && phone === '') {
+                // use "_meeting_virtual_meeting_additional_info_text_input" instead of "_meeting_virtual_meta" to position this warning under the additional info field
                 warnings.push(this.setValidationMessage("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_virtual_meta",
                     "meeting_editor_screen_meeting_url_or_phone_warning",
-                    this.validationMessageTypes.WARN));
+                    this.validationMessageTypes.WARN,
+                    true));
             }
 
             if (url !== '' && additional === '') {
-                warnings.push(this.setValidationMessage("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_virtual_meta",
+                warnings.push(this.setValidationMessage("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_virtual_meeting_additional_info_text_input",
                     "meeting_editor_screen_meeting_additional_warning",
                     this.validationMessageTypes.WARN));
             }
@@ -1499,17 +1503,26 @@ function BMLT_Server_Admin()
 
         if (errors.length == 0 && warnings.length > 0) {
             var s = my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_validation_warning'];
-            ignore_warnings = confirm(s + "\n----------\n" + warnings.join("\n\n"));
+            show_warnings = !confirm(s + "\n----------\n" + warnings.join("\n\n"));
         }
 
-        return { "errors": errors, "warnings": warnings, "ignore_warnings": ignore_warnings };
+        return { "errors": errors, "warnings": warnings, "show_warnings": show_warnings };
     }
 
-    // put an error or warning message in the appropriate spot in the DOM
-    this.setValidationMessage = function ( selector, resource, type, extras = '' ) {
-        var s = my_localized_strings['comdef_server_admin_strings'][resource];
-        $(selector).parent().append("<div class='" + type + "_helper_text'>" + s + extras + "</div>");
-        return s;
+    // put an error or warning message in the appropriate spot in the DOM, and return the message
+    this.setValidationMessage = function ( selector, resource, type, use_spacer = false ) {
+        var r = my_localized_strings['comdef_server_admin_strings'][resource];
+        var s = "<div class='" + type + "_helper_text'>" + r + "</div>";
+        var t = (use_spacer ? "<div class='virtual_error_warn_spacer'>" + s + "</div>" : s);
+        $(selector).parent().append(t);
+        return r;
+    }
+
+    // put an error or warning message below the save button in the DOM along with a warning emoji
+    this.setValidationSaveMessage = function ( selector, resource, type, messages ) {
+        var r = my_localized_strings['comdef_server_admin_strings'][resource];
+        var t = "<div class='save_error_spacer'><div class='" + type + "_helper_text'>" + "<table><tr><td class='error_emoji'>\u26A0 </td><td>" + r + messages + "</td></tr></table></div></div>";
+        $(selector).parent().append(t);
     }
 
     /************************************************************************************//**
@@ -1532,13 +1545,19 @@ function BMLT_Server_Admin()
             var meeting_sent = false;
 
             var validation = this.validateMeetingDetails(in_meeting_id);
-            if (validation.errors.length > 0) {
-                this.setValidationMessage('#bmlt_admin_meeting_editor_form_meeting_' + in_meeting_id + '_save_button',
-                    'meeting_editor_screen_meeting_validation_failed',
-                    this.validationMessageTypes.ERROR,
-                    ' Errors: ' + validation.errors.join(' '));
-                return;
-            } else if (!validation.ignore_warnings) {
+            if ( validation.errors.length > 0 || validation.show_warnings ) {
+                if ( validation.errors.length > 0 ) {
+                    this.setValidationSaveMessage('#bmlt_admin_meeting_editor_form_meeting_' + in_meeting_id + '_save_button',
+                        'meeting_editor_screen_meeting_validation_failed',
+                        this.validationMessageTypes.ERROR,
+                        validation.errors.join(' '));
+                }
+                if (validation.warnings.length > 0) {
+                    this.setValidationSaveMessage('#bmlt_admin_meeting_editor_form_meeting_' + in_meeting_id + '_save_button',
+                        'meeting_editor_screen_meeting_validation_warnings',
+                        this.validationMessageTypes.WARN,
+                        validation.warnings.join(' '));
+                }
                 return;
             }
 
