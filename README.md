@@ -50,7 +50,7 @@ For instructions on installing the root server, see [Installing a New Root Serve
 - Added initial support for time zones, hidden behind feature flag.
 - Added a "publish" checkbox to the NAWS import functionality to allow new meetings to be either published or unpublished.
 - Fixed an issue where map searches using `geo_width` could return incomplete results when filtered by service body.
-- Fixed an issue with which meeting formats are selected for a NAWS export. NAWS exports are limited to 5 formats. `auto-config.inc.php` can now specify an optional variable `$naws_export_formats_at_front` that is an array of formats that should be exported before others.
+- Fixed an issue with which meeting formats are selected for a NAWS export, to make sure the essential ones are included. The default is likely fine as is, but can be overridden with an optional variable `$naws_export_formats_at_front` in `auto-config.inc.php`.
 - Allow World IDs to be free form text, to better support current NAWS practice.
 - HY, TC, VM are now hidden from the formats tab and now are controlled through the Location tab Venue Type option.
 - Added location information checks, as follows:
