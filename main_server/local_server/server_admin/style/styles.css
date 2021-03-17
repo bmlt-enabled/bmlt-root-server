@@ -1501,3 +1501,9 @@ div.bmlt_admin_meeting_editor_service_check_all_div
 {
     border: 1px solid black;
 }
+
+input.bmlt_text_item_tiny:disabled
+{
+    color: gray;
+    background-color: #EFEFEF;
+}
