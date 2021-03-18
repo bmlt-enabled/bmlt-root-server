@@ -1457,10 +1457,8 @@ div.bmlt_admin_meeting_editor_service_check_all_div
     font-style: italic;
     text-align: left;
     border: 1px solid black;
-    background-color: red;
+    background-color: #E00000;
     color: white;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
     border-radius: 3px;
 }
 
@@ -1468,7 +1466,6 @@ div.bmlt_admin_meeting_editor_service_check_all_div
 {
     font-size: 40px;
     font-style: normal;
-    color: white;
     padding-right: 5px;
 }
 
@@ -1478,10 +1475,8 @@ div.bmlt_admin_meeting_editor_service_check_all_div
     font-style: italic;
     text-align: left;
     border: 1px solid black;
-    background-color: orange;
-    color: white;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
+    background-color: yellow;
+    color: black;
     border-radius: 3px;
 }
 
@@ -1500,4 +1495,10 @@ div.bmlt_admin_meeting_editor_service_check_all_div
 .bmlt_admin_virtual_section
 {
     border: 1px solid black;
+}
+
+input.bmlt_text_item_tiny:disabled
+{
+    color: gray;
+    background-color: #EFEFEF;
 }

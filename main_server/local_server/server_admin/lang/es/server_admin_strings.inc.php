@@ -155,7 +155,7 @@ $comdef_server_admin_strings = array('server_admin_disclosure' => 'Server Admini
     'meeting_editor_screen_meeting_url_or_phone_warning' => 'Virtual or hybrid meetings should have either a Virtual Meeting Link or a Phone Meeting Dial-in Number',
     'meeting_editor_screen_meeting_additional_warning' => 'Please also fill in Virtual Meeting Additional Information if there is a Virtual Meeting Link.',
     'meeting_editor_screen_meeting_contact_name_1_label' => 'Contact 1 Name:',
-    'meeting_editor_screen_meeting_validation_warning' => 'There are warnings.  Are you sure you want to continue?  If not, press \'cancel\' and go to the Location tab to address them.',
+    'meeting_editor_screen_meeting_validation_warning' => 'There are warnings.  Are you sure you want to save anyway?  If not, press \'cancel\' and go to the Location tab to see the warnings in place and address them.',
     'meeting_editor_screen_meeting_validation_failed' => 'Unable to save due to input errors.  Please go to the Location tab to address them, and then retry saving.  Errors: ',
     'meeting_editor_screen_meeting_validation_warnings' => 'Input warnings shown on the Location tab: ',
     'meeting_editor_screen_meeting_contact_email_1_label' => 'Contact 1 Email:',
