@@ -59,6 +59,19 @@ jobs:
           name: $TRAVIS_TAG
           on:
             tags: true
+            condition: $TRAVIS_TAG != *beta*
+        - provider: releases
+          edge: true
+          release_notes_file: "changelog.txt"
+          token:
+            secure: "IU6COo9Q0JUZKxRp+tgps1ZSibpXy4gMonko0FyMwSF1GNP6JJit7JAPulK+ccl5k4y+16a5w/ho/EwGc+PI5py5SLk5+KzfJgS3YaWRptvLuX886M5egmNtgvE0SfkaQkfMipgzDc8FFENHaIFKSIDkiMNr5IKGoAz32qqr5sYHFBX5BmTBfa+sjPuZm1REri9ft2vR5zF1IZlD8BvCiMt4GD8+zYS26CiAEZjuh8tZNC/esamqunGGiu+z8Pn2vMqR3A6qwOD1GjFHXrjLB0osei6BiCQJDtzyz9ZpPCBYyDujUkDjSx7ap6PDAJZNOC1Cw78leGMW8oDEZK6iv/QRuF5EDvD986xZtJMB7tLAdDUS2NhgTeJVm4s9JJU11LO/p30PiWeYFIETxHvKOt9k+05VOV79uJKITxG6ifNrionGD2+eY0h6YnjBDb5Gg8AjFIfZ4y1xsmm5UlnEhfL2yEc0rjoWXL1Q4VtoVrZ4nwPkauC/DokuwKoslCUQ0H3G1d7y3ookmSUCV7Jfaid/Puvxmfe2TyPgVQMnQOfJbHxpn5kR5LhmAmNUaKc8Wi/72u0VNwsaLeiYcTTRu7YRe6BwUFg/S0QIdbbrhw4qtkj2xKYrknMNye3vBJLP/e7+Fq07bYYJlLlA0RQYcSqVKi6Z8E9so5dKs0KWKnw="
+          file: $DIST_DIR_GITHUB/$GITHUB_RELEASE_FILENAME
+          skip_cleanup: true
+          name: $TRAVIS_TAG
+          prerelease: true
+          on:
+            tags: true
+            condition: $TRAVIS_TAG =~ "beta"
 
     - stage: docker images
       if: branch IN (master, unstable) OR tag IS present
