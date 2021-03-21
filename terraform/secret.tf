@@ -18,5 +18,5 @@ resource "aws_secretsmanager_secret" "docker_repository" {
 
 resource "aws_secretsmanager_secret_version" "docker_repository" {
   secret_id     = aws_secretsmanager_secret.docker_repository.id
-  secret_string = "{ \"username\": \"${var.DOCKER_USERNAME}\", \"password\": \"${var.DOCKER_PASSWORD}\" }"
+  secret_string = jsonencode({ username = var.DOCKER_USERNAME, password = var.DOCKER_PASSWORD })
 }

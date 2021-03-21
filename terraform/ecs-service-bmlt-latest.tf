@@ -1,137 +1,136 @@
 resource "aws_ecs_task_definition" "bmlt_latest" {
   family = "bmlt-latest"
 
-  container_definitions = <<EOF
-[
-  {
-    "name": "bmlt-root-server",
-    "volumesFrom": [],
-    "extraHosts": null,
-    "dnsServers": null,
-    "disableNetworking": null,
-    "dnsSearchDomains": null,
-    "portMappings": [
+  container_definitions = jsonencode(
+    [
       {
-        "hostPort": 0,
-        "containerPort": 80,
-        "protocol": "tcp"
+        name              = "bmlt-root-server",
+        volumesFrom       = [],
+        extraHosts        = null,
+        dnsServers        = null,
+        disableNetworking = null,
+        dnsSearchDomains  = null,
+        portMappings = [
+          {
+            hostPort      = 0,
+            containerPort = 80,
+            protocol      = "tcp"
+          }
+        ],
+        hostname              = null,
+        essential             = true,
+        entryPoint            = null,
+        mountPoints           = [],
+        ulimits               = null,
+        dockerSecurityOptions = null,
+        environment = [
+          {
+            name  = "GKEY",
+            value = var.GOOGLE_API_KEY
+          },
+          {
+            name  = "DBNAME",
+            value = "bmlt"
+          },
+          {
+            name  = "DBUSER",
+            value = "bmlt_user"
+          },
+          {
+            name  = "DBPASSWORD",
+            value = "bmlt_password"
+          },
+          {
+            name  = "DBSERVER",
+            value = "bmlt-db"
+          },
+          {
+            name  = "DBPREFIX",
+            value = "na"
+          }
+        ],
+        links                  = ["bmlt-db"],
+        workingDirectory       = "/tmp",
+        readonlyRootFilesystem = null,
+        image                  = "${aws_ecrpublic_repository.bmlt-root-server.repository_uri}:latest",
+        command = [
+          "/bin/bash",
+          "/tmp/start-bmlt.sh"
+        ],
+        user         = null,
+        dockerLabels = null,
+        logConfiguration = {
+          logDriver = "awslogs",
+          options = {
+            awslogs-group         = aws_cloudwatch_log_group.bmlt_root.name,
+            awslogs-region        = "us-east-1",
+            awslogs-stream-prefix = "bmlt-root"
+          }
+        },
+        memoryReservation = 128,
+        privileged        = null,
+        linuxParameters = {
+          initProcessEnabled = true
+        }
+      },
+      {
+        name              = "bmlt-db",
+        volumesFrom       = [],
+        extraHosts        = null,
+        dnsServers        = null,
+        disableNetworking = null,
+        dnsSearchDomains  = null,
+        portMappings = [
+          {
+            containerPort = 3306,
+            protocol      = "tcp"
+          }
+        ],
+        hostname              = null,
+        essential             = true,
+        mountPoints           = [],
+        ulimits               = null,
+        dockerSecurityOptions = null,
+        environment = [
+          {
+            name  = "MARIADB_ROOT_PASSWORD",
+            value = "bmlt_root_password"
+          },
+          {
+            name  = "MARIADB_DATABASE",
+            value = "bmlt"
+          },
+          {
+            name  = "MARIADB_USER",
+            value = "bmlt_user"
+          },
+          {
+            name  = "MARIADB_PASSWORD",
+            value = "bmlt_password"
+          }
+        ],
+        links                  = [],
+        workingDirectory       = "/tmp",
+        readonlyRootFilesystem = null,
+        image                  = "${aws_ecrpublic_repository.bmlt-root-server-sample-db.repository_uri}:latest",
+        user                   = null,
+        dockerLabels           = null,
+        logConfiguration = {
+          logDriver = "awslogs",
+          options = {
+            awslogs-group         = aws_cloudwatch_log_group.bmlt_db.name,
+            awslogs-region        = "us-east-1",
+            awslogs-stream-prefix = "bmlt-db"
+          }
+        },
+        memoryReservation = 144,
+        privileged        = null,
+        linuxParameters = {
+          initProcessEnabled = true
+        }
       }
-    ],
-    "hostname": null,
-    "essential": true,
-    "entryPoint": null,
-    "mountPoints": [],
-    "ulimits": null,
-    "dockerSecurityOptions": null,
-    "environment": [
-      {
-        "name": "GKEY",
-        "value": "${var.GOOGLE_API_KEY}"
-      },
-      {
-        "name": "DBNAME",
-        "value": "bmlt"
-      },
-      {
-        "name": "DBUSER",
-        "value": "bmlt_user"
-      },
-      {
-        "name": "DBPASSWORD",
-        "value": "bmlt_password"
-      },
-      {
-        "name": "DBSERVER",
-        "value": "bmlt-db"
-      },
-      {
-        "name": "DBPREFIX",
-        "value": "na"
-      }
-    ],
-    "links": ["bmlt-db"],
-    "workingDirectory": "/tmp",
-    "readonlyRootFilesystem": null,
-    "image": "public.ecr.aws/m3g5z4b2/bmlt-root-server:latest",
-    "command": [
-      "/bin/bash",
-      "/tmp/start-bmlt.sh"
-    ],
-    "user": null,
-    "dockerLabels": null,
-    "logConfiguration": {
-      "logDriver": "awslogs",
-      "options": {
-        "awslogs-group": "${aws_cloudwatch_log_group.bmlt_root.name}",
-        "awslogs-region": "us-east-1",
-        "awslogs-stream-prefix": "bmlt-root"
-      }
-    },
-    "memoryReservation": 128,
-    "privileged": null,
-    "linuxParameters": {
-      "initProcessEnabled": true
-    }
-  },
-  {
-    "name": "bmlt-db",
-    "volumesFrom": [],
-    "extraHosts": null,
-    "dnsServers": null,
-    "disableNetworking": null,
-    "dnsSearchDomains": null,
-    "portMappings": [
-      {
-        "containerPort": 3306,
-        "protocol": "tcp"
-      }
-    ],
-    "hostname": null,
-    "essential": true,
-    "mountPoints": [],
-    "ulimits": null,
-    "dockerSecurityOptions": null,
-    "environment": [
-      {
-        "name": "MARIADB_ROOT_PASSWORD",
-        "value": "bmlt_root_password"
-      },
-      {
-        "name": "MARIADB_DATABASE",
-        "value": "bmlt"
-      },
-      {
-        "name": "MARIADB_USER",
-        "value": "bmlt_user"
-      },
-      {
-        "name": "MARIADB_PASSWORD",
-        "value": "bmlt_password"
-      }
-    ],
-    "links": [],
-    "workingDirectory": "/tmp",
-    "readonlyRootFilesystem": null,
-    "image": "public.ecr.aws/m3g5z4b2/bmlt-root-server-sample-db:latest",
-    "user": null,
-    "dockerLabels": null,
-    "logConfiguration": {
-      "logDriver": "awslogs",
-      "options": {
-        "awslogs-group": "${aws_cloudwatch_log_group.bmlt_db.name}",
-        "awslogs-region": "us-east-1",
-        "awslogs-stream-prefix": "bmlt-db"
-      }
-    },
-    "memoryReservation": 144,
-    "privileged": null,
-    "linuxParameters": {
-      "initProcessEnabled": true
-    }
-  }
-]
-EOF
-
+    ]
+  )
 }
 
 resource "aws_ecs_service" "bmlt_latest" {
@@ -154,4 +153,3 @@ resource "aws_ecs_service" "bmlt_latest" {
     aws_alb_listener.bmlt_https,
   ]
 }
-

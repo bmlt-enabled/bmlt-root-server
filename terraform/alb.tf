@@ -16,24 +16,23 @@ resource "aws_s3_bucket" "bmlt_root_alb_logs" {
 resource "aws_s3_bucket_policy" "bmlt_root_alb_logs" {
   bucket = aws_s3_bucket.bmlt_root_alb_logs.id
 
-  policy = <<EOF
-{
-  "Id": "Policy1521565569242",
-  "Version": "2012-10-17",
-  "Statement": [
+  policy = jsonencode(
     {
-      "Sid": "Stmt1521565353380",
-      "Action": "s3:PutObject",
-      "Effect": "Allow",
-      "Resource": "${aws_s3_bucket.bmlt_root_alb_logs.arn}/*",
-      "Principal": {
-        "AWS": "arn:aws:iam::127311923021:root"
-      }
+      Id      = "Policy1521565569242",
+      Version = "2012-10-17",
+      Statement = [
+        {
+          Sid      = "Stmt1521565353380",
+          Action   = "s3:PutObject",
+          Effect   = "Allow",
+          Resource = "${aws_s3_bucket.bmlt_root_alb_logs.arn}/*",
+          Principal = {
+            AWS = "arn:aws:iam::127311923021:root"
+          }
+        }
+      ]
     }
-  ]
-}
-EOF
-
+  )
 }
 
 resource "aws_security_group" "ecs_http_load_balancers" {
@@ -192,4 +191,3 @@ resource "aws_acm_certificate_validation" "bmlt_unstable" {
   certificate_arn         = aws_acm_certificate.bmlt_unstable.arn
   validation_record_fqdns = [for record in aws_route53_record.cert_validation_bmlt_unstable : record.fqdn]
 }
-
