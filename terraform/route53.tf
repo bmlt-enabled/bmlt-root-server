@@ -25,4 +25,3 @@ resource "aws_route53_record" "bmlt_unstable" {
     evaluate_target_health = true
   }
 }
-
