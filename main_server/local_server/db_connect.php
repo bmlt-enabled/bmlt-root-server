@@ -347,37 +347,56 @@ function DB_Connect_and_Upgrade()
             {
                 $dbPrefix = $GLOBALS['dbPrefix'];
                 $table = "$dbPrefix" . "_comdef_formats";
-                $q = "SELECT `shared_id_bigint` FROM `$table` WHERE `key_string` = '$key' AND `lang_enum` = 'en' ORDER BY `shared_id_bigint`";
-                $result = c_comdef_dbsingleton::preparedQuery($q);
                 $langs = array('en', 'dk', 'de', 'es', 'fa', 'fr', 'it', 'pl', 'pt', 'ru', 'sv');
-                if (is_array($result) && count($result)) {
-                    // English version of the format found. Make sure there is a format for each language, and that it is mapped to the correct NAWS format.
-                    // We run through English as well as the other languages, since even for English we need to make sure it is mapped correctly.
-                    $r = $result[0];
-                    $id = $r['shared_id_bigint'];
-                    foreach ($langs as $lang) {
-                        $q1 = "SELECT `shared_id_bigint` FROM `$table` WHERE `key_string` = '$key' AND `lang_enum` = '$lang' ORDER BY `shared_id_bigint`";
-                        $result1 = c_comdef_dbsingleton::preparedQuery($q1);
-                        if (!is_array($result1) || count($result1) == 0) {
-                            $sql = "INSERT INTO `$table` (`shared_id_bigint`, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($id, '$key', NULL, '$naws', '$lang', '$name', '$descr', '$type')";
-                            c_comdef_dbsingleton::preparedExec($sql);
-                        }
-                        $sql = "UPDATE `$table` SET `worldid_mixed` = '$naws', `format_type_enum` = '$type' WHERE `shared_id_bigint` = $id";
-                        c_comdef_dbsingleton::preparedExec($sql);
+                $id = null;  // this will be the shared_id of the format we're fixing or adding
+                // first see if there is an English language version of the format with the correct key (take the one with the smallest shared id if more than one)
+                $q1 = "SELECT `shared_id_bigint` FROM `$table` WHERE `key_string` = '$key' AND `lang_enum` = 'en' ORDER BY `shared_id_bigint`";
+                $result1 = c_comdef_dbsingleton::preparedQuery($q1);
+                if (is_array($result1) && count($result1)) {
+                    // English version of the format found
+                    $id = $result1[0]['shared_id_bigint'];
+                }
+                if (!$id) {
+                    // No English language version of the format found. See if there is a format with the correct NAWS key; if so, use
+                    // that. (This seems safe -- there should not be a format to do something different that would map to that NAWS format.)
+                    $q2 = "SELECT `shared_id_bigint` FROM `$table` WHERE `worldid_mixed` = '$naws' ORDER BY `shared_id_bigint`";
+                    $result2 = c_comdef_dbsingleton::preparedQuery($q2);
+                    if (is_array($result2) && count($result2)) {
+                        $id = $result2[0]['shared_id_bigint'];
                     }
-                } else {
-                    // No English language version of the format found. Get a new shared ID and make a new format, filled in for each language.
-                    // (If there was a version of the format in some other language, this will still make a new format. Better would be to clean
-                    // up the formats before upgrading, but it should still work just with the automated migration cleanup.)
+                }
+                if (!$id) {
+                    // No format with the correct NAWS key either.  Next see if there is a format in some other language with the given key; if so, use
+                    // that.  This is a bit riskier -- although it is unlikely there would be a format with the correct key that does something different.
+                    $q3 = "SELECT `shared_id_bigint` FROM `$table` WHERE `key_string` = '$key' ORDER BY `shared_id_bigint`";
+                    $result3 = c_comdef_dbsingleton::preparedQuery($q3);
+                    if (is_array($result3) && count($result3)) {
+                        $id = $result3[0]['shared_id_bigint'];
+                    }
+                }
+                if (!$id) {
+                    // No luck finding an existing format, period. Get a new shared ID.
                     $next_id = "SELECT MAX(shared_id_bigint) + 1 AS next_id FROM `$table`";
                     $next_id = c_comdef_dbsingleton::preparedQuery($next_id);
                     $next_id = $next_id[0];
-                    $next_id = $next_id['next_id'];
-                    foreach ($langs as $lang) {
-                        $sql = "INSERT INTO `$table` (`shared_id_bigint`, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($next_id, '$key', NULL, '$naws', '$lang', '$name', '$descr', '$type')";
+                    $id = $next_id['next_id'];
+                }
+                // $id will be the shared ID for the desired format.  First update any existing formats with this $id.
+                $sql = "UPDATE `$table` SET `worldid_mixed` = '$naws', `format_type_enum` = '$type' WHERE `shared_id_bigint` = $id";
+                c_comdef_dbsingleton::preparedExec($sql);
+                // For each language, add a format for that language if there isn't one already.
+                // It will be in English - the server admin will need to translate it later.
+                foreach ($langs as $lang) {
+                    $q4 = "SELECT * FROM `$table` WHERE `shared_id_bigint` = '$id' AND `lang_enum` = '$lang'";
+                    $result4 = c_comdef_dbsingleton::preparedQuery($q4);
+                    if (!is_array($result4) || count($result4) == 0) {
+                        $sql = "INSERT INTO `$table` (`shared_id_bigint`, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($id, '$key', NULL, '$naws', '$lang', '$name', '$descr', '$type')";
                         c_comdef_dbsingleton::preparedExec($sql);
                     }
                 }
+                // make sure the key is correct for the English version of this format
+                $sql = "UPDATE `$table` SET `key_string` = '$key' WHERE `shared_id_bigint` = '$id' AND `lang_enum` = 'en'";
+                c_comdef_dbsingleton::preparedExec($sql);
             }
             fix_formats('VM', 'VM', 'Virtual Meeting', 'Meets Virtually', 'FC2');
             fix_formats('HY', 'HYBR', 'Hybrid Meeting', 'Meets Virtually and In-person', 'FC2');

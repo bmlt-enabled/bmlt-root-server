@@ -3130,11 +3130,11 @@ function BMLT_Server_Admin()
                 for (var i = 0; i < format_keys.length; i++) {
                     if ( format_checkbox.value == format_keys[i] ) {
 
-                        if (parseInt(this.venueTypeFormats['HY']['shared_id']) === main_formats[c].id) {
+                        if (this.venueTypeSharedIdDict['HY'] === main_formats[c].id) {
                             venue_type_format_selections['HY'] = true;
-                        } else if (parseInt(this.venueTypeFormats['TC']['shared_id']) === main_formats[c].id) {
+                        } else if (this.venueTypeSharedIdDict['TC'] === main_formats[c].id) {
                             venue_type_format_selections['TC'] = true;
-                        } else if (parseInt(this.venueTypeFormats['VM']['shared_id']) === main_formats[c].id) {
+                        } else if (this.venueTypeSharedIdDict['VM'] === main_formats[c].id) {
                             venue_type_format_selections['VM'] = true;
                         }
 
@@ -4568,23 +4568,24 @@ function BMLT_Server_Admin()
     /************************************************************************************//**
     *   \brief  methods and variables for venue type format codes                           *
     ****************************************************************************************/
-    this.getFormatForMasterId = function(format_code, language) {
-        // If there is more than one format with 'format_code', return the one with the smallest shared ID. The
+    this.getSharedIdForVenueTypeFormat = function(format_key) {
+        // Get the shared_id for format_key (which should be one of 'HY', 'TC', or 'VM).  This looks just at the English
+        // versions of the formats; there might be a different key in other languages.
+        // If there is more than one format with format_key, return the smallest shared ID. The
         // migrations code and menu changes are supposed to ensure that there is at least one. The migrations code
         // should also have ensured that there is an English version of each of these venue type formats (although some
         // of the other formats might not necessarily have an English version, hence the check).
-        var formats = null;
+        var id = null;
         for (var index = 0; index < g_formats_array.length; index++) {
             var f = g_formats_array[index]['formats'];
-            if ('en' in f && f['en']['key'] === format_code && (!formats || parseInt(f['en']['shared_id']) < parseInt(formats['en']['shared_id']))) {
-                formats = f;
+            if ('en' in f && 'key' in f['en'] && f['en']['key'] === format_key) {
+                var i = parseInt(f['en']['shared_id']);
+                if (!id || i < id) {
+                    id = i;
+                }
             }
         }
-        return formats[language];
-    }
-
-    this.isVenueTypeFormatByCode = function(format_code) {
-        return this.venueTypeFormats[format_code] !== undefined;
+        return id;
     }
 
     this.isVenueTypeFormatBySharedId = function(shared_id) {
@@ -4597,19 +4598,19 @@ function BMLT_Server_Admin()
     }
 
     this.venueTypeFormatSharedIds = [
-        parseInt(this.getFormatForMasterId('VM', g_langs[0])['shared_id']),
-        parseInt(this.getFormatForMasterId('HY', g_langs[0])['shared_id']),
-        parseInt(this.getFormatForMasterId('TC', g_langs[0])['shared_id'])
+        this.getSharedIdForVenueTypeFormat('VM'),
+        this.getSharedIdForVenueTypeFormat('HY'),
+        this.getSharedIdForVenueTypeFormat('TC')
     ];
 
-    this.venueTypeFormats = {
-        'VM': this.getFormatForMasterId('VM', g_langs[0]),
-        'HY': this.getFormatForMasterId('HY', g_langs[0]),
-        'TC': this.getFormatForMasterId('TC', g_langs[0])
+    this.venueTypeSharedIdDict = {
+        'VM': this.getSharedIdForVenueTypeFormat('VM'),
+        'HY': this.getSharedIdForVenueTypeFormat('HY'),
+        'TC': this.getSharedIdForVenueTypeFormat('TC')
     };
 
     this.toggleVenueTypeFormat = function(id_bigint, master_format_code, checked) {
-        var checkbox = document.getElementById("bmlt_admin_meeting_" + id_bigint + "_format_" + this.venueTypeFormats[master_format_code]['shared_id'] + "_checkbox");
+        var checkbox = document.getElementById("bmlt_admin_meeting_" + id_bigint + "_format_" + this.venueTypeSharedIdDict[master_format_code].toString() + "_checkbox");
         checkbox.checked = checked;
         $(checkbox).trigger('change');
     }
