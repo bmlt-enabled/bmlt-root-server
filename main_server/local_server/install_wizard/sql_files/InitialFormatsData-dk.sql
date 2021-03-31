@@ -1,7 +1,7 @@
 -- TODO: translate strings to Danish
 INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`, `name_string`, `description_string`, `format_type_enum`) VALUES
 (1, 'B', NULL, 'BEG', 'dk', 'Beginners', 'This meeting is focused on the needs of new members of NA.', 'FC3'),
-(2, 'BL', NULL, NULL, 'dk', 'Bi-Lingual', 'This Meeting can be attended by speakers of English and another language.', 'FC3'),
+(2, 'BL', NULL, 'LANG', 'dk', 'Bi-Lingual', 'This Meeting can be attended by speakers of English and another language.', 'LANG'),
 (3, 'BT', NULL, 'BT', 'dk', 'Basic Text', 'This meeting is focused on discussion of the Basic Text of Narcotics Anonymous.', 'FC1'),
 (4, 'C', NULL, 'CLOSED', 'dk', 'Closed', 'This meeting is closed to non-addicts. You should attend only if you believe that you may have a problem with substance abuse.', 'O'),
 (5, 'CH', NULL, 'CH', 'dk', 'Closed Holidays', 'This meeting gathers in a facility that is usually closed on holidays.', 'FC3'),

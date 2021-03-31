@@ -1,6 +1,6 @@
 INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`, `name_string`, `description_string`, `format_type_enum`) VALUES
 (1, 'B', NULL, 'BEG', 'pl', 'Nowoprzybyli', 'Mityng koncentruje się na potrzebach nowyh członków NA.', 'FC3'),
-(2, 'BL', NULL, NULL, 'pl', 'Wielojęzykowość', 'Na tym mityngu mogą uczęszczać osoby posługujące się językiem angielskim i innymi.', 'FC3'),
+(2, 'BL', NULL, 'LANG', 'pl', 'Wielojęzykowość', 'Na tym mityngu mogą uczęszczać osoby posługujące się językiem angielskim i innymi.', 'LANG'),
 (3, 'BT', NULL, 'BT', 'pl', 'Tekst Podstawowy', 'Mityng koncentruje się na dyskusjach o Tekście Podstawowym Anonimowych Narkomanów.', 'FC1'),
 (4, 'C', NULL, 'CLOSED', 'pl', 'Mityng zamknięty', 'Mityng zamknięty. Wyłącznie dla osób uzależnionych i tych, które chcą przestać brać.', 'O'),
 (5, 'CH', NULL, 'CH', 'pl', 'Zamknięty w święta', 'Mityng odbywa się w miejscu, które zwykle jest zamknięte w dni wolne od pracy/wakacje.', 'FC3'),
