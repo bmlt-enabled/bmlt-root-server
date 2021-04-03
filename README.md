@@ -45,7 +45,7 @@ satellites comprise the "client" part of the BMLT "client/server" architecture.
 
 For instructions on installing the root server, see [Installing a New Root Server](https://bmlt.app/setting-up-the-bmlt/)
 
-***Version 2.16.0* ** *- UNRELEASED*
+***Version 2.16.0* ** *- April 3, 2021*
 - Field descriptions are now displayed beneath each field to in order to support data validation changes.
 - In the meeting editor, HY, TC, VM are now hidden from the formats tab, and instead are controlled using the Location tab Venue Type radio buttons. (They are still visible in the Format Editor however.)
 - Added location information checks, as follows:
