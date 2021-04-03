@@ -47,7 +47,7 @@ For instructions on installing the root server, see [Installing a New Root Serve
 
 ***Version 2.16.0* ** *- UNRELEASED*
 - Field descriptions are now displayed beneath each field to in order to support data validation changes.
-- HY, TC, VM are now hidden from the formats tab and now are controlled through the Location tab Venue Type option.
+- In the meeting editor, HY, TC, VM are now hidden from the formats tab, and instead are controlled using the Location tab Venue Type radio buttons. (They are still visible in the Format Editor however.)
 - Added location information checks, as follows:
   - Error if no venue type selected.
   - Error if there is a virtual or hybrid meeting, and none of Virtual Meeting Link, Phone Meeting Dial-in Number, or Virtual Meeting Additional Information is filled in.
