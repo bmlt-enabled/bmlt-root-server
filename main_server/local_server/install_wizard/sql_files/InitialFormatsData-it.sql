@@ -1,6 +1,6 @@
 INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`, `name_string`, `description_string`, `format_type_enum`) VALUES
 (1, 'NV', NULL, NULL, 'it', 'Nuovi venuti', 'Riunione concentrata principalmente sulle necessità dei nuovi membri di NA.', 'FC3'),
-(2, 'BL', NULL, NULL, 'it', 'Bilingue', 'Questa riunione può essere frequentata da membri che parlano italiano e/o inglese.', 'FC3'),
+(2, 'BL', NULL, 'LANG', 'it', 'Bilingue', 'Questa riunione può essere frequentata da membri che parlano italiano e/o inglese.', 'LANG'),
 (3, 'TB', NULL, NULL, 'it', 'Testo base', 'Riunione concentrata sulla discussione del testo base di NA.', 'FC1'),
 (4, 'Ch.', NULL, NULL, 'it', 'Chiusa', 'Riunione chiusa ai non dipendenti. Dovrebbe frequentarla soltanto chi crede di avere un problema con le sostanze d\'abuso.', 'O'),
 (5, 'SF', NULL, NULL, 'it', 'Sospesa nei giorni festivi', 'Questa riunione si tiene in locali che di solito sono chiusi nei giorni festivi e di vacanza.', 'FC3'),

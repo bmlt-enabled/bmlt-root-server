@@ -47,12 +47,7 @@ For instructions on installing the root server, see [Installing a New Root Serve
 
 ***Version 2.16.0* ** *- UNRELEASED*
 - Field descriptions are now displayed beneath each field to in order to support data validation changes.
-- Added initial support for time zones, hidden behind feature flag.
-- Added a "publish" checkbox to the NAWS import functionality to allow new meetings to be either published or unpublished.
-- Fixed an issue where map searches using `geo_width` could return incomplete results when filtered by service body.
-- Fixed an issue with which meeting formats are selected for a NAWS export, to make sure the essential ones are included. The default is likely fine as is, but can be overridden with an optional variable `$naws_export_formats_at_front` in `auto-config.inc.php`.
-- Allow World IDs to be free form text, to better support current NAWS practice.
-- HY, TC, VM are now hidden from the formats tab and now are controlled through the Location tab Venue Type option.
+- In the meeting editor, HY, TC, VM are now hidden from the formats tab, and instead are controlled using the Location tab Venue Type radio buttons. (They are still visible in the Format Editor however.)
 - Added location information checks, as follows:
   - Error if no venue type selected.
   - Error if there is a virtual or hybrid meeting, and none of Virtual Meeting Link, Phone Meeting Dial-in Number, or Virtual Meeting Additional Information is filled in.
@@ -61,6 +56,12 @@ For instructions on installing the root server, see [Installing a New Root Serve
   - Warning if no street information for an in-person or hybrid meeting.
   - Warning if there is a virtual/hybrid meeting, and no Virtual Meeting Link or Phone Meeting Dial-in Number (just a warning for now though, since Virtual Meeting Additional Information might have enough information to join the meeting).
   - Warning if there is a Virtual Meeting Link but nothing in the Virtual Meeting Additional Information field.
+- Added initial support for time zones, hidden behind feature flag.
+- Added a "publish" checkbox to the NAWS import functionality to allow new meetings to be either published or unpublished.
+- Fixed an issue where map searches using `geo_width` could return incomplete results when filtered by service body.
+- Fixed an issue with which meeting formats are selected for a NAWS export, to make sure the essential ones are included. The default is likely fine as is, but can be overridden with an optional variable `$naws_export_formats_at_front` in `auto-config.inc.php`.
+- Allow World IDs to be free form text, to better support current NAWS practice.
+- Updates to initial versions of formats used for new root servers, including changing "surveillance cameras" to "security cameras" and correcting format type etc for formats that describe different languages
 
 ***Version 2.15.6* ** *- September 7, 2020*
 - Added support for the `OLM` NAWS Format code for online meetings.

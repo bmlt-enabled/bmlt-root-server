@@ -1,6 +1,6 @@
 INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`, `name_string`, `description_string`, `format_type_enum`) VALUES
 (1, 'B', NULL, 'BEG', 'fr', 'Débutants', 'Cette réunion est axée sur les besoins des nouveaux membres de NA.', 'FC3'),
-(2, 'BL', NULL, NULL, 'fr', 'bilingue', 'Cette réunion peut aider les personnes qui parlent l\'anglais et une autre langue.', 'FC3'),
+(2, 'BL', NULL, 'LANG', 'fr', 'bilingue', 'Cette réunion peut aider les personnes qui parlent l\'anglais et une autre langue.', 'LANG'),
 (3, 'BT', NULL, 'BT', 'fr', 'Texte de Base', 'Cette réunion est axée sur la discussion du texte de base de Narcotiques Anonymes.', 'FC1'),
 (4, 'C', NULL, 'CLOSED', 'fr', 'Fermée', 'Cette réunion est fermée aux non-toxicomanes. Vous pouvez y assister que si vous pensez que vous pouvez avoir un problème avec l\'abus de drogues.', 'O'),
 (5, 'CH', NULL, NULL, 'fr', 'Fermé durant les jours fériés.', 'Cette réunion a lieu dans une local qui est généralement fermé durant les jours fériés.', 'FC3'),
