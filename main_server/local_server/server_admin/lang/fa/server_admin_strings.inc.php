@@ -323,6 +323,7 @@ $comdef_server_admin_strings = array('server_admin_disclosure' => 'Server Admini
     'need_refresh_message_alert_text' => 'Because you have made changes in the Server Administration, Service Body Administration, User Administration, or Format Administration, the information displayed in this section may no longer be accurate, so the page needs to be refreshed. The easiest way to do this, is to Sign Out, then Log In again.',
     'format_editor_delete_button_confirm' => 'Are you sure that you want to delete this format?',
     'format_editor_delete_button_confirm_perm' => 'This format will be deleted permanently!',
+    'format_editor_missing_key' => 'This format should have an entry for every language (at least a key).',   // TODO: translate
     'min_password_length_string' => 'The password is too short! It must be at least %d characters long!',
     'AJAX_Auth_Failure' => 'Authorization failed for this operation. There may be a problem with the server configuration.',
     'Maps_API_Key_Warning' => 'There is a problem with the Google Maps API Key.',

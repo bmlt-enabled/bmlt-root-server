@@ -318,6 +318,7 @@ $comdef_server_admin_strings = array('server_admin_disclosure' => 'Administraç�
     'need_refresh_message_alert_text' => 'Pelas alterações feitas na Administração do Servidor, Administração de Estrutura de Serviço, Administração de Usuário, ou Administração de Formato de Reunião, as informações demonstradas nessa sessão não são mais precisas, então essa pagina precisa ser ATUALIZADA. Para isso basta teclar a tecla de função F5 ou sair e logar novamente.',
     'format_editor_delete_button_confirm' => 'Tem certeza que deseja apagar esse Formato de Reunião?',
     'format_editor_delete_button_confirm_perm' => 'Esse formato será apagado permanentemente!',
+    'format_editor_missing_key' => 'This format should have an entry for every language (at least a key).',   // TODO: translate
     'min_password_length_string' => 'Senha muito curta! Ela tem que ter no mínimo %d caracteres!',
     'AJAX_Auth_Failure' => 'Falha de autorização para essa ação. Falha de configuração do servidor.',
     'Maps_API_Key_Warning' => 'Há um problema com a chave da API do Google Maps.',

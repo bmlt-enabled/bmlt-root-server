@@ -322,6 +322,7 @@ $comdef_server_admin_strings = array(
     'need_refresh_message_alert_text' => 'Weil Änderungen in der Service Body Verwaltung, Benutzerverwaltung oder Format Verwaltung vorgenommen wurden, ist die Information, die in diesem Bereich dargestellt wird, nicht mehr akkurat, also muss die Seite neu geladen werden. Der einfachste Weg dies zu tun ist sich abzumelden und sich wieder anzumelden.',
     'format_editor_delete_button_confirm' => 'Bist du sicher, dass du dieses Format löschen willst?',
     'format_editor_delete_button_confirm_perm' => 'Dieses Format wird dauerhaft gelöscht werden!',
+    'format_editor_missing_key' => 'This format should have an entry for every language (at least a key).',   // TODO: translate
     'min_password_length_string' => 'Das Passwort ist zu kurz! Es muss mindestens %d zeichen betragen!',
     'AJAX_Auth_Failure' => 'Authorisation fehlgeschlagen für diese Operation. Es kann sein, dass ein Problem mit der Serverkonfiguration besteht.',
     'Maps_API_Key_Warning' => 'There is a problem with the Google Maps API Key.', // TODO translate

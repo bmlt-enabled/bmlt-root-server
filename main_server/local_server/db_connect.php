@@ -339,10 +339,16 @@ function DB_Connect_and_Upgrade()
             c_comdef_dbsingleton::preparedExec($create_sql);
         }),
         array(17, function () {
-            // Ensure that the database includes the 3 virtual location format types VM, HY, and TC, which are now used
+            // This migration subsumed by 18 (which also adds an additional check that every format for the virtual location
+            // types HY, TC, and VM has a key in every language, in addition to the checks that were in this migration).
+            return;
+        }),
+        array(18, function () {
+            // Ensure that the database includes the 3 virtual location format types HY, TC, and VM, which are now used
             // for the venue type radio buttons. If they aren't there, add them; and also make sure they map to the
             // correct NAWS formats and format types. If there are multiple formats named say VM (which would be weird
-            // but possible), this code will only update the one with the smallest shared id.
+            // but possible), this code will only update the one with the smallest shared id.  Also make sure that every
+            // existing format for HY, TC, and VM has a key.
             function fix_formats($key, $naws, $name, $descr, $type)
             {
                 $dbPrefix = $GLOBALS['dbPrefix'];
@@ -386,11 +392,16 @@ function DB_Connect_and_Upgrade()
                 c_comdef_dbsingleton::preparedExec($sql);
                 // For each language, add a format for that language if there isn't one already.
                 // It will be in English - the server admin will need to translate it later.
+                // If there is already a format, make sure it has a key.
                 foreach ($langs as $lang) {
                     $q4 = "SELECT * FROM `$table` WHERE `shared_id_bigint` = '$id' AND `lang_enum` = '$lang'";
                     $result4 = c_comdef_dbsingleton::preparedQuery($q4);
                     if (!is_array($result4) || count($result4) == 0) {
                         $sql = "INSERT INTO `$table` (`shared_id_bigint`, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($id, '$key', NULL, '$naws', '$lang', '$name', '$descr', '$type')";
+                        c_comdef_dbsingleton::preparedExec($sql);
+                    } elseif (trim($result4[0]['key_string'] === '')) {
+                        // there is a format for this language but the key is missing -- insert the English key in that case.
+                        $sql = "UPDATE `$table` SET `key_string` = '$key' WHERE `shared_id_bigint` = $id AND `lang_enum` = '$lang'";
                         c_comdef_dbsingleton::preparedExec($sql);
                     }
                 }
