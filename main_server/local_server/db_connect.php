@@ -392,7 +392,7 @@ function DB_Connect_and_Upgrade()
                 c_comdef_dbsingleton::preparedExec($sql);
                 // Make sure the key is correct for the English version of this format, and that the key is filled in for all versions.
                 // If the key is missing for some language, use the English key.
-                $sql = "UPDATE `$table` SET `key_string` = '$key' WHERE `shared_id_bigint` = '$id' AND (`lang_enum` = 'en' OR trim(`key_string`)='')";
+                $sql = "UPDATE `$table` SET `key_string` = '$key' WHERE `shared_id_bigint` = '$id' AND (`lang_enum` = 'en' OR TRIM(`key_string`)='')";
                 c_comdef_dbsingleton::preparedExec($sql);
                 // For each language, add a format for that language if there isn't one already.
                 // It will be in English - the server admin can translate it later.
