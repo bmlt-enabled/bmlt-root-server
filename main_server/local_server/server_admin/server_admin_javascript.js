@@ -5194,6 +5194,11 @@ function BMLT_Server_Admin()
                     };
                 };
 
+                if ( this.isVenueTypeFormatBySharedId(new_id) && this.formatHasMissingKey(new_id) ) {
+                    confirm(my_localized_strings['comdef_server_admin_strings']['format_editor_missing_key']);
+                    return;
+                }
+
                 var json_to_send_to_server = JSON.stringify(edited_format_group);    // We will be sending as a JSON object.
                 var throbber_span = document.getElementById('format_editor_change_' + in_format_id + '_throbber_span');
                 the_button.className = 'item_hidden';
@@ -5403,11 +5408,11 @@ function BMLT_Server_Admin()
         };
 
     /************************************************************************************//**
-    *   \brief  This function Sees if the formats have been changed.                        *
+    *   \brief  This function checks if a format has been changed.                        *
     *   \returns a Boolean. TRUE, if the format has been changed.
     ****************************************************************************************/
         this.isFormatDirty = function ( in_format_id    /// The ID of the format to check
-                                    ) {
+                                      ) {
             var format_change_a = document.getElementById('format_editor_change_' + in_format_id + '_a');
             var original_format_group_object = null;
             var edited_format_group_object = format_change_a.format_group_objects;  // The edited format group is attached to the change button.
@@ -5427,6 +5432,23 @@ function BMLT_Server_Admin()
             var new_string = JSON.stringify(edited_format_group_object);
 
             return ( original_string != new_string );
+        };
+
+    /************************************************************************************//**
+    *   \brief  This function checks if one or more keys is missing for a given format      *
+    *   that is being edited.                                                               *
+    *   \returns a Boolean. TRUE, if the format is missing one or more keys.                       *
+    ****************************************************************************************/
+        this.formatHasMissingKey = function ( in_format_id    /// The ID of the format to check
+                                            ) {
+            var format_change_a = document.getElementById('format_editor_change_' + in_format_id + '_a');
+            var edited_format_group_object = format_change_a.format_group_objects;  // The edited format group is attached to the change button.
+            for ( var k in edited_format_group_object ) {
+                if ( edited_format_group_object[k]['key'].trim() === '' ) {
+                    return true;
+                }
+            }
+            return false;
         };
 
     /************************************************************************************//**

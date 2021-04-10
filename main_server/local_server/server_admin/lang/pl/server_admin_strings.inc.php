@@ -322,6 +322,7 @@ $comdef_server_admin_strings = array(
     'need_refresh_message_alert_text' => 'Ponieważ wprowadziłeś zmiany w Administracji Serwera, Administracji Organów Służb, Administracji Użytkowników lub Administracji Formatów, informacje zawarte w tej sekcji mogą już nie być aktualne. Proszę odświeżyć stronę poprzez wylogowanie się i zalogowanie się ponownie.',
     'format_editor_delete_button_confirm' => 'Czy na pewno chcesz usunąć ten format?',
     'format_editor_delete_button_confirm_perm' => 'Ten format zostanie usunięty nieodwracalnie!',
+    'format_editor_missing_key' => 'This format should have an entry for every language (at least a key).',   // TODO: translate
     'min_password_length_string' => 'Hasło jest za krótkie! Hasło powinno posiadać minimum %d znaków!',
     'AJAX_Auth_Failure' => 'Nie udało się autoryzować operacji. Możliwe, że istnieje problem z konfiguracją serwera.',
     'Maps_API_Key_Warning' => 'Wystąpił problem z kluczem Google Maps API.',

@@ -326,6 +326,7 @@ $comdef_server_admin_strings = array(
     'need_refresh_message_alert_text' => 'Hvis du har foretaget ændringer i Service Body Administration, User Administration eller Format Administration, kan oplysningerne, der vises i dette afsnit, ikke længere være korrekte, så siden skal opdateres. Den nemmeste måde at gøre dette på er at logge ud og derefter logge på igen.',
     'format_editor_delete_button_confirm' => 'Er du sikker på, at du vil slette dette format?',
     'format_editor_delete_button_confirm_perm' => 'Dette format slettes permanent!',
+    'format_editor_missing_key' => 'This format should have an entry for every language (at least a key).',   // TODO: translate
     'min_password_length_string' => 'Adgangskoden er for kort! Det skal være mindst% d tegn langt!',
     'AJAX_Auth_Failure' => 'Autorisation mislykkedes for denne operation. Der kan være et problem med serverkonfigurationen.',
     'Maps_API_Key_Warning' => 'ADVARSEL: Der er et problem med API-nøglen til Google Maps.',

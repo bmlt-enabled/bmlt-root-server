@@ -325,6 +325,7 @@ $comdef_server_admin_strings = array(
     'need_refresh_message_alert_text' => 'Eftersom du gjort ändringar i serviceenhets administrationen, användar administrationen eller mötesformat administrationen, är det möjligt att information i denna sektion är felaktig, Så logga in och ut så blir allt fint',
     'format_editor_delete_button_confirm' => 'är du säker på att du vill kassera detta mötesformat?',
     'format_editor_delete_button_confirm_perm' => 'Mötesformatet kommer kasseras permanent!',
+    'format_editor_missing_key' => 'This format should have an entry for every language (at least a key).',   // TODO: translate
     'min_password_length_string' => 'Lösenordet måste vara minst %d tecken långt!',
     'AJAX_Auth_Failure' => 'Tillträde nekas. Det kan vara problem med serverinställningar.',
     'Maps_API_Key_Warning' => 'There is a problem with the Google Maps API Key.',
