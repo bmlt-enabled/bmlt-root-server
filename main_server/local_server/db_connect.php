@@ -390,24 +390,20 @@ function DB_Connect_and_Upgrade()
                 // $id will be the shared ID for the desired format.  First update any existing formats with this $id.
                 $sql = "UPDATE `$table` SET `worldid_mixed` = '$naws', `format_type_enum` = '$type' WHERE `shared_id_bigint` = $id";
                 c_comdef_dbsingleton::preparedExec($sql);
+                // Make sure the key is correct for the English version of this format, and that the key is filled in for all versions.
+                // If the key is missing for some language, use the English key.
+                $sql = "UPDATE `$table` SET `key_string` = '$key' WHERE `shared_id_bigint` = '$id' AND (`lang_enum` = 'en' OR trim(`key_string`)='')";
+                c_comdef_dbsingleton::preparedExec($sql);
                 // For each language, add a format for that language if there isn't one already.
-                // It will be in English - the server admin will need to translate it later.
-                // If there is already a format, make sure it has a key.
+                // It will be in English - the server admin can translate it later.
                 foreach ($langs as $lang) {
                     $q4 = "SELECT * FROM `$table` WHERE `shared_id_bigint` = '$id' AND `lang_enum` = '$lang'";
                     $result4 = c_comdef_dbsingleton::preparedQuery($q4);
                     if (!is_array($result4) || count($result4) == 0) {
                         $sql = "INSERT INTO `$table` (`shared_id_bigint`, `key_string`, `icon_blob`, `worldid_mixed`, `lang_enum`,`name_string`, `description_string`, `format_type_enum`) VALUES ($id, '$key', NULL, '$naws', '$lang', '$name', '$descr', '$type')";
                         c_comdef_dbsingleton::preparedExec($sql);
-                    } elseif (trim($result4[0]['key_string'] === '')) {
-                        // there is a format for this language but the key is missing -- insert the English key in that case.
-                        $sql = "UPDATE `$table` SET `key_string` = '$key' WHERE `shared_id_bigint` = $id AND `lang_enum` = '$lang'";
-                        c_comdef_dbsingleton::preparedExec($sql);
                     }
                 }
-                // make sure the key is correct for the English version of this format
-                $sql = "UPDATE `$table` SET `key_string` = '$key' WHERE `shared_id_bigint` = '$id' AND `lang_enum` = 'en'";
-                c_comdef_dbsingleton::preparedExec($sql);
             }
             fix_formats('VM', 'VM', 'Virtual Meeting', 'Meets Virtually', 'FC2');
             fix_formats('HY', 'HYBR', 'Hybrid Meeting', 'Meets Virtually and In-person', 'FC2');
