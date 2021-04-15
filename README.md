@@ -47,6 +47,7 @@ For instructions on installing the root server, see [Installing a New Root Serve
 
 ***Version 2.16.1* ** *- UNRELEASED*
 - require a key for HY, TC, and VM formats for every language
+- Support teamspeak URLs for Virtual Meeting Link
 
 ***Version 2.16.0* ** *- April 3, 2021*
 - Field descriptions are now displayed beneath each field to in order to support data validation changes.

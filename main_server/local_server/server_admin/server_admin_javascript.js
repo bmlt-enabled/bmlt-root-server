@@ -1408,7 +1408,7 @@ function BMLT_Server_Admin()
         } catch (_) {
            return false;
         }
-        return url.protocol === "http:" || url.protocol === "https:";
+        return ["http:", "https:", "teamspeak:"].includes(url.protocol);
     }
 
     this.validateMeetingDetails = function ( in_meeting_id ) {
