@@ -437,7 +437,7 @@ function DisplaySearchResultsCSV(
                             
                                 if (isset($val)) {
                                     if (($key == 'formats')) {
-                                        if (($key == 'formats') && is_array($val) && count($val)) {
+                                        if (is_array($val) && count($val)) {
                                             $v_ar = array();
                                             foreach ($val as $format) {
                                                 if ($format instanceof c_comdef_format) {
@@ -488,7 +488,6 @@ function DisplaySearchResultsCSV(
                                                 case 'formats':
                                                 case 'lang_enum':
                                                 case 'longitude':
-                                                case 'latitude':
                                                 case 'latitude':
                                                 case 'published':
                                                 case 'email_contact':
