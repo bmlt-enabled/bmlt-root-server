@@ -408,6 +408,19 @@ function DB_Connect_and_Upgrade()
             fix_formats('VM', 'VM', 'Virtual Meeting', 'Meets Virtually', 'FC2');
             fix_formats('HY', 'HYBR', 'Hybrid Meeting', 'Meets Virtually and In-person', 'FC2');
             fix_formats('TC', 'TC', 'Temporarily Closed', 'Facility is Temporarily Closed', 'FC2');
+        }),
+        array(19, function () {
+            $dbPrefix = $GLOBALS['dbPrefix'];
+            $table = "$dbPrefix" . "_comdef_meetings_data";
+            $check_column_sql = "SELECT COUNT(*) AS count FROM `$table` WHERE `key`='venue_type' AND meetingid_bigint = 0";
+            $rows = c_comdef_dbsingleton::preparedQuery($check_column_sql);
+            if (is_array($rows) && count($rows)) {
+                $row = $rows[0];
+                if (intval($row['count']) == 0) {
+                    $sql = "INSERT INTO `$table` (`meetingid_bigint`, `key`, `field_prompt`, `lang_enum`, `visibility`, `data_string`, `data_bigint`, `data_double`) VALUES (0, 'venue_type', 'Venue Type', 'en', 0, 'Venue Type', NULL, NULL)";
+                    c_comdef_dbsingleton::preparedExec($sql);
+                }
+            }
         })
     );
     // WHEN ADDING A NEW DATABASE MIGRATION, REMEMBER TO BUMP THE VERSION IN local_server/install_wizard/sql_files/initialDbVersionData.sql

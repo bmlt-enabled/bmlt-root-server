@@ -437,7 +437,7 @@ function DisplaySearchResultsCSV(
                             
                                 if (isset($val)) {
                                     if (($key == 'formats')) {
-                                        if (($key == 'formats') && is_array($val) && count($val)) {
+                                        if (is_array($val) && count($val)) {
                                             $v_ar = array();
                                             foreach ($val as $format) {
                                                 if ($format instanceof c_comdef_format) {
@@ -489,7 +489,6 @@ function DisplaySearchResultsCSV(
                                                 case 'lang_enum':
                                                 case 'longitude':
                                                 case 'latitude':
-                                                case 'latitude':
                                                 case 'published':
                                                 case 'email_contact':
                                                 case 'meeting_name':
@@ -507,6 +506,7 @@ function DisplaySearchResultsCSV(
                                                 case 'virtual_meeting_link':
                                                 case 'virtual_meeting_additional_info':
                                                 case 'phone_meeting_number':
+                                                case 'venue_type':
                                                     break;
                                     
                                                 // The rest get the prompt/value treatment, unless otherwise requested.

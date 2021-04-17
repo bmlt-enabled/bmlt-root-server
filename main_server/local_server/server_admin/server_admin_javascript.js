@@ -1754,6 +1754,7 @@ function BMLT_Server_Admin()
         is_new_meeting
     ) {
         var new_editor = document.getElementById('bmlt_admin_single_meeting_editor_' + parseInt(in_meeting_id, 10) + '_div');
+        new_editor.meeting_object.venue_type = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_venue_type").find("input:radio[name=venue_type]:checked").val();
 
         if ( is_new_meeting ) {
             new_editor.meeting_object.id_bigint = 0;
