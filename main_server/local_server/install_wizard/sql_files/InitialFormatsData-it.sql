@@ -7,7 +7,7 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (6, 'LC', NULL, NULL, 'it', 'Lume di candela', 'Questa riunione si tiene a lume di candela per favorire la meditazione.', 'FC2'),
 (7, 'BS', NULL, NULL, 'it', 'Bambini sotto supervisione', 'Sono ammessi bambini senza problemi di comportamento e sotto supervisione.', 'FC3'),
 (8, 'Disc.', NULL, NULL, 'it', 'Discussione', 'Tutti i partecipanti sono invitati a condividere.', 'FC1'),
-(9, 'IT', NULL, NULL, 'it', 'Italiano', 'Riunione in lingua italiana.', 'FC3'),
+(9, 'ES', NULL, 'LANG', 'it', 'Spagnolo', 'Riunione in lingua spagnolo.', 'FC3'),
 (14, 'SPO', NULL, NULL, 'it', 'Solo per oggi', 'Riunione in cui si discutono i temi delle meditazioni quotidiane del libro "Solo per oggi".', 'FC1'),
 (15, 'U', NULL, NULL, 'it', 'Uomini', 'Riunioni per soli uomini.', 'FC3'),
 (17, 'Ap.', NULL, NULL, 'it', 'Aperta', 'Riunione aperta ai non dipendenti. Parenti, amici, professionisti e altri membri della società, sono benvenuti.', 'O'),
