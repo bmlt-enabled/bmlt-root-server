@@ -326,6 +326,7 @@ $comdef_server_admin_strings = array(
     'format_editor_delete_button_confirm' => 'är du säker på att du vill kassera detta mötesformat?',
     'format_editor_delete_button_confirm_perm' => 'Mötesformatet kommer kasseras permanent!',
     'format_editor_missing_key' => 'This format should have an entry for every language (at least a key).',   // TODO: translate
+    'format_editor_reserved_key' => 'This key is reserved for a venue type format - please use something different.',       // TODO: translate
     'min_password_length_string' => 'Lösenordet måste vara minst %d tecken långt!',
     'AJAX_Auth_Failure' => 'Tillträde nekas. Det kan vara problem med serverinställningar.',
     'Maps_API_Key_Warning' => 'There is a problem with the Google Maps API Key.',

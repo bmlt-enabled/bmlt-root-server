@@ -319,6 +319,7 @@ $comdef_server_admin_strings = array('server_admin_disclosure' => 'Administraç�
     'format_editor_delete_button_confirm' => 'Tem certeza que deseja apagar esse Formato de Reunião?',
     'format_editor_delete_button_confirm_perm' => 'Esse formato será apagado permanentemente!',
     'format_editor_missing_key' => 'This format should have an entry for every language (at least a key).',   // TODO: translate
+    'format_editor_reserved_key' => 'This key is reserved for a venue type format - please use something different.',       // TODO: translate
     'min_password_length_string' => 'Senha muito curta! Ela tem que ter no mínimo %d caracteres!',
     'AJAX_Auth_Failure' => 'Falha de autorização para essa ação. Falha de configuração do servidor.',
     'Maps_API_Key_Warning' => 'Há um problema com a chave da API do Google Maps.',

@@ -5194,8 +5194,8 @@ function BMLT_Server_Admin()
                     };
                 };
 
-                if ( this.isVenueTypeFormatBySharedId(new_id) && this.formatHasMissingKey(new_id) ) {
-                    confirm(my_localized_strings['comdef_server_admin_strings']['format_editor_missing_key']);
+                // Check for errors regarding the venue type formats HY, TC, and VM.  If there is an error, return without saving.
+                if ( this.formatCheckForKeyError(new_id) ) {
                     return;
                 }
 
@@ -5434,19 +5434,31 @@ function BMLT_Server_Admin()
             return ( original_string != new_string );
         };
 
-    /************************************************************************************//**
-    *   \brief  This function checks if one or more keys is missing for a given format      *
-    *   that is being edited.                                                               *
-    *   \returns a Boolean. TRUE, if the format is missing one or more keys.                       *
-    ****************************************************************************************/
-        this.formatHasMissingKey = function ( in_format_id    /// The ID of the format to check
-                                            ) {
+    /*********************************************************************************************//**
+    *   \brief  This function checks for two kinds of key errors:                                    *
+    *   1) if one or more keys is missing for a venue type format (in any language)                  *
+    *   2) if one of the reserved keys HY, TC, or VM is being used for English for some other format *
+    *   Pop up a warning if there is a key error.                                                    *
+    *   \returns a Boolean. TRUE, if there is a key error.                                           *
+    *************************************************************************************************/
+        this.formatCheckForKeyError = function ( in_format_id    /// The ID of the format to check
+                                               ) {
             var format_change_a = document.getElementById('format_editor_change_' + in_format_id + '_a');
             var edited_format_group_object = format_change_a.format_group_objects;  // The edited format group is attached to the change button.
-            for ( var k in edited_format_group_object ) {
-                if ( edited_format_group_object[k]['key'].trim() === '' ) {
-                    return true;
+            // if this is a venue type format, make sure it has a key for each language
+            if ( this.isVenueTypeFormatBySharedId(in_format_id) ) {
+                for ( var k in edited_format_group_object ) {
+                    if ( edited_format_group_object[k]['key'].trim() === '' ) {
+                        confirm(my_localized_strings['comdef_server_admin_strings']['format_editor_missing_key']);
+                        return true;
+                    }
                 }
+                return false;
+            }
+            // it's not a venue type format -- check if it's using one of the reserved keys for English
+            if ( 'en' in edited_format_group_object && ['HY','TC','VM'].includes(edited_format_group_object['en']['key']) ) {
+                confirm(my_localized_strings['comdef_server_admin_strings']['format_editor_reserved_key']);
+                return true;
             }
             return false;
         };

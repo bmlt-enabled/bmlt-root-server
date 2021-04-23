@@ -324,6 +324,7 @@ $comdef_server_admin_strings = array('server_admin_disclosure' => 'Админи�
     'format_editor_delete_button_confirm' => 'Вы уверены, что хотите удалить этот формат?',
     'format_editor_delete_button_confirm_perm' => 'Этот формат будет удален навсегда!',
     'format_editor_missing_key' => 'This format should have an entry for every language (at least a key).',   // TODO: translate
+    'format_editor_reserved_key' => 'This key is reserved for a venue type format - please use something different.',       // TODO: translate
     'min_password_length_string' => 'Пароль слишком короткий! Длина должна быть не менее % d символов!',
     'AJAX_Auth_Failure' => 'Авторизация не удалась для этой операции. Может быть проблема с конфигурацией сервера.',
     'Maps_API_Key_Warning' => 'Возникла проблема с ключом API Google Maps.',

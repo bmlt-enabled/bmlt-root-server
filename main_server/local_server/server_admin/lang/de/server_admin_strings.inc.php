@@ -323,6 +323,7 @@ $comdef_server_admin_strings = array(
     'format_editor_delete_button_confirm' => 'Bist du sicher, dass du dieses Format löschen willst?',
     'format_editor_delete_button_confirm_perm' => 'Dieses Format wird dauerhaft gelöscht werden!',
     'format_editor_missing_key' => 'This format should have an entry for every language (at least a key).',   // TODO: translate
+    'format_editor_reserved_key' => 'This key is reserved for a venue type format - please use something different.',       // TODO: translate
     'min_password_length_string' => 'Das Passwort ist zu kurz! Es muss mindestens %d zeichen betragen!',
     'AJAX_Auth_Failure' => 'Authorisation fehlgeschlagen für diese Operation. Es kann sein, dass ein Problem mit der Serverkonfiguration besteht.',
     'Maps_API_Key_Warning' => 'There is a problem with the Google Maps API Key.', // TODO translate
