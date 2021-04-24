@@ -327,6 +327,7 @@ $comdef_server_admin_strings = array(
     'format_editor_delete_button_confirm' => 'Er du sikker på, at du vil slette dette format?',
     'format_editor_delete_button_confirm_perm' => 'Dette format slettes permanent!',
     'format_editor_missing_key' => 'This format should have an entry for every language (at least a key).',   // TODO: translate
+    'format_editor_reserved_key' => 'This key is reserved for a venue type format - please use something different.',       // TODO: translate
     'min_password_length_string' => 'Adgangskoden er for kort! Det skal være mindst% d tegn langt!',
     'AJAX_Auth_Failure' => 'Autorisation mislykkedes for denne operation. Der kan være et problem med serverkonfigurationen.',
     'Maps_API_Key_Warning' => 'ADVARSEL: Der er et problem med API-nøglen til Google Maps.',
