@@ -354,6 +354,10 @@ function DB_Connect_and_Upgrade()
                 $dbPrefix = $GLOBALS['dbPrefix'];
                 $table = "$dbPrefix" . "_comdef_formats";
                 $langs = array('en', 'dk', 'de', 'es', 'fa', 'fr', 'it', 'pl', 'pt', 'ru', 'sv');
+                // if there are additional languages, fix those formats as well
+                if (array_key_exists('format_lang_names', $GLOBALS)) {
+                    $langs = array_merge($langs, array_keys($GLOBALS['format_lang_names']));
+                }
                 $id = null;  // this will be the shared_id of the format we're fixing or adding
                 // first see if there is an English language version of the format with the correct key (take the one with the smallest shared id if more than one)
                 $q1 = "SELECT `shared_id_bigint` FROM `$table` WHERE `key_string` = '$key' AND `lang_enum` = 'en' ORDER BY `shared_id_bigint`";
