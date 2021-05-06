@@ -3,7 +3,7 @@
         "vendor-dir": "main_server/vendor"
     },
     "require": {
-        "phpoffice/phpspreadsheet": "1.8.2"
+        "phpoffice/phpspreadsheet": "1.16.0"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "3.*"
