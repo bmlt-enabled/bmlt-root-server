@@ -9,7 +9,7 @@ RUN apt-get update \
     php7.2-xdebug
 
 RUN echo "zend_extension=$(find /usr/lib/php/ -name xdebug.so)" >> ${PHP_INI_PATH} \
-    && echo "xdebug.remote_port=9000" >> ${PHP_INI_PATH} \
+    && echo "xdebug.remote_port=10000" >> ${PHP_INI_PATH} \
     && echo "xdebug.remote_enable=1" >> ${PHP_INI_PATH} \
     && echo "xdebug.remote_connect_back=0" >> ${PHP_INI_PATH} \
     && echo "xdebug.remote_host=docker.for.mac.localhost" >> ${PHP_INI_PATH} \
