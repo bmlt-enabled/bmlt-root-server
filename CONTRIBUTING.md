@@ -75,18 +75,9 @@ Finally, as with the earlier directions, when finished exit by pressing ctrl+c o
 
 ## To debug in IntelliJ (see screenshots below for more detail)
 
-1. Add a new configuration (ensure that you have added PHP support).
-1. Select `PHP Remote Debug`
-1. Add a new server, hitting the 3 dots to the right of the input box.
-1. Add a server called "localhost 8000".
-1. Point to hostname "localhost" and port "8000".
-1. Add a path mapping for the first folder mapping to `/var/www/html`.
-1. Save.
-1. Set IDE key to `ROOT_SERVER_DEBUG`.
-1. Save.
-1. Turn on remote debugging by press the button in the toolbar. ![image1](docker/img/3.png)
-1. Set any breakpoints, and the code should pause there.
-
-![image1](docker/img/1.png)
-
-![image2](docker/img/2.png)
+1. Open IntelliJ Preferences. Go to `Languages & Frameworks -> PHP -> Debug`. Under the `Xdebug` section, set the `Debug port` to `10000`. Close IntelliJ Preferences. ![image](docker/img/intellij-prefs-xdebug.png)
+1. Add a new `PHP Web Page` debug configuration.
+1. In the new debug configuration, make click the three dots `...` next to the Server field, and add a new Server. Set the server's `Host` to `0.0.0.0`, and set the `Port` to `8000`. Check the `Use path mappings` checkbox, and set the `Absolute path on the server` for the `Project files` to `/var/www/html`.  ![image](docker/img/add-debug-server.png)
+1. Set the `Start URL` to `/main_server/`. ![image](docker/img/final-debug-configuration.png)
+1. To start debugging, select your new debug configuration and click the `Start Listening for PHP Debug Connections` icon. ![image](docker/img/start-listening.png)
+1. Then, click the `Debug` icon to open your web browser and start the XDebug session. ![image](docker/img/debug.png)
