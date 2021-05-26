@@ -453,7 +453,7 @@ function DisplaySearchResultsCSV(
                                                     // push the key for the format in the other language onto $v_ar instead.  Note that the key might be different
                                                     // in different languages.  If there isn't a version of the format in the other language, just skip it.
                                                     $id = $format->GetSharedID();
-                                                    if ($format->GetLocalLang()==$lang_enum) {
+                                                    if ($format->GetLocalLang() == $lang_enum) {
                                                         array_push($v_ar, $format->GetKey());
                                                         array_push($format_shared_id_list, $id);
                                                     } else {
