@@ -85,7 +85,7 @@ $comdef_server_admin_strings = array('server_admin_disclosure' => 'Server Admini
     'meeting_search_start_time_eve_label' => 'Soir',
     'meeting_search_no_results_text' => 'Pas de réunions trouvés',
     'meeting_editor_tab_specifier_text' => 'Rechercher des Réunions',
-    'meeting_editor_tab_editor_text' => 'Modifier Réunions',
+    'meeting_editor_tab_editor_text' => 'Modifier Réunions',   // TODO: change to 'Edit Or Create Meetings'
     'meeting_editor_create_new_text' => 'Créer une nouvelle réunion',
     'meeting_editor_location_map_link' => 'Carte de localisation',
     'meeting_editor_screen_match_ll_button' => 'Optimiser la longitude et la latitude par rapport cette adresse',

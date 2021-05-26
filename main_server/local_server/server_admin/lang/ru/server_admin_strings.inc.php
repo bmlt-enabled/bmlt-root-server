@@ -85,7 +85,7 @@ $comdef_server_admin_strings = array('server_admin_disclosure' => 'Админи�
     'meeting_search_start_time_eve_label' => 'Вечер',
     'meeting_search_no_results_text' => 'Собрания не найдены',
     'meeting_editor_tab_specifier_text' => 'Поиск собраний',
-    'meeting_editor_tab_editor_text' => 'Редактировать собрания',
+    'meeting_editor_tab_editor_text' => 'Редактировать собрания',   // TODO: change to 'Edit Or Create Meetings'
     'meeting_editor_create_new_text' => 'Создать новое собрание',
     'meeting_editor_location_map_link' => 'Карта местности',
     'meeting_editor_screen_match_ll_button' => 'Установите долготу и широту в адрес',

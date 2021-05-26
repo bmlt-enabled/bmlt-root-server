@@ -85,7 +85,7 @@ $comdef_server_admin_strings = array('server_admin_disclosure' => 'Server Admini
     'meeting_search_start_time_eve_label' => 'Evening',
     'meeting_search_no_results_text' => 'No Meetings Found',
     'meeting_editor_tab_specifier_text' => 'Search For Meetings',
-    'meeting_editor_tab_editor_text' => 'Edit Meetings',
+    'meeting_editor_tab_editor_text' => 'Edit Or Create Meetings',
     'meeting_editor_create_new_text' => 'Create A New Meeting',
     'meeting_editor_location_map_link' => 'Location Map',
     'meeting_editor_screen_match_ll_button' => 'Set Longitude and Latitude to Address',
