@@ -46,9 +46,10 @@ satellites comprise the "client" part of the BMLT "client/server" architecture.
 For instructions on installing the root server, see [Installing a New Root Server](https://bmlt.app/setting-up-the-bmlt/)
 
 ***Version 2.16.1* ** *- UNRELEASED*
-- Require a key for HY, TC, and VM formats for every language.
+- Require a key for HY, TC, and VM formats for every language, including additional format languages; make sure they have the correct world ID and type; make sure they can't be inadvertently mapped other formats.
 - Support teamspeak URLs for Virtual Meeting Link.
 - Fix a bug with GetSearchResults, which was ignoring the lang_enum parameter.  (This was a problem for multi-language servers in which there were formats that used different keys in different languages.)
+- Rename the 'Edit Meetings' button in the meeting editor tab to 'Edit Or Create Meetings'.
 
 ***Version 2.16.0* ** *- April 3, 2021*
 - Field descriptions are now displayed beneath each field to in order to support data validation changes.
