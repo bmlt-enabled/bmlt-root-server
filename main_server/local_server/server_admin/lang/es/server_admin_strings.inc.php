@@ -21,9 +21,9 @@
 defined('BMLT_EXEC') or die('Cannot Execute Directly');    // Makes sure that this file is in the correct context.
 
 $comdef_server_admin_strings = array('server_admin_disclosure' => 'Server Administration',
-    'server_admin_naws_spreadsheet_label' => 'Updated World IDs Spreadsheet:',
-    'update_world_ids_button_text' => 'Update Meeting World IDs',
-    'update_world_ids_from_spreadsheet_dropdown_text' => 'Update Meeting World IDs from NAWS Spreadsheet',
+    'server_admin_naws_spreadsheet_label' => 'Updated World Committee Codes Spreadsheet',
+    'update_world_ids_button_text' => 'Update World Committee Codes',
+    'update_world_ids_from_spreadsheet_dropdown_text' => 'Update World Committee Codes (Group IDs from NAWS) from NAWS Spreadsheet',
     'server_admin_error_no_world_ids_updated' => 'No World IDs were updated. This could be because your user does not have permission to update the submitted meetings.',
     'server_admin_error_required_spreadsheet_column' => 'Required column does not exist in the spreadsheet: ',
     'server_admin_error_bmlt_id_not_integer' => 'The provided bmlt_id is not an integer: ',
@@ -104,7 +104,7 @@ $comdef_server_admin_strings = array('server_admin_disclosure' => 'Server Admini
     'meeting_editor_screen_meeting_duration_label' => 'Duración:',
     'meeting_editor_screen_meeting_oe_label' => 'De composición abierta',
     'meeting_editor_screen_meeting_cc_label' => 'Código Comité Mundial:',
-    'meeting_editor_screen_meeting_cc_prompt' => 'Introduzca un código de Comité Mundial',
+    'meeting_editor_screen_meeting_cc_advice' => 'Normally leave this field alone (see documentation).',  // TODO: translate
     'meeting_editor_screen_meeting_contact_label' => 'Contacto correo electonico de reunion:',
     'meeting_editor_screen_meeting_contact_prompt' => 'Escriba un correo electrónico de un contacto específico sólo a esta reunión',
     'meeting_editor_screen_meeting_sb_label' => 'Cuerpo de Servicio:',
@@ -476,7 +476,7 @@ $detailed_change_strings = array(
     'sb_prompt' => 'La reunión cambió su cuerpo de servicio de',
     'id_bigint' => 'ID de la reunion',
     'lang_enum' => 'Idioma de la reunion',
-    'worldid_mixed' => 'El ID de grupo compartida',
+    'worldid_mixed' => 'El ID de grupo compartida',  // TODO: translate The World Committee Code
     'weekday_tinyint' => 'El día de la semana en que se reúne la reunión',
     'non_existent_service_body' => 'Cuerpo de Servicio ya no existe',
 );

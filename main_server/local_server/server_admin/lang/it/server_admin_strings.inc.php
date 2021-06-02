@@ -22,9 +22,9 @@ defined('BMLT_EXEC') or die('Cannot Execute Directly');    // Makes sure that th
 
 $comdef_server_admin_strings = array(
     'server_admin_disclosure' => 'Server Administration',
-    'server_admin_naws_spreadsheet_label' => 'Updated World IDs Spreadsheet:',
-    'update_world_ids_button_text' => 'Update Meeting World IDs',
-    'update_world_ids_from_spreadsheet_dropdown_text' => 'Update Meeting World IDs from NAWS Spreadsheet',
+    'server_admin_naws_spreadsheet_label' => 'Updated World Committee Codes Spreadsheet',
+    'update_world_ids_button_text' => 'Update World Committee Codes',
+    'update_world_ids_from_spreadsheet_dropdown_text' => 'Update World Committee Codes (Group IDs from NAWS) from NAWS Spreadsheet',
     'server_admin_error_no_world_ids_updated' => 'No World IDs were updated. This could be because your user does not have permission to update the submitted meetings.',
     'server_admin_error_required_spreadsheet_column' => 'Required column does not exist in the spreadsheet: ',
     'server_admin_error_bmlt_id_not_integer' => 'The provided bmlt_id is not an integer: ',
@@ -105,7 +105,7 @@ $comdef_server_admin_strings = array(
     'meeting_editor_screen_meeting_duration_label' => 'Durata:',//'Duration:',
     'meeting_editor_screen_meeting_oe_label' => 'Senza orario di fine',//'Open-Ended',
     'meeting_editor_screen_meeting_cc_label' => 'Codice del comitato mondiale:',//'World Committee Code:',
-    'meeting_editor_screen_meeting_cc_prompt' => 'Inserisci un codice per il comitato mondiale',//'Enter A World Committee Code',
+    'meeting_editor_screen_meeting_cc_advice' => 'Normally leave this field alone (see documentation).',  // TODO: translate
     'meeting_editor_screen_meeting_contact_label' => 'Contatto email della riunione:',//'Meeting Email Contact:',
     'meeting_editor_screen_meeting_contact_prompt' => 'Inserisci un email di contatto specifica solo per questa riunione',//'Enter An Email for A Contact Specific Only to This Meeting',
     'meeting_editor_screen_meeting_sb_label' => 'Struttura di servizio:',//'Service Body:',
@@ -474,7 +474,7 @@ $detailed_change_strings = array(
     'sb_prompt' => 'La riunione ha modificato la sua struttura di servizio da',//'The meeting changed its Service Body from',
     'id_bigint' => 'ID della riunione',//'The meeting ID',
     'lang_enum' => 'Lingua della riunione',//'The meeting language',
-    'worldid_mixed' => 'ID del gruppo condiviso',//'The shared Group ID',
+    'worldid_mixed' => 'ID del gruppo condiviso',//'The World Committee Code',
     'weekday_tinyint' => 'Il giorno della settimana in cui si tiene la riunione',//'The day of the week on which the meeting gathers',
     'non_existent_service_body' => 'La struttura di servizio non esiste più',//'Service Body No Longer Exists',
 );
