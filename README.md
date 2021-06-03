@@ -51,6 +51,7 @@ For instructions on installing the root server, see [Installing a New Root Serve
 - Fix a bug with GetSearchResults, which was ignoring the lang_enum parameter.  (This was a problem for multi-language servers in which there were formats that used different keys in different languages.)
 - Rename the 'Edit Meetings' button in the meeting editor tab to 'Edit Or Create Meetings'.
 - Make terminology for World Committee Code for groups and meetings more consistent in the UI; add advice in the meeting editor that normally admins should leave this field alone.
+- update URL for API key error documentation
 
 ***Version 2.16.0* ** *- April 3, 2021*
 - Field descriptions are now displayed beneath each field to in order to support data validation changes.
