@@ -21,9 +21,9 @@
 defined('BMLT_EXEC') or die('Cannot Execute Directly');    // Makes sure that this file is in the correct context.
 
 $comdef_server_admin_strings = array('server_admin_disclosure' => 'Администрирование сервера',
-    'server_admin_naws_spreadsheet_label' => 'Обновленный список World ID:',
-    'update_world_ids_button_text' => 'Обновление World ID собраний',
-    'update_world_ids_from_spreadsheet_dropdown_text' => 'Обновление World ID из таблицы NAWS',
+    'server_admin_naws_spreadsheet_label' => 'Обновленный список World ID:', // TODO: was changed to "Updated World Committee Codes Spreadsheet"
+    'update_world_ids_button_text' => 'Обновление World ID собраний', // TODO: was changed to "'Update World Committee Codes"
+    'update_world_ids_from_spreadsheet_dropdown_text' => 'Обновление World ID из таблицы NAWS', // TODO: was changed to "Update World Committee Codes (Group IDs from NAWS) from NAWS Spreadsheet"
     'server_admin_error_no_world_ids_updated' => 'Не найдено обновлений World ID . Это может быть связано с тем, что у вашего пользователя нет прав на обновление отправленных собраний.',
     'server_admin_error_required_spreadsheet_column' => 'Обязательный столбец не существует в электронной таблице: ',
     'server_admin_error_bmlt_id_not_integer' => 'Предоставленный bmlt_id не является целым числом: ',
@@ -85,7 +85,7 @@ $comdef_server_admin_strings = array('server_admin_disclosure' => 'Админи�
     'meeting_search_start_time_eve_label' => 'Вечер',
     'meeting_search_no_results_text' => 'Собрания не найдены',
     'meeting_editor_tab_specifier_text' => 'Поиск собраний',
-    'meeting_editor_tab_editor_text' => 'Редактировать собрания',
+    'meeting_editor_tab_editor_text' => 'Редактировать собрания',   // TODO: change to 'Edit Or Create Meetings'
     'meeting_editor_create_new_text' => 'Создать новое собрание',
     'meeting_editor_location_map_link' => 'Карта местности',
     'meeting_editor_screen_match_ll_button' => 'Установите долготу и широту в адрес',
@@ -104,7 +104,7 @@ $comdef_server_admin_strings = array('server_admin_disclosure' => 'Админи�
     'meeting_editor_screen_meeting_duration_label' => 'Продолжительность:',
     'meeting_editor_screen_meeting_oe_label' => 'Открыто-закрыто',
     'meeting_editor_screen_meeting_cc_label' => 'Код мирового комитета:',
-    'meeting_editor_screen_meeting_cc_prompt' => 'Введите код мирового комитета',
+    'meeting_editor_screen_meeting_cc_advice' => 'Normally leave this field alone (see documentation).',  // TODO: translate
     'meeting_editor_screen_meeting_contact_label' => 'Контактный E-mail собрания',
     'meeting_editor_screen_meeting_contact_prompt' => 'Введите адрес электронной почты для контакта только для этого собрания',
     'meeting_editor_screen_meeting_sb_label' => 'Орган обслуживания:',
@@ -478,7 +478,7 @@ $detailed_change_strings = array(
     'sb_prompt' => 'Собрания изменено следующим органом обслуживания',
     'id_bigint' => 'ID собрания',
     'lang_enum' => 'Язык собрания',
-    'worldid_mixed' => 'Общий Group ID',
+    'worldid_mixed' => 'Общий Group ID',  // TODO: translate The World Committee Code
     'weekday_tinyint' => 'День недели, в которую собирается собрание',
     'non_existent_service_body' => 'Сервисный орган больше не существует',
 );

@@ -21,9 +21,9 @@
 defined('BMLT_EXEC') or die('Cannot Execute Directly');    // Makes sure that this file is in the correct context.
 
 $comdef_server_admin_strings = array('server_admin_disclosure' => 'Server Administration',
-    'server_admin_naws_spreadsheet_label' => 'Updated World IDs Spreadsheet:',
-    'update_world_ids_button_text' => 'Update Meeting World IDs',
-    'update_world_ids_from_spreadsheet_dropdown_text' => 'Update Meeting World IDs from NAWS Spreadsheet',
+    'server_admin_naws_spreadsheet_label' => 'Updated World Committee Codes Spreadsheet',
+    'update_world_ids_button_text' => 'Update World Committee Codes',
+    'update_world_ids_from_spreadsheet_dropdown_text' => 'Update World Committee Codes (Group IDs from NAWS) from NAWS Spreadsheet',
     'server_admin_error_no_world_ids_updated' => 'No World IDs were updated. This could be because your user does not have permission to update the submitted meetings.',
     'server_admin_error_required_spreadsheet_column' => 'Required column does not exist in the spreadsheet: ',
     'server_admin_error_bmlt_id_not_integer' => 'The provided bmlt_id is not an integer: ',
@@ -85,7 +85,7 @@ $comdef_server_admin_strings = array('server_admin_disclosure' => 'Server Admini
     'meeting_search_start_time_eve_label' => 'Evening',
     'meeting_search_no_results_text' => 'No Meetings Found',
     'meeting_editor_tab_specifier_text' => 'Search For Meetings',
-    'meeting_editor_tab_editor_text' => 'Edit Meetings',
+    'meeting_editor_tab_editor_text' => 'Edit Or Create Meetings',
     'meeting_editor_create_new_text' => 'Create A New Meeting',
     'meeting_editor_location_map_link' => 'Location Map',
     'meeting_editor_screen_match_ll_button' => 'Set Longitude and Latitude to Address',
@@ -104,7 +104,7 @@ $comdef_server_admin_strings = array('server_admin_disclosure' => 'Server Admini
     'meeting_editor_screen_meeting_duration_label' => 'Duration:',
     'meeting_editor_screen_meeting_oe_label' => 'Open-Ended',
     'meeting_editor_screen_meeting_cc_label' => 'World Committee Code:',
-    'meeting_editor_screen_meeting_cc_prompt' => 'Enter A World Committee Code',
+    'meeting_editor_screen_meeting_cc_advice' => 'Normally leave this field alone (see documentation).',  // TODO: translate
     'meeting_editor_screen_meeting_contact_label' => 'Meeting Email Contact:',
     'meeting_editor_screen_meeting_contact_prompt' => 'Enter An Email for A Contact Specific Only to This Meeting',
     'meeting_editor_screen_meeting_sb_label' => 'Service Body:',
@@ -478,7 +478,7 @@ $detailed_change_strings = array(
     'sb_prompt' => 'The meeting changed its Service Body from',
     'id_bigint' => 'The meeting ID',
     'lang_enum' => 'The meeting language',
-    'worldid_mixed' => 'The shared Group ID',
+    'worldid_mixed' => 'The World Committee Code',
     'weekday_tinyint' => 'The day of the week on which the meeting gathers',
     'non_existent_service_body' => 'Service Body No Longer Exists',
 );

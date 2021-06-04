@@ -5194,9 +5194,22 @@ function BMLT_Server_Admin()
                     };
                 };
 
-                // Check for errors regarding the venue type formats HY, TC, and VM.  If there is an error, return without saving.
+                // Special cases for the venue type formats HY, TC, and VM.
+                // First check for key errors; if there is an error, pop up a warning and then return without saving.
                 if ( this.formatCheckForKeyError(new_id, edited_format_group) ) {
                     return;
+                }
+                // Next make sure that venue type formats have the correct world_id and type.  (The only case where
+                // this would happen is if there is a newly added additional format language -- but these values can't
+                // be changed for venue type formats, so the user couldn't otherwise fix it.)                                                                  *
+                if ( this.isVenueTypeFormatBySharedId(new_id) ) {
+                    // just use the values for English (which should be correct already)
+                    var world_id = edited_format_group['en']['worldid_mixed'];
+                    var format_type = edited_format_group['en']['type'];
+                    for ( var k in edited_format_group ) {
+                        edited_format_group[k]['worldid_mixed'] = world_id;
+                        edited_format_group[k]['type'] = format_type;
+                    }
                 }
 
                 var json_to_send_to_server = JSON.stringify(edited_format_group);    // We will be sending as a JSON object.

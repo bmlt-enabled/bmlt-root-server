@@ -434,15 +434,36 @@ function DisplaySearchResultsCSV(
                                 if (($key == 'meeting_name') && !$val) {    // No meeting name results in a generic "NA Meeting" as the name.
                                     $val = $localized_strings['comdef_server_admin_strings']['Value_Prompts']['generic'];
                                 }
-                            
+
+                                if ($key == 'lang_enum' && isset($in_http_vars['lang_enum']) && $in_http_vars['lang_enum']) {
+                                    // Override the native lang_enum for the meeting with the requested language if present in http_vars
+                                    // (Does this ever matter??)
+                                    $val = $in_http_vars['lang_enum'];
+                                }
+
                                 if (isset($val)) {
                                     if (($key == 'formats')) {
                                         if (is_array($val) && count($val)) {
                                             $v_ar = array();
                                             foreach ($val as $format) {
                                                 if ($format instanceof c_comdef_format) {
-                                                    array_push($v_ar, $format->GetKey());
-                                                    array_push($format_shared_id_list, $format->GetSharedID());
+                                                    // $format will be one of the meeting's formats in the native server language.  If it's already
+                                                    // in the correct language, just add its key to $v_ar and its id to $format_shared_id_list.
+                                                    // Otherwise see if there is a version of the format in the other language (stored in $lang_enum).  If there is,
+                                                    // push the key for the format in the other language onto $v_ar instead.  Note that the key might be different
+                                                    // in different languages.  If there isn't a version of the format in the other language, just skip it.
+                                                    $id = $format->GetSharedID();
+                                                    if ($format->GetLocalLang() == $lang_enum) {
+                                                        array_push($v_ar, $format->GetKey());
+                                                        array_push($format_shared_id_list, $id);
+                                                    } else {
+                                                        $fs = $formats->GetFormatsBySharedIDCode($id);
+                                                        if (array_key_exists($lang_enum, $fs)) {
+                                                            $localized_format = $fs[$lang_enum];
+                                                            array_push($v_ar, $localized_format->GetKey());
+                                                            array_push($format_shared_id_list, $id);
+                                                        }
+                                                    }
                                                 }
                                             }
                                             $val = join(',', $v_ar);

@@ -16,9 +16,9 @@
 defined('BMLT_EXEC') or die('Cannot Execute Directly');    // Certifique-se que este arquivo esteja no contexto correto.
 
 $comdef_server_admin_strings = array('server_admin_disclosure' => 'Administração do Servidor',
-    'server_admin_naws_spreadsheet_label' => 'Planilha atualizada de IDs Mundiais:',
-    'update_world_ids_button_text' => 'Atualizar IDs Mundiais de reunião',
-    'update_world_ids_from_spreadsheet_dropdown_text' => 'Atualizar IDs Mundiais de reunião pela planilha do NAWS',
+    'server_admin_naws_spreadsheet_label' => 'Planilha atualizada de IDs Mundiais:', // TODO: was changed to "Updated World Committee Codes Spreadsheet"
+    'update_world_ids_button_text' => 'Atualizar IDs Mundiais de reunião', // TODO: was changed to "Update World Committee Codes"
+    'update_world_ids_from_spreadsheet_dropdown_text' => 'Atualizar IDs Mundiais de reunião pela planilha do NAWS', // TODO: was changed to "Update World Committee Codes (Group IDs from NAWS) from NAWS Spreadsheet"
     'server_admin_error_no_world_ids_updated' => 'Nenhum ID mundial foi atualizado. Isso pode ser por seu usuário não ter permissão para essas reuniões',
     'server_admin_error_required_spreadsheet_column' => 'Coluna requerida no existe na planilha: ',
     'server_admin_error_bmlt_id_not_integer' => 'O ID BMLT provido não é do tipo integer: ',
@@ -80,7 +80,7 @@ $comdef_server_admin_strings = array('server_admin_disclosure' => 'Administraç�
     'meeting_search_start_time_eve_label' => 'Noite',
     'meeting_search_no_results_text' => 'Nenhuma reunião encontrada',
     'meeting_editor_tab_specifier_text' => 'Busca por reuniões',
-    'meeting_editor_tab_editor_text' => 'Editar Reuniões',
+    'meeting_editor_tab_editor_text' => 'Editar Reuniões',   // TODO: change to 'Edit Or Create Meetings'
     'meeting_editor_create_new_text' => 'Criar Nova Reunião',
     'meeting_editor_location_map_link' => 'Localização no Mapa',
     'meeting_editor_screen_match_ll_button' => 'Configure Longitude e Latitude do Endereço',
@@ -99,7 +99,7 @@ $comdef_server_admin_strings = array('server_admin_disclosure' => 'Administraç�
     'meeting_editor_screen_meeting_duration_label' => 'Duration:',
     'meeting_editor_screen_meeting_oe_label' => 'Aberta até o final',
     'meeting_editor_screen_meeting_cc_label' => 'Código do Comitê Mundial:',
-    'meeting_editor_screen_meeting_cc_prompt' => 'Coloque o código do Comitê Mundial',
+    'meeting_editor_screen_meeting_cc_advice' => 'Normally leave this field alone (see documentation).',  // TODO: translate
     'meeting_editor_screen_meeting_contact_label' => 'Contato por e-mail:',
     'meeting_editor_screen_meeting_contact_prompt' => 'Contato por e-mail apenas para essa reunião',
     'meeting_editor_screen_meeting_sb_label' => 'Corpo de Serviço:',
@@ -473,7 +473,7 @@ $detailed_change_strings = array(
     'sb_prompt' => 'A reunião alterou sua estrutura de serviço de',
     'id_bigint' => 'ID da reunião',
     'lang_enum' => 'Idioma da Reunião',
-    'worldid_mixed' => 'The shared Group ID',
+    'worldid_mixed' => 'The World Committee Code',
     'weekday_tinyint' => 'The day of the week on which the meeting gathers',
     'non_existent_service_body' => 'Estrutura de Serviço não existe mais',
 );

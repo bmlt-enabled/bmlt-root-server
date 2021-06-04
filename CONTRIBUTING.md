@@ -51,9 +51,8 @@ Here are modified steps to do that.
 1. Edit `bmlt.env` to set your google maps api key, `GKEY=API_KEY`.
 1. Run the command `make deps-dev` in the top-level `bmlt-root-server` directory.
 1. Run the command `make run` in the `docker` subdirectory, leaving the window open.
-1. In another window, run `docker exec -it docker_bmlt_1 bash` to open a bash shell accessing the container's file system. You will be in
-the directory `/var/www/html/`.
-1. In the bash shell run `rm auto-config.inc.php`.
+1. In another window, run `docker exec -it docker_bmlt_1 bash` to open a bash shell accessing the container's file system.
+1. In the bash shell, `cd /var/www/html/` then `rm auto-config.inc.php`.
 1. Leave the shell open so that you can check whether the installer generated a new `auto-config.inc.php` and if so what it contains.
 1. Browse to `http://localhost:8000/main_server/`.
 1. In the browser you will now be in the Install Wizard. Start by filling in the Database Connection Settings screen as follows.
@@ -66,10 +65,10 @@ Database User: bmlt_user
 Database Password: bmlt_password
 ```
 Note that the Database Host is `db` rather than the usual `localhost`. If you start with the install wizard, normally
-you need an empty database, but the `bmlt` database already contains sample data. A convenient alternative to creating
-a new database is to use the provided `bmlt` database, and to change the Table Prefix to `na2`, as above.  If you need
-to run the installer again, just use a new Table Prefix each time (`na3` etc). If you do need to access mysql, open
-another shell using `docker exec -it docker_db_1 bash`, and then run `mysql -u bmlt_user -p`.
+you need an empty database, but the `bmlt` database already contains sample data. A convenient alternative to dropping
+and (re) creating `bmlt` is to use the provided `bmlt` database, and to change the Table Prefix to `na2`, as above.  If you need
+to run the installer again, just use a new Table Prefix each time (`na3` etc). If you do want to access mysql, open
+another shell using `docker exec -it docker_db_1 bash`, and then run `mysql -u root -pbmlt_root_password`.
 
 Finally, as with the earlier directions, when finished exit by pressing ctrl+c or by running `docker-compose down`.
 
