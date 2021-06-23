@@ -1418,6 +1418,8 @@ function BMLT_Server_Admin()
         var venue_type = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_venue_type").find("input:radio[name=venue_type]:checked").val();
         var isInpersonOrHybrid = venue_type === 'inperson' || venue_type === 'hybrid';
         var isVirtualOrHybrid = venue_type === 'virtual' || venue_type === 'virtualTC' || venue_type === 'hybrid';
+        var location = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_location_text_input").val().trim();
+        var location_extra = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_info_text_input").val().trim();
         var street = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_street_text_input").val().trim();
         var city = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_city_text_input").val().trim();
         // the state might be specified either as a text field, or selected from a list of options
@@ -1429,7 +1431,7 @@ function BMLT_Server_Admin()
         var zip = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_zip_text_input").val().trim();
         var url = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_virtual_meeting_link_text_input").val().trim();
         var phone = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_phone_meeting_number_text_input").val().trim();
-        var additional = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_virtual_meeting_additional_info_text_input").val().trim();
+        var virtual_additional = $("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_virtual_meeting_additional_info_text_input").val().trim();
 
         $(".error_helper_text").remove();
         $(".warn_helper_text").remove();
@@ -1443,7 +1445,7 @@ function BMLT_Server_Admin()
                 this.validationMessageTypes.ERROR));
         }
 
-        if (isVirtualOrHybrid && url === '' && phone === '' && additional === '') {
+        if (isVirtualOrHybrid && url === '' && phone === '' && virtual_additional === '') {
             // use "_meeting_virtual_meeting_additional_info_text_input" instead of "_meeting_virtual_meta" to position this error under the additional info field
             errors.push(this.setValidationMessage("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_virtual_meta",
                 "meeting_editor_screen_meeting_virtual_info_missing",
@@ -1463,6 +1465,8 @@ function BMLT_Server_Admin()
         //   - In-person and hybrid meetings should have a street address.
         //   - Either Virtual Meeting Link or Phone Meeting Dial-in Number field should be filled in for a virtual or hybrid meeting.
         //   - Virtual Meeting Additional Information should be filled in if there is a Virtual Meeting Link (only checked for virtual meetings).
+        //   - In-person meeting with information in any of the virtual meeting fields
+        //   - Pure virtual meeting if there is a location or address
         //
         // Notes about warnings:
         //   - If there is something in Virtual Meeting Additional Information, there should also be something in either Virtual Meeting Link
@@ -1494,10 +1498,56 @@ function BMLT_Server_Admin()
                     true));
             }
 
-            if (url !== '' && additional === '') {
+            if (url !== '' && virtual_additional === '') {
                 warnings.push(this.setValidationMessage("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_virtual_meeting_additional_info_text_input",
                     "meeting_editor_screen_meeting_additional_warning",
                     this.validationMessageTypes.WARN));
+            }
+        }
+
+        if (venue_type === 'inperson') {
+            // warning message is the same for all 3 virtual fields, so don't repeat it in the summary
+            var w = null;
+            if (phone) {
+                w = this.setValidationMessage("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_phone_meeting_number_text_input",
+                    "meeting_editor_screen_in_person_virtual_info_warning",
+                    this.validationMessageTypes.WARN);
+            }
+            if (url) {
+                w = this.setValidationMessage("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_virtual_meeting_link_text_input",
+                    "meeting_editor_screen_in_person_virtual_info_warning",
+                    this.validationMessageTypes.WARN);
+            }
+            if (virtual_additional) {
+                w = this.setValidationMessage("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_virtual_meeting_additional_info_text_input",
+                    "meeting_editor_screen_in_person_virtual_info_warning",
+                    this.validationMessageTypes.WARN);
+            }
+            if (w) {
+                warnings.push(w);
+            }
+        }
+
+        if (venue_type === 'virtual') {
+            // warning message is the same for all 3 location info fields, so don't repeat it in the summary
+            var w = null;
+            if (location) {
+                w = this.setValidationMessage("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_location_text_input",
+                    "meeting_editor_screen_meeting_virtual_location_info_warning",
+                    this.validationMessageTypes.WARN);
+            }
+            if (location_extra) {
+                w = this.setValidationMessage("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_info_text_input",
+                    "meeting_editor_screen_meeting_virtual_location_info_warning",
+                    this.validationMessageTypes.WARN);
+            }
+            if (street) {
+                w = this.setValidationMessage("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_street_text_input",
+                    "meeting_editor_screen_meeting_virtual_location_info_warning",
+                    this.validationMessageTypes.WARN);
+            }
+            if (w) {
+                warnings.push(w);
             }
         }
 
