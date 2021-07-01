@@ -394,7 +394,7 @@ $comdef_server_admin_strings = array('server_admin_disclosure' => 'AdministraÃ§Ã
         'FF' => 'Fechado em feriados',
         'VM' => 'Virtual', // TODO translate
         'HYBR' => 'Virtual and In-Person', // TODO translate
-        'TC' => 'Facility Temporarily Closed' // TODO translate
+        'TC' => 'Temporarily Closed Facility' // TODO translate
     ),
     'format_type_prompt' => 'Format Type:',
     'format_type_codes' => array(

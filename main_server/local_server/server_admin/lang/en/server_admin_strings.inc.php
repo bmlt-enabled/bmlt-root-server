@@ -400,7 +400,7 @@ $comdef_server_admin_strings = array(
         'CH' => 'Closed Holidays',
         'VM' => 'Virtual',
         'HYBR' => 'Virtual and In-Person',
-        'TC' => 'Facility Temporarily Closed'
+        'TC' => 'Temporarily Closed Facility'
     ),
     'format_type_prompt' => 'Format Type:',
     'format_type_codes' => array(

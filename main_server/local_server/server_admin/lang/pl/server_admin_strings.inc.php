@@ -398,7 +398,7 @@ $comdef_server_admin_strings = array(
         'CH' => 'Zamknięty w święta',
         'VM' => 'Virtual', // TODO translate
         'HYBR' => 'Virtual and In-Person', // TODO translate
-        'TC' => 'Facility Temporarily Closed' // TODO translate
+        'TC' => 'Temporarily Closed Facility' // TODO translate
     ),
     'format_type_prompt' => 'Typ formatu:',
     'format_type_codes' => array(
