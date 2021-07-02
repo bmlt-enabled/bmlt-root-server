@@ -411,7 +411,7 @@ function DB_Connect_and_Upgrade()
             }
             fix_formats('VM', 'VM', 'Virtual Meeting', 'Meets Virtually', 'FC2');
             fix_formats('HY', 'HYBR', 'Hybrid Meeting', 'Meets Virtually and In-person', 'FC2');
-            fix_formats('TC', 'TC', 'Temporarily Closed Facility', 'Facility is Temporarily Closed', 'FC2');
+            fix_formats('TC', 'TC', 'Temporarily Closed', 'Facility is Temporarily Closed', 'FC2');
         }),
         array(19, function () {
             // Change the name of the TC format from 'Temporarily Closed' to 'Temporarily Closed Facility' for all the versions that are unchanged from the default.
