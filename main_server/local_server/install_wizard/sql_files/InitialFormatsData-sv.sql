@@ -8,5 +8,5 @@ INSERT INTO `%%PREFIX%%_comdef_formats` (`shared_id_bigint`, `key_string`, `icon
 (33, 'RL', NULL, 'WCHR', 'sv', 'Rullstolsvänlig lokal', 'Detta möte är tillgängligt för rullstolsbundna.', 'FC2'),
 (47, 'ENG', NULL, NULL, 'sv', 'Engelska', 'Engelsktalande möte', 'FC3'),
 (54, 'VM', NULL, 'VM', 'sv', 'Virtual Meeting', 'Meets Virtually', 'FC2'),
-(55, 'TC', NULL, 'TC', 'sv', 'Temporarily Closed', 'Facility is Temporarily Closed', 'FC2'),
+(55, 'TC', NULL, 'TC', 'sv', 'Temporarily Closed Facility', 'Facility is Temporarily Closed', 'FC2'),
 (56, 'HY', NULL,  'HYBR', 'sv', 'Hybrid Meeting', 'Meets Virtually and In-person', 'FC2');

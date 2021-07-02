@@ -45,6 +45,12 @@ satellites comprise the "client" part of the BMLT "client/server" architecture.
 
 For instructions on installing the root server, see [Installing a New Root Server](https://bmlt.app/setting-up-the-bmlt/)
 
+***Version 2.16.2* ** *- UNRELEASED*
+- Added checks to meeting editor:
+  - Warning for an in-person meeting if there is information in a virtual meeting field.
+  - Warning for a virtual meeting (pure virtual, not hybrid or VM/TC) if there is a location or an address.
+- Change default name for TC format from "Temporarily Closed" to "Temporarily Closed Facility"
+
 ***Version 2.16.1* ** *- June 4, 2021*
 - Require a key for HY, TC, and VM formats for every language, including additional format languages; make sure they have the correct world ID and type; make sure they can't be inadvertently mapped other formats.
 - Support teamspeak URLs for Virtual Meeting Link.

@@ -3040,7 +3040,7 @@ class c_comdef_server
                 }
                 // Due to NAWS database limitations, only 5 formats at most can be exported. auto-config.inc.php can specify an optional variable $naws_export_formats_at_front
                 // that is an array of formats that should be exported first, to make sure they are included. This is particularly important for VM (Virtual Meeting),
-                // TC (Temporarily Closed) and HYBR (Hybrid), since these are essential and we don't want them falling off the end. If this variable isn't set in
+                // TC (Temporarily Closed Facility) and HYBR (Hybrid), since these are essential and we don't want them falling off the end. If this variable isn't set in
                 // auto-config.inc.php, give it a default value that includes those plus a few others. If the meeting has any of these formats, they are exported
                 // first, in the order they appear in naws_export_formats_at_front.
                 c_comdef_server::$server_local_strings['naws_export_formats_at_front'] = isset($naws_export_formats_at_front) ? $naws_export_formats_at_front : ['VM', 'TC', 'HYBR', 'W', 'M', 'GL'];

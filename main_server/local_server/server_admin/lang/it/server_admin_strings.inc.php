@@ -155,6 +155,8 @@ $comdef_server_admin_strings = array(
     'meeting_editor_screen_meeting_url_validation' => 'Virtual Meeting Link is not a valid URL.',
     'meeting_editor_screen_meeting_url_or_phone_warning' => 'Virtual or hybrid meetings should have either a Virtual Meeting Link or a Phone Meeting Dial-in Number',
     'meeting_editor_screen_meeting_additional_warning' => 'Please also fill in Virtual Meeting Additional Information if there is a Virtual Meeting Link.',
+    'meeting_editor_screen_in_person_virtual_info_warning' => 'In-person meetings shouldn\'t have any virtual meeting information.',
+    'meeting_editor_screen_meeting_virtual_location_info_warning' => 'Virtual meetings shouldn\'t have a location name or address.',
     'meeting_editor_screen_meeting_validation_warning' => 'There are warnings.  Are you sure you want to save anyway?  If not, press \'cancel\' and go to the Location tab to see the warnings in place and address them.',
     'meeting_editor_screen_meeting_validation_failed' => 'Unable to save due to input errors.  Please go to the Location tab to address them, and then retry saving.  Errors: ',
     'meeting_editor_screen_meeting_validation_warnings' => 'Input warnings shown on the Location tab: ',
@@ -394,7 +396,7 @@ $comdef_server_admin_strings = array(
         'CH' => 'Closed Holidays', // TODO translate
         'VM' => 'Virtual', // TODO translate
         'HYBR' => 'Virtual and In-Person', // TODO translate
-        'TC' => 'Facility Temporarily Closed' // TODO translate
+        'TC' => 'Temporarily Closed Facility' // TODO translate
     ),
     'format_type_prompt' => 'Format Type:',    // TODO: Translate
     'format_type_codes' => array(

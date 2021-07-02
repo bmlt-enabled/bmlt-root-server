@@ -412,6 +412,15 @@ function DB_Connect_and_Upgrade()
             fix_formats('VM', 'VM', 'Virtual Meeting', 'Meets Virtually', 'FC2');
             fix_formats('HY', 'HYBR', 'Hybrid Meeting', 'Meets Virtually and In-person', 'FC2');
             fix_formats('TC', 'TC', 'Temporarily Closed', 'Facility is Temporarily Closed', 'FC2');
+        }),
+        array(19, function () {
+            // Change the name of the TC format from 'Temporarily Closed' to 'Temporarily Closed Facility' for all the versions that are unchanged from the default.
+            // This will change the English version, and all versions in other languages that aren't translated yet from English.  (In theory there could be several
+            // formats with the TC key in languages other than English, with the English words -- unlikely, but if there are any we convert them as well.)
+            $dbPrefix = $GLOBALS['dbPrefix'];
+            $table = "$dbPrefix" . "_comdef_formats";
+            $sql = "UPDATE `$table` SET `name_string` = 'Temporarily Closed Facility' WHERE `key_string` = 'TC' AND `name_string` = 'Temporarily Closed' AND `description_string` = 'Facility is Temporarily Closed'";
+            c_comdef_dbsingleton::preparedExec($sql);
         })
     );
     // WHEN ADDING A NEW DATABASE MIGRATION, REMEMBER TO BUMP THE VERSION IN local_server/install_wizard/sql_files/initialDbVersionData.sql
