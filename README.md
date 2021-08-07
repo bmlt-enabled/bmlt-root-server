@@ -50,6 +50,7 @@ For instructions on installing the root server, see [Installing a New Root Serve
   - Warning for an in-person meeting if there is information in a virtual meeting field.
   - Warning for a virtual meeting (pure virtual, not hybrid or VM/TC) if there is a location or an address.
 - Change default name for TC format from "Temporarily Closed" to "Temporarily Closed Facility"
+- Add ability for NAWS to indicate that they have processed a deleted meeting, so that it stops showing up in future NAWS exports.  To do this, the spreadsheet with updated World IDs should have a World ID of 'deleted' for deleted meetings they don't need to see again.
 
 ***Version 2.16.1* ** *- June 4, 2021*
 - Require a key for HY, TC, and VM formats for every language, including additional format languages; make sure they have the correct world ID and type; make sure they can't be inadvertently mapped other formats.

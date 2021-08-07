@@ -164,7 +164,9 @@ class c_comdef_admin_ajax_handler
             'report' => array(
                 'updated' => array(),
                 'not_updated' => array(),
-                'not_found' => array()
+                'marked' => array(),
+                'not_found' => array(),
+                'not_marked' => array()
             )
         );
 
@@ -280,7 +282,15 @@ class c_comdef_admin_ajax_handler
         try {
             foreach ($meetingMap as $bmltId => $newWorldId) {
                 if (!array_key_exists($bmltId, $meetings)) {
-                    $ret['report']['not_found'][] = $bmltId;
+                    if ($newWorldId === 'deleted') {
+                        if ($this->MarkDeletedMeetingAsHandled($bmltId)) {
+                            $ret['report']['marked'][] = $bmltId;
+                        } else {
+                            $ret['report']['not_marked'][] = $bmltId;
+                        }
+                    } else {
+                        $ret['report']['not_found'][] = $bmltId;
+                    }
                     continue;
                 }
 
@@ -303,6 +313,38 @@ class c_comdef_admin_ajax_handler
 
         $ret['success'] = empty($ret['errors']);
         return json_encode($ret);
+    }
+
+    /* Helper method for HandleMeetingWorldIDsUpdate.  Mark a deleted meeting as handled, so that NAWS doesn't need to keep seeing
+    it in future exports.  This is done by setting the world_id of the deleted meeting to 'deleted', so that the code that produces
+    a NAWS export file knows it can skip it (just as it skips deleted meetings with a blank world_id).  Note that the deleted meeting
+    only exists in the changes table.  Return true if it succeeded in marking a deleted meeting as handled, and false if not.  This
+    doesn't try to be clever about working around problems: if something is wrong, it just returns false and doesn't make any changes.
+    This seems reasonable; the deleted meeting will just sit there as unmarked in that case.  */
+    private function MarkDeletedMeetingAsHandled($meeting_id)
+    {
+        $change_objects = c_comdef_server::GetChangesFromIDAndType('c_comdef_meeting', $meeting_id);
+        if ($change_objects instanceof c_comdef_changes) {
+            $obj_array = $change_objects->GetChangesObjects();
+            if (is_array($obj_array) && count($obj_array)) {
+                // The changes are returned in reverse chronological order.  Ideally the last change would be a delete; but it seems
+                // that there can be race conditions in which there are several changes with the same time stamp.  So get the
+                // most recent delete, rather than just $obj_array[0]
+                foreach ($obj_array as $change) {
+                    if ($change instanceof c_comdef_change and $change->GetChangeType() === 'comdef_change_type_delete' and !$change->GetAfterObject()) {
+                        $meeting = $change->GetBeforeObject();
+                        if ($meeting->GetWorldID() === 'deleted') {
+                            return false;
+                        }
+                        $meeting->SetWorldID('deleted');
+                        $meeting->UpdateToDB();
+                        $meeting->DeleteFromDB();
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /*******************************************************************/
