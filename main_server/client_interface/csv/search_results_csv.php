@@ -710,9 +710,10 @@ function ReturnNAWSFormatCSV(
 /**
     \brief Returns deleted meetings with NAWS IDs.
 
-    \description This queries every deleted meeting. The meetings returned are
-    not restricted to the search parameters, and may repeat from previous dumps.
-    Only meetings that had World IDs are returned.
+    \description This queries every deleted meeting. The meetings returned are not restricted to the search parameters,
+    and may repeat from previous dumps.  Only meetings that had World IDs, and that don't have the World ID 'deleted'
+    in their most recent change record, are returned.  (The special World ID 'deleted' indicates a meeting that NAWS
+    has already processed, and so they don't need to see it again.)
 
     \returns An array of World IDs and change dates. These each represent deleted meetings.
 */
@@ -722,8 +723,10 @@ function ReturnNAWSDeletedMeetings(
     $in_services                ///< Any Service body IDs
 ) {
     $ret = null;
+    $ids_to_ignore = [];   // these are the IDs of meetings that NAWS has already processed, and so we don't output them
     
     // We start by getting all the meetings that have been deleted (Could be quite a few).
+    // These are returned in reverse chronological order, with the most recent change first.
     $changes = $server->GetChangesFromOTypeAndCType('c_comdef_meeting', 'comdef_change_type_delete');
 
     if ($changes instanceof c_comdef_changes) {
@@ -747,9 +750,19 @@ function ReturnNAWSDeletedMeetings(
                                 }
                             }
                         }
-                            
-                        $value = intval(preg_replace('|\D*?|', '', $b_obj->GetMeetingDataValue('worldid_mixed')));
-                        
+                        // If the meeting's ID is in $ids_to_ignore, we don't output it (not surprisingly).
+                        // If the world_id for the meeting is 'deleted', that means that NAWS has already processed it,
+                        // and we don't output it either; in addition, we add it to the $ids_to_ignore so that any earlier
+                        // deletion change records for this meeting don't have anything output either.
+                        if (in_array($b_obj->GetID(), $ids_to_ignore)) {
+                            $value = false;
+                        } else if ($b_obj->GetMeetingDataValue('worldid_mixed') === 'deleted') {
+                            array_push($ids_to_ignore, $b_obj->GetID());
+                            $value = false;
+                        } else {
+                            $value = intval(preg_replace('|\D*?|', '', $b_obj->GetMeetingDataValue('worldid_mixed')));
+                        }
+
                         if ($value && $found) {
                             foreach ($in_transfer_dictionary as $key => $value2) {
                                 if (($key != 'Delete')) {
