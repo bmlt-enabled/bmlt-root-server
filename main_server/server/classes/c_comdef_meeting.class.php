@@ -1209,7 +1209,10 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         $this->_my_meeting_data['id_bigint'] = intval($in_meeting_id_bigint);
     }
 
-    /* Get this meeting's world_id */
+    /*******************************************************************/
+    /** \brief Get this meeting's world_id.
+     */
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     public function GetWorldID()
     {
         if (isset($this->_my_meeting_data['worldid_mixed'])) {
@@ -1219,7 +1222,10 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         }
     }
 
-    /* Set this meeting's world_id */
+    /*******************************************************************/
+    /** \brief Set this meeting's world_id.
+     */
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     public function SetWorldID(
         $new_world_id
     ) {

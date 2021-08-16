@@ -321,6 +321,7 @@ class c_comdef_admin_ajax_handler
     only exists in the changes table.  Return true if it succeeded in marking a deleted meeting as handled, and false if not.  This
     doesn't try to be clever about working around problems: if something is wrong, it just returns false and doesn't make any changes.
     This seems reasonable; the deleted meeting will just sit there as unmarked in that case.  */
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     private function MarkDeletedMeetingAsHandled($meeting_id)
     {
         $change_objects = c_comdef_server::GetChangesFromIDAndType('c_comdef_meeting', $meeting_id);
