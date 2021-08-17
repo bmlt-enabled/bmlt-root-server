@@ -45,7 +45,7 @@ satellites comprise the "client" part of the BMLT "client/server" architecture.
 
 For instructions on installing the root server, see [Installing a New Root Server](https://bmlt.app/setting-up-the-bmlt/)
 
-***Version 2.16.2* ** *- UNRELEASED*
+***Version 2.16.2* ** *- August 16, 2021*
 - Added checks to meeting editor:
   - Warning for an in-person meeting if there is information in a virtual meeting field.
   - Warning for a virtual meeting (pure virtual, not hybrid or VM/TC) if there is a location or an address.
