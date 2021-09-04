@@ -89,6 +89,7 @@ resource "aws_security_group" "cluster" {
 
     security_groups = [
       aws_security_group.ecs_http_load_balancers.id,
+      "sg-0573eb4a1df88751a", # the tomato alb
     ]
   }
 
