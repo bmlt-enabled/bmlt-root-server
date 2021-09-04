@@ -3,7 +3,7 @@ resource "aws_ecs_cluster" "main" {
 }
 
 resource "aws_iam_role" "cluster_instance" {
-  name = aws_ecs_cluster.main.name
+  name = local.cluster_name
 
   assume_role_policy = jsonencode(
     {
@@ -64,13 +64,13 @@ resource "aws_iam_role_policy" "allow_logging_policy" {
 }
 
 resource "aws_iam_instance_profile" "cluster" {
-  name = aws_ecs_cluster.main.name
+  name = local.cluster_name
   role = aws_iam_role.cluster_instance.name
 }
 
 resource "aws_autoscaling_group" "cluster" {
-  name                 = aws_ecs_cluster.main.name
-  vpc_zone_identifier  = [aws_subnet.public_a.id, aws_subnet.public_b.id]
+  name                 = local.cluster_name
+  vpc_zone_identifier  = data.aws_subnet_ids.main.ids
   min_size             = 1
   max_size             = 1
   desired_capacity     = 1
@@ -79,8 +79,8 @@ resource "aws_autoscaling_group" "cluster" {
 
 resource "aws_security_group" "cluster" {
   description = "controls direct access to cluster container instances"
-  vpc_id      = aws_vpc.main.id
-  name        = aws_ecs_cluster.main.name
+  vpc_id      = data.aws_vpc.main.id
+  name        = local.cluster_name
 
   ingress {
     protocol  = "tcp"

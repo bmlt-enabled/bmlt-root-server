@@ -4,12 +4,12 @@ resource "aws_athena_database" "bmlt_root_alb_logs" {
 }
 
 resource "aws_s3_bucket" "bmlt_root_alb_logs_athena" {
-  bucket        = "bmlt-root-alb-logs-athena"
+  bucket_prefix = "bmlt-root-alb-logs-athena"
   force_destroy = true
 }
 
 resource "aws_s3_bucket" "bmlt_root_alb_logs" {
-  bucket        = "bmlt-root-alb-logs"
+  bucket_prefix = "bmlt-root-alb-logs"
   force_destroy = true
 }
 
@@ -36,7 +36,7 @@ resource "aws_s3_bucket_policy" "bmlt_root_alb_logs" {
 }
 
 resource "aws_security_group" "ecs_http_load_balancers" {
-  vpc_id = aws_vpc.main.id
+  vpc_id = data.aws_vpc.main.id
   name   = "bmlt-lb"
 
   ingress {
@@ -55,27 +55,11 @@ resource "aws_security_group" "ecs_http_load_balancers" {
   }
 }
 
-resource "aws_alb" "bmlt" {
-  name            = "bmlt"
-  subnets         = [aws_subnet.public_a.id, aws_subnet.public_b.id]
-  security_groups = [aws_security_group.ecs_http_load_balancers.id]
-
-  access_logs {
-    bucket  = aws_s3_bucket.bmlt_root_alb_logs.bucket
-    enabled = true
-  }
-
-  tags = {
-    application = "bmlt"
-    environment = "production"
-  }
-}
-
 resource "aws_alb_target_group" "bmlt_latest" {
   name     = "bmlt-latest"
   port     = 80
   protocol = "HTTP"
-  vpc_id   = aws_vpc.main.id
+  vpc_id   = data.aws_vpc.main.id
 
   deregistration_delay = 60
 
@@ -89,7 +73,7 @@ resource "aws_alb_target_group" "bmlt_unstable" {
   name     = "bmlt-unstable"
   port     = 80
   protocol = "HTTP"
-  vpc_id   = aws_vpc.main.id
+  vpc_id   = data.aws_vpc.main.id
 
   deregistration_delay = 60
 
@@ -99,21 +83,17 @@ resource "aws_alb_target_group" "bmlt_unstable" {
   }
 }
 
-resource "aws_alb_listener" "bmlt_https" {
-  load_balancer_arn = aws_alb.bmlt.id
+data "aws_lb_listener" "main_443" {
+  load_balancer_arn = data.aws_lb.main.arn
   port              = 443
-  protocol          = "HTTPS"
+}
 
-  certificate_arn = aws_acm_certificate_validation.bmlt_latest.certificate_arn
-
-  default_action {
-    target_group_arn = aws_alb_target_group.bmlt_latest.id
-    type             = "forward"
-  }
+data "aws_lb" "main" {
+  name = "tomato"
 }
 
 resource "aws_alb_listener_rule" "bmlt_unstable" {
-  listener_arn = aws_alb_listener.bmlt_https.arn
+  listener_arn = data.aws_lb_listener.main_443.arn
 
   action {
     type             = "forward"
@@ -122,72 +102,22 @@ resource "aws_alb_listener_rule" "bmlt_unstable" {
 
   condition {
     host_header {
-      values = [aws_route53_record.bmlt_unstable.fqdn]
+      values = ["unstable.aws.bmlt.app"]
     }
   }
 }
 
-resource "aws_alb_listener_certificate" "bmlt_unstable" {
-  listener_arn    = aws_alb_listener.bmlt_https.arn
-  certificate_arn = aws_acm_certificate_validation.bmlt_unstable.certificate_arn
-}
+resource "aws_alb_listener_rule" "bmlt_latest" {
+  listener_arn = data.aws_lb_listener.main_443.arn
 
-resource "aws_acm_certificate" "bmlt_latest" {
-  domain_name       = aws_route53_record.bmlt_latest.fqdn
-  validation_method = "DNS"
-
-  lifecycle {
-    create_before_destroy = true
+  action {
+    type             = "forward"
+    target_group_arn = aws_alb_target_group.bmlt_latest.arn
   }
-}
 
-resource "aws_route53_record" "cert_validation_bmlt_latest" {
-  for_each = {
-    for dvo in aws_acm_certificate.bmlt_latest.domain_validation_options : dvo.domain_name => {
-      name    = dvo.resource_record_name
-      record  = dvo.resource_record_value
-      type    = dvo.resource_record_type
-      zone_id = data.aws_route53_zone.bmlt.id
+  condition {
+    host_header {
+      values = ["latest.aws.bmlt.app"]
     }
   }
-  name    = each.value.name
-  records = [each.value.record]
-  type    = each.value.type
-  zone_id = each.value.zone_id
-  ttl     = 60
-}
-
-resource "aws_acm_certificate_validation" "bmlt_latest" {
-  certificate_arn         = aws_acm_certificate.bmlt_latest.arn
-  validation_record_fqdns = [for record in aws_route53_record.cert_validation_bmlt_latest : record.fqdn]
-}
-
-resource "aws_acm_certificate" "bmlt_unstable" {
-  domain_name       = aws_route53_record.bmlt_unstable.fqdn
-  validation_method = "DNS"
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-resource "aws_route53_record" "cert_validation_bmlt_unstable" {
-  for_each = {
-    for dvo in aws_acm_certificate.bmlt_unstable.domain_validation_options : dvo.domain_name => {
-      name    = dvo.resource_record_name
-      record  = dvo.resource_record_value
-      type    = dvo.resource_record_type
-      zone_id = data.aws_route53_zone.bmlt.id
-    }
-  }
-  name    = each.value.name
-  records = [each.value.record]
-  type    = each.value.type
-  zone_id = each.value.zone_id
-  ttl     = 60
-}
-
-resource "aws_acm_certificate_validation" "bmlt_unstable" {
-  certificate_arn         = aws_acm_certificate.bmlt_unstable.arn
-  validation_record_fqdns = [for record in aws_route53_record.cert_validation_bmlt_unstable : record.fqdn]
 }
