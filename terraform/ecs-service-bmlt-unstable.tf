@@ -150,6 +150,5 @@ resource "aws_ecs_service" "bmlt_unstable" {
 
   depends_on = [
     aws_iam_role_policy.bmlt_lb,
-    aws_alb_listener.bmlt_https,
   ]
 }

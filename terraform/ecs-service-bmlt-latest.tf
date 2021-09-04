@@ -149,7 +149,6 @@ resource "aws_ecs_service" "bmlt_latest" {
   }
 
   depends_on = [
-    aws_iam_role_policy.bmlt_lb,
-    aws_alb_listener.bmlt_https,
+    aws_iam_role_policy.bmlt_lb
   ]
 }
