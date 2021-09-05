@@ -1,4 +1,4 @@
-FROM public.ecr.aws/m3g5z4b2/bmlt-root-server:latest
+FROM public.ecr.aws/t5y4k5q3/bmlt-root-server:latest
 
 ENV PHP_INI_PATH /etc/php/7.2/apache2/php.ini
 ENV PHP_XDEBUG_ENABLED: 1
