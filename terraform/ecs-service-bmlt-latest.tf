@@ -1,5 +1,6 @@
 resource "aws_ecs_task_definition" "bmlt_latest" {
-  family = "bmlt-latest"
+  family        = "bmlt-latest"
+  task_role_arn = aws_iam_role.ecs_task_role.arn
 
   container_definitions = jsonencode(
     [
@@ -134,12 +135,12 @@ resource "aws_ecs_task_definition" "bmlt_latest" {
 }
 
 resource "aws_ecs_service" "bmlt_latest" {
-  name            = "bmlt-latest"
-  cluster         = aws_ecs_cluster.main.id
-  desired_count   = 1
-  iam_role        = aws_iam_role.bmlt_lb.name
-  task_definition = aws_ecs_task_definition.bmlt_latest.arn
-
+  name                               = "bmlt-latest"
+  cluster                            = aws_ecs_cluster.main.id
+  desired_count                      = 1
+  iam_role                           = aws_iam_role.bmlt_lb.name
+  task_definition                    = aws_ecs_task_definition.bmlt_latest.arn
+  enable_execute_command             = true
   deployment_minimum_healthy_percent = 100
 
   load_balancer {

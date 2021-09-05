@@ -75,6 +75,24 @@ resource "aws_autoscaling_group" "cluster" {
   max_size             = 1
   desired_capacity     = 1
   launch_configuration = aws_launch_configuration.cluster.name
+
+  tags = [
+    {
+      key                 = "Name"
+      value               = "bmlt-ecs"
+      propagate_at_launch = true
+    },
+    {
+      key                 = "application"
+      value               = "bmlt"
+      propagate_at_launch = true
+    },
+    {
+      key                 = "environment"
+      value               = "production"
+      propagate_at_launch = true
+    },
+  ]
 }
 
 resource "aws_security_group" "cluster" {
@@ -294,4 +312,47 @@ resource "aws_iam_role_policy" "bmlt_lb" {
       ]
     }
   )
+}
+
+data "aws_iam_policy_document" "ecs_task_role_assume_policy" {
+  statement {
+    sid    = "ecsTask"
+    effect = "Allow"
+    principals {
+      type        = "Service"
+      identifiers = ["ecs-tasks.amazonaws.com"]
+    }
+    actions = ["sts:AssumeRole"]
+  }
+}
+
+data "aws_iam_policy_document" "ecs_execute_command" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "ssmmessages:CreateControlChannel",
+      "ssmmessages:CreateDataChannel",
+      "ssmmessages:OpenControlChannel",
+      "ssmmessages:OpenDataChannel"
+    ]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "ecs_execute_command" {
+  name        = "ecs-execute-command"
+  description = "Allows execution of remote commands on ECS"
+  policy      = data.aws_iam_policy_document.ecs_execute_command.json
+}
+
+resource "aws_iam_role" "ecs_task_role" {
+  name               = "ecs-exec-task-role"
+  assume_role_policy = data.aws_iam_policy_document.ecs_task_role_assume_policy.json
+
+  tags = { Name = "ecs-exec-task-role" }
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_task_role_execute_command_attachment" {
+  policy_arn = aws_iam_policy.ecs_execute_command.arn
+  role       = aws_iam_role.ecs_task_role.name
 }
