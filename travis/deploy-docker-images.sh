@@ -27,6 +27,6 @@ tag_and_push() {
     fi
 }
 
-aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/m3g5z4b2
-tag_and_push "bmlt-root-server:$TRAVIS_COMMIT" public.ecr.aws/m3g5z4b2/bmlt-root-server
-tag_and_push "bmlt-root-server-sample-db:$TRAVIS_COMMIT" public.ecr.aws/m3g5z4b2/bmlt-root-server-sample-db
+aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/t5y4k5q3
+tag_and_push "bmlt-root-server:$TRAVIS_COMMIT" public.ecr.aws/t5y4k5q3/bmlt-root-server
+tag_and_push "bmlt-root-server-sample-db:$TRAVIS_COMMIT" public.ecr.aws/t5y4k5q3/bmlt-root-server-sample-db
