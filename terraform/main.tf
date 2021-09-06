@@ -26,9 +26,13 @@ data "aws_vpc" "main" {
   }
 }
 
-data "aws_acm_certificate" "bmlt_wildcard" {
-  domain   = "*.bmltenabled.org"
-  statuses = ["ISSUED"]
+data "aws_lb_listener" "main_443" {
+  load_balancer_arn = data.aws_lb.main.arn
+  port              = 443
+}
+
+data "aws_lb" "main" {
+  name = "tomato"
 }
 
 data "aws_subnet_ids" "main" {
