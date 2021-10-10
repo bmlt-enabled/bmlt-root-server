@@ -45,6 +45,10 @@ satellites comprise the "client" part of the BMLT "client/server" architecture.
 
 For instructions on installing the root server, see [Installing a New Root Server](https://bmlt.app/setting-up-the-bmlt/)
 
+***Version 2.16.3* ** *- UNRELEASED*
+- Fix bug in code that lets NAWS indicate they have processed a deleted meeting, so that you don't need to be logged in as the serveradmin for it to work
+- Fix permissions bug in NAWS import code so that it works if you are logged in as the admin of a parent service body
+
 ***Version 2.16.2* ** *- August 16, 2021*
 - Added checks to meeting editor:
   - Warning for an in-person meeting if there is information in a virtual meeting field.

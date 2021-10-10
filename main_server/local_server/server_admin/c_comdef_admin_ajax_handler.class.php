@@ -192,23 +192,14 @@ class c_comdef_admin_ajax_handler
             return json_encode($ret);
         }
 
+        // If set, $userServiceBodyIDs is an array of service body IDs of meetings that the current user is allowed to edit.
+        // $userServiceBodyIDs is not set if the user is the serveradmin and can edit any meeting.
         if (!$isServerAdmin) {
-            // We are a service body admin, so get the meeting IDs this admin is allowed to edit
-            $userMeetingIDs = array();
-            $userServiceBodyIDs = c_comdef_server::GetUserServiceBodies();
-            if (is_array($userServiceBodyIDs)) {
-                $userServiceBodyIDs = array_keys($userServiceBodyIDs);
-                foreach ($userServiceBodyIDs as $serviceBodyID) {
-                    $sbMeetings = c_comdef_server::GetMeetingsForAServiceBody($serviceBodyID);
-                    if ($sbMeetings) {
-                        $sbMeetings = $sbMeetings->GetMeetingObjects();
-                        if (is_array($sbMeetings)) {
-                            foreach ($sbMeetings as $meeting) {
-                                $userMeetingIDs[$meeting->GetID()] = null;
-                            }
-                        }
-                    }
-                }
+            $ids = c_comdef_server::GetUserServiceBodies();
+            if (is_array($ids)) {
+                $userServiceBodyIDs = array_keys($ids);
+            } else {
+                $userServiceBodyIDs = [];
             }
         }
 
@@ -248,7 +239,7 @@ class c_comdef_admin_ajax_handler
                 continue;
             } elseif (!is_numeric($bmltId)) {
                 $ret['errors'][] = $this->my_localized_strings['comdef_server_admin_strings']['server_admin_error_bmlt_id_not_integer'] . $bmltId;
-            } elseif ($isServerAdmin || array_key_exists(intval($bmltId), $userMeetingIDs)) {
+            } else {
                 $meetingMap[$bmltId] = $worldId;
             }
         }
@@ -282,12 +273,9 @@ class c_comdef_admin_ajax_handler
         try {
             foreach ($meetingMap as $bmltId => $newWorldId) {
                 if (!array_key_exists($bmltId, $meetings)) {
-                    if ($newWorldId === 'deleted') {
-                        if ($this->MarkDeletedMeetingAsHandled($bmltId)) {
-                            $ret['report']['marked'][] = $bmltId;
-                        } else {
-                            $ret['report']['not_marked'][] = $bmltId;
-                        }
+                    if (strtolower($newWorldId) === 'deleted') {
+                        $x = $this->MarkDeletedMeetingAsHandled($bmltId, $isServerAdmin, $userServiceBodyIDs);
+                        $ret['report'][$x][] = $bmltId;
                     } else {
                         $ret['report']['not_found'][] = $bmltId;
                     }
@@ -295,6 +283,10 @@ class c_comdef_admin_ajax_handler
                 }
 
                 $meeting = $meetings[$bmltId];
+                if (!$isServerAdmin && !in_array(intval($meeting['service_body_bigint']), $userServiceBodyIDs)) {
+                    $ret['report']['not_found'][] = $bmltId;
+                    continue;
+                }
                 $oldWorldId = $meeting['worldid_mixed'];
                 if ($oldWorldId == $newWorldId) {
                     $ret['report']['not_updated'][] = $bmltId;
@@ -318,11 +310,11 @@ class c_comdef_admin_ajax_handler
     /* Helper method for HandleMeetingWorldIDsUpdate.  Mark a deleted meeting as handled, so that NAWS doesn't need to keep seeing
     it in future exports.  This is done by setting the world_id of the deleted meeting to 'deleted', so that the code that produces
     a NAWS export file knows it can skip it (just as it skips deleted meetings with a blank world_id).  Note that the deleted meeting
-    only exists in the changes table.  Return true if it succeeded in marking a deleted meeting as handled, and false if not.  This
-    doesn't try to be clever about working around problems: if something is wrong, it just returns false and doesn't make any changes.
+    only exists in the changes table.  Return what was done as a string ('marked', 'not_marked', or 'not_found').  This doesn't
+    try to be clever about working around problems: if something is wrong, it just returns 'not_found' and doesn't make any changes.
     This seems reasonable; the deleted meeting will just sit there as unmarked in that case.  */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    private function MarkDeletedMeetingAsHandled($meeting_id)
+    private function MarkDeletedMeetingAsHandled($meeting_id, $isServerAdmin, $userServiceBodyIDs)
     {
         $change_objects = c_comdef_server::GetChangesFromIDAndType('c_comdef_meeting', $meeting_id);
         if ($change_objects instanceof c_comdef_changes) {
@@ -334,18 +326,22 @@ class c_comdef_admin_ajax_handler
                 foreach ($obj_array as $change) {
                     if ($change instanceof c_comdef_change and $change->GetChangeType() === 'comdef_change_type_delete' and !$change->GetAfterObject()) {
                         $meeting = $change->GetBeforeObject();
-                        if ($meeting->GetWorldID() === 'deleted') {
-                            return false;
+                        if (!$isServerAdmin && !in_array(intval($meeting->GetServiceBodyID()), $userServiceBodyIDs)) {
+                            // meeting was under some other service body
+                            return 'not_found';
+                        }
+                        if (strtolower($meeting->GetWorldID()) === 'deleted') {
+                            return 'not_marked';
                         }
                         $meeting->SetWorldID('deleted');
                         $meeting->UpdateToDB();
                         $meeting->DeleteFromDB();
-                        return true;
+                        return 'marked';
                     }
                 }
             }
         }
-        return false;
+        return 'not_found';
     }
 
     /*******************************************************************/

@@ -3055,7 +3055,7 @@ class c_comdef_server
     /** \brief Return all the Service Bodies this user is authorized with
 
         \returns an associative array. The key is the ID of the Service Body, and the value is:
-            - 'principal' If the user is a principal admin
+            - 'principal' If the user is a principal admin for that service body or one of its parents.
             - 'editor' If the user is a secondary editor.
             Returns null if the user is not cleared for any Service Body.
     */
@@ -3077,18 +3077,15 @@ class c_comdef_server
                 $is_editor = null;
                 if ($service_body instanceof c_comdef_service_body) {
                     $editors = $service_body->GetEditors();
-                    
                     if (is_array($editors) && count($editors)) {
                         if (in_array($in_user_id, $editors)) {
                             $is_editor = 'editor';
                         }
                     }
-                    
-                    if ($service_body->GetPrincipalUserID() == $in_user_id) {
+                    if ($service_body->IsUserInServiceBodyHierarchy(self::GetCurrentUserObj())) {
                         $is_editor = 'principal';
                     }
                 }
-                
                 if ($is_editor) {
                     $ret[$service_body->GetID()] = $is_editor;
                 }

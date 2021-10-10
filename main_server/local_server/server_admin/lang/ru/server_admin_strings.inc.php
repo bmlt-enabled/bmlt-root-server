@@ -36,7 +36,9 @@ $comdef_server_admin_strings = array('server_admin_disclosure' => 'Админи�
     'server_admin_ui_warning' => 'ПРЕДУПРЕЖДЕНИЕ',
     'server_admin_ui_errors' => 'Ошибка(и)',
     'server_admin_ui_deleted_meetings_marked' => 'Number of deleted meetings marked so that they won\'t appear in future NAWS exports: ',
-    'server_admin_ui_meetings_not_found' => 'Собрания были найдены в таблице, которой не было в базе данных. Это могло произойти, если собрание удалено или не опубликовано.  Не достающие ID собраний : ',
+    // TODO: re-translate this string (English version has been updated)
+    // 'server_admin_ui_meetings_not_found' => 'Собрания были найдены в таблице, которой не было в базе данных. Это могло произойти, если собрание удалено или не опубликовано.  Не достающие ID собраний : ',
+    'server_admin_ui_meetings_not_found' => 'meetings were found in the spreadsheet but not among the editable meetings the database. This can happen when a meeting is deleted or unpublished, or can\'t be edited by the current user. The problem meeting IDs are: ',
     'server_admin_ui_deleted_meetings_not_marked' => 'tried to mark %d deleted meetings so that they wouldn\'t appear in future NAWS exports, but there was a problem (for example, meeting already marked or change record not found). The problem meeting IDs are: ',
     'server_admin_ui_service_bodies_created' => 'Созданы сервисные органы: ',
     'server_admin_ui_meetings_created' => 'Собрания созданы: ',
