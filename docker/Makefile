@@ -1,5 +1,5 @@
 .PHONY: run
 
 run:
-	docker build -f Dockerfile-bmlt ../ -t public.ecr.aws/m3g5z4b2/bmlt-root-server
+	docker build -f Dockerfile-bmlt ../ -t public.ecr.aws/t5y4k5q3/bmlt-root-server
 	docker-compose up
