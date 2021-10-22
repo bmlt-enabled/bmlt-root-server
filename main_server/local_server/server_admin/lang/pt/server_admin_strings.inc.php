@@ -32,9 +32,8 @@ $comdef_server_admin_strings = array('server_admin_disclosure' => 'Administraç�
     'server_admin_ui_errors' => 'Erro(s)',
     'server_admin_ui_deleted_meetings_marked' => 'Number of deleted meetings marked so that they won\'t appear in future NAWS exports: ',
     // TODO: re-translate this string (English version has been updated)
-    // 'server_admin_ui_meetings_not_found' => 'reuniões foram encontradas na planilha que não existiam na base de dados. Isso pode acontecer quando uma reunião é apagada ou não publicada. Os IDs de reunião são: ',
-    'server_admin_ui_meetings_not_found' => 'meetings were found in the spreadsheet but not among the editable meetings the database. This can happen when a meeting is deleted or unpublished, or can\'t be edited by the current user. The problem meeting IDs are: ',
-    'server_admin_ui_deleted_meetings_not_marked' => 'tried to mark %d deleted meetings so that they wouldn\'t appear in future NAWS exports, but there was a problem (for example, meeting already marked or change record not found). The problem meeting IDs are: ',
+    // 'server_admin_ui_problem_meetings' => 'reuniões foram encontradas na planilha que não existiam na base de dados. Isso pode acontecer quando uma reunião é apagada ou não publicada. Os IDs de reunião são: ',
+    'server_admin_ui_problem_meetings' => 'meetings were found in the spreadsheet that couldn\'t be updated. Problem meeting IDs: ',
     'server_admin_ui_service_bodies_created' => 'Corpos de serviço criados: ',
     'server_admin_ui_meetings_created' => 'Reuniões criadas: ',
     'server_admin_ui_users_created' => 'Usuários criados: ',

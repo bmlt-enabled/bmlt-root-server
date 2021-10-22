@@ -420,15 +420,11 @@ function BMLT_Server_Admin()
                 report += g_num_meetings_not_updated_text + result.report.not_updated.length.toString();
                 if (result.report.marked.length) {
                     report += "\n\n";
-                    report += g_deleted_meetings_marked_text + result.report.marked.length.toString() + "\n\n";
+                    report += g_deleted_meetings_marked_text + result.report.marked.length.toString();
                 }
-                if (result.report.not_found.length) {
+                if (result.report.problem.length) {
                     report += "\n\n";
-                    report += g_warning_text + ": " + result.report.not_found.length.toString() + " " + g_meetings_not_found_text + result.report.not_found.join(", ");
-                }
-                if (result.report.not_marked.length) {
-                    report += "\n\n";
-                    report += g_warning_text + ": " + sprintf(g_deleted_meetings_not_marked_text, result.report.not_marked.length) + result.report.not_marked.join(", ");
+                    report += g_warning_text + ": " + result.report.problem.length.toString() + " " + g_problem_meetings_text + result.report.problem.join(", ");
                 }
                 alert(report);
             } else {
