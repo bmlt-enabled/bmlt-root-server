@@ -14,7 +14,7 @@ services:
     volumes:
       - ../main_server:/var/www/html/main_server
   db:
-    image: public.ecr.aws/m3g5z4b2/bmlt-root-server-sample-db:latest
+    image: public.ecr.aws/t5y4k5q3/bmlt-root-server-sample-db:latest
     ports:
       - "3306:3306"
     environment:
