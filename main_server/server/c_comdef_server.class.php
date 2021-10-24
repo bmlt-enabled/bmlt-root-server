@@ -3052,49 +3052,50 @@ class c_comdef_server
     }
     
     /*******************************************************************/
-    /** \brief Return all the Service Bodies this user is authorized with
+    /** \brief Return all the Service Bodies this user is allowed to edit
 
         \returns an associative array. The key is the ID of the Service Body, and the value is:
-            - 'principal' If the user is a principal admin
+            - 'principal' If the user is the principal admin for that service body
             - 'editor' If the user is a secondary editor.
-            Returns null if the user is not cleared for any Service Body.
+            Returns null if the user is not allowed to edit any Service Body.
+
+     To decide whether the user is allowed to edit some service body, if the user is explicitly listed in the
+     editors for that service body, then the user can edit it.  In addition, if the user level is service body admin
+     (i.e.,_USER_LEVEL_SERVICE_BODY_ADMIN), then this permission recurses down to child service bodies.
+     There is also a 'editor' level _USER_LEVEL_EDITOR that isn't allowed to do as many operations.  This is currently
+     unused (the UI won't let you make users with this level).  But in uses of it elsewhere in the code, it doesn't recurse.
+     This seems weird, but for consistency this method matches that behavior.  Probably the _USER_LEVEL_EDITOR level should
+     be removed entirely.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public static function GetUserServiceBodies( $in_user_id = null   ///< The ID of the user. If not provided, the current user is checked.
+    public static function GetUserServiceBodies( $in_user = null   ///< The user to check. If not provided, the current user is checked.
                                             )
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-        $ret = null;
-        
-        if (!$in_user_id) {
-            $in_user_id = self::GetCurrentUserObj()->GetID();
+        if (!$in_user) {
+            $in_user = self::GetCurrentUserObj();
         }
-        
+        $in_user_id = $in_user->GetID();
+        $ret = null;
         $service_bodies = c_comdef_server::GetServer()->GetServiceBodyArray();
-        
         if (is_array($service_bodies) && count($service_bodies)) {
             foreach ($service_bodies as &$service_body) {
                 $is_editor = null;
                 if ($service_body instanceof c_comdef_service_body) {
                     $editors = $service_body->GetEditors();
-                    
-                    if (is_array($editors) && count($editors)) {
-                        if (in_array($in_user_id, $editors)) {
-                            $is_editor = 'editor';
-                        }
+                    if (is_array($editors) && count($editors) && in_array($in_user_id, $editors)
+                            || $in_user->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN && $service_body->IsUserInServiceBodyHierarchy($in_user)) {
+                        $is_editor = 'editor';
                     }
-                    
                     if ($service_body->GetPrincipalUserID() == $in_user_id) {
                         $is_editor = 'principal';
                     }
                 }
-                
                 if ($is_editor) {
                     $ret[$service_body->GetID()] = $is_editor;
                 }
             }
         }
-        
         return $ret;
     }
 

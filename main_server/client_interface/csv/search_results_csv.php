@@ -756,7 +756,7 @@ function ReturnNAWSDeletedMeetings(
                         // deletion change records for this meeting don't have anything output either.
                         if (in_array($b_obj->GetID(), $ids_to_ignore)) {
                             $value = false;
-                        } else if ($b_obj->GetMeetingDataValue('worldid_mixed') === 'deleted') {
+                        } else if (strtolower($b_obj->GetMeetingDataValue('worldid_mixed')) === 'deleted') {
                             array_push($ids_to_ignore, $b_obj->GetID());
                             $value = false;
                         } else {

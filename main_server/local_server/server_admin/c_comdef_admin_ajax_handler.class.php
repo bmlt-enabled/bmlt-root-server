@@ -154,10 +154,37 @@ class c_comdef_admin_ajax_handler
         return json_encode($ret);
     }
 
+    /* Method to handle updating World ID codes.  These are provided in a spreadsheet, usually sent by NAWS, with new world_id
+    codes to be entered.  The only thing that will be changed doing this are world_id codes for meetings, nothing else.
+    In addition to new codes, NAWS can also provide a new world_id 'deleted'.  This is for meetings that are already
+    deleted and so noted by NAWS.  The code that produces a NAWS export file knows it can skip deleted meetings with
+    this special world_id, just as it skips deleted meetings with a blank world_id.  (Otherwise NAWS keeps seeing these
+    deleted meetings on the export file.)  The method will only update meetings that the current logged-in user has
+    permission to edit.  For deleted meetings, the method checks that the current logged-in user could edit the meeting
+    if it were restored.  The server admin can edit any meeting.  Note that deleted meetings exist only in the changes
+    table of the database, not the meetings table; so to mark them, the code temporarily restores them, changes the world_ids,
+    and deletes them again.  Here is the logic for handling the various cases of meetings in the spreadsheet read in.
+    These are all based on the bmlt_id for the meeting.
+        * if the meeting is in the meetings table in the database:
+            + if user has edit rights to this meeting:
+                - if the world_id is changing, update the world_id, and report it as 'updated'
+                - if the world_id remains the same, don't change it, and report it as 'not_updated'
+            + if user doesn't have edit rights to this meeting, don't change it, and report it as 'problem'
+        * if the meeting is not in the meetings table in the database but is in the changes table:
+            + if the new world_id is 'deleted':
+                - if user had edit rights to this meeting:
+                    - if the world_id wasn't already 'deleted', change it to 'deleted', and report it as 'marked'
+                    - if the world_id was already 'deleted', don't change it, and report it as 'not_updated'
+                - if user didn't have edit rights to this meeting, don't change it, and report it as 'problem'
+            + if the new world_id anything else, report it as 'problem'
+        * if the meeting is neither in the meetings table nor in the changes table, report it as 'problem'
+    The results of doing the updates are returned in a json-encoded array.  */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     public function HandleMeetingWorldIDsUpdate()
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+        // $ret holds the results from updating the world_ids.
+        // TODO sometime: it would be better to encapsulate this functionality in a class MeetingWorldIDsUpdateResult.
         $ret = array(
             'success' => false,
             'errors' => array(),
@@ -165,8 +192,7 @@ class c_comdef_admin_ajax_handler
                 'updated' => array(),
                 'not_updated' => array(),
                 'marked' => array(),
-                'not_found' => array(),
-                'not_marked' => array()
+                'problem' => array()
             )
         );
 
@@ -192,23 +218,14 @@ class c_comdef_admin_ajax_handler
             return json_encode($ret);
         }
 
+        // If set, $userServiceBodyIDs is an array of service body IDs of meetings that the current user is allowed to edit.
+        // $userServiceBodyIDs is not set if the user is the serveradmin and can edit any meeting.
         if (!$isServerAdmin) {
-            // We are a service body admin, so get the meeting IDs this admin is allowed to edit
-            $userMeetingIDs = array();
-            $userServiceBodyIDs = c_comdef_server::GetUserServiceBodies();
-            if (is_array($userServiceBodyIDs)) {
-                $userServiceBodyIDs = array_keys($userServiceBodyIDs);
-                foreach ($userServiceBodyIDs as $serviceBodyID) {
-                    $sbMeetings = c_comdef_server::GetMeetingsForAServiceBody($serviceBodyID);
-                    if ($sbMeetings) {
-                        $sbMeetings = $sbMeetings->GetMeetingObjects();
-                        if (is_array($sbMeetings)) {
-                            foreach ($sbMeetings as $meeting) {
-                                $userMeetingIDs[$meeting->GetID()] = null;
-                            }
-                        }
-                    }
-                }
+            $ids = c_comdef_server::GetUserServiceBodies();
+            if (is_array($ids)) {
+                $userServiceBodyIDs = array_keys($ids);
+            } else {
+                $userServiceBodyIDs = [];
             }
         }
 
@@ -248,7 +265,7 @@ class c_comdef_admin_ajax_handler
                 continue;
             } elseif (!is_numeric($bmltId)) {
                 $ret['errors'][] = $this->my_localized_strings['comdef_server_admin_strings']['server_admin_error_bmlt_id_not_integer'] . $bmltId;
-            } elseif ($isServerAdmin || array_key_exists(intval($bmltId), $userMeetingIDs)) {
+            } else {
                 $meetingMap[$bmltId] = $worldId;
             }
         }
@@ -282,25 +299,19 @@ class c_comdef_admin_ajax_handler
         try {
             foreach ($meetingMap as $bmltId => $newWorldId) {
                 if (!array_key_exists($bmltId, $meetings)) {
-                    if ($newWorldId === 'deleted') {
-                        if ($this->MarkDeletedMeetingAsHandled($bmltId)) {
-                            $ret['report']['marked'][] = $bmltId;
-                        } else {
-                            $ret['report']['not_marked'][] = $bmltId;
-                        }
-                    } else {
-                        $ret['report']['not_found'][] = $bmltId;
-                    }
+                    $this->UpdatePossiblyDeletedMeeting($bmltId, $ret, $isServerAdmin, $userServiceBodyIDs);
                     continue;
                 }
-
                 $meeting = $meetings[$bmltId];
+                if (!$isServerAdmin && !in_array(intval($meeting['service_body_bigint']), $userServiceBodyIDs)) {
+                    $ret['report']['problem'][] = $bmltId;
+                    continue;
+                }
                 $oldWorldId = $meeting['worldid_mixed'];
                 if ($oldWorldId == $newWorldId) {
                     $ret['report']['not_updated'][] = $bmltId;
                     continue;
                 }
-
                 $meeting['worldid_mixed'] = $newWorldId;
                 $this->SetMeetingDataValues($meeting, false);
                 $ret['report']['updated'][] = $bmltId;
@@ -315,37 +326,41 @@ class c_comdef_admin_ajax_handler
         return json_encode($ret);
     }
 
-    /* Helper method for HandleMeetingWorldIDsUpdate.  Mark a deleted meeting as handled, so that NAWS doesn't need to keep seeing
-    it in future exports.  This is done by setting the world_id of the deleted meeting to 'deleted', so that the code that produces
-    a NAWS export file knows it can skip it (just as it skips deleted meetings with a blank world_id).  Note that the deleted meeting
-    only exists in the changes table.  Return true if it succeeded in marking a deleted meeting as handled, and false if not.  This
-    doesn't try to be clever about working around problems: if something is wrong, it just returns false and doesn't make any changes.
-    This seems reasonable; the deleted meeting will just sit there as unmarked in that case.  */
+    /* Helper method for HandleMeetingWorldIDsUpdate for updating deleted meetings.  These meetings exist only in the changes table,
+    if at all.  This doesn't try to be clever about working around problems: if something is wrong,
+    it just reports the meeting as a problem meeting and doesn't make any changes. */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    private function MarkDeletedMeetingAsHandled($meeting_id)
+    private function UpdatePossiblyDeletedMeeting($bmltId, &$ret, $isServerAdmin, $userServiceBodyIDs)
     {
-        $change_objects = c_comdef_server::GetChangesFromIDAndType('c_comdef_meeting', $meeting_id);
+        $change_objects = c_comdef_server::GetChangesFromIDAndType('c_comdef_meeting', $bmltId);
         if ($change_objects instanceof c_comdef_changes) {
             $obj_array = $change_objects->GetChangesObjects();
-            if (is_array($obj_array) && count($obj_array)) {
+            if (is_array($obj_array)) {
                 // The changes are returned in reverse chronological order.  Ideally the last change would be a delete; but it seems
-                // that there can be race conditions in which there are several changes with the same time stamp.  So get the
-                // most recent delete, rather than just $obj_array[0]
+                // that there can be race conditions in which there are several changes with the same time stamp (but only one of these
+                // will be a delete).  So get the most recent delete, rather than just $obj_array[0]
                 foreach ($obj_array as $change) {
-                    if ($change instanceof c_comdef_change and $change->GetChangeType() === 'comdef_change_type_delete' and !$change->GetAfterObject()) {
+                    if ($change instanceof c_comdef_change && $change->GetChangeType() === 'comdef_change_type_delete' && !$change->GetAfterObject()) {
                         $meeting = $change->GetBeforeObject();
-                        if ($meeting->GetWorldID() === 'deleted') {
-                            return false;
+                        if (!$isServerAdmin && !in_array(intval($meeting->GetServiceBodyID()), $userServiceBodyIDs)) {
+                            // Meeting was under some other service body that this user isn't allowed to change.
+                            $ret['report']['problem'][] = $bmltId;
+                        } elseif (strtolower($meeting->GetWorldID()) === 'deleted') {
+                            // meeting was already marked as 'deleted'
+                            $ret['report']['not_updated'][] = $bmltId;
+                        } else {
+                            // found it - set the meeting's world_id to 'deleted'
+                            $meeting->SetWorldID('deleted');
+                            $meeting->UpdateToDB();
+                            $meeting->DeleteFromDB();
+                            $ret['report']['marked'][] = $bmltId;
                         }
-                        $meeting->SetWorldID('deleted');
-                        $meeting->UpdateToDB();
-                        $meeting->DeleteFromDB();
-                        return true;
+                        return;
                     }
                 }
             }
         }
-        return false;
+        $ret['report']['problem'][] = $bmltId;
     }
 
     /*******************************************************************/
