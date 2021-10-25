@@ -6,6 +6,8 @@
         "phpoffice/phpspreadsheet": "1.8.2"
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "3.*"
+        "squizlabs/php_codesniffer": "3.*",
+        "phpcompatibility/php-compatibility": "*",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1"
     }
 }

@@ -105,7 +105,8 @@ class c_comdef_format extends t_comdef_world_type implements i_comdef_db_stored,
 
                 /// Create a new entry.
                 $updateSQL = "INSERT INTO `".c_comdef_server::GetFormatTableName_obj()."` (";
-                while (list ( $key, $value ) = each($record)) {
+
+                foreach ($record as $key => $value) {
                     if (!$first) {
                         $updateSQL .= ",";
                     } else {
@@ -119,7 +120,7 @@ class c_comdef_format extends t_comdef_world_type implements i_comdef_db_stored,
                 $updateSQL .= ") VALUES (";
 
                 $first = true;
-                while (list ( $key, $value ) = each($record)) {
+                foreach ($record as $key => $value) {
                     if (!$first) {
                         $updateSQL .= ",";
                     } else {

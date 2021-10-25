@@ -445,12 +445,12 @@ class c_comdef_meetings implements i_comdef_has_parent
                                 if ($in_contains) {
                                     $preg = preg_quote($in_value);
                                     $preg = '|.*'.$preg.'.*|';
-                                    $match = (1 == preg_match($preg, $value));
+                                    $match_found = (1 == preg_match($preg, $value));
                                 } else {
-                                    $match = (0 == strcmp(trim($in_value), trim($value)));
+                                    $match_found = (0 == strcmp(trim($in_value), trim($value)));
                                 }
                             
-                                if ($match) {
+                                if ($match_found) {
                                     $reto[] = $meeting;
                                 } elseif (!$in_match_case) {
                                     /*
