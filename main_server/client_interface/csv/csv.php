@@ -319,14 +319,9 @@ function parse_redirect(
             break;
         
         case 'GetServiceBodies':
-            $recursive = false;
-            $parents = 0;
-            if (isset($http_vars['recursive']) && $http_vars['recursive'] == '1') {
-                $recursive = true;
-            }
-            if (isset($http_vars['parents']) && intval($http_vars['parents']) > 0) {
-                $parents = intval($http_vars['parents']);
-            }
+            $recursive = isset($http_vars['recursive']) && $http_vars['recursive'] == '1';
+            $parents = isset($http_vars['parents']) && $http_vars['parents'] == '1';
+
             $services = null;
             if (isset($http_vars['services'])) {
                 $services = is_array($http_vars['services']) ? $http_vars['services'] : array($http_vars['services']);
@@ -1012,7 +1007,7 @@ function GetServiceBodies(
     &$server,            ///< A reference to an instance of c_comdef_server
     $services = null,
     $recursive = false,
-    $parents = 0  // This represents a depth of how many levels up to go on the hierarchy of service bodies.
+    $parents = false
 ) {
     $ret = array ();
     $localized_strings = c_comdef_server::GetLocalStrings();
@@ -1040,7 +1035,7 @@ function GetServiceBodies(
         $servicesExclude = array_merge($servicesExclude, GetChildServiceBodies($server, $servicesExclude));
     }
     
-    if ($parents > 0) {
+    if ($parents) {
         $servicesInclude = array_merge($servicesInclude, GetParentServiceBodies($server, $servicesInclude));
     }
 
@@ -1083,12 +1078,16 @@ function GetParentServiceBodies($server, $serviceBodyIds)
 {
     $ret = array();
     $serviceBodyArray = $server->GetServiceBodyArray();
-    for ($i = 0; $i < count($serviceBodyIds); $i++) {
+    $parents = $serviceBodyIds;
+    while (count($parents)) {
+        $newParents = array();
         foreach ($serviceBodyArray as $serviceBody) {
-            if ($serviceBody->GetID() == $serviceBodyIds[$i] && !in_array($serviceBody->GetOwnerId(), $ret)) {
+            if (in_array($serviceBody->GetID(), $parents) && !in_array($serviceBody->GetOwnerID(), $ret)) {
+                array_push($newParents, $serviceBody->GetOwnerID());
                 array_push($ret, $serviceBody->GetOwnerID());
             }
         }
+        $parents = $newParents;
     }
     return $ret;
 }
@@ -1097,9 +1096,10 @@ function GetChildServiceBodies($server, $parents)
 {
     $ret = array();
     $children = $parents;
+    $serviceBodyArray = $server->GetServiceBodyArray();
     while (count($children)) {
         $newChildren = array();
-        foreach ($server->GetServiceBodyArray() as $serviceBody) {
+        foreach ($serviceBodyArray as $serviceBody) {
             if (in_array($serviceBody->GetOwnerID(), $children) && !in_array($serviceBody->GetID(), $ret)) {
                 array_push($newChildren, $serviceBody->GetID());
                 array_push($ret, $serviceBody->GetID());
