@@ -421,6 +421,15 @@ function DB_Connect_and_Upgrade()
             $table = "$dbPrefix" . "_comdef_formats";
             $sql = "UPDATE `$table` SET `name_string` = 'Temporarily Closed Facility' WHERE `key_string` = 'TC' AND `name_string` = 'Temporarily Closed' AND `description_string` = 'Facility is Temporarily Closed'";
             c_comdef_dbsingleton::preparedExec($sql);
+        }),
+        array(20, function () {
+            // Add the venue_type field to the meetings table
+            $dbPrefix = $GLOBALS['dbPrefix'];
+            $table = "$dbPrefix" . "_comdef_meetings_main";
+            $alter_sql = "ALTER TABLE `$table` ADD `venue_type` TINYINT(4) UNSIGNED DEFAULT NULL AFTER `weekday_tinyint`";
+            c_comdef_dbsingleton::preparedExec($alter_sql);
+            $create_sql = "CREATE INDEX `venue_type` ON $table (`venue_type`)";
+            c_comdef_dbsingleton::preparedExec($create_sql);
         })
     );
     // WHEN ADDING A NEW DATABASE MIGRATION, REMEMBER TO BUMP THE VERSION IN local_server/install_wizard/sql_files/initialDbVersionData.sql
