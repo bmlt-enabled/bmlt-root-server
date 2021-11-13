@@ -423,13 +423,97 @@ function DB_Connect_and_Upgrade()
             c_comdef_dbsingleton::preparedExec($sql);
         }),
         array(20, function () {
-            // Add the venue_type field to the meetings table
+            // Add the venue_type column to the meetings table
             $dbPrefix = $GLOBALS['dbPrefix'];
             $table = "$dbPrefix" . "_comdef_meetings_main";
             $alter_sql = "ALTER TABLE `$table` ADD `venue_type` TINYINT(4) UNSIGNED DEFAULT NULL AFTER `weekday_tinyint`";
             c_comdef_dbsingleton::preparedExec($alter_sql);
             $create_sql = "CREATE INDEX `venue_type` ON $table (`venue_type`)";
             c_comdef_dbsingleton::preparedExec($create_sql);
+        }),
+        array(21, function () {
+            // Populate the venue_type based on existing format selections
+            // The logic is copied from setFormatCheckboxes in server_admin_javascript.js
+            function getFormatId($key)
+            {
+                $dbPrefix = $GLOBALS['dbPrefix'];
+                $formatsTable = $dbPrefix . "_comdef_formats";
+                $q1 = "SELECT `shared_id_bigint` FROM `$formatsTable` WHERE `key_string` = '$key' AND `lang_enum` = 'en' ORDER BY `shared_id_bigint`";
+                $result1 = c_comdef_dbsingleton::preparedQuery($q1);
+                if (is_array($result1) && count($result1)) {
+                    // English version of the format found
+                    return $result1[0]['shared_id_bigint'];
+                }
+                return false;
+            }
+
+            function getFormatStrFilter($formatId, $hasFormat)
+            {
+                $filter = "(";
+                if ($hasFormat) {
+                    $filter .= "`formats` IS NOT NULL AND (";
+                    $filter .= "  `formats` = '$formatId' OR ";
+                    $filter .= "  `formats` LIKE '$formatId,%' OR ";
+                    $filter .= "  `formats` LIKE '%,$formatId' OR ";
+                    $filter .= "  `formats` LIKE '%,$formatId,%'";
+                    $filter .= ")";
+                } else {
+                    $filter .= "`formats` IS NULL OR (";
+                    $filter .= "  `formats` != '$formatId' AND ";
+                    $filter .= "  `formats` NOT LIKE '$formatId,%' AND ";
+                    $filter .= "  `formats` NOT LIKE '%,$formatId' AND ";
+                    $filter .= "  `formats` NOT LIKE '%,$formatId,%'";
+                    $filter .= ")";
+                }
+                return $filter . ")";
+            }
+
+            $VENUE_TYPE_HYBRID = 3;
+            $VENUE_TYPE_VIRTUAL = 2;
+            $VENUE_TYPE_IN_PERSON = 1;
+            $vmFormatId = getFormatId("VM");
+            $hyFormatId = getFormatId("HY");
+            $tcFormatId = getFormatId("TC");
+            if (!$vmFormatId || !$hyFormatId || !$tcFormatId) {
+                // The formats don't exist... not sure how this could happen
+                // Also not sure what to do if this happens
+                return;
+            }
+
+            $dbPrefix = $GLOBALS['dbPrefix'];
+            $meetingsTable = $dbPrefix . "_comdef_meetings_main";
+
+            // HYBRID
+            // !VM && !TC && HY
+            $updateSql = "UPDATE `$meetingsTable` SET `venue_type` = $VENUE_TYPE_HYBRID WHERE `venue_type` IS NULL AND ";
+            $updateSql .= getFormatStrFilter($vmFormatId, false) . " AND ";
+            $updateSql .= getFormatStrFilter($tcFormatId, false) . " AND ";
+            $updateSql .= getFormatStrFilter($hyFormatId, true);
+            c_comdef_dbsingleton::preparedExec($updateSql);
+
+            // VIRTUAL
+            // VM && TC && !HY
+            // In the UI, this is Virtual TC, but not sure if this is actually a useful designation for filtering, so just use VIRTUAL
+            $updateSql = "UPDATE `$meetingsTable` SET `venue_type` = $VENUE_TYPE_VIRTUAL WHERE `venue_type` IS NULL AND ";
+            $updateSql .= getFormatStrFilter($vmFormatId, true) . " AND ";
+            $updateSql .= getFormatStrFilter($tcFormatId, true) . " AND ";
+            $updateSql .= getFormatStrFilter($hyFormatId, false);
+            c_comdef_dbsingleton::preparedExec($updateSql);
+
+            // VM && !TC && !HY
+            $updateSql = "UPDATE `$meetingsTable` SET `venue_type` = $VENUE_TYPE_VIRTUAL WHERE `venue_type` IS NULL AND ";
+            $updateSql .= getFormatStrFilter($vmFormatId, true) . " AND ";
+            $updateSql .= getFormatStrFilter($tcFormatId, false) . " AND ";
+            $updateSql .= getFormatStrFilter($hyFormatId, false);
+            c_comdef_dbsingleton::preparedExec($updateSql);
+
+            // IN_PERSON
+            // !VM && !TC && !HY
+            $updateSql = "UPDATE `$meetingsTable` SET `venue_type` = $VENUE_TYPE_IN_PERSON WHERE `venue_type` IS NULL AND ";
+            $updateSql .= getFormatStrFilter($vmFormatId, false) . " AND ";
+            $updateSql .= getFormatStrFilter($tcFormatId, false) . " AND ";
+            $updateSql .= getFormatStrFilter($hyFormatId, false);
+            c_comdef_dbsingleton::preparedExec($updateSql);
         })
     );
     // WHEN ADDING A NEW DATABASE MIGRATION, REMEMBER TO BUMP THE VERSION IN local_server/install_wizard/sql_files/initialDbVersionData.sql
