@@ -1816,7 +1816,7 @@ class c_comdef_server
             $valid = false;
 
             foreach ($in_venue_type_tinyint_array as $venueType) {
-                if (abs(intval($venueType)) >= VenueType::IN_PERSON && abs(intval($venueType)) < VenueType::HYBRID) {
+                if (abs(intval($venueType)) >= VenueType::IN_PERSON && abs(intval($venueType)) <= VenueType::HYBRID) {
                     $valid = true;
                 }
             }
