@@ -22,7 +22,7 @@ require_once(dirname(__FILE__).'/../../server/shared/Array2Json.php');
 require_once(dirname(__FILE__).'/../../server/shared/Array2XML.php');
 require_once(dirname(__FILE__).'/../../client_interface/csv/search_results_csv.php');
 require_once(dirname(__FILE__).'/PhpJsonXmlArrayStringInterchanger.inc.php');
-require_once(__DIR__.'/VenueType.php');
+require_once(dirname(__FILE__) . '/../../server/shared/classes/VenueType.php');
 
 /***********************************************************************************************************//**
     \class c_comdef_admin_main_console

@@ -35,6 +35,7 @@ require_once(dirname(__FILE__)."/classes/c_comdef_changes.class.php");
 require_once(dirname(__FILE__)."/classes/c_comdef_users.class.php");
 require_once(dirname(__FILE__)."/classes/c_comdef_service_bodies.class.php");
 require_once(dirname(__FILE__)."/shared/classes/base_templates.inc.php");
+require_once(dirname(__FILE__)."/shared/classes/VenueType.php");
 
 /******************************************************************/
 
@@ -1815,7 +1816,7 @@ class c_comdef_server
             $valid = false;
 
             foreach ($in_venue_type_tinyint_array as $venueType) {
-                if (abs(intval($venueType)) > 0 && abs(intval($venueType)) < 4) {
+                if (abs(intval($venueType)) >= VenueType::IN_PERSON && abs(intval($venueType)) < VenueType::HYBRID) {
                     $valid = true;
                 }
             }

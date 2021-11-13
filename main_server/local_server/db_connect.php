@@ -21,7 +21,7 @@
 function DB_Connect_and_Upgrade()
 {
     include(dirname(__FILE__)."/../server/config/get-config.php");
-    require_once(dirname(__FILE__)."/server_admin/VenueType.php");
+    require_once(dirname(__FILE__)."/../server/shared/classes/VenueType.php");
     
     if (!isset($dbType)) {
         $dbType = 'mysql';

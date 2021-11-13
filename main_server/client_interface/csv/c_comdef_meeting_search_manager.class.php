@@ -51,6 +51,7 @@
 defined('BMLT_EXEC') or die('Cannot Execute Directly');    // Makes sure that this file is in the correct context.
 
 require_once(dirname(__FILE__)."/../../server/c_comdef_server.class.php");
+require_once(dirname(__FILE__)."/../../server/shared/classes/VenueType.php");
 
 /// A class to control the basic common functionality of all meeting searches.
 // phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
@@ -220,9 +221,9 @@ class c_comdef_meeting_search_manager
             }
 
             $this->_venue_types = null;
-            $this->_venue_types[1] = 0;
-            $this->_venue_types[2] = 0;
-            $this->_venue_types[3] = 0;
+            $this->_venue_types[VenueType::IN_PERSON] = 0;
+            $this->_venue_types[VenueType::VIRTUAL] = 0;
+            $this->_venue_types[VenueType::HYBRID] = 0;
 
             // This is the default sort.
             $this->sort_array = array ( "lang_enum", "weekday_tinyint", "start_time", "id_bigint" );
