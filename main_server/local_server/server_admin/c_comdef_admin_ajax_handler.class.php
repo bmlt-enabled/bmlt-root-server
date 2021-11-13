@@ -22,6 +22,7 @@ require_once(dirname(__FILE__).'/../../server/shared/Array2Json.php');
 require_once(dirname(__FILE__).'/../../server/shared/Array2XML.php');
 require_once(dirname(__FILE__).'/../../client_interface/csv/search_results_csv.php');
 require_once(dirname(__FILE__).'/PhpJsonXmlArrayStringInterchanger.inc.php');
+require_once(__DIR__.'/VenueType.php');
 
 /***********************************************************************************************************//**
     \class c_comdef_admin_main_console
@@ -1130,7 +1131,7 @@ class c_comdef_admin_ajax_handler
                                 );
                 $meeting = new c_comdef_meeting($this->my_server, $data);
             }
-            
+
             if ($meeting instanceof c_comdef_meeting) {
                 // Security precaution: We check the session to make sure that the user is authorized for this meeting.
                 if ($meeting->UserCanEdit()) {
@@ -1181,10 +1182,14 @@ class c_comdef_admin_ajax_handler
                             case 'lang_enum':
                             case 'duration_time':
                             case 'time_zone':
-                            case 'formats':
                                 $data[$key] = $value;
                                 break;
-                            
+
+                            case 'formats':
+                                $data[$key] = $value;
+                                $data["venue_type"] = $this->GetVenueTypeForFormats($value);
+                                break;
+
                             case 'longitude':
                             case 'latitude':
                                 $data[$key] = floatval($value);
@@ -1290,6 +1295,64 @@ class c_comdef_admin_ajax_handler
             } else {
                 return $result;
             }
+        }
+    }
+
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    private function GetVenueTypeForFormats($formatsArray)
+    {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+        // Get the format ID for each of the venue type formats
+        $vmFormatId = 0;
+        $hyFormatId = 0;
+        $tcFormatId = 0;
+        foreach ($this->my_server->GetFormatsArray()["en"] as $format) {
+            if ($format->GetKey() == "VM") {
+                $vmFormatId = $format->GetSharedID();
+            } else if ($format->GetKey() == "HY") {
+                $hyFormatId = $format->GetSharedID();
+            } else if ($format->GetKey() == "TC") {
+                $tcFormatId = $format->GetSharedID();
+            }
+            if ($vmFormatId && $hyFormatId && $tcFormatId) {
+                break;
+            }
+        }
+
+        // if (!$vmFormatId || !$hyFormatId || !$tcFormatId) {
+            // I think this can only happen if someone manually messed with their database, and
+            // I am not really sure what we should do in this situation.
+        //}
+
+        // Set helper bools indicating whether or not the formats array has these formats
+        $hasVM = false;
+        $hasHY = false;
+        $hasTC = false;
+        foreach ($formatsArray as $format) {
+            if ($format->GetSharedID() == $vmFormatId) {
+                $hasVM = true;
+            } else if ($format->GetSharedID() == $hyFormatId) {
+                $hasHY = true;
+            } else if ($format->GetSharedID() == $tcFormatId) {
+                $hasTC = true;
+            }
+            if ($hasVM && $hasHY && $hasTC) {
+                break;
+            }
+        }
+
+        // This logic is copied from setFormatCheckboxes in server_admin_javascript.js
+        if (!$hasVM && !$hasTC && $hasHY) {
+            return VenueType::HYBRID;
+        } else if ($hasVM && $hasTC && !$hasHY) {
+            // This is Virtual TC in the UI, but that doesn't seem like a useful designation for filtering,
+            // so we are just going to set it to virtual. I suspect virtual TC as a venue type will go away
+            // eventually.
+            return VenueType::VIRTUAL;
+        } else if ($hasVM && !$hasTC && !$hasHY) {
+            return VenueType::VIRTUAL;
+        } else {
+            return VenueType::IN_PERSON;
         }
     }
     

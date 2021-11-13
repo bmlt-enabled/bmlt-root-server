@@ -21,6 +21,7 @@
 function DB_Connect_and_Upgrade()
 {
     include(dirname(__FILE__)."/../server/config/get-config.php");
+    require_once(dirname(__FILE__)."/server_admin/VenueType.php");
     
     if (!isset($dbType)) {
         $dbType = 'mysql';
@@ -468,9 +469,9 @@ function DB_Connect_and_Upgrade()
                 return $filter . ")";
             }
 
-            $VENUE_TYPE_HYBRID = 3;
-            $VENUE_TYPE_VIRTUAL = 2;
-            $VENUE_TYPE_IN_PERSON = 1;
+            $VENUE_TYPE_HYBRID = VenueType::HYBRID;
+            $VENUE_TYPE_VIRTUAL = VenueType::VIRTUAL;
+            $VENUE_TYPE_IN_PERSON = VenueType::IN_PERSON;
             $vmFormatId = getFormatId("VM");
             $hyFormatId = getFormatId("HY");
             $tcFormatId = getFormatId("TC");

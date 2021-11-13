@@ -1938,6 +1938,7 @@ class c_comdef_admin_main_console
                 case 'shared_group_id_bigint':
                 case 'service_body_bigint':
                 case 'weekday_tinyint':
+                case 'venue_type':
                 case 'start_time':
                 case 'formats':
                 case 'lang_enum':

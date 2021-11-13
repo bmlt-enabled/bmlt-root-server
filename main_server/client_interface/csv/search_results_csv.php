@@ -503,6 +503,7 @@ function DisplaySearchResultsCSV(
                                                 case 'shared_group_id_bigint':
                                                 case 'service_body_bigint':
                                                 case 'weekday_tinyint':
+                                                case 'venue_type':
                                                 case 'start_time':
                                                 case 'duration_time':
                                                 case 'time_zone':

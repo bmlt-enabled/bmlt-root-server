@@ -560,6 +560,7 @@ class c_comdef_meetings implements i_comdef_has_parent
                             case 'latitude':
                             case 'published':
                             case 'email_contact':
+                            case 'venue_type':
                                 break;
                             
                             case 'service_body_bigint':
