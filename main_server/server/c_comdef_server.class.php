@@ -1647,6 +1647,7 @@ class c_comdef_server
         // 'lang_enum' field is of that value. If the array is null, all languages are searched. If the enum is preceded
         // by a minus sign (-), then the language is filtered against in the search.
         $in_weekday_tinyint_array = null,   //  The weekday (An array of integer 1-Sunday, 7-Saturday). Optional. If null, all days will be returned.
+        $in_venue_type_tinyint_array = null,
         // Each day chosen widens the search. If the weekday is negative, then that is specifically filtered against in
         // the search.
         $in_formats = null,
@@ -1805,6 +1806,53 @@ class c_comdef_server
                     
                     $sql .= "$sql_x(".self::GetMeetingTableName_obj()."_main.weekday_tinyint=?)";
                     array_push($ar, $weekday-1);
+                }
+                $sql .= ")";
+            }
+        }
+
+        if (is_array($in_venue_type_tinyint_array) && count($in_venue_type_tinyint_array)) {
+            $valid = false;
+
+            foreach ($in_venue_type_tinyint_array as $venueType) {
+                if (abs(intval($venueType)) > 0 && abs(intval($venueType)) < 4) {
+                    $valid = true;
+                }
+            }
+
+            if ($valid) {
+                if ($previous) {
+                    $sql .= " AND ";
+                } else {
+                    $sql .= " WHERE ";
+                    $previous = true;
+                }
+
+                $sql .= "(";
+
+                $first = true;
+                foreach ($in_venue_type_tinyint_array as $venueType) {
+                    $venueType = intval($venueType);
+                    $sql_x = "";
+                    if ($venueType < 0) {
+                        $venueType = abs($venueType);
+                        $sql_x = " NOT ";
+
+                        if (!$first) {
+                            $sql_x = " AND $sql_x";
+                        }
+
+                        $first = true;  // This makes the OR get skipped.
+                    }
+
+                    if (!$first) {
+                        $sql_x .= " OR ";
+                    } else {
+                        $first = false;
+                    }
+
+                    $sql .= "$sql_x(".self::GetMeetingTableName_obj()."_main.venue_type=?)";
+                    array_push($ar, $venueType);
                 }
                 $sql .= ")";
             }
