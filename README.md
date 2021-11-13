@@ -47,6 +47,15 @@ For instructions on installing the root server, see [Installing a New Root Serve
 
 ***Version 2.16.4* ** *- UNRELEASED*
 - Added the ability to return all service body parents using "parents=1" when using one or more "services[]=x" querystrings for GetServiceBodies requests.
+- Exposed `venue_type` in meeting search results.
+- Added a new `venue_types` filter to `GetSearchResults`. This works like the `weekdays` and `services` filters, where a passing a positive integer will include a Venue Type and a negative integer will exclude a Venue Type.
+  - Filter Values
+    - In-Person is `1`
+    - Virtual is `2`
+    - Hybrid is `3`
+  - Examples
+    - `&venue_types[]=2&venue_types[]=3` will include all Virtual and Hybrid meetings.
+    - `&venue_types=-1` will exclude all In-Person meetings.
 
 ***Version 2.16.3* ** *- October 27, 2021*
 - Fix bug in code that lets NAWS indicate they have processed a deleted meeting, so that you don't need to be logged in as the serveradmin for it to work
