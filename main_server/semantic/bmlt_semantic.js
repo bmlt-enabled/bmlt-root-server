@@ -193,7 +193,27 @@ BMLTSemanticResult.prototype.compileSearchResults = function () {
             this.compiled_params += 'weekdays=' + parseInt(this.weekdays);
         };
     };
-    
+
+    if (this.venue_types) {
+        let venue_types = this.venue_types.split(',');
+
+        if ( venue_types.length > 1 ) {
+            for (i = 0; i < venue_types.length; i++) {
+                if ( this.compiled_params ) {
+                    this.compiled_params += '&';
+                }
+
+                this.compiled_params += 'venue_types[]=' + parseInt(venue_types[i]);
+            }
+        } else {
+            if ( this.compiled_params ) {
+                this.compiled_params += '&';
+            }
+
+            this.compiled_params += 'venue_types=' + parseInt(this.venue_types);
+        }
+    }
+
     if ( this.formats ) {
         var formats_array = this.formats.split(',');
         var has_include_formats = false;
@@ -620,6 +640,7 @@ BMLTSemantic.prototype.reloadFromServer = function () {
     this.state.meeting_key_value = null;
     this.state.services = null;
     this.state.weekdays = null;
+    this.state.venue_types = null;
     this.state.sb_id = null;
     this.state.change_start = null;
     this.state.change_end = null;
@@ -643,6 +664,7 @@ BMLTSemantic.prototype.reloadFromServer = function () {
     this.fetchServiceBodies();
     this.fetchFieldKeys();
     this.clearWeekdays();
+    this.clearVenueTypes();
     this.clearTextSearchItems();
     this.clearSorts();
     this.clearFormatsComparisonOperator();
@@ -1671,6 +1693,68 @@ BMLTSemantic.prototype.clearWeekdays = function ( ) {
         this.getScopedElement('bmlt_semantic_form_weekday_checkbox_' + i).checked = false;
         this.getScopedElement('bmlt_semantic_form_not_weekday_checkbox_' + i).checked = false;
     };
+};
+
+/*******************************************************************************************/
+/**
+ \brief
+ */
+/*******************************************************************************************/
+BMLTSemantic.prototype.handleVenueTypeCheckbox = function ( inCheckboxObject ) {
+    this.scanVenueTypes(inCheckboxObject.checked ? parseInt(inCheckboxObject.value) : 0);
+    this.refreshURI();
+};
+
+/*******************************************************************************************/
+/**
+ \brief
+ */
+/*******************************************************************************************/
+BMLTSemantic.prototype.scanVenueTypes = function ( value ) {
+    this.state.venue_types = null;
+    const abs = Math.abs(parseInt(value));
+
+    if (value > 0) {
+        this.getScopedElement('bmlt_semantic_form_not_venue_type_checkbox_' + abs).checked = false;
+    } else {
+        if (value < 0) {
+            this.getScopedElement('bmlt_semantic_form_venue_type_checkbox_' + abs).checked = false;
+        }
+    }
+
+    for (let i = 1; i < 4; i++) {
+        if (this.getScopedElement('bmlt_semantic_form_venue_type_checkbox_' + i).checked) {
+            if ( this.state.venue_types ) {
+                this.state.venue_types += ',' + i.toString();
+            } else {
+                this.state.venue_types = i.toString();
+            }
+        }
+
+        if (this.getScopedElement('bmlt_semantic_form_not_venue_type_checkbox_' + i).checked) {
+            if (this.state.venue_types) {
+                this.state.venue_types += ',' + (-i).toString();
+            } else {
+                this.state.venue_types = (-i).toString();
+            }
+        }
+    }
+}
+
+/*******************************************************************************************/
+/**
+ \brief
+ */
+/*******************************************************************************************/
+BMLTSemantic.prototype.clearVenueTypes = function ( ) {
+    this.state.venue_types = null;
+
+    this.getScopedElement('bmlt_semantic_form_venue_type_checkbox_1').checked = false;
+    this.getScopedElement('bmlt_semantic_form_venue_type_checkbox_2').checked = false;
+    this.getScopedElement('bmlt_semantic_form_venue_type_checkbox_3').checked = false;
+    this.getScopedElement('bmlt_semantic_form_not_venue_type_checkbox_1').checked = false;
+    this.getScopedElement('bmlt_semantic_form_not_venue_type_checkbox_2').checked = false;
+    this.getScopedElement('bmlt_semantic_form_not_venue_type_checkbox_3').checked = false;
 };
 
 /*******************************************************************************************/
