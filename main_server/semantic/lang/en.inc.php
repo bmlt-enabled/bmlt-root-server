@@ -140,6 +140,7 @@ $this->_localization = array (
                                 'all_unselected_note1'                  =>  'If none of these are selected, they will have no bearing at all on the search.',
                                 'all_unselected_note2'                  =>  'If any are selected, then the search will require that the selected terms match.',
                                 'all_unselected_note3'                  =>  'Any of these that are selected will prevent meetings that gather on the given weekday from being included in the search.',
+                                'all_unselected_note_venue_type'        =>  'Any of these that are selected will prevent meetings that have the given venue type from being included in the search.',
                                 'and_note'                              =>  'This is an "AND" search. Every one of these have to match in order to count.',
                                 'configurable_operator_note'            =>  'When the "AND" comparison operator is selected, every one of these have to match in order to count. When "OR" comparison operator is selected, matching anyone of these will count - they don\'t all have to match, however, you need at least one to match.',
                                 'or_note'                               =>  'This is an "OR" search. Matching any one of these will count. They don\'t all have to match. However, you need at least one match.',

@@ -943,9 +943,7 @@ class bmlt_semantic
         $ret .= defined('DEBUG') ? "\n" : '';
 
         $ret .= '<div id="bmlt_semantic_form_not_venue_type_blurb_div'.htmlspecialchars($this->_myJSName).'" class="bmlt_workshop_blurb_note_div">';
-        $ret .= '<p>'.$this->localize_string('all_unselected_note1').'</p>';
-        $ret .= '<p>'.$this->localize_string('all_unselected_note2').'</p>';
-        $ret .= '<p>'.$this->localize_string('or_note').'</p>';
+        $ret .= '<p>'.$this->localize_string('all_unselected_note_venue_type').'</p>';
         $ret .= '</div>';
         $ret .= $this->make_checkbox_html('In-Person', 'bmlt_semantic_form_not_venue_type_checkbox_1', false, -1, 'handleVenueTypeCheckbox');
         $ret .= $this->make_checkbox_html('Virtual', 'bmlt_semantic_form_not_venue_type_checkbox_2', false, -2, 'handleVenueTypeCheckbox');
