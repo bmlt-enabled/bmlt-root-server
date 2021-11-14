@@ -211,11 +211,11 @@ function parse_redirect(
                             if ($address) {
                                 $result .= '<address>'.$address.'</address>';
                             }
-                                
+                            
                             if ($desc) {
                                 $result .= '<description>'.$desc.'</description>';
                             }
-                                    
+                                
                                 $result .= '<Point>';
                                     $result .= '<coordinates>';
                                         $result .=  htmlspecialchars($lng).','.htmlspecialchars($lat).',0';
@@ -319,15 +319,14 @@ function parse_redirect(
             break;
         
         case 'GetServiceBodies':
-            $recursive = false;
-            if (isset($http_vars['recursive']) && $http_vars['recursive'] == '1') {
-                $recursive = true;
-            }
+            $recursive = isset($http_vars['recursive']) && $http_vars['recursive'] == '1';
+            $parents = isset($http_vars['parents']) && $http_vars['parents'] == '1';
+
             $services = null;
             if (isset($http_vars['services'])) {
                 $services = is_array($http_vars['services']) ? $http_vars['services'] : array($http_vars['services']);
             }
-            $result2 = GetServiceBodies($server, $services, $recursive);
+            $result2 = GetServiceBodies($server, $services, $recursive, $parents);
             
             if (isset($http_vars['xml_data'])) {
                 $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -467,7 +466,7 @@ function parse_redirect(
                                         continue;
                                     }
                                 }
-                                    
+                                
                                 if (!count($value)) {
                                     continue;
                                 } else {
@@ -509,7 +508,7 @@ function parse_redirect(
                     
                     $result2[] = "\"$key\",\"$value\"";
                 }
-                        
+                
                 $result2 = implode("\n", $result2);
             }
             
@@ -525,7 +524,7 @@ function parse_redirect(
                 $result = str_replace("\t", ',', $result2);
             }
             break;
-                
+            
         default:
             $result = HandleDefault($http_vars);
             break;
@@ -608,7 +607,7 @@ function prepareSimpleLine(
     if ($withDate && $weekday) {
         $ret = $weekday;
     }
-        
+    
     if ($withDate && $time) {
         if ($ret) {
             $ret .= ', ';
@@ -707,7 +706,7 @@ function returnArrayFromCSV( $inCSVArray   ///< A array of CSV data, split as li
             }
         }
     }
-        
+    
     return $ret;
 }
 
@@ -771,7 +770,7 @@ function GetSearchResults(
     $meeting_objects = array();
     $result = DisplaySearchResultsCSV($in_http_vars, $ignore_me, $geocode_results, $meeting_objects);
     $locationData = array ( );
-        
+    
     if (is_array($meeting_objects) && count($meeting_objects)) {
         foreach ($meeting_objects as $one_meeting) {
             if (isset($in_http_vars['getMeanLocationData']) || (isset($meanLocationData)&& is_array($meanLocationData))) {
@@ -883,7 +882,7 @@ function GetCoverageArea()
         $ret[1] = '"'.strval($result["nw_corner"]["longitude"]).'","'.strval($result["nw_corner"]["latitude"]).'","'.strval($result["se_corner"]["longitude"]).'","'.strval($result["se_corner"]["latitude"]).'"';
         $ret = implode("\n", $ret);
     }
-        
+    
     return $ret;
 }
 
@@ -1007,7 +1006,8 @@ function GetFormats(
 function GetServiceBodies(
     &$server,            ///< A reference to an instance of c_comdef_server
     $services = null,
-    $recursive = false
+    $recursive = false,
+    $parents = false
 ) {
     $ret = array ();
     $localized_strings = c_comdef_server::GetLocalStrings();
@@ -1033,6 +1033,10 @@ function GetServiceBodies(
     if ($recursive) {
         $servicesInclude = array_merge($servicesInclude, GetChildServiceBodies($server, $servicesInclude));
         $servicesExclude = array_merge($servicesExclude, GetChildServiceBodies($server, $servicesExclude));
+    }
+    
+    if ($parents) {
+        $servicesInclude = array_merge($servicesInclude, GetParentServiceBodies($server, $servicesInclude));
     }
 
     try {
@@ -1070,13 +1074,32 @@ function GetServiceBodies(
     return implode("\n", $ret);
 }
 
+function GetParentServiceBodies($server, $serviceBodyIds)
+{
+    $ret = array();
+    $serviceBodyArray = $server->GetServiceBodyArray();
+    $parents = $serviceBodyIds;
+    while (count($parents)) {
+        $newParents = array();
+        foreach ($serviceBodyArray as $serviceBody) {
+            if (in_array($serviceBody->GetID(), $parents) && !in_array($serviceBody->GetOwnerID(), $ret)) {
+                array_push($newParents, $serviceBody->GetOwnerID());
+                array_push($ret, $serviceBody->GetOwnerID());
+            }
+        }
+        $parents = $newParents;
+    }
+    return $ret;
+}
+
 function GetChildServiceBodies($server, $parents)
 {
     $ret = array();
     $children = $parents;
+    $serviceBodyArray = $server->GetServiceBodyArray();
     while (count($children)) {
         $newChildren = array();
-        foreach ($server->GetServiceBodyArray() as $serviceBody) {
+        foreach ($serviceBodyArray as $serviceBody) {
             if (in_array($serviceBody->GetOwnerID(), $children) && !in_array($serviceBody->GetID(), $ret)) {
                 array_push($newChildren, $serviceBody->GetID());
                 array_push($ret, $serviceBody->GetID());
@@ -1232,7 +1255,7 @@ function GetChanges(
                         $in_sb_id = array ( $in_sb_id );
                     }
                 }
-                    
+                
                 foreach ($obj_array as $change) {
                     $change_type = $change->GetChangeType();
                     $date_int = intval($change->GetChangeDate());
@@ -1370,7 +1393,7 @@ function GetChanges(
                                 if (($json_data != '') && ($a_obj instanceof c_comdef_meeting)) {
                                     $json_data .= ',';
                                 }
-                                    
+                                
                                 $json_data .= MakeJSONDataObject($a_obj, 'after');
                                 
                                 $change_line['json_data'] = '{'.str_replace('"', '&quot;', $json_data).'}';
@@ -1430,7 +1453,7 @@ function MakeJSONDataObject(
                                 $val = trim(preg_replace("|\s+|", ' ', $val), '"');
                                 $value[$c] = trim($val, "\\");
                             }
-                                
+                            
                             if ($json_data) {
                                 $json_data .= ',';
                             }
