@@ -263,7 +263,7 @@ function SetUpSearch(
                             array_push($additional, $value);
                         }
                         
-                        $standards = array ( 'weekday_tinyint', 'id_bigint', 'worldid_mixed', 'service_body_bigint', 'lang_enum', 'duration_time', 'start_time', 'longitude', 'latitude' );
+                        $standards = array ( 'weekday_tinyint', 'venue_type', 'id_bigint', 'worldid_mixed', 'service_body_bigint', 'lang_enum', 'duration_time', 'start_time', 'longitude', 'latitude' );
                         $templates = array_merge($standards, $additional);
                         
                         if (in_array($key, $templates)) {
