@@ -67,8 +67,8 @@ Database Password: bmlt_password
 Note that the Database Host is `db` rather than the usual `localhost`. If you start with the install wizard, normally
 you need an empty database, but the `bmlt` database already contains sample data. A convenient alternative to dropping
 and (re) creating `bmlt` is to use the provided `bmlt` database, and to change the Table Prefix to `na2`, as above.  If you need
-to run the installer again, just use a new Table Prefix each time (`na3` etc). If you do want to access mysql, open
-another shell using `docker exec -it docker_db_1 mysql -u root -pbmlt_root_password`.
+to run the installer again, just use a new Table Prefix each time (`na3` etc). If you do want to access mysql, run the command
+`docker exec -it docker_db_1 mysql -u root -pbmlt_root_password`.
 
 Finally, as with the earlier directions, when finished exit by pressing ctrl+c or by running `docker-compose down`.
 
