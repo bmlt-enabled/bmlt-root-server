@@ -51,6 +51,7 @@
 defined('BMLT_EXEC') or die('Cannot Execute Directly');    // Makes sure that this file is in the correct context.
 
 require_once(dirname(__FILE__)."/../../server/c_comdef_server.class.php");
+require_once(dirname(__FILE__)."/../../server/shared/classes/VenueType.php");
 
 /// A class to control the basic common functionality of all meeting searches.
 // phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
@@ -100,7 +101,9 @@ class c_comdef_meeting_search_manager
                                                     consideration in the meeting search. If any weekday is specified as 1, then ONLY meetings that occur on
                                                     the given weekday will be considered in the search, and you must explicitly set any other weekday you wish found.
                                                 */
-    
+
+    protected $_venue_types = null;  // An array of Venue types, positive or negative. Negative venue types are excluded.
+
     /// These specify the start time and duration of the meeting. The start time can be specified as a "window."
     protected $_start_after = null;           ///< An epoch time (seconds, as returned by time()), that denotes the earliest starting time allowed.
     protected $_start_before = null;          ///< An epoch time (seconds, as returned by time()), that denotes the latest starting time allowed.
@@ -176,6 +179,7 @@ class c_comdef_meeting_search_manager
             $this->_service_bodies = $in_parent->_service_bodies;
             $this->_languages = $in_parent->_languages;
             $this->_weekdays = $in_parent->_weekdays;
+            $this->_venue_types = $in_parent->_venue_types;
             $this->_start_after = $in_parent->_start_after;
             $this->_start_before = $in_parent->_start_before;
             $this->_end_before = $in_parent->_end_before;
@@ -215,7 +219,12 @@ class c_comdef_meeting_search_manager
             for ($wd = 1; $wd < 8; $wd++) {
                 $this->_weekdays[$wd] = 0;
             }
-                
+
+            $this->_venue_types = null;
+            $this->_venue_types[VenueType::IN_PERSON] = 0;
+            $this->_venue_types[VenueType::VIRTUAL] = 0;
+            $this->_venue_types[VenueType::HYBRID] = 0;
+
             // This is the default sort.
             $this->sort_array = array ( "lang_enum", "weekday_tinyint", "start_time", "id_bigint" );
             
@@ -611,7 +620,14 @@ class c_comdef_meeting_search_manager
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return $this->_weekdays;
     }
-    
+
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function &GetVenueTypes()
+    {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+        return $this->_venue_types;
+    }
+
     /*******************************************************************/
     /** \brief Accessor -Get a reference to the c_comdef_server object.
 
@@ -1153,6 +1169,18 @@ class c_comdef_meeting_search_manager
                         }
                     }
 
+                    // Venue Types
+                    $venueTypes = null;
+                    if (is_array($this->_venue_types) && count($this->_venue_types)) {
+                        $venueTypes = array();
+                        foreach ($this->_venue_types as $key => $value) {
+                            if (abs($value) != 0) {
+                                // I have no idea why we are multiplying here... just following the pattern
+                                array_push($venueTypes, intval($key) * $value);
+                            }
+                        }
+                    }
+
                     // Set up our formats array.
                     $formats = null;
                     
@@ -1187,6 +1215,7 @@ class c_comdef_meeting_search_manager
                         $service_bodies,
                         $languages,
                         $weekdays,
+                        $venueTypes,
                         $formats,
                         $this->_start_after,
                         $this->_start_before,

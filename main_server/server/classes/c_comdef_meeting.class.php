@@ -102,6 +102,11 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         } else {
             $main_table_values['weekday_tinyint'] = null;
         }
+        if (isset($this->_my_meeting_data['venue_type'])) {
+            $main_table_values['venue_type'] = $this->_my_meeting_data['venue_type'];
+        } else {
+            $main_table_values['venue_type'] = null;
+        }
         if (isset($this->_my_meeting_data['start_time'])) {
             $main_table_values['start_time'] = $this->_my_meeting_data['start_time'];
         } else {
@@ -159,6 +164,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                 case 'worldid_mixed':
                 case 'service_body_bigint':
                 case 'weekday_tinyint':
+                case 'venue_type':
                 case 'start_time':
                 case 'lang_enum':
                 case 'duration_time':
@@ -638,6 +644,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
             $ret['shared_group_id_bigint'] = 'shared_group_id_bigint';
             $ret['service_body_bigint'] = 'service_body_bigint';
             $ret['weekday_tinyint'] = 'weekday_tinyint';
+            $ret['venue_type'] = 'venue_type';
             $ret['start_time'] = 'start_time';
             $ret['duration_time'] = 'duration_time';
             $ret['time_zone'] = 'time_zone';
@@ -712,6 +719,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                     break;
                 
                 case 'weekday_tinyint':
+                case 'venue_type':
                 case 'id_bigint':
                 case 'worldid_mixed':
                 case 'service_body_bigint':
@@ -873,6 +881,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         $ret['shared_group_id_bigint']['key'] = 'shared_group_id_bigint';
         $ret['service_body_bigint']['key'] = 'service_body_bigint';
         $ret['weekday_tinyint']['key'] = 'weekday_tinyint';
+        $ret['venue_type']['key'] = 'venue_type';
         $ret['start_time']['key'] = 'start_time';
         $ret['duration_time']['key'] = 'duration_time';
         $ret['time_zone']['key'] = 'time_zone';

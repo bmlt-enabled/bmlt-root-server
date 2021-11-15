@@ -869,7 +869,7 @@ class bmlt_semantic
         
         $ret .= '</div>';
         $ret .= defined('DEBUG') ? "\n" : '';
-        
+
         $ret .= '<fieldset id="bmlt_semantic_form_weekday_fieldset'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_weekday_fieldset"><legend id="bmlt_semantic_form_weekday_fieldset_legend'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_weekday_fieldset_legend">';
         $ret .= $this->localize_string('weekday_section_legend');
         $ret .= '</legend>';
@@ -916,7 +916,43 @@ class bmlt_semantic
         $ret .= '<div class="clear_both"></div>';
         $ret .= '</fieldset>';
         $ret .= defined('DEBUG') ? "\n" : '';
-        
+
+        // Begin Venue Type
+        $ret .= '<fieldset id="bmlt_semantic_form_venue_type_fieldset'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_venue_type_fieldset"><legend id="bmlt_semantic_form_venue_type_fieldset_legend'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_venue_type_fieldset_legend">';
+        $ret .= $this->localize_string('venue_type_section_legend');
+        $ret .= '</legend>';
+        $ret .= defined('DEBUG') ? "\n" : '';
+
+        $ret .= '<div id="bmlt_semantic_form_venue_type_blurb_div'.htmlspecialchars($this->_myJSName).'" class="bmlt_workshop_blurb_note_div">';
+        $ret .= '<p>'.$this->localize_string('all_unselected_note1').'</p>';
+        $ret .= '<p>'.$this->localize_string('all_unselected_note2').'</p>';
+        $ret .= '<p>'.$this->localize_string('or_note').'</p>';
+        $ret .= '</div>';
+        $ret .= $this->make_checkbox_html('In-Person', 'bmlt_semantic_form_venue_type_checkbox_1', false, 1, 'handleVenueTypeCheckbox');
+        $ret .= $this->make_checkbox_html('Virtual', 'bmlt_semantic_form_venue_type_checkbox_2', false, 2, 'handleVenueTypeCheckbox');
+        $ret .= $this->make_checkbox_html('Hybird', 'bmlt_semantic_form_venue_type_checkbox_3', false, 3, 'handleVenueTypeCheckbox');
+        $ret .= '<div class="clear_both"></div>';
+        $ret .= '</fieldset>';
+        $ret .= defined('DEBUG') ? "\n" : '';
+        // End Venue Type
+
+        // Begin NOT Venue Type
+        $ret .= '<fieldset id="bmlt_semantic_form_not_venue_type_fieldset'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_not_venue_type_fieldset"><legend id="bmlt_semantic_form_not_venue_type_fieldset_legend'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_not_venue_type_fieldset_legend">';
+        $ret .= $this->localize_string('venue_type_section_negative_legend');
+        $ret .= '</legend>';
+        $ret .= defined('DEBUG') ? "\n" : '';
+
+        $ret .= '<div id="bmlt_semantic_form_not_venue_type_blurb_div'.htmlspecialchars($this->_myJSName).'" class="bmlt_workshop_blurb_note_div">';
+        $ret .= '<p>'.$this->localize_string('all_unselected_note_venue_type').'</p>';
+        $ret .= '</div>';
+        $ret .= $this->make_checkbox_html('In-Person', 'bmlt_semantic_form_not_venue_type_checkbox_1', false, -1, 'handleVenueTypeCheckbox');
+        $ret .= $this->make_checkbox_html('Virtual', 'bmlt_semantic_form_not_venue_type_checkbox_2', false, -2, 'handleVenueTypeCheckbox');
+        $ret .= $this->make_checkbox_html('Hybird', 'bmlt_semantic_form_not_venue_type_checkbox_3', false, -3, 'handleVenueTypeCheckbox');
+        $ret .= '<div class="clear_both"></div>';
+        $ret .= '</fieldset>';
+        $ret .= defined('DEBUG') ? "\n" : '';
+        // End NOT Venue Type
+
         $ret .= '<fieldset id="bmlt_semantic_form_formats_fieldset'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_formats_fieldset"><legend id="bmlt_semantic_form_formats_fieldset_legend'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_formats_fieldset_legend">';
         $ret .= $this->localize_string('format_section_legend');
         $ret .= '</legend>';

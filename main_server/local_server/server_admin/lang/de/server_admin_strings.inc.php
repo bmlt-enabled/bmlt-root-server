@@ -418,6 +418,7 @@ $comdef_server_admin_strings = array(
         'shared_group_id_bigint' => 'Unused',
         'service_body_bigint' => 'Service Body ID',
         'weekday_tinyint' => 'Wochentag',
+        'venue_type' => 'Venue Type',
         'start_time' => 'Start Zeit',
         'duration_time' => 'Dauer',
         'time_zone' => 'Time Zone',

@@ -422,6 +422,7 @@ $comdef_server_admin_strings = array('server_admin_disclosure' => 'Админи�
         'shared_group_id_bigint' => 'неиспользуемый',
         'service_body_bigint' => 'Service Body ID',
         'weekday_tinyint' => 'Weekday',
+        'venue_type' => 'Venue Type',
         'start_time' => 'Время начала',
         'duration_time' => 'Продолжительность',
         'time_zone' => 'Time Zone',

@@ -45,6 +45,15 @@ function SetUpSearch(
     //       - 'recursive'
     //           If this is set to '1', then the 'services' key will recursively follow Service bodies.
     //
+    //       - 'venue_types'
+    //           This is an array of integers.
+    //           This is interpreted as an array of integers. Each integer represents a Venue Type.
+    //           A positive integer means that the search will look specifically for meetings that have that Venue Type.
+    //           If the integer is negative (preceded by a minus sign -), then the criteria will be to look
+    //           for meetings that don't have that Venue Type.
+    //           If no 'venue_type' values are given, then the search will not use the Venue Type field as a
+    //           search criteria.
+    //
     //       - 'weekdays'
     //           This is an array of negative or positive nonzero integers (-7 - -1, 1 - 7).
     //           This is interpreted as an array of integers. Each integer represents a weekday (1 -> Sunday, 7 -> Saturday).
@@ -254,7 +263,7 @@ function SetUpSearch(
                             array_push($additional, $value);
                         }
                         
-                        $standards = array ( 'weekday_tinyint', 'id_bigint', 'worldid_mixed', 'service_body_bigint', 'lang_enum', 'duration_time', 'start_time', 'longitude', 'latitude' );
+                        $standards = array ( 'weekday_tinyint', 'venue_type', 'id_bigint', 'worldid_mixed', 'service_body_bigint', 'lang_enum', 'duration_time', 'start_time', 'longitude', 'latitude' );
                         $templates = array_merge($standards, $additional);
                         
                         if (in_array($key, $templates)) {
@@ -343,7 +352,6 @@ function SetUpSearch(
         } else {
             unset($in_http_vars['services']);
         }
-        
 
         if (!( isset($in_http_vars['geo_width_km']) && $in_http_vars['geo_width_km'] )
             && !( isset($in_http_vars['geo_width']) && $in_http_vars['geo_width'] )
@@ -391,8 +399,18 @@ function SetUpSearch(
             $wd[abs(intval($in_http_vars['weekdays']))] = intval(intval($in_http_vars['weekdays'])) > 0 ? 1 : -1;
         }
 
+        // Venue Types
+        if (isset($in_http_vars['venue_types']) && is_array($in_http_vars['venue_types']) && count($in_http_vars['venue_types'])) {
+            $vt =& $in_search_manager->GetVenueTypes();
+            foreach ($in_http_vars['venue_types'] as $venueType) {
+                $vt[abs(intval($venueType))] = intval($venueType) > 0 ? 1 : -1;
+            }
+        } else if (isset($in_http_vars['venue_types'])) {
+            $vt =& $in_search_manager->GetVenueTypes();
+            $vt[abs(intval($in_http_vars['venue_types']))] = intval($in_http_vars['venue_types']) > 0 ? 1 : -1;
+        }
+
         // Next, set up the formats.
-        
         if (isset($in_http_vars['bmlt_search_type']) && ($in_http_vars['bmlt_search_type'] == 'advanced') && isset($in_http_vars['advanced_formats']) && is_array($in_http_vars['advanced_formats']) && count($in_http_vars['advanced_formats'])) {
             $in_http_vars['formats'] = $in_http_vars['advanced_formats'];
         }

@@ -171,6 +171,15 @@ function DisplaySearchResultsCSV(
     //           If no 'services' values are given, then the search will not use the Service Body field as a
     //           search criteria.
     //
+    //       - 'venue_types'
+    //           This is an array of integers.
+    //           This is interpreted as an array of integers. Each integer represents a Venue Type.
+    //           A positive integer means that the search will look specifically for meetings that have that Venue Type.
+    //           If the integer is negative (preceded by a minus sign -), then the criteria will be to look
+    //           for meetings that don't have that Venue Type.
+    //           If no 'venue_type' values are given, then the search will not use the Venue Type field as a
+    //           search criteria.
+    //
     //       - 'weekdays'
     //           This is an array of positive integers ( 1-7).
     //           This is interpreted as an array of integers. Each integer represents a weekday (1 -> Sunday, 7 -> Saturday).
@@ -503,6 +512,7 @@ function DisplaySearchResultsCSV(
                                                 case 'shared_group_id_bigint':
                                                 case 'service_body_bigint':
                                                 case 'weekday_tinyint':
+                                                case 'venue_type':
                                                 case 'start_time':
                                                 case 'duration_time':
                                                 case 'time_zone':

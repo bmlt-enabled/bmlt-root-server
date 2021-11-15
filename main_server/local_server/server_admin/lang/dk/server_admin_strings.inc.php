@@ -422,6 +422,7 @@ $comdef_server_admin_strings = array(
         'shared_group_id_bigint' => 'Ubrugt',
         'service_body_bigint' => 'Service Enhed ID',
         'weekday_tinyint' => 'Ugedag',
+        'venue_type' => 'Venue Type',
         'start_time' => 'Starttidspunkt',
         'duration_time' => 'Retning',
         'time_zone' => 'Time Zone',

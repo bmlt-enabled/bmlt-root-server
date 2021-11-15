@@ -421,6 +421,7 @@ $comdef_server_admin_strings = array(
         'shared_group_id_bigint' => 'Nieużywane',
         'service_body_bigint' => 'ID komitetu',
         'weekday_tinyint' => 'Dzień powszedni',
+        'venue_type' => 'Venue Type',
         'start_time' => 'Czas rozpoczęcia',
         'duration_time' => 'Czas trwania',
         'time_zone' => 'Time Zone',
