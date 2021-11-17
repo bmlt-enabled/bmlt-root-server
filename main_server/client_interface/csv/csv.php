@@ -1136,6 +1136,7 @@ function GetServerInfo()
     $availableFields = "";
     $keys = c_comdef_meeting::GetFullTemplate();
     $meeting_time_zones_enabled = $localStrings['meeting_time_zones_enabled'] ? '1' : '0';
+    $phpVersion = phpversion();
     
     foreach ($keys as $key) {
         if (($key['visibility'] != 1) && ($key['key'] != 'published') && ($key['key'] != 'shared_group_id_bigint')) {
@@ -1147,12 +1148,12 @@ function GetServerInfo()
         }
     }
 
-    $ret = '"version","versionInt","langs","nativeLang","centerLongitude","centerLatitude","centerZoom","defaultDuration","regionBias","charSet","distanceUnits","semanticAdmin","emailEnabled","emailIncludesServiceBodies","changesPerMeeting","meeting_states_and_provinces","meeting_counties_and_sub_provinces","available_keys","google_api_key","dbVersion","dbPrefix","meeting_time_zones_enabled"'."\n";
+    $ret = '"version","versionInt","langs","nativeLang","centerLongitude","centerLatitude","centerZoom","defaultDuration","regionBias","charSet","distanceUnits","semanticAdmin","emailEnabled","emailIncludesServiceBodies","changesPerMeeting","meeting_states_and_provinces","meeting_counties_and_sub_provinces","available_keys","google_api_key","dbVersion","dbPrefix","meeting_time_zones_enabled","phpVersion"'."\n";
     $ret .= '"'.$version_string.'","'.strval($version_num).'","'.$lang_string.'","'.$default_lang.'",';
     $ret .= '"'.strval($localStrings['search_spec_map_center']['longitude']).'","'.strval($localStrings['search_spec_map_center']['latitude']).'",';
     $ret .= '"'.strval($localStrings['search_spec_map_center']['zoom']).'","'.$localStrings['default_duration_time'].'",';
     $ret .= '"'.$localStrings['region_bias'].'","'.$localStrings['charset'].'","'.$localStrings['dist_units'].'","'.$canAdmin.'",';
-    $ret .= '"'.$canEmail.'","'.$includeServiceBodiesOnEmails.'","'.$changeDepth.'","'.implode(',', $localStrings['meeting_states_and_provinces']).'","'.implode(',', $localStrings['meeting_counties_and_sub_provinces']).'","'.str_replace('"', '\"', $availableFields).',root_server_uri,format_shared_id_list","'.$localStrings['google_api_key'].'","'.$dbVersion.'","'.$localStrings['dbPrefix'].'","'.$meeting_time_zones_enabled.'"';
+    $ret .= '"'.$canEmail.'","'.$includeServiceBodiesOnEmails.'","'.$changeDepth.'","'.implode(',', $localStrings['meeting_states_and_provinces']).'","'.implode(',', $localStrings['meeting_counties_and_sub_provinces']).'","'.str_replace('"', '\"', $availableFields).',root_server_uri,format_shared_id_list","'.$localStrings['google_api_key'].'","'.$dbVersion.'","'.$localStrings['dbPrefix'].'","'.$meeting_time_zones_enabled.'","'.$phpVersion.'"';
     
     return $ret;
 }
