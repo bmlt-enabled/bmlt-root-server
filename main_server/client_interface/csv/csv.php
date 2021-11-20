@@ -113,7 +113,7 @@ function parse_redirect(
                         } else {
                             $result .= "<formats>";
                         }
-                        $result3 = GetFormats($server, $langs, $formats_ar);
+                        $result3 = GetFormats($server, $langs, null, $formats_ar);
                         $result .= TranslateToXML($result3);
                         $result .= "</formats>";
                     }
@@ -259,17 +259,17 @@ function parse_redirect(
                     if (isset($http_vars['get_formats_only'])) {
                         $format_list = '[]';
                         if (isset($formats_ar) && is_array($formats_ar) && count($formats_ar)) {
-                            $format_list = TranslateToJSON(GetFormats($server, $langs, $formats_ar));
+                            $format_list = TranslateToJSON(GetFormats($server, $langs, null, $formats_ar));
                         }
                         
                         $result = '{"formats":'.$format_list.'}';
                     } else {
                         if (isset($http_vars['appendMeanLocationData'])) {
-                            $result = '{"meetings":'.$result.',"formats":'.TranslateToJSON(GetFormats($server, $langs, $formats_ar)).',"locationInfo":'.array2json($meanLocationData).'}';
+                            $result = '{"meetings":'.$result.',"formats":'.TranslateToJSON(GetFormats($server, $langs, null, $formats_ar)).',"locationInfo":'.array2json($meanLocationData).'}';
                         } else {
                             $format_list = '[]';
                             if (isset($formats_ar) && is_array($formats_ar) && count($formats_ar)) {
-                                $format_list = TranslateToJSON(GetFormats($server, $langs, $formats_ar));
+                                $format_list = TranslateToJSON(GetFormats($server, $langs, null, $formats_ar));
                             }
                             
                             $result = '{"meetings":'.$result.',"formats":'.$format_list.'}';
@@ -288,7 +288,7 @@ function parse_redirect(
                 $result2 = GetSearchResults($http_vars, $formats_ar);
 
                 if (isset($http_vars['get_formats_only'])) {
-                    $result2 = GetFormats($server, $langs, $formats_ar);
+                    $result2 = GetFormats($server, $langs, null, $formats_ar);
                     
                     if (!$result2) {
                         $result2 = '[]';
@@ -300,7 +300,14 @@ function parse_redirect(
             break;
         
         case 'GetFormats':
-            $result2 = GetFormats($server, $langs);
+            $formatKeyStrings = null;
+            if (isset($http_vars['key_strings']) && is_array($http_vars['key_strings']) && count($http_vars['key_strings'])) {
+                $formatKeyStrings = $http_vars['key_strings'];
+            } else if (isset($http_vars['key_strings'])) {
+                $formatKeyStrings = [$http_vars['key_strings']];
+            }
+
+            $result2 = GetFormats($server, $langs, $formatKeyStrings);
             
             if (isset($http_vars['xml_data'])) {
                 $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -895,6 +902,7 @@ function GetCoverageArea()
 function GetFormats(
     &$server,           ///< A reference to an instance of c_comdef_server
     $in_lang = null,    ///< The language of the formats to be returned.
+    $in_key_strings = null, ///< If supplied, an array of format key strings to be returned.
     $in_formats = null  //< If supplied, an already-fetched array of formats.
 ) {
     $my_keys = array (  'key_string',
@@ -938,6 +946,13 @@ function GetFormats(
                 foreach ($format_array as $format) {
                     if ($format instanceof c_comdef_format) {
                         $localized_format = $server->GetOneFormat($format->GetSharedID(), $key);
+
+                        if (isset($in_key_strings) && is_array($in_key_strings) && count($in_key_strings)) {
+                            if (!in_array($localized_format->GetKey(), $in_key_strings)) {
+                                continue;
+                            }
+                        }
+
                         if ($localized_format instanceof c_comdef_format) {
                             $line = '';
                             foreach ($my_keys as $ky) {
