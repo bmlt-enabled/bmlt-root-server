@@ -1445,7 +1445,7 @@ class c_comdef_admin_xml_handler
             } else {
                 $result .= "<formats>";
             }
-            $result3 = GetFormats($server, $langs, $formats_ar);
+            $result3 = GetFormats($server, $langs, null, $formats_ar);
             $result .= TranslateToXML($result3);
         
             $result .= "</formats>";

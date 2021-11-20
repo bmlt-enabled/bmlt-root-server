@@ -46,7 +46,7 @@ satellites comprise the "client" part of the BMLT "client/server" architecture.
 For instructions on installing the root server, see [Installing a New Root Server](https://bmlt.app/setting-up-the-bmlt/)
 
 ***Version 2.16.4* ** *- UNRELEASED*
-- Added the ability to return all service body parents using "parents=1" when using one or more "services[]=x" querystrings for GetServiceBodies requests.
+- Added a new `parents=1` parameter to `GetServiceBodies`. When supplied with `services[]=x` filters, all parent service bodies will be returned.
 - Exposed `venue_type` in meeting search results.
 - Added a new `venue_types` filter to `GetSearchResults`. This works like the `weekdays` and `services` filters, where a passing a positive integer will include a Venue Type and a negative integer will exclude a Venue Type.
   - Filter Values
@@ -56,6 +56,8 @@ For instructions on installing the root server, see [Installing a New Root Serve
   - Examples
     - `&venue_types[]=2&venue_types[]=3` will include all Virtual and Hybrid meetings.
     - `&venue_types=-1` will exclude all In-Person meetings.
+- Added a new `key_strings` filter to `GetFormats`. This has also been implemented in tomato, and will allow crouton to make more efficient queries.
+  - Example: `&key_strings[]=TC&key_strings[]=VM&key_strings[]=HY&lang_enum=en`
 
 ***Version 2.16.3* ** *- October 27, 2021*
 - Fix bug in code that lets NAWS indicate they have processed a deleted meeting, so that you don't need to be logged in as the serveradmin for it to work
