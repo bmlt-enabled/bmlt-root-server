@@ -69,11 +69,19 @@ if ($server instanceof c_comdef_server) {
                 if (isset($http_vars['lang_enum'])) {
                     $lang = $http_vars['lang_enum'];
                 }
+
+                $formatKeyStrings = null;
+                if (isset($http_vars['key_strings']) && is_array($http_vars['key_strings']) && count($http_vars['key_strings'])) {
+                    $formatKeyStrings = $http_vars['key_strings'];
+                } else if (isset($http_vars['key_strings'])) {
+                    $formatKeyStrings = [$http_vars['key_strings']];
+                }
                 
                 unset($http_vars['lang_enum']);
+                unset($http_vars['key_strings']);
                 unset($http_vars['switcher']);
                 $container = (isset($http_vars['container_id']) && $http_vars['container_id']) ? $http_vars['container_id'] : null;
-                $result = GetSimpleFormats($server, isset($http_vars['block_mode']), $container, $lang, $http_vars);
+                $result = GetSimpleFormats($server, isset($http_vars['block_mode']), $container, $lang, $formatKeyStrings, $http_vars);
                 break;
             
             default:
@@ -362,6 +370,7 @@ if ($server instanceof c_comdef_server) {
         $in_block = false,          ///< If this is true, the results will be sent back as block elements (div tags), as opposed to a table. Default is false.
         $in_container_id = null,    ///< This is an optional ID for the "wrapper."
         $in_lang = null,            ///< The language of the formats to be returned. Default is null (server language). Can be an array.
+        $in_key_strings = null,     ///< If supplied, an array of format key strings to be returned.
         $in_search_params = null    ///< If this is supplied, then it is a search parameter list. The idea is that only the formats used in the returned meetings will be displayed.
     ) {
         $my_keys = array (  'key_string',
@@ -405,6 +414,13 @@ if ($server instanceof c_comdef_server) {
                     $alt = 1;   // This is used to provide an alternating style.
                     foreach ($format_array as $format) {
                         $has = false;
+
+                        if (isset($in_key_strings) && is_array($in_key_strings) && count($in_key_strings)) {
+                            if (!in_array($format->GetKey(), $in_key_strings)) {
+                                continue;
+                            }
+                        }
+
                         if ($format instanceof c_comdef_format) {
                             if (($formats_ar != null)) {
                                 foreach ($formats_ar as $format_obj) {
