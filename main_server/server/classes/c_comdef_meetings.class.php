@@ -786,7 +786,7 @@ class c_comdef_meetings implements i_comdef_has_parent
             $ret = ($object_a->_distance_in_km < $object_b->_distance_in_km) ? -1 : 1;
             
             if (0 == $ret) {
-                $ret = $this::SortKernel($object_a, $object_b);
+                $ret = c_comdef_meetings::SortKernel($object_a, $object_b);
             }
         }
         
