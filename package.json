@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "@bmlt-enabled/croutonjs": "^3.11.4"
+    "@bmlt-enabled/croutonjs": "^3.12.6"
   },
   "devDependencies": {},
   "scripts": {
