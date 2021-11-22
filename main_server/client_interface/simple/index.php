@@ -339,9 +339,9 @@ if ($server instanceof c_comdef_server) {
 
         \returns a string, containing the HTML rendered by the function.
     */
-    function BuildMeetingTime( $in_time ///< A string. The value of the time field.
-                                )
-    {
+    function BuildMeetingTime(
+        $in_time ///< A string. The value of the time field.
+    ) {
         $localized_strings = c_comdef_server::GetLocalStrings();
         
         $time = null;

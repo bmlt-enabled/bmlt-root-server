@@ -130,8 +130,9 @@ interface i_comdef_auth
     /// \brief Test to see if a user is allowed to edit an instance (change the data).
     /// \returns true, if the user is allowed to edit, false, otherwise.
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function UserCanEdit( $in_user_object = null   ///< A reference to a c_comdef_user object, for the user to be validated. If null, or not supplied, the server current user is tested.
-                            );
+    public function UserCanEdit(
+        $in_user_object = null   ///< A reference to a c_comdef_user object, for the user to be validated. If null, or not supplied, the server current user is tested.
+    );
     // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
 }
 

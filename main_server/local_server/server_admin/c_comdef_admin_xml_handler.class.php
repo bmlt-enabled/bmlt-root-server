@@ -1592,9 +1592,9 @@ class c_comdef_admin_xml_handler
     \returns XML, containing the answer.
     ************************************************************************************************************/
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function process_service_body_info_request(    $in_service_body_id ///< The ID of the Service body being requested.
-                                                )
-    {
+    public function process_service_body_info_request(
+        $in_service_body_id ///< The ID of the Service body being requested.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '';
         // Belt and suspenders. We need to make sure the user is authorized.
@@ -1847,9 +1847,9 @@ class c_comdef_admin_xml_handler
         \returns an XML string, with all the data in the CSV.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function TranslateCSVToXML(    $in_csv_data    ///< An array of CSV data, with the first element being the field names.
-                                )
-    {
+    public function TranslateCSVToXML(
+        $in_csv_data    ///< An array of CSV data, with the first element being the field names.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         require_once(dirname(dirname(dirname(__FILE__))).'/server/shared/Array2XML.php');
         $temp_keyed_array = array();

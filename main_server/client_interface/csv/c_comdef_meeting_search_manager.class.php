@@ -300,9 +300,9 @@ class c_comdef_meeting_search_manager
     /** \brief Sets the sort by distance flag.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function SetSortByDistance( $in_sort_search_by_distance = false    ///< A Boolean. False is default.
-                                )
-    {
+    public function SetSortByDistance(
+        $in_sort_search_by_distance = false    ///< A Boolean. False is default.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $this->_sort_search_by_distance = ($in_sort_search_by_distance != false);
     }
@@ -359,9 +359,9 @@ class c_comdef_meeting_search_manager
         \returns a boolean. If the operation was successful, it is true. False otherwise.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function SetResultsPerPage( $in_results_per_page    ///< A positive integer. If it is 0, then all results will be returned in one page.
-                                )
-    {
+    public function SetResultsPerPage(
+        $in_results_per_page    ///< A positive integer. If it is 0, then all results will be returned in one page.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = false;
         
@@ -483,9 +483,9 @@ class c_comdef_meeting_search_manager
         object, containing a subset of the meetings to fill this one page.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function GetPageOfResults( $in_page_no = 1  ///< A positive integer. This should be 1 to $this->GetNumberOfPages() (1-based)
-                            )
-    {
+    public function GetPageOfResults(
+        $in_page_no = 1  ///< A positive integer. This should be 1 to $this->GetNumberOfPages() (1-based)
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if ($in_page_no < 1) {  // Can't be less than 1.
             $in_page_no = 1;
@@ -728,9 +728,9 @@ class c_comdef_meeting_search_manager
         is in miles.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function GetRadius( $in_miles = false  ///< A boolean. If true, the returned value will be in miles. Otherwise, it is returned in kilometers.
-                        )
-    {
+    public function GetRadius(
+        $in_miles = false  ///< A boolean. If true, the returned value will be in miles. Otherwise, it is returned in kilometers.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return  $in_miles ? ($this->_search_radius / 1.609344) : $this->_search_radius;
     }
@@ -778,13 +778,13 @@ class c_comdef_meeting_search_manager
     /** \brief Sets the search for published value
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function SetPublished( $in_published_search
-// The value to set. It can be:
-                                                        //  - -1    Search for ONLY unpublished meetings
-                                                        //  -  0    Search for published and unpublished meetings.
-                                                        //  -  1    Search for ONLY published meetings.
-                            )
-    {
+    public function SetPublished(
+        $in_published_search
+        // The value to set. It can be:
+        //  - -1    Search for ONLY unpublished meetings
+        //  -  0    Search for published and unpublished meetings.
+        //  -  1    Search for ONLY published meetings.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $this->_published_search = $in_published_search;
     }
@@ -819,9 +819,9 @@ class c_comdef_meeting_search_manager
     /** \brief Set a maximum end time.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function SetEndTime( $in_ends_before       ///< An epoch time, defining that the meeting must end no later than this.
-                            )
-    {
+    public function SetEndTime(
+        $in_ends_before       ///< An epoch time, defining that the meeting must end no later than this.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $this->_end_before = $in_ends_before;
     }
@@ -936,9 +936,9 @@ class c_comdef_meeting_search_manager
     /** \brief Set the current search string.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function SetMeetingIDArray( $in_meeting_id_array   ///< An array of positive integers. These are the IDs of individual meetings to find.
-                                )
-    {
+    public function SetMeetingIDArray(
+        $in_meeting_id_array   ///< An array of positive integers. These are the IDs of individual meetings to find.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $this->_meeting_id_array = $in_meeting_id_array;
     }
@@ -1120,9 +1120,9 @@ class c_comdef_meeting_search_manager
         instance of c_comdef_search_results).
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function GetSearchResults_Obj( $in_new_search = false   ///< If this is set to true, the search is done anew.
-                                    )
-    {
+    public function GetSearchResults_Obj(
+        $in_new_search = false   ///< If this is set to true, the search is done anew.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         // See if we need to make a new search. Only the root can do a new search.
         if ((null == $this->_my_root) && (true == $in_new_search) || (null == $this->_search_results)) {
@@ -1316,9 +1316,9 @@ class c_comdef_meeting_search_manager
         beyond that.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function SetSortDepth( $in_new_depth = 0   ///< A positive integer. If nothing is provided, we set to endless (0).
-                            )
-    {
+    public function SetSortDepth(
+        $in_new_depth = 0   ///< A positive integer. If nothing is provided, we set to endless (0).
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         // Only the root can do this.
         if (null == $this->_my_root) {
@@ -1531,9 +1531,9 @@ class c_comdef_meeting_search_manager
         \returns a new (not reference) c_comdef_meeting instance. Null if it fails.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public static function GetSingleMeetingByID( $in_id   ///< An integer. The ID of the meeting.
-                                        )
-    {
+    public static function GetSingleMeetingByID(
+        $in_id   ///< An integer. The ID of the meeting.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return c_comdef_server::GetOneMeeting($in_id);
     }
@@ -1550,9 +1550,9 @@ class c_comdef_meeting_search_manager
         Null if it fails.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public static function GetMultipleMeetingsByID( $in_id_array  ///< An array of integers. The IDs of the meetings.
-                                            )
-    {
+    public static function GetMultipleMeetingsByID(
+        $in_id_array  ///< An array of integers. The IDs of the meetings.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
         

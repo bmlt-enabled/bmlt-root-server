@@ -42,7 +42,7 @@
             if (!('.' == $file[0])
                 && is_dir(dirname(dirname(dirname(__FILE__))).'/local_server/server_admin/lang/'.$file)
                 && file_exists(dirname(dirname(dirname(__FILE__))).'/local_server/server_admin/lang/'.$file.'/name.txt')
-                && file_exists(dirname(dirname(dirname(__FILE__))).'/local_server/server_admin/lang/'.$comdef_global_language.'/format_codes.php') ) {
+                && file_exists(dirname(dirname(dirname(__FILE__))).'/local_server/server_admin/lang/'.$comdef_global_language.'/format_codes.php')) {
                 /// The "name.txt" file contains -ONLY- the language name, in its local language.
                 $name = file_get_contents(dirname(dirname(dirname(__FILE__))).'/local_server/server_admin/lang/'.$file.'/name.txt');
                 /// Each language has a text file, which has its name, in local language.

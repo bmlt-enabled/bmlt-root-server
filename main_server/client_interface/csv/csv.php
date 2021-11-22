@@ -684,9 +684,9 @@ function CSVHandleNawsDump(
 
     \returns an associative array. Each main element will be one line, and each line will be an associative array of fields. If a field is not present in the line, it is not included.
 */
-function returnArrayFromCSV( $inCSVArray   ///< A array of CSV data, split as lines (each element is a single text line of CSV data). the first line is the header (array keys).
-)
-{
+function returnArrayFromCSV(
+    $inCSVArray   ///< A array of CSV data, split as lines (each element is a single text line of CSV data). the first line is the header (array keys).
+) {
     $ret = null;
     
     $desc_line = $inCSVArray[0];    // Get the field names.
@@ -1530,9 +1530,9 @@ function HandleNoServer()
 
     \returns a JSON string, with all the data in the CSV.
 */
-function TranslateToJSON( $in_csv_data ///< An array of CSV data, with the first element being the field names.
-                        )
-{
+function TranslateToJSON(
+    $in_csv_data ///< An array of CSV data, with the first element being the field names.
+) {
     $temp_keyed_array = array();
     $in_csv_data = explode("\n", $in_csv_data);
     $keys = array_shift($in_csv_data);
@@ -1571,9 +1571,9 @@ function TranslateToJSON( $in_csv_data ///< An array of CSV data, with the first
 
     \returns an XML string, with all the data in the CSV.
 */
-function TranslateToXML(   $in_csv_data        ///< An array of CSV data, with the first element being the field names.
-                        )
-{
+function TranslateToXML(
+    $in_csv_data        ///< An array of CSV data, with the first element being the field names.
+) {
     $temp_keyed_array = array();
     $in_csv_data = explode("\n", $in_csv_data);
     $keys = array_shift($in_csv_data);

@@ -48,9 +48,9 @@ class c_comdef_admin_main_console
     /********************************************************************************************************//**
     \brief
     ************************************************************************************************************/
-    public function __construct(  $in_http_vars   ///< The HTTP transaction parameters
-                        )
-    {
+    public function __construct(
+        $in_http_vars   ///< The HTTP transaction parameters
+    ) {
         $this->my_http_vars = $in_http_vars;
         $this->my_localized_strings = c_comdef_server::GetLocalStrings();
         $this->my_server = c_comdef_server::MakeServer();
@@ -1135,9 +1135,9 @@ class c_comdef_admin_main_console
     \returns a string, containing the name.
     ************************************************************************************************************/
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function get_user_name_from_id($in_user_id  ///< The ID to look up.
-                                    )
-    {
+    public function get_user_name_from_id(
+        $in_user_id  ///< The ID to look up.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
         
@@ -1417,9 +1417,9 @@ class c_comdef_admin_main_console
     \brief Build the content for the Advanced Service Bodies section.
     ****************************************************************************************/
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function populate_service_bodies(  $in_id    ///< The ID of the Service body.
-                                      )
-    {
+    public function populate_service_bodies(
+        $in_id    ///< The ID of the Service body.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $service_body_content = '';
         $child_content = '';

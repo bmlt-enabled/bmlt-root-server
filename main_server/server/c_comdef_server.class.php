@@ -554,9 +554,9 @@ class c_comdef_server
                     Service bodies that are "owned" by this one.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function GetNestedServiceBodyArray( $in_id = 0 ///< The ID of the "top" Service body. If not supplied, we start at the top.
-                                        )
-    {
+    public function GetNestedServiceBodyArray(
+        $in_id = 0 ///< The ID of the "top" Service body. If not supplied, we start at the top.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret_array = null;
         
@@ -707,9 +707,9 @@ class c_comdef_server
         \returns an integer, with the ID of the new meeting. 0 If it fails.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public static function DuplicateMeetingID( $in_meeting_id ///< The ID of the meeting to be copied.
-                                        )
-    {
+    public static function DuplicateMeetingID(
+        $in_meeting_id ///< The ID of the meeting to be copied.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = 0;
         
@@ -733,9 +733,9 @@ class c_comdef_server
         \returns a reference to a c_comdef_meeting object, representing the new meeting. Null if it fails.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public static function DuplicateMeetingObj( $in_meeting_obj   ///< A reference to the meeting object to be copied.
-                                        )
-    {
+    public static function DuplicateMeetingObj(
+        $in_meeting_obj   ///< A reference to the meeting object to be copied.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $new_meeting =  null;
         
@@ -1160,9 +1160,9 @@ class c_comdef_server
         \returns a reference to a c_comdef_user object. Null if none.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public static function GetUserByLogin(    $in_login      ///< A string. The login ID.
-                                    )
-    {
+    public static function GetUserByLogin(
+        $in_login      ///< A string. The login ID.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
         
@@ -1205,9 +1205,9 @@ class c_comdef_server
         Null if it failed.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public static function GetCurrentUserObj($in_is_ajax = false  ///< If it's an AJAX handler, this is true.
-                                        )
-    {
+    public static function GetCurrentUserObj(
+        $in_is_ajax = false  ///< If it's an AJAX handler, this is true.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         include(dirname(__FILE__).'/config/get-config.php');
 
@@ -2376,9 +2376,9 @@ class c_comdef_server
         \returns a floating point number, with the number of Km per degree longitude at the given latitude..
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public static function getKmPerLonAtLat($dLatitude ///< The latitude (in degrees).
-                                    )
-    {
+    public static function getKmPerLonAtLat(
+        $dLatitude ///< The latitude (in degrees).
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return 111.321 * cos(deg2rad($dLatitude));
     }
@@ -2666,9 +2666,9 @@ class c_comdef_server
             - 'time_zone_strings'               An array of time zone strings.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public static function GetLocalStrings( $in_lang_enum = null  ///< An enumeration string, indicating the language desired. If provided, it overrides all else.
-                                    )
-    {
+    public static function GetLocalStrings(
+        $in_lang_enum = null  ///< An enumeration string, indicating the language desired. If provided, it overrides all else.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if (!is_array(c_comdef_server::$server_local_strings) || !count(c_comdef_server::$server_local_strings)) {
             // This will create the SINGLETON server if one does not yet exist.
@@ -3117,9 +3117,9 @@ class c_comdef_server
      be removed entirely.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public static function GetUserServiceBodies( $in_user = null   ///< The user to check. If not provided, the current user is checked.
-                                            )
-    {
+    public static function GetUserServiceBodies(
+        $in_user = null   ///< The user to check. If not provided, the current user is checked.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if (!$in_user) {
             $in_user = self::GetCurrentUserObj();

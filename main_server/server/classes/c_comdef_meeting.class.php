@@ -540,9 +540,9 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         \throws an exception if there is a problem.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public static function GetAddressDataItemKeys( $in_list = false   ///< If this is true, then the return is for the list view. If false, for the "More Details" screen.
-                                            )
-    {
+    public static function GetAddressDataItemKeys(
+        $in_list = false   ///< If this is true, then the return is for the list view. If false, for the "More Details" screen.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
         
@@ -582,9 +582,9 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         \throws an exception if there is a problem.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public static function GetAddressDataItemBuilder( $in_list = false    ///< If this is true, then the return is for the list view. If false, for the "More Details" screen.
-                                                )
-    {
+    public static function GetAddressDataItemBuilder(
+        $in_list = false    ///< If this is true, then the return is for the list view. If false, for the "More Details" screen.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
         
@@ -1060,9 +1060,9 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         \returns a reference to the value of the requested element. Null if the element is not there.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function GetMeetingDataValue( $in_key   ///< A string. This is the key in the data array.
-                                )
-    {
+    public function GetMeetingDataValue(
+        $in_key   ///< A string. This is the key in the data array.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
         
@@ -1087,9 +1087,9 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         \returns a boolean. True, if the data item is hidden from normal users.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function IsItemHidden( $in_key ///< A string. This is the key in the data array.
-                            )
-    {
+    public function IsItemHidden(
+        $in_key ///< A string. This is the key in the data array.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = ($in_key == 'email_contact');
         
@@ -1108,9 +1108,9 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         \returns a string. Null if the element is not there.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function GetMeetingDataPrompt( $in_key  ///< A string. This is the key in the data array.
-                                    )
-    {
+    public function GetMeetingDataPrompt(
+        $in_key  ///< A string. This is the key in the data array.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
         
@@ -1180,9 +1180,9 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
     /** \brief Accessor - Sets the meeting's published status.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function SetPublished( $in_published   ///< A boolean. True if the meeting is published.
-                            )
-    {
+    public function SetPublished(
+        $in_published   ///< A boolean. True if the meeting is published.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if (!$this->IsCopy()) { // Can't publish copies.
             $this->_my_meeting_data['published'] = (intval($in_published) != 0) ? 1 : 0;
@@ -1261,9 +1261,9 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         \returns a boolean, which is true if the address was set correctly.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function SetEmailContact(   $in_email_contact   ///< A string. The contact email address.
-                                )
-    {
+    public function SetEmailContact(
+        $in_email_contact   ///< A string. The contact email address.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = false;
         
@@ -1293,9 +1293,9 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         \returns an integer, which is the previous ID of the Service Body for this meeting.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function SetServiceBodyID(  $in_service_body_id ///< An integer, the ID of the new Service Body for this meeting.
-                                )
-    {
+    public function SetServiceBodyID(
+        $in_service_body_id ///< An integer, the ID of the new Service Body for this meeting.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = $this->_my_meeting_data['service_body_bigint'];
         
@@ -1434,9 +1434,9 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         \returns a string, containing the meeting's address in easily-readable form.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function GetMeetingAddressString( $in_list = false  ///< If this is true, then the version returned will be for the list display. Default is false (The More Details display).
-                                    )
-    {
+    public function GetMeetingAddressString(
+        $in_list = false  ///< If this is true, then the version returned will be for the list display. Default is false (The More Details display).
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
         
@@ -1713,9 +1713,9 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         \returns a string, which is the contact email for this meeting
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function GetContactEmail( $in_recursive = false ///< If this is true, then the function will return a recursive result. Default is false.
-                            )
-    {
+    public function GetContactEmail(
+        $in_recursive = false ///< If this is true, then the function will return a recursive result. Default is false.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = trim($this->GetEmailContact());
         

@@ -67,9 +67,9 @@ if (preg_match("/localhost/", $_SERVER['SERVER_NAME'])) {
 
     \returns a Boolean. TRUE if the message appears to be spam.
 */
-function analyzeFromLine( $inFrom ///< The message from line as a text string.
-                        )
-{
+function analyzeFromLine(
+    $inFrom ///< The message from line as a text string.
+) {
     $inFrom = strtolower($inFrom);
     
     $ret = !((false == strpos($inFrom, "\r")) && (false == strpos($inFrom, "\n")) && (false == strpos($inFrom, ";")) && (false == strpos($inFrom, "to:")) && (false == strpos($inFrom, "cc:")) && (false == strpos($inFrom, "bc:")));
@@ -84,9 +84,9 @@ function analyzeFromLine( $inFrom ///< The message from line as a text string.
 
     \returns a Boolean. TRUE if the message appears to be spam.
 */
-function analyzeMessageContent( $inMessage ///< The message as a text string.
-                                )
-{
+function analyzeMessageContent(
+    $inMessage ///< The message as a text string.
+) {
     $ret = false;
     $count = 0;
     
@@ -110,9 +110,9 @@ function analyzeMessageContent( $inMessage ///< The message as a text string.
 /** \brief This analyzes email address (or a list of them), and returns TRUE if they are OK (as formatted).
     \returns a Boolean. TRUE if the emails are OK.
 */
-function isValidEmailAddress(  $in_test_address    ///< The email address (or a list or array) to be checked.
-                                )
-{
+function isValidEmailAddress(
+    $in_test_address    ///< The email address (or a list or array) to be checked.
+) {
     $valid = false;
     if (isset($in_test_address)) {
         if (!is_array($in_test_address)) {

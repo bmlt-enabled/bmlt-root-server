@@ -147,9 +147,9 @@ class c_comdef_users implements i_comdef_has_parent
         \returns a reference to a c_comdef_user object. Null if none.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function &GetUserByLogin(   $in_login       ///< A string. The login ID.
-                            )
-    {
+    public function &GetUserByLogin(
+        $in_login       ///< A string. The login ID.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
         
@@ -205,9 +205,9 @@ class c_comdef_users implements i_comdef_has_parent
     /** \brief Add a user object to the end of the array.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function AddUser(   &$in_user   ///< A reference to the user to be added.
-                        )
-    {
+    public function AddUser(
+        &$in_user   ///< A reference to the user to be added.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if ($in_user instanceof c_comdef_user) {
             $in_user->SetParentObj($this);

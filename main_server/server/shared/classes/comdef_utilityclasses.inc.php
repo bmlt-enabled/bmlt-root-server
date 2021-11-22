@@ -285,9 +285,9 @@ function call_curl(
 /** \brief Returns the HTML for an "Admin Bar" along the top of the page.
     \returns the HTML for the bar.
 */
-function c_comdef_admin_bar( $in_http_vars ///< The aggregation of the $_GET and $_POST superglobals, as an associative array.
-                            )
-{
+function c_comdef_admin_bar(
+    $in_http_vars ///< The aggregation of the $_GET and $_POST superglobals, as an associative array.
+) {
     $x_file = $_SERVER ['SCRIPT_NAME'];
     require_once(dirname(__FILE__).'/../../../server/c_comdef_server.class.php');
     $ret = '';
@@ -303,7 +303,7 @@ function c_comdef_admin_bar( $in_http_vars ///< The aggregation of the $_GET and
             
             if (isset($in_http_vars['edit_cp'])
                 || (isset($in_http_vars['do_search']) && $in_http_vars['do_search'])
-                || (isset($in_http_vars['single_meeting_id']) && $in_http_vars['single_meeting_id']) ) {
+                || (isset($in_http_vars['single_meeting_id']) && $in_http_vars['single_meeting_id'])) {
                 $left_link = '<a href="'.$x_file.'?supports_ajax=yes&amp;lang_enum='.htmlspecialchars($lang_enum).'">';
                 $left_link .= c_comdef_htmlspecialchars($localized_strings['comdef_search_admin_strings']['Admin_Bar']['meeting_search']);
                 $left_link .= '</a>';
@@ -347,7 +347,7 @@ function c_comdef_admin_bar( $in_http_vars ///< The aggregation of the $_GET and
             $admin_links = '<div class="bmlt_admin_links_div">';
             if (isset($in_http_vars['edit_cp'])
                         || (isset($in_http_vars['do_search']) && $in_http_vars['do_search'])
-                        || (isset($in_http_vars['single_meeting_id']) && $in_http_vars['single_meeting_id']) ) {
+                        || (isset($in_http_vars['single_meeting_id']) && $in_http_vars['single_meeting_id'])) {
                 $admin_links .= '<div class="bmlt_admin_one_link_div">';
                     $admin_links .= '<a href="'.$x_file.'?supports_ajax=yes&amp;lang_enum='.htmlspecialchars($lang_enum).'">';
                         $admin_links .= c_comdef_htmlspecialchars($localized_strings['comdef_search_admin_strings']['Admin_Bar']['meeting_search']);
@@ -471,9 +471,9 @@ class bdfProfiler
     /**
     * \brief Marks a time
     */
-    public static function mark( $msg = null    ///< Optional string. A message to be displayed for this marker.
-                            )
-    {
+    public static function mark(
+        $msg = null    ///< Optional string. A message to be displayed for this marker.
+    ) {
         // If possible, we see how the memory is being used.
         if (function_exists('memory_get_usage')) {
             $mem = memory_get_usage();
@@ -520,9 +520,9 @@ class bdfProfiler
     *
     * \returns a string, with a series of tab-delimited lines; each containing the profile information for a marker.
     */
-    public static function output( $in_html = false    ///< If true, the output is html. Default is false.
-                                )
-    {
+    public static function output(
+        $in_html = false    ///< If true, the output is html. Default is false.
+    ) {
         if ($in_html) {
             $output = self::html_output();
         } else {
