@@ -1,12 +1,12 @@
 FROM public.ecr.aws/t5y4k5q3/bmlt-root-server:latest
 
-ENV PHP_INI_PATH /etc/php/7.2/apache2/php.ini
+ENV PHP_INI_PATH /etc/php/7.4/apache2/php.ini
 ENV PHP_XDEBUG_ENABLED: 1
 
 RUN apt-get update \
     && apt-get -yqq install \
-    php7.2-dev \
-    php7.2-xdebug
+    php-dev \
+    php-xdebug
 
 RUN echo "zend_extension=$(find /usr/lib/php/ -name xdebug.so)" >> ${PHP_INI_PATH} \
     && echo "xdebug.remote_port=10000" >> ${PHP_INI_PATH} \

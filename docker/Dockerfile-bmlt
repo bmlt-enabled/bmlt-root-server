@@ -1,4 +1,4 @@
-FROM public.ecr.aws/lts/ubuntu:bionic
+FROM public.ecr.aws/lts/ubuntu:focal
 
 ENV TZ=America/New_York
 
@@ -9,7 +9,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
     apache2 \
     libapache2-mod-php \
     php-mysql \
-    php7.2-xml \
+    php-xml \
     php-curl \
     php-gd \
     php-zip \
