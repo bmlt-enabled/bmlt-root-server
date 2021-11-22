@@ -48,7 +48,7 @@ For instructions on installing the root server, see [Installing a New Root Serve
 ***Version 2.16.4* ** *- UNRELEASED*
 - Added a new `parents=1` parameter to `GetServiceBodies`. When supplied with `services[]=x` filters, all parent service bodies will be returned.
 - Exposed `venue_type` in meeting search results.
-- Added a new `venue_types` filter to `GetSearchResults`. This works like the `weekdays` and `services` filters, where a passing a positive integer will include a Venue Type and a negative integer will exclude a Venue Type.
+- Added a new `venue_types` filter to `GetSearchResults`. This works like the `weekdays` and `services` filters, where passing a positive integer will include a Venue Type and a negative integer will exclude a Venue Type.
   - Filter Values
     - In-Person is `1`
     - Virtual is `2`
