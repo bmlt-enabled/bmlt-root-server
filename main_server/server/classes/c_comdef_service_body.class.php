@@ -619,9 +619,9 @@ class c_comdef_service_body extends t_comdef_world_type implements i_comdef_db_s
     /** \brief Accessor - set the contact email string.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function SetContactEmail( $in_email ///< A string. The email address to be set.
-                            )
-    {
+    public function SetContactEmail(
+        $in_email ///< A string. The email address to be set.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $this->_sb_meeting_email = $in_email;
     }
@@ -636,9 +636,9 @@ class c_comdef_service_body extends t_comdef_world_type implements i_comdef_db_s
         \returns a string, which is the contact email for this Service Body
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function GetContactEmail( $in_recursive = false ///< If this is true, then the function will return a recursive result. Default is false.
-                            )
-    {
+    public function GetContactEmail(
+        $in_recursive = false ///< If this is true, then the function will return a recursive result. Default is false.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = trim($this->_sb_meeting_email);
         
@@ -701,9 +701,9 @@ class c_comdef_service_body extends t_comdef_world_type implements i_comdef_db_s
         \returns a boolean. True if the user is an editor or principal user.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function IsUserInServiceBody( $in_user_object = null    ///< A reference to an instance of c_comdef_user. If null, the current user is checked.
-                                )
-    {
+    public function IsUserInServiceBody(
+        $in_user_object = null    ///< A reference to an instance of c_comdef_user. If null, the current user is checked.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = false;
         // We load the server user if one wasn't supplied.
@@ -740,9 +740,9 @@ class c_comdef_service_body extends t_comdef_world_type implements i_comdef_db_s
         \returns a boolean. True if the user is in the hierarchy (going up) of the Service Body.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function IsUserInServiceBodyHierarchy( $in_user_object = null   ///< A reference to an instance of c_comdef_user. If null, the current user is checked.
-                                            )
-    {
+    public function IsUserInServiceBodyHierarchy(
+        $in_user_object = null   ///< A reference to an instance of c_comdef_user. If null, the current user is checked.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = false;
         // We load the server user if one wasn't supplied.
@@ -928,9 +928,9 @@ class c_comdef_service_body extends t_comdef_world_type implements i_comdef_db_s
         \returns true, if the user is allowed to observe, false, otherwise.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function UserCanObserve(   $in_user_object = null  ///< A reference to a c_comdef_user object, for the user to be validated. If null, or not supplied, the server current user is tested.
-                                )
-    {
+    public function UserCanObserve(
+        $in_user_object = null  ///< A reference to a c_comdef_user object, for the user to be validated. If null, or not supplied, the server current user is tested.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = $this->UserCanEdit($in_user_object);  // First, see if we are able to edit this Service body. If so, then we're golden.
         

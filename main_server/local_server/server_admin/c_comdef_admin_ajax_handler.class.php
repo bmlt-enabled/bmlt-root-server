@@ -42,9 +42,9 @@ class c_comdef_admin_ajax_handler
     /*******************************************************************************************************//**
     \brief
     ***********************************************************************************************************/
-    public function __construct(  $in_http_vars   ///< The HTTP transaction parameters
-                        )
-    {
+    public function __construct(
+        $in_http_vars   ///< The HTTP transaction parameters
+    ) {
         $this->my_http_vars = $in_http_vars;
         $this->my_localized_strings = c_comdef_server::GetLocalStrings();
         $this->my_server = c_comdef_server::MakeServer();
@@ -426,9 +426,9 @@ class c_comdef_admin_ajax_handler
         \brief
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function HandleFormatChange(   $in_new_format_data     ///< A JSON string with the new format data.
-                                )
-    {
+    public function HandleFormatChange(
+        $in_new_format_data     ///< A JSON string with the new format data.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if (c_comdef_server::IsUserServerAdmin(null, true)) {
             $json_tool = new PhpJsonXmlArrayStringInterchanger;
@@ -550,9 +550,9 @@ class c_comdef_admin_ajax_handler
         \brief
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function HandleDeleteFormat(   $in_format_shared_id    ///< The shared ID of the formats to delete.
-                                )
-    {
+    public function HandleDeleteFormat(
+        $in_format_shared_id    ///< The shared ID of the formats to delete.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if (c_comdef_server::IsUserServerAdmin(null, true)) {
             $ret_data = '';
@@ -583,9 +583,9 @@ class c_comdef_admin_ajax_handler
         \brief
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function HandleUserCreate( $in_user_data   ///< A JSON object, containing the new User data.
-                                )
-    {
+    public function HandleUserCreate(
+        $in_user_data   ///< A JSON object, containing the new User data.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if (c_comdef_server::IsUserServerAdmin(null, true)) {
             $json_tool = new PhpJsonXmlArrayStringInterchanger;
@@ -650,9 +650,9 @@ class c_comdef_admin_ajax_handler
         \brief
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function HandleUserChange( $in_user_data   ///< A JSON object, containing the new User data.
-                                )
-    {
+    public function HandleUserChange(
+        $in_user_data   ///< A JSON object, containing the new User data.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $isServerAdmin = c_comdef_server::IsUserServerAdmin(null, true);
         $isServiceBodyAdmin = c_comdef_server::IsUserServiceBodyAdmin(null, true);
@@ -794,9 +794,9 @@ class c_comdef_admin_ajax_handler
         \brief  This handles updating an existing Service body.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function HandleServiceBodyChange(  $in_service_body_data    ///< A JSON object, containing the new Service Body data.
-                                        )
-    {
+    public function HandleServiceBodyChange(
+        $in_service_body_data    ///< A JSON object, containing the new Service Body data.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $json_tool = new PhpJsonXmlArrayStringInterchanger;
         
@@ -855,9 +855,9 @@ class c_comdef_admin_ajax_handler
         \brief  This handles creating a new Service body.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function HandleServiceBodyCreate(  $in_service_body_data    ///< A JSON object, containing the new Service Body data.
-                                        )
-    {
+    public function HandleServiceBodyCreate(
+        $in_service_body_data    ///< A JSON object, containing the new Service Body data.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if (c_comdef_server::IsUserServerAdmin(null, true)) {
             $json_tool = new PhpJsonXmlArrayStringInterchanger;
@@ -1092,9 +1092,9 @@ class c_comdef_admin_ajax_handler
         \brief  This handles updating an existing meeting, or adding a new one.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function HandleMeetingUpdate(  $in_meeting_data    ///< A JSON object, containing the new meeting data.
-                                )
-    {
+    public function HandleMeetingUpdate(
+        $in_meeting_data    ///< A JSON object, containing the new meeting data.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $json_tool = new PhpJsonXmlArrayStringInterchanger;
         
@@ -1437,9 +1437,9 @@ class c_comdef_admin_ajax_handler
         \returns a JSON string, with all the data in the CSV.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function TranslateToJSON( $in_csv_data ///< An array of CSV data, with the first element being the field names.
-                            )
-    {
+    public function TranslateToJSON(
+        $in_csv_data ///< An array of CSV data, with the first element being the field names.
+    ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $temp_keyed_array = array();
         $in_csv_data = explode("\n", $in_csv_data);

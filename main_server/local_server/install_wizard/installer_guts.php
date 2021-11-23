@@ -438,9 +438,9 @@ $default_lang = $lang;
 
     \returns a string, containing the element HTML.
 */
-function bmlt_create_next_prev_buttons( $in_section  ///< The page we are in. An integer.
-                                        )
-{
+function bmlt_create_next_prev_buttons(
+    $in_section  ///< The page we are in. An integer.
+) {
     global  $comdef_install_wizard_strings;
     $ret = '<div class="next_prev_container_div">';
     if ($in_section > 1) {

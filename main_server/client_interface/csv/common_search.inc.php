@@ -560,9 +560,9 @@ function SetUpSearch(
 
     \returns an array of integers.
 */
-function GetAllContainedServiceBodyIDs( $in_parent_id = 0  ///< This is the ID of the top Service body (will not be included in the reponse).
-                                        )
-{
+function GetAllContainedServiceBodyIDs(
+    $in_parent_id = 0  ///< This is the ID of the top Service body (will not be included in the reponse).
+) {
     $in_parent_id = intval($in_parent_id);
     $ret = array( $in_parent_id );
     
@@ -626,9 +626,9 @@ function BuildFormats(
 
     \returns a string, containing the HTML rendered by the function.
 */
-function BuildTown( $in_mtg_obj ///< A reference to an instance of c_comdef_meeting.
-                    )
-{
+function BuildTown(
+    $in_mtg_obj ///< A reference to an instance of c_comdef_meeting.
+) {
     $location_borough = c_comdef_htmlspecialchars(trim(stripslashes($in_mtg_obj->GetMeetingDataValue('location_city_subsection'))));
     $location_town = c_comdef_htmlspecialchars(trim(stripslashes($in_mtg_obj->GetMeetingDataValue('location_municipality'))));
     $location_neighborhood = c_comdef_htmlspecialchars(trim(stripslashes($in_mtg_obj->GetMeetingDataValue('location_neighborhood'))));
@@ -684,9 +684,9 @@ function BuildTime(
 
     \returns a string, containing the HTML rendered by the function.
 */
-function BuildLocation( $in_mtg_obj ///< A reference to an instance of c_comdef_meeting.
-                        )
-{
+function BuildLocation(
+    $in_mtg_obj ///< A reference to an instance of c_comdef_meeting.
+) {
     $ret = "";
     
     if ($in_mtg_obj instanceof c_comdef_meeting) {
