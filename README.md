@@ -45,7 +45,7 @@ satellites comprise the "client" part of the BMLT "client/server" architecture.
 
 For instructions on installing the root server, see [Installing a New Root Server](https://bmlt.app/setting-up-the-bmlt/)
 
-***Version 2.16.4* ** *- UNRELEASED*
+***Version 2.16.4* ** *- November 28, 2021*
 - Added a new `parents=1` parameter to `GetServiceBodies`. When supplied with `services[]=x` filters, all parent service bodies will be returned.
 - Exposed `venue_type` in meeting search results.
 - Added a new `venue_types` filter to `GetSearchResults`. This works like the `weekdays` and `services` filters, where passing a positive integer will include a Venue Type and a negative integer will exclude a Venue Type.
