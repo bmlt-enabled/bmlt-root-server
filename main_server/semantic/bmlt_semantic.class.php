@@ -930,7 +930,7 @@ class bmlt_semantic
         $ret .= '</div>';
         $ret .= $this->make_checkbox_html('In-Person', 'bmlt_semantic_form_venue_type_checkbox_1', false, 1, 'handleVenueTypeCheckbox');
         $ret .= $this->make_checkbox_html('Virtual', 'bmlt_semantic_form_venue_type_checkbox_2', false, 2, 'handleVenueTypeCheckbox');
-        $ret .= $this->make_checkbox_html('Hybird', 'bmlt_semantic_form_venue_type_checkbox_3', false, 3, 'handleVenueTypeCheckbox');
+        $ret .= $this->make_checkbox_html('Hybrid', 'bmlt_semantic_form_venue_type_checkbox_3', false, 3, 'handleVenueTypeCheckbox');
         $ret .= '<div class="clear_both"></div>';
         $ret .= '</fieldset>';
         $ret .= defined('DEBUG') ? "\n" : '';
@@ -947,7 +947,7 @@ class bmlt_semantic
         $ret .= '</div>';
         $ret .= $this->make_checkbox_html('In-Person', 'bmlt_semantic_form_not_venue_type_checkbox_1', false, -1, 'handleVenueTypeCheckbox');
         $ret .= $this->make_checkbox_html('Virtual', 'bmlt_semantic_form_not_venue_type_checkbox_2', false, -2, 'handleVenueTypeCheckbox');
-        $ret .= $this->make_checkbox_html('Hybird', 'bmlt_semantic_form_not_venue_type_checkbox_3', false, -3, 'handleVenueTypeCheckbox');
+        $ret .= $this->make_checkbox_html('Hybrid', 'bmlt_semantic_form_not_venue_type_checkbox_3', false, -3, 'handleVenueTypeCheckbox');
         $ret .= '<div class="clear_both"></div>';
         $ret .= '</fieldset>';
         $ret .= defined('DEBUG') ? "\n" : '';
