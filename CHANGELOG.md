@@ -11,7 +11,7 @@
         - `&venue_types=-1` will exclude all In-Person meetings.
 *Added a new `key_strings` filter to `GetFormats`. This has also been implemented in tomato, and will allow crouton to make more efficient queries.
     - Example: `&key_strings[]=TC&key_strings[]=VM&key_strings[]=HY&lang_enum=en`
-*Dropped support for PHP 7.2, added support for PHP 8.0.
+* Dropped support for PHP 7.2, added support for PHP 8.0.
 
 ## 2.16.3 (October 27, 2021)
 * Fix bug in code that lets NAWS indicate they have processed a deleted meeting, so that you don't need to be logged in as the serveradmin for it to work
