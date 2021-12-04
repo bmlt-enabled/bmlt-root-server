@@ -37,7 +37,7 @@ jobs:
         - mkdir -p $DIST_DIR_GITHUB && cp $BUILD_DIR/$ZIP_FILENAME $DIST_DIR_GITHUB/$GITHUB_RELEASE_FILENAME
         - curl -LO https://raw.githubusercontent.com/bmlt-enabled/release-notes-tool/master/release-notes.sh
         - chmod +x release-notes.sh
-        - ./release-notes.sh README.md "*Version"
+        - ./release-notes.sh CHANGELOG.md "##"
       deploy:
         - provider: s3
           access_key_id: AKIA3EWZC3OHKYCL5SIY
