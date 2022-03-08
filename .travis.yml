@@ -118,6 +118,14 @@ jobs:
         - wget https://releases.hashicorp.com/terraform/1.1.7/terraform_1.1.7_linux_amd64.zip
         - unzip terraform_1.1.7_linux_amd64.zip
         - rm -f terraform_1.1.7_linux_amd64.zip
+        - |
+          mkdir -p ~/.aws
+          cat > ~/.aws/credentials << EOL
+          [mvana]
+          aws_access_key_id     = ${AWS_ACCESS_KEY_ID}
+          aws_secret_access_key = ${AWS_SECRET_ACCESS_KEY}
+          region                = us-east-1
+          EOL
       script:
         - ./terraform init -input=false
         - ./terraform taint -allow-missing aws_ecs_task_definition.bmlt_$(if [ $TRAVIS_BRANCH == "master" ]; then echo latest; else echo unstable; fi)
