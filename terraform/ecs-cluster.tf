@@ -70,29 +70,36 @@ resource "aws_iam_instance_profile" "cluster" {
 
 resource "aws_autoscaling_group" "cluster" {
   name                 = local.cluster_name
-  vpc_zone_identifier  = data.aws_subnet_ids.main.ids
+  vpc_zone_identifier  = data.aws_subnets.main.ids
   min_size             = 1
   max_size             = 1
   desired_capacity     = 1
   launch_configuration = aws_launch_configuration.cluster.name
 
-  tags = [
-    {
-      key                 = "Name"
-      value               = "bmlt-ecs"
-      propagate_at_launch = true
-    },
-    {
-      key                 = "application"
-      value               = "bmlt"
-      propagate_at_launch = true
-    },
-    {
-      key                 = "environment"
-      value               = "production"
-      propagate_at_launch = true
-    },
-  ]
+  dynamic "tag" {
+    for_each = [
+      {
+        key                 = "Name"
+        value               = "bmlt-ecs"
+        propagate_at_launch = true
+      },
+      {
+        key                 = "application"
+        value               = "bmlt"
+        propagate_at_launch = true
+      },
+      {
+        key                 = "environment"
+        value               = "production"
+        propagate_at_launch = true
+      },
+    ]
+    content {
+      key                 = tag.value.key
+      value               = tag.value.value
+      propagate_at_launch = tag.value.propagate_at_launch
+    }
+  }
 }
 
 resource "aws_security_group" "cluster" {
@@ -142,14 +149,14 @@ resource "aws_launch_configuration" "cluster" {
   iam_instance_profile        = aws_iam_instance_profile.cluster.name
   associate_public_ip_address = false
 
-  user_data = data.template_cloudinit_config.cluster.rendered
+  user_data = data.cloudinit_config.cluster.rendered
 
   lifecycle {
     create_before_destroy = true
   }
 }
 
-data "template_cloudinit_config" "cluster" {
+data "cloudinit_config" "cluster" {
   part {
     content_type = "text/x-shellscript"
     content      = <<EOF
