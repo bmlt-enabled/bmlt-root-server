@@ -115,9 +115,9 @@ jobs:
         - secure: "WCS/DszTtZEcD3QhA+c5vVSj3TAqLugSFuHsACFWX+FmGzRTfG/8yuwyPiLc4+tmTwGUjzgBNCJCrkvr5lBTQTYtL/TtUJ6WgMO/V59ULx5e8gjAdtGCADm6twJzAD4E9zfUtOPmfz+BvuNPGTplmDkqk9nAJAj/SQBtbv1uKahzcRmmXE1sfwqpv3jpHAAi+pEnpDFVN7ApIDtQ1yM7Tv91qHJDbjGer40eoeY2wiAhxsxbreXZ38GuHmHEyc/gq6OkVpHmKdtX3mdWZrnKRtZguqAD0L7Aw/zxjGM5SIRfqsDBfLHenClXspBljHnOy/SYi2EZRUkIvUjDtLlkh1vaYlFE8xUHRCTHqbH2Dkyh6tcezdJvJC/cZqEP5KWq03P3i5/BYBz8yA+khhjsvwm2FZw9c/peJlQUBI3nMmvp3aYaZBYTpARcmDaXZigHp3SzPYH95yu8adg4wqDRbT54PH0BjDA8jk4WYYpD7V6NWWUwFpukPxU47oefZf+hIzYKwtcrTtYpigkGC09PjrU+zFy9h0W30VbunB0u6wuVDbDsuKxRPayrR2rgQ2Tr0un7ybMSX5H1EwxNDRojR0/fpY9WmV39tuW1H809adO8r6eUvvnYO84QGTIKPcTKlbYKaMz2rPughIQ2Da7EqaX06dmVMTsjJUmlRgxAh24="
       install:
         - cd terraform
-        - wget https://releases.hashicorp.com/terraform/0.14.8/terraform_0.14.8_linux_amd64.zip
-        - unzip terraform_0.14.8_linux_amd64.zip
-        - rm -f terraform_0.14.8_linux_amd64.zip
+        - wget https://releases.hashicorp.com/terraform/1.1.7/terraform_1.1.7_linux_amd64.zip
+        - unzip terraform_1.1.7_linux_amd64.zip
+        - rm -f terraform_1.1.7_linux_amd64.zip
       script:
         - ./terraform init -input=false
         - ./terraform taint -allow-missing aws_ecs_task_definition.bmlt_$(if [ $TRAVIS_BRANCH == "master" ]; then echo latest; else echo unstable; fi)
