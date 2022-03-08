@@ -13,12 +13,6 @@ provider "aws" {
   profile = "mvana"
 }
 
-provider "aws" {
-  alias   = "bmlt"
-  profile = "bmlt"
-  region  = "us-east-1"
-}
-
 data "aws_vpc" "main" {
   filter {
     name   = "tag:Name"
@@ -35,6 +29,9 @@ data "aws_lb" "main" {
   name = "tomato"
 }
 
-data "aws_subnet_ids" "main" {
-  vpc_id = data.aws_vpc.main.id
+data "aws_subnets" "main" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.main.id]
+  }
 }
