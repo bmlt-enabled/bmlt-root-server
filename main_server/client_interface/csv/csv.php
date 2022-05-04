@@ -300,6 +300,7 @@ function parse_redirect(
             break;
         
         case 'GetFormats':
+            $show_all_formats = isset($http_vars['show_all']) && $http_vars['show_all'] == '1';
             $formatKeyStrings = null;
             if (isset($http_vars['key_strings']) && is_array($http_vars['key_strings']) && count($http_vars['key_strings'])) {
                 $formatKeyStrings = $http_vars['key_strings'];
@@ -307,7 +308,7 @@ function parse_redirect(
                 $formatKeyStrings = [$http_vars['key_strings']];
             }
 
-            $result2 = GetFormats($server, $langs, $formatKeyStrings);
+            $result2 = GetFormats($server, $langs, $formatKeyStrings, null, $show_all_formats);
             
             if (isset($http_vars['xml_data'])) {
                 $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -903,7 +904,8 @@ function GetFormats(
     &$server,           ///< A reference to an instance of c_comdef_server
     $in_lang = null,    ///< The language of the formats to be returned.
     $in_key_strings = null, ///< If supplied, an array of format key strings to be returned.
-    $in_formats = null  //< If supplied, an already-fetched array of formats.
+    $in_formats = null,  //< If supplied, an already-fetched array of formats.
+    $show_all = false  //< If true return all formats regardless of if they are used or not.
 ) {
     $my_keys = array (  'key_string',
                         'name_string',
@@ -998,8 +1000,7 @@ function GetFormats(
                                 
                                 $line .= '"'.str_replace('"', '\"', trim($val)).'"';
                             }
-                            
-                            if (in_array($localized_format->GetSharedID(), $used_formats)) {
+                            if ($show_all || in_array($localized_format->GetSharedID(), $used_formats)) {
                                 $ret .= "$line\n";
                             }
                         }
