@@ -820,9 +820,15 @@ class bmlt_semantic
 
         $ret .= '</select>';
         $ret .= defined('DEBUG') ? "\n" : '';
+        $ret .= '<br />';
+        $function_string_show_all = 'bmlt_semantic_js_object'.htmlspecialchars($this->_myJSName).'.handleShowAllFormatsChange(this)';
+        $ret .= '<input type="checkbox" id="bmlt_semantic_form_show_all_formats_checkbox'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_show_all_formats_checkbox" onchange="'.$function_string_show_all.'" />';
+        $ret .= defined('DEBUG') ? "\n" : '';
+        $ret .= '<label id="bmlt_semantic_form_show_all_formats_checkbox_label'.htmlspecialchars($this->_myJSName).'" for="bmlt_semantic_form_show_all_formats_checkbox'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_show_all_formats_checkbox_label">'.$this->localize_string('show_all_formats_checkbox_label').'</label>';
+        $ret .= defined('DEBUG') ? "\n" : '';
         $ret .= '</div>';
         $ret .= defined('DEBUG') ? "\n" : '';
-        
+
         return $ret;
     }
     

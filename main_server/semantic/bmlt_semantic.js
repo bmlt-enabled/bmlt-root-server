@@ -111,9 +111,14 @@ BMLTSemanticResult.prototype.compile = function () {
 /*******************************************************************************************/
 BMLTSemanticResult.prototype.compileFormats = function () {
     var formatLangSelect = this.owner.getScopedElement('bmlt_semantic_formats_lang_select');
+    var getShowAllCheckbox = this.owner.getScopedElement('bmlt_semantic_form_show_all_formats_checkbox');
 
     if ( formatLangSelect && formatLangSelect.value ) {
         this.compiled_params += '&lang_enum=' + formatLangSelect.value;
+    };
+
+    if ( getShowAllCheckbox && getShowAllCheckbox.checked ) {
+        this.compiled_params += '&show_all=1';
     };
     
     this.valid = true;
@@ -1799,6 +1804,18 @@ BMLTSemantic.prototype.handleUsedFormatsChange = function ( inElement
 
 /*******************************************************************************************/
 /**
+ \brief
+ */
+/*******************************************************************************************/
+BMLTSemantic.prototype.handleShowAllFormatsChange = function ( inElement
+) {
+    var getShowAllCheckbox = inElement.formHandler.getScopedElement('bmlt_semantic_form_show_all_formats_checkbox');
+
+    inElement.formHandler.refreshURI();
+};
+
+/*******************************************************************************************/
+/**
     \brief
 */
 /*******************************************************************************************/
@@ -2523,6 +2540,7 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function () {
     this.setBasicFunctions('bmlt_semantic_form_map_search_latitude_text');
     this.setBasicFunctions('bmlt_semantic_form_schema_select_fieldset');
     this.setBasicFunctions('bmlt_semantic_form_used_formats_checkbox');
+    this.setBasicFunctions('bmlt_semantic_form_show_all_formats_checkbox');
     this.setBasicFunctions('bmlt_semantic_form_just_used_formats_checkbox');
     this.setBasicFunctions('bmlt_semantic_form_used_formats_div');
     this.setBasicFunctions('bmlt_semantic_form_just_used_formats_checkbox_div');
