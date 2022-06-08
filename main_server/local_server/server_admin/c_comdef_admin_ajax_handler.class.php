@@ -300,7 +300,11 @@ class c_comdef_admin_ajax_handler
         try {
             foreach ($meetingMap as $bmltId => $newWorldId) {
                 if (!array_key_exists($bmltId, $meetings)) {
-                    $this->UpdatePossiblyDeletedMeeting($bmltId, $ret, $isServerAdmin, $userServiceBodyIDs);
+                    if (strtolower($newWorldId) == 'deleted') {
+                        $this->UpdatePossiblyDeletedMeeting($bmltId, $ret, $isServerAdmin, $userServiceBodyIDs);
+                    } else {
+                        $ret['report']['problem'][] = $bmltId;
+                    }
                     continue;
                 }
                 $meeting = $meetings[$bmltId];
