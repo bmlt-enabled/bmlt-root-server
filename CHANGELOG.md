@@ -1,6 +1,7 @@
 ## 2.16.5 (TBD)
 * Fixed an issue with the NAWS Formats translations for the Italian and Portuguese languages.
 * Add option to the GetFormats endpoint to get all server formats regardless of whether they are used by appending `&show_all=1`.
+* Add check to NAWS import code -- the only change allowed to a deleted meeting is to change its World ID to 'deleted'.
 
 ## 2.16.4 (November 28, 2021)
 * Added a new `parents=1` parameter to `GetServiceBodies`. When supplied with `services[]=x` filters, all parent service bodies will be returned.
