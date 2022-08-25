@@ -302,8 +302,9 @@ class c_comdef_admin_ajax_handler
                 if (!array_key_exists($bmltId, $meetings)) {
                     if (strtolower($newWorldId) == 'deleted') {
                         $this->UpdatePossiblyDeletedMeeting($bmltId, $ret, $isServerAdmin, $userServiceBodyIDs);
+                        $ret['report']['updated'][] = $bmltId;
                     } else {
-                        $ret['report']['problem'][] = $bmltId;
+                        $ret['report']['not_updated'][] = $bmltId;
                     }
                     continue;
                 }
