@@ -1,4 +1,4 @@
-## 2.16.5 (TBD)
+## 2.16.5 (August 25, 2022)
 * Fixed an issue with the NAWS Formats translations for the Italian and Portuguese languages.
 * Add option to the GetFormats endpoint to get all server formats regardless of whether they are used by appending `&show_all=1`.
 * Add check to NAWS import code -- the only change allowed to a deleted meeting is to change its World ID to 'deleted'.
