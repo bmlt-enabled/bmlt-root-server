@@ -1,4 +1,4 @@
-FROM public.ecr.aws/lts/ubuntu:focal
+FROM public.ecr.aws/lts/ubuntu:jammy
 
 ENV TZ=America/New_York
 
