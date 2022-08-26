@@ -1,5 +1,5 @@
 ## 2.16.6 (TBD)
-* TBD
+* Fixed an issue with saving meetings when using PHP 8.x.
 
 ## 2.16.5 (August 25, 2022)
 * Fixed an issue with the NAWS Formats translations for the Italian and Portuguese languages.
