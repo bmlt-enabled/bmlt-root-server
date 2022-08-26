@@ -1,3 +1,6 @@
+## 2.16.6 (TBD)
+* TBD
+
 ## 2.16.5 (August 25, 2022)
 * Fixed an issue with the NAWS Formats translations for the Italian and Portuguese languages.
 * Add option to the GetFormats endpoint to get all server formats regardless of whether they are used by appending `&show_all=1`.
