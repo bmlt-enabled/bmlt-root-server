@@ -1230,6 +1230,7 @@ class c_comdef_admin_ajax_handler
                                 break;
 
                             case 'root_server_uri':
+                            case 'venue_type':
                                 break;  // This should just be a calculated field, so don't save it
 
                             // These are the various "optional" fields.
