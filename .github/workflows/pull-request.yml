@@ -1,37 +1,106 @@
-name: 'pull-request'
+name: 'main'
+on: [ push ]
 
-on:
-  pull_request:
-    branches: [ 'master' ]
+env:
+  S3_BUCKET: archives.bmlt.app
+  S3_KEY: bmlt-root-server
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out code
+      - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Setup PHP
+      - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@v2
         with:
           php-version: 7.4
+          extensions: ctype, dom, gd, iconv, fileinfo, libxml, mbstring, simplexml, xml, xmlreader, xmlwriter, zip, zlib
+          coverage: none
+          tools: cs2pr
 
-      - name: Cache Composer packages
+      - name: Get composer cache directory
         id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache composer dependencies
         uses: actions/cache@v2
         with:
-          path: vendor
-          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-php-
-      - name: Install dependencies
-        if: steps.composer-cache.outputs.cache-hit != 'true'
-        id: install-dependencies
-        uses: php-actions/composer@v6
-        with:
-          args: --prefer-dist --no-progress --no-suggest
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
 
-      - name: Lint
+      - name: Install dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
+
+      - name: Code style with PHP_CodeSniffer
         run: |
           find . -name "*.php" ! -path '*/vendor/*' -print0 | xargs -0 -n1 -P8 php -l
-          vendor/squizlabs/php_codesniffer/bin/phpcs --warning-severity=6 --standard=PSR2 --ignore=vendor --extensions=php --report=full main_server
+          main_server/vendor/squizlabs/php_codesniffer/bin/phpcs --warning-severity=6 --standard=PSR2 --ignore=vendor --extensions=php --report=full main_server
+
+  package:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+    needs: [ lint ]
+    env:
+      BUILD_DIR: build
+      DIST_DIR_S3: dist/s3
+      DIST_DIR_GITHUB: dist/github
+      GITHUB_RELEASE_FILENAME: bmlt-root-server.zip
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup PHP, with composer and extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+          extensions: ctype, dom, gd, iconv, fileinfo, libxml, mbstring, simplexml, xml, xmlreader, xmlwriter, zip, zlib
+          coverage: none
+          tools: cs2pr
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Build zip
+        id: build-zip
+        run: |
+          ZIP_FILENAME=bmlt-root-server-build${GITHUB_RUN_NUMBER}-${GITHUB_SHA}.zip
+          make deps
+          cp LICENSE.txt main_server && cp .htaccess main_server/vendor
+          find ./main_server -type d | xargs chmod 755
+          find ./main_server -name '*.php' | xargs chmod 644
+          mkdir $BUILD_DIR && zip -r $BUILD_DIR/$ZIP_FILENAME main_server
+          mkdir -p $DIST_DIR_S3 && cp $BUILD_DIR/$ZIP_FILENAME $DIST_DIR_S3/$ZIP_FILENAME
+          mkdir -p $DIST_DIR_GITHUB && cp $BUILD_DIR/$ZIP_FILENAME $DIST_DIR_GITHUB/$GITHUB_RELEASE_FILENAME
+          curl -LO https://raw.githubusercontent.com/bmlt-enabled/release-notes-tool/master/release-notes.sh
+          chmod +x release-notes.sh
+          ./release-notes.sh CHANGELOG.md "##"
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions/gh-ci-s3-artifact
+          role-session-name: gh-actions
+          aws-region: us-east-1
+      - run: |
+          ls -lta dist/s3
+          echo $DIST_DIR_S3/$ZIP_FILENAME
+          aws s3 cp $DIST_DIR_S3/$ZIP_FILENAME s3://$S3_BUCKET/$S3_KEY/$ZIP_FILENAME
+          aws s3 ls archives.bmlt.app
+
+#
+#env:
+#  ZIP_FILENAME: bmlt-root-server-build${GITHUB_RUN_NUMBER}-${GITHUB_SHA}.zip
+#  S3_BUCKET: archives.bmlt.app
+#  S3_KEY: bmlt-root-server

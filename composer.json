@@ -1,5 +1,16 @@
 {
+    "config": {
+        "vendor-dir": "main_server/vendor",
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "require": {
+        "phpoffice/phpspreadsheet": "1.19.0"
+    },
     "require-dev": {
-        "squizlabs/php_codesniffer": "3.*"
+        "squizlabs/php_codesniffer": "3.*",
+        "phpcompatibility/php-compatibility": "*",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1"
     }
 }
