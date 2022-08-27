@@ -1,6 +1,9 @@
 {
     "config": {
-        "vendor-dir": "main_server/vendor"
+        "vendor-dir": "main_server/vendor",
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     },
     "require": {
         "phpoffice/phpspreadsheet": "1.19.0"

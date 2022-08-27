@@ -4,15 +4,15 @@ tag_and_push() {
     SOURCE_IMAGE=$1
     TARGET_IMAGE_NAME=$2
 
-    TARGET_IMAGE1="$TARGET_IMAGE_NAME:$TRAVIS_COMMIT"
+    TARGET_IMAGE1="$TARGET_IMAGE_NAME:${GITHUB_SHA}"
 
-    if [ ! -z $TRAVIS_TAG ]
+    if [ "$GITHUB_REF_TYPE" == "tag" ]
     then
-        TARGET_IMAGE2="$TARGET_IMAGE_NAME:$TRAVIS_TAG"
-    elif [ "$TRAVIS_BRANCH" == "unstable" ]
+        TARGET_IMAGE2="$TARGET_IMAGE_NAME:$GITHUB_REF_NAME"
+    elif [ "$GITHUB_REF_NAME" == "unstable" ]
     then
         TARGET_IMAGE2="$TARGET_IMAGE_NAME:unstable"
-    elif [ "$TRAVIS_BRANCH" == "master" ]
+    elif [ "$GITHUB_REF_NAME" == "master" ]
     then
         TARGET_IMAGE2="$TARGET_IMAGE_NAME:latest"
     fi
@@ -28,5 +28,5 @@ tag_and_push() {
 }
 
 aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/t5y4k5q3
-tag_and_push "bmlt-root-server:$TRAVIS_COMMIT" public.ecr.aws/t5y4k5q3/bmlt-root-server
-tag_and_push "bmlt-root-server-sample-db:$TRAVIS_COMMIT" public.ecr.aws/t5y4k5q3/bmlt-root-server-sample-db
+tag_and_push "bmlt-root-server:${GITHUB_SHA}" public.ecr.aws/t5y4k5q3/bmlt-root-server
+tag_and_push "bmlt-root-server-sample-db:${GITHUB_SHA}" public.ecr.aws/t5y4k5q3/bmlt-root-server-sample-db

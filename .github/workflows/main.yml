@@ -1,0 +1,208 @@
+name: 'main'
+on: [ push ]
+
+env:
+  S3_BUCKET: archives.bmlt.app
+  S3_KEY: bmlt-root-server
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup PHP, with composer and extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+          extensions: ctype, dom, gd, iconv, fileinfo, libxml, mbstring, simplexml, xml, xmlreader, xmlwriter, zip, zlib
+          coverage: none
+          tools: cs2pr
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
+
+      - name: Code style with PHP_CodeSniffer
+        run: |
+          find . -name "*.php" ! -path '*/vendor/*' -print0 | xargs -0 -n1 -P8 php -l
+          main_server/vendor/squizlabs/php_codesniffer/bin/phpcs --warning-severity=6 --standard=PSR2 --ignore=vendor --extensions=php --report=full main_server
+
+  package:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+    needs: [ lint ]
+    env:
+      BUILD_DIR: build
+      DIST_DIR_S3: dist/s3
+      DIST_DIR_GITHUB: dist/github
+      GITHUB_RELEASE_FILENAME: bmlt-root-server.zip
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup PHP, with composer and extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+          extensions: ctype, dom, gd, iconv, fileinfo, libxml, mbstring, simplexml, xml, xmlreader, xmlwriter, zip, zlib
+          coverage: none
+          tools: cs2pr
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Build zip
+        id: build-zip
+        run: |
+          ZIP_FILENAME=bmlt-root-server-build${GITHUB_RUN_NUMBER}-${GITHUB_SHA}.zip
+          echo "ZIP_FILENAME=${ZIP_FILENAME}" >> $GITHUB_ENV
+          make deps
+          cp LICENSE.txt main_server && cp .htaccess main_server/vendor
+          find ./main_server -type d | xargs chmod 755
+          find ./main_server -name '*.php' | xargs chmod 644
+          mkdir $BUILD_DIR && zip -r $BUILD_DIR/$ZIP_FILENAME main_server
+          mkdir -p $DIST_DIR_S3 && cp $BUILD_DIR/$ZIP_FILENAME $DIST_DIR_S3/$ZIP_FILENAME
+          mkdir -p $DIST_DIR_GITHUB && cp $BUILD_DIR/$ZIP_FILENAME $DIST_DIR_GITHUB/$GITHUB_RELEASE_FILENAME
+          curl -LO https://raw.githubusercontent.com/bmlt-enabled/release-notes-tool/master/release-notes.sh
+          chmod +x release-notes.sh
+          ./release-notes.sh CHANGELOG.md "##"
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions/gh-ci-s3-artifact
+          role-session-name: gh-actions
+          aws-region: us-east-1
+      - run: |
+          aws s3 cp $DIST_DIR_S3/$ZIP_FILENAME s3://$S3_BUCKET/$S3_KEY/$ZIP_FILENAME
+
+      - name: Prepare artifact metadata
+        id: prepare_artifact_metadata
+        run: |
+          echo ::set-output name=ARTIFACT_PATH::$DIST_DIR_GITHUB/$GITHUB_RELEASE_FILENAME
+          echo ::set-output name=ARTIFACT_NAME::$GITHUB_RELEASE_FILENAME
+
+      - name: Release beta
+        if: github.event_name == 'push' && contains(github.ref, 'refs/tags/') && contains(github.ref, 'beta')
+        id: beta_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          body_path: "changelog.txt"
+          prerelease: true
+          draft: false
+
+      - name: Upload Beta Asset
+        if: github.event_name == 'push' && contains(github.ref, 'refs/tags/') && contains(github.ref, 'beta')
+        id: beta-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.beta_release.outputs.upload_url }}
+          asset_path: ${{ steps.prepare_artifact_metadata.outputs.ARTIFACT_PATH }}
+          asset_name: ${{ steps.prepare_artifact_metadata.outputs.ARTIFACT_NAME }}
+          asset_content_type: application/zip
+
+      - name: Release stable
+        if: github.event_name == 'push' && contains(github.ref, 'refs/tags/') && !contains(github.ref, 'beta')
+        id: stable_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          body_path: "changelog.txt"
+          prerelease: false
+          draft: false
+
+      - name: Upload Stable Asset
+        if: github.event_name == 'push' && contains(github.ref, 'refs/tags/') && !contains(github.ref, 'beta')
+        id: stable-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.stable_release.outputs.upload_url }}
+          asset_path: ${{ steps.prepare_artifact_metadata.outputs.ARTIFACT_PATH }}
+          asset_name: ${{ steps.prepare_artifact_metadata.outputs.ARTIFACT_NAME }}
+          asset_content_type: application/zip
+
+      - name: configure terraform aws credentials
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master' || github.event_name == 'push' && github.ref == 'refs/heads/unstable' || github.event_name == 'push' && contains(github.ref, 'refs/tags/')
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions/gh-ci-tf-bmlt-rs
+          role-session-name: gh-actions-tf
+          aws-region: us-east-1
+
+      - name: Login to Amazon ECR
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master' || github.event_name == 'push' && github.ref == 'refs/heads/unstable' || github.event_name == 'push' && contains(github.ref, 'refs/tags/')
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: build docker images
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master' || github.event_name == 'push' && github.ref == 'refs/heads/unstable' || github.event_name == 'push' && contains(github.ref, 'refs/tags/')
+        id: docker_build_images
+        run: |
+          docker build -f docker/Dockerfile-bmlt . -t bmlt-root-server:${GITHUB_SHA}
+          docker build -f docker/Dockerfile-db . -t bmlt-root-server-sample-db:${GITHUB_SHA}
+
+      - name: push docker images
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master' || github.event_name == 'push' && github.ref == 'refs/heads/unstable' || github.event_name == 'push' && contains(github.ref, 'refs/tags/')
+        id: docker_push_images
+        run: |
+          chmod +x ci/deploy-docker-images.sh
+          ci/deploy-docker-images.sh
+
+      - name: deploy to ecs
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master' || github.event_name == 'push' && github.ref == 'refs/heads/unstable' || github.event_name == 'push' && contains(github.ref, 'refs/tags/')
+        id: deploy_to_ecs
+        run: |
+          cd terraform
+          curl -s https://releases.hashicorp.com/terraform/1.2.8/terraform_1.2.8_linux_amd64.zip -o  terraform_1.2.8_linux_amd64.zip
+          unzip terraform_1.2.8_linux_amd64.zip
+          rm -f terraform_1.2.8_linux_amd64.zip
+          export TF_VAR_GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}
+          ./terraform init -input=false
+          ./terraform taint -allow-missing aws_ecs_task_definition.bmlt_$(if [ ${{ github.ref }} == "master" ]; then echo latest; else echo unstable; fi)
+          ./terraform apply -input=false -auto-approve
+
+      - name: Build Docs
+        if: github.ref == 'refs/heads/master'
+        run: |
+          sudo apt-get install -y doxygen
+          mkdir docs && cd doc
+          doxygen Doxyfile
+
+      - name: Deploy Docs
+        if: github.ref == 'refs/heads/master'
+        uses: JamesIves/github-pages-deploy-action@4.1.7
+        with:
+          branch: gh-pages
+          folder: docs
