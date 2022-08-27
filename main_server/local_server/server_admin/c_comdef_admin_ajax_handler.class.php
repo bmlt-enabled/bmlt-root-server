@@ -300,12 +300,7 @@ class c_comdef_admin_ajax_handler
         try {
             foreach ($meetingMap as $bmltId => $newWorldId) {
                 if (!array_key_exists($bmltId, $meetings)) {
-                    if (strtolower($newWorldId) == 'deleted') {
-                        $this->UpdatePossiblyDeletedMeeting($bmltId, $ret, $isServerAdmin, $userServiceBodyIDs);
-                        $ret['report']['updated'][] = $bmltId;
-                    } else {
-                        $ret['report']['not_updated'][] = $bmltId;
-                    }
+                    $this->UpdatePossiblyDeletedMeeting($bmltId, $newWorldId, $ret, $isServerAdmin, $userServiceBodyIDs);
                     continue;
                 }
                 $meeting = $meetings[$bmltId];
@@ -333,10 +328,11 @@ class c_comdef_admin_ajax_handler
     }
 
     /* Helper method for HandleMeetingWorldIDsUpdate for updating deleted meetings.  These meetings exist only in the changes table,
-    if at all.  This doesn't try to be clever about working around problems: if something is wrong,
-    it just reports the meeting as a problem meeting and doesn't make any changes. */
+    if at all.  The only change allowed in this case is to set the world_id to 'deleted'.  If the world_id was already 'deleted' or
+    if we're trying to set it to its current world_id, report no change.  This method doesn't try to be clever about working around
+    problems: if something is wrong, it just reports the meeting as a problem meeting and doesn't make any changes. */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    private function UpdatePossiblyDeletedMeeting($bmltId, &$ret, $isServerAdmin, $userServiceBodyIDs)
+    private function UpdatePossiblyDeletedMeeting($bmltId, $newWorldId, &$ret, $isServerAdmin, $userServiceBodyIDs)
     {
         $change_objects = c_comdef_server::GetChangesFromIDAndType('c_comdef_meeting', $bmltId);
         if ($change_objects instanceof c_comdef_changes) {
@@ -351,15 +347,25 @@ class c_comdef_admin_ajax_handler
                         if (!$isServerAdmin && !in_array(intval($meeting->GetServiceBodyID()), $userServiceBodyIDs)) {
                             // Meeting was under some other service body that this user isn't allowed to change.
                             $ret['report']['problem'][] = $bmltId;
-                        } elseif (strtolower($meeting->GetWorldID()) === 'deleted') {
-                            // meeting was already marked as 'deleted'
+                        } elseif ($newWorldId === $meeting->GetWorldID()) {
+                            // Even though the meeting is deleted, we aren't trying to change its world_id -- so this is still ok
                             $ret['report']['not_updated'][] = $bmltId;
-                        } else {
-                            // found it - set the meeting's world_id to 'deleted'
+                        } elseif (strtolower($newWorldId) == 'deleted' && strtolower($meeting->GetWorldID()) == 'deleted') {
+                            // The newWorldId is 'deleted', perhaps with some non-standard case (e.g., 'DeLETED'), and the current world_id
+                            // is already 'deleted'.  The database should only have world_ids of 'deleted' in all lower case, and not
+                            // with some nonstandard capitalization -- but there may be older releases of the server that didn't check
+                            // the case of 'deleted' before saving it, so convert that to all lower case as well for the test.
+                            $ret['report']['not_updated'][] = $bmltId;
+                        } elseif (strtolower($newWorldId) == 'deleted') {
+                            // Found a deleted meeting whose world_id should be changed to 'deleted'.  Do that.
                             $meeting->SetWorldID('deleted');
                             $meeting->UpdateToDB();
                             $meeting->DeleteFromDB();
                             $ret['report']['marked'][] = $bmltId;
+                        } else {
+                            // problem meeting -- the meeting is already deleted, and we're trying to change the world_id from its
+                            // current value to something other than 'deleted'
+                            $ret['report']['problem'][] = $bmltId;
                         }
                         return;
                     }

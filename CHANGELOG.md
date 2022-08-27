@@ -1,5 +1,6 @@
 ## 2.16.6 (TBD)
 * Fixed an issue with saving meetings when using PHP 8.x.
+* Update the check in the NAWS import code to record trying to update the World ID of a deleted meeting to its current value as 'no change', rather than flagging it as a problem.
 
 ## 2.16.5 (August 25, 2022)
 * Fixed an issue with the NAWS Formats translations for the Italian and Portuguese languages.

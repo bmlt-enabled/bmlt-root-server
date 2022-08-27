@@ -161,7 +161,7 @@ class c_comdef_dbsingleton
             self::$pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 
             if (version_compare(phpversion(), "8.1.0", ">=")) {
-                # With PHP 8.1 or grater, Integers and floats are returned using native PHP types instead of strings
+                # With PHP 8.1 or greater, Integers and floats are returned using native PHP types instead of strings
                 # https://www.php.net/manual/en/migration81.incompatible.php#migration81.incompatible.pdo.mysql
                 self::$pdo->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, true);
             }
