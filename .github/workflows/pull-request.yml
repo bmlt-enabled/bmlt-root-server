@@ -153,8 +153,16 @@ jobs:
           asset_name: ${{ steps.prepare_artifact_metadata.outputs.ARTIFACT_NAME }}
           asset_content_type: application/zip
 
-#
-#env:
-#  ZIP_FILENAME: bmlt-root-server-build${GITHUB_RUN_NUMBER}-${GITHUB_SHA}.zip
-#  S3_BUCKET: archives.bmlt.app
-#  S3_KEY: bmlt-root-server
+      - name: Build Docs
+        if: github.ref == 'refs/heads/pj/gh-actions'
+        run: |
+          apt-get install -y doxygen
+          mkdir docs && cd doc
+          doxygen Doxyfile
+
+      - name: Deploy Docs
+        if: github.ref == 'refs/heads/pj/gh-actions'
+        uses: JamesIves/github-pages-deploy-action@4.1.7
+        with:
+          branch: gh-pages
+          folder: docs
