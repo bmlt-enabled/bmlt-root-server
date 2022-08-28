@@ -95,10 +95,38 @@ jobs:
           role-session-name: gh-actions
           aws-region: us-east-1
       - run: |
-          ls -lta dist/s3
-          echo $DIST_DIR_S3/$ZIP_FILENAME
           aws s3 cp $DIST_DIR_S3/$ZIP_FILENAME s3://$S3_BUCKET/$S3_KEY/$ZIP_FILENAME
-          aws s3 ls archives.bmlt.app
+
+      - name: Prepare artifact metadata
+        id: prepare_artifact_metadata
+        run: |
+          echo ::set-output name=ARTIFACT_PATH::$DIST_DIR_GITHUB/$GITHUB_RELEASE_FILENAME
+          echo ::set-output name=ARTIFACT_NAME::$GITHUB_RELEASE_FILENAME
+
+      - name: Release beta
+        if: contains(github.ref, 'beta')
+        id: beta_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          body_path: "changelog.txt"
+          prerelease: true
+          draft: false
+
+      - name: Upload Beta Asset
+        if: contains(github.ref, 'beta')
+        id: beta-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.beta_release.outputs.upload_url }}
+          asset_path: ${{ steps.prepare_artifact_metadata.outputs.ARTIFACT_PATH }}
+          asset_name: ${{ steps.prepare_artifact_metadata.outputs.ARTIFACT_NAME }}
+          asset_content_type: application/zip
 
 #
 #env:
