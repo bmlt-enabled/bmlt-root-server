@@ -1,3 +1,4 @@
 variable "GOOGLE_API_KEY" {
-  type = string
+  type      = string
+  sensitive = true
 }

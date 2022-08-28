@@ -4,13 +4,13 @@ terraform {
     key            = "state/bmlt-root-server"
     region         = "us-east-1"
     dynamodb_table = "mvana-account-terraform"
-    profile        = "mvana"
+    #    profile        = "mvana"
   }
 }
 
 provider "aws" {
-  region  = "us-east-1"
-  profile = "mvana"
+  region = "us-east-1"
+  #  profile = "mvana"
 }
 
 data "aws_vpc" "main" {
