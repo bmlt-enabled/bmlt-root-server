@@ -128,6 +128,31 @@ jobs:
           asset_name: ${{ steps.prepare_artifact_metadata.outputs.ARTIFACT_NAME }}
           asset_content_type: application/zip
 
+      - name: Release stable
+        if: "!contains(github.ref, 'beta')"
+        id: stable_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          body_path: "changelog.txt"
+          prerelease: false
+          draft: false
+
+      - name: Upload Stable Asset
+        if: "!contains(github.ref, 'beta')"
+        id: stable-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.stable_release.outputs.upload_url }}
+          asset_path: ${{ steps.prepare_artifact_metadata.outputs.ARTIFACT_PATH }}
+          asset_name: ${{ steps.prepare_artifact_metadata.outputs.ARTIFACT_NAME }}
+          asset_content_type: application/zip
+
 #
 #env:
 #  ZIP_FILENAME: bmlt-root-server-build${GITHUB_RUN_NUMBER}-${GITHUB_SHA}.zip
