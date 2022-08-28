@@ -76,6 +76,7 @@ jobs:
         id: build-zip
         run: |
           ZIP_FILENAME=bmlt-root-server-build${GITHUB_RUN_NUMBER}-${GITHUB_SHA}.zip
+          echo "ZIP_FILENAME=${ZIP_FILENAME}" >> $GITHUB_ENV
           make deps
           cp LICENSE.txt main_server && cp .htaccess main_server/vendor
           find ./main_server -type d | xargs chmod 755
