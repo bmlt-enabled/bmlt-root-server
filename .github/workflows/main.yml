@@ -190,7 +190,7 @@ jobs:
           rm -f terraform_1.2.8_linux_amd64.zip
           export TF_VAR_GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}
           ./terraform init -input=false
-          ./terraform taint -allow-missing aws_ecs_task_definition.bmlt_$(if [ ${{ github.ref }} == "master" ]; then echo latest; else echo unstable; fi)
+          ./terraform taint -allow-missing aws_ecs_task_definition.bmlt_$(if [ $GITHUB_REF_NAME == "master" ]; then echo latest; else echo unstable; fi)
           ./terraform apply -input=false -auto-approve
 
       - name: Build Docs
