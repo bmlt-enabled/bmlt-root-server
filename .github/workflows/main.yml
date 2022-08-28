@@ -84,9 +84,9 @@ jobs:
           mkdir $BUILD_DIR && zip -r $BUILD_DIR/$ZIP_FILENAME main_server
           mkdir -p $DIST_DIR_S3 && cp $BUILD_DIR/$ZIP_FILENAME $DIST_DIR_S3/$ZIP_FILENAME
           mkdir -p $DIST_DIR_GITHUB && cp $BUILD_DIR/$ZIP_FILENAME $DIST_DIR_GITHUB/$GITHUB_RELEASE_FILENAME
-          curl -LO https://raw.githubusercontent.com/bmlt-enabled/release-notes-tool/master/release-notes.sh
-          chmod +x release-notes.sh
-          ./release-notes.sh CHANGELOG.md "##"
+          curl -LO https://raw.githubusercontent.com/bmlt-enabled/release-notes-tool/master/gh-release-notes.sh
+          chmod +x gh-release-notes.sh
+          ./gh-release-notes.sh CHANGELOG.md "##"
 
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1
