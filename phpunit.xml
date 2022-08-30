@@ -1,3 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="main_server/vendor/autoload.php">
-</phpunit>
