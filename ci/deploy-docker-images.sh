@@ -8,7 +8,7 @@ tag_and_push() {
 
     if [ "$GITHUB_REF_TYPE" == "tag" ]
     then
-        TARGET_IMAGE2="$TARGET_IMAGE_NAME:$GITHUB_REF_NAME"
+        TARGET_IMAGE2="$TARGET_IMAGE_NAME:${GITHUB_REF##*/}"
     elif [ "$GITHUB_REF_NAME" == "unstable" ]
     then
         TARGET_IMAGE2="$TARGET_IMAGE_NAME:unstable"
