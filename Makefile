@@ -1,6 +1,6 @@
 .PHONY: build-docker
 build-docker:
-	cd docker && docker build -t rootserver:local .
+	cd docker && docker build -f Dockerfile-debug -t rootserver:local .
 
 .PHONY: composer-install
 composer-install: build-docker

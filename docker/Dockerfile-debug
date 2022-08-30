@@ -39,6 +39,17 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php -r "unlink('composer-setup.php');" \
     && mv composer.phar /usr/local/bin/composer
 
+# Configure apache php
+ENV PHP_INI_PATH /etc/php/8.0/apache2/php.ini
+ENV PHP_XDEBUG_ENABLED: 1
+RUN echo "zend_extension=$(find /usr/lib/php/ -name xdebug.so)" >> ${PHP_INI_PATH} \
+    && echo "xdebug.mode=debug" >> ${PHP_INI_PATH} \
+    && echo "xdebug.client_port=9003" >> ${PHP_INI_PATH} \
+    && echo "xdebug.client_host=host.docker.internal" >> ${PHP_INI_PATH} \
+    && echo "xdebug.start_with_request=yes" >> ${PHP_INI_PATH} \
+    && echo "xdebug.log=/tmp/xdebug.log" >> ${PHP_INI_PATH} \
+    && echo "xdebug.idekey=ROOT_SERVER_DEBUG" >> ${PHP_INI_PATH}
+
 # Configure apache
 ENV APACHE_RUN_USER www-data
 ENV APACHE_RUN_GROUP www-data
