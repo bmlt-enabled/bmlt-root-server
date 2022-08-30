@@ -4,21 +4,26 @@ services:
   bmlt:
     build:
       context: .
-      dockerfile: Dockerfile-bmltdebug
+      dockerfile: Dockerfile
     ports:
-      - "8000:80"
+      - "8000:8000"
     env_file:
       - bmlt.env
+    environment:
+      APP_DEBUG: "true"
+      DB_HOST: db
     depends_on:
       - db
     volumes:
-      - ../main_server:/var/www/html/main_server
+      - ../src:/var/www/html/
   db:
-    image: public.ecr.aws/t5y4k5q3/bmlt-root-server-sample-db:latest
+    build:
+      context: .
+      dockerfile: Dockerfile-db
     ports:
       - "3306:3306"
     environment:
-      MARIADB_ROOT_PASSWORD: bmlt_root_password
-      MARIADB_DATABASE: bmlt
-      MARIADB_USER: bmlt_user
-      MARIADB_PASSWORD: bmlt_password
+      MARIADB_ROOT_PASSWORD: rootserver
+      MARIADB_DATABASE: rootserver
+      MARIADB_USER: rootserver
+      MARIADB_PASSWORD: rootserver
