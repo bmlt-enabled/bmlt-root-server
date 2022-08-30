@@ -175,11 +175,6 @@ jobs:
           docker build -f docker/Dockerfile-bmlt . -t bmlt-root-server:${GITHUB_SHA}
           docker build -f docker/Dockerfile-db . -t bmlt-root-server-sample-db:${GITHUB_SHA}
 
-      - name: Login to Amazon ECR
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master' || github.event_name == 'push' && github.ref == 'refs/heads/unstable' || github.event_name == 'push' && contains(github.ref, 'refs/tags/')
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-
       - name: push docker images
         if: github.event_name == 'push' && github.ref == 'refs/heads/master' || github.event_name == 'push' && github.ref == 'refs/heads/unstable' || github.event_name == 'push' && contains(github.ref, 'refs/tags/')
         id: docker_push_images
