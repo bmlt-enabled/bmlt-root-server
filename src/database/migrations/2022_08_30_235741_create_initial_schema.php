@@ -77,7 +77,7 @@ return new class extends Migration
             $table->index('owner_id_bigint', 'owner_id_bigint');
         });
 
-        Schema::create('comdef_changes_laravel', function (Blueprint $table) {
+        Schema::create('comdef_changes', function (Blueprint $table) {
             $table->bigIncrements('id_bigint');
             $table->bigInteger('user_id_bigint');
             $table->bigInteger('service_body_id_bigint');
