@@ -7,5 +7,6 @@ main_server/vendor
 bmlt_conversion_tables.php
 docs
 node_modules
-main_server/client_interface/html/croutonjs
+src/legacy/client_interface/html/croutonjs
+croutonjs.zip
 terraform.tfvars
