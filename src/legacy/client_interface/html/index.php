@@ -1,7 +1,7 @@
 <?php
 define('ROOTPATH', __DIR__ . '/../..');
 defined('BMLT_EXEC') or define('BMLT_EXEC', 1);
-require_once('../../local_server/server_admin/c_comdef_admin_main_console.class.php');
+require_once(__DIR__ . '/../../local_server/server_admin/c_comdef_admin_main_console.class.php');
 $console_object = new c_comdef_admin_main_console($_REQUEST);
 $local_strings = $console_object->my_server->GetLocalStrings();
 $user_obj = $console_object->my_server->GetCurrentUserObj();
