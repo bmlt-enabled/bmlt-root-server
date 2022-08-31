@@ -4,7 +4,7 @@ build-docker:
 
 .PHONY: composer-install
 composer-install: build-docker
-	docker run -it -v $(shell pwd)/src:/app -w /app rootserver:local composer install
+	docker run -it --rm -v $(shell pwd)/src:/app -w /app rootserver:local composer install
 
 .PHONY: dev
 dev:
