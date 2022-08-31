@@ -42,6 +42,25 @@ return new class extends Migration
             $table->index('sb_owner_2', 'sb_owner_2');
             $table->index('sb_meeting_email', 'sb_meeting_email');
         });
+
+        Schema::create('comdef_users', function (Blueprint $table) {
+            $table->bigIncrements('id_bigint');
+            $table->tinyInteger('user_level_tinyint')->default(0);
+            $table->string('name_string', 255);
+            $table->text('description_string');
+            $table->string('email_address_string', 255);
+            $table->string('login_string', 255);
+            $table->string('password_string', 255);
+            $table->dateTime('last_access_datetime')->default('1970-01-01 00:00:00');
+            $table->string('lang_enum', 7)->default('en');
+            $table->bigInteger('owner_id_bigint')->default(-1);
+            $table->unique('login_string', 'login_string');
+            $table->index('user_level_tinyint', 'user_level_tinyint');
+            $table->index('email_address_string', 'email_address_string');
+            $table->index('last_access_datetime', 'last_access_datetime');
+            $table->index('lang_enum', 'lang_enum');
+            $table->index('owner_id_bigint', 'owner_id_bigint');
+        });
     }
 
     /**
@@ -52,5 +71,6 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('comdef_service_bodies');
+        Schema::dropIfExists('comdef_users');
     }
 };
