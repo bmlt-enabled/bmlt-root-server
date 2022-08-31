@@ -1,4 +1,4 @@
-sed -i '/gkey/d' /var/www/htmlauto-config.inc.php
+sed -i '/gkey/d' /var/www/auto-config.inc.php
 sed -i '/dbName/d' /var/www/auto-config.inc.php
 sed -i '/dbUser/d' /var/www/auto-config.inc.php
 sed -i '/dbPassword/d' /var/www/auto-config.inc.php
