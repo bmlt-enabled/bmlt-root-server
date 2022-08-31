@@ -14,7 +14,7 @@ resource "aws_ecs_task_definition" "bmlt_unstable" {
         portMappings = [
           {
             hostPort      = 0,
-            containerPort = 80,
+            containerPort = 8000,
             protocol      = "tcp"
           }
         ],
@@ -53,7 +53,7 @@ resource "aws_ecs_task_definition" "bmlt_unstable" {
         links                  = ["bmlt-db"],
         workingDirectory       = "/tmp",
         readonlyRootFilesystem = null,
-        image                  = "${aws_ecrpublic_repository.bmlt-root-server.repository_uri}:unstable",
+        image                  = "${aws_ecrpublic_repository.bmlt-root-server.repository_uri}:3.0.0",
         command = [
           "/bin/bash",
           "/tmp/start-bmlt.sh"
@@ -146,7 +146,7 @@ resource "aws_ecs_service" "bmlt_unstable" {
   load_balancer {
     target_group_arn = aws_alb_target_group.bmlt_unstable.id
     container_name   = "bmlt-root-server"
-    container_port   = 80
+    container_port   = 8000
   }
 
   depends_on = [
