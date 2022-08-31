@@ -31,15 +31,15 @@ resource "aws_ecs_task_definition" "bmlt_unstable" {
           },
           {
             name  = "DBNAME",
-            value = "bmlt"
+            value = "rootserver"
           },
           {
             name  = "DBUSER",
-            value = "bmlt_user"
+            value = "rootserver"
           },
           {
             name  = "DBPASSWORD",
-            value = "bmlt_password"
+            value = "rootserver"
           },
           {
             name  = "DBSERVER",
@@ -95,19 +95,19 @@ resource "aws_ecs_task_definition" "bmlt_unstable" {
         environment = [
           {
             name  = "MARIADB_ROOT_PASSWORD",
-            value = "bmlt_root_password"
+            value = "rootserver"
           },
           {
             name  = "MARIADB_DATABASE",
-            value = "bmlt"
+            value = "rootserver"
           },
           {
             name  = "MARIADB_USER",
-            value = "bmlt_user"
+            value = "rootserver"
           },
           {
             name  = "MARIADB_PASSWORD",
-            value = "bmlt_password"
+            value = "rootserver"
           }
         ],
         links                  = [],
@@ -152,4 +152,8 @@ resource "aws_ecs_service" "bmlt_unstable" {
   depends_on = [
     aws_iam_role_policy.bmlt_lb,
   ]
+
+  #  lifecycle {
+  #    ignore_changes = [task_definition]
+  #  }
 }
