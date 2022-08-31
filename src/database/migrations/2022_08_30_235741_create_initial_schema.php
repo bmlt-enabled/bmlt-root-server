@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -13,6 +14,20 @@ return new class extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('comdef_db_version')) {
+            if (!Schema::hasColumn('comdef_db_version', 'id')) {
+                Schema::table('comdef_db_version', function(Blueprint $table) {
+                   $table->increments('id')->first();
+                });
+            }
+        } else {
+            Schema::create('comdef_db_version', function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('version');
+            });
+            DB::table('comdef_db_version')->insert(['version' => 21]);
+        }
+
         if (Schema::hasTable('comdef_service_bodies')) {
             return;
         }
@@ -101,5 +116,6 @@ return new class extends Migration
         Schema::dropIfExists('comdef_service_bodies');
         Schema::dropIfExists('comdef_users');
         Schema::dropIfExists('comdef_changes');
+        Schema::dropIfExists('comdef_db_version');
     }
 };
