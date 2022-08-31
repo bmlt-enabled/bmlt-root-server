@@ -61,6 +61,34 @@ return new class extends Migration
             $table->index('lang_enum', 'lang_enum');
             $table->index('owner_id_bigint', 'owner_id_bigint');
         });
+
+        Schema::create('comdef_changes_laravel', function (Blueprint $table) {
+            $table->bigIncrements('id_bigint');
+            $table->bigInteger('user_id_bigint');
+            $table->bigInteger('service_body_id_bigint');
+            $table->string('lang_enum', 7);
+            $table->timestamp('change_date')->useCurrent()->useCurrentOnUpdate();
+            $table->string('object_class_string', 64);
+            $table->string('change_name_string', 255)->nullable();
+            $table->text('change_description_text')->nullable();
+            $table->unsignedBigInteger('before_id_bigint')->nullable();
+            $table->string('before_lang_enum', 7)->nullable();
+            $table->unsignedBigInteger('after_id_bigint')->nullable();
+            $table->string('after_lang_enum', 7)->nullable();
+            $table->string('change_type_enum', 32);
+            $table->binary('before_object')->nullable();
+            $table->binary('after_object')->nullable();
+            $table->index('user_id_bigint', 'user_id_bigint');
+            $table->index('service_body_id_bigint', 'service_body_id_bigint');
+            $table->index('lang_enum', 'lang_enum');
+            $table->index('change_type_enum', 'change_type_enum');
+            $table->index('change_date', 'change_date');
+            $table->index('before_id_bigint', 'before_id_bigint');
+            $table->index('after_id_bigint', 'after_id_bigint');
+            $table->index('before_lang_enum', 'before_lang_enum');
+            $table->index('after_lang_enum', 'after_lang_enum');
+            $table->index('object_class_string', 'object_class_string');
+        });
     }
 
     /**
@@ -72,5 +100,6 @@ return new class extends Migration
     {
         Schema::dropIfExists('comdef_service_bodies');
         Schema::dropIfExists('comdef_users');
+        Schema::dropIfExists('comdef_changes');
     }
 };
