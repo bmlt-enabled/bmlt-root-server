@@ -68,7 +68,7 @@ resource "aws_ecs_task_definition" "bmlt_unstable" {
             awslogs-stream-prefix = "bmlt-root"
           }
         },
-        memoryReservation = 128,
+        memoryReservation = 256,
         privileged        = null,
         linuxParameters = {
           initProcessEnabled = true
