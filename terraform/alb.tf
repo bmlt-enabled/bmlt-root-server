@@ -34,7 +34,7 @@ resource "aws_alb_target_group" "bmlt_latest" {
 
 resource "aws_alb_target_group" "bmlt_unstable" {
   name     = "bmlt-unstable"
-  port     = 80
+  port     = 8000
   protocol = "HTTP"
   vpc_id   = data.aws_vpc.main.id
 
