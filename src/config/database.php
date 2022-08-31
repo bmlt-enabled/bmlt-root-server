@@ -38,7 +38,7 @@ return [
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', '0.0.0.0'),
+            'host' => env('DB_HOST', 'bmlt-db'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'rootserver'),
             'username' => env('DB_USERNAME', 'rootserver'),

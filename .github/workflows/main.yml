@@ -1,4 +1,5 @@
 name: 'main'
+<<<<<<< HEAD
 on: [ push ]
 
 env:
@@ -40,10 +41,19 @@ jobs:
           main_server/vendor/squizlabs/php_codesniffer/bin/phpcs --warning-severity=6 --standard=PSR2 --ignore=vendor --extensions=php --report=full main_server
 
   package:
+=======
+on:
+  push:
+    branches: [ '3.0.0' ]
+
+jobs:
+  build-latest:
+>>>>>>> f7cf697f (CI Builds (#500))
     runs-on: ubuntu-latest
     permissions:
       id-token: write
       contents: write
+<<<<<<< HEAD
     needs: [ lint ]
     env:
       BUILD_DIR: build
@@ -87,10 +97,22 @@ jobs:
           curl -LO https://raw.githubusercontent.com/bmlt-enabled/release-notes-tool/master/gh-release-notes.sh
           chmod +x gh-release-notes.sh
           ./gh-release-notes.sh CHANGELOG.md "##"
+=======
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Make Root Server Build
+        run: |
+          make build
+          SHORT_SHA=$(git rev-parse --short=8 HEAD)
+          echo "IMAGE_NAME=public.ecr.aws/bmlt/bmlt-root-server:3.0.0-${SHORT_SHA}" >> $GITHUB_ENV
+>>>>>>> f7cf697f (CI Builds (#500))
 
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
+<<<<<<< HEAD
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions/gh-ci-s3-artifact
           role-session-name: gh-actions
           aws-region: us-east-1
@@ -163,11 +185,19 @@ jobs:
 
       - name: Login to Amazon ECR Public
         if: github.event_name == 'push' && github.ref == 'refs/heads/master' || github.event_name == 'push' && github.ref == 'refs/heads/unstable' || github.event_name == 'push' && contains(github.ref, 'refs/tags/')
+=======
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions/gh-ci-tf-bmlt-rs
+          role-session-name: gh-actions-bmlt
+          aws-region: us-east-1
+
+      - name: Login to Amazon ECR Public
+>>>>>>> f7cf697f (CI Builds (#500))
         id: login-ecr-public
         uses: aws-actions/amazon-ecr-login@v1
         with:
           registry-type: public
 
+<<<<<<< HEAD
       - name: build docker images
         if: github.event_name == 'push' && github.ref == 'refs/heads/master' || github.event_name == 'push' && github.ref == 'refs/heads/unstable' || github.event_name == 'push' && contains(github.ref, 'refs/tags/')
         id: docker_build_images
@@ -208,3 +238,31 @@ jobs:
         with:
           branch: gh-pages
           folder: docs
+=======
+      - name: push docker images
+        id: docker_push_images
+        run: |
+          make push
+
+      - name: Download task definition
+        run: |
+          echo $IMAGE_NAME
+          aws ecs describe-task-definition --task-definition bmlt-unstable --query taskDefinition > task-definition.json
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          container-name: bmlt-root-server
+          image: ${{ env.IMAGE_NAME }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: bmlt-unstable
+          cluster: bmlt
+          wait-for-service-stability: true
+          wait-for-minutes: 5
+>>>>>>> f7cf697f (CI Builds (#500))
