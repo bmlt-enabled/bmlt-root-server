@@ -103,6 +103,31 @@ return new class extends Migration
             });
         }
 
+        if (Schema::hasTable('comdef_formats')) {
+            if (!Schema::hasColumn('comdef_formats', 'id')) {
+                Schema::table('comdef_formats', function(Blueprint $table) {
+                    $table->bigIncrements('id')->first();
+                });
+            }
+        } else {
+            Schema::create('comdef_formats', function (Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->unsignedBigInteger('shared_id_bigint');
+                $table->string('key_string', 255)->nullable();
+                $table->binary('icon_blob')->nullable();
+                $table->string('worldid_mixed', 255)->nullable();
+                $table->string('lang_enum', 7)->default('en');
+                $table->string('name_string', 255)->nullable();
+                $table->text('description_string')->nullable();
+                $table->string('format_type_enum', 7)->default('FC1')->nullable();
+                $table->index('shared_id_bigint', 'shared_id_bigint');
+                $table->index('worldid_mixed', 'worldid_mixed');
+                $table->index('format_type_enum', 'format_type_enum');
+                $table->index('lang_enum', 'lang_enum');
+                $table->index('key_string', 'key_string');
+            });
+        }
+
         if (Schema::hasTable('comdef_service_bodies')) {
             return;
         }
@@ -224,6 +249,7 @@ return new class extends Migration
         Schema::dropIfExists('comdef_meetings_data');
         Schema::dropIfExists('comdef_meetings_longdata');
         Schema::dropIfExists('comdef_meetings_main');
+        Schema::dropIfExists('comdef_formats');
         Schema::dropIfExists('comdef_service_bodies');
         Schema::dropIfExists('comdef_users');
         Schema::dropIfExists('comdef_changes');
