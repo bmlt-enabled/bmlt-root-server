@@ -1,5 +1,10 @@
 COMMIT := $(shell git rev-parse --short=8 HEAD)
-
+BASE_IMAGE := public.ecr.aws/bmlt/bmlt-root-server-base
+BASE_IMAGE_TAG := 1.1.1
+BASE_IMAGE_BUILD_TAG := $(COMMIT)-$(shell date +%s)
+CROUTON_JS := src/legacy/client_interface/html/croutonjs/crouton.js
+VENDOR_AUTOLOAD := src/vendor/autoload.php
+ZIP_FILE := build/bmlt-root-server.zip
 ifeq ($(CI)x, x)
 	DOCKERFILE := Dockerfile-debug
 	IMAGE := rootserver
@@ -20,12 +25,6 @@ else
 	LINT_PREFIX :=
 	TEST_PREFIX := cd src &&
 endif
-BASE_IMAGE := public.ecr.aws/bmlt/bmlt-root-server-base
-BASE_IMAGE_TAG := 1.1.0
-BASE_IMAGE_BUILD_TAG := $(COMMIT)-$(shell date +%s)
-CROUTON_JS := src/legacy/client_interface/html/croutonjs/crouton.js
-VENDOR_AUTOLOAD := src/vendor/autoload.php
-ZIP_FILE := build/bmlt-root-server.zip
 
 help:  ## Print the help documentation
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
