@@ -3,8 +3,8 @@ version: '3'
 services:
   bmlt:
     build:
-      context: .
-      dockerfile: Dockerfile-debug
+      context: ..
+      dockerfile: docker/Dockerfile-debug
     ports:
       - "8000:8000"
     env_file:
@@ -15,7 +15,7 @@ services:
     depends_on:
       - db
     volumes:
-      - ../src:/var/www/html/
+      - ../src:/var/www/html/main_server/
   db:
     build:
       context: .
