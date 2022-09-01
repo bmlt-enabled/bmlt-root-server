@@ -6,12 +6,14 @@ ifeq ($(CI)x, x)
 	TAG := local
 	DOCKER_ARGS := -it --rm
 	COMPOSER_ARGS :=
+	ZIP_NAME := bmlt-root-server-3.0.0-build$(COMMIT).zip
 else
 	DOCKERFILE := Dockerfile
 	IMAGE := public.ecr.aws/bmlt/bmlt-root-server
 	TAG := 3.0.0-$(COMMIT)
 	DOCKER_ARGS := -t
 	COMPOSER_ARGS := --classmap-authoritative
+	ZIP_NAME := bmlt-root-server-3.0.0-build$(GITHUB_RUN_NUMBER)-$(GITHUB_SHA).zip
 endif
 
 BASE_IMAGE := public.ecr.aws/bmlt/bmlt-root-server-base:latest
@@ -22,9 +24,18 @@ help:  ## Print the help documentation
 
 build: clean composer-install crouton-install build-docker ## Builds Full Image
 
+build-zip: clean composer-install crouton-install zip-build ## Builds Full Zip
+
 .PHONY: build-docker
 build-docker:  ## Builds Docker Image
 	docker build -f docker/$(DOCKERFILE) . -t $(IMAGE):$(TAG)
+
+.PHONY: zip-build
+zip-build:  ## Zips the build
+	rm -rf build
+	mkdir -p build
+	cp -r src build/main_server
+	cd build && zip -r $(ZIP_NAME) main_server && cd ..
 
 .PHONY: composer-install
 composer-install:  ## Composer Install
