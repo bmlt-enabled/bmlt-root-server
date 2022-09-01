@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Schema;
 use App\Models\LegacyDbVersion;
 use App\Models\Migration;
 
-
 class DatabaseMigrations
 {
     public function handle(Request $request, Closure $next)
@@ -61,7 +60,8 @@ class DatabaseMigrations
         return true;
     }
 
-    private function allEloquentMigrationsHaveRun(): bool {
+    private function allEloquentMigrationsHaveRun(): bool
+    {
         if (!Schema::hasTable('migrations')) {
             return false;
         }

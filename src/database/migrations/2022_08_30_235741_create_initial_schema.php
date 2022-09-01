@@ -16,8 +16,8 @@ return new class extends Migration
     {
         if (Schema::hasTable('comdef_db_version')) {
             if (!Schema::hasColumn('comdef_db_version', 'id')) {
-                Schema::table('comdef_db_version', function(Blueprint $table) {
-                   $table->increments('id')->first();
+                Schema::table('comdef_db_version', function (Blueprint $table) {
+                    $table->increments('id')->first();
                 });
             }
         } else {
@@ -30,7 +30,7 @@ return new class extends Migration
 
         if (Schema::hasTable('comdef_meetings_data')) {
             if (!Schema::hasColumn('comdef_meetings_data', 'id')) {
-                Schema::table('comdef_meetings_data', function(Blueprint $table) {
+                Schema::table('comdef_meetings_data', function (Blueprint $table) {
                     $table->bigIncrements('id')->first();
                 });
             }
@@ -81,7 +81,7 @@ return new class extends Migration
 
         if (Schema::hasTable('comdef_meetings_longdata')) {
             if (!Schema::hasColumn('comdef_meetings_longdata', 'id')) {
-                Schema::table('comdef_meetings_longdata', function(Blueprint $table) {
+                Schema::table('comdef_meetings_longdata', function (Blueprint $table) {
                     $table->bigIncrements('id')->first();
                 });
             }
@@ -105,7 +105,7 @@ return new class extends Migration
 
         if (Schema::hasTable('comdef_formats')) {
             if (!Schema::hasColumn('comdef_formats', 'id')) {
-                Schema::table('comdef_formats', function(Blueprint $table) {
+                Schema::table('comdef_formats', function (Blueprint $table) {
                     $table->bigIncrements('id')->first();
                 });
             }
