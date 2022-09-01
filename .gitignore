@@ -10,3 +10,4 @@ node_modules
 src/legacy/client_interface/html/croutonjs
 croutonjs.zip
 terraform.tfvars
+build
