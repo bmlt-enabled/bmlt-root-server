@@ -2,6 +2,11 @@
 
 use Illuminate\Support\Str;
 
+$dbPrefix = env('DB_PREFIX', 'na_');
+if (!str_ends_with($dbPrefix, '_')) {
+    $dbPrefix .= '_';
+}
+
 return [
 
     /*
@@ -38,7 +43,7 @@ return [
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', 'bmlt-db'),
+            'host' => env('DB_HOST', '0.0.0.0'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'rootserver'),
             'username' => env('DB_USERNAME', 'rootserver'),
@@ -46,7 +51,27 @@ return [
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
-            'prefix' => env('DB_PREFIX', 'na_'),
+            'prefix' => $dbPrefix,
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
+        'test' => [
+            'driver' => 'mysql',
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_HOST', '0.0.0.0'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'rootserver'),
+            'username' => env('DB_USERNAME', 'rootserver'),
+            'password' => env('DB_PASSWORD', 'rootserver'),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => 'test_',
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,

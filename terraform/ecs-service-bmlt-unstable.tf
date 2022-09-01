@@ -30,23 +30,23 @@ resource "aws_ecs_task_definition" "bmlt_unstable" {
             value = var.GOOGLE_API_KEY
           },
           {
-            name  = "DBNAME",
+            name  = "DB_DATABASE",
             value = "rootserver"
           },
           {
-            name  = "DBUSER",
+            name  = "DB_USER",
             value = "rootserver"
           },
           {
-            name  = "DBPASSWORD",
+            name  = "DB_PASSWORD",
             value = "rootserver"
           },
           {
-            name  = "DBSERVER",
+            name  = "DB_HOST",
             value = "bmlt-db"
           },
           {
-            name  = "DBPREFIX",
+            name  = "DB_PREFIX",
             value = "na"
           }
         ],

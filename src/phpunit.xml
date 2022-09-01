@@ -18,10 +18,14 @@
         </include>
     </coverage>
     <php>
+        <server name='HTTP_HOST' value='localhost' />
+        <server name="SERVER_NAME" value="localhost"/>
+        <server name="SERVER_PORT" value="8000"/>
+        <server name="SERVER_PROTOCOL" value="http"/>
         <env name="APP_ENV" value="testing"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="CACHE_DRIVER" value="array"/>
-        <!-- <env name="DB_CONNECTION" value="sqlite"/> -->
+        <env name="DB_CONNECTION" value="test"/>
         <!-- <env name="DB_DATABASE" value=":memory:"/> -->
         <env name="MAIL_MAILER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
