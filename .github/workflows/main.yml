@@ -13,17 +13,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Build Root Server
+      - name: Build Zip Release
         run: |
-          make build
+          make zip
+
+      - name: Build Docker Image
+        run: |
+          make docker
           SHORT_SHA=$(git rev-parse --short=8 HEAD)
           echo "IMAGE_NAME=public.ecr.aws/bmlt/bmlt-root-server:3.0.0-${SHORT_SHA}" >> $GITHUB_ENV
-
-      - name: Zip Build
-        run: |
-          make zip-build
-          ZIP_FILENAME=bmlt-root-server-3.0.0-build${GITHUB_RUN_NUMBER}-${GITHUB_SHA}.zip
-          echo "ZIP_FILENAME=${ZIP_FILENAME}" >> $GITHUB_ENV
 
       - name: Configure S3 AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -34,7 +32,7 @@ jobs:
 
       - name: Copy Artifacts to S3
         run: |
-          aws s3 cp build/$ZIP_FILENAME s3://${{ secrets.S3_BUCKET }}/bmlt-root-server/$ZIP_FILENAME
+          aws s3 cp build/bmlt-root-server.zip s3://${{ secrets.S3_BUCKET }}/bmlt-root-server/bmlt-root-server-3.0.0-build${GITHUB_RUN_NUMBER}-${GITHUB_SHA}.zip
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -52,7 +50,7 @@ jobs:
       - name: Push Docker Image
         id: docker_push_images
         run: |
-          make push
+          make docker-push
 
       - name: Download Task Definition
         run: |
