@@ -57,8 +57,4 @@ RUN a2enmod rewrite \
      && a2dismod php8.1 \
      && a2enmod php8.0
 
-COPY start-bmlt.sh /tmp/start-bmlt.sh
-
 EXPOSE 8000
-
-CMD ["/bin/bash", "/tmp/start-bmlt.sh"]
