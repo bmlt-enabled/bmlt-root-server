@@ -13,13 +13,30 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Make Root Server Build
+      - name: Build Root Server
         run: |
           make build
           SHORT_SHA=$(git rev-parse --short=8 HEAD)
           echo "IMAGE_NAME=public.ecr.aws/bmlt/bmlt-root-server:3.0.0-${SHORT_SHA}" >> $GITHUB_ENV
 
-      - name: configure aws credentials
+      - name: Zip Build
+        run: |
+          make zip-build
+          ZIP_FILENAME=bmlt-root-server-3.0.0-build${GITHUB_RUN_NUMBER}-${GITHUB_SHA}.zip
+          echo "ZIP_FILENAME=${ZIP_FILENAME}" >> $GITHUB_ENV
+
+      - name: Configure S3 AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions/gh-ci-s3-artifact
+          role-session-name: gh-actions
+          aws-region: us-east-1
+
+      - name: Copy Artifacts to S3
+        run: |
+          aws s3 cp build/$ZIP_FILENAME s3://${{ secrets.S3_BUCKET }}/bmlt-root-server/$ZIP_FILENAME
+
+      - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions/gh-ci-tf-bmlt-rs
@@ -32,15 +49,23 @@ jobs:
         with:
           registry-type: public
 
-      - name: push docker images
+      - name: Push Docker Image
         id: docker_push_images
         run: |
           make push
 
-      - name: Download task definition
+      - name: Download Task Definition
         run: |
           echo $IMAGE_NAME
-          aws ecs describe-task-definition --task-definition bmlt-unstable --query taskDefinition > task-definition.json
+          aws ecs describe-task-definition --task-definition bmlt-unstable --query taskDefinition | jq -r 'del(
+            .taskDefinitionArn,
+            .requiresAttributes,
+            .compatibilities,
+            .revision,
+            .status,
+            .registeredAt,
+            .registeredBy
+          )' > task-definition.json
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
