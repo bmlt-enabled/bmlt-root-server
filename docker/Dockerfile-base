@@ -50,7 +50,7 @@ RUN /bin/bash -c "source /etc/apache2/envvars"
 RUN chown -R www-data: /var/www
 RUN sed -i 's/Listen 80/Listen 8000/' /etc/apache2/ports.conf
 COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
-COPY auto-config.inc.php /var/www/auto-config.inc.php
+COPY auto-config.inc.php /var/www/html/auto-config.inc.php
 RUN ln -sf /proc/self/fd/1 /var/log/apache2/access.log && \
     ln -sf /proc/self/fd/1 /var/log/apache2/error.log
 RUN a2enmod rewrite \
