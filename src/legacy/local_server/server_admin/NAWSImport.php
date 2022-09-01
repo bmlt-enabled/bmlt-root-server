@@ -2,7 +2,7 @@
 
 defined('BMLT_EXEC') or die('Cannot Execute Directly');
 
-require_once(__DIR__ . '/../../vendor/autoload.php');
+require_once(__DIR__ . '/../../../vendor/autoload.php');
 require_once(__DIR__ . '/../../server/c_comdef_server.class.php');
 require_once(__DIR__ . '/NAWSImportMeetingsExistException.php');
 require_once(__DIR__ . '/NAWSImportServiceBodiesExistException.php');
