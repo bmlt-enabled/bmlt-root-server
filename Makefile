@@ -20,6 +20,9 @@ CROUTON_JS := src/legacy/client_interface/html/croutonjs/crouton.js
 VENDOR_AUTOLOAD := src/vendor/autoload.php
 ZIP_FILE := build/bmlt-root-server.zip
 
+help:  ## Print the help documentation
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
 $(VENDOR_AUTOLOAD):
 	docker run $(DOCKER_ARGS) -v $(shell pwd)/src:/app -w /app $(BASE_IMAGE) composer install $(COMPOSER_ARGS)
 
@@ -37,9 +40,6 @@ $(ZIP_FILE): $(VENDOR_AUTOLOAD) $(CROUTON_JS)
 	cp -r src build/main_server
 	cd build && zip -r $(shell basename $(ZIP_FILE)) main_server
 	rm -rf build/main_server
-
-help:  ## Print the help documentation
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 .PHONY: composer
 composer: $(VENDOR_AUTOLOAD) ## Runs composer install
