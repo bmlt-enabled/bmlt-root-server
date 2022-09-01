@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-
 class LegacyController extends Controller
 {
     public function all(Request $request): Response
@@ -23,7 +22,8 @@ class LegacyController extends Controller
         abort(404);
     }
 
-    private function getPathInfo(Request $request): LegacyPathInfo {
+    private function getPathInfo(Request $request): LegacyPathInfo
+    {
         // TODO unit test this
         $path = trim($request->path(), "/");
         while (str_contains($path, '..')) {
@@ -61,4 +61,3 @@ class LegacyPathInfo
         $this->contentType = $contentType;
     }
 }
-
