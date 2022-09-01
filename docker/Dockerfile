@@ -1,8 +1,11 @@
 FROM public.ecr.aws/bmlt/bmlt-root-server-base:1.1.0
 
-RUN rm /var/www/html/index.html
-ADD /src /var/www/html
-RUN chown -R www-data: /var/www/html
+COPY build/bmlt-root-server.zip /tmp/bmlt-root-server.zip
+RUN \
+  rm -f /var/www/html/index.html \
+  && unzip /tmp/bmlt-root-server.zip -d /var/www/html \
+  && rm -f /tmp/bmlt-root-server.zip \
+  && chown -R www-data: /var/www/html
 
 COPY docker/start-bmlt.sh /tmp/start-bmlt.sh
 
