@@ -83,7 +83,7 @@ lint-fix: $(VENDOR_AUTOLOAD)  ## PHP Lint Fix
 	src/vendor/squizlabs/php_codesniffer/bin/phpcbf
 
 .PHONY: docker-publish-base
-docker-publish-base:  ## Builds Base Docker Image
+docker-publish-base: ecr-login  ## Builds Base Docker Image
 	docker build -f docker/Dockerfile-base docker/ -t $(BASE_IMAGE):$(BASE_IMAGE_BUILD_TAG)
 	docker tag $(BASE_IMAGE):$(BASE_IMAGE_BUILD_TAG) $(BASE_IMAGE):$(BASE_IMAGE_TAG)
 	docker push $(BASE_IMAGE):$(BASE_IMAGE_BUILD_TAG)
