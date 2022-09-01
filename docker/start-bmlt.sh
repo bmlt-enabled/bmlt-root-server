@@ -11,29 +11,29 @@ then
     echo "\$gkey = \"$GKEY\";" >> /var/www/html/auto-config.inc.php
 fi
 
-if [ ! -z $DBNAME ]
+if [ ! -z $DB_DATABASE ]
 then
-    echo "\$dbName = \"$DBNAME\";" >> /var/www/html/auto-config.inc.php
+    echo "\$dbName = \"$DB_DATABASE\";" >> /var/www/html/auto-config.inc.php
 fi
 
-if [ ! -z $DBUSER ]
+if [ ! -z $DB_USER ]
 then
-    echo "\$dbUser = \"$DBUSER\";" >> /var/www/html/auto-config.inc.php
+    echo "\$dbUser = \"$DB_USER\";" >> /var/www/html/auto-config.inc.php
 fi
 
-if [ ! -z $DBPASSWORD ]
+if [ ! -z $DB_PASSWORD ]
 then
-    echo "\$dbPassword = \"$DBPASSWORD\";" >> /var/www/html/auto-config.inc.php
+    echo "\$dbPassword = \"$DB_PASSWORD\";" >> /var/www/html/auto-config.inc.php
 fi
 
-if [ ! -z $DBSERVER ]
+if [ ! -z $DB_HOST ]
 then
-    echo "\$dbServer = \"$DBSERVER\";" >> /var/www/html/auto-config.inc.php
+    echo "\$dbServer = \"$DB_HOST\";" >> /var/www/html/auto-config.inc.php
 fi
 
-if [ ! -z $DBPREFIX ]
+if [ ! -z $DB_PREFIX ]
 then
-    echo "\$dbPrefix = \"$DBPREFIX\";" >> /var/www/html/auto-config.inc.php
+    echo "\$dbPrefix = \"$DB_PREFIX\";" >> /var/www/html/auto-config.inc.php
 fi
 
 if [ ! -z "$DO_NOT_FORCE_PORT" -a "$DO_NOT_FORCE_PORT" == "true" ]
