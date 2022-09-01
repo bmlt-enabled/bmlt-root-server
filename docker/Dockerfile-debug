@@ -1,4 +1,4 @@
-FROM public.ecr.aws/bmlt/bmlt-root-server-base:latest
+FROM public.ecr.aws/bmlt/bmlt-root-server-base:1.1.0
 
 # Configure apache php
 ENV PHP_INI_PATH /etc/php/8.0/apache2/php.ini
@@ -10,3 +10,7 @@ RUN echo "zend_extension=$(find /usr/lib/php/ -name xdebug.so)" >> ${PHP_INI_PAT
     && echo "xdebug.start_with_request=yes" >> ${PHP_INI_PATH} \
     && echo "xdebug.log=/tmp/xdebug.log" >> ${PHP_INI_PATH} \
     && echo "xdebug.idekey=ROOT_SERVER_DEBUG" >> ${PHP_INI_PATH}
+
+COPY start-bmlt.sh /tmp/start-bmlt.sh
+
+CMD ["/bin/bash", "/tmp/start-bmlt.sh"]
