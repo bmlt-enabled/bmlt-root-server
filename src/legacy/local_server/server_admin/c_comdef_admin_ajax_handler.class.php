@@ -207,7 +207,7 @@ class c_comdef_admin_ajax_handler
             return json_encode($ret);
         }
 
-        require_once(__DIR__ .'/../../vendor/autoload.php');
+        require_once(__DIR__ .'/../../../vendor/autoload.php');
 
         $file = $_FILES['thefile'];
         try {
@@ -384,32 +384,32 @@ class c_comdef_admin_ajax_handler
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $response_text = array();
-        
+
         $t_user = isset($this->my_http_vars['target_user']) ? intval($this->my_http_vars['target_user']) : 0;
-        
+
         if ((intval($this->my_user->GetID()) == $t_user) && isset($this->my_http_vars['account_email_value'])) {
             $this->my_user->SetEmailAddress($this->my_http_vars['account_email_value']);
             $success = $this->my_user->UpdateToDB();
             $response_text['EMAIL_CHANGED'] = ($success ? true : false);
         }
-    
+
         if ((intval($this->my_user->GetID()) == $t_user) && isset($this->my_http_vars['account_description_value'])) {
             $this->my_user->SetLocalDescription($this->my_http_vars['account_description_value']);
             $success = $this->my_user->UpdateToDB();
             $response_text['DESCRIPTION_CHANGED'] = ($success ? true : false);
         }
-        
+
         $login = $this->my_user->GetLogin();
         $login_changed = false;
         $password = (isset($this->my_http_vars['account_password_value']) ? $this->my_http_vars['account_password_value'] : '');
-        
+
         if ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) {
             if ((intval($this->my_user->GetID()) == $t_user) && isset($this->my_http_vars['account_name_value'])) {
                 $this->my_user->SetLocalName($this->my_http_vars['account_name_value']);
                 $success = $this->my_user->UpdateToDB();
                 $response_text['NAME_CHANGED'] = ($success ? true : false);
             }
-        
+
             if ((intval($this->my_user->GetID()) == $t_user) && isset($this->my_http_vars['account_login_value'])) {
                 $login = $this->my_http_vars['account_login_value'];
                 $login_changed = true;
@@ -417,7 +417,7 @@ class c_comdef_admin_ajax_handler
         } else {
             unset($this->my_http_vars['account_login_value']);
         }
-        
+
         if ((intval($this->my_user->GetID()) == $t_user) && (isset($this->my_http_vars['account_login_value']) || isset($this->my_http_vars['account_password_value']))) {
             $success = $this->my_user->UpdateToDB(false, $login, $password);
             $response_text['PASSWORD_CHANGED'] = ($success ? true : false);
@@ -425,7 +425,7 @@ class c_comdef_admin_ajax_handler
                 $response_text['LOGIN_CHANGED'] = ($success ? true : false);
             }
         }
-    
+
         if (is_array($response_text) && count($response_text)) {
             header('Content-Type:application/json; charset=UTF-8');
             echo ( array2json(array ( 'ACCOUNT_CHANGED' => $response_text )));
@@ -443,29 +443,29 @@ class c_comdef_admin_ajax_handler
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if (c_comdef_server::IsUserServerAdmin(null, true)) {
             $json_tool = new PhpJsonXmlArrayStringInterchanger;
-    
+
             $the_processed_formats = $json_tool->convertJsonToArray($in_new_format_data, true);
-        
+
             $the_changed_formats = array();
             foreach ($the_processed_formats as $the_format) {
                 if (trim($the_format['key']) || trim($the_format['name']) || trim($the_format['description'])) {
                     $the_changed_formats[$the_format['lang_key']] = $the_format;
                 }
             }
-        
+
             $the_objects_to_be_changed = array();
-        
+
             $ret_data = '';
             $shared_id = '';
             $format_type = 'FC1';
-        
+
             // The first thing that we do, is go through the incoming data, and make sure that we create or modify c_comdef_format objects to match the input.
             foreach ($the_changed_formats as $format_data) {
                 if ($format_data) {
                     foreach ($format_data as &$data_val) {  // This removes double-slashes, added by the JSON encoding.
                         $data_val = str_replace('\\\\', '\\', $data_val);
                     }
-                        
+
                     if (!$shared_id) {
                         $shared_id = intval($format_data['shared_id']);
                         $format_type = $format_data['type'];
@@ -475,11 +475,11 @@ class c_comdef_admin_ajax_handler
                             break;
                         }
                     }
-            
+
                     $lang_key = $format_data['lang_key'];
-        
+
                     $server_format = null;
-                
+
                     if ($format_data['shared_id']) {
                         $this->my_server->GetOneFormat($format_data['shared_id'], $format_data['lang_key']);
                     }
@@ -491,17 +491,17 @@ class c_comdef_admin_ajax_handler
                         $server_format->SetLocalName($format_data['name']);
                         $server_format->SetLocalDescription($format_data['description']);
                     }
-                
+
                     if (isset($format_data['worldid_mixed']) && $format_data['worldid_mixed']) {
                         $server_format->SetWorldID($format_data['worldid_mixed']);
                     }
-                    
+
                     array_push($the_objects_to_be_changed, $server_format);
                 }
             }
 
             $the_changed_objects = array();
-        
+
             if ($the_objects_to_be_changed && is_array($the_objects_to_be_changed) && count($the_objects_to_be_changed)) {
                 $new_shared_id = 0;
                 $langs = $this->my_server->GetFormatLangs();
@@ -512,11 +512,11 @@ class c_comdef_admin_ajax_handler
                         $ret_data = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['format_change_fader_change_fail_text']);
                         break;
                     }
-                
+
                     if (!$one_format->GetSharedID()) {
                         $one_format->SetSharedID($new_shared_id);
                     }
-                
+
                     $saved_format_object = array (
                                                 'shared_id' => $one_format->GetSharedID(),
                                                 'lang_key' => $one_format->GetLocalLang(),
@@ -527,16 +527,16 @@ class c_comdef_admin_ajax_handler
                                                 'type' => $one_format->GetFormatType(),
                                                 'worldid_mixed' => $one_format->GetWorldID()
                                                 );
-                
+
                     $new_shared_id = $saved_format_object['shared_id'];
-                
+
                     $the_changed_objects[$one_format->GetLocalLang()] = $saved_format_object;
                 }
-                
+
                 // Now, we go through the server's formats, and delete any that aren't reflected in the incoming data.
                 foreach ($langs as $lang_key => $lang_name) {
                     $server_format = $this->my_server->GetOneFormat($shared_id, $lang_key);
-                
+
                     if ($server_format && !$the_changed_formats[$lang_key]) {
                         $server_format->DeleteFromDB();
                     }
@@ -544,7 +544,7 @@ class c_comdef_admin_ajax_handler
             } else {
                 $ret_data = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['format_change_fader_change_fail_text']);
             }
-        
+
             header('Content-Type:application/json; charset=UTF-8');
             if ($ret_data) {
                 echo "{'success':false,'report':'$ret_data'}";
@@ -555,7 +555,7 @@ class c_comdef_admin_ajax_handler
             echo 'NOT AUTHORIZED';
         }
     }
-    
+
     /*******************************************************************/
     /**
         \brief
@@ -567,12 +567,12 @@ class c_comdef_admin_ajax_handler
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if (c_comdef_server::IsUserServerAdmin(null, true)) {
             $ret_data = '';
-            
+
             $langs = $this->my_server->GetFormatLangs();
 
             foreach ($langs as $lang_key => $lang_name) {
                 $server_format = $this->my_server->GetOneFormat($in_format_shared_id, $lang_key);
-            
+
                 if ($server_format instanceof c_comdef_format) {
                     $server_format->DeleteFromDB();
                 }
@@ -588,7 +588,7 @@ class c_comdef_admin_ajax_handler
             echo 'NOT AUTHORIZED';
         }
     }
-    
+
     /*******************************************************************/
     /**
         \brief
@@ -600,9 +600,9 @@ class c_comdef_admin_ajax_handler
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if (c_comdef_server::IsUserServerAdmin(null, true)) {
             $json_tool = new PhpJsonXmlArrayStringInterchanger;
-        
+
             $the_new_user = $json_tool->convertJsonToArray($in_user_data, true);
-        
+
             if (is_array($the_new_user) && count($the_new_user)) {
                 $id = $the_new_user[0];
                 $login = $the_new_user[1];
@@ -620,12 +620,12 @@ class c_comdef_admin_ajax_handler
 
                 if (!$this->my_server->GetUserByLogin($login)) {
                     $user_to_create = new c_comdef_user(null, 0, $user_level, $email, $login, "", $this->my_server->GetLocalLang(), $name, $description, $user_owner, null);
-            
+
                     if ($user_to_create instanceof c_comdef_user) {
                         if ($password) {
                             $user_to_create->SetNewPassword($password);
                         }
-                
+
                         if ($user_to_create->UpdateToDB()) {
                             // Get whatever ID was assigned to this User.
                             $the_new_user[0] = intval($user_to_create->GetID());
@@ -655,7 +655,7 @@ class c_comdef_admin_ajax_handler
             echo 'NOT AUTHORIZED';
         }
     }
-    
+
     /*******************************************************************/
     /**
         \brief
@@ -669,9 +669,9 @@ class c_comdef_admin_ajax_handler
         $isServiceBodyAdmin = c_comdef_server::IsUserServiceBodyAdmin(null, true);
         if ($isServerAdmin || $isServiceBodyAdmin) {
             $json_tool = new PhpJsonXmlArrayStringInterchanger;
-        
+
             $the_changed_user = $json_tool->convertJsonToArray($in_user_data, true);
-        
+
             if (is_array($the_changed_user) && count($the_changed_user)) {
                 $id = $the_changed_user[0];
                 $login = $the_changed_user[1];
@@ -704,7 +704,7 @@ class c_comdef_admin_ajax_handler
                         $user_to_change->SetUserLevel($user_level);
                         $user_to_change->SetOwnerID($user_owner);
                     }
-                    
+
                     if ($password) {
                         if (!$user_to_change->SetNewPassword($password)) {
                             $err_string = json_prepare($this->my_localized_strings['comdef_server_admin_strings']['user_change_fader_fail_cant_update_text']);
@@ -713,7 +713,7 @@ class c_comdef_admin_ajax_handler
                             return;
                         }
                     }
-                
+
                     if ($user_to_change->UpdateToDB()) {
                         header('Content-Type:application/json; charset=UTF-8');
                         echo '{"success":true,"user":'.array2json($the_changed_user)."}";
@@ -736,7 +736,7 @@ class c_comdef_admin_ajax_handler
             echo 'NOT AUTHORIZED';
         }
     }
-    
+
     /*******************************************************************/
     /**
         \brief
@@ -751,14 +751,14 @@ class c_comdef_admin_ajax_handler
         if (c_comdef_server::IsUserServerAdmin(null, true)) {
             try {
                 $user_to_delete = $this->my_server->GetUserByIDObj($in_user_id);
-            
+
                 if ($user_to_delete instanceof c_comdef_user) {
                     if ($user_to_delete->DeleteFromDB()) {
                         $user_to_delete->ResetChildUsers();
                         if ($in_delete_permanently) {
                             $this->DeleteUserChanges($in_user_id);
                         }
-                    
+
                         header('Content-Type:application/json; charset=UTF-8');
                         echo "{'success':true,'report':'$in_user_id'}";
                     } else {
@@ -787,10 +787,10 @@ class c_comdef_admin_ajax_handler
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if (c_comdef_server::IsUserServerAdmin(null, true)) {
             $changes = $this->my_server->GetChangesFromIDAndType('c_comdef_user', $in_user_id);
-        
+
             if ($changes instanceof c_comdef_changes) {
                 $obj_array = $changes->GetChangesObjects();
-            
+
                 if (is_array($obj_array) && count($obj_array)) {
                     foreach ($obj_array as $change) {
                         $change->DeleteFromDB();
@@ -810,9 +810,9 @@ class c_comdef_admin_ajax_handler
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $json_tool = new PhpJsonXmlArrayStringInterchanger;
-        
+
         $the_new_service_body = $json_tool->convertJsonToArray($in_service_body_data, true);
-        
+
         if (is_array($the_new_service_body) && count($the_new_service_body)) {
             $id = $the_new_service_body[0];
             $parent_service_body_id = $the_new_service_body[1];
@@ -825,9 +825,9 @@ class c_comdef_admin_ajax_handler
             $helpline = $the_new_service_body[8];
             $type = $the_new_service_body[9];
             $worldid = $the_new_service_body[12];
-            
+
             $sb_to_change = $this->my_server->GetServiceBodyByIDObj($id);
-            
+
             if ($sb_to_change instanceof c_comdef_service_body) {
                 $sb_to_change->SetOwnerID($parent_service_body_id);
                 $sb_to_change->SetLocalName($name);
@@ -840,7 +840,7 @@ class c_comdef_admin_ajax_handler
                 $sb_to_change->SetHelpline($helpline);
                 $sb_to_change->SetSBType($type);
                 $sb_to_change->SetWorldID($worldid);
-            
+
                 if ($sb_to_change->UpdateToDB()) {
                     header('Content-Type:application/json; charset=UTF-8');
                     echo "{'success':true,'service_body':".array2json($the_new_service_body)."}";
@@ -860,7 +860,7 @@ class c_comdef_admin_ajax_handler
             echo "{'success':false,'report':'$err_string'}";
         }
     }
-                
+
     /*******************************************************************/
     /**
         \brief  This handles creating a new Service body.
@@ -872,9 +872,9 @@ class c_comdef_admin_ajax_handler
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if (c_comdef_server::IsUserServerAdmin(null, true)) {
             $json_tool = new PhpJsonXmlArrayStringInterchanger;
-        
+
             $the_new_service_body = $json_tool->convertJsonToArray($in_service_body_data, true);
-        
+
             if (is_array($the_new_service_body) && count($the_new_service_body)) {
                 $id = $the_new_service_body[0];
                 $parent_service_body_id = $the_new_service_body[1];
@@ -887,9 +887,9 @@ class c_comdef_admin_ajax_handler
                 $helpline = $the_new_service_body[8];
                 $type = $the_new_service_body[9];
                 $worldid = $the_new_service_body[12];
-            
+
                 $sb_to_create = new c_comdef_service_body;
-            
+
                 if ($sb_to_create instanceof c_comdef_service_body) {
                     $sb_to_create->SetOwnerID($parent_service_body_id);
                     $sb_to_create->SetLocalName($name);
@@ -901,7 +901,7 @@ class c_comdef_admin_ajax_handler
                     $sb_to_create->SetHelpline($helpline);
                     $sb_to_create->SetSBType($type);
                     $sb_to_create->SetWorldID($worldid);
-                
+
                     if ($sb_to_create->UpdateToDB()) {
                         // Get whatever ID was assigned to this Service Body.
                         $the_new_service_body[0] = $sb_to_create->GetID();
@@ -926,7 +926,7 @@ class c_comdef_admin_ajax_handler
             echo 'NOT AUTHORIZED';
         }
     }
-    
+
     /*******************************************************************/
     /**
         \brief
@@ -942,13 +942,13 @@ class c_comdef_admin_ajax_handler
         if (c_comdef_server::IsUserServerAdmin(null, true)) {
             try {
                 $service_body = $this->my_server->GetServiceBodyByIDObj($in_sb_id);
-            
+
                 if ($service_body instanceof c_comdef_service_body) {
                     if ($service_body->DeleteFromDB()) {
                         if ($in_delete_permanently) {
                             $this->DeleteServiceBodyChanges($in_sb_id);
                         }
-                    
+
                         header('Content-Type:application/json; charset=UTF-8');
                         echo "{'success':true, 'id':$in_sb_id}";
                     } else {
@@ -977,10 +977,10 @@ class c_comdef_admin_ajax_handler
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if (c_comdef_server::IsUserServerAdmin(null, true)) {
             $changes = $this->my_server->GetChangesFromIDAndType('c_comdef_service_body', $in_sb_id);
-        
+
             if ($changes instanceof c_comdef_changes) {
                 $obj_array = $changes->GetChangesObjects();
-            
+
                 if (is_array($obj_array) && count($obj_array)) {
                     foreach ($obj_array as $change) {
                         $change->DeleteFromDB();
@@ -989,7 +989,7 @@ class c_comdef_admin_ajax_handler
             }
         }
     }
-    
+
     /*******************************************************************/
     /**
         \brief
@@ -1000,20 +1000,20 @@ class c_comdef_admin_ajax_handler
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '[';
         $changes = $this->my_server->GetChangesFromIDAndType('c_comdef_meeting', $in_meeting_id);
-    
+
         if ($changes instanceof c_comdef_changes) {
             $obj_array = $changes->GetChangesObjects();
-        
+
             if (is_array($obj_array) && count($obj_array)) {
                 $first = true;
-                
+
                 foreach ($obj_array as $change) {
                     if (!$first) {
                         $ret .= ',';
                     } else {
                         $first = false;
                     }
-                    
+
                     $ret .= '{';
                         $change_id = $change->GetID();
                         $user_id = $change->GetUserID();
@@ -1025,22 +1025,22 @@ class c_comdef_admin_ajax_handler
                     }
                         $change_description = json_prepare($change->DetailedChangeDescription());
                         $change_date = json_prepare(date('g:i A, F j Y', $change->GetChangeDate()));
-                        
+
                         $ret .= '"id":'.$change_id.',';
                         $ret .= '"user":"'.$user_name.'",';
                         $ret .= '"description":["'.implode('","', str_replace('&amp;', '&', $change_description['details'])).'"],';
                         $ret .= '"date":"'.$change_date.'"';
-                        
+
                     $ret .= '}';
                 }
             }
         }
-            
+
         $ret .= ']';
-        
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /**
         \brief
@@ -1052,7 +1052,7 @@ class c_comdef_admin_ajax_handler
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         try {
             $meeting = $this->my_server->GetOneMeeting($in_meeting_id);
-            
+
             if ($meeting instanceof c_comdef_meeting) {
                 if ($meeting->UserCanEdit()) {
                     if ($meeting->DeleteFromDB()) {
@@ -1085,10 +1085,10 @@ class c_comdef_admin_ajax_handler
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if (c_comdef_server::IsUserServerAdmin(null, true)) {
             $changes = $this->my_server->GetChangesFromIDAndType('c_comdef_meeting', $in_meeting_id);
-        
+
             if ($changes instanceof c_comdef_changes) {
                 $obj_array = $changes->GetChangesObjects();
-            
+
                 if (is_array($obj_array) && count($obj_array)) {
                     foreach ($obj_array as $change) {
                         $change->DeleteFromDB();
@@ -1108,7 +1108,7 @@ class c_comdef_admin_ajax_handler
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $json_tool = new PhpJsonXmlArrayStringInterchanger;
-        
+
         $the_new_meeting = $json_tool->convertJsonToArray($in_meeting_data, true);
 
         if (is_array($the_new_meeting) && count($the_new_meeting)) {
@@ -1122,7 +1122,7 @@ class c_comdef_admin_ajax_handler
             c_comdef_dbsingleton::commit();
         }
     }
-    
+
     /*******************************************************************/
     /**
         \brief
@@ -1154,17 +1154,17 @@ class c_comdef_admin_ajax_handler
                     // This is where we get a list of the available "optional" fields to put in a popup for adding a new one.
                     $template_data = c_comdef_meeting::GetDataTableTemplate();
                     $template_longdata = c_comdef_meeting::GetLongDataTableTemplate();
-                
+
                     // We merge the two tables (data and longdata).
                     if (is_array($template_data) && count($template_data) && is_array($template_longdata) && count($template_longdata)) {
                         $template_data = array_merge($template_data, $template_longdata);
                     }
-                
+
                     foreach ($in_meeting_data as $key => $value) {
                         if ($key == 'formats') {
                             continue;
                         }
-                        
+
                         if ($key == 'format_shared_id_list') {
                             $vals = array();
                             $value = explode(",", $value);
@@ -1180,13 +1180,13 @@ class c_comdef_admin_ajax_handler
                             $value = $vals;
                             $key = 'formats';
                         }
-                        
+
                         switch ($key) {
                             case 'zoom':
                             case 'distance_in_km':       // These are ignored.
                             case 'distance_in_miles':
                                 break;
-                
+
                             // These are the "fixed" or "core" data values.
                             case 'worldid_mixed':
                             case 'start_time':
@@ -1205,13 +1205,13 @@ class c_comdef_admin_ajax_handler
                             case 'latitude':
                                 $data[$key] = floatval($value);
                                 break;
-                
+
                             case 'id_bigint':
                             case 'service_body_bigint':
                             case 'weekday_tinyint':
                                 $data[$key] = intval($value);
                                 break;
-                
+
                             case 'email_contact':
                                 $value = trim($value);
                                 if ($value) {
@@ -1226,7 +1226,7 @@ class c_comdef_admin_ajax_handler
                                     $data[$key] = $value;
                                 }
                                 break;
-                
+
                             // We only accept a 1 or a 0.
                             case 'published':
                                 // Meeting list editors can't publish meetings.
@@ -1367,7 +1367,7 @@ class c_comdef_admin_ajax_handler
             return VenueType::IN_PERSON;
         }
     }
-    
+
     /*******************************************************************/
     /**
         \brief  This returns the search results, in whatever form was requested.
@@ -1409,7 +1409,7 @@ class c_comdef_admin_ajax_handler
                 }
             }
         }
-    
+
         if (isset($in_http_vars['data_field_key']) && $in_http_vars['data_field_key']) {
             // At this point, we have everything in a CSV. We separate out just the field we want.
             $temp_keyed_array = array();
@@ -1417,7 +1417,7 @@ class c_comdef_admin_ajax_handler
             $keys = array_shift($result);
             $keys = explode("\",\"", trim($keys, '"'));
             $the_keys = explode(',', $in_http_vars['data_field_key']);
-        
+
             $result2 = array();
             foreach ($result as $row) {
                 if ($row) {
@@ -1438,7 +1438,7 @@ class c_comdef_admin_ajax_handler
             $the_keys = array_intersect($keys, $the_keys);
             $result = '"'.implode('","', $the_keys)."\"\n".implode("\n", $result2);
         }
-        
+
         return $result;
     }
 
@@ -1457,7 +1457,7 @@ class c_comdef_admin_ajax_handler
         $in_csv_data = explode("\n", $in_csv_data);
         $keys = array_shift($in_csv_data);
         $keys = explode("\",\"", trim($keys, '"'));
-    
+
         foreach ($in_csv_data as $row) {
             if ($row) {
                 $line = null;
@@ -1481,7 +1481,7 @@ class c_comdef_admin_ajax_handler
                 array_push($temp_keyed_array, $line);
             }
         }
-    
+
         $out_json_data = array2json($temp_keyed_array);
 
         return $out_json_data;
