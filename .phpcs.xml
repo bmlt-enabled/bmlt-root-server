@@ -1,0 +1,48 @@
+<?xml version='1.0'?>
+<ruleset name='BMLTRootServer'>
+    <description>The BMLT Coding Standards</description>
+    <!--
+    If no files or directories are specified on the command line
+    your custom standard can specify what files should be checked
+    instead.
+    Note that specifying any file or directory path
+    on the command line will ignore all file tags.
+    -->
+    <file>src</file>
+
+    <!--
+       You can hard-code command line values into your custom standard.
+       Note that this does not work for the command line values:
+       -v[v][v], -l, -d, -sniffs and -standard
+       The following tags are equivalent to the command line arguments:
+       -p
+    -->
+    <arg name='encoding' value='utf-8'/>
+    <arg name='extensions' value='php'/>
+    <arg name='warning-severity' value='6'/>
+    <arg name="report" value="full"/>
+    <arg value='s'/>
+
+    <!--
+       You can hard-code custom php.ini settings into your custom standard.
+       The following tag sets the memory limit to 64M.
+    -->
+    <ini name="memory_limit" value="128M"/>
+
+    <!--
+   You can hard-code ignore patterns directly into your
+   custom standard so you don't have to specify the
+   patterns on the command line.
+    -->
+    <exclude-pattern>*/cache/*</exclude-pattern>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+
+    <!--
+    You can add specific global ignores to different
+    rules here.
+    -->
+    <rule ref='PSR2'></rule>
+    <rule ref="PSR1">
+        <exclude name="PSR1.Classes.ClassDeclaration.MultipleClasses" />
+    </rule>
+</ruleset>

@@ -4,7 +4,7 @@ ifeq ($(CI)x, x)
 	DOCKERFILE := Dockerfile-debug
 	IMAGE := rootserver
 	TAG := local
-	DOCKER_ARGS := -it --rm
+	DOCKER_ARGS := -t --rm
 	COMPOSER_ARGS :=
 	ZIP_NAME := bmlt-root-server-3.0.0-build$(COMMIT).zip
 else
@@ -12,7 +12,7 @@ else
 	IMAGE := public.ecr.aws/bmlt/bmlt-root-server
 	TAG := 3.0.0-$(COMMIT)
 	DOCKER_ARGS := -t
-	COMPOSER_ARGS := --classmap-authoritative
+	COMPOSER_ARGS :=  --no-dev --classmap-authoritative
 	ZIP_NAME := bmlt-root-server-3.0.0-build$(GITHUB_RUN_NUMBER)-$(GITHUB_SHA).zip
 endif
 BASE_IMAGE := public.ecr.aws/bmlt/bmlt-root-server-base:latest
@@ -71,3 +71,11 @@ clean:  ## Clean build
 	rm -rf src/legacy/client_interface/html/croutonjs
 	rm -rf src/vendor
 	rm -rf build
+
+.PHONY: lint
+lint: $(VENDOR_AUTOLOAD)  ## PHP Lint
+	src/vendor/squizlabs/php_codesniffer/bin/phpcs
+
+.PHONY: lint-fix
+lint-fix: $(VENDOR_AUTOLOAD)  ## PHP Lint Fix
+	src/vendor/squizlabs/php_codesniffer/bin/phpcbf
