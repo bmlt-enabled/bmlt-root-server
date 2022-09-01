@@ -34,8 +34,9 @@
    custom standard so you don't have to specify the
    patterns on the command line.
     -->
-    <exclude-pattern>*/cache/*</exclude-pattern>
-    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>src/bootstrap/cache/*</exclude-pattern>
+    <exclude-pattern>src/vendor/*</exclude-pattern>
+    <exclude-pattern>src/storage/*</exclude-pattern>
 
     <!--
     You can add specific global ignores to different
