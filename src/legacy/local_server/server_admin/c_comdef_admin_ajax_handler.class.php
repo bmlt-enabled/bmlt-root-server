@@ -219,14 +219,13 @@ class c_comdef_admin_ajax_handler
             return json_encode($ret);
         }
 
-        // If set, $userServiceBodyIDs is an array of service body IDs of meetings that the current user is allowed to edit.
-        // $userServiceBodyIDs is not set if the user is the serveradmin and can edit any meeting.
+        // $userServiceBodyIDs is an array of service body IDs of meetings that the current user is allowed to edit.
+        // $userServiceBodyIDs is empty if the user is the serveradmin and can edit any meeting.
+        $userServiceBodyIDs = [];
         if (!$isServerAdmin) {
             $ids = c_comdef_server::GetUserServiceBodies();
             if (is_array($ids)) {
                 $userServiceBodyIDs = array_keys($ids);
-            } else {
-                $userServiceBodyIDs = [];
             }
         }
 
