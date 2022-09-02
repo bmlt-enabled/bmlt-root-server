@@ -153,7 +153,7 @@ resource "aws_ecs_service" "bmlt_unstable" {
     aws_iam_role_policy.bmlt_lb,
   ]
 
-  #  lifecycle {
-  #    ignore_changes = [task_definition]
-  #  }
+  lifecycle {
+    ignore_changes = [task_definition]
+  }
 }
