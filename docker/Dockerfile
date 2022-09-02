@@ -1,4 +1,4 @@
-FROM public.ecr.aws/bmlt/bmlt-root-server-base:1.1.1
+FROM public.ecr.aws/bmlt/bmlt-root-server-base:1.1.2
 
 COPY build/bmlt-root-server.zip /tmp/bmlt-root-server.zip
 RUN \
