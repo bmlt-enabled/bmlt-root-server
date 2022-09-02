@@ -45,8 +45,8 @@ if (file_exists(dirname(dirname(__FILE__)).'/server/shared/classes/comdef_utilit
     }
 
     $url_path = $_SERVER['SERVER_NAME'];
-    $file_path = str_replace('\\', '/', dirname(dirname(dirname(dirname(dirname(__FILE__))))));
-    $my_path = str_replace('\\', '/', dirname(dirname($_SERVER['PHP_SELF'])));
+    $file_path = str_replace('\\', '/', dirname(dirname(dirname(dirname(__FILE__)))));
+    $my_path = str_replace('\\', '/', dirname($_SERVER['PHP_SELF']));
     $subsequent_path = str_replace($file_path, '', $my_path);
 
     // See if we need to add an explicit port to the URI.
