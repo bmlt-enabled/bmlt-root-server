@@ -38,7 +38,9 @@ class LegacyController extends Controller
 
         $contentType = 'text/html';
         if (str_ends_with($path, '.php')) {
-            if (preg_match('/client_interface\/json/', $path)) {
+            if (str_contains($path, "/client_interface/jsonp")) {
+                $contentType = "application/javascript";
+            } elseif (preg_match('/client_interface\/json/', $path)) {
                 $contentType = 'application/json';
             } elseif (preg_match('/client_interface\/(xml|gpx|kml|xsd)/', $path)) {
                 $contentType = 'application/xml';

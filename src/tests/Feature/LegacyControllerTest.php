@@ -66,6 +66,17 @@ class LegacyControllerTest extends LegacyTestCase
         $this->assertEquals('application/json', $pathInfo->contentType);
     }
 
+    public function testSemanticJsonp()
+    {
+        $controller = new TestLegacyController();
+        $pathInfo = $controller->testGetPathInfo('/main_server/client_interface/jsonp');
+        $this->assertEquals('/legacy/main_server/client_interface/jsonp/index.php', str_replace(base_path(), '', $pathInfo->path));
+        $this->assertEquals('application/javascript', $pathInfo->contentType);
+        $pathInfo = $controller->testGetPathInfo('/main_server/client_interface/jsonp/');
+        $this->assertEquals('/legacy/main_server/client_interface/jsonp/index.php', str_replace(base_path(), '', $pathInfo->path));
+        $this->assertEquals('application/javascript', $pathInfo->contentType);
+    }
+
     public function testSemanticXml()
     {
         $controller = new TestLegacyController();
