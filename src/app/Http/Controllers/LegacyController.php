@@ -9,7 +9,7 @@ class LegacyController extends Controller
 {
     public function all(Request $request): Response
     {
-        $pathInfo = $this->getPathInfo($request->path());
+        $pathInfo = $this->getPathInfo($request);
 
         if (file_exists($pathInfo->path)) {
             return response()
@@ -20,8 +20,9 @@ class LegacyController extends Controller
         abort(404);
     }
 
-    protected function getPathInfo(string $path): LegacyPathInfo
+    protected function getPathInfo(Request $request): LegacyPathInfo
     {
+        $path = $request->path();
         while (str_contains($path, '..')) {
             // I don't think this is possible... but as a just in case security measure...
             $path = str_replace("..", '', $path);
@@ -37,10 +38,12 @@ class LegacyController extends Controller
         }
 
         $contentType = 'text/html';
-        if (str_ends_with($path, '.php')) {
+        if (!is_null($request->input('bmlt_ajax_callback'))) {
+            $contentType = "application/json";
+        } elseif (str_ends_with($path, '.php')) {
             if (str_contains($path, "/client_interface/jsonp")) {
                 $contentType = "application/javascript";
-            } elseif (preg_match('/client_interface\/json/', $path)) {
+            } elseif (str_contains($path, '/client_interface/json')) {
                 $contentType = 'application/json';
             } elseif (preg_match('/client_interface\/(xml|gpx|kml|xsd)/', $path)) {
                 $contentType = 'application/xml';
