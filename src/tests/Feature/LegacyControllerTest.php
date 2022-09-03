@@ -18,13 +18,6 @@ class TestLegacyController extends LegacyController
 
 class LegacyControllerTest extends LegacyTestCase
 {
-    public function testTheApplicationReturnsASuccessfulResponse()
-    {
-        // TODO: These can't work until we figure out how to mock the setcookie() and header() built-ins
-         $response = $this->get('/');
-         $response->assertStatus(500);
-    }
-
     private function request(string $uri, bool $bmltAjaxCallback = false): Request
     {
         return Request::create($uri, method: 'POST', parameters: $bmltAjaxCallback ? ['bmlt_ajax_callback' => '1'] : []);
