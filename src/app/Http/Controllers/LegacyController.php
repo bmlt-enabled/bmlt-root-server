@@ -41,11 +41,11 @@ class LegacyController extends Controller
         if (!is_null($request->input('bmlt_ajax_callback'))) {
             $contentType = "application/json";
         } elseif (str_ends_with($path, '.php')) {
-            if (str_contains($path, "/client_interface/jsonp")) {
+            if (str_contains($path, "/client_interface/jsonp/")) {
                 $contentType = "application/javascript";
-            } elseif (str_contains($path, '/client_interface/json')) {
+            } elseif (preg_match('/server_admin\/json\.php|client_interface\/json/', $path)) {
                 $contentType = 'application/json';
-            } elseif (preg_match('/client_interface\/(xml|gpx|kml|xsd)/', $path)) {
+            } elseif (preg_match('/server_admin\/xml\.php|client_interface\/(xml|gpx|kml|xsd)/', $path)) {
                 $contentType = 'application/xml';
             } elseif (preg_match('/client_interface\/(csv|poi)/', $path)) {
                 $contentType = 'text/csv';
