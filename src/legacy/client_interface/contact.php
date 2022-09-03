@@ -233,7 +233,7 @@ if (isset($_GET['meeting_id'])) {
 // If this is just a test, we respond with the capability.
 if (0 ==  $meeting_id) {
     if (file_exists(dirname(dirname(dirname(__FILE__))).'/../auto-config.inc.php')) {
-        define('BMLT_EXEC', 1);
+        defined('BMLT_EXEC') or define('BMLT_EXEC', 1);
         // We check to make sure that we are supporting the capability.
         require_once(dirname(dirname(dirname(__FILE__))).'/../auto-config.inc.php');
         $ret = $g_enable_email_contact ? 1 : 0;
@@ -279,7 +279,7 @@ if (0 ==  $meeting_id) {
 
                 if (!$isspam) {
                     if (file_exists(dirname(dirname(dirname(__FILE__))).'/../auto-config.inc.php')) {
-                        define('BMLT_EXEC', 1);
+                        defined('BMLT_EXEC') or define('BMLT_EXEC', 1);
 
                         // We check to make sure that we are supporting the capability.
                         require_once(dirname(dirname(dirname(__FILE__))).'/../auto-config.inc.php');
