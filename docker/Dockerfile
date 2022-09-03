@@ -2,8 +2,7 @@ FROM public.ecr.aws/bmlt/bmlt-root-server-base:1.1.2
 
 COPY build/bmlt-root-server.zip /tmp/bmlt-root-server.zip
 RUN \
-  rm -f /var/www/html/index.html \
-  && unzip /tmp/bmlt-root-server.zip -d /var/www/html \
+  unzip /tmp/bmlt-root-server.zip -d /var/www/html \
   && rm -f /tmp/bmlt-root-server.zip \
   && chown -R www-data: /var/www/html
 
