@@ -4,19 +4,10 @@ namespace Tests\Feature;
 
 // use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
-use App\Http\Controllers\LegacyController;
-use App\Http\Controllers\LegacyPathInfo;
+use App\Http\Controllers\Legacy\LegacyPathInfo;
 use Tests\LegacyTestCase;
 
-class TestLegacyController extends LegacyController
-{
-    public function testGetPathInfo(Request $request): LegacyPathInfo
-    {
-        return $this->getPathInfo($request);
-    }
-}
-
-class LegacyControllerTest extends LegacyTestCase
+class LegacyPathInfoTest extends LegacyTestCase
 {
     private function request(string $uri, bool $bmltAjaxCallback = false): Request
     {
@@ -25,162 +16,147 @@ class LegacyControllerTest extends LegacyTestCase
 
     public function testBare()
     {
-        $controller = new TestLegacyController();
         $request = $this->request('/index.php');
-        $pathInfo = $controller->testGetPathInfo($request);
+        $pathInfo = LegacyPathInfo::parse($request);
         $this->assertEquals('/legacy/index.php', str_replace(base_path(), '', $pathInfo->path));
         $this->assertEquals('text/html', $pathInfo->contentType);
     }
     public function testDotJs()
     {
-        $controller = new TestLegacyController();
         $request = $this->request('/blah.js');
-        $pathInfo = $controller->testGetPathInfo($request);
+        $pathInfo = LegacyPathInfo::parse($request);
         $this->assertEquals('/legacy/blah.js', str_replace(base_path(), '', $pathInfo->path));
         $this->assertEquals('text/javascript', $pathInfo->contentType);
     }
 
     public function testDotCss()
     {
-        $controller = new TestLegacyController();
         $request = $this->request('/blah/blah/blah.css');
-        $pathInfo = $controller->testGetPathInfo($request);
+        $pathInfo = LegacyPathInfo::parse($request);
         $this->assertEquals('/legacy/blah/blah/blah.css', str_replace(base_path(), '', $pathInfo->path));
         $this->assertEquals('text/css', $pathInfo->contentType);
     }
 
     public function testDotXml()
     {
-        $controller = new TestLegacyController();
         $request = $this->request('/main_server/client_interface/serverInfo.xml');
-        $pathInfo = $controller->testGetPathInfo($request);
+        $pathInfo = LegacyPathInfo::parse($request);
         $this->assertEquals('/legacy/main_server/client_interface/serverInfo.xml', str_replace(base_path(), '', $pathInfo->path));
         $this->assertEquals('text/xml', $pathInfo->contentType);
     }
 
     public function testSemanticJson()
     {
-        $controller = new TestLegacyController();
         $request = $this->request('/main_server/client_interface/json');
-        $pathInfo = $controller->testGetPathInfo($request);
+        $pathInfo = LegacyPathInfo::parse($request);
         $this->assertEquals('/legacy/main_server/client_interface/json/index.php', str_replace(base_path(), '', $pathInfo->path));
         $this->assertEquals('application/json', $pathInfo->contentType);
         $request = $this->request('/main_server/client_interface/json/');
-        $pathInfo = $controller->testGetPathInfo($request);
+        $pathInfo = LegacyPathInfo::parse($request);
         $this->assertEquals('/legacy/main_server/client_interface/json/index.php', str_replace(base_path(), '', $pathInfo->path));
         $this->assertEquals('application/json', $pathInfo->contentType);
     }
 
     public function testSemanticJsonp()
     {
-        $controller = new TestLegacyController();
         $request = $this->request('/main_server/client_interface/jsonp');
-        $pathInfo = $controller->testGetPathInfo($request);
+        $pathInfo = LegacyPathInfo::parse($request);
         $this->assertEquals('/legacy/main_server/client_interface/jsonp/index.php', str_replace(base_path(), '', $pathInfo->path));
         $this->assertEquals('application/javascript', $pathInfo->contentType);
         $request = $this->request('/main_server/client_interface/jsonp/');
-        $pathInfo = $controller->testGetPathInfo($request);
+        $pathInfo = LegacyPathInfo::parse($request);
         $this->assertEquals('/legacy/main_server/client_interface/jsonp/index.php', str_replace(base_path(), '', $pathInfo->path));
         $this->assertEquals('application/javascript', $pathInfo->contentType);
     }
 
     public function testSemanticXml()
     {
-        $controller = new TestLegacyController();
         $request = $this->request('/main_server/client_interface/xml');
-        $pathInfo = $controller->testGetPathInfo($request);
+        $pathInfo = LegacyPathInfo::parse($request);
         $this->assertEquals('/legacy/main_server/client_interface/xml/index.php', str_replace(base_path(), '', $pathInfo->path));
         $this->assertEquals('application/xml', $pathInfo->contentType);
         $request = $this->request('/main_server/client_interface/xml/');
-        $pathInfo = $controller->testGetPathInfo($request);
+        $pathInfo = LegacyPathInfo::parse($request);
         $this->assertEquals('/legacy/main_server/client_interface/xml/index.php', str_replace(base_path(), '', $pathInfo->path));
         $this->assertEquals('application/xml', $pathInfo->contentType);
     }
 
     public function testSemanticGpx()
     {
-        $controller = new TestLegacyController();
         $request = $this->request('/main_server/client_interface/gpx');
-        $pathInfo = $controller->testGetPathInfo($request);
+        $pathInfo = LegacyPathInfo::parse($request);
         $this->assertEquals('/legacy/main_server/client_interface/gpx/index.php', str_replace(base_path(), '', $pathInfo->path));
         $this->assertEquals('application/xml', $pathInfo->contentType);
         $request = $this->request('/main_server/client_interface/gpx/');
-        $pathInfo = $controller->testGetPathInfo($request);
+        $pathInfo = LegacyPathInfo::parse($request);
         $this->assertEquals('/legacy/main_server/client_interface/gpx/index.php', str_replace(base_path(), '', $pathInfo->path));
         $this->assertEquals('application/xml', $pathInfo->contentType);
     }
 
     public function testSemanticKml()
     {
-        $controller = new TestLegacyController();
         $request = $this->request('/main_server/client_interface/kml');
-        $pathInfo = $controller->testGetPathInfo($request);
+        $pathInfo = LegacyPathInfo::parse($request);
         $this->assertEquals('/legacy/main_server/client_interface/kml/index.php', str_replace(base_path(), '', $pathInfo->path));
         $this->assertEquals('application/xml', $pathInfo->contentType);
         $request = $this->request('/main_server/client_interface/kml/');
-        $pathInfo = $controller->testGetPathInfo($request);
+        $pathInfo = LegacyPathInfo::parse($request);
         $this->assertEquals('/legacy/main_server/client_interface/kml/index.php', str_replace(base_path(), '', $pathInfo->path));
         $this->assertEquals('application/xml', $pathInfo->contentType);
     }
 
     public function testSemanticXsd()
     {
-        $controller = new TestLegacyController();
         $request = $this->request('/main_server/client_interface/xsd/GetLangs.php');
-        $pathInfo = $controller->testGetPathInfo($request);
+        $pathInfo = LegacyPathInfo::parse($request);
         $this->assertEquals('/legacy/main_server/client_interface/xsd/GetLangs.php', str_replace(base_path(), '', $pathInfo->path));
         $this->assertEquals('application/xml', $pathInfo->contentType);
     }
 
     public function testSemanticCsv()
     {
-        $controller = new TestLegacyController();
         $request = $this->request('/main_server/client_interface/csv');
-        $pathInfo = $controller->testGetPathInfo($request);
+        $pathInfo = LegacyPathInfo::parse($request);
         $this->assertEquals('/legacy/main_server/client_interface/csv/index.php', str_replace(base_path(), '', $pathInfo->path));
         $this->assertEquals('text/csv', $pathInfo->contentType);
         $request = $this->request('/main_server/client_interface/csv/');
-        $pathInfo = $controller->testGetPathInfo($request);
+        $pathInfo = LegacyPathInfo::parse($request);
         $this->assertEquals('/legacy/main_server/client_interface/csv/index.php', str_replace(base_path(), '', $pathInfo->path));
         $this->assertEquals('text/csv', $pathInfo->contentType);
     }
 
     public function testSemanticPoi()
     {
-        $controller = new TestLegacyController();
         $request = $this->request('/main_server/client_interface/poi');
-        $pathInfo = $controller->testGetPathInfo($request);
+        $pathInfo = LegacyPathInfo::parse($request);
         $this->assertEquals('/legacy/main_server/client_interface/poi/index.php', str_replace(base_path(), '', $pathInfo->path));
         $this->assertEquals('text/csv', $pathInfo->contentType);
         $request = $this->request('/main_server/client_interface/poi/');
-        $pathInfo = $controller->testGetPathInfo($request);
+        $pathInfo = LegacyPathInfo::parse($request);
         $this->assertEquals('/legacy/main_server/client_interface/poi/index.php', str_replace(base_path(), '', $pathInfo->path));
         $this->assertEquals('text/csv', $pathInfo->contentType);
     }
 
     public function testAdminUIApi()
     {
-        $controller = new TestLegacyController();
         $request = $this->request('/main_server/', true);
-        $pathInfo = $controller->testGetPathInfo($request);
+        $pathInfo = LegacyPathInfo::parse($request);
         $this->assertEquals('/legacy/main_server/index.php', str_replace(base_path(), '', $pathInfo->path));
         $this->assertEquals('application/json', $pathInfo->contentType);
     }
 
     public function testServerAdminApiJson()
     {
-        $controller = new TestLegacyController();
         $request = $this->request('/main_server/server_admin/json.php', true);
-        $pathInfo = $controller->testGetPathInfo($request);
+        $pathInfo = LegacyPathInfo::parse($request);
         $this->assertEquals('/legacy/main_server/server_admin/json.php', str_replace(base_path(), '', $pathInfo->path));
         $this->assertEquals('application/json', $pathInfo->contentType);
     }
 
     public function testServerAdminApiXml()
     {
-        $controller = new TestLegacyController();
         $request = $this->request('/main_server/server_admin/xml.php');
-        $pathInfo = $controller->testGetPathInfo($request);
+        $pathInfo = LegacyPathInfo::parse($request);
         $this->assertEquals('/legacy/main_server/server_admin/xml.php', str_replace(base_path(), '', $pathInfo->path));
         $this->assertEquals('application/xml', $pathInfo->contentType);
     }

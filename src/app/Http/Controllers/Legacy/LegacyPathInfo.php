@@ -1,26 +1,20 @@
 <?php
-
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Legacy;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
-class LegacyController extends Controller
+class LegacyPathInfo
 {
-    public function all(Request $request): Response
+    public string $path;
+    public ?string $contentType;
+
+    public function __construct(string $path, ?string $contentType)
     {
-        $pathInfo = $this->getPathInfo($request);
-
-        if (file_exists($pathInfo->path)) {
-            return response()
-                ->view('legacy', ['includePath' => $pathInfo->path])
-                ->header('Content-Type', $pathInfo->contentType);
-        }
-
-        abort(404);
+        $this->path = $path;
+        $this->contentType = $contentType;
     }
 
-    protected function getPathInfo(Request $request): LegacyPathInfo
+    public static function parse(Request $request): LegacyPathInfo
     {
         $path = $request->path();
         while (str_contains($path, '..')) {
@@ -63,18 +57,5 @@ class LegacyController extends Controller
         }
 
         return new LegacyPathInfo($path, $contentType);
-    }
-}
-
-
-class LegacyPathInfo
-{
-    public string $path;
-    public ?string $contentType;
-
-    public function __construct(string $path, ?string $contentType)
-    {
-        $this->path = $path;
-        $this->contentType = $contentType;
     }
 }
