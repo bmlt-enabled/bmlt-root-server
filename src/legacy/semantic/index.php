@@ -20,7 +20,7 @@
 
 // Comment out for release version.
 define('DEBUG', 1);
-define('BMLT_EXEC', 1);
+defined('BMLT_EXEC') or define('BMLT_EXEC', 1);
 require_once(dirname(__FILE__).'/bmlt_semantic.class.php');
 $uri = '';
 

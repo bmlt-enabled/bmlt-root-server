@@ -15,7 +15,7 @@
     You should have received a copy of the MIT License along with this code.
     If not, see <https://opensource.org/licenses/MIT>.
 */
-define('BMLT_EXEC', 1);
+defined('BMLT_EXEC') or define('BMLT_EXEC', 1);
 require_once(dirname(dirname(dirname(__FILE__))).'/server/config/get-config.php');
 
 // We only do this if the capability has been enabled in the auto-config file.
@@ -27,7 +27,7 @@ if (isset($g_enable_semantic_admin) && ($g_enable_semantic_admin == true)) {
     ***************************************************************************************************************/
 
     $http_vars = array_merge($_GET, $_POST);
-    
+
     // Create an HTTP path to our XML file. We build it manually, in case this file is being used elsewhere, or we have a redirect in the domain.
     // We allow it to be used as HTTPS.
     $url_path = GetURLToMainServerDirectory().'local_server/server_admin/json.php';
@@ -47,20 +47,20 @@ if (isset($g_enable_semantic_admin) && ($g_enable_semantic_admin == true)) {
 
     $expires = time() + (60 * 60 * 24 * 365);   // Expire in one year.
     setcookie('bmlt_admin_lang_pref', $lang_enum, $expires, '/');
-    
+
     require_once(dirname(dirname(dirname(__FILE__))).'/server/shared/classes/comdef_utilityclasses.inc.php');
     require_once(dirname(dirname(dirname(__FILE__))).'/server/shared/Array2Json.php');
     require_once(dirname(dirname(__FILE__)).'/db_connect.php');
-    
+
     DB_Connect_and_Upgrade();
 
     $server = c_comdef_server::MakeServer();
-    
+
     if ($server instanceof c_comdef_server) {
         if (!isset($_SESSION)) {
             session_start();
         }
-        
+
         // See if we are logging in
         if (isset($http_vars['admin_action']) && (($http_vars['admin_action'] == 'logout') || ($http_vars['admin_action'] == 'login'))) {
             $login_call = true;
@@ -71,14 +71,14 @@ if (isset($g_enable_semantic_admin) && ($g_enable_semantic_admin == true)) {
             if (isset($http_vars['admin_action']) && ($http_vars['admin_action'] == 'login')) {
                 $login = $http_vars['c_comdef_admin_login'];
                 $pw = $http_vars['c_comdef_admin_password'];
-                
+
                 if ($login && $pw) {
                     // If this is a valid login, we'll get an encrypted password back.
                     $enc_password = $server->GetEncryptedPW($login, trim($pw));
 
                     if (null != $enc_password) {    // If we got a password, we set up the session.
                         $_SESSION[$admin_session_name] = "$login\t$enc_password";
-                        
+
                         // Check to make sure this is a kosher user.
                         $user_obj = $server->GetCurrentUserObj();
                         if (!($user_obj instanceof c_comdef_user) || ($user_obj->GetUserLevel() == _USER_LEVEL_DISABLED) || ($user_obj->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) || ($user_obj->GetID() == 1)) {
@@ -87,7 +87,7 @@ if (isset($g_enable_semantic_admin) && ($g_enable_semantic_admin == true)) {
                             c_comdef_LogoutUser();
                             die('NOT AUTHORIZED');
                         }
-                            
+
                         // If we are OK, we'll fall through.
                     } else // These seem redundant, but a basic security posture of mine is to immediatly kill execution upon discovering a security breach.
                         {
@@ -116,34 +116,34 @@ if (isset($g_enable_semantic_admin) && ($g_enable_semantic_admin == true)) {
                 {
                 if (isset($http_vars['admin_action']) && $http_vars['admin_action']) {   // Must have an admin_action.
                     require_once(dirname(__FILE__).'/c_comdef_admin_xml_handler.class.php');
-            
+
                     $handler = new c_comdef_admin_xml_handler($http_vars, $server);
-                
+
                     if ($handler instanceof c_comdef_admin_xml_handler) {
                         $ret = $handler->process_commands();
                         $ret = simplexml_load_string($ret);
                         $json = json_encode((Array)$ret, JSON_NUMERIC_CHECK);
-                        
+
                         $pattern = '/\{\"\@attributes\"\:\{(.*?)\}\}/';    // Replace attribute objects with direct objects, to remove the extra layer.
                         $replacement = '{\1}';
                         do {
                             $old_json = $json;
                             $json = preg_replace($pattern, $replacement, $json);
                         } while ($json && ($old_json != $json));
-                        
+
                         $pattern = '/\"\@attributes\"\:\{(\"sequence_index\"\:(\d+?))\}\,/';
                         $replacement = '';
                         do {
                             $old_json = $json;
                             $json = preg_replace($pattern, $replacement, $json);
                         } while ($json && ($old_json != $json));
-                        
+
                         $pattern = '/\"row\"\:\{\"sequence_index\"\:(\d*?)\}\,/';    // Replace sequence index object, to remove the extra layer.
                         do {
                             $old_json = $json;
                             $json = preg_replace($pattern, "", $json);
                         } while ($json && ($old_json != $json));
-                        
+
                         if (isset($json) && $json) {
                             header('Content-Type:application/json; charset=UTF-8');
                             if (zlib_get_coding_type() === false) {
@@ -159,7 +159,7 @@ if (isset($g_enable_semantic_admin) && ($g_enable_semantic_admin == true)) {
                     } else {
                         $ret = 'ERROR';
                     }
-                    
+
                     // Just making sure...
                     unset($handler);
                     unset($server);
