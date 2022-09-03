@@ -165,12 +165,30 @@ class LegacyControllerTest extends LegacyTestCase
         $this->assertEquals('text/csv', $pathInfo->contentType);
     }
 
-    public function testAdminApi()
+    public function testAdminUIApi()
     {
         $controller = new TestLegacyController();
         $request = $this->request('/main_server/', true);
         $pathInfo = $controller->testGetPathInfo($request);
         $this->assertEquals('/legacy/main_server/index.php', str_replace(base_path(), '', $pathInfo->path));
         $this->assertEquals('application/json', $pathInfo->contentType);
+    }
+
+    public function testServerAdminApiJson()
+    {
+        $controller = new TestLegacyController();
+        $request = $this->request('/main_server/server_admin/json.php', true);
+        $pathInfo = $controller->testGetPathInfo($request);
+        $this->assertEquals('/legacy/main_server/server_admin/json.php', str_replace(base_path(), '', $pathInfo->path));
+        $this->assertEquals('application/json', $pathInfo->contentType);
+    }
+
+    public function testServerAdminApiXml()
+    {
+        $controller = new TestLegacyController();
+        $request = $this->request('/main_server/server_admin/xml.php');
+        $pathInfo = $controller->testGetPathInfo($request);
+        $this->assertEquals('/legacy/main_server/server_admin/xml.php', str_replace(base_path(), '', $pathInfo->path));
+        $this->assertEquals('application/xml', $pathInfo->contentType);
     }
 }
