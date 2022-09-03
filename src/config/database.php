@@ -2,9 +2,10 @@
 
 use Illuminate\Support\Str;
 
-$dbPrefix = env('DB_PREFIX', 'na_');
-if (!str_ends_with($dbPrefix, '_')) {
-    $dbPrefix .= '_';
+$legacyConfigFile = base_path() . '/../auto-config.inc.php';
+if (file_exists($legacyConfigFile)) {
+    defined('BMLT_EXEC') or define('BMLT_EXEC', 1);
+    require($legacyConfigFile);
 }
 
 return [
@@ -43,15 +44,15 @@ return [
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', '0.0.0.0'),
+            'host' => $dbServer ?? env('DB_HOST', '0.0.0.0'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'rootserver'),
-            'username' => env('DB_USERNAME', 'rootserver'),
-            'password' => env('DB_PASSWORD', 'rootserver'),
+            'database' => $dbName ?? env('DB_DATABASE', 'rootserver'),
+            'username' => $dbUser ?? env('DB_USERNAME', 'rootserver'),
+            'password' => $dbPassword ?? env('DB_PASSWORD', 'rootserver'),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
-            'prefix' => $dbPrefix,
+            'prefix' => isset($dbPrefix) ? $dbPrefix . '_'  : 'na_',
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
@@ -63,15 +64,15 @@ return [
         'test' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', '0.0.0.0'),
+            'host' => $dbServer ?? env('DB_HOST', '0.0.0.0'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'rootserver'),
-            'username' => env('DB_USERNAME', 'rootserver'),
-            'password' => env('DB_PASSWORD', 'rootserver'),
+            'database' => $dbName ?? env('DB_DATABASE', 'rootserver'),
+            'username' => $dbUser ?? env('DB_USERNAME', 'rootserver'),
+            'password' => $dbPassword ?? env('DB_PASSWORD', 'rootserver'),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
-            'prefix' => 'test_',
+            'prefix' => isset($dbPrefix) ? $dbPrefix . '_'  : 'test_',
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,

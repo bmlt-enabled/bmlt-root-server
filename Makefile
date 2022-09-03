@@ -12,7 +12,7 @@ ifeq ($(CI)x, x)
 	COMPOSER_ARGS :=
 	COMPOSER_PREFIX := docker run -t --rm -v $(shell pwd):/code -w /code $(BASE_IMAGE):$(BASE_IMAGE_TAG)
 	LINT_PREFIX := docker run -t --rm -v $(shell pwd):/code -w /code $(IMAGE):$(TAG)
-	TEST_PREFIX := docker run -t --rm -v $(shell pwd)/src:/var/www/html/main_server -v $(shell pwd)/test-auto-config.inc.php:/var/www/html/auto-config.inc.php -w /var/www/html/main_server --network host $(IMAGE):$(TAG)
+	TEST_PREFIX := docker run -t --rm -v $(shell pwd)/src:/var/www/html/main_server -v $(shell pwd)/docker/test-auto-config.inc.php:/var/www/html/auto-config.inc.php -w /var/www/html/main_server --network host $(IMAGE):$(TAG)
 else
 	DOCKERFILE := Dockerfile
 	IMAGE := public.ecr.aws/bmlt/bmlt-root-server
