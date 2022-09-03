@@ -16,4 +16,4 @@ use App\Http\Controllers\EchoController;
 
 
 Route::get('/echo', [EchoController::class, 'get']);
-Route::any('{all}', ['uses' => 'App\Http\Controllers\LegacyController@all'])->where('all', '.*');
+Route::any('{all}', ['uses' => 'App\Http\Controllers\Legacy\LegacyController@all'])->where('all', '.*');
