@@ -4,6 +4,17 @@ on: [push]
 jobs:
   test:
     runs-on: ubuntu-22.04
+    services:
+      mariadb:
+        image: mariadb:latest
+        ports:
+          - 3306
+        env:
+          MYSQL_USER: rootserver
+          MYSQL_PASSWORD: rootserver
+          MYSQL_DATABASE: rootserver
+          MYSQL_ROOT_PASSWORD: rootserver
+        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
     steps:
       - name: checkout
         uses: actions/checkout@v2
@@ -24,5 +35,7 @@ jobs:
           make lint
 
       - name: make test
+        env:
+          DB_PORT: ${{ job.services.mariadb.ports[3306] }}
         run: |
           make test

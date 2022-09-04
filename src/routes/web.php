@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\EchoController;
+use App\Http\Controllers\SwitcherController;
+use App\Http\Controllers\Legacy\LegacyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,5 +16,7 @@ use App\Http\Controllers\EchoController;
 */
 
 
-Route::get('/echo', [EchoController::class, 'get']);
-Route::any('{all}', ['uses' => 'App\Http\Controllers\Legacy\LegacyController@all'])->where('all', '.*');
+Route::get('/client_interface/{dataFormat}', [SwitcherController::class, 'get']);
+
+Route::any('{all}', [LegacyController::class, 'all'])
+    ->where('all', '.*');
