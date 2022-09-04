@@ -33,7 +33,7 @@ require_once(dirname(__FILE__).'/../csv/csv.php');
 try {
     $server = c_comdef_server::MakeServer();
     $ret = null;
-    
+
     if ($server instanceof c_comdef_server) {
         $_GET['json_data'] = true;
         $ret = parse_redirect($server);
@@ -47,8 +47,10 @@ try {
             header('Content-Type:application/javascript; charset=UTF-8');
             ob_start();
         }
-        
-        echo $_GET['callback'] . "(" . $ret . ");";
+
+        echo $_GET['callback'] . '(';
+        echo $ret;
+        echo ');';
         ob_end_flush();
     } else {
         echo HandleNoServer();
