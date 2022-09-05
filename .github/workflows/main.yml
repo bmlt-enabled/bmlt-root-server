@@ -82,10 +82,6 @@ jobs:
         run: |
           aws s3 cp build/bmlt-root-server.zip s3://${{ secrets.S3_BUCKET }}/bmlt-root-server/bmlt-root-server-3.0.0-build${GITHUB_RUN_NUMBER}-${GITHUB_SHA}.zip
 
-      - name: make docker
-        run: |
-          make docker
-
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -98,6 +94,10 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
         with:
           registry-type: public
+
+      - name: make docker
+        run: |
+          make docker
 
       - name: make docker-push
         id: docker_push_images
