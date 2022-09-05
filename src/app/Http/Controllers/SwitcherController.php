@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\FormatResource;
-use App\Http\Resources\ServiceBodyResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\App;
+use App\Http\Resources\FormatResource;
+use App\Http\Resources\ServiceBodyResource;
 use App\Http\Controllers\Legacy\LegacyController;
 use App\Interfaces\FormatRepositoryInterface;
 use App\Interfaces\ServiceBodyRepositoryInterface;
+use App\Models\MeetingData;
 
 class SwitcherController extends Controller
 {
@@ -27,20 +29,25 @@ class SwitcherController extends Controller
     {
         $switcher = $request->input('switcher');
 
-        if (in_array($switcher, ['GetFormats', 'GetServiceBodies'])) {
+        $validValues = ['GetFormats', 'GetServiceBodies', 'GetFieldKeys'];
+        if (in_array($switcher, $validValues)) {
             if ($dataFormat != 'json' && $dataFormat != 'jsonp') {
                 abort(404, 'This endpoint only supports the \'json\' and \'jsonp\' data formats.');
             }
 
             if ($switcher == 'GetFormats') {
                 $response = $this->getFormats($request);
-            } else {
+            } elseif ($switcher == 'GetServiceBodies') {
                 $response = $this->getServiceBodies($request);
+            } else {
+                $response = $this->getFieldKeys($request);
             }
 
-            return $dataFormat == 'jsonp'
-                ? $response->withCallback($request->input('callback', 'callback'))
-                : $response;
+            if ($dataFormat == 'jsonp') {
+                $response = $response->withCallback($request->input('callback', 'callback'));
+            }
+
+            return $response;
         }
 
         return LegacyController::handle($request);
@@ -87,5 +94,54 @@ class SwitcherController extends Controller
 
         $serviceBodies = $this->serviceBodyRepository->getServiceBodies($includeIds, $excludeIds, $recurseChildren, $recurseParents);
         return ServiceBodyResource::collection($serviceBodies->get())->response();
+    }
+
+    private function getFieldKeys($request)
+    {
+        $data = [
+            ['key' => 'id_bigint', 'description' => __('main_prompts.id_bigint')],
+            ['key' => 'worldid_mixed', 'description' => __('main_prompts.worldid_mixed')],
+            ['key' => 'service_body_bigint', 'description' => __('main_prompts.service_body_bigint')],
+            ['key' => 'weekday_tinyint', 'description' => __('main_prompts.weekday_tinyint')],
+            ['key' => 'venue_type', 'description' => __('main_prompts.venue_type')],
+            ['key' => 'start_time', 'description' => __('main_prompts.start_time')],
+            ['key' => 'duration_time', 'description' => __('main_prompts.duration_time')],
+            ['key' => 'time_zone', 'description' => __('main_prompts.time_zone')],
+            ['key' => 'formats', 'description' => __('main_prompts.formats')],
+            ['key' => 'lang_enum', 'description' => __('main_prompts.lang_enum')],
+            ['key' => 'longitude', 'description' => __('main_prompts.longitude')],
+            ['key' => 'latitude', 'description' => __('main_prompts.latitude')],
+        ];
+
+        $langEnum = App::currentLocale();
+        $fields = MeetingData::query()
+            ->where('meetingid_bigint', 0)
+            ->where('lang_enum', $langEnum)
+            ->whereNot('visibility', 1)
+            ->get();
+
+        foreach ($fields as $field) {
+            array_push($data, ['key' => $field->key, 'description' => $field->field_prompt]);
+        }
+
+        if ($langEnum != 'en') {
+            $seenKeys = [];
+            foreach ($data as $f) {
+                $seenKeys[$f['key']] = null;
+            }
+
+            $fields = MeetingData::query()
+                ->where('meetingid_bigint', 0)
+                ->where('lang_enum', 'en')
+                ->whereNot('visibility', 1)
+                ->get();
+            foreach ($fields as $field) {
+                if (!array_key_exists($field->key, $seenKeys)) {
+                    array_push($data, ['key' => $field->key, 'description' => $field->field_prompt]);
+                }
+            }
+        }
+
+        return new JsonResponse($data);
     }
 }

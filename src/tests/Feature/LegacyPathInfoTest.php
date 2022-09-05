@@ -5,9 +5,9 @@ namespace Tests\Feature;
 // use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Legacy\LegacyPathInfo;
-use Tests\LegacyTestCase;
+use Tests\TestCase;
 
-class LegacyPathInfoTest extends LegacyTestCase
+class LegacyPathInfoTest extends TestCase
 {
     private function request(string $uri, bool $bmltAjaxCallback = false): Request
     {

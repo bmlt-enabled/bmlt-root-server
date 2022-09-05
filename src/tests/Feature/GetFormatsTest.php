@@ -3,11 +3,11 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\LegacyTestCase;
+use Tests\TestCase;
 use App\Models\Format;
 use App\Models\Meeting;
 
-class GetFormatsTest extends LegacyTestCase
+class GetFormatsTest extends TestCase
 {
     use RefreshDatabase;
 

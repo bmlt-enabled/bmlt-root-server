@@ -3,10 +3,10 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\LegacyTestCase;
+use Tests\TestCase;
 use App\Models\ServiceBody;
 
-class GetServiceBodiesTest extends LegacyTestCase
+class GetServiceBodiesTest extends TestCase
 {
     use RefreshDatabase;
 
