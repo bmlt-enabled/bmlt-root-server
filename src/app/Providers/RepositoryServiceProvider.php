@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Interfaces\FormatRepositoryInterface;
 use App\Interfaces\ServiceBodyRepositoryInterface;
+use App\Repositories\FormatRepository;
 use App\Repositories\ServiceBodyRepository;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -15,6 +17,7 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->bind(FormatRepositoryInterface::class, FormatRepository::class);
         $this->app->bind(ServiceBodyRepositoryInterface::class, ServiceBodyRepository::class);
     }
 
