@@ -2,25 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\App;
 use App\Http\Resources\FormatResource;
 use App\Http\Resources\ServiceBodyResource;
 use App\Http\Controllers\Legacy\LegacyController;
+use App\Interfaces\FieldKeysRepositoryInterface;
+use App\Interfaces\FieldValuesRepositoryInterface;
 use App\Interfaces\FormatRepositoryInterface;
 use App\Interfaces\ServiceBodyRepositoryInterface;
-use App\Models\MeetingData;
 
 class SwitcherController extends Controller
 {
+    private FieldKeysRepositoryInterface $fieldKeysRepository;
+    private FieldValuesRepositoryInterface $fieldValuesRepository;
     private FormatRepositoryInterface $formatRepository;
     private ServiceBodyRepositoryInterface $serviceBodyRepository;
 
     public function __construct(
+        FieldKeysRepositoryInterface $fieldKeysRepository,
+        FieldValuesRepositoryInterface $fieldValuesRepository,
         FormatRepositoryInterface $formatRepository,
         ServiceBodyRepositoryInterface $serviceBodyRepository
     ) {
+        $this->fieldKeysRepository = $fieldKeysRepository;
+        $this->fieldValuesRepository = $fieldValuesRepository;
         $this->formatRepository = $formatRepository;
         $this->serviceBodyRepository = $serviceBodyRepository;
     }
@@ -29,18 +36,24 @@ class SwitcherController extends Controller
     {
         $switcher = $request->input('switcher');
 
-        $validValues = ['GetFormats', 'GetServiceBodies', 'GetFieldKeys'];
+        $validValues = ['GetFormats', 'GetServiceBodies', 'GetFieldKeys', 'GetFieldValues'];
         if (in_array($switcher, $validValues)) {
             if ($dataFormat != 'json' && $dataFormat != 'jsonp') {
                 abort(404, 'This endpoint only supports the \'json\' and \'jsonp\' data formats.');
             }
 
             if ($switcher == 'GetFormats') {
-                $response = $this->getFormats($request);
+                $collection = $this->getFormats($request);
+                $response = FormatResource::collection($collection)->response();
             } elseif ($switcher == 'GetServiceBodies') {
-                $response = $this->getServiceBodies($request);
+                $collection = $this->getServiceBodies($request);
+                $response = ServiceBodyResource::collection($collection)->response();
+            } elseif ($switcher == 'GetFieldKeys') {
+                $collection = $this->getFieldKeys($request);
+                $response = new JsonResponse($collection);
             } else {
-                $response = $this->getFieldKeys($request);
+                $collection = $this->getFieldValues($request);
+                $response = new JsonResponse($collection);
             }
 
             if ($dataFormat == 'jsonp') {
@@ -53,7 +66,7 @@ class SwitcherController extends Controller
         return LegacyController::handle($request);
     }
 
-    private function getFormats(Request $request): JsonResponse
+    private function getFormats(Request $request): Collection
     {
         $langEnums = $request->input('lang_enum', ['en']);
         if (!is_array($langEnums)) {
@@ -67,11 +80,10 @@ class SwitcherController extends Controller
 
         $showAll = $request->input('show_all') == '1';
 
-        $formats = $this->formatRepository->getFormats($langEnums, $keyStrings, $showAll);
-        return FormatResource::collection($formats->get())->response();
+        return $this->formatRepository->getFormats($langEnums, $keyStrings, $showAll);
     }
 
-    private function getServiceBodies(Request $request): JsonResponse
+    private function getServiceBodies(Request $request): Collection
     {
         $serviceBodyIds = $request->input('services', []);
         if (!is_array($serviceBodyIds)) {
@@ -92,56 +104,31 @@ class SwitcherController extends Controller
         $recurseChildren = $request->input('recurse') == '1';
         $recurseParents = $request->input('parents') == '1';
 
-        $serviceBodies = $this->serviceBodyRepository->getServiceBodies($includeIds, $excludeIds, $recurseChildren, $recurseParents);
-        return ServiceBodyResource::collection($serviceBodies->get())->response();
+        return $this->serviceBodyRepository->getServiceBodies($includeIds, $excludeIds, $recurseChildren, $recurseParents);
     }
 
-    private function getFieldKeys($request)
+    private function getFieldKeys($request): Collection
     {
-        $data = [
-            ['key' => 'id_bigint', 'description' => __('main_prompts.id_bigint')],
-            ['key' => 'worldid_mixed', 'description' => __('main_prompts.worldid_mixed')],
-            ['key' => 'service_body_bigint', 'description' => __('main_prompts.service_body_bigint')],
-            ['key' => 'weekday_tinyint', 'description' => __('main_prompts.weekday_tinyint')],
-            ['key' => 'venue_type', 'description' => __('main_prompts.venue_type')],
-            ['key' => 'start_time', 'description' => __('main_prompts.start_time')],
-            ['key' => 'duration_time', 'description' => __('main_prompts.duration_time')],
-            ['key' => 'time_zone', 'description' => __('main_prompts.time_zone')],
-            ['key' => 'formats', 'description' => __('main_prompts.formats')],
-            ['key' => 'lang_enum', 'description' => __('main_prompts.lang_enum')],
-            ['key' => 'longitude', 'description' => __('main_prompts.longitude')],
-            ['key' => 'latitude', 'description' => __('main_prompts.latitude')],
-        ];
+        return $this->fieldKeysRepository->getFieldKeys();
+    }
 
-        $langEnum = App::currentLocale();
-        $fields = MeetingData::query()
-            ->where('meetingid_bigint', 0)
-            ->where('lang_enum', $langEnum)
-            ->whereNot('visibility', 1)
-            ->get();
-
-        foreach ($fields as $field) {
-            array_push($data, ['key' => $field->key, 'description' => $field->field_prompt]);
+    private function getFieldValues($request): Collection
+    {
+        $fieldName = $request->input('meeting_key');
+        if (!$fieldName) {
+            abort(400);
         }
 
-        if ($langEnum != 'en') {
-            $seenKeys = [];
-            foreach ($data as $f) {
-                $seenKeys[$f['key']] = null;
-            }
+        $validFieldNames = $this->fieldKeysRepository->getFieldKeys();
 
-            $fields = MeetingData::query()
-                ->where('meetingid_bigint', 0)
-                ->where('lang_enum', 'en')
-                ->whereNot('visibility', 1)
-                ->get();
-            foreach ($fields as $field) {
-                if (!array_key_exists($field->key, $seenKeys)) {
-                    array_push($data, ['key' => $field->key, 'description' => $field->field_prompt]);
-                }
-            }
+        if (!$validFieldNames->contains('key', $fieldName)) {
+            abort(400);
         }
 
-        return new JsonResponse($data);
+        $specificFormats = $request->input('specific_formats');
+        $specificFormats = $specificFormats ? explode(',', trim($specificFormats)) : [];
+        $allFormats = (bool)$request->input('all_formats');
+
+        return $this->fieldValuesRepository->getFieldValues($fieldName, $specificFormats, $allFormats);
     }
 }
