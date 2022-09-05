@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ServiceBodyResource;
-use App\Http\Resources\ServiceBodyResourceJsonp;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Legacy\LegacyController;
