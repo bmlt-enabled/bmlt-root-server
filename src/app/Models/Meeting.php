@@ -9,4 +9,8 @@ class Meeting extends Model
     protected $table = 'comdef_meetings_main';
     protected $primaryKey = 'id_bigint';
     public $timestamps = false;
+    protected $fillable = [
+        'formats',
+        'service_body_bigint',
+    ];
 }
