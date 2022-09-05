@@ -2,6 +2,12 @@
 
 use Illuminate\Support\Facades\Facade;
 
+$legacyConfigFile = base_path() . '/../auto-config.inc.php';
+if (file_exists($legacyConfigFile)) {
+    defined('BMLT_EXEC') or define('BMLT_EXEC', 1);
+    require($legacyConfigFile);
+}
+
 return [
 
     /*
@@ -82,7 +88,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => $comdef_global_language ?? 'en',
 
     /*
     |--------------------------------------------------------------------------
