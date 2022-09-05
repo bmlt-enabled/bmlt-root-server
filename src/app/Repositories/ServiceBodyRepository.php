@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use Illuminate\Support\Collection;
 use App\Interfaces\ServiceBodyRepositoryInterface;
 use App\Models\ServiceBody;
 
@@ -12,7 +13,7 @@ class ServiceBodyRepository implements ServiceBodyRepositoryInterface
         array $excludeIds = [],
         bool $recurseChildren = false,
         bool $recurseParents = false
-    ) {
+    ): Collection {
         if ($recurseChildren) {
             $includeIds = array_merge($includeIds, $this->getChildren($includeIds));
             $excludeIds = array_merge($excludeIds, $this->getChildren($excludeIds));
@@ -32,7 +33,7 @@ class ServiceBodyRepository implements ServiceBodyRepositoryInterface
             $serviceBodies = $serviceBodies->whereNotIn('id_bigint', $excludeIds);
         }
 
-        return $serviceBodies;
+        return $serviceBodies->get();
     }
 
     public function getChildren(array $parents): array

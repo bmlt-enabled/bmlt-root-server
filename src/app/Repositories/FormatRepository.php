@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use Illuminate\Support\Collection;
 use App\Interfaces\FormatRepositoryInterface;
 use App\Models\Format;
 use App\Models\Meeting;
@@ -12,7 +13,7 @@ class FormatRepository implements FormatRepositoryInterface
         array $langEnums = ['en'],
         array $keyStrings = null,
         bool $showAll = false,
-    ) {
+    ): Collection {
         $formats = Format::query()->whereIn('lang_enum', $langEnums);
 
         if (!$showAll) {
@@ -23,7 +24,7 @@ class FormatRepository implements FormatRepositoryInterface
             $formats = $formats->whereIn('key_string', $keyStrings);
         }
 
-        return $formats;
+        return $formats->get();
     }
 
     private function getUsedFormatIds(): array
