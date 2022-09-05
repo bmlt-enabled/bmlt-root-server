@@ -285,25 +285,15 @@ class bmlt_semantic
         if ($this->_bmltRootServerURI) {
             $error = null;
 
-            $uri = $this->_bmltRootServerURI.'/client_interface/xml/GetLangs.php';
-            $xml = self::call_curl($uri, $error);
+            $uri = $this->_bmltRootServerURI.'/client_interface/json/GetLangs.php';
+            $json = self::call_curl($uri, $error);
 
-            if (!$error && $xml) {
-                $info_file = new DOMDocument;
-                if ($info_file instanceof DOMDocument) {
-                    if (@$info_file->loadXML($xml)) {
-                        $languages = $info_file->getElementsByTagName("language");
-
-                        if (($languages instanceof domnodelist) && $languages->length) {
-                            for ($index = 0; $index < $languages->length; $index++) {
-                                $language = $languages->item($index);
-                                $attributes = $language->attributes;
-                                $key = $attributes->getNamedItem("key")->nodeValue;
-                                $name = $language->nodeValue;
-
-                                $ret[$key] = $name;
-                            }
-                        }
+            if (!$error && $json) {
+                $json = json_decode($json, true);
+                if ($json && isset($json["languages"])) {
+                    $languages = $json["languages"];
+                    foreach ($languages as $language) {
+                        $ret[$language["key"]] = $language["name"];
                     }
                 }
             }
