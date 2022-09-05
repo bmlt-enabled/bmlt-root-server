@@ -80,16 +80,13 @@ function get_api_key($bmltRootServerURI)
     if ($bmltRootServerURI) {
         $error = null;
 
-        $uri = $bmltRootServerURI.'/client_interface/xml/index.php?switcher=GetServerInfo';
-        $xml = bmlt_semantic::call_curl($uri, $error);
-        if (!$error && $xml) {
-            $info_file = new DOMDocument;
-            if ($info_file instanceof DOMDocument) {
-                if (@$info_file->loadXML($xml)) {
-                    $api_key = $info_file->getElementsByTagName("google_api_key");
-                    if ($api_key->length > 0) {
-                        $ret = $api_key->item(0)->nodeValue;
-                    }
+        $uri = $bmltRootServerURI.'/client_interface/json/?switcher=GetServerInfo';
+        $json = bmlt_semantic::call_curl($uri, $error);
+        if (!$error && $json) {
+            $json = json_decode($json, true);
+            if (count($json) > 0) {
+                if (isset($json[0]["google_api_key"]) && !empty($json[0]["google_api_key"])) {
+                    $ret = $json[0]["google_api_key"];
                 }
             }
         }
