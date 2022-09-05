@@ -315,26 +315,22 @@ class bmlt_semantic
         if ($this->_keys) {
             $ret = $this->_keys;
         } elseif ($this->_bmltRootServerURI) {
-            $keys = explode("\n", self::call_curl($this->_bmltRootServerURI.'/client_interface/csv/?switcher=GetFieldKeys'));
+            $error = null;
 
-            $first = true;
+            $uri = $this->_bmltRootServerURI . '/client_interface/json/?switcher=GetFieldKeys';
+            $json = self::call_curl($uri, $error);
 
-            foreach ($keys as $keyLine) {
-                $key_name = explode(",", $keyLine);
-
-                if (2 == count($key_name)) {
-                    $key = $key_name[0];
-                    $name = $key_name[1];
-
-                    if (!$first) {
-                        $this->_keys[trim($key, '"')] = trim($name, '"');
+            if (!$error && $json) {
+                $json = json_decode($json, true);
+                if ($json) {
+                    foreach ($json as $field_keys) {
+                        $ret[$field_keys["key"]] = $field_keys["description"];
                     }
-                    $first = false;
                 }
             }
         }
 
-        return $this->_keys;
+        return $ret;
     }
 
     /**************************************************************/
