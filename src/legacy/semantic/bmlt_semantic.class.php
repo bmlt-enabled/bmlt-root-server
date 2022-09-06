@@ -96,19 +96,9 @@ class bmlt_semantic
                 $ret = file_get_contents($in_uri);
             }
         } else {
-            // This gets the session as a cookie.
-            if (isset($_COOKIE['PHPSESSID']) && $_COOKIE['PHPSESSID']) {
-                $strCookie = 'PHPSESSID=' . $_COOKIE['PHPSESSID'] . '; path=/';
-
-                session_write_close();
-            }
-
             // Create a new cURL resource.
             $resource = curl_init();
 
-            if (isset($strCookie)) {
-                curl_setopt($resource, CURLOPT_COOKIE, $strCookie);
-            }
 
             // Set url to call.
             curl_setopt($resource, CURLOPT_URL, $in_uri);

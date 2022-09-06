@@ -264,8 +264,10 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
         try {
             $server = c_comdef_server::MakeServer();
             $adminLogin = $http_vars['admin_login'];
-            $encryptedPassword = $server->GetEncryptedPW($http_vars['admin_login'], $http_vars['admin_password']);
-            $_SESSION[$http_vars['admin_session_name']] = "$adminLogin\t$encryptedPassword";
+            $adminPassword = $http_vars['admin_password'];
+            auth()->attempt(['login_string' => $adminLogin, 'password' => $adminPassword]);
+            $encryptedPassword = $server->GetEncryptedPW($adminLogin, $adminPassword);
+            session()->put('password_hash_web', $encryptedPassword);
             require_once(__DIR__.'/../server_admin/c_comdef_admin_ajax_handler.class.php');
             $nawsImport->import();
             $response['importStatus'] = true;

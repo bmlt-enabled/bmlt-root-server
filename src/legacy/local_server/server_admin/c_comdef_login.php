@@ -57,104 +57,40 @@ $t_server = c_comdef_server::MakeServer();  // We initialize the server.
 $lang_enum = $t_server->GetServer()->GetLocalLang();
 
 // We use a cookie to store the language pref.
-if (isset($_COOKIE) && isset($_COOKIE['bmlt_admin_lang_pref']) && $_COOKIE['bmlt_admin_lang_pref']) {
-    $bmlt_localization = $_COOKIE['bmlt_admin_lang_pref'];
-}
+$lang_enum = request()->cookie('bmlt_admin_lang_pref', $lang_enum);
 
 if (isset($http_vars['lang_enum']) && $http_vars['lang_enum']) {
     $lang_enum = $http_vars['lang_enum'];
 }
 
 if (isset($g_enable_language_selector) && $g_enable_language_selector) {
-    $expires = time() + (60 * 60 * 24 * 365);   // Expire in one year.
-    setcookie('bmlt_admin_lang_pref', $lang_enum, $expires, '/');
+    cookie()->queue('bmlt_admin_lang_pref', $lang_enum, 60 * 24 * 365);
 }
 
-if (!isset($_SESSION)) {
-    session_start();
+if (isset($_GET['bad_login_form'])) {
+    $localized_strings = c_comdef_server::GetLocalStrings();
+    die('<h2 class="c_comdef_not_auth_3">'.c_comdef_htmlspecialchars($localized_strings['comdef_server_admin_strings']['not_auth_3']).'</h2>'.c_comdef_LoginForm($server).'</body></html>');
 }
 
-// See if we are logging in or out
-if ((isset($_GET['admin_action']) && ($_GET['admin_action'] == 'logout'))    // No GET login.
-    ||  (isset($_POST['admin_action']) && ($_POST['admin_action'] == 'logout'))
-    ||  (isset($_POST['admin_action']) && ($_POST['admin_action'] == 'login'))   // Only POST login.
-    ) {
-    // Belt and suspenders -nuke the stored login.
-    $_SESSION[$admin_session_name] = null;
-    unset($_SESSION[$admin_session_name]);
-    session_write_close();  // Close and reopen the session.
-    session_start();
-
-    if (isset($_POST['admin_action']) && ($_POST['admin_action'] == 'login')) {
-        $login = isset($_POST['c_comdef_admin_login']) ? $_POST['c_comdef_admin_login'] : null;
-
-        // If this is a valid login, we'll get an encrypted password back.
-        $enc_password = isset($_POST['c_comdef_admin_password']) ? $t_server->GetEncryptedPW($login, trim($_POST['c_comdef_admin_password'])) : null;
-        if (null != $enc_password) {
-            $_SESSION[$admin_session_name] = "$login\t$enc_password";
-            // If the login interrupted going somewhere else, we complete the journey.
-            if (isset($_POST['attemptedurl']) && $_POST['attemptedurl'] && (0 >= strpos('logout', $_POST['attemptedurl']))) {
-                ob_end_clean();
-                header('Location: '.$_POST['attemptedurl']);
-            }
-        } else {
-            // Otherwise, we just check to make sure this is a kosher user.
-            $user_obj = $t_server->GetCurrentUserObj();
-            if (!($user_obj instanceof c_comdef_user) || ($user_obj->GetUserLevel() == _USER_LEVEL_DISABLED)) {
-                // Get the display strings.
-                $localized_strings = c_comdef_server::GetLocalStrings();
-    
-                c_comdef_LogoutUser();
-
-                // If the login is invalid, we terminate the whole kit and kaboodle, and inform the user they are persona non grata.
-                die('<h2 class="c_comdef_not_auth_3">'.c_comdef_htmlspecialchars($localized_strings['comdef_server_admin_strings']['not_auth_3']).'</h2>'.c_comdef_LoginForm($server).'</body></html>');
-            }
-        }
-    } elseif ((isset($_POST['admin_action']) && ($_POST['admin_action'] == 'logout')) || (isset($_GET['admin_action']) && ($_GET['admin_action'] == 'logout'))) {
-        c_comdef_LogoutUser();
-    }
-
-    // Make sure these get wiped and deleted.
-    $_POST['admin_action'] = null;
-    $_POST['c_comdef_admin_login'] = null;
-    $_POST['c_comdef_admin_password'] = null;
-    
-    // Shouldn't have GET, but what the hell...
-    $_GET['admin_action'] = null;
-    $_GET['c_comdef_admin_login'] = null;
-    $_GET['c_comdef_admin_password'] = null;
-    
-    // Belt and suspenders -we set them to naught, then unset them.
-    unset($_POST['admin_action']);
-    unset($_POST['c_comdef_admin_login']);
-    unset($_POST['c_comdef_admin_password']);
-    unset($_GET['admin_action']);
-    unset($_GET['c_comdef_admin_login']);
-    unset($_GET['c_comdef_admin_password']);
-}
-
-// See if a session has been started, or a login was attempted.
-if (isset($_SESSION[$admin_session_name])) {
+$user_obj = $t_server->GetCurrentUserObj();
+if (is_null($user_obj)) {
+    echo c_comdef_LoginForm($t_server);
+} elseif (!($user_obj instanceof c_comdef_user) || ($user_obj->GetUserLevel() == _USER_LEVEL_DISABLED)) {
+    // If the login is invalid, we terminate the whole kit and kaboodle, and inform the user they are persona non grata.
+    die('<div class="c_comdef_not_auth_container_div"><div class="c_comdef_not_auth_div"><h1 class="c_comdef_not_auth_1">'.c_comdef_htmlspecialchars($localized_strings['comdef_server_admin_strings']['not_auth_1']).'</h1><h2 class="c_comdef_not_auth_2">'.c_comdef_htmlspecialchars($localized_strings['comdef_server_admin_strings']['not_auth_2']).'</h2></div></div></body></html>');
+} else {
     // Get the display strings.
     $localized_strings = c_comdef_server::GetLocalStrings();
 
-    // We double-check, and see if the user is valid.
-    $user_obj = $t_server->GetCurrentUserObj();
-    if (!($user_obj instanceof c_comdef_user) || ($user_obj->GetUserLevel() == _USER_LEVEL_DISABLED)) {
-        // If the login is invalid, we terminate the whole kit and kaboodle, and inform the user they are persona non grata.
-        die('<div class="c_comdef_not_auth_container_div"><div class="c_comdef_not_auth_div"><h1 class="c_comdef_not_auth_1">'.c_comdef_htmlspecialchars($localized_strings['comdef_server_admin_strings']['not_auth_1']).'</h1><h2 class="c_comdef_not_auth_2">'.c_comdef_htmlspecialchars($localized_strings['comdef_server_admin_strings']['not_auth_2']).'</h2></div></div></body></html>');
-    }
-
     if (!isset($supress_header) || !$supress_header) {
         echo '<div class="bmlt_admin_logout_bar"><h4><a href="'.$_SERVER['PHP_SELF'].'?admin_action=logout">'.c_comdef_htmlspecialchars($localized_strings['comdef_server_admin_strings']['logout']). ($user_obj->GetLocalName() != '' ? ' ('.$user_obj->GetLocalName().')' : '') . '</a></h4>';
-            $server_info = GetServerInfo();
-            echo '<div class="server_version_display_div">'.htmlspecialchars($server_info['version']).'</div>';
+        $server_info = GetServerInfo();
+        echo '<div class="server_version_display_div">'.htmlspecialchars($server_info['version']).'</div>';
         echo '</div>';
         echo '<div id="google_maps_api_error_div" class="bmlt_admin_google_api_key_error_bar item_hidden"><h4><a id="google_maps_api_error_a" href="https://bmlt.app/google-api-key/" target="_blank"></a></h4></div>';
     }
-} else {
-    echo c_comdef_LoginForm($t_server);
 }
+
 
 $t_server = null;
 
@@ -196,7 +132,7 @@ function GetServerInfo()
         if ($info_file instanceof DOMDocument) {
             if (@$info_file->load(dirname(dirname(dirname(__FILE__))).'/client_interface/serverInfo.xml')) {
                 $has_info = $info_file->getElementsByTagName("bmltInfo");
-        
+
                 if (($has_info instanceof domnodelist) && $has_info->length) {
                     $ret['version'] = $has_info->item(0)->nodeValue;
                 }
@@ -223,7 +159,7 @@ function GetServerInfo()
 
     return $ret;
 }
-    
+
 /*******************************************************************/
 /** \brief  Returns HTML for the login form. If the user is not logged
     in, then they get the form. Otherwise, the login is processed, or
@@ -245,21 +181,19 @@ function c_comdef_LoginForm(
 
     if (isset($http_vars) && is_array($http_vars) && count($http_vars) && isset($http_vars['lang_enum'])) {
         $lang_name = $http_vars['lang_enum'];
-    
+
         if (file_exists(dirname(__FILE__)."/lang/".$lang_name."/name.txt")) {
             $comdef_global_language = $lang_name;
         }
-    } elseif (isset($_SESSION) && is_array($_SESSION) && isset($_SESSION['lang_enum'])) {
-        $lang_name = $_SESSION['lang_enum'];
-    
+    } elseif (session('lang_enum')) {
+        $lang_name = session('lang_enum');
+
         if (file_exists(dirname(__FILE__)."/lang/".$lang_name."/name.txt")) {
             $comdef_global_language = $lang_name;
         }
     }
 
-    if (isset($_SESSION) && is_array($_SESSION)) {
-        $_SESSION['lang_enum'] = $comdef_global_language;
-    }
+    session()->put('lang_enum', $comdef_global_language);
 
     $ret = '<div class="c_comdef_admin_login_form_container_div">';
         // If there is no JavaScript, then this message is displayed, and the form will not be revealed.
@@ -276,7 +210,7 @@ function c_comdef_LoginForm(
             case 'admin_action':
             case 'login':
                 break;
-                
+
             default:
                 // Arrays need to be concatenated strings.
                 if (is_array($value)) {
@@ -294,11 +228,11 @@ function c_comdef_LoginForm(
         $ret .= '">';   // Only the login will go through post.
             $ret .= '<input id="admin_action" type="hidden" name="admin_action" value="login" />';
             $attempted_url = full_url($_SERVER);
-            
+
     if (!preg_match('|logout|', $attempted_url)) {
         $ret .= '<input id="attemptedurl" type="hidden" name="attemptedurl" value="'.c_comdef_htmlspecialchars($attempted_url).'" />';
     }
-            
+
             $ret .= '<div style="display:none" id="c_comdef_admin_login_form_inner_container_div" class="c_comdef_admin_login_form_inner_container_div">';
                 $ret .= '<div class="c_comdef_admin_login_form_line_div">';
                 $ret .= '<div class="c_comdef_admin_login_form_prompt">'.c_comdef_htmlspecialchars($localized_strings['comdef_server_admin_strings']['title']).'</div>';
