@@ -133,7 +133,6 @@ BMLTSemanticResult.prototype.compileSearchResults = function () {
     var responseTypeSelect = 'json'
     var mainSelect = this.owner.getScopedElement('bmlt_semantic_form_main_mode_select');
     var getUsedCheckbox = this.owner.getScopedElement('bmlt_semantic_form_used_formats_checkbox');
-    var blockCheckbox = this.owner.getScopedElement('block_mode_checkbox');
 
     if (responseTypeSelect == 'json') {
         if ( getUsedCheckbox && getUsedCheckbox.checked ) {
@@ -407,14 +406,6 @@ BMLTSemanticResult.prototype.compileSearchResults = function () {
 
             this.compiled_params += 'MaxDurationM=' + this.durationMax[1].toString();
         };
-    };
-
-    if ( blockCheckbox && blockCheckbox.checked && (mainSelect.value == 'SHORTCODE_SIMPLE') ) {
-        if ( this.compiled_params ) {
-            this.compiled_params += '&';
-        };
-
-        this.compiled_params += 'block_mode=1';
     };
 
     this.valid = true;
@@ -1946,15 +1937,6 @@ BMLTSemantic.prototype.handleMapCheckboxChange = function ( inCheckbox
     this.refreshURI();
 };
 
-/*******************************************************************************************/
-/**
-    \brief
-*/
-/*******************************************************************************************/
-BMLTSemantic.prototype.handleBlockCheckboxChange = function ( inCheckbox
-                                                            ) {
-    this.refreshURI();
-};
 
 /*******************************************************************************************/
 /**
@@ -2542,8 +2524,6 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function () {
     this.setBasicFunctions('bmlt_semantic_form_duration_max_text');
     this.setBasicFunctions('bmlt_semantic_form_sb_fieldset');
     this.setBasicFunctions('bmlt_semantic_form_sb_not_fieldset');
-    this.setBasicFunctions('block_mode_checkbox_div');
-    this.setBasicFunctions('block_mode_checkbox');
     this.setBasicFunctions('bmlt_semantic_form_weekday_fieldset');
     this.setBasicFunctions('bmlt_semantic_form_not_weekday_fieldset');
     this.setBasicFunctions('bmlt_semantic_form_specific_fields_fieldset');
@@ -2673,8 +2653,6 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     var bmlt_semantic_form_just_used_formats_checkbox_div = this.getScopedElement('bmlt_semantic_form_just_used_formats_checkbox_div');
     var bmlt_semantic_form_formats_fieldset_contents_div = this.getScopedElement('bmlt_semantic_form_formats_fieldset_contents_div');
     var bmlt_semantic_form_weekday_header_checkbox_div = this.getScopedElement('bmlt_semantic_form_weekday_header_checkbox_div');
-    var blockModeDiv = this.getScopedElement('block_mode_checkbox_div');
-    var blockModeCheckbox = this.getScopedElement('block_mode_checkbox');
     var bmlt_switcher_coverageAreaMapFieldset = this.getScopedElement('bmlt_semantic_coverage_area_fieldset');
     var coverageAreaMapElement = this.getScopedElement('bmlt_semantic_coverage_area_fieldset_map_div');
 
@@ -2719,17 +2697,6 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
         bmlt_semantic_info_div_shortcode_line.show();
     };
 
-    if ( (switcher_select.value == 'GetLangs') && !((response_type_select == 'json') && (this.version >= 2007005))) {
-        switcher_select.selectedIndex = 0;
-    };
-
-    if ( (inItem != response_type_select) && (switcher_select.value == 'GetNAWSDump') && ((response_type_select != 'csv') || (main_fieldset_select.value != 'DOWNLOAD')) ) {
-        response_type_select.selectedIndex = 0;
-        bmlt_switcher_field_value_div_formats.innerHTML = '';
-        bmlt_switcher_field_value_div_no_selected_formats_blurb.hide();
-        bmlt_semantic_form_meeting_fields_fieldset_contents_div.hide();
-    };
-
     if ( bmlt_switcher_coverageAreaMapFieldset && (switcher_select.value == 'GetCoverageArea') ) {
         bmlt_switcher_coverageAreaMapFieldset.show();
         this.setUpCoverageMap();
@@ -2737,14 +2704,6 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
         if ( bmlt_switcher_coverageAreaMapFieldset ) {
             bmlt_switcher_coverageAreaMapFieldset.hide();
         };
-    };
-
-    if ( (inItem != switcher_select) && (switcher_select.value == 'GetNAWSDump') && ((response_type_select != 'csv') || (main_fieldset_select.value != 'DOWNLOAD')) ) {
-        switcher_select.selectedIndex = 0;
-    } else {
-            if ( (inItem != switcher_select) && (switcher_select.value == 'GetCoverageArea') && (response_type_select != 'csv')&& (response_type_select != 'json') ) {
-                    switcher_select.selectedIndex = 0;
-            };
     };
 
     bmlt_switcher_naws_dump_div.hide();
@@ -2756,7 +2715,6 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     bmlt_semantic_form_used_formats_div.hide();
     bmlt_semantic_form_just_used_formats_checkbox_div.hide();
     bmlt_semantic_form_formats_fieldset_contents_div.hide();
-    blockModeDiv.hide();
 
     if ( (switcher_select.value == 'GetSearchResults') && (main_fieldset_select.value != 'DOWNLOAD') ) {
         bmlt_semantic_form_weekday_header_checkbox_div.show();
@@ -2810,7 +2768,6 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
 
     if ( main_fieldset_select.value == 'DOWNLOAD' ) {
         if ( switcher_select.value == 'GetSearchResults' ) {
-            blockModeDiv.hide();
             bmlt_semantic_form_weekday_header_checkbox_div.hide();
             bmlt_semantic_form_specific_fields_fieldset.show();
             bmlt_semantic_form_sort_fields_fieldset.show();
@@ -2845,7 +2802,6 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
             switcher_type_select_fieldkey_option.disable();
             switcher_type_select_fieldval_option.disable();
             switcher_type_select_naws_option.disable();
-            blockModeDiv.hide();
             bmlt_semantic_form_used_formats_div.hide();
             bmlt_semantic_form_weekday_fieldset.hide();
             bmlt_semantic_form_not_weekday_fieldset.hide();
@@ -2853,7 +2809,6 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
             bmlt_semantic_form_sort_fields_fieldset.hide();
         } else {
             if ( main_fieldset_select.value == 'SHORTCODE_SIMPLE' ) {
-                blockModeDiv.show();
                 bmlt_semantic_form_weekday_header_checkbox_div.show();
                 bmlt_semantic_form_specific_fields_fieldset.hide();
                 bmlt_semantic_form_sort_fields_fieldset.show();
