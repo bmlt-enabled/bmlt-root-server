@@ -12,6 +12,8 @@ use App\Models\Migration;
 
 class DatabaseMigrations
 {
+    private ?bool $_allLegacyMigrationsHaveRun = null;
+
     public function handle(Request $request, Closure $next)
     {
         if ($this->migrationsShouldRun()) {
@@ -19,6 +21,18 @@ class DatabaseMigrations
             try {
                 DB::select("SELECT GET_LOCK('$lockName', 600)");
                 Artisan::call('migrate', ['--force' => true]);
+            } finally {
+                DB::statement("SELECT RELEASE_LOCK('$lockName')");
+            }
+        } else if (!$this->allLegacyMigrationsHaveRun()) {
+            // We need to at least be sure the sessions table exists
+            $lockName = 'bmlt-db-migrations';
+            try {
+                DB::select("SELECT GET_LOCK('$lockName', 600)");
+                Artisan::call('migrate', [
+                    '--path' => '/database/migrations/1900_01_01_000000_create_sessions_table.php',
+                    '--force' => true,
+                ]);
             } finally {
                 DB::statement("SELECT RELEASE_LOCK('$lockName')");
             }
@@ -48,15 +62,22 @@ class DatabaseMigrations
 
     private function allLegacyMigrationsHaveRun(): bool
     {
+        if (!is_null($this->_allLegacyMigrationsHaveRun)) {
+            return $this->_allLegacyMigrationsHaveRun;
+        }
+
         if (!Schema::hasTable('comdef_db_version')) {
+            $this->_allLegacyMigrationsHaveRun = false;
             return false;
         }
 
         $version = LegacyDbVersion::get('version')->first();
         if (!$version || $version->version != 21) {
+            $this->_allLegacyMigrationsHaveRun = false;
             return false;
         }
 
+        $this->_allLegacyMigrationsHaveRun = true;
         return true;
     }
 
