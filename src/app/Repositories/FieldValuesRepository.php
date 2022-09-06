@@ -26,14 +26,34 @@ class FieldValuesRepository implements FieldValuesRepositoryInterface
 
     public function getFieldValues(string $fieldName, array $specificFormats = [], bool $allFormats = false): Collection
     {
-        $fieldValues = [];
-
         if (in_array($fieldName, FieldValuesRepository::$mainFields)) {
             $meetingIdsByValue = Meeting::all()
-                ->mapToGroups(function ($meeting, $key) use ($fieldName) {
+                ->mapToGroups(function ($meeting, $key) use ($fieldName, $specificFormats, $allFormats) {
                     $value = $meeting->{$fieldName};
                     $value = $fieldName == 'worldid_mixed' && $value ? trim($value) : $value;
-                    return [$value => (string)$meeting->id_bigint];
+
+                    if ($fieldName == 'formats' && $specificFormats && $value) {
+                        $meetingFormatIds = explode(',', $value);
+                        $commonFormatIds = array_intersect($meetingFormatIds, $specificFormats);
+                        if (!$commonFormatIds) {
+                            return [null => (string)$meeting->id_bigint];
+                        }
+
+                        if ($allFormats) {
+                            if (array_diff($specificFormats, $commonFormatIds)) {
+                                return [null => (string)$meeting->id_bigint];
+                            }
+                        }
+
+                        sort($commonFormatIds, SORT_NUMERIC);
+
+                        $value = implode(',', $commonFormatIds);
+                    }
+
+                    return [strval($value) => (string)$meeting->id_bigint];
+                })
+                ->reject(function ($meetingIds, $value) use ($fieldName, $specificFormats) {
+                    return $fieldName == 'formats' && $specificFormats && $value == '';
                 });
         } else {
             $meetingIdsByValue = MeetingData::query()
@@ -49,39 +69,7 @@ class FieldValuesRepository implements FieldValuesRepositoryInterface
                 });
         }
 
-        if ($fieldName == 'formats' && $specificFormats) {
-            $newMeetingIdsByValue = [];
-            foreach ($meetingIdsByValue as $value => $meetingIds) {
-                if ($value == 'NULL') {
-                    continue;
-                }
-
-                $formatIds = explode(',', $value);
-                $commonFormatIds = array_intersect($formatIds, $specificFormats);
-                if (!$commonFormatIds) {
-                    continue;
-                }
-
-                if ($allFormats) {
-                    if (array_diff($specificFormats, $commonFormatIds)) {
-                        continue;
-                    }
-                }
-
-                sort($commonFormatIds, SORT_NUMERIC);
-
-                $value = implode(',', $commonFormatIds);
-
-                if (array_key_exists($value, $newMeetingIdsByValue)) {
-                    $existingMeetingIds = $newMeetingIdsByValue[$value];
-                    $newMeetingIdsByValue[$value] = $existingMeetingIds->merge($meetingIds);
-                } else {
-                    $newMeetingIdsByValue[$value] = $meetingIds;
-                }
-            }
-            $meetingIdsByValue = $newMeetingIdsByValue;
-        }
-
+        $fieldValues = [];
         foreach ($meetingIdsByValue as $value => $meetingIds) {
             $value = $value == '' ? 'NULL' : strval($value);
             $meetingIds->sort(SORT_NUMERIC);
