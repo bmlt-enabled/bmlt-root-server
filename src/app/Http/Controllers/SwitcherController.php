@@ -120,7 +120,6 @@ class SwitcherController extends Controller
         }
 
         $validFieldNames = $this->fieldKeysRepository->getFieldKeys();
-
         if (!$validFieldNames->contains('key', $fieldName)) {
             abort(400);
         }
