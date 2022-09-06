@@ -29,62 +29,61 @@ class FieldValuesRepository implements FieldValuesRepositoryInterface
         $fieldValues = [];
 
         if (in_array($fieldName, FieldValuesRepository::$mainFields)) {
-            $meetingIdsByValue = [];
-            $meetings = Meeting::all();
-            foreach ($meetings as $meeting) {
-                $value = $meeting->{$fieldName};
-
-                if ($fieldName == 'worldid_mixed' && $value) {
-                    $value = trim($value);
-                }
-
-                if (array_key_exists($value, $meetingIdsByValue)) {
-                    $meetingIdsByValue[$value][] = $meeting->id_bigint;
-                } else {
-                    $meetingIdsByValue[$value] = [$meeting->id_bigint];
-                }
-            }
-
-            if ($fieldName == 'formats' && $specificFormats) {
-                $newMeetingIdsByValue = [];
-                foreach ($meetingIdsByValue as $value => $meetingIds) {
-                    if ($value == 'NULL') {
-                        continue;
-                    }
-
-                    $formatIds = explode(',', $value);
-                    $commonFormatIds = array_intersect($formatIds, $specificFormats);
-                    if (!$commonFormatIds) {
-                        continue;
-                    }
-
-                    if ($allFormats) {
-                        if (array_diff($specificFormats, $commonFormatIds)) {
-                            continue;
-                        }
-                    }
-
-                    sort($commonFormatIds, SORT_NUMERIC);
-
-                    $value = implode(',', $commonFormatIds);
-
-                    if (array_key_exists($value, $newMeetingIdsByValue)) {
-                        $existingMeetingIds = $newMeetingIdsByValue[$value];
-                        $newMeetingIdsByValue[$value] = array_merge($meetingIds, $existingMeetingIds);
-                    } else {
-                        $newMeetingIdsByValue[$value] = $meetingIds;
-                    }
-                }
-                $meetingIdsByValue = $newMeetingIdsByValue;
-            }
-
-            foreach ($meetingIdsByValue as $value => $meetingIds) {
-                $value = $value == '' ? 'NULL' : strval($value);
-                sort($meetingIds);
-                $fieldValues[] = [$fieldName => $value, 'ids' => implode(',', $meetingIds)];
-            }
+            $meetingIdsByValue = Meeting::all()
+                ->mapToGroups(function ($meeting, $key) use ($fieldName) {
+                    $value = $meeting->{$fieldName};
+                    $value = $fieldName == 'worldid_mixed' && $value ? trim($value) : $value;
+                    return [$value => (string)$meeting->id_bigint];
+                });
         } else {
-            $fieldValues = [];
+            $meetingIdsByValue = MeetingData::query()
+                ->where('key', $fieldName)
+                ->whereNot('meetingid_bigint', 0)
+                ->whereNot('visibility', 1)
+                ->get()
+                ->mapToGroups(function ($meetingData, $key) use ($fieldName) {
+                    $value = $meetingData->data_string;
+                    return [$value => (string)$meetingData->meetingid_bigint];
+                });
+        }
+
+        if ($fieldName == 'formats' && $specificFormats) {
+            $newMeetingIdsByValue = [];
+            foreach ($meetingIdsByValue as $value => $meetingIds) {
+                if ($value == 'NULL') {
+                    continue;
+                }
+
+                $formatIds = explode(',', $value);
+                $commonFormatIds = array_intersect($formatIds, $specificFormats);
+                if (!$commonFormatIds) {
+                    continue;
+                }
+
+                if ($allFormats) {
+                    if (array_diff($specificFormats, $commonFormatIds)) {
+                        continue;
+                    }
+                }
+
+                sort($commonFormatIds, SORT_NUMERIC);
+
+                $value = implode(',', $commonFormatIds);
+
+                if (array_key_exists($value, $newMeetingIdsByValue)) {
+                    $existingMeetingIds = $newMeetingIdsByValue[$value];
+                    $newMeetingIdsByValue[$value] = $existingMeetingIds->merge($meetingIds);
+                } else {
+                    $newMeetingIdsByValue[$value] = $meetingIds;
+                }
+            }
+            $meetingIdsByValue = $newMeetingIdsByValue;
+        }
+
+        foreach ($meetingIdsByValue as $value => $meetingIds) {
+            $value = $value == '' ? 'NULL' : strval($value);
+            $meetingIds->sort(SORT_NUMERIC);
+            $fieldValues[] = [$fieldName => $value, 'ids' => $meetingIds->join(',')];
         }
 
         return collect($fieldValues);
