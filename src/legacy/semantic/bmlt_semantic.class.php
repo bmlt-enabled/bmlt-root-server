@@ -566,8 +566,6 @@ class bmlt_semantic
         $ret .= defined('DEBUG') ? "\n" : '';
         $ret .= '</div>';
         $ret .= defined('DEBUG') ? "\n" : '';
-
-        $ret .= $this->get_wizard_page_direct_url_html();
         $ret .= $this->get_wizard_page_switcher_fieldset_html();
 
         $ret .= '</fieldset>';
@@ -601,52 +599,6 @@ class bmlt_semantic
         return $ret;
     }
 
-    /**************************************************************/
-    /** \brief
-
-        \returns the HTML.
-    */
-    /**************************************************************/
-    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function get_wizard_page_direct_url_html()
-    {
-        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-        $ret = '<div id="bmlt_semantic_form_direct_url_div'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_direct_url_div">';
-        $ret .= defined('DEBUG') ? "\n" : '';
-        $ret .= $this->get_wizard_page_response_type_select_html();
-        $ret .= '</div>';
-        $ret .= defined('DEBUG') ? "\n" : '';
-
-        return $ret;
-    }
-
-    /**************************************************************/
-    /** \brief
-
-        \returns the HTML.
-    */
-    /**************************************************************/
-    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function get_wizard_page_response_type_select_html()
-    {
-        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-        $ret = '<label id="bmlt_semantic_form_response_type_select_label'.htmlspecialchars($this->_myJSName).'" for="bmlt_semantic_form_response_type_select'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_response_type_select_label">'.$this->localize_string('response_type_selector_prompt').'</label>';
-        $ret .= '<select id="bmlt_semantic_form_response_type_select'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_response_type_select">';
-        $ret .= defined('DEBUG') ? "\n" : '';
-        $ret .= '<option value="csv" selected="selected">'.$this->localize_string('response_type_selector_type_csv').'</option>';
-        $ret .= '<option value="xml">'.$this->localize_string('response_type_selector_type_xml').'</option>';
-        $ret .= '<option value="json">'.$this->localize_string('response_type_selector_type_json').'</option>';
-        $ret .= '<option id="bmlt_semantic_form_response_type_select_kml_option'.htmlspecialchars($this->_myJSName).'" value="kml">'.$this->localize_string('response_type_selector_type_kml').'</option>';
-        $ret .= '<option id="bmlt_semantic_form_response_type_select_gpx_option'.htmlspecialchars($this->_myJSName).'" value="gpx">'.$this->localize_string('response_type_selector_type_gpx').'</option>';
-        $ret .= '<option id="bmlt_semantic_form_response_type_select_poi_option'.htmlspecialchars($this->_myJSName).'" value="poi">'.$this->localize_string('response_type_selector_type_poi').'</option>';
-        $ret .= '<option value="simple-block">'.$this->localize_string('response_type_selector_type_simple_block').'</option>';
-        $ret .= '<option value="simple">'.$this->localize_string('response_type_selector_type_simple_table').'</option>';
-        $ret .= defined('DEBUG') ? "\n" : '';
-        $ret .= '</select>';
-        $ret .= defined('DEBUG') ? "\n" : '';
-
-        return $ret;
-    }
 
     /**************************************************************/
     /** \brief  Outputs the HTML for the wizard page switcher fieldset.
@@ -677,7 +629,6 @@ class bmlt_semantic
         $ret .= $this->get_wizard_page_meeting_search_html();
         $ret .= $this->get_wizard_page_changes_html();
         $ret .= $this->get_wizard_page_fields_html();
-        $ret .= $this->get_wizard_page_schema_select_html();
         $ret .= $this->get_wizard_page_formats_html();
         $ret .= $this->get_wizard_page_coverage_area_html();
         $ret .= '</fieldset>';
@@ -1366,57 +1317,6 @@ class bmlt_semantic
     */
     /**************************************************************/
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function get_wizard_page_schema_select_html()
-    {
-        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-        $ret = '<fieldset id="bmlt_semantic_form_schema_select_fieldset'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_schema_select_fieldset" style="display:none"><legend id="bmlt_semantic_form_schema_select_fieldset_legend'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_schema_select_fieldset_legend">';
-        $ret .= $this->localize_string('schema_type_selector_legend');
-        $ret .= '</legend>';
-        $ret .= defined('DEBUG') ? "\n" : '';
-        $ret .= '<div id="bmlt_semantic_form_schema_select_blurb_div'.htmlspecialchars($this->_myJSName).'" class="bmlt_workshop_blurb_note_div">';
-        $ret .= defined('DEBUG') ? "\n" : '';
-        $ret .= '<p>'.$this->_localization['schema_type_selector_blurb1'].'</p>';
-        $ret .= '<p>'.$this->localize_string('schema_type_selector_blurb2').'</p>';
-        $ret .= defined('DEBUG') ? "\n" : '';
-        $ret .= '</div>';
-        $ret .= defined('DEBUG') ? "\n" : '';
-        $ret .= '<label id="bmlt_semantic_form_schema_select_label'.htmlspecialchars($this->_myJSName).'" for="bmlt_semantic_form_schema_select'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_schema_select_label">'.$this->localize_string('schema_type_selector_label').'</label>';
-        $ret .= defined('DEBUG') ? "\n" : '';
-        $function_string = 'bmlt_semantic_js_object'.htmlspecialchars($this->_myJSName).'.refreshURI()';
-        $ret .= '<select id="bmlt_semantic_form_schema_select'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_schema_select" onchange="'.$function_string.'">';
-        $ret .= defined('DEBUG') ? "\n" : '';
-        $ret .= '<option value="GetSearchResults" selected="selected">'.$this->localize_string('schema_type_selector_results').'</option>';
-        $ret .= '<option value="GetMeetingLocationInfo">'.$this->localize_string('schema_type_selector_location_info').'</option>';
-        $ret .= '<option value="GetFieldKeys">'.$this->localize_string('schema_type_selector_field_keys').'</option>';
-        $ret .= '<option value="GetFieldValues">'.$this->localize_string('schema_type_selector_field_values').'</option>';
-        $ret .= '<option value="AdminPermissions">'.$this->localize_string('schema_type_selector_admin_permissions').'</option>';
-        $ret .= '<option value="ChangeResponse">'.$this->localize_string('schema_type_selector_change_response').'</option>';
-        $ret .= '<option value="DeletedMeeting">'.$this->localize_string('schema_type_selector_deleted_meeting').'</option>';
-        $ret .= '<option value="FieldTemplates">'.$this->localize_string('schema_type_selector_field_templates').'</option>';
-        $ret .= '<option value="GetChanges">'.$this->localize_string('schema_type_selector_changes').'</option>';
-        $ret .= '<option value="GetFormats">'.$this->localize_string('schema_type_selector_formats').'</option>';
-        $ret .= '<option value="GetLangs">'.$this->localize_string('schema_type_selector_langs').'</option>';
-        $ret .= '<option value="GetServiceBodies">'.$this->localize_string('schema_type_selector_service_bodies').'</option>';
-        $ret .= '<option value="HierServiceBodies">'.$this->localize_string('schema_type_selector_hier_service_bodies').'</option>';
-        $ret .= '<option value="ServerInfo">'.$this->localize_string('schema_type_selector_hier_server_info').'</option>';
-        $ret .= '<option value="GetCoverageArea">'.$this->localize_string('schema_type_selector_coverage_area').'</option>';
-        $ret .= '<option value="UserInfo">'.$this->localize_string('schema_type_selector_get_user_info').'</option>';
-        $ret .= defined('DEBUG') ? "\n" : '';
-        $ret .= '</select>';
-        $ret .= defined('DEBUG') ? "\n" : '';
-        $ret .= '</fieldset>';
-        $ret .= defined('DEBUG') ? "\n" : '';
-
-        return $ret;
-    }
-
-    /**************************************************************/
-    /** \brief
-
-        \returns the HTML.
-    */
-    /**************************************************************/
-    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     public function get_wizard_page_switcher_type_select_html()
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -1424,15 +1324,14 @@ class bmlt_semantic
         $ret .= defined('DEBUG') ? "\n" : '';
         $ret .= '<select id="bmlt_semantic_form_switcher_type_select'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_switcher_type_select">';
         $ret .= defined('DEBUG') ? "\n" : '';
-        $ret .= '<option value="GetSearchResults" selected="selected">'.$this->localize_string('switcher_type_selector_results').'</option>';
+        $ret .= '<option id="bmlt_semantic_form_switcher_type_select_search_option" value="GetSearchResults" selected="selected">'.$this->localize_string('switcher_type_selector_results').'</option>';
         $ret .= '<option id="bmlt_semantic_form_switcher_type_select_formats_option'.htmlspecialchars($this->_myJSName).'" value="GetFormats">'.$this->localize_string('switcher_type_selector_formats').'</option>';
         $ret .= '<option id="bmlt_semantic_form_switcher_type_select_sb_option'.htmlspecialchars($this->_myJSName).'" value="GetServiceBodies">'.$this->localize_string('switcher_type_selector_sb').'</option>';
         $ret .= '<option id="bmlt_semantic_form_switcher_type_select_changes_option'.htmlspecialchars($this->_myJSName).'" value="GetChanges">'.$this->localize_string('switcher_type_selector_changes').'</option>';
         $ret .= '<option id="bmlt_semantic_form_switcher_type_select_fieldkey_option'.htmlspecialchars($this->_myJSName).'" value="GetFieldKeys">'.$this->localize_string('switcher_type_selector_field_keys').'</option>';
         $ret .= '<option id="bmlt_semantic_form_switcher_type_select_fieldval_option'.htmlspecialchars($this->_myJSName).'" value="GetFieldValues">'.$this->localize_string('switcher_type_selector_field_values').'</option>';
         $ret .= '<option id="bmlt_semantic_form_switcher_type_select_naws_option'.htmlspecialchars($this->_myJSName).'" value="GetNAWSDump">'.$this->localize_string('switcher_type_selector_naws').'</option>';
-        $ret .= '<option id="bmlt_semantic_form_switcher_type_select_schema_option'.htmlspecialchars($this->_myJSName).'" disabled="disabled" value="XMLSchema">'.$this->localize_string('switcher_type_selector_schema').'</option>';
-        $ret .= '<option id="bmlt_semantic_form_switcher_type_select_server_langs_option'.htmlspecialchars($this->_myJSName).'" disabled="disabled" value="GetLangs">'.$this->localize_string('switcher_type_selector_server_langs').'</option>';
+        $ret .= '<option id="bmlt_semantic_form_switcher_type_select_server_langs_option'.htmlspecialchars($this->_myJSName).'" value="GetLangs">'.$this->localize_string('switcher_type_selector_server_langs').'</option>';
 
         $this->get_server_version();
         $version = $this->_version;
