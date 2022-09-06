@@ -240,6 +240,7 @@ class bmlt_semantic
             $error = null;
 
             $uri = $this->_bmltRootServerURI.'/client_interface/serverInfo.xml';
+            // TODO: Get server version some other way
             $xml = self::call_curl($uri, $error);
 
             if (!$error && $xml) {
