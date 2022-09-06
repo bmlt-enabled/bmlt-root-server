@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Meeting;
+use App\Models\MeetingData;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -17,6 +18,27 @@ class GetFieldValuesTest extends TestCase
             [$fieldName => $fieldValue],
         );
         return Meeting::create($fields);
+    }
+
+    private function createMeetingWithData($fieldName, $fieldValue)
+    {
+        $field = MeetingData::query()
+            ->where('key', $fieldName)
+            ->where('meetingid_bigint', 0)
+            ->first();
+
+        $meeting = Meeting::create(['service_body_bigint' => 1]);
+
+        MeetingData::create([
+            'meetingid_bigint' => $meeting->id_bigint,
+            'key' => $field->key,
+            'field_prompt' => $field->field_prompt,
+            'lang_enum' => 'en',
+            'data_string' => $fieldValue,
+            'visibility' => 0,
+        ]);
+
+        return $meeting;
     }
 
     public function testXml()
@@ -190,5 +212,36 @@ class GetFieldValuesTest extends TestCase
             ->assertExactJson([
                 ['formats' => '2,3', 'ids' => implode(',', [$meeting2->id_bigint, $meeting3->id_bigint])],
             ]);
+    }
+
+    public function testAllMeetingDataFields()
+    {
+        $fieldNames = [
+            'meeting_name', 'location_text', 'location_info', 'location_street', 'location_city_subsection',
+            'location_neighborhood', 'location_municipality', 'location_sub_province', 'location_province',
+            'location_postal_code_1', 'location_nation', 'comments', 'train_lines', 'bus_lines',
+            'phone_meeting_number', 'virtual_meeting_link', 'virtual_meeting_additional_info',
+        ];
+
+        foreach ($fieldNames as $fieldName) {
+            try {
+                $meeting1 = $this->createMeetingWithData($fieldName, null);
+                $meeting2 = $this->createMeetingWithData($fieldName, 'test');
+                $meeting3 = $this->createMeetingWithData($fieldName, 'test');
+                $meeting4 = $this->createMeetingWithData($fieldName, 'test2');
+                $this->get("/client_interface/json/?switcher=GetFieldValues&meeting_key=$fieldName")
+                    ->assertStatus(200)
+                    ->assertExactJson([
+                        [$fieldName => 'NULL', 'ids' => strval($meeting1->id_bigint)],
+                        [$fieldName => 'test', 'ids' => implode(',', [$meeting2->id_bigint, $meeting3->id_bigint])],
+                        [$fieldName => 'test2', 'ids' => strval($meeting4->id_bigint)]
+                    ]);
+            } finally {
+                Meeting::query()->delete();
+                MeetingData::query()
+                    ->whereNot('meetingid_bigint', 0)
+                    ->delete();
+            }
+        }
     }
 }
