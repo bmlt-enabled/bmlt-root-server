@@ -556,16 +556,6 @@ class bmlt_semantic
         $ret .= $this->get_wizard_page_main_select_html();
         $ret .= '</legend>';
         $ret .= defined('DEBUG') ? "\n" : '';
-        $ret .= '<div class="block_mode_checkbox_div" id="block_mode_checkbox_div'.htmlspecialchars($this->_myJSName).'" style="display:none">';
-        $ret .= defined('DEBUG') ? "\n" : '';
-        $function_string = 'bmlt_semantic_js_object'.htmlspecialchars($this->_myJSName).'.handleBlockCheckboxChange(this)';
-        $ret .= defined('DEBUG') ? "\n" : '';
-        $ret .= '<input type="checkbox" id="block_mode_checkbox'.htmlspecialchars($this->_myJSName).'" class="block_mode_checkbox" onchange="'.$function_string.'" />';
-        $ret .= defined('DEBUG') ? "\n" : '';
-        $ret .= '<label for="block_mode_checkbox'.htmlspecialchars($this->_myJSName).'">'.$this->localize_string('block_mode_checkbox_label').'</label>';
-        $ret .= defined('DEBUG') ? "\n" : '';
-        $ret .= '</div>';
-        $ret .= defined('DEBUG') ? "\n" : '';
         $ret .= $this->get_wizard_page_switcher_fieldset_html();
 
         $ret .= '</fieldset>';
