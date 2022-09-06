@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use App\Interfaces\FieldKeysRepositoryInterface;
@@ -30,7 +31,9 @@ class FieldKeysRepository implements FieldKeysRepositoryInterface
         $fields = MeetingData::query()
             ->where('meetingid_bigint', 0)
             ->where('lang_enum', $langEnum)
-            ->whereNot('visibility', 1)
+            ->where(function (Builder $query) {
+                $query->where('visibility', null)->orWhereNot('visibility', 1);
+            })
             ->get();
 
         foreach ($fields as $field) {
@@ -46,7 +49,9 @@ class FieldKeysRepository implements FieldKeysRepositoryInterface
             $fields = MeetingData::query()
                 ->where('meetingid_bigint', 0)
                 ->where('lang_enum', 'en')
-                ->whereNot('visibility', 1)
+                ->where(function ($query) {
+                    $query->where('visibility', null)->orWhereNot('visibility', 1);
+                })
                 ->get();
 
             foreach ($fields as $field) {
