@@ -23,9 +23,7 @@ $http_vars = array_merge($_GET, $_POST);
 $lang_enum = '';
 
 // We use a cookie to store the language pref.
-if (isset($_COOKIE) && isset($_COOKIE[_LANG_COOKIE_NAME]) && $_COOKIE[_LANG_COOKIE_NAME]) {
-    $lang_enum = $_COOKIE[_LANG_COOKIE_NAME];
-}
+$lang_enum = request()->cookie(_LANG_COOKIE_NAME, $lang_enum);
 
 if (isset($http_vars['lang_enum']) && $http_vars['lang_enum']) {
     $lang_enum = $http_vars['lang_enum'];
@@ -38,8 +36,7 @@ $file_loc = dirname(__FILE__).'/install_wizard/index.php';
 require_once($file_loc);  // We test for the install wizard, first.
 
 if (isset($g_enable_language_selector) && $g_enable_language_selector) {
-    $expires = time() + (60 * 60 * 24 * 365);   // Expire in one year.
-    setcookie(_LANG_COOKIE_NAME, $lang_enum, $expires, '/');
+    cookie()->queue(_LANG_COOKIE_NAME, $lang_enum, 60 * 24 * 365);
 }
 
 if (isset($http_vars ['bmlt_ajax_callback'])) {
@@ -56,7 +53,7 @@ if (isset($http_vars ['bmlt_ajax_callback'])) {
     <?php
             require_once(dirname(dirname(__FILE__)).'/server/shared/classes/comdef_utilityclasses.inc.php');
             $config_file_path = dirname(dirname(__FILE__)).'/server/config/get-config.php';
-            
+
     if (file_exists($config_file_path)) {
         include($config_file_path);
     }
@@ -64,7 +61,7 @@ if (isset($http_vars ['bmlt_ajax_callback'])) {
             $url_path = GetURLToMainServerDirectory();
             $shortcut_icon = $url_path."local_server/server_admin/style/images/shortcut.png";
             $stylesheet = $url_path."local_server/server_admin/style/styles.css?v=" . time();
-            
+
             require_once(dirname(dirname(__FILE__)).'/server/c_comdef_server.class.php');
             require_once(dirname(__FILE__).'/db_connect.php');
 
@@ -83,7 +80,7 @@ if (isset($http_vars ['bmlt_ajax_callback'])) {
     if ($server instanceof c_comdef_server) {
         // This throws up a tackle if someone wants to just barge in.
         require_once(dirname(__FILE__).'/server_admin/c_comdef_login.php');
-        
+
         // We can only go past here is we are a logged-in user.
         $user_obj = $server->GetCurrentUserObj();
         if (($user_obj instanceof c_comdef_user) && ($user_obj->GetUserLevel() != _USER_LEVEL_DISABLED)) {
