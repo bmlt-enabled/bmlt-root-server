@@ -39,7 +39,9 @@ class FieldValuesRepository implements FieldValuesRepositoryInterface
             $meetingIdsByValue = MeetingData::query()
                 ->where('key', $fieldName)
                 ->whereNot('meetingid_bigint', 0)
-                ->whereNot('visibility', 1)
+                ->where(function ($query) {
+                    $query->where('visibility', null)->orWhereNot('visibility', 1);
+                })
                 ->get()
                 ->mapToGroups(function ($meetingData, $key) use ($fieldName) {
                     $value = $meetingData->data_string;
