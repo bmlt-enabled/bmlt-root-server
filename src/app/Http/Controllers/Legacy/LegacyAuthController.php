@@ -41,7 +41,7 @@ class LegacyAuthController extends Controller
         if ($apiType == $this->REQUEST_TYPE_ADMIN_XML) {
             return response('OK');
         } elseif ($apiType == $this->REQUEST_TYPE_ADMIN_JSON) {
-            return response();
+            return response('');
         } else {
             $redirectUrl = $request->input('attemptedurl', '/');
             if (str_contains($redirectUrl, 'bad_login_form')) {
