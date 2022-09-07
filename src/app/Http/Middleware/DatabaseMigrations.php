@@ -22,6 +22,7 @@ class DatabaseMigrations
                 DB::statement("SELECT RELEASE_LOCK('$lockName')");
             }
         }
+
         return $next($request);
     }
 
