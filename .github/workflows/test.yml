@@ -1,5 +1,7 @@
 name: test
-on: [push]
+on:
+  push:
+    branches-ignore: ['3.0.0']
 
 jobs:
   test:
