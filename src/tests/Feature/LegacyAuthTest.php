@@ -4,9 +4,9 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\LegacyTestCase;
+use Tests\TestCase;
 
-class LegacyAuthTest extends LegacyTestCase
+class LegacyAuthTest extends TestCase
 {
     use RefreshDatabase;
 
