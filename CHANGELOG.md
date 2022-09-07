@@ -6,6 +6,12 @@
     * `GetFormats`
     * `GetFieldKeys`
     * `GetFieldValues`
+  * The following plugins require minimum versions to work.
+
+      | Root Server Version | 3.0.0          |
+      |:--------------------|:--------------:|
+      | WordPress Satellite | \>= 3.11.0     |
+      | BMLT Portal         | \>= 1.0.0      |
 
 ## 2.16.6 (August 27, 2022)
 * Fixed an issue with saving meetings when using PHP 8.x.
