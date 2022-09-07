@@ -8,26 +8,22 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Resources\FormatResource;
 use App\Http\Resources\ServiceBodyResource;
 use App\Http\Controllers\Legacy\LegacyController;
-use App\Interfaces\FieldKeysRepositoryInterface;
-use App\Interfaces\FieldValuesRepositoryInterface;
 use App\Interfaces\FormatRepositoryInterface;
+use App\Interfaces\MeetingRepositoryInterface;
 use App\Interfaces\ServiceBodyRepositoryInterface;
 
 class SwitcherController extends Controller
 {
-    private FieldKeysRepositoryInterface $fieldKeysRepository;
-    private FieldValuesRepositoryInterface $fieldValuesRepository;
+    private MeetingRepositoryInterface $meetingRepository;
     private FormatRepositoryInterface $formatRepository;
     private ServiceBodyRepositoryInterface $serviceBodyRepository;
 
     public function __construct(
-        FieldKeysRepositoryInterface $fieldKeysRepository,
-        FieldValuesRepositoryInterface $fieldValuesRepository,
+        MeetingRepositoryInterface $meetingRepository,
         FormatRepositoryInterface $formatRepository,
         ServiceBodyRepositoryInterface $serviceBodyRepository
     ) {
-        $this->fieldKeysRepository = $fieldKeysRepository;
-        $this->fieldValuesRepository = $fieldValuesRepository;
+        $this->meetingRepository = $meetingRepository;
         $this->formatRepository = $formatRepository;
         $this->serviceBodyRepository = $serviceBodyRepository;
     }
@@ -109,7 +105,7 @@ class SwitcherController extends Controller
 
     private function getFieldKeys($request): Collection
     {
-        return $this->fieldKeysRepository->getFieldKeys();
+        return $this->meetingRepository->getFieldKeys();
     }
 
     private function getFieldValues($request): Collection
@@ -119,7 +115,7 @@ class SwitcherController extends Controller
             abort(400);
         }
 
-        $validFieldNames = $this->fieldKeysRepository->getFieldKeys();
+        $validFieldNames = $this->meetingRepository->getFieldKeys();
         if (!$validFieldNames->contains('key', $fieldName)) {
             abort(400);
         }
@@ -128,6 +124,6 @@ class SwitcherController extends Controller
         $specificFormats = $specificFormats ? explode(',', trim($specificFormats)) : [];
         $allFormats = (bool)$request->input('all_formats');
 
-        return $this->fieldValuesRepository->getFieldValues($fieldName, $specificFormats, $allFormats);
+        return $this->meetingRepository->getFieldValues($fieldName, $specificFormats, $allFormats);
     }
 }
