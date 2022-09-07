@@ -44,6 +44,7 @@ jobs:
 
   build:
     runs-on: ubuntu-22.04
+    concurrency: build
     needs: [test]
     permissions:
       id-token: write
