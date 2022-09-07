@@ -21,6 +21,7 @@ Route::get('/client_interface/{dataFormat}', [SwitcherController::class, 'get'])
 Route::any('/local_server/server_admin/{dataFormat}.php', [LegacyAuthController::class, 'handle'])
     ->where('dataFormat', 'json|xml');
 Route::any('/', [LegacyAuthController::class, 'handle']);
+Route::any('/index.php', [LegacyAuthController::class, 'handle']);
 
 // Catch-all to send everything else to legacy code
 Route::any('{all}', [LegacyController::class, 'all'])
