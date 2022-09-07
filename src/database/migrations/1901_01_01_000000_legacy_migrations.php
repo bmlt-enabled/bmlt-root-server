@@ -557,6 +557,8 @@ return new class extends Migration
             }
         } catch (PDOException $exception) {
             throw new Exception(__METHOD__ . '() ' . $exception->getMessage());
+        } finally {
+            $pdo->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);
         }
     }
 
@@ -572,6 +574,8 @@ return new class extends Migration
             return $stmt->execute($params);
         } catch (PDOException $exception) {
             throw new Exception(__METHOD__ . '() ' . $exception->getMessage());
+        } finally {
+            $pdo->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);
         }
     }
 };
