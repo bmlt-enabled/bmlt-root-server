@@ -127,18 +127,7 @@ function GetServerInfo()
 {
     $ret = null;
 
-    if (file_exists(dirname(dirname(dirname(__FILE__))).'/client_interface/serverInfo.xml')) {
-        $info_file = new DOMDocument;
-        if ($info_file instanceof DOMDocument) {
-            if (@$info_file->load(dirname(dirname(dirname(__FILE__))).'/client_interface/serverInfo.xml')) {
-                $has_info = $info_file->getElementsByTagName("bmltInfo");
-
-                if (($has_info instanceof domnodelist) && $has_info->length) {
-                    $ret['version'] = $has_info->item(0)->nodeValue;
-                }
-            }
-        }
-    }
+    $ret['version'] = config()->get('app.version');
 
     $config_file_path = dirname(dirname(dirname(__FILE__))).'/server/config/get-config.php';
 

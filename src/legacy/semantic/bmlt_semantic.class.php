@@ -224,39 +224,18 @@ class bmlt_semantic
     public function get_server_version()
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-        $ret = array();
 
-        if ($this->_bmltRootServerURI) {
-            $error = null;
+        $ret = explode('.', config()->get('app.version'));
 
-            $uri = $this->_bmltRootServerURI.'/client_interface/serverInfo.xml';
-            // TODO: Get server version some other way
-            $xml = self::call_curl($uri, $error);
-
-            if (!$error && $xml) {
-                $info_file = new DOMDocument;
-                if ($info_file instanceof DOMDocument) {
-                    if (@$info_file->loadXML($xml)) {
-                        $has_info = $info_file->getElementsByTagName("bmltInfo");
-
-                        if (($has_info instanceof domnodelist) && $has_info->length) {
-                            $nodeVal = $has_info->item(0)->nodeValue;
-                            $ret = explode('.', $nodeVal);
-
-                            if (!isset($ret[1])) {
-                                $ret[1] = 0;
-                            }
-
-                            if (!isset($ret[2])) {
-                                $ret[2] = 0;
-                            }
-
-                            $this->_version = (intval($ret[0]) * 1000000) + (intval($ret[1]) * 1000) + intval($ret[2]);
-                        }
-                    }
-                }
-            }
+        if (!isset($ret[1])) {
+            $ret[1] = 0;
         }
+
+        if (!isset($ret[2])) {
+            $ret[2] = 0;
+        }
+
+        $this->_version = (intval($ret[0]) * 1000000) + (intval($ret[1]) * 1000) + intval($ret[2]);
 
         return $ret;
     }
