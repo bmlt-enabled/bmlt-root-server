@@ -113,7 +113,7 @@ jobs:
       - name: Download Task Definition
         run: |
           echo $IMAGE_NAME
-          aws ecs describe-task-definition --task-definition bmlt-unstable --query taskDefinition | jq -r 'del(
+          aws ecs describe-task-definition --task-definition bmlt-latest --query taskDefinition | jq -r 'del(
             .taskDefinitionArn,
             .requiresAttributes,
             .compatibilities,
@@ -135,7 +135,7 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: bmlt-unstable
+          service: bmlt-latest
           cluster: bmlt
           wait-for-service-stability: true
           wait-for-minutes: 5
