@@ -1,7 +1,7 @@
 name: main
 on:
   push:
-    branches: ['main']
+    branches: ['3.0.0', 'pj/ci-release']
 
 jobs:
   test:
@@ -139,3 +139,17 @@ jobs:
           cluster: bmlt
           wait-for-service-stability: true
           wait-for-minutes: 5
+
+      - name: Generate Release Notes
+        if: github.ref_type == 'tag'
+        run: |
+          curl -LO https://raw.githubusercontent.com/bmlt-enabled/release-notes-tool/master/gh-release-notes.sh
+          chmod +x gh-release-notes.sh
+          ./gh-release-notes.sh CHANGELOG.md "##"
+
+      - name: Create Beta Release
+        uses: ncipollo/release-action@v1
+        if: github.ref_type == 'tag' && contains(github.ref_name, 'beta')
+        with:
+          artifacts: "build/bmlt-root-server.zip"
+          bodyFile: "changelog.txt"
