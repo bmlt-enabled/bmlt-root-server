@@ -112,13 +112,15 @@ class LegacyAuthTest extends LegacyTestCase
             'OK',
             $this->post('/local_server/server_admin/xml.php', $data)
                 ->assertStatus(200)
+                ->assertHeader('Content-Type', 'text/html; charset=UTF-8')
                 ->assertSessionHas('login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d', $user->id_bigint)
                 ->content()
         );
         $this->assertEquals(
             'OK',
-            $this->get("/local_server/server_admin/xml.php?admin_action=login&c_comdef_admin_login=$user->login_string&c_comdef_admin_password=$this->goodPassword", $data)
+            $this->get("/local_server/server_admin/xml.php?admin_action=login&c_comdef_admin_login=$user->login_string&c_comdef_admin_password=$this->goodPassword")
                 ->assertStatus(200)
+                ->assertHeader('Content-Type', 'text/html; charset=UTF-8')
                 ->assertSessionHas('login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d', $user->id_bigint)
                 ->content()
         );
@@ -136,13 +138,15 @@ class LegacyAuthTest extends LegacyTestCase
             '<h1>NOT AUTHORIZED</h1>',
             $this->post('/local_server/server_admin/xml.php', $data)
                 ->assertStatus(200)
+                ->assertHeader('Content-Type', 'text/html; charset=UTF-8')
                 ->assertSessionMissing('login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d')
                 ->content()
         );
         $this->assertEquals(
             '<h1>NOT AUTHORIZED</h1>',
-            $this->get("/local_server/server_admin/xml.php?admin_action=login&c_comdef_admin_login=$user->login_string&c_comdef_admin_password=$this->badPassword", $data)
+            $this->get("/local_server/server_admin/xml.php?admin_action=login&c_comdef_admin_login=$user->login_string&c_comdef_admin_password=$this->badPassword")
                 ->assertStatus(200)
+                ->assertHeader('Content-Type', 'text/html; charset=UTF-8')
                 ->assertSessionMissing('login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d')
                 ->content()
         );
@@ -160,13 +164,15 @@ class LegacyAuthTest extends LegacyTestCase
             '<h1>NOT AUTHORIZED</h1>',
             $this->post('/local_server/server_admin/xml.php', $data)
                 ->assertStatus(200)
+                ->assertHeader('Content-Type', 'text/html; charset=UTF-8')
                 ->assertSessionMissing('login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d')
                 ->content()
         );
         $this->assertEquals(
             '<h1>NOT AUTHORIZED</h1>',
-            $this->get("/local_server/server_admin/xml.php?admin_action=login&c_comdef_admin_login=$user->login_string&c_comdef_admin_password=$this->badPassword", $data)
+            $this->get("/local_server/server_admin/xml.php?admin_action=login&c_comdef_admin_login=$user->login_string&c_comdef_admin_password=$this->badPassword")
                 ->assertStatus(200)
+                ->assertHeader('Content-Type', 'text/html; charset=UTF-8')
                 ->assertSessionMissing('login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d')
                 ->content()
         );
@@ -183,6 +189,7 @@ class LegacyAuthTest extends LegacyTestCase
                 ])
                 ->post('/local_server/server_admin/xml.php', ['admin_action' => 'logout'])
                 ->assertStatus(200)
+                ->assertHeader('Content-Type', 'text/html; charset=UTF-8')
                 ->assertSessionMissing('login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d')
                 ->content()
         );
@@ -194,6 +201,7 @@ class LegacyAuthTest extends LegacyTestCase
                 ])
                 ->get('/local_server/server_admin/xml.php?admin_action=logout')
                 ->assertStatus(200)
+                ->assertHeader('Content-Type', 'text/html; charset=UTF-8')
                 ->assertSessionMissing('login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d')
                 ->content()
         );
@@ -211,13 +219,15 @@ class LegacyAuthTest extends LegacyTestCase
             'OK',
             $this->post('/local_server/server_admin/json.php', $data)
                 ->assertStatus(200)
+                ->assertHeader('Content-Type', 'text/html; charset=UTF-8')
                 ->assertSessionHas('login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d', $user->id_bigint)
                 ->content()
         );
         $this->assertEquals(
             'OK',
-            $this->get("/local_server/server_admin/json.php?admin_action=login&c_comdef_admin_login=$user->login_string&c_comdef_admin_password=$this->goodPassword", $data)
+            $this->get("/local_server/server_admin/json.php?admin_action=login&c_comdef_admin_login=$user->login_string&c_comdef_admin_password=$this->goodPassword")
                 ->assertStatus(200)
+                ->assertHeader('Content-Type', 'text/html; charset=UTF-8')
                 ->assertSessionHas('login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d', $user->id_bigint)
                 ->content()
         );
@@ -235,13 +245,15 @@ class LegacyAuthTest extends LegacyTestCase
             'NOT AUTHORIZED',
             $this->post('/local_server/server_admin/json.php', $data)
                 ->assertStatus(200)
+                ->assertHeader('Content-Type', 'text/html; charset=UTF-8')
                 ->assertSessionMissing('login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d')
                 ->content()
         );
         $this->assertEquals(
             'NOT AUTHORIZED',
-            $this->get("/local_server/server_admin/json.php?admin_action=login&c_comdef_admin_login=$user->login_string&c_comdef_admin_password=$this->badPassword", $data)
+            $this->get("/local_server/server_admin/json.php?admin_action=login&c_comdef_admin_login=$user->login_string&c_comdef_admin_password=$this->badPassword")
                 ->assertStatus(200)
+                ->assertHeader('Content-Type', 'text/html; charset=UTF-8')
                 ->assertSessionMissing('login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d')
                 ->content()
         );
@@ -259,13 +271,15 @@ class LegacyAuthTest extends LegacyTestCase
             'NOT AUTHORIZED',
             $this->post('/local_server/server_admin/json.php', $data)
                 ->assertStatus(200)
+                ->assertHeader('Content-Type', 'text/html; charset=UTF-8')
                 ->assertSessionMissing('login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d')
                 ->content()
         );
         $this->assertEquals(
             'NOT AUTHORIZED',
-            $this->get("/local_server/server_admin/json.php?admin_action=login&c_comdef_admin_login=$user->login_string&c_comdef_admin_password=$this->badPassword", $data)
+            $this->get("/local_server/server_admin/json.php?admin_action=login&c_comdef_admin_login=$user->login_string&c_comdef_admin_password=$this->badPassword")
                 ->assertStatus(200)
+                ->assertHeader('Content-Type', 'text/html; charset=UTF-8')
                 ->assertSessionMissing('login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d')
                 ->content()
         );
@@ -282,6 +296,7 @@ class LegacyAuthTest extends LegacyTestCase
                 ])
                 ->post('/local_server/server_admin/json.php', ['admin_action' => 'logout'])
                 ->assertStatus(200)
+                ->assertHeader('Content-Type', 'text/html; charset=UTF-8')
                 ->assertSessionMissing('login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d')
                 ->content()
         );
@@ -293,6 +308,7 @@ class LegacyAuthTest extends LegacyTestCase
                 ])
                 ->get('/local_server/server_admin/json.php?admin_action=logout')
                 ->assertStatus(200)
+                ->assertHeader('Content-Type', 'text/html; charset=UTF-8')
                 ->assertSessionMissing('login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d')
                 ->content()
         );
