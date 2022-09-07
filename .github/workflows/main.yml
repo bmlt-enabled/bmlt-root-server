@@ -108,7 +108,7 @@ jobs:
       - name: Save Image Name
         run: |
           SHORT_SHA=$(git rev-parse --short=8 HEAD)
-          echo "IMAGE_NAME=public.ecr.aws/bmlt/bmlt-root-server:3.0.0-${SHORT_SHA}" >> $GITHUB_ENV
+          echo "IMAGE_NAME=public.ecr.aws/bmlt/bmlt-root-server:$(cat src/config/app.php | grep "'version'" | cut -d"'" -f4)-${SHORT_SHA}" >> $GITHUB_ENV
 
       - name: Download Task Definition
         run: |
