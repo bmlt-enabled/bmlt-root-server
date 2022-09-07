@@ -80,19 +80,7 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
     &&  isset($http_vars['admin_login'])     && $http_vars['admin_login']
     &&  isset($http_vars['admin_password'])  && $http_vars['admin_password']  // This is cleartext, but that can't be helped. This is the only place in the installer where this happens.
      ) {
-    $value_array = array();
-    $db_prefix = ($http_vars['dbType'] != 'mysql') ? $http_vars['dbName'].'.' : '';
-
-    $sql[] = str_replace('%%PREFIX%%', preg_replace('|[^a-z_\.\-A-Z0-9]|', '', $db_prefix.$http_vars['dbPrefix']), file_get_contents(dirname(__FILE__).'/sql_files/initialMeetingsStructure.sql'));
-    $sql[] = str_replace('%%PREFIX%%', preg_replace('|[^a-z_\.\-A-Z0-9]|', '', $db_prefix.$http_vars['dbPrefix']), file_get_contents(dirname(__FILE__).'/sql_files/initialFormatsStructure.sql'));
-    $sql[] = str_replace('%%PREFIX%%', preg_replace('|[^a-z_\.\-A-Z0-9]|', '', $db_prefix.$http_vars['dbPrefix']), file_get_contents(dirname(__FILE__).'/sql_files/initialChangesStructure.sql'));
-    $sql[] = str_replace('%%PREFIX%%', preg_replace('|[^a-z_\.\-A-Z0-9]|', '', $db_prefix.$http_vars['dbPrefix']), file_get_contents(dirname(__FILE__).'/sql_files/initialServiceBodiesStructure.sql'));
-    $sql[] = str_replace('%%PREFIX%%', preg_replace('|[^a-z_\.\-A-Z0-9]|', '', $db_prefix.$http_vars['dbPrefix']), file_get_contents(dirname(__FILE__).'/sql_files/InitialUsersStructure.sql'));
-    $sql[] = str_replace('%%PREFIX%%', preg_replace('|[^a-z_\.\-A-Z0-9]|', '', $db_prefix.$http_vars['dbPrefix']), file_get_contents(dirname(__FILE__).'/sql_files/InitialMeetingsData.sql'));
-    $sql[] = str_replace('%%PREFIX%%', preg_replace('|[^a-z_\.\-A-Z0-9]|', '', $db_prefix.$http_vars['dbPrefix']), file_get_contents(dirname(__FILE__).'/sql_files/initialDbVersionStructure.sql'));
-    $sql[] = str_replace('%%PREFIX%%', preg_replace('|[^a-z_\.\-A-Z0-9]|', '', $db_prefix.$http_vars['dbPrefix']), file_get_contents(dirname(__FILE__).'/sql_files/initialDbVersionData.sql'));
-
-    // Our SQL is now ready to be set to the server. We need to use PDO, as that is the abstraction mechanism used by the server.
+    $db_prefix = '';
 
     $response = array(
         'dbStatus' => false,
@@ -135,11 +123,26 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
             $result = null;
         }
 
-        // Create schema
-        $value_array = array();
-        foreach ($sql as $sql_statement) {
-            c_comdef_dbsingleton::preparedExec($sql_statement, $value_array);
-        }
+        config(['database.connections.installer' => [
+            'driver' => 'mysql',
+            'host' => $http_vars['dbServer'],
+            'port' => '3306',
+            'database' => $http_vars['dbName'],
+            'username' => $http_vars['dbUser'],
+            'password' => $http_vars['dbPassword'],
+            'unix_socket' => '',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => $http_vars['dbPrefix'] . '_',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ]]);
+        require_once(__DIR__ . '/../../../vendor/autoload.php');
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true, '--database' => 'installer']);
 
         // Create server admin
         $serveradmin_name = $comdef_install_wizard_strings['ServerAdminName'];
@@ -150,21 +153,6 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
         $sql_array = array ( $serveradmin_name, $serveradmin_desc, $http_vars['admin_login'], FullCrypt($http_vars['admin_password'], $salt, $max_crypt), $lang );
         c_comdef_dbsingleton::preparedExec($sql_serveradmin, $sql_array);
 
-        // Create formats
-        // Formats are special. There are diacriticals that need to be escaped, so we make sure they get set into the values array.
-        foreach (glob(dirname(__FILE__).'/sql_files/InitialFormatsData-*.sql') as $filename) {
-            $sql_temp = str_replace('%%PREFIX%%', preg_replace('|[^a-z_\.\-A-Z0-9]|', '', $db_prefix.$http_vars['dbPrefix']), file_get_contents($filename));
-            $value_array = array();
-            $sql_temp = str_replace("\\'", "`", $sql_temp);
-            preg_match_all("|'(.*?)'|", $sql_temp, $value_array);
-            $value_array = $value_array[0];
-            for ($c = 0; $c < count($value_array); $c++) {
-                $value_array[$c] = preg_replace("|'(.*?)'|", "$1", $value_array[$c]);
-                $value_array[$c] = str_replace("`", "'", $value_array[$c]);
-            }
-            $sql_temp = preg_replace("|'.*?'|", "?", $sql_temp);
-            c_comdef_dbsingleton::preparedExec($sql_temp, $value_array);
-        }
         $response['dbStatus'] = true;
     } catch (Exception $e) {
         $response['dbReport'] = $comdef_install_wizard_strings['AJAX_Handler_DB_Connect_Error'];

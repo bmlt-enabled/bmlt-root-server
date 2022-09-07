@@ -262,7 +262,6 @@ function c_comdef_LoginForm(
         <script type="text/javascript">
             document.getElementById(\'c_comdef_admin_login_form_inner_container_div\').style.display=\'block\';
             document.getElementById(\'c_comdef_admin_login\').focus();
-            document.cookie=\'comdef_test=test\';
         </script>';
     $ret .= '</div>';
 
