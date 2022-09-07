@@ -30,23 +30,23 @@ resource "aws_ecs_task_definition" "bmlt_latest" {
             value = var.GOOGLE_API_KEY
           },
           {
-            name  = "DBNAME",
-            value = "bmlt"
+            name  = "DB_DATABASE",
+            value = "rootserver"
           },
           {
-            name  = "DBUSER",
-            value = "bmlt_user"
+            name  = "DB_USER",
+            value = "rootserver"
           },
           {
-            name  = "DBPASSWORD",
-            value = "bmlt_password"
+            name  = "DB_PASSWORD",
+            value = "rootserver"
           },
           {
-            name  = "DBSERVER",
+            name  = "DB_HOST",
             value = "bmlt-db"
           },
           {
-            name  = "DBPREFIX",
+            name  = "DB_PREFIX",
             value = "na"
           }
         ],
@@ -68,7 +68,7 @@ resource "aws_ecs_task_definition" "bmlt_latest" {
             awslogs-stream-prefix = "bmlt-root"
           }
         },
-        memoryReservation = 128,
+        memoryReservation = 256,
         privileged        = null,
         linuxParameters = {
           initProcessEnabled = true
@@ -95,19 +95,19 @@ resource "aws_ecs_task_definition" "bmlt_latest" {
         environment = [
           {
             name  = "MARIADB_ROOT_PASSWORD",
-            value = "bmlt_root_password"
+            value = "rootserver"
           },
           {
             name  = "MARIADB_DATABASE",
-            value = "bmlt"
+            value = "rootserver"
           },
           {
             name  = "MARIADB_USER",
-            value = "bmlt_user"
+            value = "rootserver"
           },
           {
             name  = "MARIADB_PASSWORD",
-            value = "bmlt_password"
+            value = "rootserver"
           }
         ],
         links                  = [],
@@ -152,4 +152,8 @@ resource "aws_ecs_service" "bmlt_latest" {
   depends_on = [
     aws_iam_role_policy.bmlt_lb
   ]
+
+  lifecycle {
+    ignore_changes = [task_definition]
+  }
 }
