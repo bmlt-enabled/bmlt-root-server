@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Config;
 
 class ServerInfoXmlController extends Controller
 {
     public function get(): Response
     {
-        $version = Config::get('app.version');
+        $version = config('app.version');
         $xml = <<<VERSION
 <?xml version="1.0" encoding="utf-8"?>
 <bmltInfo>
