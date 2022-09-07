@@ -156,14 +156,14 @@ class LegacyAuthTest extends LegacyTestCase
             'c_comdef_admin_password' => $this->goodPassword
         ];
         $this->assertEquals(
-            '',
+            'OK',
             $this->post('/local_server/server_admin/json.php', $data)
                 ->assertStatus(200)
                 ->assertSessionHas('login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d', $user->id_bigint)
                 ->content()
         );
         $this->assertEquals(
-            '',
+            'OK',
             $this->get("/local_server/server_admin/json.php?admin_action=login&c_comdef_admin_login=$user->login_string&c_comdef_admin_password=$this->goodPassword", $data)
                 ->assertStatus(200)
                 ->assertSessionHas('login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d', $user->id_bigint)
