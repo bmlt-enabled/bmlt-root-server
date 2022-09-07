@@ -21,11 +21,23 @@ class LegacyAuthController extends Controller
             $username = $request->input('c_comdef_admin_login');
             $password = $request->input('c_comdef_admin_password');
             $credentials = ['login_string' => $username, 'password' => $password];
-            if (Auth::attempt($credentials)) {
-                return $this->loggedInResponse($request);
+            $success = Auth::attempt($credentials);
+            if ($success) {
+                $apiType = $this->getApiType($request);
+                if ($apiType != $this->REQUEST_TYPE_WEB) {
+                    $user = Auth::user();
+                    if ($user) {
+                        if ($user->user_level_tinyint == 1 || $user->user_level_tinyint == 4) {
+                            Auth::logout();
+                            $request->session()->invalidate();
+                            $success = false;
+                        }
+                    }
+                }
             }
-
-            return $this->badCredentialsResponse($request);
+            return $success
+                ? $this->loggedInResponse($request)
+                : $this->badCredentialsResponse($request);
         } elseif ($adminAction == 'logout') {
             Auth::logout();
             $request->session()->invalidate();
