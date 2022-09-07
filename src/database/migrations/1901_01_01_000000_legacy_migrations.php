@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
@@ -23,8 +22,8 @@ return new class extends Migration
         // Legacy migration code copied from legacy codebase
 
         global $dbPrefix;
-        $dbName = Config::get('database.connections.mysql.database');
-        $dbPrefix = rtrim(Config::get('database.connections.mysql.prefix'), '_');
+        $dbName = config('database.connections.mysql.database');
+        $dbPrefix = rtrim(config('database.connections.mysql.prefix'), '_');
 
         require_once(__DIR__."/../../legacy/server/shared/classes/VenueType.php");
 
