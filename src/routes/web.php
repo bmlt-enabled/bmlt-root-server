@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SwitcherController;
+use App\Http\Controllers\ServerInfoXmlController;
 use App\Http\Controllers\Legacy\LegacyController;
 use App\Http\Controllers\Legacy\LegacyAuthController;
 
@@ -16,7 +17,7 @@ use App\Http\Controllers\Legacy\LegacyAuthController;
 |
 */
 
-
+Route::get('/client_interface/serverInfo.xml', [ServerInfoXmlController::class, 'get']);
 Route::get('/client_interface/{dataFormat}', [SwitcherController::class, 'get']);
 Route::any('/local_server/server_admin/{dataFormat}.php', [LegacyAuthController::class, 'handle'])
     ->where('dataFormat', 'json|xml');
