@@ -1,7 +1,7 @@
 name: test
 on:
   push:
-    branches-ignore: ['3.0.0']
+    branches-ignore: ['main']
 
 jobs:
   test:
