@@ -17,6 +17,12 @@ else
 	DOCKERFILE := Dockerfile
 	IMAGE := public.ecr.aws/bmlt/bmlt-root-server
 	TAG := 3.0.0-$(COMMIT)
+	ifeq ($(strip $(GITHUB_REF_NAME)),main)
+		TAG := latest
+	endif
+	ifeq ($(strip $(GITHUB_REF_NAME)),unstable)
+		TAG := unstable
+	endif
 	COMPOSER_ARGS := --classmap-authoritative
 	ifeq ($(DEV)x, x)
 		COMPOSER_ARGS := $(COMPOSER_ARGS) --no-dev

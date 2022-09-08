@@ -1,7 +1,8 @@
 name: main
 on:
   push:
-    branches: ['main']
+    branches: ['main', 'unstable']
+    tags: ['*']
 
 jobs:
   test:
@@ -84,6 +85,7 @@ jobs:
           aws s3 cp build/bmlt-root-server.zip s3://${{ secrets.S3_BUCKET }}/bmlt-root-server/bmlt-root-server-$(cat src/config/app.php | grep "'version'" | cut -d"'" -f4)-build${GITHUB_RUN_NUMBER}-${GITHUB_SHA}.zip
 
       - name: Configure AWS Credentials
+        if: contains(github.ref_name, 'main') || contains(github.ref_name, 'unstable')
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions/gh-ci-tf-bmlt-rs
@@ -91,29 +93,36 @@ jobs:
           aws-region: us-east-1
 
       - name: Login to Amazon ECR Public
+        if: contains(github.ref_name, 'main') || contains(github.ref_name, 'unstable')
         id: login-ecr-public
         uses: aws-actions/amazon-ecr-login@v1
         with:
           registry-type: public
 
       - name: make docker
+        if: contains(github.ref_name, 'main') || contains(github.ref_name, 'unstable')
         run: |
           make docker
 
       - name: make docker-push
+        if: contains(github.ref_name, 'main') || contains(github.ref_name, 'unstable')
         id: docker_push_images
         run: |
           make docker-push
 
       - name: Save Image Name
+        if: contains(github.ref_name, 'main') || contains(github.ref_name, 'unstable')
         run: |
           SHORT_SHA=$(git rev-parse --short=8 HEAD)
-          echo "IMAGE_NAME=public.ecr.aws/bmlt/bmlt-root-server:$(cat src/config/app.php | grep "'version'" | cut -d"'" -f4)-${SHORT_SHA}" >> $GITHUB_ENV
+          echo "IMAGE_NAME=public.ecr.aws/bmlt/bmlt-root-server:${GITHUB_REF_NAME}" >> $GITHUB_ENV
 
       - name: Download Task Definition
+        if: contains(github.ref_name, 'main') || contains(github.ref_name, 'unstable')
         run: |
+          TASK_DEF=$([ "$GITHUB_REF_NAME" == "main" ] && echo "latest" || echo "unstable")
+          echo "TASK_DEF=${TASK_DEF}" >> $GITHUB_ENV
           echo $IMAGE_NAME
-          aws ecs describe-task-definition --task-definition bmlt-latest --query taskDefinition | jq -r 'del(
+          aws ecs describe-task-definition --task-definition bmlt-${TASK_DEF} --query taskDefinition | jq -r 'del(
             .taskDefinitionArn,
             .requiresAttributes,
             .compatibilities,
@@ -124,6 +133,7 @@ jobs:
           )' > task-definition.json
 
       - name: Fill in the new image ID in the Amazon ECS task definition
+        if: contains(github.ref_name, 'main') || contains(github.ref_name, 'unstable')
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
@@ -132,10 +142,28 @@ jobs:
           image: ${{ env.IMAGE_NAME }}
 
       - name: Deploy Amazon ECS task definition
+        if: contains(github.ref_name, 'main') || contains(github.ref_name, 'unstable')
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: bmlt-latest
+          service: bmlt-${{ env.TASK_DEF }}
           cluster: bmlt
           wait-for-service-stability: true
           wait-for-minutes: 5
+
+      - name: Generate Release Notes
+        if: github.ref_type == 'tag'
+        run: |
+          curl -LO https://raw.githubusercontent.com/bmlt-enabled/release-notes-tool/master/gh-release-notes.sh
+          chmod +x gh-release-notes.sh
+          ./gh-release-notes.sh CHANGELOG.md "##"
+          RELEASE_TYPE=$(if [[ "$GITHUB_REF_NAME" =~ "beta" ]]; then echo "true"; else echo "false"; fi)
+          echo "RELEASE_TYPE=${RELEASE_TYPE}" >> $GITHUB_ENV
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        if: github.ref_type == 'tag'
+        with:
+          artifacts: "build/bmlt-root-server.zip"
+          bodyFile: "changelog.txt"
+          prerelease: ${{ env.RELEASE_TYPE }}
