@@ -114,15 +114,15 @@ jobs:
         if: contains(github.ref_name, 'main') || contains(github.ref_name, 'unstable')
         run: |
           SHORT_SHA=$(git rev-parse --short=8 HEAD)
-          echo "IMAGE_NAME=public.ecr.aws/bmlt/bmlt-root-server:${GITHUB_REF_NAME}" >> $GITHUB_ENV
+          IMAGE_TAG=$([ "$GITHUB_REF_NAME" == "main" ] && echo "latest" || echo "unstable")
+          echo "IMAGE_TAG=${IMAGE_TAGF}" >> $GITHUB_ENV
+          echo "IMAGE_NAME=public.ecr.aws/bmlt/bmlt-root-server:${IMAGE_TAG}" >> $GITHUB_ENV
 
       - name: Download Task Definition
         if: contains(github.ref_name, 'main') || contains(github.ref_name, 'unstable')
         run: |
-          TASK_DEF=$([ "$GITHUB_REF_NAME" == "main" ] && echo "latest" || echo "unstable")
-          echo "TASK_DEF=${TASK_DEF}" >> $GITHUB_ENV
           echo $IMAGE_NAME
-          aws ecs describe-task-definition --task-definition bmlt-${TASK_DEF} --query taskDefinition | jq -r 'del(
+          aws ecs describe-task-definition --task-definition bmlt-${{ env.IMAGE_TAG }} --query taskDefinition | jq -r 'del(
             .taskDefinitionArn,
             .requiresAttributes,
             .compatibilities,
@@ -146,7 +146,7 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: bmlt-${{ env.TASK_DEF }}
+          service: bmlt-${{ env.IMAGE_TAG }}
           cluster: bmlt
           wait-for-service-stability: true
           wait-for-minutes: 5
