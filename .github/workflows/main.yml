@@ -1,7 +1,7 @@
 name: main
 on:
   push:
-    branches: ['3.0.0', 'pj/ci-release']
+    branches: ['main', 'pj/ci-release']
 
 jobs:
   test:
