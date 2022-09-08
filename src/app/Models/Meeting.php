@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class Meeting extends Model
@@ -22,4 +23,14 @@ class Meeting extends Model
         'longitude',
         'latitude',
     ];
+
+    public function getName()
+    {
+        return $this->data->where('key', 'meeting_name')->pluck('data_string')->first();
+    }
+
+    public function data()
+    {
+        return $this->hasMany(MeetingData::class, 'meetingid_bigint');
+    }
 }
