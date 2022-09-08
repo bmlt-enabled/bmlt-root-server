@@ -14,7 +14,7 @@ resource "aws_ecs_task_definition" "bmlt_latest" {
         portMappings = [
           {
             hostPort      = 0,
-            containerPort = 80,
+            containerPort = 8000,
             protocol      = "tcp"
           }
         ],
@@ -146,14 +146,14 @@ resource "aws_ecs_service" "bmlt_latest" {
   load_balancer {
     target_group_arn = aws_alb_target_group.bmlt_latest.id
     container_name   = "bmlt-root-server"
-    container_port   = 80
+    container_port   = 8000
   }
 
   depends_on = [
     aws_iam_role_policy.bmlt_lb
   ]
 
-  lifecycle {
-    ignore_changes = [task_definition]
-  }
+    lifecycle {
+      ignore_changes = [task_definition]
+    }
 }
