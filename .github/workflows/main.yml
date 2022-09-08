@@ -122,7 +122,7 @@ jobs:
         if: contains(github.ref_name, 'main') || contains(github.ref_name, 'unstable')
         run: |
           echo $IMAGE_NAME
-          aws ecs describe-task-definition --task-definition bmlt-${{ env.IMAGE_TAG }} --query taskDefinition | jq -r 'del(
+          aws ecs describe-task-definition --task-definition bmlt-${IMAGE_TAG} --query taskDefinition | jq -r 'del(
             .taskDefinitionArn,
             .requiresAttributes,
             .compatibilities,
