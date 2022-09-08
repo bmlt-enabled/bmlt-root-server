@@ -2,12 +2,6 @@
 
 use Illuminate\Support\Str;
 
-$legacyConfigFile = base_path() . '/../auto-config.inc.php';
-if (file_exists($legacyConfigFile)) {
-    defined('BMLT_EXEC') or define('BMLT_EXEC', 1);
-    require($legacyConfigFile);
-}
-
 return [
 
     /*
@@ -44,15 +38,15 @@ return [
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host' => $dbServer ?? env('DB_HOST', '0.0.0.0'),
+            'host' => legacy_config('db_host', '0.0.0.0'),
             'port' => env('DB_PORT', '3306'),
-            'database' => $dbName ?? null,
-            'username' => $dbUser ?? null,
-            'password' => $dbPassword ?? null,
+            'database' => legacy_config('db_database'),
+            'username' => legacy_config('db_username'),
+            'password' => legacy_config('db_password'),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
-            'prefix' => isset($dbPrefix) ? $dbPrefix . '_'  : 'na_',
+            'prefix' => legacy_config('db_prefix') ? legacy_config('db_prefix') . '_' : 'test_',
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
@@ -64,15 +58,15 @@ return [
         'test' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host' => $dbServer ?? env('DB_HOST', '0.0.0.0'),
+            'host' => legacy_config('db_host', '0.0.0.0'),
             'port' => env('DB_PORT', '3306'),
-            'database' => $dbName ?? env('DB_DATABASE', 'rootserver'),
-            'username' => $dbUser ?? env('DB_USERNAME', 'rootserver'),
-            'password' => $dbPassword ?? env('DB_PASSWORD', 'rootserver'),
+            'database' => legacy_config('db_database', 'rootserver'),
+            'username' => legacy_config('db_username', 'rootserver'),
+            'password' => legacy_config('db_password', 'rootserver'),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
-            'prefix' => isset($dbPrefix) ? $dbPrefix . '_'  : 'test_',
+            'prefix' => legacy_config('db_prefix') ? legacy_config('db_prefix') . '_' : 'test_',
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
