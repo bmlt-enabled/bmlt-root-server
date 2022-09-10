@@ -212,7 +212,7 @@ class GetChangesTest extends TestCase
             ->assertExactJson([
                 [
                     'date_int' => strval(strtotime($change->change_date)),
-                    'date_str' => date('g:i A, n/j/Y', strtotime($change->change_date)),
+                    'date_string' => date('g:i A, n/j/Y', strtotime($change->change_date)),
                     'change_type' => $change->change_type_enum,
                     'change_id' => strval($change->id_bigint),
                     'meeting_id' => strval($change->afterMeeting->id_bigint),
@@ -241,7 +241,7 @@ class GetChangesTest extends TestCase
             ->assertExactJson([
                 [
                     'date_int' => strval(strtotime($change->change_date)),
-                    'date_str' => date('g:i A, n/j/Y', strtotime($change->change_date)),
+                    'date_string' => date('g:i A, n/j/Y', strtotime($change->change_date)),
                     'change_type' => $change->change_type_enum,
                     'change_id' => strval($change->id_bigint),
                     'meeting_id' => strval($change->afterMeeting->id_bigint),
@@ -250,7 +250,7 @@ class GetChangesTest extends TestCase
                     'user_name' => '',
                     'service_body_id' => '1',
                     'service_body_name' => '',
-                    'meeting_exists' => '1',
+                    'meeting_exists' => '0',
                     'details' => 'The meeting was deleted.',
                     'json_data' => [
                         'before' => collect($this->getMainValuesPublicArray($change->beforeMeeting, $beforeValues))->merge($beforeValues)->toArray(),
@@ -271,7 +271,7 @@ class GetChangesTest extends TestCase
             ->assertExactJson([
                 [
                     'date_int' => strval(strtotime($change->change_date)),
-                    'date_str' => date('g:i A, n/j/Y', strtotime($change->change_date)),
+                    'date_string' => date('g:i A, n/j/Y', strtotime($change->change_date)),
                     'change_type' => $change->change_type_enum,
                     'change_id' => strval($change->id_bigint),
                     'meeting_id' => strval($change->afterMeeting->id_bigint),
@@ -304,7 +304,7 @@ class GetChangesTest extends TestCase
             ->assertExactJson([
                 [
                     'date_int' => strval(strtotime($change->change_date)),
-                    'date_str' => date('g:i A, n/j/Y', strtotime($change->change_date)),
+                    'date_string' => date('g:i A, n/j/Y', strtotime($change->change_date)),
                     'change_type' => $change->change_type_enum,
                     'change_id' => strval($change->id_bigint),
                     'meeting_id' => strval($change->afterMeeting->id_bigint),
@@ -341,7 +341,7 @@ class GetChangesTest extends TestCase
             ->assertExactJson([
                 [
                     'date_int' => strval(strtotime($change->change_date)),
-                    'date_str' => date('g:i A, n/j/Y', strtotime($change->change_date)),
+                    'date_string' => date('g:i A, n/j/Y', strtotime($change->change_date)),
                     'change_type' => $change->change_type_enum,
                     'change_id' => strval($change->id_bigint),
                     'meeting_id' => strval($change->afterMeeting->id_bigint),
@@ -371,7 +371,7 @@ class GetChangesTest extends TestCase
             ->assertExactJson([
                 [
                     'date_int' => strval(strtotime($change->change_date)),
-                    'date_str' => date('g:i A, n/j/Y', strtotime($change->change_date)),
+                    'date_string' => date('g:i A, n/j/Y', strtotime($change->change_date)),
                     'change_type' => $change->change_type_enum,
                     'change_id' => strval($change->id_bigint),
                     'meeting_id' => strval($change->afterMeeting->id_bigint),
@@ -401,7 +401,7 @@ class GetChangesTest extends TestCase
             ->assertExactJson([
                 [
                     'date_int' => strval(strtotime($change->change_date)),
-                    'date_str' => date('g:i A, n/j/Y', strtotime($change->change_date)),
+                    'date_string' => date('g:i A, n/j/Y', strtotime($change->change_date)),
                     'change_type' => $change->change_type_enum,
                     'change_id' => strval($change->id_bigint),
                     'meeting_id' => strval($change->afterMeeting->id_bigint),
@@ -431,7 +431,7 @@ class GetChangesTest extends TestCase
             ->assertExactJson([
                 [
                     'date_int' => strval(strtotime($change->change_date)),
-                    'date_str' => date('g:i A, n/j/Y', strtotime($change->change_date)),
+                    'date_string' => date('g:i A, n/j/Y', strtotime($change->change_date)),
                     'change_type' => $change->change_type_enum,
                     'change_id' => strval($change->id_bigint),
                     'meeting_id' => strval($change->afterMeeting->id_bigint),
@@ -461,7 +461,7 @@ class GetChangesTest extends TestCase
             ->assertExactJson([
                 [
                     'date_int' => strval(strtotime($change->change_date)),
-                    'date_str' => date('g:i A, n/j/Y', strtotime($change->change_date)),
+                    'date_string' => date('g:i A, n/j/Y', strtotime($change->change_date)),
                     'change_type' => $change->change_type_enum,
                     'change_id' => strval($change->id_bigint),
                     'meeting_id' => strval($change->afterMeeting->id_bigint),
@@ -491,7 +491,7 @@ class GetChangesTest extends TestCase
             ->assertExactJson([
                 [
                     'date_int' => strval(strtotime($change->change_date)),
-                    'date_str' => date('g:i A, n/j/Y', strtotime($change->change_date)),
+                    'date_string' => date('g:i A, n/j/Y', strtotime($change->change_date)),
                     'change_type' => $change->change_type_enum,
                     'change_id' => strval($change->id_bigint),
                     'meeting_id' => strval($change->afterMeeting->id_bigint),
@@ -523,7 +523,7 @@ class GetChangesTest extends TestCase
             ->assertExactJson([
                 [
                     'date_int' => strval(strtotime($change->change_date)),
-                    'date_str' => date('g:i A, n/j/Y', strtotime($change->change_date)),
+                    'date_string' => date('g:i A, n/j/Y', strtotime($change->change_date)),
                     'change_type' => $change->change_type_enum,
                     'change_id' => strval($change->id_bigint),
                     'meeting_id' => strval($change->afterMeeting->id_bigint),
@@ -553,7 +553,7 @@ class GetChangesTest extends TestCase
             ->assertExactJson([
                 [
                     'date_int' => strval(strtotime($change->change_date)),
-                    'date_str' => date('g:i A, n/j/Y', strtotime($change->change_date)),
+                    'date_string' => date('g:i A, n/j/Y', strtotime($change->change_date)),
                     'change_type' => $change->change_type_enum,
                     'change_id' => strval($change->id_bigint),
                     'meeting_id' => strval($change->afterMeeting->id_bigint),
@@ -583,7 +583,7 @@ class GetChangesTest extends TestCase
             ->assertExactJson([
                 [
                     'date_int' => strval(strtotime($change->change_date)),
-                    'date_str' => date('g:i A, n/j/Y', strtotime($change->change_date)),
+                    'date_string' => date('g:i A, n/j/Y', strtotime($change->change_date)),
                     'change_type' => $change->change_type_enum,
                     'change_id' => strval($change->id_bigint),
                     'meeting_id' => strval($change->afterMeeting->id_bigint),
@@ -613,7 +613,7 @@ class GetChangesTest extends TestCase
             ->assertExactJson([
                 [
                     'date_int' => strval(strtotime($change->change_date)),
-                    'date_str' => date('g:i A, n/j/Y', strtotime($change->change_date)),
+                    'date_string' => date('g:i A, n/j/Y', strtotime($change->change_date)),
                     'change_type' => $change->change_type_enum,
                     'change_id' => strval($change->id_bigint),
                     'meeting_id' => strval($change->afterMeeting->id_bigint),
@@ -663,7 +663,7 @@ class GetChangesTest extends TestCase
                 ->assertExactJson([
                     [
                         'date_int' => strval(strtotime($change->change_date)),
-                        'date_str' => date('g:i A, n/j/Y', strtotime($change->change_date)),
+                        'date_string' => date('g:i A, n/j/Y', strtotime($change->change_date)),
                         'change_type' => $change->change_type_enum,
                         'change_id' => strval($change->id_bigint),
                         'meeting_id' => strval($change->afterMeeting->id_bigint),
@@ -717,7 +717,7 @@ class GetChangesTest extends TestCase
                 ->assertExactJson([
                     [
                         'date_int' => strval(strtotime($change->change_date)),
-                        'date_str' => date('g:i A, n/j/Y', strtotime($change->change_date)),
+                        'date_string' => date('g:i A, n/j/Y', strtotime($change->change_date)),
                         'change_type' => $change->change_type_enum,
                         'change_id' => strval($change->id_bigint),
                         'meeting_id' => strval($change->afterMeeting->id_bigint),
@@ -771,7 +771,7 @@ class GetChangesTest extends TestCase
                 ->assertExactJson([
                     [
                         'date_int' => strval(strtotime($change->change_date)),
-                        'date_str' => date('g:i A, n/j/Y', strtotime($change->change_date)),
+                        'date_string' => date('g:i A, n/j/Y', strtotime($change->change_date)),
                         'change_type' => $change->change_type_enum,
                         'change_id' => strval($change->id_bigint),
                         'meeting_id' => strval($change->afterMeeting->id_bigint),
@@ -815,7 +815,7 @@ class GetChangesTest extends TestCase
                 ->assertExactJson([
                     [
                         'date_int' => strval(strtotime($change->change_date)),
-                        'date_str' => date('g:i A, n/j/Y', strtotime($change->change_date)),
+                        'date_string' => date('g:i A, n/j/Y', strtotime($change->change_date)),
                         'change_type' => $change->change_type_enum,
                         'change_id' => strval($change->id_bigint),
                         'meeting_id' => strval($change->afterMeeting->id_bigint),
@@ -859,7 +859,7 @@ class GetChangesTest extends TestCase
                 ->assertExactJson([
                     [
                         'date_int' => strval(strtotime($change->change_date)),
-                        'date_str' => date('g:i A, n/j/Y', strtotime($change->change_date)),
+                        'date_string' => date('g:i A, n/j/Y', strtotime($change->change_date)),
                         'change_type' => $change->change_type_enum,
                         'change_id' => strval($change->id_bigint),
                         'meeting_id' => strval($change->afterMeeting->id_bigint),
@@ -903,7 +903,7 @@ class GetChangesTest extends TestCase
                 ->assertExactJson([
                     [
                         'date_int' => strval(strtotime($change->change_date)),
-                        'date_str' => date('g:i A, n/j/Y', strtotime($change->change_date)),
+                        'date_string' => date('g:i A, n/j/Y', strtotime($change->change_date)),
                         'change_type' => $change->change_type_enum,
                         'change_id' => strval($change->id_bigint),
                         'meeting_id' => strval($change->afterMeeting->id_bigint),

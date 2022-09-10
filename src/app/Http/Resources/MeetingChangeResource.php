@@ -39,7 +39,7 @@ class MeetingChangeResource extends JsonResource
     {
         return [
             'date_int' => strval(strtotime($this->change_date)),
-            'date_str' => date('g:i A, n/j/Y', strtotime($this->change_date)),
+            'date_string' => date('g:i A, n/j/Y', strtotime($this->change_date)),
             'change_type' => $this->change_type_enum,
             'change_id' => strval($this->id_bigint),
             'meeting_id' => strval($this->before_id_bigint ?? $this->after_id_bigint ?? 0),
@@ -48,7 +48,7 @@ class MeetingChangeResource extends JsonResource
             'user_name' => $this->user?->name_string ?? '',
             'service_body_id' => strval($this->service_body_id_bigint),
             'service_body_name' => $this->serviceBody?->name_string ?? '',
-            'meeting_exists' => ($this->getBeforeObject() || $this->getAfterObject()) ? '1' : '0',
+            'meeting_exists' => $this->getAfterObject() ? '1' : '0',
             'details' => $this->getChangeDetailsString(),
             'json_data' => $this->getJsonDataArray(),
         ];
