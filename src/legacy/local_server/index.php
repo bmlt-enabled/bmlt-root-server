@@ -19,7 +19,7 @@ defined('BMLT_EXEC') or die('Cannot Execute Directly');    // Makes sure that th
 define('_LANG_COOKIE_NAME', 'bmlt_admin_lang_pref');
 
 global  $http_vars;
-$http_vars = request()->input();
+$http_vars = array_merge($_GET, $_POST);
 $lang_enum = '';
 
 // We use a cookie to store the language pref.

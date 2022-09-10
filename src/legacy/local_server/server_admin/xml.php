@@ -26,7 +26,7 @@ if (isset($g_enable_semantic_admin) && ($g_enable_semantic_admin == true)) {
     ************************************************* MAIN CONTEXT *************************************************
     ***************************************************************************************************************/
 
-    $http_vars = request()->input();
+    $http_vars = array_merge($_GET, $_POST);
 
     // Create an HTTP path to our XML file. We build it manually, in case this file is being used elsewhere, or we have a redirect in the domain.
     // We allow it to be used as HTTPS.

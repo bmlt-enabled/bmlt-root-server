@@ -161,7 +161,7 @@ function c_comdef_LoginForm(
 ) {
     include(dirname(dirname(dirname(__FILE__))).'/server/config/get-config.php');
 
-    $http_vars = request()->input();
+    $http_vars = array_merge($_GET, $_POST);
 
     $localized_strings = c_comdef_server::GetLocalStrings();
     $server_info = GetServerInfo();
