@@ -142,6 +142,16 @@ class MeetingChangeResource extends JsonResource
                 $ret->put('latitude', (string)$latitude);
             }
 
+            $worldIdMixed = $mainValues['worldid_mixed'] ?? null;
+            if (!is_null($worldIdMixed)) {
+                $ret->put('worldid_mixed', (string)$worldIdMixed);
+            }
+
+            $timeZone = $mainValues['time_zone'] ?? null;
+            if (!is_null($timeZone)) {
+                $ret->put('time_zone', (string)$timeZone);
+            }
+
             $published = $mainValues['published'] ?? null;
             if (!is_null($published)) {
                 $ret->put('published', (string)$published);
