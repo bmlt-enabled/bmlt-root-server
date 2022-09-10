@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Change;
+use App\Models\Format;
 use App\Models\Meeting;
 use App\Models\MeetingData;
 use App\Models\ServiceBody;
@@ -171,6 +172,19 @@ class GetChangesTest extends TestCase
         ]);
     }
 
+    private function createFormat(int $sharedId, string $keyString, string $langEnum = 'en', string $worldId = null, string $formatTypeEnum = 'FC')
+    {
+        return Format::create([
+            'shared_id_bigint' => $sharedId,
+            'key_string' => $keyString,
+            'name_string' => $keyString,
+            'lang_enum' => $langEnum,
+            'description_string' => $keyString,
+            'worldid_mixed' => $worldId,
+            'format_type_enum' => $formatTypeEnum,
+        ]);
+    }
+
     public function testXml()
     {
         $this->get('/client_interface/xml/?switcher=GetChanges')
@@ -300,6 +314,43 @@ class GetChangesTest extends TestCase
                     'json_data' => [
                         'before' => collect($this->getMainValuesPublicArray($change->beforeMeeting, $beforeValues))->merge($beforeValues)->toArray(),
                         'after' => collect($this->getMainValuesPublicArray($change->afterMeeting, $afterValues))->merge($afterValues)->toArray(),
+                    ],
+                ]
+            ]);
+    }
+
+    public function testFormatsChanged()
+    {
+        $format1 = $this->createFormat(101, 'X');
+        $format2 = $this->createFormat(102, 'A');
+        $format3 = $this->createFormat(103, 'B');
+        $user = $this->createUser();
+        $beforeValues = ['formats' => implode(',', [$format1->shared_id_bigint])];
+        $afterValues = ['formats' => implode(',', [$format1->shared_id_bigint, $format2->shared_id_bigint, $format3->shared_id_bigint])];
+        $change = $this->createChange($beforeValues, $afterValues, $user);
+        $beforeArray = collect($this->getMainValuesPublicArray($change->beforeMeeting, $beforeValues))->merge($beforeValues)->toArray();
+        $beforeArray['formats'] = 'X';
+        $afterArray = collect($this->getMainValuesPublicArray($change->afterMeeting, $afterValues))->merge($afterValues)->toArray();
+        $afterArray['formats'] = 'A, B, X';
+        $this->get('/client_interface/json/?switcher=GetChanges')
+            ->assertStatus(200)
+            ->assertExactJson([
+                [
+                    'date_int' => strval(strtotime($change->change_date)),
+                    'date_str' => date('g:i A, n/j/Y', strtotime($change->change_date)),
+                    'change_type' => $change->change_type_enum,
+                    'change_id' => strval($change->id_bigint),
+                    'meeting_id' => strval($change->afterMeeting->id_bigint),
+                    'meeting_name' => '',
+                    'user_id' => strval($user->id_bigint),
+                    'user_name' => $user->name_string,
+                    'service_body_id' => '1',
+                    'service_body_name' => '',
+                    'meeting_exists' => '1',
+                    'details' => 'The meeting format was changed from "X" to "A, B, X".',
+                    'json_data' => [
+                        'before' => $beforeArray,
+                        'after' => $afterArray,
                     ],
                 ]
             ]);
