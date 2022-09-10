@@ -14,7 +14,9 @@ return new class extends Migration
      */
     public function up()
     {
+        $prefix = config('database.connections.mysql.prefix');
         if (Schema::hasTable('comdef_db_version')) {
+            DB::statement(DB::raw('ALTER TABLE ' . $prefix . 'comdef_db_version ENGINE = InnoDB'));
             if (!Schema::hasColumn('comdef_db_version', 'id')) {
                 Schema::table('comdef_db_version', function (Blueprint $table) {
                     $table->increments('id')->first();
@@ -29,6 +31,7 @@ return new class extends Migration
         }
 
         if (Schema::hasTable('comdef_meetings_data')) {
+            DB::statement(DB::raw('ALTER TABLE ' . $prefix . 'comdef_meetings_data ENGINE = InnoDB'));
             if (!Schema::hasColumn('comdef_meetings_data', 'id')) {
                 Schema::table('comdef_meetings_data', function (Blueprint $table) {
                     $table->bigIncrements('id')->first();
@@ -80,6 +83,7 @@ return new class extends Migration
         }
 
         if (Schema::hasTable('comdef_meetings_longdata')) {
+            DB::statement(DB::raw('ALTER TABLE ' . $prefix . 'comdef_meetings_longdata ENGINE = InnoDB'));
             if (!Schema::hasColumn('comdef_meetings_longdata', 'id')) {
                 Schema::table('comdef_meetings_longdata', function (Blueprint $table) {
                     $table->bigIncrements('id')->first();
@@ -104,6 +108,7 @@ return new class extends Migration
         }
 
         if (Schema::hasTable('comdef_formats')) {
+            DB::statement(DB::raw('ALTER TABLE ' . $prefix . 'comdef_formats ENGINE = InnoDB'));
             if (!Schema::hasColumn('comdef_formats', 'id')) {
                 Schema::table('comdef_formats', function (Blueprint $table) {
                     $table->bigIncrements('id')->first();
@@ -627,114 +632,159 @@ return new class extends Migration
             ]);
         }
 
-        if (Schema::hasTable('comdef_service_bodies')) {
-            return;
+        if (Schema::hasTable('comdef_meetings_main')) {
+            DB::statement(DB::raw('ALTER TABLE ' . $prefix . 'comdef_meetings_main ENGINE = InnoDB'));
+        } else {
+            Schema::create('comdef_meetings_main', function (Blueprint $table) {
+                $table->bigIncrements('id_bigint');
+                $table->string('worldid_mixed', 255)->nullable();
+                $table->bigInteger('shared_group_id_bigint')->nullable();
+                $table->unsignedBigInteger('service_body_bigint');
+                $table->unsignedTinyInteger('weekday_tinyint')->nullable();
+                $table->unsignedTinyInteger('venue_type')->nullable();
+                $table->time('start_time')->nullable();
+                $table->time('duration_time')->nullable();
+                $table->string('time_zone', 40)->nullable();
+                $table->string('formats', 255)->nullable();
+                $table->string('lang_enum', 7)->nullable();
+                $table->double('longitude')->nullable();
+                $table->double('latitude')->nullable();
+                $table->tinyInteger('published')->default(0);
+                $table->string('email_contact', 255)->nullable();
+                $table->index('weekday_tinyint', 'weekday_tinyint');
+                $table->index('venue_type', 'venue_type');
+                $table->index('service_body_bigint', 'service_body_bigint');
+                $table->index('start_time', 'start_time');
+                $table->index('duration_time', 'duration_time');
+                $table->index('time_zone', 'time_zone');
+                $table->index('formats', 'formats');
+                $table->index('lang_enum', 'lang_enum');
+                $table->index('worldid_mixed', 'worldid_mixed');
+                $table->index('shared_group_id_bigint', 'shared_group_id_bigint');
+                $table->index('longitude', 'longitude');
+                $table->index('latitude', 'latitude');
+                $table->index('published', 'published');
+                $table->index('email_contact', 'email_contact');
+            });
         }
 
-        Schema::create('comdef_meetings_main', function (Blueprint $table) {
-            $table->bigIncrements('id_bigint');
-            $table->string('worldid_mixed', 255)->nullable();
-            $table->bigInteger('shared_group_id_bigint')->nullable();
-            $table->unsignedBigInteger('service_body_bigint');
-            $table->unsignedTinyInteger('weekday_tinyint')->nullable();
-            $table->unsignedTinyInteger('venue_type')->nullable();
-            $table->time('start_time')->nullable();
-            $table->time('duration_time')->nullable();
-            $table->string('time_zone', 40)->nullable();
-            $table->string('formats', 255)->nullable();
-            $table->string('lang_enum', 7)->nullable();
-            $table->double('longitude')->nullable();
-            $table->double('latitude')->nullable();
-            $table->tinyInteger('published')->default(0);
-            $table->string('email_contact', 255)->nullable();
-            $table->index('weekday_tinyint', 'weekday_tinyint');
-            $table->index('venue_type', 'venue_type');
-            $table->index('service_body_bigint', 'service_body_bigint');
-            $table->index('start_time', 'start_time');
-            $table->index('duration_time', 'duration_time');
-            $table->index('time_zone', 'time_zone');
-            $table->index('formats', 'formats');
-            $table->index('lang_enum', 'lang_enum');
-            $table->index('worldid_mixed', 'worldid_mixed');
-            $table->index('shared_group_id_bigint', 'shared_group_id_bigint');
-            $table->index('longitude', 'longitude');
-            $table->index('latitude', 'latitude');
-            $table->index('published', 'published');
-            $table->index('email_contact', 'email_contact');
+        if (Schema::hasTable('comdef_service_bodies')) {
+            DB::statement(DB::raw('ALTER TABLE ' . $prefix . 'comdef_service_bodies ENGINE = InnoDB'));
+        } else {
+            Schema::create('comdef_service_bodies', function (Blueprint $table) {
+                $table->bigIncrements('id_bigint');
+                $table->string('name_string', 255);
+                $table->text('description_string');
+                $table->string('lang_enum', 7)->default('en');
+                $table->string('worldid_mixed', 255)->nullable();
+                $table->string('kml_file_uri_string', 255)->nullable();
+                $table->unsignedBigInteger('principal_user_bigint')->nullable();
+                $table->string('editors_string', 255)->nullable();
+                $table->string('uri_string', 255)->nullable();
+                $table->string('sb_type', 32)->nullable();
+                $table->unsignedBigInteger('sb_owner')->nullable();
+                $table->unsignedBigInteger('sb_owner_2')->nullable();
+                $table->string('sb_meeting_email', 255);
+                $table->index('worldid_mixed', 'worldid_mixed');
+                $table->index('kml_file_uri_string', 'kml_file_uri_string');
+                $table->index('principal_user_bigint', 'principal_user_bigint');
+                $table->index('editors_string', 'editors_string');
+                $table->index('lang_enum', 'lang_enum');
+                $table->index('uri_string', 'uri_string');
+                $table->index('sb_type', 'sb_type');
+                $table->index('sb_owner', 'sb_owner');
+                $table->index('sb_owner_2', 'sb_owner_2');
+                $table->index('sb_meeting_email', 'sb_meeting_email');
+            });
+        }
+
+        if (Schema::hasTable('comdef_users')) {
+            Schema::table('comdef_users', function (Blueprint $table) {
+                $table->dateTime('last_access_datetime')->default('1970-01-01 00:00:00')->change();
+            });
+            DB::statement(DB::raw('ALTER TABLE ' . $prefix . 'comdef_users ENGINE = InnoDB'));
+        } else {
+            Schema::create('comdef_users', function (Blueprint $table) {
+                $table->bigIncrements('id_bigint');
+                $table->unsignedTinyInteger('user_level_tinyint')->default(0);
+                $table->string('name_string', 255);
+                $table->text('description_string');
+                $table->string('email_address_string', 255);
+                $table->string('login_string', 255);
+                $table->string('password_string', 255);
+                $table->dateTime('last_access_datetime')->default('1970-01-01 00:00:00');
+                $table->string('lang_enum', 7)->default('en');
+                $table->bigInteger('owner_id_bigint')->default(-1);
+                $table->unique('login_string', 'login_string');
+                $table->index('user_level_tinyint', 'user_level_tinyint');
+                $table->index('email_address_string', 'email_address_string');
+                $table->index('last_access_datetime', 'last_access_datetime');
+                $table->index('lang_enum', 'lang_enum');
+                $table->index('owner_id_bigint', 'owner_id_bigint');
+            });
+        }
+
+        if (Schema::hasTable('comdef_changes')) {
+            DB::statement(DB::raw('ALTER TABLE ' . $prefix . 'comdef_changes ENGINE = InnoDB'));
+        } else {
+            Schema::create('comdef_changes', function (Blueprint $table) {
+                $table->bigIncrements('id_bigint');
+                $table->unsignedBigInteger('user_id_bigint');
+                $table->unsignedBigInteger('service_body_id_bigint');
+                $table->string('lang_enum', 7);
+                $table->timestamp('change_date')->useCurrent()->useCurrentOnUpdate();
+                $table->string('object_class_string', 64);
+                $table->string('change_name_string', 255)->nullable();
+                $table->text('change_description_text')->nullable();
+                $table->unsignedBigInteger('before_id_bigint')->nullable();
+                $table->string('before_lang_enum', 7)->nullable();
+                $table->unsignedBigInteger('after_id_bigint')->nullable();
+                $table->string('after_lang_enum', 7)->nullable();
+                $table->string('change_type_enum', 32);
+                $table->binary('before_object')->nullable();
+                $table->binary('after_object')->nullable();
+                $table->index('user_id_bigint', 'user_id_bigint');
+                $table->index('service_body_id_bigint', 'service_body_id_bigint');
+                $table->index('lang_enum', 'lang_enum');
+                $table->index('change_type_enum', 'change_type_enum');
+                $table->index('change_date', 'change_date');
+                $table->index('before_id_bigint', 'before_id_bigint');
+                $table->index('after_id_bigint', 'after_id_bigint');
+                $table->index('before_lang_enum', 'before_lang_enum');
+                $table->index('after_lang_enum', 'after_lang_enum');
+                $table->index('object_class_string', 'object_class_string');
+            });
+        }
+
+        Schema::create('format_meeting', function (Blueprint $table) {
+            $table->unsignedBigInteger('format_id');
+            $table->unsignedBigInteger('meeting_id');
+            $table->index('meeting_id');
+            $table->index('format_id');
+            $table->foreign('meeting_id')->references('id_bigint')->on('comdef_meetings_main')->cascadeOnDelete();
+            $table->foreign('format_id')->references('id')->on('comdef_formats')->cascadeOnDelete();
         });
 
-        Schema::create('comdef_service_bodies', function (Blueprint $table) {
-            $table->bigIncrements('id_bigint');
-            $table->string('name_string', 255);
-            $table->text('description_string');
-            $table->string('lang_enum', 7)->default('en');
-            $table->string('worldid_mixed', 255)->nullable();
-            $table->string('kml_file_uri_string', 255)->nullable();
-            $table->unsignedBigInteger('principal_user_bigint')->nullable();
-            $table->string('editors_string', 255)->nullable();
-            $table->string('uri_string', 255)->nullable();
-            $table->string('sb_type', 32)->nullable();
-            $table->unsignedBigInteger('sb_owner')->nullable();
-            $table->unsignedBigInteger('sb_owner_2')->nullable();
-            $table->string('sb_meeting_email', 255);
-            $table->index('worldid_mixed', 'worldid_mixed');
-            $table->index('kml_file_uri_string', 'kml_file_uri_string');
-            $table->index('principal_user_bigint', 'principal_user_bigint');
-            $table->index('editors_string', 'editors_string');
-            $table->index('lang_enum', 'lang_enum');
-            $table->index('uri_string', 'uri_string');
-            $table->index('sb_type', 'sb_type');
-            $table->index('sb_owner', 'sb_owner');
-            $table->index('sb_owner_2', 'sb_owner_2');
-            $table->index('sb_meeting_email', 'sb_meeting_email');
-        });
+        $allFormats = DB::table('comdef_formats')
+            ->get()
+            ->mapToGroups(fn ($format) => [$format->shared_id_bigint => $format]);
 
-        Schema::create('comdef_users', function (Blueprint $table) {
-            $table->bigIncrements('id_bigint');
-            $table->unsignedTinyInteger('user_level_tinyint')->default(0);
-            $table->string('name_string', 255);
-            $table->text('description_string');
-            $table->string('email_address_string', 255);
-            $table->string('login_string', 255);
-            $table->string('password_string', 255);
-            $table->dateTime('last_access_datetime')->default('1970-01-01 00:00:00');
-            $table->string('lang_enum', 7)->default('en');
-            $table->bigInteger('owner_id_bigint')->default(-1);
-            $table->unique('login_string', 'login_string');
-            $table->index('user_level_tinyint', 'user_level_tinyint');
-            $table->index('email_address_string', 'email_address_string');
-            $table->index('last_access_datetime', 'last_access_datetime');
-            $table->index('lang_enum', 'lang_enum');
-            $table->index('owner_id_bigint', 'owner_id_bigint');
-        });
-
-        Schema::create('comdef_changes', function (Blueprint $table) {
-            $table->bigIncrements('id_bigint');
-            $table->unsignedBigInteger('user_id_bigint');
-            $table->unsignedBigInteger('service_body_id_bigint');
-            $table->string('lang_enum', 7);
-            $table->timestamp('change_date')->useCurrent()->useCurrentOnUpdate();
-            $table->string('object_class_string', 64);
-            $table->string('change_name_string', 255)->nullable();
-            $table->text('change_description_text')->nullable();
-            $table->unsignedBigInteger('before_id_bigint')->nullable();
-            $table->string('before_lang_enum', 7)->nullable();
-            $table->unsignedBigInteger('after_id_bigint')->nullable();
-            $table->string('after_lang_enum', 7)->nullable();
-            $table->string('change_type_enum', 32);
-            $table->binary('before_object')->nullable();
-            $table->binary('after_object')->nullable();
-            $table->index('user_id_bigint', 'user_id_bigint');
-            $table->index('service_body_id_bigint', 'service_body_id_bigint');
-            $table->index('lang_enum', 'lang_enum');
-            $table->index('change_type_enum', 'change_type_enum');
-            $table->index('change_date', 'change_date');
-            $table->index('before_id_bigint', 'before_id_bigint');
-            $table->index('after_id_bigint', 'after_id_bigint');
-            $table->index('before_lang_enum', 'before_lang_enum');
-            $table->index('after_lang_enum', 'after_lang_enum');
-            $table->index('object_class_string', 'object_class_string');
-        });
+        DB::table('comdef_meetings_main')->chunkById(100, function ($meetings) use ($allFormats) {
+            $formatMeetings = [];
+            foreach ($meetings as $meeting) {
+                $formatIds = $meeting?->formats ?? '';
+                $formatIds = explode(',', $formatIds);
+                foreach ($formatIds as $formatId) {
+                    $formats = $allFormats->get($formatId, []);
+                    foreach ($formats as $format) {
+                        $formatMeetings[] = ['meeting_id' => $meeting->id_bigint, 'format_id' => $format->id];
+                    }
+                }
+            }
+            if (count($formatMeetings)) {
+                DB::table('format_meeting')->insert($formatMeetings);
+            }
+        }, 'id_bigint');
     }
 
     /**

@@ -46,7 +46,7 @@ function parse_redirect(
     &$server    ///< A reference to an instance of c_comdef_server
 ) {
     $result = null;
-    $http_vars = array_merge_recursive($_GET, $_POST);
+    $http_vars = request()->input();
 
     $port = $_SERVER['SERVER_PORT'] ;
     // IIS puts "off" in the HTTPS field, so we need to test for that.

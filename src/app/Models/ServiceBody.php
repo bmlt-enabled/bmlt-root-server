@@ -16,6 +16,7 @@ class ServiceBody extends Model
         'sb_type',
         'uri_string',
         'kml_file_uri_string',
+        'principal_user_bigint',
         'worldid_mixed',
         'sb_meeting_email',
     ];
