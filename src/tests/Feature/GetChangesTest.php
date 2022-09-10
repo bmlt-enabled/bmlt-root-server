@@ -117,7 +117,6 @@ class GetChangesTest extends TestCase
     private function getMainValuesPublicArray($meeting, array $valuesArray)
     {
         return collect($this->getMainValuesArray($valuesArray))
-            ->reject(fn ($value, $key) => $key == 'worldid_mixed' || $key == 'time_zone')
             ->map(fn ($value) => $value ?? '')
             ->merge(['id_bigint' => strval($meeting?->id_bigint ?? '')])
             ->reject(fn ($value, $key) => is_null($value) || $value == '')
@@ -382,6 +381,66 @@ class GetChangesTest extends TestCase
                     'service_body_name' => '',
                     'meeting_exists' => '1',
                     'details' => 'venue_type was changed from "1" to "2".',
+                    'json_data' => [
+                        'before' => collect($this->getMainValuesPublicArray($change->beforeMeeting, $beforeValues))->merge($beforeValues)->toArray(),
+                        'after' => collect($this->getMainValuesPublicArray($change->afterMeeting, $afterValues))->merge($afterValues)->toArray(),
+                    ],
+                ]
+            ]);
+    }
+
+    public function testWorldIdChanged()
+    {
+        $user = $this->createUser();
+        $beforeValues = ['worldid_mixed' => 'before'];
+        $afterValues = ['worldid_mixed' => 'after'];
+        $change = $this->createChange($beforeValues, $afterValues, $user);
+        $this->get('/client_interface/json/?switcher=GetChanges')
+            ->assertStatus(200)
+            ->assertExactJson([
+                [
+                    'date_int' => strval(strtotime($change->change_date)),
+                    'date_string' => date('g:i A, n/j/Y', strtotime($change->change_date)),
+                    'change_type' => $change->change_type_enum,
+                    'change_id' => strval($change->id_bigint),
+                    'meeting_id' => strval($change->afterMeeting->id_bigint),
+                    'meeting_name' => '',
+                    'user_id' => strval($user->id_bigint),
+                    'user_name' => $user->name_string,
+                    'service_body_id' => '1',
+                    'service_body_name' => '',
+                    'meeting_exists' => '1',
+                    'details' => 'worldid_mixed was changed from "before" to "after".',
+                    'json_data' => [
+                        'before' => collect($this->getMainValuesPublicArray($change->beforeMeeting, $beforeValues))->merge($beforeValues)->toArray(),
+                        'after' => collect($this->getMainValuesPublicArray($change->afterMeeting, $afterValues))->merge($afterValues)->toArray(),
+                    ],
+                ]
+            ]);
+    }
+
+    public function testTimeZoneChanged()
+    {
+        $user = $this->createUser();
+        $beforeValues = ['time_zone' => 'before'];
+        $afterValues = ['time_zone' => 'after'];
+        $change = $this->createChange($beforeValues, $afterValues, $user);
+        $this->get('/client_interface/json/?switcher=GetChanges')
+            ->assertStatus(200)
+            ->assertExactJson([
+                [
+                    'date_int' => strval(strtotime($change->change_date)),
+                    'date_string' => date('g:i A, n/j/Y', strtotime($change->change_date)),
+                    'change_type' => $change->change_type_enum,
+                    'change_id' => strval($change->id_bigint),
+                    'meeting_id' => strval($change->afterMeeting->id_bigint),
+                    'meeting_name' => '',
+                    'user_id' => strval($user->id_bigint),
+                    'user_name' => $user->name_string,
+                    'service_body_id' => '1',
+                    'service_body_name' => '',
+                    'meeting_exists' => '1',
+                    'details' => 'time_zone was changed from "before" to "after".',
                     'json_data' => [
                         'before' => collect($this->getMainValuesPublicArray($change->beforeMeeting, $beforeValues))->merge($beforeValues)->toArray(),
                         'after' => collect($this->getMainValuesPublicArray($change->afterMeeting, $afterValues))->merge($afterValues)->toArray(),
