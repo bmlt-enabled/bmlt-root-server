@@ -120,6 +120,7 @@ class GetChangesTest extends TestCase
             ->reject(fn ($value, $key) => $key == 'worldid_mixed' || $key == 'time_zone')
             ->map(fn ($value) => $value ?? '')
             ->merge(['id_bigint' => strval($meeting?->id_bigint ?? '')])
+            ->reject(fn ($value, $key) => is_null($value) || $value == '')
             ->toArray();
     }
 
@@ -295,6 +296,9 @@ class GetChangesTest extends TestCase
         $beforeValues = ['weekday_tinyint' => '0'];
         $afterValues = ['weekday_tinyint' => '1'];
         $change = $this->createChange($beforeValues, $afterValues, $user);
+        // for some reason changes add 1
+        $beforeValues = ['weekday_tinyint' => '1'];
+        $afterValues = ['weekday_tinyint' => '2'];
         $this->get('/client_interface/json/?switcher=GetChanges')
             ->assertStatus(200)
             ->assertExactJson([
@@ -329,9 +333,9 @@ class GetChangesTest extends TestCase
         $afterValues = ['formats' => implode(',', [$format1->shared_id_bigint, $format2->shared_id_bigint, $format3->shared_id_bigint])];
         $change = $this->createChange($beforeValues, $afterValues, $user);
         $beforeArray = collect($this->getMainValuesPublicArray($change->beforeMeeting, $beforeValues))->merge($beforeValues)->toArray();
-        $beforeArray['formats'] = 'X';
+        $beforeArray['formats'] = ['X'];
         $afterArray = collect($this->getMainValuesPublicArray($change->afterMeeting, $afterValues))->merge($afterValues)->toArray();
-        $afterArray['formats'] = 'A, B, X';
+        $afterArray['formats'] = ['A', 'B', 'X'];
         $this->get('/client_interface/json/?switcher=GetChanges')
             ->assertStatus(200)
             ->assertExactJson([

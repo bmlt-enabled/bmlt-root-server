@@ -28,7 +28,8 @@ class ChangeRepository implements ChangeRepositoryInterface
                 'beforeMeeting.data' => fn ($query) => $query->where('key', 'meeting_name'),
                 'afterMeeting.data' => fn ($query) => $query->where('key', 'meeting_name'),
             ])
-            ->where('object_class_string', 'c_comdef_meeting');
+            ->where('object_class_string', 'c_comdef_meeting')
+            ->orderByDesc('change_date');
 
         if (!is_null($meetingId)) {
             $changes = $changes->where(function (Builder $query) use ($meetingId) {
