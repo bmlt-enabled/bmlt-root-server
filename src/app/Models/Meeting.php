@@ -32,9 +32,4 @@ class Meeting extends Model
     {
         return $this->hasMany(MeetingData::class, 'meetingid_bigint');
     }
-
-    public function realFormats()
-    {
-        return $this->belongsToMany(Format::class);
-    }
 }
