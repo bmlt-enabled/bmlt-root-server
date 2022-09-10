@@ -146,6 +146,9 @@ class SwitcherController extends Controller
 
         $startDate = $validated['start_date'] ?? null;
         $endDate = $validated['end_date'] ?? null;
+        if ($endDate) {
+            $endDate = date('Y-m-d 23:59:59', strtotime($endDate));
+        }
         $meetingId = $validated['meeting_id'] ?? null;
         $serviceBodyId = $validated['service_body_id'] ?? null;
 
