@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Migration;
 use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -37,7 +38,7 @@ class SwitcherController extends Controller
     {
         $switcher = $request->input('switcher');
 
-        $validValues = ['GetFormats', 'GetServiceBodies', 'GetFieldKeys', 'GetFieldValues', 'GetChanges'];
+        $validValues = ['GetFormats', 'GetServiceBodies', 'GetFieldKeys', 'GetFieldValues', 'GetChanges', 'GetServerInfo'];
         if (in_array($switcher, $validValues)) {
             if ($dataFormat != 'json' && $dataFormat != 'jsonp') {
                 abort(404, 'This endpoint only supports the \'json\' and \'jsonp\' data formats.');
@@ -55,9 +56,12 @@ class SwitcherController extends Controller
             } elseif ($switcher == 'GetFieldValues') {
                 $collection = $this->getFieldValues($request);
                 $response = new JsonResponse($collection);
-            } else {
+            } elseif ($switcher == 'GetChanges') {
                 $collection = $this->getMeetingChanges($request);
                 $response = MeetingChangeResource::collection($collection)->response();
+            } else {
+                $collection = $this->getServerInfo($request);
+                $response = new JsonResponse($collection);
             }
 
             if ($dataFormat == 'jsonp') {
@@ -153,5 +157,32 @@ class SwitcherController extends Controller
         $serviceBodyId = $validated['service_body_id'] ?? null;
 
         return $this->changeRepository->getMeetingChanges($startDate, $endDate, $meetingId, $serviceBodyId);
+    }
+
+    private function getServerInfo()
+    {
+        $versionArray = explode('.', config('app.version'));
+        return [
+            'version' => config('app.version'),
+            'versionInt' => (intval($versionArray[0]) * 1000000) + (intval($versionArray[1]) * 1000) + intval($versionArray[2]),
+            'langs' => collect(scandir(base_path('lang')))->reject(fn ($dir) => $dir == '.' || $dir == '..')->sort()->join(','),
+            'nativeLang' => config('app.locale'),
+            'defaultDuration' => legacy_config('default_duration_time'),
+            'regionBias' => legacy_config('region_bias'),
+            'charSet' => 'UTF-8',
+            'distanceUnits' => legacy_config('distance_units'),
+            'semanticAdmin' => legacy_config('enable_semantic_admin') ? '1' : '0',
+            'emailEnabled' => legacy_config('enable_email_contact') ? '1' : '0',
+            'emailIncludesServiceBodies' => legacy_config('include_service_body_admin_on_emails') ? '1' : '0',
+            'changesPerMeeting' => strval(legacy_config('change_depth_for_meetings')),
+            'meeting_states_and_provinces' => implode(',', legacy_config('meeting_states_and_provinces', [])),
+            'meeting_counties_and_sub_provinces' => implode(',', legacy_config('meeting_counties_and_sub_provinces', [])),
+            'available_keys' => $this->meetingRepository->getFieldKeys()->map(fn ($value) => $value['key'])->join(','),
+            'google_api_key' => legacy_config('google_api_key', ''),
+            'dbVersion' => Migration::query()->orderByDesc('id')->first()->migration,
+            'dbPrefix' => legacy_config('db_prefix'),
+            'meeting_time_zones_enabled' => legacy_config('meeting_time_zones_enabled') ? '1' : '0',
+            'phpVersion' => phpversion()
+        ];
     }
 }
