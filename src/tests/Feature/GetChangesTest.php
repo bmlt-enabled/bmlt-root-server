@@ -280,7 +280,7 @@ class GetChangesTest extends TestCase
                     'service_body_id' => '1',
                     'service_body_name' => '',
                     'meeting_exists' => '1',
-                    'details' => 'latitude was changed from "1.1" to "-1.1".',
+                    'details' => 'The meeting latitude was changed from "1.1" to "-1.1".',
                     'json_data' => [
                         'before' => collect($this->getMainValuesPublicArray($change->beforeMeeting, $beforeValues))->merge($beforeValues)->toArray(),
                         'after' => collect($this->getMainValuesPublicArray($change->afterMeeting, $afterValues))->merge($afterValues)->toArray(),
@@ -313,7 +313,7 @@ class GetChangesTest extends TestCase
                     'service_body_id' => '1',
                     'service_body_name' => '',
                     'meeting_exists' => '1',
-                    'details' => 'weekday_tinyint was changed from "Sunday" to "Monday".',
+                    'details' => 'The day of the week on which the meeting gathers was changed from "Sunday" to "Monday".',
                     'json_data' => [
                         'before' => collect($this->getMainValuesPublicArray($change->beforeMeeting, $beforeValues))->merge($beforeValues)->toArray(),
                         'after' => collect($this->getMainValuesPublicArray($change->afterMeeting, $afterValues))->merge($afterValues)->toArray(),
@@ -410,7 +410,7 @@ class GetChangesTest extends TestCase
                     'service_body_id' => '1',
                     'service_body_name' => '',
                     'meeting_exists' => '1',
-                    'details' => 'worldid_mixed was changed from "before" to "after".',
+                    'details' => 'The World Committee Code was changed from "before" to "after".',
                     'json_data' => [
                         'before' => collect($this->getMainValuesPublicArray($change->beforeMeeting, $beforeValues))->merge($beforeValues)->toArray(),
                         'after' => collect($this->getMainValuesPublicArray($change->afterMeeting, $afterValues))->merge($afterValues)->toArray(),
@@ -470,7 +470,7 @@ class GetChangesTest extends TestCase
                     'service_body_id' => '1',
                     'service_body_name' => '',
                     'meeting_exists' => '1',
-                    'details' => 'start_time was changed from "10:00" to "11:00".',
+                    'details' => 'The meeting start time was changed from "10:00" to "11:00".',
                     'json_data' => [
                         'before' => collect($this->getMainValuesPublicArray($change->beforeMeeting, $beforeValues))->merge($beforeValues)->toArray(),
                         'after' => collect($this->getMainValuesPublicArray($change->afterMeeting, $afterValues))->merge($afterValues)->toArray(),
@@ -500,7 +500,7 @@ class GetChangesTest extends TestCase
                     'service_body_id' => '1',
                     'service_body_name' => '',
                     'meeting_exists' => '1',
-                    'details' => 'duration_time was changed from "1:00" to "1:30".',
+                    'details' => 'The meeting duration was changed from "1:00" to "1:30".',
                     'json_data' => [
                         'before' => collect($this->getMainValuesPublicArray($change->beforeMeeting, $beforeValues))->merge($beforeValues)->toArray(),
                         'after' => collect($this->getMainValuesPublicArray($change->afterMeeting, $afterValues))->merge($afterValues)->toArray(),
@@ -530,7 +530,7 @@ class GetChangesTest extends TestCase
                     'service_body_id' => '1',
                     'service_body_name' => '',
                     'meeting_exists' => '1',
-                    'details' => 'longitude was changed from "1.1" to "-1.1".',
+                    'details' => 'The meeting longitude was changed from "1.1" to "-1.1".',
                     'json_data' => [
                         'before' => collect($this->getMainValuesPublicArray($change->beforeMeeting, $beforeValues))->merge($beforeValues)->toArray(),
                         'after' => collect($this->getMainValuesPublicArray($change->afterMeeting, $afterValues))->merge($afterValues)->toArray(),
@@ -560,7 +560,7 @@ class GetChangesTest extends TestCase
                     'service_body_id' => '1',
                     'service_body_name' => '',
                     'meeting_exists' => '1',
-                    'details' => 'latitude was changed from "1.1" to "-1.1".',
+                    'details' => 'The meeting latitude was changed from "1.1" to "-1.1".',
                     'json_data' => [
                         'before' => collect($this->getMainValuesPublicArray($change->beforeMeeting, $beforeValues))->merge($beforeValues)->toArray(),
                         'after' => collect($this->getMainValuesPublicArray($change->afterMeeting, $afterValues))->merge($afterValues)->toArray(),

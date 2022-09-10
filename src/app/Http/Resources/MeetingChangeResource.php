@@ -222,43 +222,53 @@ class MeetingChangeResource extends JsonResource
 
             $fieldName = $key;
             $isVisible = true;
+            $fieldPrompt = $key;
             $beforeValue = $beforeValues->get($key);
             $afterValue = $afterValues->get($key);
             if (is_array($afterValue)) {
                 $isVisible = $afterValue['visibility'] !== 1;
-                $fieldName = $afterValue['field_prompt'] ?? $fieldName;
+                $fieldPrompt = $afterValue['field_prompt'] ?? $fieldName;
                 $afterValue = $afterValue['data_string'] ?? null;
             }
             if (is_array($beforeValue)) {
                 if ($isVisible) {
                     $isVisible = $beforeValue['visibility'] !== 1;
                 }
-                $fieldName = $beforeValue['field_prompt'] ?? $fieldName;
+                if ($fieldPrompt == $key) {
+                    $fieldPrompt = $beforeValue['field_prompt'] ?? $fieldName;
+                }
                 $beforeValue = $beforeValue['data_string'] ?? null;
+            }
+            if ($fieldPrompt == $key) {
+                $translatedPrompt = __("change_detail.$key");
+                if ($translatedPrompt != "change_detail.$key") {
+                    $fieldPrompt = $translatedPrompt;
+                }
             }
 
             if (!is_null($beforeValue) && is_null($afterValue)) {
                 if ($key == 'published') {
-                    $changeStrings[] = $fieldName . ' ' . __('change_detail.was_unpublished') . '.';
+                    $changeStrings[] = __('change_detail.was_unpublished') . '.';
                     continue;
                 }
-                $changeStrings[] = $fieldName . ' ' . __('change_detail.was_deleted') . '.';
+                $changeStrings[] = $fieldPrompt . ' ' . __('change_detail.was_deleted') . '.';
             } elseif (is_null($beforeValue) && !is_null($afterValue)) {
                 if (!$isVisible) {
-                    $changeStrings[] = $fieldName . ' ' . __('change_detail.was_changed') . '.';
+                    $changeStrings[] = $fieldPrompt . ' ' . __('change_detail.was_changed') . '.';
                     continue;
                 } elseif ($key == 'published') {
-                    $changeStrings[] = (int)$afterValue != 0 ?  $fieldName . ' ' . __('change_detail.was_published') . '.' : null;
+                    if ((int)$afterValue != 0) {
+                        $changeStrings[] = __('change_detail.was_published') . '.';
+                    }
                     continue;
                 } elseif ($key == 'email_contact') {
-                    $changeStrings[] = $fieldName . ' ' . __('change_detail.was_changed') . '.';
+                    $changeStrings[] = $fieldPrompt . ' ' . __('change_detail.was_changed') . '.';
                     continue;
                 } elseif ($key == 'start_time' || $key == 'duration_time') {
-                    $fieldName = __("change_detail.$key");
                     $afterValue = explode(':', $afterValue);
                     $afterValue = (intval($afterValue[0]) * 100) + intval($afterValue[1]);
                 }
-                $changeStrings[] = $fieldName . ' ' . __('change_detail.was_added_as') . ' "' . $afterValue . '".';
+                $changeStrings[] = $fieldPrompt . ' ' . __('change_detail.was_added_as') . ' "' . $afterValue . '".';
             } elseif ($key == 'formats') {
                 $langEnum = $beforeValues->get('lang_enum');
                 if (is_null($langEnum)) {
@@ -279,13 +289,13 @@ class MeetingChangeResource extends JsonResource
                 }
             } elseif ($beforeValue != $afterValue) {
                 if (!$isVisible) {
-                    $changeStrings[] = $fieldName . ' ' . __('change_detail.was_changed') . '.';
+                    $changeStrings[] = $fieldPrompt . ' ' . __('change_detail.was_changed') . '.';
                     continue;
                 } elseif ($key == 'published') {
                     $changeStrings[] =  (int)$afterValue != 0 ? __('change_detail.was_published') . '.' : __('change_detail.was_unpublished') . '.';
                     continue;
                 } elseif ($key == 'email_contact') {
-                    $changeStrings[] = $fieldName . ' ' . __('change_detail.was_changed') . '.';
+                    $changeStrings[] = $fieldPrompt . ' ' . __('change_detail.was_changed') . '.';
                     continue;
                 } elseif ($key == 'weekday_tinyint') {
                     $intToDay = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
@@ -299,8 +309,7 @@ class MeetingChangeResource extends JsonResource
                     $beforeValue = $beforeValue?->name_string ?? __('change_detail.non_existent_service_body');
                     $afterValue = $allServiceBodies->get((int)$afterValue);
                     $afterValue = $afterValue?->name_string ?? __('change_detail.non_existent_service_body');
-                    $fieldName = __('change_detail.sb_prompt');
-                    $changeStrings[] = $fieldName . ' ' . $beforeValue . ' ' . __('change_detail.to') . ' ' . $afterValue . '.';
+                    $changeStrings[] = __('change_detail.sb_prompt') . ' ' . $beforeValue . ' ' . __('change_detail.to') . ' ' . $afterValue . '.';
                     continue;
                 } elseif ($key == 'longitude' || $key == 'latitude') {
                     $beforeValue = floatval($beforeValue);
@@ -315,7 +324,7 @@ class MeetingChangeResource extends JsonResource
                         continue;
                     }
                 }
-                $changeStrings[] = $fieldName . ' ' . __('change_detail.was_changed_from') . ' "' . $beforeValue . '" ' . __('change_detail.to') . ' "' . $afterValue . '".';
+                $changeStrings[] = $fieldPrompt . ' ' . __('change_detail.was_changed_from') . ' "' . $beforeValue . '" ' . __('change_detail.to') . ' "' . $afterValue . '".';
             }
         }
 
