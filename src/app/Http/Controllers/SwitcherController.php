@@ -164,7 +164,7 @@ class SwitcherController extends Controller
         $versionArray = explode('.', config('app.version'));
         return [[
             'version' => config('app.version'),
-            'versionInt' => (intval($versionArray[0]) * 1000000) + (intval($versionArray[1]) * 1000) + intval($versionArray[2]),
+            'versionInt' => strval((intval($versionArray[0]) * 1000000) + (intval($versionArray[1]) * 1000) + intval($versionArray[2])),
             'langs' => collect(scandir(base_path('lang')))->reject(fn ($dir) => $dir == '.' || $dir == '..')->sort()->join(','),
             'nativeLang' => config('app.locale'),
             'defaultDuration' => legacy_config('default_duration_time'),
