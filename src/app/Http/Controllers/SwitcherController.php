@@ -162,7 +162,7 @@ class SwitcherController extends Controller
     private function getServerInfo()
     {
         $versionArray = explode('.', config('app.version'));
-        return [
+        return [[
             'version' => config('app.version'),
             'versionInt' => (intval($versionArray[0]) * 1000000) + (intval($versionArray[1]) * 1000) + intval($versionArray[2]),
             'langs' => collect(scandir(base_path('lang')))->reject(fn ($dir) => $dir == '.' || $dir == '..')->sort()->join(','),
@@ -177,12 +177,12 @@ class SwitcherController extends Controller
             'changesPerMeeting' => strval(legacy_config('change_depth_for_meetings')),
             'meeting_states_and_provinces' => implode(',', legacy_config('meeting_states_and_provinces', [])),
             'meeting_counties_and_sub_provinces' => implode(',', legacy_config('meeting_counties_and_sub_provinces', [])),
-            'available_keys' => $this->meetingRepository->getFieldKeys()->map(fn ($value) => $value['key'])->join(','),
+            'available_keys' => $this->meetingRepository->getFieldKeys()->map(fn ($value) => $value['key'])->merge(['format_shared_id_list'])->join(','),
             'google_api_key' => legacy_config('google_api_key', ''),
             'dbVersion' => Migration::query()->orderByDesc('id')->first()->migration,
             'dbPrefix' => legacy_config('db_prefix'),
             'meeting_time_zones_enabled' => legacy_config('meeting_time_zones_enabled') ? '1' : '0',
             'phpVersion' => phpversion()
-        ];
+        ]];
     }
 }
