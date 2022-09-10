@@ -401,37 +401,6 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                     $after_lang = $this->GetLocalLang();
                     $cType = (true == $is_rollback) ? 'comdef_change_type_rollback' : ((null != $before) ? 'comdef_change_type_change' : 'comdef_change_type_new');
                     c_comdef_server::AddNewChange($user->GetID(), $cType, $service_body_id, $before, $after, 'c_comdef_meeting', $before_id, $after_id, $before_lang, $after_lang);
-
-                    // Update the new formats join table
-                    //
-                    //
-                    $tablePrefix = explode('_', c_comdef_server::GetMeetingTableName_obj())[0];
-                    $meetingId = $this->_my_meeting_data['id_bigint'];
-
-                    // Delete old rows
-                    c_comdef_dbsingleton::preparedExec('DELETE FROM ' . $tablePrefix . '_format_meeting WHERE meeting_id = ?', [$meetingId]);
-
-                    // Get format ids for new rows
-                    $formatSharedIds = $main_table_values['formats'] ?? '';
-                    $formatSharedIds = explode(',', $formatSharedIds);
-                    $formatIds = [];
-                    if (count($formatSharedIds)) {
-                        $selectQuery = 'SELECT id FROM ' . $tablePrefix . '_comdef_formats WHERE shared_id_bigint IN (';
-                        $selectQuery .= implode(',', $formatSharedIds);
-                        $selectQuery .= ')';
-                        $rows = c_comdef_dbsingleton::preparedQuery($selectQuery);
-                        if ($rows && count($rows)) {
-                            foreach ($rows as $row) {
-                                $formatIds[] = $row['id'];
-                            }
-                        }
-                    }
-
-                    // Insert new rows
-                    foreach ($formatIds as $formatId) {
-                        c_comdef_dbsingleton::preparedExec('INSERT INTO ' . $tablePrefix . '_format_meeting (meeting_id, format_id) VALUES(?, ?)', [$meetingId, $formatId]);
-                    }
-
                     $ret = true;
                 }
             } catch (Exception $ex) {

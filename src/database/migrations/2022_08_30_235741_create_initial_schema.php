@@ -16,7 +16,6 @@ return new class extends Migration
     {
         $prefix = config('database.connections.mysql.prefix');
         if (Schema::hasTable('comdef_db_version')) {
-            DB::statement(DB::raw('ALTER TABLE ' . $prefix . 'comdef_db_version ENGINE = InnoDB'));
             if (!Schema::hasColumn('comdef_db_version', 'id')) {
                 Schema::table('comdef_db_version', function (Blueprint $table) {
                     $table->increments('id')->first();
@@ -31,7 +30,6 @@ return new class extends Migration
         }
 
         if (Schema::hasTable('comdef_meetings_data')) {
-            DB::statement(DB::raw('ALTER TABLE ' . $prefix . 'comdef_meetings_data ENGINE = InnoDB'));
             if (!Schema::hasColumn('comdef_meetings_data', 'id')) {
                 Schema::table('comdef_meetings_data', function (Blueprint $table) {
                     $table->bigIncrements('id')->first();
@@ -83,7 +81,6 @@ return new class extends Migration
         }
 
         if (Schema::hasTable('comdef_meetings_longdata')) {
-            DB::statement(DB::raw('ALTER TABLE ' . $prefix . 'comdef_meetings_longdata ENGINE = InnoDB'));
             if (!Schema::hasColumn('comdef_meetings_longdata', 'id')) {
                 Schema::table('comdef_meetings_longdata', function (Blueprint $table) {
                     $table->bigIncrements('id')->first();
@@ -108,7 +105,6 @@ return new class extends Migration
         }
 
         if (Schema::hasTable('comdef_formats')) {
-            DB::statement(DB::raw('ALTER TABLE ' . $prefix . 'comdef_formats ENGINE = InnoDB'));
             if (!Schema::hasColumn('comdef_formats', 'id')) {
                 Schema::table('comdef_formats', function (Blueprint $table) {
                     $table->bigIncrements('id')->first();
@@ -632,9 +628,7 @@ return new class extends Migration
             ]);
         }
 
-        if (Schema::hasTable('comdef_meetings_main')) {
-            DB::statement(DB::raw('ALTER TABLE ' . $prefix . 'comdef_meetings_main ENGINE = InnoDB'));
-        } else {
+        if (!Schema::hasTable('comdef_meetings_main')) {
             Schema::create('comdef_meetings_main', function (Blueprint $table) {
                 $table->bigIncrements('id_bigint');
                 $table->string('worldid_mixed', 255)->nullable();
@@ -668,9 +662,7 @@ return new class extends Migration
             });
         }
 
-        if (Schema::hasTable('comdef_service_bodies')) {
-            DB::statement(DB::raw('ALTER TABLE ' . $prefix . 'comdef_service_bodies ENGINE = InnoDB'));
-        } else {
+        if (!Schema::hasTable('comdef_service_bodies')) {
             Schema::create('comdef_service_bodies', function (Blueprint $table) {
                 $table->bigIncrements('id_bigint');
                 $table->string('name_string', 255);
@@ -698,12 +690,7 @@ return new class extends Migration
             });
         }
 
-        if (Schema::hasTable('comdef_users')) {
-            Schema::table('comdef_users', function (Blueprint $table) {
-                $table->dateTime('last_access_datetime')->default('1970-01-01 00:00:00')->change();
-            });
-            DB::statement(DB::raw('ALTER TABLE ' . $prefix . 'comdef_users ENGINE = InnoDB'));
-        } else {
+        if (!Schema::hasTable('comdef_users')) {
             Schema::create('comdef_users', function (Blueprint $table) {
                 $table->bigIncrements('id_bigint');
                 $table->unsignedTinyInteger('user_level_tinyint')->default(0);
@@ -724,9 +711,7 @@ return new class extends Migration
             });
         }
 
-        if (Schema::hasTable('comdef_changes')) {
-            DB::statement(DB::raw('ALTER TABLE ' . $prefix . 'comdef_changes ENGINE = InnoDB'));
-        } else {
+        if (!Schema::hasTable('comdef_changes')) {
             Schema::create('comdef_changes', function (Blueprint $table) {
                 $table->bigIncrements('id_bigint');
                 $table->unsignedBigInteger('user_id_bigint');
@@ -755,36 +740,6 @@ return new class extends Migration
                 $table->index('object_class_string', 'object_class_string');
             });
         }
-
-        Schema::create('format_meeting', function (Blueprint $table) {
-            $table->unsignedBigInteger('format_id');
-            $table->unsignedBigInteger('meeting_id');
-            $table->index('meeting_id');
-            $table->index('format_id');
-            $table->foreign('meeting_id')->references('id_bigint')->on('comdef_meetings_main')->cascadeOnDelete();
-            $table->foreign('format_id')->references('id')->on('comdef_formats')->cascadeOnDelete();
-        });
-
-        $allFormats = DB::table('comdef_formats')
-            ->get()
-            ->mapToGroups(fn ($format) => [$format->shared_id_bigint => $format]);
-
-        DB::table('comdef_meetings_main')->chunkById(100, function ($meetings) use ($allFormats) {
-            $formatMeetings = [];
-            foreach ($meetings as $meeting) {
-                $formatIds = $meeting?->formats ?? '';
-                $formatIds = explode(',', $formatIds);
-                foreach ($formatIds as $formatId) {
-                    $formats = $allFormats->get($formatId, []);
-                    foreach ($formats as $format) {
-                        $formatMeetings[] = ['meeting_id' => $meeting->id_bigint, 'format_id' => $format->id];
-                    }
-                }
-            }
-            if (count($formatMeetings)) {
-                DB::table('format_meeting')->insert($formatMeetings);
-            }
-        }, 'id_bigint');
     }
 
     /**
