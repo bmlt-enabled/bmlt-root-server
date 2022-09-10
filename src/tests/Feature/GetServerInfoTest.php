@@ -24,6 +24,14 @@ class GetServerInfoTest extends TestCase
         $this->assertStringEndsWith(']);', $content);
     }
 
+    public function testIsList()
+    {
+        $data = $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->json();
+        $this->assertEquals(1, count($data));
+    }
+
     public function testVersion()
     {
         $this->get('/client_interface/json/?switcher=GetServerInfo')
