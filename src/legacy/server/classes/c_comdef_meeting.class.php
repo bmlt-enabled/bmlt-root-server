@@ -53,7 +53,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 {
     /// This is the data for this meeting.
     private $_my_meeting_data = null;
-    
+
     /*******************************************************************/
     /** \brief Returns the object, in 3 storable arrays.
 
@@ -68,17 +68,17 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         // We first see whether this is a new instance or an existing one. A new instance will have no ID.
         $is_update = ( isset($this->_my_meeting_data['id_bigint']) && (0 < intval($this->_my_meeting_data['id_bigint']) ) );
-        
+
         // We now set up values for the three tables: The main one, the extra data one, and the long data one.
         $main_table_values = array();
         $data_table_values = array();
         $longdata_table_values = array();
-        
+
         // If this is a new meeting, we null it out so that the db will auto increment the value
         if (!$is_update) {
             $this->_my_meeting_data['id_bigint'] = null;
         }
-        
+
         // Load the main table first.
         $main_table_values['id_bigint'] = $this->_my_meeting_data['id_bigint'];
 
@@ -142,7 +142,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         } else {
             $main_table_values['published'] = 0;
         }
-        
+
         // Now, we "unwind" the formats. Remember that we made the formats into an array, and replaced the values with objects, so we just use the keys here.
         $main_table_values['formats'] = "";
         if (isset($this->_my_meeting_data['formats']) && is_array($this->_my_meeting_data['formats']) && count($this->_my_meeting_data['formats'])) {
@@ -153,7 +153,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                 $main_table_values['formats'] .= $key;
             }
         }
-        
+
         // Okay, that does it for the main table. Time to do the two data tables. The way we do that is very simple: We just measure how many bytes are in the data.
         // Anything over 255 characters in length becomes a member of the longdata table.
         foreach ($this->_my_meeting_data as $key => $value2) {
@@ -176,7 +176,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                 case 'distance_in_miles':
                 case 'email_contact':
                     break;
-                
+
                 // Everything else goes into one of the other tables.
                 default:
                     $data_table_value['data_bigint'] = null;
@@ -216,7 +216,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                                 }
                             }
                         }
-                        
+
                         if (null != $val) {
                             $data_table_value['meetingid_bigint'] = $main_table_values['id_bigint'];
                             $data_table_value['lang_enum'] = $this->_my_meeting_data['lang_enum'];
@@ -230,16 +230,16 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                     break;
             }
         }
-        
+
         $ret_array = array ();
-        
+
         array_push($ret_array, $main_table_values);
         array_push($ret_array, $data_table_values);
         array_push($ret_array, $longdata_table_values);
-        
+
         return $ret_array;
     }
-    
+
     /*******************************************************************/
     /** \brief Updates the DB to the current values of this instance.
         (replacing current values of the DB).
@@ -254,9 +254,9 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = false;
-        
+
         $user = c_comdef_server::GetCurrentUserObj();
-        
+
         if ($this->UserCanEdit($user)) {
             // We take a snapshot of the meeting as it currently sits in the database as a "before" image.
             $before = null;
@@ -264,7 +264,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
             $before_lang = null;
             $service_body_id = null;
             $before_obj = c_comdef_server::GetServer()->GetOneMeeting($this->GetID());
-            
+
             if ($before_obj instanceof c_comdef_meeting) {
                 $service_body_id = $before_obj->GetServiceBodyID();
                 $before = $before_obj->SerializeObject();
@@ -276,19 +276,18 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
             if (null == $service_body_id) {
                 $service_body_id = $this->GetServiceBodyID();
             }
-            
+
             try {
                 // We now set up values for the three tables: The main one, the extra data one, and the long data one.
                 list ( $main_table_values, $data_table_values, $longdata_table_values ) = $this->ReduceToArrays();
                 // Okay, we have our three rows. Time to send them to the database.
 
-                
                 if (is_array($main_table_values)  && count($main_table_values)) {
                     // The first thing we do is delete the current entry. We'll insert a new one.
                     $this->DeleteFromDB_NoRecord();
-    
+
                     $first = true;
-                    $updateSQL = "INSERT INTO `".c_comdef_server::GetMeetingTableName_obj()."_main` (";
+                    $updateSQL = "INSERT INTO `" . c_comdef_server::GetMeetingTableName_obj() . "_main` (";
                     foreach ($main_table_values as $key => $value) {
                         if (!$first) {
                             $updateSQL .= ",";
@@ -311,7 +310,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                         /// We give the value by declaring an associative array element with the token name.
                         $vals[":$key"] = $value;
                     }
-                    
+
                     $updateSQL .= ")";
 
                     c_comdef_dbsingleton::preparedExec($updateSQL, $vals);
@@ -319,13 +318,13 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                         // This was a new meeting, need to get the generated id
                         $newMeetingId = intval(c_comdef_dbsingleton::lastInsertId());
                         $this->_my_meeting_data['id_bigint'] = $newMeetingId;
-                        list ( $main_table_values, $data_table_values, $longdata_table_values ) = $this->ReduceToArrays();
+                        list ($main_table_values, $data_table_values, $longdata_table_values) = $this->ReduceToArrays();
                     }
 
-                    if (is_array($data_table_values)  && count($data_table_values)) {
+                    if (is_array($data_table_values) && count($data_table_values)) {
                         foreach ($data_table_values as $data_table_value) {
                             $first = true;
-                            $updateSQL = "INSERT INTO `".c_comdef_server::GetMeetingTableName_obj()."_data` (";
+                            $updateSQL = "INSERT INTO `" . c_comdef_server::GetMeetingTableName_obj() . "_data` (";
                             foreach ($data_table_value as $key => $value) {
                                 if (!$first) {
                                     $updateSQL .= ",";
@@ -342,7 +341,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                                 if ($key == 'meetingid_bigint') {
                                     $value = $main_table_values['id_bigint'];
                                 }
-                                
+
                                 if (!$first) {
                                     $updateSQL .= ",";
                                 } else {
@@ -353,23 +352,23 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                                 /// We give the value by declaring an associative array element with the token name.
                                 $vals[":$key"] = $value;
                             }
-                            
+
                             $updateSQL .= ")";
-    
+
                             c_comdef_dbsingleton::preparedExec($updateSQL, $vals);
                         }
                     }
-                    
-                    if (is_array($longdata_table_values)  && count($longdata_table_values)) {
+
+                    if (is_array($longdata_table_values) && count($longdata_table_values)) {
                         foreach ($longdata_table_values as $longdata_table_value) {
                             $first = true;
-                            $updateSQL = "INSERT INTO `".c_comdef_server::GetMeetingTableName_obj()."_longdata` (";
+                            $updateSQL = "INSERT INTO `" . c_comdef_server::GetMeetingTableName_obj() . "_longdata` (";
                             foreach ($longdata_table_value as $key => $value) {
                                 // Just in case some dork wants to change the meeting ID (BAD idea).
                                 if ($key == 'meetingid_bigint') {
                                     $value = $main_table_values['id_bigint'];
                                 }
-                                
+
                                 if (!$first) {
                                     $updateSQL .= ",";
                                 } else {
@@ -391,9 +390,9 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                                 /// We give the value by declaring an associative array element with the token name.
                                 $vals[":$key"] = $value;
                             }
-                            
+
                             $updateSQL .= ")";
-                            
+
                             c_comdef_dbsingleton::preparedExec($updateSQL, $vals);
                         }
                     }
@@ -402,11 +401,42 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                     $after_lang = $this->GetLocalLang();
                     $cType = (true == $is_rollback) ? 'comdef_change_type_rollback' : ((null != $before) ? 'comdef_change_type_change' : 'comdef_change_type_new');
                     c_comdef_server::AddNewChange($user->GetID(), $cType, $service_body_id, $before, $after, 'c_comdef_meeting', $before_id, $after_id, $before_lang, $after_lang);
+
+                    // Update the new formats join table
+                    //
+                    //
+                    $tablePrefix = explode('_', c_comdef_server::GetMeetingTableName_obj())[0];
+                    $meetingId = $this->_my_meeting_data['id_bigint'];
+
+                    // Delete old rows
+                    c_comdef_dbsingleton::preparedExec('DELETE FROM ' . $tablePrefix . '_format_meeting WHERE meeting_id = ?', [$meetingId]);
+
+                    // Get format ids for new rows
+                    $formatSharedIds = $main_table_values['formats'] ?? '';
+                    $formatSharedIds = explode(',', $formatSharedIds);
+                    $formatIds = [];
+                    if (count($formatSharedIds)) {
+                        $selectQuery = 'SELECT id FROM ' . $tablePrefix . '_comdef_formats WHERE shared_id_bigint IN (';
+                        $selectQuery .= implode(',', $formatSharedIds);
+                        $selectQuery .= ')';
+                        $rows = c_comdef_dbsingleton::preparedQuery($selectQuery);
+                        if ($rows && count($rows)) {
+                            foreach ($rows as $row) {
+                                $formatIds[] = $row['id'];
+                            }
+                        }
+                    }
+
+                    // Insert new rows
+                    foreach ($formatIds as $formatId) {
+                        c_comdef_dbsingleton::preparedExec('INSERT INTO ' . $tablePrefix . '_format_meeting (meeting_id, format_id) VALUES(?, ?)', [$meetingId, $formatId]);
+                    }
+
                     $ret = true;
                 }
             } catch (Exception $ex) {
                 global  $_COMDEF_DEBUG;
-                
+
                 if ($_COMDEF_DEBUG) {
                     echo "Exception Thrown in c_comdef_meeting::UpdateToDB()!<br />";
                     var_dump($ex);
@@ -414,10 +444,10 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                 throw ( $ex );
             }
         }
-            
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Deletes this instance from the database.
 
@@ -430,9 +460,9 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = false;
-        
+
         $user = c_comdef_server::GetCurrentUserObj();
-        
+
         if ($this->UserCanEdit($user)) {
             try {
                 $sql = "DELETE FROM `".c_comdef_server::GetMeetingTableName_obj()."_main` WHERE `id_bigint`=?";
@@ -444,7 +474,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                 $ret = true;
             } catch (Exception $ex) {
                 global  $_COMDEF_DEBUG;
-                
+
                 if ($_COMDEF_DEBUG) {
                     echo "Exception Thrown in c_comdef_meeting::DeleteFromDB()!<br />";
                     var_dump($ex);
@@ -452,10 +482,10 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                 throw ( $ex );
             }
         }
-    
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Deletes this instance from the database.
 
@@ -468,25 +498,25 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = false;
-        
+
         $user = c_comdef_server::GetCurrentUserObj();
-        
+
         if ($this->UserCanEdit($user)) {
             // We take a snapshot of the meeting as it currently sits in the database as a "before" image.
             $service_body_id = $this->GetServiceBodyID();
             $id = $this->GetID();
             $lang = $this->GetLocalLang();
             $before = $this->SerializeObject();
-    
+
             try {
                 $ret = $this->DeleteFromDB_NoRecord();
-                
+
                 c_comdef_server::AddNewChange($user->GetID(), 'comdef_change_type_delete', $service_body_id, $before, '', 'c_comdef_meeting', $id, null, $lang, null);
 
                 $ret = true;
             } catch (Exception $ex) {
                 global  $_COMDEF_DEBUG;
-                
+
                 if ($_COMDEF_DEBUG) {
                     echo "Exception Thrown in c_comdef_meeting::DeleteFromDB()!<br />";
                     var_dump($ex);
@@ -494,10 +524,10 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                 throw ( $ex );
             }
         }
-    
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Updates this instance to the current values in the DB
         (replacing current values of the instance).
@@ -510,9 +540,9 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         try {
             $sql = "SELECT * FROM `".c_comdef_server::GetMeetingTableName_obj()."_main` WHERE id_bigint=? LIMIT 1";
-            
+
             $rows = c_comdef_dbsingleton::preparedQuery($sql, array ( $this->GetID() ));
-            
+
             if (is_array($rows) && count($rows)) {
                 foreach ($rows as $row) {
                     $meeting_row = self::process_meeting_row($row);
@@ -523,7 +553,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
             }
         } catch (Exception $ex) {
             global  $_COMDEF_DEBUG;
-            
+
             if ($_COMDEF_DEBUG) {
                 echo "Exception Thrown in c_comdef_meeting::RestoreFromDB()!<br />";
                 var_dump($ex);
@@ -545,24 +575,24 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
-        
+
         $local_strings = c_comdef_server::GetLocalStrings();
-        
+
         // At this point, we have the format strings. We mow parse them to get the keys used for address display.
         // The data item keys are surrounded by sets of double percent signs (%%_key_%%).
         $string_to_parse = $local_strings['comdef_global_more_details_address'];
-        
+
         if ($in_list) {
             $string_to_parse = $local_strings['comdef_global_list_address'];
         }
-        
+
         $matches = array();
-        
+
         if (preg_match_all('#\%\%(.*?)\%\%#', $string_to_parse, $matches)) {
             $keys = c_comdef_meeting::GetAllMeetingKeys();
             if (is_array($keys) && count($keys)) {
                 $ret = array();
-                
+
                 while ($elem = array_shift($matches[1])) {
                     if (in_array($elem, $keys)) {
                         array_push($ret, $elem);
@@ -587,21 +617,21 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
-        
+
         $local_strings = c_comdef_server::GetLocalStrings();
-        
+
         // At this point, we have the format strings. We mow parse them to get the keys used for address display.
         // The data item keys are surrounded by sets of double percent signs (%%_key_%%).
         $string_to_parse = $local_strings['comdef_global_more_details_address'];
-        
+
         if ($in_list) {
             $string_to_parse = $local_strings['comdef_global_list_address'];
         }
 
         $matches = array();
-        
+
         $parse_targets = explode('@@', $string_to_parse);
-        
+
         if (is_array($parse_targets) && count($parse_targets)) {
             $ret = array ();
             $keys = c_comdef_meeting::GetAllMeetingKeys();
@@ -611,17 +641,17 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                     $r['prefix'] = preg_replace('#(.*?)\%(.*)#', "$1", $target);
                     $r['key'] = preg_replace('#(.*?)\%\%(.*?)\%\%(.*)#', "$2", $target);
                     $r['suffix'] = preg_replace('#(.*)\%(.*?)$#', "$2", $target);
-                    
+
                     if (in_array($r['key'], $keys)) {
                         array_push($ret, $r);
                     }
                 }
             }
         }
-        
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Returns an array of strings, containing the keys (table columns)
         used for all meetings (specified in ID 0 table rows).
@@ -636,7 +666,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
-        
+
         try {
             // The main table always has these keys.
             $ret['id_bigint'] = 'id_bigint';
@@ -655,23 +685,23 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
             $ret['distance_in_km'] = 'distance_in_km';
             $ret['distance_in_miles'] = 'distance_in_miles';
             $ret['email_contact'] = 'email_contact';
-            
+
             // For the data and longdata tables, the keys can be dynamic, and we create a "0" ID version of them to establish the possibilities.
             $sql = "SELECT * FROM `".c_comdef_server::GetMeetingTableName_obj()."_data` WHERE meetingid_bigint=0";
-            
+
             $rows = c_comdef_dbsingleton::preparedQuery($sql, array ( ));
-            
+
             if (is_array($rows) && count($rows)) {
                 foreach ($rows as $row) {
                     $key = $row['key'];
                     $ret[$key] = $key;
                 }
             }
-            
+
             $sql = "SELECT * FROM `".c_comdef_server::GetMeetingTableName_obj()."_longdata` WHERE meetingid_bigint=0";
-            
+
             $rows = c_comdef_dbsingleton::preparedQuery($sql, array ( ));
-            
+
             if (is_array($rows) && count($rows)) {
                 foreach ($rows as $row) {
                     $key = $row['key'];
@@ -680,18 +710,18 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
             }
         } catch (Exception $ex) {
             global  $_COMDEF_DEBUG;
-            
+
             if ($_COMDEF_DEBUG) {
                 echo "Exception Thrown in c_comdef_meeting::GetAllMeetingKeys()!<br />";
                 var_dump($ex);
             }
             throw ( $ex );
         }
-        
+
         $ret['published'] = 'published';    // The last field is always the published flag.
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Returns an array of values for the given key.
 
@@ -706,10 +736,10 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
-        
+
         try {
             $rows = null;
-            
+
             switch (strtolower(trim($inKey))) {
                 case 'shared_group_id_bigint':
                 case 'email_contact':
@@ -717,7 +747,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                 case 'distance_in_miles':
                 case 'published':
                     break;
-                
+
                 case 'weekday_tinyint':
                 case 'venue_type':
                 case 'id_bigint':
@@ -734,7 +764,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                     $sql = "SELECT `$inKey`,`id_bigint`,`published` FROM `".c_comdef_server::GetMeetingTableName_obj()."_main` WHERE (`id_bigint` > 0) AND (`published`=1) ORDER BY ?";
                     $rows = c_comdef_dbsingleton::preparedQuery($sql, array ( $inKey ));
                     break;
-                
+
                 default:
                     $temp = self::GetDataTableTemplate();
                     if (isset($temp[$inKey]) && ($temp[$inKey]['visibility'] != 1)) {
@@ -753,54 +783,54 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                 foreach ($rows as $row) {
                     if (isset($row['published']) && $row['published']) {
                         $id = (isset($row['id_bigint']) && intval($row['id_bigint'])) ? intval($row['id_bigint']) : null;
-                    
+
                         if (!$id) {
                             $id = (isset($row['meetingid_bigint']) && intval($row['meetingid_bigint'])) ? intval($row['meetingid_bigint']) : null;
                         }
-                    
+
                         $value = null;
                         if (isset($row[$inKey])) {
                             $value = $row[$inKey];
-                        
+
                             if ($inKey == 'weekday_tinyint') {
                                 $value = intval($value) + 1;
                             }
-                        
+
                             if ($inKey == 'formats') {
                                 $value = explode(',', $value);
                                 asort($value);
                                 $value = implode("\t", $value);
                             }
                         }
-                    
+
                         if (!$value && isset($row['data_string']) && trim($row['data_string'])) {
                             $value = str_replace(',', '&APOS&', trim($row['data_string']));
                         }
-                    
+
                         if (!$value && isset($row['data_bigint'])) {
                             $value = intval($row['data_bigint']);
                         }
-                    
+
                         if (!$value && isset($row['data_double'])) {
                             $value = floatval($row['data_double']);
                         }
-                    
+
                         if (!$value && isset($row['data_longtext'])) {
                             $value = floatval($row['data_longtext']);
                         }
-                    
+
                         if (!$value && isset($row['data_blob'])) {
                             $value = floatval($row['data_blob']);
                         }
-                    
+
                         if (!$ret) {
                             $ret = array();
                             $ret['NULL'] = '';
                         }
-                            
+
                         if ($value) {
                             $ids = null;
-                        
+
                             if (isset($ret[$value])) {
                                 $ids = explode('\t', $ret[$value]);
                                 $ids[] = $id;
@@ -810,7 +840,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                             $ret[$value] = implode('\t', $ids);
                         } else {
                             $ids = null;
-                        
+
                             if (isset($ret['NULL'])) {
                                 $ids = explode('\t', $ret['NULL']);
                                 $ids[] = $id;
@@ -824,21 +854,21 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
             }
         } catch (Exception $ex) {
             global  $_COMDEF_DEBUG;
-            
+
             if ($_COMDEF_DEBUG) {
                 echo "Exception Thrown in c_comdef_meeting::GetAllMeetingValues()!<br />";
                 var_dump($ex);
             }
             throw ( $ex );
         }
-        
+
         if (!$ret['NULL']) {
             unset($ret['NULL']);
         }
-        
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Returns an array that provides a template for all tables
 
@@ -851,15 +881,15 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         $main = self::GetMainDataTemplate();
         $data = self::GetDataTableTemplate();
         $longData = self::GetLongDataTableTemplate();
-        
+
         $ret = array_merge($main, $data);
         if (isset($longData) && is_array($longData) && count($longData)) {
             $ret = array_merge($ret, $longData);
         }
-        
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Returns an array that provides a template for the main table
         values (the standard values).
@@ -871,11 +901,11 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         global $comdef_global_language;
-        
+
         $localized_strings = c_comdef_server::GetLocalStrings();
-        
+
         $ret = array();
-        
+
         $ret['id_bigint']['key'] = 'id_bigint';
         $ret['worldid_mixed']['key'] = 'worldid_mixed';
         $ret['shared_group_id_bigint']['key'] = 'shared_group_id_bigint';
@@ -891,7 +921,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         $ret['latitude']['key'] = 'latitude';
         $ret['published']['key'] = 'published';
         $ret['email_contact']['key'] = 'email_contact';
-        
+
         // Everything gets a lang_enum (determined by global server setting).
         // Almost all are visibility 0 (everyone can see).
         foreach ($ret as &$elem) {
@@ -901,7 +931,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         }
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Returns an array that provides a template for the data table
         values (the optional/additional values).
@@ -915,10 +945,10 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = array();
-            
+
         try {
             $sql = "SELECT * FROM `".c_comdef_server::GetMeetingTableName_obj()."_data` WHERE meetingid_bigint=0";
-            
+
             $rows = c_comdef_dbsingleton::preparedQuery($sql, array());
             foreach ($rows as $row) {
                 $ret[$row['key']]['key'] = $row['key'];
@@ -937,17 +967,17 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
             }
         } catch (Exception $ex) {
             global  $_COMDEF_DEBUG;
-            
+
             if ($_COMDEF_DEBUG) {
                 echo "Exception Thrown in c_comdef_meeting::GetDataTableTemplate()!<br />";
                 var_dump($ex);
             }
             throw ( $ex );
         }
-        
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Returns an array that provides a template for the long data table
         values (the optional/additional values).
@@ -962,19 +992,19 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = array();
-        
+
         if (!$in_lang_enum) {
             $in_lang_enum = c_comdef_server::GetServer()->GetLocalLang();
         }
-        
+
         // Should never happen.
         if (!$in_lang_enum) {
             $in_lang_enum = "en";
         }
-            
+
         try {
             $sql = "SELECT * FROM `".c_comdef_server::GetMeetingTableName_obj()."_longdata` WHERE meetingid_bigint=0 AND lang_enum=?";
-            
+
             $rows = c_comdef_dbsingleton::preparedQuery($sql, array ( $in_lang_enum ));
             foreach ($rows as $row) {
                 $ret[$row['key']]['key'] = $row['key'];
@@ -991,17 +1021,17 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
             }
         } catch (Exception $ex) {
             global  $_COMDEF_DEBUG;
-            
+
             if ($_COMDEF_DEBUG) {
                 echo "Exception Thrown in c_comdef_meeting::GetDataTableTemplate()!<br />";
                 var_dump($ex);
             }
             throw ( $ex );
         }
-        
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Constructor
 
@@ -1016,14 +1046,14 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         if (isset($this->_my_meeting_data) && isset($this->_my_meeting_data['formats']) && is_array($this->_my_meeting_data['formats']) && count($this->_my_meeting_data['formats'])) {
             uksort($this->_my_meeting_data['formats'], array('c_comdef_meeting','format_sorter_preference'));
         }
-        
+
         // Set these inherited characteristics.
         $this->SetLocalLang($this->_my_meeting_data['lang_enum']);
         if (isset($this->_my_meeting_data['meeting_name']) && $this->_my_meeting_data['meeting_name'] && $this->_my_meeting_data['meeting_name']['value']) {
             $this->SetLocalName($this->_my_meeting_data['meeting_name']['value']);
         }
     }
-    
+
     /*******************************************************************/
     /** \brief Returns a reference to the internal meeting data.
 
@@ -1035,7 +1065,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return $this->_my_meeting_data;
     }
-    
+
     /*******************************************************************/
     /** \brief Returns a list of the available keys in this meeting.
 
@@ -1046,14 +1076,14 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = array();
-        
+
         foreach ($this->_my_meeting_data as $key => &$value) {
             array_push($ret, $key);
         }
-        
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Returns a reference to the internal meeting data.
 
@@ -1065,7 +1095,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
-        
+
         if (isset($this->_my_meeting_data[$in_key])) {
             if (is_array($this->_my_meeting_data[$in_key]) && isset($this->_my_meeting_data[$in_key]['value'])) {
                 if (isset($this->_my_meeting_data[$in_key]['visibility']) && ($this->_my_meeting_data[$in_key]['visibility'] == _VISIBILITY_NONE_) && !$this->UserCanObserve()) {
@@ -1077,10 +1107,10 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                 $ret = $this->_my_meeting_data[$in_key];
             }
         }
-        
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Returns whether or not a data item is hidden.
 
@@ -1092,16 +1122,16 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = ($in_key == 'email_contact');
-        
+
         if (!$ret && isset($this->_my_meeting_data[$in_key])) {
             if (is_array($this->_my_meeting_data[$in_key]) && isset($this->_my_meeting_data[$in_key]['value'])) {
                 $ret = (isset($this->_my_meeting_data[$in_key]['visibility']) && ($this->_my_meeting_data[$in_key]['visibility'] == _VISIBILITY_NONE_));
             }
         }
-        
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Returns the internal meeting data string prompt.
 
@@ -1113,7 +1143,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
-        
+
         if (isset($this->_my_meeting_data[$in_key])) {
             $ret = $this->_my_meeting_data[$in_key];
             if (is_array($ret) && isset($ret['prompt'])) {
@@ -1122,10 +1152,10 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                 $ret = $in_key;
             }
         }
-        
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Accessor - Returns true if the meeting data is valid.
 
@@ -1136,10 +1166,10 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         list ( $main_table_values, $data_table_values, $longdata_table_values ) = $this->ReduceToArrays();
-        
+
         return ( isset($main_table_values['longitude']) && isset($main_table_values['latitude']) && is_array($data_table_values) && (count($data_table_values) > 0));
     }
-    
+
     /*******************************************************************/
     /** \brief Accessor - Reflects the meeting's status as a duplicate of another.
 
@@ -1151,7 +1181,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return (isset($this->_my_meeting_data['copy']) );
     }
-    
+
     /*******************************************************************/
     /** \brief Accessor - Reflects the meeting's status as a duplicate of another.
 
@@ -1163,7 +1193,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return (intval($this->_my_meeting_data['copy']) );
     }
-    
+
     /*******************************************************************/
     /** \brief Accessor - Reflects the meeting's published status.
 
@@ -1175,7 +1205,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return $this->_my_meeting_data['published'];
     }
-    
+
     /*******************************************************************/
     /** \brief Accessor - Sets the meeting's published status.
     */
@@ -1188,7 +1218,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
             $this->_my_meeting_data['published'] = (intval($in_published) != 0) ? 1 : 0;
         }
     }
-    
+
     /*******************************************************************/
     /** \brief Accessor - Returns the user ID as an integer.
 
@@ -1199,11 +1229,11 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = 0;
-        
+
         if (isset($this->_my_meeting_data['id_bigint'])) {
             $ret = $this->_my_meeting_data['id_bigint'];
         }
-        
+
         return $ret;
     }
 
@@ -1240,7 +1270,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
     ) {
         $this->_my_meeting_data['worldid_mixed'] = $new_world_id;
     }
-    
+
     /*******************************************************************/
     /** \brief Get this meeting's Email Contact Address
 
@@ -1252,7 +1282,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return $this->_my_meeting_data['email_contact'];
     }
-    
+
     /*******************************************************************/
     /** \brief Set this meeting's Email Contact Address
         This "vets" the email address, to ensure it has the appropriate structure.
@@ -1266,15 +1296,15 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = false;
-        
+
         if (preg_match('#^(?:[a-zA-Z0-9_\'^&amp;/+-])+(?:\.(?:[a-zA-Z0-9_\'^&amp;/+-])+)*@(?:(?:\[?(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))\.){3}(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\]?)|(?:[a-zA-Z0-9-]+\.)+(?:[a-zA-Z]){2,}\.?)$#', $in_email_contact)) {
             $this->_my_meeting_data['email_contact'] = $in_email_contact;
             $ret = true;
         }
-        
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Get this meeting's Service Body ID
 
@@ -1286,7 +1316,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return $this->_my_meeting_data['service_body_bigint'];
     }
-    
+
     /*******************************************************************/
     /** \brief Set this meeting's Service Body ID
 
@@ -1298,12 +1328,12 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = $this->_my_meeting_data['service_body_bigint'];
-        
+
         $this->_my_meeting_data['service_body_bigint'] = intval($in_service_body_id);
-        
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Get this meeting's Service Body, as a reference to an object.
 
@@ -1315,7 +1345,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return c_comdef_server::GetServiceBodyByIDObj($this->GetServiceBodyID());
     }
-    
+
     /*******************************************************************/
     /** \brief Get this meeting's Service Body name, as a string.
 
@@ -1327,14 +1357,14 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = $this->_my_meeting_data['service_body_bigint'];
         $sb = $this->GetServiceBodyObj();
-        
+
         if ($sb instanceof c_comdef_service_body) {
             $ret = $sb->GetLocalName();
         }
-            
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Add a new data field to the object. If the field already
         exists, then the existing field is changed to match the new data.
@@ -1368,24 +1398,24 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
             if ($in_field_prompt_string !== null) {
                 $this->_my_meeting_data[$in_key_enum]['prompt'] = $in_field_prompt_string;
             }
-            
+
             // Hack to make sure there's no such thing as "pure" midnight.
             if ($in_key_enum == 'start_time') {
                 if (($in_value_mixed == '00:00:00') || ($in_value_mixed == '00:00') || ($in_value_mixed == '24:00:00') || ($in_value_mixed == '24:00')) {
                     $in_value_mixed == '23:59:00';
                 }
             }
-            
+
             $this->_my_meeting_data[$in_key_enum]['value'] = null;  // Just in case of memory leaks.
             $this->_my_meeting_data[$in_key_enum]['value'] = $in_value_mixed;
             $this->_my_meeting_data[$in_key_enum]['lang_enum'] = $in_lang_enum;
             $this->_my_meeting_data[$in_key_enum]['visibility'] = ( $in_visibility === null ) ? ((isset($this->_my_meeting_data[$in_key_enum]) && isset($this->_my_meeting_data[$in_key_enum]['visibility'])) ? intval($this->_my_meeting_data[$in_key_enum]['visibility']) : 0) : intval($in_visibility);
             return true;
         }
-        
+
         return false;
     }
-    
+
     /*******************************************************************/
     /** \brief Deletes a data field. Will not delete a principal field.
 
@@ -1409,13 +1439,13 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
             }
             $this->_my_meeting_data[$in_key_enum] = null;
             unset($this->_my_meeting_data[$in_key_enum]);
-            
+
             return true;
         }
-        
+
         return false;
     }
-    
+
     /*******************************************************************/
     /** \brief Get this meeting's Language Enum.
 
@@ -1427,7 +1457,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return $this->_my_meeting_data['lang_enum'];
     }
-    
+
     /*******************************************************************/
     /** \brief Get this meeting's Address in the string format specified for this server.
 
@@ -1439,7 +1469,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
-        
+
         $builder = self::GetAddressDataItemBuilder($in_list);    // Get the parsed address format builder.
 
         if (is_array($builder) && count($builder)) {
@@ -1451,7 +1481,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                 }
             }
         }
-        
+
         return $ret;
     }
 
@@ -1471,17 +1501,17 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $myData = $this->GetMeetingData();
         $my_formats = c_comdef_server::GetServer()->GetFormatsObj();
-        
+
         // If we already have the format, we don't add it, but there's no error.
         if (!isset($myData['formats'][$in_format])) {
             $myData['formats'][$in_format] = $my_formats->GetFormatBySharedIDCodeAndLanguage($in_format, $this->GetMeetingLang());
             uksort($myData['formats'], array('c_comdef_meeting','format_sorter_preference'));
             return true;
         }
-        
+
         return false;
     }
-    
+
     /*******************************************************************/
     /** \brief Remove a format from the meeting (by code).
 
@@ -1502,10 +1532,10 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
             unset($myData['formats'][$in_format]);
             return true;
         }
-        
+
         return false;
     }
-    
+
     /*******************************************************************/
     /** \brief Determines which format goes first (used in sorting).
 
@@ -1521,7 +1551,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $a = intval($a);
         $b = intval($b);
-        
+
         if (($a == 4) || ($a == 17)) {
             return -1;
         } elseif (($b == 4) || ($b == 17)) {
@@ -1532,7 +1562,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
             return ( $a < $b ) ? -1 : 1;
         }
     }
-    
+
     /*******************************************************************/
     /** \brief Determines which format goes first (used in sorting). Very
         simple version, with no preferences.
@@ -1554,7 +1584,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
             return ( $a < $b ) ? -1 : 1;
         }
     }
-    
+
     /*******************************************************************/
     /** \brief Returns a storable serialization of the object, as a string.
 
@@ -1576,7 +1606,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
 
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief This takes a serialized object, and instantiates a
         new object from it.
@@ -1595,12 +1625,12 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         $data_table_values = unserialize($serialized_array['data_table_values']);
         $longdata_table_values = unserialize($serialized_array['longdata_table_values']);
         $my_data = self::process_meeting_row($main_table_values, $data_table_values, $longdata_table_values);
-        
+
         $new_meeting = new c_comdef_meeting($in_parent, $my_data);
-        
+
         return $new_meeting;
     }
-    
+
     /*******************************************************************/
     /** \brief This processes the data retrieved from a single main table meeting.
         It will look up the corollary data in the data and longdata tables,
@@ -1625,7 +1655,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
             // However, we do one thing differently: We split the formats array, so it is in multiple elements. That'll make it easier to handle later.
             // We also actually assign a reference to the localized format object itself to the array.
             $meeting_row['formats'] = explode(",", $meeting_row['formats']);
-            
+
             // What we do here is assign the format object to the version for the language of the meeting (not necessarily the server).
             // The formats array will use the format codes as keys, so we can use these to access other localizations.
             $new_formats = array();
@@ -1634,9 +1664,9 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
             foreach ($meeting_row['formats'] as $format_id) {
                 $new_formats[$format_id] = $my_formats->GetFormatBySharedIDCodeAndLanguage($format_id, $row['lang_enum']);
             }
-            
+
             $meeting_row['formats'] = $new_formats;
-            
+
             // If the row was not already supplied, we fetch it ourselves.
             if (null == $data_rows) {
                 // We do two lookups, because a fancy-ass JOIN takes FOR-EVER. The performance is AWFUL.
@@ -1644,12 +1674,12 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                 // down the regular data table to include a table that barely ever has anything.
                 // This has the added advantage of allowing implementations to override the main data, and
                 // to allow data in the longdata table to override the regular table.
-                
+
                 $sql = "SELECT * FROM `".c_comdef_server::GetMeetingTableName_Obj()."_data` WHERE ".c_comdef_server::GetMeetingTableName_Obj()."_data.meetingid_bigint=?";
-        
+
                 $data_rows = c_comdef_dbsingleton::preparedQuery($sql, array ( $meeting_id ));
             }
-            
+
             if (is_array($data_rows) && count($data_rows)) {
                 foreach ($data_rows as $data_row) {
                     $key = $data_row['key'];
@@ -1661,7 +1691,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                         } elseif (isset($data_row['data_double']) && ( null != $data_row['data_double'] )) {
                             $meeting_row[$key]['value'] = floatval($data_row['data_double']);
                         }
-                        
+
                         // Only set these if we have data.
                         if (isset($meeting_row[$key]['value'])) {
                             $meeting_row[$key]['longdata'] = false;
@@ -1672,14 +1702,14 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                     }
                 }
             }
-            
+
             // If the row was not already supplied, we fetch it ourselves.
             if (null == $longdata_rows) {
                 $sql = "SELECT * FROM `".c_comdef_server::GetMeetingTableName_Obj()."_longdata` WHERE ".c_comdef_server::GetMeetingTableName_Obj()."_longdata.meetingid_bigint=?";
-    
+
                 $longdata_rows = c_comdef_dbsingleton::preparedQuery($sql, array ( $meeting_id ));
             }
-            
+
             if (is_array($longdata_rows) && count($longdata_rows)) {
                 foreach ($longdata_rows as $longdata_row) {
                     $key = $longdata_row['key'];
@@ -1692,12 +1722,12 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                     }
                 }
             }
-            
+
             // At this point, we have all the data for this one meeting, culled from its three tables and aggregated into an array.
             return $meeting_row;
         } catch (Exception $ex) {
             global  $_COMDEF_DEBUG;
-            
+
             if ($_COMDEF_DEBUG) {
                 echo "Exception Thrown in c_comdef_meeting::process_meeting_row()!<br />";
                 var_dump($ex);
@@ -1705,7 +1735,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
             throw ( $ex );
         }
     }
-    
+
     /*******************************************************************/
     /** \brief Get the contact email for this meeting.
                 If $in_recursive is false, then it simply looks at this meeting's Service Body.
@@ -1718,18 +1748,18 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = trim($this->GetEmailContact());
-        
+
         if (!$ret) {
             $service_body = $this->GetServiceBodyObj();
-            
+
             if ($service_body instanceof c_comdef_service_body) {
                 $ret = $service_body->GetContactEmail($in_recursive);
             }
         }
-        
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Test to see if a user is allowed to edit an instance (change the data).
 
@@ -1741,20 +1771,20 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = false;
-        
+
         // We load the server user if one wasn't supplied.
         if (null == $in_user_object) {
             $in_user_object = c_comdef_server::GetCurrentUserObj();
         }
-        
+
         // If it isn't a user object, we fail right there.
         if ($in_user_object instanceof c_comdef_user) {
             $in_user_object->RestoreFromDB();   // The reason you do this, is to ensure that the user wasn't modified "live." It's a security precaution.
-            
+
             if (($in_user_object->GetUserLevel() != _USER_LEVEL_SERVER_ADMIN) && ($in_user_object->GetUserLevel() != _USER_LEVEL_DISABLED) && (($in_user_object->GetUserLevel() == _USER_LEVEL_EDITOR) || ($in_user_object->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN))) {
                 // If there is an existing object, then we can't make changes unless it's allowed in the existing object.
                 $current_obj = c_comdef_server::GetServer()->GetOneMeeting($this->GetID());
-                
+
                 // If there is no current object, then we are a new meeting.
                 if (null == $current_obj) {
                     $current_obj = $this;
@@ -1764,10 +1794,10 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                     // Otherwise, block dope fiends.
                     $current_obj->RestoreFromDB();
                 }
-                
+
                 if ($current_obj instanceof c_comdef_meeting) {
                     $my_service_body = c_comdef_server::GetServiceBodyByIDObj($current_obj->GetServiceBodyID());
-                    
+
                     if ($in_user_object->GetUserLevel() == _USER_LEVEL_EDITOR) {
                         // Regular meeting list editors can't change published objects. They also can only edit meetings in the exact Service Body to which they are assigned.
                         $ret = ($my_service_body instanceof c_comdef_service_body) && $my_service_body->IsUserInServiceBody($in_user_object) && !$this->IsPublished();
@@ -1779,10 +1809,10 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                 $ret = true;
             }
         }
-        
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Test to see if a user is allowed to observe an instance (view the data).
 
@@ -1794,20 +1824,20 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = false;
-        
+
         // We load the server user if one wasn't supplied.
         if (null == $in_user_object) {
             $in_user_object = c_comdef_server::GetCurrentUserObj();
         }
-        
+
         // If it isn't a user object, we fail right there.
         if ($in_user_object instanceof c_comdef_user) {
             $in_user_object->RestoreFromDB();   // The reason you do this, is to ensure that the user wasn't modified "live." It's a security precaution.
-            
+
             if (($in_user_object->GetUserLevel() == _USER_LEVEL_OBSERVER) || ($in_user_object->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) || ($in_user_object->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN)) {
                 // If there is an existing object, then we can't make changes unless it's allowed in the existing object.
                 $current_obj = c_comdef_server::GetServer()->GetOneMeeting($this->GetID());
-                
+
                 // If there is no current object, then we are a new meeting.
                 if (null == $current_obj) {
                     $current_obj = $this;
@@ -1817,17 +1847,17 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
                     // Otherwise, block dope fiends.
                     $current_obj->RestoreFromDB();
                 }
-                
+
                 if ($current_obj instanceof c_comdef_meeting) {
                     $my_service_body = c_comdef_server::GetServiceBodyByIDObj($current_obj->GetServiceBodyID());
-                    
+
                     if (($my_service_body instanceof c_comdef_service_body) && $my_service_body->UserCanObserve($in_user_object)) {
                         $ret = true;
                     }
                 }
             }
         }
-        
+
         return $ret;
     }
 }

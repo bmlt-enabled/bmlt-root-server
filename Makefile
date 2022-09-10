@@ -84,7 +84,6 @@ test:
 # 	$(TEST_PREFIX) vendor/phpunit/phpunit/phpunit tests/Feature/GetChangesTest.php
 # 	$(TEST_PREFIX) vendor/phpunit/phpunit/phpunit --filter testPureDataFieldsRemoved tests/Feature/GetChangesTest.php
 
-
 .PHONY: lint
 lint:  ## PHP Lint
 	$(LINT_PREFIX) src/vendor/squizlabs/php_codesniffer/bin/phpcs

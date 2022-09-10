@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class Meeting extends Model
@@ -32,5 +31,10 @@ class Meeting extends Model
     public function data()
     {
         return $this->hasMany(MeetingData::class, 'meetingid_bigint');
+    }
+
+    public function realFormats()
+    {
+        return $this->belongsToMany(Format::class);
     }
 }
