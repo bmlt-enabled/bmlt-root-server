@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Migration;
 use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use App\Http\Resources\FormatResource;
 use App\Http\Resources\MeetingChangeResource;
 use App\Http\Resources\ServiceBodyResource;
+use App\Http\Responses\JsonResponse;
 use App\Http\Controllers\Legacy\LegacyController;
 use App\Interfaces\ChangeRepositoryInterface;
 use App\Interfaces\FormatRepositoryInterface;
@@ -159,7 +159,7 @@ class SwitcherController extends Controller
         return $this->changeRepository->getMeetingChanges($startDate, $endDate, $meetingId, $serviceBodyId);
     }
 
-    private function getServerInfo()
+    private function getServerInfo($request)
     {
         $versionArray = explode('.', config('app.version'));
         return [[
@@ -177,7 +177,7 @@ class SwitcherController extends Controller
             'changesPerMeeting' => strval(legacy_config('change_depth_for_meetings')),
             'meeting_states_and_provinces' => implode(',', legacy_config('meeting_states_and_provinces', [])),
             'meeting_counties_and_sub_provinces' => implode(',', legacy_config('meeting_counties_and_sub_provinces', [])),
-            'available_keys' => $this->meetingRepository->getFieldKeys()->map(fn ($value) => $value['key'])->merge(['format_shared_id_list'])->join(','),
+            'available_keys' => $this->meetingRepository->getFieldKeys()->map(fn ($value) => $value['key'])->merge(['root_server_uri', 'format_shared_id_list'])->join(','),
             'google_api_key' => legacy_config('google_api_key', ''),
             'dbVersion' => Migration::query()->orderByDesc('id')->first()->migration,
             'dbPrefix' => legacy_config('db_prefix'),
