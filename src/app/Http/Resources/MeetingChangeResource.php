@@ -4,7 +4,6 @@ namespace App\Http\Resources;
 
 use App\Models\Format;
 use App\Models\ServiceBody;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 
 class MeetingChangeResource extends JsonResource

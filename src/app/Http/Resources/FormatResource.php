@@ -2,8 +2,6 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
-
 class FormatResource extends JsonResource
 {
     /**
@@ -22,6 +20,7 @@ class FormatResource extends JsonResource
             'id' => (string)$this->shared_id_bigint,
             'world_id' => $this->worldid_mixed ?? '',
             'format_type_enum' => $this->format_type_enum ?? '',
+            'root_server_uri' => $request->getSchemeAndHttpHost() . $request->getBaseUrl()
         ];
     }
 }

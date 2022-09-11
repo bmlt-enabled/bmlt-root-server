@@ -58,6 +58,7 @@ class GetFormatsTest extends TestCase
                 'id' => (string)$item->shared_id_bigint,
                 'world_id' => $item->worldid_mixed ?? '',
                 'format_type_enum' => $item->format_type_enum ?? '',
+                'root_server_uri' => 'http://localhost',
             ], $array)) {
                 return false;
             }
