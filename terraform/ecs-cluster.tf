@@ -340,10 +340,26 @@ data "aws_iam_policy_document" "ecs_execute_command" {
       "ssmmessages:CreateControlChannel",
       "ssmmessages:CreateDataChannel",
       "ssmmessages:OpenControlChannel",
-      "ssmmessages:OpenDataChannel"
+      "ssmmessages:OpenDataChannel",
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+      "logs:DescribeLogStreams"
     ]
     resources = ["*"]
   }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "secretsmanager:GetSecretValue"
+    ]
+    resources = [data.aws_secretsmanager_secret.docker.arn]
+  }
+
+
+
+
 }
 
 resource "aws_iam_policy" "ecs_execute_command" {

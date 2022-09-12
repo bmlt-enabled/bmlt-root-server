@@ -1,6 +1,7 @@
 resource "aws_ecs_task_definition" "bmlt_latest" {
-  family        = "bmlt-latest"
-  task_role_arn = aws_iam_role.ecs_task_role.arn
+  family             = "bmlt-latest"
+  task_role_arn      = aws_iam_role.ecs_task_role.arn
+  execution_role_arn = aws_iam_role.ecs_task_role.arn
 
   container_definitions = jsonencode(
     [
@@ -53,7 +54,10 @@ resource "aws_ecs_task_definition" "bmlt_latest" {
         links                  = ["bmlt-db"],
         workingDirectory       = "/tmp",
         readonlyRootFilesystem = null,
-        image                  = "${aws_ecrpublic_repository.bmlt-root-server.repository_uri}:latest",
+        image                  = "bmltenabled/bmlt-root-server:latest",
+        repositoryCredentials = {
+          credentialsParameter = data.aws_secretsmanager_secret.docker.arn
+        },
         command = [
           "/bin/bash",
           "/tmp/start-bmlt.sh"
@@ -113,9 +117,12 @@ resource "aws_ecs_task_definition" "bmlt_latest" {
         links                  = [],
         workingDirectory       = "/tmp",
         readonlyRootFilesystem = null,
-        image                  = "${aws_ecrpublic_repository.bmlt-root-server-sample-db.repository_uri}:latest",
-        user                   = null,
-        dockerLabels           = null,
+        image                  = "bmltenabled/bmlt-root-server-sample-db:latest",
+        repositoryCredentials = {
+          credentialsParameter = data.aws_secretsmanager_secret.docker.arn
+        },
+        user         = null,
+        dockerLabels = null,
         logConfiguration = {
           logDriver = "awslogs",
           options = {
@@ -153,7 +160,7 @@ resource "aws_ecs_service" "bmlt_latest" {
     aws_iam_role_policy.bmlt_lb
   ]
 
-    lifecycle {
-      ignore_changes = [task_definition]
-    }
+  lifecycle {
+    ignore_changes = [task_definition]
+  }
 }

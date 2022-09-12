@@ -35,3 +35,7 @@ data "aws_subnets" "main" {
     values = [data.aws_vpc.main.id]
   }
 }
+
+data "aws_secretsmanager_secret" "docker" {
+  name = "docker"
+}
