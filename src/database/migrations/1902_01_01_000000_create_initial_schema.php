@@ -14,7 +14,6 @@ return new class extends Migration
      */
     public function up()
     {
-        $prefix = config('database.connections.mysql.prefix');
         if (Schema::hasTable('comdef_db_version')) {
             if (!Schema::hasColumn('comdef_db_version', 'id')) {
                 Schema::table('comdef_db_version', function (Blueprint $table) {
@@ -33,6 +32,7 @@ return new class extends Migration
             if (!Schema::hasColumn('comdef_meetings_data', 'id')) {
                 Schema::table('comdef_meetings_data', function (Blueprint $table) {
                     $table->bigIncrements('id')->first();
+                    $table->fullText('data_string');
                 });
             }
         } else {
@@ -52,6 +52,7 @@ return new class extends Migration
                 $table->index('lang_enum', 'lang_enum');
                 $table->index('key', 'key');
                 $table->index('visibility', 'visibility');
+                $table->fullText('data_string');
             });
             DB::table('comdef_meetings_data')->insert([
                 ['meetingid_bigint' => 0, 'key' => 'meeting_name', 'field_prompt' => 'Meeting Name', 'lang_enum' => 'en', 'visibility' => 0, 'data_string' => 'Meeting Name', 'data_bigint' => null, 'data_double' => null],
@@ -84,6 +85,9 @@ return new class extends Migration
             if (!Schema::hasColumn('comdef_meetings_longdata', 'id')) {
                 Schema::table('comdef_meetings_longdata', function (Blueprint $table) {
                     $table->bigIncrements('id')->first();
+                    $table->text('data_blob')->nullable()->change();
+                    $table->dropColumn('data_longtext');
+                    $table->fullText('data_blob');
                 });
             }
         } else {
@@ -94,13 +98,13 @@ return new class extends Migration
                 $table->string('field_prompt', 255)->nullable();
                 $table->string('lang_enum', 7)->nullable();
                 $table->integer('visibility')->nullable();
-                $table->text('data_longtext')->nullable();
-                $table->binary('data_blob')->nullable();
+                $table->text('data_blob')->nullable();
                 $table->index('meetingid_bigint', 'meetingid_bigint');
                 $table->index('lang_enum', 'lang_enum');
                 $table->index('field_prompt', 'field_prompt');
                 $table->index('key', 'key');
                 $table->index('visibility', 'visibility');
+                $table->fullText('data_blob');
             });
         }
 

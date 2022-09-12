@@ -28,6 +28,7 @@ class DatabaseMigrations
         if ($this->migrationsShouldRun()) {
             $lockName = 'bmlt-db-migrations';
             try {
+                ini_set('max_execution_time', '600');
                 DB::select("SELECT GET_LOCK('$lockName', 600)");
                 Artisan::call('migrate', ['--force' => true]);
             } finally {
@@ -44,7 +45,7 @@ class DatabaseMigrations
             return true;
         }
 
-        if (!Migration::where('migration', '2022_08_30_235741_create_initial_schema')->exists()) {
+        if (!Migration::where('migration', '1910_01_01_000000_innodb_changes')->exists()) {
             return true;
         }
 

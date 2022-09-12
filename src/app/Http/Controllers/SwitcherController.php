@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Migration;
-use Illuminate\Support\Collection;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Legacy\LegacyController;
 use App\Http\Resources\FormatResource;
+use App\Http\Resources\MeetingResource;
 use App\Http\Resources\MeetingChangeResource;
 use App\Http\Resources\ServiceBodyResource;
 use App\Http\Responses\JsonResponse;
-use App\Http\Controllers\Legacy\LegacyController;
 use App\Interfaces\ChangeRepositoryInterface;
 use App\Interfaces\FormatRepositoryInterface;
 use App\Interfaces\MeetingRepositoryInterface;
 use App\Interfaces\ServiceBodyRepositoryInterface;
+use App\Models\Migration;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse as BaseJsonResponse;
+use Illuminate\Support\Facades\Http;
 
 class SwitcherController extends Controller
 {
@@ -38,30 +40,26 @@ class SwitcherController extends Controller
     {
         $switcher = $request->input('switcher');
 
-        $validValues = ['GetFormats', 'GetServiceBodies', 'GetFieldKeys', 'GetFieldValues', 'GetChanges', 'GetServerInfo'];
+        $validValues = ['GetSearchResults', 'GetFormats', 'GetServiceBodies', 'GetFieldKeys', 'GetFieldValues', 'GetChanges', 'GetServerInfo'];
         if (in_array($switcher, $validValues)) {
             if ($dataFormat != 'json' && $dataFormat != 'jsonp') {
                 abort(404, 'This endpoint only supports the \'json\' and \'jsonp\' data formats.');
             }
 
-            if ($switcher == 'GetFormats') {
-                $collection = $this->getFormats($request);
-                $response = FormatResource::collection($collection)->response();
+            if ($switcher == 'GetSearchResults') {
+                $response = $this->getSearchResults($request);
+            } elseif ($switcher == 'GetFormats') {
+                $response = $this->getFormats($request);
             } elseif ($switcher == 'GetServiceBodies') {
-                $collection = $this->getServiceBodies($request);
-                $response = ServiceBodyResource::collection($collection)->response();
+                $response = $this->getServiceBodies($request);
             } elseif ($switcher == 'GetFieldKeys') {
-                $collection = $this->getFieldKeys($request);
-                $response = new JsonResponse($collection);
+                $response = $this->getFieldKeys($request);
             } elseif ($switcher == 'GetFieldValues') {
-                $collection = $this->getFieldValues($request);
-                $response = new JsonResponse($collection);
+                $response = $this->getFieldValues($request);
             } elseif ($switcher == 'GetChanges') {
-                $collection = $this->getMeetingChanges($request);
-                $response = MeetingChangeResource::collection($collection)->response();
+                $response = $this->getMeetingChanges($request);
             } else {
-                $collection = $this->getServerInfo($request);
-                $response = new JsonResponse($collection);
+                $response = $this->getServerInfo($request);
             }
 
             if ($dataFormat == 'jsonp') {
@@ -74,9 +72,207 @@ class SwitcherController extends Controller
         return LegacyController::handle($request);
     }
 
-    private function getFormats(Request $request): Collection
+    private function getSearchResults(Request $request): BaseJsonResponse
     {
-        $langEnums = $request->input('lang_enum', ['en']);
+        $meetingIds = $request->input('meeting_ids');
+        $meetingIds = !is_null($meetingIds) ? ensure_integer_array($meetingIds) : null;
+
+        $weekdays = $request->input('weekdays', []);
+        $weekdays = ensure_integer_array($weekdays);
+        $weekdaysInclude = collect($weekdays)->filter(fn ($w) => $w > 0)->map(fn ($w) => $w - 1)->toArray();
+        $weekdaysInclude = count($weekdaysInclude) ? $weekdaysInclude : null;
+        $weekdaysExclude = collect($weekdays)->filter(fn ($w) => $w < 0)->map(fn ($w) => abs($w) - 1)->toArray();
+        $weekdaysExclude = count($weekdaysExclude) ? $weekdaysExclude : null;
+
+        $venueTypes = $request->input('venue_types', []);
+        $venueTypes = ensure_integer_array($venueTypes);
+        $venueTypesInclude = collect($venueTypes)->filter(fn ($v) => $v > 0)->toArray();
+        $venueTypesInclude = !empty($venueTypesInclude) ? $venueTypesInclude : null;
+        $venueTypesExclude = collect($venueTypes)->filter(fn ($v) => $v < 0)->map(fn ($v) => abs($v))->toArray();
+        $venueTypesExclude = !empty($venueTypesExclude) ? $venueTypesExclude : null;
+
+        $recursive = $request->input('recursive', '0') == '1';
+        $services = $request->input('services', []);
+        $services = ensure_integer_array($services);
+        $servicesInclude = collect($services)->filter(fn ($s) => $s > 0)->toArray();
+        $servicesInclude = $recursive ? $this->serviceBodyRepository->getChildren($servicesInclude) : $servicesInclude;
+        $servicesInclude = !empty($servicesInclude) ? $servicesInclude : null;
+        $servicesExclude = collect($services)->filter(fn ($s) => $s < 0)->map(fn ($s) => abs($s))->toArray();
+        $servicesExclude = $recursive ? $this->serviceBodyRepository->getChildren($servicesExclude) : $servicesExclude;
+        $servicesExclude = !empty($servicesExclude) ? $servicesExclude : null;
+
+        $formats = $request->input('formats', []);
+        $formats = ensure_integer_array($formats);
+        $formatsInclude = collect($formats)->filter(fn ($f) => $f > 0)->toArray();
+        $formatsInclude = !empty($formatsInclude) ? $formatsInclude : null;
+        $formatsExclude = collect($formats)->filter(fn ($s) => $s < 0)->map(fn ($s) => abs($s))->toArray();
+        $formatsExclude = !empty($formatsExclude) ? $formatsExclude : null;
+        $formatsComparisonOperator = $request->input('formats_comparison_operator', 'AND');
+        $formatsComparisonOperator = strtoupper($formatsComparisonOperator) == 'AND' ? 'AND' : 'OR';
+
+        $meetingKey = $request->input('meeting_key');
+        $meetingKeyValue = null;
+        if (!is_null($meetingKey)) {
+            $meetingKeyValue = $request->input('meeting_key_value');
+            if (!is_null($meetingKeyValue)) {
+                if ($meetingKey == 'weekday_tinyint') {
+                    $meetingKeyValue = strval(intval($meetingKeyValue) - 1);
+                } elseif ($meetingKey == 'start_time' || $meetingKey == 'duration_time') {
+                    $timePieces = explode(':', $meetingKeyValue);
+                    if (count($timePieces) >= 2) {
+                        $meetingKeyValue = build_time_string($timePieces[0], $timePieces[1]);
+                    }
+                }
+            }
+            if (is_null($meetingKeyValue)) {
+                return new JsonResponse([]);
+            }
+        }
+
+        $startsAfter = build_time_string($request->input('StartsAfterH'), $request->input('StartsAfterM'));
+        $startsBefore = build_time_string($request->input('StartsBeforeH'), $request->input('StartsBeforeM'));
+        $endsBefore = build_time_string($request->input('EndsBeforeH'), $request->input('EndsBeforeM'));
+        $minDuration = build_time_string($request->input('MinDurationH'), $request->input('MinDurationM'));
+        $maxDuration = build_time_string($request->input('MaxDurationH'), $request->input('MaxDurationM'));
+
+        $latitude = $request->input('lat_val');
+        $latitude = is_numeric($latitude) ? floatval($latitude) : null;
+        $longitude = $request->input('long_val');
+        $longitude = is_numeric($longitude) ? floatval($longitude) : null;
+        $geoWidthMiles = null;
+        $geoWidthKilometers = null;
+        $sortResultsByDistance = false;
+        $needsDistanceField = false;
+        if (!is_null($latitude) || !is_null($longitude)) {
+            $geoWidthMiles = $request->input('geo_width');
+            $geoWidthMiles = is_numeric($geoWidthMiles) ? floatval($geoWidthMiles) : null;
+            $geoWidthKilometers = $request->input('geo_width_km');
+            $geoWidthKilometers = is_numeric($geoWidthKilometers) ? floatval($geoWidthKilometers) : null;
+            $sortResultsByDistance = $request->input('sort_results_by_distance') == '1';
+            $dataFieldKeys = $request->input('data_field_key');
+            $dataFieldKeys = !is_null($dataFieldKeys) ? explode(',', $dataFieldKeys) : [];
+            $needsDistanceField = in_array('distance_in_miles', $dataFieldKeys) || in_array('distance_in_km', $dataFieldKeys);
+            if (is_null($latitude) || is_null($longitude) || (is_null($geoWidthMiles) && is_null($geoWidthKilometers) && !$needsDistanceField)) {
+                return new JsonResponse([]);
+            }
+        }
+
+        $searchString = $request->input('SearchString');
+        $searchString = !is_null($searchString) ? trim($searchString) : null;
+        $searchString = strlen($searchString) > 2 || is_numeric($searchString) ? $searchString : null;
+        $searchStringIsAddress = !is_null($searchString) && $request->input('StringSearchIsAnAddress') == '1';
+        if (!is_null($searchString) && $searchStringIsAddress) {
+            $googleApiKey = legacy_config('google_api_key');
+            if (is_null($googleApiKey)) {
+                abort(400, 'A google api key must be configured to use StringSearchIsAnAddress.');
+            }
+
+            $searchStringRadius = $request->input('SearchStringRadius');
+            if (is_null($searchStringRadius) || !is_numeric($searchStringRadius)) {
+                abort(400, 'SearchStringRadius is required to use SearchStringIsAnAddress.');
+            }
+
+            $geocodeResponse = Http::get("https://maps.googleapis.com/maps/api/geocode/json?key=$googleApiKey&address=$searchString&sensor=false");
+            $genericError = 'There was a problem geocoding the SearchString.';
+            if (!$geocodeResponse->ok()) {
+                abort(500, $genericError);
+            }
+
+            $geocodeResponse = $geocodeResponse->json();
+            if (!isset($geocodeResponse['status']) || $geocodeResponse['status'] != 'OK') {
+                $errorMessage = $geocodeResponse['error_message'] ?? $genericError;
+                abort(500, $errorMessage);
+            }
+
+            try {
+                $latitude = $geocodeResponse['results'][0]['geometry']['location']['lat'];
+                $longitude = $geocodeResponse['results'][0]['geometry']['location']['lng'];
+            } catch (Exception) {
+                abort(500, 'There was a problem parsing the geocoding response.');
+            }
+
+            $searchString = null;
+            $geoWidthMiles = legacy_config('distance_units') == 'mi' ? floatval($searchStringRadius) : null;
+            $geoWidthKilometers = legacy_config('distance_units') != 'mi' ? floatval($searchStringRadius) : null;
+        }
+
+        $published = $request->input('advanced_published', '1');
+        if ($published == '1') {
+            $published = true;
+        } elseif ($published == '0') {
+            $published = null;
+        } else {
+            $published = false;
+        }
+
+        $sortKeys = $request->input('sort_keys');
+        $sortKeys = $sortKeys && $sortKeys != '' ? explode(',', $sortKeys) : ['lang_enum', 'weekday_tinyint', 'start_time', 'id_bigint'];
+
+        $pageSize = $request->input('page_size');
+        $pageSize = is_numeric($pageSize) ? intval($pageSize) : null;
+        $pageNum = null;
+        if (!is_null($pageSize)) {
+            $pageNum = $request->input('page_num');
+            $pageNum = is_numeric($pageNum) ? intval($pageNum) : 1;
+        }
+
+        $meetings = $this->meetingRepository->getSearchResults(
+            meetingIds: $meetingIds,
+            weekdaysInclude: $weekdaysInclude,
+            weekdaysExclude: $weekdaysExclude,
+            venueTypesInclude: $venueTypesInclude,
+            venueTypesExclude: $venueTypesExclude,
+            servicesInclude: $servicesInclude,
+            servicesExclude: $servicesExclude,
+            formatsInclude: $formatsInclude,
+            formatsExclude: $formatsExclude,
+            formatsComparisonOperator: $formatsComparisonOperator,
+            meetingKey: $meetingKey,
+            meetingKeyValue: $meetingKeyValue,
+            startsAfter: $startsAfter,
+            startsBefore: $startsBefore,
+            endsBefore: $endsBefore,
+            minDuration: $minDuration,
+            maxDuration: $maxDuration,
+            latitude: $latitude,
+            longitude: $longitude,
+            geoWidthMiles: $geoWidthMiles,
+            geoWidthKilometers: $geoWidthKilometers,
+            needsDistanceField: $needsDistanceField,
+            sortResultsByDistance: $sortResultsByDistance,
+            searchString: $searchString,
+            published: $published,
+            sortKeys: $sortKeys,
+            pageSize: $pageSize,
+            pageNum: $pageNum,
+        );
+
+        // This code to calculate the formats fields is really inefficient, but necessary because
+        // we don't have foreign keys between the meetings and formats tables.
+        $langEnum = $request->input('lang_enum', config('app.locale', 'en'));
+        $formats = $this->formatRepository->getFormats(langEnums: [$langEnum], meetings: $meetings);
+
+        $formatsById = $formats->mapWithKeys(fn ($format, $_) => [$format->shared_id_bigint => $format]);
+        foreach ($meetings as $meeting) {
+            $meeting->calculateFormatsFields($formatsById);
+        }
+
+        if ($request->has('get_used_formats')) {
+            $response = ['formats' => FormatResource::collection($formats)];
+            if (!$request->has('get_formats_only')) {
+                $response = array_merge(['meetings' => MeetingResource::collection($meetings)], $response);
+            }
+            $response = new JsonResponse($response);
+        } else {
+            $response = MeetingResource::collection($meetings)->response();
+        }
+
+        return $response;
+    }
+
+    private function getFormats(Request $request): BaseJsonResponse
+    {
+        $langEnums = $request->input('lang_enum', config('app.locale', 'en'));
         if (!is_array($langEnums)) {
             $langEnums = [$langEnums];
         }
@@ -88,10 +284,12 @@ class SwitcherController extends Controller
 
         $showAll = $request->input('show_all') == '1';
 
-        return $this->formatRepository->getFormats($langEnums, $keyStrings, $showAll);
+        $formats = $this->formatRepository->getFormats($langEnums, $keyStrings, $showAll);
+
+        return FormatResource::collection($formats)->response();
     }
 
-    private function getServiceBodies(Request $request): Collection
+    private function getServiceBodies(Request $request): BaseJsonResponse
     {
         $serviceBodyIds = $request->input('services', []);
         if (!is_array($serviceBodyIds)) {
@@ -112,15 +310,18 @@ class SwitcherController extends Controller
         $recurseChildren = $request->input('recurse') == '1';
         $recurseParents = $request->input('parents') == '1';
 
-        return $this->serviceBodyRepository->getServiceBodies($includeIds, $excludeIds, $recurseChildren, $recurseParents);
+        $serviceBodies = $this->serviceBodyRepository->getServiceBodies($includeIds, $excludeIds, $recurseChildren, $recurseParents);
+
+        return ServiceBodyResource::collection($serviceBodies)->response();
     }
 
-    private function getFieldKeys($request): Collection
+    private function getFieldKeys($request): BaseJsonResponse
     {
-        return $this->meetingRepository->getFieldKeys();
+        $fieldKeys = $this->meetingRepository->getFieldKeys();
+        return new JsonResponse($fieldKeys);
     }
 
-    private function getFieldValues($request): Collection
+    private function getFieldValues($request): BaseJsonResponse
     {
         $fieldName = $request->input('meeting_key');
         if (!$fieldName) {
@@ -136,10 +337,12 @@ class SwitcherController extends Controller
         $specificFormats = $specificFormats ? explode(',', trim($specificFormats)) : [];
         $allFormats = (bool)$request->input('all_formats');
 
-        return $this->meetingRepository->getFieldValues($fieldName, $specificFormats, $allFormats);
+        $fieldValues = $this->meetingRepository->getFieldValues($fieldName, $specificFormats, $allFormats);
+
+        return new JsonResponse($fieldValues);
     }
 
-    private function getMeetingChanges(Request $request): Collection
+    private function getMeetingChanges(Request $request): BaseJsonResponse
     {
         $validated = $request->validate([
             'start_date' => 'date_format:Y-m-d',
@@ -156,13 +359,15 @@ class SwitcherController extends Controller
         $meetingId = $validated['meeting_id'] ?? null;
         $serviceBodyId = $validated['service_body_id'] ?? null;
 
-        return $this->changeRepository->getMeetingChanges($startDate, $endDate, $meetingId, $serviceBodyId);
+        $changes = $this->changeRepository->getMeetingChanges($startDate, $endDate, $meetingId, $serviceBodyId);
+
+        return MeetingChangeResource::collection($changes)->response();
     }
 
-    private function getServerInfo($request)
+    private function getServerInfo($request): BaseJsonResponse
     {
         $versionArray = explode('.', config('app.version'));
-        return [[
+        return new JsonResponse([[
             'version' => config('app.version'),
             'versionInt' => strval((intval($versionArray[0]) * 1000000) + (intval($versionArray[1]) * 1000) + intval($versionArray[2])),
             'langs' => collect(scandir(base_path('lang')))->reject(fn ($dir) => $dir == '.' || $dir == '..')->sort()->join(','),
@@ -183,6 +388,6 @@ class SwitcherController extends Controller
             'dbPrefix' => legacy_config('db_prefix'),
             'meeting_time_zones_enabled' => legacy_config('meeting_time_zones_enabled') ? '1' : '0',
             'phpVersion' => phpversion()
-        ]];
+        ]]);
     }
 }
