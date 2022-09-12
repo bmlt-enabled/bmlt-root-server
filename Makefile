@@ -1,5 +1,5 @@
 COMMIT := $(shell git rev-parse --short=8 HEAD)
-BASE_IMAGE := public.ecr.aws/bmlt/bmlt-root-server-base
+BASE_IMAGE := bmltenabled/bmlt-root-server-base
 BASE_IMAGE_TAG := 1.1.2
 BASE_IMAGE_BUILD_TAG := $(COMMIT)-$(shell date +%s)
 CROUTON_JS := src/legacy/client_interface/html/croutonjs/crouton.js
@@ -15,7 +15,7 @@ ifeq ($(CI)x, x)
 	TEST_PREFIX := docker run -t --rm -v $(shell pwd)/src:/var/www/html/main_server -v $(shell pwd)/docker/test-auto-config.inc.php:/var/www/html/auto-config.inc.php -w /var/www/html/main_server --network host $(IMAGE):$(TAG)
 else
 	DOCKERFILE := Dockerfile
-	IMAGE := public.ecr.aws/bmlt/bmlt-root-server
+	IMAGE := bmltenabled/bmlt-root-server
 	TAG := 3.0.0-$(COMMIT)
 	ifeq ($(strip $(GITHUB_REF_NAME)),main)
 		TAG := latest
@@ -67,12 +67,8 @@ docker: zip ## Builds Docker Image
 	docker build -f docker/$(DOCKERFILE) . -t $(IMAGE):$(TAG)
 
 .PHONY: docker-push
-docker-push: ## Pushes docker image to ECR
+docker-push: ## Pushes docker image to Dockerhub
 	docker push $(IMAGE):$(TAG)
-
-.PHONY: ecr-login
-ecr-login: ## Authenticates to ECR
-	aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/bmlt
 
 .PHONY: dev
 dev: zip ## Docker Compose Up
@@ -93,7 +89,7 @@ lint-fix:  ## PHP Lint Fix
 	$(LINT_PREFIX) src/vendor/squizlabs/php_codesniffer/bin/phpcbf
 
 .PHONY: docker-publish-base
-docker-publish-base: ecr-login  ## Builds Base Docker Image
+docker-publish-base:  ## Builds Base Docker Image
 	docker build -f docker/Dockerfile-base docker/ -t $(BASE_IMAGE):$(BASE_IMAGE_BUILD_TAG)
 	docker tag $(BASE_IMAGE):$(BASE_IMAGE_BUILD_TAG) $(BASE_IMAGE):$(BASE_IMAGE_TAG)
 	docker push $(BASE_IMAGE):$(BASE_IMAGE_BUILD_TAG)

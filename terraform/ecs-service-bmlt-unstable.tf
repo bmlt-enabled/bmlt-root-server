@@ -1,6 +1,7 @@
 resource "aws_ecs_task_definition" "bmlt_unstable" {
-  family        = "bmlt-unstable"
-  task_role_arn = aws_iam_role.ecs_task_role.arn
+  family             = "bmlt-unstable"
+  task_role_arn      = aws_iam_role.ecs_task_role.arn
+  execution_role_arn = aws_iam_role.ecs_task_role.arn
 
   container_definitions = jsonencode(
     [
@@ -53,7 +54,10 @@ resource "aws_ecs_task_definition" "bmlt_unstable" {
         links                  = ["bmlt-db"],
         workingDirectory       = "/tmp",
         readonlyRootFilesystem = null,
-        image                  = "${aws_ecrpublic_repository.bmlt-root-server.repository_uri}:3.0.0",
+        image                  = "bmltenabled/bmlt-root-server:unstable",
+        repositoryCredentials = {
+          credentialsParameter = data.aws_secretsmanager_secret.docker.arn
+        },
         command = [
           "/bin/bash",
           "/tmp/start-bmlt.sh"
@@ -113,9 +117,12 @@ resource "aws_ecs_task_definition" "bmlt_unstable" {
         links                  = [],
         workingDirectory       = "/tmp",
         readonlyRootFilesystem = null,
-        image                  = "${aws_ecrpublic_repository.bmlt-root-server-sample-db.repository_uri}:unstable",
-        user                   = null,
-        dockerLabels           = null,
+        image                  = "bmltenabled/bmlt-root-server-sample-db:unstable",
+        repositoryCredentials = {
+          credentialsParameter = data.aws_secretsmanager_secret.docker.arn
+        },
+        user         = null,
+        dockerLabels = null,
         logConfiguration = {
           logDriver = "awslogs",
           options = {
