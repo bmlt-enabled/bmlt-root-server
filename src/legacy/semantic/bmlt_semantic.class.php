@@ -943,9 +943,7 @@ class bmlt_semantic
         $ret .= '<input type="text" id="bmlt_semantic_form_text_search_text'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_text_search_text" value="'.$this->localize_string('value_prompt_text_item').'" />';
         $ret .= '<select id="bmlt_semantic_form_text_search_select'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_text_search_select" onchange="'.$function_string.'" disabled="disabled">';
         $ret .= '<option value="" selected="selected">'.$this->localize_string('text_search_type_select_option_0').'</option>';
-        $ret .= '<option value="SearchStringAll=1">'.$this->localize_string('text_search_type_select_option_1').'</option>';
-        $ret .= '<option value="SearchStringExact=1">'.$this->localize_string('text_search_type_select_option_2').'</option>';
-        $ret .= '<option value="StringSearchIsAnAddress=1">'.$this->localize_string('text_search_type_select_option_3').'</option>';
+        $ret .= '<option value="StringSearchIsAnAddress=1">'.$this->localize_string('text_search_type_select_option_1').'</option>';
         $ret .= '</select>';
         $ret .= '<div id="text_search_radius_input_div'.htmlspecialchars($this->_myJSName).'" class="text_search_radius_input_div" style="display:none">';
         $ret .= '<label for="bmlt_semantic_form_text_search_text_radius'.htmlspecialchars($this->_myJSName).'" id="bmlt_semantic_form_text_search_text_radius_label'.htmlspecialchars($this->_myJSName).'">'.$this->localize_string('text_search_radius_label').'</label>';
