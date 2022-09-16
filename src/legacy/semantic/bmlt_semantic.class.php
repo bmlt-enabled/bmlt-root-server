@@ -751,7 +751,7 @@ class bmlt_semantic
         $ret .= '</div>';
         $ret .= defined('DEBUG') ? "\n" : '';
 
-        $ret .= '<div id="bmlt_semantic_form_used_formats_div'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_used_formats_div" style="display:none">';
+        $ret .= '<div id="bmlt_semantic_form_used_formats_div'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_used_formats_div">';
 
         $ret .= '<div id="bmlt_semantic_form_used_formats_checkbox_div'.htmlspecialchars($this->_myJSName).'" class="bmlt_semantic_form_used_formats_checkbox_div">';
         $function_string = 'bmlt_semantic_js_object'.htmlspecialchars($this->_myJSName).'.handleUsedFormatsChange(this)';
