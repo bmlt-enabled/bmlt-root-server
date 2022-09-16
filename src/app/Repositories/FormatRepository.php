@@ -9,15 +9,12 @@ use App\Models\Meeting;
 
 class FormatRepository implements FormatRepositoryInterface
 {
-    public function getFormats(
-        array $langEnums = ['en'],
-        array $keyStrings = null,
-        bool $showAll = false,
-    ): Collection {
+    public function getFormats(array $langEnums = null, array $keyStrings = null, bool $showAll = false, Collection $meetings = null): Collection
+    {
         $formats = Format::query()->whereIn('lang_enum', $langEnums);
 
-        if (!$showAll) {
-            $formats = $formats->whereIn('shared_id_bigint', $this->getUsedFormatIds());
+        if (!$showAll || !is_null($meetings)) {
+            $formats = $formats->whereIn('shared_id_bigint', $this->getUsedFormatIds($meetings));
         }
 
         if ($keyStrings) {
@@ -27,12 +24,15 @@ class FormatRepository implements FormatRepositoryInterface
         return $formats->get();
     }
 
-    private function getUsedFormatIds(): array
+    private function getUsedFormatIds(Collection $meetings = null): array
     {
         $uniqueFormatIds = [];
 
-        $results = Meeting::query()->pluck('formats');
-        foreach ($results as $formatIds) {
+        if (is_null($meetings)) {
+            $meetings = Meeting::query();
+        }
+
+        foreach ($meetings->pluck('formats') as $formatIds) {
             if ($formatIds) {
                 $formatIds = explode(",", $formatIds);
                 foreach ($formatIds as $formatId) {

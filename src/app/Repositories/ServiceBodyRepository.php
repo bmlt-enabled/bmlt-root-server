@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use App\Interfaces\ServiceBodyRepositoryInterface;
 use App\Models\ServiceBody;
@@ -34,6 +35,28 @@ class ServiceBodyRepository implements ServiceBodyRepositoryInterface
         }
 
         return $serviceBodies->get();
+    }
+
+    public function getServiceBodyIdsForUser(int $userId): Collection
+    {
+        $serviceBodyIds = ServiceBody::query()
+            ->where('principal_user_bigint', $userId)
+            ->orWhere(function (Builder $query) use ($userId) {
+                $query
+                    ->orWhere('editors_string', "$userId")
+                    ->orWhere('editors_string', 'LIKE', "$userId,%")
+                    ->orWhere('editors_string', 'LIKE', "%,$userId,%")
+                    ->orWhere('editors_string', 'LIKE', "%,$userId");
+            })
+            ->get()
+            ->map(fn ($sb) => $sb->id_bigint)
+            ->toArray();
+
+        foreach ($this->getChildren($serviceBodyIds) as $serviceBodyId) {
+            $serviceBodyIds[] = $serviceBodyId;
+        }
+
+        return collect($serviceBodyIds);
     }
 
     public function getChildren(array $parents): array

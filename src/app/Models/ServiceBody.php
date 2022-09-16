@@ -19,5 +19,6 @@ class ServiceBody extends Model
         'principal_user_bigint',
         'worldid_mixed',
         'sb_meeting_email',
+        'editors_string',
     ];
 }

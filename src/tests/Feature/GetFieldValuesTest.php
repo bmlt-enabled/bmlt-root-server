@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Meeting;
 use App\Models\MeetingData;
+use App\Models\MeetingLongData;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -35,6 +36,27 @@ class GetFieldValuesTest extends TestCase
             'field_prompt' => $field->field_prompt,
             'lang_enum' => 'en',
             'data_string' => $fieldValue,
+            'visibility' => 0,
+        ]);
+
+        return $meeting;
+    }
+
+    private function createMeetingWithLongData($fieldName, $fieldValue)
+    {
+        $field = MeetingData::query()
+            ->where('key', $fieldName)
+            ->where('meetingid_bigint', 0)
+            ->first();
+
+        $meeting = Meeting::create(['service_body_bigint' => 1]);
+
+        MeetingLongData::create([
+            'meetingid_bigint' => $meeting->id_bigint,
+            'key' => $field->key,
+            'field_prompt' => $field->field_prompt,
+            'lang_enum' => 'en',
+            'data_blob' => $fieldValue,
             'visibility' => 0,
         ]);
 
@@ -239,6 +261,38 @@ class GetFieldValuesTest extends TestCase
             } finally {
                 Meeting::query()->delete();
                 MeetingData::query()
+                    ->whereNot('meetingid_bigint', 0)
+                    ->delete();
+            }
+        }
+    }
+
+    public function testAllMeetingLongDataFields()
+    {
+        $fieldNames = [
+            'meeting_name', 'location_text', 'location_info', 'location_street', 'location_city_subsection',
+            'location_neighborhood', 'location_municipality', 'location_sub_province', 'location_province',
+            'location_postal_code_1', 'location_nation', 'comments', 'train_lines', 'bus_lines',
+            'phone_meeting_number', 'virtual_meeting_link', 'virtual_meeting_additional_info',
+        ];
+
+        foreach ($fieldNames as $fieldName) {
+            try {
+                $meeting1 = $this->createMeetingWithLongData($fieldName, null);
+                $meeting2 = $this->createMeetingWithLongData($fieldName, 'test');
+                $meeting3 = $this->createMeetingWithLongData($fieldName, 'test');
+                $meeting4 = $this->createMeetingWithLongData($fieldName, 'test2');
+                $data = $this->get("/client_interface/json/?switcher=GetFieldValues&meeting_key=$fieldName")->json();
+                $this->get("/client_interface/json/?switcher=GetFieldValues&meeting_key=$fieldName")
+                    ->assertStatus(200)
+                    ->assertExactJson([
+                        [$fieldName => 'NULL', 'ids' => strval($meeting1->id_bigint)],
+                        [$fieldName => 'test', 'ids' => implode(',', [$meeting2->id_bigint, $meeting3->id_bigint])],
+                        [$fieldName => 'test2', 'ids' => strval($meeting4->id_bigint)]
+                    ]);
+            } finally {
+                Meeting::query()->delete();
+                MeetingLongData::query()
                     ->whereNot('meetingid_bigint', 0)
                     ->delete();
             }

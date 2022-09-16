@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
-use App\Http\Resources\ServiceBodyResource;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -14,7 +16,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // Logs sql queries to storage/logs/laravel.log
+//        DB::listen(function ($query) {
+//            Log::info($query->sql, $query->bindings, $query->time);
+//        });
     }
 
     /**
@@ -24,6 +29,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        ServiceBodyResource::withoutWrapping();
+        JsonResource::withoutWrapping();
     }
 }

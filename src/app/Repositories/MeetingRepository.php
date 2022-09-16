@@ -2,29 +2,357 @@
 
 namespace App\Repositories;
 
+use App\Models\Meeting;
+use App\Models\MeetingData;
+use App\Models\MeetingLongData;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use App\Interfaces\MeetingRepositoryInterface;
-use App\Models\Meeting;
-use App\Models\MeetingData;
+use Illuminate\Support\Facades\DB;
 
 class MeetingRepository implements MeetingRepositoryInterface
 {
-    private static array $mainFields = [
-        'id_bigint',
-        'worldid_mixed',
-        'service_body_bigint',
-        'weekday_tinyint',
-        'venue_type',
-        'start_time',
-        'duration_time',
-        'time_zone',
-        'formats',
-        'lang_enum',
-        'longitude',
-        'latitude',
-    ];
+    private string $sqlDistanceFormula = "? * DEGREES(ACOS(LEAST(1.0, COS(RADIANS(latitude)) * COS(RADIANS(?)) * COS(RADIANS(longitude) - RADIANS(?)) + SIN(RADIANS(latitude)) * SIN(RADIANS(?)))))";
+
+    public function getSearchResults(
+        array $meetingIds = null,
+        array $weekdaysInclude = null,
+        array $weekdaysExclude = null,
+        array $venueTypesInclude = null,
+        array $venueTypesExclude = null,
+        array $servicesInclude = null,
+        array $servicesExclude = null,
+        array $formatsInclude = null,
+        array $formatsExclude = null,
+        string $formatsComparisonOperator = 'AND',
+        string $meetingKey = null,
+        string $meetingKeyValue = null,
+        string $startsAfter = null,
+        string $startsBefore = null,
+        string $endsBefore = null,
+        string $minDuration = null,
+        string $maxDuration = null,
+        float $latitude = null,
+        float $longitude = null,
+        float $geoWidthMiles = null,
+        float $geoWidthKilometers = null,
+        bool $needsDistanceField = false,
+        bool $sortResultsByDistance = false,
+        string $searchString = null,
+        ?bool $published = true,
+        array $sortKeys = null,
+        int $pageSize = null,
+        int $pageNum = null,
+    ): Collection {
+        $meetings = Meeting::query()->with(['data', 'longdata']);
+
+        if (!is_null($published)) {
+            $meetings = $meetings->where('published', $published ? 1 : 0);
+        }
+
+        if (!is_null($meetingIds)) {
+            $meetings = $meetings->whereIn('id_bigint', $meetingIds);
+        }
+
+        if (!is_null($weekdaysInclude)) {
+            $meetings = $meetings->whereIn('weekday_tinyint', $weekdaysInclude);
+        }
+
+        if (!is_null($weekdaysExclude)) {
+            $meetings = $meetings->whereNotIn('weekday_tinyint', $weekdaysExclude);
+        }
+
+        if (!is_null($venueTypesInclude)) {
+            $meetings = $meetings->whereIn('venue_type', $venueTypesInclude);
+        }
+
+        if (!is_null($venueTypesExclude)) {
+            $meetings = $meetings->whereNotIn('venue_type', $venueTypesExclude);
+        }
+
+        if (!is_null($servicesInclude)) {
+            $meetings = $meetings->whereIn('service_body_bigint', $servicesInclude);
+        }
+
+        if (!is_null($servicesExclude)) {
+            $meetings = $meetings->whereNotIn('service_body_bigint', $servicesExclude);
+        }
+
+        if (!is_null($formatsInclude)) {
+            if ($formatsComparisonOperator == 'AND') {
+                foreach ($formatsInclude as $formatId) {
+                    $meetings = $meetings->where(function (Builder $query) use ($formatId) {
+                        $query
+                            ->orWhere('formats', "$formatId")
+                            ->orWhere('formats', 'LIKE', "$formatId,%")
+                            ->orWhere('formats', 'LIKE', "%,$formatId,%")
+                            ->orWhere('formats', 'LIKE', "%,$formatId");
+                    });
+                }
+            } else {
+                $meetings = $meetings->where(function (Builder $query) use ($formatsInclude) {
+                    foreach ($formatsInclude as $formatId) {
+                        $query->orWhere(function (Builder $query) use ($formatId) {
+                            $query
+                                ->orWhere('formats', "$formatId")
+                                ->orWhere('formats', 'LIKE', "$formatId,%")
+                                ->orWhere('formats', 'LIKE', "%,$formatId,%")
+                                ->orWhere('formats', 'LIKE', "%,$formatId");
+                        });
+                    }
+                });
+            }
+        }
+
+        if (!is_null($formatsExclude)) {
+            foreach ($formatsExclude as $formatId) {
+                $meetings = $meetings
+                    ->whereNot('formats', "$formatId")
+                    ->whereNot('formats', 'LIKE', "$formatId,%")
+                    ->whereNot('formats', 'LIKE', "%,$formatId,%")
+                    ->whereNot('formats', 'LIKE', "%,$formatId");
+            }
+        }
+
+        if (!is_null($meetingKey) && !is_null($meetingKeyValue)) {
+            if (in_array($meetingKey, Meeting::$mainFields)) {
+                if ($meetingKey == 'formats' || $meetingKey == 'latitude' || $meetingKey == 'longitude') {
+                    $meetings = $meetings->whereRaw('1 = 0');
+                } else {
+                    $meetings = $meetings->where($meetingKey, $meetingKeyValue);
+                }
+            } else {
+                $meetings = $meetings->where(function (Builder $query) use ($meetingKey, $meetingKeyValue) {
+                    $query
+                        ->whereHas('data', function (Builder $query) use ($meetingKey, $meetingKeyValue) {
+                            $query->where('key', $meetingKey)->where('data_string', $meetingKeyValue);
+                        })
+                        ->orWhereHas('longdata', function (Builder $query) use ($meetingKey, $meetingKeyValue) {
+                            $query->where('key', $meetingKey)->where('data_blob', $meetingKeyValue);
+                        });
+                });
+            }
+        }
+
+        if (!is_null($startsAfter)) {
+            $meetings = $meetings->where('start_time', '>', $startsAfter);
+        }
+
+        if (!is_null($startsBefore)) {
+            $meetings = $meetings->where('start_time', '<', $startsBefore);
+        }
+
+        if (!is_null($endsBefore)) {
+            $endsBefore = explode(':', $endsBefore);
+            $endsBefore = ($endsBefore[0] * 3600) + ($endsBefore[1] * 60);
+            $meetings = $meetings->whereRaw("time_to_sec(start_time + duration_time) <= $endsBefore");
+        }
+
+        if (!is_null($maxDuration)) {
+            $meetings = $meetings->where('duration_time', '<=', $maxDuration);
+        }
+
+        if (!is_null($minDuration)) {
+            $meetings = $meetings->where('duration_time', '>=', $minDuration);
+        }
+
+        // handle full text searches
+        if (!is_null($searchString)) {
+            $moreMeetingIds = [];
+            $searchString = trim($searchString);
+            foreach (explode(',', $searchString) as $word) {
+                if (is_numeric($word)) {
+                    $moreMeetingIds[] = intval($word);
+                } else {
+                    $moreMeetingIds = [];
+                    break;
+                }
+            }
+
+            if (empty($moreMeetingIds)) {
+                $meetings = $meetings->where(function (Builder $query) use ($searchString) {
+                    $query
+                        ->whereHas('data', function (Builder $query) use ($searchString) {
+                            $query->whereFullText('data_string', $searchString);
+                        })
+                        ->orWhereHas('longdata', function (Builder $query) use ($searchString) {
+                            $query->whereFullText('data_blob', $searchString);
+                        });
+                });
+            } else {
+                $meetings = $meetings->whereIn('id_bigint', $moreMeetingIds);
+            }
+        }
+
+        // handle geographic searches - this has to come last, because we need all of the constraints when we clone the query
+        $isGeographicSearch = !is_null($latitude) && !is_null($longitude) && (!is_null($geoWidthMiles) || !is_null($geoWidthKilometers) || $needsDistanceField);
+        if ($isGeographicSearch) {
+            $nNearest = null;
+            $geoWidth = null;
+
+            $useMiles = true;
+            if (!is_null($geoWidthMiles)) {
+                $geoWidth = $geoWidthMiles;
+                if ($geoWidthMiles < 0) {
+                    $nNearest = abs(intval($geoWidthMiles));
+                }
+            } elseif (!is_null($geoWidthKilometers)) {
+                $useMiles = false;
+                $geoWidth = $geoWidthKilometers;
+                if ($geoWidthKilometers < 0) {
+                    $nNearest = abs(intval($geoWidthKilometers));
+                }
+            }
+
+            $milesMultiplier = 69.0;
+            $kilometersMultiplier = 111.111;
+
+            $distanceMultiplier = $useMiles ? $milesMultiplier : $kilometersMultiplier;
+
+            if (!is_null($nNearest)) {
+                // The idea here is to find the search radius that gives at least $nNearest meetings, which is slightly
+                // different and more useful for map searches than just returning the $nNearest meetings.
+                $geoWidth = $this->calculateSearchRadius($meetings, $nNearest, $latitude, $longitude, $distanceMultiplier);
+            }
+
+            $meetings = $meetings->selectRaw(
+                "*, $this->sqlDistanceFormula as distance_in_miles, $this->sqlDistanceFormula as distance_in_km",
+                [$milesMultiplier, $latitude, $longitude, $latitude, $kilometersMultiplier, $latitude, $longitude, $latitude],
+            );
+
+            if (!is_null($geoWidth)) {
+                $meetings = $meetings->whereRaw("$this->sqlDistanceFormula <= ?", [$distanceMultiplier, $latitude, $longitude, $latitude, $geoWidth]);
+            }
+
+            if ($sortResultsByDistance) {
+                $meetings = $meetings->orderByRaw($this->sqlDistanceFormula, [$distanceMultiplier, $latitude, $longitude, $latitude]);
+            }
+        }
+
+        // paging
+        if (!is_null($pageSize)) {
+            $meetings = $meetings->limit($pageSize);
+            if (!is_null($pageNum)) {
+                $meetings = $meetings->offset(max(0, $pageNum - 1));
+            }
+        }
+
+        // sort and return
+        if (is_null($sortKeys) || ($isGeographicSearch && $sortResultsByDistance)) {
+            // there are no sorts, or a sort by distance is already applied
+            return $meetings->get();
+        }
+
+        if (empty(array_diff($sortKeys, Meeting::$mainFields))) {
+            // all sorts can be done in sql
+            foreach ($sortKeys as $sortKey) {
+                $meetings = $meetings->orderBy($sortKey);
+            }
+            return $meetings->get();
+        }
+
+        // we have to sort in memory
+        $mainTableKeys = [];
+        foreach ($sortKeys as $sortKey) {
+            if (in_array($sortKey, Meeting::$mainFields)) {
+                $mainTableKeys[$sortKey] = null;
+            }
+        }
+
+        $dataByMeeting = [];
+        $meetings = $meetings->get();
+        foreach ($meetings as $meeting) {
+            $dataByMeeting[$meeting->id_bigint] = $meeting->data
+                ->mapWithKeys(fn($data, $_) => [$data->key => $data->data_string])
+                ->toBase()
+                ->merge(
+                    $meeting->longdata->mapWithKeys(fn($data, $_) => [$data->key => $data->data_blob])->toBase()
+                );
+        }
+
+        return $meetings->sortBy([function ($m1, $m2) use ($sortKeys, $mainTableKeys, $dataByMeeting) {
+            foreach ($sortKeys as $sortKey) {
+                if (isset($mainTableKeys[$sortKey])) {
+                    $field1 = $m1->{$sortKey};
+                    $field2 = $m2->{$sortKey};
+                } else {
+                    $field1 = $dataByMeeting[$m1->id_bigint]?->get($sortKey);
+                    $field2 = $dataByMeeting[$m2->id_bigint]?->get($sortKey);
+                }
+
+                // push nulls and empty strings to the end...
+                if ((is_null($field1) || $field1 == '') && !is_null($field2) && $field2 != '') {
+                    return 1;
+                } elseif (!is_null($field1) && $field1 != '' && (is_null($field2) || $field2 == '')) {
+                    return -1;
+                }
+
+                $comparison = $field1 <=> $field2;
+                if ($comparison != 0) {
+                    return $comparison;
+                }
+            }
+            return 0;
+        }]);
+    }
+
+    private function calculateSearchRadius(Builder $baseQuery, $numMeetings, float $latitude, float $longitude, float $distanceMultiplier): float
+    {
+        $radiuses = [0.0625, 0.125, 0.1875, 0.25, 0.4375, 0.5, 0.5625, 0.75, 0.8125, 1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.25, 4.5, 4.75, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0, 8.5, 9.0, 9.5, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 17.5, 20.0, 22.5, 25.0, 27.5, 30.0, 35.0, 40.0, 45.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0, 150, 200];
+        $counts = [];
+        $low = 0;
+        $high = count($radiuses) - 1;
+        while ($low <= $high) {
+            $mid = floor(($low + $high) / 2);
+            $radius = $radiuses[$mid];
+            $count = DB::query()
+                ->fromSub(
+                    $baseQuery->clone()
+                        ->selectRaw(
+                            "$this->sqlDistanceFormula as distance",
+                            [$distanceMultiplier, $latitude, $longitude, $latitude]
+                        )
+                        ->whereRaw(
+                            'latitude BETWEEN ? - (? / ?) AND ? + (? / ?)',
+                            [$latitude, $radius, $distanceMultiplier, $latitude, $radius, $distanceMultiplier]
+                        )
+                        ->whereRaw(
+                            'longitude BETWEEN ? - (? / (? * COS(RADIANS(?)))) AND ? + (? / (? * COS(RADIANS(?))))',
+                            [$longitude, $radius, $distanceMultiplier, $latitude, $longitude, $radius, $distanceMultiplier, $latitude]
+                        ),
+                    'd'
+                )
+                ->where('d.distance', '<=', $radius)
+                ->count();
+
+            $counts[$mid] = $count;
+
+            if ($count < $numMeetings) {
+                // see if we have the next one yet
+                if (isset($counts[$mid + 1])) {
+                    if ($counts[$mid + 1] >= $numMeetings) {
+                        // the next one was bigger, so that's the threshold, return it
+                        return $radiuses[$mid + 1];
+                    }
+                }
+
+                $low = $mid + 1;
+            } else {
+                // see if we have the previous one yet
+                if (isset($counts[$mid - 1])) {
+                    if ($counts[$mid - 1] < $numMeetings) {
+                        // the previous one was smaller, so this is the threshold, return it
+                        return $radius;
+                    }
+                }
+
+                $high = $mid - 1;
+            }
+        }
+
+        return $radius;
+    }
 
     public function getFieldKeys(): Collection
     {
@@ -82,9 +410,9 @@ class MeetingRepository implements MeetingRepositoryInterface
 
     public function getFieldValues(string $fieldName, array $specificFormats = [], bool $allFormats = false): Collection
     {
-        if (in_array($fieldName, self::$mainFields)) {
+        if (in_array($fieldName, Meeting::$mainFields)) {
             $meetingIdsByValue = Meeting::all()
-                ->mapToGroups(function ($meeting, $key) use ($fieldName, $specificFormats, $allFormats) {
+                ->mapToGroups(function ($meeting, $_) use ($fieldName, $specificFormats, $allFormats) {
                     $value = $meeting->{$fieldName};
                     $value = $fieldName == 'worldid_mixed' && $value ? trim($value) : $value;
 
@@ -119,8 +447,17 @@ class MeetingRepository implements MeetingRepositoryInterface
                     $query->where('visibility', null)->orWhereNot('visibility', 1);
                 })
                 ->get()
+                ->merge(
+                    MeetingLongData::query()
+                        ->where('key', $fieldName)
+                        ->whereNot('meetingid_bigint', 0)
+                        ->where(function ($query) {
+                            $query->where('visibility', null)->orWhereNot('visibility', 1);
+                        })
+                        ->get()
+                )
                 ->mapToGroups(function ($meetingData, $key) use ($fieldName) {
-                    $value = $meetingData->data_string;
+                    $value = $meetingData->data_string ?? $meetingData->data_blob ?? null;
                     return [$value => (string)$meetingData->meetingid_bigint];
                 });
         }
