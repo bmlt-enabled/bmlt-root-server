@@ -471,4 +471,59 @@ class MeetingRepository implements MeetingRepositoryInterface
 
         return collect($fieldValues);
     }
+
+    public function getBoundingBox(): array
+    {
+        $nw = ['lat' => null, 'long' => null];
+        $se = ['lat' => null, 'long' => null];
+
+        $query = Meeting::query()
+            ->select(['latitude', 'longitude'])
+            ->whereNotNull(['latitude', 'longitude'])
+            ->where('published', 1);
+
+        foreach ($query->get() as $coords) {
+            // The logic in this loop is copied entirely from the old code
+            $longitude = max(-180.0, min(180.0, floatval($coords->longitude)));
+            $latitude = max(-90.0, min(90.0, floatval($coords->latitude)));
+
+            if ($longitude == 0 || $latitude == 0) {
+                continue;
+            }
+
+            if (is_null($nw['long'])) {
+                $nw['long'] = $longitude;
+            } elseif (abs($longitude) > 90 && $longitude >= 0 && ($nw['long'] < 0)) {
+                $nw['long'] = $longitude;
+            } elseif (abs($longitude) > 90 && $longitude < 0 && $nw['long'] >= 0) {
+                continue;
+            } else {
+                $nw['long'] = min($longitude, $nw['long']);
+            }
+
+            if (is_null($se['long'])) {
+                $se['long'] = $longitude;
+            } elseif (abs($longitude) > 90 && $longitude < 0 && $se['long'] >= 0) {
+                $se['long'] = $longitude;
+            } else if (abs($longitude) > 90 && $longitude >= 0 && $se['long'] < 0) {
+                continue;
+            } else {
+                $se['long'] = max($longitude, $se['long']);
+            }
+
+            if (is_null($nw['lat'])) {
+                $nw['lat'] = $latitude;
+            } else {
+                $nw['lat'] = max($latitude, $nw['lat']);
+            }
+
+            if (is_null($se['lat'])) {
+                $se['lat'] = $latitude;
+            } else {
+                $se['lat'] = min($latitude, $se['lat']);
+            }
+        }
+
+        return ['nw' => $nw, 'se' => $se];
+    }
 }

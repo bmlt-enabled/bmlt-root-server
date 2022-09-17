@@ -38,4 +38,5 @@ interface MeetingRepositoryInterface
     ): Collection;
     public function getFieldKeys(): Collection;
     public function getFieldValues(string $fieldName, array $specificFormats = [], bool $allFormats = false): Collection;
+    public function getBoundingBox(): array;
 }
