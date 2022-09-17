@@ -1,11 +1,13 @@
 ## 3.0.0 (TBD)
-* Root Server 3.0.0 is the beginning of a major refactoring and code modernization effort.
-  * PHP 8.0 or 8.1 are now required. PHP 7.x is no longer supported.
-  * As we rewrite endpoints, with the exception of `GetNAWSDump`, we are dropping all data formats but `json` and `jsonp`. As such, the following endpoints have been rewritten and now support only the `json` and `jsonp` data formats:
+* PHP 8.0 or 8.1 are now required. PHP 7.x is no longer supported.
+* As part of a modernization effort, we are rewriting the APIs. As we rewrite them, we are dropping all output formats except for json. In this release, the following APIs have been rewritten:
+    * `GetSearchResults`
     * `GetServiceBodies`
     * `GetFormats`
     * `GetFieldKeys`
     * `GetFieldValues`
+    * `GetChanges`    
+    * `GetServerInfo`
 * Allow NAWS import code to update the world ID of deleted meetings. (This avoids a synchronization problem that would arise if a new meeting is deleted before its NAWS code can be uploaded.)
 
 ## 2.16.6 (August 27, 2022)
