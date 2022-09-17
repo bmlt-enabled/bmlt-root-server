@@ -6,6 +6,7 @@
     * `GetFormats`
     * `GetFieldKeys`
     * `GetFieldValues`
+* Allow NAWS import code to update the world ID of deleted meetings. (This avoids a synchronization problem that would arise if a new meeting is deleted before its NAWS code can be uploaded.)
 
 ## 2.16.6 (August 27, 2022)
 * Fixed an issue with saving meetings when using PHP 8.x.
