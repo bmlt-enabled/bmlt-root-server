@@ -2,15 +2,22 @@
 
 namespace App\Http\Middleware;
 
+use App\Interfaces\MigrationRepositoryInterface;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use App\Models\Migration;
 
 class DatabaseMigrations
 {
+    private MigrationRepositoryInterface $migrationRepository;
+
+    public function __construct(MigrationRepositoryInterface $migrationRepository)
+    {
+        $this->migrationRepository = $migrationRepository;
+    }
+
     public function handle(Request $request, Closure $next)
     {
         if (config('app.env') != 'testing') {
@@ -45,7 +52,7 @@ class DatabaseMigrations
             return true;
         }
 
-        if (!Migration::where('migration', '1910_01_01_000000_innodb_changes')->exists()) {
+        if (!$this->migrationRepository->migrationExists('1910_01_01_000000_innodb_changes')) {
             return true;
         }
 
