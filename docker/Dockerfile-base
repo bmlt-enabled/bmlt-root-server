@@ -30,6 +30,7 @@ RUN apt-get update \
         php8.0-xdebug \
         php8.0-xml \
         php8.0-zip \
+        php8.0-intl \
     && update-alternatives --set php /usr/bin/php8.0
 
 # Install composer

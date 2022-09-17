@@ -252,21 +252,15 @@ class bmlt_semantic
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = array ( );
 
-        if ($this->_bmltRootServerURI) {
-            $error = null;
-
-            $uri = $this->_bmltRootServerURI.'/client_interface/json/GetLangs.php';
-            $json = self::call_curl($uri, $error);
-
-            if (!$error && $json) {
-                $json = json_decode($json, true);
-                if ($json && isset($json["languages"])) {
-                    $languages = $json["languages"];
-                    foreach ($languages as $language) {
-                        $ret[$language["key"]] = $language["name"];
-                    }
-                }
-            }
+        $languages = collect(scandir(base_path('lang')))->reject(fn ($dir) => $dir == '.' || $dir == '..')->sort()->join(',');
+        $languages = explode(",", $languages);
+        foreach ($languages as $language) {
+            $lang_name = $language == "dk" ? "da" : $language;
+            $lang_name = Locale::getDisplayLanguage($lang_name, $lang_name);
+            $firstChar = mb_substr($lang_name, 0, 1, "utf-8");
+            $then = mb_substr($lang_name, 1, null, "utf-8");
+            $lang_name = mb_strtoupper($firstChar, "utf-8") . $then;
+            $ret[$language] = $lang_name;
         }
 
         return $ret;
