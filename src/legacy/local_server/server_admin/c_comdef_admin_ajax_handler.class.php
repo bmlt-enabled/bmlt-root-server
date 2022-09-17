@@ -326,10 +326,25 @@ class c_comdef_admin_ajax_handler
         return json_encode($ret);
     }
 
-    /* Helper method for HandleMeetingWorldIDsUpdate for updating deleted meetings.  These meetings exist only in the changes table,
-    if at all.  The only change allowed in this case is to set the world_id to 'deleted'.  If the world_id was already 'deleted' or
-    if we're trying to set it to its current world_id, report no change.  This method doesn't try to be clever about working around
-    problems: if something is wrong, it just reports the meeting as a problem meeting and doesn't make any changes. */
+    /* Helper method for HandleMeetingWorldIDsUpdate for updating deleted meetings.  These meetings exist only in the
+    changes table, if at all.  The normal use for this method is to set the world_id to 'deleted', which is used by NAWS
+    to indicate that they've recorded this deletion.  The NAWS export facility doesn't export meetings whose world_id is
+    'deleted', so that NAWS doesn't have to keep looking at the same deleted meeting over and over.  If the world_id was
+    already 'deleted' or if we're trying to set it to its current world_id, report no change.  This method doesn't try
+    to be to be clever about working around problems: if something is wrong, it just reports the meeting as a problem
+    meeting and doesn't make any changes.  Obscure case: it's also OK to update the world_id of a deleted meeting to a
+    different world_id as well, not just to 'deleted'.  This is useful for avoiding a synchronization problem that would
+    arise if a new meeting is deleted before its NAWS code can be uploaded.  (The sequence of events in that case would
+    be a meeting is created with no world_id, gets picked up in a NAWS export, and then gets deleted, still with no
+    world_id recorded.  Then if NAWS sees the new meeting in the export and enters it in their database, it will get a
+    world_id on the next import.  This will set the world_id on the next import.  Then the next export will include it
+    as deleted, since it now has a world_id, so that NAWS knows that the meeting with that world_id no longer exists.
+    As a final wrinkle, you could also change the world_id of a deleted meeting that already had a world_id.
+    There doesn't seem to be a use case for this, but it would not be a problem to do so.  In that case, there is a
+    "feature" of the NAWS export code that causes 2 entries in the spreadsheet for the deleted meeting, one for each
+    world_id under which it was deleted.  I'm going to declare that this is in fact a feature rather than a bug, since
+    it's probably good if NAWS sees both world_ids in case something weird is going on.  Once it's set to 'deleted' that
+    meeting will no longer appear.) */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     private function UpdatePossiblyDeletedMeeting($bmltId, $newWorldId, &$ret, $isServerAdmin, $userServiceBodyIDs)
     {
@@ -347,30 +362,25 @@ class c_comdef_admin_ajax_handler
                             // Meeting was under some other service body that this user isn't allowed to change.
                             $ret['report']['problem'][] = $bmltId;
                         } elseif ($newWorldId === $meeting->GetWorldID()) {
-                            // Even though the meeting is deleted, we aren't trying to change its world_id -- so this is still ok
+                            // We aren't trying to change its world_id.
                             $ret['report']['not_updated'][] = $bmltId;
-                        } elseif (strtolower($newWorldId) == 'deleted' && strtolower($meeting->GetWorldID()) == 'deleted') {
-                            // The newWorldId is 'deleted', perhaps with some non-standard case (e.g., 'DeLETED'), and the current world_id
-                            // is already 'deleted'.  The database should only have world_ids of 'deleted' in all lower case, and not
-                            // with some nonstandard capitalization -- but there may be older releases of the server that didn't check
-                            // the case of 'deleted' before saving it, so convert that to all lower case as well for the test.
-                            $ret['report']['not_updated'][] = $bmltId;
-                        } elseif (strtolower($newWorldId) == 'deleted') {
-                            // Found a deleted meeting whose world_id should be changed to 'deleted'.  Do that.
-                            $meeting->SetWorldID('deleted');
+                        } else {
+                            // Found a deleted meeting whose world_id should be changed (could be to 'deleted' or to another world_id).  Do that.
+                            $meeting->SetWorldID($newWorldId);
                             $meeting->UpdateToDB();
                             $meeting->DeleteFromDB();
-                            $ret['report']['marked'][] = $bmltId;
-                        } else {
-                            // problem meeting -- the meeting is already deleted, and we're trying to change the world_id from its
-                            // current value to something other than 'deleted'
-                            $ret['report']['problem'][] = $bmltId;
+                            if (strtolower($newWorldId) == 'deleted') {
+                                $ret['report']['marked'][] = $bmltId;
+                            } else {
+                                $ret['report']['updated'][] = $bmltId;
+                            }
                         }
                         return;
                     }
                 }
             }
         }
+        // meeting not found in the changes table
         $ret['report']['problem'][] = $bmltId;
     }
 
