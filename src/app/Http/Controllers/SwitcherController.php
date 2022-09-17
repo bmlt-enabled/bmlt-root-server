@@ -12,6 +12,7 @@ use App\Interfaces\ChangeRepositoryInterface;
 use App\Interfaces\FormatRepositoryInterface;
 use App\Interfaces\MeetingRepositoryInterface;
 use App\Interfaces\ServiceBodyRepositoryInterface;
+use App\Models\Meeting;
 use App\Models\Migration;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse as BaseJsonResponse;
@@ -40,7 +41,7 @@ class SwitcherController extends Controller
     {
         $switcher = $request->input('switcher');
 
-        $validValues = ['GetSearchResults', 'GetFormats', 'GetServiceBodies', 'GetFieldKeys', 'GetFieldValues', 'GetChanges', 'GetServerInfo'];
+        $validValues = ['GetSearchResults', 'GetFormats', 'GetServiceBodies', 'GetFieldKeys', 'GetFieldValues', 'GetChanges', 'GetServerInfo', 'GetCoverageArea'];
         if (in_array($switcher, $validValues)) {
             if ($dataFormat != 'json' && $dataFormat != 'jsonp') {
                 abort(404, 'This endpoint only supports the \'json\' and \'jsonp\' data formats.');
@@ -58,8 +59,10 @@ class SwitcherController extends Controller
                 $response = $this->getFieldValues($request);
             } elseif ($switcher == 'GetChanges') {
                 $response = $this->getMeetingChanges($request);
-            } else {
+            } elseif ($switcher == 'GetServerInfo') {
                 $response = $this->getServerInfo($request);
+            } else {
+                $response = $this->getCoverageArea($request);
             }
 
             if ($dataFormat == 'jsonp') {
@@ -389,6 +392,18 @@ class SwitcherController extends Controller
             'dbPrefix' => legacy_config('db_prefix'),
             'meeting_time_zones_enabled' => legacy_config('meeting_time_zones_enabled') ? '1' : '0',
             'phpVersion' => phpversion()
+        ]]);
+    }
+
+    private function getCoverageArea($request): BaseJsonResponse
+    {
+        $box = $this->meetingRepository->getBoundingBox();
+
+        return new JsonResponse([[
+            'nw_corner_longitude' => strval($box['nw']['long']),
+            'nw_corner_latitude' => strval($box['nw']['lat']),
+            'se_corner_longitude' => strval($box['se']['long']),
+            'se_corner_latitude' => strval($box['se']['lat']),
         ]]);
     }
 }
