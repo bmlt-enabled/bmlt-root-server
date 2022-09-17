@@ -48,7 +48,6 @@ $this->_localization = array (
                                 'switcher_type_selector_naws'           =>  'Get A NAWS Format Export',
                                 'switcher_type_selector_field_keys'     =>  'Get A List of Available Field Keys',
                                 'switcher_type_selector_field_values'   =>  'Get A List of Specific Field Values',
-                                'switcher_type_selector_server_langs'   =>  'Get Server Languages',
                                 'switcher_type_selector_server_info'    =>  'Get Server Information',
                                 'switcher_type_selector_coverage_area'  =>  'Get Geographic Coverage Area',
                                 'coverage_area_legend'                  =>  'Geographic Coverage Area',

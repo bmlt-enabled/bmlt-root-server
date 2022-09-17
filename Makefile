@@ -1,6 +1,6 @@
 COMMIT := $(shell git rev-parse --short=8 HEAD)
 BASE_IMAGE := bmltenabled/bmlt-root-server-base
-BASE_IMAGE_TAG := 1.1.2
+BASE_IMAGE_TAG := 1.1.3
 BASE_IMAGE_BUILD_TAG := $(COMMIT)-$(shell date +%s)
 CROUTON_JS := src/legacy/client_interface/html/croutonjs/crouton.js
 VENDOR_AUTOLOAD := src/vendor/autoload.php

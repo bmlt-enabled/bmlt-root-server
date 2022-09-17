@@ -252,21 +252,13 @@ class bmlt_semantic
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = array ( );
 
-        if ($this->_bmltRootServerURI) {
-            $error = null;
-
-            $uri = $this->_bmltRootServerURI.'/client_interface/json/GetLangs.php';
-            $json = self::call_curl($uri, $error);
-
-            if (!$error && $json) {
-                $json = json_decode($json, true);
-                if ($json && isset($json["languages"])) {
-                    $languages = $json["languages"];
-                    foreach ($languages as $language) {
-                        $ret[$language["key"]] = $language["name"];
-                    }
-                }
-            }
+        $languages = collect(scandir(base_path('lang')))->reject(fn ($dir) => $dir == '.' || $dir == '..')->sort();
+        foreach ($languages as $language) {
+            $langName = $language == 'dk' ? 'da' : $language;
+            $langName = Locale::getDisplayLanguage($langName, $langName);
+            $langName = mb_str_split($langName);
+            $langName = mb_strtoupper($langName[0]) . implode('', array_slice($langName, 1));
+            $ret[$language] = $langName;
         }
 
         return $ret;
@@ -1289,7 +1281,6 @@ class bmlt_semantic
         $ret .= '<option id="bmlt_semantic_form_switcher_type_select_fieldkey_option'.htmlspecialchars($this->_myJSName).'" value="GetFieldKeys">'.$this->localize_string('switcher_type_selector_field_keys').'</option>';
         $ret .= '<option id="bmlt_semantic_form_switcher_type_select_fieldval_option'.htmlspecialchars($this->_myJSName).'" value="GetFieldValues">'.$this->localize_string('switcher_type_selector_field_values').'</option>';
         $ret .= '<option id="bmlt_semantic_form_switcher_type_select_naws_option'.htmlspecialchars($this->_myJSName).'" value="GetNAWSDump">'.$this->localize_string('switcher_type_selector_naws').'</option>';
-        $ret .= '<option id="bmlt_semantic_form_switcher_type_select_server_langs_option'.htmlspecialchars($this->_myJSName).'" value="GetLangs">'.$this->localize_string('switcher_type_selector_server_langs').'</option>';
 
         $this->get_server_version();
         $version = $this->_version;
