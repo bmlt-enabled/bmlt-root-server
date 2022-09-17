@@ -11,9 +11,8 @@ use App\Http\Responses\JsonResponse;
 use App\Interfaces\ChangeRepositoryInterface;
 use App\Interfaces\FormatRepositoryInterface;
 use App\Interfaces\MeetingRepositoryInterface;
+use App\Interfaces\MigrationRepositoryInterface;
 use App\Interfaces\ServiceBodyRepositoryInterface;
-use App\Models\Meeting;
-use App\Models\Migration;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse as BaseJsonResponse;
 use Illuminate\Support\Facades\Http;
@@ -23,17 +22,20 @@ class SwitcherController extends Controller
     private ChangeRepositoryInterface $changeRepository;
     private FormatRepositoryInterface $formatRepository;
     private MeetingRepositoryInterface $meetingRepository;
+    private MigrationRepositoryInterface $migrationRepository;
     private ServiceBodyRepositoryInterface $serviceBodyRepository;
 
     public function __construct(
         ChangeRepositoryInterface $changeRepository,
         FormatRepositoryInterface $formatRepository,
         MeetingRepositoryInterface $meetingRepository,
+        MigrationRepositoryInterface $migrationRepository,
         ServiceBodyRepositoryInterface $serviceBodyRepository
     ) {
         $this->changeRepository = $changeRepository;
         $this->formatRepository = $formatRepository;
         $this->meetingRepository = $meetingRepository;
+        $this->migrationRepository = $migrationRepository;
         $this->serviceBodyRepository = $serviceBodyRepository;
     }
 
@@ -388,7 +390,7 @@ class SwitcherController extends Controller
             'meeting_counties_and_sub_provinces' => implode(',', legacy_config('meeting_counties_and_sub_provinces', [])),
             'available_keys' => $this->meetingRepository->getFieldKeys()->map(fn ($value) => $value['key'])->merge(['root_server_uri', 'format_shared_id_list'])->join(','),
             'google_api_key' => legacy_config('google_api_key', ''),
-            'dbVersion' => Migration::query()->orderByDesc('id')->first()->migration,
+            'dbVersion' => $this->migrationRepository->getLastMigration()['migration'],
             'dbPrefix' => legacy_config('db_prefix'),
             'meeting_time_zones_enabled' => legacy_config('meeting_time_zones_enabled') ? '1' : '0',
             'phpVersion' => phpversion()
