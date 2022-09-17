@@ -1526,5 +1526,45 @@ class GetSearchResultsTest extends TestCase
         $this->assertEquals('', $meeting['contact_email_2']);
     }
 
-    // TODO add tests for get_used_formats and get_formats_only
+    public function testGetUsedFormats()
+    {
+        $format1 = $this->createFormat1();
+        $format2 = $this->createFormat2();
+        $meeting1 = $this->createMeeting(['formats' => "$format1->shared_id_bigint"]);
+        $meeting2 = $this->createMeeting(['formats' => "$format1->shared_id_bigint"]);
+        $data = $this->get("/client_interface/json/?switcher=GetSearchResults&get_used_formats")
+            ->assertStatus(200)
+            ->json();
+        $this->assertEquals(2, count($data['meetings']));
+        $this->assertEquals(1, count($data['formats']));
+        $this->assertEquals(strval($format1->shared_id_bigint), $data['formats'][0]['id']);
+    }
+
+    public function testGetFormatsOnly()
+    {
+        $format1 = $this->createFormat1();
+        $format2 = $this->createFormat2();
+        $meeting1 = $this->createMeeting(['formats' => "$format1->shared_id_bigint"]);
+        $meeting2 = $this->createMeeting(['formats' => "$format1->shared_id_bigint"]);
+        $data = $this->get("/client_interface/json/?switcher=GetSearchResults&get_formats_only")
+            ->assertStatus(200)
+            ->json();
+        $this->assertFalse(array_key_exists('meetings', $data));
+        $this->assertEquals(1, count($data['formats']));
+        $this->assertEquals(strval($format1->shared_id_bigint), $data['formats'][0]['id']);
+    }
+
+    public function testGetFormatsOnlyPrecedence()
+    {
+        $format1 = $this->createFormat1();
+        $format2 = $this->createFormat2();
+        $meeting1 = $this->createMeeting(['formats' => "$format1->shared_id_bigint"]);
+        $meeting2 = $this->createMeeting(['formats' => "$format1->shared_id_bigint"]);
+        $data = $this->get("/client_interface/json/?switcher=GetSearchResults&get_used_formats&get_formats_only")
+            ->assertStatus(200)
+            ->json();
+        $this->assertFalse(array_key_exists('meetings', $data));
+        $this->assertEquals(1, count($data['formats']));
+        $this->assertEquals(strval($format1->shared_id_bigint), $data['formats'][0]['id']);
+    }
 }

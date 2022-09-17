@@ -257,17 +257,18 @@ class SwitcherController extends Controller
             $meeting->calculateFormatsFields($formatsById);
         }
 
-        if ($request->has('get_used_formats')) {
-            $response = ['formats' => FormatResource::collection($formats)];
-            if (!$request->has('get_formats_only')) {
-                $response = array_merge(['meetings' => MeetingResource::collection($meetings)], $response);
-            }
-            $response = new JsonResponse($response);
-        } else {
-            $response = MeetingResource::collection($meetings)->response();
+        if ($request->has('get_formats_only')) {
+            return new JsonResponse([
+                'formats' => FormatResource::collection($formats)
+            ]);
+        } elseif ($request->has('get_used_formats')) {
+            return new JsonResponse([
+                'meetings' => MeetingResource::collection($meetings),
+                'formats' => FormatResource::collection($formats)
+            ]);
         }
 
-        return $response;
+        return MeetingResource::collection($meetings)->response();
     }
 
     private function getFormats(Request $request): BaseJsonResponse
