@@ -695,6 +695,9 @@ return new class extends Migration
         }
 
         if (Schema::hasTable('comdef_users')) {
+            DB::table('comdef_users')
+                ->where('last_access_datetime', '0000-00-00 00:00:00')
+                ->update(['last_access_datetime' => '1970-01-01 00:00:00']);
             Schema::table('comdef_users', function (Blueprint $table) {
                 $table->dateTime('last_access_datetime')->default('1970-01-01 00:00:00')->change();
             });
