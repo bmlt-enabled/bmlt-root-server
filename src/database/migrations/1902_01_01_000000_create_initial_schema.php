@@ -694,7 +694,11 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('comdef_users')) {
+        if (Schema::hasTable('comdef_users')) {
+            Schema::table('comdef_users', function (Blueprint $table) {
+                $table->dateTime('last_access_datetime')->default('1970-01-01 00:00:00')->change();
+            });
+        } else {
             Schema::create('comdef_users', function (Blueprint $table) {
                 $table->bigIncrements('id_bigint');
                 $table->unsignedTinyInteger('user_level_tinyint')->default(0);
