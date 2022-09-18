@@ -11,7 +11,11 @@ class FormatRepository implements FormatRepositoryInterface
 {
     public function getFormats(array $langEnums = null, array $keyStrings = null, bool $showAll = false, Collection $meetings = null): Collection
     {
-        $formats = Format::query()->whereIn('lang_enum', $langEnums);
+        $formats = Format::query();
+
+        if (!is_null($langEnums)) {
+            $formats = $formats->whereIn('lang_enum', $langEnums);
+        }
 
         if (!$showAll || !is_null($meetings)) {
             $formats = $formats->whereIn('shared_id_bigint', $this->getUsedFormatIds($meetings));

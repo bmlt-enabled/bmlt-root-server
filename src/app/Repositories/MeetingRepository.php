@@ -472,6 +472,16 @@ class MeetingRepository implements MeetingRepositoryInterface
         return collect($fieldValues);
     }
 
+    public function getMainFields(): Collection
+    {
+        return collect(Meeting::$mainFields);
+    }
+
+    public function getDataTemplates(): Collection
+    {
+        return MeetingData::query()->where('meetingid_bigint', 0)->get();
+    }
+
     public function getBoundingBox(): array
     {
         $nw = ['lat' => null, 'long' => null];
