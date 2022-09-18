@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Resources\MeetingChangeResource;
 use App\Models\Change;
 use App\Models\Format;
 use App\Models\Meeting;
@@ -44,6 +45,12 @@ class GetChangesTest extends TestCase
         'published' => '1',
         'formats' => '',
     ];
+
+    protected function tearDown(): void
+    {
+        MeetingChangeResource::resetStaticVariables();
+        parent::tearDown();
+    }
 
     private function createChange($beforeValues, $afterValues, $user, $langEnum = 'en', $changeDate = '2022-01-01')
     {

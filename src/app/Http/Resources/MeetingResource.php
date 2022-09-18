@@ -2,31 +2,30 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Meeting;
-use App\Models\MeetingData;
+use App\Repositories\MeetingRepository;
 use App\Repositories\ServiceBodyRepository;
 use Illuminate\Support\Collection;
 
 class MeetingResource extends JsonResource
 {
+    private static bool $isRequestInitialized = false;
+
     private static ?Collection $meetingDataTemplates = null;
-    private static bool $areDataFieldKeysLoaded = false;
     private static ?Collection $dataFieldKeys = null;
     private static bool $hasDataFieldKeys = false;
+
     private static ?Collection $serviceBodyPermissions = null;
     private static bool $userIsAuthenticated = false;
     private static bool $userIsAdmin = false;
-    private static bool $arePermissionsLoaded = false;
 
-    // this is really only for tests
+    // Allows tests to reset state
     public static function resetStaticVariables()
     {
+        self::$isRequestInitialized = false;
         self::$meetingDataTemplates = null;
-        self::$areDataFieldKeysLoaded = false;
         self::$dataFieldKeys = null;
         self::$hasDataFieldKeys = false;
         self::$serviceBodyPermissions = null;
-        self::$arePermissionsLoaded = false;
         self::$userIsAuthenticated = false;
         self::$userIsAdmin = false;
     }
@@ -39,8 +38,10 @@ class MeetingResource extends JsonResource
      */
     public function toArray($request)
     {
-        $this->loadDataFieldKeys($request);
-        $this->loadPermissions($request);
+        if (!self::$isRequestInitialized) {
+            $this->initializeRequest($request);
+            self::$isRequestInitialized = true;
+        }
 
         // main keys
         $meeting = [
@@ -68,7 +69,7 @@ class MeetingResource extends JsonResource
                 $this->longdata->mapWithKeys(fn ($data, $_) => [$data->key => $data->data_blob])->toBase()
             );
 
-        foreach ($this->getMeetingDataTemplates() as $meetingDataTemplate) {
+        foreach (self::$meetingDataTemplates as $meetingDataTemplate) {
             if (self::$hasDataFieldKeys && !self::$dataFieldKeys->has($meetingDataTemplate->key)) {
                 continue;
             }
@@ -91,6 +92,44 @@ class MeetingResource extends JsonResource
         }
 
         return $meeting;
+    }
+
+    private function initializeRequest($request)
+    {
+        $meetingRepository = new MeetingRepository();
+        $serviceBodyRepository = new ServiceBodyRepository();
+
+        // Preload meeting data templates
+        self::$meetingDataTemplates = $meetingRepository->getDataTemplates();
+
+        // Permissions
+        $user = $request->user();
+        if (!is_null($user) && $user->user_level_tinyint != 4) {
+            self::$userIsAuthenticated = true;
+            if ($user->user_level_tinyint == 1) {
+                self::$userIsAdmin = true;
+            } else {
+                self::$serviceBodyPermissions = $serviceBodyRepository
+                    ->getServiceBodyIdsForUser($user->id_bigint)
+                    ->mapWithKeys(fn ($sbId, $_) => [$sbId => null]);
+            }
+        }
+
+        // Data field keys
+        $dataFieldKeys = $request->input('data_field_key');
+        $dataFieldKeys = collect(!is_null($dataFieldKeys) ? explode(',', $dataFieldKeys) : []);
+        if ($dataFieldKeys->isNotEmpty()) {
+            $dataFieldKeys = self::$meetingDataTemplates
+                ->mapWithKeys(fn($data, $_) => [$data->key => $data->data_string])
+                ->keys()
+                ->merge($meetingRepository->getMainFields())
+                ->merge(['distance_in_miles', 'distance_in_km'])
+                ->intersect($dataFieldKeys)
+                ->mapWithKeys(fn($key, $_) => [$key => $key]);
+
+            self::$hasDataFieldKeys = $dataFieldKeys->isNotEmpty();
+            self::$dataFieldKeys = $dataFieldKeys;
+        }
     }
 
     private function getIdBigint()
@@ -218,56 +257,5 @@ class MeetingResource extends JsonResource
             !self::$hasDataFieldKeys || self::$dataFieldKeys->has('email_contact'),
             (self::$userIsAuthenticated && (self::$userIsAdmin || self::$serviceBodyPermissions?->has($this->service_body_bigint))) ? $this->email_contact ?? '' : ''
         );
-    }
-
-    private function loadPermissions($request)
-    {
-        if (self::$arePermissionsLoaded) {
-            return;
-        }
-
-        $user = $request->user();
-        if (!is_null($user) && $user->user_level_tinyint != 4) {
-            self::$userIsAuthenticated = true;
-            if ($user->user_level_tinyint == 1) {
-                self::$userIsAdmin = true;
-            } else {
-                $serviceBodyRepository = new ServiceBodyRepository();
-                self::$serviceBodyPermissions = $serviceBodyRepository
-                    ->getServiceBodyIdsForUser($user->id_bigint)
-                    ->mapWithKeys(fn ($sbId, $_) => [$sbId => null]);
-            }
-        }
-
-        self::$arePermissionsLoaded = true;
-    }
-
-    private function loadDataFieldKeys($request)
-    {
-        if (self::$areDataFieldKeysLoaded) {
-            return;
-        }
-
-        $dataFieldKeys = $request->input('data_field_key');
-        $dataFieldKeys = collect(!is_null($dataFieldKeys) ? explode(',', $dataFieldKeys) : []);
-        $dataFieldKeys = $this->getMeetingDataTemplates()
-            ->mapWithKeys(fn ($data, $_) => [$data->key => $data->data_string])
-            ->keys()
-            ->merge(Meeting::$mainFields)
-            ->merge(['distance_in_miles', 'distance_in_km'])
-            ->intersect($dataFieldKeys)
-            ->mapWithKeys(fn ($key, $_) => [$key => $key]);
-        self::$hasDataFieldKeys = $dataFieldKeys->isNotEmpty();
-        self::$dataFieldKeys = $dataFieldKeys;
-        self::$areDataFieldKeysLoaded = true;
-    }
-
-    private function getMeetingDataTemplates(): Collection
-    {
-        if (is_null(self::$meetingDataTemplates)) {
-            self::$meetingDataTemplates = MeetingData::query()->where('meetingid_bigint', 0)->get();
-        }
-
-        return self::$meetingDataTemplates;
     }
 }

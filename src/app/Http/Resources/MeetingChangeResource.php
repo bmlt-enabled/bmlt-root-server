@@ -2,16 +2,14 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Format;
-use App\Models\ServiceBody;
+use App\Repositories\FormatRepository;
+use App\Repositories\ServiceBodyRepository;
 use Illuminate\Support\Collection;
 
 class MeetingChangeResource extends JsonResource
 {
-    private static bool $areFormatsLoaded = false;
+    private static bool $isRequestInitialized = false;
     private static Collection $allFormats;
-
-    private static bool $areServiceBodiesLoaded = false;
     private static Collection $allServiceBodies;
 
     private bool $isBeforeObjectLoaded = false;
@@ -20,22 +18,33 @@ class MeetingChangeResource extends JsonResource
     private bool $isAfterObjectLoaded = false;
     private ?array $cachedAfterObject;
 
-    private static $objectClassToStrMap = [
+    private static array $objectClassToStrMap = [
         'c_comdef_meeting' => 'meeting',
         'c_comdef_format' => 'format',
         'c_comdef_user' => 'user',
         'c_comdef_service_body'=> 'service_body',
     ];
 
-    private static $changeTypeToStrMap = [
+    private static array $changeTypeToStrMap = [
         'comdef_change_type_new' => 'created',
         'comdef_change_type_delete' => 'deleted',
         'comdef_change_type_change' => 'changed',
         'comdef_change_type_rollback' => 'rolled_back',
     ];
 
+    // Allows tests to reset state
+    public static function resetStaticVariables()
+    {
+        self::$isRequestInitialized = false;
+    }
+
     public function toArray($request)
     {
+        if (!self::$isRequestInitialized) {
+            $this->initializeRequest($request);
+            self::$isRequestInitialized = true;
+        }
+
         return [
             'date_int' => strval(strtotime($this->change_date)),
             'date_string' => date('g:i A, n/j/Y', strtotime($this->change_date)),
@@ -51,6 +60,15 @@ class MeetingChangeResource extends JsonResource
             'details' => $this->getChangeDetailsString(),
             'json_data' => $this->getJsonDataArray(),
         ];
+    }
+
+    private function initializeRequest()
+    {
+        $formatRepository = new FormatRepository();
+        self::$allFormats = $formatRepository->getFormats(showAll: true)->groupBy(['shared_id_bigint', 'lang_enum'], preserveKeys: true);
+
+        $serviceBodyRepository = new ServiceBodyRepository();
+        self::$allServiceBodies = $serviceBodyRepository->getServiceBodies()->mapWithKeys(fn ($sb) => [$sb->id_bigint => $sb]);
     }
 
     private function getBeforeObject(): ?array
@@ -303,10 +321,9 @@ class MeetingChangeResource extends JsonResource
                     $afterValue = $intToDay[max(0, min(6, intval($afterValue)))];
                     $afterValue = __("weekdays.$afterValue");
                 } elseif ($key == 'service_body_bigint') {
-                    $allServiceBodies = $this->getAllServiceBodies();
-                    $beforeValue = $allServiceBodies->get((int)$beforeValue);
+                    $beforeValue = self::$allServiceBodies->get((int)$beforeValue);
                     $beforeValue = $beforeValue?->name_string ?? __('change_detail.non_existent_service_body');
-                    $afterValue = $allServiceBodies->get((int)$afterValue);
+                    $afterValue = self::$allServiceBodies->get((int)$afterValue);
                     $afterValue = $afterValue?->name_string ?? __('change_detail.non_existent_service_body');
                     $changeStrings[] = __('change_detail.sb_prompt') . ' ' . $beforeValue . ' ' . __('change_detail.to') . ' ' . $afterValue . '.';
                     continue;
@@ -334,8 +351,7 @@ class MeetingChangeResource extends JsonResource
     {
         $formatKeys = [];
         foreach ($formatIds as $formatId) {
-            $allFormats = $this->getAllFormats();
-            $formatsByLanguage = $allFormats->get(intval($formatId), collect([]));
+            $formatsByLanguage = self::$allFormats->get(intval($formatId), collect([]));
             $format = $formatsByLanguage->get($langEnum);
             if ($format) {
                 $format = $format->first();
@@ -348,25 +364,5 @@ class MeetingChangeResource extends JsonResource
         $formatKeys = array_unique($formatKeys);
         asort($formatKeys);
         return $formatKeys;
-    }
-
-    private function getAllFormats(): Collection
-    {
-        if (!self::$areFormatsLoaded) {
-            self::$allFormats = Format::all()->groupBy(['shared_id_bigint', 'lang_enum'], preserveKeys: true);
-            self::$areFormatsLoaded = true;
-        }
-
-        return self::$allFormats;
-    }
-
-    private function getAllServiceBodies(): Collection
-    {
-        if (!self::$areServiceBodiesLoaded) {
-            self::$allServiceBodies = ServiceBody::all()->mapWithKeys(fn ($sb) => [$sb->id_bigint => $sb]);
-            self::$areServiceBodiesLoaded = true;
-        }
-
-        return self::$allServiceBodies;
     }
 }
