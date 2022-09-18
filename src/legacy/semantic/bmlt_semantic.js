@@ -2490,7 +2490,6 @@ BMLTSemantic.prototype.setUpForm_MainFieldset = function () {
     this.setBasicFunctions('bmlt_semantic_form_switcher_type_select_fieldkey_option');
     this.setBasicFunctions('bmlt_semantic_form_switcher_type_select_fieldval_option');
     this.setBasicFunctions('bmlt_semantic_form_switcher_type_select_naws_option');
-    this.setBasicFunctions('bmlt_semantic_form_switcher_type_select_server_langs_option');
     this.setBasicFunctions('bmlt_semantic_info_div_download_line');
     this.setBasicFunctions('bmlt_semantic_info_div_shortcode_line');
     this.setBasicFunctions('bmlt_semantic_form_main_fields_fieldset_contents_div');
@@ -2644,7 +2643,6 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     var bmlt_semantic_form_meeting_fields_fieldset_contents_div = this.getScopedElement('bmlt_semantic_form_meeting_fields_fieldset_contents_div');
     var bmlt_semantic_form_map_wrapper_div = this.getScopedElement('bmlt_semantic_form_map_wrapper_div');
     var bmlt_semantic_form_map_checkbox = this.getScopedElement('bmlt_semantic_form_map_checkbox');
-    var switcher_type_select_server_langs_option = this.getScopedElement('bmlt_semantic_form_switcher_type_select_server_langs_option');
     var switcher_type_select_server_info_option = this.getScopedElement('bmlt_semantic_form_switcher_type_select_server_info_option');
     var switcher_type_select_coverage_area_option = this.getScopedElement('bmlt_semantic_form_switcher_type_select_coverage_area_option');
     var getUsedCheckbox = this.getScopedElement('bmlt_semantic_form_used_formats_checkbox');
@@ -2659,7 +2657,6 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
     switcher_type_select_formats_option.enable();
     switcher_type_select_sb_option.enable();
     switcher_type_select_changes_option.enable();
-    switcher_type_select_server_langs_option.disable();
 
     if ( switcher_type_select_server_info_option ) {
         switcher_type_select_server_info_option.disable();
@@ -2781,7 +2778,6 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
             switcher_type_select_changes_option.enable();
             switcher_type_select_fieldkey_option.enable();
             switcher_type_select_fieldval_option.enable();
-            switcher_type_select_server_langs_option.enable();
             switcher_type_select_server_info_option.enable();
             switcher_type_select_coverage_area_option.enable();
         };
@@ -2823,10 +2819,6 @@ BMLTSemantic.prototype.setUpMainSelectors = function ( inItem
             switcher_type_select_naws_option.disable();
         };
     };
-
-    if ( (main_fieldset_select.value == 'DOWNLOAD') && ((response_type_select == 'json') && (this.version >= 2007005)) ) {
-            switcher_type_select_server_langs_option.enable();
-        }
 
     this.refreshURI();
 };
@@ -3004,52 +2996,43 @@ BMLTSemantic.prototype.refreshURI = function () {
 
     this.state.switcher = this.getScopedElement('bmlt_semantic_form_switcher_type_select').value;
 
-    if (this.state.switcher != 'GetLangs') {
-        var compiled_arguments = this.state.compile();
-    };
+    var compiled_arguments = this.state.compile();
 
-    if ( (this.state.switcher == 'GetLangs') && (type == 'json') ) {
-            uri = this.state.root_server_uri + '/client_interface/json/GetLangs.php';
+    if ( this.state.valid ) {
+        if ( this.getScopedElement('bmlt_semantic_form_main_mode_select').value == 'DOWNLOAD' ) {
+            if (this.state.switcher == 'GetNAWSDump') {
+                type = "csv"
+            }
+            var uri = '';
+
+            uri = this.state.root_server_uri + '/client_interface/' + type + '/?' + compiled_arguments;
+
             var url_string = '<a target="_blank" href="' + uri + '">' + uri + '</a>';
             uri_active.innerHTML = url_string;
             uri_invalid.hide();
             uri_active.show();
         } else {
-            if ( this.state.valid ) {
-                if ( this.getScopedElement('bmlt_semantic_form_main_mode_select').value == 'DOWNLOAD' ) {
-                    if (this.state.switcher == 'GetNAWSDump') {
-                        type = "csv"
-                    }
-                    var uri = '';
-
-                    uri = this.state.root_server_uri + '/client_interface/' + type + '/?' + compiled_arguments;
-
-                    var url_string = '<a target="_blank" href="' + uri + '">' + uri + '</a>';
-                    uri_active.innerHTML = url_string;
-                    uri_invalid.hide();
-                    uri_active.show();
-                } else {
-                    if ( this.getScopedElement('bmlt_semantic_form_main_mode_select').value == 'SHORTCODE_SIMPLE' ) {
-                        var shortcode_string = '[[BMLT_SIMPLE(' + compiled_arguments + ')]]';
-                        shortcode_active.innerHTML = shortcode_string;
-                        shortcode_invalid.hide();
-                        shortcode_active.show();
-                    } else {
-                        var shortcode_string = '[[BMLT_TABLE';
-                        if ( compiled_arguments ) {
-                            shortcode_string += '(' + compiled_arguments + ')';
-                        };
-                        shortcode_string += ']]';
-                        shortcode_active.innerHTML = shortcode_string;
-                        shortcode_invalid.hide();
-                        shortcode_active.show();
-                    };
-                }
+            if ( this.getScopedElement('bmlt_semantic_form_main_mode_select').value == 'SHORTCODE_SIMPLE' ) {
+                var shortcode_string = '[[BMLT_SIMPLE(' + compiled_arguments + ')]]';
+                shortcode_active.innerHTML = shortcode_string;
+                shortcode_invalid.hide();
+                shortcode_active.show();
             } else {
-                uri_invalid.show();
-                uri_active.hide();
-                shortcode_invalid.show();
-                shortcode_active.hide();
+                var shortcode_string = '[[BMLT_TABLE';
+                if ( compiled_arguments ) {
+                    shortcode_string += '(' + compiled_arguments + ')';
+                };
+                shortcode_string += ']]';
+                shortcode_active.innerHTML = shortcode_string;
+                shortcode_invalid.hide();
+                shortcode_active.show();
             };
-        };
+        }
+    } else {
+        uri_invalid.show();
+        uri_active.hide();
+        shortcode_invalid.show();
+        shortcode_active.hide();
+    };
 };
+
