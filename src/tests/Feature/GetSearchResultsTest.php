@@ -253,11 +253,15 @@ class GetSearchResultsTest extends TestCase
         $meeting1 = $this->createMeeting(['weekday_tinyint' => 5]);
         $meeting2 = $this->createMeeting(['weekday_tinyint' => 3]);
         $meeting3 = $this->createMeeting(['weekday_tinyint' => 1]);
-        $this->get("/client_interface/json/?switcher=GetSearchResults&weekdays[]=6&weekdays[]=4")
+        $data = collect($this->get("/client_interface/json/?switcher=GetSearchResults&weekdays[]=6&weekdays[]=4")
             ->assertStatus(200)
             ->assertJsonCount(2)
-            ->assertJsonFragment(['id_bigint' => strval($meeting1->id_bigint), 'weekday_tinyint' => '6'])
-            ->assertJsonFragment(['id_bigint' => strval($meeting2->id_bigint), 'weekday_tinyint' => '4']);
+            ->json());
+
+        $meeting = $data->filter(fn ($meeting) => $meeting['id_bigint'] == $meeting1->id_bigint)->first();
+        $this->assertEquals('6', $meeting['weekday_tinyint']);
+        $meeting = $data->filter(fn ($meeting) => $meeting['id_bigint'] == $meeting2->id_bigint)->first();
+        $this->assertEquals('4', $meeting['weekday_tinyint']);
     }
 
     public function testWeekdayExcludeOne()
@@ -614,19 +618,18 @@ class GetSearchResultsTest extends TestCase
         $meeting1 = $this->createMeeting(['formats' => "$format1->shared_id_bigint,$format2->shared_id_bigint"]);
         $meeting2 = $this->createMeeting(['formats' => "$format1->shared_id_bigint"]);
         $meeting3 = $this->createMeeting();
-        $this->get("/client_interface/json/?switcher=GetSearchResults&formats[]=$format1->shared_id_bigint&formats[]=$format2->shared_id_bigint&formats_comparison_operator=OR")
+        $data = collect($this->get("/client_interface/json/?switcher=GetSearchResults&formats[]=$format1->shared_id_bigint&formats[]=$format2->shared_id_bigint&formats_comparison_operator=OR")
             ->assertStatus(200)
             ->assertJsonCount(2)
-            ->assertJsonFragment([
-                'id_bigint' => strval($meeting1->id_bigint),
-                'format_shared_id_list' => "$format1->shared_id_bigint,$format2->shared_id_bigint",
-                'formats' => "$format1->key_string,$format2->key_string",
-            ])
-            ->assertJsonFragment([
-                'id_bigint' => strval($meeting2->id_bigint),
-                'format_shared_id_list' => "$format1->shared_id_bigint",
-                'formats' => "$format1->key_string",
-            ]);
+            ->json());
+
+        $meeting = $data->filter(fn ($meeting) => $meeting['id_bigint'] == $meeting1->id_bigint)->first();
+        $this->assertEquals("$format1->shared_id_bigint,$format2->shared_id_bigint", $meeting['format_shared_id_list']);
+        $this->assertEquals("$format1->key_string,$format2->key_string", $meeting['formats']);
+
+        $meeting = $data->filter(fn ($meeting) => $meeting['id_bigint'] == $meeting2->id_bigint)->first();
+        $this->assertEquals("$format1->shared_id_bigint", $meeting['format_shared_id_list']);
+        $this->assertEquals("$format1->key_string", $meeting['formats']);
     }
 
     public function testFormatsExcludeTwo()
