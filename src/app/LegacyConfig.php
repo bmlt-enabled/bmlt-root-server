@@ -101,7 +101,9 @@ class LegacyConfig
         $config['meeting_states_and_provinces'] = $meeting_states_and_provinces ?? [];
         $config['meeting_counties_and_sub_provinces'] = $meeting_counties_and_sub_provinces ?? [];
         $config['meeting_time_zones_enabled'] = isset($meeting_time_zones_enabled) && $meeting_time_zones_enabled;
-
+        $config['search_spec_map_center_longitude'] = isset($search_spec_map_center) && is_array($search_spec_map_center) && isset($search_spec_map_center['longitude']) ? $search_spec_map_center['longitude'] : -118.563659;
+        $config['search_spec_map_center_latitude'] = isset($search_spec_map_center) && is_array($search_spec_map_center) && isset($search_spec_map_center['latitude']) ? $search_spec_map_center['latitude'] : 34.235918;
+        $config['search_spec_map_center_zoom'] = isset($search_spec_map_center) && is_array($search_spec_map_center) && isset($search_spec_map_center['zoom']) ? $search_spec_map_center['zoom'] : 6;
 
         self::$config = $config;
         self::$configLoaded = true;

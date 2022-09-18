@@ -241,4 +241,67 @@ class GetServerInfoTest extends TestCase
             LegacyConfig::reset();
         }
     }
+
+    public function testCenterLongitude()
+    {
+        LegacyConfig::remove('search_spec_map_center_longitude');
+        try {
+            $this->get('/client_interface/json/?switcher=GetServerInfo')
+                ->assertStatus(200)
+                ->assertJsonFragment(['centerLongitude' => '']);
+        } finally {
+            LegacyConfig::reset();
+        }
+
+        LegacyConfig::set('search_spec_map_center_longitude', -79.793701171875);
+        try {
+            $this->get('/client_interface/json/?switcher=GetServerInfo')
+                ->assertStatus(200)
+                ->assertJsonFragment(['centerLongitude' => '-79.793701171875']);
+        } finally {
+            LegacyConfig::reset();
+        }
+    }
+
+    public function testCenterLatitude()
+    {
+        LegacyConfig::remove('search_spec_map_center_latitude');
+        try {
+            $this->get('/client_interface/json/?switcher=GetServerInfo')
+                ->assertStatus(200)
+                ->assertJsonFragment(['centerLatitude' => '']);
+        } finally {
+            LegacyConfig::reset();
+        }
+
+        LegacyConfig::set('search_spec_map_center_latitude', 36.065752051707);
+        try {
+            $this->get('/client_interface/json/?switcher=GetServerInfo')
+                ->assertStatus(200)
+                ->assertJsonFragment(['centerLatitude' => '36.065752051707']);
+        } finally {
+            LegacyConfig::reset();
+        }
+    }
+
+    public function testCenterZoom()
+    {
+        LegacyConfig::remove('search_spec_map_center_zoom');
+        try {
+            $this->get('/client_interface/json/?switcher=GetServerInfo')
+                ->assertStatus(200)
+                ->assertJsonFragment(['centerZoom' => '']);
+        } finally {
+            LegacyConfig::reset();
+        }
+
+        LegacyConfig::set('search_spec_map_center_zoom', 10);
+        try {
+            $this->get('/client_interface/json/?switcher=GetServerInfo')
+                ->assertStatus(200)
+                ->assertJsonFragment(['centerZoom' => '10']);
+        } finally {
+            LegacyConfig::reset();
+        }
+    }
 }
