@@ -1,6 +1,13 @@
 # Basic Meeting List Toolbox Root Server
 
-[![Build Status](https://travis-ci.org/bmlt-enabled/bmlt-root-server.svg?branch=master)](https://travis-ci.org/bmlt-enabled/bmlt-root-server)
+<h1 align="center">
+<a href="https://github.com/bmlt-enabled/yap/releases/latest"><img src="https://img.shields.io/github/v/release/bmlt-enabled/bmlt-root-server"></a>
+<a href="https://php.net"><img src="https://img.shields.io/packagist/php-v/ramsey/uuid.svg?style=flat-square&colorB=%238892BF" alt="PHP Programming Language"></a>
+<a href="https://raw.githubusercontent.com/bmlt-enabled/bmlt-root-server/main/LICENSE"><img src="https://img.shields.io/github/license/bmlt-enabled/bmlt-root-server"></a>
+<a href="https://github.com/bmlt-enabled/bmlt-root-server/actions/workflows/test.yml"><img src="https://github.com/bmlt-enabled/bmlt-root-server/actions/workflows/test.yml/badge.svg" alt="Tests"></a>
+<a href="https://github.com/bmlt-enabled/bmlt-root-server/actions/workflows/main.yml"><img src="https://img.shields.io/github/workflow/status/bmlt-enabled/bmlt-root-server/main/main?logo=github&style=flat-square" alt="Build Status"></a>
+<a href="https://github.com/bmlt-enabled/bmlt-root-server/releases"><img src="https://img.shields.io/github/downloads/bmlt-enabled/yap/total"></a>
+</h1>
 
 DESCRIPTION
 -----------
