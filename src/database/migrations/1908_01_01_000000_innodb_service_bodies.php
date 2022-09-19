@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up()
     {
-        $prefix = config('database.connections.mysql.prefix');
+        $prefix = DB::connection()->getTablePrefix();
         DB::statement(DB::raw('ALTER TABLE ' . $prefix . 'comdef_service_bodies ENGINE = InnoDB;'));
     }
 
