@@ -10,26 +10,25 @@ class GetServerInfoTest extends TestCase
 {
     public function testXml()
     {
-        $this->get('/client_interface/xml/?switcher=GetFieldKeys')
+        $this->get('/client_interface/xml/?switcher=GetServerInfo')
             ->assertStatus(404);
     }
 
     public function testJsonp()
     {
-        $response = $this->get('/client_interface/jsonp/?switcher=GetFieldKeys&callback=asdf');
-        $response->assertStatus(200);
-        $response->assertHeader('Content-Type', 'text/javascript; charset=UTF-8');
-        $content = $response->content();
+        $content = $this->get('/client_interface/jsonp/?switcher=GetServerInfo&callback=asdf')
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'text/javascript; charset=UTF-8')
+            ->content();
         $this->assertStringStartsWith('/**/asdf([', $content);
         $this->assertStringEndsWith(']);', $content);
     }
 
     public function testIsList()
     {
-        $data = $this->get('/client_interface/json/?switcher=GetServerInfo')
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
             ->assertStatus(200)
-            ->json();
-        $this->assertEquals(1, count($data));
+            ->assertJsonCount(1);
     }
 
     public function testVersion()
