@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SwitcherController;
-use App\Http\Controllers\ServerInfoXmlController;
 use App\Http\Controllers\Legacy\LegacyController;
 use App\Http\Controllers\Legacy\LegacyAuthController;
+use App\Http\Controllers\Query\ServerInfoXmlController;
+use App\Http\Controllers\Query\SwitcherController;
 
 /*
 |--------------------------------------------------------------------------

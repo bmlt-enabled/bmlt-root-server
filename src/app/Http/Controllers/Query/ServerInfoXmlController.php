@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Query;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Response;
 
 class ServerInfoXmlController extends Controller

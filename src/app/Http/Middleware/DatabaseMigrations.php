@@ -52,7 +52,7 @@ class DatabaseMigrations
             return true;
         }
 
-        if (!$this->migrationRepository->migrationExists('1910_01_01_000000_innodb_changes')) {
+        if (!$this->migrationRepository->migrationExists('2019_12_14_000001_create_personal_access_tokens_table')) {
             return true;
         }
 

@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Query;
+
+use App\Http\Resources\JsonResource;
 
 class FormatResource extends JsonResource
 {

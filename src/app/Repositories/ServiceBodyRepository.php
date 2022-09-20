@@ -9,6 +9,11 @@ use App\Models\ServiceBody;
 
 class ServiceBodyRepository implements ServiceBodyRepositoryInterface
 {
+    public function getById(int $id)
+    {
+        return ServiceBody::query()->where('id_bigint', $id)->first();
+    }
+
     public function getServiceBodies(
         array $includeIds = [],
         array $excludeIds = [],

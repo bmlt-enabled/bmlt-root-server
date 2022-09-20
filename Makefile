@@ -95,6 +95,14 @@ docker-publish-base:  ## Builds Base Docker Image
 	docker push $(BASE_IMAGE):$(BASE_IMAGE_BUILD_TAG)
 	docker push $(BASE_IMAGE):$(BASE_IMAGE_TAG)
 
+.PHONY: mysql
+mysql:  ## Runs mysql cli in mysql container
+	docker exec -it docker_db_1 mysql -u root -prootserver rootserver
+
+.PHONY: bash
+bash:  ## Runs bash shell in apache container
+	docker exec -it -w /var/www/html/main_server docker_bmlt_1 bash
+
 .PHONY: clean
 clean:  ## Clean build
 	rm -rf src/legacy/client_interface/html/croutonjs
