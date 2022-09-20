@@ -61,7 +61,7 @@ class ServiceBodyRepository implements ServiceBodyRepositoryInterface
 
     public function getChildren(array $parents): array
     {
-        $ret = [];
+        $ret = array_merge($parents);
 
         $children = $parents;
         while (!empty($children)) {

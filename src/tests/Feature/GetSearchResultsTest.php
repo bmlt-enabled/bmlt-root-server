@@ -393,6 +393,21 @@ class GetSearchResultsTest extends TestCase
             ->assertJsonFragment(['id_bigint' => strval($meeting3->id_bigint)]);
     }
 
+    public function testServicesIncludeRecursiveArea()
+    {
+        $zone = $this->createZone('zone', 'zone');
+        $region1 = $this->createRegion('region1', 'region1', $zone->id_bigint);
+        $area1 = $this->createArea('area1', 'area1', $region1->id_bigint);
+        $region2 = $this->createRegion('region2', 'region2', $zone->id_bigint);
+        $area2 = $this->createArea('area2', 'area2', $region2->id_bigint);
+        $meeting1 = $this->createMeeting(['service_body_bigint' => $area1->id_bigint]);
+        $meeting2 = $this->createMeeting(['service_body_bigint' => $area2->id_bigint]);
+        $this->get("/client_interface/json/?switcher=GetSearchResults&services[]=$area1->id_bigint&recursive=1")
+            ->assertStatus(200)
+            ->assertJsonCount(1)
+            ->assertJsonFragment(['id_bigint' => strval($meeting1->id_bigint)]);
+    }
+
     public function testServicesIncludeRecursiveOneLevel()
     {
         $zone = $this->createZone('zone', 'zone');
