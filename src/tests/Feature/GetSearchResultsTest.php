@@ -1283,6 +1283,39 @@ class GetSearchResultsTest extends TestCase
         }
     }
 
+    public function testDataFieldKeyFormatSharedIdList()
+    {
+        $meeting1 = $this->createMeeting();
+        $data = collect($this->get("/client_interface/json/?switcher=GetSearchResults&data_field_key=format_shared_id_list")
+            ->assertStatus(200)
+            ->json());
+        $keys = array_keys($data[0]);
+        $this->assertEquals(1, count($keys));
+        $this->assertEquals('format_shared_id_list', $keys[0]);
+    }
+
+    public function testDataFieldKeyPublished()
+    {
+        $meeting1 = $this->createMeeting();
+        $data = collect($this->get("/client_interface/json/?switcher=GetSearchResults&data_field_key=published")
+            ->assertStatus(200)
+            ->json());
+        $keys = array_keys($data[0]);
+        $this->assertEquals(1, count($keys));
+        $this->assertEquals('published', $keys[0]);
+    }
+
+    public function testDataFieldKeyRootServerUri()
+    {
+        $meeting1 = $this->createMeeting();
+        $data = collect($this->get("/client_interface/json/?switcher=GetSearchResults&data_field_key=root_server_uri")
+            ->assertStatus(200)
+            ->json());
+        $keys = array_keys($data[0]);
+        $this->assertEquals(1, count($keys));
+        $this->assertEquals('root_server_uri', $keys[0]);
+    }
+
     public function testDataFieldKeyDataFields()
     {
         $dataFieldTemplates = MeetingData::query()->where('meetingid_bigint', 0)->get();

@@ -61,6 +61,9 @@ class MeetingResource extends JsonResource
             'distance_in_km' => $this->getDistanceInKm(),
             'distance_in_miles' => $this->getDistanceInMiles(),
             'email_contact' => $this->getEmailContact(),
+            'published' => $this->getPublished(),
+            'root_server_uri' => $this->getRootServerUri($request),
+            'format_shared_id_list' => $this->getFormatSharedIdList(),
         ];
 
         // data table keys
@@ -82,13 +85,6 @@ class MeetingResource extends JsonResource
             }
 
             $meeting[$meetingDataTemplate->key] = $meetingData->get($meetingDataTemplate->key, '');
-        }
-
-        // keys the old server always had at the end
-        if (!self::$hasDataFieldKeys) {
-            $meeting['published'] = strval($this->published);
-            $meeting['root_server_uri'] = $request->getSchemeAndHttpHost() . $request->getBaseUrl();
-            $meeting['format_shared_id_list'] = $this->getCalculatedFormatSharedIds() ?? '';
         }
 
         return $meeting;
@@ -123,7 +119,7 @@ class MeetingResource extends JsonResource
                 ->mapWithKeys(fn($data, $_) => [$data->key => $data->data_string])
                 ->keys()
                 ->merge($meetingRepository->getMainFields())
-                ->merge(['distance_in_miles', 'distance_in_km'])
+                ->merge(['published', 'root_server_uri', 'format_shared_id_list', 'distance_in_miles', 'distance_in_km'])
                 ->intersect($dataFieldKeys)
                 ->mapWithKeys(fn($key, $_) => [$key => $key]);
 
@@ -256,6 +252,30 @@ class MeetingResource extends JsonResource
         return $this->when(
             !self::$hasDataFieldKeys || self::$dataFieldKeys->has('email_contact'),
             (self::$userIsAuthenticated && (self::$userIsAdmin || self::$serviceBodyPermissions?->has($this->service_body_bigint))) ? $this->email_contact ?? '' : ''
+        );
+    }
+
+    private function getPublished()
+    {
+        return $this->when(
+            !self::$hasDataFieldKeys || self::$dataFieldKeys->has('published'),
+            strval($this->published)
+        );
+    }
+
+    private function getRootServerUri($request)
+    {
+        return $this->when(
+            !self::$hasDataFieldKeys || self::$dataFieldKeys->has('root_server_uri'),
+            $request->getSchemeAndHttpHost() . $request->getBaseUrl()
+        );
+    }
+
+    private function getFormatSharedIdList()
+    {
+        return $this->when(
+            !self::$hasDataFieldKeys || self::$dataFieldKeys->has('format_shared_id_list'),
+            $this->getCalculatedFormatSharedIds() ?? ''
         );
     }
 }
