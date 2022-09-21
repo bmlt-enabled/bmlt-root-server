@@ -59,8 +59,20 @@ class TokenTestCase extends PermissionsTestCase
             ->assertStatus(200);
 
         // make sure the originalToken expires soon
-        $originalToken = PersonalAccessToken::findToken($originalToken);
-        $this->assertNotNull($originalToken->expires_at);
-        $this->assertLessThanOrEqual(time() + 20, strtotime($originalToken->expires_at->toDateTimeString()));
+        $originalTokenModel = PersonalAccessToken::findToken($originalToken);
+        $this->assertNotNull($originalTokenModel->expires_at);
+        $this->assertLessThanOrEqual(time() + 20, strtotime($originalTokenModel->expires_at->toDateTimeString()));
+    }
+
+    public function testExpiredToken()
+    {
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $tokenModel = PersonalAccessToken::findToken($token);
+        $tokenModel->expires_at = time() - 10;
+        $tokenModel->save();
+        $this->withHeader('Authorization', "Bearer $token")
+            ->get('/api/v1/servicebodies')
+            ->assertStatus(401);
     }
 }
