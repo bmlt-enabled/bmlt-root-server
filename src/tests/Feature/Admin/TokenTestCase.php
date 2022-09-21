@@ -40,7 +40,12 @@ class TokenTestCase extends PermissionsTestCase
             ->assertStatus(200);
     }
 
-    public function testRefresh()
+    public function testRefreshUnauthenticated()
+    {
+        $this->post('/api/v1/auth/refresh')->assertStatus(401);
+    }
+
+    public function testRefreshSuccess()
     {
         $user = $this->createAdminUser();
         $originalToken = $this->post('/api/v1/auth/token', ['username' => $user->login_string, 'password' => $this->userPassword])
