@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Query;
 
+use App\Http\Resources\JsonResource;
 use App\Repositories\FormatRepository;
 use App\Repositories\ServiceBodyRepository;
 use Illuminate\Support\Collection;

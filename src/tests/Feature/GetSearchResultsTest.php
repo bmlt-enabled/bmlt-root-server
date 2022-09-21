@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Http\Resources\MeetingResource;
+use App\Http\Resources\Query\MeetingResource;
 use App\Models\Format;
 use App\Models\Meeting;
 use App\Models\MeetingData;

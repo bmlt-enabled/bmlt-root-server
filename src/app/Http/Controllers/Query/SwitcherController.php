@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Query;
 
-use App\Http\Controllers\Legacy\LegacyController;
-use App\Http\Resources\FormatResource;
-use App\Http\Resources\MeetingResource;
-use App\Http\Resources\MeetingChangeResource;
-use App\Http\Resources\ServiceBodyResource;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\Query\FormatResource;
+use App\Http\Resources\Query\MeetingResource;
+use App\Http\Resources\Query\MeetingChangeResource;
+use App\Http\Resources\Query\ServiceBodyResource;
 use App\Http\Responses\JsonResponse;
 use App\Interfaces\ChangeRepositoryInterface;
 use App\Interfaces\FormatRepositoryInterface;
