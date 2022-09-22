@@ -65,4 +65,9 @@ class TokenController extends Controller
             'expires_at' => $expiresAt,
         ];
     }
+
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+    }
 }
