@@ -47,10 +47,7 @@ class TokenTest extends PermissionsTestCase
 
     public function testRefreshSuccess()
     {
-        $user = $this->createAdminUser();
-        $originalToken = $this->post('/api/v1/auth/token', ['username' => $user->login_string, 'password' => $this->userPassword])
-            ->assertStatus(200)
-            ->json()['token'];
+        $originalToken = $this->createAdminUser()->createToken('test')->plainTextToken;
 
         // refresh originalToken, get newToken
         $newToken = $this->withHeader('Authorization', "Bearer $originalToken")
@@ -67,6 +64,17 @@ class TokenTest extends PermissionsTestCase
         $originalTokenModel = PersonalAccessToken::findToken($originalToken);
         $this->assertNotNull($originalTokenModel->expires_at);
         $this->assertLessThanOrEqual(time() + 20, strtotime($originalTokenModel->expires_at->toDateTimeString()));
+    }
+
+    public function testLogout()
+    {
+        $token = $this->createAdminUser()->createToken('test')->plainTextToken;
+
+        $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/auth/logout')
+            ->assertStatus(200);
+
+        $this->assertNull(PersonalAccessToken::findToken($token));
     }
 
     public function testExpiredToken()

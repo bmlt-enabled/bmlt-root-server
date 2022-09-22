@@ -77,8 +77,8 @@ dev: zip ## Docker Compose Up
 .PHONY: test
 test:
 	$(TEST_PREFIX) vendor/phpunit/phpunit/phpunit
-# 	$(TEST_PREFIX) vendor/phpunit/phpunit/phpunit tests/Feature/GetChangesTest.php
-# 	$(TEST_PREFIX) vendor/phpunit/phpunit/phpunit --filter testPureDataFieldsRemoved tests/Feature/GetChangesTest.php
+# 	$(TEST_PREFIX) vendor/phpunit/phpunit/phpunit tests/Feature/Admin/TokenTest.php
+# 	$(TEST_PREFIX) vendor/phpunit/phpunit/phpunit --filter testLogout tests/Feature/Admin/TokenTest.php
 
 .PHONY: lint
 lint:  ## PHP Lint
