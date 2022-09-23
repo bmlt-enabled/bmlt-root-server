@@ -9,12 +9,7 @@ use App\Models\ServiceBody;
 
 class ServiceBodyRepository implements ServiceBodyRepositoryInterface
 {
-    public function getById(int $id)
-    {
-        return ServiceBody::query()->where('id_bigint', $id)->first();
-    }
-
-    public function getServiceBodies(
+    public function search(
         array $includeIds = [],
         array $excludeIds = [],
         bool $recurseChildren = false,
@@ -42,7 +37,12 @@ class ServiceBodyRepository implements ServiceBodyRepositoryInterface
         return $serviceBodies->get();
     }
 
-    public function getServiceBodyIdsForUser(int $userId): Collection
+    public function create(array $serviceBody): ServiceBody
+    {
+        return ServiceBody::create($serviceBody);
+    }
+
+    public function getUserServiceBodyIds(int $userId): Collection
     {
         $serviceBodyIds = ServiceBody::query()
             ->where('principal_user_bigint', $userId)

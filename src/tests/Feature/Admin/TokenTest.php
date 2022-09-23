@@ -5,7 +5,7 @@ namespace Tests\Feature\Admin;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\PersonalAccessToken;
 
-class TokenTest extends PermissionsTestCase
+class TokenTest extends TestCase
 {
     use RefreshDatabase;
 

@@ -69,7 +69,7 @@ class MeetingChangeResource extends JsonResource
         self::$allFormats = $formatRepository->getFormats(showAll: true)->groupBy(['shared_id_bigint', 'lang_enum'], preserveKeys: true);
 
         $serviceBodyRepository = new ServiceBodyRepository();
-        self::$allServiceBodies = $serviceBodyRepository->getServiceBodies()->mapWithKeys(fn ($sb) => [$sb->id_bigint => $sb]);
+        self::$allServiceBodies = $serviceBodyRepository->search()->mapWithKeys(fn ($sb) => [$sb->id_bigint => $sb]);
     }
 
     private function getBeforeObject(): ?array
