@@ -37,9 +37,14 @@ class ServiceBodyRepository implements ServiceBodyRepositoryInterface
         return $serviceBodies->get();
     }
 
-    public function create(array $serviceBody): ServiceBody
+    public function create(array $values): ServiceBody
     {
-        return ServiceBody::create($serviceBody);
+        return ServiceBody::create($values);
+    }
+
+    public function update(int $id, array $values): bool
+    {
+        return ServiceBody::query()->where('id_bigint', $id)->update($values) > 0;
     }
 
     public function getUserServiceBodyIds(int $userId): Collection
