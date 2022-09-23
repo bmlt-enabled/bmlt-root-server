@@ -204,7 +204,7 @@ class ServiceBodyPermissionsTest extends TestCase
         $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/servicebodies/$area1->id_bigint")
-            ->assertStatus(200);
+            ->assertStatus(422);
     }
 
     public function testUpdateAsAdminAllowed()
@@ -214,7 +214,7 @@ class ServiceBodyPermissionsTest extends TestCase
         $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/servicebodies/$area1->id_bigint")
-            ->assertStatus(200);
+            ->assertStatus(422);
     }
 
     // partial update
@@ -264,7 +264,7 @@ class ServiceBodyPermissionsTest extends TestCase
         $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/servicebodies/$area1->id_bigint")
-            ->assertStatus(200);
+            ->assertStatus(204);
     }
 
     public function testPartialUpdateAsAdminAllowed()
@@ -274,7 +274,7 @@ class ServiceBodyPermissionsTest extends TestCase
         $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/servicebodies/$area1->id_bigint")
-            ->assertStatus(200);
+            ->assertStatus(204);
     }
 
     // delete
