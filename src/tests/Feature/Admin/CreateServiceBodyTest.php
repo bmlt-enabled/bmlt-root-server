@@ -6,7 +6,7 @@ use App\Models\ServiceBody;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class ServiceBodyTest extends TestCase
+class CreateServiceBodyTest extends TestCase
 {
     use RefreshDatabase;
 

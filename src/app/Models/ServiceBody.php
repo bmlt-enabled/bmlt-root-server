@@ -42,4 +42,14 @@ class ServiceBody extends Model
         'sb_meeting_email',
         'editors_string',
     ];
+
+    public function meetings()
+    {
+        return $this->hasMany(Meeting::class, 'service_body_bigint');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(self::class, 'sb_owner');
+    }
 }

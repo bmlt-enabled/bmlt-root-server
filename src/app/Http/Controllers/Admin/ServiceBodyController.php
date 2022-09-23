@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\ServiceBodyResource;
+use App\Http\Responses\JsonResponse;
 use App\Interfaces\ServiceBodyRepositoryInterface;
 use App\Models\ServiceBody;
 use Illuminate\Http\Request;
@@ -79,6 +80,14 @@ class ServiceBodyController extends Controller
 
     public function destroy(ServiceBody $serviceBody)
     {
-        //
+        if ($serviceBody->children()->exists() || $serviceBody->meetings()->exists()) {
+            return new JsonResponse([
+                'message' => 'You cannot delete a service body while other service bodies or meetings are assigned to it.'
+            ], 409);
+        }
+
+        $serviceBody->delete();
+
+        return response()->noContent();
     }
 }

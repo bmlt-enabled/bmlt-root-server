@@ -34,11 +34,7 @@ class ServiceBodyPolicy
 
     public function create(User $user)
     {
-        if ($user->isAdmin()) {
-            return true;
-        }
-
-        return false;
+        return $user->isAdmin();
     }
 
     public function update(User $user, ServiceBody $serviceBody)
@@ -56,10 +52,6 @@ class ServiceBodyPolicy
 
     public function delete(User $user, ServiceBody $serviceBody)
     {
-        if ($user->isAdmin()) {
-            return true;
-        }
-
-        return false;
+        return $user->isAdmin();
     }
 }

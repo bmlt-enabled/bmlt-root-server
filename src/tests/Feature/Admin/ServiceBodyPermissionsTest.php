@@ -324,6 +324,6 @@ class ServiceBodyPermissionsTest extends TestCase
         $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
         $this->withHeader('Authorization', "Bearer $token")
             ->delete("/api/v1/servicebodies/$area1->id_bigint")
-            ->assertStatus(200);
+            ->assertStatus(204);
     }
 }
