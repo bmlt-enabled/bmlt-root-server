@@ -3,42 +3,10 @@
 namespace Tests\Feature\Admin;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Models\ServiceBody;
 
-class ServiceBodyPermissionsTest extends PermissionsTestCase
+class ServiceBodyPermissionsTest extends TestCase
 {
     use RefreshDatabase;
-
-    private function createZone(string $name, string $description, string $uri = null, string $helpline = null, string $worldId = null, string $email = null, int $userId = null, array $editorUserIds = null)
-    {
-        return $this->createServiceBody($name, $description, 'ZF', 0, $uri, $helpline, $worldId, $email, $userId, $editorUserIds);
-    }
-
-    private function createRegion(string $name, string $description, int $sbOwner, string $uri = null, string $helpline = null, string $worldId = null, string $email = null, int $userId = null, array $editorUserIds = null)
-    {
-        return $this->createServiceBody($name, $description, 'RS', $sbOwner, $uri, $helpline, $worldId, $email, $userId, $editorUserIds);
-    }
-
-    private function createArea(string $name, string $description, int $sbOwner, string $uri = null, string $helpline = null, string $worldId = null, string $email = null, int $userId = null, array $editorUserIds = null)
-    {
-        return $this->createServiceBody($name, $description, 'AS', $sbOwner, $uri, $helpline, $worldId, $email, $userId, $editorUserIds);
-    }
-
-    private function createServiceBody(string $name, string $description, string $sbType, int $sbOwner, string $uri = null, string $helpline = null, string $worldId = null, string $email = null, int $userId = null, array $editorUserIds = null)
-    {
-        return ServiceBody::create([
-            'sb_owner' => $sbOwner,
-            'name_string' => $name,
-            'description_string' => $description,
-            'sb_type' => $sbType,
-            'uri_string' => $uri,
-            'kml_file_uri_string' => $helpline,
-            'worldid_mixed' => $worldId,
-            'sb_meeting_email' => $email ?? '',
-            'principal_user_bigint' => $userId,
-            'editors_string' => !is_null($editorUserIds) ? implode(',', $editorUserIds) : null,
-        ]);
-    }
 
     // index
     //
@@ -186,7 +154,7 @@ class ServiceBodyPermissionsTest extends PermissionsTestCase
         $token = $user->createToken('test')->plainTextToken;
         $this->withHeader('Authorization', "Bearer $token")
             ->post("/api/v1/servicebodies")
-            ->assertStatus(200);
+            ->assertStatus(422);
     }
 
     // update

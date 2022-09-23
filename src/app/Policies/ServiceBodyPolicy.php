@@ -29,7 +29,7 @@ class ServiceBodyPolicy
             return true;
         }
 
-        return $this->serviceBodyRepository->getServiceBodyIdsForUser($user->id_bigint)->contains($serviceBody->id_bigint);
+        return $this->serviceBodyRepository->getUserServiceBodyIds($user->id_bigint)->contains($serviceBody->id_bigint);
     }
 
     public function create(User $user)
@@ -48,7 +48,7 @@ class ServiceBodyPolicy
         }
 
         if ($user->isServiceBodyAdmin()) {
-            return $this->serviceBodyRepository->getServiceBodyIdsForUser($user->id_bigint)->contains($serviceBody->id_bigint);
+            return $this->serviceBodyRepository->getUserServiceBodyIds($user->id_bigint)->contains($serviceBody->id_bigint);
         }
 
         return false;

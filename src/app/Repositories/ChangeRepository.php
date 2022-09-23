@@ -38,7 +38,7 @@ class ChangeRepository implements ChangeRepositoryInterface
         }
 
         if (!is_null($serviceBodyId)) {
-            $serviceBodyIds = $this->serviceBodyRepository->getServiceBodies(includeIds: [$serviceBodyId], recurseChildren: true)
+            $serviceBodyIds = $this->serviceBodyRepository->search(includeIds: [$serviceBodyId], recurseChildren: true)
                 ->map(fn ($serviceBody) => $serviceBody->id_bigint)
                 ->toArray();
             $changes = $changes->whereIn('service_body_id_bigint', $serviceBodyIds);

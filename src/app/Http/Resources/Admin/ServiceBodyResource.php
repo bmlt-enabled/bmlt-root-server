@@ -22,8 +22,11 @@ class ServiceBodyResource extends JsonResource
             'name' => $this->name_string,
             'description' => $this->description_string,
             'type' => in_array($this->sb_type, ServiceBody::VALID_SB_TYPES) ? $this->sb_type : null,
+            'userId' => $this->principal_user_bigint ?? null,
+            'editorUserIds' => !empty($this->editors_string) ? collect(explode(',', $this->editors_string))->map(fn ($id) => intval($id))->toArray() : [],
             'url' => $this->uri_string,
             'helpline' => $this->kml_file_uri_string,
+            'email' => $this->sb_meeting_email,
             'worldId' => $this->worldid_mixed,
         ];
     }

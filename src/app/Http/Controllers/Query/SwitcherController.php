@@ -316,7 +316,7 @@ class SwitcherController extends Controller
         $recurseChildren = $request->input('recurse') == '1';
         $recurseParents = $request->input('parents') == '1';
 
-        $serviceBodies = $this->serviceBodyRepository->getServiceBodies($includeIds, $excludeIds, $recurseChildren, $recurseParents);
+        $serviceBodies = $this->serviceBodyRepository->search($includeIds, $excludeIds, $recurseChildren, $recurseParents);
 
         return ServiceBodyResource::collection($serviceBodies)->response();
     }
