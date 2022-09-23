@@ -1049,19 +1049,19 @@ class GetChangesTest extends TestCase
         $change1 = $this->createChange($beforeValues, $afterValues, $user);
         $change2 = $this->createChange($beforeValues, $afterValues, $user);
 
-        $changes = $this->get("/client_interface/json/?switcher=GetChanges&meeting_id=$change1->id_bigint")
+        $changes = $this->get("/client_interface/json/?switcher=GetChanges&meeting_id=$change1->before_id_bigint")
             ->assertStatus(200)
             ->assertJsonCount(1)
             ->json();
         $this->assertEquals(strval($change1->id_bigint), $changes[0]['change_id']);
 
-        $changes = $this->get("/client_interface/json/?switcher=GetChanges&meeting_id=$change2->id_bigint")
+        $changes = $this->get("/client_interface/json/?switcher=GetChanges&meeting_id=$change2->before_id_bigint")
             ->assertStatus(200)
             ->assertJsonCount(1)
             ->json();
         $this->assertEquals(strval($change2->id_bigint), $changes[0]['change_id']);
 
-        $missingId = $change2->id_bigint + 1;
+        $missingId = $change2->before_id_bigint + 1;
         $this->get("/client_interface/json/?switcher=GetChanges&meeting_id=$missingId")
             ->assertStatus(200)
             ->assertJsonCount(0);

@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Models\Meeting;
+use App\Models\MeetingData;
 use App\Models\ServiceBody;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -11,6 +13,81 @@ class TestCase extends BaseTestCase
 {
     use RefreshDatabase;
 
+    // meetings
+    //
+    //
+    private static $meetingMainFieldDefaults = [
+        'worldid_mixed' => 'worldid_mixed_default',
+        'service_body_bigint' => 1,
+        'weekday_tinyint' => 1,
+        'venue_type' => 1,
+        'start_time' => '19:00:00',
+        'duration_time' => '01:00:00',
+        'time_zone' => '',
+        'formats' => '17,29,30', // O,To,Tr
+        'lang_enum' => 'en',
+        'longitude' => -79.793701171875,
+        'latitude' => 36.065752051707,
+        'published' => 1,
+    ];
+
+    private static $meetingDataFieldDefaults = [
+        'meeting_name' => 'NA Meeting',
+    ];
+
+    protected function createMeeting(array $mainFields = [], array $dataFields = [], array $longDataFields = [])
+    {
+        static $dataFieldTemplates;
+        if (!isset($dataFieldTemplates)) {
+            $dataFieldTemplates = MeetingData::query()
+                ->where('meetingid_bigint', 0)
+                ->get()
+                ->mapWithKeys(fn ($value, $_) => [$value->key => $value]);
+        }
+
+        $meeting = Meeting::create(array_merge(self::$meetingMainFieldDefaults, $mainFields));
+
+        $dataFields = array_merge(self::$meetingDataFieldDefaults, $dataFields);
+        foreach (array_keys($longDataFields) as $fieldName) {
+            unset($dataFields[$fieldName]);
+        }
+
+        foreach ($dataFields as $fieldName => $fieldValue) {
+            $fieldTemplate = $dataFieldTemplates->get($fieldName);
+            if (is_null($fieldTemplate)) {
+                throw new \Exception("unknown field '$fieldName' specified in test meeting");
+            }
+
+            $meeting->data()->create([
+                'key' => $fieldName,
+                'field_prompt' => $fieldTemplate->field_prompt,
+                'lang_enum' => 'en',
+                'data_string' => $fieldValue,
+                'visibility' => $fieldTemplate->visibility,
+            ]);
+        }
+
+        foreach ($longDataFields as $fieldName => $fieldValue) {
+            $fieldTemplate = $dataFieldTemplates->get($fieldName);
+            if (is_null($fieldTemplate)) {
+                throw new \Exception("unknown field '$fieldName' specified in test meeting");
+            }
+
+            $meeting->longdata()->create([
+                'key' => $fieldName,
+                'field_prompt' => $fieldTemplate->field_prompt,
+                'lang_enum' => 'en',
+                'data_blob' => $fieldValue,
+                'visibility' => $fieldTemplate->visibility,
+            ]);
+        }
+
+        return $meeting;
+    }
+
+    // users
+    //
+    //
     protected string $userPassword = 'goodpassword';
 
     protected function createAdminUser(): User
@@ -61,6 +138,9 @@ class TestCase extends BaseTestCase
         ]);
     }
 
+    // service bodies
+    //
+    //
     protected function createZone(string $name, string $description, string $uri = null, string $helpline = null, string $worldId = null, string $email = null, int $userId = null, array $editorUserIds = null)
     {
         return $this->createServiceBody($name, $description, 'ZF', 0, $uri, $helpline, $worldId, $email, $userId, $editorUserIds);
