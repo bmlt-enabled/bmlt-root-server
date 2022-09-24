@@ -72,10 +72,14 @@ class Change extends Model
             return null;
         }
 
-        $ret = unserialize($object);
-        $ret['main_table_values'] = unserialize($ret['main_table_values']);
-        $ret['data_table_values'] = unserialize($ret['data_table_values']);
-        $ret['longdata_table_values'] = unserialize($ret['longdata_table_values']);
-        return $ret;
+        if ($this->object_class_string == 'c_comdef_meeting') {
+            $ret = unserialize($object);
+            $ret['main_table_values'] = unserialize($ret['main_table_values']);
+            $ret['data_table_values'] = unserialize($ret['data_table_values']);
+            $ret['longdata_table_values'] = unserialize($ret['longdata_table_values']);
+            return $ret;
+        }
+
+        return unserialize($object);
     }
 }
