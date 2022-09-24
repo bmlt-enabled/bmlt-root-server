@@ -1,6 +1,6 @@
 COMMIT := $(shell git rev-parse --short=8 HEAD)
 BASE_IMAGE := bmltenabled/bmlt-root-server-base
-BASE_IMAGE_TAG := 1.1.3
+BASE_IMAGE_TAG := 1.1.4
 BASE_IMAGE_BUILD_TAG := $(COMMIT)-$(shell date +%s)
 CROUTON_JS := src/legacy/client_interface/html/croutonjs/crouton.js
 VENDOR_AUTOLOAD := src/vendor/autoload.php
@@ -98,10 +98,7 @@ lint-fix:  ## PHP Lint Fix
 
 .PHONY: docker-publish-base
 docker-publish-base:  ## Builds Base Docker Image
-	docker build -f docker/Dockerfile-base docker/ -t $(BASE_IMAGE):$(BASE_IMAGE_BUILD_TAG)
-	docker tag $(BASE_IMAGE):$(BASE_IMAGE_BUILD_TAG) $(BASE_IMAGE):$(BASE_IMAGE_TAG)
-	docker push $(BASE_IMAGE):$(BASE_IMAGE_BUILD_TAG)
-	docker push $(BASE_IMAGE):$(BASE_IMAGE_TAG)
+	docker buildx build --platform linux/amd64,linux/arm64/v8 -f docker/Dockerfile-base docker/ -t $(BASE_IMAGE):$(BASE_IMAGE_TAG) --push
 
 .PHONY: mysql
 mysql:  ## Runs mysql cli in mysql container
