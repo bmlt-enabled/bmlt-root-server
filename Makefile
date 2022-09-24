@@ -75,7 +75,7 @@ dev: zip ## Docker Compose Up
 	docker-compose -f docker/docker-compose.yml up --build
 
 .PHONY: test
-test:
+test:  ## Runs PHP Tests
 	$(TEST_PREFIX) vendor/phpunit/phpunit/phpunit
 # 	$(TEST_PREFIX) vendor/phpunit/phpunit/phpunit tests/Feature/Admin/TokenTest.php
 # 	$(TEST_PREFIX) vendor/phpunit/phpunit/phpunit --filter testLogout tests/Feature/Admin/TokenTest.php
