@@ -1061,6 +1061,38 @@ class GetSearchResultsTest extends TestCase
         $this->assertStringStartsWith('2.85', $meeting['distance_in_km']);
     }
 
+    public function testHasOnlyLongVal()
+    {
+        $meeting1 = $this->createMeeting(['latitude' => 36.0733691, 'longitude' => -79.8240715]);
+        $this->get("/client_interface/json/?switcher=GetSearchResults&long_val=-79.8240715")
+            ->assertStatus(200)
+            ->assertJsonCount(0);
+    }
+
+    public function testHasOnlyLatVal()
+    {
+        $meeting1 = $this->createMeeting(['latitude' => 36.0733691, 'longitude' => -79.8240715]);
+        $this->get("/client_interface/json/?switcher=GetSearchResults&lat_val=36.0733691")
+            ->assertStatus(200)
+            ->assertJsonCount(0);
+    }
+
+    public function testHasEmptyGeoWidth()
+    {
+        $meeting1 = $this->createMeeting(['latitude' => 36.0733691, 'longitude' => -79.8240715]);
+        $this->get("/client_interface/json/?switcher=GetSearchResults&geo_width=&long_val=-79.8240715&lat_val=36.0733691")
+            ->assertStatus(200)
+            ->assertJsonCount(0);
+    }
+
+    public function testHasEmptyGeoWidthKm()
+    {
+        $meeting1 = $this->createMeeting(['latitude' => 36.0733691, 'longitude' => -79.8240715]);
+        $this->get("/client_interface/json/?switcher=GetSearchResults&geo_width_km=long_val=-79.8240715&lat_val=36.0733691")
+            ->assertStatus(200)
+            ->assertJsonCount(0);
+    }
+
     // SearchString
     //
     //
