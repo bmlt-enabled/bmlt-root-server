@@ -64,7 +64,7 @@ zip: $(ZIP_FILE) ## Builds zip file
 
 .PHONY: docker
 docker: zip ## Builds Docker Image
-	docker build -f docker/$(DOCKERFILE) . -t $(IMAGE):$(TAG)
+	docker build --pull -f docker/$(DOCKERFILE) . -t $(IMAGE):$(TAG)
 
 .PHONY: docker-push
 docker-push: ## Pushes docker image to Dockerhub
