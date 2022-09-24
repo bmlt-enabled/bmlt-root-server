@@ -5,6 +5,7 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile-debug
+      pull: true
     ports:
       - "8000:8000"
     env_file:
