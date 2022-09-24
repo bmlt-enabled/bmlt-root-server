@@ -12,7 +12,7 @@ ifeq ($(CI)x, x)
 	COMPOSER_ARGS :=
 	COMPOSER_PREFIX := docker run -t --rm -v $(shell pwd):/code -w /code $(BASE_IMAGE):$(BASE_IMAGE_TAG)
 	LINT_PREFIX := docker run -t --rm -v $(shell pwd):/code -w /code $(IMAGE):$(TAG)
-	TEST_PREFIX := docker run -t --rm -v $(shell pwd)/src:/var/www/html/main_server -v $(shell pwd)/docker/test-auto-config.inc.php:/var/www/html/auto-config.inc.php -w /var/www/html/main_server --network host $(IMAGE):$(TAG)
+	TEST_PREFIX := docker run -e XDEBUG_MODE=coverage,debug -t --rm -v $(shell pwd)/src:/var/www/html/main_server -v $(shell pwd)/docker/test-auto-config.inc.php:/var/www/html/auto-config.inc.php -w /var/www/html/main_server --network host $(IMAGE):$(TAG)
 else
 	DOCKERFILE := Dockerfile
 	IMAGE := bmltenabled/bmlt-root-server
@@ -79,6 +79,14 @@ test:  ## Runs PHP Tests
 	$(TEST_PREFIX) vendor/phpunit/phpunit/phpunit
 # 	$(TEST_PREFIX) vendor/phpunit/phpunit/phpunit tests/Feature/Admin/TokenTest.php
 # 	$(TEST_PREFIX) vendor/phpunit/phpunit/phpunit --filter testLogout tests/Feature/Admin/TokenTest.php
+
+.PHONY: coverage
+coverage:  ## Generates HTML Coverage Report
+	$(TEST_PREFIX) vendor/phpunit/phpunit/phpunit --coverage-html tests/reports/coverage
+
+.PHONY: coverage-serve
+coverage-serve:  ## Serves HTML Coverage Report
+	python3 -m http.server 8100 --directory src/tests/reports/coverage
 
 .PHONY: lint
 lint:  ## PHP Lint
