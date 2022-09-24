@@ -1,6 +1,6 @@
 COMMIT := $(shell git rev-parse --short=8 HEAD)
 BASE_IMAGE := bmltenabled/bmlt-root-server-base
-BASE_IMAGE_TAG := 1.1.4
+BASE_IMAGE_TAG := latest
 BASE_IMAGE_BUILD_TAG := $(COMMIT)-$(shell date +%s)
 CROUTON_JS := src/legacy/client_interface/html/croutonjs/crouton.js
 VENDOR_AUTOLOAD := src/vendor/autoload.php
@@ -10,7 +10,7 @@ ifeq ($(CI)x, x)
 	IMAGE := rootserver
 	TAG := local
 	COMPOSER_ARGS :=
-	COMPOSER_PREFIX := docker run -t --rm -v $(shell pwd):/code -w /code $(BASE_IMAGE):$(BASE_IMAGE_TAG)
+	COMPOSER_PREFIX := docker run --pull=always -t --rm -v $(shell pwd):/code -w /code $(BASE_IMAGE):$(BASE_IMAGE_TAG)
 	LINT_PREFIX := docker run -t --rm -v $(shell pwd):/code -w /code $(IMAGE):$(TAG)
 	TEST_PREFIX := docker run -e XDEBUG_MODE=coverage,debug -t --rm -v $(shell pwd)/src:/var/www/html/main_server -v $(shell pwd)/docker/test-auto-config.inc.php:/var/www/html/auto-config.inc.php -w /var/www/html/main_server --network host $(IMAGE):$(TAG)
 else
