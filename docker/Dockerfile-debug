@@ -5,7 +5,7 @@ ENV PHP_INI_PATH /etc/php/8.0/apache2/php.ini
 ENV PHP_CLI_INI_PATH /etc/php/8.0/cli/php.ini
 ENV PHP_XDEBUG_ENABLED: 1
 RUN echo "zend_extension=$(find /usr/lib/php/ -name xdebug.so)" >> ${PHP_INI_PATH} \
-    && echo "xdebug.mode=debug" >> ${PHP_INI_PATH} \
+    && echo "xdebug.mode=coverage,debug" >> ${PHP_INI_PATH} \
     && echo "xdebug.client_port=9003" >> ${PHP_INI_PATH} \
     && echo "xdebug.client_host=host.docker.internal" >> ${PHP_INI_PATH} \
     && echo "xdebug.start_with_request=yes" >> ${PHP_INI_PATH} \
@@ -13,7 +13,7 @@ RUN echo "zend_extension=$(find /usr/lib/php/ -name xdebug.so)" >> ${PHP_INI_PAT
     && echo "xdebug.idekey=ROOT_SERVER_DEBUG" >> ${PHP_INI_PATH}
 
 RUN echo "zend_extension=$(find /usr/lib/php/ -name xdebug.so)" >> ${PHP_CLI_INI_PATH} \
-    && echo "xdebug.mode=debug" >> ${PHP_CLI_INI_PATH} \
+    && echo "xdebug.mode=coverage,debug" >> ${PHP_CLI_INI_PATH} \
     && echo "xdebug.client_port=9003" >> ${PHP_CLI_INI_PATH} \
     && echo "xdebug.client_host=host.docker.internal" >> ${PHP_CLI_INI_PATH} \
     && echo "xdebug.start_with_request=yes" >> ${PHP_CLI_INI_PATH} \
