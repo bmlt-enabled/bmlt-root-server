@@ -1141,7 +1141,7 @@ class c_comdef_admin_ajax_handler
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         try {
-            if ($in_meeting_data['id_bigint']) {
+            if ($in_meeting_data['id_bigint'] ?? false) {
                 $meeting = $this->my_server->GetOneMeeting($in_meeting_data['id_bigint']);
             } else {
                 $data = array ( 'service_body_bigint' => intval($in_meeting_data['service_body_bigint']),
@@ -1155,7 +1155,11 @@ class c_comdef_admin_ajax_handler
             if ($meeting instanceof c_comdef_meeting) {
                 // Security precaution: We check the session to make sure that the user is authorized for this meeting.
                 if ($meeting->UserCanEdit()) {
-                    $result_data = array ( 'meeting_id' => $in_meeting_data['id_bigint'] );
+                    if (array_key_exists('id_bigint', $in_meeting_data)) {
+                        $result_data = array ( 'meeting_id' => $in_meeting_data['id_bigint'] );
+                    } else {
+                        $result_data = [];
+                    }
                     $data =& $meeting->GetMeetingData();
 
                     // We prepare the "template" array. These are the data values for meeting 0 in the two tables.

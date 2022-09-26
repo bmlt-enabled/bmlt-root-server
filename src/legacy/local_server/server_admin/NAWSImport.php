@@ -264,7 +264,7 @@ class NAWSImport
                         break;
                     case 'room':
                     case 'directions':
-                        if ($meetingData['location_info']) {
+                        if ($meetingData['location_info'] ?? false) {
                             if ($value) {
                                 if ($columnName == 'directions') {
                                     $meetingData['location_info'] .= ', ' . $value;
@@ -291,7 +291,7 @@ class NAWSImport
                     case 'format3':
                     case 'format4':
                     case 'format5':
-                        $value = $formats[$value];
+                        $value = $formats[$value] ?? false;
                         if ($value) {
                             $meetingData['format_shared_id_list'] = array_merge($meetingData['format_shared_id_list'], $value);
                         }
