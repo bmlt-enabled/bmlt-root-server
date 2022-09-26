@@ -1,12 +1,13 @@
 # Contributing to the BMLT Root Server
 
 For general information about BMLT, including ways to contribute to the project, please see
-[the website](https://bmlt.app).
+[the BMLT website](https://bmlt.app).
 
 This file contains information specifically about how to set up a development environment to work on the root server.
 We want the server code (as well as code for the other project core elements) to continue to be of high quality, so
 prospective developers should have a solid grounding in good software engineering practice. In other words, making
-changes to the server code wouldn't be the best place to start for folks new to software development -- there are, on
+changes to the server code with the intent to contribute them back to 
+the main repository wouldn't be the best place to start for folks new to software development -- there are, on
 the other hand, lots of other parts of the project that could very much use your time and energy! (An exception is
 that we do frequently need fluent speakers of languages other than English to translate localization strings -- even
 if the initial translation has already been done, there are often new strings added in subsequent development work
@@ -14,21 +15,19 @@ that need translation.)
 
 There are various ways you can set up your development environment; in the directions here we use
 [Docker](https://www.docker.com). If you don't have it already, install
-[Docker Desktop](https://www.docker.com/products/docker-desktop). Then go to the `docker` directory, which contains the
-Dockerfiles for building images for both the BMLT Root Server and a MySQL database with sample data for testing
-purposes. The `make dev` Makefile target will run them using docker-compose.
+[Docker Desktop](https://www.docker.com/products/docker-desktop) and
+clone the root server repo from github.
 
-## How to use
+## Running the root server under docker
 1. Edit `docker/bmlt.env` to set your google maps api key, `GKEY=API_KEY`.
-1. Run the command `make dev` in the top-level `bmlt-root-server` directory. If you are running on a Mac and get an
-error about a missing PHP extension `zip`, run `brew install php` first.
-1. Browse to `http://localhost:8000/main_server/`.
-1. Login with username "serveradmin" and password "CoreysGoryStory".
-1. When finished, exit by pressing ctrl+c. You may also wish to delete the containers in the Docker Dashboard.
+2. Run the command `make dev` in the top-level `bmlt-root-server` directory. If something isn't working (for example,
+mising packages), try running `make clean` first and then `make dev`.
+3. Browse to `http://localhost:8000/main_server/`.
+4. Login with username "serveradmin" and password "CoreysGoryStory".
+5. When finished, exit by pressing ctrl+c. You may also wish to delete the containers in the Docker Dashboard.
 
-You can run the linter by running `make lint` in the top-level directory.
 
-## Supported environment variables
+### Supported environment variables
 This is an example `bmlt.env` file. The value for each of these variables, on start of the container, is automatically
 written to the appropriate line in `auto-config.inc.php`.
 ```
@@ -40,18 +39,46 @@ DB_HOST=db
 DB_PREFIX=na
 ```
 
+## Useful `make` commands
+
+- `make clean` clean up the docker container (TODO: better description?)
+- `make docker` builds the docker image.  TODO: when do we need to do this?
+- `make dev` run the root server under docker (see above)
+- `make bash` open a bash shell on the container's file system.  This will start in the directory `/var/www/html/main_server`
+- `make mysql` start the mysql command-line client with the database `rootserver`, which holds the root server's tables.
+
+## Loading a different sample database
+
+Use this command to replace the supplied test database with your own:
+```
+docker exec -i docker-db-1 sh -c 'exec mysql -uroot -prootserver rootserver' < mydb.sql
+```
+
+## Running tests
+
+Start the root server using `make dev` (see above).  Then in a separate terminal, run the tests using `make test`.
+Somewhat annoyingly, `make test` will clobber your current database, so you'll need to restore it if you want to go
+back to running the root server.
+
+
+## Running lint
+You can run the linter by running `make lint` in the top-level directory.
+
+TODO: this didn't work for me
+
 ## Testing the install wizard
 The Docker files automatically set up an `auto-config.inc.php` file for you. Usually this is great since it saves you
 the bother of going through the install wizard each time you restart the root server. However, if you want to test or
 change the install wizard, you can start with the install wizard instead of the login screen by deleting this file.
 Here are modified steps to do that.
 1. Edit `bmlt.env` to set your google maps api key, `GKEY=API_KEY`.
-1. Run the command `make dev` in the top-level `bmlt-root-server` directory.
-1. In another window, run `docker exec -it docker_bmlt_1 bash` to open a bash shell accessing the container's file system.
-1. In the bash shell, `cd /var/www/html/` then `rm auto-config.inc.php`.
-1. Leave the shell open so that you can check whether the installer generated a new `auto-config.inc.php` and if so what it contains.
-1. Browse to `http://localhost:8000/main_server/`.
-1. In the browser you will now be in the Install Wizard. Start by filling in the Database Connection Settings screen as follows.
+2. Run the command `make dev` in the top-level `bmlt-root-server` directory.
+3. In another window, run `make bash` to open a bash shell accessing the container's file system. The shell should
+start in the directory `cd /var/www/html/main_server`.  
+5. In the bash shell, `cd ..` to get to the parent directory, then `rm auto-config.inc.php`.
+6. Leave the shell open so that you can check whether the installer generated a new `auto-config.inc.php` and if so what it contains.
+7. Browse to `http://localhost:8000/main_server/`.
+8. In the browser you will now be in the Install Wizard. Start by filling in the Database Connection Settings screen as follows.
 ```
 Database Type: mysql
 Database Host: db
@@ -63,8 +90,7 @@ Database Password: rootserver
 Note that the Database Host is `db` rather than the usual `localhost`. If you start with the install wizard, normally
 you need an empty database, but the `bmlt` database already contains sample data. A convenient alternative to dropping
 and (re) creating `rootserver` is to use the provided `rootserver` database, and to change the Table Prefix to `na2`, as above.  If you need
-to run the installer again, just use a new Table Prefix each time (`na3` etc). If you do want to access mysql, run the command
-`docker exec -it docker_db_1 mysql -u root -prootserver`.
+to run the installer again, just use a new Table Prefix each time (`na3` etc).
 
 Finally, as with the earlier directions, when finished exit by pressing ctrl+c or by running `docker-compose down`.
 
