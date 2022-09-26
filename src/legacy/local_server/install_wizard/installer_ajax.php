@@ -250,14 +250,31 @@ if (isset($http_vars['ajax_req'])        && ($http_vars['ajax_req'] == 'initiali
     if (!is_null($nawsImport)) {
         require_once(__DIR__.'/../../server/c_comdef_server.class.php');
         try {
-            $server = c_comdef_server::MakeServer();
+            $baseUrl = request()->getSchemeAndHttpHost() . request()->getBaseUrl();
+            $baseUrl = str_ends_with($baseUrl, 'index.php') ? substr($baseUrl, 0, -9) : $baseUrl;
+            $baseUrl = str_ends_with($baseUrl, '/') ? substr($baseUrl, 0, -1) : $baseUrl;
+            $httpClient = \Illuminate\Support\Facades\Http::withOptions(['cookies' => new \GuzzleHttp\Cookie\CookieJar]);
+
             $adminLogin = $http_vars['admin_login'];
             $adminPassword = $http_vars['admin_password'];
-            auth()->attempt(['login_string' => $adminLogin, 'password' => $adminPassword]);
-            $encryptedPassword = $server->GetEncryptedPW($adminLogin, $adminPassword);
-            session()->put('password_hash_web', $encryptedPassword);
-            require_once(__DIR__.'/../server_admin/c_comdef_admin_ajax_handler.class.php');
-            $nawsImport->import();
+            $data = $httpClient
+                ->post($baseUrl . "/?admin_action=login&c_comdef_admin_login=$adminLogin&c_comdef_admin_password=$adminPassword")
+                ->body();
+
+            if (str_contains($data, 'c_comdef_not_auth_3')) {
+                throw new Exception('There was an authentication problem when importing the NAWS file.');
+            }
+
+            $initialValueForPublished = $http_vars['initialValueForPublished'] == 'TRUE' ? 'TRUE' : 'FALSE';
+            $data = $httpClient
+                ->attach('thefile', file_get_contents($_FILES['thefile']['tmp_name']), 'upload')
+                ->post($baseUrl . "/?bmlt_ajax_callback=1&do_naws_import=1&initialValueForPublished=$initialValueForPublished")
+                ->json();
+
+            if ($data['errors']) {
+                throw new Exception($data['errors']);
+            }
+
             $response['importStatus'] = true;
         } catch (Exception $e) {
             // Drop all the tables
