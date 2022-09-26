@@ -149,7 +149,7 @@ class ServiceBodyController extends Controller
             ], 409);
         }
 
-        $serviceBody->delete();
+        $this->serviceBodyRepository->delete($serviceBody->id_bigint);
 
         return response()->noContent();
     }
