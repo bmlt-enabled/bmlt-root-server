@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\ServiceBodyController;
 use App\Http\Controllers\Admin\TokenController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,4 +22,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/auth/refresh', [TokenController::class, 'refresh']);
     Route::post('/auth/logout', [TokenController::class, 'logout']);
     Route::apiResource('servicebodies', ServiceBodyController::class, ['parameters' => ['servicebodies' => 'serviceBody']]);
+    Route::apiResource('users', UserController::class);
 });
