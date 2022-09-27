@@ -41,8 +41,9 @@ DB_PREFIX=na
 ## Some useful `make` commands
 
 - `make help`  Describe all of the make commands.
-- `make clean` Clean the build.
-- `make docker` Builds the docker image.
+- `make clean` Clean the build by removing all build artifacts and downloaded dependencies.
+- `make docker` Builds the docker image. You really only need to run this when first getting set up or after a change
+has been made to the Dockerfile or its base image.
 - `make dev` Run the root server under docker (see above).
 - `make bash` Open a bash shell on the container's file system.  This will start in the directory `/var/www/html/main_server`
 - `make mysql` Start the mysql command-line client with the database `rootserver`, which holds the root server's tables.
