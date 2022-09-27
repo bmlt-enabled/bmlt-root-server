@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Query;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Legacy\LegacyController;
 use App\Http\Resources\Query\FormatResource;
 use App\Http\Resources\Query\MeetingResource;
 use App\Http\Resources\Query\MeetingChangeResource;
