@@ -6,7 +6,7 @@ For general information about BMLT, including ways to contribute to the project,
 This file contains information specifically about how to set up a development environment to work on the root server.
 We want the server code (as well as code for the other project core elements) to continue to be of high quality, so
 prospective developers should have a solid grounding in good software engineering practice. In other words, making
-changes to the server code with the intent to contribute them back to 
+changes to the server code with the intent to contribute them back to
 the main repository wouldn't be the best place to start for folks new to software development -- there are, on
 the other hand, lots of other parts of the project that could very much use your time and energy! (An exception is
 that we do frequently need fluent speakers of languages other than English to translate localization strings -- even
@@ -14,17 +14,16 @@ if the initial translation has already been done, there are often new strings ad
 that need translation.)
 
 There are various ways you can set up your development environment; in the directions here we use
-[Docker](https://www.docker.com). If you don't have it already, install
-[Docker Desktop](https://www.docker.com/products/docker-desktop) and
-clone the root server repo from github.
+[Docker](https://www.docker.com). If you don't have them already, clone the root server repo from github, and install
+[Docker Desktop](https://www.docker.com/products/docker-desktop). The make file assumes docker-compose v2.
 
 ## Running the root server under docker
 1. Edit `docker/bmlt.env` to set your google maps api key, `GKEY=API_KEY`.
-2. Run the command `make dev` in the top-level `bmlt-root-server` directory. If something isn't working (for example,
+1. Run the command `make dev` in the top-level `bmlt-root-server` directory. If something isn't working (for example,
 mising packages), try running `make clean` first and then `make dev`.
-3. Browse to `http://localhost:8000/main_server/`.
-4. Login with username "serveradmin" and password "CoreysGoryStory".
-5. When finished, exit by pressing ctrl+c. You may also wish to delete the containers in the Docker Dashboard.
+1. Browse to `http://localhost:8000/main_server/`.
+1. Login with username "serveradmin" and password "CoreysGoryStory".
+1. When finished, exit by pressing ctrl+c. You may also wish to delete the containers in the Docker Dashboard.
 
 
 ### Supported environment variables
@@ -39,13 +38,17 @@ DB_HOST=db
 DB_PREFIX=na
 ```
 
-## Useful `make` commands
+## Some useful `make` commands
 
-- `make clean` clean up the docker container (TODO: better description?)
-- `make docker` builds the docker image.  TODO: when do we need to do this?
-- `make dev` run the root server under docker (see above)
-- `make bash` open a bash shell on the container's file system.  This will start in the directory `/var/www/html/main_server`
-- `make mysql` start the mysql command-line client with the database `rootserver`, which holds the root server's tables.
+- `make help`  Describe all of the make commands.
+- `make clean` Clean the build.
+- `make docker` Builds the docker image.
+- `make dev` Run the root server under docker (see above).
+- `make bash` Open a bash shell on the container's file system.  This will start in the directory `/var/www/html/main_server`
+- `make mysql` Start the mysql command-line client with the database `rootserver`, which holds the root server's tables.
+- `make test`  Run PHP tests.
+
+There are some additional commands as well; `make help` will list them.
 
 ## Loading a different sample database
 
@@ -63,8 +66,7 @@ back to running the root server.
 
 ## Running lint
 You can run the linter by running `make lint` in the top-level directory.
-
-TODO: this didn't work for me
+It doesn't work when xdebug is listening, so make sure xdebug is off first.
 
 ## Testing the install wizard
 The Docker files automatically set up an `auto-config.inc.php` file for you. Usually this is great since it saves you
@@ -72,13 +74,13 @@ the bother of going through the install wizard each time you restart the root se
 change the install wizard, you can start with the install wizard instead of the login screen by deleting this file.
 Here are modified steps to do that.
 1. Edit `bmlt.env` to set your google maps api key, `GKEY=API_KEY`.
-2. Run the command `make dev` in the top-level `bmlt-root-server` directory.
-3. In another window, run `make bash` to open a bash shell accessing the container's file system. The shell should
+1. Run the command `make dev` in the top-level `bmlt-root-server` directory.
+1. In another window, run `make bash` to open a bash shell accessing the container's file system. The shell should
 start in the directory `cd /var/www/html/main_server`.  
-5. In the bash shell, `cd ..` to get to the parent directory, then `rm auto-config.inc.php`.
-6. Leave the shell open so that you can check whether the installer generated a new `auto-config.inc.php` and if so what it contains.
-7. Browse to `http://localhost:8000/main_server/`.
-8. In the browser you will now be in the Install Wizard. Start by filling in the Database Connection Settings screen as follows.
+1. In the bash shell, `cd ..` to get to the parent directory, then `rm auto-config.inc.php`.
+1. Leave the shell open so that you can check whether the installer generated a new `auto-config.inc.php` and if so what it contains.
+1. Browse to `http://localhost:8000/main_server/`.
+1. In the browser you will now be in the Install Wizard. Start by filling in the Database Connection Settings screen as follows.
 ```
 Database Type: mysql
 Database Host: db
@@ -88,9 +90,9 @@ Database User: rootserver
 Database Password: rootserver
 ```
 Note that the Database Host is `db` rather than the usual `localhost`. If you start with the install wizard, normally
-you need an empty database, but the `bmlt` database already contains sample data. A convenient alternative to dropping
-and (re) creating `rootserver` is to use the provided `rootserver` database, and to change the Table Prefix to `na2`, as above.  If you need
-to run the installer again, just use a new Table Prefix each time (`na3` etc).
+you need an empty database, but the `rootserver` database already contains sample data. A convenient alternative to dropping
+and (re) creating `rootserver` is to use the provided `rootserver` database, and to change the Table Prefix to `na2`, as
+above.  If you need to run the installer again, just use a new Table Prefix each time (`na3` etc).
 
 Finally, as with the earlier directions, when finished exit by pressing ctrl+c or by running `docker-compose down`.
 
