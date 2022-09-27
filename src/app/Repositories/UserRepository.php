@@ -37,6 +37,19 @@ class UserRepository implements UserRepositoryInterface
         });
     }
 
+    public function update(int $id, array $values): bool
+    {
+        return DB::transaction(function () use ($id, $values) {
+            $user = User::find($id);
+            if (!is_null($user)) {
+                $user::query()->where('id_bigint', $id)->update($values);
+                // $this->saveChange($user, User::find($id));
+                return true;
+            }
+            return false;
+        });
+    }
+
     public function delete(int $id): bool
     {
         return DB::transaction(function () use ($id) {
