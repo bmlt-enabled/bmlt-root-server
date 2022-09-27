@@ -21,11 +21,18 @@ class User extends Model implements AuthenticatableContract
     public const USER_TYPE_SERVICE_BODY_ADMIN = 'serviceBodyAdmin';
     public const USER_TYPE_OBSERVER = 'observer';
 
-    public const USER_LEVEL_USER_TYPE_MAP = [
+    public const USER_LEVEL_TO_USER_TYPE_MAP = [
         self::USER_LEVEL_DISABLED => self::USER_TYPE_DISABLED,
         self::USER_LEVEL_ADMIN => self::USER_TYPE_ADMIN,
         self::USER_LEVEL_SERVICE_BODY_ADMIN => self::USER_TYPE_SERVICE_BODY_ADMIN,
         self::USER_LEVEL_OBSERVER => self::USER_TYPE_OBSERVER,
+    ];
+
+    public const USER_TYPE_TO_USER_LEVEL_MAP = [
+        self::USER_TYPE_DISABLED => self::USER_LEVEL_DISABLED,
+        self::USER_TYPE_ADMIN => self::USER_LEVEL_ADMIN,
+        self::USER_TYPE_SERVICE_BODY_ADMIN => self::USER_LEVEL_SERVICE_BODY_ADMIN,
+        self::USER_TYPE_OBSERVER => self::USER_LEVEL_OBSERVER,
     ];
 
     protected $table = 'comdef_users';
@@ -38,6 +45,7 @@ class User extends Model implements AuthenticatableContract
         'email_address_string',
         'login_string',
         'password_string',
+        'owner_id_bigint',
     ];
 
     public function getAuthPassword()
