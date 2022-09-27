@@ -227,7 +227,7 @@ class UserPermissionsTest extends TestCase
         $token = $user->createToken('test')->plainTextToken;
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/users/$user->id_bigint")
-            ->assertStatus(200);
+            ->assertStatus(422);
     }
 
     public function testUpdateOtherAsServiceBodyObserver()
@@ -258,7 +258,7 @@ class UserPermissionsTest extends TestCase
         $token = $user->createToken('test')->plainTextToken;
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/users/$user->id_bigint")
-            ->assertStatus(200);
+            ->assertStatus(422);
     }
 
     public function testUpdateOtherAsServiceBodyAdmin()
@@ -280,7 +280,7 @@ class UserPermissionsTest extends TestCase
         $user2->save();
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/users/$user2->id_bigint")
-            ->assertStatus(200);
+            ->assertStatus(422);
     }
 
     // partial update
@@ -308,7 +308,7 @@ class UserPermissionsTest extends TestCase
         $token = $user->createToken('test')->plainTextToken;
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/users/$user->id_bigint")
-            ->assertStatus(200);
+            ->assertStatus(204);
     }
 
     public function testPartialUpdateOtherAsServiceBodyObserver()
@@ -339,7 +339,7 @@ class UserPermissionsTest extends TestCase
         $token = $user->createToken('test')->plainTextToken;
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/users/$user->id_bigint")
-            ->assertStatus(200);
+            ->assertStatus(204);
     }
 
     public function testPartialUpdateOtherAsServiceBodyAdmin()
@@ -361,7 +361,7 @@ class UserPermissionsTest extends TestCase
         $user2->save();
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/users/$user2->id_bigint")
-            ->assertStatus(200);
+            ->assertStatus(204);
     }
 
 
