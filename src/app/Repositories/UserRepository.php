@@ -28,6 +28,15 @@ class UserRepository implements UserRepositoryInterface
         return $users->get();
     }
 
+    public function create(array $values): User
+    {
+        return DB::transaction(function () use ($values) {
+            $user = User::create($values);
+            //$this->saveChange(null, $user);
+            return $user;
+        });
+    }
+
     public function delete(int $id): bool
     {
         return DB::transaction(function () use ($id) {

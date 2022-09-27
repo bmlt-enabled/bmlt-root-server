@@ -199,7 +199,7 @@ class UserPermissionsTest extends TestCase
         $token = $user->createToken('test')->plainTextToken;
         $this->withHeader('Authorization', "Bearer $token")
             ->post("/api/v1/users")
-            ->assertStatus(200);
+            ->assertStatus(422);
     }
 
     // update
