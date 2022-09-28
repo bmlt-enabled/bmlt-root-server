@@ -1650,4 +1650,16 @@ class GetSearchResultsTest extends TestCase
         $this->assertEquals(1, count($data['formats']));
         $this->assertEquals(strval($format1->shared_id_bigint), $data['formats'][0]['id']);
     }
+
+    // misc
+    //
+    //
+    public function testNullDataValue()
+    {
+        $this->createMeeting([], ['location_postal_code_1' => null]);
+        $data = $this->get("/client_interface/json/?switcher=GetSearchResults")
+            ->assertStatus(200)
+            ->json();
+        $this->assertEquals('', $data[0]['location_postal_code_1']);
+    }
 }

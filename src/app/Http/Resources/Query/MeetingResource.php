@@ -85,7 +85,7 @@ class MeetingResource extends JsonResource
                 }
             }
 
-            $meeting[$meetingDataTemplate->key] = $meetingData->get($meetingDataTemplate->key, '');
+            $meeting[$meetingDataTemplate->key] = $meetingData->get($meetingDataTemplate->key, '') ?? '';
         }
 
         return $meeting;
