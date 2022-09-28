@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\ServiceBodyResource;
 use App\Http\Responses\JsonResponse;
 use App\Interfaces\ServiceBodyRepositoryInterface;
@@ -10,7 +9,7 @@ use App\Models\ServiceBody;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
-class ServiceBodyController extends Controller
+class ServiceBodyController extends ResourceController
 {
     private ServiceBodyRepositoryInterface $serviceBodyRepository;
 
@@ -75,36 +74,48 @@ class ServiceBodyController extends Controller
 
     public function update(Request $request, ServiceBody $serviceBody)
     {
-        if ($request->method() == 'PUT') {
-            $validated = $request->validate([
-                'parentId' => 'nullable|present|int|exists:comdef_service_bodies,id_bigint',
-                'name' => 'required|string|max:255',
-                'description' => 'required|string',
-                'type' => ['required', Rule::in(ServiceBody::VALID_SB_TYPES)],
-                'userId' => 'required|exists:comdef_users,id_bigint',
-                'editorUserIds' => 'present|array',
-                'editorUserIds.*' => 'int|exists:comdef_users,id_bigint',
-                'url' => 'url|max:255',
-                'helpline' => 'string|max:255',
-                'email' => 'email|max:255',
-                'worldId' => 'string|max:30',
-            ]);
-        } else {
-            $validated = $request->validate([
-                'parentId' => 'nullable|int|exists:comdef_service_bodies,id_bigint',
-                'name' => 'string|max:255',
-                'description' => 'string',
-                'type' => Rule::in(ServiceBody::VALID_SB_TYPES),
-                'userId' => 'exists:comdef_users,id_bigint',
-                'editorUserIds' => 'array',
-                'editorUserIds.*' => 'int|exists:comdef_users,id_bigint',
-                'url' => 'url|max:255',
-                'helpline' => 'string|max:255',
-                'email' => 'email|max:255',
-                'worldId' => 'string|max:30',
-            ]);
-        }
+        $validated = $request->validate([
+            'parentId' => 'nullable|present|int|exists:comdef_service_bodies,id_bigint',
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'type' => ['required', Rule::in(ServiceBody::VALID_SB_TYPES)],
+            'userId' => 'required|exists:comdef_users,id_bigint',
+            'editorUserIds' => 'present|array',
+            'editorUserIds.*' => 'int|exists:comdef_users,id_bigint',
+            'url' => 'url|max:255',
+            'helpline' => 'string|max:255',
+            'email' => 'email|max:255',
+            'worldId' => 'string|max:30',
+        ]);
 
+        $this->handleUpdate($request, $serviceBody, $validated);
+
+        return response()->noContent();
+    }
+
+    public function partialUpdate(Request $request, ServiceBody $serviceBody)
+    {
+        $validated = $request->validate([
+            'parentId' => 'nullable|int|exists:comdef_service_bodies,id_bigint',
+            'name' => 'string|max:255',
+            'description' => 'string',
+            'type' => Rule::in(ServiceBody::VALID_SB_TYPES),
+            'userId' => 'exists:comdef_users,id_bigint',
+            'editorUserIds' => 'array',
+            'editorUserIds.*' => 'int|exists:comdef_users,id_bigint',
+            'url' => 'url|max:255',
+            'helpline' => 'string|max:255',
+            'email' => 'email|max:255',
+            'worldId' => 'string|max:30',
+        ]);
+
+        $this->handleUpdate($request, $serviceBody, $validated);
+
+        return response()->noContent();
+    }
+
+    private function handleUpdate(Request $request, ServiceBody $serviceBody, array $validated)
+    {
         $values = collect($validated)->mapWithKeys(function ($value, $key) use ($request) {
             if ($request->user()->isAdmin()) {
                 if ($key == 'parentId') {
@@ -137,8 +148,6 @@ class ServiceBodyController extends Controller
         if (!empty($values)) {
             $this->serviceBodyRepository->update($serviceBody->id_bigint, $values);
         }
-
-        return response()->noContent();
     }
 
     public function destroy(ServiceBody $serviceBody)

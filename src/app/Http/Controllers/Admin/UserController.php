@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\UserResource;
 use App\Interfaces\UserRepositoryInterface;
 use App\Models\User;
@@ -11,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
-class UserController extends Controller
+class UserController extends ResourceController
 {
     private UserRepositoryInterface $userRepository;
 
@@ -70,28 +69,40 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
-        if ($request->method() == 'PUT') {
-            $validated = $request->validate([
-                'username' => ['required', 'string', 'max:255', Rule::unique('comdef_users', 'login_string')->ignore($user->id_bigint, 'id_bigint')],
-                'password' => ['required', Password::min(12)],
-                'type' => ['required', Rule::in(array_values(User::USER_LEVEL_TO_USER_TYPE_MAP))],
-                'displayName' => 'required|string|max:255',
-                'description' => 'string|max:1024',
-                'email' => 'email',
-                'ownerId' => 'nullable|present|int|exists:comdef_users,id_bigint',
-            ]);
-        } else {
-            $validated = $request->validate([
-                'username' => ['string', 'max:255', Rule::unique('comdef_users', 'login_string')->ignore($user->id_bigint, 'id_bigint')],
-                'password' => [Password::min(12)],
-                'type' => [Rule::in(array_values(User::USER_LEVEL_TO_USER_TYPE_MAP))],
-                'displayName' => 'string|max:255',
-                'description' => 'string|max:1024',
-                'email' => 'email',
-                'ownerId' => 'nullable|int|exists:comdef_users,id_bigint',
-            ]);
-        }
+        $validated = $request->validate([
+            'username' => ['required', 'string', 'max:255', Rule::unique('comdef_users', 'login_string')->ignore($user->id_bigint, 'id_bigint')],
+            'password' => ['required', Password::min(12)],
+            'type' => ['required', Rule::in(array_values(User::USER_LEVEL_TO_USER_TYPE_MAP))],
+            'displayName' => 'required|string|max:255',
+            'description' => 'string|max:1024',
+            'email' => 'email',
+            'ownerId' => 'nullable|present|int|exists:comdef_users,id_bigint',
+        ]);
 
+        $this->handleUpdate($request, $user, $validated);
+
+        return response()->noContent();
+    }
+
+    public function partialUpdate(Request $request, User $user)
+    {
+        $validated = $request->validate([
+            'username' => ['string', 'max:255', Rule::unique('comdef_users', 'login_string')->ignore($user->id_bigint, 'id_bigint')],
+            'password' => [Password::min(12)],
+            'type' => [Rule::in(array_values(User::USER_LEVEL_TO_USER_TYPE_MAP))],
+            'displayName' => 'string|max:255',
+            'description' => 'string|max:1024',
+            'email' => 'email',
+            'ownerId' => 'nullable|int|exists:comdef_users,id_bigint',
+        ]);
+
+        $this->handleUpdate($request, $user, $validated);
+
+        return response()->noContent();
+    }
+
+    private function handleUpdate(Request $request, User $user, array $validated)
+    {
         $requestUser = $request->user();
         $isAdmin = $requestUser->isAdmin();
         $isOwner = $requestUser->isServiceBodyAdmin() && $requestUser->id_bigint == $user->owner_id_bigint;
@@ -124,8 +135,6 @@ class UserController extends Controller
         if (!empty($values)) {
             $this->userRepository->update($user->id_bigint, $values);
         }
-
-        return response()->nocontent();
     }
 
     public function destroy(User $user)
