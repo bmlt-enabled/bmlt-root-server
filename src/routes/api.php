@@ -22,5 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/auth/refresh', [TokenController::class, 'refresh']);
     Route::post('/auth/logout', [TokenController::class, 'logout']);
     Route::apiResource('servicebodies', ServiceBodyController::class, ['parameters' => ['servicebodies' => 'serviceBody']]);
+    Route::patch('/servicebodies/{serviceBody}', [ServiceBodyController::class, 'partialUpdate']);
     Route::apiResource('users', UserController::class);
+    Route::patch('/users/{user}', [UserController::class, 'partialUpdate']);
 });

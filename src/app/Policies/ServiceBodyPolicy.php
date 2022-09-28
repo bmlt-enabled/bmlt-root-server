@@ -50,6 +50,11 @@ class ServiceBodyPolicy
         return false;
     }
 
+    public function partialUpdate(User $user, ServiceBody $serviceBody)
+    {
+        return $this->update($user, $serviceBody);
+    }
+
     public function delete(User $user, ServiceBody $serviceBody)
     {
         return $user->isAdmin();

@@ -53,6 +53,11 @@ class UserPolicy
         return false;
     }
 
+    public function partialUpdate(User $user, User $resourceUser)
+    {
+        return $this->update($user, $resourceUser);
+    }
+
     public function delete(User $user, User $resourceUser)
     {
         return $user->isAdmin();
