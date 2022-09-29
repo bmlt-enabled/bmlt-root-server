@@ -48,6 +48,11 @@ class ServiceBody extends Model
         return $this->hasMany(Meeting::class, 'service_body_bigint');
     }
 
+    public function parent()
+    {
+        return $this->belongsTo(self::class, 'sb_owner');
+    }
+
     public function children()
     {
         return $this->hasMany(self::class, 'sb_owner');

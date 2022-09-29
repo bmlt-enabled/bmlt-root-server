@@ -177,6 +177,20 @@ class GetSearchResultsTest extends TestCase
         parent::tearDown();
     }
 
+    public function testMeetingForeignKeys()
+    {
+        $zone = $this->createZone('zone', 'zone');
+        $region = $this->createRegion('region', 'region', $zone->id_bigint);
+        $area = $this->createRegion('region', 'region', $region->id_bigint);
+        $meeting = $this->createMeeting(['service_body_bigint' => $area->id_bigint]);
+        $areaModel = $meeting->serviceBody;
+        $this->assertEquals($area->id_bigint, $areaModel->id_bigint);
+        $regionModel = $areaModel->parent;
+        $this->assertEquals($region->id_bigint, $regionModel->id_bigint);
+        $zoneModel = $regionModel->parent;
+        $this->assertEquals($zone->id_bigint, $zoneModel->id_bigint);
+    }
+
     public function testXml()
     {
         $this->get('/client_interface/xml/?switcher=GetSearchResults')

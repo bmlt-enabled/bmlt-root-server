@@ -46,6 +46,11 @@ class Meeting extends Model
         return $this->data->where('key', 'meeting_name')->pluck('data_string')->first();
     }
 
+    public function serviceBody()
+    {
+        return $this->belongsTo(ServiceBody::class, 'service_body_bigint');
+    }
+
     public function data()
     {
         return $this->hasMany(MeetingData::class, 'meetingid_bigint');
