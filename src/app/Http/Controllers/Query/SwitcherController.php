@@ -266,7 +266,7 @@ class SwitcherController extends Controller
         // This code to calculate the formats fields is really inefficient, but necessary because
         // we don't have foreign keys between the meetings and formats tables.
         $langEnum = $request->input('lang_enum', config('app.locale', 'en'));
-        $formats = $this->formatRepository->getFormats(langEnums: [$langEnum], meetings: $meetings);
+        $formats = $this->formatRepository->search(langEnums: [$langEnum], meetings: $meetings);
 
         $formatsById = $formats->mapWithKeys(fn ($format, $_) => [$format->shared_id_bigint => $format]);
         foreach ($meetings as $meeting) {
@@ -301,7 +301,7 @@ class SwitcherController extends Controller
 
         $showAll = $request->input('show_all') == '1';
 
-        $formats = $this->formatRepository->getFormats($langEnums, $keyStrings, $showAll);
+        $formats = $this->formatRepository->search($langEnums, $keyStrings, $showAll);
 
         return FormatResource::collection($formats)->response();
     }
@@ -437,7 +437,7 @@ class SwitcherController extends Controller
 
         $deletedMeetings = $this->changeRepository->getMeetingChanges(serviceBodyId: $validated['sb_id'], changeTypes: [Change::CHANGE_TYPE_DELETE]);
         $meetings = $this->meetingRepository->getSearchResults(servicesInclude: [$validated['sb_id']], published: null, eagerServiceBodies: true);
-        $formatIdToWorldId = $this->formatRepository->getFormats(showAll: true)
+        $formatIdToWorldId = $this->formatRepository->search(showAll: true)
             ->reject(fn ($fmt) => is_null($fmt->worldid_mixed) || empty(trim($fmt->worldid_mixed)))
             ->mapWithKeys(fn ($fmt, $_) => [$fmt->shared_id_bigint => $fmt->worldid_mixed]);
 
