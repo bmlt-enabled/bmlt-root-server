@@ -14,9 +14,13 @@ use App\Interfaces\FormatRepositoryInterface;
 use App\Interfaces\MeetingRepositoryInterface;
 use App\Interfaces\MigrationRepositoryInterface;
 use App\Interfaces\ServiceBodyRepositoryInterface;
+use App\Models\Change;
+use App\Models\Meeting;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse as BaseJsonResponse;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Validation\Rule;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class SwitcherController extends Controller
 {
@@ -44,38 +48,44 @@ class SwitcherController extends Controller
     {
         $switcher = $request->input('switcher');
 
-        $validValues = ['GetSearchResults', 'GetFormats', 'GetServiceBodies', 'GetFieldKeys', 'GetFieldValues', 'GetChanges', 'GetServerInfo', 'GetCoverageArea'];
+        $response = null;
+
+        $validValues = ['GetSearchResults', 'GetFormats', 'GetServiceBodies', 'GetFieldKeys', 'GetFieldValues', 'GetChanges', 'GetServerInfo', 'GetCoverageArea', 'GetNAWSDump'];
         if (in_array($switcher, $validValues)) {
-            if ($dataFormat != 'json' && $dataFormat != 'jsonp') {
-                abort(404, 'This endpoint only supports the \'json\' and \'jsonp\' data formats.');
-            }
+            if ($switcher == 'GetNAWSDump' && $dataFormat == 'csv') {
+                return LegacyController::handle($request);
+                $response = $this->getNawsDump($request);
+            } elseif ($dataFormat == 'json' || $dataFormat == 'jsonp') {
+                if ($switcher == 'GetSearchResults') {
+                    $response = $this->getSearchResults($request);
+                } elseif ($switcher == 'GetFormats') {
+                    $response = $this->getFormats($request);
+                } elseif ($switcher == 'GetServiceBodies') {
+                    $response = $this->getServiceBodies($request);
+                } elseif ($switcher == 'GetFieldKeys') {
+                    $response = $this->getFieldKeys($request);
+                } elseif ($switcher == 'GetFieldValues') {
+                    $response = $this->getFieldValues($request);
+                } elseif ($switcher == 'GetChanges') {
+                    $response = $this->getMeetingChanges($request);
+                } elseif ($switcher == 'GetServerInfo') {
+                    $response = $this->getServerInfo($request);
+                } else {
+                    $response = $this->getCoverageArea($request);
+                }
 
-            if ($switcher == 'GetSearchResults') {
-                $response = $this->getSearchResults($request);
-            } elseif ($switcher == 'GetFormats') {
-                $response = $this->getFormats($request);
-            } elseif ($switcher == 'GetServiceBodies') {
-                $response = $this->getServiceBodies($request);
-            } elseif ($switcher == 'GetFieldKeys') {
-                $response = $this->getFieldKeys($request);
-            } elseif ($switcher == 'GetFieldValues') {
-                $response = $this->getFieldValues($request);
-            } elseif ($switcher == 'GetChanges') {
-                $response = $this->getMeetingChanges($request);
-            } elseif ($switcher == 'GetServerInfo') {
-                $response = $this->getServerInfo($request);
-            } else {
-                $response = $this->getCoverageArea($request);
+                if ($dataFormat == 'jsonp') {
+                    $response = $response->withCallback($request->input('callback', 'callback'));
+                }
             }
-
-            if ($dataFormat == 'jsonp') {
-                $response = $response->withCallback($request->input('callback', 'callback'));
-            }
-
-            return $response;
         }
 
-        return LegacyController::handle($request);
+        if (is_null($response)) {
+            $validJsonValues = collect($validValues)->reject(fn ($v) => $v == 'GetNAWSDump')->join(', ');
+            abort(422, "Invalid data format or endpoint name. Valid endpoint names for the json and jsonp data formats are: $validJsonValues. Valid endpoint names for the csv format are: GetNAWSDump.");
+        }
+
+        return $response;
     }
 
     private function getSearchResults(Request $request): BaseJsonResponse
@@ -411,5 +421,173 @@ class SwitcherController extends Controller
             'se_corner_longitude' => strval($box['se']['long']),
             'se_corner_latitude' => strval($box['se']['lat']),
         ]]);
+    }
+
+    private function getNawsDump($request): StreamedResponse
+    {
+        $validated = $request->validate([
+            'sb_id' => [
+                'required',
+                'int',
+                Rule::exists('comdef_service_bodies', 'id_bigint')
+                    ->whereNot('worldid_mixed', '')
+                    ->whereNotNull('worldid_mixed')
+            ]
+        ]);
+
+        $deletedMeetings = $this->changeRepository->getMeetingChanges(serviceBodyId: $validated['sb_id'], changeTypes: [Change::CHANGE_TYPE_DELETE]);
+        $meetings = $this->meetingRepository->getSearchResults(servicesInclude: [$validated['sb_id']], published: null, eagerServiceBodies: true);
+        $formatIdToWorldId = $this->formatRepository->getFormats(showAll: true)
+            ->reject(fn ($fmt) => is_null($fmt->worldid_mixed) || empty(trim($fmt->worldid_mixed)))
+            ->mapWithKeys(fn ($fmt, $_) => [$fmt->shared_id_bigint => $fmt->worldid_mixed]);
+
+        $columnNames = ['Committee', 'CommitteeName', 'AddDate', 'AreaRegion', 'ParentName', 'ComemID', 'ContactID', 'ContactName', 'CompanyName', 'ContactAddrID', 'ContactAddress1', 'ContactAddress2', 'ContactCity', 'ContactState', 'ContactZip', 'ContactCountry', 'ContactPhone', 'MeetingID', 'Room', 'Closed', 'WheelChr', 'Day', 'Time', 'Language1', 'Language2', 'Language3', 'LocationId', 'Place', 'Address', 'City', 'LocBorough', 'State', 'Zip', 'Country', 'Directions', 'Institutional', 'Format1', 'Format2', 'Format3', 'Format4', 'Format5', 'Delete', 'LastChanged', 'Longitude', 'Latitude', 'ContactGP', 'PhoneMeetingNumber', 'VirtualMeetingLink', 'VirtualMeetingInfo', 'TimeZone', 'bmlt_id', 'unpublished'];
+        $f = fopen('php://memory', 'r+');
+        fputcsv($f, $columnNames);
+        foreach ($meetings->concat($deletedMeetings) as $meeting) {
+            $row = [];
+
+            if ($meeting instanceof Meeting) {
+                $isDeleted = false;
+                $meetingData = $meeting->data
+                    ->mapWithKeys(fn($data, $_) => [$data->key => $data->data_string])->toBase()
+                    ->merge($meeting->longdata->mapWithKeys(fn($data, $_) => [$data->key => $data->data_blob])->toBase());
+            } else {
+                $isDeleted = true;
+                $meeting = $meeting->before_object;
+                if (is_null($meeting)) {
+                    continue;  // should never happen, but you never know with these old databases...
+                }
+
+                $meetingData = collect($meeting['data_table_values'])
+                    ->mapWithKeys(fn ($data, $_) => [$data['key'] => $data['data_string']])
+                    ->merge(collect($meeting['longdata_table_values'])->mapWithKeys(fn ($data, $_) => [$data['key'] => $data['data_blob']]));
+                $meeting = new Meeting($meeting['main_table_values']);
+                $meeting->longitude = !is_null($meeting->longitude) ? floatval($meeting->longitude) : null;
+                $meeting->latitude = !is_null($meeting->latitude) ? floatval($meeting->latitude) : null;
+            }
+
+            // list of format world ids
+            $meetingFormats = collect(explode(',', $meeting->formats ?? ''))
+                ->map(fn ($id) => $formatIdToWorldId->get(intval($id)))
+                ->reject(fn ($value, $_) => is_null($value))
+                ->unique();
+
+            foreach ($columnNames as $columnName) {
+                if ($columnName == 'Committee') {
+                    $row[] = !empty($meeting->worldid_mixed) ? trim($meeting->worldid_mixed) : '';
+                } elseif ($columnName == 'CommitteeName') {
+                    $row[] = $meetingData->get('meeting_name', '');
+                } elseif ($columnName == 'AddDate') {
+                    $row[] = '';
+                } elseif ($columnName == 'AreaRegion') {
+                    $row[] = $meeting->serviceBody->worldid_mixed;
+                } elseif ($columnName == 'ParentName') {
+                    $row[] = $meeting->serviceBody->name_string;
+                } elseif ($columnName == 'ComemID') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'ContactID') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'ContactName') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'CompanyName') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'ContactAddrID') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'ContactAddress1') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'ContactAddress2') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'ContactCity') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'ContactState') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'ContactZip') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'ContactCountry') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'ContactPhone') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'MeetingID') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'Room') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'Closed') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'WheelChr') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'Day') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'Time') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'Language1') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'Language2') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'Language3') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'LocationId') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'Place') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'Address') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'City') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'LocBorough') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'State') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'Zip') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'Country') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'Directions') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'Institutional') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'Format1') {
+                    $row[] = count($meetingFormats) >= 1 ? $meetingFormats->slice(0, 1)->first() : '';
+                } elseif ($columnName == 'Format2') {
+                    $row[] = count($meetingFormats) >= 2 ? $meetingFormats->slice(1, 1)->first() : '';
+                } elseif ($columnName == 'Format3') {
+                    $row[] = count($meetingFormats) >= 3 ? $meetingFormats->slice(2, 1)->first() : '';
+                } elseif ($columnName == 'Format4') {
+                    $row[] = count($meetingFormats) >= 4 ? $meetingFormats->slice(3, 1)->first() : '';
+                } elseif ($columnName == 'Format5') {
+                    $row[] = count($meetingFormats) >= 5 ? $meetingFormats->slice(4, 1)->first() : '';
+                } elseif ($columnName == 'Delete') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'LastChanged') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'Longitude') {
+                    $row[] = $meeting->longitude ?? '';
+                } elseif ($columnName == 'Latitude') {
+                    $row[] = $meeting->latitude ?? '';
+                } elseif ($columnName == 'ContactGP') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'PhoneMeetingNumber') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'VirtualMeetingLink') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'VirtualMeetingInfo') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'TimeZone') {
+                    $row[] = 'TODO';
+                } elseif ($columnName == 'bmlt_id') {
+                    $row[] = $meeting->id_bigint;
+                } else {
+                    // unpublished
+                    $row[] = 'TODO';
+                }
+            }
+
+            if (fputcsv($f, $row) == false) {
+                abort(500);
+            }
+        }
+
+        $filename = 'NAWSExport.csv';  // TODO generate proper filename
+        return response()->streamDownload(fn () => rewind($f) && print(stream_get_contents($f)), $filename);
     }
 }

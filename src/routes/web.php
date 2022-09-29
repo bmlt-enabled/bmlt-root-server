@@ -5,6 +5,7 @@ use App\Http\Controllers\Legacy\LegacyController;
 use App\Http\Controllers\Legacy\LegacyAuthController;
 use App\Http\Controllers\Query\ServerInfoXmlController;
 use App\Http\Controllers\Query\SwitcherController;
+use App\Http\Middleware\AcceptJson;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,9 +19,8 @@ use App\Http\Controllers\Query\SwitcherController;
 */
 
 Route::get('/client_interface/serverInfo.xml', [ServerInfoXmlController::class, 'get']);
-Route::get('/client_interface/{dataFormat}', [SwitcherController::class, 'get']);
-Route::any('/local_server/server_admin/{dataFormat}.php', [LegacyAuthController::class, 'handle'])
-    ->where('dataFormat', 'json|xml');
+Route::get('/client_interface/{dataFormat}', [SwitcherController::class, 'get'])->middleware('json');
+Route::any('/local_server/server_admin/{dataFormat}.php', [LegacyAuthController::class, 'handle'])->where('dataFormat', 'json|xml');
 Route::any('/', [LegacyAuthController::class, 'handle']);
 Route::any('/index.php', [LegacyAuthController::class, 'handle']);
 

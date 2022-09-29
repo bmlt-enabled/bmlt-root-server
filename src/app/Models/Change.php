@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Change extends Model
 {
+    public const CHANGE_TYPE_NEW = 'comdef_change_type_new';
+    public const CHANGE_TYPE_CHANGE = 'comdef_change_type_change';
+    public const CHANGE_TYPE_DELETE = 'comdef_change_type_delete';
+
     protected $table = 'comdef_changes';
     protected $primaryKey = 'id_bigint';
     public $timestamps = false;

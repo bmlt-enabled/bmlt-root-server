@@ -17,7 +17,7 @@ class ChangeRepository implements ChangeRepositoryInterface
         $this->serviceBodyRepository = $serviceBodyRepository;
     }
 
-    public function getMeetingChanges(string $startDate = null, string $endDate = null, int $meetingId = null, int $serviceBodyId = null): Collection
+    public function getMeetingChanges(string $startDate = null, string $endDate = null, int $meetingId = null, int $serviceBodyId = null, array $changeTypes = null): Collection
     {
         $changes = Change::query()
             ->with([
@@ -50,6 +50,10 @@ class ChangeRepository implements ChangeRepositoryInterface
 
         if (!is_null($endDate)) {
             $changes = $changes->where('change_date', '<=', $endDate);
+        }
+
+        if (!is_null($changeTypes)) {
+            $changes = $changes->whereIn('change_type_enum', $changeTypes);
         }
 
         return $changes->get();

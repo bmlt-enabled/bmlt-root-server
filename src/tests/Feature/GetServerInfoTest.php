@@ -8,12 +8,6 @@ use Tests\TestCase;
 
 class GetServerInfoTest extends TestCase
 {
-    public function testXml()
-    {
-        $this->get('/client_interface/xml/?switcher=GetServerInfo')
-            ->assertStatus(404);
-    }
-
     public function testJsonp()
     {
         $content = $this->get('/client_interface/jsonp/?switcher=GetServerInfo&callback=asdf')

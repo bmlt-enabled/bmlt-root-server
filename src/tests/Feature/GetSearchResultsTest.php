@@ -191,12 +191,6 @@ class GetSearchResultsTest extends TestCase
         $this->assertEquals($zone->id_bigint, $zoneModel->id_bigint);
     }
 
-    public function testXml()
-    {
-        $this->get('/client_interface/xml/?switcher=GetSearchResults')
-            ->assertStatus(404);
-    }
-
     public function testJsonp()
     {
         $response = $this->get('/client_interface/jsonp/?switcher=GetSearchResults&callback=asdf');

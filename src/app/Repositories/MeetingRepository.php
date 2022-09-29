@@ -41,11 +41,18 @@ class MeetingRepository implements MeetingRepositoryInterface
         bool $sortResultsByDistance = false,
         string $searchString = null,
         ?bool $published = true,
+        bool $eagerServiceBodies = false,
         array $sortKeys = null,
         int $pageSize = null,
         int $pageNum = null,
     ): Collection {
-        $meetings = Meeting::query()->with(['data', 'longdata']);
+        $meetings = Meeting::query();
+
+        if ($eagerServiceBodies) {
+            $meetings = $meetings->with(['data', 'longdata', 'serviceBody']);
+        } else {
+            $meetings = $meetings->with(['data', 'longdata']);
+        }
 
         if (!is_null($published)) {
             $meetings = $meetings->where('published', $published ? 1 : 0);
