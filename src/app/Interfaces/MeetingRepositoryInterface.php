@@ -32,6 +32,7 @@ interface MeetingRepositoryInterface
         bool $sortResultsByDistance = false,
         string $searchString = null,
         bool $published = true,
+        bool $eagerServiceBodies = false,
         array $sortKeys = null,
         int $pageSize = null,
         int $pageNum = null,

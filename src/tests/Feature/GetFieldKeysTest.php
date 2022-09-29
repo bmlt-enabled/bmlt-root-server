@@ -7,12 +7,6 @@ use Tests\TestCase;
 
 class GetFieldKeysTest extends TestCase
 {
-    public function testXml()
-    {
-        $this->get('/client_interface/xml/?switcher=GetFieldKeys')
-            ->assertStatus(404);
-    }
-
     public function testJsonp()
     {
         $response = $this->get('/client_interface/jsonp/?switcher=GetFieldKeys&callback=asdf');

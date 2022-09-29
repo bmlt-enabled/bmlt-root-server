@@ -79,12 +79,6 @@ class GetServiceBodiesTest extends TestCase
         return true;
     }
 
-    public function testXml()
-    {
-        $this->get('/client_interface/xml/?switcher=GetServiceBodies')
-            ->assertStatus(404);
-    }
-
     public function testJsonp()
     {
         $response = $this->get('/client_interface/jsonp/?switcher=GetServiceBodies&callback=asdf');

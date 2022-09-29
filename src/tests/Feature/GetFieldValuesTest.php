@@ -63,12 +63,6 @@ class GetFieldValuesTest extends TestCase
         return $meeting;
     }
 
-    public function testXml()
-    {
-        $this->get('/client_interface/xml/?switcher=GetFieldValues')
-            ->assertStatus(404);
-    }
-
     public function testJsonp()
     {
         $response = $this->get('/client_interface/jsonp/?switcher=GetFieldValues&callback=asdf&meeting_key=meeting_name')

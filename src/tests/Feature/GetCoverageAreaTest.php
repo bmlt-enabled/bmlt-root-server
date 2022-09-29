@@ -80,12 +80,6 @@ class GetCoverageAreaTest extends TestCase
         return $meeting;
     }
 
-    public function testXml()
-    {
-        $this->get('/client_interface/xml/?switcher=GetCoverageArea')
-            ->assertStatus(404);
-    }
-
     public function testJsonp()
     {
         $content = $this->get('/client_interface/jsonp/?switcher=GetCoverageArea&callback=asdf')

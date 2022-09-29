@@ -192,12 +192,6 @@ class GetChangesTest extends TestCase
         ]);
     }
 
-    public function testXml()
-    {
-        $this->get('/client_interface/xml/?switcher=GetChanges')
-            ->assertStatus(404);
-    }
-
     public function testJsonp()
     {
         $response = $this->get('/client_interface/jsonp/?switcher=GetChanges&callback=asdf');
