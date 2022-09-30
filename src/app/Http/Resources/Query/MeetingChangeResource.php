@@ -66,7 +66,7 @@ class MeetingChangeResource extends JsonResource
     private function initializeRequest()
     {
         $formatRepository = new FormatRepository();
-        self::$allFormats = $formatRepository->getFormats(showAll: true)->groupBy(['shared_id_bigint', 'lang_enum'], preserveKeys: true);
+        self::$allFormats = $formatRepository->search(showAll: true)->groupBy(['shared_id_bigint', 'lang_enum'], preserveKeys: true);
 
         $serviceBodyRepository = new ServiceBodyRepository();
         self::$allServiceBodies = $serviceBodyRepository->search()->mapWithKeys(fn ($sb) => [$sb->id_bigint => $sb]);

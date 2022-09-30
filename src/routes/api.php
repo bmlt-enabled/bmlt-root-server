@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\FormatController;
 use App\Http\Controllers\Admin\ServiceBodyController;
 use App\Http\Controllers\Admin\TokenController;
 use App\Http\Controllers\Admin\UserController;
@@ -21,6 +22,8 @@ Route::post('/auth/token', [TokenController::class, 'token']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/auth/refresh', [TokenController::class, 'refresh']);
     Route::post('/auth/logout', [TokenController::class, 'logout']);
+    Route::apiResource('formats', FormatController::class);
+    Route::patch('/formats/{format}', [FormatController::class, 'partialUpdate']);
     Route::apiResource('servicebodies', ServiceBodyController::class, ['parameters' => ['servicebodies' => 'serviceBody']]);
     Route::patch('/servicebodies/{serviceBody}', [ServiceBodyController::class, 'partialUpdate']);
     Route::apiResource('users', UserController::class);
