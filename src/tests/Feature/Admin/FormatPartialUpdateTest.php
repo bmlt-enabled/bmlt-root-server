@@ -140,10 +140,11 @@ class FormatPartialUpdateTest extends TestCase
 
         $data['worldId'] = 'modified';
         $data['type'] = Format::TYPE_MEETING_FORMAT;
-        foreach ($data['translations'] as $translation) {
+        foreach ($data['translations'] as $key => $translation) {
             $translation['key'] .= 'updated';
             $translation['name'] .= 'updated';
             $translation['description'] .= 'updated';
+            $data['translations'][$key] = $translation;
         }
 
         $this->withHeader('Authorization', "Bearer $token")
@@ -168,10 +169,11 @@ class FormatPartialUpdateTest extends TestCase
         $formats = $this->createFormats();
         $data = $this->toPayload($formats, 'translations');
 
-        foreach ($data['translations'] as $translation) {
+        foreach ($data['translations'] as $key => $translation) {
             $translation['key'] .= 'updated';
             $translation['name'] .= 'updated';
             $translation['description'] .= 'updated';
+            $data['translations'][$key] = $translation;
         }
 
         $this->withHeader('Authorization', "Bearer $token")
@@ -198,10 +200,11 @@ class FormatPartialUpdateTest extends TestCase
         $formats = $this->createFormats();
         $data = $this->toPayload($formats, 'translations');
 
-        foreach ($data['translations'] as $translation) {
+        foreach ($data['translations'] as $key => $translation) {
             $translation['key'] .= 'updated';
             $translation['name'] .= 'updated';
             $translation['description'] .= 'updated';
+            $data['translations'][$key] = $translation;
         }
 
         $data['translations'][] = [
@@ -236,10 +239,11 @@ class FormatPartialUpdateTest extends TestCase
 
         $data = $this->toPayload($formats, 'translations');
 
-        foreach ($data['translations'] as $translation) {
+        foreach ($data['translations'] as $key => $translation) {
             $translation['key'] .= 'updated';
             $translation['name'] .= 'updated';
             $translation['description'] .= 'updated';
+            $data['translations'][$key] = $translation;
         }
 
         $this->withHeader('Authorization', "Bearer $token")

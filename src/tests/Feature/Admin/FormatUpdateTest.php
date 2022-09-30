@@ -68,10 +68,11 @@ class FormatUpdateTest extends TestCase
 
         $data['worldId'] .= 'updated';
         $data['type'] = Format::TYPE_MEETING_FORMAT;
-        foreach ($data['translations'] as $translation) {
+        foreach ($data['translations'] as $key => $translation) {
             $translation['key'] .= 'updated';
             $translation['name'] .= 'updated';
             $translation['description'] .= 'updated';
+            $data['translations'][$key] = $translation;
         }
 
         $this->withHeader('Authorization', "Bearer $token")
@@ -102,10 +103,11 @@ class FormatUpdateTest extends TestCase
 
         $data['worldId'] .= 'updated';
         $data['type'] = Format::TYPE_MEETING_FORMAT;
-        foreach ($data['translations'] as $translation) {
+        foreach ($data['translations'] as $key => $translation) {
             $translation['key'] .= 'updated';
             $translation['name'] .= 'updated';
             $translation['description'] .= 'updated';
+            $data['translations'][$key] = $translation;
         }
 
         $this->withHeader('Authorization', "Bearer $token")
@@ -139,10 +141,11 @@ class FormatUpdateTest extends TestCase
 
         $data['worldId'] .= 'updated';
         $data['type'] = Format::TYPE_MEETING_FORMAT;
-        foreach ($data['translations'] as $translation) {
+        foreach ($data['translations'] as $key => $translation) {
             $translation['key'] .= 'updated';
             $translation['name'] .= 'updated';
             $translation['description'] .= 'updated';
+            $data['translations'][$key] = $translation;
         }
 
         $data['translations'][] = [
