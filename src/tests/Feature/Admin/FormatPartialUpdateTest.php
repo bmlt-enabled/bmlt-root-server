@@ -411,9 +411,9 @@ class FormatPartialUpdateTest extends TestCase
             ->patch("/api/v1/formats/{$formats[0]->shared_id_bigint}", $data)
             ->assertStatus(422);
 
-        // it can't be longer than 30
+        // it can't be longer than 10
         $data['translations'] = [[
-            'key' => str_repeat('t', 31),
+            'key' => str_repeat('t', 11),
             'name' => 'Open',
             'description' => 'Meeting is open to non-addicts.',
             'language' => 'en',
@@ -422,9 +422,9 @@ class FormatPartialUpdateTest extends TestCase
             ->patch("/api/v1/formats/{$formats[0]->shared_id_bigint}", $data)
             ->assertStatus(422);
 
-        // it can be 30
+        // it can be 10
         $data['translations'] = [[
-            'key' => str_repeat('t', 30),
+            'key' => str_repeat('t', 10),
             'name' => 'Open',
             'description' => 'Meeting is open to non-addicts.',
             'language' => 'en',

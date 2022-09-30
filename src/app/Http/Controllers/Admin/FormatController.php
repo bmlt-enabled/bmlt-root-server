@@ -45,7 +45,7 @@ class FormatController extends ResourceController
                     }
                 }
             ],
-            'translations.*.key' => 'required|string|max:30',
+            'translations.*.key' => 'required|string|max:10',
             'translations.*.name' => 'required|string|max:255',
             'translations.*.description' => 'required|string|max:255',
             'translations.*.language' => 'required|string|max:7',
@@ -83,7 +83,7 @@ class FormatController extends ResourceController
                     }
                 }
             ],
-            'translations.*.key' => 'required|string|max:30',
+            'translations.*.key' => 'required|string|max:10',
             'translations.*.name' => 'required|string|max:255',
             'translations.*.description' => 'required|string|max:255',
             'translations.*.language' => 'required|string|max:7',
@@ -121,7 +121,7 @@ class FormatController extends ResourceController
                     }
                 }
             ],
-            'translations.*.key' => 'required|string|max:30',
+            'translations.*.key' => 'required|string|max:10',
             'translations.*.name' => 'required|string|max:255',
             'translations.*.description' => 'required|string|max:255',
             'translations.*.language' => 'required|string|max:7',
