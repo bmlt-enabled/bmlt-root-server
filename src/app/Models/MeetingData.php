@@ -16,4 +16,30 @@ class MeetingData extends Model
         'data_string',
         'visibility',
     ];
+
+    public const STOCK_FIELDS = [
+        'contact_phone_2',
+        'contact_email_1',
+        'contact_phone_1',
+        'contact_email_2',
+        'contact_name_1',
+        'contact_name_2',
+        'comments',
+        'virtual_meeting_additional_info',
+        'location_city_subsection',
+        'virtual_meeting_link',
+        'phone_meeting_number',
+        'location_nation',
+        'location_postal_code_1',
+        'location_province',
+        'location_sub_province',
+        'location_municipality',
+        'location_neighborhood',
+        'location_street',
+        'location_info',
+        'location_text',
+        'meeting_name',
+        'bus_lines',
+        'train_lines',
+    ];
 }

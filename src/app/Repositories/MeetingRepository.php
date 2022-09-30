@@ -543,4 +543,97 @@ class MeetingRepository implements MeetingRepositoryInterface
 
         return ['nw' => $nw, 'se' => $se];
     }
+
+    public function create(array $values): Meeting
+    {
+        $values = collect($values);
+        $mainValues = $values->reject(fn ($_, $fieldName) => !in_array($fieldName, Meeting::$mainFields))->toArray();
+        $dataTemplates = $this->getDataTemplates()->mapWithKeys(fn ($t, $_) => [$t->key => $t]);
+        $dataValues = $values->reject(fn ($_, $fieldName) => !$dataTemplates->has($fieldName));
+
+        return DB::transaction(function () use ($mainValues, $dataValues, $dataTemplates) {
+            $meeting = Meeting::create($mainValues);
+            foreach ($dataValues as $fieldName => $fieldValue) {
+                $t = $dataTemplates->get($fieldName);
+                if (strlen($fieldValue) > 255) {
+                    MeetingLongData::create([
+                        'meetingid_bigint' => $meeting->id_bigint,
+                        'key' => $t->key,
+                        'field_prompt' => $t->field_prompt,
+                        'lang_enum' => 'en',
+                        'data_blob' => $fieldValue,
+                        'visibility' => $t->visibility,
+                    ]);
+                } else {
+                    MeetingData::create([
+                        'meetingid_bigint' => $meeting->id_bigint,
+                        'key' => $t->key,
+                        'field_prompt' => $t->field_prompt,
+                        'lang_enum' => 'en',
+                        'data_string' => $fieldValue,
+                        'visibility' => $t->visibility,
+                    ]);
+                }
+            }
+            //$this->saveChange(null, $meeting);
+            return $meeting;
+        });
+    }
+
+    public function update(int $id, array $values): bool
+    {
+        $values = collect($values);
+        $mainValues = $values->reject(fn ($_, $fieldName) => !in_array($fieldName, Meeting::$mainFields))->toArray();
+        $dataTemplates = $this->getDataTemplates()->mapWithKeys(fn ($t, $_) => [$t->key => $t]);
+        $dataValues = $values->reject(fn ($_, $fieldName) => !$dataTemplates->has($fieldName));
+
+        return DB::transaction(function () use ($id, $mainValues, $dataValues, $dataTemplates) {
+            $meeting = Meeting::find($id);
+            if (!is_null($meeting)) {
+                Meeting::query()->where('id_bigint', $id)->update($mainValues);
+                MeetingData::query()->where('meetingid_bigint', $id)->delete();
+                MeetingLongData::query()->where('meetingid_bigint', $id)->delete();
+                foreach ($dataValues as $fieldName => $fieldValue) {
+                    $t = $dataTemplates->get($fieldName);
+                    if (strlen($fieldValue) > 255) {
+                        MeetingLongData::create([
+                            'meetingid_bigint' => $meeting->id_bigint,
+                            'key' => $t->key,
+                            'field_prompt' => $t->field_prompt,
+                            'lang_enum' => 'en',
+                            'data_blob' => $fieldValue,
+                            'visibility' => $t->visibility,
+                        ]);
+                    } else {
+                        MeetingData::create([
+                            'meetingid_bigint' => $meeting->id_bigint,
+                            'key' => $t->key,
+                            'field_prompt' => $t->field_prompt,
+                            'lang_enum' => 'en',
+                            'data_string' => $fieldValue,
+                            'visibility' => $t->visibility,
+                        ]);
+                    }
+                }
+                //$this->saveChange($meeting, Meeting::find($id));
+                return true;
+            }
+            return false;
+        });
+    }
+
+    public function delete(int $id): bool
+    {
+        return DB::transaction(function () use ($id) {
+            $meeting = Meeting::find($id);
+            if (!is_null($meeting)) {
+                $meeting->data()->delete();
+                $meeting->longdata()->delete();
+                $meeting->delete();
+//                $this->saveChange($meeting, null);
+                return true;
+            }
+            return false;
+        });
+    }
 }
