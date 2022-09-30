@@ -34,7 +34,17 @@ class FormatController extends ResourceController
         $validated = $request->validate([
             'worldId' => 'nullable|string|max:30',
             'type' => ['nullable', Rule::in(array_keys(Format::TYPE_TO_COMDEF_TYPE_MAP))],
-            'translations' => 'required|array',
+            'translations' => [
+                'required',
+                'array',
+                function ($attribute, $value, $fail) {
+                    foreach (collect($value)->groupBy('language') as $translations) {
+                        if (count($translations) > 1) {
+                            $fail(':attribute may have only one translation per language.');
+                        }
+                    }
+                }
+            ],
             'translations.*.key' => 'required|string|max:30',
             'translations.*.name' => 'required|string|max:255',
             'translations.*.description' => 'required|string|max:255',
@@ -62,7 +72,17 @@ class FormatController extends ResourceController
         $validated = $request->validate([
             'worldId' => 'nullable|string|max:30',
             'type' => ['nullable', Rule::in(array_keys(Format::TYPE_TO_COMDEF_TYPE_MAP))],
-            'translations' => 'required|array',
+            'translations' => [
+                'required',
+                'array',
+                function ($attribute, $value, $fail) {
+                    foreach (collect($value)->groupBy('language') as $translations) {
+                        if (count($translations) > 1) {
+                            $fail(':attribute may have only one translation per language.');
+                        }
+                    }
+                }
+            ],
             'translations.*.key' => 'required|string|max:30',
             'translations.*.name' => 'required|string|max:255',
             'translations.*.description' => 'required|string|max:255',
@@ -87,11 +107,20 @@ class FormatController extends ResourceController
 
     public function partialUpdate(Request $request, Format $format)
     {
-        // TODO handle case where someone passes in multiple translations for the same language
         $validated = $request->validate([
             'worldId' => 'nullable|string|max:30',
             'type' => ['nullable', Rule::in(array_keys(Format::TYPE_TO_COMDEF_TYPE_MAP))],
-            'translations' => 'array|min:1',
+            'translations' => [
+                'array',
+                'min:1',
+                function ($attribute, $value, $fail) {
+                    foreach (collect($value)->groupBy('language') as $translations) {
+                        if (count($translations) > 1) {
+                            $fail(':attribute may have only one translation per language.');
+                        }
+                    }
+                }
+            ],
             'translations.*.key' => 'required|string|max:30',
             'translations.*.name' => 'required|string|max:255',
             'translations.*.description' => 'required|string|max:255',

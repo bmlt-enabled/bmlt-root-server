@@ -164,16 +164,35 @@ class FormatCreateTest extends TestCase
             ->post('/api/v1/formats', $data)
             ->assertStatus(422);
 
-        // it can be non-empty
+        // it can't have duplicate translations
         $data['translations'] = [
-            'key' => 'O',
-            'name' => 'Open',
-            'description' => 'Meeting is open to non-addicts.',
-            'language' => 'en',
+            [
+                'key' => 'O',
+                'name' => 'Open',
+                'description' => 'Meeting is open to non-addicts.',
+                'language' => 'en',
+            ],
+            [
+                'key' => 'O',
+                'name' => 'Open',
+                'description' => 'Meeting is open to non-addicts.',
+                'language' => 'en',
+            ],
         ];
         $this->withHeader('Authorization', "Bearer $token")
             ->post('/api/v1/formats', $data)
             ->assertStatus(422);
+
+        // it can be non-empty
+        $data['translations'] = [[
+            'key' => 'O',
+            'name' => 'Open',
+            'description' => 'Meeting is open to non-addicts.',
+            'language' => 'en',
+        ]];
+        $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/formats', $data)
+            ->assertStatus(201);
     }
 
     public function testCreateFormatValidateKey()

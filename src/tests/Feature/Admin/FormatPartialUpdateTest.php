@@ -358,6 +358,25 @@ class FormatPartialUpdateTest extends TestCase
             ->patch("/api/v1/formats/{$formats[0]->shared_id_bigint}", $data)
             ->assertStatus(422);
 
+        // it can't have duplicate translations
+        $data['translations'] = [
+            [
+                'key' => 'O',
+                'name' => 'Open',
+                'description' => 'Meeting is open to non-addicts.',
+                'language' => 'en',
+            ],
+            [
+                'key' => 'O',
+                'name' => 'Open',
+                'description' => 'Meeting is open to non-addicts.',
+                'language' => 'en',
+            ],
+        ];
+        $this->withHeader('Authorization', "Bearer $token")
+            ->patch("/api/v1/formats/{$formats[0]->shared_id_bigint}", $data)
+            ->assertStatus(422);
+
         // it is not required
         $data = [];
         $this->withHeader('Authorization', "Bearer $token")

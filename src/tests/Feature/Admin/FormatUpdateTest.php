@@ -249,6 +249,25 @@ class FormatUpdateTest extends TestCase
             ->put("/api/v1/formats/{$formats[0]->shared_id_bigint}", $data)
             ->assertStatus(422);
 
+        // it can't have duplicate translations
+        $data['translations'] = [
+            [
+                'key' => 'O',
+                'name' => 'Open',
+                'description' => 'Meeting is open to non-addicts.',
+                'language' => 'en',
+            ],
+            [
+                'key' => 'O',
+                'name' => 'Open',
+                'description' => 'Meeting is open to non-addicts.',
+                'language' => 'en',
+            ],
+        ];
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/formats/{$formats[0]->shared_id_bigint}", $data)
+            ->assertStatus(422);
+
         // it can be non-empty
         $data['translations'] = [[
             'key' => 'O',
