@@ -87,6 +87,7 @@ class FormatController extends ResourceController
 
     public function partialUpdate(Request $request, Format $format)
     {
+        // TODO handle case where someone passes in multiple translations for the same language
         $validated = $request->validate([
             'worldId' => 'nullable|string|max:30',
             'type' => ['nullable', Rule::in(array_keys(Format::TYPE_TO_COMDEF_TYPE_MAP))],
