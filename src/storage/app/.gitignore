@@ -1,3 +1,4 @@
 *
 !public/
 !.gitignore
+!api-docs.json
