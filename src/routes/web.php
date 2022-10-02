@@ -18,6 +18,7 @@ use App\Http\Middleware\AcceptJson;
 |
 */
 
+Route::any('/client_interface/html', [LegacyController::class, 'all']);
 Route::get('/client_interface/serverInfo.xml', [ServerInfoXmlController::class, 'get']);
 Route::get('/client_interface/{dataFormat}', [SwitcherController::class, 'get'])->middleware('json');
 Route::any('/local_server/server_admin/{dataFormat}.php', [LegacyAuthController::class, 'handle'])->where('dataFormat', 'json|xml');
