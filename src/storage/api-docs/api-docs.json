@@ -19,6 +19,10 @@
             "description": "BMLT Admin API Unstable Server"
         },
         {
+            "url": "https://gyro.sezf.org/main_server",
+            "description": "BMLT Admin API Gyro Server"
+        },
+        {
             "url": "http://localhost:8000/main_server",
             "description": "BMLT Admin API Local Server"
         }
@@ -316,7 +320,7 @@
                 ],
                 "summary": "Update single Service Body",
                 "description": "Updates a single service body",
-                "operationId": "updateWholeServiceBody",
+                "operationId": "updateServiceBody",
                 "parameters": [
                     {
                         "name": "serviceBodyId",
@@ -1087,6 +1091,143 @@
                     }
                 ]
             },
+            "put": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Update single user",
+                "description": "Updates a single user",
+                "operationId": "updateUser",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "ID of user",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass in user object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "username",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "displayName": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "ownerId": {
+                                        "type": "string",
+                                        "example": "0"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Returns when PUT is successful"
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The username field is required. (and 1 more error)"
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "username": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The username field is required."
+                                                    }
+                                                },
+                                                "password": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The password field is required."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user is not authenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The provided credentials are incorrect."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Returns when user is unauthorized to perform action.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserErrorUnauthenticated"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
             "delete": {
                 "tags": [
                     "users"
@@ -1145,6 +1286,102 @@
                     },
                     "404": {
                         "description": "Returns when no user exists.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No query results for model [App\\\\Models\\\\User]"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Patches a single user",
+                "description": "Patches a single user by id",
+                "operationId": "patchUser",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "ID of user",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass in user attributes",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Returns with successful request."
+                    },
+                    "401": {
+                        "description": "Returns when not authenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Returns when unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "This action is unauthorized."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Returns when no service body exists.",
                         "content": {
                             "application/json": {
                                 "schema": {

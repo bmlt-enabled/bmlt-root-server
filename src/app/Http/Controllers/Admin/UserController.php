@@ -230,6 +230,84 @@ class UserController extends ResourceController
         return new UserResource($user);
     }
 
+    /**
+     * @OA\Put(
+     * path="/api/v1/users/{userId}",
+     * summary="Update single user",
+     * description="Updates a single user",
+     * operationId="updateUser",
+     * tags={"users"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(
+     *    description="ID of user",
+     *    in="path",
+     *    name="userId",
+     *    required=true,
+     *    example="1",
+     *    @OA\Schema(
+     *       type="integer",
+     *       format="int64"
+     *    )
+     * ),
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="Pass in user object",
+     *    @OA\JsonContent(
+     *       required={"username","password"},
+     *     @OA\Property(property="username", type="string", example="string"),
+     *     @OA\Property(property="type", type="string", example="string"),
+     *     @OA\Property(property="password", type="string", example="string"),
+     *     @OA\Property(property="displayName", type="string", example="string"),
+     *     @OA\Property(property="description", type="string", example="string"),
+     *     @OA\Property(property="email", type="string", example="string"),
+     *     @OA\Property(property="ownerId", type="string", example="0")
+     *    ),
+     * ),
+     * @OA\Response(
+     *    response=204,
+     *    description="Returns when PUT is successful"
+     * ),
+     * @OA\Response(
+     *     response=422,
+     *     description="Validation error",
+     *     @OA\JsonContent(
+     *        @OA\Property(property="message", type="string", example="The username field is required. (and 1 more error)"),
+     *        @OA\Property(
+     *           property="errors",
+     *           type="object",
+     *           @OA\Property(
+     *              property="username",
+     *              type="array",
+     *              @OA\Items(
+     *                 type="string",
+     *                 example="The username field is required.",
+     *              )
+     *           ),
+     *           @OA\Property(
+     *              property="password",
+     *              type="array",
+     *              @OA\Items(
+     *                 type="string",
+     *                 example="The password field is required.",
+     *              )
+     *           )
+     *        )
+     *     )
+     * ),
+     * @OA\Response(
+     *    response=401,
+     *    description="Returns when user is not authenticated",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="The provided credentials are incorrect."),
+     *    )
+     * ),
+     * @OA\Response(
+     *    response=403,
+     *    description="Returns when user is unauthorized to perform action.",
+     *    @OA\JsonContent(ref="#/components/schemas/UserErrorUnauthenticated")
+     * )
+     * )
+     */
     public function update(Request $request, User $user)
     {
         $validated = $request->validate([
@@ -247,6 +325,59 @@ class UserController extends ResourceController
         return response()->noContent();
     }
 
+    /**
+     * @OA\Patch(
+     * path="/api/v1/users/{userId}",
+     * summary="Patches a single user",
+     * description="Patches a single user by id",
+     * operationId="patchUser",
+     * tags={"users"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(
+     *    description="ID of user",
+     *    in="path",
+     *    name="userId",
+     *    required=true,
+     *    example="1",
+     *    @OA\Schema(
+     *       type="integer",
+     *       format="int64"
+     *    )
+     * ),
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="Pass in user attributes",
+     *    @OA\JsonContent(
+     *     @OA\Property(property="email", type="string", example="string"),
+     *    ),
+     * ),
+     * @OA\Response(
+     *     response=204,
+     *     description="Returns with successful request."
+     *     ),
+     * @OA\Response(
+     *    response=401,
+     *    description="Returns when not authenticated",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Unauthenticated."),
+     *    )
+     * ),
+     * @OA\Response(
+     *    response=403,
+     *    description="Returns when unauthorized",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="This action is unauthorized."),
+     *    )
+     * ),
+     *  @OA\Response(
+     *     response=404,
+     *     description="Returns when no service body exists.",
+     *     @OA\JsonContent(
+     *        @OA\Property(property="message", type="string", example="No query results for model [App\\Models\\User]"),
+     *     )
+     *  )
+     * )
+     */
     public function partialUpdate(Request $request, User $user)
     {
         $validated = $request->validate([
