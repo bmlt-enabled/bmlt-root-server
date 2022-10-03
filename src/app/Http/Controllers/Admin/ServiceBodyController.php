@@ -279,7 +279,7 @@ class ServiceBodyController extends ResourceController
      * path="/api/v1/servicebodies/{serviceBodyId}",
      * summary="Update single Service Body",
      * description="Updates a single service body",
-     * operationId="updateWholeServiceBody",
+     * operationId="updateServiceBody",
      * tags={"servicebodies"},
      * security={{"bearerAuth":{}}},
      * @OA\Parameter(
