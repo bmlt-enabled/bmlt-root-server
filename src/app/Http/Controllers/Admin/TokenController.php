@@ -122,8 +122,9 @@ class TokenController extends Controller
         $expiresAt += time();
 
         return [
-            'token' => $user->createToken(Str::random(20))->plainTextToken,
+            'access_token' => $user->createToken(Str::random(20))->plainTextToken,
             'expires_at' => $expiresAt,
+            'token_type' => 'bearer',
         ];
     }
 
