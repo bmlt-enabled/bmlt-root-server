@@ -19,12 +19,26 @@ use Illuminate\Routing\Controller as BaseController;
  * )
  * @OA\Server(
  *      url="https://latest.aws.bmlt.app/main_server",
- *      description="BMLT Admin API Server"
+ *      description="BMLT Admin API Latest Server"
+ * )
+ * @OA\Server(
+ *      url="https://unstable.aws.bmlt.app/main_server",
+ *      description="BMLT Admin API Unstable Server"
+ * )
+ * @OA\Server(
+ *      url="http://localhost:8000/main_server",
+ *      description="BMLT Admin API Local Server"
  * )
  * @OA\SecurityScheme(
- *      securityScheme="bearerAuth",
- *      type="http",
- *      scheme="bearer"
+ *     securityScheme="bearerAuth",
+ *     type="oauth2",
+ *     @OA\Flow(
+ *       flow="password",
+ *       authorizationUrl="main_server/api/v1/auth/token",
+ *       tokenUrl="main_server/api/v1/auth/token",
+ *       refreshUrl="main_server/api/v1/auth/refresh",
+ *       scopes={}
+ *     )
  * )
  */
 
