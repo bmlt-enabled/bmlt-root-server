@@ -41,6 +41,16 @@ class Meeting extends Model
         'latitude',
     ];
 
+    public const VENUE_TYPE_IN_PERSON = 1;
+    public const VENUE_TYPE_VIRTUAL = 2;
+    public const VENUE_TYPE_HYBRID = 3;
+
+    public const VALID_VENUE_TYPES = [
+        self::VENUE_TYPE_IN_PERSON,
+        self::VENUE_TYPE_VIRTUAL,
+        self::VENUE_TYPE_HYBRID,
+    ];
+
     public function getName()
     {
         return $this->data->where('key', 'meeting_name')->pluck('data_string')->first();

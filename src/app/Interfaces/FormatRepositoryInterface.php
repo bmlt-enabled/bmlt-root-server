@@ -9,6 +9,9 @@ interface FormatRepositoryInterface
 {
     public function search(array $langEnums = null, array $keyStrings = null, bool $showAll = false, Collection $meetings = null): Collection;
     public function getAsTranslations(): Collection;
+    public function getVirtualFormat(): Format;
+    public function getHybridFormat(): Format;
+    public function getTemporarilyClosedFormat(): Format;
     public function create(array $sharedFormatsValues): Format;
     public function update(int $sharedId, array $sharedFormatsValues): bool;
     public function delete(int $sharedId): bool;

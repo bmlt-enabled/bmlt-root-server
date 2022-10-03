@@ -30,6 +30,30 @@ class FormatRepository implements FormatRepositoryInterface
         return $formats->get();
     }
 
+    public function getVirtualFormat(): Format
+    {
+        return Format::query()
+            ->where('key_string', 'VM')
+            ->where('lang_enum', 'en')
+            ->firstOrFail();
+    }
+
+    public function getHybridFormat(): Format
+    {
+        return Format::query()
+            ->where('key_string', 'HY')
+            ->where('lang_enum', 'en')
+            ->firstOrFail();
+    }
+
+    public function getTemporarilyClosedFormat(): Format
+    {
+        return Format::query()
+            ->where('key_string', 'TC')
+            ->where('lang_enum', 'en')
+            ->firstOrFail();
+    }
+
     private function getUsedFormatIds(Collection $meetings = null): array
     {
         $uniqueFormatIds = [];

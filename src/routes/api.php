@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\FormatController;
+use App\Http\Controllers\Admin\MeetingController;
 use App\Http\Controllers\Admin\ServiceBodyController;
 use App\Http\Controllers\Admin\TokenController;
 use App\Http\Controllers\Admin\UserController;
@@ -24,6 +25,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/auth/logout', [TokenController::class, 'logout']);
     Route::apiResource('formats', FormatController::class);
     Route::patch('/formats/{format}', [FormatController::class, 'partialUpdate']);
+    Route::apiResource('meetings', MeetingController::class);
+    Route::patch('/meetings/{meeting}', [MeetingController::class, 'partialUpdate']);
     Route::apiResource('servicebodies', ServiceBodyController::class, ['parameters' => ['servicebodies' => 'serviceBody']]);
     Route::patch('/servicebodies/{serviceBody}', [ServiceBodyController::class, 'partialUpdate']);
     Route::apiResource('users', UserController::class);
