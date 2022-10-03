@@ -59,10 +59,14 @@ class MeetingController extends ResourceController
 
     private function validateInputsAndCreateValuesArray(Request $request): array
     {
+        $virtualFormatId = $this->formatRepository->getVirtualFormat()->shared_id_bigint;
+        $temporarilyClosedId = $this->formatRepository->getTemporarilyClosedFormat()->shared_id_bigint;
+        $hybridFormatId = $this->formatRepository->getHybridFormat()->shared_id_bigint;
+
         $validated = collect($request->validate([
             'serviceBodyId' => ['required', 'int', 'exists:comdef_service_bodies,id_bigint'],
             'formatIds' => 'present|array',
-            'formatIds.*' => 'int|exists:comdef_formats,shared_id_bigint',
+            'formatIds.*' => ['int', 'exists:comdef_formats,shared_id_bigint', Rule::notIn([$virtualFormatId, $temporarilyClosedId, $hybridFormatId])],
             'venueType' => ['required', Rule::in(Meeting::VALID_VENUE_TYPES)],
             'temporarilyVirtual' => 'sometimes|boolean',
             'day' => 'required|int|between:0,6',
@@ -104,19 +108,19 @@ class MeetingController extends ResourceController
                 ->toArray()
         )));
 
-        return $validated->mapWithKeys(function ($value, $fieldName) use ($validated) {
+        return $validated->mapWithKeys(function ($value, $fieldName) use ($validated, $virtualFormatId, $temporarilyClosedId, $hybridFormatId) {
             if ($fieldName == 'serviceBodyId') {
                 return ['service_body_bigint' => $value];
             } elseif ($fieldName == 'formatIds') {
                 $temporarilyVirtual = boolval($validated['temporarilyVirtual'] ?? false);
                 $venueType = $validated->get('venueType');
                 if ($venueType == Meeting::VENUE_TYPE_VIRTUAL) {
-                    array_push($value, $this->formatRepository->getVirtualFormat()->shared_id_bigint);
+                    array_push($value, $virtualFormatId);
                     if ($temporarilyVirtual) {
-                        array_push($value, $this->formatRepository->getTemporarilyClosedFormat()->shared_id_bigint);
+                        array_push($value, $temporarilyClosedId);
                     }
                 } elseif ($venueType == Meeting::VENUE_TYPE_HYBRID) {
-                    array_push($value, $this->formatRepository->getHybridFormat()->shared_id_bigint);
+                    array_push($value, $hybridFormatId);
                 }
                 return ['formats' => collect($value)->sort()->unique()->join(',')];
             } elseif ($fieldName == 'venueType') {
