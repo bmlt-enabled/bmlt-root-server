@@ -404,6 +404,11 @@ class MeetingCreateTest extends TestCase
         $format = Format::query()->first();
         $payload = $this->validPayload($area, [$format]);
 
+        $formatRepository = new FormatRepository();
+        $virtualFormatId = $formatRepository->getVirtualFormat()->shared_id_bigint;
+        $temporarilyClosedId = $formatRepository->getTemporarilyClosedFormat()->shared_id_bigint;
+        $hybridFormatId = $formatRepository->getHybridFormat()->shared_id_bigint;
+
         // it is required
         unset($payload['formatIds']);
         $this->withHeader('Authorization', "Bearer $token")
@@ -416,11 +421,13 @@ class MeetingCreateTest extends TestCase
             ->post('/api/v1/meetings', $payload)
             ->assertStatus(422);
 
-        // it can't be an invalid format id
-        $payload['formatIds'] = [Format::query()->max('shared_id_bigint') + 1];
-        $this->withHeader('Authorization', "Bearer $token")
-            ->post('/api/v1/meetings', $payload)
-            ->assertStatus(422);
+        // it can't contain a special format id
+        foreach ([$virtualFormatId, $temporarilyClosedId, $hybridFormatId] as $formatId) {
+            $payload['formatIds'] = [$formatId];
+            $this->withHeader('Authorization', "Bearer $token")
+                ->post('/api/v1/meetings', $payload)
+                ->assertStatus(422);
+        }
 
         // it can be an empty list
         $payload['formatIds'] = [];
