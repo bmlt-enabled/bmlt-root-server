@@ -9,6 +9,63 @@ use App\Models\ServiceBody;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
+/**
+ * @OA\Schema(
+ *     schema="ServiceBodyResponse",
+ *     @OA\Property(property="id", type="integer", example="0"),
+ *     @OA\Property(property="parentId", type="integer", example="0"),
+ *     @OA\Property(property="name", type="string", example="string"),
+ *     @OA\Property(property="description", type="string", example="string"),
+ *     @OA\Property(property="type", type="string", example="string"),
+ *     @OA\Property(property="userId", type="integer", example="0"),
+ *     @OA\Property(
+ *        property="editorUserIds",
+ *        type="array",
+ *        @OA\Items(
+ *           type="integer",
+ *           example="0",
+ *        )
+ *     ),
+ *     @OA\Property(property="url", type="string", example="string"),
+ *     @OA\Property(property="helpline", type="string", example="string"),
+ *     @OA\Property(property="email", type="string", example="string"),
+ *     @OA\Property(property="worldId", type="string", example="string")
+ * ),
+ * @OA\Schema(
+ *     schema="ServiceBodiesResponse",
+ *             type="array",
+ *                example={{
+ *                  "id": 0,
+ *                  "parentId": 0,
+ *                  "name": "string",
+ *                  "description": "string",
+ *                  "type": "string",
+ *                  "userId": 0,
+ *                  "editorUserIds": {1},
+ *                  "url": "string",
+ *                  "helpline": "string",
+ *                  "email": "string",
+ *                  "worldId": "string",
+ *                }, {
+ *                  "id": 0,
+ *                  "parentId": 0,
+ *                  "name": "string",
+ *                  "description": "string",
+ *                  "type": "string",
+ *                  "userId": 0,
+ *                  "editorUserIds": {1},
+ *                  "url": "string",
+ *                  "helpline": "string",
+ *                  "email": "string",
+ *                  "worldId": "string",
+ *                }},
+ *                @OA\Items(ref="#/components/schemas/ServiceBodyResponse"),
+ * ),
+ * @OA\Schema(
+ *     schema="ServiceErrorUnauthenticated",
+ *     @OA\Property(property="message", type="string", example="Unauthenticated.")
+ * )
+ */
 class ServiceBodyController extends ResourceController
 {
     private ServiceBodyRepositoryInterface $serviceBodyRepository;
@@ -18,6 +75,34 @@ class ServiceBodyController extends ResourceController
         $this->serviceBodyRepository = $serviceBodyRepository;
         $this->authorizeResource(ServiceBody::class, 'serviceBody');
     }
+
+    /**
+     * @OA\Get(
+     * path="/api/v1/servicebodies",
+     * summary="Retrieve service bodies",
+     * description="Retrieve service bodies for authenticated user",
+     * operationId="getServiceBodies",
+     * tags={"servicebodies"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Response(
+     *     response=200,
+     *     description="Returns when user is authenticated.",
+     *     @OA\JsonContent(ref="#/components/schemas/ServiceBodiesResponse")
+     *   ),
+     *   @OA\Response(
+     *      response=401,
+     *      description="Returns when not authenticated",
+     *      @OA\JsonContent(ref="#/components/schemas/ServiceErrorUnauthenticated")
+     *   ),
+     *   @OA\Response(
+     *      response=404,
+     *      description="Returns when no service body exists.",
+     *      @OA\JsonContent(
+     *         @OA\Property(property="message", type="string", example="No query results for model [App\\Models\\ServiceBody]"),
+     *      )
+     *   )
+     * )
+     */
 
     public function index(Request $request)
     {
@@ -35,6 +120,46 @@ class ServiceBodyController extends ResourceController
         return ServiceBodyResource::collection($serviceBodies);
     }
 
+    /**
+     * @OA\Get(
+     * path="/api/v1/servicebodies/{serviceBodyId}",
+     * summary="Retrieve a single service body",
+     * description="Retrieve a single service body by id",
+     * operationId="getServiceBody",
+     * tags={"servicebodies"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(
+     *    description="ID of service body",
+     *    in="path",
+     *    name="serviceBodyId",
+     *    required=true,
+     *    example="1",
+     *    @OA\Schema(
+     *       type="integer",
+     *       format="int64"
+     *    )
+     * ),
+     * @OA\Response(
+     *     response=200,
+     *     description="Returns when user is authenticated.",
+     *     @OA\JsonContent(ref="#/components/schemas/ServiceBodyResponse")
+     *     ),
+     * @OA\Response(
+     *    response=401,
+     *    description="Returns when not authenticated",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Unauthenticated."),
+     *    )
+     * ),
+     * @OA\Response(
+     *    response=403,
+     *    description="Returns when unauthorized",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="This action is unauthorized."),
+     *    )
+     * )
+     * )
+     */
     public function show(ServiceBody $serviceBody)
     {
         return new ServiceBodyResource($serviceBody);
