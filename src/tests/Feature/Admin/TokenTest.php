@@ -33,8 +33,10 @@ class TokenTest extends TestCase
         // reported expiration looks reasonable
         $this->assertTrue($data['expires_at'] >= (time() + config('sanctum.expiration')) - 1);
 
+        $this->assertTrue($data['token_type'] == 'bearer');
+
         // try to use the token
-        $token = $data['token'];
+        $token = $data['access_token'];
         $this->withHeader('Authorization', "Bearer $token")
             ->get('/api/v1/servicebodies')
             ->assertStatus(200);
@@ -53,7 +55,7 @@ class TokenTest extends TestCase
         $newToken = $this->withHeader('Authorization', "Bearer $originalToken")
             ->post('/api/v1/auth/refresh')
             ->assertStatus(200)
-            ->json()['token'];
+            ->json()['access_token'];
 
         // verify newToken works
         $this->withHeader('Authorization', "Bearer $newToken")
