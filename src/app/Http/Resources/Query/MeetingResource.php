@@ -181,7 +181,7 @@ class MeetingResource extends JsonResource
     {
         return $this->when(
             !self::$hasDataFieldKeys || self::$dataFieldKeys->has('start_time'),
-            $this->start_time ?? ''
+            (\DateTime::createFromFormat('H:i:s', $this->start_time) ?: \DateTime::createFromFormat('H:i', $this->start_time) ?: null)?->format('H:i:s') ?? ''
         );
     }
 
@@ -189,7 +189,7 @@ class MeetingResource extends JsonResource
     {
         return $this->when(
             !self::$hasDataFieldKeys || self::$dataFieldKeys->has('duration_time'),
-            $this->duration_time ?? ''
+            (\DateTime::createFromFormat('H:i:s', $this->duration_time) ?: \DateTime::createFromFormat('H:i', $this->duration_time) ?: null)?->format('H:i:s') ?? ''
         );
     }
 
