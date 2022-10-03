@@ -157,8 +157,14 @@ class FormatController extends ResourceController
         return response()->noContent();
     }
 
-    public function destroy(Format $format)
+    public function destroy(Request $request, Format $format)
     {
+        $request->merge(['id' => $format->shared_id_bigint]);
+        $request->validate(['id' => [Rule::notIn([
+            $this->formatRepository->getVirtualFormat()->shared_id_bigint,
+            $this->formatRepository->getTemporarilyClosedFormat()->shared_id_bigint,
+            $this->formatRepository->getHybridFormat()->shared_id_bigint,
+        ])]]);
         $this->formatRepository->delete($format->shared_id_bigint);
         return response()->noContent();
     }
