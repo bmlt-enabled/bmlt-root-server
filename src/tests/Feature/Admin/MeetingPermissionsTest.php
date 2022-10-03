@@ -347,7 +347,7 @@ class MeetingPermissionsTest extends TestCase
         $meeting1 = $this->createMeeting(['service_body_bigint' => $area1->id_bigint]);
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/meetings/$meeting1->id_bigint")
-            ->assertStatus(404);
+            ->assertStatus(422);
     }
 
     public function testPartialUpdateAsAdminAllowed()
@@ -358,7 +358,7 @@ class MeetingPermissionsTest extends TestCase
         $meeting1 = $this->createMeeting(['service_body_bigint' => $area1->id_bigint]);
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/meetings/$meeting1->id_bigint")
-            ->assertStatus(404);
+            ->assertStatus(422);
     }
 
     // delete

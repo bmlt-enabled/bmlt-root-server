@@ -39,6 +39,7 @@ class Meeting extends Model
         'lang_enum',
         'longitude',
         'latitude',
+        'published',
     ];
 
     public const VENUE_TYPE_IN_PERSON = 1;

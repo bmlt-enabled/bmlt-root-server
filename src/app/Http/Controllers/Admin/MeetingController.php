@@ -57,6 +57,63 @@ class MeetingController extends ResourceController
         return response()->noContent();
     }
 
+    public function partialUpdate(Request $request, Meeting $meeting)
+    {
+        $meetingData = $meeting->data
+            ->mapWithKeys(fn ($data, $_) => [$data->key => $data->data_string])
+            ->toBase()
+            ->merge(
+                $meeting->longdata
+                    ->mapWithKeys(fn ($data, $_) => [$data->key => $data->data_blob])
+                    ->toBase()
+            );
+
+        $dataTemplateKeys = $this->meetingRepository->getDataTemplates()
+            ->map(fn ($template, $_) => $template->key);
+
+        $mergedInputs = collect(Meeting::$mainFields)->merge($dataTemplateKeys)
+            ->reject(fn ($fieldName) => $fieldName == 'id_bigint' || $fieldName == 'time_zone' || $fieldName == 'lang_enum')
+            ->mapWithKeys(function ($fieldName, $_) use ($request, $meeting, $meetingData) {
+                if ($fieldName == 'service_body_bigint') {
+                    return ['serviceBodyId' => $request->has('serviceBodyId') ? $request->input('serviceBodyId') : $meeting->service_body_bigint];
+                } elseif ($fieldName == 'formats') {
+                    return ['formatIds' => $request->has('formatIds') ? $request->input('formatIds') : (empty($this->formats) ? collect([]) : collect(explode(',', $meeting->formats))->map(fn ($id) => intval($id))->toArray())];
+                } elseif ($fieldName == 'venue_type') {
+                    return ['venueType' => $request->has('venueType') ? $request->input('venueType') : $meeting->venue_type];
+                } elseif ($fieldName == 'weekday_tinyint') {
+                    return ['day' => $request->has('day') ? $request->input('day') : $meeting->weekday_tinyint];
+                } elseif ($fieldName == 'start_time') {
+                    return ['startTime' => $request->has('startTime') ? $request->input('startTime') : (empty($meeting->start_time) ? null : (\DateTime::createFromFormat('H:i:s', $meeting->start_time) ?: \DateTime::createFromFormat('H:i', $meeting->start_time))->format('H:i'))];
+                } elseif ($fieldName == 'duration_time') {
+                    return ['duration' => $request->has('duration') ? $request->input('duration') : (empty($meeting->duration_time) ? null : (\DateTime::createFromFormat('H:i:s', $meeting->duration_time) ?: \DateTime::createFromFormat('H:i', $meeting->duration_time))->format('H:i'))];
+                } elseif ($fieldName == 'published') {
+                    return ['published' => $request->has('published') ? $request->input('published') : ($meeting->published === 1)];
+                } elseif ($fieldName == 'email_contact') {
+                    return ['email' => $request->has('email') ? $request->input('email') : $meeting->email_contact];
+                } elseif ($fieldName == 'worldid_mixed') {
+                    return ['worldId' => $request->has('worldId') ? $request->input('worldId') : $meeting->worldid_mixed];
+                } elseif ($fieldName == 'meeting_name') {
+                    return ['name' => $request->has('name') ? $request->input('name') : $meetingData->get('meeting_name')];
+                } elseif (in_array($fieldName, Meeting::$mainFields)) {
+                    return [$fieldName => $request->has($fieldName) ? $request->input($fieldName) : $meeting->{$fieldName}];
+                } else {
+                    return [$fieldName => $request->has($fieldName) ? $request->input($fieldName) : $meetingData->get($fieldName)];
+                }
+            })
+            ->toArray();
+
+        $request->merge($mergedInputs);
+        $values = $this->validateInputsAndCreateValuesArray($request);
+        $this->meetingRepository->update($meeting->id_bigint, $values);
+        return response()->noContent();
+    }
+
+    public function destroy(Meeting $meeting)
+    {
+        $this->meetingRepository->delete($meeting->id_bigint);
+        return response()->noContent();
+    }
+
     private function validateInputsAndCreateValuesArray(Request $request): array
     {
         $virtualFormatId = $this->formatRepository->getVirtualFormat()->shared_id_bigint;
@@ -100,8 +157,7 @@ class MeetingController extends ResourceController
             'bus_lines' => 'nullable|string|max:512',
             'train_lines' => 'nullable|string|max:512',
             'comments' => 'nullable|string|max:512',
-        ]))
-        ->merge(collect($request->validate(
+        ]))->merge(collect($request->validate(
             $this->meetingRepository->getDataTemplates()
                 ->mapWithKeys(fn ($template, $_) => [$template->key => 'nullable|string|max:512'])
                 ->reject(fn ($_, $fieldName) => in_array($fieldName, MeetingData::STOCK_FIELDS))
@@ -142,18 +198,6 @@ class MeetingController extends ResourceController
             } else {
                 return [$fieldName => $value];
             }
-        })
-        ->toArray();
-    }
-
-    public function partialUpdate(Request $request, Meeting $meeting)
-    {
-        abort(404);
-    }
-
-    public function destroy(Meeting $meeting)
-    {
-        $this->meetingRepository->delete($meeting->id_bigint);
-        return response()->noContent();
+        })->toArray();
     }
 }
