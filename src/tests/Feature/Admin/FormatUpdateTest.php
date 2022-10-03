@@ -305,6 +305,14 @@ class FormatUpdateTest extends TestCase
             ->put("/api/v1/formats/{$formats[0]->shared_id_bigint}", $data)
             ->assertStatus(422);
 
+        // it can't be a reserved format key
+        foreach (['VM', 'TC', 'HY'] as $key) {
+            $data['translations'][0]['key'] = $key;
+            $this->withHeader('Authorization', "Bearer $token")
+                ->put("/api/v1/formats/{$formats[0]->shared_id_bigint}", $data)
+                ->assertStatus(422);
+        }
+
         // it can't be longer than 10
         $data['translations'][0]['key'] = str_repeat('t', 11);
         $this->withHeader('Authorization', "Bearer $token")

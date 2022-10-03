@@ -219,6 +219,14 @@ class FormatCreateTest extends TestCase
             ->post('/api/v1/formats', $data)
             ->assertStatus(422);
 
+        // it can't be a reserved format key
+        foreach (['VM', 'TC', 'HY'] as $key) {
+            $data['translations'][0]['key'] = $key;
+            $this->withHeader('Authorization', "Bearer $token")
+                ->post('/api/v1/formats', $data)
+                ->assertStatus(422);
+        }
+
         // it can't be longer than 10
         $data['translations'][0]['key'] = str_repeat('t', 11);
         $this->withHeader('Authorization', "Bearer $token")
