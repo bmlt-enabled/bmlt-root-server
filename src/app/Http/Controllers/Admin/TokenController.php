@@ -31,8 +31,9 @@ use Illuminate\Support\Str;
  *    response=200,
  *    description="Returns when user is authenticated",
  *    @OA\JsonContent(
- *       @OA\Property(property="token", type="string", example="2|tR6PIqa8tiBJWMu4zyb3qw4eECuERjLd7xeLKgBu"),
+ *       @OA\Property(property="access_token", type="string", example="2|tR6PIqa8tiBJWMu4zyb3qw4eECuERjLd7xeLKgBu"),
  *       @OA\Property(property="expires_at", type="integer", example="1667342171"),
+ *       @OA\Property(property="token_type", type="string", example="bearer"),
  *    )
  * ),
 * @OA\Response(
@@ -101,6 +102,32 @@ class TokenController extends Controller
         return new JsonResponse($this->createToken($user));
     }
 
+    /**
+     * @OA\Post(
+     * path="/api/v1/auth/refresh",
+     * summary="Refresh Token",
+     * description="Refresh token",
+     * operationId="authRefresh",
+     * tags={"auth"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Response(
+     *    response=200,
+     *    description="Returns when token is valid.",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="access_token", type="string", example="2|tR6PIqa8tiBJWMu4zyb3qw4eECuERjLd7xeLKgBu"),
+     *       @OA\Property(property="expires_at", type="integer", example="1667342171"),
+     *       @OA\Property(property="token_type", type="string", example="bearer"),
+     *    )
+     * ),
+     * @OA\Response(
+     *    response=401,
+     *    description="Returns when token is invalid or missing.",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Unauthenticated."),
+     *    )
+     * )
+     * )
+     */
     public function refresh(Request $request)
     {
         $user = $request->user();
@@ -128,6 +155,27 @@ class TokenController extends Controller
         ];
     }
 
+    /**
+     * @OA\Post(
+     * path="/api/v1/auth/logout",
+     * summary="Revoke Token",
+     * description="Revoke token and logout",
+     * operationId="authLogout",
+     * tags={"auth"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Response(
+     *    response=200,
+     *    description="Returns when token is valid",
+     * ),
+     * @OA\Response(
+     *    response=401,
+     *    description="Returns when token is invalid or missing.",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Unauthenticated."),
+     *    )
+     * )
+     * )
+     */
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
