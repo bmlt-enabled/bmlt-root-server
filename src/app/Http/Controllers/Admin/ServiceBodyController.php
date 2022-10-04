@@ -57,6 +57,11 @@ use Illuminate\Validation\Rule;
  *     schema="ServiceErrorUnauthorized",
  *     @OA\Property(property="message", type="string", example="This action is unauthorized.")
  * )
+ * @OA\Schema(
+ *     schema="NoServiceBodyExists",
+ *      description="Returns when no user exists.",
+ *      @OA\Property(property="message", type="string", example="No query results for model [App\\Models\\ServiceBody]"),
+ * )
  */
 class ServiceBodyController extends ResourceController
 {
@@ -85,13 +90,6 @@ class ServiceBodyController extends ResourceController
      *      response=401,
      *      description="Returns when not authenticated.",
      *      @OA\JsonContent(ref="#/components/schemas/ServiceErrorUnauthenticated")
-     *   ),
-     *   @OA\Response(
-     *      response=404,
-     *      description="Returns when no service body exists.",
-     *      @OA\JsonContent(
-     *         @OA\Property(property="message", type="string", example="No query results for model [App\\Models\\ServiceBody]"),
-     *      )
      *   )
      * )
      */
@@ -140,22 +138,20 @@ class ServiceBodyController extends ResourceController
      *    response=401,
      *    description="Returns when not authenticated.",
      *    @OA\JsonContent(
-     *       @OA\Property(property="message", type="string", example="Unauthenticated."),
+     *       @OA\Property(ref="#/components/schemas/ServiceErrorUnauthenticated"),
      *    )
      * ),
      * @OA\Response(
      *    response=403,
      *    description="Returns when unauthorized.",
      *    @OA\JsonContent(
-     *       @OA\Property(property="message", type="string", example="This action is unauthorized."),
+     *       @OA\Property(ref="#/components/schemas/ServiceErrorUnauthorized"),
      *    )
      * ),
      *  @OA\Response(
      *     response=404,
      *     description="Returns when no service body exists.",
-     *     @OA\JsonContent(
-     *        @OA\Property(property="message", type="string", example="No query results for model [App\\Models\\ServiceBody]"),
-     *     )
+     *     @OA\JsonContent(ref="#/components/schemas/NoServiceBodyExists")
      *  )
      * )
      */
@@ -424,22 +420,20 @@ class ServiceBodyController extends ResourceController
      *    response=401,
      *    description="Returns when not authenticated.",
      *    @OA\JsonContent(
-     *       @OA\Property(property="message", type="string", example="Unauthenticated."),
+     *       @OA\Property(ref="#/components/schemas/ServiceErrorUnauthenticated"),
      *    )
      * ),
      * @OA\Response(
      *    response=403,
      *    description="Returns when unauthorized.",
      *    @OA\JsonContent(
-     *       @OA\Property(property="message", type="string", example="This action is unauthorized."),
+     *       @OA\Property(ref="#/components/schemas/ServiceErrorUnauthorized"),
      *    )
      * ),
      *  @OA\Response(
      *     response=404,
      *     description="Returns when no service body exists.",
-     *     @OA\JsonContent(
-     *        @OA\Property(property="message", type="string", example="No query results for model [App\\Models\\ServiceBody]"),
-     *     )
+     *     @OA\JsonContent(ref="#/components/schemas/NoServiceBodyExists")
      *  )
      * )
      */
@@ -525,16 +519,16 @@ class ServiceBodyController extends ResourceController
      *     ),
      * @OA\Response(
      *    response=401,
-     *    description="Returns when not authenticated",
+     *    description="Returns when not authenticated.",
      *    @OA\JsonContent(
-     *       @OA\Property(property="message", type="string", example="Unauthenticated."),
+     *       @OA\Property(ref="#/components/schemas/ServiceErrorUnauthenticated"),
      *    )
      * ),
      * @OA\Response(
      *    response=403,
      *    description="Returns when unauthorized.",
      *    @OA\JsonContent(
-     *       @OA\Property(property="message", type="string", example="This action is unauthorized."),
+     *       @OA\Property(ref="#/components/schemas/ServiceErrorUnauthorized"),
      *    )
      * ),
      *  @OA\Response(

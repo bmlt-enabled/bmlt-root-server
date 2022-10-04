@@ -10,6 +10,17 @@ use Illuminate\Validation\Rule;
 
 /**
  * @OA\Schema(
+ *     schema="FormatResponse",
+ *     @OA\Property(property="worldId", type="string", example="string"),
+ *     @OA\Property(property="type", type="string", example="string"),
+ *     @OA\Property(
+ *        property="translations",
+ *        type="array",
+ *        @OA\Items(ref="#/components/schemas/FormatLangModel")
+ *     ),
+ *    ),
+ * ),
+ * @OA\Schema(
  *     schema="FormatLangModel",
  *     required={"key", "name", "description", "language"},
  *     @OA\Property(
@@ -28,7 +39,7 @@ use Illuminate\Validation\Rule;
  *         property="language",
  *         type="string"
  *     )
- * )
+ * ),
  * @OA\Schema(
  *     schema="FormatErrorUnauthenticated",
  *     @OA\Property(property="message", type="string", example="Unauthenticated.")
@@ -36,6 +47,29 @@ use Illuminate\Validation\Rule;
  * @OA\Schema(
  *     schema="FormatErrorUnauthorized",
  *     @OA\Property(property="message", type="string", example="This action is unauthorized.")
+ * ),
+ * @OA\Schema(
+ *     schema="NoFormatExists",
+ *      description="Returns when no format exists.",
+ *      @OA\Property(property="message", type="string", example="No query results for model [App\\Models\\Format]"),
+ * ),
+ * @OA\Schema(
+ *     schema="GetFormatsResponse",
+ *             type="array",
+ *                example={{
+ *                  "id": 0,
+ *                  "worldId": "string",
+ *                  "type": "string",
+ *                  "translations": {
+ *                    "key": "string",
+ *                    "name": "string",
+ *                    "description": "string",
+ *                    "language": "string"
+ *                  }
+ *                }},
+ *                @OA\Items(
+ *     @OA\Property(property="id", type="integer", example="0"),
+ *     ref="#/components/schemas/FormatResponse"),
  * )
  */
 class FormatController extends ResourceController
@@ -59,16 +93,7 @@ class FormatController extends ResourceController
      * @OA\Response(
      *     response=200,
      *     description="Returns when user is authenticated.",
-     *     @OA\JsonContent(
-     *     @OA\Property(property="id", type="integer", example="0"),
-     *     @OA\Property(property="worldId", type="string", example="string"),
-     *     @OA\Property(property="type", type="string", example="string"),
-     *     @OA\Property(
-     *        property="translations",
-     *        type="array",
-     *        @OA\Items(ref="#/components/schemas/FormatLangModel")
-     *     ),
-     *    )
+     *     @OA\JsonContent(ref="#/components/schemas/GetFormatsResponse")
      *   ),
      *   @OA\Response(
      *      response=401,
@@ -83,11 +108,127 @@ class FormatController extends ResourceController
         return FormatResource::collection($formats);
     }
 
+    /**
+     * @OA\Get(
+     * path="/api/v1/formats/{formatId}",
+     * summary="Retrieve a single format",
+     * description="Retrieve single format.",
+     * operationId="getSingleFormat",
+     * tags={"formats"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(
+     *    description="ID of format",
+     *    in="path",
+     *    name="formatId",
+     *    required=true,
+     *    example="1",
+     *    @OA\Schema(
+     *       type="integer",
+     *       format="int64"
+     *    )
+     * ),
+     * @OA\Response(
+     *     response=200,
+     *     description="Returns with successful request.",
+     *     @OA\JsonContent(
+     *     @OA\Property(property="id", type="integer", example="0"),
+     *     @OA\Property(property="worldId", type="string", example="string"),
+     *     @OA\Property(property="type", type="string", example="string"),
+     *     @OA\Property(
+     *        property="translations",
+     *        type="array",
+     *        @OA\Items(ref="#/components/schemas/FormatLangModel")
+     *     ),
+     *   )
+     * )
+     *   ),
+     *   @OA\Response(
+     *      response=401,
+     *      description="Returns when not authenticated.",
+     *      @OA\JsonContent(ref="#/components/schemas/FormatErrorUnauthenticated")
+     *   ),
+     *   @OA\Response(
+     *      response=404,
+     *      description="Returns when no format exists.",
+     *      @OA\JsonContent(ref="#/components/schemas/NoFormatExists")
+     *   )
+     * )
+     */
     public function show(Format $format)
     {
         return new FormatResource($format);
     }
 
+    /**
+     * @OA\Post(
+     * path="/api/v1/formats",
+     * summary="Create Format",
+     * description="Cretaes a format.",
+     * operationId="createFormat",
+     * tags={"formats"},
+     * security={{"bearerAuth":{}}},
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="Pass in format object",
+     *    @OA\JsonContent(
+     *       required={"translations"},
+     *     @OA\Property(property="worldId", type="string", example="string"),
+     *     @OA\Property(property="type", type="string", example="string"),
+     *     @OA\Property(
+     *        property="translations",
+     *        type="array",
+     *        @OA\Items(ref="#/components/schemas/FormatLangModel")
+     *     ),
+     *    ),
+     * ),
+     * @OA\Response(
+     *    response=201,
+     *    description="Returns when POST is successful.",
+     *    @OA\JsonContent(
+     *     @OA\Property(property="id", type="integer", example="0"),
+     *     ref="#/components/schemas/FormatResponse")
+     * ),
+     * @OA\Response(
+     *     response=422,
+     *     description="Validation error.",
+     *     @OA\JsonContent(
+     *        @OA\Property(property="message", type="string", example="The translations.0.key field is required. (and 1 more error)"),
+     *        @OA\Property(
+     *           property="errors",
+     *           type="object",
+     *           @OA\Property(
+     *              property="translations.0.key",
+     *              type="array",
+     *              @OA\Items(
+     *                 type="string",
+     *                 example="The translations.0.key field is required.",
+     *              )
+     *           ),
+     *           @OA\Property(
+     *              property="translations.0.name",
+     *              type="array",
+     *              @OA\Items(
+     *                 type="string",
+     *                 example="The translations.0.name field is required.",
+     *              )
+     *           )
+     *        )
+     *     )
+     * ),
+     * @OA\Response(
+     *    response=401,
+     *    description="Returns when user is not authenticated.",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="The provided credentials are incorrect."),
+     *    )
+     * ),
+     * @OA\Response(
+     *    response=403,
+     *    description="Returns when user is unauthorized to perform action.",
+     *    @OA\JsonContent(ref="#/components/schemas/FormatErrorUnauthenticated")
+     * )
+     * )
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -126,6 +267,75 @@ class FormatController extends ResourceController
         return new FormatResource($format);
     }
 
+    /**
+     * @OA\Put(
+     * path="/api/v1/formats/{formatId}",
+     * summary="Update single format",
+     * description="Updates a single format.",
+     * operationId="updateFormat",
+     * tags={"formats"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(
+     *    description="ID of format",
+     *    in="path",
+     *    name="formatId",
+     *    required=true,
+     *    example="1",
+     *    @OA\Schema(
+     *       type="integer",
+     *       format="int64"
+     *    )
+     * ),
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="Pass in format object",
+     *    @OA\JsonContent(ref="#/components/schemas/FormatResponse"),
+     * ),
+     * @OA\Response(
+     *    response=204,
+     *    description="Returns when PUT is successful."
+     * ),
+     * @OA\Response(
+     *     response=422,
+     *     description="Validation error.",
+     *     @OA\JsonContent(
+     *        @OA\Property(property="message", type="string", example="The translations.0.key field is required. (and 1 more error)"),
+     *        @OA\Property(
+     *           property="errors",
+     *           type="object",
+     *           @OA\Property(
+     *              property="translations.0.key",
+     *              type="array",
+     *              @OA\Items(
+     *                 type="string",
+     *                 example="The translations.0.key field is required.",
+     *              )
+     *           ),
+     *           @OA\Property(
+     *              property="translations.0.name",
+     *              type="array",
+     *              @OA\Items(
+     *                 type="string",
+     *                 example="The translations.0.name field is required.",
+     *              )
+     *           )
+     *        )
+     *     )
+     * ),
+     * @OA\Response(
+     *    response=401,
+     *    description="Returns when user is not authenticated.",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="The provided credentials are incorrect."),
+     *    )
+     * ),
+     * @OA\Response(
+     *    response=403,
+     *    description="Returns when user is unauthorized to perform action.",
+     *    @OA\JsonContent(ref="#/components/schemas/FormatErrorUnauthenticated")
+     * )
+     * )
+     */
     public function update(Request $request, Format $format)
     {
         $validated = $request->validate([
@@ -164,6 +374,53 @@ class FormatController extends ResourceController
         return response()->noContent();
     }
 
+    /**
+     * @OA\Patch(
+     * path="/api/v1/formats/{formatId}",
+     * summary="Patches a single format",
+     * description="Patches a single format by id.",
+     * operationId="patchFormat",
+     * tags={"formats"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(
+     *    description="ID of format",
+     *    in="path",
+     *    name="formatId",
+     *    required=true,
+     *    example="1",
+     *    @OA\Schema(
+     *       type="integer",
+     *       format="int64"
+     *    )
+     * ),
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="Pass in format attributes.",
+     *    @OA\JsonContent(ref="#/components/schemas/FormatResponse"),
+     * ),
+     * @OA\Response(
+     *     response=204,
+     *     description="Returns with successful request."
+     *     ),
+     * @OA\Response(
+     *    response=401,
+     *    description="Returns when not authenticated.",
+     *    @OA\JsonContent(ref="#/components/schemas/FormatErrorUnauthenticated")
+     * ),
+     * @OA\Response(
+     *    response=403,
+     *    description="Returns when unauthorized.",
+     *    @OA\JsonContent(
+     *       @OA\Property(ref="#/components/schemas/FormatErrorUnauthorized"),
+     *    )
+     * ),
+     *  @OA\Response(
+     *     response=404,
+     *     description="Returns when no service body exists.",
+     *     @OA\JsonContent(ref="#/components/schemas/NoFormatExists")
+     *  )
+     * )
+     */
     public function partialUpdate(Request $request, Format $format)
     {
         $validated = $request->validate([
@@ -216,6 +473,48 @@ class FormatController extends ResourceController
         return response()->noContent();
     }
 
+    /**
+     * @OA\Delete(
+     * path="/api/v1/formats/{formatId}",
+     * summary="Deletes a single format",
+     * description="Deletes a single format by id.",
+     * operationId="deleteFormat",
+     * tags={"formats"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(
+     *    description="ID of format",
+     *    in="path",
+     *    name="formatId",
+     *    required=true,
+     *    example="1",
+     *    @OA\Schema(
+     *       type="integer",
+     *       format="int64"
+     *    )
+     * ),
+     * @OA\Response(
+     *     response=204,
+     *     description="Returns with successful request."
+     *     ),
+     * @OA\Response(
+     *    response=401,
+     *    description="Returns when not authenticated",
+     *    @OA\JsonContent(ref="#/components/schemas/FormatErrorUnauthenticated")
+     * ),
+     * @OA\Response(
+     *    response=403,
+     *    description="Returns when unauthorized.",
+     *    @OA\JsonContent(ref="#/components/schemas/FormatErrorUnauthorized")
+     * ),
+     *  @OA\Response(
+     *     response=404,
+     *     description="Returns when no format for id exists.",
+     *     @OA\JsonContent(
+     *        @OA\Property(property="message", type="string", example="No query results for model [App\\Models\\Format]"),
+     *     )
+     *  )
+     * )
+     */
     public function destroy(Request $request, Format $format)
     {
         $request->merge(['id' => $format->shared_id_bigint]);
