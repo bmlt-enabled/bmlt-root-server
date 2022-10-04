@@ -90,9 +90,7 @@ class TokenControllerDoc extends ResourceController
      * @OA\Response(
      *    response=401,
      *    description="Returns when user is not authenticated.",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="message", type="string", example="The provided credentials are incorrect."),
-     *    )
+     *    @OA\JsonContent(ref="#/components/schemas/ErrorIncorrectCredentials")
      * )
      * )
      */

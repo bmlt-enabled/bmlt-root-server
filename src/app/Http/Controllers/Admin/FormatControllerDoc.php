@@ -35,14 +35,6 @@ namespace App\Http\Controllers\Admin;
  *     )
  * ),
  * @OA\Schema(
- *     schema="FormatErrorUnauthenticated",
- *     @OA\Property(property="message", type="string", example="Unauthenticated.")
- * ),
- * @OA\Schema(
- *     schema="FormatErrorUnauthorized",
- *     @OA\Property(property="message", type="string", example="This action is unauthorized.")
- * ),
- * @OA\Schema(
  *     schema="NoFormatExists",
  *      description="Returns when no format exists.",
  *      @OA\Property(property="message", type="string", example="No query results for model [App\\Models\\Format]"),
@@ -85,7 +77,7 @@ class FormatControllerDoc extends ResourceController
      *   @OA\Response(
      *      response=401,
      *      description="Returns when not authenticated",
-     *      @OA\JsonContent(ref="#/components/schemas/FormatErrorUnauthenticated")
+     *      @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
      *   )
      * )
      */
@@ -130,7 +122,7 @@ class FormatControllerDoc extends ResourceController
      *   @OA\Response(
      *      response=401,
      *      description="Returns when not authenticated.",
-     *      @OA\JsonContent(ref="#/components/schemas/FormatErrorUnauthenticated")
+     *      @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
      *   ),
      *   @OA\Response(
      *      response=404,
@@ -202,14 +194,12 @@ class FormatControllerDoc extends ResourceController
      * @OA\Response(
      *    response=401,
      *    description="Returns when user is not authenticated.",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="message", type="string", example="The provided credentials are incorrect."),
-     *    )
+     *    @OA\JsonContent(ref="#/components/schemas/ErrorIncorrectCredentials")
      * ),
      * @OA\Response(
      *    response=403,
      *    description="Returns when user is unauthorized to perform action.",
-     *    @OA\JsonContent(ref="#/components/schemas/FormatErrorUnauthenticated")
+     *    @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
      * )
      * )
      */
@@ -275,14 +265,12 @@ class FormatControllerDoc extends ResourceController
      * @OA\Response(
      *    response=401,
      *    description="Returns when user is not authenticated.",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="message", type="string", example="The provided credentials are incorrect."),
-     *    )
+     *    @OA\JsonContent(ref="#/components/schemas/ErrorIncorrectCredentials")
      * ),
      * @OA\Response(
      *    response=403,
      *    description="Returns when user is unauthorized to perform action.",
-     *    @OA\JsonContent(ref="#/components/schemas/FormatErrorUnauthenticated")
+     *    @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
      * )
      * )
      */
@@ -321,13 +309,13 @@ class FormatControllerDoc extends ResourceController
      * @OA\Response(
      *    response=401,
      *    description="Returns when not authenticated.",
-     *    @OA\JsonContent(ref="#/components/schemas/FormatErrorUnauthenticated")
+     *    @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
      * ),
      * @OA\Response(
      *    response=403,
      *    description="Returns when unauthorized.",
      *    @OA\JsonContent(
-     *       @OA\Property(ref="#/components/schemas/FormatErrorUnauthorized"),
+     *       @OA\Property(ref="#/components/schemas/ErrorUnauthorized"),
      *    )
      * ),
      *  @OA\Response(
@@ -367,12 +355,12 @@ class FormatControllerDoc extends ResourceController
      * @OA\Response(
      *    response=401,
      *    description="Returns when not authenticated",
-     *    @OA\JsonContent(ref="#/components/schemas/FormatErrorUnauthenticated")
+     *    @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
      * ),
      * @OA\Response(
      *    response=403,
      *    description="Returns when unauthorized.",
-     *    @OA\JsonContent(ref="#/components/schemas/FormatErrorUnauthorized")
+     *    @OA\JsonContent(ref="#/components/schemas/ErrorUnauthorized")
      * ),
      *  @OA\Response(
      *     response=404,

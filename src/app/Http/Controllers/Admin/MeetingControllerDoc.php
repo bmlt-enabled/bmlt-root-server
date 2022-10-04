@@ -4,8 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 /**
  * @OA\Schema(
- *     schema="MeetingResponse",
- *     @OA\Property(property="id", type="integer", example="0"),
+ *     schema="MeetingTemplate",
  *     @OA\Property(property="serviceBodyId", type="integer", example="0"),
  *     @OA\Property(
  *        property="formatIds",
@@ -48,14 +47,6 @@ namespace App\Http\Controllers\Admin;
  *     @OA\Property(property="comments", type="string", example="string"),
  * ),
  * @OA\Schema(
- *     schema="MeetingErrorUnauthenticated",
- *     @OA\Property(property="message", type="string", example="Unauthenticated.")
- * ),
- * @OA\Schema(
- *     schema="MeetingErrorUnauthorized",
- *     @OA\Property(property="message", type="string", example="This action is unauthorized.")
- * ),
- * @OA\Schema(
  *     schema="NoMeetingExists",
  *      description="Returns when no Meeting exists.",
  *      @OA\Property(property="message", type="string", example="No query results for model [App\\Models\\Meeting]"),
@@ -64,6 +55,15 @@ namespace App\Http\Controllers\Admin;
  *     schema="MeetingsResponse",
  *             type="array",
  *                @OA\Items(ref="#/components/schemas/MeetingResponse"),
+ * ),
+ * @OA\Schema(
+ *     schema="MeetingResponse",
+ *     allOf={
+ *         @OA\Schema(
+ *             @OA\Property(property="id", type="integer", example="0")
+ *         ),
+ *         @OA\Schema(ref="#components/schemas/MeetingTemplate")
+ *     }
  * )
  */
 
@@ -86,10 +86,10 @@ class MeetingControllerDoc extends ResourceController
      *   @OA\Response(
      *      response=401,
      *      description="Returns when not authenticated.",
-     *      @OA\JsonContent(ref="#/components/schemas/MeetingErrorUnauthenticated")
+     *      @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
      *   )
      * )
-    */
+     */
     public function index()
     {
     }
@@ -121,7 +121,12 @@ class MeetingControllerDoc extends ResourceController
      *   @OA\Response(
      *      response=401,
      *      description="Returns when not authenticated.",
-     *      @OA\JsonContent(ref="#/components/schemas/MeetingErrorUnauthenticated")
+     *      @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
+     *   ),
+     *   @OA\Response(
+     *      response=403,
+     *      description="Returns when user is unauthorized to perform action.",
+     *      @OA\JsonContent(ref="#/components/schemas/ErrorUnauthorized")
      *   ),
      *   @OA\Response(
      *      response=404,
@@ -134,14 +139,174 @@ class MeetingControllerDoc extends ResourceController
     {
     }
 
+    /**
+     * @OA\Post(
+     * path="/api/v1/meetings",
+     * summary="Create Meeting",
+     * description="Cretaes a meeting.",
+     * operationId="createMeeting",
+     * tags={"meetings"},
+     * security={{"bearerAuth":{}}},
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="Pass in meeting object",
+     *    @OA\JsonContent(ref="#/components/schemas/MeetingTemplate"),
+     * ),
+     * @OA\Response(
+     *    response=201,
+     *    description="Returns when POST is successful.",
+     *    @OA\JsonContent(ref="#/components/schemas/MeetingResponse")
+     * ),
+     * @OA\Response(
+     *     response=422,
+     *     description="Validation error.",
+     *     @OA\JsonContent(
+     *        @OA\Property(property="message", type="string", example="The latitude must be a number."),
+     *        @OA\Property(
+     *           property="errors",
+     *           type="object",
+     *           @OA\Property(
+     *              property="latitude",
+     *              type="array",
+     *              @OA\Items(
+     *                 type="string",
+     *                 example="The latitude must be a number.",
+     *              )
+     *           )
+     *        )
+     *     )
+     * ),
+     * @OA\Response(
+     *    response=401,
+     *    description="Returns when user is not authenticated.",
+     *    @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
+     * ),
+     * @OA\Response(
+     *    response=403,
+     *    description="Returns when user is unauthorized to perform action.",
+     *    @OA\JsonContent(ref="#/components/schemas/ErrorUnauthorized")
+     * )
+     * )
+     */
     public function store()
     {
     }
 
+    /**
+     * @OA\Put(
+     * path="/api/v1/meetings/{meetingId}",
+     * summary="Update single meeting",
+     * description="Updates a single meeting.",
+     * operationId="updateMeeting",
+     * tags={"meetings"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(
+     *    description="ID of meeting",
+     *    in="path",
+     *    name="meetingId",
+     *    required=true,
+     *    example="1",
+     *    @OA\Schema(
+     *       type="integer",
+     *       format="int64"
+     *    )
+     * ),
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="Pass in meeting object",
+     *    @OA\JsonContent(ref="#/components/schemas/MeetingTemplate"),
+     * ),
+     * @OA\Response(
+     *    response=204,
+     *    description="Returns when PUT is successful."
+     * ),
+     * @OA\Response(
+     *     response=422,
+     *     description="Validation error.",
+     *     @OA\JsonContent(
+     *        @OA\Property(property="message", type="string", example="The latitude must be a number."),
+     *        @OA\Property(
+     *           property="errors",
+     *           type="object",
+     *           @OA\Property(
+     *              property="latitude",
+     *              type="array",
+     *              @OA\Items(
+     *                 type="string",
+     *                 example="The latitude must be a number.",
+     *              )
+     *           )
+     *        )
+     *     )
+     * ),
+     * @OA\Response(
+     *    response=401,
+     *    description="Returns when user is not authenticated.",
+     *    @OA\JsonContent(ref="#/components/schemas/ErrorIncorrectCredentials")
+     * ),
+     * @OA\Response(
+     *    response=403,
+     *    description="Returns when user is unauthorized to perform action.",
+     *    @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
+     * ),
+     * @OA\Response(
+     *    response=404,
+     *    description="Returns when no meeting exists.",
+     *    @OA\JsonContent(ref="#/components/schemas/NoMeetingExists")
+     * )
+     * )
+     */
     public function update()
     {
     }
 
+    /**
+     * @OA\Patch(
+     * path="/api/v1/meetings/{meetingId}",
+     * summary="Patches a single meeting",
+     * description="Patches a single meeting by id",
+     * operationId="patchMeeting",
+     * tags={"meetings"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(
+     *    description="ID of meeting",
+     *    in="path",
+     *    name="meetingId",
+     *    required=true,
+     *    example="1",
+     *    @OA\Schema(
+     *       type="integer",
+     *       format="int64"
+     *    )
+     * ),
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="Pass in meeting attributes",
+     *    @OA\JsonContent(
+     *     @OA\Property(property="name", type="string", example="string"),
+     *    ),
+     * ),
+     * @OA\Response(
+     *     response=204,
+     *     description="Returns with successful request."
+     *     ),
+     * @OA\Response(
+     *    response=401,
+     *    description="Returns when not authenticated",
+     *    @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
+     * ),
+     * @OA\Response(
+     *    response=403,
+     *    description="Returns when unauthorized",
+     *    @OA\JsonContent(ref="#/components/schemas/ErrorUnauthorized")
+     * ),
+     *  @OA\Response(
+     *     response=404,
+     *     description="Returns when no meeting exists.",
+     *     @OA\JsonContent(ref="#/components/schemas/NoMeetingExists")
+     *  )
+     * )
+     */
     public function partialUpdate()
     {
     }
@@ -172,12 +337,12 @@ class MeetingControllerDoc extends ResourceController
      * @OA\Response(
      *    response=401,
      *    description="Returns when not authenticated",
-     *    @OA\JsonContent(ref="#/components/schemas/MeetingErrorUnauthenticated")
+     *    @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
      * ),
      * @OA\Response(
      *    response=403,
      *    description="Returns when unauthorized.",
-     *    @OA\JsonContent(ref="#/components/schemas/MeetingErrorUnauthorized")
+     *    @OA\JsonContent(ref="#/components/schemas/ErrorUnauthorized")
      * ),
      *  @OA\Response(
      *     response=404,

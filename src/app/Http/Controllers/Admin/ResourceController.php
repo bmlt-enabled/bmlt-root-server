@@ -42,6 +42,7 @@ use App\Http\Controllers\Controller;
  *     )
  * )
  */
+
 class ResourceController extends Controller
 {
     protected function resourceAbilityMap()
