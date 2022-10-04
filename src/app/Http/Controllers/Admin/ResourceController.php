@@ -35,7 +35,6 @@ use App\Http\Controllers\Controller;
  *     type="oauth2",
  *     @OA\Flow(
  *       flow="password",
- *       authorizationUrl="main_server/api/v1/auth/token",
  *       tokenUrl="main_server/api/v1/auth/token",
  *       refreshUrl="main_server/api/v1/auth/refresh",
  *       scopes={}

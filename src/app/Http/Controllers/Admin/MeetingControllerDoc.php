@@ -62,7 +62,7 @@ namespace App\Http\Controllers\Admin;
  *         @OA\Schema(
  *             @OA\Property(property="id", type="integer", example="0")
  *         ),
- *         @OA\Schema(ref="#components/schemas/MeetingTemplate")
+ *         @OA\Schema(ref="#/components/schemas/MeetingTemplate")
  *     }
  * )
  */
