@@ -78,6 +78,36 @@ class MeetingControllerDoc extends ResourceController
      * operationId="getMeetings",
      * tags={"meetings"},
      * security={{"bearerAuth":{}}},
+     * @OA\Parameter(
+     *    description="int delimited",
+     *    in="query",
+     *    name="meetingIds",
+     *    required=false,
+     *    example="1,2",
+     *    @OA\Schema(
+     *       type="string"
+     *    )
+     * ),
+     * @OA\Parameter(
+     *    description="int delimited",
+     *    in="query",
+     *    name="days",
+     *    required=false,
+     *    example="0,1",
+     *    @OA\Schema(
+     *       type="string"
+     *    )
+     * ),
+     * @OA\Parameter(
+     *    description="int delimited",
+     *    in="query",
+     *    name="serviceBodyIds",
+     *    required=false,
+     *    example="3,4",
+     *    @OA\Schema(
+     *       type="string"
+     *    )
+     * ),
      * @OA\Response(
      *     response=200,
      *     description="Returns when user is authenticated.",
