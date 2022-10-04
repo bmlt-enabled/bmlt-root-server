@@ -33,7 +33,7 @@ class MeetingController extends ResourceController
         $user = $request->user();
         $serviceBodyIds = null;
         if (!$user->isAdmin()) {
-            $serviceBodyIds = $this->serviceBodyRepository->getUserServiceBodyIds($user->id_bigint)->toArray();
+            $serviceBodyIds = $this->serviceBodyRepository->getAssignedServiceBodyIds($user->id_bigint)->toArray();
         }
         $meetings = $this->meetingRepository->getSearchResults(servicesInclude: $serviceBodyIds);
         return MeetingResource::collection($meetings);

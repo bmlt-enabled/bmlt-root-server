@@ -111,7 +111,22 @@ class ServiceBodyRepository implements ServiceBodyRepositoryInterface
         ]);
     }
 
-    public function getUserServiceBodyIds(int $userId): Collection
+    public function getAdminServiceBodyIds(int $userId): Collection
+    {
+        $serviceBodyIds = ServiceBody::query()
+            ->where('principal_user_bigint', $userId)
+            ->get()
+            ->map(fn ($sb) => $sb->id_bigint)
+            ->toArray();
+
+        foreach ($this->getChildren($serviceBodyIds) as $serviceBodyId) {
+            $serviceBodyIds[] = $serviceBodyId;
+        }
+
+        return collect($serviceBodyIds)->unique();
+    }
+
+    public function getAssignedServiceBodyIds(int $userId): Collection
     {
         $serviceBodyIds = ServiceBody::query()
             ->where('principal_user_bigint', $userId)
@@ -130,7 +145,7 @@ class ServiceBodyRepository implements ServiceBodyRepositoryInterface
             $serviceBodyIds[] = $serviceBodyId;
         }
 
-        return collect($serviceBodyIds);
+        return collect($serviceBodyIds)->unique();
     }
 
     public function getChildren(array $parents): array

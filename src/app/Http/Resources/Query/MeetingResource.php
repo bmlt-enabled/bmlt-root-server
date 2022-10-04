@@ -107,7 +107,7 @@ class MeetingResource extends JsonResource
                 self::$userIsAdmin = true;
             } else {
                 self::$serviceBodyPermissions = $serviceBodyRepository
-                    ->getUserServiceBodyIds($user->id_bigint)
+                    ->getAssignedServiceBodyIds($user->id_bigint)
                     ->mapWithKeys(fn ($sbId, $_) => [$sbId => null]);
             }
         }

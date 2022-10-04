@@ -29,7 +29,7 @@ class MeetingPolicy
             return true;
         }
 
-        return $this->serviceBodyRepository->getUserServiceBodyIds($user->id_bigint)->contains($meeting->service_body_bigint);
+        return $this->serviceBodyRepository->getAssignedServiceBodyIds($user->id_bigint)->contains($meeting->service_body_bigint);
     }
 
     public function create(User $user)
@@ -41,7 +41,7 @@ class MeetingPolicy
         if ($user->isServiceBodyAdmin()) {
             $serviceBodyId = request()->input('serviceBodyId');
             if (!is_null($serviceBodyId)) {
-                return $this->serviceBodyRepository->getUserServiceBodyIds($user->id_bigint)->contains($serviceBodyId);
+                return $this->serviceBodyRepository->getAssignedServiceBodyIds($user->id_bigint)->contains($serviceBodyId);
             }
         }
 
@@ -55,7 +55,7 @@ class MeetingPolicy
         }
 
         if ($user->isServiceBodyAdmin()) {
-            return $this->serviceBodyRepository->getUserServiceBodyIds($user->id_bigint)->contains($meeting->service_body_bigint);
+            return $this->serviceBodyRepository->getAssignedServiceBodyIds($user->id_bigint)->contains($meeting->service_body_bigint);
         }
 
         return false;
@@ -73,7 +73,7 @@ class MeetingPolicy
         }
 
         if ($user->isServiceBodyAdmin()) {
-            return $this->serviceBodyRepository->getUserServiceBodyIds($user->id_bigint)->contains($meeting->service_body_bigint);
+            return $this->serviceBodyRepository->getAssignedServiceBodyIds($user->id_bigint)->contains($meeting->service_body_bigint);
         }
 
         return false;
