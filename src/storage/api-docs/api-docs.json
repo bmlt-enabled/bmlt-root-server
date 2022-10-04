@@ -2468,7 +2468,7 @@
                         "type": "object"
                     },
                     {
-                        "$ref": "#components/schemas/MeetingTemplate"
+                        "$ref": "#/components/schemas/MeetingTemplate"
                     }
                 ]
             },
@@ -2645,7 +2645,6 @@
                 "type": "oauth2",
                 "flows": {
                     "password": {
-                        "authorizationUrl": "main_server/api/v1/auth/token",
                         "tokenUrl": "main_server/api/v1/auth/token",
                         "refreshUrl": "main_server/api/v1/auth/refresh",
                         "scopes": {}
