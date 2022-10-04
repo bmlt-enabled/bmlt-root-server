@@ -15,7 +15,7 @@ use Illuminate\Support\Str;
  * @OA\Post(
  * path="/api/v1/auth/token",
  * summary="Retrieve Token",
- * description="Retrieve token by username, password",
+ * description="Retrieve token by username, password.",
  * operationId="authToken",
  * tags={"auth"},
  * @OA\RequestBody(
@@ -29,7 +29,7 @@ use Illuminate\Support\Str;
  * ),
  * @OA\Response(
  *    response=200,
- *    description="Returns when user is authenticated",
+ *    description="Returns when user is authenticated.",
  *    @OA\JsonContent(
  *       @OA\Property(property="access_token", type="string", example="2|tR6PIqa8tiBJWMu4zyb3qw4eECuERjLd7xeLKgBu"),
  *       @OA\Property(property="expires_at", type="integer", example="1667342171"),
@@ -65,7 +65,7 @@ use Illuminate\Support\Str;
  *     ),
  * @OA\Response(
  *    response=401,
- *    description="Returns when user is not authenticated",
+ *    description="Returns when user is not authenticated.",
  *    @OA\JsonContent(
  *       @OA\Property(property="message", type="string", example="The provided credentials are incorrect."),
  *    )
@@ -106,7 +106,7 @@ class TokenController extends Controller
      * @OA\Post(
      * path="/api/v1/auth/refresh",
      * summary="Refresh Token",
-     * description="Refresh token",
+     * description="Refresh token.",
      * operationId="authRefresh",
      * tags={"auth"},
      * security={{"bearerAuth":{}}},
@@ -159,13 +159,13 @@ class TokenController extends Controller
      * @OA\Post(
      * path="/api/v1/auth/logout",
      * summary="Revoke Token",
-     * description="Revoke token and logout",
+     * description="Revoke token and logout.",
      * operationId="authLogout",
      * tags={"auth"},
      * security={{"bearerAuth":{}}},
      * @OA\Response(
      *    response=200,
-     *    description="Returns when token is valid",
+     *    description="Returns when token is valid.",
      * ),
      * @OA\Response(
      *    response=401,

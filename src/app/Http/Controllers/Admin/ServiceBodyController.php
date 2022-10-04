@@ -72,7 +72,7 @@ class ServiceBodyController extends ResourceController
      * @OA\Get(
      * path="/api/v1/servicebodies",
      * summary="Retrieve service bodies",
-     * description="Retrieve service bodies for authenticated user",
+     * description="Retrieve service bodies for authenticated user.",
      * operationId="getServiceBodies",
      * tags={"servicebodies"},
      * security={{"bearerAuth":{}}},
@@ -83,7 +83,7 @@ class ServiceBodyController extends ResourceController
      *   ),
      *   @OA\Response(
      *      response=401,
-     *      description="Returns when not authenticated",
+     *      description="Returns when not authenticated.",
      *      @OA\JsonContent(ref="#/components/schemas/ServiceErrorUnauthenticated")
      *   ),
      *   @OA\Response(
@@ -116,7 +116,7 @@ class ServiceBodyController extends ResourceController
      * @OA\Get(
      * path="/api/v1/servicebodies/{serviceBodyId}",
      * summary="Retrieve a single service body",
-     * description="Retrieve a single service body by id",
+     * description="Retrieve a single service body by id.",
      * operationId="getServiceBody",
      * tags={"servicebodies"},
      * security={{"bearerAuth":{}}},
@@ -138,14 +138,14 @@ class ServiceBodyController extends ResourceController
      *     ),
      * @OA\Response(
      *    response=401,
-     *    description="Returns when not authenticated",
+     *    description="Returns when not authenticated.",
      *    @OA\JsonContent(
      *       @OA\Property(property="message", type="string", example="Unauthenticated."),
      *    )
      * ),
      * @OA\Response(
      *    response=403,
-     *    description="Returns when unauthorized",
+     *    description="Returns when unauthorized.",
      *    @OA\JsonContent(
      *       @OA\Property(property="message", type="string", example="This action is unauthorized."),
      *    )
@@ -168,7 +168,7 @@ class ServiceBodyController extends ResourceController
      * @OA\Post(
      * path="/api/v1/servicebodies",
      * summary="Create Service Body",
-     * description="Cretaes a service body",
+     * description="Cretaes a service body.",
      * operationId="createServiceBody",
      * tags={"servicebodies"},
      * security={{"bearerAuth":{}}},
@@ -198,7 +198,7 @@ class ServiceBodyController extends ResourceController
      * ),
      * @OA\Response(
      *    response=201,
-     *    description="Returns when POST is successful",
+     *    description="Returns when POST is successful.",
      *    @OA\JsonContent(ref="#/components/schemas/ServiceBodyResponse")
      * ),
      * @OA\Response(
@@ -230,7 +230,7 @@ class ServiceBodyController extends ResourceController
      * ),
      * @OA\Response(
      *    response=401,
-     *    description="Returns when user is not authenticated",
+     *    description="Returns when user is not authenticated.",
      *    @OA\JsonContent(
      *       @OA\Property(property="message", type="string", example="The provided credentials are incorrect."),
      *    )
@@ -278,7 +278,7 @@ class ServiceBodyController extends ResourceController
      * @OA\Put(
      * path="/api/v1/servicebodies/{serviceBodyId}",
      * summary="Update single Service Body",
-     * description="Updates a single service body",
+     * description="Updates a single service body.",
      * operationId="updateServiceBody",
      * tags={"servicebodies"},
      * security={{"bearerAuth":{}}},
@@ -295,7 +295,7 @@ class ServiceBodyController extends ResourceController
      * ),
      * @OA\RequestBody(
      *    required=true,
-     *    description="Pass in service body object",
+     *    description="Pass in service body object.",
      *    @OA\JsonContent(
      *     @OA\Property(property="parentId", type="integer", example="0"),
      *     @OA\Property(property="name", type="string", example="string"),
@@ -318,11 +318,11 @@ class ServiceBodyController extends ResourceController
      * ),
      * @OA\Response(
      *    response=204,
-     *    description="Returns when PUT is successful"
+     *    description="Returns when PUT is successful."
      * ),
      * @OA\Response(
      *     response=422,
-     *     description="Validation error",
+     *     description="Validation error.",
      *     @OA\JsonContent(
      *        @OA\Property(property="message", type="string", example="The parent id field must be present. (and 1 more error)"),
      *        @OA\Property(
@@ -349,7 +349,7 @@ class ServiceBodyController extends ResourceController
      * ),
      * @OA\Response(
      *    response=401,
-     *    description="Returns when user is not authenticated",
+     *    description="Returns when user is not authenticated.",
      *    @OA\JsonContent(
      *       @OA\Property(property="message", type="string", example="The provided credentials are incorrect."),
      *    )
@@ -387,7 +387,7 @@ class ServiceBodyController extends ResourceController
      * @OA\Patch(
      * path="/api/v1/servicebodies/{serviceBodyId}",
      * summary="Patches a single service body",
-     * description="Patches a single service body by id",
+     * description="Patches a single service body by id.",
      * operationId="patchServiceBody",
      * tags={"servicebodies"},
      * security={{"bearerAuth":{}}},
@@ -404,7 +404,7 @@ class ServiceBodyController extends ResourceController
      * ),
      * @OA\RequestBody(
      *    required=true,
-     *    description="Pass in service body attributes",
+     *    description="Pass in service body attributes.",
      *    @OA\JsonContent(
      *     @OA\Property(
      *        property="editorUserIds",
@@ -422,14 +422,14 @@ class ServiceBodyController extends ResourceController
      *     ),
      * @OA\Response(
      *    response=401,
-     *    description="Returns when not authenticated",
+     *    description="Returns when not authenticated.",
      *    @OA\JsonContent(
      *       @OA\Property(property="message", type="string", example="Unauthenticated."),
      *    )
      * ),
      * @OA\Response(
      *    response=403,
-     *    description="Returns when unauthorized",
+     *    description="Returns when unauthorized.",
      *    @OA\JsonContent(
      *       @OA\Property(property="message", type="string", example="This action is unauthorized."),
      *    )
@@ -504,7 +504,7 @@ class ServiceBodyController extends ResourceController
      * @OA\Delete(
      * path="/api/v1/servicebodies/{serviceBodyId}",
      * summary="Deletes a single service body",
-     * description="Deletes a single service body by id",
+     * description="Deletes a single service body by id.",
      * operationId="deleteServiceBody",
      * tags={"servicebodies"},
      * security={{"bearerAuth":{}}},
@@ -532,7 +532,7 @@ class ServiceBodyController extends ResourceController
      * ),
      * @OA\Response(
      *    response=403,
-     *    description="Returns when unauthorized",
+     *    description="Returns when unauthorized.",
      *    @OA\JsonContent(
      *       @OA\Property(property="message", type="string", example="This action is unauthorized."),
      *    )

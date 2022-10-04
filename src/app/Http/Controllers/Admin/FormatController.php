@@ -8,6 +8,36 @@ use App\Models\Format;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
+/**
+ * @OA\Schema(
+ *     schema="FormatLangModel",
+ *     required={"key", "name", "description", "language"},
+ *     @OA\Property(
+ *         property="key",
+ *         type="string"
+ *     ),
+ *     @OA\Property(
+ *         property="name",
+ *         type="string"
+ *     ),
+ *     @OA\Property(
+ *         property="description",
+ *         type="string"
+ *     ),
+ *     @OA\Property(
+ *         property="language",
+ *         type="string"
+ *     )
+ * )
+ * @OA\Schema(
+ *     schema="FormatErrorUnauthenticated",
+ *     @OA\Property(property="message", type="string", example="Unauthenticated.")
+ * ),
+ * @OA\Schema(
+ *     schema="FormatErrorUnauthorized",
+ *     @OA\Property(property="message", type="string", example="This action is unauthorized.")
+ * )
+ */
 class FormatController extends ResourceController
 {
     private FormatRepositoryInterface $formatRepository;
@@ -18,6 +48,35 @@ class FormatController extends ResourceController
         $this->authorizeResource(Format::class);
     }
 
+    /**
+     * @OA\Get(
+     * path="/api/v1/formats",
+     * summary="Retrieve formats",
+     * description="Retrieve formats for server.",
+     * operationId="getFormats",
+     * tags={"formats"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Response(
+     *     response=200,
+     *     description="Returns when user is authenticated.",
+     *     @OA\JsonContent(
+     *     @OA\Property(property="id", type="integer", example="0"),
+     *     @OA\Property(property="worldId", type="string", example="string"),
+     *     @OA\Property(property="type", type="string", example="string"),
+     *     @OA\Property(
+     *        property="translations",
+     *        type="array",
+     *        @OA\Items(ref="#/components/schemas/FormatLangModel")
+     *     ),
+     *    )
+     *   ),
+     *   @OA\Response(
+     *      response=401,
+     *      description="Returns when not authenticated",
+     *      @OA\JsonContent(ref="#/components/schemas/FormatErrorUnauthenticated")
+     *   )
+     * )
+     */
     public function index(Request $request)
     {
         $formats = $this->formatRepository->getAsTranslations();
