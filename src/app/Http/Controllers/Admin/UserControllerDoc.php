@@ -28,14 +28,6 @@ namespace App\Http\Controllers\Admin;
  *                @OA\Items(ref="#/components/schemas/UserResponse"),
  * ),
  * @OA\Schema(
- *     schema="UserErrorUnauthenticated",
- *     @OA\Property(property="message", type="string", example="Unauthenticated.")
- * ),
- * @OA\Schema(
- *     schema="UserErrorUnauthorized",
- *     @OA\Property(property="message", type="string", example="This action is unauthorized.")
- * ),
- * @OA\Schema(
  *     schema="NoUserExists",
  *      description="Returns when no user exists.",
  *      @OA\Property(property="message", type="string", example="No query results for model [App\\Models\\User]"),
@@ -60,7 +52,7 @@ class UserControllerDoc extends ResourceController
      *   @OA\Response(
      *      response=401,
      *      description="Returns when not authenticated",
-     *      @OA\JsonContent(ref="#/components/schemas/UserErrorUnauthenticated")
+     *      @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
      *   )
      * )
      */
@@ -95,7 +87,7 @@ class UserControllerDoc extends ResourceController
      *   @OA\Response(
      *      response=401,
      *      description="Returns when not authenticated.",
-     *      @OA\JsonContent(ref="#/components/schemas/UserErrorUnauthenticated")
+     *      @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
      *   ),
      *   @OA\Response(
      *      response=404,
@@ -165,14 +157,12 @@ class UserControllerDoc extends ResourceController
      * @OA\Response(
      *    response=401,
      *    description="Returns when user is not authenticated.",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="message", type="string", example="The provided credentials are incorrect."),
-     *    )
+     *    @OA\JsonContent(ref="#/components/schemas/ErrorIncorrectCredentials")
      * ),
      * @OA\Response(
      *    response=403,
      *    description="Returns when user is unauthorized to perform action.",
-     *    @OA\JsonContent(ref="#/components/schemas/UserErrorUnauthenticated")
+     *    @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
      * )
      * )
      */
@@ -247,14 +237,17 @@ class UserControllerDoc extends ResourceController
      * @OA\Response(
      *    response=401,
      *    description="Returns when user is not authenticated.",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="message", type="string", example="The provided credentials are incorrect."),
-     *    )
+     *    @OA\JsonContent(ref="#/components/schemas/ErrorIncorrectCredentials")
      * ),
      * @OA\Response(
      *    response=403,
      *    description="Returns when user is unauthorized to perform action.",
-     *    @OA\JsonContent(ref="#/components/schemas/UserErrorUnauthenticated")
+     *    @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
+     * ),
+     * @OA\Response(
+     *    response=404,
+     *    description="Returns when no service body exists.",
+     *    @OA\JsonContent(ref="#/components/schemas/NoUserExists")
      * )
      * )
      */
@@ -295,12 +288,12 @@ class UserControllerDoc extends ResourceController
      * @OA\Response(
      *    response=401,
      *    description="Returns when not authenticated",
-     *    @OA\JsonContent(ref="#/components/schemas/UserErrorUnauthenticated")
+     *    @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
      * ),
      * @OA\Response(
      *    response=403,
      *    description="Returns when unauthorized",
-     *    @OA\JsonContent(ref="#/components/schemas/UserErrorUnauthorized")
+     *    @OA\JsonContent(ref="#/components/schemas/ErrorUnauthorized")
      * ),
      *  @OA\Response(
      *     response=404,
@@ -339,12 +332,12 @@ class UserControllerDoc extends ResourceController
      * @OA\Response(
      *    response=401,
      *    description="Returns when not authenticated",
-     *    @OA\JsonContent(ref="#/components/schemas/UserErrorUnauthenticated")
+     *    @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
      * ),
      * @OA\Response(
      *    response=403,
      *    description="Returns when unauthorized",
-     *    @OA\JsonContent(ref="#/components/schemas/UserErrorUnauthorized")
+     *    @OA\JsonContent(ref="#/components/schemas/ErrorUnauthorized")
      * ),
      *  @OA\Response(
      *     response=404,

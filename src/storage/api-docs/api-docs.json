@@ -52,7 +52,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/FormatErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
                                 }
                             }
                         }
@@ -152,13 +152,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "The provided credentials are incorrect."
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/ErrorIncorrectCredentials"
                                 }
                             }
                         }
@@ -168,7 +162,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/FormatErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
                                 }
                             }
                         }
@@ -315,13 +309,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "The provided credentials are incorrect."
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/ErrorIncorrectCredentials"
                                 }
                             }
                         }
@@ -331,7 +319,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/FormatErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
                                 }
                             }
                         }
@@ -372,7 +360,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/FormatErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
                                 }
                             }
                         }
@@ -382,7 +370,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/FormatErrorUnauthorized"
+                                    "$ref": "#/components/schemas/ErrorUnauthorized"
                                 }
                             }
                         }
@@ -450,7 +438,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/FormatErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
                                 }
                             }
                         }
@@ -462,7 +450,7 @@
                                 "schema": {
                                     "properties": {
                                         "": {
-                                            "$ref": "#/components/schemas/FormatErrorUnauthorized"
+                                            "$ref": "#/components/schemas/ErrorUnauthorized"
                                         }
                                     },
                                     "type": "object"
@@ -512,7 +500,91 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/MeetingErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "meetings"
+                ],
+                "summary": "Create Meeting",
+                "description": "Cretaes a meeting.",
+                "operationId": "createMeeting",
+                "requestBody": {
+                    "description": "Pass in meeting object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/MeetingTemplate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Returns when POST is successful.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MeetingResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The latitude must be a number."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "latitude": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The latitude must be a number."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user is not authenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Returns when user is unauthorized to perform action.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorUnauthorized"
                                 }
                             }
                         }
@@ -562,13 +634,123 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/MeetingErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Returns when user is unauthorized to perform action.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorUnauthorized"
                                 }
                             }
                         }
                     },
                     "404": {
                         "description": "Returns when no format exists.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NoMeetingExists"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "meetings"
+                ],
+                "summary": "Update single meeting",
+                "description": "Updates a single meeting.",
+                "operationId": "updateMeeting",
+                "parameters": [
+                    {
+                        "name": "meetingId",
+                        "in": "path",
+                        "description": "ID of meeting",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass in meeting object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/MeetingTemplate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Returns when PUT is successful."
+                    },
+                    "422": {
+                        "description": "Validation error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The latitude must be a number."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "latitude": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The latitude must be a number."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user is not authenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorIncorrectCredentials"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Returns when user is unauthorized to perform action.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Returns when no meeting exists.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -613,7 +795,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/MeetingErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
                                 }
                             }
                         }
@@ -623,13 +805,91 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/MeetingErrorUnauthorized"
+                                    "$ref": "#/components/schemas/ErrorUnauthorized"
                                 }
                             }
                         }
                     },
                     "404": {
                         "description": "Returns when no meeting for id exists.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NoMeetingExists"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "meetings"
+                ],
+                "summary": "Patches a single meeting",
+                "description": "Patches a single meeting by id",
+                "operationId": "patchMeeting",
+                "parameters": [
+                    {
+                        "name": "meetingId",
+                        "in": "path",
+                        "description": "ID of meeting",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass in meeting attributes",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Returns with successful request."
+                    },
+                    "401": {
+                        "description": "Returns when not authenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Returns when unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorUnauthorized"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Returns when no meeting exists.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -670,7 +930,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ServiceErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
                                 }
                             }
                         }
@@ -800,13 +1060,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "The provided credentials are incorrect."
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/ErrorIncorrectCredentials"
                                 }
                             }
                         }
@@ -816,7 +1070,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ServiceErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
                                 }
                             }
                         }
@@ -868,7 +1122,7 @@
                                 "schema": {
                                     "properties": {
                                         "": {
-                                            "$ref": "#/components/schemas/ServiceErrorUnauthenticated"
+                                            "$ref": "#/components/schemas/ErrorUnauthenticated"
                                         }
                                     },
                                     "type": "object"
@@ -883,7 +1137,7 @@
                                 "schema": {
                                     "properties": {
                                         "": {
-                                            "$ref": "#/components/schemas/ServiceErrorUnauthorized"
+                                            "$ref": "#/components/schemas/ErrorUnauthorized"
                                         }
                                     },
                                     "type": "object"
@@ -1028,13 +1282,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "The provided credentials are incorrect."
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/ErrorIncorrectCredentials"
                                 }
                             }
                         }
@@ -1044,7 +1292,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ServiceErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
                                 }
                             }
                         }
@@ -1087,7 +1335,7 @@
                                 "schema": {
                                     "properties": {
                                         "": {
-                                            "$ref": "#/components/schemas/ServiceErrorUnauthenticated"
+                                            "$ref": "#/components/schemas/ErrorUnauthenticated"
                                         }
                                     },
                                     "type": "object"
@@ -1102,7 +1350,7 @@
                                 "schema": {
                                     "properties": {
                                         "": {
-                                            "$ref": "#/components/schemas/ServiceErrorUnauthorized"
+                                            "$ref": "#/components/schemas/ErrorUnauthorized"
                                         }
                                     },
                                     "type": "object"
@@ -1194,7 +1442,7 @@
                                 "schema": {
                                     "properties": {
                                         "": {
-                                            "$ref": "#/components/schemas/ServiceErrorUnauthenticated"
+                                            "$ref": "#/components/schemas/ErrorUnauthenticated"
                                         }
                                     },
                                     "type": "object"
@@ -1209,7 +1457,7 @@
                                 "schema": {
                                     "properties": {
                                         "": {
-                                            "$ref": "#/components/schemas/ServiceErrorUnauthorized"
+                                            "$ref": "#/components/schemas/ErrorUnauthorized"
                                         }
                                     },
                                     "type": "object"
@@ -1392,13 +1640,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "The provided credentials are incorrect."
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/ErrorIncorrectCredentials"
                                 }
                             }
                         }
@@ -1466,7 +1708,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/UserErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
                                 }
                             }
                         }
@@ -1581,13 +1823,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "The provided credentials are incorrect."
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/ErrorIncorrectCredentials"
                                 }
                             }
                         }
@@ -1597,7 +1833,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/UserErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
                                 }
                             }
                         }
@@ -1647,7 +1883,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/UserErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
                                 }
                             }
                         }
@@ -1778,13 +2014,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "The provided credentials are incorrect."
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/ErrorIncorrectCredentials"
                                 }
                             }
                         }
@@ -1794,7 +2024,17 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/UserErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Returns when no service body exists.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NoUserExists"
                                 }
                             }
                         }
@@ -1835,7 +2075,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/UserErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
                                 }
                             }
                         }
@@ -1845,7 +2085,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/UserErrorUnauthorized"
+                                    "$ref": "#/components/schemas/ErrorUnauthorized"
                                 }
                             }
                         }
@@ -1913,7 +2153,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/UserErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
                                 }
                             }
                         }
@@ -1923,7 +2163,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/UserErrorUnauthorized"
+                                    "$ref": "#/components/schemas/ErrorUnauthorized"
                                 }
                             }
                         }
@@ -1949,6 +2189,33 @@
     },
     "components": {
         "schemas": {
+            "ErrorIncorrectCredentials": {
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "The provided credentials are incorrect."
+                    }
+                },
+                "type": "object"
+            },
+            "ErrorUnauthenticated": {
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Unauthenticated."
+                    }
+                },
+                "type": "object"
+            },
+            "ErrorUnauthorized": {
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "This action is unauthorized."
+                    }
+                },
+                "type": "object"
+            },
             "FormatResponse": {
                 "properties": {
                     "worldId": {
@@ -1991,24 +2258,6 @@
                 },
                 "type": "object"
             },
-            "FormatErrorUnauthenticated": {
-                "properties": {
-                    "message": {
-                        "type": "string",
-                        "example": "Unauthenticated."
-                    }
-                },
-                "type": "object"
-            },
-            "FormatErrorUnauthorized": {
-                "properties": {
-                    "message": {
-                        "type": "string",
-                        "example": "This action is unauthorized."
-                    }
-                },
-                "type": "object"
-            },
             "NoFormatExists": {
                 "description": "Returns when no format exists.",
                 "properties": {
@@ -2038,12 +2287,8 @@
                     }
                 ]
             },
-            "MeetingResponse": {
+            "MeetingTemplate": {
                 "properties": {
-                    "id": {
-                        "type": "integer",
-                        "example": "0"
-                    },
                     "serviceBodyId": {
                         "type": "integer",
                         "example": "0"
@@ -2195,24 +2440,6 @@
                 },
                 "type": "object"
             },
-            "MeetingErrorUnauthenticated": {
-                "properties": {
-                    "message": {
-                        "type": "string",
-                        "example": "Unauthenticated."
-                    }
-                },
-                "type": "object"
-            },
-            "MeetingErrorUnauthorized": {
-                "properties": {
-                    "message": {
-                        "type": "string",
-                        "example": "This action is unauthorized."
-                    }
-                },
-                "type": "object"
-            },
             "NoMeetingExists": {
                 "description": "Returns when no Meeting exists.",
                 "properties": {
@@ -2228,6 +2455,22 @@
                 "items": {
                     "$ref": "#/components/schemas/MeetingResponse"
                 }
+            },
+            "MeetingResponse": {
+                "allOf": [
+                    {
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "example": "0"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    {
+                        "$ref": "#components/schemas/MeetingTemplate"
+                    }
+                ]
             },
             "ServiceBodyResponse": {
                 "properties": {
@@ -2304,24 +2547,6 @@
                     }
                 ]
             },
-            "ServiceErrorUnauthenticated": {
-                "properties": {
-                    "message": {
-                        "type": "string",
-                        "example": "Unauthenticated."
-                    }
-                },
-                "type": "object"
-            },
-            "ServiceErrorUnauthorized": {
-                "properties": {
-                    "message": {
-                        "type": "string",
-                        "example": "This action is unauthorized."
-                    }
-                },
-                "type": "object"
-            },
             "NoServiceBodyExists": {
                 "description": "Returns when no user exists.",
                 "properties": {
@@ -2382,24 +2607,6 @@
                     }
                 ]
             },
-            "UserErrorUnauthenticated": {
-                "properties": {
-                    "message": {
-                        "type": "string",
-                        "example": "Unauthenticated."
-                    }
-                },
-                "type": "object"
-            },
-            "UserErrorUnauthorized": {
-                "properties": {
-                    "message": {
-                        "type": "string",
-                        "example": "This action is unauthorized."
-                    }
-                },
-                "type": "object"
-            },
             "NoUserExists": {
                 "description": "Returns when no user exists.",
                 "properties": {
@@ -2417,7 +2624,7 @@
                 "content": {
                     "application/json": {
                         "schema": {
-                            "$ref": "#/components/schemas/FormatErrorUnauthenticated"
+                            "$ref": "#/components/schemas/ErrorUnauthenticated"
                         }
                     }
                 }
