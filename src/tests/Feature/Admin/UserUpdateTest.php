@@ -146,6 +146,32 @@ class UserUpdateTest extends TestCase
         $this->assertEquals($oldOwner, $user1->owner_id_bigint);
     }
 
+    public function testUpdateUserExcludeOptionalFieldsFromPayload()
+    {
+        $user1 = $this->createAdminUser();
+        $token = $user1->createToken('test')->plainTextToken;
+        $user2 = $this->createServiceBodyAdminUser();
+        $user2->description_string = 'a description';
+        $user2->email_address_string = 'test@test.com';
+        $user2->save();
+
+        $data = [
+            'username' => 'new username',
+            'password' => 'this is a valid password',
+            'type' => User::USER_TYPE_ADMIN,
+            'displayName' => 'pretty name',
+            'ownerId' => $user1->id_bigint,
+        ];
+
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/users/$user2->id_bigint", $data)
+            ->assertStatus(204);
+
+        $user2->refresh();
+        $this->assertEquals('', $user2->description_string);
+        $this->assertEquals('', $user2->email_address_string);
+    }
+
     public function testUpdateUserValidateUsername()
     {
         $user = $this->createAdminUser();
