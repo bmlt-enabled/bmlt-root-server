@@ -10,6 +10,15 @@ use Illuminate\Validation\Validator;
 
 class VenueTypeLocation implements DataAwareRule, InvokableRule, ValidatorAwareRule
 {
+    public const FIELDS = [
+        'location_street',
+        'location_municipality',
+        'location_province',
+        'location_postal_code_1',
+        'phone_meeting_number',
+        'virtual_meeting_link'
+    ];
+
     public $implicit = true;
 
     protected array $data = [];

@@ -4,7 +4,6 @@ namespace App\Http\Resources\Admin;
 
 use App\Http\Resources\JsonResource;
 use App\Models\Meeting;
-use App\Models\MeetingData;
 use App\Repositories\MeetingRepository;
 use App\Repositories\FormatRepository;
 use Illuminate\Support\Collection;
@@ -12,7 +11,7 @@ use Illuminate\Support\Collection;
 class MeetingResource extends JsonResource
 {
     private static bool $isRequestInitialized = false;
-    private static ?Collection $extraFieldsTemplates = null;
+    private static ?Collection $dataTemplates = null;
     private static ?Collection $formatsById = null;
     private static ?int $virtualFormatId = null;
     private static ?int $hybridFormatId = null;
@@ -22,7 +21,7 @@ class MeetingResource extends JsonResource
     public static function resetStaticVariables()
     {
         self::$isRequestInitialized = false;
-        self::$extraFieldsTemplates = null;
+        self::$dataTemplates = null;
         self::$formatsById = null;
         self::$virtualFormatId = null;
         self::$hybridFormatId = null;
@@ -34,9 +33,9 @@ class MeetingResource extends JsonResource
     {
         if (!self::$isRequestInitialized) {
             $meetingRepository = new MeetingRepository();
-            self::$extraFieldsTemplates = $meetingRepository
+            self::$dataTemplates = $meetingRepository
                 ->getDataTemplates()
-                ->reject(fn ($template, $_) => in_array($template->key, MeetingData::STOCK_FIELDS));
+                ->reject(fn ($template, $_) => $template->key == 'meeting_name');
             $formatRepository = new FormatRepository();
             self::$formatsById = $formatRepository->getAsTranslations()->mapWithKeys(fn ($fmt) => [$fmt->shared_id_bigint => $fmt]);
             self::$virtualFormatId = $formatRepository->getVirtualFormat()->shared_id_bigint;
@@ -76,28 +75,6 @@ class MeetingResource extends JsonResource
             'email' => $this->email_contact ?: null,
             'worldId' => $this->worldid_mixed ?: null,
             'name' => $meetingData->get('meeting_name') ?: null,
-            'location_text' => $meetingData->get('location_text') ?: null,
-            'location_info' => $meetingData->get('location_info') ?: null,
-            'location_street' => $meetingData->get('location_street') ?: null,
-            'location_neighborhood' => $meetingData->get('location_neighborhood') ?: null,
-            'location_city_subsection' => $meetingData->get('location_city_subsection') ?: null,
-            'location_municipality' => $meetingData->get('location_municipality') ?: null,
-            'location_sub_province' => $meetingData->get('location_sub_province') ?: null,
-            'location_province' => $meetingData->get('location_province') ?: null,
-            'location_postal_code_1' => $meetingData->get('location_postal_code_1') ?: null,
-            'location_nation' => $meetingData->get('location_nation') ?: null,
-            'phone_meeting_number' => $meetingData->get('phone_meeting_number') ?: null,
-            'virtual_meeting_link' => $meetingData->get('virtual_meeting_link') ?: null,
-            'virtual_meeting_additional_info' => $meetingData->get('virtual_meeting_additional_info') ?: null,
-            'contact_name_1' => $meetingData->get('contact_name_1') ?: null,
-            'contact_name_2' => $meetingData->get('contact_name_2') ?: null,
-            'contact_phone_1' => $meetingData->get('contact_phone_1') ?: null,
-            'contact_phone_2' => $meetingData->get('contact_phone_2') ?: null,
-            'contact_email_1' => $meetingData->get('contact_email_1') ?: null,
-            'contact_email_2' => $meetingData->get('contact_email_2') ?: null,
-            'bus_lines' => $meetingData->get('bus_lines') ?: null,
-            'train_lines' => $meetingData->get('train_lines') ?: null,
-            'comments' => $meetingData->get('comments') ?: null,
-        ], self::$extraFieldsTemplates->mapWithKeys(fn ($t, $_) => [$t->key => $meetingData->get($t->key) ?: null])->toArray());
+        ], self::$dataTemplates->mapWithKeys(fn ($t, $_) => [$t->key => $meetingData->get($t->key) ?: null])->toArray());
     }
 }
