@@ -59,6 +59,33 @@ class FormatUpdateTest extends TestCase
         });
     }
 
+    public function testUpdateFormatExcludeOptionalFields()
+    {
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $formats = $this->createFormats();
+        $data = $this->toPayload($formats);
+
+        unset($data['worldId']);
+        unset($data['type']);
+        foreach ($data['translations'] as $key => $translation) {
+            $translation['key'] .= 'updated';
+            $translation['name'] .= 'updated';
+            $translation['description'] .= 'updated';
+            $data['translations'][$key] = $translation;
+        }
+
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/formats/{$formats[0]->shared_id_bigint}", $data)
+            ->assertStatus(204);
+
+        foreach ($formats as $format) {
+            $format = Format::query()->where('shared_id_bigint', $format->shared_id_bigint)->where('lang_enum', $format->lang_enum)->first();
+            $this->assertNull($format->worldid_mixed);
+            $this->assertNull($format->format_type_enum);
+        }
+    }
+
     public function testUpdateFormatNoTranslationsRemoved()
     {
         $user = $this->createAdminUser();
