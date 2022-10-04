@@ -7,10 +7,11 @@ use App\Interfaces\FormatRepositoryInterface;
 use App\Interfaces\MeetingRepositoryInterface;
 use App\Interfaces\ServiceBodyRepositoryInterface;
 use App\Models\Meeting;
-use App\Models\MeetingData;
 use App\Repositories\ServiceBodyRepository;
 use App\Rules\VenueTypeLocation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\App;
 use Illuminate\Validation\Rule;
 
 class MeetingController extends ResourceController
@@ -45,14 +46,34 @@ class MeetingController extends ResourceController
 
     public function store(Request $request)
     {
-        $values = $this->validateInputsAndCreateValuesArray($request, isForCreate: true);
+        $validated = collect($request->validate(
+            array_merge([
+                'serviceBodyId' => 'required|int|exists:comdef_service_bodies,id_bigint',
+                'formatIds' => 'present|array',
+                'formatIds.*' => ['int', 'exists:comdef_formats,shared_id_bigint', Rule::notIn([$this->getVirtualFormatId(), $this->getTemporarilyClosedFormatId(), $this->getHybridFormatId()])],
+                'venueType' => ['required', Rule::in(Meeting::VALID_VENUE_TYPES)],
+                'temporarilyVirtual' => 'sometimes|boolean',
+                'day' => 'required|int|between:0,6',
+                'startTime' => 'required|date_format:H:i',
+                'duration' => 'required|date_format:H:i',
+                'latitude' => 'required|numeric|between:-90,90',
+                'longitude' => 'required|numeric|between:-180,180',
+                'published' => 'required|boolean',
+                'email' => 'nullable|email|max:255',
+                'worldId' => 'nullable|string|max:30',
+                'name' => 'required|string|max:128',
+            ], $this->getDataFieldValidators())
+        ));
+
+        $values = $this->buildValuesArray($validated);
         $meeting = $this->meetingRepository->create($values);
         return new MeetingResource($meeting);
     }
 
     public function update(Request $request, Meeting $meeting)
     {
-        $values = $this->validateInputsAndCreateValuesArray($request);
+        $validated = $this->validateForUpdate($request);
+        $values = $this->buildValuesArray($validated);
         $this->meetingRepository->update($meeting->id_bigint, $values);
         return response()->noContent();
     }
@@ -62,48 +83,46 @@ class MeetingController extends ResourceController
         $meetingData = $meeting->data
             ->mapWithKeys(fn ($data, $_) => [$data->key => $data->data_string])
             ->toBase()
-            ->merge(
-                $meeting->longdata
-                    ->mapWithKeys(fn ($data, $_) => [$data->key => $data->data_blob])
-                    ->toBase()
-            );
+            ->merge($meeting->longdata->mapWithKeys(fn ($data, $_) => [$data->key => $data->data_blob])->toBase());
 
-        $dataTemplateKeys = $this->meetingRepository->getDataTemplates()
-            ->map(fn ($template, $_) => $template->key);
+        // Since a patch is only a partial representation of the meeting, we fill in all of the gaps
+        // with data from the actual meeting. This allows us to share code with the store and update
+        // (POST and PUT) handlers.
+        $request->merge(
+            collect(Meeting::$mainFields)
+                ->merge($this->getDataTemplates()->map(fn ($_, $key) => $key))
+                ->mapWithKeys(function ($fieldName, $_) use ($request, $meeting, $meetingData) {
+                    if ($fieldName == 'service_body_bigint') {
+                        return ['serviceBodyId' => $request->has('serviceBodyId') ? $request->input('serviceBodyId') : $meeting->service_body_bigint];
+                    } elseif ($fieldName == 'formats') {
+                        return ['formatIds' => $request->has('formatIds') ? $request->input('formatIds') : (empty($this->formats) ? collect([]) : collect(explode(',', $meeting->formats))->map(fn ($id) => intval($id))->toArray())];
+                    } elseif ($fieldName == 'venue_type') {
+                        return ['venueType' => $request->has('venueType') ? $request->input('venueType') : $meeting->venue_type];
+                    } elseif ($fieldName == 'weekday_tinyint') {
+                        return ['day' => $request->has('day') ? $request->input('day') : $meeting->weekday_tinyint];
+                    } elseif ($fieldName == 'start_time') {
+                        return ['startTime' => $request->has('startTime') ? $request->input('startTime') : (empty($meeting->start_time) ? null : (\DateTime::createFromFormat('H:i:s', $meeting->start_time) ?: \DateTime::createFromFormat('H:i', $meeting->start_time))->format('H:i'))];
+                    } elseif ($fieldName == 'duration_time') {
+                        return ['duration' => $request->has('duration') ? $request->input('duration') : (empty($meeting->duration_time) ? null : (\DateTime::createFromFormat('H:i:s', $meeting->duration_time) ?: \DateTime::createFromFormat('H:i', $meeting->duration_time))->format('H:i'))];
+                    } elseif ($fieldName == 'published') {
+                        return ['published' => $request->has('published') ? $request->input('published') : ($meeting->published === 1)];
+                    } elseif ($fieldName == 'email_contact') {
+                        return ['email' => $request->has('email') ? $request->input('email') : $meeting->email_contact];
+                    } elseif ($fieldName == 'worldid_mixed') {
+                        return ['worldId' => $request->has('worldId') ? $request->input('worldId') : $meeting->worldid_mixed];
+                    } elseif ($fieldName == 'meeting_name') {
+                        return ['name' => $request->has('name') ? $request->input('name') : $meetingData->get('meeting_name')];
+                    } elseif (in_array($fieldName, Meeting::$mainFields)) {
+                        return [$fieldName => $request->has($fieldName) ? $request->input($fieldName) : $meeting->{$fieldName}];
+                    } else {
+                        return [$fieldName => $request->has($fieldName) ? $request->input($fieldName) : $meetingData->get($fieldName)];
+                    }
+                })
+                ->toArray()
+        );
 
-        $mergedInputs = collect(Meeting::$mainFields)->merge($dataTemplateKeys)
-            ->reject(fn ($fieldName) => $fieldName == 'id_bigint' || $fieldName == 'time_zone' || $fieldName == 'lang_enum')
-            ->mapWithKeys(function ($fieldName, $_) use ($request, $meeting, $meetingData) {
-                if ($fieldName == 'service_body_bigint') {
-                    return ['serviceBodyId' => $request->has('serviceBodyId') ? $request->input('serviceBodyId') : $meeting->service_body_bigint];
-                } elseif ($fieldName == 'formats') {
-                    return ['formatIds' => $request->has('formatIds') ? $request->input('formatIds') : (empty($this->formats) ? collect([]) : collect(explode(',', $meeting->formats))->map(fn ($id) => intval($id))->toArray())];
-                } elseif ($fieldName == 'venue_type') {
-                    return ['venueType' => $request->has('venueType') ? $request->input('venueType') : $meeting->venue_type];
-                } elseif ($fieldName == 'weekday_tinyint') {
-                    return ['day' => $request->has('day') ? $request->input('day') : $meeting->weekday_tinyint];
-                } elseif ($fieldName == 'start_time') {
-                    return ['startTime' => $request->has('startTime') ? $request->input('startTime') : (empty($meeting->start_time) ? null : (\DateTime::createFromFormat('H:i:s', $meeting->start_time) ?: \DateTime::createFromFormat('H:i', $meeting->start_time))->format('H:i'))];
-                } elseif ($fieldName == 'duration_time') {
-                    return ['duration' => $request->has('duration') ? $request->input('duration') : (empty($meeting->duration_time) ? null : (\DateTime::createFromFormat('H:i:s', $meeting->duration_time) ?: \DateTime::createFromFormat('H:i', $meeting->duration_time))->format('H:i'))];
-                } elseif ($fieldName == 'published') {
-                    return ['published' => $request->has('published') ? $request->input('published') : ($meeting->published === 1)];
-                } elseif ($fieldName == 'email_contact') {
-                    return ['email' => $request->has('email') ? $request->input('email') : $meeting->email_contact];
-                } elseif ($fieldName == 'worldid_mixed') {
-                    return ['worldId' => $request->has('worldId') ? $request->input('worldId') : $meeting->worldid_mixed];
-                } elseif ($fieldName == 'meeting_name') {
-                    return ['name' => $request->has('name') ? $request->input('name') : $meetingData->get('meeting_name')];
-                } elseif (in_array($fieldName, Meeting::$mainFields)) {
-                    return [$fieldName => $request->has($fieldName) ? $request->input($fieldName) : $meeting->{$fieldName}];
-                } else {
-                    return [$fieldName => $request->has($fieldName) ? $request->input($fieldName) : $meetingData->get($fieldName)];
-                }
-            })
-            ->toArray();
-
-        $request->merge($mergedInputs);
-        $values = $this->validateInputsAndCreateValuesArray($request);
+        $validated = $this->validateForUpdate($request);
+        $values = $this->buildValuesArray($validated);
         $this->meetingRepository->update($meeting->id_bigint, $values);
         return response()->noContent();
     }
@@ -114,86 +133,118 @@ class MeetingController extends ResourceController
         return response()->noContent();
     }
 
-    private function validateInputsAndCreateValuesArray(Request $request, bool $isForCreate = false): array
+    private function getDataTemplates(): Collection
     {
-        $virtualFormatId = $this->formatRepository->getVirtualFormat()->shared_id_bigint;
-        $temporarilyClosedId = $this->formatRepository->getTemporarilyClosedFormat()->shared_id_bigint;
-        $hybridFormatId = $this->formatRepository->getHybridFormat()->shared_id_bigint;
+        static $dataTemplates = null;
+        if (is_null($dataTemplates) || App::runningUnitTests()) {
+            $dataTemplates = $this->meetingRepository->getDataTemplates()->mapWithKeys(fn ($t, $_) => [$t->key => $t]);
+        }
+        return $dataTemplates;
+    }
 
-        $validators = [
-            'serviceBodyId' => ['required', 'int', 'exists:comdef_service_bodies,id_bigint'],
-            'formatIds' => 'present|array',
-            'formatIds.*' => ['int', 'exists:comdef_formats,shared_id_bigint', Rule::notIn([$virtualFormatId, $temporarilyClosedId, $hybridFormatId])],
-            'venueType' => ['required', Rule::in(Meeting::VALID_VENUE_TYPES)],
-            'temporarilyVirtual' => 'sometimes|boolean',
-            'day' => 'required|int|between:0,6',
-            'startTime' => 'required|date_format:H:i',
-            'duration' => 'required|date_format:H:i',
-            'latitude' => 'required|numeric|between:-90,90',
-            'longitude' => 'required|numeric|between:-180,180',
-            'published' => 'required|boolean',
-            'email' => array_merge($isForCreate ? [] : ['present'], ['nullable', 'email', 'max:255']),
-            'worldId' => array_merge($isForCreate ? [] : ['present'], ['nullable', 'string', 'max:30']),
-            'name' => 'required|string|max:128',
-        ];
+    private function validateForUpdate(Request $request)
+    {
+        return collect($request->validate(
+            array_merge([
+                'serviceBodyId' => 'required|int|exists:comdef_service_bodies,id_bigint',
+                'formatIds' => 'present|array',
+                'formatIds.*' => ['int', 'exists:comdef_formats,shared_id_bigint', Rule::notIn([$this->getVirtualFormatId(), $this->getTemporarilyClosedFormatId(), $this->getHybridFormatId()])],
+                'venueType' => ['required', Rule::in(Meeting::VALID_VENUE_TYPES)],
+                'temporarilyVirtual' => 'sometimes|boolean',
+                'day' => 'required|int|between:0,6',
+                'startTime' => 'required|date_format:H:i',
+                'duration' => 'required|date_format:H:i',
+                'latitude' => 'required|numeric|between:-90,90',
+                'longitude' => 'required|numeric|between:-180,180',
+                'published' => 'required|boolean',
+                'email' => 'nullable|present|email|max:255',
+                'worldId' => 'nullable|present|string|max:30',
+                'name' => 'required|string|max:128',
+            ], $this->getDataFieldValidators())
+        ));
+    }
 
-        $validators = array_merge(
-            $validators,
-            $this->meetingRepository->getDataTemplates()
-                ->mapWithKeys(function ($template, $_) {
-                    if ($template->key == 'meeting_name') {
-                        return ['name' => 'required|string|max:128'];
-                    } elseif (in_array($template->key, VenueTypeLocation::FIELDS)) {
-                        return [$template->key => ['max:512', new VenueTypeLocation]];
-                    } else {
-                        return [$template->key => 'nullable|string|max:512'];
-                    }
-                })
-                ->toArray()
-        );
-
-        $validated = collect($request->validate($validators));
-
-        return collect($validators)
-            ->mapWithKeys(function ($_, $fieldName) use ($validated, $virtualFormatId, $temporarilyClosedId, $hybridFormatId) {
-                if ($fieldName == 'serviceBodyId') {
-                    return ['service_body_bigint' => $validated[$fieldName]];
-                } elseif ($fieldName == 'formatIds') {
-                    $value = $validated[$fieldName];
-                    $temporarilyVirtual = boolval($validated['temporarilyVirtual'] ?? false);
-                    $venueType = $validated->get('venueType');
-                    if ($venueType == Meeting::VENUE_TYPE_VIRTUAL) {
-                        array_push($value, $virtualFormatId);
-                        if ($temporarilyVirtual) {
-                            array_push($value, $temporarilyClosedId);
-                        }
-                    } elseif ($venueType == Meeting::VENUE_TYPE_HYBRID) {
-                        array_push($value, $hybridFormatId);
-                    }
-                    return ['formats' => collect($value)->sort()->unique()->join(',')];
-                } elseif ($fieldName == 'venueType') {
-                    return ['venue_type' => $validated[$fieldName]];
-                } elseif ($fieldName == 'day') {
-                    return ['weekday_tinyint' => $validated[$fieldName]];
-                } elseif ($fieldName == 'startTime') {
-                    return ['start_time' => $validated[$fieldName]];
-                } elseif ($fieldName == 'duration') {
-                    return ['duration_time' => $validated[$fieldName]];
-                } elseif ($fieldName == 'published') {
-                    return ['published' => $validated[$fieldName] ? 1 : 0];
-                } elseif ($fieldName == 'email') {
-                    return ['email_contact' => $validated[$fieldName] ?? null];
-                } elseif ($fieldName == 'worldId') {
-                    return ['worldid_mixed' => $validated[$fieldName] ?? null];
-                } elseif ($fieldName == 'name') {
-                    return ['meeting_name' => $validated[$fieldName]];
-                } elseif ($validated->has($fieldName)) {
-                    return [$fieldName => $validated[$fieldName]];
+    private function getDataFieldValidators(): array
+    {
+        return $this->getDataTemplates()
+            ->reject(fn ($_, $fieldName) => $fieldName == 'meeting_name')
+            ->mapWithKeys(function ($_, $fieldName) {
+                if (in_array($fieldName, VenueTypeLocation::FIELDS)) {
+                    return [$fieldName => ['max:512', new VenueTypeLocation]];
                 } else {
-                    return [null => null];
+                    return [$fieldName => 'nullable|string|max:512'];
                 }
             })
-            ->reject(fn ($_, $key) => empty($key))
+            ->toArray();
+    }
+
+    private function getVirtualFormatId(): int
+    {
+        static $id = null;
+        if (is_null($id)) {
+            $id = $this->formatRepository->getVirtualFormat()->shared_id_bigint;
+        }
+        return $id;
+    }
+
+    private function getHybridFormatId(): int
+    {
+        static $id = null;
+        if (is_null($id)) {
+            $id = $this->formatRepository->getHybridFormat()->shared_id_bigint;
+        }
+        return $id;
+    }
+
+    private function getTemporarilyClosedFormatId(): int
+    {
+        static $id = null;
+        if (is_null($id)) {
+            $id = $this->formatRepository->getTemporarilyClosedFormat()->shared_id_bigint;
+        }
+        return $id;
+    }
+
+    private function buildFormatsString(Collection $validated): string
+    {
+        $formatIds = $validated['formatIds'];
+        $temporarilyVirtual = boolval($validated['temporarilyVirtual'] ?? false);
+        $venueType = $validated['venueType'];
+        if ($venueType == Meeting::VENUE_TYPE_VIRTUAL) {
+            array_push($formatIds, $this->getVirtualFormatId());
+            if ($temporarilyVirtual) {
+                array_push($formatIds, $this->getTemporarilyClosedFormatId());
+            }
+        } elseif ($venueType == Meeting::VENUE_TYPE_HYBRID) {
+            array_push($formatIds, $this->getHybridFormatId());
+        }
+        return collect($formatIds)->sort()->unique()->join(',');
+    }
+
+    private function buildValuesArray(Collection $validated): array
+    {
+        $values = [
+            'service_body_bigint' => $validated['serviceBodyId'],
+            'formats' => $this->buildFormatsString($validated),
+            'venue_type' => $validated['venueType'],
+            'weekday_tinyint' => $validated['day'],
+            'start_time' => \DateTime::createFromFormat('H:i', $validated['startTime'])->format('H:i:s'),
+            'duration_time' => \DateTime::createFromFormat('H:i', $validated['duration'])->format('H:i:s'),
+            'latitude' => $validated['latitude'],
+            'longitude' => $validated['longitude'],
+            'published' => $validated['published'] ? 1 : 0,
+            'email_contact' => $validated['email'] ?? null,
+            'worldid_mixed' => $validated['worldId'] ?? null,
+            'meeting_name' => $validated['name'],
+        ];
+
+        return collect($values)
+            ->merge(
+                $this->getDataTemplates()
+                    ->reject(fn ($_, $fieldName) => $fieldName == 'meeting_name')
+                    ->mapWithKeys(fn ($_, $fieldName) => $validated->has($fieldName) ? [$fieldName => $validated[$fieldName]] : [null => null])
+                    ->reject(fn ($_, $key) => empty($key))
+            )
             ->toArray();
     }
 }
