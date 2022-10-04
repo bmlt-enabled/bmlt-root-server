@@ -28,6 +28,63 @@
         }
     ],
     "paths": {
+        "/api/v1/formats": {
+            "get": {
+                "tags": [
+                    "formats"
+                ],
+                "summary": "Retrieve formats",
+                "description": "Retrieve formats for server",
+                "operationId": "getFormats",
+                "responses": {
+                    "200": {
+                        "description": "Returns when user is authenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": "0"
+                                        },
+                                        "worldId": {
+                                            "type": "string",
+                                            "example": "string"
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "example": "string"
+                                        },
+                                        "translations": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/FormatLangModel"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when not authenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FormatErrorUnauthenticated"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/servicebodies": {
             "get": {
                 "tags": [
@@ -1407,6 +1464,47 @@
     },
     "components": {
         "schemas": {
+            "FormatLangModel": {
+                "required": [
+                    "key",
+                    "name",
+                    "description",
+                    "language"
+                ],
+                "properties": {
+                    "key": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "language": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "FormatErrorUnauthenticated": {
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Unauthenticated."
+                    }
+                },
+                "type": "object"
+            },
+            "FormatErrorUnauthorized": {
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "This action is unauthorized."
+                    }
+                },
+                "type": "object"
+            },
             "ServiceBodyResponse": {
                 "properties": {
                     "id": {

@@ -63,7 +63,7 @@ class UserController extends ResourceController
      * @OA\Get(
      * path="/api/v1/users",
      * summary="Retrieve users",
-     * description="Retrieve users for authenticated user",
+     * description="Retrieve users for authenticated user.",
      * operationId="getUsers",
      * tags={"users"},
      * security={{"bearerAuth":{}}},
@@ -100,7 +100,7 @@ class UserController extends ResourceController
      * @OA\Get(
      * path="/api/v1/users/{userId}",
      * summary="Retrieve a single user",
-     * description="Retrieve single user",
+     * description="Retrieve single user.",
      * operationId="getSingleUser",
      * tags={"users"},
      * security={{"bearerAuth":{}}},
@@ -122,7 +122,7 @@ class UserController extends ResourceController
      *   ),
      *   @OA\Response(
      *      response=401,
-     *      description="Returns when not authenticated",
+     *      description="Returns when not authenticated.",
      *      @OA\JsonContent(ref="#/components/schemas/UserErrorUnauthenticated")
      *   ),
      *   @OA\Response(
@@ -161,12 +161,12 @@ class UserController extends ResourceController
      * ),
      * @OA\Response(
      *    response=201,
-     *    description="Returns when POST is successful",
+     *    description="Returns when POST is successful.",
      *    @OA\JsonContent(ref="#/components/schemas/UserResponse")
      * ),
      * @OA\Response(
      *     response=422,
-     *     description="Validation error",
+     *     description="Validation error.",
      *     @OA\JsonContent(
      *        @OA\Property(property="message", type="string", example="The username field is required. (and 1 more error)"),
      *        @OA\Property(
@@ -193,7 +193,7 @@ class UserController extends ResourceController
      * ),
      * @OA\Response(
      *    response=401,
-     *    description="Returns when user is not authenticated",
+     *    description="Returns when user is not authenticated.",
      *    @OA\JsonContent(
      *       @OA\Property(property="message", type="string", example="The provided credentials are incorrect."),
      *    )
@@ -234,7 +234,7 @@ class UserController extends ResourceController
      * @OA\Put(
      * path="/api/v1/users/{userId}",
      * summary="Update single user",
-     * description="Updates a single user",
+     * description="Updates a single user.",
      * operationId="updateUser",
      * tags={"users"},
      * security={{"bearerAuth":{}}},
@@ -265,11 +265,11 @@ class UserController extends ResourceController
      * ),
      * @OA\Response(
      *    response=204,
-     *    description="Returns when PUT is successful"
+     *    description="Returns when PUT is successful."
      * ),
      * @OA\Response(
      *     response=422,
-     *     description="Validation error",
+     *     description="Validation error.",
      *     @OA\JsonContent(
      *        @OA\Property(property="message", type="string", example="The username field is required. (and 1 more error)"),
      *        @OA\Property(
@@ -296,7 +296,7 @@ class UserController extends ResourceController
      * ),
      * @OA\Response(
      *    response=401,
-     *    description="Returns when user is not authenticated",
+     *    description="Returns when user is not authenticated.",
      *    @OA\JsonContent(
      *       @OA\Property(property="message", type="string", example="The provided credentials are incorrect."),
      *    )
