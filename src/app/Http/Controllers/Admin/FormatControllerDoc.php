@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Responses\JsonResponse;
-use App\Models\ServiceBody;
 
 /**
  * @OA\Schema(
