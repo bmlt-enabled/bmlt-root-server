@@ -128,7 +128,7 @@ class UserController extends ResourceController
      *   @OA\Response(
      *      response=404,
      *      description="Returns when no user exists.",
-     *      @OA\JsonContent(ref="#/components/schemas/UsersResponse")
+     *      @OA\JsonContent(ref="#/components/schemas/NoUserExists")
      *   )
      * )
      */
@@ -141,7 +141,7 @@ class UserController extends ResourceController
      * @OA\Post(
      * path="/api/v1/users",
      * summary="Create User",
-     * description="Cretaes a user",
+     * description="Cretaes a user.",
      * operationId="createUser",
      * tags={"users"},
      * security={{"bearerAuth":{}}},
@@ -348,23 +348,17 @@ class UserController extends ResourceController
      * @OA\Response(
      *    response=401,
      *    description="Returns when not authenticated",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="message", type="string", example="Unauthenticated."),
-     *    )
+     *    @OA\JsonContent(ref="#/components/schemas/UserErrorUnauthenticated")
      * ),
      * @OA\Response(
      *    response=403,
      *    description="Returns when unauthorized",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="message", type="string", example="This action is unauthorized."),
-     *    )
+     *    @OA\JsonContent(ref="#/components/schemas/UserErrorUnauthorized")
      * ),
      *  @OA\Response(
      *     response=404,
      *     description="Returns when no service body exists.",
-     *     @OA\JsonContent(
-     *        @OA\Property(property="message", type="string", example="No query results for model [App\\Models\\User]"),
-     *     )
+     *     @OA\JsonContent(ref="#/components/schemas/NoUserExists")
      *  )
      * )
      */
@@ -425,23 +419,17 @@ class UserController extends ResourceController
      * @OA\Response(
      *    response=401,
      *    description="Returns when not authenticated",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="message", type="string", example="Unauthenticated."),
-     *    )
+     *    @OA\JsonContent(ref="#/components/schemas/UserErrorUnauthenticated")
      * ),
      * @OA\Response(
      *    response=403,
      *    description="Returns when unauthorized",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="message", type="string", example="This action is unauthorized."),
-     *    )
+     *    @OA\JsonContent(ref="#/components/schemas/UserErrorUnauthorized")
      * ),
      *  @OA\Response(
      *     response=404,
-     *     description="Returns when no user exists.",
-     *     @OA\JsonContent(
-     *        @OA\Property(property="message", type="string", example="No query results for model [App\\Models\\User]"),
-     *     )
+     *     description="Returns when no service body exists.",
+     *     @OA\JsonContent(ref="#/components/schemas/NoUserExists")
      *  )
      * )
      */

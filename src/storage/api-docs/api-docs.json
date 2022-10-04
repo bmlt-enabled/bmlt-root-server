@@ -34,11 +34,177 @@
                     "formats"
                 ],
                 "summary": "Retrieve formats",
-                "description": "Retrieve formats for server",
+                "description": "Retrieve formats for server.",
                 "operationId": "getFormats",
                 "responses": {
                     "200": {
                         "description": "Returns when user is authenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetFormatsResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when not authenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FormatErrorUnauthenticated"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "formats"
+                ],
+                "summary": "Create Format",
+                "description": "Cretaes a format.",
+                "operationId": "createFormat",
+                "requestBody": {
+                    "description": "Pass in format object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "translations"
+                                ],
+                                "properties": {
+                                    "worldId": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "translations": {
+                                        "type": "array",
+                                        "items": {
+                                            "$ref": "#/components/schemas/FormatLangModel"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Returns when POST is successful.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FormatResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The translations.0.key field is required. (and 1 more error)"
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "translations.0.key": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The translations.0.key field is required."
+                                                    }
+                                                },
+                                                "translations.0.name": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The translations.0.name field is required."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user is not authenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The provided credentials are incorrect."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Returns when user is unauthorized to perform action.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FormatErrorUnauthenticated"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/formats/{formatId}": {
+            "get": {
+                "tags": [
+                    "formats"
+                ],
+                "summary": "Retrieve a single format",
+                "description": "Retrieve single format.",
+                "operationId": "getSingleFormat",
+                "parameters": [
+                    {
+                        "name": "formatId",
+                        "in": "path",
+                        "description": "ID of format",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns with successful request.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -66,6 +232,140 @@
                                 }
                             }
                         }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "formats"
+                ],
+                "summary": "Update single format",
+                "description": "Updates a single format.",
+                "operationId": "updateFormat",
+                "parameters": [
+                    {
+                        "name": "formatId",
+                        "in": "path",
+                        "description": "ID of format",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass in format object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FormatResponse"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Returns when PUT is successful."
+                    },
+                    "422": {
+                        "description": "Validation error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The translations.0.key field is required. (and 1 more error)"
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "translations.0.key": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The translations.0.key field is required."
+                                                    }
+                                                },
+                                                "translations.0.name": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The translations.0.name field is required."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user is not authenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The provided credentials are incorrect."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Returns when user is unauthorized to perform action.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FormatErrorUnauthenticated"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "formats"
+                ],
+                "summary": "Deletes a single format",
+                "description": "Deletes a single format by id.",
+                "operationId": "deleteFormat",
+                "parameters": [
+                    {
+                        "name": "formatId",
+                        "in": "path",
+                        "description": "ID of format",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Returns with successful request."
                     },
                     "401": {
                         "description": "Returns when not authenticated",
@@ -73,6 +373,109 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/FormatErrorUnauthenticated"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Returns when unauthorized.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FormatErrorUnauthorized"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Returns when no format for id exists.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No query results for model [App\\\\Models\\\\Format]"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "formats"
+                ],
+                "summary": "Patches a single format",
+                "description": "Patches a single format by id.",
+                "operationId": "patchFormat",
+                "parameters": [
+                    {
+                        "name": "formatId",
+                        "in": "path",
+                        "description": "ID of format",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass in format attributes.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FormatResponse"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Returns with successful request."
+                    },
+                    "401": {
+                        "description": "Returns when not authenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FormatErrorUnauthenticated"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Returns when unauthorized.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "": {
+                                            "$ref": "#/components/schemas/FormatErrorUnauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Returns when no service body exists.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NoFormatExists"
                                 }
                             }
                         }
@@ -91,7 +494,7 @@
                     "servicebodies"
                 ],
                 "summary": "Retrieve service bodies",
-                "description": "Retrieve service bodies for authenticated user",
+                "description": "Retrieve service bodies for authenticated user.",
                 "operationId": "getServiceBodies",
                 "responses": {
                     "200": {
@@ -105,27 +508,11 @@
                         }
                     },
                     "401": {
-                        "description": "Returns when not authenticated",
+                        "description": "Returns when not authenticated.",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ServiceErrorUnauthenticated"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Returns when no service body exists.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "No query results for model [App\\\\Models\\\\ServiceBody]"
-                                        }
-                                    },
-                                    "type": "object"
                                 }
                             }
                         }
@@ -142,7 +529,7 @@
                     "servicebodies"
                 ],
                 "summary": "Create Service Body",
-                "description": "Cretaes a service body",
+                "description": "Cretaes a service body.",
                 "operationId": "createServiceBody",
                 "requestBody": {
                     "description": "Pass in service body object",
@@ -206,7 +593,7 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Returns when POST is successful",
+                        "description": "Returns when POST is successful.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -251,7 +638,7 @@
                         }
                     },
                     "401": {
-                        "description": "Returns when user is not authenticated",
+                        "description": "Returns when user is not authenticated.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -290,7 +677,7 @@
                     "servicebodies"
                 ],
                 "summary": "Retrieve a single service body",
-                "description": "Retrieve a single service body by id",
+                "description": "Retrieve a single service body by id.",
                 "operationId": "getServiceBody",
                 "parameters": [
                     {
@@ -317,14 +704,13 @@
                         }
                     },
                     "401": {
-                        "description": "Returns when not authenticated",
+                        "description": "Returns when not authenticated.",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
+                                        "": {
+                                            "$ref": "#/components/schemas/ServiceErrorUnauthenticated"
                                         }
                                     },
                                     "type": "object"
@@ -333,14 +719,13 @@
                         }
                     },
                     "403": {
-                        "description": "Returns when unauthorized",
+                        "description": "Returns when unauthorized.",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "This action is unauthorized."
+                                        "": {
+                                            "$ref": "#/components/schemas/ServiceErrorUnauthorized"
                                         }
                                     },
                                     "type": "object"
@@ -353,13 +738,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "No query results for model [App\\\\Models\\\\ServiceBody]"
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/NoServiceBodyExists"
                                 }
                             }
                         }
@@ -376,7 +755,7 @@
                     "servicebodies"
                 ],
                 "summary": "Update single Service Body",
-                "description": "Updates a single service body",
+                "description": "Updates a single service body.",
                 "operationId": "updateServiceBody",
                 "parameters": [
                     {
@@ -392,7 +771,7 @@
                     }
                 ],
                 "requestBody": {
-                    "description": "Pass in service body object",
+                    "description": "Pass in service body object.",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -449,10 +828,10 @@
                 },
                 "responses": {
                     "204": {
-                        "description": "Returns when PUT is successful"
+                        "description": "Returns when PUT is successful."
                     },
                     "422": {
-                        "description": "Validation error",
+                        "description": "Validation error.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -487,7 +866,7 @@
                         }
                     },
                     "401": {
-                        "description": "Returns when user is not authenticated",
+                        "description": "Returns when user is not authenticated.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -524,7 +903,7 @@
                     "servicebodies"
                 ],
                 "summary": "Deletes a single service body",
-                "description": "Deletes a single service body by id",
+                "description": "Deletes a single service body by id.",
                 "operationId": "deleteServiceBody",
                 "parameters": [
                     {
@@ -544,14 +923,13 @@
                         "description": "Returns with successful request."
                     },
                     "401": {
-                        "description": "Returns when not authenticated",
+                        "description": "Returns when not authenticated.",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
+                                        "": {
+                                            "$ref": "#/components/schemas/ServiceErrorUnauthenticated"
                                         }
                                     },
                                     "type": "object"
@@ -560,14 +938,13 @@
                         }
                     },
                     "403": {
-                        "description": "Returns when unauthorized",
+                        "description": "Returns when unauthorized.",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "This action is unauthorized."
+                                        "": {
+                                            "$ref": "#/components/schemas/ServiceErrorUnauthorized"
                                         }
                                     },
                                     "type": "object"
@@ -619,7 +996,7 @@
                     "servicebodies"
                 ],
                 "summary": "Patches a single service body",
-                "description": "Patches a single service body by id",
+                "description": "Patches a single service body by id.",
                 "operationId": "patchServiceBody",
                 "parameters": [
                     {
@@ -635,7 +1012,7 @@
                     }
                 ],
                 "requestBody": {
-                    "description": "Pass in service body attributes",
+                    "description": "Pass in service body attributes.",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -659,14 +1036,13 @@
                         "description": "Returns with successful request."
                     },
                     "401": {
-                        "description": "Returns when not authenticated",
+                        "description": "Returns when not authenticated.",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
+                                        "": {
+                                            "$ref": "#/components/schemas/ServiceErrorUnauthenticated"
                                         }
                                     },
                                     "type": "object"
@@ -675,14 +1051,13 @@
                         }
                     },
                     "403": {
-                        "description": "Returns when unauthorized",
+                        "description": "Returns when unauthorized.",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "This action is unauthorized."
+                                        "": {
+                                            "$ref": "#/components/schemas/ServiceErrorUnauthorized"
                                         }
                                     },
                                     "type": "object"
@@ -695,13 +1070,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "No query results for model [App\\\\Models\\\\ServiceBody]"
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/NoServiceBodyExists"
                                 }
                             }
                         }
@@ -720,7 +1089,7 @@
                     "auth"
                 ],
                 "summary": "Retrieve Token",
-                "description": "Retrieve token by username, password",
+                "description": "Retrieve token by username, password.",
                 "operationId": "authToken",
                 "requestBody": {
                     "description": "Pass user credentials",
@@ -751,7 +1120,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Returns when user is authenticated",
+                        "description": "Returns when user is authenticated.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -810,7 +1179,7 @@
                         }
                     },
                     "401": {
-                        "description": "Returns when user is not authenticated",
+                        "description": "Returns when user is not authenticated.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -834,7 +1203,7 @@
                     "auth"
                 ],
                 "summary": "Refresh Token",
-                "description": "Refresh token",
+                "description": "Refresh token.",
                 "operationId": "authRefresh",
                 "responses": {
                     "200": {
@@ -891,11 +1260,11 @@
                     "auth"
                 ],
                 "summary": "Revoke Token",
-                "description": "Revoke token and logout",
+                "description": "Revoke token and logout.",
                 "operationId": "authLogout",
                 "responses": {
                     "200": {
-                        "description": "Returns when token is valid"
+                        "description": "Returns when token is valid."
                     },
                     "401": {
                         "description": "Returns when token is invalid or missing.",
@@ -927,7 +1296,7 @@
                     "users"
                 ],
                 "summary": "Retrieve users",
-                "description": "Retrieve users for authenticated user",
+                "description": "Retrieve users for authenticated user.",
                 "operationId": "getUsers",
                 "responses": {
                     "200": {
@@ -962,7 +1331,7 @@
                     "users"
                 ],
                 "summary": "Create User",
-                "description": "Cretaes a user",
+                "description": "Cretaes a user.",
                 "operationId": "createUser",
                 "requestBody": {
                     "description": "Pass in user object",
@@ -1011,7 +1380,7 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Returns when POST is successful",
+                        "description": "Returns when POST is successful.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1021,7 +1390,7 @@
                         }
                     },
                     "422": {
-                        "description": "Validation error",
+                        "description": "Validation error.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1056,7 +1425,7 @@
                         }
                     },
                     "401": {
-                        "description": "Returns when user is not authenticated",
+                        "description": "Returns when user is not authenticated.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1095,7 +1464,7 @@
                     "users"
                 ],
                 "summary": "Retrieve a single user",
-                "description": "Retrieve single user",
+                "description": "Retrieve single user.",
                 "operationId": "getSingleUser",
                 "parameters": [
                     {
@@ -1122,7 +1491,7 @@
                         }
                     },
                     "401": {
-                        "description": "Returns when not authenticated",
+                        "description": "Returns when not authenticated.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1136,7 +1505,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/UsersResponse"
+                                    "$ref": "#/components/schemas/NoUserExists"
                                 }
                             }
                         }
@@ -1153,7 +1522,7 @@
                     "users"
                 ],
                 "summary": "Update single user",
-                "description": "Updates a single user",
+                "description": "Updates a single user.",
                 "operationId": "updateUser",
                 "parameters": [
                     {
@@ -1215,10 +1584,10 @@
                 },
                 "responses": {
                     "204": {
-                        "description": "Returns when PUT is successful"
+                        "description": "Returns when PUT is successful."
                     },
                     "422": {
-                        "description": "Validation error",
+                        "description": "Validation error.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1253,7 +1622,7 @@
                         }
                     },
                     "401": {
-                        "description": "Returns when user is not authenticated",
+                        "description": "Returns when user is not authenticated.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1314,13 +1683,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/UserErrorUnauthenticated"
                                 }
                             }
                         }
@@ -1330,29 +1693,17 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "This action is unauthorized."
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/UserErrorUnauthorized"
                                 }
                             }
                         }
                     },
                     "404": {
-                        "description": "Returns when no user exists.",
+                        "description": "Returns when no service body exists.",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "No query results for model [App\\\\Models\\\\User]"
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/NoUserExists"
                                 }
                             }
                         }
@@ -1410,13 +1761,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/UserErrorUnauthenticated"
                                 }
                             }
                         }
@@ -1426,13 +1771,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "This action is unauthorized."
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/UserErrorUnauthorized"
                                 }
                             }
                         }
@@ -1442,13 +1781,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "No query results for model [App\\\\Models\\\\User]"
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/NoUserExists"
                                 }
                             }
                         }
@@ -1464,6 +1797,25 @@
     },
     "components": {
         "schemas": {
+            "FormatResponse": {
+                "properties": {
+                    "worldId": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "type": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "translations": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/FormatLangModel"
+                        }
+                    }
+                },
+                "type": "object"
+            },
             "FormatLangModel": {
                 "required": [
                     "key",
@@ -1504,6 +1856,35 @@
                     }
                 },
                 "type": "object"
+            },
+            "NoFormatExists": {
+                "description": "Returns when no format exists.",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "No query results for model [App\\\\Models\\\\Format]"
+                    }
+                },
+                "type": "object"
+            },
+            "GetFormatsResponse": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/FormatResponse"
+                },
+                "example": [
+                    {
+                        "id": 0,
+                        "worldId": "string",
+                        "type": "string",
+                        "translations": {
+                            "key": "string",
+                            "name": "string",
+                            "description": "string",
+                            "language": "string"
+                        }
+                    }
+                ]
             },
             "ServiceBodyResponse": {
                 "properties": {
@@ -1598,6 +1979,16 @@
                 },
                 "type": "object"
             },
+            "NoServiceBodyExists": {
+                "description": "Returns when no user exists.",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "No query results for model [App\\\\Models\\\\ServiceBody]"
+                    }
+                },
+                "type": "object"
+            },
             "UserResponse": {
                 "properties": {
                     "id": {
@@ -1675,6 +2066,28 @@
                     }
                 },
                 "type": "object"
+            }
+        },
+        "responses": {
+            "401": {
+                "description": "Returns when not authenticated.",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/FormatErrorUnauthenticated"
+                        }
+                    }
+                }
+            },
+            "404": {
+                "description": "Returns when no format exists.",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/NoFormatExists"
+                        }
+                    }
+                }
             }
         },
         "securitySchemes": {
