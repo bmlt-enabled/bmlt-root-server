@@ -135,35 +135,20 @@ class MeetingController extends ResourceController
             'email' => array_merge($isForCreate ? [] : ['present'], ['nullable', 'email', 'max:255']),
             'worldId' => array_merge($isForCreate ? [] : ['present'], ['nullable', 'string', 'max:30']),
             'name' => 'required|string|max:128',
-            'location_text' => 'nullable|string|max:512',
-            'location_info' => 'nullable|string|max:512',
-            'location_street' => ['max:512', new VenueTypeLocation],
-            'location_neighborhood' => 'nullable|string|max:512',
-            'location_city_subsection' => 'nullable|string|max:512',
-            'location_municipality' => ['max:512', new VenueTypeLocation],
-            'location_sub_province' => 'nullable|string|max:512',
-            'location_province' => ['max:512', new VenueTypeLocation],
-            'location_postal_code_1' => ['max:512', new VenueTypeLocation],
-            'location_nation' => 'nullable|string|max:512',
-            'phone_meeting_number' => ['max:512', new VenueTypeLocation],
-            'virtual_meeting_link' => ['max:512', new VenueTypeLocation],
-            'virtual_meeting_additional_info' => 'nullable|string|max:512',
-            'contact_name_1' => 'nullable|string|max:512',
-            'contact_name_2' => 'nullable|string|max:512',
-            'contact_phone_1' => 'nullable|string|max:512',
-            'contact_phone_2' => 'nullable|string|max:512',
-            'contact_email_1' => 'nullable|string|max:512',
-            'contact_email_2' => 'nullable|string|max:512',
-            'bus_lines' => 'nullable|string|max:512',
-            'train_lines' => 'nullable|string|max:512',
-            'comments' => 'nullable|string|max:512',
         ];
 
         $validators = array_merge(
             $validators,
             $this->meetingRepository->getDataTemplates()
-                ->mapWithKeys(fn ($template, $_) => [$template->key => 'nullable|string|max:512'])
-                ->reject(fn ($_, $fieldName) => in_array($fieldName, MeetingData::STOCK_FIELDS))
+                ->mapWithKeys(function ($template, $_) {
+                    if ($template->key == 'meeting_name') {
+                        return ['name' => 'required|string|max:128'];
+                    } elseif (in_array($template->key, VenueTypeLocation::FIELDS)) {
+                        return [$template->key => ['max:512', new VenueTypeLocation]];
+                    } else {
+                        return [$template->key => 'nullable|string|max:512'];
+                    }
+                })
                 ->toArray()
         );
 
