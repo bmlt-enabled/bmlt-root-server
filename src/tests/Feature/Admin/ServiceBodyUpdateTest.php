@@ -19,23 +19,11 @@ class ServiceBodyUpdateTest extends TestCase
             'type' => $serviceBody->sb_type,
             'userId' => $serviceBody->principal_user_bigint,
             'editorUserIds' => !empty($this->editors_string) ? collect(explode(',', $this->editors_string))->map(fn ($id) => intval($id))->toArray() : [],
+            'url' => $serviceBody->uri_string,
+            'helpline' => $serviceBody->kml_file_uri_string,
+            'email' => $serviceBody->sb_meeting_email,
+            'worldId' => $serviceBody->worldid_mixed,
         ];
-
-        if (!empty($serviceBody->uri_string)) {
-            $values['url'] = $serviceBody->uri_string;
-        }
-
-        if (!empty($serviceBody->kml_file_uri_string)) {
-            $values['helpline'] = $serviceBody->kml_file_uri_string;
-        }
-
-        if (!empty($serviceBody->sb_meeting_email)) {
-            $values['email'] = $serviceBody->sb_meeting_email;
-        }
-
-        if (!empty($serviceBody->worldid_mixed)) {
-            $values['worldId'] = $serviceBody->worldid_mixed;
-        }
 
         return $values;
     }
@@ -352,20 +340,8 @@ class ServiceBodyUpdateTest extends TestCase
         $zone = $this->createZone('zone', 'zone', userId: $user->id_bigint);
         $data = $this->toPayload($zone);
 
-        // it is not required
+        // it is required
         unset($data['url']);
-        $this->withHeader('Authorization', "Bearer $token")
-            ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
-            ->assertStatus(204);
-
-        // it can't be null
-        $data['url'] = null;
-        $this->withHeader('Authorization', "Bearer $token")
-            ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
-            ->assertStatus(422);
-
-        // it can't be empty
-        $data['url'] = '    ';
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(422);
@@ -387,6 +363,18 @@ class ServiceBodyUpdateTest extends TestCase
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(204);
+
+        // it can be null
+        $data['url'] = null;
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
+            ->assertStatus(204);
+
+        // it can be empty (gets converted to null)
+        $data['url'] = '    ';
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
+            ->assertStatus(204);
     }
 
     public function testUpdateServiceBodyValidateHelpline()
@@ -396,20 +384,8 @@ class ServiceBodyUpdateTest extends TestCase
         $zone = $this->createZone('zone', 'zone', userId: $user->id_bigint);
         $data = $this->toPayload($zone);
 
-        // it is not required
+        // it is required
         unset($data['helpline']);
-        $this->withHeader('Authorization', "Bearer $token")
-            ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
-            ->assertStatus(204);
-
-        // it can't be null
-        $data['helpline'] = null;
-        $this->withHeader('Authorization', "Bearer $token")
-            ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
-            ->assertStatus(422);
-
-        // it can't be empty
-        $data['helpline'] = '    ';
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(422);
@@ -425,6 +401,18 @@ class ServiceBodyUpdateTest extends TestCase
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(204);
+
+        // it can be null
+        $data['helpline'] = null;
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
+            ->assertStatus(204);
+
+        // it can be empty (gets converted to null)
+        $data['helpline'] = '    ';
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
+            ->assertStatus(204);
     }
 
     public function testUpdateServiceBodyValidateEmail()
@@ -434,14 +422,8 @@ class ServiceBodyUpdateTest extends TestCase
         $zone = $this->createZone('zone', 'zone', userId: $user->id_bigint);
         $data = $this->toPayload($zone);
 
-        // it is not required
+        // it is required
         unset($data['email']);
-        $this->withHeader('Authorization', "Bearer $token")
-            ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
-            ->assertStatus(204);
-
-        // it can't be null
-        $data['email'] = null;
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(422);
@@ -463,6 +445,12 @@ class ServiceBodyUpdateTest extends TestCase
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(204);
+
+        // it can be null
+        $data['email'] = null;
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
+            ->assertStatus(204);
     }
 
     public function testUpdateServiceBodyValidateWorldId()
@@ -472,20 +460,8 @@ class ServiceBodyUpdateTest extends TestCase
         $zone = $this->createZone('zone', 'zone', userId: $user->id_bigint);
         $data = $this->toPayload($zone);
 
-        // it is not required
+        // it is required
         unset($data['worldId']);
-        $this->withHeader('Authorization', "Bearer $token")
-            ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
-            ->assertStatus(204);
-
-        // it can't be null
-        $data['worldId'] = null;
-        $this->withHeader('Authorization', "Bearer $token")
-            ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
-            ->assertStatus(422);
-
-        // it can't be empty
-        $data['worldId'] = '    ';
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(422);
@@ -498,6 +474,18 @@ class ServiceBodyUpdateTest extends TestCase
 
         // it can be 30 characters
         $data['worldId'] = str_repeat('t', 30);
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
+            ->assertStatus(204);
+
+        // it can be empty (gets converted to null)
+        $data['worldId'] = '    ';
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
+            ->assertStatus(204);
+
+        // it can be null
+        $data['worldId'] = null;
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(204);

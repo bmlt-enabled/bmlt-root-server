@@ -368,10 +368,10 @@ class ServiceBodyController extends ResourceController
             'userId' => 'required|exists:comdef_users,id_bigint',
             'editorUserIds' => 'present|array',
             'editorUserIds.*' => 'int|exists:comdef_users,id_bigint',
-            'url' => 'url|max:255',
-            'helpline' => 'string|max:255',
-            'email' => 'email|max:255',
-            'worldId' => 'string|max:30',
+            'url' => 'nullable|present|url|max:255',
+            'helpline' => 'nullable|present|string|max:255',
+            'email' => 'nullable|present|email|max:255',
+            'worldId' => 'nullable|present|string|max:30',
         ]);
 
         $this->handleUpdate($request, $serviceBody, $validated);
