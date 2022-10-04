@@ -141,22 +141,22 @@ class TestCase extends BaseTestCase
     // service bodies
     //
     //
-    protected function createZone(string $name, string $description, string $uri = null, string $helpline = null, string $worldId = null, string $email = null, int $userId = null, array $editorUserIds = null)
+    protected function createZone(string $name, string $description, string $uri = null, string $helpline = null, string $worldId = null, string $email = null, int $adminUserId = null, array $assignedUserIds = null)
     {
-        return $this->createServiceBody($name, $description, 'ZF', 0, $uri, $helpline, $worldId, $email, $userId, $editorUserIds);
+        return $this->createServiceBody($name, $description, 'ZF', 0, $uri, $helpline, $worldId, $email, $adminUserId, $assignedUserIds);
     }
 
-    protected function createRegion(string $name, string $description, int $sbOwner, string $uri = null, string $helpline = null, string $worldId = null, string $email = null, int $userId = null, array $editorUserIds = null)
+    protected function createRegion(string $name, string $description, int $sbOwner, string $uri = null, string $helpline = null, string $worldId = null, string $email = null, int $adminUserId = null, array $assignedUserIds = null)
     {
-        return $this->createServiceBody($name, $description, 'RS', $sbOwner, $uri, $helpline, $worldId, $email, $userId, $editorUserIds);
+        return $this->createServiceBody($name, $description, 'RS', $sbOwner, $uri, $helpline, $worldId, $email, $adminUserId, $assignedUserIds);
     }
 
-    protected function createArea(string $name, string $description, int $sbOwner, string $uri = null, string $helpline = null, string $worldId = null, string $email = null, int $userId = null, array $editorUserIds = null)
+    protected function createArea(string $name, string $description, int $sbOwner, string $uri = null, string $helpline = null, string $worldId = null, string $email = null, int $adminUserId = null, array $assignedUserIds = null)
     {
-        return $this->createServiceBody($name, $description, 'AS', $sbOwner, $uri, $helpline, $worldId, $email, $userId, $editorUserIds);
+        return $this->createServiceBody($name, $description, 'AS', $sbOwner, $uri, $helpline, $worldId, $email, $adminUserId, $assignedUserIds);
     }
 
-    protected function createServiceBody(string $name, string $description, string $sbType, int $sbOwner, string $uri = null, string $helpline = null, string $worldId = null, string $email = null, int $userId = null, array $editorUserIds = null)
+    protected function createServiceBody(string $name, string $description, string $sbType, int $sbOwner, string $uri = null, string $helpline = null, string $worldId = null, string $email = null, int $adminUserId = null, array $assignedUserIds = null)
     {
         return ServiceBody::create([
             'sb_owner' => $sbOwner,
@@ -167,8 +167,8 @@ class TestCase extends BaseTestCase
             'kml_file_uri_string' => $helpline,
             'worldid_mixed' => $worldId,
             'sb_meeting_email' => $email ?? '',
-            'principal_user_bigint' => $userId,
-            'editors_string' => !is_null($editorUserIds) ? implode(',', $editorUserIds) : null,
+            'principal_user_bigint' => $adminUserId,
+            'editors_string' => !is_null($assignedUserIds) ? implode(',', $assignedUserIds) : null,
         ]);
     }
 }

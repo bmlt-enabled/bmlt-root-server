@@ -86,22 +86,22 @@ class GetSearchResultsTest extends TestCase
         return $meeting;
     }
 
-    private function createZone(string $name, string $description, string $uri = null, string $helpline = null, string $worldId = null, string $email = null, int $principalUserId = null, array $editorUserIds = null)
+    private function createZone(string $name, string $description, string $uri = null, string $helpline = null, string $worldId = null, string $email = null, int $principalUserId = null, array $assignedUserIds = null)
     {
-        return $this->createServiceBody($name, $description, 'ZF', 0, $uri, $helpline, $worldId, $email, $principalUserId, $editorUserIds);
+        return $this->createServiceBody($name, $description, 'ZF', 0, $uri, $helpline, $worldId, $email, $principalUserId, $assignedUserIds);
     }
 
-    private function createRegion(string $name, string $description, int $sbOwner, string $uri = null, string $helpline = null, string $worldId = null, string $email = null, int $principalUserId = null, array $editorUserIds = null)
+    private function createRegion(string $name, string $description, int $sbOwner, string $uri = null, string $helpline = null, string $worldId = null, string $email = null, int $principalUserId = null, array $assignedUserIds = null)
     {
-        return $this->createServiceBody($name, $description, 'RS', $sbOwner, $uri, $helpline, $worldId, $email, $principalUserId, $editorUserIds);
+        return $this->createServiceBody($name, $description, 'RS', $sbOwner, $uri, $helpline, $worldId, $email, $principalUserId, $assignedUserIds);
     }
 
-    private function createArea(string $name, string $description, int $sbOwner, string $uri = null, string $helpline = null, string $worldId = null, string $email = null, int $principalUserId = null, array $editorUserIds = null)
+    private function createArea(string $name, string $description, int $sbOwner, string $uri = null, string $helpline = null, string $worldId = null, string $email = null, int $principalUserId = null, array $assignedUserIds = null)
     {
-        return $this->createServiceBody($name, $description, 'AS', $sbOwner, $uri, $helpline, $worldId, $email, $principalUserId, $editorUserIds);
+        return $this->createServiceBody($name, $description, 'AS', $sbOwner, $uri, $helpline, $worldId, $email, $principalUserId, $assignedUserIds);
     }
 
-    private function createServiceBody(string $name, string $description, string $sbType, int $sbOwner, string $uri = null, string $helpline = null, string $worldId = null, string $email = null, int $principalUserId = null, array $editorUserIds = null)
+    private function createServiceBody(string $name, string $description, string $sbType, int $sbOwner, string $uri = null, string $helpline = null, string $worldId = null, string $email = null, int $principalUserId = null, array $assignedUserIds = null)
     {
         return ServiceBody::create([
             'sb_owner' => $sbOwner,
@@ -113,7 +113,7 @@ class GetSearchResultsTest extends TestCase
             'worldid_mixed' => $worldId,
             'sb_meeting_email' => $email ?? '',
             'principal_user_bigint' => $principalUserId,
-            'editors_string' => !is_null($editorUserIds) ? implode(',', $editorUserIds) : null,
+            'editors_string' => !is_null($assignedUserIds) ? implode(',', $assignedUserIds) : null,
         ]);
     }
 
@@ -1556,7 +1556,7 @@ class GetSearchResultsTest extends TestCase
     public function testSensitiveFieldsServiceBodyAdminEditorsString()
     {
         $user = $this->createServiceBodyAdminUser();
-        $region1 = $this->createRegion('region1', 'region1', 0, editorUserIds: [$user->id_bigint]);
+        $region1 = $this->createRegion('region1', 'region1', 0, assignedUserIds: [$user->id_bigint]);
         $area1 = $this->createArea('area1', 'area1', $region1->id_bigint);
         $region2 = $this->createRegion('region2', 'region2', 0);
         $area2 = $this->createArea('area2', 'area2', $region2->id_bigint);

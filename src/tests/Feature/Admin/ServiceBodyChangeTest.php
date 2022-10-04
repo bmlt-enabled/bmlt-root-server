@@ -21,8 +21,8 @@ class ServiceBodyChangeTest extends TestCase
             'name' => 'test name',
             'description' => 'test description',
             'type' => 'AS',
-            'userId' => $user->id_bigint,
-            'editorUserIds' => [$user->id_bigint, $user2->id_bigint],
+            'adminUserId' => $user->id_bigint,
+            'assignedUserIds' => [$user->id_bigint, $user2->id_bigint],
             'url' => 'http://blah.com',
             'helpline' => '555-555-5555',
             'worldId' => 'test world id',
@@ -52,14 +52,14 @@ class ServiceBodyChangeTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $zone = $this->createZone('zone name', 'zone description', userId: $user->id_bigint);
+        $zone = $this->createZone('zone name', 'zone description', adminUserId: $user->id_bigint);
         $data = [
             'parentId' => $zone->id_bigint,
             'name' => $zone->name_string . ' modified',
             'description' => $zone->description_string,
             'type' => $zone->sb_type,
-            'userId' => $zone->principal_user_bigint,
-            'editorUserIds' => [],
+            'adminUserId' => $zone->principal_user_bigint,
+            'assignedUserIds' => [],
             'url' => 'http://blah.com',
             'helpline' => 'new helpline',
             'worldId' => 'new worldId',

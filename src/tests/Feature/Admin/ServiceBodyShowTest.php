@@ -134,8 +134,8 @@ class ServiceBodyShowTest extends TestCase
             ->assertStatus(200)
             ->json();
 
-        $this->assertIsInt($data['userId']);
-        $this->assertEquals($area->principal_user_bigint, $data['userId']);
+        $this->assertIsInt($data['adminUserId']);
+        $this->assertEquals($area->principal_user_bigint, $data['adminUserId']);
     }
 
     public function testShowServiceBodyUserIdNull()
@@ -152,10 +152,10 @@ class ServiceBodyShowTest extends TestCase
             ->assertStatus(200)
             ->json();
 
-        $this->assertNull($data['userId']);
+        $this->assertNull($data['adminUserId']);
     }
 
-    public function testShowServiceBodyEditorUserIdsNotNull()
+    public function testShowServiceBodyassignedUserIdsNotNull()
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
@@ -169,11 +169,11 @@ class ServiceBodyShowTest extends TestCase
             ->assertStatus(200)
             ->json();
 
-        $this->assertIsArray($data['editorUserIds']);
-        $this->assertEquals([1,2,3], $data['editorUserIds']);
+        $this->assertIsArray($data['assignedUserIds']);
+        $this->assertEquals([1,2,3], $data['assignedUserIds']);
     }
 
-    public function testShowServiceBodyEditorUserIdsNull()
+    public function testShowServiceBodyassignedUserIdsNull()
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
@@ -187,8 +187,8 @@ class ServiceBodyShowTest extends TestCase
             ->assertStatus(200)
             ->json();
 
-        $this->assertIsArray($data['editorUserIds']);
-        $this->assertEquals([], $data['editorUserIds']);
+        $this->assertIsArray($data['assignedUserIds']);
+        $this->assertEquals([], $data['assignedUserIds']);
     }
 
     public function testShowServiceBodyUrlNotNull()

@@ -31,7 +31,7 @@ class ServiceBodyPermissionsTest extends TestCase
         $user = $this->createServiceBodyObserverUser();
         $token = $user->createToken('test')->plainTextToken;
         $region = $this->createRegion('region', 'region', 0);
-        $area1 = $this->createArea('area1', 'area1', $region->id_bigint, userId: $user->id_bigint);
+        $area1 = $this->createArea('area1', 'area1', $region->id_bigint, adminUserId: $user->id_bigint);
         $this->withHeader('Authorization', "Bearer $token")
             ->get('/api/v1/servicebodies')
             ->assertStatus(200)
@@ -44,7 +44,7 @@ class ServiceBodyPermissionsTest extends TestCase
         $user = $this->createServiceBodyAdminUser();
         $token = $user->createToken('test')->plainTextToken;
         $region = $this->createRegion('region', 'region', 0);
-        $area1 = $this->createArea('area1', 'area1', $region->id_bigint, userId: $user->id_bigint);
+        $area1 = $this->createArea('area1', 'area1', $region->id_bigint, adminUserId: $user->id_bigint);
         $this->withHeader('Authorization', "Bearer $token")
             ->get('/api/v1/servicebodies')
             ->assertStatus(200)
@@ -76,7 +76,7 @@ class ServiceBodyPermissionsTest extends TestCase
     {
         $user = $this->createDisabledUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area1 = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $this->withHeader('Authorization', "Bearer $token")
             ->get("/api/v1/servicebodies/$area1->id_bigint")
             ->assertStatus(403);
@@ -86,7 +86,7 @@ class ServiceBodyPermissionsTest extends TestCase
     {
         $user = $this->createServiceBodyObserverUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area1 = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $this->withHeader('Authorization', "Bearer $token")
             ->get("/api/v1/servicebodies/$area1->id_bigint")
             ->assertStatus(200);
@@ -96,7 +96,7 @@ class ServiceBodyPermissionsTest extends TestCase
     {
         $user = $this->createServiceBodyAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area1 = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $this->withHeader('Authorization', "Bearer $token")
             ->get("/api/v1/servicebodies/$area1->id_bigint")
             ->assertStatus(200);
@@ -171,7 +171,7 @@ class ServiceBodyPermissionsTest extends TestCase
     {
         $user = $this->createDisabledUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area1 = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/servicebodies/$area1->id_bigint")
             ->assertStatus(403);
@@ -181,7 +181,7 @@ class ServiceBodyPermissionsTest extends TestCase
     {
         $user = $this->createServiceBodyObserverUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area1 = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/servicebodies/$area1->id_bigint")
             ->assertStatus(403);
@@ -201,7 +201,7 @@ class ServiceBodyPermissionsTest extends TestCase
     {
         $user = $this->createServiceBodyAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area1 = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/servicebodies/$area1->id_bigint")
             ->assertStatus(422);
@@ -211,7 +211,7 @@ class ServiceBodyPermissionsTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area1 = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/servicebodies/$area1->id_bigint")
             ->assertStatus(422);
@@ -231,7 +231,7 @@ class ServiceBodyPermissionsTest extends TestCase
     {
         $user = $this->createDisabledUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area1 = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/servicebodies/$area1->id_bigint")
             ->assertStatus(403);
@@ -241,7 +241,7 @@ class ServiceBodyPermissionsTest extends TestCase
     {
         $user = $this->createServiceBodyObserverUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area1 = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/servicebodies/$area1->id_bigint")
             ->assertStatus(403);
@@ -261,7 +261,7 @@ class ServiceBodyPermissionsTest extends TestCase
     {
         $user = $this->createServiceBodyAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area1 = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/servicebodies/$area1->id_bigint")
             ->assertStatus(204);
@@ -271,7 +271,7 @@ class ServiceBodyPermissionsTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area1 = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/servicebodies/$area1->id_bigint")
             ->assertStatus(204);
@@ -291,7 +291,7 @@ class ServiceBodyPermissionsTest extends TestCase
     {
         $user = $this->createDisabledUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area1 = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $this->withHeader('Authorization', "Bearer $token")
             ->delete("/api/v1/servicebodies/$area1->id_bigint")
             ->assertStatus(403);
@@ -301,7 +301,7 @@ class ServiceBodyPermissionsTest extends TestCase
     {
         $user = $this->createServiceBodyObserverUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area1 = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $this->withHeader('Authorization', "Bearer $token")
             ->delete("/api/v1/servicebodies/$area1->id_bigint")
             ->assertStatus(403);
@@ -311,7 +311,7 @@ class ServiceBodyPermissionsTest extends TestCase
     {
         $user = $this->createServiceBodyAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area1 = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $this->withHeader('Authorization', "Bearer $token")
             ->delete("/api/v1/servicebodies/$area1->id_bigint")
             ->assertStatus(403);
@@ -321,7 +321,7 @@ class ServiceBodyPermissionsTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area1 = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $this->withHeader('Authorization', "Bearer $token")
             ->delete("/api/v1/servicebodies/$area1->id_bigint")
             ->assertStatus(204);

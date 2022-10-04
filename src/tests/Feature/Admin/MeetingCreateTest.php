@@ -43,7 +43,7 @@ class MeetingCreateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $payload = $this->validPayload($area, [$format]);
 
@@ -120,7 +120,7 @@ class MeetingCreateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $payload = $this->validPayload($area, [$format]);
 
@@ -185,7 +185,7 @@ class MeetingCreateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $payload = $this->validPayload($area, [$format]);
         $payload['venueType'] = Meeting::VENUE_TYPE_IN_PERSON;
@@ -215,7 +215,7 @@ class MeetingCreateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $payload = $this->validPayload($area, [$format]);
         $payload['venueType'] = Meeting::VENUE_TYPE_IN_PERSON;
@@ -246,7 +246,7 @@ class MeetingCreateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $payload = $this->validPayload($area, [$format]);
         $payload['venueType'] = Meeting::VENUE_TYPE_VIRTUAL;
@@ -276,7 +276,7 @@ class MeetingCreateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $payload = $this->validPayload($area, [$format]);
         $payload['venueType'] = Meeting::VENUE_TYPE_VIRTUAL;
@@ -307,7 +307,7 @@ class MeetingCreateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $payload = $this->validPayload($area, [$format]);
         $payload['venueType'] = Meeting::VENUE_TYPE_HYBRID;
@@ -337,7 +337,7 @@ class MeetingCreateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $payload = $this->validPayload($area, [$format]);
         $payload['venueType'] = Meeting::VENUE_TYPE_HYBRID;
@@ -368,7 +368,7 @@ class MeetingCreateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $payload = $this->validPayload($area, [$format]);
 
@@ -401,7 +401,7 @@ class MeetingCreateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $payload = $this->validPayload($area, [$format]);
 
@@ -447,7 +447,7 @@ class MeetingCreateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $payload = $this->validPayload($area, [$format]);
 
@@ -480,7 +480,7 @@ class MeetingCreateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $payload = $this->validPayload($area, [$format]);
 
@@ -517,7 +517,7 @@ class MeetingCreateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $payload = $this->validPayload($area, [$format]);
 
@@ -558,7 +558,7 @@ class MeetingCreateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $payload = $this->validPayload($area, [$format]);
 
@@ -593,7 +593,7 @@ class MeetingCreateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $payload = $this->validPayload($area, [$format]);
 
@@ -628,7 +628,7 @@ class MeetingCreateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $payload = $this->validPayload($area, [$format]);
 
@@ -665,7 +665,7 @@ class MeetingCreateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $payload = $this->validPayload($area, [$format]);
 
@@ -702,7 +702,7 @@ class MeetingCreateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $payload = $this->validPayload($area, [$format]);
 
@@ -739,7 +739,7 @@ class MeetingCreateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $payload = $this->validPayload($area, [$format]);
 
@@ -778,7 +778,7 @@ class MeetingCreateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $payload = $this->validPayload($area, [$format]);
 
@@ -811,7 +811,7 @@ class MeetingCreateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $payload = $this->validPayload($area, [$format]);
 
@@ -844,7 +844,7 @@ class MeetingCreateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
 
         $meetingRepository = new MeetingRepository();
@@ -887,7 +887,7 @@ class MeetingCreateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $payload = $this->validPayload($area, [$format]);
 
@@ -912,7 +912,7 @@ class MeetingCreateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $payload = $this->validPayload($area, [$format]);
 
@@ -954,7 +954,7 @@ class MeetingCreateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $payload = $this->validPayload($area, [$format]);
         $payload['venueType'] = Meeting::VENUE_TYPE_IN_PERSON;
@@ -978,7 +978,7 @@ class MeetingCreateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $payload = $this->validPayload($area, [$format]);
 
@@ -1011,7 +1011,7 @@ class MeetingCreateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $payload = $this->validPayload($area, [$format]);
         $payload['venueType'] = Meeting::VENUE_TYPE_VIRTUAL;
@@ -1039,7 +1039,7 @@ class MeetingCreateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $payload = $this->validPayload($area, [$format]);
 

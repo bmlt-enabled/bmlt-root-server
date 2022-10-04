@@ -15,7 +15,7 @@ class ServiceBodyPartialUpdateTest extends TestCase
         $user1 = $this->createAdminUser();
         $token = $user1->createToken('test')->plainTextToken;
         $zone = $this->createZone('zone', 'zone');
-        $region = $this->createRegion('region', 'region', sbOwner: 0, userId: $user1->id_bigint);
+        $region = $this->createRegion('region', 'region', sbOwner: 0, adminUserId: $user1->id_bigint);
         $user2 = $this->createServiceBodyAdminUser();
 
         $data = ['parentId' => $zone->id_bigint];
@@ -47,19 +47,19 @@ class ServiceBodyPartialUpdateTest extends TestCase
         $region->refresh();
         $this->assertEquals($region->sb_type, $data['type']);
 
-        $data = ['userId' => $user2->id_bigint];
+        $data = ['adminUserId' => $user2->id_bigint];
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/servicebodies/$region->id_bigint", $data)
             ->assertStatus(204);
         $region->refresh();
-        $this->assertEquals($region->principal_user_bigint, $data['userId']);
+        $this->assertEquals($region->principal_user_bigint, $data['adminUserId']);
 
-        $data = ['editorUserIds' => [$user2->id_bigint]];
+        $data = ['assignedUserIds' => [$user2->id_bigint]];
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/servicebodies/$region->id_bigint", $data)
             ->assertStatus(204);
         $region->refresh();
-        $this->assertEquals($region->editors_string, implode(',', $data['editorUserIds']));
+        $this->assertEquals($region->editors_string, implode(',', $data['assignedUserIds']));
 
         $data = ['url' => 'https://www.na.org'];
         $this->withHeader('Authorization', "Bearer $token")
@@ -95,7 +95,7 @@ class ServiceBodyPartialUpdateTest extends TestCase
         $user1 = $this->createServiceBodyAdminUser();
         $token = $user1->createToken('test')->plainTextToken;
         $zone = $this->createZone('zone', 'zone');
-        $region = $this->createRegion('region', 'region', sbOwner: 0, userId: $user1->id_bigint);
+        $region = $this->createRegion('region', 'region', sbOwner: 0, adminUserId: $user1->id_bigint);
         $user2 = $this->createAdminUser();
 
         $data = ['parentId' => $zone->id_bigint];
@@ -127,19 +127,19 @@ class ServiceBodyPartialUpdateTest extends TestCase
         $region->refresh();
         $this->assertEquals($region->sb_type, 'RS');  // did not change
 
-        $data = ['userId' => $user2->id_bigint];
+        $data = ['adminUserId' => $user2->id_bigint];
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/servicebodies/$region->id_bigint", $data)
             ->assertStatus(204);
         $region->refresh();
         $this->assertEquals($region->principal_user_bigint, $user1->id_bigint);  // did not change
 
-        $data = ['editorUserIds' => [$user2->id_bigint]];
+        $data = ['assignedUserIds' => [$user2->id_bigint]];
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/servicebodies/$region->id_bigint", $data)
             ->assertStatus(204);
         $region->refresh();
-        $this->assertEquals($region->editors_string, implode(',', $data['editorUserIds']));
+        $this->assertEquals($region->editors_string, implode(',', $data['assignedUserIds']));
 
         $data = ['url' => 'https://www.na.org'];
         $this->withHeader('Authorization', "Bearer $token")
@@ -175,7 +175,7 @@ class ServiceBodyPartialUpdateTest extends TestCase
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
         $zone = $this->createZone('zone', 'zone');
-        $region = $this->createRegion('region', 'region', $zone->id_bigint, userId: $user->id_bigint);
+        $region = $this->createRegion('region', 'region', $zone->id_bigint, adminUserId: $user->id_bigint);
         $data = [];
 
         $this->withHeader('Authorization', "Bearer $token")
@@ -188,7 +188,7 @@ class ServiceBodyPartialUpdateTest extends TestCase
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
         $zone = $this->createZone('zone', 'zone');
-        $region = $this->createRegion('region', 'region', $zone->id_bigint, userId: $user->id_bigint);
+        $region = $this->createRegion('region', 'region', $zone->id_bigint, adminUserId: $user->id_bigint);
         $data = [];
 
         // it can't be an invalid service body
@@ -214,7 +214,7 @@ class ServiceBodyPartialUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $zone = $this->createZone('zone', 'zone', userId: $user->id_bigint);
+        $zone = $this->createZone('zone', 'zone', adminUserId: $user->id_bigint);
         $data = [];
 
         // it can't be null
@@ -246,7 +246,7 @@ class ServiceBodyPartialUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $zone = $this->createZone('zone', 'zone', userId: $user->id_bigint);
+        $zone = $this->createZone('zone', 'zone', adminUserId: $user->id_bigint);
         $data = [];
 
         // it can't be null
@@ -272,7 +272,7 @@ class ServiceBodyPartialUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $zone = $this->createZone('zone', 'zone', userId: $user->id_bigint);
+        $zone = $this->createZone('zone', 'zone', adminUserId: $user->id_bigint);
         $data = [];
 
         // it can't be null
@@ -306,55 +306,55 @@ class ServiceBodyPartialUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $zone = $this->createZone('zone', 'zone', userId: $user->id_bigint);
+        $zone = $this->createZone('zone', 'zone', adminUserId: $user->id_bigint);
         $data = [];
 
         // it can't be null
-        $data['userId'] = null;
+        $data['adminUserId'] = null;
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(422);
 
         // it can't be a userId that doesn't exist
-        $data['userId'] = $user->id_bigint + 1;
+        $data['adminUserId'] = $user->id_bigint + 1;
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(422);
 
         // it can be a valid user id
-        $data['userId'] = $user->id_bigint;
+        $data['adminUserId'] = $user->id_bigint;
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(204);
     }
 
-    public function testPartialUpdateServiceBodyValidateEditorUserIds()
+    public function testPartialUpdateServiceBodyValidateassignedUserIds()
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $zone = $this->createZone('zone', 'zone', userId: $user->id_bigint);
+        $zone = $this->createZone('zone', 'zone', adminUserId: $user->id_bigint);
         $data = [];
 
         // it can't be null
-        $data['editorUserIds'] = null;
+        $data['assignedUserIds'] = null;
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(422);
 
         // it can't contain an invalid user id
-        $data['editorUserIds'] = [$user->id_bigint, $user->id_bigint + 1];
+        $data['assignedUserIds'] = [$user->id_bigint, $user->id_bigint + 1];
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(422);
 
         // it can be an empty array
-        $data['editorUserIds'] = [];
+        $data['assignedUserIds'] = [];
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(204);
 
         // it can contain valid user ids
-        $data['editorUserIds'] = [$user->id_bigint];
+        $data['assignedUserIds'] = [$user->id_bigint];
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(204);
@@ -364,7 +364,7 @@ class ServiceBodyPartialUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $zone = $this->createZone('zone', 'zone', userId: $user->id_bigint);
+        $zone = $this->createZone('zone', 'zone', adminUserId: $user->id_bigint);
         $data = [];
 
         // it can't be null
@@ -402,7 +402,7 @@ class ServiceBodyPartialUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $zone = $this->createZone('zone', 'zone', userId: $user->id_bigint);
+        $zone = $this->createZone('zone', 'zone', adminUserId: $user->id_bigint);
         $data = [];
 
         // it can't be null
@@ -434,7 +434,7 @@ class ServiceBodyPartialUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $zone = $this->createZone('zone', 'zone', userId: $user->id_bigint);
+        $zone = $this->createZone('zone', 'zone', adminUserId: $user->id_bigint);
         $data = [];
 
         // it can't be null
@@ -466,7 +466,7 @@ class ServiceBodyPartialUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $zone = $this->createZone('zone', 'zone', userId: $user->id_bigint);
+        $zone = $this->createZone('zone', 'zone', adminUserId: $user->id_bigint);
         $data = [];
 
         // it can't be null

@@ -17,8 +17,8 @@ class ServiceBodyUpdateTest extends TestCase
             'name' => $serviceBody->name_string,
             'description' => $serviceBody->description_string,
             'type' => $serviceBody->sb_type,
-            'userId' => $serviceBody->principal_user_bigint,
-            'editorUserIds' => !empty($this->editors_string) ? collect(explode(',', $this->editors_string))->map(fn ($id) => intval($id))->toArray() : [],
+            'adminUserId' => $serviceBody->principal_user_bigint,
+            'assignedUserIds' => !empty($this->editors_string) ? collect(explode(',', $this->editors_string))->map(fn ($id) => intval($id))->toArray() : [],
             'url' => $serviceBody->uri_string,
             'helpline' => $serviceBody->kml_file_uri_string,
             'email' => $serviceBody->sb_meeting_email,
@@ -33,15 +33,15 @@ class ServiceBodyUpdateTest extends TestCase
         $user1 = $this->createAdminUser();
         $token = $user1->createToken('test')->plainTextToken;
         $zone = $this->createZone('zone', 'zone');
-        $region = $this->createZone('region', 'region', userId: $user1->id_bigint);
+        $region = $this->createZone('region', 'region', adminUserId: $user1->id_bigint);
         $user2 = $this->createServiceBodyAdminUser();
         $data = [
             'parentId' => $zone->id_bigint,
             'name' => 'updated name',
             'description' => 'update description',
             'type' => ServiceBody::SB_TYPE_AREA,
-            'userId' => $user2->id_bigint,
-            'editorUserIds' => [$user2->id_bigint],
+            'adminUserId' => $user2->id_bigint,
+            'assignedUserIds' => [$user2->id_bigint],
             'url' => 'https://na.org',
             'helpline' => '123-456-7890',
             'email' => 'test@test.com',
@@ -57,8 +57,8 @@ class ServiceBodyUpdateTest extends TestCase
         $this->assertEquals($region->name_string, $data['name']);
         $this->assertEquals($region->description_string, $data['description']);
         $this->assertEquals($region->sb_type, $data['type']);
-        $this->assertEquals($region->principal_user_bigint, $data['userId']);
-        $this->assertEquals($region->editors_string, implode(',', $data['editorUserIds']));
+        $this->assertEquals($region->principal_user_bigint, $data['adminUserId']);
+        $this->assertEquals($region->editors_string, implode(',', $data['assignedUserIds']));
         $this->assertEquals($region->uri_string, $data['url']);
         $this->assertEquals($region->kml_file_uri_string, $data['helpline']);
         $this->assertEquals($region->sb_meeting_email, $data['email']);
@@ -79,15 +79,15 @@ class ServiceBodyUpdateTest extends TestCase
         $user1 = $this->createServiceBodyAdminUser();
         $token = $user1->createToken('test')->plainTextToken;
         $zone = $this->createZone('zone', 'zone');
-        $region = $this->createRegion('region', 'region', sbOwner: 0, userId: $user1->id_bigint);
+        $region = $this->createRegion('region', 'region', sbOwner: 0, adminUserId: $user1->id_bigint);
         $user2 = $this->createAdminUser();
         $data = [
             'parentId' => $zone->id_bigint,
             'name' => 'updated name',
             'description' => 'update description',
             'type' => ServiceBody::SB_TYPE_AREA,
-            'userId' => $user2->id_bigint,
-            'editorUserIds' => [$user2->id_bigint],
+            'adminUserId' => $user2->id_bigint,
+            'assignedUserIds' => [$user2->id_bigint],
             'url' => 'https://na.org',
             'helpline' => '123-456-7890',
             'email' => 'test@test.com',
@@ -104,7 +104,7 @@ class ServiceBodyUpdateTest extends TestCase
         $this->assertEquals($region->description_string, $data['description']);
         $this->assertEquals($region->sb_type, 'RS');  // did not change
         $this->assertEquals($region->principal_user_bigint, $user1->id_bigint);  // did not change
-        $this->assertEquals($region->editors_string, implode(',', $data['editorUserIds']));
+        $this->assertEquals($region->editors_string, implode(',', $data['assignedUserIds']));
         $this->assertEquals($region->uri_string, $data['url']);
         $this->assertEquals($region->kml_file_uri_string, $data['helpline']);
         $this->assertEquals($region->sb_meeting_email, $data['email']);
@@ -125,7 +125,7 @@ class ServiceBodyUpdateTest extends TestCase
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
         $zone = $this->createZone('zone', 'zone');
-        $region = $this->createRegion('region', 'region', $zone->id_bigint, userId: $user->id_bigint);
+        $region = $this->createRegion('region', 'region', $zone->id_bigint, adminUserId: $user->id_bigint);
         $data = $this->toPayload($region);
 
         // it is required
@@ -157,7 +157,7 @@ class ServiceBodyUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $zone = $this->createZone('zone', 'zone', userId: $user->id_bigint);
+        $zone = $this->createZone('zone', 'zone', adminUserId: $user->id_bigint);
         $data = $this->toPayload($zone);
 
         // it is required
@@ -195,7 +195,7 @@ class ServiceBodyUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $zone = $this->createZone('zone', 'zone', userId: $user->id_bigint);
+        $zone = $this->createZone('zone', 'zone', adminUserId: $user->id_bigint);
         $data = $this->toPayload($zone);
 
         // it is required
@@ -227,7 +227,7 @@ class ServiceBodyUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $zone = $this->createZone('zone', 'zone', userId: $user->id_bigint);
+        $zone = $this->createZone('zone', 'zone', adminUserId: $user->id_bigint);
         $data = $this->toPayload($zone);
 
         // it is required
@@ -267,67 +267,67 @@ class ServiceBodyUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $zone = $this->createZone('zone', 'zone', userId: $user->id_bigint);
+        $zone = $this->createZone('zone', 'zone', adminUserId: $user->id_bigint);
         $data = $this->toPayload($zone);
 
         // it is required
-        unset($data['userId']);
+        unset($data['adminUserId']);
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(422);
 
         // it can't be null
-        $data['userId'] = null;
+        $data['adminUserId'] = null;
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(422);
 
         // it can't be a userId that doesn't exist
-        $data['userId'] = $user->id_bigint + 1;
+        $data['adminUserId'] = $user->id_bigint + 1;
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(422);
 
         // it can be a valid user id
-        $data['userId'] = $user->id_bigint;
+        $data['adminUserId'] = $user->id_bigint;
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(204);
     }
 
-    public function testUpdateServiceBodyValidateEditorUserIds()
+    public function testUpdateServiceBodyValidateassignedUserIds()
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $zone = $this->createZone('zone', 'zone', userId: $user->id_bigint);
+        $zone = $this->createZone('zone', 'zone', adminUserId: $user->id_bigint);
         $data = $this->toPayload($zone);
 
         // it is required
-        unset($data['editorUserIds']);
+        unset($data['assignedUserIds']);
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(422);
 
         // it can't be null
-        $data['editorUserIds'] = null;
+        $data['assignedUserIds'] = null;
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(422);
 
         // it can't contain an invalid user id
-        $data['editorUserIds'] = [$user->id_bigint, $user->id_bigint + 1];
+        $data['assignedUserIds'] = [$user->id_bigint, $user->id_bigint + 1];
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(422);
 
         // it can be an empty array
-        $data['editorUserIds'] = [];
+        $data['assignedUserIds'] = [];
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(204);
 
         // it can contain valid user ids
-        $data['editorUserIds'] = [$user->id_bigint];
+        $data['assignedUserIds'] = [$user->id_bigint];
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(204);
@@ -337,7 +337,7 @@ class ServiceBodyUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $zone = $this->createZone('zone', 'zone', userId: $user->id_bigint);
+        $zone = $this->createZone('zone', 'zone', adminUserId: $user->id_bigint);
         $data = $this->toPayload($zone);
 
         // it is required
@@ -381,7 +381,7 @@ class ServiceBodyUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $zone = $this->createZone('zone', 'zone', userId: $user->id_bigint);
+        $zone = $this->createZone('zone', 'zone', adminUserId: $user->id_bigint);
         $data = $this->toPayload($zone);
 
         // it is required
@@ -419,7 +419,7 @@ class ServiceBodyUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $zone = $this->createZone('zone', 'zone', userId: $user->id_bigint);
+        $zone = $this->createZone('zone', 'zone', adminUserId: $user->id_bigint);
         $data = $this->toPayload($zone);
 
         // it is required
@@ -457,7 +457,7 @@ class ServiceBodyUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $zone = $this->createZone('zone', 'zone', userId: $user->id_bigint);
+        $zone = $this->createZone('zone', 'zone', adminUserId: $user->id_bigint);
         $data = $this->toPayload($zone);
 
         // it is required
