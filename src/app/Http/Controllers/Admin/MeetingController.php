@@ -45,7 +45,7 @@ class MeetingController extends ResourceController
 
     public function store(Request $request)
     {
-        $values = $this->validateInputsAndCreateValuesArray($request);
+        $values = $this->validateInputsAndCreateValuesArray($request, isForCreate: true);
         $meeting = $this->meetingRepository->create($values);
         return new MeetingResource($meeting);
     }
@@ -114,7 +114,7 @@ class MeetingController extends ResourceController
         return response()->noContent();
     }
 
-    private function validateInputsAndCreateValuesArray(Request $request): array
+    private function validateInputsAndCreateValuesArray(Request $request, bool $isForCreate = false): array
     {
         $virtualFormatId = $this->formatRepository->getVirtualFormat()->shared_id_bigint;
         $temporarilyClosedId = $this->formatRepository->getTemporarilyClosedFormat()->shared_id_bigint;
@@ -132,8 +132,8 @@ class MeetingController extends ResourceController
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',
             'published' => 'required|boolean',
-            'email' => 'nullable|email|max:255',
-            'worldId' => 'nullable|string|max:30',
+            'email' => array_merge($isForCreate ? [] : ['present'], ['nullable', 'email', 'max:255']),
+            'worldId' => array_merge($isForCreate ? [] : ['present'], ['nullable', 'string', 'max:30']),
             'name' => 'required|string|max:128',
             'location_text' => 'nullable|string|max:512',
             'location_info' => 'nullable|string|max:512',

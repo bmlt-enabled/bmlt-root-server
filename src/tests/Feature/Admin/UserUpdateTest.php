@@ -12,23 +12,15 @@ class UserUpdateTest extends TestCase
 
     private function toPayload(User $user): array
     {
-        $values = [
+        return [
             'username' => $user->login_string,
             'password' => 'this is a password',
             'type' => User::USER_LEVEL_TO_USER_TYPE_MAP[$user->user_level_tinyint],
             'displayName' => $user->name_string,
+            'description' => $user->description_string,
+            'email' => $user->email_address_string,
             'ownerId' => $user->owner_id_bigint == -1 ? null : $user->owner_id_bigint,
         ];
-
-        if (!empty($user->description_string)) {
-            $values['description'] = $user->description_string;
-        }
-
-        if (!empty($user->email_address_string)) {
-            $values['email'] = $user->email_address_string;
-        }
-
-        return $values;
     }
 
     public function testUpdateUserAsAdmin()
@@ -144,32 +136,6 @@ class UserUpdateTest extends TestCase
         $this->assertEquals($oldUsername, $user1->login_string);
         $this->assertEquals($oldType, $user1->user_level_tinyint);
         $this->assertEquals($oldOwner, $user1->owner_id_bigint);
-    }
-
-    public function testUpdateUserExcludeOptionalFieldsFromPayload()
-    {
-        $user1 = $this->createAdminUser();
-        $token = $user1->createToken('test')->plainTextToken;
-        $user2 = $this->createServiceBodyAdminUser();
-        $user2->description_string = 'a description';
-        $user2->email_address_string = 'test@test.com';
-        $user2->save();
-
-        $data = [
-            'username' => 'new username',
-            'password' => 'this is a valid password',
-            'type' => User::USER_TYPE_ADMIN,
-            'displayName' => 'pretty name',
-            'ownerId' => $user1->id_bigint,
-        ];
-
-        $this->withHeader('Authorization', "Bearer $token")
-            ->put("/api/v1/users/$user2->id_bigint", $data)
-            ->assertStatus(204);
-
-        $user2->refresh();
-        $this->assertEquals('', $user2->description_string);
-        $this->assertEquals('', $user2->email_address_string);
     }
 
     public function testUpdateUserValidateUsername()
@@ -322,8 +288,8 @@ class UserUpdateTest extends TestCase
         $token = $user->createToken('test')->plainTextToken;
         $data = $this->toPayload($user);
 
-        // it can't be null
-        $data['description'] = null;
+        // it is requried
+        unset($data['description']);
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/users/$user->id_bigint", $data)
             ->assertStatus(422);
@@ -346,8 +312,8 @@ class UserUpdateTest extends TestCase
             ->put("/api/v1/users/$user->id_bigint", $data)
             ->assertStatus(204);
 
-        // it can be omitted
-        unset($data['description']);
+        // it can be null
+        $data['description'] = null;
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/users/$user->id_bigint", $data)
             ->assertStatus(204);
@@ -359,8 +325,8 @@ class UserUpdateTest extends TestCase
         $token = $user->createToken('test')->plainTextToken;
         $data = $this->toPayload($user);
 
-        // it can't be null
-        $data['email'] = null;
+        // it is required
+        unset($data['email']);
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/users/$user->id_bigint", $data)
             ->assertStatus(422);
@@ -377,8 +343,8 @@ class UserUpdateTest extends TestCase
             ->put("/api/v1/users/$user->id_bigint", $data)
             ->assertStatus(204);
 
-        // it can be omitted
-        unset($data['email']);
+        // it can be null
+        $data['email'] = null;
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/users/$user->id_bigint", $data)
             ->assertStatus(204);

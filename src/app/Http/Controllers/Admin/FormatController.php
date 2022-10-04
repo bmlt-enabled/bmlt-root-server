@@ -339,8 +339,8 @@ class FormatController extends ResourceController
     public function update(Request $request, Format $format)
     {
         $validated = $request->validate([
-            'worldId' => 'nullable|string|max:30',
-            'type' => ['nullable', Rule::in(array_keys(Format::TYPE_TO_COMDEF_TYPE_MAP))],
+            'worldId' => 'nullable|present|string|max:30',
+            'type' => ['nullable', 'present', Rule::in(array_keys(Format::TYPE_TO_COMDEF_TYPE_MAP))],
             'translations' => [
                 'required',
                 'array',

@@ -35,6 +35,7 @@ class MeetingCreateTest extends TestCase
             'location_postal_code_1' => '27610',
             'virtual_meeting_link' => 'https://zoom.us',
             'phone_meeting_number' => '5555555555',
+            'worldId' => 'nice world id',
         ];
     }
 
@@ -760,14 +761,14 @@ class MeetingCreateTest extends TestCase
             ->post('/api/v1/meetings', $payload)
             ->assertStatus(201);
 
-        // it is not required
-        unset($payload['email']);
+        // it can be null
+        $payload['email'] = null;
         $this->withHeader('Authorization', "Bearer $token")
             ->post('/api/v1/meetings', $payload)
             ->assertStatus(201);
 
-        // it can be null
-        $payload['email'] = null;
+        // it is not required
+        unset($payload['email']);
         $this->withHeader('Authorization', "Bearer $token")
             ->post('/api/v1/meetings', $payload)
             ->assertStatus(201);
