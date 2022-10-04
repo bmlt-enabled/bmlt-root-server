@@ -197,7 +197,17 @@ class ServiceBodyPermissionsTest extends TestCase
             ->assertStatus(403);
     }
 
-    public function testUpdateAsServiceBodyAdminAllowed()
+    public function testUpdateAsServiceBodyAdminAsAssignedDenied()
+    {
+        $user = $this->createServiceBodyAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $area1 = $this->createArea('area1', 'area1', 0, assignedUserIds: [$user->id_bigint]);
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/servicebodies/$area1->id_bigint")
+            ->assertStatus(403);
+    }
+
+    public function testUpdateAsServiceBodyAdminAsAdminAllowed()
     {
         $user = $this->createServiceBodyAdminUser();
         $token = $user->createToken('test')->plainTextToken;
@@ -257,7 +267,17 @@ class ServiceBodyPermissionsTest extends TestCase
             ->assertStatus(403);
     }
 
-    public function testPartialUpdateAsServiceBodyAdminAllowed()
+    public function testPartialUpdateAsServiceBodyAdminAsAssignedDenied()
+    {
+        $user = $this->createServiceBodyAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $area1 = $this->createArea('area1', 'area1', 0, assignedUserIds: [$user->id_bigint]);
+        $this->withHeader('Authorization', "Bearer $token")
+            ->patch("/api/v1/servicebodies/$area1->id_bigint")
+            ->assertStatus(403);
+    }
+
+    public function testPartialUpdateAsServiceBodyAdminAsAdminAllowed()
     {
         $user = $this->createServiceBodyAdminUser();
         $token = $user->createToken('test')->plainTextToken;

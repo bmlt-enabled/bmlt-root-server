@@ -11,7 +11,8 @@ interface ServiceBodyRepositoryInterface
     public function create(array $values): ServiceBody;
     public function update(int $id, array $values): bool;
     public function delete(int $id): bool;
-    public function getUserServiceBodyIds(int $userId): Collection;
+    public function getAssignedServiceBodyIds(int $userId): Collection;
+    public function getAdminServiceBodyIds(int $userId): Collection;
     public function getChildren(array $parents): array;
     public function getParents(array $children): array;
 }

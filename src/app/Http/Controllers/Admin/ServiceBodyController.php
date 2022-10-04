@@ -26,7 +26,7 @@ class ServiceBodyController extends ResourceController
 
         $serviceBodyIds = [];
         if (!$user->isAdmin()) {
-            $serviceBodyIds = $this->serviceBodyRepository->getUserServiceBodyIds($user->id_bigint)->toArray();
+            $serviceBodyIds = $this->serviceBodyRepository->getAssignedServiceBodyIds($user->id_bigint)->toArray();
             if (empty($serviceBodyIds)) {
                 return ServiceBodyResource::collection([]);
             }
