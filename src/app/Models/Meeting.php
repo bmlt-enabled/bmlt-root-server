@@ -40,6 +40,7 @@ class Meeting extends Model
         'longitude',
         'latitude',
         'published',
+        'email_contact',
     ];
 
     public const VENUE_TYPE_IN_PERSON = 1;

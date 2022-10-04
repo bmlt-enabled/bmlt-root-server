@@ -99,6 +99,30 @@ class MeetingUpdateTest extends TestCase
         ], self::$extraFieldsTemplates->mapWithKeys(fn ($t, $_) => [$t->key => $meetingData->get($t->key) ?: null])->toArray());
     }
 
+    public function testUpdateMeetingExcludeOptionalFieldsFromPayload()
+    {
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $format = Format::query()->first();
+        $meeting = $this->createMeeting(
+            ['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint), 'worldid_mixed' => 'test worldid', 'email_contact' => 'test@test.com'],
+            ['location_street' => '813 Darby St', 'location_municipality' => 'Raleigh', 'location_province' => 'NC', 'virtual_meeting_link' => 'https://zoom.us']
+        );
+        $payload = $this->toPayload($meeting);
+
+        unset($payload['worldId']);
+        unset($payload['email']);
+
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/meetings/$meeting->id_bigint", $payload)
+            ->assertStatus(204);
+
+        $meeting->refresh();
+        $this->assertNull($meeting->worldid_mixed);
+        $this->assertNull($meeting->email_contact);
+    }
+
     public function testUpdateMeetingAllFields()
     {
         $user = $this->createAdminUser();
