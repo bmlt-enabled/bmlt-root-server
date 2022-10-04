@@ -11,7 +11,8 @@
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
-        "phpoffice/phpspreadsheet": "^1.24"
+        "phpoffice/phpspreadsheet": "^1.24",
+        "spatie/laravel-validation-rules": "^3.2"
     },
     "require-dev": {
         "darkaonline/l5-swagger": "^8.4",
