@@ -35,11 +35,13 @@ class MeetingController extends ResourceController
             'meetingIds' => [new Delimited('int|exists:comdef_meetings_main,id_bigint')],
             'days' => [new Delimited('int|between:0,6')],
             'serviceBodyIds' => [new Delimited('int|exists:comdef_service_bodies,id_bigint')],
+            'searchString' => 'string|min:3',
         ]);
 
         $days = !empty($validated['days']) ? array_map(fn ($v) => intval($v), explode(',', $validated['days'])) : null;
         $meetingIds = !empty($validated['meetingIds']) ? array_map(fn ($v) => intval($v), explode(',', $validated['meetingIds'])) : null;
         $serviceBodyIds = !empty($validated['serviceBodyIds']) ? array_map(fn ($v) => intval($v), explode(',', $validated['serviceBodyIds'])) : null;
+        $searchString = $validated['searchString'] ?? null;
 
         $user = $request->user();
         if (!$user->isAdmin()) {
@@ -47,7 +49,13 @@ class MeetingController extends ResourceController
             $serviceBodyIds = is_null($serviceBodyIds) ? $allowedServiceBodyIds : array_intersect($serviceBodyIds, $allowedServiceBodyIds);
         }
 
-        $meetings = $this->meetingRepository->getSearchResults(meetingIds: $meetingIds, weekdaysInclude: $days, servicesInclude: $serviceBodyIds);
+        $meetings = $this->meetingRepository->getSearchResults(
+            meetingIds: $meetingIds,
+            weekdaysInclude: $days,
+            servicesInclude: $serviceBodyIds,
+            searchString: $searchString,
+        );
+
         return MeetingResource::collection($meetings);
     }
 

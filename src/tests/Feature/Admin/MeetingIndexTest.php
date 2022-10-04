@@ -2,7 +2,11 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Models\Meeting;
+use App\Models\MeetingData;
+use App\Models\MeetingLongData;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 
 class MeetingIndexTest extends TestCase
 {
@@ -75,6 +79,30 @@ class MeetingIndexTest extends TestCase
             ->assertJsonFragment(['id' => $meeting2->id_bigint]);
     }
 
+    public function testIndexMeetingsSearchStringFilter()
+    {
+        try {
+            $user = $this->createAdminUser();
+            $token = $user->createToken('test')->plainTextToken;
+            $meeting1 = $this->createMeeting([], ['meeting_name' => 'Sunday Serenity']);
+            $meeting2 = $this->createMeeting([], ['meeting_name' => 'Living the Program']);
+            // MySQL full text searches do not work against uncommitted data, because the full text
+            // index has not yet been updated. We commit here, and then are very careful to clean up all
+            // data in the finally block
+            DB::commit();
+            $this->withHeader('Authorization', "Bearer $token")
+                ->get('/api/v1/meetings?searchString=Living')
+                ->assertStatus(200)
+                ->assertJsonCount(1)
+                ->assertJsonFragment(['id' => $meeting2->id_bigint]);
+        } finally {
+            $user->delete();
+            Meeting::query()->whereIn('id_bigint', [$meeting1->id_bigint, $meeting2->id_bigint])->delete();
+            MeetingData::query()->whereIn('meetingid_bigint', [$meeting1->id_bigint, $meeting2->id_bigint])->delete();
+            MeetingLongData::query()->whereIn('meetingid_bigint', [$meeting1->id_bigint, $meeting2->id_bigint])->delete();
+        }
+    }
+
     public function testIndexMeetingsServiceBodyIdsValidate()
     {
         $user = $this->createAdminUser();
@@ -134,17 +162,33 @@ class MeetingIndexTest extends TestCase
 
         // can't be an invalid day
         $this->withHeader('Authorization', "Bearer $token")
-            ->get("/api/v1/meetings?days=0,999")
+            ->get('/api/v1/meetings?days=0,999')
             ->assertStatus(422);
 
         // can be a valid day
         $this->withHeader('Authorization', "Bearer $token")
-            ->get("/api/v1/meetings?days=0")
+            ->get('/api/v1/meetings?days=0')
             ->assertStatus(200);
 
         // or multiple
         $this->withHeader('Authorization', "Bearer $token")
-            ->get("/api/v1/meetings?days=0,1,2,3,4,5,6")
+            ->get('/api/v1/meetings?days=0,1,2,3,4,5,6')
+            ->assertStatus(200);
+    }
+
+    public function testIndexMeetingsSearchStringValidate()
+    {
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+
+        // can't be less than 3 characters
+        $this->withHeader('Authorization', "Bearer $token")
+            ->get('/api/v1/meetings?searchString=ab')
+            ->assertStatus(422);
+
+        // can be 3 characters
+        $this->withHeader('Authorization', "Bearer $token")
+            ->get('/api/v1/meetings?searchString=abc')
             ->assertStatus(200);
     }
 }
