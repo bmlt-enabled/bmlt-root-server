@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-
 /**
  * @OA\Schema(
  *     schema="FormatResponse",
@@ -92,7 +91,6 @@ class FormatControllerDoc extends ResourceController
      */
     public function show()
     {
-
     }
 
     /**
@@ -143,7 +141,6 @@ class FormatControllerDoc extends ResourceController
      */
     public function index()
     {
-
     }
 
     /**
@@ -218,7 +215,6 @@ class FormatControllerDoc extends ResourceController
      */
     public function store()
     {
-
     }
 
     /**
@@ -292,7 +288,6 @@ class FormatControllerDoc extends ResourceController
      */
     public function update()
     {
-
     }
 
     /**
@@ -344,7 +339,6 @@ class FormatControllerDoc extends ResourceController
      */
     public function partialUpdate()
     {
-
     }
 
     /**
@@ -391,6 +385,5 @@ class FormatControllerDoc extends ResourceController
      */
     public function destroy()
     {
-
     }
 }

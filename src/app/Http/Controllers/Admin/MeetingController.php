@@ -14,35 +14,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Validation\Rule;
 
-/**
- * @OA\Schema(
- *     schema="MeetingsResponse",
- *     @OA\Property(property="id", type="integer", example="0"),
- *     @OA\Property(property="serviceBodyId", type="integer", example="0"),
- *     @OA\Property(
- *        property="formatIds",
- *        type="array",
- *        @OA\Items(type="integer")
- *     ),
- *     @OA\Property(property="venueType", type="integer", example="1"),
- *     @OA\Property(property="temporarilyVirtual", type="bool", example="false"),
- *     @OA\Property(property="day", type="integer", example="0"),
- *     @OA\Property(property="startTime", type="string", example="string"),
- * ),
- * @OA\Schema(
- *     schema="MeetingErrorUnauthenticated",
- *     @OA\Property(property="message", type="string", example="Unauthenticated.")
- * ),
- * @OA\Schema(
- *     schema="MeetingErrorUnauthorized",
- *     @OA\Property(property="message", type="string", example="This action is unauthorized.")
- * ),
- * @OA\Schema(
- *     schema="NoMeetingExists",
- *      description="Returns when no Meeting exists.",
- *      @OA\Property(property="message", type="string", example="No query results for model [App\\Models\\Meeting]"),
- * )
- */
 class MeetingController extends ResourceController
 {
     private FormatRepositoryInterface $formatRepository;
@@ -57,29 +28,6 @@ class MeetingController extends ResourceController
         $this->authorizeResource(Meeting::class);
     }
 
-    /**
-     * @OA\Get(
-     * path="/api/v1/meetings",
-     * summary="Retrieve meetings",
-     * description="Retrieve meetings for server.",
-     * operationId="getMeetings",
-     * tags={"meetings"},
-     * security={{"bearerAuth":{}}},
-     * @OA\Response(
-     *     response=200,
-     *     description="Returns when user is authenticated.",
-     *     @OA\JsonContent(
-     *       @OA\Property(property="id", type="integer", example="0"),
-     *       ref="#/components/schemas/MeetingsResponse",
-     *     )
-     *   ),
-     *   @OA\Response(
-     *      response=401,
-     *      description="Returns when not authenticated",
-     *      @OA\JsonContent(ref="#/components/schemas/MeetingErrorUnauthenticated")
-     *   )
-     * )
-     */
     public function index(Request $request)
     {
         $user = $request->user();
