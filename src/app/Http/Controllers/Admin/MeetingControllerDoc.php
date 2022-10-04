@@ -108,6 +108,16 @@ class MeetingControllerDoc extends ResourceController
      *       type="string"
      *    )
      * ),
+     * @OA\Parameter(
+     *    description="string",
+     *    in="query",
+     *    name="searchString",
+     *    required=false,
+     *    example="Just for Today",
+     *    @OA\Schema(
+     *       type="string"
+     *    )
+     * ),
      * @OA\Response(
      *     response=200,
      *     description="Returns when user is authenticated.",
