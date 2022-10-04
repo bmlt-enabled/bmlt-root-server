@@ -484,6 +484,38 @@
                 "summary": "Retrieve meetings",
                 "description": "Retrieve meetings for authenticated user.",
                 "operationId": "getMeetings",
+                "parameters": [
+                    {
+                        "name": "meetingIds",
+                        "in": "query",
+                        "description": "int delimited",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "1,2"
+                    },
+                    {
+                        "name": "days",
+                        "in": "query",
+                        "description": "int delimited",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "0,1"
+                    },
+                    {
+                        "name": "serviceBodyIds",
+                        "in": "query",
+                        "description": "int delimited",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "3,4"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Returns when user is authenticated.",
