@@ -488,6 +488,43 @@
                 ]
             }
         },
+        "/api/v1/meetings": {
+            "get": {
+                "tags": [
+                    "meetings"
+                ],
+                "summary": "Retrieve meetings",
+                "description": "Retrieve meetings for authenticated user.",
+                "operationId": "getMeetings",
+                "responses": {
+                    "200": {
+                        "description": "Returns when user is authenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MeetingsResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when not authenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MeetingErrorUnauthenticated"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/servicebodies": {
             "get": {
                 "tags": [
@@ -1083,6 +1120,63 @@
                 ]
             }
         },
+        "/api/v1/auth/refresh": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Refresh Token",
+                "description": "Refresh token.",
+                "operationId": "authRefresh",
+                "responses": {
+                    "200": {
+                        "description": "Returns when token is valid.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "access_token": {
+                                            "type": "string",
+                                            "example": "2|tR6PIqa8tiBJWMu4zyb3qw4eECuERjLd7xeLKgBu"
+                                        },
+                                        "expires_at": {
+                                            "type": "integer",
+                                            "example": "1667342171"
+                                        },
+                                        "token_type": {
+                                            "type": "string",
+                                            "example": "bearer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when token is invalid or missing.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/auth/token": {
             "post": {
                 "tags": [
@@ -1195,63 +1289,6 @@
                         }
                     }
                 }
-            }
-        },
-        "/api/v1/auth/refresh": {
-            "post": {
-                "tags": [
-                    "auth"
-                ],
-                "summary": "Refresh Token",
-                "description": "Refresh token.",
-                "operationId": "authRefresh",
-                "responses": {
-                    "200": {
-                        "description": "Returns when token is valid.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "access_token": {
-                                            "type": "string",
-                                            "example": "2|tR6PIqa8tiBJWMu4zyb3qw4eECuERjLd7xeLKgBu"
-                                        },
-                                        "expires_at": {
-                                            "type": "integer",
-                                            "example": "1667342171"
-                                        },
-                                        "token_type": {
-                                            "type": "string",
-                                            "example": "bearer"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Returns when token is invalid or missing.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
             }
         },
         "/api/v1/auth/logout": {
@@ -1885,6 +1922,69 @@
                         }
                     }
                 ]
+            },
+            "MeetingsResponse": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": "0"
+                    },
+                    "serviceBodyId": {
+                        "type": "integer",
+                        "example": "0"
+                    },
+                    "formatIds": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    "venueType": {
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "temporarilyVirtual": {
+                        "type": "boolean",
+                        "example": "false"
+                    },
+                    "day": {
+                        "type": "integer",
+                        "example": "0"
+                    },
+                    "startTime": {
+                        "type": "string",
+                        "example": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "MeetingErrorUnauthenticated": {
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Unauthenticated."
+                    }
+                },
+                "type": "object"
+            },
+            "MeetingErrorUnauthorized": {
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "This action is unauthorized."
+                    }
+                },
+                "type": "object"
+            },
+            "NoMeetingExists": {
+                "description": "Returns when no Meeting exists.",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "No query results for model [App\\\\Models\\\\Meeting]"
+                    }
+                },
+                "type": "object"
             },
             "ServiceBodyResponse": {
                 "properties": {
