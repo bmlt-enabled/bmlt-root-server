@@ -30,7 +30,7 @@ class MeetingPermissionsTest extends TestCase
     {
         $user = $this->createServiceBodyObserverUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, editorUserIds: [$user->id_bigint]);
+        $area1 = $this->createArea('area1', 'area1', 0, assignedUserIds: [$user->id_bigint]);
         $area2 = $this->createArea('area2', 'area2', 0);
         $meeting1 = $this->createMeeting(['service_body_bigint' => $area1->id_bigint]);
         $meeting2 = $this->createMeeting(['service_body_bigint' => $area2->id_bigint]);
@@ -45,7 +45,7 @@ class MeetingPermissionsTest extends TestCase
     {
         $user = $this->createServiceBodyAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area1 = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $area2 = $this->createArea('area2', 'area2', 0);
         $meeting1 = $this->createMeeting(['service_body_bigint' => $area1->id_bigint]);
         $meeting2 = $this->createMeeting(['service_body_bigint' => $area2->id_bigint]);
@@ -60,7 +60,7 @@ class MeetingPermissionsTest extends TestCase
     {
         $user = $this->createServiceBodyAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, editorUserIds: [$user->id_bigint]);
+        $area1 = $this->createArea('area1', 'area1', 0, assignedUserIds: [$user->id_bigint]);
         $area2 = $this->createArea('area2', 'area2', 0);
         $meeting1 = $this->createMeeting(['service_body_bigint' => $area1->id_bigint]);
         $meeting2 = $this->createMeeting(['service_body_bigint' => $area2->id_bigint]);
@@ -109,7 +109,7 @@ class MeetingPermissionsTest extends TestCase
     {
         $user = $this->createServiceBodyObserverUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, editorUserIds: [$user->id_bigint]);
+        $area1 = $this->createArea('area1', 'area1', 0, assignedUserIds: [$user->id_bigint]);
         $meeting1 = $this->createMeeting(['service_body_bigint' => $area1->id_bigint]);
         $this->withHeader('Authorization', "Bearer $token")
             ->get("/api/v1/meetings/$meeting1->id_bigint")
@@ -120,7 +120,7 @@ class MeetingPermissionsTest extends TestCase
     {
         $user = $this->createServiceBodyAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area1 = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $meeting1 = $this->createMeeting(['service_body_bigint' => $area1->id_bigint]);
         $this->withHeader('Authorization', "Bearer $token")
             ->get("/api/v1/meetings/$meeting1->id_bigint")
@@ -131,7 +131,7 @@ class MeetingPermissionsTest extends TestCase
     {
         $user = $this->createServiceBodyAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, editorUserIds: [$user->id_bigint]);
+        $area1 = $this->createArea('area1', 'area1', 0, assignedUserIds: [$user->id_bigint]);
         $meeting1 = $this->createMeeting(['service_body_bigint' => $area1->id_bigint]);
         $this->withHeader('Authorization', "Bearer $token")
             ->get("/api/v1/meetings/$meeting1->id_bigint")
@@ -180,7 +180,7 @@ class MeetingPermissionsTest extends TestCase
     {
         $user = $this->createServiceBodyAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area1 = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $data = ['serviceBodyId' => $area1->id_bigint];
         $this->withHeader('Authorization', "Bearer $token")
             ->post("/api/v1/meetings", $data)
@@ -202,7 +202,7 @@ class MeetingPermissionsTest extends TestCase
     {
         $user = $this->createServiceBodyAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, editorUserIds: [$user->id_bigint]);
+        $area1 = $this->createArea('area1', 'area1', 0, assignedUserIds: [$user->id_bigint]);
         $data = ['serviceBodyId' => $area1->id_bigint];
         $this->withHeader('Authorization', "Bearer $token")
             ->post("/api/v1/meetings", $data)
@@ -244,7 +244,7 @@ class MeetingPermissionsTest extends TestCase
     {
         $user = $this->createDisabledUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area1 = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $meeting1 = $this->createMeeting(['service_body_bigint' => $area1->id_bigint]);
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/meetings/$meeting1->id_bigint")
@@ -255,7 +255,7 @@ class MeetingPermissionsTest extends TestCase
     {
         $user = $this->createServiceBodyObserverUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area1 = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $meeting1 = $this->createMeeting(['service_body_bigint' => $area1->id_bigint]);
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/meetings/$meeting1->id_bigint")
@@ -277,7 +277,7 @@ class MeetingPermissionsTest extends TestCase
     {
         $user = $this->createServiceBodyAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area1 = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $meeting1 = $this->createMeeting(['service_body_bigint' => $area1->id_bigint]);
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/meetings/$meeting1->id_bigint")
@@ -321,7 +321,7 @@ class MeetingPermissionsTest extends TestCase
     {
         $user = $this->createServiceBodyObserverUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area1 = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $meeting1 = $this->createMeeting(['service_body_bigint' => $area1->id_bigint]);
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/meetings/$meeting1->id_bigint")
@@ -343,7 +343,7 @@ class MeetingPermissionsTest extends TestCase
     {
         $user = $this->createServiceBodyAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area1 = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $meeting1 = $this->createMeeting(['service_body_bigint' => $area1->id_bigint]);
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/meetings/$meeting1->id_bigint")
@@ -376,7 +376,7 @@ class MeetingPermissionsTest extends TestCase
     {
         $user = $this->createDisabledUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area1 = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $meeting1 = $this->createMeeting(['service_body_bigint' => $area1->id_bigint]);
         $this->withHeader('Authorization', "Bearer $token")
             ->delete("/api/v1/meetings/$meeting1->id_bigint")
@@ -387,7 +387,7 @@ class MeetingPermissionsTest extends TestCase
     {
         $user = $this->createServiceBodyObserverUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area1 = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $meeting1 = $this->createMeeting(['service_body_bigint' => $area1->id_bigint]);
         $this->withHeader('Authorization', "Bearer $token")
             ->delete("/api/v1/meetings/$meeting1->id_bigint")
@@ -409,7 +409,7 @@ class MeetingPermissionsTest extends TestCase
     {
         $user = $this->createServiceBodyAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area1 = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area1 = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $meeting1 = $this->createMeeting(['service_body_bigint' => $area1->id_bigint]);
         $this->withHeader('Authorization', "Bearer $token")
             ->delete("/api/v1/meetings/$meeting1->id_bigint")

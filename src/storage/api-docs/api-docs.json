@@ -595,11 +595,11 @@
                                         "type": "string",
                                         "example": "string"
                                     },
-                                    "userId": {
+                                    "adminUserId": {
                                         "type": "integer",
                                         "example": "0"
                                     },
-                                    "editorUserIds": {
+                                    "assignedUserIds": {
                                         "type": "array",
                                         "items": {
                                             "type": "integer",
@@ -658,7 +658,7 @@
                                                         "example": "The parent id field must be present."
                                                     }
                                                 },
-                                                "editorUserIds": {
+                                                "assignedUserIds": {
                                                     "type": "array",
                                                     "items": {
                                                         "type": "string",
@@ -830,11 +830,11 @@
                                         "type": "string",
                                         "example": "string"
                                     },
-                                    "userId": {
+                                    "adminUserId": {
                                         "type": "integer",
                                         "example": "0"
                                     },
-                                    "editorUserIds": {
+                                    "assignedUserIds": {
                                         "type": "array",
                                         "items": {
                                             "type": "integer",
@@ -886,7 +886,7 @@
                                                         "example": "The parent id field must be present."
                                                     }
                                                 },
-                                                "editorUserIds": {
+                                                "assignedUserIds": {
                                                     "type": "array",
                                                     "items": {
                                                         "type": "string",
@@ -1055,7 +1055,7 @@
                         "application/json": {
                             "schema": {
                                 "properties": {
-                                    "editorUserIds": {
+                                    "assignedUserIds": {
                                         "type": "array",
                                         "items": {
                                             "type": "integer",
@@ -2008,11 +2008,11 @@
                         "type": "string",
                         "example": "string"
                     },
-                    "userId": {
+                    "adminUserId": {
                         "type": "integer",
                         "example": "0"
                     },
-                    "editorUserIds": {
+                    "assignedUserIds": {
                         "type": "array",
                         "items": {
                             "type": "integer",
@@ -2050,8 +2050,8 @@
                         "name": "string",
                         "description": "string",
                         "type": "string",
-                        "userId": 0,
-                        "editorUserIds": [
+                        "adminUserId": 0,
+                        "assignedUserIds": [
                             1
                         ],
                         "url": "string",

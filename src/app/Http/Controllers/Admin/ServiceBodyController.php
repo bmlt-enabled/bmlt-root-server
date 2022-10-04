@@ -50,9 +50,9 @@ class ServiceBodyController extends ResourceController
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'type' => ['required', Rule::in(ServiceBody::VALID_SB_TYPES)],
-            'userId' => 'required|exists:comdef_users,id_bigint',
-            'editorUserIds' => 'present|array',
-            'editorUserIds.*' => 'int|exists:comdef_users,id_bigint',
+            'adminUserId' => 'required|exists:comdef_users,id_bigint',
+            'assignedUserIds' => 'present|array',
+            'assignedUserIds.*' => 'int|exists:comdef_users,id_bigint',
             'url' => 'url|max:255',
             'helpline' => 'string|max:255',
             'email' => 'email|max:255',
@@ -64,8 +64,8 @@ class ServiceBodyController extends ResourceController
             'name_string' => $validated['name'],
             'description_string' => $validated['description'],
             'sb_type' => $validated['type'],
-            'principal_user_bigint' => $validated['userId'],
-            'editors_string' => collect($validated['editorUserIds'])->map(fn ($v) => strval($v))->join(','),
+            'principal_user_bigint' => $validated['adminUserId'],
+            'editors_string' => collect($validated['assignedUserIds'])->map(fn ($v) => strval($v))->join(','),
             'uri_string' => $validated['url'] ?? null,
             'sb_meeting_email' => $validated['email'] ?? '',
             'kml_file_uri_string' => $validated['helpline'] ?? null,
@@ -82,9 +82,9 @@ class ServiceBodyController extends ResourceController
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'type' => ['required', Rule::in(ServiceBody::VALID_SB_TYPES)],
-            'userId' => 'required|exists:comdef_users,id_bigint',
-            'editorUserIds' => 'present|array',
-            'editorUserIds.*' => 'int|exists:comdef_users,id_bigint',
+            'adminUserId' => 'required|exists:comdef_users,id_bigint',
+            'assignedUserIds' => 'present|array',
+            'assignedUserIds.*' => 'int|exists:comdef_users,id_bigint',
             'url' => 'nullable|present|url|max:255',
             'helpline' => 'nullable|present|string|max:255',
             'email' => 'nullable|present|email|max:255',
@@ -104,9 +104,9 @@ class ServiceBodyController extends ResourceController
             'name' => 'string|max:255',
             'description' => 'string',
             'type' => Rule::in(ServiceBody::VALID_SB_TYPES),
-            'userId' => 'exists:comdef_users,id_bigint',
-            'editorUserIds' => 'array',
-            'editorUserIds.*' => 'int|exists:comdef_users,id_bigint',
+            'adminUserId' => 'exists:comdef_users,id_bigint',
+            'assignedUserIds' => 'array',
+            'assignedUserIds.*' => 'int|exists:comdef_users,id_bigint',
             'url' => 'url|max:255',
             'helpline' => 'string|max:255',
             'email' => 'email|max:255',
@@ -126,7 +126,7 @@ class ServiceBodyController extends ResourceController
                     return ['sb_owner' => $value ?? 0];
                 } elseif ($key == 'type') {
                     return ['sb_type' => $value];
-                } elseif ($key == 'userId') {
+                } elseif ($key == 'adminUserId') {
                     return ['principal_user_bigint' => $value];
                 }
             }
@@ -134,7 +134,7 @@ class ServiceBodyController extends ResourceController
                 return ['name_string' => $value];
             } elseif ($key == 'description') {
                 return ['description_string' => $value];
-            } elseif ($key == 'editorUserIds') {
+            } elseif ($key == 'assignedUserIds') {
                 return ['editors_string' => collect($value)->map(fn ($v) => strval($v))->join(',')];
             } elseif ($key == 'url') {
                 return ['uri_string' => $value ?? null];

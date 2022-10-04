@@ -10,9 +10,9 @@ namespace App\Http\Controllers\Admin;
  *     @OA\Property(property="name", type="string", example="string"),
  *     @OA\Property(property="description", type="string", example="string"),
  *     @OA\Property(property="type", type="string", example="string"),
- *     @OA\Property(property="userId", type="integer", example="0"),
+ *     @OA\Property(property="adminUserId", type="integer", example="0"),
  *     @OA\Property(
- *        property="editorUserIds",
+ *        property="assignedUserIds",
  *        type="array",
  *        @OA\Items(
  *           type="integer",
@@ -33,8 +33,8 @@ namespace App\Http\Controllers\Admin;
  *                  "name": "string",
  *                  "description": "string",
  *                  "type": "string",
- *                  "userId": 0,
- *                  "editorUserIds": {1},
+ *                  "adminUserId": 0,
+ *                  "assignedUserIds": {1},
  *                  "url": "string",
  *                  "helpline": "string",
  *                  "email": "string",
@@ -150,9 +150,9 @@ class ServiceBodyControllerDoc extends ResourceController
      *     @OA\Property(property="name", type="string", example="string"),
      *     @OA\Property(property="description", type="string", example="string"),
      *     @OA\Property(property="type", type="string", example="string"),
-     *     @OA\Property(property="userId", type="integer", example="0"),
+     *     @OA\Property(property="adminUserId", type="integer", example="0"),
      *     @OA\Property(
-     *        property="editorUserIds",
+     *        property="assignedUserIds",
      *        type="array",
      *        @OA\Items(
      *           type="integer",
@@ -187,7 +187,7 @@ class ServiceBodyControllerDoc extends ResourceController
      *              )
      *           ),
      *           @OA\Property(
-     *              property="editorUserIds",
+     *              property="assignedUserIds",
      *              type="array",
      *              @OA\Items(
      *                 type="string",
@@ -242,9 +242,9 @@ class ServiceBodyControllerDoc extends ResourceController
      *     @OA\Property(property="name", type="string", example="string"),
      *     @OA\Property(property="description", type="string", example="string"),
      *     @OA\Property(property="type", type="string", example="string"),
-     *     @OA\Property(property="userId", type="integer", example="0"),
+     *     @OA\Property(property="adminUserId", type="integer", example="0"),
      *     @OA\Property(
-     *        property="editorUserIds",
+     *        property="assignedUserIds",
      *        type="array",
      *        @OA\Items(
      *           type="integer",
@@ -278,7 +278,7 @@ class ServiceBodyControllerDoc extends ResourceController
      *              )
      *           ),
      *           @OA\Property(
-     *              property="editorUserIds",
+     *              property="assignedUserIds",
      *              type="array",
      *              @OA\Items(
      *                 type="string",
@@ -331,7 +331,7 @@ class ServiceBodyControllerDoc extends ResourceController
      *    description="Pass in service body attributes.",
      *    @OA\JsonContent(
      *     @OA\Property(
-     *        property="editorUserIds",
+     *        property="assignedUserIds",
      *        type="array",
      *        @OA\Items(
      *           type="integer",

@@ -17,8 +17,8 @@ class ServiceBodyCreateTest extends TestCase
             'name' => 'test name',
             'description' => 'test description',
             'type' => 'AS',
-            'userId' => $user->id_bigint,
-            'editorUserIds' => [],
+            'adminUserId' => $user->id_bigint,
+            'assignedUserIds' => [],
             'url' => 'http://blah.com',
             'helpline' => '555-555-5555',
             'worldId' => 'test world id',
@@ -31,7 +31,7 @@ class ServiceBodyCreateTest extends TestCase
         $user2 = $this->createServiceBodyAdminUser();
         $token = $user->createToken('test')->plainTextToken;
         $data = $this->validPayload($user);
-        $data['editorUserIds'] = [$user->id_bigint, $user2->id_bigint];
+        $data['assignedUserIds'] = [$user->id_bigint, $user2->id_bigint];
 
         $this->withHeader('Authorization', "Bearer $token")
             ->post('/api/v1/servicebodies', $data)
@@ -40,8 +40,8 @@ class ServiceBodyCreateTest extends TestCase
             ->assertJsonFragment(['name' => $data['name']])
             ->assertJsonFragment(['description' => $data['description']])
             ->assertJsonFragment(['type' => $data['type']])
-            ->assertJsonFragment(['userId' => $data['userId']])
-            ->assertJsonFragment(['editorUserIds' => $data['editorUserIds']])
+            ->assertJsonFragment(['adminUserId' => $data['adminUserId']])
+            ->assertJsonFragment(['assignedUserIds' => $data['assignedUserIds']])
             ->assertJsonFragment(['url' => $data['url']])
             ->assertJsonFragment(['helpline' => $data['helpline']])
             ->assertJsonFragment(['worldId' => $data['worldId']])
@@ -63,8 +63,8 @@ class ServiceBodyCreateTest extends TestCase
             ->assertJsonFragment(['name' => $data['name']])
             ->assertJsonFragment(['description' => $data['description']])
             ->assertJsonFragment(['type' => $data['type']])
-            ->assertJsonFragment(['userId' => $data['userId']])
-            ->assertJsonFragment(['editorUserIds' => $data['editorUserIds']])
+            ->assertJsonFragment(['adminUserId' => $data['adminUserId']])
+            ->assertJsonFragment(['assignedUserIds' => $data['assignedUserIds']])
             ->assertJsonFragment(['url' => $data['url']])
             ->assertJsonFragment(['helpline' => $data['helpline']])
             ->assertJsonFragment(['worldId' => $data['worldId']])
@@ -217,62 +217,62 @@ class ServiceBodyCreateTest extends TestCase
         $data = $this->validPayload($user);
 
         // it is required
-        unset($data['userId']);
+        unset($data['adminUserId']);
         $this->withHeader('Authorization', "Bearer $token")
             ->post('/api/v1/servicebodies', $data)
             ->assertStatus(422);
 
         // it can't be null
-        $data['userId'] = null;
+        $data['adminUserId'] = null;
         $this->withHeader('Authorization', "Bearer $token")
             ->post('/api/v1/servicebodies', $data)
             ->assertStatus(422);
 
         // it can't be a userId that doesn't exist
-        $data['userId'] = $user->id_bigint + 1;
+        $data['adminUserId'] = $user->id_bigint + 1;
         $this->withHeader('Authorization', "Bearer $token")
             ->post('/api/v1/servicebodies', $data)
             ->assertStatus(422);
 
         // it can be a valid user id
-        $data['userId'] = $user->id_bigint;
+        $data['adminUserId'] = $user->id_bigint;
         $this->withHeader('Authorization', "Bearer $token")
             ->post('/api/v1/servicebodies', $data)
             ->assertStatus(201);
     }
 
-    public function testStoreServiceBodyValidateEditorUserIds()
+    public function testStoreServiceBodyValidateassignedUserIds()
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
         $data = $this->validPayload($user);
 
         // it is required
-        unset($data['editorUserIds']);
+        unset($data['assignedUserIds']);
         $this->withHeader('Authorization', "Bearer $token")
             ->post('/api/v1/servicebodies', $data)
             ->assertStatus(422);
 
         // it can't be null
-        $data['editorUserIds'] = null;
+        $data['assignedUserIds'] = null;
         $this->withHeader('Authorization', "Bearer $token")
             ->post('/api/v1/servicebodies', $data)
             ->assertStatus(422);
 
         // it can't contain an invalid user id
-        $data['editorUserIds'] = [$user->id_bigint, $user->id_bigint + 1];
+        $data['assignedUserIds'] = [$user->id_bigint, $user->id_bigint + 1];
         $this->withHeader('Authorization', "Bearer $token")
             ->post('/api/v1/servicebodies', $data)
             ->assertStatus(422);
 
         // it can be an empty array
-        $data['editorUserIds'] = [];
+        $data['assignedUserIds'] = [];
         $this->withHeader('Authorization', "Bearer $token")
             ->post('/api/v1/servicebodies', $data)
             ->assertStatus(201);
 
         // it can contain valid user ids
-        $data['editorUserIds'] = [$user->id_bigint];
+        $data['assignedUserIds'] = [$user->id_bigint];
         $this->withHeader('Authorization', "Bearer $token")
             ->post('/api/v1/servicebodies', $data)
             ->assertStatus(201);

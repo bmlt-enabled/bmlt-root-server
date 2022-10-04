@@ -49,7 +49,7 @@ class MeetingPartialUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $meeting = $this->createMeeting(['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)]);
 
@@ -113,7 +113,7 @@ class MeetingPartialUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $meeting = $this->createMeeting(['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)]);
 
@@ -137,7 +137,7 @@ class MeetingPartialUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $meeting = $this->createMeeting(['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)]);
 
@@ -164,7 +164,7 @@ class MeetingPartialUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $meeting = $this->createMeeting(['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)]);
 
@@ -197,7 +197,7 @@ class MeetingPartialUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $meeting = $this->createMeeting(['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)]);
 
@@ -224,7 +224,7 @@ class MeetingPartialUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $meeting = $this->createMeeting(['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)]);
 
@@ -255,7 +255,7 @@ class MeetingPartialUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $meeting = $this->createMeeting(['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)]);
 
@@ -290,7 +290,7 @@ class MeetingPartialUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $meeting = $this->createMeeting(['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)]);
 
@@ -319,7 +319,7 @@ class MeetingPartialUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $meeting = $this->createMeeting(['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)]);
 
@@ -348,7 +348,7 @@ class MeetingPartialUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $meeting = $this->createMeeting(['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)]);
 
@@ -379,7 +379,7 @@ class MeetingPartialUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $meeting = $this->createMeeting(['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)]);
 
@@ -410,7 +410,7 @@ class MeetingPartialUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $meeting = $this->createMeeting(['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)]);
 
@@ -441,7 +441,7 @@ class MeetingPartialUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $meeting = $this->createMeeting(['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)]);
 
@@ -480,7 +480,7 @@ class MeetingPartialUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $meeting = $this->createMeeting(['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)]);
 
@@ -513,7 +513,7 @@ class MeetingPartialUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $meeting = $this->createMeeting(['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)]);
 
@@ -540,7 +540,7 @@ class MeetingPartialUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
 
         $meetingRepository = new MeetingRepository();
@@ -594,7 +594,7 @@ class MeetingPartialUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $meeting = $this->createMeeting(['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)]);
 
@@ -619,7 +619,7 @@ class MeetingPartialUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
 
         foreach ([Meeting::VENUE_TYPE_IN_PERSON, Meeting::VENUE_TYPE_HYBRID] as $venueType) {
@@ -733,7 +733,7 @@ class MeetingPartialUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $meeting = $this->createMeeting(['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)]);
         $payload['venueType'] = Meeting::VENUE_TYPE_IN_PERSON;
@@ -750,7 +750,7 @@ class MeetingPartialUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
 
         foreach ([Meeting::VENUE_TYPE_VIRTUAL, Meeting::VENUE_TYPE_HYBRID] as $venueType) {
@@ -800,7 +800,7 @@ class MeetingPartialUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $payload['venueType'] = Meeting::VENUE_TYPE_VIRTUAL;
 
@@ -848,7 +848,7 @@ class MeetingPartialUpdateTest extends TestCase
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, userId: $user->id_bigint);
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
         $meeting = $this->createMeeting(['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)]);
 
