@@ -150,7 +150,7 @@ class FormatController extends ResourceController
 
         $sharedFormatsValues = collect($validated['translations'])->map(function ($translation) use ($validated) {
             return [
-                'format_type_enum' => !is_null($validated['type']) ? Format::TYPE_TO_COMDEF_TYPE_MAP[$validated['type']] : null,
+                'format_type_enum' => isset($validated['type']) && !is_null($validated['type']) ? Format::TYPE_TO_COMDEF_TYPE_MAP[$validated['type']] : null,
                 'worldid_mixed' => $validated['worldId'] ?? null,
                 'lang_enum' => $translation['language'],
                 'key_string' => $translation['key'],
