@@ -120,7 +120,7 @@ class MeetingController extends ResourceController
         $temporarilyClosedId = $this->formatRepository->getTemporarilyClosedFormat()->shared_id_bigint;
         $hybridFormatId = $this->formatRepository->getHybridFormat()->shared_id_bigint;
 
-        $validated = collect($request->validate([
+        $validators = [
             'serviceBodyId' => ['required', 'int', 'exists:comdef_service_bodies,id_bigint'],
             'formatIds' => 'present|array',
             'formatIds.*' => ['int', 'exists:comdef_formats,shared_id_bigint', Rule::notIn([$virtualFormatId, $temporarilyClosedId, $hybridFormatId])],
@@ -157,47 +157,58 @@ class MeetingController extends ResourceController
             'bus_lines' => 'nullable|string|max:512',
             'train_lines' => 'nullable|string|max:512',
             'comments' => 'nullable|string|max:512',
-        ]))->merge(collect($request->validate(
+        ];
+
+        $validators = array_merge(
+            $validators,
             $this->meetingRepository->getDataTemplates()
                 ->mapWithKeys(fn ($template, $_) => [$template->key => 'nullable|string|max:512'])
                 ->reject(fn ($_, $fieldName) => in_array($fieldName, MeetingData::STOCK_FIELDS))
                 ->toArray()
-        )));
+        );
 
-        return $validated->mapWithKeys(function ($value, $fieldName) use ($validated, $virtualFormatId, $temporarilyClosedId, $hybridFormatId) {
-            if ($fieldName == 'serviceBodyId') {
-                return ['service_body_bigint' => $value];
-            } elseif ($fieldName == 'formatIds') {
-                $temporarilyVirtual = boolval($validated['temporarilyVirtual'] ?? false);
-                $venueType = $validated->get('venueType');
-                if ($venueType == Meeting::VENUE_TYPE_VIRTUAL) {
-                    array_push($value, $virtualFormatId);
-                    if ($temporarilyVirtual) {
-                        array_push($value, $temporarilyClosedId);
+        $validated = collect($request->validate($validators));
+
+        return collect($validators)
+            ->mapWithKeys(function ($_, $fieldName) use ($validated, $virtualFormatId, $temporarilyClosedId, $hybridFormatId) {
+                if ($fieldName == 'serviceBodyId') {
+                    return ['service_body_bigint' => $validated[$fieldName]];
+                } elseif ($fieldName == 'formatIds') {
+                    $value = $validated[$fieldName];
+                    $temporarilyVirtual = boolval($validated['temporarilyVirtual'] ?? false);
+                    $venueType = $validated->get('venueType');
+                    if ($venueType == Meeting::VENUE_TYPE_VIRTUAL) {
+                        array_push($value, $virtualFormatId);
+                        if ($temporarilyVirtual) {
+                            array_push($value, $temporarilyClosedId);
+                        }
+                    } elseif ($venueType == Meeting::VENUE_TYPE_HYBRID) {
+                        array_push($value, $hybridFormatId);
                     }
-                } elseif ($venueType == Meeting::VENUE_TYPE_HYBRID) {
-                    array_push($value, $hybridFormatId);
+                    return ['formats' => collect($value)->sort()->unique()->join(',')];
+                } elseif ($fieldName == 'venueType') {
+                    return ['venue_type' => $validated[$fieldName]];
+                } elseif ($fieldName == 'day') {
+                    return ['weekday_tinyint' => $validated[$fieldName]];
+                } elseif ($fieldName == 'startTime') {
+                    return ['start_time' => $validated[$fieldName]];
+                } elseif ($fieldName == 'duration') {
+                    return ['duration_time' => $validated[$fieldName]];
+                } elseif ($fieldName == 'published') {
+                    return ['published' => $validated[$fieldName] ? 1 : 0];
+                } elseif ($fieldName == 'email') {
+                    return ['email_contact' => $validated[$fieldName] ?? null];
+                } elseif ($fieldName == 'worldId') {
+                    return ['worldid_mixed' => $validated[$fieldName] ?? null];
+                } elseif ($fieldName == 'name') {
+                    return ['meeting_name' => $validated[$fieldName]];
+                } elseif ($validated->has($fieldName)) {
+                    return [$fieldName => $validated[$fieldName]];
+                } else {
+                    return [null => null];
                 }
-                return ['formats' => collect($value)->sort()->unique()->join(',')];
-            } elseif ($fieldName == 'venueType') {
-                return ['venue_type' => $value];
-            } elseif ($fieldName == 'day') {
-                return ['weekday_tinyint' => $value];
-            } elseif ($fieldName == 'startTime') {
-                return ['start_time' => $value];
-            } elseif ($fieldName == 'duration') {
-                return ['duration_time' => $value];
-            } elseif ($fieldName == 'published') {
-                return ['published' => $value ? 1 : 0];
-            } elseif ($fieldName == 'email') {
-                return ['email_contact' => $value];
-            } elseif ($fieldName == 'worldId') {
-                return ['worldid_mixed' => $value];
-            } elseif ($fieldName == 'name') {
-                return ['meeting_name' => $value];
-            } else {
-                return [$fieldName => $value];
-            }
-        })->toArray();
+            })
+            ->reject(fn ($_, $key) => empty($key))
+            ->toArray();
     }
 }
