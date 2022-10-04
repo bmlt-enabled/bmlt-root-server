@@ -525,6 +525,127 @@
                 ]
             }
         },
+        "/api/v1/meetings/{meetingId}": {
+            "get": {
+                "tags": [
+                    "meetings"
+                ],
+                "summary": "Retrieve a single meeting",
+                "description": "Retrieve single meeting.",
+                "operationId": "getSingleMeeting",
+                "parameters": [
+                    {
+                        "name": "meetingId",
+                        "in": "path",
+                        "description": "ID of meeting",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns with successful request.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MeetingResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when not authenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MeetingErrorUnauthenticated"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Returns when no format exists.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NoMeetingExists"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "meetings"
+                ],
+                "summary": "Deletes a single meeting",
+                "description": "Deletes a single meeting by id.",
+                "operationId": "deleteMeeting",
+                "parameters": [
+                    {
+                        "name": "meetingId",
+                        "in": "path",
+                        "description": "ID of meeting",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Returns with successful request."
+                    },
+                    "401": {
+                        "description": "Returns when not authenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MeetingErrorUnauthenticated"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Returns when unauthorized.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MeetingErrorUnauthorized"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Returns when no meeting for id exists.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NoMeetingExists"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/servicebodies": {
             "get": {
                 "tags": [
@@ -994,13 +1115,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "No query results for model [App\\\\Models\\\\ServiceBody]"
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/NoServiceBodyExists"
                                 }
                             }
                         }
@@ -1923,7 +2038,7 @@
                     }
                 ]
             },
-            "MeetingsResponse": {
+            "MeetingResponse": {
                 "properties": {
                     "id": {
                         "type": "integer",
@@ -1952,6 +2067,128 @@
                         "example": "0"
                     },
                     "startTime": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "duration": {
+                        "type": "string",
+                        "example": "01:00"
+                    },
+                    "timeZone": {
+                        "type": "string",
+                        "example": "America/New_York"
+                    },
+                    "latitude": {
+                        "type": "number",
+                        "format": "float",
+                        "example": "35.698741"
+                    },
+                    "longitude": {
+                        "type": "number",
+                        "format": "float",
+                        "example": "-81.26273"
+                    },
+                    "published": {
+                        "type": "boolean",
+                        "example": "true"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "worldId": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "location_text": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "location_info": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "location_street": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "location_neighborhood": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "location_city_subsection": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "location_municipality": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "location_sub_province": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "location_province": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "location_postal_code_1": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "location_nation": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "phone_meeting_number": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "virtual_meeting_link": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "virtual_meeting_additional_info": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "contact_name_1": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "contact_name_2": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "contact_phone_1": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "contact_phone_2": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "contact_email_1": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "contact_email_2": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "bus_lines": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "train_line": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "comments": {
                         "type": "string",
                         "example": "string"
                     }
@@ -1985,6 +2222,12 @@
                     }
                 },
                 "type": "object"
+            },
+            "MeetingsResponse": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/MeetingResponse"
+                }
             },
             "ServiceBodyResponse": {
                 "properties": {

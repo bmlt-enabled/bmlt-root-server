@@ -409,9 +409,7 @@ class ServiceBodyControllerDoc extends ResourceController
      *  @OA\Response(
      *     response=404,
      *     description="Returns when no service body exists.",
-     *     @OA\JsonContent(
-     *        @OA\Property(property="message", type="string", example="No query results for model [App\\Models\\ServiceBody]"),
-     *     )
+     *     @OA\JsonContent(ref="#/components/schemas/NoServiceBodyExists")
      *  ),
      *  @OA\Response(
      *     response=409,
