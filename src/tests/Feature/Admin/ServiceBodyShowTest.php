@@ -3,7 +3,6 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\ServiceBody;
-use App\Repositories\MeetingRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ServiceBodyShowTest extends TestCase
