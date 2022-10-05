@@ -3,30 +3,25 @@
 namespace App\Http\Controllers\Admin;
 
 /**
+ * @OA\Schema(schema="UserBase",
+ *     @OA\Property(property="username", type="string", example="string"),
+ *     @OA\Property(property="type", type="string", example="string"),
+ *     @OA\Property(property="displayName", type="string", example="string"),
+ *     @OA\Property(property="description", type="string", example="string"),
+ *     @OA\Property(property="email", type="string", example="string"),
+ *     @OA\Property(property="ownerId", type="string", example="0")
+ * ),
  * @OA\Schema(schema="User",
  *     @OA\Property(property="id", type="integer", example="0"),
- *     @OA\Property(property="username", type="string", example="string"),
- *     @OA\Property(property="type", type="string", example="string"),
- *     @OA\Property(property="displayName", type="string", example="string"),
- *     @OA\Property(property="description", type="string", example="string"),
- *     @OA\Property(property="email", type="string", example="string"),
- *     @OA\Property(property="ownerId", type="string", example="0")
+ *     allOf={ @OA\Schema(ref="#/components/schemas/UserBase") }
  * ),
  * @OA\Schema(schema="CreateOrUpdateUser", required={"username","password","type","displayName"},
- *     @OA\Property(property="username", type="string", example="string"),
- *     @OA\Property(property="type", type="string", example="string"),
- *     @OA\Property(property="displayName", type="string", example="string"),
- *     @OA\Property(property="description", type="string", example="string"),
- *     @OA\Property(property="email", type="string", example="string"),
- *     @OA\Property(property="ownerId", type="string", example="0")
+ *     @OA\Property(property="password", type="string", example="string"),
+ *     allOf={ @OA\Schema(ref="#/components/schemas/UserBase") }
  * ),
  * @OA\Schema(schema="PartialUpdateUser",
- *     @OA\Property(property="username", type="string", example="string"),
- *     @OA\Property(property="type", type="string", example="string"),
- *     @OA\Property(property="displayName", type="string", example="string"),
- *     @OA\Property(property="description", type="string", example="string"),
- *     @OA\Property(property="email", type="string", example="string"),
- *     @OA\Property(property="ownerId", type="string", example="0")
+ *     @OA\Property(property="password", type="string", example="string"),
+ *     allOf={ @OA\Schema(ref="#/components/schemas/UserBase") }
  * ),
  * @OA\Schema(schema="UserResourceCollection", type="array",
  *     @OA\Items(ref="#/components/schemas/User")
