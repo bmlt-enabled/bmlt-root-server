@@ -21,6 +21,7 @@
     <arg name='extensions' value='php'/>
     <arg name='warning-severity' value='6'/>
     <arg name="report" value="full"/>
+    <arg name="parallel" value="4" />
     <arg value='s'/>
 
     <!--
