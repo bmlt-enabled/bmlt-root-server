@@ -138,6 +138,46 @@ class UserUpdateTest extends TestCase
         $this->assertEquals($oldOwner, $user1->owner_id_bigint);
     }
 
+    public function testUpdateUserOmittedOptionalFieldsAsAdmin()
+    {
+        $user1 = $this->createAdminUser();
+        $token = $user1->createToken('test')->plainTextToken;
+        $user2 = $this->createServiceBodyAdminUser();
+        $data = [
+            'username' => 'new username',
+            'password' => 'this is a valid password',
+            'type' => User::USER_TYPE_ADMIN,
+            'displayName' => 'pretty name',
+            'ownerId' => $user1->id_bigint,
+        ];
+
+        $this->assertNotEquals('', $user2->description_string);
+        $this->assertNotEquals('', $user2->email_address_string);
+
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/users/$user2->id_bigint", $data)
+            ->assertStatus(204);
+
+        $oldPasswordHash = $user2->password_string;
+        $user2->refresh();
+        $this->assertEquals($data['username'], $user2->login_string);
+        $this->assertNotEquals($oldPasswordHash, $user2->password_string);
+        $this->assertEquals($data['type'], User::USER_LEVEL_TO_USER_TYPE_MAP[$user2->user_level_tinyint]);
+        $this->assertEquals($data['displayName'], $user2->name_string);
+        $this->assertEquals('', $user2->description_string);
+        $this->assertEquals('', $user2->email_address_string);
+        $this->assertEquals($data['ownerId'], $user2->owner_id_bigint);
+
+        // validate nulling out ownerId comes out as -1 in the database
+        $data['ownerId'] = null;
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/users/$user2->id_bigint", $data)
+            ->assertStatus(204);
+
+        $user2->refresh();
+        $this->assertEquals(-1, $user2->owner_id_bigint);
+    }
+
     public function testUpdateUserValidateUsername()
     {
         $user = $this->createAdminUser();

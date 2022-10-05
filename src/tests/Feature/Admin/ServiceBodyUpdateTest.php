@@ -120,6 +120,48 @@ class ServiceBodyUpdateTest extends TestCase
         $this->assertTrue($region->sb_owner === 0);
     }
 
+    public function testUpdateServiceBodyOptionalFieldsAsAdmin()
+    {
+        $user1 = $this->createAdminUser();
+        $token = $user1->createToken('test')->plainTextToken;
+        $zone = $this->createZone('zone', 'zone');
+        $region = $this->createZone('region', 'region', uri: 'https://test.com', helpline: '5555555555', worldId: 'abc', adminUserId: $user1->id_bigint);
+        $user2 = $this->createServiceBodyAdminUser();
+        $data = [
+            'parentId' => $zone->id_bigint,
+            'name' => 'updated name',
+            'description' => 'update description',
+            'type' => ServiceBody::SB_TYPE_AREA,
+            'adminUserId' => $user2->id_bigint,
+            'assignedUserIds' => [$user2->id_bigint],
+        ];
+
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/servicebodies/$region->id_bigint", $data)
+            ->assertStatus(204);
+
+        $region->refresh();
+        $this->assertEquals($region->sb_owner, $data['parentId']);
+        $this->assertEquals($region->name_string, $data['name']);
+        $this->assertEquals($region->description_string, $data['description']);
+        $this->assertEquals($region->sb_type, $data['type']);
+        $this->assertEquals($region->principal_user_bigint, $data['adminUserId']);
+        $this->assertEquals($region->editors_string, implode(',', $data['assignedUserIds']));
+        $this->assertNull($region->uri_string);
+        $this->assertNull($region->kml_file_uri_string);
+        $this->assertEquals('', $region->sb_meeting_email);
+        $this->assertNull($region->worldid_mixed);
+
+        // validate nulling out parentId comes out as zero in the database
+        $data['parentId'] = null;
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/servicebodies/$region->id_bigint", $data)
+            ->assertStatus(204);
+
+        $region->refresh();
+        $this->assertTrue($region->sb_owner === 0);
+    }
+
     public function testUpdateServiceBodyValidateParentId()
     {
         $user = $this->createAdminUser();
