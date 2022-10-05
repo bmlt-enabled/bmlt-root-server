@@ -131,8 +131,8 @@ class TestCase extends BaseTestCase
         return User::create([
             'user_level_tinyint' => USER::USER_LEVEL_SERVICE_BODY_ADMIN,
             'name_string' => 'sbadmin',
-            'description_string' => '',
-            'email_address_string' => '',
+            'description_string' => 'a description',
+            'email_address_string' => 'email@email.com',
             'login_string' => 'sbadmin',
             'password_string' => password_hash($this->userPassword, PASSWORD_BCRYPT),
         ]);
