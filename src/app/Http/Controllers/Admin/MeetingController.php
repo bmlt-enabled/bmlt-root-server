@@ -263,7 +263,7 @@ class MeetingController extends ResourceController
                 $this->getDataTemplates()
                     ->reject(fn ($_, $fieldName) => $fieldName == 'meeting_name')
                     ->mapWithKeys(fn ($_, $fieldName) => $validated->has($fieldName) ? [$fieldName => $validated[$fieldName]] : [null => null])
-                    ->reject(fn ($_, $key) => empty($key))
+                    ->reject(fn ($value, $_) => is_null($value))
             )
             ->toArray();
     }
