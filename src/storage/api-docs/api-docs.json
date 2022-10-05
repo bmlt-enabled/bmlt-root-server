@@ -1306,6 +1306,59 @@
                 ]
             }
         },
+        "/api/v1/auth/token": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Create Token",
+                "description": "Exchange credentials for a new token",
+                "operationId": "authToken",
+                "requestBody": {
+                    "description": "User credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TokenCredentials"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Returns when POST is successful.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Token"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when credentials are incorrect.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorIncorrectCredentials"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/auth/refresh": {
             "post": {
                 "tags": [
@@ -1316,41 +1369,21 @@
                 "operationId": "authRefresh",
                 "responses": {
                     "200": {
-                        "description": "Returns when token is valid.",
+                        "description": "Returns when refresh is successful.",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "access_token": {
-                                            "type": "string",
-                                            "example": "2|tR6PIqa8tiBJWMu4zyb3qw4eECuERjLd7xeLKgBu"
-                                        },
-                                        "expires_at": {
-                                            "type": "integer",
-                                            "example": "1667342171"
-                                        },
-                                        "token_type": {
-                                            "type": "string",
-                                            "example": "bearer"
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/Token"
                                 }
                             }
                         }
                     },
                     "401": {
-                        "description": "Returns when token is invalid or missing.",
+                        "description": "Returns when request is unauthenticated.",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
                                 }
                             }
                         }
@@ -1363,138 +1396,24 @@
                 ]
             }
         },
-        "/api/v1/auth/token": {
-            "post": {
-                "tags": [
-                    "auth"
-                ],
-                "summary": "Retrieve Token",
-                "description": "Retrieve token by username, password.",
-                "operationId": "authToken",
-                "requestBody": {
-                    "description": "Pass user credentials",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "username",
-                                    "password"
-                                ],
-                                "properties": {
-                                    "username": {
-                                        "type": "string",
-                                        "format": "username",
-                                        "example": "MyUsername"
-                                    },
-                                    "password": {
-                                        "type": "string",
-                                        "format": "password",
-                                        "example": "PassWord12345"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Returns when user is authenticated.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "access_token": {
-                                            "type": "string",
-                                            "example": "2|tR6PIqa8tiBJWMu4zyb3qw4eECuERjLd7xeLKgBu"
-                                        },
-                                        "expires_at": {
-                                            "type": "integer",
-                                            "example": "1667342171"
-                                        },
-                                        "token_type": {
-                                            "type": "string",
-                                            "example": "bearer"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "The username field is required. (and 1 more error)"
-                                        },
-                                        "errors": {
-                                            "properties": {
-                                                "username": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "example": "The email field is required."
-                                                    }
-                                                },
-                                                "password": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "example": "The password field is required."
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Returns when user is not authenticated.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorIncorrectCredentials"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/api/v1/auth/logout": {
             "post": {
                 "tags": [
                     "auth"
                 ],
-                "summary": "Revoke Token",
+                "summary": "Logout",
                 "description": "Revoke token and logout.",
                 "operationId": "authLogout",
                 "responses": {
                     "200": {
-                        "description": "Returns when token is valid."
+                        "description": "Returns when token was logged out."
                     },
                     "401": {
-                        "description": "Returns when token is invalid or missing.",
+                        "description": "Returns when request is unauthenticated.",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
                                 }
                             }
                         }
@@ -2365,6 +2284,42 @@
                     "message": {
                         "type": "string",
                         "example": "No query results for model [App\\\\Models\\\\ServiceBody]"
+                    }
+                },
+                "type": "object"
+            },
+            "Token": {
+                "properties": {
+                    "access_token": {
+                        "type": "string",
+                        "example": "2|tR6PIqa8tiBJWMu4zyb3qw4eECuERjLd7xeLKgBu"
+                    },
+                    "expires_at": {
+                        "type": "integer",
+                        "example": "1667342171"
+                    },
+                    "token_type": {
+                        "type": "string",
+                        "example": "bearer"
+                    }
+                },
+                "type": "object"
+            },
+            "TokenCredentials": {
+                "required": [
+                    "username",
+                    "password"
+                ],
+                "properties": {
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "PassWord12345"
+                    },
+                    "username": {
+                        "type": "string",
+                        "format": "username",
+                        "example": "MyUsername"
                     }
                 },
                 "type": "object"
