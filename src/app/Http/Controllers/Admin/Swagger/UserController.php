@@ -38,7 +38,7 @@ class UserController extends Controller
 {
 
     /**
-     * @OA\Get(path="/api/v1/users", summary="Retrieve users", description="Retrieve users for authenticated user.", operationId="getUsers", tags={"users"}, security={{"bearerAuth":{}}},
+     * @OA\Get(path="/api/v1/users", summary="Retrieves users", description="Retrieve users for authenticated user.", operationId="getUsers", tags={"users"}, security={{"bearerAuth":{}}},
      *     @OA\Response(response=200, description="Returns when user is authenticated.",
      *         @OA\JsonContent(ref="#/components/schemas/UserCollection")
      *     ),
@@ -52,7 +52,7 @@ class UserController extends Controller
     }
 
     /**
-     * @OA\Get(path="/api/v1/users/{userId}", summary="Retrieve a single user", description="Retrieve single user.", operationId="getUser", tags={"users"}, security={{"bearerAuth":{}}},
+     * @OA\Get(path="/api/v1/users/{userId}", summary="Retrieves a single user", description="Retrieve single user.", operationId="getUser", tags={"users"}, security={{"bearerAuth":{}}},
      *     @OA\Parameter(description="ID of user", in="path", name="userId", required=true, example="1",
      *         @OA\Schema(type="integer", format="int64")
      *     ),
@@ -72,7 +72,7 @@ class UserController extends Controller
     }
 
     /**
-     * @OA\Post(path="/api/v1/users", summary="Create User", description="Creates a user.", operationId="createUser", tags={"users"}, security={{"bearerAuth":{}}},
+     * @OA\Post(path="/api/v1/users", summary="Creates a user", description="Creates a user.", operationId="createUser", tags={"users"}, security={{"bearerAuth":{}}},
      *     @OA\RequestBody(required=true, description="Pass in user object",
      *         @OA\JsonContent(ref="#/components/schemas/CreateUser"),
      *     ),
@@ -125,7 +125,7 @@ class UserController extends Controller
     }
 
     /**
-     * @OA\Patch(path="/api/v1/users/{userId}", summary="Patches a user.", description="Patches a user by id.", operationId="partialUpdateUser", tags={"users"}, security={{"bearerAuth":{}}},
+     * @OA\Patch(path="/api/v1/users/{userId}", summary="Patches a user", description="Patches a user by id.", operationId="partialUpdateUser", tags={"users"}, security={{"bearerAuth":{}}},
      *     @OA\Parameter(description="ID of user", in="path", name="userId", required=true, example="1",
      *        @OA\Schema(type="integer", format="int64")
      *     ),
