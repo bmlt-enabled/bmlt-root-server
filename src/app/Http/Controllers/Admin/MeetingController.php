@@ -177,8 +177,8 @@ class MeetingController extends ResourceController
                 'latitude' => 'required|numeric|between:-90,90',
                 'longitude' => 'required|numeric|between:-180,180',
                 'published' => 'required|boolean',
-                'email' => 'nullable|present|email|max:255',
-                'worldId' => 'nullable|present|string|max:30',
+                'email' => 'nullable|email|max:255',
+                'worldId' => 'nullable|string|max:30',
                 'name' => 'required|string|max:128',
             ], $this->getDataFieldValidators())
         ));

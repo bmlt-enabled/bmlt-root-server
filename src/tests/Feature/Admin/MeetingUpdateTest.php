@@ -598,12 +598,6 @@ class MeetingUpdateTest extends TestCase
         );
         $payload = $this->toPayload($meeting);
 
-        // it is required
-        unset($payload['email']);
-        $this->withHeader('Authorization', "Bearer $token")
-            ->put("/api/v1/meetings/$meeting->id_bigint", $payload)
-            ->assertStatus(422);
-
         // it can't be an invalid email
         $payload['email'] = 'blah';
         $this->withHeader('Authorization', "Bearer $token")
@@ -627,6 +621,12 @@ class MeetingUpdateTest extends TestCase
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/meetings/$meeting->id_bigint", $payload)
             ->assertStatus(204);
+
+        // it is not required
+        unset($payload['email']);
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/meetings/$meeting->id_bigint", $payload)
+            ->assertStatus(204);
     }
 
     public function testUpdateMeetingValidateWorldId()
@@ -640,12 +640,6 @@ class MeetingUpdateTest extends TestCase
             ['location_street' => '813 Darby St', 'location_municipality' => 'Raleigh', 'location_province' => 'NC', 'virtual_meeting_link' => 'https://zoom.us']
         );
         $payload = $this->toPayload($meeting);
-
-        // it is required
-        unset($payload['worldId']);
-        $this->withHeader('Authorization', "Bearer $token")
-            ->put("/api/v1/meetings/$meeting->id_bigint", $payload)
-            ->assertStatus(422);
 
         // it can't be more than 30 chars
         $payload['worldId'] = str_repeat('t', 31);
@@ -661,6 +655,12 @@ class MeetingUpdateTest extends TestCase
 
         // it can be null
         $payload['worldId'] = null;
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/meetings/$meeting->id_bigint", $payload)
+            ->assertStatus(204);
+
+        // it is not required
+        unset($payload['worldId']);
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/meetings/$meeting->id_bigint", $payload)
             ->assertStatus(204);
