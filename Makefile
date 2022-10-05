@@ -80,6 +80,8 @@ dev: zip ## Docker Compose Up
 .PHONY: test
 test:  ## Runs PHP Tests
 	$(TEST_PREFIX) php artisan test --parallel --recreate-databases
+# 	$(TEST_PREFIX) vendor/bin/phpunit tests/Feature/Admin/ServiceBodyPartialUpdateTest.php
+# 	$(TEST_PREFIX) vendor/bin/phpunit --filter testUpdateServiceBodyAsServiceBodyAdmin tests/Feature/Admin/ServiceBodyPartialUpdateTest.php
 
 .PHONY: coverage
 coverage:  ## Generates HTML Coverage Report

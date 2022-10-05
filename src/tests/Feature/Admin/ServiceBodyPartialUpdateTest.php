@@ -367,18 +367,6 @@ class ServiceBodyPartialUpdateTest extends TestCase
         $zone = $this->createZone('zone', 'zone', adminUserId: $user->id_bigint);
         $data = [];
 
-        // it can't be null
-        $data['url'] = null;
-        $this->withHeader('Authorization', "Bearer $token")
-            ->patch("/api/v1/servicebodies/$zone->id_bigint", $data)
-            ->assertStatus(422);
-
-        // it can't be empty
-        $data['url'] = '    ';
-        $this->withHeader('Authorization', "Bearer $token")
-            ->patch("/api/v1/servicebodies/$zone->id_bigint", $data)
-            ->assertStatus(422);
-
         // it can't be an invalid url
         $data['url'] = 'test';
         $this->withHeader('Authorization', "Bearer $token")
@@ -396,6 +384,18 @@ class ServiceBodyPartialUpdateTest extends TestCase
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(204);
+
+        // it can be empty
+        $data['url'] = '    ';  // nulled by middleware
+        $this->withHeader('Authorization', "Bearer $token")
+            ->patch("/api/v1/servicebodies/$zone->id_bigint", $data)
+            ->assertStatus(204);
+
+        // it can be null
+        $data['url'] = null;
+        $this->withHeader('Authorization', "Bearer $token")
+            ->patch("/api/v1/servicebodies/$zone->id_bigint", $data)
+            ->assertStatus(204);
     }
 
     public function testPartialUpdateServiceBodyValidateHelpline()
@@ -404,18 +404,6 @@ class ServiceBodyPartialUpdateTest extends TestCase
         $token = $user->createToken('test')->plainTextToken;
         $zone = $this->createZone('zone', 'zone', adminUserId: $user->id_bigint);
         $data = [];
-
-        // it can't be null
-        $data['helpline'] = null;
-        $this->withHeader('Authorization', "Bearer $token")
-            ->patch("/api/v1/servicebodies/$zone->id_bigint", $data)
-            ->assertStatus(422);
-
-        // it can't be empty
-        $data['helpline'] = '    ';
-        $this->withHeader('Authorization', "Bearer $token")
-            ->patch("/api/v1/servicebodies/$zone->id_bigint", $data)
-            ->assertStatus(422);
 
         // it can't be longer than 255 characters
         $data['helpline'] = str_repeat('t', 256);
@@ -428,6 +416,18 @@ class ServiceBodyPartialUpdateTest extends TestCase
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(204);
+
+        // it can be empty
+        $data['helpline'] = '    '; // nulled by middlware
+        $this->withHeader('Authorization', "Bearer $token")
+            ->patch("/api/v1/servicebodies/$zone->id_bigint", $data)
+            ->assertStatus(204);
+
+        // it can be null
+        $data['helpline'] = null;
+        $this->withHeader('Authorization', "Bearer $token")
+            ->patch("/api/v1/servicebodies/$zone->id_bigint", $data)
+            ->assertStatus(204);
     }
 
     public function testPartialUpdateServiceBodyValidateEmail()
@@ -436,12 +436,6 @@ class ServiceBodyPartialUpdateTest extends TestCase
         $token = $user->createToken('test')->plainTextToken;
         $zone = $this->createZone('zone', 'zone', adminUserId: $user->id_bigint);
         $data = [];
-
-        // it can't be null
-        $data['email'] = null;
-        $this->withHeader('Authorization', "Bearer $token")
-            ->patch("/api/v1/servicebodies/$zone->id_bigint", $data)
-            ->assertStatus(422);
 
         // it can't be an invalid email
         $data['email'] = 'blah';
@@ -460,6 +454,12 @@ class ServiceBodyPartialUpdateTest extends TestCase
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(204);
+
+        // it can be null
+        $data['email'] = null;
+        $this->withHeader('Authorization', "Bearer $token")
+            ->patch("/api/v1/servicebodies/$zone->id_bigint", $data)
+            ->assertStatus(204);
     }
 
     public function testPartialUpdateServiceBodyValidateWorldId()
@@ -469,18 +469,6 @@ class ServiceBodyPartialUpdateTest extends TestCase
         $zone = $this->createZone('zone', 'zone', adminUserId: $user->id_bigint);
         $data = [];
 
-        // it can't be null
-        $data['worldId'] = null;
-        $this->withHeader('Authorization', "Bearer $token")
-            ->patch("/api/v1/servicebodies/$zone->id_bigint", $data)
-            ->assertStatus(422);
-
-        // it can't be empty
-        $data['worldId'] = '    ';
-        $this->withHeader('Authorization', "Bearer $token")
-            ->patch("/api/v1/servicebodies/$zone->id_bigint", $data)
-            ->assertStatus(422);
-
         // it can't be longer than 30 characters
         $data['worldId'] = str_repeat('t', 31);
         $this->withHeader('Authorization', "Bearer $token")
@@ -489,6 +477,18 @@ class ServiceBodyPartialUpdateTest extends TestCase
 
         // it can be 30 characters
         $data['worldId'] = str_repeat('t', 30);
+        $this->withHeader('Authorization', "Bearer $token")
+            ->patch("/api/v1/servicebodies/$zone->id_bigint", $data)
+            ->assertStatus(204);
+
+        // it can be empty
+        $data['worldId'] = '    ';  // nulled by middleware
+        $this->withHeader('Authorization', "Bearer $token")
+            ->patch("/api/v1/servicebodies/$zone->id_bigint", $data)
+            ->assertStatus(204);
+
+        // it can be null
+        $data['worldId'] = null;
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(204);

@@ -48,15 +48,7 @@ class User extends Model implements AuthenticatableContract
     protected $table = 'comdef_users';
     protected $primaryKey = 'id_bigint';
     public $timestamps = false;
-    protected $fillable = [
-        'user_level_tinyint',
-        'name_string',
-        'description_string',
-        'email_address_string',
-        'login_string',
-        'password_string',
-        'owner_id_bigint',
-    ];
+    protected $fillable = self::FIELDS;
 
     public function getAuthPassword()
     {

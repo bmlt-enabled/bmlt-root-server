@@ -340,12 +340,6 @@ class ServiceBodyUpdateTest extends TestCase
         $zone = $this->createZone('zone', 'zone', adminUserId: $user->id_bigint);
         $data = $this->toPayload($zone);
 
-        // it is required
-        unset($data['url']);
-        $this->withHeader('Authorization', "Bearer $token")
-            ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
-            ->assertStatus(422);
-
         // it can't be an invalid url
         $data['url'] = 'test';
         $this->withHeader('Authorization', "Bearer $token")
@@ -375,6 +369,12 @@ class ServiceBodyUpdateTest extends TestCase
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(204);
+
+        // it is not required
+        unset($data['url']);
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
+            ->assertStatus(204);
     }
 
     public function testUpdateServiceBodyValidateHelpline()
@@ -383,12 +383,6 @@ class ServiceBodyUpdateTest extends TestCase
         $token = $user->createToken('test')->plainTextToken;
         $zone = $this->createZone('zone', 'zone', adminUserId: $user->id_bigint);
         $data = $this->toPayload($zone);
-
-        // it is required
-        unset($data['helpline']);
-        $this->withHeader('Authorization', "Bearer $token")
-            ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
-            ->assertStatus(422);
 
         // it can't be longer than 255 characters
         $data['helpline'] = str_repeat('t', 256);
@@ -413,6 +407,12 @@ class ServiceBodyUpdateTest extends TestCase
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(204);
+
+        // it is not required
+        unset($data['helpline']);
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
+            ->assertStatus(204);
     }
 
     public function testUpdateServiceBodyValidateEmail()
@@ -421,12 +421,6 @@ class ServiceBodyUpdateTest extends TestCase
         $token = $user->createToken('test')->plainTextToken;
         $zone = $this->createZone('zone', 'zone', adminUserId: $user->id_bigint);
         $data = $this->toPayload($zone);
-
-        // it is required
-        unset($data['email']);
-        $this->withHeader('Authorization', "Bearer $token")
-            ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
-            ->assertStatus(422);
 
         // it can't be an invalid email
         $data['email'] = 'blah';
@@ -451,6 +445,12 @@ class ServiceBodyUpdateTest extends TestCase
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(204);
+
+        // it is not required
+        unset($data['email']);
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
+            ->assertStatus(204);
     }
 
     public function testUpdateServiceBodyValidateWorldId()
@@ -459,12 +459,6 @@ class ServiceBodyUpdateTest extends TestCase
         $token = $user->createToken('test')->plainTextToken;
         $zone = $this->createZone('zone', 'zone', adminUserId: $user->id_bigint);
         $data = $this->toPayload($zone);
-
-        // it is required
-        unset($data['worldId']);
-        $this->withHeader('Authorization', "Bearer $token")
-            ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
-            ->assertStatus(422);
 
         // it can't be longer than 30 characters
         $data['worldId'] = str_repeat('t', 31);
@@ -486,6 +480,12 @@ class ServiceBodyUpdateTest extends TestCase
 
         // it can be null
         $data['worldId'] = null;
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
+            ->assertStatus(204);
+
+        // it is not required
+        unset($data['worldId']);
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(204);
