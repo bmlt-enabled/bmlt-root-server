@@ -61,7 +61,7 @@ return [
             'host' => legacy_config('db_host', '0.0.0.0'),
             'port' => env('DB_PORT', '3306'),
             'database' => legacy_config('db_database', 'rootserver'),
-            'username' => legacy_config('db_username', 'rootserver'),
+            'username' => legacy_config('db_username', 'root'),
             'password' => legacy_config('db_password', 'rootserver'),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',

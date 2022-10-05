@@ -15,6 +15,7 @@
         "spatie/laravel-validation-rules": "^3.2"
     },
     "require-dev": {
+        "brianium/paratest": "*",
         "darkaonline/l5-swagger": "^8.4",
         "fakerphp/faker": "^1.9.1",
         "laravel/pint": "^1.0",

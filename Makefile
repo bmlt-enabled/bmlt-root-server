@@ -79,9 +79,7 @@ dev: zip ## Docker Compose Up
 
 .PHONY: test
 test:  ## Runs PHP Tests
-	$(TEST_PREFIX) vendor/phpunit/phpunit/phpunit
-# 	$(TEST_PREFIX) vendor/phpunit/phpunit/phpunit tests/Feature/Admin/TokenTest.php
-# 	$(TEST_PREFIX) vendor/phpunit/phpunit/phpunit --filter testLogout tests/Feature/Admin/TokenTest.php
+	$(TEST_PREFIX) php artisan test --parallel --recreate-databases
 
 .PHONY: coverage
 coverage:  ## Generates HTML Coverage Report
