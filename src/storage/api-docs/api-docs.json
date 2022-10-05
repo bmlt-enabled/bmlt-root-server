@@ -1740,7 +1740,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/UsersResponse"
+                                    "$ref": "#/components/schemas/UserResourceCollection"
                                 }
                             }
                         }
@@ -1767,7 +1767,7 @@
                     "users"
                 ],
                 "summary": "Create User",
-                "description": "Cretaes a user.",
+                "description": "Creates a user.",
                 "operationId": "createUser",
                 "requestBody": {
                     "description": "Pass in user object",
@@ -1775,41 +1775,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "username",
-                                    "password"
-                                ],
-                                "properties": {
-                                    "username": {
-                                        "type": "string",
-                                        "example": "string"
-                                    },
-                                    "type": {
-                                        "type": "string",
-                                        "example": "string"
-                                    },
-                                    "password": {
-                                        "type": "string",
-                                        "example": "string"
-                                    },
-                                    "displayName": {
-                                        "type": "string",
-                                        "example": "string"
-                                    },
-                                    "description": {
-                                        "type": "string",
-                                        "example": "string"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "example": "string"
-                                    },
-                                    "ownerId": {
-                                        "type": "string",
-                                        "example": "0"
-                                    }
-                                },
-                                "type": "object"
+                                "$ref": "#/components/schemas/CreateOrUpdateUser"
                             }
                         }
                     }
@@ -1820,42 +1786,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/UserResponse"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation error.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "The username field is required. (and 1 more error)"
-                                        },
-                                        "errors": {
-                                            "properties": {
-                                                "username": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "example": "The username field is required."
-                                                    }
-                                                },
-                                                "password": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "example": "The password field is required."
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/User"
                                 }
                             }
                         }
@@ -1879,6 +1810,16 @@
                                 }
                             }
                         }
+                    },
+                    "422": {
+                        "description": "Validation error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -1895,7 +1836,7 @@
                 ],
                 "summary": "Retrieve a single user",
                 "description": "Retrieve single user.",
-                "operationId": "getSingleUser",
+                "operationId": "getUser",
                 "parameters": [
                     {
                         "name": "userId",
@@ -1915,7 +1856,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/UserResponse"
+                                    "$ref": "#/components/schemas/User"
                                 }
                             }
                         }
@@ -1952,7 +1893,7 @@
                     "users"
                 ],
                 "summary": "Update single user",
-                "description": "Updates a single user.",
+                "description": "Updates a user.",
                 "operationId": "updateUser",
                 "parameters": [
                     {
@@ -1973,83 +1914,14 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "username",
-                                    "password"
-                                ],
-                                "properties": {
-                                    "username": {
-                                        "type": "string",
-                                        "example": "string"
-                                    },
-                                    "type": {
-                                        "type": "string",
-                                        "example": "string"
-                                    },
-                                    "password": {
-                                        "type": "string",
-                                        "example": "string"
-                                    },
-                                    "displayName": {
-                                        "type": "string",
-                                        "example": "string"
-                                    },
-                                    "description": {
-                                        "type": "string",
-                                        "example": "string"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "example": "string"
-                                    },
-                                    "ownerId": {
-                                        "type": "string",
-                                        "example": "0"
-                                    }
-                                },
-                                "type": "object"
+                                "$ref": "#/components/schemas/CreateOrUpdateUser"
                             }
                         }
                     }
                 },
                 "responses": {
                     "204": {
-                        "description": "Returns when PUT is successful."
-                    },
-                    "422": {
-                        "description": "Validation error.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "The username field is required. (and 1 more error)"
-                                        },
-                                        "errors": {
-                                            "properties": {
-                                                "username": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "example": "The username field is required."
-                                                    }
-                                                },
-                                                "password": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "example": "The password field is required."
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Success."
                     },
                     "401": {
                         "description": "Returns when user is not authenticated.",
@@ -2072,11 +1944,21 @@
                         }
                     },
                     "404": {
-                        "description": "Returns when no service body exists.",
+                        "description": "Returns when no user exists.",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/NoUserExists"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
                                 }
                             }
                         }
@@ -2092,9 +1974,9 @@
                 "tags": [
                     "users"
                 ],
-                "summary": "Deletes a single user",
-                "description": "Deletes a single user by id",
-                "operationId": "deleteUSer",
+                "summary": "Deletes a user",
+                "description": "Deletes a user by id",
+                "operationId": "deleteUser",
                 "parameters": [
                     {
                         "name": "userId",
@@ -2110,7 +1992,7 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": "Returns with successful request."
+                        "description": "Success."
                     },
                     "401": {
                         "description": "Returns when not authenticated",
@@ -2133,11 +2015,21 @@
                         }
                     },
                     "404": {
-                        "description": "Returns when no service body exists.",
+                        "description": "Returns when no user exists.",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/NoUserExists"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
                                 }
                             }
                         }
@@ -2153,9 +2045,9 @@
                 "tags": [
                     "users"
                 ],
-                "summary": "Patches a single user",
-                "description": "Patches a single user by id",
-                "operationId": "patchUser",
+                "summary": "Patches a user.",
+                "description": "Patches a user by id.",
+                "operationId": "partialUpdateUser",
                 "parameters": [
                     {
                         "name": "userId",
@@ -2170,25 +2062,19 @@
                     }
                 ],
                 "requestBody": {
-                    "description": "Pass in user attributes",
+                    "description": "Pass in fields you want to update.",
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "properties": {
-                                    "email": {
-                                        "type": "string",
-                                        "example": "string"
-                                    }
-                                },
-                                "type": "object"
+                                "$ref": "#/components/schemas/PartialUpdateUser"
                             }
                         }
                     }
                 },
                 "responses": {
                     "204": {
-                        "description": "Returns with successful request."
+                        "description": "Success."
                     },
                     "401": {
                         "description": "Returns when not authenticated",
@@ -2211,11 +2097,21 @@
                         }
                     },
                     "404": {
-                        "description": "Returns when no service body exists.",
+                        "description": "Returns when no user exists.",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/NoUserExists"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
                                 }
                             }
                         }
@@ -2254,6 +2150,25 @@
                     "message": {
                         "type": "string",
                         "example": "This action is unauthorized."
+                    }
+                },
+                "type": "object"
+            },
+            "ValidationError": {
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "The username field is required. (and 1 more error)"
+                    },
+                    "errors": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "example": "error details"
+                            }
+                        }
                     }
                 },
                 "type": "object"
@@ -2599,7 +2514,7 @@
                 },
                 "type": "object"
             },
-            "UserResponse": {
+            "User": {
                 "properties": {
                     "id": {
                         "type": "integer",
@@ -2632,22 +2547,75 @@
                 },
                 "type": "object"
             },
-            "UsersResponse": {
+            "CreateOrUpdateUser": {
+                "required": [
+                    "username",
+                    "password",
+                    "type",
+                    "displayName"
+                ],
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "type": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "displayName": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "ownerId": {
+                        "type": "string",
+                        "example": "0"
+                    }
+                },
+                "type": "object"
+            },
+            "PartialUpdateUser": {
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "type": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "displayName": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "ownerId": {
+                        "type": "string",
+                        "example": "0"
+                    }
+                },
+                "type": "object"
+            },
+            "UserResourceCollection": {
                 "type": "array",
                 "items": {
-                    "$ref": "#/components/schemas/UserResponse"
-                },
-                "example": [
-                    {
-                        "id": 1,
-                        "username": "string",
-                        "type": "string",
-                        "displayName": "string",
-                        "description": "string",
-                        "email": "string",
-                        "ownerId": 0
-                    }
-                ]
+                    "$ref": "#/components/schemas/User"
+                }
             },
             "NoUserExists": {
                 "description": "Returns when no user exists.",
