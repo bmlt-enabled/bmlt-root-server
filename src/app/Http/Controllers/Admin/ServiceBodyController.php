@@ -7,6 +7,7 @@ use App\Http\Responses\JsonResponse;
 use App\Interfaces\ServiceBodyRepositoryInterface;
 use App\Models\ServiceBody;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Validation\Rule;
 
 class ServiceBodyController extends ResourceController
@@ -45,21 +46,8 @@ class ServiceBodyController extends ResourceController
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'parentId' => 'nullable|present|int|exists:comdef_service_bodies,id_bigint',
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'type' => ['required', Rule::in(ServiceBody::VALID_SB_TYPES)],
-            'adminUserId' => 'required|exists:comdef_users,id_bigint',
-            'assignedUserIds' => 'present|array',
-            'assignedUserIds.*' => 'int|exists:comdef_users,id_bigint',
-            'url' => 'url|max:255',
-            'helpline' => 'string|max:255',
-            'email' => 'email|max:255',
-            'worldId' => 'string|max:30',
-        ]);
-
-        $serviceBody = $this->serviceBodyRepository->create([
+        $validated = $this->validateInputs($request);
+        $values = [
             'sb_owner' => $validated['parentId'] ?? 0,
             'name_string' => $validated['name'],
             'description_string' => $validated['description'],
@@ -70,90 +58,57 @@ class ServiceBodyController extends ResourceController
             'sb_meeting_email' => $validated['email'] ?? '',
             'kml_file_uri_string' => $validated['helpline'] ?? null,
             'worldid_mixed' => $validated['worldId'] ?? null,
-        ]);
-
+        ];
+        $serviceBody = $this->serviceBodyRepository->create($values);
         return new ServiceBodyResource($serviceBody);
     }
 
     public function update(Request $request, ServiceBody $serviceBody)
     {
-        $validated = $request->validate([
-            'parentId' => 'nullable|present|int|exists:comdef_service_bodies,id_bigint',
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'type' => ['required', Rule::in(ServiceBody::VALID_SB_TYPES)],
-            'adminUserId' => 'required|exists:comdef_users,id_bigint',
-            'assignedUserIds' => 'present|array',
-            'assignedUserIds.*' => 'int|exists:comdef_users,id_bigint',
-            'url' => 'nullable|present|url|max:255',
-            'helpline' => 'nullable|present|string|max:255',
-            'email' => 'nullable|present|email|max:255',
-            'worldId' => 'nullable|present|string|max:30',
-        ]);
-
-        $this->handleUpdate($request, $serviceBody, $validated);
-
+        $validated = $this->validateInputs($request);
+        $values = $this->buildValuesArrayForUpdate($request, $validated);
+        $this->serviceBodyRepository->update($serviceBody->id_bigint, $values);
         return response()->noContent();
     }
 
 
     public function partialUpdate(Request $request, ServiceBody $serviceBody)
     {
-        $validated = $request->validate([
-            'parentId' => 'nullable|int|exists:comdef_service_bodies,id_bigint',
-            'name' => 'string|max:255',
-            'description' => 'string',
-            'type' => Rule::in(ServiceBody::VALID_SB_TYPES),
-            'adminUserId' => 'exists:comdef_users,id_bigint',
-            'assignedUserIds' => 'array',
-            'assignedUserIds.*' => 'int|exists:comdef_users,id_bigint',
-            'url' => 'url|max:255',
-            'helpline' => 'string|max:255',
-            'email' => 'email|max:255',
-            'worldId' => 'string|max:30',
-        ]);
-
-        $this->handleUpdate($request, $serviceBody, $validated);
-
+        $request->merge(
+            collect(ServiceBody::FIELDS)
+                ->mapWithKeys(function ($fieldName, $_) use ($request, $serviceBody) {
+                    if ($fieldName == 'sb_owner') {
+                        return ['parentId' => $request->has('parentId') ? $request->input('parentId') : ($serviceBody->owner_id_bigint == 0 ? null : $serviceBody->owner_id_bigint)];
+                    } elseif ($fieldName == 'sb_type') {
+                        return ['type' => $request->has('type') ? $request->input('type') : $serviceBody->sb_type];
+                    } elseif ($fieldName == 'principal_user_bigint') {
+                        return ['adminUserId' => $request->has('adminUserId') ? $request->input('adminUserId') : $serviceBody->principal_user_bigint];
+                    } elseif ($fieldName == 'name_string') {
+                        return ['name' => $request->has('name') ? $request->input('name') : $serviceBody->name_string];
+                    } elseif ($fieldName == 'description_string') {
+                        return ['description' => $request->has('description') ? $request->input('description') : $serviceBody->description_string];
+                    } elseif ($fieldName == 'editors_string') {
+                        return ['assignedUserIds' => $request->has('assignedUserIds') ? $request->input('assignedUserIds') : (empty($serviceBody->editors_string) ? [] : array_map(fn ($v) => intval($v), explode(',', $serviceBody->editors_string)))];
+                    } elseif ($fieldName == 'uri_string') {
+                        return ['url' => $request->has('url') ? $request->input('url') : $serviceBody->uri_string];
+                    } elseif ($fieldName == 'sb_meeting_email') {
+                        return ['email' => $request->has('email') ? $request->input('email') : $serviceBody->sb_meeting_email];
+                    } elseif ($fieldName == 'kml_file_uri_string') {
+                        return ['helpline' => $request->has('helpline') ? $request->input('helpline') : $serviceBody->kml_file_uri_string];
+                    } elseif ($fieldName == 'worldid_mixed') {
+                        return ['worldId' => $request->has('worldId') ? $request->input('worldId') : $serviceBody->worldid_mixed];
+                    } else {
+                        return [null => null];
+                    }
+                })
+                ->reject(fn ($_, $key) => empty($key))
+                ->toArray()
+        );
+        $validated = $this->validateInputs($request);
+        $values = $this->buildValuesArrayForUpdate($request, $validated);
+        $this->serviceBodyRepository->update($serviceBody->id_bigint, $values);
         return response()->noContent();
     }
-
-    private function handleUpdate(Request $request, ServiceBody $serviceBody, array $validated)
-    {
-        $values = collect($validated)->mapWithKeys(function ($value, $key) use ($request) {
-            if ($request->user()->isAdmin()) {
-                if ($key == 'parentId') {
-                    return ['sb_owner' => $value ?? 0];
-                } elseif ($key == 'type') {
-                    return ['sb_type' => $value];
-                } elseif ($key == 'adminUserId') {
-                    return ['principal_user_bigint' => $value];
-                }
-            }
-            if ($key == 'name') {
-                return ['name_string' => $value];
-            } elseif ($key == 'description') {
-                return ['description_string' => $value];
-            } elseif ($key == 'assignedUserIds') {
-                return ['editors_string' => collect($value)->map(fn ($v) => strval($v))->join(',')];
-            } elseif ($key == 'url') {
-                return ['uri_string' => $value ?? null];
-            } elseif ($key == 'email') {
-                return ['sb_meeting_email' => $value ?? ''];
-            } elseif ($key == 'helpline') {
-                return ['kml_file_uri_string' => $value ?? null];
-            } elseif ($key == 'worldId') {
-                return ['worldid_mixed' => $value ?? null];
-            } else {
-                return [null => null];
-            }
-        })->reject(fn ($_, $key) => empty($key))->toArray();
-
-        if (!empty($values)) {
-            $this->serviceBodyRepository->update($serviceBody->id_bigint, $values);
-        }
-    }
-
 
     public function destroy(ServiceBody $serviceBody)
     {
@@ -166,5 +121,59 @@ class ServiceBodyController extends ResourceController
         $this->serviceBodyRepository->delete($serviceBody->id_bigint);
 
         return response()->noContent();
+    }
+
+    private function validateInputs(Request $request): Collection
+    {
+        return collect($request->validate([
+            'parentId' => 'nullable|present|int|exists:comdef_service_bodies,id_bigint',
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'type' => ['required', Rule::in(ServiceBody::VALID_SB_TYPES)],
+            'adminUserId' => 'required|exists:comdef_users,id_bigint',
+            'assignedUserIds' => 'present|array',
+            'assignedUserIds.*' => 'int|exists:comdef_users,id_bigint',
+            'url' => 'nullable|url|max:255',
+            'helpline' => 'nullable|string|max:255',
+            'email' => 'nullable|email|max:255',
+            'worldId' => 'nullable|string|max:30',
+        ]));
+    }
+
+    private function buildValuesArrayForUpdate(Request $request, Collection $validated): array
+    {
+        $requestUser = $request->user();
+        $isAdmin = $requestUser->isAdmin();
+        return collect(ServiceBody::FIELDS)
+            ->mapWithKeys(function ($fieldName, $_) use ($validated, $isAdmin) {
+                if ($isAdmin) {
+                    if ($fieldName == 'sb_owner') {
+                        return [$fieldName => $validated['parentId'] ?? 0];
+                    } elseif ($fieldName == 'sb_type') {
+                        return [$fieldName => $validated['type']];
+                    } elseif ($fieldName == 'principal_user_bigint') {
+                        return [$fieldName => $validated['adminUserId']];
+                    }
+                }
+                if ($fieldName == 'name_string') {
+                    return ['name_string' => $validated['name']];
+                } elseif ($fieldName == 'description_string') {
+                    return [$fieldName => $validated['description']];
+                } elseif ($fieldName == 'editors_string') {
+                    return [$fieldName => collect($validated['assignedUserIds'])->map(fn ($v) => strval($v))->join(',')];
+                } elseif ($fieldName == 'uri_string') {
+                    return [$fieldName => $validated['url'] ?? null];
+                } elseif ($fieldName == 'sb_meeting_email') {
+                    return [$fieldName => $validated['email'] ?? ''];
+                } elseif ($fieldName == 'kml_file_uri_string') {
+                    return [$fieldName => $validated['helpline'] ?? null];
+                } elseif ($fieldName == 'worldid_mixed') {
+                    return [$fieldName => $validated['worldId'] ?? null];
+                } else {
+                    return [null => null];
+                }
+            })
+            ->reject(fn ($_, $key) => empty($key))
+            ->toArray();
     }
 }

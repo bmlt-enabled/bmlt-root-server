@@ -284,24 +284,6 @@ class ServiceBodyCreateTest extends TestCase
         $token = $user->createToken('test')->plainTextToken;
         $data = $this->validPayload($user);
 
-        // it is not required
-        unset($data['url']);
-        $this->withHeader('Authorization', "Bearer $token")
-            ->post('/api/v1/servicebodies', $data)
-            ->assertStatus(201);
-
-        // it can't be null
-        $data['url'] = null;
-        $this->withHeader('Authorization', "Bearer $token")
-            ->post('/api/v1/servicebodies', $data)
-            ->assertStatus(422);
-
-        // it can't be empty
-        $data['url'] = '    ';
-        $this->withHeader('Authorization', "Bearer $token")
-            ->post('/api/v1/servicebodies', $data)
-            ->assertStatus(422);
-
         // it can't be an invalid url
         $data['url'] = 'test';
         $this->withHeader('Authorization', "Bearer $token")
@@ -319,6 +301,24 @@ class ServiceBodyCreateTest extends TestCase
         $this->withHeader('Authorization', "Bearer $token")
             ->post('/api/v1/servicebodies', $data)
             ->assertStatus(201);
+
+        // it can't be empty
+        $data['url'] = '    ';  // gets nulled by middlware
+        $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/servicebodies', $data)
+            ->assertStatus(201);
+
+        // it can be null
+        $data['url'] = null;
+        $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/servicebodies', $data)
+            ->assertStatus(201);
+
+        // it is not required
+        unset($data['url']);
+        $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/servicebodies', $data)
+            ->assertStatus(201);
     }
 
     public function testStoreServiceBodyValidateHelpline()
@@ -326,24 +326,6 @@ class ServiceBodyCreateTest extends TestCase
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
         $data = $this->validPayload($user);
-
-        // it is not required
-        unset($data['helpline']);
-        $this->withHeader('Authorization', "Bearer $token")
-            ->post('/api/v1/servicebodies', $data)
-            ->assertStatus(201);
-
-        // it can't be null
-        $data['helpline'] = null;
-        $this->withHeader('Authorization', "Bearer $token")
-            ->post('/api/v1/servicebodies', $data)
-            ->assertStatus(422);
-
-        // it can't be empty
-        $data['helpline'] = '    ';
-        $this->withHeader('Authorization', "Bearer $token")
-            ->post('/api/v1/servicebodies', $data)
-            ->assertStatus(422);
 
         // it can't be longer than 255 characters
         $data['helpline'] = str_repeat('t', 256);
@@ -356,6 +338,24 @@ class ServiceBodyCreateTest extends TestCase
         $this->withHeader('Authorization', "Bearer $token")
             ->post('/api/v1/servicebodies', $data)
             ->assertStatus(201);
+
+        // it can't be empty
+        $data['helpline'] = '    ';  // gets nulled by middleware
+        $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/servicebodies', $data)
+            ->assertStatus(201);
+
+        // it can't be null
+        $data['helpline'] = null;
+        $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/servicebodies', $data)
+            ->assertStatus(201);
+
+        // it is not required
+        unset($data['helpline']);
+        $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/servicebodies', $data)
+            ->assertStatus(201);
     }
 
     public function testStoreServiceBodyValidateEmail()
@@ -363,18 +363,6 @@ class ServiceBodyCreateTest extends TestCase
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
         $data = $this->validPayload($user);
-
-        // it is not required
-        unset($data['email']);
-        $this->withHeader('Authorization', "Bearer $token")
-            ->post('/api/v1/servicebodies', $data)
-            ->assertStatus(201);
-
-        // it can't be null
-        $data['email'] = null;
-        $this->withHeader('Authorization', "Bearer $token")
-            ->post('/api/v1/servicebodies', $data)
-            ->assertStatus(422);
 
         // it can't be an invalid email
         $data['email'] = 'blah';
@@ -393,6 +381,18 @@ class ServiceBodyCreateTest extends TestCase
         $this->withHeader('Authorization', "Bearer $token")
             ->post('/api/v1/servicebodies', $data)
             ->assertStatus(201);
+
+        // it is not required
+        unset($data['email']);
+        $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/servicebodies', $data)
+            ->assertStatus(201);
+
+        // it can be null
+        $data['email'] = null;
+        $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/servicebodies', $data)
+            ->assertStatus(201);
     }
 
     public function testStoreServiceBodyValidateWorldId()
@@ -400,24 +400,6 @@ class ServiceBodyCreateTest extends TestCase
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
         $data = $this->validPayload($user);
-
-        // it is not required
-        unset($data['worldId']);
-        $this->withHeader('Authorization', "Bearer $token")
-            ->post('/api/v1/servicebodies', $data)
-            ->assertStatus(201);
-
-        // it can't be null
-        $data['worldId'] = null;
-        $this->withHeader('Authorization', "Bearer $token")
-            ->post('/api/v1/servicebodies', $data)
-            ->assertStatus(422);
-
-        // it can't be empty
-        $data['worldId'] = '    ';
-        $this->withHeader('Authorization', "Bearer $token")
-            ->post('/api/v1/servicebodies', $data)
-            ->assertStatus(422);
 
         // it can't be longer than 30 characters
         $data['worldId'] = str_repeat('t', 31);
@@ -427,6 +409,24 @@ class ServiceBodyCreateTest extends TestCase
 
         // it can be 30 characters
         $data['worldId'] = str_repeat('t', 30);
+        $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/servicebodies', $data)
+            ->assertStatus(201);
+
+        // it is not required
+        unset($data['worldId']);
+        $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/servicebodies', $data)
+            ->assertStatus(201);
+
+        // it can be empty
+        $data['worldId'] = '    ';  // gets nulled by middleware
+        $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/servicebodies', $data)
+            ->assertStatus(201);
+
+        // it can be null
+        $data['worldId'] = null;
         $this->withHeader('Authorization', "Bearer $token")
             ->post('/api/v1/servicebodies', $data)
             ->assertStatus(201);

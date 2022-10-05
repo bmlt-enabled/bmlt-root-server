@@ -27,10 +27,7 @@ class ServiceBody extends Model
         self::SB_TYPE_WORLD,
     ];
 
-    protected $table = 'comdef_service_bodies';
-    protected $primaryKey = 'id_bigint';
-    public $timestamps = false;
-    protected $fillable = [
+    public const FIELDS = [
         'sb_owner',
         'name_string',
         'description_string',
@@ -42,6 +39,11 @@ class ServiceBody extends Model
         'sb_meeting_email',
         'editors_string',
     ];
+
+    protected $table = 'comdef_service_bodies';
+    protected $primaryKey = 'id_bigint';
+    public $timestamps = false;
+    protected $fillable = self::FIELDS;
 
     public function meetings()
     {
