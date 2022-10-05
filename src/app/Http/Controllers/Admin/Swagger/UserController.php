@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\Swagger;
 
 /**
  * @OA\Schema(schema="UserBase",
@@ -34,7 +34,7 @@ namespace App\Http\Controllers\Admin;
  *     @OA\Property(property="message", type="string", example="No query results for model [App\\Models\\User]")
  * )
  */
-class UserControllerDoc extends ResourceController
+class UserController extends Controller
 {
 
     /**

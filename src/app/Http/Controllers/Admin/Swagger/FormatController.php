@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\Swagger;
 
 /**
  * @OA\Schema(
@@ -58,7 +58,7 @@ namespace App\Http\Controllers\Admin;
  *     ref="#/components/schemas/FormatResponse"),
  * )
  */
-class FormatControllerDoc extends ResourceController
+class FormatController extends Controller
 {
 
     /**

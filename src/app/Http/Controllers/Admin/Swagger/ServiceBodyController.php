@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\Swagger;
 
 /**
  * @OA\Schema(schema="ServiceBodyBase",
@@ -37,7 +37,7 @@ namespace App\Http\Controllers\Admin;
  *     @OA\Property(property="message", type="string", example="No query results for model [App\\Models\\ServiceBody]"),
  * ),
  */
-class ServiceBodyControllerDoc extends ResourceController
+class ServiceBodyController extends Controller
 {
 
     /**
