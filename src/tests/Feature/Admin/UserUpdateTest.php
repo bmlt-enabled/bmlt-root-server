@@ -181,12 +181,6 @@ class UserUpdateTest extends TestCase
         $token = $user->createToken('test')->plainTextToken;
         $data = $this->toPayload($user);
 
-        // it is required
-        unset($data['password']);
-        $this->withHeader('Authorization', "Bearer $token")
-            ->put("/api/v1/users/$user->id_bigint", $data)
-            ->assertStatus(422);
-
         // it can't be null
         $data['password'] = null;
         $this->withHeader('Authorization', "Bearer $token")
@@ -207,6 +201,12 @@ class UserUpdateTest extends TestCase
 
         // it can be 12 characters long
         $data['password'] = str_repeat('t', 12);
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/users/$user->id_bigint", $data)
+            ->assertStatus(204);
+
+        // it is not required
+        unset($data['password']);
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/users/$user->id_bigint", $data)
             ->assertStatus(204);
@@ -288,12 +288,6 @@ class UserUpdateTest extends TestCase
         $token = $user->createToken('test')->plainTextToken;
         $data = $this->toPayload($user);
 
-        // it is requried
-        unset($data['description']);
-        $this->withHeader('Authorization', "Bearer $token")
-            ->put("/api/v1/users/$user->id_bigint", $data)
-            ->assertStatus(422);
-
         // it has to be a string
         $data['description'] = 1;
         $this->withHeader('Authorization', "Bearer $token")
@@ -317,6 +311,12 @@ class UserUpdateTest extends TestCase
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/users/$user->id_bigint", $data)
             ->assertStatus(204);
+
+        // it is not required
+        unset($data['description']);
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/users/$user->id_bigint", $data)
+            ->assertStatus(204);
     }
 
     public function testUpdateUserValidateEmail()
@@ -324,12 +324,6 @@ class UserUpdateTest extends TestCase
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
         $data = $this->toPayload($user);
-
-        // it is required
-        unset($data['email']);
-        $this->withHeader('Authorization', "Bearer $token")
-            ->put("/api/v1/users/$user->id_bigint", $data)
-            ->assertStatus(422);
 
         // it can't be an invalid email
         $data['email'] = 'not a valid email';
@@ -345,6 +339,12 @@ class UserUpdateTest extends TestCase
 
         // it can be null
         $data['email'] = null;
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/users/$user->id_bigint", $data)
+            ->assertStatus(204);
+
+        // it is not required
+        unset($data['email']);
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/users/$user->id_bigint", $data)
             ->assertStatus(204);

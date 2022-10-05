@@ -6,6 +6,7 @@ use App\Http\Resources\Admin\UserResource;
 use App\Interfaces\UserRepositoryInterface;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
@@ -52,11 +53,10 @@ class UserController extends ResourceController
             'password' => ['required', Password::min(12)],
             'type' => ['required', Rule::in(array_values(User::USER_LEVEL_TO_USER_TYPE_MAP))],
             'displayName' => 'required|string|max:255',
-            'description' => 'string|max:1024',
-            'email' => 'email',
+            'description' => 'nullable|string|max:1024',
+            'email' => 'nullable|email',
             'ownerId' => 'nullable|present|int|exists:comdef_users,id_bigint',
         ]);
-
         $user = $this->userRepository->create([
             'login_string' => $validated['username'],
             'password_string' => Hash::make($validated['password']),
@@ -66,46 +66,48 @@ class UserController extends ResourceController
             'email_address_string' => $validated['email'] ?? '',
             'owner_id_bigint' => $validated['ownerId'] ?? -1,
         ]);
-
         return new UserResource($user);
     }
 
-
     public function update(Request $request, User $user)
     {
-        $validated = $request->validate([
-            'username' => ['required', 'string', 'max:255', Rule::unique('comdef_users', 'login_string')->ignore($user->id_bigint, 'id_bigint')],
-            'password' => ['required', Password::min(12)],
-            'type' => ['required', Rule::in(array_values(User::USER_LEVEL_TO_USER_TYPE_MAP))],
-            'displayName' => 'required|string|max:255',
-            'description' => 'nullable|present|string|max:1024',
-            'email' => 'nullable|present|email',
-            'ownerId' => 'nullable|present|int|exists:comdef_users,id_bigint',
-        ]);
-
-        $this->handleUpdate($request, $user, $validated);
-
+        $validated = $this->validateForUpdate($request, $user);
+        $values = $this->buildValuesArrayForUpdate($request, $user, $validated);
+        $this->userRepository->update($user->id_bigint, $values);
         return response()->noContent();
     }
-
 
     public function partialUpdate(Request $request, User $user)
     {
-        $validated = $request->validate([
-            'username' => ['string', 'max:255', Rule::unique('comdef_users', 'login_string')->ignore($user->id_bigint, 'id_bigint')],
-            'password' => [Password::min(12)],
-            'type' => [Rule::in(array_values(User::USER_LEVEL_TO_USER_TYPE_MAP))],
-            'displayName' => 'string|max:255',
-            'description' => 'string|max:1024',
-            'email' => 'email',
-            'ownerId' => 'nullable|int|exists:comdef_users,id_bigint',
-        ]);
-
-        $this->handleUpdate($request, $user, $validated);
-
+        $request->merge(
+            collect(User::FIELDS)
+                ->mapWithKeys(function ($fieldName, $_) use ($request, $user) {
+                    if ($fieldName == 'user_level_tinyint') {
+                        return ['type' => $request->has('type') ? $request->input('type') : User::USER_LEVEL_TO_USER_TYPE_MAP[$user->user_level_tinyint]];
+                    } elseif ($fieldName == 'login_string') {
+                        return ['username' => $request->has('username') ? $request->input('username') : $user->login_string];
+                    } elseif ($fieldName == 'name_string') {
+                        return ['displayName' => $request->has('displayName') ? $request->input('displayName') : $user->name_string];
+                    } elseif ($fieldName == 'description_string') {
+                        return ['description' => $request->has('description') ? $request->input('description') : $user->description_string];
+                    } elseif ($fieldName == 'email_address_string') {
+                        return ['email' => $request->has('email') ? $request->input('email') : $user->email_address_string];
+                    } elseif ($fieldName == 'password_string') {
+                        return $request->has('password') ? ['password' => $request->input('password')] : [null => null];
+                    } elseif ($fieldName == 'owner_id_bigint') {
+                        return ['ownerId' => $request->has('ownerId') ? $request->input('ownerId') : ($user->owner_id_bigint === -1 ? null : $user->owner_id_bigint)];
+                    } else {
+                        return [null => null];
+                    }
+                })
+                ->reject(fn ($_, $key) => empty($key))
+                ->toArray()
+        );
+        $validated = $this->validateForUpdate($request, $user);
+        $values = $this->buildValuesArrayForUpdate($request, $user, $validated);
+        $this->userRepository->update($user->id_bigint, $values);
         return response()->noContent();
     }
-
 
     public function destroy(User $user)
     {
@@ -113,39 +115,51 @@ class UserController extends ResourceController
         return response()->noContent();
     }
 
-    private function handleUpdate(Request $request, User $user, array $validated)
+    private function validateForUpdate(Request $request, User $user): Collection
+    {
+        return collect($request->validate([
+            'username' => ['required', 'string', 'max:255', Rule::unique('comdef_users', 'login_string')->ignore($user->id_bigint, 'id_bigint')],
+            'password' => [Password::min(12)],
+            'type' => ['required', Rule::in(array_values(User::USER_LEVEL_TO_USER_TYPE_MAP))],
+            'displayName' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1024',
+            'email' => 'nullable|email',
+            'ownerId' => 'nullable|present|int|exists:comdef_users,id_bigint',
+        ]));
+    }
+
+    private function buildValuesArrayForUpdate(Request $request, User $user, Collection $validated): array
     {
         $requestUser = $request->user();
         $isAdmin = $requestUser->isAdmin();
         $isOwner = $requestUser->isServiceBodyAdmin() && $requestUser->id_bigint == $user->owner_id_bigint;
-        $values = collect($validated)->mapWithKeys(function ($value, $key) use ($isAdmin, $isOwner) {
-            if ($isAdmin) {
-                if ($key == 'type') {
-                    return ['user_level_tinyint' => User::USER_TYPE_TO_USER_LEVEL_MAP[$value]];
-                } elseif ($key == 'ownerId') {
-                    return ['owner_id_bigint' => $value ?? -1];
+        return collect(User::FIELDS)
+            ->mapWithKeys(function ($fieldName, $_) use ($validated, $isAdmin, $isOwner) {
+                if ($isAdmin) {
+                    if ($fieldName == 'user_level_tinyint') {
+                        return [$fieldName => User::USER_TYPE_TO_USER_LEVEL_MAP[$validated['type']]];
+                    } elseif ($fieldName == 'owner_id_bigint') {
+                        return [$fieldName => $validated['ownerId'] ?? -1];
+                    }
                 }
-            }
-            if ($isAdmin || $isOwner) {
-                if ($key == 'username') {
-                    return ['login_string' => $value];
+                if ($isAdmin || $isOwner) {
+                    if ($fieldName == 'login_string') {
+                        return [$fieldName => $validated['username']];
+                    }
                 }
-            }
-            if ($key == 'password') {
-                return ['password_string' => Hash::make($value)];
-            } elseif ($key == 'displayName') {
-                return ['name_string' => $value];
-            } elseif ($key == 'description') {
-                return ['description_string' => $value ?? ''];
-            } elseif ($key == 'email') {
-                return ['email_address_string' => $value ?? ''];
-            } else {
-                return [null => null];
-            }
-        })->reject(fn ($_, $key) => empty($key))->toArray();
-
-        if (!empty($values)) {
-            $this->userRepository->update($user->id_bigint, $values);
-        }
+                if ($fieldName == 'password_string' && $validated->has('password')) {
+                    return [$fieldName => Hash::make($validated['password'])];
+                } elseif ($fieldName == 'name_string') {
+                    return [$fieldName => $validated['displayName']];
+                } elseif ($fieldName == 'description_string') {
+                    return [$fieldName => $validated['description'] ?? ''];
+                } elseif ($fieldName == 'email_address_string') {
+                    return [$fieldName => $validated['email'] ?? ''];
+                } else {
+                    return [null => null];
+                }
+            })
+            ->reject(fn ($_, $key) => empty($key))
+            ->toArray();
     }
 }

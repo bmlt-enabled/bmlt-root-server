@@ -66,25 +66,7 @@ class MeetingController extends ResourceController
 
     public function store(Request $request)
     {
-        $validated = collect($request->validate(
-            array_merge([
-                'serviceBodyId' => 'required|int|exists:comdef_service_bodies,id_bigint',
-                'formatIds' => 'present|array',
-                'formatIds.*' => ['int', 'exists:comdef_formats,shared_id_bigint', Rule::notIn([$this->getVirtualFormatId(), $this->getTemporarilyClosedFormatId(), $this->getHybridFormatId()])],
-                'venueType' => ['required', Rule::in(Meeting::VALID_VENUE_TYPES)],
-                'temporarilyVirtual' => 'sometimes|boolean',
-                'day' => 'required|int|between:0,6',
-                'startTime' => 'required|date_format:H:i',
-                'duration' => 'required|date_format:H:i',
-                'latitude' => 'required|numeric|between:-90,90',
-                'longitude' => 'required|numeric|between:-180,180',
-                'published' => 'required|boolean',
-                'email' => 'nullable|email|max:255',
-                'worldId' => 'nullable|string|max:30',
-                'name' => 'required|string|max:128',
-            ], $this->getDataFieldValidators())
-        ));
-
+        $validated = $this->validateInputs($request);
         $values = $this->buildValuesArray($validated);
         $meeting = $this->meetingRepository->create($values);
         return new MeetingResource($meeting);
@@ -92,7 +74,7 @@ class MeetingController extends ResourceController
 
     public function update(Request $request, Meeting $meeting)
     {
-        $validated = $this->validateForUpdate($request);
+        $validated = $this->validateInputs($request);
         $values = $this->buildValuesArray($validated);
         $this->meetingRepository->update($meeting->id_bigint, $values);
         return response()->noContent();
@@ -141,7 +123,7 @@ class MeetingController extends ResourceController
                 ->toArray()
         );
 
-        $validated = $this->validateForUpdate($request);
+        $validated = $this->validateInputs($request);
         $values = $this->buildValuesArray($validated);
         $this->meetingRepository->update($meeting->id_bigint, $values);
         return response()->noContent();
@@ -162,7 +144,7 @@ class MeetingController extends ResourceController
         return $dataTemplates;
     }
 
-    private function validateForUpdate(Request $request)
+    private function validateInputs(Request $request)
     {
         return collect($request->validate(
             array_merge([
