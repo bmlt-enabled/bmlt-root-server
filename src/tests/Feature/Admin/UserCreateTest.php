@@ -218,12 +218,6 @@ class UserCreateTest extends TestCase
         $token = $user->createToken('test')->plainTextToken;
         $data = $this->validPayload();
 
-        // it can't be null
-        $data['description'] = null;
-        $this->withHeader('Authorization', "Bearer $token")
-            ->post('/api/v1/users', $data)
-            ->assertStatus(422);
-
         // it has to be a string
         $data['description'] = 1;
         $this->withHeader('Authorization', "Bearer $token")
@@ -244,6 +238,14 @@ class UserCreateTest extends TestCase
             ->json()['id'];
         User::query()->where('id_bigint', $id)->delete();
 
+        // it can be null
+        $data['description'] = null;
+        $id = $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/users', $data)
+            ->assertStatus(201)
+            ->json()['id'];
+        User::query()->where('id_bigint', $id)->delete();
+
         // it can be omitted
         unset($data['description']);
         $this->withHeader('Authorization', "Bearer $token")
@@ -257,12 +259,6 @@ class UserCreateTest extends TestCase
         $token = $user->createToken('test')->plainTextToken;
         $data = $this->validPayload();
 
-        // it can't be null
-        $data['email'] = null;
-        $this->withHeader('Authorization', "Bearer $token")
-            ->post('/api/v1/users', $data)
-            ->assertStatus(422);
-
         // it can't be an invalid email
         $data['email'] = 'not a valid email';
         $this->withHeader('Authorization', "Bearer $token")
@@ -271,6 +267,14 @@ class UserCreateTest extends TestCase
 
         // it can be a valid email
         $data['email'] = 'test@test.com';
+        $id = $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/users', $data)
+            ->assertStatus(201)
+            ->json()['id'];
+        User::query()->where('id_bigint', $id)->delete();
+
+        // it can be null
+        $data['email'] = null;
         $id = $this->withHeader('Authorization', "Bearer $token")
             ->post('/api/v1/users', $data)
             ->assertStatus(201)

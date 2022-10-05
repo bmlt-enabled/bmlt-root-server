@@ -35,6 +35,16 @@ class User extends Model implements AuthenticatableContract
         self::USER_TYPE_OBSERVER => self::USER_LEVEL_OBSERVER,
     ];
 
+    public const FIELDS = [
+        'user_level_tinyint',
+        'name_string',
+        'description_string',
+        'email_address_string',
+        'login_string',
+        'password_string',
+        'owner_id_bigint',
+    ];
+
     protected $table = 'comdef_users';
     protected $primaryKey = 'id_bigint';
     public $timestamps = false;

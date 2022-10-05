@@ -340,12 +340,6 @@ class UserPartialUpdateTest extends TestCase
         $token = $user->createToken('test')->plainTextToken;
         $data = [];
 
-        // it can't be null
-        $data['description'] = null;
-        $this->withHeader('Authorization', "Bearer $token")
-            ->patch("/api/v1/users/$user->id_bigint", $data)
-            ->assertStatus(422);
-
         // it has to be a string
         $data['description'] = 1;
         $this->withHeader('Authorization', "Bearer $token")
@@ -364,6 +358,12 @@ class UserPartialUpdateTest extends TestCase
             ->patch("/api/v1/users/$user->id_bigint", $data)
             ->assertStatus(204);
 
+        // it can be null
+        $data['description'] = null;
+        $this->withHeader('Authorization', "Bearer $token")
+            ->patch("/api/v1/users/$user->id_bigint", $data)
+            ->assertStatus(204);
+
         // it can be omitted
         unset($data['description']);
         $this->withHeader('Authorization', "Bearer $token")
@@ -377,12 +377,6 @@ class UserPartialUpdateTest extends TestCase
         $token = $user->createToken('test')->plainTextToken;
         $data = [];
 
-        // it can't be null
-        $data['email'] = null;
-        $this->withHeader('Authorization', "Bearer $token")
-            ->patch("/api/v1/users/$user->id_bigint", $data)
-            ->assertStatus(422);
-
         // it can't be an invalid email
         $data['email'] = 'not a valid email';
         $this->withHeader('Authorization', "Bearer $token")
@@ -391,6 +385,12 @@ class UserPartialUpdateTest extends TestCase
 
         // it can be a valid email
         $data['email'] = 'test@test.com';
+        $this->withHeader('Authorization', "Bearer $token")
+            ->patch("/api/v1/users/$user->id_bigint", $data)
+            ->assertStatus(204);
+
+        // it can be null
+        $data['email'] = null;
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/users/$user->id_bigint", $data)
             ->assertStatus(204);
