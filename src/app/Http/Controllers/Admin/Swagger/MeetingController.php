@@ -183,7 +183,7 @@ class MeetingController extends Controller
      * @OA\Post(
      * path="/api/v1/meetings",
      * summary="Create Meeting",
-     * description="Cretaes a meeting.",
+     * description="Creates a meeting.",
      * operationId="createMeeting",
      * tags={"meetings"},
      * security={{"bearerAuth":{}}},

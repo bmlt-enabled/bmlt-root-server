@@ -58,13 +58,13 @@ class UserController extends Controller
      *     ),
      *     @OA\Response(response=200, description="Returns when user is authenticated.",
      *         @OA\JsonContent(ref="#/components/schemas/User")
-     *      ),
-     *      @OA\Response(response=401, description="Returns when not authenticated.",
-     *          @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
-     *      ),
-     *      @OA\Response(response=404, description="Returns when no user exists.",
-     *          @OA\JsonContent(ref="#/components/schemas/NoUserExists")
-     *      )
+     *     ),
+     *     @OA\Response(response=401, description="Returns when not authenticated.",
+     *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
+     *     ),
+     *     @OA\Response(response=404, description="Returns when no user exists.",
+     *         @OA\JsonContent(ref="#/components/schemas/NoUserExists")
+     *     )
      * )
      */
     public function show()
