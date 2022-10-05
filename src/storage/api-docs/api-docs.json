@@ -33,7 +33,7 @@
                 "tags": [
                     "formats"
                 ],
-                "summary": "Retrieve formats",
+                "summary": "Retrieves formats",
                 "description": "Retrieve formats",
                 "operationId": "getFormats",
                 "responses": {
@@ -68,7 +68,7 @@
                 "tags": [
                     "formats"
                 ],
-                "summary": "Create Format",
+                "summary": "Creates a format",
                 "description": "Creates a format.",
                 "operationId": "createFormat",
                 "requestBody": {
@@ -146,7 +146,7 @@
                 "tags": [
                     "formats"
                 ],
-                "summary": "Retrieve a format",
+                "summary": "Retrieves a format",
                 "description": "Retrieve a format",
                 "operationId": "getFormat",
                 "parameters": [
@@ -204,7 +204,7 @@
                 "tags": [
                     "formats"
                 ],
-                "summary": "Update format",
+                "summary": "Updates a format",
                 "description": "Updates a format.",
                 "operationId": "updateFormat",
                 "parameters": [
@@ -357,7 +357,7 @@
                 "tags": [
                     "formats"
                 ],
-                "summary": "Patches a single format",
+                "summary": "Patches a format",
                 "description": "Patches a single format by id.",
                 "operationId": "patchFormat",
                 "parameters": [
@@ -441,14 +441,14 @@
                 "tags": [
                     "meetings"
                 ],
-                "summary": "Retrieve meetings",
+                "summary": "Retrieves meetings",
                 "description": "Retrieve meetings for authenticated user.",
                 "operationId": "getMeetings",
                 "parameters": [
                     {
                         "name": "meetingIds",
                         "in": "query",
-                        "description": "int delimited",
+                        "description": "comma delimited meeting ids",
                         "required": false,
                         "schema": {
                             "type": "string"
@@ -458,7 +458,7 @@
                     {
                         "name": "days",
                         "in": "query",
-                        "description": "int delimited",
+                        "description": "comma delimited day ids between 0-6",
                         "required": false,
                         "schema": {
                             "type": "string"
@@ -468,7 +468,7 @@
                     {
                         "name": "serviceBodyIds",
                         "in": "query",
-                        "description": "int delimited",
+                        "description": "comma delimited service body ids",
                         "required": false,
                         "schema": {
                             "type": "string"
@@ -488,21 +488,31 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Returns when user is authenticated.",
+                        "description": "List of meetings.",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/MeetingsResponse"
+                                    "$ref": "#/components/schemas/MeetingCollection"
                                 }
                             }
                         }
                     },
                     "401": {
-                        "description": "Returns when not authenticated.",
+                        "description": "Returns when user is not authenticated.",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
                                 }
                             }
                         }
@@ -518,7 +528,7 @@
                 "tags": [
                     "meetings"
                 ],
-                "summary": "Create Meeting",
+                "summary": "Creates a meeting",
                 "description": "Creates a meeting.",
                 "operationId": "createMeeting",
                 "requestBody": {
@@ -527,7 +537,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/MeetingTemplate"
+                                "$ref": "#/components/schemas/CreateMeeting"
                             }
                         }
                     }
@@ -538,35 +548,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/MeetingResponse"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation error.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "The latitude must be a number."
-                                        },
-                                        "errors": {
-                                            "properties": {
-                                                "latitude": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "example": "The latitude must be a number."
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/Meeting"
                                 }
                             }
                         }
@@ -590,6 +572,26 @@
                                 }
                             }
                         }
+                    },
+                    "404": {
+                        "description": "Returns when no meeting body exists.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NoMeetingExists"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -604,9 +606,9 @@
                 "tags": [
                     "meetings"
                 ],
-                "summary": "Retrieve a single meeting",
-                "description": "Retrieve single meeting.",
-                "operationId": "getSingleMeeting",
+                "summary": "Retrieves a meeting",
+                "description": "Retrieve a meeting.",
+                "operationId": "getMeeting",
                 "parameters": [
                     {
                         "name": "meetingId",
@@ -622,17 +624,17 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Returns with successful request.",
+                        "description": "Returns when user is authenticated.",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/MeetingResponse"
+                                    "$ref": "#/components/schemas/Meeting"
                                 }
                             }
                         }
                     },
                     "401": {
-                        "description": "Returns when not authenticated.",
+                        "description": "Returns when user is not authenticated.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -641,18 +643,8 @@
                             }
                         }
                     },
-                    "403": {
-                        "description": "Returns when user is unauthorized to perform action.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthorized"
-                                }
-                            }
-                        }
-                    },
                     "404": {
-                        "description": "Returns when no format exists.",
+                        "description": "Returns when no meeting exists.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -672,8 +664,8 @@
                 "tags": [
                     "meetings"
                 ],
-                "summary": "Update single meeting",
-                "description": "Updates a single meeting.",
+                "summary": "Updates a meeting",
+                "description": "Updates a meeting.",
                 "operationId": "updateMeeting",
                 "parameters": [
                     {
@@ -694,49 +686,21 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/MeetingTemplate"
+                                "$ref": "#/components/schemas/UpdateMeeting"
                             }
                         }
                     }
                 },
                 "responses": {
                     "204": {
-                        "description": "Returns when PUT is successful."
-                    },
-                    "422": {
-                        "description": "Validation error.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "The latitude must be a number."
-                                        },
-                                        "errors": {
-                                            "properties": {
-                                                "latitude": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "example": "The latitude must be a number."
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Success."
                     },
                     "401": {
                         "description": "Returns when user is not authenticated.",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorIncorrectCredentials"
+                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
                                 }
                             }
                         }
@@ -746,7 +710,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/ErrorUnauthorized"
                                 }
                             }
                         }
@@ -757,6 +721,16 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/NoMeetingExists"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
                                 }
                             }
                         }
@@ -772,8 +746,8 @@
                 "tags": [
                     "meetings"
                 ],
-                "summary": "Deletes a single meeting",
-                "description": "Deletes a single meeting by id.",
+                "summary": "Deletes a meeting",
+                "description": "Deletes a meeting by id.",
                 "operationId": "deleteMeeting",
                 "parameters": [
                     {
@@ -790,10 +764,10 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": "Returns with successful request."
+                        "description": "Success."
                     },
                     "401": {
-                        "description": "Returns when not authenticated",
+                        "description": "Returns when user is not authenticated.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -803,7 +777,7 @@
                         }
                     },
                     "403": {
-                        "description": "Returns when unauthorized.",
+                        "description": "Returns when user is unauthorized to perform action.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -813,7 +787,7 @@
                         }
                     },
                     "404": {
-                        "description": "Returns when no meeting for id exists.",
+                        "description": "Returns when no meeting exists.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -833,8 +807,8 @@
                 "tags": [
                     "meetings"
                 ],
-                "summary": "Patches a single meeting",
-                "description": "Patches a single meeting by id",
+                "summary": "Patches a meeting",
+                "description": "Patches a meeting by id",
                 "operationId": "patchMeeting",
                 "parameters": [
                     {
@@ -850,28 +824,22 @@
                     }
                 ],
                 "requestBody": {
-                    "description": "Pass in meeting attributes",
+                    "description": "Pass in fields you want to update.",
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "example": "string"
-                                    }
-                                },
-                                "type": "object"
+                                "$ref": "#/components/schemas/PartialUpdateMeeting"
                             }
                         }
                     }
                 },
                 "responses": {
                     "204": {
-                        "description": "Returns with successful request."
+                        "description": "Success."
                     },
                     "401": {
-                        "description": "Returns when not authenticated",
+                        "description": "Returns when user is not authenticated.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -881,7 +849,7 @@
                         }
                     },
                     "403": {
-                        "description": "Returns when unauthorized",
+                        "description": "Returns when user is unauthorized to perform action.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -899,6 +867,16 @@
                                 }
                             }
                         }
+                    },
+                    "422": {
+                        "description": "Validation error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -913,7 +891,7 @@
                 "tags": [
                     "servicebodies"
                 ],
-                "summary": "Retrieve service bodies",
+                "summary": "Retrieves service bodies",
                 "description": "Retrieve service bodies for authenticated user.",
                 "operationId": "getServiceBodies",
                 "responses": {
@@ -948,7 +926,7 @@
                 "tags": [
                     "servicebodies"
                 ],
-                "summary": "Create Service Body",
+                "summary": "Creates a service body",
                 "description": "Creates a service body.",
                 "operationId": "createServiceBody",
                 "requestBody": {
@@ -1026,7 +1004,7 @@
                 "tags": [
                     "servicebodies"
                 ],
-                "summary": "Retrieve a service body",
+                "summary": "Retrieves a service body",
                 "description": "Retrieve a single service body by id.",
                 "operationId": "getServiceBody",
                 "parameters": [
@@ -1084,7 +1062,7 @@
                 "tags": [
                     "servicebodies"
                 ],
-                "summary": "Update a Service Body",
+                "summary": "Updates a Service Body",
                 "description": "Updates a single service body.",
                 "operationId": "updateServiceBody",
                 "parameters": [
@@ -1311,7 +1289,7 @@
                 "tags": [
                     "auth"
                 ],
-                "summary": "Create Token",
+                "summary": "Creates a token",
                 "description": "Exchange credentials for a new token",
                 "operationId": "authToken",
                 "requestBody": {
@@ -1364,7 +1342,7 @@
                 "tags": [
                     "auth"
                 ],
-                "summary": "Refresh Token",
+                "summary": "Revokes and issues a new token",
                 "description": "Refresh token.",
                 "operationId": "authRefresh",
                 "responses": {
@@ -1401,7 +1379,7 @@
                 "tags": [
                     "auth"
                 ],
-                "summary": "Logout",
+                "summary": "Revokes a token",
                 "description": "Revoke token and logout.",
                 "operationId": "authLogout",
                 "responses": {
@@ -1431,7 +1409,7 @@
                 "tags": [
                     "users"
                 ],
-                "summary": "Retrieve users",
+                "summary": "Retrieves users",
                 "description": "Retrieve users for authenticated user.",
                 "operationId": "getUsers",
                 "responses": {
@@ -1466,7 +1444,7 @@
                 "tags": [
                     "users"
                 ],
-                "summary": "Create User",
+                "summary": "Creates a user",
                 "description": "Creates a user.",
                 "operationId": "createUser",
                 "requestBody": {
@@ -1544,7 +1522,7 @@
                 "tags": [
                     "users"
                 ],
-                "summary": "Retrieve a single user",
+                "summary": "Retrieves a single user",
                 "description": "Retrieve single user.",
                 "operationId": "getUser",
                 "parameters": [
@@ -1755,7 +1733,7 @@
                 "tags": [
                     "users"
                 ],
-                "summary": "Patches a user.",
+                "summary": "Patches a user",
                 "description": "Patches a user by id.",
                 "operationId": "partialUpdateUser",
                 "parameters": [
@@ -1986,7 +1964,7 @@
                 },
                 "type": "object"
             },
-            "MeetingTemplate": {
+            "MeetingBase": {
                 "properties": {
                     "serviceBodyId": {
                         "type": "integer",
@@ -2139,6 +2117,85 @@
                 },
                 "type": "object"
             },
+            "Meeting": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/MeetingBase"
+                    },
+                    {
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "example": "0"
+                            }
+                        }
+                    }
+                ]
+            },
+            "CreateMeeting": {
+                "required": [
+                    "serviceBodyId",
+                    "formatIds",
+                    "venueType",
+                    "day",
+                    "startTime",
+                    "duration",
+                    "latitude",
+                    "longitude",
+                    "published",
+                    "name"
+                ],
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/MeetingBase"
+                    }
+                ]
+            },
+            "UpdateMeeting": {
+                "required": [
+                    "serviceBodyId",
+                    "formatIds",
+                    "venueType",
+                    "day",
+                    "startTime",
+                    "duration",
+                    "latitude",
+                    "longitude",
+                    "published",
+                    "name"
+                ],
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/MeetingBase"
+                    }
+                ]
+            },
+            "PartialUpdateMeeting": {
+                "required": [
+                    "serviceBodyId",
+                    "formatIds",
+                    "venueType",
+                    "day",
+                    "startTime",
+                    "duration",
+                    "latitude",
+                    "longitude",
+                    "published",
+                    "name"
+                ],
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/MeetingBase"
+                    }
+                ]
+            },
+            "MeetingCollection": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Meeting"
+                }
+            },
             "NoMeetingExists": {
                 "description": "Returns when no Meeting exists.",
                 "properties": {
@@ -2148,28 +2205,6 @@
                     }
                 },
                 "type": "object"
-            },
-            "MeetingsResponse": {
-                "type": "array",
-                "items": {
-                    "$ref": "#/components/schemas/MeetingResponse"
-                }
-            },
-            "MeetingResponse": {
-                "allOf": [
-                    {
-                        "properties": {
-                            "id": {
-                                "type": "integer",
-                                "example": "0"
-                            }
-                        },
-                        "type": "object"
-                    },
-                    {
-                        "$ref": "#/components/schemas/MeetingTemplate"
-                    }
-                ]
             },
             "ServiceBodyBase": {
                 "properties": {
