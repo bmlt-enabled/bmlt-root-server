@@ -34,7 +34,7 @@
                     "formats"
                 ],
                 "summary": "Retrieve formats",
-                "description": "Retrieve formats for server.",
+                "description": "Retrieve formats",
                 "operationId": "getFormats",
                 "responses": {
                     "200": {
@@ -42,7 +42,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/GetFormatsResponse"
+                                    "$ref": "#/components/schemas/FormatCollection"
                                 }
                             }
                         }
@@ -69,7 +69,7 @@
                     "formats"
                 ],
                 "summary": "Create Format",
-                "description": "Cretaes a format.",
+                "description": "Creates a format.",
                 "operationId": "createFormat",
                 "requestBody": {
                     "description": "Pass in format object",
@@ -77,26 +77,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "translations"
-                                ],
-                                "properties": {
-                                    "worldId": {
-                                        "type": "string",
-                                        "example": "string"
-                                    },
-                                    "type": {
-                                        "type": "string",
-                                        "example": "string"
-                                    },
-                                    "translations": {
-                                        "type": "array",
-                                        "items": {
-                                            "$ref": "#/components/schemas/FormatLangModel"
-                                        }
-                                    }
-                                },
-                                "type": "object"
+                                "$ref": "#/components/schemas/CreateFormat"
                             }
                         }
                     }
@@ -107,42 +88,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/FormatResponse"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation error.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "The translations.0.key field is required. (and 1 more error)"
-                                        },
-                                        "errors": {
-                                            "properties": {
-                                                "translations.0.key": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "example": "The translations.0.key field is required."
-                                                    }
-                                                },
-                                                "translations.0.name": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "example": "The translations.0.name field is required."
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/Format"
                                 }
                             }
                         }
@@ -166,6 +112,26 @@
                                 }
                             }
                         }
+                    },
+                    "404": {
+                        "description": "Returns when no format exists.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NoFormatExists"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -180,9 +146,9 @@
                 "tags": [
                     "formats"
                 ],
-                "summary": "Retrieve a single format",
-                "description": "Retrieve single format.",
-                "operationId": "getSingleFormat",
+                "summary": "Retrieve a format",
+                "description": "Retrieve a format",
+                "operationId": "getFormat",
                 "parameters": [
                     {
                         "name": "formatId",
@@ -198,31 +164,31 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Returns with successful request.",
+                        "description": "Returns when user is authenticated.",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "id": {
-                                            "type": "integer",
-                                            "example": "0"
-                                        },
-                                        "worldId": {
-                                            "type": "string",
-                                            "example": "string"
-                                        },
-                                        "type": {
-                                            "type": "string",
-                                            "example": "string"
-                                        },
-                                        "translations": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/FormatLangModel"
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/Format"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when not authenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Returns when no format exists.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NoFormatExists"
                                 }
                             }
                         }
@@ -238,8 +204,8 @@
                 "tags": [
                     "formats"
                 ],
-                "summary": "Update single format",
-                "description": "Updates a single format.",
+                "summary": "Update format",
+                "description": "Updates a format.",
                 "operationId": "updateFormat",
                 "parameters": [
                     {
@@ -260,49 +226,14 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/FormatResponse"
+                                "$ref": "#/components/schemas/UpdateFormat"
                             }
                         }
                     }
                 },
                 "responses": {
                     "204": {
-                        "description": "Returns when PUT is successful."
-                    },
-                    "422": {
-                        "description": "Validation error.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "The translations.0.key field is required. (and 1 more error)"
-                                        },
-                                        "errors": {
-                                            "properties": {
-                                                "translations.0.key": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "example": "The translations.0.key field is required."
-                                                    }
-                                                },
-                                                "translations.0.name": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "example": "The translations.0.name field is required."
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Success."
                     },
                     "401": {
                         "description": "Returns when user is not authenticated.",
@@ -323,6 +254,26 @@
                                 }
                             }
                         }
+                    },
+                    "404": {
+                        "description": "Returns when no format exists.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NoFormatExists"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -335,8 +286,8 @@
                 "tags": [
                     "formats"
                 ],
-                "summary": "Deletes a single format",
-                "description": "Deletes a single format by id.",
+                "summary": "Deletes a format",
+                "description": "Deletes a format by id.",
                 "operationId": "deleteFormat",
                 "parameters": [
                     {
@@ -353,7 +304,7 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": "Returns with successful request."
+                        "description": "Success."
                     },
                     "401": {
                         "description": "Returns when not authenticated",
@@ -366,7 +317,7 @@
                         }
                     },
                     "403": {
-                        "description": "Returns when unauthorized.",
+                        "description": "Returns when unauthorized",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -376,17 +327,21 @@
                         }
                     },
                     "404": {
-                        "description": "Returns when no format for id exists.",
+                        "description": "Returns when no format exists.",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "No query results for model [App\\\\Models\\\\Format]"
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/NoFormatExists"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
                                 }
                             }
                         }
@@ -419,22 +374,22 @@
                     }
                 ],
                 "requestBody": {
-                    "description": "Pass in format attributes.",
+                    "description": "Pass in fields you want to update.",
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/FormatResponse"
+                                "$ref": "#/components/schemas/PartialUpdateFormat"
                             }
                         }
                     }
                 },
                 "responses": {
                     "204": {
-                        "description": "Returns with successful request."
+                        "description": "Success."
                     },
                     "401": {
-                        "description": "Returns when not authenticated.",
+                        "description": "Returns when not authenticated",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -444,26 +399,31 @@
                         }
                     },
                     "403": {
-                        "description": "Returns when unauthorized.",
+                        "description": "Returns when unauthorized",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "": {
-                                            "$ref": "#/components/schemas/ErrorUnauthorized"
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/ErrorUnauthorized"
                                 }
                             }
                         }
                     },
                     "404": {
-                        "description": "Returns when no service body exists.",
+                        "description": "Returns when no format exists.",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/NoFormatExists"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
                                 }
                             }
                         }
@@ -559,7 +519,7 @@
                     "meetings"
                 ],
                 "summary": "Create Meeting",
-                "description": "Cretaes a meeting.",
+                "description": "Creates a meeting.",
                 "operationId": "createMeeting",
                 "requestBody": {
                     "description": "Pass in meeting object",
@@ -2004,7 +1964,7 @@
                 },
                 "type": "object"
             },
-            "FormatResponse": {
+            "FormatBase": {
                 "properties": {
                     "worldId": {
                         "type": "string",
@@ -2017,13 +1977,13 @@
                     "translations": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/FormatLangModel"
+                            "$ref": "#/components/schemas/FormatTranslation"
                         }
                     }
                 },
                 "type": "object"
             },
-            "FormatLangModel": {
+            "FormatTranslation": {
                 "required": [
                     "key",
                     "name",
@@ -2046,6 +2006,57 @@
                 },
                 "type": "object"
             },
+            "Format": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/FormatBase"
+                    },
+                    {
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "example": "0"
+                            }
+                        }
+                    }
+                ]
+            },
+            "CreateFormat": {
+                "required": [
+                    "translations"
+                ],
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/FormatBase"
+                    }
+                ]
+            },
+            "UpdateFormat": {
+                "required": [
+                    "worldId",
+                    "type",
+                    "translations"
+                ],
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/FormatBase"
+                    }
+                ]
+            },
+            "PartialUpdateFormat": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/FormatBase"
+                    }
+                ]
+            },
+            "FormatCollection": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Format"
+                }
+            },
             "NoFormatExists": {
                 "description": "Returns when no format exists.",
                 "properties": {
@@ -2055,25 +2066,6 @@
                     }
                 },
                 "type": "object"
-            },
-            "GetFormatsResponse": {
-                "type": "array",
-                "items": {
-                    "$ref": "#/components/schemas/FormatResponse"
-                },
-                "example": [
-                    {
-                        "id": 0,
-                        "worldId": "string",
-                        "type": "string",
-                        "translations": {
-                            "key": "string",
-                            "name": "string",
-                            "description": "string",
-                            "language": "string"
-                        }
-                    }
-                ]
             },
             "MeetingTemplate": {
                 "properties": {
@@ -2496,28 +2488,6 @@
                     }
                 },
                 "type": "object"
-            }
-        },
-        "responses": {
-            "401": {
-                "description": "Returns when not authenticated.",
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "$ref": "#/components/schemas/ErrorUnauthenticated"
-                        }
-                    }
-                }
-            },
-            "404": {
-                "description": "Returns when no format exists.",
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "$ref": "#/components/schemas/NoFormatExists"
-                        }
-                    }
-                }
             }
         },
         "securitySchemes": {
