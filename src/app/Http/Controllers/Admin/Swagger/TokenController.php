@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\Swagger;
 
-class TokenControllerDoc extends ResourceController
+class TokenController extends Controller
 {
 
     /**

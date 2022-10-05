@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\Swagger;
 
 /**
  * @OA\Schema(
@@ -67,7 +67,7 @@ namespace App\Http\Controllers\Admin;
  * )
  */
 
-class MeetingControllerDoc extends ResourceController
+class MeetingController extends Controller
 {
 
     /**

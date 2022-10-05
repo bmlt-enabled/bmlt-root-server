@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\Swagger;
 
 /**
  * @OA\Schema(schema="ErrorIncorrectCredentials",
@@ -21,8 +21,6 @@ namespace App\Http\Controllers\Admin;
  *     ),
  * )
  */
-
-class ErrorDoc extends ResourceController
+class Errors extends Controller
 {
-
 }
