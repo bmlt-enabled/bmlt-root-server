@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Change;
 use App\Models\Meeting;
 use App\Models\MeetingData;
 use App\Models\MeetingLongData;
@@ -575,7 +576,7 @@ class MeetingRepository implements MeetingRepositoryInterface
                     ]);
                 }
             }
-            //$this->saveChange(null, $meeting);
+            $this->saveChange(null, $meeting);
             return $meeting;
         });
     }
@@ -589,6 +590,7 @@ class MeetingRepository implements MeetingRepositoryInterface
 
         return DB::transaction(function () use ($id, $mainValues, $dataValues, $dataTemplates) {
             $meeting = Meeting::find($id);
+            $meeting->loadMissing(['data', 'longdata']);
             if (!is_null($meeting)) {
                 Meeting::query()->where('id_bigint', $id)->update($mainValues);
                 MeetingData::query()->where('meetingid_bigint', $id)->delete();
@@ -615,7 +617,7 @@ class MeetingRepository implements MeetingRepositoryInterface
                         ]);
                     }
                 }
-                //$this->saveChange($meeting, Meeting::find($id));
+                $this->saveChange($meeting, Meeting::find($id));
                 return true;
             }
             return false;
@@ -627,13 +629,79 @@ class MeetingRepository implements MeetingRepositoryInterface
         return DB::transaction(function () use ($id) {
             $meeting = Meeting::find($id);
             if (!is_null($meeting)) {
-                $meeting->data()->delete();
-                $meeting->longdata()->delete();
-                $meeting->delete();
-//                $this->saveChange($meeting, null);
+                $meeting->loadMissing(['data', 'longdata']);
+                MeetingData::query()->where('meetingid_bigint', $meeting->id_bigint)->delete();
+                MeetingLongData::query()->where('meetingid_bigint', $meeting->id_bigint)->delete();
+                Meeting::query()->where('id_bigint', $meeting->id_bigint)->delete();
+                $this->saveChange($meeting, null);
                 return true;
             }
             return false;
         });
+    }
+
+    private function saveChange(?Meeting $beforeMeeting, ?Meeting $afterMeeting): void
+    {
+        Change::create([
+            'user_id_bigint' => request()->user()->id_bigint,
+            'service_body_id_bigint' => $afterMeeting?->service_body_bigint ?? $beforeMeeting->service_body_bigint,
+            'lang_enum' => $beforeMeeting?->lang_enum ?: $afterMeeting?->lang_enum ?: legacy_config('language') ?: App::currentLocale(),
+            'object_class_string' => 'c_comdef_meeting',
+            'before_id_bigint' => $beforeMeeting?->id_bigint,
+            'before_lang_enum' => !is_null($beforeMeeting) ? $beforeMeeting?->lang_enum ?: legacy_config('language') ?: App::currentLocale() : null,
+            'after_id_bigint' => $afterMeeting?->id_bigint,
+            'after_lang_enum' => !is_null($afterMeeting) ? $afterMeeting?->lang_enum ?: legacy_config('language') ?: App::currentLocale() : null,
+            'change_type_enum' => is_null($beforeMeeting) ? 'comdef_change_type_new' : (is_null($afterMeeting) ? 'comdef_change_type_delete' : 'comdef_change_type_change'),
+            'before_object' => !is_null($beforeMeeting) ? $this->serializeForChange($beforeMeeting) : null,
+            'after_object' => !is_null($afterMeeting) ? $this->serializeForChange($afterMeeting) : null,
+        ]);
+    }
+
+    private function serializeForChange(Meeting $meeting): string
+    {
+        return serialize([
+            'main_table_values' => serialize([
+                'id_bigint' => $meeting->id_bigint,
+                'email_contact' => $meeting->email_contact,
+                'worldid_mixed' => $meeting->worldid_mixed,
+                'service_body_bigint' => $meeting->service_body_bigint,
+                'weekday_tinyint' => $meeting->weekday_tinyint,  // decrement?
+                'venue_type' => $meeting->venue_type,
+                'start_time' => $meeting->start_time,
+                'lang_enum' => $meeting->lang_enum,
+                'duration_time' => $meeting->duration_time,
+                'time_zone' => $meeting->time_zone,
+                'longitude' => $meeting->longitude,
+                'latitude' => $meeting->latitude,
+                'published' => $meeting->published,
+                'formats' => $meeting->formats,
+            ]),
+            'data_table_values' => serialize(
+                $meeting->data
+                    ->map(fn ($data) => [
+                        'meetingid_bigint' => $data->meetingid_bigint,
+                        'lang_enum' => $data->lang_enum,
+                        'field_prompt' => $data->field_prompt,
+                        'visibility' => $data->visibility,
+                        'key' => $data->key,
+                        'data_string' => $data->data_string,
+                        'data_bigint' => null,
+                        'data_double' => null,
+                    ])
+                    ->toArray()
+            ),
+            'longdata_table_values' => serialize(
+                $meeting->longdata
+                    ->map(fn ($data) => [
+                        'meetingid_bigint' => $data->meetingid_bigint,
+                        'lang_enum' => $data->lang_enum,
+                        'field_prompt' => $data->field_prompt,
+                        'visibility' => $data->visibility,
+                        'key' => $data->key,
+                        'data_blob' => $data->data_blob,
+                    ])
+                    ->toArray()
+            ),
+        ]);
     }
 }
