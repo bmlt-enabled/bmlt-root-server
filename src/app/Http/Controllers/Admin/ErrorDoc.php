@@ -13,7 +13,7 @@ namespace App\Http\Controllers\Admin;
  *     @OA\Property(property="message", type="string", example="This action is unauthorized.")
  * ),
  * @OA\Schema(schema="ValidationError",
- *     @OA\Property(property="message", type="string", example="The username field is required. (and 1 more error)"),
+ *     @OA\Property(property="message", type="string", example="The field is required. (and 1 more error)"),
  *     @OA\Property(property="errors", type="object",
  *         @OA\AdditionalProperties(type="array",
  *             @OA\Items(type="string", example="error details")
