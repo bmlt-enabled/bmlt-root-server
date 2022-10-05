@@ -15,7 +15,11 @@ namespace App\Http\Controllers\Admin;
  *     @OA\Property(property="id", type="integer", example="0"),
  *     allOf={ @OA\Schema(ref="#/components/schemas/UserBase") }
  * ),
- * @OA\Schema(schema="CreateOrUpdateUser", required={"username","password","type","displayName"},
+ * @OA\Schema(schema="CreateUser", required={"username","password","type","displayName"},
+ *     @OA\Property(property="password", type="string", example="string"),
+ *     allOf={ @OA\Schema(ref="#/components/schemas/UserBase") }
+ * ),
+ * @OA\Schema(schema="UpdateUser", required={"username","type","displayName"},
  *     @OA\Property(property="password", type="string", example="string"),
  *     allOf={ @OA\Schema(ref="#/components/schemas/UserBase") }
  * ),
@@ -23,7 +27,7 @@ namespace App\Http\Controllers\Admin;
  *     @OA\Property(property="password", type="string", example="string"),
  *     allOf={ @OA\Schema(ref="#/components/schemas/UserBase") }
  * ),
- * @OA\Schema(schema="UserResourceCollection", type="array",
+ * @OA\Schema(schema="UserCollection", type="array",
  *     @OA\Items(ref="#/components/schemas/User")
  * ),
  * @OA\Schema(schema="NoUserExists", description="Returns when no user exists.",
@@ -36,7 +40,7 @@ class UserControllerDoc extends ResourceController
     /**
      * @OA\Get(path="/api/v1/users", summary="Retrieve users", description="Retrieve users for authenticated user.", operationId="getUsers", tags={"users"}, security={{"bearerAuth":{}}},
      *     @OA\Response(response=200, description="Returns when user is authenticated.",
-     *         @OA\JsonContent(ref="#/components/schemas/UserResourceCollection")
+     *         @OA\JsonContent(ref="#/components/schemas/UserCollection")
      *     ),
      *     @OA\Response(response=401, description="Returns when not authenticated",
      *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
@@ -70,7 +74,7 @@ class UserControllerDoc extends ResourceController
     /**
      * @OA\Post(path="/api/v1/users", summary="Create User", description="Creates a user.", operationId="createUser", tags={"users"}, security={{"bearerAuth":{}}},
      *     @OA\RequestBody(required=true, description="Pass in user object",
-     *         @OA\JsonContent(ref="#/components/schemas/CreateOrUpdateUser"),
+     *         @OA\JsonContent(ref="#/components/schemas/CreateUser"),
      *     ),
      *     @OA\Response(response=201, description="Returns when POST is successful.",
      *         @OA\JsonContent(ref="#/components/schemas/User")
@@ -80,6 +84,9 @@ class UserControllerDoc extends ResourceController
      *     ),
      *     @OA\Response(response=403, description="Returns when user is unauthorized to perform action.",
      *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
+     *     ),
+     *     @OA\Response(response=404, description="Returns when no user exists.",
+     *         @OA\JsonContent(ref="#/components/schemas/NoUserExists")
      *     ),
      *     @OA\Response(response=422, description="Validation error.",
      *         @OA\JsonContent(ref="#/components/schemas/ValidationError")
@@ -96,7 +103,7 @@ class UserControllerDoc extends ResourceController
      *         @OA\Schema(type="integer", format="int64")
      *     ),
      *     @OA\RequestBody(required=true, description="Pass in user object",
-     *         @OA\JsonContent(ref="#/components/schemas/CreateOrUpdateUser"),
+     *         @OA\JsonContent(ref="#/components/schemas/UpdateUser"),
      *     ),
      *     @OA\Response(response=204, description="Success."),
      *     @OA\Response(response=401, description="Returns when user is not authenticated.",

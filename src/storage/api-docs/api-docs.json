@@ -962,7 +962,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ServiceBodiesResponse"
+                                    "$ref": "#/components/schemas/ServiceBodyCollection"
                                 }
                             }
                         }
@@ -989,7 +989,7 @@
                     "servicebodies"
                 ],
                 "summary": "Create Service Body",
-                "description": "Cretaes a service body.",
+                "description": "Creates a service body.",
                 "operationId": "createServiceBody",
                 "requestBody": {
                     "description": "Pass in service body object",
@@ -997,56 +997,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "name",
-                                    "description"
-                                ],
-                                "properties": {
-                                    "parentId": {
-                                        "type": "integer",
-                                        "example": "0"
-                                    },
-                                    "name": {
-                                        "type": "string",
-                                        "example": "string"
-                                    },
-                                    "description": {
-                                        "type": "string",
-                                        "example": "string"
-                                    },
-                                    "type": {
-                                        "type": "string",
-                                        "example": "string"
-                                    },
-                                    "adminUserId": {
-                                        "type": "integer",
-                                        "example": "0"
-                                    },
-                                    "assignedUserIds": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "integer",
-                                            "example": "0"
-                                        }
-                                    },
-                                    "url": {
-                                        "type": "string",
-                                        "example": "string"
-                                    },
-                                    "helpline": {
-                                        "type": "string",
-                                        "example": "string"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "example": "string"
-                                    },
-                                    "worldId": {
-                                        "type": "string",
-                                        "example": "string"
-                                    }
-                                },
-                                "type": "object"
+                                "$ref": "#/components/schemas/CreateServiceBody"
                             }
                         }
                     }
@@ -1057,42 +1008,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ServiceBodyResponse"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "The parent id field must be present. (and 1 more error)"
-                                        },
-                                        "errors": {
-                                            "properties": {
-                                                "parentId": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "example": "The parent id field must be present."
-                                                    }
-                                                },
-                                                "assignedUserIds": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "example": "The editor user ids field must be present."
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/ServiceBody"
                                 }
                             }
                         }
@@ -1102,7 +1018,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorIncorrectCredentials"
+                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
                                 }
                             }
                         }
@@ -1112,7 +1028,27 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/ErrorUnauthorized"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Returns when no service body exists.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NoServiceBodyExists"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
                                 }
                             }
                         }
@@ -1130,7 +1066,7 @@
                 "tags": [
                     "servicebodies"
                 ],
-                "summary": "Retrieve a single service body",
+                "summary": "Retrieve a service body",
                 "description": "Retrieve a single service body by id.",
                 "operationId": "getServiceBody",
                 "parameters": [
@@ -1152,37 +1088,17 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ServiceBodyResponse"
+                                    "$ref": "#/components/schemas/ServiceBody"
                                 }
                             }
                         }
                     },
                     "401": {
-                        "description": "Returns when not authenticated.",
+                        "description": "Returns when user is not authenticated.",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "": {
-                                            "$ref": "#/components/schemas/ErrorUnauthenticated"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Returns when unauthorized.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "": {
-                                            "$ref": "#/components/schemas/ErrorUnauthorized"
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
                                 }
                             }
                         }
@@ -1208,7 +1124,7 @@
                 "tags": [
                     "servicebodies"
                 ],
-                "summary": "Update single Service Body",
+                "summary": "Update a Service Body",
                 "description": "Updates a single service body.",
                 "operationId": "updateServiceBody",
                 "parameters": [
@@ -1225,106 +1141,26 @@
                     }
                 ],
                 "requestBody": {
-                    "description": "Pass in service body object.",
+                    "description": "Pass in service body object",
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "properties": {
-                                    "parentId": {
-                                        "type": "integer",
-                                        "example": "0"
-                                    },
-                                    "name": {
-                                        "type": "string",
-                                        "example": "string"
-                                    },
-                                    "description": {
-                                        "type": "string",
-                                        "example": "string"
-                                    },
-                                    "type": {
-                                        "type": "string",
-                                        "example": "string"
-                                    },
-                                    "adminUserId": {
-                                        "type": "integer",
-                                        "example": "0"
-                                    },
-                                    "assignedUserIds": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "integer",
-                                            "example": "0"
-                                        }
-                                    },
-                                    "url": {
-                                        "type": "string",
-                                        "example": "string"
-                                    },
-                                    "helpline": {
-                                        "type": "string",
-                                        "example": "string"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "example": "string"
-                                    },
-                                    "worldId": {
-                                        "type": "string",
-                                        "example": "string"
-                                    }
-                                },
-                                "type": "object"
+                                "$ref": "#/components/schemas/UpdateServiceBody"
                             }
                         }
                     }
                 },
                 "responses": {
                     "204": {
-                        "description": "Returns when PUT is successful."
-                    },
-                    "422": {
-                        "description": "Validation error.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "The parent id field must be present. (and 1 more error)"
-                                        },
-                                        "errors": {
-                                            "properties": {
-                                                "parentId": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "example": "The parent id field must be present."
-                                                    }
-                                                },
-                                                "assignedUserIds": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "example": "The editor user ids field must be present."
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Success."
                     },
                     "401": {
                         "description": "Returns when user is not authenticated.",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorIncorrectCredentials"
+                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
                                 }
                             }
                         }
@@ -1334,7 +1170,27 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/ErrorUnauthorized"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Returns when no service body exists.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NoServiceBodyExists"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
                                 }
                             }
                         }
@@ -1350,8 +1206,8 @@
                 "tags": [
                     "servicebodies"
                 ],
-                "summary": "Deletes a single service body",
-                "description": "Deletes a single service body by id.",
+                "summary": "Deletes a service body",
+                "description": "Deletes a service body by id.",
                 "operationId": "deleteServiceBody",
                 "parameters": [
                     {
@@ -1368,34 +1224,24 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": "Returns with successful request."
+                        "description": "Success."
                     },
                     "401": {
-                        "description": "Returns when not authenticated.",
+                        "description": "Returns when user is not authenticated.",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "": {
-                                            "$ref": "#/components/schemas/ErrorUnauthenticated"
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
                                 }
                             }
                         }
                     },
                     "403": {
-                        "description": "Returns when unauthorized.",
+                        "description": "Returns when user is unauthorized to perform action.",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "": {
-                                            "$ref": "#/components/schemas/ErrorUnauthorized"
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/ErrorUnauthorized"
                                 }
                             }
                         }
@@ -1406,22 +1252,6 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/NoServiceBodyExists"
-                                }
-                            }
-                        }
-                    },
-                    "409": {
-                        "description": "Returns when service body has dependant resources.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "You cannot delete a service body while other service bodies or meetings are assigned to it."
-                                        }
-                                    },
-                                    "type": "object"
                                 }
                             }
                         }
@@ -1437,7 +1267,7 @@
                 "tags": [
                     "servicebodies"
                 ],
-                "summary": "Patches a single service body",
+                "summary": "Patches a service body",
                 "description": "Patches a single service body by id.",
                 "operationId": "patchServiceBody",
                 "parameters": [
@@ -1454,55 +1284,36 @@
                     }
                 ],
                 "requestBody": {
-                    "description": "Pass in service body attributes.",
+                    "description": "Pass in fields you want to update.",
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "properties": {
-                                    "assignedUserIds": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "integer",
-                                            "example": "0"
-                                        }
-                                    }
-                                },
-                                "type": "object"
+                                "$ref": "#/components/schemas/PartialUpdateServiceBody"
                             }
                         }
                     }
                 },
                 "responses": {
                     "204": {
-                        "description": "Returns with successful request."
+                        "description": "Success."
                     },
                     "401": {
-                        "description": "Returns when not authenticated.",
+                        "description": "Returns when user is not authenticated.",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "": {
-                                            "$ref": "#/components/schemas/ErrorUnauthenticated"
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
                                 }
                             }
                         }
                     },
                     "403": {
-                        "description": "Returns when unauthorized.",
+                        "description": "Returns when user is unauthorized to perform action.",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "": {
-                                            "$ref": "#/components/schemas/ErrorUnauthorized"
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/ErrorUnauthorized"
                                 }
                             }
                         }
@@ -1513,6 +1324,16 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/NoServiceBodyExists"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
                                 }
                             }
                         }
@@ -1740,7 +1561,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/UserResourceCollection"
+                                    "$ref": "#/components/schemas/UserCollection"
                                 }
                             }
                         }
@@ -1775,7 +1596,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/CreateOrUpdateUser"
+                                "$ref": "#/components/schemas/CreateUser"
                             }
                         }
                     }
@@ -1807,6 +1628,16 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Returns when no user exists.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NoUserExists"
                                 }
                             }
                         }
@@ -1914,7 +1745,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/CreateOrUpdateUser"
+                                "$ref": "#/components/schemas/UpdateUser"
                             }
                         }
                     }
@@ -2158,7 +1989,7 @@
                 "properties": {
                     "message": {
                         "type": "string",
-                        "example": "The username field is required. (and 1 more error)"
+                        "example": "The field is required. (and 1 more error)"
                     },
                     "errors": {
                         "type": "object",
@@ -2429,12 +2260,8 @@
                     }
                 ]
             },
-            "ServiceBodyResponse": {
+            "ServiceBodyBase": {
                 "properties": {
-                    "id": {
-                        "type": "integer",
-                        "example": "0"
-                    },
                     "parentId": {
                         "type": "integer",
                         "example": "0"
@@ -2481,28 +2308,64 @@
                 },
                 "type": "object"
             },
-            "ServiceBodiesResponse": {
-                "type": "array",
-                "items": {
-                    "$ref": "#/components/schemas/ServiceBodyResponse"
-                },
-                "example": [
+            "ServiceBody": {
+                "type": "object",
+                "allOf": [
                     {
-                        "id": 0,
-                        "parentId": 0,
-                        "name": "string",
-                        "description": "string",
-                        "type": "string",
-                        "adminUserId": 0,
-                        "assignedUserIds": [
-                            1
-                        ],
-                        "url": "string",
-                        "helpline": "string",
-                        "email": "string",
-                        "worldId": "string"
+                        "$ref": "#/components/schemas/ServiceBodyBase"
+                    },
+                    {
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "example": "0"
+                            }
+                        }
                     }
                 ]
+            },
+            "CreateServiceBody": {
+                "required": [
+                    "parentId",
+                    "name",
+                    "description",
+                    "type",
+                    "adminUserId",
+                    "assignedUserIds"
+                ],
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ServiceBodyBase"
+                    }
+                ]
+            },
+            "UpdateServiceBody": {
+                "required": [
+                    "parentId",
+                    "name",
+                    "description",
+                    "type",
+                    "adminUserId",
+                    "assignedUserIds"
+                ],
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ServiceBodyBase"
+                    }
+                ]
+            },
+            "PartialUpdateServiceBody": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ServiceBodyBase"
+                    }
+                ]
+            },
+            "ServiceBodyCollection": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/ServiceBody"
+                }
             },
             "NoServiceBodyExists": {
                 "description": "Returns when no user exists.",
@@ -2559,10 +2422,31 @@
                     }
                 ]
             },
-            "CreateOrUpdateUser": {
+            "CreateUser": {
                 "required": [
                     "username",
                     "password",
+                    "type",
+                    "displayName"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/UserBase"
+                    },
+                    {
+                        "properties": {
+                            "password": {
+                                "type": "string",
+                                "example": "string"
+                            }
+                        }
+                    }
+                ]
+            },
+            "UpdateUser": {
+                "required": [
+                    "username",
                     "type",
                     "displayName"
                 ],
@@ -2597,7 +2481,7 @@
                     }
                 ]
             },
-            "UserResourceCollection": {
+            "UserCollection": {
                 "type": "array",
                 "items": {
                     "$ref": "#/components/schemas/User"
