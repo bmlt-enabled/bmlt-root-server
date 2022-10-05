@@ -514,6 +514,16 @@
                             "type": "string"
                         },
                         "example": "3,4"
+                    },
+                    {
+                        "name": "searchString",
+                        "in": "query",
+                        "description": "string",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Just for Today"
                     }
                 ],
                 "responses": {
