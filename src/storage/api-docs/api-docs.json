@@ -2514,12 +2514,8 @@
                 },
                 "type": "object"
             },
-            "User": {
+            "UserBase": {
                 "properties": {
-                    "id": {
-                        "type": "integer",
-                        "example": "0"
-                    },
                     "username": {
                         "type": "string",
                         "example": "string"
@@ -2546,6 +2542,22 @@
                     }
                 },
                 "type": "object"
+            },
+            "User": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/UserBase"
+                    },
+                    {
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "example": "0"
+                            }
+                        }
+                    }
+                ]
             },
             "CreateOrUpdateUser": {
                 "required": [
@@ -2554,62 +2566,36 @@
                     "type",
                     "displayName"
                 ],
-                "properties": {
-                    "username": {
-                        "type": "string",
-                        "example": "string"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/UserBase"
                     },
-                    "type": {
-                        "type": "string",
-                        "example": "string"
-                    },
-                    "displayName": {
-                        "type": "string",
-                        "example": "string"
-                    },
-                    "description": {
-                        "type": "string",
-                        "example": "string"
-                    },
-                    "email": {
-                        "type": "string",
-                        "example": "string"
-                    },
-                    "ownerId": {
-                        "type": "string",
-                        "example": "0"
+                    {
+                        "properties": {
+                            "password": {
+                                "type": "string",
+                                "example": "string"
+                            }
+                        }
                     }
-                },
-                "type": "object"
+                ]
             },
             "PartialUpdateUser": {
-                "properties": {
-                    "username": {
-                        "type": "string",
-                        "example": "string"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/UserBase"
                     },
-                    "type": {
-                        "type": "string",
-                        "example": "string"
-                    },
-                    "displayName": {
-                        "type": "string",
-                        "example": "string"
-                    },
-                    "description": {
-                        "type": "string",
-                        "example": "string"
-                    },
-                    "email": {
-                        "type": "string",
-                        "example": "string"
-                    },
-                    "ownerId": {
-                        "type": "string",
-                        "example": "0"
+                    {
+                        "properties": {
+                            "password": {
+                                "type": "string",
+                                "example": "string"
+                            }
+                        }
                     }
-                },
-                "type": "object"
+                ]
             },
             "UserResourceCollection": {
                 "type": "array",
