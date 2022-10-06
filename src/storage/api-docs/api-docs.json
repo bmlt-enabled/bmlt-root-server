@@ -11,20 +11,29 @@
     },
     "servers": [
         {
-            "url": "https://latest.aws.bmlt.app/main_server",
+            "url": "https://latest.aws.bmlt.app/main_server/",
             "description": "BMLT Admin API Latest Server"
         },
         {
-            "url": "https://unstable.aws.bmlt.app/main_server",
+            "url": "https://unstable.aws.bmlt.app/main_server/",
             "description": "BMLT Admin API Unstable Server"
         },
         {
-            "url": "https://gyro.sezf.org/main_server",
+            "url": "https://gyro.sezf.org/main_server/",
             "description": "BMLT Admin API Gyro Server"
         },
         {
-            "url": "http://localhost:8000/main_server",
+            "url": "http://localhost:8000/main_server/",
             "description": "BMLT Admin API Local Server"
+        },
+        {
+            "url": "https://{domain}",
+            "description": "BMLT Admin API Custom Server",
+            "variables": {
+                "domain": {
+                    "default": ""
+                }
+            }
         }
     ],
     "paths": {
@@ -2481,12 +2490,12 @@
             }
         },
         "securitySchemes": {
-            "bearerAuth": {
+            "oauth2": {
                 "type": "oauth2",
                 "flows": {
                     "password": {
-                        "tokenUrl": "main_server/api/v1/auth/token",
-                        "refreshUrl": "main_server/api/v1/auth/refresh",
+                        "tokenUrl": "api/v1/auth/token",
+                        "refreshUrl": "api/v1/auth/refresh",
                         "scopes": {}
                     }
                 }
