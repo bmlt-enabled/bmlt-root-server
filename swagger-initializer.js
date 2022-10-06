@@ -51,7 +51,7 @@ window.onload = function() {
       window.ui.setServers([
         {url: 'https://latest.aws.bmlt.app/main_server/', description: 'Latest'},
         {url: 'https://unstable.aws.bmlt.app/main_server/', description: 'Unstable'},
-        {url: 'https://gyro.aws.bmlt.app/main_server/', description: 'Gyro'},
+        {url: 'https://gyro.sezf.org/main_server/', description: 'Gyro'},
         {url: 'https://{domain}', description: 'Custom', variables: { domain: { default: '' } } },
       ]);
       window.ui.setAuthUrlPrefix('api/v1/');
