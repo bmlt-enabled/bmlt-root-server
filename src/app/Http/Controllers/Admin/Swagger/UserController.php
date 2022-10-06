@@ -38,7 +38,7 @@ class UserController extends Controller
 {
 
     /**
-     * @OA\Get(path="/api/v1/users", summary="Retrieves users", description="Retrieve users for authenticated user.", operationId="getUsers", tags={"users"}, security={{"bearerAuth":{}}},
+     * @OA\Get(path="/api/v1/users", summary="Retrieves users", description="Retrieve users for authenticated user.", operationId="getUsers", tags={"users"}, security={{"oauth2":{}}},
      *     @OA\Response(response=200, description="Returns when user is authenticated.",
      *         @OA\JsonContent(ref="#/components/schemas/UserCollection")
      *     ),
@@ -52,7 +52,7 @@ class UserController extends Controller
     }
 
     /**
-     * @OA\Get(path="/api/v1/users/{userId}", summary="Retrieves a single user", description="Retrieve single user.", operationId="getUser", tags={"users"}, security={{"bearerAuth":{}}},
+     * @OA\Get(path="/api/v1/users/{userId}", summary="Retrieves a single user", description="Retrieve single user.", operationId="getUser", tags={"users"}, security={{"oauth2":{}}},
      *     @OA\Parameter(description="ID of user", in="path", name="userId", required=true, example="1",
      *         @OA\Schema(type="integer", format="int64")
      *     ),
@@ -72,7 +72,7 @@ class UserController extends Controller
     }
 
     /**
-     * @OA\Post(path="/api/v1/users", summary="Creates a user", description="Creates a user.", operationId="createUser", tags={"users"}, security={{"bearerAuth":{}}},
+     * @OA\Post(path="/api/v1/users", summary="Creates a user", description="Creates a user.", operationId="createUser", tags={"users"}, security={{"oauth2":{}}},
      *     @OA\RequestBody(required=true, description="Pass in user object",
      *         @OA\JsonContent(ref="#/components/schemas/CreateUser"),
      *     ),
@@ -98,7 +98,7 @@ class UserController extends Controller
     }
 
     /**
-     * @OA\Put(path="/api/v1/users/{userId}", summary="Update single user", description="Updates a user.", operationId="updateUser", tags={"users"}, security={{"bearerAuth":{}}},
+     * @OA\Put(path="/api/v1/users/{userId}", summary="Update single user", description="Updates a user.", operationId="updateUser", tags={"users"}, security={{"oauth2":{}}},
      *     @OA\Parameter(description="ID of user", in="path", name="userId", required=true, example="1",
      *         @OA\Schema(type="integer", format="int64")
      *     ),
@@ -125,7 +125,7 @@ class UserController extends Controller
     }
 
     /**
-     * @OA\Patch(path="/api/v1/users/{userId}", summary="Patches a user", description="Patches a user by id.", operationId="partialUpdateUser", tags={"users"}, security={{"bearerAuth":{}}},
+     * @OA\Patch(path="/api/v1/users/{userId}", summary="Patches a user", description="Patches a user by id.", operationId="partialUpdateUser", tags={"users"}, security={{"oauth2":{}}},
      *     @OA\Parameter(description="ID of user", in="path", name="userId", required=true, example="1",
      *        @OA\Schema(type="integer", format="int64")
      *     ),
@@ -152,7 +152,7 @@ class UserController extends Controller
     }
 
     /**
-     * @OA\Delete(path="/api/v1/users/{userId}", summary="Deletes a user", description="Deletes a user by id", operationId="deleteUser", tags={"users"}, security={{"bearerAuth":{}}},
+     * @OA\Delete(path="/api/v1/users/{userId}", summary="Deletes a user", description="Deletes a user by id", operationId="deleteUser", tags={"users"}, security={{"oauth2":{}}},
      *     @OA\Parameter(description="ID of user", in="path", name="userId", required=true, example="1",
      *         @OA\Schema(type="integer", format="int64")
      *     ),
