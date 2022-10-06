@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/openapi.json', fn () => response(File::get(storage_path('api-docs/api-docs.json')))->withHeaders(['content-type' => 'text/json']));
 Route::post('/auth/token', [TokenController::class, 'token']);
 
 Route::middleware('auth:sanctum')->group(function () {
