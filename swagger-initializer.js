@@ -8,7 +8,28 @@ window.onload = function() {
         const newJsonSpec = Object.assign({}, jsonSpec, { servers });
 
         return system.specActions.updateJsonSpec(newJsonSpec);
-      }
+      },
+      setAuthUrlPrefix: (prefix) => {
+        const jsonSpec = system.getState().toJSON().spec.json;
+        const components = {
+          schemas: jsonSpec.components.schemas,
+          securitySchemes: {
+            bmltToken: {
+              flows: {
+                password: {
+                  tokenUrl: prefix + jsonSpec.components.securitySchemes.bmltToken.flows.password.tokenUrl,
+                  refreshUrl: prefix + jsonSpec.components.securitySchemes.bmltToken.flows.password.refreshUrl,
+                  scopes: {}
+                },
+              },
+              type: 'oauth2',
+            }
+          }
+        };
+        const newJsonSpec = Object.assign({}, jsonSpec, { components });
+
+        return system.specActions.updateJsonSpec(newJsonSpec);
+      },
     }
   });
 
@@ -33,6 +54,7 @@ window.onload = function() {
         {url: 'https://gyro.aws.bmlt.app/main_server/', description: 'Gyro'},
         {url: 'https://{domain}', description: 'Custom', variables: { domain: { default: '' } } },
       ]);
+      window.ui.setAuthUrlPrefix('api/v1/');
     }
   });
 
