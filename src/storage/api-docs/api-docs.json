@@ -2572,8 +2572,8 @@
                 "type": "oauth2",
                 "flows": {
                     "password": {
-                        "tokenUrl": "main_server/api/v1/auth/token",
-                        "refreshUrl": "main_server/api/v1/auth/refresh",
+                        "tokenUrl": "api/v1/auth/token",
+                        "refreshUrl": "api/v1/auth/refresh",
                         "scopes": {}
                     }
                 }
