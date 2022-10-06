@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\MeetingController;
 use App\Http\Controllers\Admin\ServiceBodyController;
 use App\Http\Controllers\Admin\TokenController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\SwaggerController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/openapi.json', fn () => response(File::get(storage_path('api-docs/api-docs.json')))->withHeaders(['content-type' => 'text/json']));
+Route::get('/openapi.json', [SwaggerController::class, 'openapi'])->name('openapi');
 Route::post('/auth/token', [TokenController::class, 'token']);
 
 Route::middleware('auth:sanctum')->group(function () {

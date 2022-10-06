@@ -15,5 +15,3 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
-resources/views/vendor/l5-swagger
-config/l5-swagger.php
