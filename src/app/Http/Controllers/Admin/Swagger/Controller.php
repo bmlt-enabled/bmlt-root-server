@@ -14,7 +14,7 @@ namespace App\Http\Controllers\Admin\Swagger;
  *     @OA\ServerVariable(serverVariable="domain", default="")
  * )
  * @OA\SecurityScheme(securityScheme="oauth2", type="oauth2",
- *     @OA\Flow(flow="password", tokenUrl="main_server/api/v1/auth/token", refreshUrl="main_server/api/v1/auth/refresh", scopes={})
+ *     @OA\Flow(flow="password", tokenUrl="api/v1/auth/token", refreshUrl="api/v1/auth/refresh", scopes={})
  * )
  * @OA\SecurityScheme(securityScheme="bearerAuth", type="http", scheme="bearer")
  */
