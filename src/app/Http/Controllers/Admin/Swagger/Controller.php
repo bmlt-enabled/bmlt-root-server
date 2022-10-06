@@ -13,7 +13,7 @@ namespace App\Http\Controllers\Admin\Swagger;
  * @OA\Server(url="https://{domain}", description="BMLT Admin API Custom Server",
  *     @OA\ServerVariable(serverVariable="domain", default="")
  * )
- * @OA\SecurityScheme(securityScheme="oauth2", type="oauth2",
+ * @OA\SecurityScheme(securityScheme="bmltToken", type="oauth2",
  *     @OA\Flow(flow="password", tokenUrl="api/v1/auth/token", refreshUrl="api/v1/auth/refresh", scopes={})
  * )
  */
