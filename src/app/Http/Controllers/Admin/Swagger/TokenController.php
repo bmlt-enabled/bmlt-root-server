@@ -36,7 +36,7 @@ class TokenController extends Controller
     }
 
     /**
-     * @OA\Post(path="/api/v1/auth/refresh", summary="Revokes and issues a new token", description="Refresh token.", operationId="authRefresh", tags={"auth"}, security={{"oauth2":{}}},
+     * @OA\Post(path="/api/v1/auth/refresh", summary="Revokes and issues a new token", description="Refresh token.", operationId="authRefresh", tags={"auth"}, security={{"bmltToken":{}}},
      *     @OA\Response(response=200, description="Returns when refresh is successful.",
      *         @OA\JsonContent(ref="#/components/schemas/Token")
      *     ),
@@ -50,7 +50,7 @@ class TokenController extends Controller
     }
 
     /**
-     * @OA\Post(path="/api/v1/auth/logout", summary="Revokes a token", description="Revoke token and logout.", operationId="authLogout", tags={"auth"}, security={{"oauth2":{}}},
+     * @OA\Post(path="/api/v1/auth/logout", summary="Revokes a token", description="Revoke token and logout.", operationId="authLogout", tags={"auth"}, security={{"bmltToken":{}}},
      *     @OA\Response(response=200, description="Returns when token was logged out."),
      *     @OA\Response(response=401, description="Returns when request is unauthenticated.",
      *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")

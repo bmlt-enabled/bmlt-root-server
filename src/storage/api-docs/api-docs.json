@@ -69,7 +69,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bmltToken": []
                     }
                 ]
             },
@@ -145,7 +145,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bmltToken": []
                     }
                 ]
             }
@@ -205,7 +205,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bmltToken": []
                     }
                 ]
             },
@@ -287,7 +287,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bmltToken": []
                     }
                 ]
             },
@@ -358,7 +358,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bmltToken": []
                     }
                 ]
             },
@@ -440,7 +440,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bmltToken": []
                     }
                 ]
             }
@@ -529,7 +529,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bmltToken": []
                     }
                 ]
             },
@@ -605,7 +605,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bmltToken": []
                     }
                 ]
             }
@@ -665,7 +665,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bmltToken": []
                     }
                 ]
             },
@@ -747,7 +747,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bmltToken": []
                     }
                 ]
             },
@@ -808,7 +808,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bmltToken": []
                     }
                 ]
             },
@@ -890,7 +890,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bmltToken": []
                     }
                 ]
             }
@@ -927,7 +927,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bmltToken": []
                     }
                 ]
             },
@@ -1003,7 +1003,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bmltToken": []
                     }
                 ]
             }
@@ -1063,7 +1063,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bmltToken": []
                     }
                 ]
             },
@@ -1145,7 +1145,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bmltToken": []
                     }
                 ]
             },
@@ -1206,7 +1206,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bmltToken": []
                     }
                 ]
             },
@@ -1288,7 +1288,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bmltToken": []
                     }
                 ]
             }
@@ -1378,7 +1378,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bmltToken": []
                     }
                 ]
             }
@@ -1408,7 +1408,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bmltToken": []
                     }
                 ]
             }
@@ -1445,7 +1445,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bmltToken": []
                     }
                 ]
             },
@@ -1521,7 +1521,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bmltToken": []
                     }
                 ]
             }
@@ -1581,7 +1581,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bmltToken": []
                     }
                 ]
             },
@@ -1663,7 +1663,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bmltToken": []
                     }
                 ]
             },
@@ -1734,7 +1734,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bmltToken": []
                     }
                 ]
             },
@@ -1816,7 +1816,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bmltToken": []
                     }
                 ]
             }
@@ -2490,7 +2490,7 @@
             }
         },
         "securitySchemes": {
-            "oauth2": {
+            "bmltToken": {
                 "type": "oauth2",
                 "flows": {
                     "password": {
