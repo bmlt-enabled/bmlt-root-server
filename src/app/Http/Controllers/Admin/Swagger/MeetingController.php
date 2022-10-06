@@ -69,7 +69,7 @@ class MeetingController extends Controller
 {
 
     /**
-     * @OA\Get(path="/api/v1/meetings", summary="Retrieves meetings", description="Retrieve meetings for authenticated user.", operationId="getMeetings", tags={"meetings"}, security={{"bearerAuth":{}}},
+     * @OA\Get(path="/api/v1/meetings", summary="Retrieves meetings", description="Retrieve meetings for authenticated user.", operationId="getMeetings", tags={"meetings"}, security={{"oauth2":{}},{"bearerAuth":{}}},
      *     @OA\Parameter(description="comma delimited meeting ids", in="query", name="meetingIds", required=false, example="1,2",
      *         @OA\Schema(type="string")
      *     ),
@@ -98,7 +98,7 @@ class MeetingController extends Controller
     }
 
     /**
-     * @OA\Get(path="/api/v1/meetings/{meetingId}", summary="Retrieves a meeting", description="Retrieve a meeting.", operationId="getMeeting", tags={"meetings"}, security={{"bearerAuth":{}}},
+     * @OA\Get(path="/api/v1/meetings/{meetingId}", summary="Retrieves a meeting", description="Retrieve a meeting.", operationId="getMeeting", tags={"meetings"}, security={{"oauth2":{}},{"bearerAuth":{}}},
      *     @OA\Parameter(description="ID of meeting", in="path", name="meetingId", required=true, example="1",
      *         @OA\Schema(type="integer",format="int64")
      *     ),
@@ -118,7 +118,7 @@ class MeetingController extends Controller
     }
 
     /**
-     * @OA\Post(path="/api/v1/meetings", summary="Creates a meeting", description="Creates a meeting.", operationId="createMeeting", tags={"meetings"}, security={{"bearerAuth":{}}},
+     * @OA\Post(path="/api/v1/meetings", summary="Creates a meeting", description="Creates a meeting.", operationId="createMeeting", tags={"meetings"}, security={{"oauth2":{}},{"bearerAuth":{}}},
      *     @OA\RequestBody(required=true, description="Pass in meeting object",
      *         @OA\JsonContent(ref="#/components/schemas/CreateMeeting"),
      *     ),
@@ -144,7 +144,7 @@ class MeetingController extends Controller
     }
 
     /**
-     * @OA\Put(path="/api/v1/meetings/{meetingId}", summary="Updates a meeting", description="Updates a meeting.", operationId="updateMeeting", tags={"meetings"}, security={{"bearerAuth":{}}},
+     * @OA\Put(path="/api/v1/meetings/{meetingId}", summary="Updates a meeting", description="Updates a meeting.", operationId="updateMeeting", tags={"meetings"}, security={{"oauth2":{}},{"bearerAuth":{}}},
      *     @OA\Parameter(description="ID of meeting",in="path", name="meetingId", required=true, example="1",
      *         @OA\Schema(type="integer", format="int64")
      *     ),
@@ -171,7 +171,7 @@ class MeetingController extends Controller
     }
 
     /**
-     * @OA\Patch(path="/api/v1/meetings/{meetingId}", summary="Patches a meeting", description="Patches a meeting by id", operationId="patchMeeting", tags={"meetings"}, security={{"bearerAuth":{}}},
+     * @OA\Patch(path="/api/v1/meetings/{meetingId}", summary="Patches a meeting", description="Patches a meeting by id", operationId="patchMeeting", tags={"meetings"}, security={{"oauth2":{}},{"bearerAuth":{}}},
      *     @OA\Parameter(description="ID of meeting", in="path", name="meetingId", required=true, example="1",
      *         @OA\Schema(type="integer", format="int64")
      *     ),
@@ -198,7 +198,7 @@ class MeetingController extends Controller
     }
 
     /**
-     * @OA\Delete(path="/api/v1/meetings/{meetingId}", summary="Deletes a meeting", description="Deletes a meeting by id.", operationId="deleteMeeting", tags={"meetings"}, security={{"bearerAuth":{}}},
+     * @OA\Delete(path="/api/v1/meetings/{meetingId}", summary="Deletes a meeting", description="Deletes a meeting by id.", operationId="deleteMeeting", tags={"meetings"}, security={{"oauth2":{}},{"bearerAuth":{}}},
      *     @OA\Parameter(description="ID of meeting", in="path", name="meetingId", required=true, example="1",
      *         @OA\Schema(type="integer", format="int64")
      *     ),

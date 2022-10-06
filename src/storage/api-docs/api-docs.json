@@ -25,6 +25,15 @@
         {
             "url": "http://localhost:8000/main_server",
             "description": "BMLT Admin API Local Server"
+        },
+        {
+            "url": "https://{domain}",
+            "description": "BMLT Admin API Custom Server",
+            "variables": {
+                "domain": {
+                    "default": ""
+                }
+            }
         }
     ],
     "paths": {
@@ -59,6 +68,9 @@
                     }
                 },
                 "security": [
+                    {
+                        "oauth2": []
+                    },
                     {
                         "bearerAuth": []
                     }
@@ -136,6 +148,9 @@
                 },
                 "security": [
                     {
+                        "oauth2": []
+                    },
+                    {
                         "bearerAuth": []
                     }
                 ]
@@ -195,6 +210,9 @@
                     }
                 },
                 "security": [
+                    {
+                        "oauth2": []
+                    },
                     {
                         "bearerAuth": []
                     }
@@ -278,6 +296,9 @@
                 },
                 "security": [
                     {
+                        "oauth2": []
+                    },
+                    {
                         "bearerAuth": []
                     }
                 ]
@@ -348,6 +369,9 @@
                     }
                 },
                 "security": [
+                    {
+                        "oauth2": []
+                    },
                     {
                         "bearerAuth": []
                     }
@@ -430,6 +454,9 @@
                     }
                 },
                 "security": [
+                    {
+                        "oauth2": []
+                    },
                     {
                         "bearerAuth": []
                     }
@@ -520,6 +547,9 @@
                 },
                 "security": [
                     {
+                        "oauth2": []
+                    },
+                    {
                         "bearerAuth": []
                     }
                 ]
@@ -596,6 +626,9 @@
                 },
                 "security": [
                     {
+                        "oauth2": []
+                    },
+                    {
                         "bearerAuth": []
                     }
                 ]
@@ -655,6 +688,9 @@
                     }
                 },
                 "security": [
+                    {
+                        "oauth2": []
+                    },
                     {
                         "bearerAuth": []
                     }
@@ -738,6 +774,9 @@
                 },
                 "security": [
                     {
+                        "oauth2": []
+                    },
+                    {
                         "bearerAuth": []
                     }
                 ]
@@ -798,6 +837,9 @@
                     }
                 },
                 "security": [
+                    {
+                        "oauth2": []
+                    },
                     {
                         "bearerAuth": []
                     }
@@ -881,6 +923,9 @@
                 },
                 "security": [
                     {
+                        "oauth2": []
+                    },
+                    {
                         "bearerAuth": []
                     }
                 ]
@@ -917,6 +962,9 @@
                     }
                 },
                 "security": [
+                    {
+                        "oauth2": []
+                    },
                     {
                         "bearerAuth": []
                     }
@@ -994,6 +1042,9 @@
                 },
                 "security": [
                     {
+                        "oauth2": []
+                    },
+                    {
                         "bearerAuth": []
                     }
                 ]
@@ -1053,6 +1104,9 @@
                     }
                 },
                 "security": [
+                    {
+                        "oauth2": []
+                    },
                     {
                         "bearerAuth": []
                     }
@@ -1136,6 +1190,9 @@
                 },
                 "security": [
                     {
+                        "oauth2": []
+                    },
+                    {
                         "bearerAuth": []
                     }
                 ]
@@ -1196,6 +1253,9 @@
                     }
                 },
                 "security": [
+                    {
+                        "oauth2": []
+                    },
                     {
                         "bearerAuth": []
                     }
@@ -1278,6 +1338,9 @@
                     }
                 },
                 "security": [
+                    {
+                        "oauth2": []
+                    },
                     {
                         "bearerAuth": []
                     }
@@ -1369,6 +1432,9 @@
                 },
                 "security": [
                     {
+                        "oauth2": []
+                    },
+                    {
                         "bearerAuth": []
                     }
                 ]
@@ -1398,6 +1464,9 @@
                     }
                 },
                 "security": [
+                    {
+                        "oauth2": []
+                    },
                     {
                         "bearerAuth": []
                     }
@@ -1435,6 +1504,9 @@
                     }
                 },
                 "security": [
+                    {
+                        "oauth2": []
+                    },
                     {
                         "bearerAuth": []
                     }
@@ -1512,6 +1584,9 @@
                 },
                 "security": [
                     {
+                        "oauth2": []
+                    },
+                    {
                         "bearerAuth": []
                     }
                 ]
@@ -1571,6 +1646,9 @@
                     }
                 },
                 "security": [
+                    {
+                        "oauth2": []
+                    },
                     {
                         "bearerAuth": []
                     }
@@ -1654,6 +1732,9 @@
                 },
                 "security": [
                     {
+                        "oauth2": []
+                    },
+                    {
                         "bearerAuth": []
                     }
                 ]
@@ -1724,6 +1805,9 @@
                     }
                 },
                 "security": [
+                    {
+                        "oauth2": []
+                    },
                     {
                         "bearerAuth": []
                     }
@@ -1806,6 +1890,9 @@
                     }
                 },
                 "security": [
+                    {
+                        "oauth2": []
+                    },
                     {
                         "bearerAuth": []
                     }
@@ -2481,7 +2568,7 @@
             }
         },
         "securitySchemes": {
-            "bearerAuth": {
+            "oauth2": {
                 "type": "oauth2",
                 "flows": {
                     "password": {
@@ -2490,6 +2577,10 @@
                         "scopes": {}
                     }
                 }
+            },
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer"
             }
         }
     }

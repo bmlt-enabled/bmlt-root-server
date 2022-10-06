@@ -40,7 +40,7 @@ class FormatController extends Controller
 {
 
     /**
-     * @OA\Get(path="/api/v1/formats", summary="Retrieves formats", description="Retrieve formats", operationId="getFormats", tags={"formats"}, security={{"bearerAuth":{}}},
+     * @OA\Get(path="/api/v1/formats", summary="Retrieves formats", description="Retrieve formats", operationId="getFormats", tags={"formats"}, security={{"oauth2":{}},{"bearerAuth":{}}},
      *     @OA\Response(response=200, description="Returns when user is authenticated.",
      *         @OA\JsonContent(ref="#/components/schemas/FormatCollection")
      *     ),
@@ -54,7 +54,7 @@ class FormatController extends Controller
     }
 
     /**
-     * @OA\Get(path="/api/v1/formats/{formatId}", summary="Retrieves a format", description="Retrieve a format", operationId="getFormat", tags={"formats"}, security={{"bearerAuth":{}}},
+     * @OA\Get(path="/api/v1/formats/{formatId}", summary="Retrieves a format", description="Retrieve a format", operationId="getFormat", tags={"formats"}, security={{"oauth2":{}},{"bearerAuth":{}}},
      *     @OA\Parameter(description="ID of format", in="path", name="formatId", required=true, example="1",
      *         @OA\Schema(type="integer", format="int64")
      *     ),
@@ -74,7 +74,7 @@ class FormatController extends Controller
     }
 
     /**
-     * @OA\Post(path="/api/v1/formats", summary="Creates a format", description="Creates a format.", operationId="createFormat", tags={"formats"}, security={{"bearerAuth":{}}},
+     * @OA\Post(path="/api/v1/formats", summary="Creates a format", description="Creates a format.", operationId="createFormat", tags={"formats"}, security={{"oauth2":{}},{"bearerAuth":{}}},
      *     @OA\RequestBody(required=true, description="Pass in format object",
      *         @OA\JsonContent(ref="#/components/schemas/CreateFormat"),
      *     ),
@@ -100,7 +100,7 @@ class FormatController extends Controller
     }
 
     /**
-     * @OA\Put( path="/api/v1/formats/{formatId}", summary="Updates a format", description="Updates a format.", operationId="updateFormat", tags={"formats"}, security={{"bearerAuth":{}}},
+     * @OA\Put( path="/api/v1/formats/{formatId}", summary="Updates a format", description="Updates a format.", operationId="updateFormat", tags={"formats"}, security={{"oauth2":{}},{"bearerAuth":{}}},
      *     @OA\Parameter(description="ID of format", in="path", name="formatId", required=true, example="1",
      *         @OA\Schema(type="integer", format="int64")
      *     ),
@@ -127,7 +127,7 @@ class FormatController extends Controller
     }
 
     /**
-     * @OA\Patch(path="/api/v1/formats/{formatId}", summary="Patches a format", description="Patches a single format by id.", operationId="patchFormat", tags={"formats"}, security={{"bearerAuth":{}}},
+     * @OA\Patch(path="/api/v1/formats/{formatId}", summary="Patches a format", description="Patches a single format by id.", operationId="patchFormat", tags={"formats"}, security={{"oauth2":{}},{"bearerAuth":{}}},
      *     @OA\Parameter(description="ID of format", in="path", name="formatId", required=true, example="1",
      *         @OA\Schema(type="integer", format="int64")
      *     ),
@@ -154,7 +154,7 @@ class FormatController extends Controller
     }
 
     /**
-     * @OA\Delete(path="/api/v1/formats/{formatId}", summary="Deletes a format", description="Deletes a format by id.", operationId="deleteFormat", tags={"formats"}, security={{"bearerAuth":{}}},
+     * @OA\Delete(path="/api/v1/formats/{formatId}", summary="Deletes a format", description="Deletes a format by id.", operationId="deleteFormat", tags={"formats"}, security={{"oauth2":{}},{"bearerAuth":{}}},
      *     @OA\Parameter(description="ID of format", in="path", name="formatId", required=true, example="1",
      *         @OA\Schema(type="integer", format="int64")
      *     ),
