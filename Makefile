@@ -53,9 +53,6 @@ $(ZIP_FILE): $(VENDOR_AUTOLOAD) $(CROUTON_JS)
 	cd build && zip -r $(shell basename $(ZIP_FILE)) main_server
 	rm -rf build/main_server
 
-src/config/l5-swagger.php:
-	$(LINT_PREFIX) src/artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider"
-
 .PHONY: composer
 composer: $(VENDOR_AUTOLOAD) ## Runs composer install
 
@@ -92,7 +89,7 @@ coverage-serve:  ## Serves HTML Coverage Report
 	python3 -m http.server 8100 --directory src/tests/reports/coverage
 
 .PHONY: generate-api-json
-generate-api-json: src/config/l5-swagger.php ## Generates Open API JSON
+generate-api-json: ## Generates Open API JSON
 	$(LINT_PREFIX) src/artisan l5-swagger:generate
 #	mv src/storage/api-docs/api-docs.json src/storage/api-docs/openapi.json
 
