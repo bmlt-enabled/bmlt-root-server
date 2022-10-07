@@ -655,6 +655,28 @@ class MeetingRepository implements MeetingRepositoryInterface
             'before_object' => !is_null($beforeMeeting) ? $this->serializeForChange($beforeMeeting) : null,
             'after_object' => !is_null($afterMeeting) ? $this->serializeForChange($afterMeeting) : null,
         ]);
+
+        $changeLimit = legacy_config('change_depth_for_meetings');
+        if (is_integer($changeLimit) && $changeLimit > 0) {
+            $meetingId = $beforeMeeting?->id_bigint ?? $afterMeeting?->id_bigint;
+            if (!is_null($meetingId)) {
+                $keepIds = Change::query()
+                    ->where('before_id_bigint', $meetingId)
+                    ->orWhere('after_id_bigint', $meetingId)
+                    ->orderByDesc('id_bigint')
+                    ->limit($changeLimit)
+                    ->pluck('id_bigint');
+
+                Change::query()
+                    ->where(function ($query) use ($meetingId) {
+                        $query
+                            ->where('before_id_bigint', $meetingId)
+                            ->orWhere('after_id_bigint', $meetingId);
+                    })
+                    ->whereNotIn('id_bigint', $keepIds)
+                    ->delete();
+            }
+        }
     }
 
     private function serializeForChange(Meeting $meeting): string
