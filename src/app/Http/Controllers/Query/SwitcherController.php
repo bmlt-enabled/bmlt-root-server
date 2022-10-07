@@ -188,7 +188,18 @@ class SwitcherController extends Controller
                 abort(400, 'SearchStringRadius is required to use SearchStringIsAnAddress.');
             }
 
-            $geocodeResponse = Http::get("https://maps.googleapis.com/maps/api/geocode/json?key=$googleApiKey&address=$searchString&sensor=false");
+            $regionBias = legacy_config('region_bias');
+            if (is_string($regionBias) && is_numeric($searchString)) {
+                // when it's numeric, like a postcode, add $regionBias directly
+                $searchString .= ' ' . $regionBias;
+            }
+
+            $geocodeUrl = "https://maps.googleapis.com/maps/api/geocode/json?key=$googleApiKey&address=$searchString&sensor=false";
+            if (is_string($regionBias)) {
+                $geocodeUrl .= "&region=$regionBias";
+            }
+
+            $geocodeResponse = Http::get($geocodeUrl);
             $genericError = 'There was a problem geocoding the SearchString.';
             if (!$geocodeResponse->ok()) {
                 abort(500, $genericError);
