@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin;
 
+use App\LegacyConfig;
 use App\Models\Change;
 use App\Models\Format;
 use App\Models\Meeting;
@@ -339,5 +340,145 @@ class MeetingChangeTest extends TestCase
 
         // AFTER
         $this->assertNull($change->after_object);
+    }
+
+    public function testPruneMeetingChangesDeletedMeeting()
+    {
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $meeting1 = $this->createMeeting();
+        $meeting2 = $this->createMeeting();
+
+        for ($i = 0; $i < 10; $i++) {
+            Change::create([
+                'user_id_bigint' => 1,
+                'service_body_id_bigint' => 1,
+                'lang_enum' => App::currentLocale(),
+                'object_class_string' => 'c_comdef_meeting',
+                'before_id_bigint' => $meeting1->id_bigint,
+                'before_lang_enum' => App::currentLocale(),
+                'after_id_bigint' => null,
+                'after_lang_enum' => null,
+                'change_type_enum' => 'comdef_change_type_delete',
+                'before_object' => null,
+                'after_object' => null,
+            ]);
+            Change::create([
+                'user_id_bigint' => 1,
+                'service_body_id_bigint' => 1,
+                'lang_enum' => App::currentLocale(),
+                'object_class_string' => 'c_comdef_meeting',
+                'before_id_bigint' => $meeting2->id_bigint,
+                'before_lang_enum' => App::currentLocale(),
+                'after_id_bigint' => null,
+                'after_lang_enum' => null,
+                'change_type_enum' => 'comdef_change_type_delete',
+                'before_object' => null,
+                'after_object' => null,
+            ]);
+        }
+
+        $nextChangeId = Change::query()->max('id_bigint') + 1;
+
+        LegacyConfig::set('change_depth_for_meetings', 3);
+        try {
+            $this
+                ->withHeader('Authorization', "Bearer $token")
+                ->delete("/api/v1/meetings/{$meeting1->id_bigint}")
+                ->assertStatus(204);
+        } finally {
+            LegacyConfig::reset();
+        }
+
+        $this->assertEquals(3, Change::query()->where('before_id_bigint', $meeting1->id_bigint)->orWhere('after_id_bigint', $meeting1->id_bigint)->count());
+        $this->assertEquals(10, Change::query()->where('before_id_bigint', $meeting2->id_bigint)->orWhere('after_id_bigint', $meeting2->id_bigint)->count());
+        $this->assertEquals(3, Change::query()->whereIn('id_bigint', [$nextChangeId, $nextChangeId - 1, $nextChangeId - 2])->count());
+    }
+
+    public function testPruneMeetingChangesNewMeeting()
+    {
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $meeting1 = $this->createMeeting();
+        $meeting2 = $this->createMeeting();
+
+        for ($i = 0; $i < 10; $i++) {
+            Change::create([
+                'user_id_bigint' => 1,
+                'service_body_id_bigint' => 1,
+                'lang_enum' => App::currentLocale(),
+                'object_class_string' => 'c_comdef_meeting',
+                'before_id_bigint' => null,
+                'before_lang_enum' => null,
+                'after_id_bigint' => $meeting1->id_bigint,
+                'after_lang_enum' => App::currentLocale(),
+                'change_type_enum' => 'comdef_change_type_new',
+                'before_object' => null,
+                'after_object' => null,
+            ]);
+            Change::create([
+                'user_id_bigint' => 1,
+                'service_body_id_bigint' => 1,
+                'lang_enum' => App::currentLocale(),
+                'object_class_string' => 'c_comdef_meeting',
+                'before_id_bigint' => null,
+                'before_lang_enum' => null,
+                'after_id_bigint' => $meeting2->id_bigint,
+                'after_lang_enum' => App::currentLocale(),
+                'change_type_enum' => 'comdef_change_type_new',
+                'before_object' => null,
+                'after_object' => null,
+            ]);
+        }
+        $nextChangeId = Change::query()->max('id_bigint') + 1;
+
+        LegacyConfig::set('change_depth_for_meetings', 3);
+        try {
+            $this
+                ->withHeader('Authorization', "Bearer $token")
+                ->delete("/api/v1/meetings/{$meeting1->id_bigint}")
+                ->assertStatus(204);
+        } finally {
+            LegacyConfig::reset();
+        }
+
+        $this->assertEquals(3, Change::query()->where('before_id_bigint', $meeting1->id_bigint)->orWhere('after_id_bigint', $meeting1->id_bigint)->count());
+        $this->assertEquals(10, Change::query()->where('before_id_bigint', $meeting2->id_bigint)->orWhere('after_id_bigint', $meeting2->id_bigint)->count());
+        $this->assertEquals(3, Change::query()->whereIn('id_bigint', [$nextChangeId, $nextChangeId - 1, $nextChangeId - 2])->count());
+    }
+
+    public function testPruneMeetingChangesNewMeetingNullSetting()
+    {
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $meeting = $this->createMeeting();
+
+        for ($i = 0; $i < 10; $i++) {
+            Change::create([
+                'user_id_bigint' => 1,
+                'service_body_id_bigint' => 1,
+                'lang_enum' => App::currentLocale(),
+                'object_class_string' => 'c_comdef_meeting',
+                'before_id_bigint' => null,
+                'before_lang_enum' => null,
+                'after_id_bigint' => $meeting->id_bigint,
+                'after_lang_enum' => App::currentLocale(),
+                'change_type_enum' => 'comdef_change_type_new',
+                'before_object' => null,
+                'after_object' => null,
+            ]);
+        }
+
+        LegacyConfig::remove('change_depth_for_meetings');
+        try {
+            $this
+                ->withHeader('Authorization', "Bearer $token")
+                ->delete("/api/v1/meetings/{$meeting->id_bigint}")
+                ->assertStatus(204);
+        } finally {
+            LegacyConfig::reset();
+        }
+
+        $this->assertEquals(11, Change::query()->count());
     }
 }
