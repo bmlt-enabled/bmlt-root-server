@@ -379,6 +379,8 @@ class MeetingRepository implements MeetingRepositoryInterface
             ['key' => 'latitude', 'description' => __('main_prompts.latitude')],
         ];
 
+        // The stock fields are all english, but we want to account for the possibility that someone added a new/translated
+        // field in their server's native language, so we get those first.
         $langEnum = App::currentLocale();
         $fields = MeetingData::query()
             ->where('meetingid_bigint', 0)
@@ -398,6 +400,7 @@ class MeetingRepository implements MeetingRepositoryInterface
                 $seenKeys[$f['key']] = null;
             }
 
+            // Now we fill in all of the gaps with the english templates
             $fields = MeetingData::query()
                 ->where('meetingid_bigint', 0)
                 ->where('lang_enum', 'en')
@@ -487,7 +490,38 @@ class MeetingRepository implements MeetingRepositoryInterface
 
     public function getDataTemplates(): Collection
     {
-        return MeetingData::query()->where('meetingid_bigint', 0)->get();
+        $serverLanguage = App::currentLocale();
+        $fallbackLanguage = config('fallback_locale');
+        $dataTemplates = MeetingData::query()->where('meetingid_bigint', 0)->get();
+
+        $unique = collect([]);
+        foreach ($dataTemplates as $dataTemplate) {
+            $seenTemplate = $unique->get($dataTemplate->key);
+            if (is_null($seenTemplate)) {
+                $unique->put($dataTemplate->key, $dataTemplate);
+                continue;
+            }
+
+            if ($seenTemplate->lang_enum == $serverLanguage) {
+                continue;
+            }
+
+            if ($dataTemplate->lang_enum == $serverLanguage) {
+                $unique->put($dataTemplate->key, $dataTemplate);
+                continue;
+            }
+
+            if ($seenTemplate->lang_enum == $fallbackLanguage) {
+                continue;
+            }
+
+            if ($dataTemplate->lang_enum == $fallbackLanguage) {
+                $unique->put($dataTemplate->key, $dataTemplate);
+                continue;
+            }
+        }
+
+        return $unique;
     }
 
     public function getBoundingBox(): array
@@ -549,7 +583,7 @@ class MeetingRepository implements MeetingRepositoryInterface
     {
         $values = collect($values);
         $mainValues = $values->reject(fn ($_, $fieldName) => !in_array($fieldName, Meeting::$mainFields))->toArray();
-        $dataTemplates = $this->getDataTemplates()->mapWithKeys(fn ($t, $_) => [$t->key => $t]);
+        $dataTemplates = $this->getDataTemplates();
         $dataValues = $values->reject(fn ($_, $fieldName) => !$dataTemplates->has($fieldName));
 
         return DB::transaction(function () use ($mainValues, $dataValues, $dataTemplates) {
@@ -561,7 +595,7 @@ class MeetingRepository implements MeetingRepositoryInterface
                         'meetingid_bigint' => $meeting->id_bigint,
                         'key' => $t->key,
                         'field_prompt' => $t->field_prompt,
-                        'lang_enum' => 'en',
+                        'lang_enum' => $t->lang_enum,
                         'data_blob' => $fieldValue,
                         'visibility' => $t->visibility,
                     ]);
@@ -570,7 +604,7 @@ class MeetingRepository implements MeetingRepositoryInterface
                         'meetingid_bigint' => $meeting->id_bigint,
                         'key' => $t->key,
                         'field_prompt' => $t->field_prompt,
-                        'lang_enum' => 'en',
+                        'lang_enum' => $t->lang_enum,
                         'data_string' => $fieldValue,
                         'visibility' => $t->visibility,
                     ]);
@@ -585,7 +619,7 @@ class MeetingRepository implements MeetingRepositoryInterface
     {
         $values = collect($values);
         $mainValues = $values->reject(fn ($_, $fieldName) => !in_array($fieldName, Meeting::$mainFields))->toArray();
-        $dataTemplates = $this->getDataTemplates()->mapWithKeys(fn ($t, $_) => [$t->key => $t]);
+        $dataTemplates = $this->getDataTemplates();
         $dataValues = $values->reject(fn ($_, $fieldName) => !$dataTemplates->has($fieldName));
 
         return DB::transaction(function () use ($id, $mainValues, $dataValues, $dataTemplates) {
@@ -602,7 +636,7 @@ class MeetingRepository implements MeetingRepositoryInterface
                             'meetingid_bigint' => $meeting->id_bigint,
                             'key' => $t->key,
                             'field_prompt' => $t->field_prompt,
-                            'lang_enum' => 'en',
+                            'lang_enum' => $t->lang_enum,
                             'data_blob' => $fieldValue,
                             'visibility' => $t->visibility,
                         ]);
@@ -611,7 +645,7 @@ class MeetingRepository implements MeetingRepositoryInterface
                             'meetingid_bigint' => $meeting->id_bigint,
                             'key' => $t->key,
                             'field_prompt' => $t->field_prompt,
-                            'lang_enum' => 'en',
+                            'lang_enum' => $t->lang_enum,
                             'data_string' => $fieldValue,
                             'visibility' => $t->visibility,
                         ]);

@@ -139,7 +139,7 @@ class MeetingController extends ResourceController
     {
         static $dataTemplates = null;
         if (is_null($dataTemplates) || App::runningUnitTests()) {
-            $dataTemplates = $this->meetingRepository->getDataTemplates()->mapWithKeys(fn ($t, $_) => [$t->key => $t]);
+            $dataTemplates = $this->meetingRepository->getDataTemplates();
         }
         return $dataTemplates;
     }

@@ -276,7 +276,7 @@ class SwitcherController extends Controller
 
         // This code to calculate the formats fields is really inefficient, but necessary because
         // we don't have foreign keys between the meetings and formats tables.
-        $langEnum = $request->input('lang_enum', config('app.locale', 'en'));
+        $langEnum = $request->input('lang_enum', config('app.locale'));
         $formats = $this->formatRepository->search(langEnums: [$langEnum], meetings: $meetings);
 
         $formatsById = $formats->mapWithKeys(fn ($format, $_) => [$format->shared_id_bigint => $format]);
@@ -300,7 +300,7 @@ class SwitcherController extends Controller
 
     private function getFormats(Request $request): BaseJsonResponse
     {
-        $langEnums = $request->input('lang_enum', config('app.locale', 'en'));
+        $langEnums = $request->input('lang_enum', config('app.locale'));
         if (!is_array($langEnums)) {
             $langEnums = [$langEnums];
         }
