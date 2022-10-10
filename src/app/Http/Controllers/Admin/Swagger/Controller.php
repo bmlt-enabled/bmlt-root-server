@@ -7,7 +7,7 @@ namespace App\Http\Controllers\Admin\Swagger;
  *    @OA\License(name="MIT", url="https://github.com/bmlt-enabled/bmlt-root-server/blob/main/LICENSE")
  * )
  * @OA\SecurityScheme(securityScheme="bmltToken", type="oauth2",
- *     @OA\Flow(flow="password", tokenUrl="auth/token", refreshUrl="auth/refresh", scopes={})
+ *     @OA\Flow(flow="password", tokenUrl="api/v1/auth/token", refreshUrl="api/v1/auth/refresh", scopes={})
  * )
  */
 class Controller

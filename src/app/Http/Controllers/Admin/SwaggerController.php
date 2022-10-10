@@ -11,7 +11,7 @@ class SwaggerController extends Controller
     public function openapi(Request $request)
     {
         $server = new \stdClass;
-        $server->url = rtrim($request->getBaseUrl(), '/') . '/';
+        $server->url = rtrim(url('/'), '/') . '/';
         $server->description = 'this server';
 
         $json = json_decode(\File::get(storage_path('api-docs/api-docs.json')));
