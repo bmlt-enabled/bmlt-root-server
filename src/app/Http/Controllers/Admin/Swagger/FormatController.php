@@ -33,7 +33,7 @@ namespace App\Http\Controllers\Admin\Swagger;
  *     @OA\Items(ref="#/components/schemas/Format")
  * ),
  * @OA\Schema(schema="NoFormatExists",description="Returns when no format exists.",
- *     @OA\Property(property="message", type="string", example="No query results for model [App\\Models\\Format]"),
+ *     @OA\Property(property="message", type="string", example="Not Found"),
  * ),
  */
 class FormatController extends Controller

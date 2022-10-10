@@ -34,7 +34,7 @@ namespace App\Http\Controllers\Admin\Swagger;
  *     @OA\Items(ref="#/components/schemas/ServiceBody")
  * ),
  * @OA\Schema(schema="NoServiceBodyExists", description="Returns when no user exists.",
- *     @OA\Property(property="message", type="string", example="No query results for model [App\\Models\\ServiceBody]"),
+ *     @OA\Property(property="message", type="string", example="Not Found"),
  * ),
  */
 class ServiceBodyController extends Controller

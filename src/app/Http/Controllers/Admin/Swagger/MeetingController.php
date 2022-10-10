@@ -61,7 +61,7 @@ namespace App\Http\Controllers\Admin\Swagger;
  *     @OA\Items(ref="#/components/schemas/Meeting")
  * ),
  * @OA\Schema(schema="NoMeetingExists", description="Returns when no Meeting exists.",
- *     @OA\Property(property="message", type="string", example="No query results for model [App\\Models\\Meeting]"),
+ *     @OA\Property(property="message", type="string", example="Not Found"),
  * ),
  */
 

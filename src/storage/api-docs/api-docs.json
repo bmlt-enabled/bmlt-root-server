@@ -1939,7 +1939,7 @@
                 "properties": {
                     "message": {
                         "type": "string",
-                        "example": "No query results for model [App\\\\Models\\\\Format]"
+                        "example": "Not Found"
                     }
                 },
                 "type": "object"
@@ -2181,7 +2181,7 @@
                 "properties": {
                     "message": {
                         "type": "string",
-                        "example": "No query results for model [App\\\\Models\\\\Meeting]"
+                        "example": "Not Found"
                     }
                 },
                 "type": "object"
@@ -2298,7 +2298,7 @@
                 "properties": {
                     "message": {
                         "type": "string",
-                        "example": "No query results for model [App\\\\Models\\\\ServiceBody]"
+                        "example": "Not Found"
                     }
                 },
                 "type": "object"
@@ -2454,7 +2454,7 @@
                 "properties": {
                     "message": {
                         "type": "string",
-                        "example": "No query results for model [App\\\\Models\\\\User]"
+                        "example": "Not Found"
                     }
                 },
                 "type": "object"

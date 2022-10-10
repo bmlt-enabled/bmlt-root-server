@@ -31,7 +31,7 @@ namespace App\Http\Controllers\Admin\Swagger;
  *     @OA\Items(ref="#/components/schemas/User")
  * ),
  * @OA\Schema(schema="NoUserExists", description="Returns when no user exists.",
- *     @OA\Property(property="message", type="string", example="No query results for model [App\\Models\\User]")
+ *     @OA\Property(property="message", type="string", example="Not Found")
  * )
  */
 class UserController extends Controller
