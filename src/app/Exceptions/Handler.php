@@ -2,8 +2,10 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -52,5 +54,14 @@ class Handler extends ExceptionHandler
     protected function invalid($request, ValidationException $exception)
     {
         return $this->invalidJson($request, $exception);
+    }
+
+    protected function prepareException(Throwable $e)
+    {
+        if ($e instanceof ModelNotFoundException) {
+            return new NotFoundHttpException('Not Found', $e);
+        }
+
+        return parent::prepareException($e);
     }
 }
