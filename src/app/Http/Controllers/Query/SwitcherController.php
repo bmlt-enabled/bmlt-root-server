@@ -418,7 +418,8 @@ class SwitcherController extends Controller
             'dbVersion' => $this->migrationRepository->getLastMigration()['migration'],
             'dbPrefix' => legacy_config('db_prefix'),
             'meeting_time_zones_enabled' => legacy_config('meeting_time_zones_enabled') ? '1' : '0',
-            'phpVersion' => phpversion()
+            'phpVersion' => phpversion(),
+            'auto_geocoding_enabled' => legacy_config('auto_geocoding_enabled')
         ]]);
     }
 
