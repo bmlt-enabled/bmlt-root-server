@@ -54,7 +54,6 @@ window.onload = function() {
         {url: 'https://gyro.sezf.org/main_server/', description: 'Gyro'},
         {url: 'https://{domain}', description: 'Custom', variables: { domain: { default: '' } } },
       ]);
-      window.ui.setAuthUrlPrefix('api/v1/');
     }
   });
 
