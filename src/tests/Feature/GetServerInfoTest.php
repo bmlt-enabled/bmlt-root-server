@@ -297,4 +297,25 @@ class GetServerInfoTest extends TestCase
             LegacyConfig::reset();
         }
     }
+
+    public function testAutoGeocodingEnabled()
+    {
+        LegacyConfig::set('auto_geocoding_enabled', true);
+        try {
+            $this->get('/client_interface/json/?switcher=GetServerInfo')
+                ->assertStatus(200)
+                ->assertJsonFragment(['auto_geocoding_enabled' => true]);
+        } finally {
+            LegacyConfig::reset();
+        }
+
+        LegacyConfig::set('auto_geocoding_enabled', false);
+        try {
+            $this->get('/client_interface/json/?switcher=GetServerInfo')
+                ->assertStatus(200)
+                ->assertJsonFragment(['auto_geocoding_enabled' => false]);
+        } finally {
+            LegacyConfig::reset();
+        }
+    }
 }
