@@ -23,7 +23,7 @@ namespace App\Http\Controllers\Admin\Swagger;
  * @OA\Schema(schema="CreateFormat", required={"translations"},
  *     allOf={ @OA\Schema(ref="#/components/schemas/FormatBase") }
  * ),
- * @OA\Schema(schema="UpdateFormat", required={"worldId", "type", "translations"},
+ * @OA\Schema(schema="UpdateFormat", required={"translations"},
  *     allOf={ @OA\Schema(ref="#/components/schemas/FormatBase") }
  * ),
  * @OA\Schema(schema="PartialUpdateFormat",
