@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Query;
 
 use App\Http\Resources\JsonResource;
+use App\Models\User;
 use App\Repositories\MeetingRepository;
 use App\Repositories\ServiceBodyRepository;
 use Illuminate\Support\Collection;
@@ -101,9 +102,9 @@ class MeetingResource extends JsonResource
 
         // Permissions
         $user = $request->user();
-        if (!is_null($user) && $user->user_level_tinyint != 4) {
+        if (!is_null($user) && $user->user_level_tinyint != User::USER_LEVEL_DISABLED) {
             self::$userIsAuthenticated = true;
-            if ($user->user_level_tinyint == 1) {
+            if ($user->user_level_tinyint == User::USER_LEVEL_ADMIN) {
                 self::$userIsAdmin = true;
             } else {
                 self::$serviceBodyPermissions = $serviceBodyRepository
