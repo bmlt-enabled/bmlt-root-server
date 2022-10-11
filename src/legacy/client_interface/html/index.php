@@ -45,19 +45,19 @@ if ($user_obj instanceof c_comdef_user && $user_obj->GetUserLevel() != _USER_LEV
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php
-    $url = dirname(dirname(dirname($_SERVER['PHP_SELF']))) !== "/" ? dirname(dirname(dirname($_SERVER['PHP_SELF']))) : '';
+    $url = rtrim(url('/'), '/');
     $lang_enum = request()->cookie('bmlt_admin_lang_pref', 'en');
     ?>
         <link rel="icon" href="<?php echo sprintf("%s/local_server/server_admin/style/images/shortcut.png", $url) ?>" />
         <link rel="stylesheet" href="<?php echo sprintf("%s/local_server/server_admin/style/styles.css", $url) ?>" />
-        <link rel="stylesheet" type="text/css" href="croutonjs/crouton.min.css" />
-        <script type="text/javascript" src="croutonjs/crouton.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="<?php echo $url; ?>/client_interface/html/croutonjs/crouton.min.css" />
+        <script type="text/javascript" src="<?php echo $url; ?>/client_interface/html/croutonjs/crouton.min.js"></script>
         <script type="text/javascript">
             // Full list of parameters: https://github.com/bmlt-enabled/crouton/blob/master/croutonjs/src/js/crouton-core.js#L13
             var crouton = new Crouton({
-                root_server: "<?php echo str_replace('client_interface/html/', '', GetURLToMainServerDirectory()) ?>",
+                root_server: "<?php echo $url; ?>",
                 service_body: <?php echo json_encode($service_body_ids) ?>,
-                template_path: "croutonjs/templates",
+                template_path: "<?php echo $url; ?>/client_interface/html/croutonjs/templates",
                 theme: "<?php echo $local_strings["meeting_browser_theme"] ?>",
                 has_languages: "1",
                 has_areas: "1",
