@@ -5,26 +5,20 @@ use App\Http\Controllers\Legacy\LegacyController;
 use App\Http\Controllers\Legacy\LegacyAuthController;
 use App\Http\Controllers\Query\ServerInfoXmlController;
 use App\Http\Controllers\Query\SwitcherController;
-use App\Http\Middleware\AcceptJson;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+// legacy crouton
+Route::get('/client_interface/html', [LegacyController::class, 'all']);
 
-Route::any('/client_interface/html', [LegacyController::class, 'all']);
+// reimplemented serverInfo.xml
 Route::get('/client_interface/serverInfo.xml', [ServerInfoXmlController::class, 'get']);
+
+// reimplemented query apis
 Route::get('/client_interface/{dataFormat}', [SwitcherController::class, 'get'])->middleware('json');
+
+// reimplemented auth
 Route::any('/local_server/server_admin/{dataFormat}.php', [LegacyAuthController::class, 'handle'])->where('dataFormat', 'json|xml');
 Route::any('/', [LegacyAuthController::class, 'handle']);
 Route::any('/index.php', [LegacyAuthController::class, 'handle']);
 
 // Catch-all to send everything else to legacy code
-Route::any('{all}', [LegacyController::class, 'all'])
-    ->where('all', '.*');
+Route::any('{all}', [LegacyController::class, 'all'])->where('all', '.*');
