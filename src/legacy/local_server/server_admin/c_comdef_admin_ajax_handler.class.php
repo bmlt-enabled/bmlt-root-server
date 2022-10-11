@@ -1007,47 +1007,26 @@ class c_comdef_admin_ajax_handler
     public function GetMeetingHistory($in_meeting_id)
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-        $ret = '[';
+
+        $ret = [];
         $changes = $this->my_server->GetChangesFromIDAndType('c_comdef_meeting', $in_meeting_id);
 
         if ($changes instanceof c_comdef_changes) {
             $obj_array = $changes->GetChangesObjects();
 
             if (is_array($obj_array) && count($obj_array)) {
-                $first = true;
-
+                $index = 0;
                 foreach ($obj_array as $change) {
-                    if (!$first) {
-                        $ret .= ',';
-                    } else {
-                        $first = false;
-                    }
-
-                    $ret .= '{';
-                        $change_id = $change->GetID();
-                        $user_id = $change->GetUserID();
-                    if ($user_id) {
-                        $user_object = $this->my_server->GetUserByIDObj($change->GetUserID());
-                        if ($user_object) {
-                            $user_name = json_prepare($user_object->GetLocalName());
-                        }
-                    }
-                        $change_description = json_prepare($change->DetailedChangeDescription());
-                        $change_date = json_prepare(date('g:i A, F j Y', $change->GetChangeDate()));
-
-                        $ret .= '"id":'.$change_id.',';
-                        $ret .= '"user":"'.$user_name.'",';
-                        $ret .= '"description":["'.implode('","', str_replace('&amp;', '&', $change_description['details'])).'"],';
-                        $ret .= '"date":"'.$change_date.'"';
-
-                    $ret .= '}';
+                    $ret[$index]['id'] = intval($change->GetID());
+                    $ret[$index]['user'] = $this->my_server->GetUserByIDObj($change->GetUserID())->GetLocalName();
+                    $ret[$index]['description'] = $change->DetailedChangeDescription()['details'];
+                    $ret[$index]['date'] = date('g:i A, F j Y', $change->GetChangeDate());
+                    $index++;
                 }
             }
         }
 
-        $ret .= ']';
-
-        return $ret;
+        return json_encode($ret);
     }
 
     /*******************************************************************/
