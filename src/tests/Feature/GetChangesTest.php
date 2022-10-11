@@ -170,7 +170,7 @@ class GetChangesTest extends TestCase
     public function createUser()
     {
         return User::create([
-            'user_level_tinyint' => 2,
+            'user_level_tinyint' => User::USER_LEVEL_SERVICE_BODY_ADMIN,
             'name_string' => 'test',
             'description_string' => '',
             'email_address_string' => '',

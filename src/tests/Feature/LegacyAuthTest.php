@@ -16,7 +16,7 @@ class LegacyAuthTest extends TestCase
     public function createServerAdmin()
     {
         return User::create([
-            'user_level_tinyint' => 1,
+            'user_level_tinyint' => User::USER_LEVEL_ADMIN,
             'name_string' => 'test',
             'description_string' => '',
             'email_address_string' => '',
@@ -28,7 +28,7 @@ class LegacyAuthTest extends TestCase
     public function createServiceBodyAdmin()
     {
         return User::create([
-            'user_level_tinyint' => 2,
+            'user_level_tinyint' => User::USER_LEVEL_SERVICE_BODY_ADMIN,
             'name_string' => 'test',
             'description_string' => '',
             'email_address_string' => '',

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Legacy;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
@@ -27,7 +28,7 @@ class LegacyAuthController extends Controller
                 if ($apiType != $this->REQUEST_TYPE_WEB) {
                     $user = Auth::user();
                     if ($user) {
-                        if ($user->user_level_tinyint == 1 || $user->user_level_tinyint == 4) {
+                        if ($user->user_level_tinyint == User::USER_LEVEL_ADMIN || $user->user_level_tinyint == User::USER_LEVEL_DISABLED) {
                             Auth::logout();
                             $request->session()->invalidate();
                             $success = false;
