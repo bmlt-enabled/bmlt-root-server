@@ -182,6 +182,35 @@ class MeetingUpdateTest extends TestCase
         }
     }
 
+    public function testUpdateMeetingOptionalFieldsOmitted()
+    {
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
+        $format = Format::query()->first();
+        $meeting = $this->createMeeting(
+            ['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)],
+            ['location_street' => '813 Darby St', 'location_municipality' => 'Raleigh', 'location_province' => 'NC', 'virtual_meeting_link' => 'https://zoom.us']
+        );
+        $payload = $this->toPayload($meeting);
+
+        $requiredFields = ['meeting_name', 'location_street', 'location_municipality', 'location_province', 'virtual_meeting_link'];
+        foreach (MeetingData::STOCK_FIELDS as $fieldName) {
+            if (in_array($fieldName, $requiredFields)) {
+                continue;
+            }
+
+            unset($payload[$fieldName]);
+        }
+
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/meetings/$meeting->id_bigint", $payload)
+            ->assertStatus(204);
+
+        $meeting->refresh();
+        $this->assertEquals(count($requiredFields), $meeting->data->count());
+    }
+
     public function testUpdateMeetingValidateServiceBodyId()
     {
         $user = $this->createAdminUser();
