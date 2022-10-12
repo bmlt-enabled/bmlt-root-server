@@ -2,7 +2,8 @@ COMMIT := $(shell git rev-parse --short=8 HEAD)
 BASE_IMAGE := bmltenabled/bmlt-root-server-base
 BASE_IMAGE_TAG := latest
 BASE_IMAGE_BUILD_TAG := $(COMMIT)-$(shell date +%s)
-CROUTON_JS := src/legacy/client_interface/html/croutonjs/crouton.js
+CROUTON_JS := src/public/client_interface/html/croutonjs/crouton.js
+LEGACY_STATIC_FILES := src/public/local_server/styles.css
 VENDOR_AUTOLOAD := src/vendor/autoload.php
 ZIP_FILE := build/bmlt-root-server.zip
 ifeq ($(CI)x, x)
@@ -40,14 +41,30 @@ $(VENDOR_AUTOLOAD):
 
 $(CROUTON_JS):
 	curl -sLO https://github.com/bmlt-enabled/crouton/releases/latest/download/croutonjs.zip
-	mkdir -p src/legacy/client_interface/html/croutonjs
-	unzip croutonjs.zip -d src/legacy/client_interface/html/croutonjs
+	mkdir -p src/public/client_interface/html/croutonjs
+	unzip croutonjs.zip -d src/public/client_interface/html/croutonjs
 	rm -f croutonjs.zip
-	rm -f src/legacy/client_interface/html/croutonjs/*.html
-	rm -f src/legacy/client_interface/html/croutonjs/*.json
-	rm -rf src/legacy/client_interface/html/croutonjs/examples
+	rm -f src/public/client_interface/html/croutonjs/*.html
+	rm -f src/public/client_interface/html/croutonjs/*.json
+	rm -rf src/public/client_interface/html/croutonjs/examples
 
-$(ZIP_FILE): $(VENDOR_AUTOLOAD) $(CROUTON_JS)
+$(LEGACY_STATIC_FILES):
+	rsync -a -m \
+	    --include='**/*.js' \
+	    --include='**/*.css' \
+	    --include='**/*.png' \
+	    --include='**/*.svg' \
+	    --include='**/*.ttf' \
+	    --include='**/*.woff' \
+	    --include='**/*.woff2' \
+	    --include='**/*.eot'  \
+	    --include='**/*.json' \
+	    --include='**/*.gif' \
+	    --include='*/' \
+	    --exclude='*' \
+	    src/legacy/ src/public
+
+$(ZIP_FILE): $(VENDOR_AUTOLOAD) $(CROUTON_JS) $(LEGACY_STATIC_FILES)
 	mkdir -p build
 	cp -r src build/main_server
 	cd build && zip -r $(shell basename $(ZIP_FILE)) main_server
@@ -118,6 +135,8 @@ bash:  ## Runs bash shell in apache container
 
 .PHONY: clean
 clean:  ## Clean build
-	rm -rf src/legacy/client_interface/html/croutonjs
+	rm -rf src/public/client_interface
+	rm -rf src/public/local_server
+	rm -rf src/public/semantic
 	rm -rf src/vendor
 	rm -rf build

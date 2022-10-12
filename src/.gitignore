@@ -2,6 +2,9 @@
 /public/build
 /public/hot
 /public/storage
+/public/client_interface
+/public/local_server
+/public/semantic
 /storage/*.key
 /vendor
 /tests/reports
