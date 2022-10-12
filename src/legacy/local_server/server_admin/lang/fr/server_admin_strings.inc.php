@@ -105,7 +105,7 @@ $comdef_server_admin_strings = array('server_admin_disclosure' => 'Administratio
     'meeting_editor_screen_meeting_duration_label' => 'Durée:',
     'meeting_editor_screen_meeting_oe_label' => 'À composition non limitée:',
     'meeting_editor_screen_meeting_cc_label' => 'Code Comité mondial:',
-    'meeting_editor_screen_meeting_cc_advice' => 'Normalement, ne touchez pas à ce champ (voir la documentation).',  // TODO: translate // Done
+    'meeting_editor_screen_meeting_cc_advice' => 'Normalement, ne touchez pas à ce champ (voir la documentation).',
     'meeting_editor_screen_meeting_contact_label' => 'Contact E-mail de la réunion:',
     'meeting_editor_screen_meeting_contact_prompt' => 'Entrez un E-mail pour un contact spécifique uniquement de cette réunion',
     'meeting_editor_screen_meeting_sb_label' => 'composante de structure de service:',
@@ -326,7 +326,7 @@ $comdef_server_admin_strings = array('server_admin_disclosure' => 'Administratio
     'need_refresh_message_alert_text' => 'Parce que vous avez fait des changements dd l\'administration de la structure de composante de service, gestion des utilisateurs ou d\'administration de format, les informations affichées dans cette section peuvent ne plus être exactes même si la page doit être rafraîchie. La meilleure façon de le faire est de vous déconnecter, puis vous connecter à nouveau.',
     'format_editor_delete_button_confirm' => 'Etes-vous sûr que vous voulez supprimer ce format?',
     'format_editor_delete_button_confirm_perm' => 'Ce format sera définitivement supprimé!',
-    'format_editor_reserved_key' => 'Cette clé est réservée à un format de type "lieu" - veuillez utiliser quelque chose de différent.',       // TODO: translate // Done
+    'format_editor_reserved_key' => 'Cette clé est réservée à un format de type "lieu" - veuillez utiliser quelque chose de différent.',
     'min_password_length_string' => 'Le mot de passe est trop court! Il doit être au moins contenir au moins %d caractères!',
     'AJAX_Auth_Failure' => 'Échec de l\'autorisation pour cette opération. Il peut y avoir un problème avec la configuration du serveur.',
     'Maps_API_Key_Warning' => 'Il y a un problème avec API Key Google maps.',
@@ -393,22 +393,23 @@ $comdef_server_admin_strings = array('server_admin_disclosure' => 'Administratio
         'W' => 'Femmes',
         'Y' => 'Jeunes',
         'LANG' => 'Langue étrangère',
-        'GP' => 'Principes de base', // TODO translate // Done
-        'NC' => 'Pas d\'enfants', // TODO translate // Done
-        'CH' => 'Fermé pour les vacances', // TODO translate // Done
-        'VM' => 'virtuelle', // TODO translate // Done
-        'HYBR' => 'virtuelle et physique', // TODO translate // Done
-        'TC' => 'Temporairement fermée' // TODO translate // Done
+        'GP' => 'Principes de base',
+        'NC' => 'Pas d\'enfants',
+        'CH' => 'Fermé pour les vacances',
+        'VM' => 'virtuelle',
+        'HYBR' => 'virtuelle et physique',
+        'TC' => 'Temporairement fermée',
+        'SPAD' => 'Spiritual Principle a Day', // TODO translate
     ),
-    'format_type_prompt' => 'Format Type:',    // TODO: Translate // Done
+    'format_type_prompt' => 'Format Type:',
     'format_type_codes' => array(
-        '' => 'Aucun',    // TODO: Translate // Done
-        'FC1' => 'Format de la réunion (Speaker, Étude de la littérature, etc.)',    // TODO: Translate // Done
-        'FC2' => 'Code d\'emplacement (Accessible en fauteuil roulant, Parking limité, etc.)',    // TODO: Translate // Done
-        'FC3' => 'Common Needs and Restrictions (Réunion hommes, LGBTQI+, Pas d\'enfants, etc.)',    // TODO: Translate // Done
-        'O' => 'Présence de non-dépendants (Ouvert, Fermé)',    // TODO: Translate // Done
-        'LANG' => 'Langue', // TRANSLATE // Done
-        'ALERT' => 'Le format doit être particulièrement mis en évidence (Nécéssité d\'être clean, etc.)',// TODO: Translate // Done
+        '' => 'Aucun',
+        'FC1' => 'Format de la réunion (Speaker, Étude de la littérature, etc.)',
+        'FC2' => 'Code d\'emplacement (Accessible en fauteuil roulant, Parking limité, etc.)',
+        'FC3' => 'Common Needs and Restrictions (Réunion hommes, LGBTQI+, Pas d\'enfants, etc.)',
+        'O' => 'Présence de non-dépendants (Ouvert, Fermé)',
+        'LANG' => 'Langue',
+        'ALERT' => 'Le format doit être particulièrement mis en évidence (Nécéssité d\'être clean, etc.)',
     ),
     'cookie_monster' => 'Ce site contient un cookie pour emmagasiner l\'information de votre langue de préférée.',
     'main_prompts' => array(

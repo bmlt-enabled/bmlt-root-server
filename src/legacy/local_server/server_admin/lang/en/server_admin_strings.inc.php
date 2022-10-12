@@ -401,7 +401,8 @@ $comdef_server_admin_strings = array(
         'CH' => 'Closed Holidays',
         'VM' => 'Virtual',
         'HYBR' => 'Virtual and In-Person',
-        'TC' => 'Temporarily Closed Facility'
+        'TC' => 'Temporarily Closed Facility',
+        'SPAD' => 'Spiritual Principle a Day',
     ),
     'format_type_prompt' => 'Format Type:',
     'format_type_codes' => array(
