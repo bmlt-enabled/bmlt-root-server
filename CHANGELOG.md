@@ -1,14 +1,7 @@
 ## 3.0.0 (TBD)
 * PHP 8.0 or 8.1 are now required. PHP 7.x is no longer supported.
-* As part of a modernization effort, we are rewriting the APIs. As we rewrite them, we are dropping all output formats except for json. In this release, the following APIs have been rewritten:
-    * GetSearchResults
-    * GetServiceBodies
-    * GetFormats
-    * GetFieldKeys
-    * GetFieldValues
-    * GetChanges
-    * GetServerInfo
-    * GetCoverageArea
+* As part of a modernization effort, all of the APIs have been reimplemented. All API output formats except for `json` and `jsonp` have been removed. The `GetNAWSDump` API still supports the `csv` output format.
+* Added the `SPAD` format. If you've manually added a `SPAD` format to your server, the appropriate NAWS code will be automatically assigned when you upgrade.
 * Allow NAWS import code to update the world ID of deleted meetings. (This avoids a synchronization problem that would arise if a new meeting is deleted before its NAWS code can be uploaded.)
 
 ## 2.16.6 (August 27, 2022)

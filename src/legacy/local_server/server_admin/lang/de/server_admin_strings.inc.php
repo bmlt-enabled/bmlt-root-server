@@ -398,7 +398,8 @@ $comdef_server_admin_strings = array(
         'CH' => 'Closed Holidays', // TODO translate
         'VM' => 'Virtual', // TODO translate
         'HYBR' => 'Virtual and In-person', // TODO translate
-        'TC' => 'Temporarily Closed Facility' // TODO translate
+        'TC' => 'Temporarily Closed Facility', // TODO translate
+        'SPAD' => 'Ein spirituelles Prinzip pro Tag',
     ),
     'format_type_prompt' => 'Format Type:',
     'format_type_codes' => array(

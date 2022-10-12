@@ -113,6 +113,23 @@ return new class extends Migration
                 Schema::table('comdef_formats', function (Blueprint $table) {
                     $table->bigIncrements('id')->first();
                 });
+
+                $spadFormat = DB::table('comdef_formats')
+                    ->where('lang_enum', 'en')
+                    ->where('key_string', 'SPAD')
+                    ->first();
+
+                if (is_null($spadFormat)) {
+                    $nextId = DB::table('comdef_formats')->max('shared_id_bigint') + 1;
+                    DB::table('comdef_formats')->insert([
+                        ['shared_id_bigint' => $nextId, 'key_string' => 'SPAD', 'worldid_mixed' => 'SPAD', 'lang_enum' => 'de', 'name_string' => 'Ein spirituelles Prinzip pro Tag', 'description_string' => 'Lesen aus dem Buch Ein spirituelles Prinzip pro Tag', 'format_type_enum' => 'FC1'],
+                        ['shared_id_bigint' => $nextId, 'key_string' => 'SPAD', 'worldid_mixed' => 'SPAD', 'lang_enum' => 'en', 'name_string' => 'A Spiritual Principle a Day', 'description_string' => 'This meeting is focused on discussion of the book A Spiritual Principle a Day.', 'format_type_enum' => 'FC1'],
+                    ]);
+                } else {
+                    DB::table('comdef_formats')
+                        ->where('shared_id_bigint', $spadFormat->shared_id_bigint)
+                        ->update(['worldid_mixed' => 'SPAD']);
+                }
             }
         } else {
             Schema::create('comdef_formats', function (Blueprint $table) {
@@ -185,6 +202,7 @@ return new class extends Migration
                 ['shared_id_bigint' => 54, 'key_string' => 'VM', 'worldid_mixed' => 'VM', 'lang_enum' => 'de', 'name_string' => 'Virtual Meeting', 'description_string' => 'Meets Virtually', 'format_type_enum' => 'FC2'],
                 ['shared_id_bigint' => 55, 'key_string' => 'TC', 'worldid_mixed' => 'TC', 'lang_enum' => 'de', 'name_string' => 'Temporarily Closed Facility', 'description_string' => 'Facility is Temporarily Closed', 'format_type_enum' => 'FC2'],
                 ['shared_id_bigint' => 56, 'key_string' => 'HY', 'worldid_mixed' => 'HYBR', 'lang_enum' => 'de', 'name_string' => 'Hybrid Meeting', 'description_string' => 'Meets Virtually and In-person', 'format_type_enum' => 'FC2'],
+                ['shared_id_bigint' => 57, 'key_string' => 'SPAD', 'worldid_mixed' => 'SPAD', 'lang_enum' => 'de', 'name_string' => 'Ein spirituelles Prinzip pro Tag', 'description_string' => 'Lesen aus dem Buch Ein spirituelles Prinzip pro Tag', 'format_type_enum' => 'FC1'],
                 ['shared_id_bigint' => 1, 'key_string' => 'B', 'worldid_mixed' => 'BEG', 'lang_enum' => 'dk', 'name_string' => 'Beginners', 'description_string' => 'This meeting is focused on the needs of new members of NA.', 'format_type_enum' => 'FC3'],
                 ['shared_id_bigint' => 2, 'key_string' => 'BL', 'worldid_mixed' => 'LANG', 'lang_enum' => 'dk', 'name_string' => 'Bi-Lingual', 'description_string' => 'This Meeting can be attended by speakers of English and another language.', 'format_type_enum' => 'LANG'],
                 ['shared_id_bigint' => 3, 'key_string' => 'BT', 'worldid_mixed' => 'BT', 'lang_enum' => 'dk', 'name_string' => 'Basic Text', 'description_string' => 'This meeting is focused on discussion of the Basic Text of Narcotics Anonymous.', 'format_type_enum' => 'FC1'],
@@ -291,6 +309,7 @@ return new class extends Migration
                 ['shared_id_bigint' => 54, 'key_string' => 'VM', 'worldid_mixed' => 'VM', 'lang_enum' => 'en', 'name_string' => 'Virtual Meeting', 'description_string' => 'Meets Virtually', 'format_type_enum' => 'FC2'],
                 ['shared_id_bigint' => 55, 'key_string' => 'TC', 'worldid_mixed' => 'TC', 'lang_enum' => 'en', 'name_string' => 'Temporarily Closed Facility', 'description_string' => 'Facility is Temporarily Closed', 'format_type_enum' => 'FC2'],
                 ['shared_id_bigint' => 56, 'key_string' => 'HY', 'worldid_mixed' => 'HYBR', 'lang_enum' => 'en', 'name_string' => 'Hybrid Meeting', 'description_string' => 'Meets Virtually and In-person', 'format_type_enum' => 'FC2'],
+                ['shared_id_bigint' => 57, 'key_string' => 'SPAD', 'worldid_mixed' => 'SPAD', 'lang_enum' => 'en', 'name_string' => 'A Spiritual Principle a Day', 'description_string' => 'This meeting is focused on discussion of the book A Spiritual Principle a Day.', 'format_type_enum' => 'FC1'],
                 ['shared_id_bigint' => 1, 'key_string' => 'B', 'worldid_mixed' => 'BEG', 'lang_enum' => 'es', 'name_string' => 'Para el recién llegado', 'description_string' => 'Esta reunión se centra en las necesidades de los nuevos miembros de NA.', 'format_type_enum' => 'FC3'],
                 ['shared_id_bigint' => 2, 'key_string' => 'BL', 'worldid_mixed' => 'LANG', 'lang_enum' => 'es', 'name_string' => 'Bilingüe', 'description_string' => 'Esta reunión se pueden asistir personas de que hablen inglés y otro idioma.', 'format_type_enum' => 'LANG'],
                 ['shared_id_bigint' => 3, 'key_string' => 'BT', 'worldid_mixed' => 'BT', 'lang_enum' => 'es', 'name_string' => 'Texto Básico', 'description_string' => 'Esta reunión se centra en la discusión del texto básico de Narcóticos Anónimos.', 'format_type_enum' => 'FC1'],
