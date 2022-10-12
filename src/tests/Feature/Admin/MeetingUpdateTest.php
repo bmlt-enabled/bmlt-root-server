@@ -188,13 +188,23 @@ class MeetingUpdateTest extends TestCase
         $token = $user->createToken('test')->plainTextToken;
         $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
+        $requiredFields = ['meeting_name', 'location_street', 'location_municipality', 'location_province', 'virtual_meeting_link'];
         $meeting = $this->createMeeting(
             ['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)],
-            ['location_street' => '813 Darby St', 'location_municipality' => 'Raleigh', 'location_province' => 'NC', 'virtual_meeting_link' => 'https://zoom.us']
+            collect([
+                'meeting_name' => 'nice name',
+                'location_street' => '813 Darby St',
+                'location_municipality' => 'Raleigh',
+                'location_province' => 'NC',
+                'virtual_meeting_link' => 'https://zoom.us',
+            ])->merge(
+                collect(MeetingData::STOCK_FIELDS)
+                    ->reject(fn ($f) => in_array($f, $requiredFields))
+                    ->mapWithKeys(fn ($fieldName, $_) => [$fieldName => 'test'])
+            )->toArray()
         );
         $payload = $this->toPayload($meeting);
 
-        $requiredFields = ['meeting_name', 'location_street', 'location_municipality', 'location_province', 'virtual_meeting_link'];
         foreach (MeetingData::STOCK_FIELDS as $fieldName) {
             if (in_array($fieldName, $requiredFields)) {
                 continue;
