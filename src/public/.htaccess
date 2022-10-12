@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # If it matches a file, show the file... otherwise kick it back to index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ ../index.php [L]
+</IfModule>

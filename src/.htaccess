@@ -9,8 +9,9 @@
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    # Send Requests To Front Controller...
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_FILENAME} !-f
+    # Send anything not index.php to public... it'll send it back if there's no match
+    RewriteCond %{REQUEST_FILENAME} !/index.php$
+    RewriteRule (.+) public/$1 [L]
+
     RewriteRule ^ index.php [L]
 </IfModule>
