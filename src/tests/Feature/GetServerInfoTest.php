@@ -318,4 +318,11 @@ class GetServerInfoTest extends TestCase
             LegacyConfig::reset();
         }
     }
+
+    public function testCommit()
+    {
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['commit' => config('app.commit')]);
+    }
 }

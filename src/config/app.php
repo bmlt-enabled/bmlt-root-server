@@ -32,6 +32,17 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Application Commit
+    |--------------------------------------------------------------------------
+    |
+    | This value is the git commit hash of the current build for application.
+    | This value is used exposed to the GetServerInfo endpoint.
+    */
+
+    'commit' => '',
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Environment
     |--------------------------------------------------------------------------
     |
