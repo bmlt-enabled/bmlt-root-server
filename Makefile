@@ -66,7 +66,6 @@ $(LEGACY_STATIC_FILES):
 
 $(ZIP_FILE): $(VENDOR_AUTOLOAD) $(CROUTON_JS) $(LEGACY_STATIC_FILES)
 	mkdir -p build
-	$(COMPOSER_PREFIX) sed -i "s/'commit'.*=>.*/'commit' => '$(shell git rev-parse HEAD)',/" src/config/app.php
 	cp -r src build/main_server
 	cd build && zip -r $(shell basename $(ZIP_FILE)) main_server
 	rm -rf build/main_server
