@@ -28,7 +28,7 @@ return [
     | or any other location as required by the application or its packages.
     */
 
-    'version' => '3.0.0',
+    'version' => env('APP_VERSION', '3.0.0'),
 
     /*
     |--------------------------------------------------------------------------
@@ -39,7 +39,7 @@ return [
     | This value is used exposed to the GetServerInfo endpoint.
     */
 
-    'commit' => '',
+    'commit' => env('COMMIT_SHA', 'dev'),
 
     /*
     |--------------------------------------------------------------------------
