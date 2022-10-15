@@ -79,9 +79,8 @@ jobs:
           make crouton
 
       - name: Write .env with APP_VERSION and COMMIT_SHA
-        if: github.ref_type == 'tag'
         shell: bash
-        run: >-
+        run: |
           echo COMMIT_SHA=${GITHUB_SHA} > src/.env
           if [[ $GITHUB_REF_NAME =~ ^([0-9]+\.){2}(\*|[0-9]+)(-.*)?$ ]]; then
             echo APP_VERSION=${GITHUB_REF_NAME} >> src/.env
