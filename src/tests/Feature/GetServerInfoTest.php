@@ -32,6 +32,14 @@ class GetServerInfoTest extends TestCase
             ->assertJsonFragment(['version' => config('app.version')]);
     }
 
+    public function testVersionBeta()
+    {
+        Config::set('app.version', '3.0.0-beta');
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['versionInt' => '3000000']);
+    }
+
     public function testNativeLang()
     {
         Config::set('app.locale', 'es');
