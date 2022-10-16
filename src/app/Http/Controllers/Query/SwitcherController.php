@@ -53,6 +53,9 @@ class SwitcherController extends Controller
         $validValues = ['GetSearchResults', 'GetFormats', 'GetServiceBodies', 'GetFieldKeys', 'GetFieldValues', 'GetChanges', 'GetServerInfo', 'GetCoverageArea', 'GetNAWSDump'];
         if (in_array($switcher, $validValues)) {
             if ($switcher == 'GetNAWSDump' && $dataFormat == 'csv') {
+                if (legacy_config('new_ui_enabled')) {
+                    return view('index');
+                }
                 return LegacyController::handle($request);
                 $response = $this->getNawsDump($request);
             } elseif ($dataFormat == 'json' || $dataFormat == 'jsonp') {

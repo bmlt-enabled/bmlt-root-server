@@ -38,6 +38,8 @@
     <exclude-pattern>src/bootstrap/cache/*</exclude-pattern>
     <exclude-pattern>src/vendor/*</exclude-pattern>
     <exclude-pattern>src/storage/*</exclude-pattern>
+    <exclude-pattern>src/node_modules/*</exclude-pattern>
+    <exclude-pattern>src/public/build/*</exclude-pattern>
 
     <!--
     You can add specific global ignores to different

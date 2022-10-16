@@ -109,6 +109,7 @@ class LegacyConfig
         $config['search_spec_map_center_latitude'] = isset($search_spec_map_center) && is_array($search_spec_map_center) && isset($search_spec_map_center['latitude']) ? $search_spec_map_center['latitude'] : 34.235918;
         $config['search_spec_map_center_zoom'] = isset($search_spec_map_center) && is_array($search_spec_map_center) && isset($search_spec_map_center['zoom']) ? $search_spec_map_center['zoom'] : 6;
         $config['auto_geocoding_enabled'] = isset($auto_geocoding_enabled) ? boolval($auto_geocoding_enabled) : true;
+        $config['new_ui_enabled'] = $new_ui_enabled ?? false;
 
         self::$config = $config;
         self::$configLoaded = true;

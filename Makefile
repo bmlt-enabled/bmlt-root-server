@@ -5,6 +5,8 @@ BASE_IMAGE_BUILD_TAG := $(COMMIT)-$(shell date +%s)
 CROUTON_JS := src/public/client_interface/html/croutonjs/crouton.js
 LEGACY_STATIC_FILES := src/public/local_server/styles.css
 VENDOR_AUTOLOAD := src/vendor/autoload.php
+NODE_MODULES := src/node_modules/.package-lock.json
+FRONTEND := src/public/build/manifest.json
 ZIP_FILE := build/bmlt-root-server.zip
 ifeq ($(CI)x, x)
 	DOCKERFILE := Dockerfile-debug
@@ -48,6 +50,12 @@ $(CROUTON_JS):
 	rm -f src/public/client_interface/html/croutonjs/*.json
 	rm -rf src/public/client_interface/html/croutonjs/examples
 
+$(NODE_MODULES):
+	cd src && npm install
+
+$(FRONTEND): $(NODE_MODULES)
+	cd src && npm run build
+
 $(LEGACY_STATIC_FILES):
 	rsync -a -m \
 	    --include='**/*.js' \
@@ -64,7 +72,7 @@ $(LEGACY_STATIC_FILES):
 	    --exclude='*' \
 	    src/legacy/ src/public
 
-$(ZIP_FILE): $(VENDOR_AUTOLOAD) $(CROUTON_JS) $(LEGACY_STATIC_FILES)
+$(ZIP_FILE): $(VENDOR_AUTOLOAD) $(FRONTEND) $(CROUTON_JS) $(LEGACY_STATIC_FILES)
 	mkdir -p build
 	cp -r src build/main_server
 	cd build && zip -r $(shell basename $(ZIP_FILE)) main_server
@@ -76,8 +84,14 @@ src/config/l5-swagger.php:
 .PHONY: composer
 composer: $(VENDOR_AUTOLOAD) ## Runs composer install
 
+.PHONY: npm
+npm: $(NODE_MODULES) ## Runs npm install
+
 .PHONY: crouton
 crouton: $(CROUTON_JS) ## Installs crouton
+
+.PHONY: frontend
+frontend: $(FRONTEND)  ## Builds the frontend
 
 .PHONY: zip
 zip: $(ZIP_FILE) ## Builds zip file
@@ -121,6 +135,10 @@ lint:  ## PHP Lint
 lint-fix:  ## PHP Lint Fix
 	$(LINT_PREFIX) src/vendor/squizlabs/php_codesniffer/bin/phpcbf
 
+.PHONY: lint-js
+lint-js:  ## JavaScript Lint
+	cd src && npm run check
+
 .PHONY: docker-publish-base
 docker-publish-base:  ## Builds Base Docker Image
 	docker buildx build --platform linux/amd64,linux/arm64/v8 -f docker/Dockerfile-base docker/ -t $(BASE_IMAGE):$(BASE_IMAGE_TAG) --push
@@ -135,8 +153,10 @@ bash:  ## Runs bash shell in apache container
 
 .PHONY: clean
 clean:  ## Clean build
+	rm -rf src/public/build
 	rm -rf src/public/client_interface
 	rm -rf src/public/local_server
 	rm -rf src/public/semantic
+	rm -rf src/node_modules
 	rm -rf src/vendor
 	rm -rf build

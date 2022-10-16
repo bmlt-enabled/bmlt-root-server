@@ -4,7 +4,7 @@ on:
     branches-ignore: ['main']
 
 jobs:
-  test:
+  test-php:
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
@@ -50,3 +50,24 @@ jobs:
           DB_PORT: ${{ job.services.mariadb.ports[3306] }}
         run: |
           make test
+
+  test-js:
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: setup node 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: make npm
+        run: |
+          make npm
+
+      - name: make lint-js
+        run: |
+          make lint-js
