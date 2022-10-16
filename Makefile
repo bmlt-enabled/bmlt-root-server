@@ -75,7 +75,7 @@ $(LEGACY_STATIC_FILES):
 $(ZIP_FILE): $(VENDOR_AUTOLOAD) $(FRONTEND) $(CROUTON_JS) $(LEGACY_STATIC_FILES)
 	mkdir -p build
 	cp -r src build/main_server
-	cd build && zip -r $(shell basename $(ZIP_FILE)) main_server
+	cd build && zip -r $(shell basename $(ZIP_FILE)) main_server -x main_server/node_modules/\*
 	rm -rf build/main_server
 
 src/config/l5-swagger.php:
