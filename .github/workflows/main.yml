@@ -76,7 +76,7 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     concurrency: build
-    needs: [test]
+    needs: [test-php, test-js]
     permissions:
       id-token: write
       contents: write
