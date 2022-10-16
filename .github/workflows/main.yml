@@ -78,12 +78,12 @@ jobs:
         run: |
           make crouton
 
-      - name: Update App Version
-        if: github.ref_type == 'tag'
+      - name: Write .env with APP_VERSION and COMMIT_SHA
         shell: bash
-        run: >-
+        run: |
+          echo COMMIT_SHA=${GITHUB_SHA} > src/.env
           if [[ $GITHUB_REF_NAME =~ ^([0-9]+\.){2}(\*|[0-9]+)(-.*)?$ ]]; then
-            sed -i "s/'version'.*=>.*/'version' => '${GITHUB_REF_NAME}',/" src/config/app.php
+            echo APP_VERSION=${GITHUB_REF_NAME} >> src/.env
           fi
 
       - name: make zip
