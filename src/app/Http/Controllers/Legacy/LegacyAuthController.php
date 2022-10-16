@@ -45,6 +45,10 @@ class LegacyAuthController extends Controller
             return $this->logoutResponse($request);
         }
 
+        if (legacy_config('new_ui_enabled')) {
+            return view('index');
+        }
+
         return LegacyController::handle($request);
     }
 

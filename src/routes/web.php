@@ -20,5 +20,5 @@ Route::any('/local_server/server_admin/{dataFormat}.php', [LegacyAuthController:
 Route::any('/', [LegacyAuthController::class, 'handle']);
 Route::any('/index.php', [LegacyAuthController::class, 'handle']);
 
-// Catch-all to send everything else to legacy code
-Route::any('{all}', [LegacyController::class, 'all'])->where('all', '.*');
+// Catch-all for everything else - legacy code or UI
+Route::get('{any}', legacy_config('new_ui_enabled') ? fn () => view('index') : [LegacyController::class, 'all'])->where('any', '.*');
