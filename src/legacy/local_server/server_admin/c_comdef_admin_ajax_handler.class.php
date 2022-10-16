@@ -471,6 +471,18 @@ class c_comdef_admin_ajax_handler
             // The first thing that we do, is go through the incoming data, and make sure that we create or modify c_comdef_format objects to match the input.
             foreach ($the_changed_formats as $format_data) {
                 if ($format_data) {
+                    if (isset($format_data['key'])) {
+                        $format_data['key'] = trim($format_data['key']);
+                    }
+
+                    if (isset($format_data['name'])) {
+                        $format_data['name'] = trim($format_data['name']);
+                    }
+
+                    if (isset($format_data['description'])) {
+                        $format_data['description'] = trim($format_data['description']);
+                    }
+
                     foreach ($format_data as &$data_val) {  // This removes double-slashes, added by the JSON encoding.
                         $data_val = str_replace('\\\\', '\\', $data_val);
                     }
@@ -546,7 +558,7 @@ class c_comdef_admin_ajax_handler
                 foreach ($langs as $lang_key => $lang_name) {
                     $server_format = $this->my_server->GetOneFormat($shared_id, $lang_key);
 
-                    if ($server_format && !$the_changed_formats[$lang_key]) {
+                    if ($server_format && !isset($the_changed_formats[$lang_key])) {
                         $server_format->DeleteFromDB();
                     }
                 }
@@ -825,15 +837,15 @@ class c_comdef_admin_ajax_handler
         if (is_array($the_new_service_body) && count($the_new_service_body)) {
             $id = $the_new_service_body[0];
             $parent_service_body_id = $the_new_service_body[1];
-            $name = $the_new_service_body[2];
-            $description = $the_new_service_body[3];
+            $name = trim($the_new_service_body[2]);
+            $description = trim($the_new_service_body[3]);
             $main_user_id = $the_new_service_body[4];
             $editor_ids = explode(',', $the_new_service_body[5]);
-            $email = $the_new_service_body[6];
-            $uri = $the_new_service_body[7];
-            $helpline = $the_new_service_body[8];
+            $email = trim($the_new_service_body[6]);
+            $uri = trim($the_new_service_body[7]);
+            $helpline = trim($the_new_service_body[8]);
             $type = $the_new_service_body[9];
-            $worldid = $the_new_service_body[12];
+            $worldid = trim($the_new_service_body[12]);
 
             $sb_to_change = $this->my_server->GetServiceBodyByIDObj($id);
 
@@ -887,15 +899,15 @@ class c_comdef_admin_ajax_handler
             if (is_array($the_new_service_body) && count($the_new_service_body)) {
                 $id = $the_new_service_body[0];
                 $parent_service_body_id = $the_new_service_body[1];
-                $name = $the_new_service_body[2];
-                $description = $the_new_service_body[3];
+                $name = trim($the_new_service_body[2]);
+                $description = trim($the_new_service_body[3]);
                 $main_user_id = $the_new_service_body[4];
                 $editor_ids = explode(',', $the_new_service_body[5]);
-                $email = $the_new_service_body[6];
-                $uri = $the_new_service_body[7];
-                $helpline = $the_new_service_body[8];
+                $email = trim($the_new_service_body[6]);
+                $uri = trim($the_new_service_body[7]);
+                $helpline = trim($the_new_service_body[8]);
                 $type = $the_new_service_body[9];
-                $worldid = $the_new_service_body[12];
+                $worldid = trim($the_new_service_body[12]);
 
                 $sb_to_create = new c_comdef_service_body;
 
@@ -1206,7 +1218,7 @@ class c_comdef_admin_ajax_handler
                             case 'lang_enum':
                             case 'duration_time':
                             case 'time_zone':
-                                $data[$key] = $value;
+                                $data[$key] = trim($value);
                                 break;
 
                             case 'formats':
@@ -1256,8 +1268,9 @@ class c_comdef_admin_ajax_handler
                             default:
                                 if (isset($data[$key])) {
                                     $data[$key]['meetingid_bigint'] = $in_meeting_data['id_bigint'];
-                                    $data[$key]['value'] = $value;
+                                    $data[$key]['value'] = trim($value);
                                 } else {
+                                    $value = trim($value);
                                     $template_field_prompt = array_key_exists($key, $template_data) ? $template_data[$key]['field_prompt'] : null;
                                     $template_visibility = array_key_exists($key, $template_data) ? $template_data[$key]['visibility'] : null;
                                     $result_data['new_data']['key'] = $key;
