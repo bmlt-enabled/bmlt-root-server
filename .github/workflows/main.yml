@@ -99,7 +99,7 @@ jobs:
 
       - name: Copy Artifacts to S3
         run: |
-          aws s3 cp build/bmlt-root-server.zip s3://${{ secrets.S3_BUCKET }}/bmlt-root-server/bmlt-root-server-$(cat src/config/app.php | grep "'version'" | cut -d"'" -f4)-build${GITHUB_RUN_NUMBER}-${GITHUB_SHA}.zip
+          aws s3 cp build/bmlt-root-server.zip s3://${{ secrets.S3_BUCKET }}/bmlt-root-server/bmlt-root-server-$(cat src/config/app.php | grep "'version'" | cut -d"'" -f6)-build${GITHUB_RUN_NUMBER}-${GITHUB_SHA}.zip
 
       - name: Configure AWS Credentials
         if: contains(github.ref_name, 'main') || contains(github.ref_name, 'unstable')
