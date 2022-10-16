@@ -194,9 +194,14 @@ class MeetingResource extends JsonResource
 
     private function getDurationTime()
     {
+        $durationTime = (\DateTime::createFromFormat('H:i:s', $this->duration_time) ?: \DateTime::createFromFormat('H:i', $this->duration_time) ?: null)?->format('H:i:s');
+        if (empty($durationTime) || $durationTime == '00:00:00') {
+            $durationTime = self::$defaultDurationTime;
+        }
+
         return $this->when(
             !self::$hasDataFieldKeys || self::$dataFieldKeys->has('duration_time'),
-            (\DateTime::createFromFormat('H:i:s', $this->duration_time) ?: \DateTime::createFromFormat('H:i', $this->duration_time) ?: null)?->format('H:i:s') ?? self::$defaultDurationTime
+            $durationTime
         );
     }
 
