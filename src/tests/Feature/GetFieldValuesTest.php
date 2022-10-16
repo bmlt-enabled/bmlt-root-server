@@ -142,7 +142,6 @@ class GetFieldValuesTest extends TestCase
                 $this->get("/client_interface/json/?switcher=GetFieldValues&meeting_key=$fieldName")
                     ->assertStatus(200)
                     ->assertExactJson([
-                        [$fieldName => 'NULL', 'ids' => strval($meeting1->id_bigint)],
                         [$fieldName => strval($meeting2->{$fieldName}), 'ids' => implode(',', [$meeting2->id_bigint, $meeting3->id_bigint])],
                         [$fieldName => strval($meeting4->{$fieldName}), 'ids' => strval($meeting4->id_bigint)]
                     ]);

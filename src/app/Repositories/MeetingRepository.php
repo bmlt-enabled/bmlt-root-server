@@ -448,6 +448,9 @@ class MeetingRepository implements MeetingRepositoryInterface
                     return [strval($value) => (string)$meeting->id_bigint];
                 })
                 ->reject(function ($meetingIds, $value) use ($fieldName, $specificFormats) {
+                    if (($fieldName == 'duration_time' || $fieldName == 'start_time') && empty($value)) {
+                        return true;
+                    }
                     return $fieldName == 'formats' && $specificFormats && $value == '';
                 });
         } else {
