@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Http\Resources\Query\MeetingResource;
+use App\LegacyConfig;
 use App\Models\Format;
 use App\Models\Meeting;
 use App\Models\MeetingData;
@@ -1669,5 +1670,41 @@ class GetSearchResultsTest extends TestCase
             ->assertStatus(200)
             ->json();
         $this->assertEquals('', $data[0]['location_postal_code_1']);
+    }
+
+    public function testDurationTimeNull()
+    {
+        $this->createMeeting(['duration_time' => null]);
+
+        LegacyConfig::set('default_duration_time', 'blah');
+        try {
+            $this->get("/client_interface/json/?switcher=GetSearchResults")
+                ->assertStatus(200)
+                ->assertJsonFragment(['duration_time' => 'blah']);
+        } finally {
+            LegacyConfig::reset();
+        }
+    }
+
+    public function testDurationTime0Hours()
+    {
+        $this->createMeeting(['duration_time' => '00:00:00']);
+
+        LegacyConfig::set('default_duration_time', 'blah');
+        try {
+            $this->get("/client_interface/json/?switcher=GetSearchResults")
+                ->assertStatus(200)
+                ->assertJsonFragment(['duration_time' => 'blah']);
+        } finally {
+            LegacyConfig::reset();
+        }
+    }
+
+    public function testDurationTime24Hours()
+    {
+        $this->createMeeting(['duration_time' => '24:00:00']);
+        $this->get("/client_interface/json/?switcher=GetSearchResults")
+            ->assertStatus(200)
+            ->assertJsonFragment(['duration_time' => '24:00:00']);
     }
 }

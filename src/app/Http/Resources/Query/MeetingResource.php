@@ -20,6 +20,8 @@ class MeetingResource extends JsonResource
     private static bool $userIsAuthenticated = false;
     private static bool $userIsAdmin = false;
 
+    private static ?string $defaultDurationTime = null;
+
     // Allows tests to reset state
     public static function resetStaticVariables()
     {
@@ -30,6 +32,7 @@ class MeetingResource extends JsonResource
         self::$serviceBodyPermissions = null;
         self::$userIsAuthenticated = false;
         self::$userIsAdmin = false;
+        self::$defaultDurationTime = null;
     }
 
     /**
@@ -96,6 +99,9 @@ class MeetingResource extends JsonResource
     {
         $meetingRepository = new MeetingRepository();
         $serviceBodyRepository = new ServiceBodyRepository();
+
+        // Default duration time
+        self::$defaultDurationTime = legacy_config('default_duration_time');
 
         // Preload meeting data templates
         self::$meetingDataTemplates = $meetingRepository->getDataTemplates();
@@ -188,9 +194,18 @@ class MeetingResource extends JsonResource
 
     private function getDurationTime()
     {
+        $durationTime = $this->duration_time;
+
+        if ($durationTime != '24:00:00') {
+            $durationTime = (\DateTime::createFromFormat('H:i:s', $this->duration_time) ?: \DateTime::createFromFormat('H:i', $this->duration_time) ?: null)?->format('H:i:s');
+            if (empty($durationTime) || $durationTime == '00:00:00') {
+                $durationTime = self::$defaultDurationTime;
+            }
+        }
+
         return $this->when(
             !self::$hasDataFieldKeys || self::$dataFieldKeys->has('duration_time'),
-            (\DateTime::createFromFormat('H:i:s', $this->duration_time) ?: \DateTime::createFromFormat('H:i', $this->duration_time) ?: null)?->format('H:i:s') ?? ''
+            $durationTime
         );
     }
 
