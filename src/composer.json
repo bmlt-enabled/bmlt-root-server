@@ -1,8 +1,8 @@
 {
-    "name": "laravel/laravel",
+    "name": "bmlt-enabled/bmlt-root-server",
     "type": "project",
-    "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "description": "The BMLT Root Server.",
+    "keywords": ["bmlt", "bmltenabled"],
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
