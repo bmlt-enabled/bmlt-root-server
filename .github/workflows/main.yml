@@ -5,7 +5,7 @@ on:
     tags: ['*']
 
 env:
-  IMAGE_NAME: bmltenabled/bmlt-root-server
+  IMAGE_NAME: bmltenabled/bmlt-root-server:latest
 
 jobs:
   test-php:
@@ -182,7 +182,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tag:
+        env:
           - "latest"
           - "unstable"
     steps:
@@ -198,8 +198,8 @@ jobs:
 
       - name: Download Task Definition
         run: |
-          echo $IMAGE_NAME:latest
-          aws ecs describe-task-definition --task-definition bmlt-${{ matrix.tag }} --query taskDefinition | jq -r 'del(
+          echo $IMAGE_NAME
+          aws ecs describe-task-definition --task-definition bmlt-${{ matrix.env }} --query taskDefinition | jq -r 'del(
             .taskDefinitionArn,
             .requiresAttributes,
             .compatibilities,
@@ -215,13 +215,13 @@ jobs:
         with:
           task-definition: task-definition.json
           container-name: bmlt-root-server
-          image: ${{ env.IMAGE_NAME }}:latest
+          image: ${{ env.IMAGE_NAME }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: bmlt-${{ matrix.tag }}
+          service: bmlt-${{ matrix.env }}
           cluster: bmlt
           wait-for-service-stability: true
           wait-for-minutes: 5
