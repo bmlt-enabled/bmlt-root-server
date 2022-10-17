@@ -1,8 +1,11 @@
 name: main
 on:
   push:
-    branches: ['main', 'unstable']
+    branches: ['main']
     tags: ['*']
+
+env:
+  IMAGE_NAME: bmltenabled/bmlt-root-server
 
 jobs:
   test-php:
@@ -71,7 +74,6 @@ jobs:
 
   build:
     runs-on: ubuntu-22.04
-    concurrency: build
     needs: [test-php, test-js]
     permissions:
       id-token: write
@@ -152,47 +154,6 @@ jobs:
         run: |
           make docker-push
 
-      - name: Save Image Name
-        if: contains(github.ref_name, 'main') || contains(github.ref_name, 'unstable')
-        run: |
-          SHORT_SHA=$(git rev-parse --short=8 HEAD)
-          IMAGE_TAG=$([ "$GITHUB_REF_NAME" == "main" ] && echo "latest" || echo "unstable")
-          echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_ENV
-          echo "IMAGE_NAME=bmltenabled/bmlt-root-server:${IMAGE_TAG}" >> $GITHUB_ENV
-
-      - name: Download Task Definition
-        if: contains(github.ref_name, 'main') || contains(github.ref_name, 'unstable')
-        run: |
-          echo $IMAGE_NAME
-          aws ecs describe-task-definition --task-definition bmlt-${IMAGE_TAG} --query taskDefinition | jq -r 'del(
-            .taskDefinitionArn,
-            .requiresAttributes,
-            .compatibilities,
-            .revision,
-            .status,
-            .registeredAt,
-            .registeredBy
-          )' > task-definition.json
-
-      - name: Fill in the new image ID in the Amazon ECS task definition
-        if: contains(github.ref_name, 'main') || contains(github.ref_name, 'unstable')
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: task-definition.json
-          container-name: bmlt-root-server
-          image: ${{ env.IMAGE_NAME }}
-
-      - name: Deploy Amazon ECS task definition
-        if: contains(github.ref_name, 'main') || contains(github.ref_name, 'unstable')
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: bmlt-${{ env.IMAGE_TAG }}
-          cluster: bmlt
-          wait-for-service-stability: true
-          wait-for-minutes: 5
-
       - name: Generate Release Notes
         if: github.ref_type == 'tag'
         run: |
@@ -209,3 +170,58 @@ jobs:
           artifacts: "build/bmlt-root-server.zip"
           bodyFile: "changelog.txt"
           prerelease: ${{ env.RELEASE_TYPE }}
+
+  deploy:
+    runs-on: ubuntu-22.04
+    concurrency: deploy-${{ matrix.tag }}
+    needs: [build]
+    permissions:
+      id-token: write
+      contents: write
+    if: contains(github.ref_name, 'main')
+    strategy:
+      fail-fast: false
+      matrix:
+        tag:
+          - "latest"
+          - "unstable"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions/gh-ci-tf-bmlt-rs
+          role-session-name: gh-actions-bmlt
+          aws-region: us-east-1
+
+      - name: Download Task Definition
+        run: |
+          echo $IMAGE_NAME:latest
+          aws ecs describe-task-definition --task-definition bmlt-${{ matrix.tag }} --query taskDefinition | jq -r 'del(
+            .taskDefinitionArn,
+            .requiresAttributes,
+            .compatibilities,
+            .revision,
+            .status,
+            .registeredAt,
+            .registeredBy
+          )' > task-definition.json
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          container-name: bmlt-root-server
+          image: ${{ env.IMAGE_NAME }}:latest
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: bmlt-${{ matrix.tag }}
+          cluster: bmlt
+          wait-for-service-stability: true
+          wait-for-minutes: 5
