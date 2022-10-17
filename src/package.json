@@ -3,16 +3,18 @@
     "type": "module",
     "scripts": {
         "dev": "vite dev",
-        "build": "vite build && rm -rf public/_app && mv build/_app public/ && mv build/favicon.png public/ && rm -rf build",
+        "build": "npm run smui-theme && vite build && rm -rf public/_app && mv build/_app public/ && mv build/favicon.png public/ && mv build/smui.css public/ && rm -rf build",
         "preview": "vite preview",
+        "smui-theme": "smui-theme compile resources/static/smui.css -i resources/kit/lib/css/theme",
         "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
         "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-        "lint": "prettier --plugin-search-dir . --check resources/sveltekit && eslint resources/sveltekit",
-        "format": "prettier --plugin-search-dir . --write resources/sveltekit"
+        "lint": "prettier --plugin-search-dir . --check resources/kit && eslint resources/kit",
+        "format": "prettier --plugin-search-dir . --write resources/kit"
     },
     "devDependencies": {
         "@material/typography": "^14.0.0",
         "@rushstack/eslint-patch": "^1.1.4",
+        "@smui/button": "^7.0.0-beta.0",
         "@sveltejs/adapter-static": "^1.0.0-next.44",
         "@sveltejs/kit": "^1.0.0-next.516",
         "@tsconfig/svelte": "^3.0.0",

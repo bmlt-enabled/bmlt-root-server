@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <link rel="icon" href="{{ $basePath }}/favicon.png" />
     <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="smui.css" />
     <meta http-equiv="content-security-policy" content="">
     <link rel="modulepreload" href="{{ $startScript }}">
     @foreach ($chunks as $chunk)

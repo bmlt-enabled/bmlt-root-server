@@ -13,12 +13,12 @@ const config = {
         }),
         files: {
             assets: 'resources/static',
-            lib: 'resources/sveltekit/lib',
-            params: 'resources/sveltekit/params',
-            routes: 'resources/sveltekit/routes',
-            serviceWorker: 'resources/sveltekit/routes',
-            appTemplate: 'resources/sveltekit/app.html',
-            errorTemplate: 'resources/sveltekit/error.html'
+            lib: 'resources/kit/lib',
+            params: 'resources/kit/params',
+            routes: 'resources/kit/routes',
+            serviceWorker: 'resources/kit/routes',
+            appTemplate: 'resources/kit/app.html',
+            errorTemplate: 'resources/kit/error.html'
         }
     }
 };

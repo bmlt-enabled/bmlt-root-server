@@ -15,7 +15,7 @@
         "isolatedModules": true
     },
     "include": [
-        "resources/sveltekit/**/*",
-        "resources/sveltekit/**/*.svelte"
+        "resources/kit/**/*",
+        "resources/kit/**/*.svelte"
     ]
 }
