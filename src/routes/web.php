@@ -1,13 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Legacy\LegacyController;
+use App\Http\Controllers\CatchAllController;
 use App\Http\Controllers\Legacy\LegacyAuthController;
 use App\Http\Controllers\Query\ServerInfoXmlController;
 use App\Http\Controllers\Query\SwitcherController;
 
 // legacy crouton
-Route::get('/client_interface/html', [LegacyController::class, 'all']);
+Route::get('/client_interface/html', [CatchAllController::class, 'all']);
 
 // reimplemented serverInfo.xml
 Route::get('/client_interface/serverInfo.xml', [ServerInfoXmlController::class, 'get']);
@@ -21,4 +21,4 @@ Route::any('/', [LegacyAuthController::class, 'handle']);
 Route::any('/index.php', [LegacyAuthController::class, 'handle']);
 
 // Catch-all for everything else - legacy code or UI
-Route::get('{any}', legacy_config('new_ui_enabled') ? fn () => view('index') : [LegacyController::class, 'all'])->where('any', '.*');
+Route::get('{any}', [CatchAllController::class, 'all'])->where('any', '.*');

@@ -2,25 +2,15 @@
     "private": true,
     "scripts": {
         "dev": "vite",
-        "build": "vite build",
-        "check": "svelte-check --tsconfig ./tsconfig.json"
+        "build": "vite build"
     },
     "devDependencies": {
-        "@rushstack/eslint-patch": "^1.1.4",
-        "@sveltejs/vite-plugin-svelte": "^1.0.5",
-        "@tsconfig/svelte": "^3.0.0",
-        "@types/node": "^18.7.16",
-        "carbon-components": "^10.58.3",
-        "carbon-components-svelte": "^0.70.12",
-        "eslint": "^8.23.0",
+        "@vitejs/plugin-react": "^2.1.0",
         "laravel-vite-plugin": "^0.6.0",
-        "prettier": "^2.7.1",
-        "prettier-plugin-svelte": "^2.8.0",
-        "sass": "^1.55.0",
-        "svelte": "^3.50.1",
-        "svelte-check": "^2.9.0",
-        "tslib": "^2.4.0",
-        "typescript": "^4.8.3",
-        "vite": "^3.1.0"
+        "vite": "^3.0.0"
+    },
+    "dependencies": {
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0"
     }
 }

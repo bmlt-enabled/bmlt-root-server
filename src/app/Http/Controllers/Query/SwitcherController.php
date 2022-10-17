@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Query;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Legacy\LegacyController;
+use App\Http\Controllers\CatchAllController;
 use App\Http\Resources\Query\FormatResource;
 use App\Http\Resources\Query\MeetingResource;
 use App\Http\Resources\Query\MeetingChangeResource;
@@ -53,10 +53,7 @@ class SwitcherController extends Controller
         $validValues = ['GetSearchResults', 'GetFormats', 'GetServiceBodies', 'GetFieldKeys', 'GetFieldValues', 'GetChanges', 'GetServerInfo', 'GetCoverageArea', 'GetNAWSDump'];
         if (in_array($switcher, $validValues)) {
             if ($switcher == 'GetNAWSDump' && $dataFormat == 'csv') {
-                if (legacy_config('new_ui_enabled')) {
-                    return view('index');
-                }
-                return LegacyController::handle($request);
+                return CatchAllController::handle($request);
                 $response = $this->getNawsDump($request);
             } elseif ($dataFormat == 'json' || $dataFormat == 'jsonp') {
                 if ($switcher == 'GetSearchResults') {

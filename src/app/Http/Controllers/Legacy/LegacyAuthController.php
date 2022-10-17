@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\CatchAllController;
 
 class LegacyAuthController extends Controller
 {
@@ -45,11 +46,7 @@ class LegacyAuthController extends Controller
             return $this->logoutResponse($request);
         }
 
-        if (legacy_config('new_ui_enabled')) {
-            return view('index');
-        }
-
-        return LegacyController::handle($request);
+        return CatchAllController::handle($request);
     }
 
     private function loggedInResponse($request)
