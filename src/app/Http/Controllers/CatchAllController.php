@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Legacy;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Legacy\LegacyPathInfo;
 
-class LegacyController extends Controller
+class CatchAllController extends Controller
 {
     public function all(Request $request): Response
     {
@@ -15,6 +15,10 @@ class LegacyController extends Controller
 
     public static function handle(Request $request): Response
     {
+        if (legacy_config('new_ui_enabled')) {
+            return response()->view('frontend');
+        }
+
         $pathInfo = LegacyPathInfo::parse($request);
 
         if (file_exists($pathInfo->path)) {

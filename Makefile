@@ -135,10 +135,6 @@ lint:  ## PHP Lint
 lint-fix:  ## PHP Lint Fix
 	$(LINT_PREFIX) src/vendor/squizlabs/php_codesniffer/bin/phpcbf
 
-.PHONY: lint-js
-lint-js:  ## JavaScript Lint
-	cd src && npm run check
-
 .PHONY: docker-publish-base
 docker-publish-base:  ## Builds Base Docker Image
 	docker buildx build --platform linux/amd64,linux/arm64/v8 -f docker/Dockerfile-base docker/ -t $(BASE_IMAGE):$(BASE_IMAGE_TAG) --push
