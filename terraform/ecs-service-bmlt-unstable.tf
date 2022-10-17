@@ -31,6 +31,10 @@ resource "aws_ecs_task_definition" "bmlt_unstable" {
             value = var.GOOGLE_API_KEY
           },
           {
+            name  = "NEW_UI_ENABLED",
+            value = "true"
+          },
+          {
             name  = "DB_DATABASE",
             value = "rootserver"
           },
