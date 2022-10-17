@@ -137,7 +137,7 @@ lint-fix:  ## PHP Lint Fix
 
 .PHONY: lint-js
 lint-js:  ## JavaScript Lint
-	cd src && npm run check
+	cd src && npm run check && npm run lint
 
 .PHONY: docker-publish-base
 docker-publish-base:  ## Builds Base Docker Image

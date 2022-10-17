@@ -10,7 +10,7 @@
     <link rel="modulepreload" href="{{ $chunk }}">
     @endforeach
 </head>
-<body data-sveltekit-prefetch>
+<body data-sveltekit-prefetch class="mdc-typography">
 <div>
     <script type="module" data-sveltekit-hydrate="45h">
         import { start } from "{{ $startScript }}";
