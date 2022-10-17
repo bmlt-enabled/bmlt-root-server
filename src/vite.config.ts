@@ -1,19 +1,12 @@
-import laravel from 'laravel-vite-plugin'
-import { svelte } from "@sveltejs/vite-plugin-svelte";
+import { sveltekit } from '@sveltejs/kit/vite';
 import type { UserConfig } from 'vite';
 
 const config: UserConfig = {
     build: {
-        minify: false,
+        minify: false
     },
 
-    plugins: [
-        laravel([
-            'resources/css/app.scss',
-            'resources/js/main.ts'
-        ]),
-        svelte()
-    ]
+    plugins: [sveltekit()]
 };
 
 export default config;

@@ -1,5 +1,6 @@
 /node_modules
 /public/build
+/public/_app
 /public/hot
 /public/storage
 /public/client_interface
@@ -18,3 +19,4 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+.svelte-kit

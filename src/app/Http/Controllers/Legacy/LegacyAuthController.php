@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Web\SvelteKitController;
 
 class LegacyAuthController extends Controller
 {
@@ -46,7 +47,7 @@ class LegacyAuthController extends Controller
         }
 
         if (legacy_config('new_ui_enabled')) {
-            return view('index');
+            return SvelteKitController::handle($request);
         }
 
         return LegacyController::handle($request);

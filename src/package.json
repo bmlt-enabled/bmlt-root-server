@@ -1,24 +1,29 @@
 {
     "private": true,
+    "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "vite build",
+        "build": "vite build && rm -rf public/_app && mv build/_app public/ && rm -rf build",
         "check": "svelte-check --tsconfig ./tsconfig.json"
     },
     "devDependencies": {
+        "@fontsource/fira-mono": "^4.5.0",
+        "@neoconfetti/svelte": "^1.0.0",
+        "@playwright/test": "^1.25.0",
         "@rushstack/eslint-patch": "^1.1.4",
+        "@sveltejs/adapter-static": "^1.0.0-next.44",
+        "@sveltejs/kit": "^1.0.0-next.516",
         "@sveltejs/vite-plugin-svelte": "^1.0.5",
         "@tsconfig/svelte": "^3.0.0",
-        "@types/node": "^18.7.16",
         "carbon-components": "^10.58.3",
         "carbon-components-svelte": "^0.70.12",
         "eslint": "^8.23.0",
-        "laravel-vite-plugin": "^0.6.0",
         "prettier": "^2.7.1",
         "prettier-plugin-svelte": "^2.8.0",
         "sass": "^1.55.0",
         "svelte": "^3.50.1",
         "svelte-check": "^2.9.0",
+        "sveltekit-adapter-html-like": "^0.3.0",
         "tslib": "^2.4.0",
         "typescript": "^4.8.3",
         "vite": "^3.1.0"

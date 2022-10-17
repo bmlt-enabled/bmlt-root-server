@@ -6,7 +6,7 @@ CROUTON_JS := src/public/client_interface/html/croutonjs/crouton.js
 LEGACY_STATIC_FILES := src/public/local_server/styles.css
 VENDOR_AUTOLOAD := src/vendor/autoload.php
 NODE_MODULES := src/node_modules/.package-lock.json
-FRONTEND := src/public/build/manifest.json
+FRONTEND := src/public/_app/version.json
 ZIP_FILE := build/bmlt-root-server.zip
 ifeq ($(CI)x, x)
 	DOCKERFILE := Dockerfile-debug
@@ -75,7 +75,7 @@ $(LEGACY_STATIC_FILES):
 $(ZIP_FILE): $(VENDOR_AUTOLOAD) $(FRONTEND) $(CROUTON_JS) $(LEGACY_STATIC_FILES)
 	mkdir -p build
 	cp -r src build/main_server
-	cd build && zip -r $(shell basename $(ZIP_FILE)) main_server -x main_server/node_modules/\*
+	cd build && zip -r $(shell basename $(ZIP_FILE)) main_server -x main_server/node_modules/\* -x main_server/.svelte-kit
 	rm -rf build/main_server
 
 src/config/l5-swagger.php:

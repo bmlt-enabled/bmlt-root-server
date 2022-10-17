@@ -5,6 +5,7 @@ use App\Http\Controllers\Legacy\LegacyController;
 use App\Http\Controllers\Legacy\LegacyAuthController;
 use App\Http\Controllers\Query\ServerInfoXmlController;
 use App\Http\Controllers\Query\SwitcherController;
+use App\Http\Controllers\Web\SvelteKitController;
 
 // legacy crouton
 Route::get('/client_interface/html', [LegacyController::class, 'all']);
@@ -21,4 +22,4 @@ Route::any('/', [LegacyAuthController::class, 'handle']);
 Route::any('/index.php', [LegacyAuthController::class, 'handle']);
 
 // Catch-all for everything else - legacy code or UI
-Route::get('{any}', legacy_config('new_ui_enabled') ? fn () => view('index') : [LegacyController::class, 'all'])->where('any', '.*');
+Route::get('{any}', legacy_config('new_ui_enabled') ? [SvelteKitController::class, 'all'] : [LegacyController::class, 'all'])->where('any', '.*');

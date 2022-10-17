@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Query;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Legacy\LegacyController;
+use App\Http\Controllers\Web\SvelteKitController;
 use App\Http\Resources\Query\FormatResource;
 use App\Http\Resources\Query\MeetingResource;
 use App\Http\Resources\Query\MeetingChangeResource;
@@ -54,7 +55,7 @@ class SwitcherController extends Controller
         if (in_array($switcher, $validValues)) {
             if ($switcher == 'GetNAWSDump' && $dataFormat == 'csv') {
                 if (legacy_config('new_ui_enabled')) {
-                    return view('index');
+                    SvelteKitController::handle($request);
                 }
                 return LegacyController::handle($request);
                 $response = $this->getNawsDump($request);
