@@ -15,15 +15,15 @@ namespace App\Http\Controllers\Admin\Swagger;
  *     @OA\Property(property="id", type="integer", example="0"),
  *     allOf={ @OA\Schema(ref="#/components/schemas/UserBase") }
  * ),
- * @OA\Schema(schema="CreateUser", required={"username","password","type","displayName"},
+ * @OA\Schema(schema="UserCreate", required={"username","password","type","displayName"},
  *     @OA\Property(property="password", type="string", example="string"),
  *     allOf={ @OA\Schema(ref="#/components/schemas/UserBase") }
  * ),
- * @OA\Schema(schema="UpdateUser", required={"username","type","displayName"},
+ * @OA\Schema(schema="UserUpdate", required={"username","type","displayName"},
  *     @OA\Property(property="password", type="string", example="string"),
  *     allOf={ @OA\Schema(ref="#/components/schemas/UserBase") }
  * ),
- * @OA\Schema(schema="PartialUpdateUser",
+ * @OA\Schema(schema="UserPartialUpdate",
  *     @OA\Property(property="password", type="string", example="string"),
  *     allOf={ @OA\Schema(ref="#/components/schemas/UserBase") }
  * ),
@@ -38,7 +38,7 @@ class UserController extends Controller
 {
 
     /**
-     * @OA\Get(path="/api/v1/users", summary="Retrieves users", description="Retrieve users for authenticated user.", operationId="getUsers", tags={"users"}, security={{"bmltToken":{}}},
+     * @OA\Get(path="/api/v1/users", summary="Retrieves users", description="Retrieve users for authenticated user.", operationId="getUsers", tags={"rootServer"}, security={{"bmltToken":{}}},
      *     @OA\Response(response=200, description="Returns when user is authenticated.",
      *         @OA\JsonContent(ref="#/components/schemas/UserCollection")
      *     ),
@@ -52,7 +52,7 @@ class UserController extends Controller
     }
 
     /**
-     * @OA\Get(path="/api/v1/users/{userId}", summary="Retrieves a single user", description="Retrieve single user.", operationId="getUser", tags={"users"}, security={{"bmltToken":{}}},
+     * @OA\Get(path="/api/v1/users/{userId}", summary="Retrieves a single user", description="Retrieve single user.", operationId="getUser", tags={"rootServer"}, security={{"bmltToken":{}}},
      *     @OA\Parameter(description="ID of user", in="path", name="userId", required=true, example="1",
      *         @OA\Schema(type="integer", format="int64")
      *     ),
@@ -72,9 +72,9 @@ class UserController extends Controller
     }
 
     /**
-     * @OA\Post(path="/api/v1/users", summary="Creates a user", description="Creates a user.", operationId="createUser", tags={"users"}, security={{"bmltToken":{}}},
+     * @OA\Post(path="/api/v1/users", summary="Creates a user", description="Creates a user.", operationId="createUser", tags={"rootServer"}, security={{"bmltToken":{}}},
      *     @OA\RequestBody(required=true, description="Pass in user object",
-     *         @OA\JsonContent(ref="#/components/schemas/CreateUser"),
+     *         @OA\JsonContent(ref="#/components/schemas/UserCreate"),
      *     ),
      *     @OA\Response(response=201, description="Returns when POST is successful.",
      *         @OA\JsonContent(ref="#/components/schemas/User")
@@ -98,12 +98,12 @@ class UserController extends Controller
     }
 
     /**
-     * @OA\Put(path="/api/v1/users/{userId}", summary="Update single user", description="Updates a user.", operationId="updateUser", tags={"users"}, security={{"bmltToken":{}}},
+     * @OA\Put(path="/api/v1/users/{userId}", summary="Update single user", description="Updates a user.", operationId="updateUser", tags={"rootServer"}, security={{"bmltToken":{}}},
      *     @OA\Parameter(description="ID of user", in="path", name="userId", required=true, example="1",
      *         @OA\Schema(type="integer", format="int64")
      *     ),
      *     @OA\RequestBody(required=true, description="Pass in user object",
-     *         @OA\JsonContent(ref="#/components/schemas/UpdateUser"),
+     *         @OA\JsonContent(ref="#/components/schemas/UserUpdate"),
      *     ),
      *     @OA\Response(response=204, description="Success."),
      *     @OA\Response(response=401, description="Returns when user is not authenticated.",
@@ -125,12 +125,12 @@ class UserController extends Controller
     }
 
     /**
-     * @OA\Patch(path="/api/v1/users/{userId}", summary="Patches a user", description="Patches a user by id.", operationId="partialUpdateUser", tags={"users"}, security={{"bmltToken":{}}},
+     * @OA\Patch(path="/api/v1/users/{userId}", summary="Patches a user", description="Patches a user by id.", operationId="partialUpdateUser", tags={"rootServer"}, security={{"bmltToken":{}}},
      *     @OA\Parameter(description="ID of user", in="path", name="userId", required=true, example="1",
      *        @OA\Schema(type="integer", format="int64")
      *     ),
      *     @OA\RequestBody(required=true, description="Pass in fields you want to update.",
-     *         @OA\JsonContent(ref="#/components/schemas/PartialUpdateUser"),
+     *         @OA\JsonContent(ref="#/components/schemas/UserPartialUpdate"),
      *     ),
      *     @OA\Response(response=204, description="Success."),
      *     @OA\Response(response=401,description="Returns when not authenticated",
@@ -152,7 +152,7 @@ class UserController extends Controller
     }
 
     /**
-     * @OA\Delete(path="/api/v1/users/{userId}", summary="Deletes a user", description="Deletes a user by id", operationId="deleteUser", tags={"users"}, security={{"bmltToken":{}}},
+     * @OA\Delete(path="/api/v1/users/{userId}", summary="Deletes a user", description="Deletes a user by id", operationId="deleteUser", tags={"rootServer"}, security={{"bmltToken":{}}},
      *     @OA\Parameter(description="ID of user", in="path", name="userId", required=true, example="1",
      *         @OA\Schema(type="integer", format="int64")
      *     ),

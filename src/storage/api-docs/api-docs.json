@@ -13,7 +13,7 @@
         "/api/v1/formats": {
             "get": {
                 "tags": [
-                    "formats"
+                    "rootServer"
                 ],
                 "summary": "Retrieves formats",
                 "description": "Retrieve formats",
@@ -48,7 +48,7 @@
             },
             "post": {
                 "tags": [
-                    "formats"
+                    "rootServer"
                 ],
                 "summary": "Creates a format",
                 "description": "Creates a format.",
@@ -59,7 +59,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/CreateFormat"
+                                "$ref": "#/components/schemas/FormatCreate"
                             }
                         }
                     }
@@ -126,7 +126,7 @@
         "/api/v1/formats/{formatId}": {
             "get": {
                 "tags": [
-                    "formats"
+                    "rootServer"
                 ],
                 "summary": "Retrieves a format",
                 "description": "Retrieve a format",
@@ -184,7 +184,7 @@
             },
             "put": {
                 "tags": [
-                    "formats"
+                    "rootServer"
                 ],
                 "summary": "Updates a format",
                 "description": "Updates a format.",
@@ -208,7 +208,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/UpdateFormat"
+                                "$ref": "#/components/schemas/FormatUpdate"
                             }
                         }
                     }
@@ -266,7 +266,7 @@
             },
             "delete": {
                 "tags": [
-                    "formats"
+                    "rootServer"
                 ],
                 "summary": "Deletes a format",
                 "description": "Deletes a format by id.",
@@ -337,7 +337,7 @@
             },
             "patch": {
                 "tags": [
-                    "formats"
+                    "rootServer"
                 ],
                 "summary": "Patches a format",
                 "description": "Patches a single format by id.",
@@ -361,7 +361,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/PartialUpdateFormat"
+                                "$ref": "#/components/schemas/FormatPartialUpdate"
                             }
                         }
                     }
@@ -421,7 +421,7 @@
         "/api/v1/meetings": {
             "get": {
                 "tags": [
-                    "meetings"
+                    "rootServer"
                 ],
                 "summary": "Retrieves meetings",
                 "description": "Retrieve meetings for authenticated user.",
@@ -508,7 +508,7 @@
             },
             "post": {
                 "tags": [
-                    "meetings"
+                    "rootServer"
                 ],
                 "summary": "Creates a meeting",
                 "description": "Creates a meeting.",
@@ -519,7 +519,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/CreateMeeting"
+                                "$ref": "#/components/schemas/MeetingCreate"
                             }
                         }
                     }
@@ -586,7 +586,7 @@
         "/api/v1/meetings/{meetingId}": {
             "get": {
                 "tags": [
-                    "meetings"
+                    "rootServer"
                 ],
                 "summary": "Retrieves a meeting",
                 "description": "Retrieve a meeting.",
@@ -644,7 +644,7 @@
             },
             "put": {
                 "tags": [
-                    "meetings"
+                    "rootServer"
                 ],
                 "summary": "Updates a meeting",
                 "description": "Updates a meeting.",
@@ -668,7 +668,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/UpdateMeeting"
+                                "$ref": "#/components/schemas/MeetingUpdate"
                             }
                         }
                     }
@@ -726,7 +726,7 @@
             },
             "delete": {
                 "tags": [
-                    "meetings"
+                    "rootServer"
                 ],
                 "summary": "Deletes a meeting",
                 "description": "Deletes a meeting by id.",
@@ -787,7 +787,7 @@
             },
             "patch": {
                 "tags": [
-                    "meetings"
+                    "rootServer"
                 ],
                 "summary": "Patches a meeting",
                 "description": "Patches a meeting by id",
@@ -811,7 +811,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/PartialUpdateMeeting"
+                                "$ref": "#/components/schemas/MeetingPartialUpdate"
                             }
                         }
                     }
@@ -871,7 +871,7 @@
         "/api/v1/servicebodies": {
             "get": {
                 "tags": [
-                    "servicebodies"
+                    "rootServer"
                 ],
                 "summary": "Retrieves service bodies",
                 "description": "Retrieve service bodies for authenticated user.",
@@ -906,7 +906,7 @@
             },
             "post": {
                 "tags": [
-                    "servicebodies"
+                    "rootServer"
                 ],
                 "summary": "Creates a service body",
                 "description": "Creates a service body.",
@@ -917,7 +917,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/CreateServiceBody"
+                                "$ref": "#/components/schemas/ServiceBodyCreate"
                             }
                         }
                     }
@@ -984,7 +984,7 @@
         "/api/v1/servicebodies/{serviceBodyId}": {
             "get": {
                 "tags": [
-                    "servicebodies"
+                    "rootServer"
                 ],
                 "summary": "Retrieves a service body",
                 "description": "Retrieve a single service body by id.",
@@ -1042,7 +1042,7 @@
             },
             "put": {
                 "tags": [
-                    "servicebodies"
+                    "rootServer"
                 ],
                 "summary": "Updates a Service Body",
                 "description": "Updates a single service body.",
@@ -1066,7 +1066,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/UpdateServiceBody"
+                                "$ref": "#/components/schemas/ServiceBodyUpdate"
                             }
                         }
                     }
@@ -1124,7 +1124,7 @@
             },
             "delete": {
                 "tags": [
-                    "servicebodies"
+                    "rootServer"
                 ],
                 "summary": "Deletes a service body",
                 "description": "Deletes a service body by id.",
@@ -1185,7 +1185,7 @@
             },
             "patch": {
                 "tags": [
-                    "servicebodies"
+                    "rootServer"
                 ],
                 "summary": "Patches a service body",
                 "description": "Patches a single service body by id.",
@@ -1209,7 +1209,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/PartialUpdateServiceBody"
+                                "$ref": "#/components/schemas/ServiceBodyPartialUpdate"
                             }
                         }
                     }
@@ -1269,7 +1269,7 @@
         "/api/v1/auth/token": {
             "post": {
                 "tags": [
-                    "auth"
+                    "rootServer"
                 ],
                 "summary": "Creates a token",
                 "description": "Exchange credentials for a new token",
@@ -1322,7 +1322,7 @@
         "/api/v1/auth/refresh": {
             "post": {
                 "tags": [
-                    "auth"
+                    "rootServer"
                 ],
                 "summary": "Revokes and issues a new token",
                 "description": "Refresh token.",
@@ -1359,7 +1359,7 @@
         "/api/v1/auth/logout": {
             "post": {
                 "tags": [
-                    "auth"
+                    "rootServer"
                 ],
                 "summary": "Revokes a token",
                 "description": "Revoke token and logout.",
@@ -1389,7 +1389,7 @@
         "/api/v1/users": {
             "get": {
                 "tags": [
-                    "users"
+                    "rootServer"
                 ],
                 "summary": "Retrieves users",
                 "description": "Retrieve users for authenticated user.",
@@ -1424,7 +1424,7 @@
             },
             "post": {
                 "tags": [
-                    "users"
+                    "rootServer"
                 ],
                 "summary": "Creates a user",
                 "description": "Creates a user.",
@@ -1435,7 +1435,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/CreateUser"
+                                "$ref": "#/components/schemas/UserCreate"
                             }
                         }
                     }
@@ -1502,7 +1502,7 @@
         "/api/v1/users/{userId}": {
             "get": {
                 "tags": [
-                    "users"
+                    "rootServer"
                 ],
                 "summary": "Retrieves a single user",
                 "description": "Retrieve single user.",
@@ -1560,7 +1560,7 @@
             },
             "put": {
                 "tags": [
-                    "users"
+                    "rootServer"
                 ],
                 "summary": "Update single user",
                 "description": "Updates a user.",
@@ -1584,7 +1584,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/UpdateUser"
+                                "$ref": "#/components/schemas/UserUpdate"
                             }
                         }
                     }
@@ -1642,7 +1642,7 @@
             },
             "delete": {
                 "tags": [
-                    "users"
+                    "rootServer"
                 ],
                 "summary": "Deletes a user",
                 "description": "Deletes a user by id",
@@ -1713,7 +1713,7 @@
             },
             "patch": {
                 "tags": [
-                    "users"
+                    "rootServer"
                 ],
                 "summary": "Patches a user",
                 "description": "Patches a user by id.",
@@ -1737,7 +1737,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/PartialUpdateUser"
+                                "$ref": "#/components/schemas/UserPartialUpdate"
                             }
                         }
                     }
@@ -1901,7 +1901,7 @@
                     }
                 ]
             },
-            "CreateFormat": {
+            "FormatCreate": {
                 "required": [
                     "translations"
                 ],
@@ -1911,7 +1911,7 @@
                     }
                 ]
             },
-            "UpdateFormat": {
+            "FormatUpdate": {
                 "required": [
                     "translations"
                 ],
@@ -1921,7 +1921,7 @@
                     }
                 ]
             },
-            "PartialUpdateFormat": {
+            "FormatPartialUpdate": {
                 "allOf": [
                     {
                         "$ref": "#/components/schemas/FormatBase"
@@ -2113,7 +2113,7 @@
                     }
                 ]
             },
-            "CreateMeeting": {
+            "MeetingCreate": {
                 "required": [
                     "serviceBodyId",
                     "formatIds",
@@ -2132,7 +2132,7 @@
                     }
                 ]
             },
-            "UpdateMeeting": {
+            "MeetingUpdate": {
                 "required": [
                     "serviceBodyId",
                     "formatIds",
@@ -2151,7 +2151,7 @@
                     }
                 ]
             },
-            "PartialUpdateMeeting": {
+            "MeetingPartialUpdate": {
                 "required": [
                     "serviceBodyId",
                     "formatIds",
@@ -2250,7 +2250,7 @@
                     }
                 ]
             },
-            "CreateServiceBody": {
+            "ServiceBodyCreate": {
                 "required": [
                     "parentId",
                     "name",
@@ -2265,7 +2265,7 @@
                     }
                 ]
             },
-            "UpdateServiceBody": {
+            "ServiceBodyUpdate": {
                 "required": [
                     "parentId",
                     "name",
@@ -2280,7 +2280,7 @@
                     }
                 ]
             },
-            "PartialUpdateServiceBody": {
+            "ServiceBodyPartialUpdate": {
                 "allOf": [
                     {
                         "$ref": "#/components/schemas/ServiceBodyBase"
@@ -2384,7 +2384,7 @@
                     }
                 ]
             },
-            "CreateUser": {
+            "UserCreate": {
                 "required": [
                     "username",
                     "password",
@@ -2406,7 +2406,7 @@
                     }
                 ]
             },
-            "UpdateUser": {
+            "UserUpdate": {
                 "required": [
                     "username",
                     "type",
@@ -2427,7 +2427,7 @@
                     }
                 ]
             },
-            "PartialUpdateUser": {
+            "UserPartialUpdate": {
                 "type": "object",
                 "allOf": [
                     {
