@@ -111,6 +111,8 @@ class LegacyConfig
         $config['number_of_meetings_for_auto'] = isset($number_of_meetings_for_auto) && is_numeric($number_of_meetings_for_auto) ? intval($number_of_meetings_for_auto) : 10;
         $config['auto_geocoding_enabled'] = isset($auto_geocoding_enabled) ? boolval($auto_geocoding_enabled) : true;
         $config['new_ui_enabled'] = $new_ui_enabled ?? false;
+        // If default_closed_status is TRUE, meetings that don't explicitly have an OPEN or CLOSED format are assumed CLOSED for the NAWS export.
+        $config['default_closed_status'] = $g_defaultClosedStatus ?? true;
 
         self::$config = $config;
         self::$configLoaded = true;
