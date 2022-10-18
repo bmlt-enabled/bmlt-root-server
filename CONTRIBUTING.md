@@ -18,6 +18,9 @@ There are various ways you can set up your development environment; in the direc
 [Docker Desktop](https://www.docker.com/products/docker-desktop). The make file assumes docker-compose v2.
 
 ## Running the root server under docker
+1. You will need to make sure you are using docker-compose v2. You can do this by opening the docker dashboard and going
+to preferences then general then scroll to the bottom and check the box that says `Use Docker Compose V2`, then hit apply &
+restart.
 1. Edit `docker/bmlt.env` to set your google maps api key, `GKEY=API_KEY`.
 1. Run the command `make dev` in the top-level `bmlt-root-server` directory. If something isn't working (for example,
 mising packages), try running `make clean` first and then `make dev`.
