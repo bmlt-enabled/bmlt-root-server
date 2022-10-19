@@ -1,0 +1,11 @@
+includes:
+    - ./src/vendor/nunomaduro/larastan/extension.neon
+parameters:
+    level: 5
+    paths:
+        - src/app
+        - src/tests
+    excludePaths:
+        - 'src/vendor/*'
+        - 'src/node_modules/*'
+        - 'src/legacy/*'

@@ -140,6 +140,10 @@ lint:  ## PHP Lint
 lint-fix:  ## PHP Lint Fix
 	$(LINT_PREFIX) src/vendor/squizlabs/php_codesniffer/bin/phpcbf
 
+.PHONY: phpstan
+phpstan:  ## PHP Larastan Code Analysis
+	$(LINT_PREFIX) src/vendor/bin/phpstan analyse -c .phpstan.neon --memory-limit=2G
+
 .PHONY: docker-publish-base
 docker-publish-base:  ## Builds Base Docker Image
 	docker buildx build --platform linux/amd64,linux/arm64/v8 -f docker/Dockerfile-base docker/ -t $(BASE_IMAGE):$(BASE_IMAGE_TAG) --push
