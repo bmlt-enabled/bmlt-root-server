@@ -47,6 +47,15 @@ services:
       NEW_UI_ENABLED: 'true'
 ```
 
+## Developing the New UI
+The new UI is developed using [React](https://reactjs.org/), and the code is located in the `resources/js` directory.
+
+You can enable the new UI in the docker container by setting the `NEW_UI_ENABLED` environment variable to `'true'` in `docker/docker-compose.dev.yml`.
+
+To install the UI's dependencies, run the `npm install` command from the `src` directory.
+
+When working on the UI, you'll need to have the [Vite](https://vitejs.dev/) dev server running. To start the dev server, run `npm run dev` from the `src` directory. While the dev server is running, the UI is served out of the `resources/js` directory instead of the normal `public` directory, and [hot module replacement](https://vitejs.dev/guide/features.html#hot-module-replacement) is enabled.
+
 ## Some useful `make` commands
 
 - `make help`  Describe all of the make commands.
