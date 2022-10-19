@@ -10,13 +10,19 @@ use App\Http\Controllers\Query\SwitcherController;
 Route::get('/client_interface/html', [CatchAllController::class, 'all']);
 
 // reimplemented serverInfo.xml
-Route::get('/client_interface/serverInfo.xml', [ServerInfoXmlController::class, 'get']);
+Route::get('/{moreSlashes}client_interface/serverInfo.xml', [ServerInfoXmlController::class, 'get'])
+    ->where('moreSlashes', '/*'); // some old clients have repeating slashes at beginning of path
 
 // reimplemented query apis
-Route::get('/client_interface/{dataFormat}', [SwitcherController::class, 'get'])->middleware('json');
+Route::get('/{moreSlashes}client_interface/{dataFormat}', [SwitcherController::class, 'get'])
+    ->where('moreSlashes', '/*') // some old clients have repeating slashes at beginning of path
+    ->middleware('json');
 
 // reimplemented auth
-Route::any('/local_server/server_admin/{dataFormat}.php', [LegacyAuthController::class, 'handle'])->where('dataFormat', 'json|xml');
+Route::any('/{moreSlashes}local_server/server_admin/{dataFormat}.php', [LegacyAuthController::class, 'handle'])
+    ->where('moreSlashes', '/*') // some old clients have repeating slashes at beginning of path
+    ->where('dataFormat', 'json|xml');
+
 Route::any('/', [LegacyAuthController::class, 'handle']);
 Route::any('/index.php', [LegacyAuthController::class, 'handle']);
 

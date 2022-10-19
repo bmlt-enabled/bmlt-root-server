@@ -236,6 +236,15 @@ class GetSearchResultsTest extends TestCase
             ->assertJsonFragment(['id_bigint' => strval($meeting2->id_bigint)]);
     }
 
+    public function testMultipleLeadingSlashes()
+    {
+        $meeting1 = $this->createMeeting();
+        $badId = $meeting1->id_bigint + 1;
+        $this->get("///client_interface/json/?switcher=GetSearchResults&meeting_ids[]=$meeting1->id_bigint")
+            ->assertStatus(200)
+            ->assertJsonCount(1);
+    }
+
     // weekdays
     //
     //

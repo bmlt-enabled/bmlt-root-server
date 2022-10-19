@@ -28,6 +28,25 @@ VERSION;
         $this->assertXmlStringEqualsXmlString($expectedContent, $content);
     }
 
+    public function testMultipleSlashes()
+    {
+        $newVersion = "2.0.0";
+        $expectedContent = <<<VERSION
+<?xml version="1.0" encoding="utf-8"?>
+<bmltInfo>
+  <serverVersion>
+    <readableString>$newVersion</readableString>
+  </serverVersion>
+</bmltInfo>
+VERSION;
+        Config::set('app.version', $newVersion);
+        $content = $this->get('///client_interface/serverInfo.xml')
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/xml')
+            ->content();
+        $this->assertXmlStringEqualsXmlString($expectedContent, $content);
+    }
+
     public function setUp(): void
     {
         parent::setUp();
