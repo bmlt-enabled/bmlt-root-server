@@ -39,6 +39,7 @@ DB_USER=rootserver
 DB_PASSWORD=rootserver
 DB_HOST=db
 DB_PREFIX=na
+NEW_UI_ENABLED=true
 ```
 
 ## Some useful `make` commands
