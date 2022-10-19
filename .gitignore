@@ -11,3 +11,4 @@ src/legacy/client_interface/html/croutonjs
 croutonjs.zip
 terraform.tfvars
 build
+docker/docker-compose.dev.yml

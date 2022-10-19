@@ -8,6 +8,7 @@ VENDOR_AUTOLOAD := src/vendor/autoload.php
 NODE_MODULES := src/node_modules/.package-lock.json
 FRONTEND := src/public/build/manifest.json
 ZIP_FILE := build/bmlt-root-server.zip
+EXTRA_DOCKER_COMPOSE_ARGS :=
 ifeq ($(CI)x, x)
 	DOCKERFILE := Dockerfile-debug
 	IMAGE := rootserver
@@ -16,6 +17,9 @@ ifeq ($(CI)x, x)
 	COMPOSER_PREFIX := docker run --pull=always -t --rm -v $(shell pwd):/code -w /code $(BASE_IMAGE):$(BASE_IMAGE_TAG)
 	LINT_PREFIX := docker run -t --rm -v $(shell pwd):/code -w /code $(IMAGE):$(TAG)
 	TEST_PREFIX := docker run -e XDEBUG_MODE=coverage,debug -t --rm -v $(shell pwd)/src:/var/www/html/main_server -v $(shell pwd)/docker/test-auto-config.inc.php:/var/www/html/auto-config.inc.php -w /var/www/html/main_server --network host $(IMAGE):$(TAG)
+	ifneq (,$(wildcard docker/docker-compose.dev.yml))
+		EXTRA_DOCKER_COMPOSE_ARGS := -f docker/docker-compose.dev.yml
+	endif
 else
 	DOCKERFILE := Dockerfile
 	IMAGE := bmltenabled/bmlt-root-server
@@ -103,7 +107,7 @@ docker-push: ## Pushes docker image to Dockerhub
 
 .PHONY: dev
 dev: zip ## Docker Compose Up
-	docker-compose -f docker/docker-compose.yml up --build
+	docker-compose -f docker/docker-compose.yml $(EXTRA_DOCKER_COMPOSE_ARGS) up --build
 
 .PHONY: test
 test:  ## Runs PHP Tests
