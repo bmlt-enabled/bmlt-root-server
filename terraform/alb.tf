@@ -19,12 +19,11 @@ resource "aws_security_group" "ecs_http_load_balancers" {
 }
 
 resource "aws_alb_target_group" "bmlt_latest" {
-  name     = "bmlt-latest"
-  port     = 8000
-  protocol = "HTTP"
-  vpc_id   = data.aws_vpc.main.id
-
-  deregistration_delay = 60
+  name                 = "bmlt-latest"
+  port                 = 8000
+  protocol             = "HTTP"
+  vpc_id               = data.aws_vpc.main.id
+  deregistration_delay = 5
 
   health_check {
     path    = "/"
@@ -33,12 +32,11 @@ resource "aws_alb_target_group" "bmlt_latest" {
 }
 
 resource "aws_alb_target_group" "bmlt_unstable" {
-  name     = "bmlt-unstable"
-  port     = 8000
-  protocol = "HTTP"
-  vpc_id   = data.aws_vpc.main.id
-
-  deregistration_delay = 60
+  name                 = "bmlt-unstable"
+  port                 = 8000
+  protocol             = "HTTP"
+  vpc_id               = data.aws_vpc.main.id
+  deregistration_delay = 5
 
   health_check {
     path    = "/"
