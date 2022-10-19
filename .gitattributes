@@ -2,6 +2,7 @@
 .gitattributes export-ignore
 .gitignore export-ignore
 .phpstan.neon export-ignore
+.nvmrc export-ignore
 composer.json export-ignore
 composer.lock export-ignore
 hashed_pw.txt export-ignore
