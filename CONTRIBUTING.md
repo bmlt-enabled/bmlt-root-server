@@ -21,7 +21,7 @@ There are various ways you can set up your development environment; in the direc
 1. You will need to make sure you are using docker-compose v2. You can do this by opening the docker dashboard and going
 to preferences then general then scroll to the bottom and check the box that says `Use Docker Compose V2`, then hit apply &
 restart.
-1. Edit `docker/bmlt.env` to set your google maps api key, `GKEY=API_KEY`.
+1. Copy `docker/docker-compose.dev.yml.example` to `docker/docker-compose.dev.yml` and edit it to set the `GKEY` variable to your google api key.
 1. Run the command `make dev` in the top-level `bmlt-root-server` directory. If something isn't working (for example,
 mising packages), try running `make clean` first and then `make dev`.
 1. Browse to `http://localhost:8000/main_server/`.
@@ -30,16 +30,21 @@ mising packages), try running `make clean` first and then `make dev`.
 
 
 ### Supported environment variables
-This is an example `bmlt.env` file. The value for each of these variables, on start of the container, is automatically
+This is an example `docker-compose.dev.yml` file. The value for each of these variables, on start of the container, is automatically
 written to the appropriate line in `auto-config.inc.php`.
 ```
-GKEY=
-DB_DATABASE=rootserver
-DB_USER=rootserver
-DB_PASSWORD=rootserver
-DB_HOST=db
-DB_PREFIX=na
-NEW_UI_ENABLED=true
+version: '3'
+
+services:
+  bmlt:
+    environment:
+      GKEY: ''
+      DB_DATABASE: rootserver
+      DB_USER: rootserver
+      DB_PASSWORD: rootserver
+      DB_HOST: db
+      DB_PREFIX: na
+      NEW_UI_ENABLED: 'true'
 ```
 
 ## Some useful `make` commands
@@ -78,7 +83,7 @@ The Docker files automatically set up an `auto-config.inc.php` file for you. Usu
 the bother of going through the install wizard each time you restart the root server. However, if you want to test or
 change the install wizard, you can start with the install wizard instead of the login screen by deleting this file.
 Here are modified steps to do that.
-1. Edit `bmlt.env` to set your google maps api key, `GKEY=API_KEY`.
+1. Edit `docker-compose.dev.yml` to set your google maps api key, `GKEY: API_KEY`.
 1. Run the command `make dev` in the top-level `bmlt-root-server` directory.
 1. In another window, run `make bash` to open a bash shell accessing the container's file system. The shell should
 start in the directory `cd /var/www/html/main_server`.  
