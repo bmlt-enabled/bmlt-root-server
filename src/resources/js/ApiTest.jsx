@@ -1,5 +1,7 @@
+import { Container } from '@mui/material';
 import React from 'react';
 import RootServerApi from './RootServerApi'
+
 
 
 class LoginFormTest extends React.Component {
@@ -73,11 +75,11 @@ class GetMeetingsTest extends React.Component {
 export default class ApiTest extends React.Component {
     render() {
         return (
-            <div>
+            <Container maxWidth="lg">
                 <LoginFormTest/>
                 <br/><br/>
                 <GetMeetingsTest/>
-            </div>
+            </Container>
         );
     }
 }
