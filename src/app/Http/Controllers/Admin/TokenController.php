@@ -40,7 +40,6 @@ class TokenController extends Controller
         return new JsonResponse($this->createToken($user));
     }
 
-
     public function refresh(Request $request)
     {
         $user = $request->user();
@@ -67,7 +66,6 @@ class TokenController extends Controller
             'token_type' => 'bearer',
         ];
     }
-
 
     public function logout(Request $request)
     {
