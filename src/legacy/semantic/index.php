@@ -58,7 +58,7 @@ if (file_exists(dirname(dirname(__FILE__)).'/server/shared/classes/comdef_utilit
         }
     }
 
-    $url_path .= '/'.trim($subsequent_path, '/').'/';
+    $url_path .= '/'.trim($subsequent_path, '/');
     $uri = 'http'.($https ? 's' : '').'://'.$url_path;
     $api_key = get_api_key($uri);
     $_GET = array ( 'root_server' => $uri, 'direct_workshop' => 1, 'google_api_key' => $api_key,  );
