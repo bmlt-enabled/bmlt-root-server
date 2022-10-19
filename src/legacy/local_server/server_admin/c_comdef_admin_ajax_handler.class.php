@@ -1499,18 +1499,18 @@ class c_comdef_admin_ajax_handler
                     $row = substr($row, 0, strlen($row) - 1);
                 }
                 $row = explode('","', $row);
-                foreach ($row as $column) {
-                    if (isset($column)) {
-                        $line[$keys[$index++]] = $column;
+                if (is_array($row)) {
+                    foreach ($row as $column) {
+                        if (isset($column)) {
+                            $line[$keys[$index++]] = $column;
+                        }
                     }
+                    array_push($temp_keyed_array, $line);
                 }
-                array_push($temp_keyed_array, $line);
             }
         }
 
-        $out_json_data = array2json($temp_keyed_array);
-
-        return $out_json_data;
+        return array2json($temp_keyed_array);
     }
 }
 
