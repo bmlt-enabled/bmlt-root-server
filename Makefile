@@ -75,11 +75,8 @@ $(LEGACY_STATIC_FILES):
 $(ZIP_FILE): $(VENDOR_AUTOLOAD) $(FRONTEND) $(CROUTON_JS) $(LEGACY_STATIC_FILES)
 	mkdir -p build
 	cp -r src build/main_server
-	cd build && zip -r $(shell basename $(ZIP_FILE)) main_server -x main_server/node_modules/\*
+	cd build && zip -r $(shell basename $(ZIP_FILE)) main_server -x main_server/node_modules/\* -x resources/npm
 	rm -rf build/main_server
-
-src/config/l5-swagger.php:
-	$(LINT_PREFIX) src/artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider"
 
 .PHONY: composer
 composer: $(VENDOR_AUTOLOAD) ## Runs composer install
@@ -123,9 +120,17 @@ coverage-serve:  ## Serves HTML Coverage Report
 	python3 -m http.server 8100 --directory src/tests/reports/coverage
 
 .PHONY: generate-api-json
-generate-api-json: src/config/l5-swagger.php ## Generates Open API JSON
+generate-api-json: ## Generates Open API JSON
 	$(LINT_PREFIX) src/artisan l5-swagger:generate
-#	mv src/storage/api-docs/api-docs.json src/storage/api-docs/openapi.json
+
+.PHONY: generate-api-client
+generate-api-client: ## Generates javascript api client
+	rm -rf src/resources/npm/api-client
+	docker run --rm -v "$(shell pwd):/local" -w /local openapitools/openapi-generator-cli generate \
+	    -i src/storage/api-docs/api-docs.json \
+	    -g typescript-fetch \
+	    -p npmName=bmlt-root-server-client \
+	    -o src/resources/npm/api-client
 
 .PHONY: lint
 lint:  ## PHP Lint

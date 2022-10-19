@@ -48,13 +48,13 @@ namespace App\Http\Controllers\Admin\Swagger;
  *     @OA\Property(property="id", type="integer", example="0"),
  *     allOf={ @OA\Schema(ref="#/components/schemas/MeetingBase") }
  * ),
- * @OA\Schema(schema="CreateMeeting", required={"serviceBodyId", "formatIds", "venueType", "day", "startTime", "duration", "latitude", "longitude", "published", "name"},
+ * @OA\Schema(schema="MeetingCreate", required={"serviceBodyId", "formatIds", "venueType", "day", "startTime", "duration", "latitude", "longitude", "published", "name"},
  *     allOf={ @OA\Schema(ref="#/components/schemas/MeetingBase") }
  * ),
- * @OA\Schema(schema="UpdateMeeting", required={"serviceBodyId", "formatIds", "venueType", "day", "startTime", "duration", "latitude", "longitude", "published", "name"},
+ * @OA\Schema(schema="MeetingUpdate", required={"serviceBodyId", "formatIds", "venueType", "day", "startTime", "duration", "latitude", "longitude", "published", "name"},
  *     allOf={ @OA\Schema(ref="#/components/schemas/MeetingBase") }
  * ),
- * @OA\Schema(schema="PartialUpdateMeeting", required={"serviceBodyId", "formatIds", "venueType", "day", "startTime", "duration", "latitude", "longitude", "published", "name"},
+ * @OA\Schema(schema="MeetingPartialUpdate", required={"serviceBodyId", "formatIds", "venueType", "day", "startTime", "duration", "latitude", "longitude", "published", "name"},
  *     allOf={ @OA\Schema(ref="#/components/schemas/MeetingBase") }
  * ),
  * @OA\Schema(schema="MeetingCollection", type="array",
@@ -69,7 +69,7 @@ class MeetingController extends Controller
 {
 
     /**
-     * @OA\Get(path="/api/v1/meetings", summary="Retrieves meetings", description="Retrieve meetings for authenticated user.", operationId="getMeetings", tags={"meetings"}, security={{"bmltToken":{}}},
+     * @OA\Get(path="/api/v1/meetings", summary="Retrieves meetings", description="Retrieve meetings for authenticated user.", operationId="getMeetings", tags={"rootServer"}, security={{"bmltToken":{}}},
      *     @OA\Parameter(description="comma delimited meeting ids", in="query", name="meetingIds", required=false, example="1,2",
      *         @OA\Schema(type="string")
      *     ),
@@ -98,7 +98,7 @@ class MeetingController extends Controller
     }
 
     /**
-     * @OA\Get(path="/api/v1/meetings/{meetingId}", summary="Retrieves a meeting", description="Retrieve a meeting.", operationId="getMeeting", tags={"meetings"}, security={{"bmltToken":{}}},
+     * @OA\Get(path="/api/v1/meetings/{meetingId}", summary="Retrieves a meeting", description="Retrieve a meeting.", operationId="getMeeting", tags={"rootServer"}, security={{"bmltToken":{}}},
      *     @OA\Parameter(description="ID of meeting", in="path", name="meetingId", required=true, example="1",
      *         @OA\Schema(type="integer",format="int64")
      *     ),
@@ -118,9 +118,9 @@ class MeetingController extends Controller
     }
 
     /**
-     * @OA\Post(path="/api/v1/meetings", summary="Creates a meeting", description="Creates a meeting.", operationId="createMeeting", tags={"meetings"}, security={{"bmltToken":{}}},
+     * @OA\Post(path="/api/v1/meetings", summary="Creates a meeting", description="Creates a meeting.", operationId="createMeeting", tags={"rootServer"}, security={{"bmltToken":{}}},
      *     @OA\RequestBody(required=true, description="Pass in meeting object",
-     *         @OA\JsonContent(ref="#/components/schemas/CreateMeeting"),
+     *         @OA\JsonContent(ref="#/components/schemas/MeetingCreate"),
      *     ),
      *     @OA\Response(response=201, description="Returns when POST is successful.",
      *         @OA\JsonContent(ref="#/components/schemas/Meeting")
@@ -144,12 +144,12 @@ class MeetingController extends Controller
     }
 
     /**
-     * @OA\Put(path="/api/v1/meetings/{meetingId}", summary="Updates a meeting", description="Updates a meeting.", operationId="updateMeeting", tags={"meetings"}, security={{"bmltToken":{}}},
+     * @OA\Put(path="/api/v1/meetings/{meetingId}", summary="Updates a meeting", description="Updates a meeting.", operationId="updateMeeting", tags={"rootServer"}, security={{"bmltToken":{}}},
      *     @OA\Parameter(description="ID of meeting",in="path", name="meetingId", required=true, example="1",
      *         @OA\Schema(type="integer", format="int64")
      *     ),
      *     @OA\RequestBody(required=true, description="Pass in meeting object",
-     *         @OA\JsonContent(ref="#/components/schemas/UpdateMeeting"),
+     *         @OA\JsonContent(ref="#/components/schemas/MeetingUpdate"),
      *     ),
      *     @OA\Response(response=204, description="Success."),
      *     @OA\Response(response=401, description="Returns when user is not authenticated.",
@@ -171,12 +171,12 @@ class MeetingController extends Controller
     }
 
     /**
-     * @OA\Patch(path="/api/v1/meetings/{meetingId}", summary="Patches a meeting", description="Patches a meeting by id", operationId="patchMeeting", tags={"meetings"}, security={{"bmltToken":{}}},
+     * @OA\Patch(path="/api/v1/meetings/{meetingId}", summary="Patches a meeting", description="Patches a meeting by id", operationId="patchMeeting", tags={"rootServer"}, security={{"bmltToken":{}}},
      *     @OA\Parameter(description="ID of meeting", in="path", name="meetingId", required=true, example="1",
      *         @OA\Schema(type="integer", format="int64")
      *     ),
      *     @OA\RequestBody(required=true, description="Pass in fields you want to update.",
-     *         @OA\JsonContent(ref="#/components/schemas/PartialUpdateMeeting"),
+     *         @OA\JsonContent(ref="#/components/schemas/MeetingPartialUpdate"),
      *     ),
      *     @OA\Response(response=204, description="Success."),
      *     @OA\Response(response=401, description="Returns when user is not authenticated.",
@@ -198,7 +198,7 @@ class MeetingController extends Controller
     }
 
     /**
-     * @OA\Delete(path="/api/v1/meetings/{meetingId}", summary="Deletes a meeting", description="Deletes a meeting by id.", operationId="deleteMeeting", tags={"meetings"}, security={{"bmltToken":{}}},
+     * @OA\Delete(path="/api/v1/meetings/{meetingId}", summary="Deletes a meeting", description="Deletes a meeting by id.", operationId="deleteMeeting", tags={"rootServer"}, security={{"bmltToken":{}}},
      *     @OA\Parameter(description="ID of meeting", in="path", name="meetingId", required=true, example="1",
      *         @OA\Schema(type="integer", format="int64")
      *     ),

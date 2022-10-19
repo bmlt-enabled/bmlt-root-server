@@ -4,6 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>BMLT Root Server</title>
+    <script>
+        var baseUrl = '{{ url('/') }}';
+    </script>
 
     @viteReactRefresh
     @vite('resources/js/App.jsx')

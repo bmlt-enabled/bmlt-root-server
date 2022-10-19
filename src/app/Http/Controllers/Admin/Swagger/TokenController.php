@@ -16,7 +16,7 @@ namespace App\Http\Controllers\Admin\Swagger;
 class TokenController extends Controller
 {
     /**
-     * @OA\Post(path="/api/v1/auth/token", summary="Creates a token", description="Exchange credentials for a new token", operationId="authToken", tags={"auth"},
+     * @OA\Post(path="/api/v1/auth/token", summary="Creates a token", description="Exchange credentials for a new token", operationId="authToken", tags={"rootServer"},
      *     @OA\RequestBody(required=true, description="User credentials",
      *         @OA\JsonContent(ref="#/components/schemas/TokenCredentials"),
      *     ),
@@ -36,7 +36,7 @@ class TokenController extends Controller
     }
 
     /**
-     * @OA\Post(path="/api/v1/auth/refresh", summary="Revokes and issues a new token", description="Refresh token.", operationId="authRefresh", tags={"auth"}, security={{"bmltToken":{}}},
+     * @OA\Post(path="/api/v1/auth/refresh", summary="Revokes and issues a new token", description="Refresh token.", operationId="authRefresh", tags={"rootServer"}, security={{"bmltToken":{}}},
      *     @OA\Response(response=200, description="Returns when refresh is successful.",
      *         @OA\JsonContent(ref="#/components/schemas/Token")
      *     ),
@@ -50,7 +50,7 @@ class TokenController extends Controller
     }
 
     /**
-     * @OA\Post(path="/api/v1/auth/logout", summary="Revokes a token", description="Revoke token and logout.", operationId="authLogout", tags={"auth"}, security={{"bmltToken":{}}},
+     * @OA\Post(path="/api/v1/auth/logout", summary="Revokes a token", description="Revoke token and logout.", operationId="authLogout", tags={"rootServer"}, security={{"bmltToken":{}}},
      *     @OA\Response(response=200, description="Returns when token was logged out."),
      *     @OA\Response(response=401, description="Returns when request is unauthenticated.",
      *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
