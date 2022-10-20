@@ -3,7 +3,7 @@ import RootServerApi from "../RootServerApi";
 import {useNavigate} from "react-router-dom";
 import { Header } from "../sections/Header";
 import { LoginForm } from "../partials/forms/LoginForm";
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
 import { styled } from "@mui/system";
 
 const StyledFormWrapper = styled(Box)(({theme}) => ({
