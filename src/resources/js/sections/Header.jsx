@@ -10,10 +10,10 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
 
 export const Header = () => {
   return (
-    <StyledAppBar position="relative">
+    <StyledAppBar position="relative" elevation={0}>
       <Container maxWidth="lg">
         <Typography color="dark.main">Root Server Header</Typography>
       </Container>
-      </StyledAppBar>
+    </StyledAppBar>
   );
 };
