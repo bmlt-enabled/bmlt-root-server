@@ -9,14 +9,13 @@ export const theme = createTheme({
             main: "#232424",
         },
         primary: {
-            main: "#C6203E",
-            contrastText: "#fff",
+            main: "#4a90e2",
         },
         secondary: {
             main: "#E460AB",
         },
         tertiary: {
-            main: "#00bcd4",
+            main: "#d8d8d8",
         },
         white: {
             main: "#fff",
@@ -105,7 +104,7 @@ export const theme = createTheme({
         MuiButton: {
             styleOverrides: {
                 root: {
-                    padding: "1rem 3rem",
+                    padding: "0.5rem 1.5rem",
                 },
             },
             variants: [
