@@ -1,0 +1,30 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+    RewriteOptions AllowNoSlash
+
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteCond %{HTTP:X-Forwarded-Proto} =https
+    RewriteCond %{HTTP:X-Forwarded-Port} !^$
+    RewriteCond %{HTTP:X-Forwarded-Port} !^443$
+    RewriteCond %{REQUEST_URI} main_server$
+    RewriteRule ^ https://%{HTTP_HOST}:%{HTTP:X-Forwarded-Port}/main_server/ [R=301,L,QSA]
+
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteCond %{HTTP:X-Forwarded-Proto} =https
+    RewriteCond %{REQUEST_URI} main_server$
+    RewriteRule ^ https://%{HTTP_HOST}/main_server/ [R=301,L,QSA]
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Send anything not index.php to public... it'll send it back if there's no match
+    RewriteCond %{REQUEST_FILENAME} !index.php$
+    RewriteRule (.+) public/$1 [L]
+
+    RewriteRule ^ index.php [L]
+</IfModule>
