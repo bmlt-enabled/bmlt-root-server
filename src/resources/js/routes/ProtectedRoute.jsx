@@ -1,21 +1,19 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Navigate } from "react-router-dom";
-import { checkAccessToken } from "../helpers/checkAccessToken";
+import RootServerApi from "../RootServerApi";
 import { Layout } from '../Layout';
+import { loadAccessToken } from '../helpers/utils';
 
 export const ProtectedRoute = ({children}) => {
-  useEffect(() => {
-    checkAccessToken();
-  }, []);
-  const token = localStorage.getItem("accessToken");
-  if (token) {
+  loadAccessToken();
+  if (RootServerApi.isLoggedIn) {
     return (
       <Layout>
       {children}
       </Layout>
     )
-
-  } else {
-    return <Navigate to="/login" />
   }
+  
+  return <Navigate to="/login" />
+
 }
