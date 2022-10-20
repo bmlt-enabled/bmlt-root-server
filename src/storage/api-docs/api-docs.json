@@ -1,7 +1,7 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "BMLT - OpenAPI 3.0",
+        "title": "BMLT",
         "description": "BMLT Admin API Documentation",
         "license": {
             "name": "MIT",
@@ -2316,6 +2316,10 @@
                     "token_type": {
                         "type": "string",
                         "example": "bearer"
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "example": "1"
                     }
                 },
                 "type": "object"

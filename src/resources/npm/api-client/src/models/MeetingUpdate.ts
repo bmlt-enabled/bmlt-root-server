@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * BMLT - OpenAPI 3.0
+ * BMLT
  * BMLT Admin API Documentation
  *
  * The version of the OpenAPI document: 1.0.0
