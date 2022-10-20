@@ -108,6 +108,7 @@ class LegacyConfig
         $config['search_spec_map_center_longitude'] = isset($search_spec_map_center) && is_array($search_spec_map_center) && isset($search_spec_map_center['longitude']) ? $search_spec_map_center['longitude'] : -118.563659;
         $config['search_spec_map_center_latitude'] = isset($search_spec_map_center) && is_array($search_spec_map_center) && isset($search_spec_map_center['latitude']) ? $search_spec_map_center['latitude'] : 34.235918;
         $config['search_spec_map_center_zoom'] = isset($search_spec_map_center) && is_array($search_spec_map_center) && isset($search_spec_map_center['zoom']) ? $search_spec_map_center['zoom'] : 6;
+        $config['number_of_meetings_for_auto'] = isset($number_of_meetings_for_auto) && is_numeric($number_of_meetings_for_auto) ? intval($number_of_meetings_for_auto) : 10;
         $config['auto_geocoding_enabled'] = isset($auto_geocoding_enabled) ? boolval($auto_geocoding_enabled) : true;
         $config['new_ui_enabled'] = $new_ui_enabled ?? false;
 
