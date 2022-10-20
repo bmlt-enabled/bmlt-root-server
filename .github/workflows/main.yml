@@ -196,32 +196,7 @@ jobs:
           role-session-name: gh-actions-bmlt
           aws-region: us-east-1
 
-      - name: Download Task Definition
+      - name: Update ECS Service bmlt-${{ matrix.env }}
         run: |
-          echo $IMAGE_NAME
-          aws ecs describe-task-definition --task-definition bmlt-${{ matrix.env }} --query taskDefinition | jq -r 'del(
-            .taskDefinitionArn,
-            .requiresAttributes,
-            .compatibilities,
-            .revision,
-            .status,
-            .registeredAt,
-            .registeredBy
-          )' > task-definition.json
-
-      - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: task-definition.json
-          container-name: bmlt-root-server
-          image: ${{ env.IMAGE_NAME }}
-
-      - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: bmlt-${{ matrix.env }}
-          cluster: bmlt
-          wait-for-service-stability: true
-          wait-for-minutes: 5
+          aws ecs update-service --cluster bmlt --service bmlt-${{ matrix.env }} --force-new-deployment
+          aws ecs wait services-stable --cluster bmlt --services bmlt-${{ matrix.env }}
