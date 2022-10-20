@@ -7,16 +7,16 @@ import { CssBaseline } from "@mui/material";
 // import { AuthController } from './routes/AuthController';
 import { BrowserRouter } from "react-router-dom";
 import { Router } from './routes/Router';
-import { Layout } from './Layout';
+// import { Layout } from './Layout';
 
 export default function App() {
   return (
     <ThemeProvider theme={theme}>
        <BrowserRouter basename="/main_server/">
-        <Layout>
+        {/* <Layout> */}
           <CssBaseline />
           <Router />
-        </Layout>
+        {/* </Layout> */}
       </BrowserRouter>
     </ThemeProvider>
   );

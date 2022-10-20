@@ -28,6 +28,9 @@ const StyledNavWrapper = styled("nav")(({ theme }) => ({
   [theme.breakpoints.up("md")]: {
     flexDirection: "row",
   },
+  '& > a': {
+    marginRight: theme.spacing(),
+  }
 }));
   
 
@@ -48,6 +51,8 @@ export const Navbar = () => {
           <Link to="/meetings">Add/Edit Meetings</Link>
           <Link to="/service-bodies">Service Bodies</Link>
           <Link to="/users">Users</Link>
+          <Link to="/meeting-formats">Meting Formats</Link>
+          <Link to="/my-account">My Account</Link>
         </StyledNavWrapper>
         <StyledUserInfo>
           <Typography color="dark.main">UserName</Typography>
