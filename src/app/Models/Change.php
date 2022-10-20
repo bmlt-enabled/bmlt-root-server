@@ -31,11 +31,6 @@ class Change extends Model
         'after_object',
     ];
 
-    public function getMeetingData($key)
-    {
-        return $this->meetingData->{$key} ?? null;
-    }
-
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id_bigint');
