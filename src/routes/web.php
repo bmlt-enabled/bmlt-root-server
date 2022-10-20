@@ -24,7 +24,8 @@ Route::any('/{moreSlashes}local_server/server_admin/{dataFormat}.php', [LegacyAu
     ->where('dataFormat', 'json|xml');
 
 Route::any('/', [LegacyAuthController::class, 'handle']);
-Route::any('/index.php', [LegacyAuthController::class, 'handle']);
+Route::any('/{moreSlashes}index.php', [LegacyAuthController::class, 'handle'])
+    ->where('moreSlashes', '/*'); // some old clients have repeating slashes at beginning of path
 
 // Catch-all for everything else - legacy code or UI
 Route::get('{any}', [CatchAllController::class, 'all'])->where('any', '.*');
