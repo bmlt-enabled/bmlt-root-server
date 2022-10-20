@@ -15,6 +15,7 @@
         "@mui/material": "^5.10.10",
         "bmlt-root-server-client": "file:resources/npm/api-client",
         "react": "^18.2.0",
-        "react-dom": "^18.2.0"
+        "react-dom": "^18.2.0",
+        "react-router-dom": "^6.4.2"
     }
 }
