@@ -183,11 +183,6 @@ class SwitcherController extends Controller
                 abort(400, 'A google api key must be configured to use StringSearchIsAnAddress.');
             }
 
-            $searchStringRadius = $request->input('SearchStringRadius');
-            if (is_null($searchStringRadius) || !is_numeric($searchStringRadius)) {
-                abort(400, 'SearchStringRadius is required to use SearchStringIsAnAddress.');
-            }
-
             $regionBias = legacy_config('region_bias');
             if (is_string($regionBias) && is_numeric($searchString)) {
                 // when it's numeric, like a postcode, add $regionBias directly
@@ -218,9 +213,17 @@ class SwitcherController extends Controller
                 abort(500, 'There was a problem parsing the geocoding response.');
             }
 
+            $searchStringRadius = $request->input('SearchStringRadius');
+            if (is_null($searchStringRadius) || !is_numeric($searchStringRadius)) {
+                $nNearestAuto = abs(legacy_config('number_of_meetings_for_auto')) * -1;
+                $geoWidthMiles = legacy_config('distance_units') == 'mi' ? $nNearestAuto : null;
+                $geoWidthKilometers = legacy_config('distance_units') != 'mi' ? $nNearestAuto : null;
+            } else {
+                $geoWidthMiles = legacy_config('distance_units') == 'mi' ? floatval($searchStringRadius) : null;
+                $geoWidthKilometers = legacy_config('distance_units') != 'mi' ? floatval($searchStringRadius) : null;
+            }
+
             $searchString = null;
-            $geoWidthMiles = legacy_config('distance_units') == 'mi' ? floatval($searchStringRadius) : null;
-            $geoWidthKilometers = legacy_config('distance_units') != 'mi' ? floatval($searchStringRadius) : null;
         }
 
         $published = $request->input('advanced_published', '1');
