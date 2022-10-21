@@ -18,3 +18,5 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+tsconfig.tsbuildinfo
+/resources/npm/api-client/*.tgz

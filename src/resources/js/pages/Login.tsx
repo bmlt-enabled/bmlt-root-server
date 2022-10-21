@@ -6,7 +6,7 @@ import { LoginForm } from '../partials/forms/LoginForm';
 import { Box } from '@mui/material';
 import { styled } from '@mui/system';
 
-const StyledFormWrapper = styled(Box)(({ theme }) => ({
+const StyledFormWrapper = styled(Box)`
   position: 'absolute',
   top: '50%',
   left: '50%',
@@ -15,26 +15,26 @@ const StyledFormWrapper = styled(Box)(({ theme }) => ({
   maxWidth: '600px',
   padding: '20px',
   border: '1px solid #ccc',
-  borderRadius: theme.borderRadius,
-}));
+  border-radius: ${({ theme }) => theme.shape.borderRadius},
+`;
 
 export const Login = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleUsernameChange = (e) => {
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
   };
 
-  const handlePasswordChange = (e) => {
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const token = await RootServerApi.login(username, password);
-    RootServerApi.accessToken = token.accessToken;
+    RootServerApi.accessToken = token.accessToken ?? null;
     localStorage.setItem('token', JSON.stringify(token));
     navigate('/');
   };

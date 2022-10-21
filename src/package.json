@@ -3,13 +3,16 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
-        "lint": "prettier --check resources/js && eslint resources/js",
+        "lint": "tsc && prettier --check resources/js && eslint resources/js",
         "format": "prettier --write resources/js"
     },
     "devDependencies": {
+        "@types/react": "^18.0.21",
+        "@types/react-dom": "^18.0.6",
+        "@typescript-eslint/eslint-plugin": "^5.40.1",
+        "@typescript-eslint/parser": "^5.40.1",
         "@vitejs/plugin-react": "^2.1.0",
         "eslint": "^8.25.0",
-        "eslint-config-airbnb": "^19.0.4",
         "eslint-config-prettier": "^8.5.0",
         "eslint-plugin-import": "^2.26.0",
         "eslint-plugin-jsx-a11y": "^6.6.1",
@@ -18,13 +21,15 @@
         "eslint-plugin-react-hooks": "^4.6.0",
         "laravel-vite-plugin": "^0.6.0",
         "prettier": "^2.7.1",
-        "vite": "^3.0.0"
+        "typescript": "^4.8.4",
+        "vite": "^3.0.0",
+        "vite-tsconfig-paths": "^3.5.2"
     },
     "dependencies": {
         "@emotion/react": "^11.10.4",
         "@emotion/styled": "^11.10.4",
         "@mui/material": "^5.10.10",
-        "bmlt-root-server-client": "file:resources/npm/api-client",
+        "bmlt-root-server-client": "file:resources/npm/api-client/bmlt-root-server-client-1.0.0.tgz",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-router-dom": "^6.4.2"

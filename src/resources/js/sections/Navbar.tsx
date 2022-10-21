@@ -1,7 +1,6 @@
-import { Container, Box, Typography, Button } from '@mui/material';
+import { Container, Typography, Button } from '@mui/material';
 import { styled } from '@mui/system';
 import { Link, useNavigate } from 'react-router-dom';
-import React from 'react';
 import RootServerApi from '../RootServerApi';
 
 const StyledNavBarWrapper = styled('div')(({ theme }) => ({
@@ -43,18 +42,18 @@ export const Navbar = () => {
   };
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth='lg'>
       <StyledNavBarWrapper>
         <StyledNavWrapper>
-          <Link to="/meetings">Meetings</Link>
-          <Link to="/service-bodies">Service Bodies</Link>
-          <Link to="/users">Users</Link>
-          <Link to="/meeting-formats">Formats</Link>
-          <Link to="/my-account">My Account</Link>
+          <Link to='/meetings'>Meetings</Link>
+          <Link to='/service-bodies'>Service Bodies</Link>
+          <Link to='/users'>Users</Link>
+          <Link to='/meeting-formats'>Formats</Link>
+          <Link to='/my-account'>My Account</Link>
         </StyledNavWrapper>
         <StyledUserInfo>
-          <Typography color="dark.main">UserName</Typography>
-          <Button variant="contained" color="primary" onClick={handleLogout}>
+          <Typography color='dark.main'>UserName</Typography>
+          <Button variant='contained' color='primary' onClick={handleLogout}>
             Logout
           </Button>
         </StyledUserInfo>
