@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Admin\Swagger;
 
 /**
  * @OA\Schema(schema="Token",
- *       @OA\Property(property="access_token", type="string", example="2|tR6PIqa8tiBJWMu4zyb3qw4eECuERjLd7xeLKgBu"),
- *       @OA\Property(property="expires_at", type="integer", example="1667342171"),
- *       @OA\Property(property="token_type", type="string", example="bearer"),
+ *     @OA\Property(property="access_token", type="string", example="2|tR6PIqa8tiBJWMu4zyb3qw4eECuERjLd7xeLKgBu"),
+ *     @OA\Property(property="expires_at", type="integer", example="1667342171"),
+ *     @OA\Property(property="token_type", type="string", example="bearer"),
+ *     @OA\Property(property="user_id", type="integer", example="1"),
  * ),
  * @OA\Schema(schema="TokenCredentials", required={"username","password"},
  *     @OA\Property(property="password", type="string", format="password", example="PassWord12345"),

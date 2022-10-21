@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * BMLT - OpenAPI 3.0
+ * BMLT
  * BMLT Admin API Documentation
  *
  * The version of the OpenAPI document: 1.0.0
@@ -37,6 +37,12 @@ export interface Token {
      * @memberof Token
      */
     tokenType?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof Token
+     */
+    userId?: number;
 }
 
 /**
@@ -61,6 +67,7 @@ export function TokenFromJSONTyped(json: any, ignoreDiscriminator: boolean): Tok
         'accessToken': !exists(json, 'access_token') ? undefined : json['access_token'],
         'expiresAt': !exists(json, 'expires_at') ? undefined : json['expires_at'],
         'tokenType': !exists(json, 'token_type') ? undefined : json['token_type'],
+        'userId': !exists(json, 'user_id') ? undefined : json['user_id'],
     };
 }
 
@@ -76,6 +83,7 @@ export function TokenToJSON(value?: Token | null): any {
         'access_token': value.accessToken,
         'expires_at': value.expiresAt,
         'token_type': value.tokenType,
+        'user_id': value.userId,
     };
 }
 

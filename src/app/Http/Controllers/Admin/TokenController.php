@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Admin\UserResource;
 use App\Http\Responses\JsonResponse;
 use App\Interfaces\UserRepositoryInterface;
 use App\Models\User;
@@ -64,6 +65,7 @@ class TokenController extends Controller
             'access_token' => $user->createToken(Str::random(20))->plainTextToken,
             'expires_at' => $expiresAt,
             'token_type' => 'bearer',
+            'user_id' => $user->id_bigint,
         ];
     }
 

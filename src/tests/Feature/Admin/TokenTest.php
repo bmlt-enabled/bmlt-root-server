@@ -32,8 +32,8 @@ class TokenTest extends TestCase
 
         // reported expiration looks reasonable
         $this->assertTrue($data['expires_at'] >= (time() + config('sanctum.expiration')) - 1);
-
         $this->assertTrue($data['token_type'] == 'bearer');
+        $this->assertEquals($data['user_id'], $user->id_bigint);
 
         // try to use the token
         $token = $data['access_token'];
