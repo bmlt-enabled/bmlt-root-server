@@ -21,7 +21,7 @@ class ApiClient extends RootServerApi {
   }
 
   get isLoggedIn(): boolean {
-    return this.authorizationHeader !== null;
+    return Boolean(this.authorizationHeader);
   }
 }
 
