@@ -20,3 +20,4 @@ yarn-error.log
 /.vscode
 tsconfig.tsbuildinfo
 /resources/npm/api-client/*.tgz
+/resources/npm/api-client/package-lock.json
