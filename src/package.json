@@ -3,8 +3,8 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
-        "lint": "tsc && prettier --check resources/js && eslint resources/js",
-        "format": "prettier --write resources/js"
+        "lint": "tsc && prettier --check vite.config.ts resources/js && eslint vite.config.ts resources/js",
+        "format": "prettier --write vite.config.ts resources/js"
     },
     "devDependencies": {
         "@types/react": "^18.0.21",
