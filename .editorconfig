@@ -1,12 +1,24 @@
-[*.xml]
+root = true
+
+[*]
+charset = utf-8
 end_of_line = lf
 insert_final_newline = true
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+
+[*.{tf,tfvars}]
+indent_size = 2
 
 [*.yml]
-end_of_line = lf
-insert_final_newline = true
+indent_size = 2
 
 [Makefile]
-end_of_line = lf
-insert_final_newline = true
 indent_style = tab
+
+[*.md]
+trim_trailing_whitespace = false
+
+[*.{js,jsx,ts,tsx}]
+indent_size = 2
