@@ -8,7 +8,7 @@ VENDOR_AUTOLOAD := src/vendor/autoload.php
 NODE_MODULES := src/node_modules/.package-lock.json
 FRONTEND := src/public/build/manifest.json
 ZIP_FILE := build/bmlt-root-server.zip
-API_CLIENT_PACKAGE := resources/npm/api-client/bmlt-root-server-client-1.0.0.tgz
+API_CLIENT_PACKAGE := src/resources/npm/api-client/bmlt-root-server-client-1.0.0.tgz
 EXTRA_DOCKER_COMPOSE_ARGS :=
 ifeq ($(CI)x, x)
 	DOCKERFILE := Dockerfile-debug
@@ -56,7 +56,7 @@ $(CROUTON_JS):
 	rm -rf src/public/client_interface/html/croutonjs/examples
 
 $(API_CLIENT_PACKAGE):
-	cd src/resources/npm/api-client && npm pack
+	cd src/resources/npm/api-client && npm install && npm pack
 
 $(NODE_MODULES): $(API_CLIENT_PACKAGE)
 	cd src && npm install
@@ -177,3 +177,4 @@ clean:  ## Clean build
 	rm -rf src/node_modules
 	rm -rf src/vendor
 	rm -rf build
+	rm -f $(API_CLIENT_PACKAGE)
