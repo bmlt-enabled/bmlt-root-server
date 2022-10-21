@@ -1,14 +1,17 @@
 import { Container } from '@mui/material';
-import React from 'react';
 import { Navbar } from './sections/Navbar';
 import { Header } from './sections/Header';
 
-export const Layout = ({ children }) => {
+type Props = {
+  children: JSX.Element;
+};
+
+export const Layout = ({ children }: Props) => {
   return (
     <>
       <Header />
       <Navbar />
-      <Container maxWidth="lg">{children}</Container>
+      <Container maxWidth='lg'>{children}</Container>
     </>
   );
 };

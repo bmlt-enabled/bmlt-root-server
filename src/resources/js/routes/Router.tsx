@@ -1,4 +1,3 @@
-import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Login } from '../pages/Login';
 import { ProtectedLoginRoute } from './ProtectedLoginRoute';
@@ -9,7 +8,7 @@ export const Router = () => {
   return (
     <Routes>
       <Route
-        path="/login"
+        path='/login'
         element={
           <ProtectedLoginRoute>
             <Login />

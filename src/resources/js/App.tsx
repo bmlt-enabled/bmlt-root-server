@@ -9,7 +9,7 @@ import { Router } from './routes/Router';
 export default function App() {
   return (
     <ThemeProvider theme={theme}>
-      <BrowserRouter basename="/main_server/">
+      <BrowserRouter basename='/main_server/'>
         <CssBaseline />
         <Router />
       </BrowserRouter>
@@ -18,5 +18,5 @@ export default function App() {
 }
 
 if (document.getElementById('root')) {
-  createRoot(document.getElementById('root')).render(<App />);
+  createRoot(document.getElementById('root') as HTMLElement).render(<App />);
 }
