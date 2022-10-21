@@ -35,8 +35,7 @@ export const Login = () => {
     e.preventDefault();
     const token = await RootServerApi.login(username, password);
     RootServerApi.accessToken = token.accessToken;
-    localStorage.setItem('accessToken', token.accessToken);
-    localStorage.setItem('expiresAt', token.expiresAt);
+    localStorage.setItem('token', JSON.stringify(token));
     navigate('/');
   };
   return (

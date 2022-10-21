@@ -37,8 +37,7 @@ export const Navbar = () => {
   const navigate = useNavigate();
   const handleLogout = async () => {
     await RootServerApi.logout();
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('expiresAt');
+    localStorage.removeItem('token');
     RootServerApi.accessToken = null;
     navigate('/login');
   };
