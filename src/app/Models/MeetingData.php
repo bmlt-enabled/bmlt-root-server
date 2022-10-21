@@ -42,4 +42,9 @@ class MeetingData extends Model
         'bus_lines',
         'train_lines',
     ];
+
+    public function meeting()
+    {
+        return $this->belongsTo(Meeting::class, 'meetingid_bigint');
+    }
 }

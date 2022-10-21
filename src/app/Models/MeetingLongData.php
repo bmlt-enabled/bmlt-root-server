@@ -16,4 +16,9 @@ class MeetingLongData extends Model
         'data_blob',
         'visibility',
     ];
+
+    public function meeting()
+    {
+        return $this->belongsTo(Meeting::class, 'meetingid_bigint');
+    }
 }

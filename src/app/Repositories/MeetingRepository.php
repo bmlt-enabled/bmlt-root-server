@@ -422,7 +422,9 @@ class MeetingRepository implements MeetingRepositoryInterface
     public function getFieldValues(string $fieldName, array $specificFormats = [], bool $allFormats = false): Collection
     {
         if (in_array($fieldName, Meeting::$mainFields)) {
-            $meetingIdsByValue = Meeting::all()
+            $meetingIdsByValue = Meeting::query()
+                ->where('published', 1)
+                ->get()
                 ->mapToGroups(function ($meeting, $_) use ($fieldName, $specificFormats, $allFormats) {
                     $value = $meeting->{$fieldName};
                     $value = $fieldName == 'worldid_mixed' && $value ? trim($value) : $value;
@@ -459,6 +461,7 @@ class MeetingRepository implements MeetingRepositoryInterface
             $meetingIdsByValue = MeetingData::query()
                 ->where('key', $fieldName)
                 ->whereNot('meetingid_bigint', 0)
+                ->whereRelation('meeting', 'published', 1)
                 ->where(function ($query) {
                     $query->where('visibility', null)->orWhereNot('visibility', 1);
                 })
@@ -467,6 +470,7 @@ class MeetingRepository implements MeetingRepositoryInterface
                     MeetingLongData::query()
                         ->where('key', $fieldName)
                         ->whereNot('meetingid_bigint', 0)
+                        ->whereRelation('meeting', 'published', 1)
                         ->where(function ($query) {
                             $query->where('visibility', null)->orWhereNot('visibility', 1);
                         })

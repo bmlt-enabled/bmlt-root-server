@@ -15,7 +15,10 @@ class GetFieldValuesTest extends TestCase
     private function createMeeting($fieldName, $fieldValue)
     {
         $fields = array_merge(
-            ['service_body_bigint' => 1],
+            [
+                'published' => 1,
+                'service_body_bigint' => 1
+            ],
             [$fieldName => $fieldValue],
         );
         return Meeting::create($fields);
@@ -28,7 +31,10 @@ class GetFieldValuesTest extends TestCase
             ->where('meetingid_bigint', 0)
             ->first();
 
-        $meeting = Meeting::create(['service_body_bigint' => 1]);
+        $meeting = Meeting::create([
+            'published' => 1,
+            'service_body_bigint' => 1
+        ]);
 
         MeetingData::create([
             'meetingid_bigint' => $meeting->id_bigint,
@@ -49,7 +55,10 @@ class GetFieldValuesTest extends TestCase
             ->where('meetingid_bigint', 0)
             ->first();
 
-        $meeting = Meeting::create(['service_body_bigint' => 1]);
+        $meeting = Meeting::create([
+            'published' => 1,
+            'service_body_bigint' => 1
+        ]);
 
         MeetingLongData::create([
             'meetingid_bigint' => $meeting->id_bigint,
@@ -297,5 +306,44 @@ class GetFieldValuesTest extends TestCase
                     ->delete();
             }
         }
+    }
+
+    public function testUnpublishedMainField()
+    {
+        $meeting1 = $this->createMeeting('venue_type', 1);
+        $meeting1->published = 0;
+        $meeting1->save();
+        $meeting2 = $this->createMeeting('venue_type', 2);
+        $this->get("/client_interface/json/?switcher=GetFieldValues&meeting_key=venue_type")
+            ->assertStatus(200)
+            ->assertExactJson([
+                ['venue_type' => strval($meeting2->venue_type), 'ids' => strval($meeting2->id_bigint)],
+            ]);
+    }
+
+    public function testUnpublishedDataField()
+    {
+        $meeting1 = $this->createMeetingWithData('meeting_name', 'test1');
+        $meeting1->published = 0;
+        $meeting1->save();
+        $meeting2 = $this->createMeetingWithData('meeting_name', 'test2');
+        $this->get("/client_interface/json/?switcher=GetFieldValues&meeting_key=meeting_name")
+            ->assertStatus(200)
+            ->assertExactJson([
+                ['meeting_name' => 'test2', 'ids' => strval($meeting2->id_bigint)]
+            ]);
+    }
+
+    public function testUnpublishedLongDataField()
+    {
+        $meeting1 = $this->createMeetingWithLongData('meeting_name', 'test1');
+        $meeting1->published = 0;
+        $meeting1->save();
+        $meeting2 = $this->createMeetingWithLongData('meeting_name', 'test2');
+        $this->get("/client_interface/json/?switcher=GetFieldValues&meeting_key=meeting_name")
+            ->assertStatus(200)
+            ->assertExactJson([
+                ['meeting_name' => 'test2', 'ids' => strval($meeting2->id_bigint)]
+            ]);
     }
 }
