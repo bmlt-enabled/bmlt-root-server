@@ -106,27 +106,34 @@ class GetFieldValuesTest extends TestCase
         }
     }
 
-    public function testIntMainFields()
+    public function testWeekday()
     {
-        $mainFields = ['weekday_tinyint', 'venue_type'];
+        $meeting1 = $this->createMeeting('weekday_tinyint', null);
+        $meeting2 = $this->createMeeting('weekday_tinyint', 1);
+        $meeting3 = $this->createMeeting('weekday_tinyint', 1);
+        $meeting4 = $this->createMeeting('weekday_tinyint', 2);
+        $this->get("/client_interface/json/?switcher=GetFieldValues&meeting_key=weekday_tinyint")
+            ->assertStatus(200)
+            ->assertExactJson([
+                ['weekday_tinyint' => 'NULL', 'ids' => strval($meeting1->id_bigint)],
+                ['weekday_tinyint' => strval($meeting2->weekday_tinyint + 1), 'ids' => implode(',', [$meeting2->id_bigint, $meeting3->id_bigint])],
+                ['weekday_tinyint' => strval($meeting4->weekday_tinyint + 1), 'ids' => strval($meeting4->id_bigint)]
+            ]);
+    }
 
-        foreach ($mainFields as $fieldName) {
-            try {
-                $meeting1 = $this->createMeeting($fieldName, null);
-                $meeting2 = $this->createMeeting($fieldName, 1);
-                $meeting3 = $this->createMeeting($fieldName, 1);
-                $meeting4 = $this->createMeeting($fieldName, 2);
-                $this->get("/client_interface/json/?switcher=GetFieldValues&meeting_key=$fieldName")
-                    ->assertStatus(200)
-                    ->assertExactJson([
-                        [$fieldName => 'NULL', 'ids' => strval($meeting1->id_bigint)],
-                        [$fieldName => strval($meeting2->{$fieldName}), 'ids' => implode(',', [$meeting2->id_bigint, $meeting3->id_bigint])],
-                        [$fieldName => strval($meeting4->{$fieldName}), 'ids' => strval($meeting4->id_bigint)]
-                    ]);
-            } finally {
-                Meeting::query()->delete();
-            }
-        }
+    public function testVenueType()
+    {
+        $meeting1 = $this->createMeeting('venue_type', null);
+        $meeting2 = $this->createMeeting('venue_type', 1);
+        $meeting3 = $this->createMeeting('venue_type', 1);
+        $meeting4 = $this->createMeeting('venue_type', 2);
+        $this->get("/client_interface/json/?switcher=GetFieldValues&meeting_key=venue_type")
+            ->assertStatus(200)
+            ->assertExactJson([
+                ['venue_type' => 'NULL', 'ids' => strval($meeting1->id_bigint)],
+                ['venue_type' => strval($meeting2->venue_type), 'ids' => implode(',', [$meeting2->id_bigint, $meeting3->id_bigint])],
+                ['venue_type' => strval($meeting4->venue_type), 'ids' => strval($meeting4->id_bigint)]
+            ]);
     }
 
     public function testTimeMainFields()
