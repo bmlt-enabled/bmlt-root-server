@@ -6,7 +6,7 @@ import { LoginForm } from '../partials/forms/LoginForm';
 import { Box } from '@mui/material';
 import { styled } from '@mui/system';
 
-const StyledFormWrapper = styled(Box)`
+const StyledFormWrapper = styled(Box)(({ theme }) => ({
   position: 'absolute',
   top: '50%',
   left: '50%',
@@ -15,8 +15,8 @@ const StyledFormWrapper = styled(Box)`
   maxWidth: '600px',
   padding: '20px',
   border: '1px solid #ccc',
-  border-radius: ${({ theme }) => theme.shape.borderRadius},
-`;
+  borderRadius: theme.shape.borderRadius,
+}));
 
 export const Login = () => {
   const navigate = useNavigate();
