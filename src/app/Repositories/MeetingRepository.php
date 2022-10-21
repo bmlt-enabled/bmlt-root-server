@@ -443,6 +443,8 @@ class MeetingRepository implements MeetingRepositoryInterface
                         sort($commonFormatIds, SORT_NUMERIC);
 
                         $value = implode(',', $commonFormatIds);
+                    } elseif ($fieldName == 'weekday_tinyint' && !is_null($value)) {
+                        $value += 1;
                     }
 
                     return [strval($value) => (string)$meeting->id_bigint];
