@@ -1,4 +1,4 @@
-import { Configuration, RootServerApi } from 'bmlt-root-server-client';
+import { Configuration, RootServerApi } from 'bmlt-root-server-client/src'; // eslint-disable-line import/no-unresolved,
 
 class ApiClient extends RootServerApi {
   constructor(accessToken = null) {
