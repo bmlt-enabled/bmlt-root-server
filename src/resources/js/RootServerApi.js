@@ -1,53 +1,54 @@
-import {Configuration, RootServerApi } from "bmlt-root-server-client/src";
+import { Configuration, RootServerApi } from 'bmlt-root-server-client';
 
 class ApiClient extends RootServerApi {
-    constructor(accessToken = null) {
-        super();
-        this.accessToken = accessToken;
-        this.configuration = new Configuration({ basePath: baseUrl, accessToken: () => this._authorizationHeader });
-    }
+  constructor(accessToken = null) {
+    super();
+    this.accessToken = accessToken;
+    // eslint-disable-next-line no-undef
+    this.configuration = new Configuration({ basePath: baseUrl, accessToken: () => this.authorizationHeader });
+  }
 
-    set accessToken(accessToken) {
-        if (accessToken === null) {
-            this._authorizationHeader = null;
-        } else {
-            this._authorizationHeader = 'Bearer ' + accessToken;
-        }
+  set accessToken(accessToken) {
+    if (accessToken === null) {
+      this.authorizationHeader = null;
+    } else {
+      this.authorizationHeader = `Bearer ${accessToken}`;
     }
+  }
 
-    get isLoggedIn() {
-        return this._authorizationHeader !== null;
-    }
+  get isLoggedIn() {
+    return this.authorizationHeader !== null;
+  }
 }
 
 class ApiClientWrapper {
-    static instance = new ApiClientWrapper();
+  constructor() {
+    this.api = new ApiClient();
+  }
 
-    constructor() {
-        this.api = new ApiClient();
-    }
+  set accessToken(accessToken) {
+    this.api.accessToken = accessToken;
+  }
 
-    set accessToken(accessToken) {
-        this.api.accessToken = accessToken;
-    }
+  get isLoggedIn() {
+    return this.api.isLoggedIn;
+  }
 
-    get isLoggedIn() {
-        return this.api.isLoggedIn;
-    }
+  login(username, password) {
+    const tokenCredentials = { username, password };
+    const authTokenRequest = { tokenCredentials };
+    return this.api.authToken(authTokenRequest);
+  }
 
-    login(username, password) {
-        const tokenCredentials = { username: username, password: password };
-        const authTokenRequest = { tokenCredentials: tokenCredentials };
-        return this.api.authToken(authTokenRequest);
-    }
+  logout() {
+    return this.api.authLogout();
+  }
 
-    logout() {
-        return this.api.authLogout();
-    }
-
-    getMeetings() {
-        return this.api.getMeetings();
-    }
+  getMeetings() {
+    return this.api.getMeetings();
+  }
 }
 
-export default ApiClientWrapper.instance;
+const instance = new ApiClientWrapper();
+
+export default instance;

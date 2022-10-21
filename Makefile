@@ -144,6 +144,10 @@ lint:  ## PHP Lint
 lint-fix:  ## PHP Lint Fix
 	$(LINT_PREFIX) src/vendor/squizlabs/php_codesniffer/bin/phpcbf
 
+.PHONY: lint-js
+lint-js:  ## JavaScript Lint
+	cd src && npm run lint
+
 .PHONY: phpstan
 phpstan:  ## PHP Larastan Code Analysis
 	$(LINT_PREFIX) src/vendor/bin/phpstan analyse -c .phpstan.neon --memory-limit=2G
