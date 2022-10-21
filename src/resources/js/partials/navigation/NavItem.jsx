@@ -1,5 +1,5 @@
-import React from "react";
+import React from 'react';
 
 export const NavItem = () => {
-    return <div>NavItem</div>;
+  return <div>NavItem</div>;
 };

@@ -1,6 +1,6 @@
-import { AppBar, Container, Typography } from "@mui/material";
-import { styled } from "@mui/system";
-import React from "react";
+import { AppBar, Container, Typography } from '@mui/material';
+import { styled } from '@mui/system';
+import React from 'react';
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.tertiary.main,

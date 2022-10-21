@@ -1,7 +1,5 @@
-import React from 'react'
+import React from 'react';
 
 export const MeetingFormats = () => {
-  return (
-    <div>MeetingFormats</div>
-  )
-}
+  return <div>MeetingFormats</div>;
+};

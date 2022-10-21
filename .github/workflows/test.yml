@@ -68,3 +68,6 @@ jobs:
         run: |
           make npm
 
+      - name: make lint-js
+        run: |
+          make lint-js

@@ -1,7 +1,5 @@
-import React from 'react'
+import React from 'react';
 
 export const ServiceBodies = () => {
-  return (
-    <div>ServiceBodies</div>
-  )
-}
+  return <div>ServiceBodies</div>;
+};
