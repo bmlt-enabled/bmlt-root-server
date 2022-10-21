@@ -8,7 +8,7 @@
     Note that specifying any file or directory path
     on the command line will ignore all file tags.
     -->
-    <file>src</file>
+    <file>.</file>
 
     <!--
        You can hard-code command line values into your custom standard.
@@ -35,11 +35,11 @@
    custom standard so you don't have to specify the
    patterns on the command line.
     -->
-    <exclude-pattern>src/bootstrap/cache/*</exclude-pattern>
-    <exclude-pattern>src/vendor/*</exclude-pattern>
-    <exclude-pattern>src/storage/*</exclude-pattern>
-    <exclude-pattern>src/node_modules/*</exclude-pattern>
-    <exclude-pattern>src/public/build/*</exclude-pattern>
+    <exclude-pattern>bootstrap/cache/*</exclude-pattern>
+    <exclude-pattern>vendor/*</exclude-pattern>
+    <exclude-pattern>storage/*</exclude-pattern>
+    <exclude-pattern>node_modules/*</exclude-pattern>
+    <exclude-pattern>public/build/*</exclude-pattern>
 
     <!--
     You can add specific global ignores to different
