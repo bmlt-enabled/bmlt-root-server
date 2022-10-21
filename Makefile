@@ -16,7 +16,7 @@ ifeq ($(CI)x, x)
 	TAG := local
 	COMPOSER_ARGS :=
 	COMPOSER_PREFIX := docker run --pull=always -t --rm -v $(shell pwd):/code -w /code $(BASE_IMAGE):$(BASE_IMAGE_TAG)
-	LINT_PREFIX := docker run -t --rm -v $(shell pwd):/code -w /code $(IMAGE):$(TAG)
+	LINT_PREFIX := docker run -t --rm -v $(shell pwd):/code -w /code/src $(IMAGE):$(TAG)
 	TEST_PREFIX := docker run -e XDEBUG_MODE=coverage,debug -t --rm -v $(shell pwd)/src:/var/www/html/main_server -v $(shell pwd)/docker/test-auto-config.inc.php:/var/www/html/auto-config.inc.php -w /var/www/html/main_server --network host $(IMAGE):$(TAG)
 	ifneq (,$(wildcard docker/docker-compose.dev.yml))
 		EXTRA_DOCKER_COMPOSE_ARGS := -f docker/docker-compose.dev.yml
@@ -36,7 +36,7 @@ else
 		COMPOSER_ARGS := $(COMPOSER_ARGS) --no-dev
 	endif
 	COMPOSER_PREFIX :=
-	LINT_PREFIX :=
+	LINT_PREFIX := cd src &&
 	TEST_PREFIX := cd src &&
 endif
 
@@ -129,7 +129,7 @@ coverage-serve:  ## Serves HTML Coverage Report
 
 .PHONY: generate-api-json
 generate-api-json: ## Generates Open API JSON
-	$(LINT_PREFIX) src/artisan l5-swagger:generate
+	$(LINT_PREFIX) php artisan l5-swagger:generate
 
 .PHONY: generate-api-client
 generate-api-client: ## Generates javascript api client
@@ -142,11 +142,11 @@ generate-api-client: ## Generates javascript api client
 
 .PHONY: lint
 lint:  ## PHP Lint
-	$(LINT_PREFIX) src/vendor/squizlabs/php_codesniffer/bin/phpcs
+	$(LINT_PREFIX) vendor/squizlabs/php_codesniffer/bin/phpcs
 
 .PHONY: lint-fix
 lint-fix:  ## PHP Lint Fix
-	$(LINT_PREFIX) src/vendor/squizlabs/php_codesniffer/bin/phpcbf
+	$(LINT_PREFIX) vendor/squizlabs/php_codesniffer/bin/phpcbf
 
 .PHONY: lint-js
 lint-js:  ## JavaScript Lint
@@ -154,7 +154,7 @@ lint-js:  ## JavaScript Lint
 
 .PHONY: phpstan
 phpstan:  ## PHP Larastan Code Analysis
-	$(LINT_PREFIX) src/vendor/bin/phpstan analyse -c .phpstan.neon --memory-limit=2G
+	$(LINT_PREFIX) vendor/bin/phpstan analyse -c .phpstan.neon --memory-limit=2G
 
 .PHONY: docker-publish-base
 docker-publish-base:  ## Builds Base Docker Image
