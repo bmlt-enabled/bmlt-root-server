@@ -11,15 +11,15 @@ namespace App\Http\Controllers\Admin\Swagger;
  *     @OA\Property(property="email", type="string", example="string"),
  *     @OA\Property(property="ownerId", type="string", example="0")
  * ),
- * @OA\Schema(schema="User",
+ * @OA\Schema(schema="User", required={"id", "username", "type", "displayName", "description", "email", "ownerId"},
  *     @OA\Property(property="id", type="integer", example="0"),
  *     allOf={ @OA\Schema(ref="#/components/schemas/UserBase") }
  * ),
- * @OA\Schema(schema="UserCreate", required={"username","password","type","displayName"},
+ * @OA\Schema(schema="UserCreate", required={"username", "password", "type", "displayName"},
  *     @OA\Property(property="password", type="string", example="string"),
  *     allOf={ @OA\Schema(ref="#/components/schemas/UserBase") }
  * ),
- * @OA\Schema(schema="UserUpdate", required={"username","type","displayName"},
+ * @OA\Schema(schema="UserUpdate", required={"username", "type", "displayName"},
  *     @OA\Property(property="password", type="string", example="string"),
  *     allOf={ @OA\Schema(ref="#/components/schemas/UserBase") }
  * ),

@@ -16,7 +16,7 @@ namespace App\Http\Controllers\Admin\Swagger;
  *     @OA\Property(property="description", type="string"),
  *     @OA\Property(property="language", type="string")
  * ),
- * @OA\Schema(schema="Format",
+ * @OA\Schema(schema="Format", required={"id", "worldId", "type", "translations"},
  *     @OA\Property(property="id", type="integer", example="0"),
  *     allOf={ @OA\Schema(ref="#/components/schemas/FormatBase") }
  * ),
