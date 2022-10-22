@@ -87,14 +87,11 @@ class LegacyConfig
             $config['db_prefix'] = $dbPrefix;
         }
 
-        if (isset($comdef_global_language)) {
-            $config['language'] = $comdef_global_language;
-        }
-
         if (isset($change_depth_for_meetings)) {
             $config['change_depth_for_meetings'] = intval($change_depth_for_meetings);
         }
 
+        $config['language'] = $comdef_global_language ?? 'en';
         $config['default_duration_time'] = $default_duration_time ?? '01:00:00';
         $config['region_bias'] = $region_bias ?? 'us';
         $config['distance_units'] = $comdef_distance_units ?? 'mi';
@@ -111,6 +108,8 @@ class LegacyConfig
         $config['number_of_meetings_for_auto'] = isset($number_of_meetings_for_auto) && is_numeric($number_of_meetings_for_auto) ? intval($number_of_meetings_for_auto) : 10;
         $config['auto_geocoding_enabled'] = isset($auto_geocoding_enabled) ? boolval($auto_geocoding_enabled) : true;
         $config['new_ui_enabled'] = $new_ui_enabled ?? false;
+        // If default_closed_status is TRUE, meetings that don't explicitly have an OPEN or CLOSED format are assumed CLOSED for the NAWS export.
+        $config['default_closed_status'] = $g_defaultClosedStatus ?? true;
 
         self::$config = $config;
         self::$configLoaded = true;
