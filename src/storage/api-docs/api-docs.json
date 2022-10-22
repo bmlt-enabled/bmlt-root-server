@@ -1886,6 +1886,12 @@
                 "type": "object"
             },
             "Format": {
+                "required": [
+                    "id",
+                    "worldId",
+                    "type",
+                    "translations"
+                ],
                 "type": "object",
                 "allOf": [
                     {
@@ -2098,6 +2104,23 @@
                 "type": "object"
             },
             "Meeting": {
+                "required": [
+                    "id",
+                    "serviceBodyId",
+                    "formatIds",
+                    "venueType",
+                    "temporarilyVirtual",
+                    "day",
+                    "startTime",
+                    "duration",
+                    "timeZone",
+                    "latitude",
+                    "longitude",
+                    "published",
+                    "email",
+                    "worldId",
+                    "name"
+                ],
                 "type": "object",
                 "allOf": [
                     {
@@ -2235,6 +2258,19 @@
                 "type": "object"
             },
             "ServiceBody": {
+                "required": [
+                    "id",
+                    "parentId",
+                    "name",
+                    "description",
+                    "type",
+                    "adminUserId",
+                    "assignedUserIds",
+                    "url",
+                    "helpline",
+                    "email",
+                    "worldId"
+                ],
                 "type": "object",
                 "allOf": [
                     {
@@ -2304,6 +2340,12 @@
                 "type": "object"
             },
             "Token": {
+                "required": [
+                    "access_token",
+                    "expires_at",
+                    "token_type",
+                    "user_id"
+                ],
                 "properties": {
                     "access_token": {
                         "type": "string",
@@ -2373,6 +2415,15 @@
                 "type": "object"
             },
             "User": {
+                "required": [
+                    "id",
+                    "username",
+                    "type",
+                    "displayName",
+                    "description",
+                    "email",
+                    "ownerId"
+                ],
                 "type": "object",
                 "allOf": [
                     {

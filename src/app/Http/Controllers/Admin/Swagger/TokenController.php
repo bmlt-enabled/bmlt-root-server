@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin\Swagger;
 
 /**
- * @OA\Schema(schema="Token",
+ * @OA\Schema(schema="Token", required={"access_token", "expires_at", "token_type", "user_id"},
  *     @OA\Property(property="access_token", type="string", example="2|tR6PIqa8tiBJWMu4zyb3qw4eECuERjLd7xeLKgBu"),
  *     @OA\Property(property="expires_at", type="integer", example="1667342171"),
  *     @OA\Property(property="token_type", type="string", example="bearer"),
