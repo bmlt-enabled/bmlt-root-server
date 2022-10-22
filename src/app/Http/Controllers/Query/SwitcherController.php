@@ -486,9 +486,13 @@ class SwitcherController extends Controller
             $nawsExportFormatsAtFront =  ['VM', 'TC', 'HYBR', 'W', 'M', 'GL'];
 
             $allServices = $this->serviceBodyRepository->getChildren([$validated['sb_id']]);
+            $meetings = $this->meetingRepository->getSearchResults(servicesInclude: $allServices, published: null, eagerServiceBodies: true, sortKeys: ['lang_enum', 'weekday_tinyint', 'start_time', 'id_bigint']);
+            $existingMeetingIds = $meetings->map(fn ($meeting) => $meeting->id_bigint);
             $deletedMeetingData = [];
+            $seenDeletedMeetingIds = [];
             $deletedMeetings = $this->changeRepository->getMeetingChanges(serviceBodyId: $validated['sb_id'], changeTypes: [Change::CHANGE_TYPE_DELETE])
-                ->map(function ($meetingChange) use (&$deletedMeetingData) {
+                ->sortByDesc(fn ($meetingChange) => $meetingChange->id_bigint)
+                ->map(function ($meetingChange) use (&$existingMeetingIds, &$deletedMeetingData, &$seenDeletedMeetingIds) {
                     $serializedMeeting = $meetingChange->before_object;
                     if (is_null($serializedMeeting)) {
                         // TODO write a test
@@ -501,10 +505,29 @@ class SwitcherController extends Controller
                         return null;
                     }
 
+                    $meetingId = intval($meetingId);
+                    if ($existingMeetingIds->contains($meetingId)) {
+                        // TODO write a test
+                        return null;
+                    }
+
+                    if (in_array($meetingId, $seenDeletedMeetingIds)) {
+                        // TODO write a test
+                        return null;
+                    }
+
                     $meeting = new Meeting($serializedMeeting['main_table_values']);
                     $meeting->id_bigint = $meetingId;
 
-                    if (is_null($meeting->worldid_mixed) || empty(trim($meeting->worldid_mixed)) || trim($meeting->worldid_mixed) == 'deleted') {
+                    // we only want the newest delete for each meeting, just in case it's been deleted and restored several times
+                    $seenDeletedMeetingIds[] = $meeting->id_bigint;
+
+                    if (is_null($meeting->worldid_mixed) || empty(trim($meeting->worldid_mixed))) {
+                        // TODO write a test
+                        return null;
+                    }
+
+                    if (trim(strtolower($meeting->worldid_mixed)) == 'deleted' || !intval(preg_replace('|\D*?|', '', $meeting->worldid_mixed))) {
                         // TODO write a test
                         return null;
                     }
@@ -516,8 +539,7 @@ class SwitcherController extends Controller
                     return $meeting;
                 })
                 ->reject(fn ($meeting) => is_null($meeting));
-            $meetings = $this->meetingRepository->getSearchResults(servicesInclude: $allServices, published: null, eagerServiceBodies: true, sortKeys: ['lang_enum', 'weekday_tinyint', 'start_time', 'id_bigint'])
-                ->concat($deletedMeetings);
+            $meetings = $meetings->concat($deletedMeetings);
             $allFormats = $this->formatRepository->search(langEnums: [legacy_config('language')], showAll: true)
                 ->reject(fn ($fmt) => is_null($fmt->key_string) || empty(trim($fmt->key_string)));
             $formatIdToWorldId = $allFormats->mapWithKeys(fn ($fmt, $_) => [$fmt->shared_id_bigint => $fmt->worldid_mixed]);
