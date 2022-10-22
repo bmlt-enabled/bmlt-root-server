@@ -55,6 +55,11 @@ jobs:
         run: |
           make test
 
+      - name: Send coverage data to codecov.io
+        uses: codecov/codecov-action@v3
+        with:
+          files: src/coverage.xml
+
   test-js:
     runs-on: ubuntu-22.04
     strategy:
