@@ -19,6 +19,20 @@ class ChangeRepository implements ChangeRepositoryInterface
 
     public function getMeetingChanges(string $startDate = null, string $endDate = null, int $meetingId = null, int $serviceBodyId = null, array $changeTypes = null): Collection
     {
+        return $this->getBuilder($startDate, $endDate, $meetingId, $serviceBodyId, $changeTypes)->get();
+    }
+
+    public function getMeetingLastChangeTimes(string $startDate = null, string $endDate = null, int $meetingId = null, int $serviceBodyId = null, array $changeTypes = null): Collection
+    {
+        return $this->getBuilder($startDate, $endDate, $meetingId, $serviceBodyId, $changeTypes)
+            ->selectRaw('MAX(change_date) as change_date, COALESCE(before_id_bigint, after_id_bigint) as meeting_id')
+            ->groupByRaw('COALESCE(before_id_bigint, after_id_bigint)')
+            ->get()
+            ->mapWithKeys(fn ($row, $_) => [$row->meeting_id => strtotime($row->change_date)]);
+    }
+
+    private function getBuilder(string $startDate = null, string $endDate = null, int $meetingId = null, int $serviceBodyId = null, array $changeTypes = null)
+    {
         $changes = Change::query()
             ->with([
                 'user',
@@ -56,6 +70,6 @@ class ChangeRepository implements ChangeRepositoryInterface
             $changes = $changes->whereIn('change_type_enum', $changeTypes);
         }
 
-        return $changes->get();
+        return $changes;
     }
 }
