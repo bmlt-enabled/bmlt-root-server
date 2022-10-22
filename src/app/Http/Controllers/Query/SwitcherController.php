@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Query;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\CatchAllController;
 use App\Http\Resources\Query\FormatResource;
 use App\Http\Resources\Query\MeetingResource;
 use App\Http\Resources\Query\MeetingChangeResource;
@@ -525,15 +524,7 @@ class SwitcherController extends Controller
             $formatIdToKeyString = $allFormats->mapWithKeys(fn ($fmt, $_) => [$fmt->shared_id_bigint => $fmt->key_string]);
             $formatIdToNameString = $allFormats->mapWithKeys(fn ($fmt, $_) => [$fmt->shared_id_bigint => $fmt->name_string]);
             // $lastChanged is a dictionary whose keys are meeting IDs and whose values are the last time that meeting was changed
-            // $meetingIdsAndTimes is just used in constructing $lastChanged
-            $meetingIdsAndTimes = $this->changeRepository->getMeetingChanges(serviceBodyId: $validated['sb_id'])
-                ->map(function ($change, $_) {
-                    return [$change?->before_id_bigint ?? $change->after_id_bigint, strtotime($change->change_date)];
-                });
-            $lastChanged = [];
-            foreach ($meetingIdsAndTimes as list($id, $time)) {
-                $lastChanged[$id] = max($time, $lastChanged[$id] ?? 0);
-            }
+            $lastChanged = $this->changeRepository->getMeetingLastChangeTimes(serviceBodyId: $validated['sb_id'])->toArray();
 
             $f = fopen('php://output', 'r+');
             fputcsv($f, $columnNames);
