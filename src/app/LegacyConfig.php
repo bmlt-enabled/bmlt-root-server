@@ -87,14 +87,11 @@ class LegacyConfig
             $config['db_prefix'] = $dbPrefix;
         }
 
-        if (isset($comdef_global_language)) {
-            $config['language'] = $comdef_global_language;
-        }
-
         if (isset($change_depth_for_meetings)) {
             $config['change_depth_for_meetings'] = intval($change_depth_for_meetings);
         }
 
+        $config['language'] = $comdef_global_language ?? 'en';
         $config['default_duration_time'] = $default_duration_time ?? '01:00:00';
         $config['region_bias'] = $region_bias ?? 'us';
         $config['distance_units'] = $comdef_distance_units ?? 'mi';
