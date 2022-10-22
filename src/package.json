@@ -29,7 +29,7 @@
         "@emotion/react": "^11.10.4",
         "@emotion/styled": "^11.10.4",
         "@mui/material": "^5.10.10",
-        "bmlt-root-server-client": "file:resources/npm/api-client/bmlt-root-server-client-1.0.0.tgz",
+        "bmlt-root-server-client": "github:bmlt-enabled/bmlt-root-server-typescript-client",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-router-dom": "^6.4.2"

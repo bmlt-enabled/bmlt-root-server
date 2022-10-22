@@ -8,7 +8,6 @@ VENDOR_AUTOLOAD := src/vendor/autoload.php
 NODE_MODULES := src/node_modules/.package-lock.json
 FRONTEND := src/public/build/manifest.json
 ZIP_FILE := build/bmlt-root-server.zip
-API_CLIENT_PACKAGE := src/resources/npm/api-client/bmlt-root-server-client-1.0.0.tgz
 EXTRA_DOCKER_COMPOSE_ARGS :=
 ifeq ($(CI)x, x)
 	DOCKERFILE := Dockerfile-debug
@@ -55,10 +54,7 @@ $(CROUTON_JS):
 	rm -f src/public/client_interface/html/croutonjs/*.json
 	rm -rf src/public/client_interface/html/croutonjs/examples
 
-$(API_CLIENT_PACKAGE):
-	cd src/resources/npm/api-client && npm install && npm pack
-
-$(NODE_MODULES): $(API_CLIENT_PACKAGE)
+$(NODE_MODULES):
 	cd src && npm install
 
 $(FRONTEND): $(NODE_MODULES)
@@ -83,7 +79,7 @@ $(LEGACY_STATIC_FILES):
 $(ZIP_FILE): $(VENDOR_AUTOLOAD) $(FRONTEND) $(CROUTON_JS) $(LEGACY_STATIC_FILES)
 	mkdir -p build
 	cp -r src build/main_server
-	cd build && zip -r $(shell basename $(ZIP_FILE)) main_server -x main_server/node_modules/\* -x resources/npm
+	cd build && zip -r $(shell basename $(ZIP_FILE)) main_server -x main_server/node_modules/\*
 	rm -rf build/main_server
 
 .PHONY: composer
@@ -131,15 +127,6 @@ coverage-serve:  ## Serves HTML Coverage Report
 generate-api-json: ## Generates Open API JSON
 	$(LINT_PREFIX) php artisan l5-swagger:generate
 
-.PHONY: generate-api-client
-generate-api-client: ## Generates javascript api client
-	rm -rf src/resources/npm/api-client
-	docker run --rm -v "$(shell pwd):/local" -w /local openapitools/openapi-generator-cli generate \
-	    -i src/storage/api-docs/api-docs.json \
-	    -g typescript-fetch \
-	    -p npmName=bmlt-root-server-client \
-	    -o src/resources/npm/api-client
-
 .PHONY: lint
 lint:  ## PHP Lint
 	$(LINT_PREFIX) vendor/squizlabs/php_codesniffer/bin/phpcs
@@ -177,4 +164,3 @@ clean:  ## Clean build
 	rm -rf src/node_modules
 	rm -rf src/vendor
 	rm -rf build
-	rm -f $(API_CLIENT_PACKAGE)
