@@ -441,22 +441,6 @@ class SwitcherController extends Controller
 
     private function getNawsDump($request): StreamedResponse
     {
-        // constants for getNawsDump
-        $columnNames = ['Committee', 'CommitteeName', 'AddDate', 'AreaRegion', 'ParentName', 'ComemID', 'ContactID', 'ContactName',
-            'CompanyName', 'ContactAddrID', 'ContactAddress1', 'ContactAddress2', 'ContactCity', 'ContactState', 'ContactZip', 'ContactCountry',
-            'ContactPhone', 'MeetingID', 'Room', 'Closed', 'WheelChr', 'Day', 'Time', 'Language1', 'Language2', 'Language3', 'LocationId',
-            'Place', 'Address', 'City', 'LocBorough', 'State', 'Zip', 'Country', 'Directions', 'Institutional', 'Format1', 'Format2', 'Format3',
-            'Format4', 'Format5', 'Delete', 'LastChanged', 'Longitude', 'Latitude', 'ContactGP', 'PhoneMeetingNumber', 'VirtualMeetingLink',
-            'VirtualMeetingInfo', 'TimeZone', 'bmlt_id', 'unpublished'];
-        // $excludedNawsFormats are formats included with meetings but that should not be among the formats listed in the export spreadsheet --
-        //  they are exported in their own columns.
-        $excludedNawsFormats = ['OPEN', 'CLOSED', 'WCHR'];
-        // $nawsExportFormatsAtFront are formats that should be listed first in the format1, ... format5 columns, to make sure they are included.
-        // This is particularly important for VM (Virtual Meeting), TC (Temporarily Closed) and HYBR (Hybrid), since these are essential and we
-        // don't want them falling off the end.  In versions 2.16 and earlier of the server, this could be overridden by a variable in
-        // auto-config.inc.php, but this is currently no longer supported since it seemed unlikely that anyone would ever want to change the default here.
-        $nawsExportFormatsAtFront =  ['VM', 'TC', 'HYBR', 'W', 'M', 'GL'];
-
         $validated = $request->validate([
             'sb_id' => [
                 'required',
@@ -465,270 +449,6 @@ class SwitcherController extends Controller
             ]
         ]);
 
-        $allServices = $this->serviceBodyRepository->getChildren([$validated['sb_id']]);
-        $deletedMeetingData = [];
-        $deletedMeetings = $this->changeRepository->getMeetingChanges(serviceBodyId: $validated['sb_id'], changeTypes: [Change::CHANGE_TYPE_DELETE])
-            ->map(function ($meetingChange) use (&$deletedMeetingData) {
-                $serializedMeeting = $meetingChange->before_object;
-                if (is_null($serializedMeeting)) {
-                    // TODO write a test
-                    return null;
-                }
-
-                $meetingId = $meetingChange->before_id_bigint ?? $serializedMeeting['main_table_values']['id_bigint'] ?? null;
-                if (is_null($meetingId) || !is_numeric($meetingId)) {
-                    // TODO write a test
-                    return null;
-                }
-
-                $meeting = new Meeting($serializedMeeting['main_table_values']);
-                $meeting->id_bigint = $meetingId;
-
-                if (is_null($meeting->worldid_mixed) || empty(trim($meeting->worldid_mixed)) || trim($meeting->worldid_mixed) == 'deleted') {
-                    // TODO write a test
-                    return null;
-                }
-
-                $deletedMeetingData[$meeting->id_bigint] = collect($serializedMeeting['data_table_values'])
-                    ->mapWithKeys(fn ($data, $_) => [$data['key'] => $data['data_string']])
-                    ->merge(collect($serializedMeeting['longdata_table_values'])->mapWithKeys(fn ($data, $_) => [$data['key'] => $data['data_blob']]));
-
-                return $meeting;
-            })
-            ->reject(fn ($meeting) => is_null($meeting));
-        $meetings = $this->meetingRepository->getSearchResults(servicesInclude: $allServices, published: null, eagerServiceBodies: true, sortKeys: ['lang_enum', 'weekday_tinyint', 'start_time', 'id_bigint'])
-            ->concat($deletedMeetings);
-        $allFormats = $this->formatRepository->search(langEnums: [legacy_config('language')], showAll: true)
-            ->reject(fn ($fmt) => is_null($fmt->key_string) || empty(trim($fmt->key_string)));
-        $formatIdToWorldId = $allFormats->mapWithKeys(fn ($fmt, $_) => [$fmt->shared_id_bigint => $fmt->worldid_mixed]);
-        $formatIdToKeyString = $allFormats->mapWithKeys(fn ($fmt, $_) => [$fmt->shared_id_bigint => $fmt->key_string]);
-        $formatIdToNameString = $allFormats->mapWithKeys(fn ($fmt, $_) => [$fmt->shared_id_bigint => $fmt->name_string]);
-        // $lastChanged is a dictionary whose keys are meeting IDs and whose values are the last time that meeting was changed
-        // $meetingIdsAndTimes is just used in constructing $lastChanged
-        $meetingIdsAndTimes = $this->changeRepository->getMeetingChanges(serviceBodyId: $validated['sb_id'])
-            ->map(function ($change, $_) {
-                return [$change?->before_id_bigint ?? $change->after_id_bigint, strtotime($change->change_date)];
-            });
-        $lastChanged = [];
-        foreach ($meetingIdsAndTimes as list($id, $time)) {
-            $lastChanged[$id] = max($time, $lastChanged[$id] ?? 0);
-        }
-
-        $f = fopen('php://memory', 'r+');
-        fputcsv($f, $columnNames);
-        foreach ($meetings as $meeting) {
-            $row = [];
-
-            $isDeleted = array_key_exists($meeting->id_bigint, $deletedMeetingData);
-            if ($isDeleted) {
-                $meetingData = $deletedMeetingData[$meeting->id_bigint];
-            } else {
-                $meetingData = $meeting->data
-                    ->mapWithKeys(fn($data, $_) => [$data->key => $data->data_string])->toBase()
-                    ->merge($meeting->longdata->mapWithKeys(fn($data, $_) => [$data->key => $data->data_blob])->toBase());
-            }
-
-            $allMeetingFormatIds = collect(explode(',', $meeting->formats ?? ''));
-            // list of format world ids
-            $allNawsMeetingFormats = $allMeetingFormatIds
-                ->map(fn ($id) => $formatIdToWorldId->get(intval($id)))
-                ->reject(fn ($value, $_) => is_null($value) || $value == '')
-                ->unique()
-                ->toArray();
-            $nawsMeetingFormatsForExport = [];
-            foreach ($nawsExportFormatsAtFront as $fmt) {
-                if (in_array($fmt, $allNawsMeetingFormats)) {
-                    $nawsMeetingFormatsForExport[] = $fmt;
-                }
-            }
-            foreach ($allNawsMeetingFormats as $fmt) {
-                if (!in_array($fmt, $nawsExportFormatsAtFront) && !in_array($fmt, $excludedNawsFormats)) {
-                    $nawsMeetingFormatsForExport[] = $fmt;
-                }
-            }
-            // $nonNawsFormatNames is a array of names of all formats that don't map to NAWS codes
-            $nonNawsFormatNames = $allMeetingFormatIds
-                ->reject(fn ($value, $_) => $formatIdToWorldId->get(intval($value)))
-                ->map(fn ($id) => $formatIdToNameString->get(intval($id)))
-                ->toArray();
-            $nawsLanguages = $allMeetingFormatIds
-                ->filter(fn ($value, $_) => $formatIdToWorldId->get(intval($value)) === 'LANG')
-                ->map(fn ($id) => strtoupper($formatIdToKeyString->get(intval($id))))
-                ->values()
-                ->toArray();
-
-            foreach ($columnNames as $columnName) {
-                switch ($columnName) {
-                    case 'Committee':
-                        $row[] = !empty($meeting->worldid_mixed) ? trim($meeting->worldid_mixed) : '';
-                        break;
-                    case 'CommitteeName':
-                        $row[] = $meetingData->get('meeting_name', '');
-                        break;
-                    case 'AddDate':
-                        $row[] = '';
-                        break;
-                    case 'AreaRegion':
-                        $row[] = $meeting->serviceBody->worldid_mixed;
-                        break;
-                    case 'ParentName':
-                        $row[] = $meeting->serviceBody->name_string;
-                        break;
-                    case 'ComemID':
-                        $row[] = '';
-                        break;
-                    case 'ContactID':
-                        $row[] = '';
-                        break;
-                    case 'ContactName':
-                        $row[] = '';
-                        break;
-                    case 'CompanyName':
-                        $row[] = '';
-                        break;
-                    case 'ContactAddrID':
-                        $row[] = '';
-                        break;
-                    case 'ContactAddress1':
-                        $row[] = '';
-                        break;
-                    case 'ContactAddress2':
-                        $row[] = '';
-                        break;
-                    case 'ContactCity':
-                        $row[] = '';
-                        break;
-                    case 'ContactState':
-                        $row[] = '';
-                        break;
-                    case 'ContactZip':
-                        $row[] = '';
-                        break;
-                    case 'ContactCountry':
-                        $row[] = '';
-                        break;
-                    case 'ContactPhone':
-                        $row[] = '';
-                        break;
-                    case 'MeetingID':
-                        $row[] = '';
-                        break;
-                    case 'Room':
-                        $row[] = implode(', ', $nonNawsFormatNames);
-                        break;
-                    case 'Closed':
-                        $row[] = $this->getNawsClosed($allNawsMeetingFormats);
-                        break;
-                    case 'WheelChr':
-                        $row[] = in_array('WCHR', $allNawsMeetingFormats) ? 'TRUE' : 'FALSE';
-                        break;
-                    case 'Day':
-                        $row[] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][$meeting->weekday_tinyint] ?? '';
-                        break;
-                    case 'Time':
-                        $row[] = $this->getNawsTime($meeting);
-                        break;
-                    case 'Language1':
-                        $row[] = $nawsLanguages[0] ?? '';
-                        break;
-                    case 'Language2':
-                        $row[] = '';
-                        // could also fill this in as follows:
-                        // $row[] = $nawsLanguages[1] ?? '';
-                        break;
-                    case 'Language3':
-                        $row[] = '';
-                        // could also fill this in as follows:
-                        // $row[] = $nawsLanguages[2] ?? '';
-                        break;
-                    case 'LocationId':
-                        $row[] = '';
-                        break;
-                    case 'Place':
-                        $row[] = $meetingData->get('location_text', '');
-                        break;
-                    case 'Address':
-                        $row[] = $meetingData->get('location_street', '');
-                        break;
-                    case 'City':
-                        $row[] = $this->getNawsCity($meetingData);
-                        break;
-                    case 'LocBorough':
-                        $row[] = $meetingData->get('location_neighborhood', '');
-                        break;
-                    case 'State':
-                        $row[] = $meetingData->get('location_province', '');
-                        break;
-                    case 'Zip':
-                        $row[] = $meetingData->get('location_postal_code_1', '');
-                        break;
-                    case 'Country':
-                        $row[] = $meetingData->get('location_nation', '');
-                        break;
-                    case 'Directions':
-                        $row[] = $this->getNawsDirections($meetingData);
-                        break;
-                    case 'Institutional':
-                        $row[] = 'FALSE';
-                        break;
-                    case 'Format1':
-                        $row[] = $nawsMeetingFormatsForExport[0] ?? '';
-                        break;
-                    case 'Format2':
-                        $row[] = $nawsMeetingFormatsForExport[1] ?? '';
-                        break;
-                    case 'Format3':
-                        $row[] = $nawsMeetingFormatsForExport[2] ?? '';
-                        break;
-                    case 'Format4':
-                        $row[] = $nawsMeetingFormatsForExport[3] ?? '';
-                        break;
-                    case 'Format5':
-                        $row[] = $nawsMeetingFormatsForExport[4] ?? '';
-                        break;
-                    case 'Delete':
-                        // TODO write a test
-                        $row[] = $isDeleted ? 'D' : '';
-                        break;
-                    case 'LastChanged':
-                        $row[] = $this->getLastChanged($lastChanged, $meeting);
-                        break;
-                    case 'Longitude':
-                        $row[] = $meeting->longitude ?? '';
-                        break;
-                    case 'Latitude':
-                        $row[] = $meeting->latitude ?? '';
-                        break;
-                    case 'ContactGP':
-                        $row[] = '';
-                        break;
-                    case 'PhoneMeetingNumber':
-                        $row[] = $meetingData->get('phone_meeting_number', '');
-                        break;
-                    case 'VirtualMeetingLink':
-                        $row[] = $meetingData->get('virtual_meeting_link', '');
-                        break;
-                    case 'VirtualMeetingInfo':
-                        $row[] = $meetingData->get('virtual_meeting_additional_info', '');
-                        break;
-                    case 'TimeZone':
-                        $row[] = !empty($meeting->time_zone) ? trim($meeting->time_zone) : '';
-                        break;
-                    case 'bmlt_id':
-                        $row[] = $meeting->id_bigint;
-                        break;
-                    case 'unpublished':
-                        $row[] = $meeting->published ? '' : '1';
-                        break;
-                    default:
-                        $row[] = 'INTERNAL ERROR - BAD COLUMN NAME';
-                }
-            }
-
-            if (fputcsv($f, $row) == false) {
-                abort(500);
-            }
-        }
 
         // Generate a filename for the spreadsheet of this form: BMLT_AR73828_seattle_area_2022_09_30_16_57_53.csv where
         // AR73828 is the World ID for the service body (converting letters to upper case and non alpha characters to _),
@@ -749,7 +469,289 @@ class SwitcherController extends Controller
         $filename = join('_', ['BMLT', $worldIdForFileName, $sbNameForFileName, date('Y_m_d_H_i_s')]);
         $filename .= '.csv';
 
-        return response()->streamDownload(fn () => rewind($f) && print(stream_get_contents($f)), $filename);
+        return response()->streamDownload(function () use ($validated) {
+            // constants for getNawsDump
+            $columnNames = ['Committee', 'CommitteeName', 'AddDate', 'AreaRegion', 'ParentName', 'ComemID', 'ContactID', 'ContactName',
+                'CompanyName', 'ContactAddrID', 'ContactAddress1', 'ContactAddress2', 'ContactCity', 'ContactState', 'ContactZip', 'ContactCountry',
+                'ContactPhone', 'MeetingID', 'Room', 'Closed', 'WheelChr', 'Day', 'Time', 'Language1', 'Language2', 'Language3', 'LocationId',
+                'Place', 'Address', 'City', 'LocBorough', 'State', 'Zip', 'Country', 'Directions', 'Institutional', 'Format1', 'Format2', 'Format3',
+                'Format4', 'Format5', 'Delete', 'LastChanged', 'Longitude', 'Latitude', 'ContactGP', 'PhoneMeetingNumber', 'VirtualMeetingLink',
+                'VirtualMeetingInfo', 'TimeZone', 'bmlt_id', 'unpublished'];
+            // $excludedNawsFormats are formats included with meetings but that should not be among the formats listed in the export spreadsheet --
+            //  they are exported in their own columns.
+            $excludedNawsFormats = ['OPEN', 'CLOSED', 'WCHR'];
+            // $nawsExportFormatsAtFront are formats that should be listed first in the format1, ... format5 columns, to make sure they are included.
+            // This is particularly important for VM (Virtual Meeting), TC (Temporarily Closed) and HYBR (Hybrid), since these are essential and we
+            // don't want them falling off the end.  In versions 2.16 and earlier of the server, this could be overridden by a variable in
+            // auto-config.inc.php, but this is currently no longer supported since it seemed unlikely that anyone would ever want to change the default here.
+            $nawsExportFormatsAtFront =  ['VM', 'TC', 'HYBR', 'W', 'M', 'GL'];
+
+            $allServices = $this->serviceBodyRepository->getChildren([$validated['sb_id']]);
+            $deletedMeetingData = [];
+            $deletedMeetings = $this->changeRepository->getMeetingChanges(serviceBodyId: $validated['sb_id'], changeTypes: [Change::CHANGE_TYPE_DELETE])
+                ->map(function ($meetingChange) use (&$deletedMeetingData) {
+                    $serializedMeeting = $meetingChange->before_object;
+                    if (is_null($serializedMeeting)) {
+                        // TODO write a test
+                        return null;
+                    }
+
+                    $meetingId = $meetingChange->before_id_bigint ?? $serializedMeeting['main_table_values']['id_bigint'] ?? null;
+                    if (is_null($meetingId) || !is_numeric($meetingId)) {
+                        // TODO write a test
+                        return null;
+                    }
+
+                    $meeting = new Meeting($serializedMeeting['main_table_values']);
+                    $meeting->id_bigint = $meetingId;
+
+                    if (is_null($meeting->worldid_mixed) || empty(trim($meeting->worldid_mixed)) || trim($meeting->worldid_mixed) == 'deleted') {
+                        // TODO write a test
+                        return null;
+                    }
+
+                    $deletedMeetingData[$meeting->id_bigint] = collect($serializedMeeting['data_table_values'])
+                        ->mapWithKeys(fn ($data, $_) => [$data['key'] => $data['data_string']])
+                        ->merge(collect($serializedMeeting['longdata_table_values'])->mapWithKeys(fn ($data, $_) => [$data['key'] => $data['data_blob']]));
+
+                    return $meeting;
+                })
+                ->reject(fn ($meeting) => is_null($meeting));
+            $meetings = $this->meetingRepository->getSearchResults(servicesInclude: $allServices, published: null, eagerServiceBodies: true, sortKeys: ['lang_enum', 'weekday_tinyint', 'start_time', 'id_bigint'])
+                ->concat($deletedMeetings);
+            $allFormats = $this->formatRepository->search(langEnums: [legacy_config('language')], showAll: true)
+                ->reject(fn ($fmt) => is_null($fmt->key_string) || empty(trim($fmt->key_string)));
+            $formatIdToWorldId = $allFormats->mapWithKeys(fn ($fmt, $_) => [$fmt->shared_id_bigint => $fmt->worldid_mixed]);
+            $formatIdToKeyString = $allFormats->mapWithKeys(fn ($fmt, $_) => [$fmt->shared_id_bigint => $fmt->key_string]);
+            $formatIdToNameString = $allFormats->mapWithKeys(fn ($fmt, $_) => [$fmt->shared_id_bigint => $fmt->name_string]);
+            // $lastChanged is a dictionary whose keys are meeting IDs and whose values are the last time that meeting was changed
+            // $meetingIdsAndTimes is just used in constructing $lastChanged
+            $meetingIdsAndTimes = $this->changeRepository->getMeetingChanges(serviceBodyId: $validated['sb_id'])
+                ->map(function ($change, $_) {
+                    return [$change?->before_id_bigint ?? $change->after_id_bigint, strtotime($change->change_date)];
+                });
+            $lastChanged = [];
+            foreach ($meetingIdsAndTimes as list($id, $time)) {
+                $lastChanged[$id] = max($time, $lastChanged[$id] ?? 0);
+            }
+
+            $f = fopen('php://output', 'r+');
+            fputcsv($f, $columnNames);
+
+            foreach ($meetings as $meeting) {
+                $row = [];
+
+                $isDeleted = array_key_exists($meeting->id_bigint, $deletedMeetingData);
+                if ($isDeleted) {
+                    $meetingData = $deletedMeetingData[$meeting->id_bigint];
+                } else {
+                    $meetingData = $meeting->data
+                        ->mapWithKeys(fn($data, $_) => [$data->key => $data->data_string])->toBase()
+                        ->merge($meeting->longdata->mapWithKeys(fn($data, $_) => [$data->key => $data->data_blob])->toBase());
+                }
+
+                $allMeetingFormatIds = collect(explode(',', $meeting->formats ?? ''));
+                // list of format world ids
+                $allNawsMeetingFormats = $allMeetingFormatIds
+                    ->map(fn ($id) => $formatIdToWorldId->get(intval($id)))
+                    ->reject(fn ($value, $_) => is_null($value) || $value == '')
+                    ->unique()
+                    ->toArray();
+                $nawsMeetingFormatsForExport = [];
+                foreach ($nawsExportFormatsAtFront as $fmt) {
+                    if (in_array($fmt, $allNawsMeetingFormats)) {
+                        $nawsMeetingFormatsForExport[] = $fmt;
+                    }
+                }
+                foreach ($allNawsMeetingFormats as $fmt) {
+                    if (!in_array($fmt, $nawsExportFormatsAtFront) && !in_array($fmt, $excludedNawsFormats)) {
+                        $nawsMeetingFormatsForExport[] = $fmt;
+                    }
+                }
+                // $nonNawsFormatNames is a array of names of all formats that don't map to NAWS codes
+                $nonNawsFormatNames = $allMeetingFormatIds
+                    ->reject(fn ($value, $_) => $formatIdToWorldId->get(intval($value)))
+                    ->map(fn ($id) => $formatIdToNameString->get(intval($id)))
+                    ->toArray();
+                $nawsLanguages = $allMeetingFormatIds
+                    ->filter(fn ($value, $_) => $formatIdToWorldId->get(intval($value)) === 'LANG')
+                    ->map(fn ($id) => strtoupper($formatIdToKeyString->get(intval($id))))
+                    ->values()
+                    ->toArray();
+
+                foreach ($columnNames as $columnName) {
+                    switch ($columnName) {
+                        case 'Committee':
+                            $row[] = !empty($meeting->worldid_mixed) ? trim($meeting->worldid_mixed) : '';
+                            break;
+                        case 'CommitteeName':
+                            $row[] = $meetingData->get('meeting_name', '');
+                            break;
+                        case 'AddDate':
+                            $row[] = '';
+                            break;
+                        case 'AreaRegion':
+                            $row[] = $meeting->serviceBody->worldid_mixed;
+                            break;
+                        case 'ParentName':
+                            $row[] = $meeting->serviceBody->name_string;
+                            break;
+                        case 'ComemID':
+                            $row[] = '';
+                            break;
+                        case 'ContactID':
+                            $row[] = '';
+                            break;
+                        case 'ContactName':
+                            $row[] = '';
+                            break;
+                        case 'CompanyName':
+                            $row[] = '';
+                            break;
+                        case 'ContactAddrID':
+                            $row[] = '';
+                            break;
+                        case 'ContactAddress1':
+                            $row[] = '';
+                            break;
+                        case 'ContactAddress2':
+                            $row[] = '';
+                            break;
+                        case 'ContactCity':
+                            $row[] = '';
+                            break;
+                        case 'ContactState':
+                            $row[] = '';
+                            break;
+                        case 'ContactZip':
+                            $row[] = '';
+                            break;
+                        case 'ContactCountry':
+                            $row[] = '';
+                            break;
+                        case 'ContactPhone':
+                            $row[] = '';
+                            break;
+                        case 'MeetingID':
+                            $row[] = '';
+                            break;
+                        case 'Room':
+                            $row[] = implode(', ', $nonNawsFormatNames);
+                            break;
+                        case 'Closed':
+                            $row[] = $this->getNawsClosed($allNawsMeetingFormats);
+                            break;
+                        case 'WheelChr':
+                            $row[] = in_array('WCHR', $allNawsMeetingFormats) ? 'TRUE' : 'FALSE';
+                            break;
+                        case 'Day':
+                            $row[] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][$meeting->weekday_tinyint] ?? '';
+                            break;
+                        case 'Time':
+                            $row[] = $this->getNawsTime($meeting);
+                            break;
+                        case 'Language1':
+                            $row[] = $nawsLanguages[0] ?? '';
+                            break;
+                        case 'Language2':
+                            $row[] = '';
+                            // could also fill this in as follows:
+                            // $row[] = $nawsLanguages[1] ?? '';
+                            break;
+                        case 'Language3':
+                            $row[] = '';
+                            // could also fill this in as follows:
+                            // $row[] = $nawsLanguages[2] ?? '';
+                            break;
+                        case 'LocationId':
+                            $row[] = '';
+                            break;
+                        case 'Place':
+                            $row[] = $meetingData->get('location_text', '');
+                            break;
+                        case 'Address':
+                            $row[] = $meetingData->get('location_street', '');
+                            break;
+                        case 'City':
+                            $row[] = $this->getNawsCity($meetingData);
+                            break;
+                        case 'LocBorough':
+                            $row[] = $meetingData->get('location_neighborhood', '');
+                            break;
+                        case 'State':
+                            $row[] = $meetingData->get('location_province', '');
+                            break;
+                        case 'Zip':
+                            $row[] = $meetingData->get('location_postal_code_1', '');
+                            break;
+                        case 'Country':
+                            $row[] = $meetingData->get('location_nation', '');
+                            break;
+                        case 'Directions':
+                            $row[] = $this->getNawsDirections($meetingData);
+                            break;
+                        case 'Institutional':
+                            $row[] = 'FALSE';
+                            break;
+                        case 'Format1':
+                            $row[] = $nawsMeetingFormatsForExport[0] ?? '';
+                            break;
+                        case 'Format2':
+                            $row[] = $nawsMeetingFormatsForExport[1] ?? '';
+                            break;
+                        case 'Format3':
+                            $row[] = $nawsMeetingFormatsForExport[2] ?? '';
+                            break;
+                        case 'Format4':
+                            $row[] = $nawsMeetingFormatsForExport[3] ?? '';
+                            break;
+                        case 'Format5':
+                            $row[] = $nawsMeetingFormatsForExport[4] ?? '';
+                            break;
+                        case 'Delete':
+                            // TODO write a test
+                            $row[] = $isDeleted ? 'D' : '';
+                            break;
+                        case 'LastChanged':
+                            $row[] = $this->getLastChanged($lastChanged, $meeting);
+                            break;
+                        case 'Longitude':
+                            $row[] = $meeting->longitude ?? '';
+                            break;
+                        case 'Latitude':
+                            $row[] = $meeting->latitude ?? '';
+                            break;
+                        case 'ContactGP':
+                            $row[] = '';
+                            break;
+                        case 'PhoneMeetingNumber':
+                            $row[] = $meetingData->get('phone_meeting_number', '');
+                            break;
+                        case 'VirtualMeetingLink':
+                            $row[] = $meetingData->get('virtual_meeting_link', '');
+                            break;
+                        case 'VirtualMeetingInfo':
+                            $row[] = $meetingData->get('virtual_meeting_additional_info', '');
+                            break;
+                        case 'TimeZone':
+                            $row[] = !empty($meeting->time_zone) ? trim($meeting->time_zone) : '';
+                            break;
+                        case 'bmlt_id':
+                            $row[] = $meeting->id_bigint;
+                            break;
+                        case 'unpublished':
+                            $row[] = $meeting->published ? '' : '1';
+                            break;
+                        default:
+                            $row[] = 'INTERNAL ERROR - BAD COLUMN NAME';
+                    }
+                }
+
+                if (fputcsv($f, $row) == false) {
+                    abort(500);
+                }
+            }
+        }, $filename);
     }
 
     // return 'OPEN' or 'CLOSED' depending on whether it's an open or closed meeting
