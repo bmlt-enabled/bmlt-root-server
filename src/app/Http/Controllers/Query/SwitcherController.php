@@ -465,9 +465,39 @@ class SwitcherController extends Controller
             ]
         ]);
 
-        $deletedMeetings = $this->changeRepository->getMeetingChanges(serviceBodyId: $validated['sb_id'], changeTypes: [Change::CHANGE_TYPE_DELETE]);
         $allServices = $this->serviceBodyRepository->getChildren([$validated['sb_id']]);
-        $meetings = $this->meetingRepository->getSearchResults(servicesInclude: $allServices, published: null, eagerServiceBodies: true, sortKeys: ['lang_enum', 'weekday_tinyint', 'start_time', 'id_bigint']);
+        $deletedMeetingData = [];
+        $deletedMeetings = $this->changeRepository->getMeetingChanges(serviceBodyId: $validated['sb_id'], changeTypes: [Change::CHANGE_TYPE_DELETE])
+            ->map(function ($meetingChange) use (&$deletedMeetingData) {
+                $serializedMeeting = $meetingChange->before_object;
+                if (is_null($serializedMeeting)) {
+                    // TODO write a test
+                    return null;
+                }
+
+                $meetingId = $meetingChange->before_id_bigint ?? $serializedMeeting['main_table_values']['id_bigint'] ?? null;
+                if (is_null($meetingId) || !is_numeric($meetingId)) {
+                    // TODO write a test
+                    return null;
+                }
+
+                $meeting = new Meeting($serializedMeeting['main_table_values']);
+                $meeting->id_bigint = $meetingId;
+
+                if (is_null($meeting->worldid_mixed) || empty(trim($meeting->worldid_mixed)) || trim($meeting->worldid_mixed) == 'deleted') {
+                    // TODO write a test
+                    return null;
+                }
+
+                $deletedMeetingData[$meeting->id_bigint] = collect($serializedMeeting['data_table_values'])
+                    ->mapWithKeys(fn ($data, $_) => [$data['key'] => $data['data_string']])
+                    ->merge(collect($serializedMeeting['longdata_table_values'])->mapWithKeys(fn ($data, $_) => [$data['key'] => $data['data_blob']]));
+
+                return $meeting;
+            })
+            ->reject(fn ($meeting) => is_null($meeting));
+        $meetings = $this->meetingRepository->getSearchResults(servicesInclude: $allServices, published: null, eagerServiceBodies: true, sortKeys: ['lang_enum', 'weekday_tinyint', 'start_time', 'id_bigint'])
+            ->concat($deletedMeetings);
         $allFormats = $this->formatRepository->search(langEnums: [legacy_config('language')], showAll: true)
             ->reject(fn ($fmt) => is_null($fmt->key_string) || empty(trim($fmt->key_string)));
         $formatIdToWorldId = $allFormats->mapWithKeys(fn ($fmt, $_) => [$fmt->shared_id_bigint => $fmt->worldid_mixed]);
@@ -486,27 +516,16 @@ class SwitcherController extends Controller
 
         $f = fopen('php://memory', 'r+');
         fputcsv($f, $columnNames);
-        foreach ($meetings->concat($deletedMeetings) as $meeting) {
+        foreach ($meetings as $meeting) {
             $row = [];
 
-            if ($meeting instanceof Meeting) {
-                $isDeleted = false;
+            $isDeleted = array_key_exists($meeting->id_bigint, $deletedMeetingData);
+            if ($isDeleted) {
+                $meetingData = $deletedMeetingData[$meeting->id_bigint];
+            } else {
                 $meetingData = $meeting->data
                     ->mapWithKeys(fn($data, $_) => [$data->key => $data->data_string])->toBase()
                     ->merge($meeting->longdata->mapWithKeys(fn($data, $_) => [$data->key => $data->data_blob])->toBase());
-            } else {
-                $isDeleted = true;
-                $meeting = $meeting->before_object;
-                if (is_null($meeting)) {
-                    continue;  // should never happen, but you never know with these old databases...
-                }
-
-                $meetingData = collect($meeting['data_table_values'])
-                    ->mapWithKeys(fn ($data, $_) => [$data['key'] => $data['data_string']])
-                    ->merge(collect($meeting['longdata_table_values'])->mapWithKeys(fn ($data, $_) => [$data['key'] => $data['data_blob']]));
-                $meeting = new Meeting($meeting['main_table_values']);
-                $meeting->longitude = !is_null($meeting->longitude) ? floatval($meeting->longitude) : null;
-                $meeting->latitude = !is_null($meeting->latitude) ? floatval($meeting->latitude) : null;
             }
 
             $allMeetingFormatIds = collect(explode(',', $meeting->formats ?? ''));
@@ -668,7 +687,8 @@ class SwitcherController extends Controller
                         $row[] = $nawsMeetingFormatsForExport[4] ?? '';
                         break;
                     case 'Delete':
-                        $row[] = '';
+                        // TODO write a test
+                        $row[] = $isDeleted ? 'D' : '';
                         break;
                     case 'LastChanged':
                         $row[] = $this->getLastChanged($lastChanged, $meeting);
