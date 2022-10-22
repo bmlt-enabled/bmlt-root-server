@@ -6,6 +6,7 @@
 <a href="https://raw.githubusercontent.com/bmlt-enabled/bmlt-root-server/main/LICENSE"><img src="https://img.shields.io/github/license/bmlt-enabled/bmlt-root-server"></a>
 <a href="https://github.com/bmlt-enabled/bmlt-root-server/actions/workflows/test.yml"><img src="https://github.com/bmlt-enabled/bmlt-root-server/actions/workflows/test.yml/badge.svg" alt="Tests"></a>
 <a href="https://github.com/bmlt-enabled/bmlt-root-server/actions/workflows/main.yml"><img src="https://img.shields.io/github/workflow/status/bmlt-enabled/bmlt-root-server/main/main?logo=github&style=flat-square" alt="Build Status"></a>
+<a href="https://app.codecov.io/gh/bmlt-enabled/bmlt-root-server/tree/main"><img src="https://codecov.io/gh/bmlt-enabled/bmlt-root-server/branch/main/graph/badge.svg?token=E64EDTCREH"></a>
 <a href="https://github.com/bmlt-enabled/bmlt-root-server/releases"><img src="https://img.shields.io/github/downloads/bmlt-enabled/bmlt-root-server/total"></a>
 </h1>
 
