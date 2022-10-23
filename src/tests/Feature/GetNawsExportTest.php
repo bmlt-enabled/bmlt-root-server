@@ -260,6 +260,19 @@ class GetNawsExportTest extends TestCase
         $this->assertEquals(['G001', 'G002', 'G003', 'G004', 'G005'], $worldIds);
     }
 
+    // test that meetings in a service body with no NAWS world ID dont export
+    public function testMissingServiceBodyNawsId()
+    {
+        $zone = $this->createZone('My Zone', 'A Zone of Some Kind', worldId: 'ZN42');
+        $region1 = $this->createRegion('region1', 'region1', $zone->id_bigint, worldId: 'RG52');
+        $area1 = $this->createArea('area1', 'area1', $region1->id_bigint);
+        $meeting1 = $this->createMeeting(['worldid_mixed' => 'G001', 'service_body_bigint' => $area1->id_bigint]);
+        $csv = $this->get("/client_interface/csv/?switcher=GetNAWSDump&sb_id=$zone->id_bigint")->streamedContent();
+        $reader = CsvReader::createFromString($csv);
+        $reader->setHeaderOffset(0);
+        $this->assertEquals(0, count($reader));  // should have 0 meetings
+    }
+
     // test a meeting with more than 5 NAWS formats -- can't include them all since the spreadsheet is limited to 5 columns for this
     public function testTooManyFormats()
     {
