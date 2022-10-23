@@ -1,6 +1,0 @@
-{
-  "eslint.options": {
-    "configFile": ".dev.eslintrc.js"
-  },
-  "eslint.workingDirectories": ["./src/js"]
-}
