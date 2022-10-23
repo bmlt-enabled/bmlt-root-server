@@ -237,10 +237,10 @@ class GetNawsExportTest extends TestCase
     public function testMultipleLevels()
     {
         $zone = $this->createZone('My Zone', 'A Zone of Some Kind', worldId: 'ZN42');
-        $region1 = $this->createRegion('region1', 'region1', $zone->id_bigint);
-        $area1 = $this->createArea('area1', 'area1', $region1->id_bigint);
-        $region2 = $this->createRegion('region2', 'region2', $zone->id_bigint);
-        $area2 = $this->createArea('area2', 'area2', $region2->id_bigint);
+        $region1 = $this->createRegion('region1', 'region1', $zone->id_bigint, worldId: 'RG52');
+        $area1 = $this->createArea('area1', 'area1', $region1->id_bigint, worldId: 'AR62');
+        $region2 = $this->createRegion('region2', 'region2', $zone->id_bigint, worldId: 'RF72');
+        $area2 = $this->createArea('area2', 'area2', $region2->id_bigint, worldId: 'AR82');
         // mix the world_id order (probably for no good reason .... anyway, the test should work no matter what order they are in)
         $meeting1 = $this->createMeeting(['worldid_mixed' => 'G004', 'service_body_bigint' => $area1->id_bigint]);
         $meeting2 = $this->createMeeting(['worldid_mixed' => 'G005', 'service_body_bigint' => $area1->id_bigint]);

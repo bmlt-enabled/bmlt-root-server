@@ -558,6 +558,10 @@ class SwitcherController extends Controller
                 if ($isDeleted) {
                     $meetingData = $deletedMeetingData[$meeting->id_bigint];
                 } else {
+                    if (empty(trim($meeting?->serviceBody?->worldid_mixed ?? ''))) {
+                        continue;
+                        // TODO: Test this ish
+                    }
                     $meetingData = $meeting->data
                         ->mapWithKeys(fn($data, $_) => [$data->key => $data->data_string])->toBase()
                         ->merge($meeting->longdata->mapWithKeys(fn($data, $_) => [$data->key => $data->data_blob])->toBase());
