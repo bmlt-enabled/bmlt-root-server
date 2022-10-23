@@ -1,11 +1,9 @@
 import { useState } from 'react';
 import RootServerApi from '../RootServerApi';
 import { useNavigate } from 'react-router-dom';
-import { Header } from '../sections/Header';
 import LoginForm from '../partials/forms/LoginForm';
 import { SubmitHandler } from 'react-hook-form';
 import { handleApiErrors } from '../helpers/handleApiErrors';
-import { LoadingSpinner } from '../partials/utilities/LoadingSpinner';
 import { LoginLayout } from '../layouts/LoginLayout';
 
 interface IFormValues {
