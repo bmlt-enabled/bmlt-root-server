@@ -1,53 +1,38 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import RootServerApi from '../RootServerApi';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '../sections/Header';
-import { LoginForm } from '../partials/forms/LoginForm';
-import { Box } from '@mui/material';
-import { styled } from '@mui/system';
+import LoginForm from '../partials/forms/LoginForm';
+import { SubmitHandler } from 'react-hook-form';
+import { handleApiErrors } from '../helpers/handleApiErrors';
+import { LoadingSpinner } from '../partials/utilities/LoadingSpinner';
+import { LoginLayout } from '../layouts/LoginLayout';
 
-const StyledFormWrapper = styled(Box)(({ theme }) => ({
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: '100%',
-  maxWidth: '600px',
-  padding: '20px',
-  border: '1px solid #ccc',
-  borderRadius: theme.shape.borderRadius,
-}));
+interface IFormValues {
+  username: string;
+  password: string;
+}
 
 export const Login = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(e.target.value);
+  const handleOnSubmit: SubmitHandler<IFormValues> = async (inputValues) => {
+    try {
+      const token = await RootServerApi.login(inputValues.username, inputValues.password);
+      console.log(token);
+      RootServerApi.accessToken = token.accessToken ?? null;
+      localStorage.setItem('token', JSON.stringify(token));
+      navigate('/');
+    } catch (error: any) {
+      const errorStatus = await handleApiErrors(error);
+      setErrorMessage(errorStatus);
+    }
   };
 
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const token = await RootServerApi.login(username, password);
-    RootServerApi.accessToken = token.accessToken ?? null;
-    localStorage.setItem('token', JSON.stringify(token));
-    navigate('/');
-  };
   return (
-    <div>
-      <Header />
-      <StyledFormWrapper>
-        <LoginForm
-          handlePasswordChange={handlePasswordChange}
-          handleUsernameChange={handleUsernameChange}
-          handleSubmit={handleSubmit}
-        />
-      </StyledFormWrapper>
-    </div>
+    <LoginLayout>
+      <LoginForm handleOnSubmit={handleOnSubmit} errorMessage={errorMessage} />
+    </LoginLayout>
   );
 };

@@ -1,12 +1,12 @@
 import { Container } from '@mui/material';
-import { Navbar } from './sections/Navbar';
-import { Header } from './sections/Header';
+import { Navbar } from '../sections/Navbar';
+import { Header } from '../sections/Header';
 
 type Props = {
   children: JSX.Element;
 };
 
-export const Layout = ({ children }: Props) => {
+export const AppLayout = ({ children }: Props) => {
   return (
     <>
       <Header />

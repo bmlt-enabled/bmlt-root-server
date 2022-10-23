@@ -1,6 +1,6 @@
 import { Navigate } from 'react-router-dom';
 import RootServerApi from '../RootServerApi';
-import { Layout } from '../Layout';
+import { AppLayout } from '../layouts/AppLayout';
 import { loadAccessToken } from '../helpers/utils';
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
 export const ProtectedRoute = ({ children }: Props) => {
   loadAccessToken();
   if (RootServerApi.isLoggedIn) {
-    return <Layout>{children}</Layout>;
+    return <AppLayout>{children}</AppLayout>;
   }
 
   return <Navigate to='/login' />;
