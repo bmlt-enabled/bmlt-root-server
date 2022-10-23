@@ -6,16 +6,16 @@ import { SubmitHandler } from 'react-hook-form';
 import { handleApiErrors } from '../helpers/handleApiErrors';
 import { LoginLayout } from '../layouts/LoginLayout';
 
-interface IFormValues {
+type formValues = {
   username: string;
   password: string;
-}
+};
 
 export const Login = () => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
 
-  const handleOnSubmit: SubmitHandler<IFormValues> = async (inputValues) => {
+  const handleOnSubmit: SubmitHandler<formValues> = async (inputValues) => {
     try {
       const token = await RootServerApi.login(inputValues.username, inputValues.password);
       console.log(token);

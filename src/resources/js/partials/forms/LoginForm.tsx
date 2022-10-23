@@ -34,12 +34,12 @@ const StyledFormLabel = styled(Typography)(({ theme }) => ({
   color: theme.palette.primary.main,
 }));
 
-interface IProps {
+type props = {
   handleOnSubmit: (data: any) => void;
   errorMessage?: string;
-}
+};
 
-const LoginForm = ({ handleOnSubmit, errorMessage }: IProps) => {
+const LoginForm = ({ handleOnSubmit, errorMessage }: props) => {
   const {
     register,
     handleSubmit,

@@ -1,10 +1,10 @@
 import { Typography } from '@mui/material';
 
-interface IProps {
+type props = {
   message: string | null;
-}
+};
 
-export const InputRequiredError = ({ message }: IProps) => {
+export const InputRequiredError = ({ message }: props) => {
   return (
     <Typography variant='caption' color='error.main'>
       {message}
