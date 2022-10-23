@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext", "es6"],
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -25,9 +25,6 @@
     "paths": {
       "~/*": ["src/*"]
     }
-    // "noImplicitAny": true,
-    // "noImplicitThis": true,
-    // "strictNullChecks": true
   },
   "include": ["vite.config.ts", "resources/js/**/*.ts", "resources/js/**/*.tsx"],
   "exclude": ["node_modules"]
