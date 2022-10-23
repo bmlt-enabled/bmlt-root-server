@@ -560,7 +560,6 @@ class SwitcherController extends Controller
                 } else {
                     if (empty(trim($meeting?->serviceBody?->worldid_mixed ?? ''))) {
                         continue;
-                        // TODO: Test this ish
                     }
                     $meetingData = $meeting->data
                         ->mapWithKeys(fn($data, $_) => [$data->key => $data->data_string])->toBase()
