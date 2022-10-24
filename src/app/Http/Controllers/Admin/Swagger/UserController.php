@@ -30,9 +30,6 @@ namespace App\Http\Controllers\Admin\Swagger;
  * @OA\Schema(schema="UserCollection", type="array",
  *     @OA\Items(ref="#/components/schemas/User")
  * ),
- * @OA\Schema(schema="NoUserExists", description="Returns when no user exists.",
- *     @OA\Property(property="message", type="string", example="Not Found")
- * )
  */
 class UserController extends Controller
 {
@@ -43,7 +40,7 @@ class UserController extends Controller
      *         @OA\JsonContent(ref="#/components/schemas/UserCollection")
      *     ),
      *     @OA\Response(response=401, description="Returns when not authenticated",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
      *     )
      * )
      */
@@ -60,10 +57,10 @@ class UserController extends Controller
      *         @OA\JsonContent(ref="#/components/schemas/User")
      *     ),
      *     @OA\Response(response=401, description="Returns when not authenticated.",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
      *     ),
      *     @OA\Response(response=404, description="Returns when no user exists.",
-     *         @OA\JsonContent(ref="#/components/schemas/NoUserExists")
+     *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
      *     )
      * )
      */
@@ -80,13 +77,13 @@ class UserController extends Controller
      *         @OA\JsonContent(ref="#/components/schemas/User")
      *     ),
      *     @OA\Response(response=401, description="Returns when user is not authenticated.",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorIncorrectCredentials")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
      *     ),
      *     @OA\Response(response=403, description="Returns when user is unauthorized to perform action.",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
      *     ),
      *     @OA\Response(response=404, description="Returns when no user exists.",
-     *         @OA\JsonContent(ref="#/components/schemas/NoUserExists")
+     *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
      *     ),
      *     @OA\Response(response=422, description="Validation error.",
      *         @OA\JsonContent(ref="#/components/schemas/ValidationError")
@@ -107,13 +104,13 @@ class UserController extends Controller
      *     ),
      *     @OA\Response(response=204, description="Success."),
      *     @OA\Response(response=401, description="Returns when user is not authenticated.",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorIncorrectCredentials")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
      *     ),
      *     @OA\Response(response=403, description="Returns when user is unauthorized to perform action.",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
      *     ),
      *     @OA\Response(response=404, description="Returns when no user exists.",
-     *         @OA\JsonContent(ref="#/components/schemas/NoUserExists")
+     *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
      *     ),
      *     @OA\Response(response=422, description="Validation error.",
      *         @OA\JsonContent(ref="#/components/schemas/ValidationError")
@@ -134,13 +131,13 @@ class UserController extends Controller
      *     ),
      *     @OA\Response(response=204, description="Success."),
      *     @OA\Response(response=401,description="Returns when not authenticated",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
      *     ),
      *     @OA\Response(response=403, description="Returns when unauthorized",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthorized")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthorizationError")
      *     ),
      *     @OA\Response(response=404, description="Returns when no user exists.",
-     *         @OA\JsonContent(ref="#/components/schemas/NoUserExists")
+     *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
      *     ),
      *     @OA\Response(response=422, description="Validation error.",
      *         @OA\JsonContent(ref="#/components/schemas/ValidationError")
@@ -158,13 +155,13 @@ class UserController extends Controller
      *     ),
      *     @OA\Response(response=204, description="Success."),
      *     @OA\Response(response=401,description="Returns when not authenticated",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
      *     ),
      *     @OA\Response(response=403, description="Returns when unauthorized",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthorized")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthorizationError")
      *     ),
      *     @OA\Response(response=404, description="Returns when no user exists.",
-     *         @OA\JsonContent(ref="#/components/schemas/NoUserExists")
+     *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
      *     ),
      *     @OA\Response(response=422, description="Validation error.",
      *         @OA\JsonContent(ref="#/components/schemas/ValidationError")
