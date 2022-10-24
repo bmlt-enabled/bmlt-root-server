@@ -3,16 +3,16 @@
 namespace App\Http\Controllers\Admin\Swagger;
 
 /**
- * @OA\Schema(schema="ErrorIncorrectCredentials",
- *     @OA\Property(property="message", type="string", example="The provided credentials are incorrect.")
- * ),
- * @OA\Schema(schema="ErrorUnauthenticated",
+ * @OA\Schema(schema="AuthenticationError", required={"message"},
  *     @OA\Property(property="message", type="string", example="Unauthenticated.")
  * ),
- * @OA\Schema(schema="ErrorUnauthorized",
+ * @OA\Schema(schema="AuthorizationError", required={"message"},
  *     @OA\Property(property="message", type="string", example="This action is unauthorized.")
  * ),
- * @OA\Schema(schema="ValidationError",
+ * @OA\Schema(schema="NotFoundError", required={"message"},
+ *     @OA\Property(property="message", type="string", example="This action is unauthorized.")
+ * ),
+ * @OA\Schema(schema="ValidationError", required={"message", "errors"},
  *     @OA\Property(property="message", type="string", example="The field is required. (and 1 more error)"),
  *     @OA\Property(property="errors", type="object",
  *         @OA\AdditionalProperties(type="array",

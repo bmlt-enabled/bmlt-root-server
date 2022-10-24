@@ -25,7 +25,7 @@ class TokenController extends Controller
      *         @OA\JsonContent(ref="#/components/schemas/Token")
      *     ),
      *     @OA\Response(response=401, description="Returns when credentials are incorrect.",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorIncorrectCredentials")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
      *     ),
      *     @OA\Response(response=422, description="Validation error.",
      *         @OA\JsonContent(ref="#/components/schemas/ValidationError")
@@ -42,7 +42,7 @@ class TokenController extends Controller
      *         @OA\JsonContent(ref="#/components/schemas/Token")
      *     ),
      *     @OA\Response(response=401, description="Returns when request is unauthenticated.",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
      *     ),
      * )
      */
@@ -54,7 +54,7 @@ class TokenController extends Controller
      * @OA\Post(path="/api/v1/auth/logout", summary="Revokes a token", description="Revoke token and logout.", operationId="authLogout", tags={"rootServer"}, security={{"bmltToken":{}}},
      *     @OA\Response(response=200, description="Returns when token was logged out."),
      *     @OA\Response(response=401, description="Returns when request is unauthenticated.",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
      *     ),
      * )
      */

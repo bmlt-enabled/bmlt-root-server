@@ -34,7 +34,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -80,7 +80,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorIncorrectCredentials"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -90,7 +90,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -100,7 +100,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/NoFormatExists"
+                                    "$ref": "#/components/schemas/NotFoundError"
                                 }
                             }
                         }
@@ -160,7 +160,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -170,7 +170,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/NoFormatExists"
+                                    "$ref": "#/components/schemas/NotFoundError"
                                 }
                             }
                         }
@@ -222,7 +222,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorIncorrectCredentials"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -232,7 +232,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -242,7 +242,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/NoFormatExists"
+                                    "$ref": "#/components/schemas/NotFoundError"
                                 }
                             }
                         }
@@ -293,7 +293,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -303,7 +303,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthorized"
+                                    "$ref": "#/components/schemas/AuthorizationError"
                                 }
                             }
                         }
@@ -313,7 +313,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/NoFormatExists"
+                                    "$ref": "#/components/schemas/NotFoundError"
                                 }
                             }
                         }
@@ -375,7 +375,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -385,7 +385,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthorized"
+                                    "$ref": "#/components/schemas/AuthorizationError"
                                 }
                             }
                         }
@@ -395,7 +395,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/NoFormatExists"
+                                    "$ref": "#/components/schemas/NotFoundError"
                                 }
                             }
                         }
@@ -484,7 +484,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -540,7 +540,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -550,7 +550,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthorized"
+                                    "$ref": "#/components/schemas/AuthorizationError"
                                 }
                             }
                         }
@@ -560,7 +560,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/NoMeetingExists"
+                                    "$ref": "#/components/schemas/NotFoundError"
                                 }
                             }
                         }
@@ -620,7 +620,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -630,7 +630,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/NoMeetingExists"
+                                    "$ref": "#/components/schemas/NotFoundError"
                                 }
                             }
                         }
@@ -682,7 +682,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -692,7 +692,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthorized"
+                                    "$ref": "#/components/schemas/AuthorizationError"
                                 }
                             }
                         }
@@ -702,7 +702,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/NoMeetingExists"
+                                    "$ref": "#/components/schemas/NotFoundError"
                                 }
                             }
                         }
@@ -753,7 +753,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -763,7 +763,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthorized"
+                                    "$ref": "#/components/schemas/AuthorizationError"
                                 }
                             }
                         }
@@ -773,7 +773,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/NoMeetingExists"
+                                    "$ref": "#/components/schemas/NotFoundError"
                                 }
                             }
                         }
@@ -825,7 +825,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -835,7 +835,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthorized"
+                                    "$ref": "#/components/schemas/AuthorizationError"
                                 }
                             }
                         }
@@ -845,7 +845,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/NoMeetingExists"
+                                    "$ref": "#/components/schemas/NotFoundError"
                                 }
                             }
                         }
@@ -892,7 +892,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -938,7 +938,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -948,7 +948,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthorized"
+                                    "$ref": "#/components/schemas/AuthorizationError"
                                 }
                             }
                         }
@@ -958,7 +958,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/NoServiceBodyExists"
+                                    "$ref": "#/components/schemas/NotFoundError"
                                 }
                             }
                         }
@@ -1018,7 +1018,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -1028,7 +1028,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/NoServiceBodyExists"
+                                    "$ref": "#/components/schemas/NotFoundError"
                                 }
                             }
                         }
@@ -1080,7 +1080,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -1090,7 +1090,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthorized"
+                                    "$ref": "#/components/schemas/AuthorizationError"
                                 }
                             }
                         }
@@ -1100,7 +1100,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/NoServiceBodyExists"
+                                    "$ref": "#/components/schemas/NotFoundError"
                                 }
                             }
                         }
@@ -1151,7 +1151,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -1161,7 +1161,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthorized"
+                                    "$ref": "#/components/schemas/AuthorizationError"
                                 }
                             }
                         }
@@ -1171,7 +1171,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/NoServiceBodyExists"
+                                    "$ref": "#/components/schemas/NotFoundError"
                                 }
                             }
                         }
@@ -1223,7 +1223,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -1233,7 +1233,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthorized"
+                                    "$ref": "#/components/schemas/AuthorizationError"
                                 }
                             }
                         }
@@ -1243,7 +1243,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/NoServiceBodyExists"
+                                    "$ref": "#/components/schemas/NotFoundError"
                                 }
                             }
                         }
@@ -1301,7 +1301,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorIncorrectCredentials"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -1343,7 +1343,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -1373,7 +1373,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -1410,7 +1410,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -1456,7 +1456,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorIncorrectCredentials"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -1466,7 +1466,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -1476,7 +1476,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/NoUserExists"
+                                    "$ref": "#/components/schemas/NotFoundError"
                                 }
                             }
                         }
@@ -1536,7 +1536,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -1546,7 +1546,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/NoUserExists"
+                                    "$ref": "#/components/schemas/NotFoundError"
                                 }
                             }
                         }
@@ -1598,7 +1598,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorIncorrectCredentials"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -1608,7 +1608,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -1618,7 +1618,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/NoUserExists"
+                                    "$ref": "#/components/schemas/NotFoundError"
                                 }
                             }
                         }
@@ -1669,7 +1669,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -1679,7 +1679,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthorized"
+                                    "$ref": "#/components/schemas/AuthorizationError"
                                 }
                             }
                         }
@@ -1689,7 +1689,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/NoUserExists"
+                                    "$ref": "#/components/schemas/NotFoundError"
                                 }
                             }
                         }
@@ -1751,7 +1751,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthenticated"
+                                    "$ref": "#/components/schemas/AuthenticationError"
                                 }
                             }
                         }
@@ -1761,7 +1761,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorUnauthorized"
+                                    "$ref": "#/components/schemas/AuthorizationError"
                                 }
                             }
                         }
@@ -1771,7 +1771,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/NoUserExists"
+                                    "$ref": "#/components/schemas/NotFoundError"
                                 }
                             }
                         }
@@ -1797,16 +1797,10 @@
     },
     "components": {
         "schemas": {
-            "ErrorIncorrectCredentials": {
-                "properties": {
-                    "message": {
-                        "type": "string",
-                        "example": "The provided credentials are incorrect."
-                    }
-                },
-                "type": "object"
-            },
-            "ErrorUnauthenticated": {
+            "AuthenticationError": {
+                "required": [
+                    "message"
+                ],
                 "properties": {
                     "message": {
                         "type": "string",
@@ -1815,7 +1809,22 @@
                 },
                 "type": "object"
             },
-            "ErrorUnauthorized": {
+            "AuthorizationError": {
+                "required": [
+                    "message"
+                ],
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "This action is unauthorized."
+                    }
+                },
+                "type": "object"
+            },
+            "NotFoundError": {
+                "required": [
+                    "message"
+                ],
                 "properties": {
                     "message": {
                         "type": "string",
@@ -1825,6 +1834,10 @@
                 "type": "object"
             },
             "ValidationError": {
+                "required": [
+                    "message",
+                    "errors"
+                ],
                 "properties": {
                     "message": {
                         "type": "string",
@@ -1939,16 +1952,6 @@
                 "items": {
                     "$ref": "#/components/schemas/Format"
                 }
-            },
-            "NoFormatExists": {
-                "description": "Returns when no format exists.",
-                "properties": {
-                    "message": {
-                        "type": "string",
-                        "example": "Not Found"
-                    }
-                },
-                "type": "object"
             },
             "MeetingBase": {
                 "properties": {
@@ -2199,16 +2202,6 @@
                     "$ref": "#/components/schemas/Meeting"
                 }
             },
-            "NoMeetingExists": {
-                "description": "Returns when no Meeting exists.",
-                "properties": {
-                    "message": {
-                        "type": "string",
-                        "example": "Not Found"
-                    }
-                },
-                "type": "object"
-            },
             "ServiceBodyBase": {
                 "properties": {
                     "parentId": {
@@ -2328,16 +2321,6 @@
                 "items": {
                     "$ref": "#/components/schemas/ServiceBody"
                 }
-            },
-            "NoServiceBodyExists": {
-                "description": "Returns when no user exists.",
-                "properties": {
-                    "message": {
-                        "type": "string",
-                        "example": "Not Found"
-                    }
-                },
-                "type": "object"
             },
             "Token": {
                 "required": [
@@ -2503,16 +2486,6 @@
                 "items": {
                     "$ref": "#/components/schemas/User"
                 }
-            },
-            "NoUserExists": {
-                "description": "Returns when no user exists.",
-                "properties": {
-                    "message": {
-                        "type": "string",
-                        "example": "Not Found"
-                    }
-                },
-                "type": "object"
             }
         },
         "securitySchemes": {
