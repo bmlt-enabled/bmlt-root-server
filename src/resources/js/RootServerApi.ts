@@ -1,5 +1,6 @@
 import {
   Configuration,
+  ErrorTest,
   Format,
   FormatCreate,
   FormatPartialUpdate,
@@ -186,6 +187,15 @@ class ApiClientWrapper {
   async deleteUser(id: number): Promise<void> {
     const params = { userId: id };
     return this.api.deleteUser(params);
+  }
+
+  async errorTest(
+    arbitraryString?: string,
+    arbitraryInt?: number,
+    forceServerError?: boolean,
+  ): Promise<ErrorTest> {
+    const params = { errorTest: { arbitraryString, arbitraryInt, forceServerError } };
+    return this.api.createErrorTest(params);
   }
 }
 
