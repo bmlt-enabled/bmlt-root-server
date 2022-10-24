@@ -18,6 +18,10 @@ import {
   UserCreate,
   UserPartialUpdate,
   UserUpdate,
+  AuthenticationError,
+  AuthorizationError,
+  ValidationError,
+  ResponseError,
 } from 'bmlt-root-server-client';
 
 class ApiClient extends RootServerApi {
@@ -186,6 +190,57 @@ class ApiClientWrapper {
   async deleteUser(id: number): Promise<void> {
     const params = { userId: id };
     return this.api.deleteUser(params);
+  }
+
+  async handleApiErrors(
+    error: Error,
+    handleAuthenticationError?: (error: AuthenticationError) => void,
+    handleAuthorizationError?: (error: AuthorizationError) => void,
+    handleValidationError?: (error: ValidationError) => void,
+    handleServerError?: (error: any) => void,
+    handleNetworkError?: () => void,
+    handleError?: (error: any) => void,
+  ): Promise<void> {
+    // handle network errors first
+    if (error.message === 'Failed to fetch') {
+      if (handleNetworkError) {
+        return handleNetworkError();
+      }
+
+      if (handleError) {
+        return handleError(error.message);
+      }
+
+      // return showErrorDialog(error.message);
+      console.log(error.message);
+    }
+
+    // handle api errors
+    const responseError = error as ResponseError;
+    const response = await responseError.response.json();
+
+    if (handleAuthenticationError && response.status === 401) {
+      return handleAuthenticationError(response.body as AuthenticationError);
+    }
+
+    if (handleAuthorizationError && response.status === 403) {
+      return handleAuthorizationError(response.body as AuthorizationError);
+    }
+
+    if (handleValidationError && response.status === 422) {
+      return handleValidationError(response.body as ValidationError);
+    }
+
+    if (handleServerError && response.status > 499) {
+      return handleServerError(response.body);
+    }
+
+    if (handleError) {
+      return handleError(response.body);
+    }
+
+    // return showErrorDialog(response.body);
+    console.log(response.body);
   }
 }
 

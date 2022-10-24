@@ -3,7 +3,7 @@ import RootServerApi from '../RootServerApi';
 import { useNavigate } from 'react-router-dom';
 import LoginForm from '../partials/forms/LoginForm';
 import { SubmitHandler } from 'react-hook-form';
-import { handleApiErrors } from '../helpers/handleApiErrors';
+// import { handleApiErrors } from '../helpers/handleApiErrors';
 import { LoginLayout } from '../layouts/LoginLayout';
 
 type formValues = {
@@ -11,9 +11,17 @@ type formValues = {
   password: string;
 };
 
+type AuthenticationError = {
+  message: string;
+};
+
 export const Login = () => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
+
+  const handleAuthenticationError = (error: AuthenticationError) => {
+    console.log(error);
+  };
 
   const handleOnSubmit: SubmitHandler<formValues> = async (inputValues) => {
     try {
@@ -23,8 +31,8 @@ export const Login = () => {
       localStorage.setItem('token', JSON.stringify(token));
       navigate('/');
     } catch (error: any) {
-      const errorStatus = await handleApiErrors(error);
-      setErrorMessage(errorStatus);
+      await RootServerApi.handleApiErrors(error, handleAuthenticationError);
+      setErrorMessage('Invalid username or password');
     }
   };
 
