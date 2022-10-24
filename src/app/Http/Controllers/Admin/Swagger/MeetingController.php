@@ -60,9 +60,6 @@ namespace App\Http\Controllers\Admin\Swagger;
  * @OA\Schema(schema="MeetingCollection", type="array",
  *     @OA\Items(ref="#/components/schemas/Meeting")
  * ),
- * @OA\Schema(schema="NoMeetingExists", description="Returns when no Meeting exists.",
- *     @OA\Property(property="message", type="string", example="Not Found"),
- * ),
  */
 
 class MeetingController extends Controller
@@ -86,7 +83,7 @@ class MeetingController extends Controller
      *         @OA\JsonContent(ref="#/components/schemas/MeetingCollection")
      *     ),
      *     @OA\Response(response=401, description="Returns when user is not authenticated.",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
      *     ),
      *     @OA\Response(response=422, description="Validation error.",
      *         @OA\JsonContent(ref="#/components/schemas/ValidationError")
@@ -106,10 +103,10 @@ class MeetingController extends Controller
      *         @OA\JsonContent(ref="#/components/schemas/Meeting")
      *     ),
      *     @OA\Response(response=401, description="Returns when user is not authenticated.",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
      *     ),
      *     @OA\Response(response=404, description="Returns when no meeting exists.",
-     *         @OA\JsonContent(ref="#/components/schemas/NoMeetingExists")
+     *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
      *     ),
      * )
      */
@@ -126,13 +123,13 @@ class MeetingController extends Controller
      *         @OA\JsonContent(ref="#/components/schemas/Meeting")
      *     ),
      *     @OA\Response(response=401, description="Returns when user is not authenticated.",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
      *     ),
      *     @OA\Response(response=403, description="Returns when user is unauthorized to perform action.",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthorized")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthorizationError")
      *     ),
      *     @OA\Response(response=404, description="Returns when no meeting body exists.",
-     *         @OA\JsonContent(ref="#/components/schemas/NoMeetingExists")
+     *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
      *     ),
      *     @OA\Response(response=422, description="Validation error.",
      *         @OA\JsonContent(ref="#/components/schemas/ValidationError")
@@ -153,13 +150,13 @@ class MeetingController extends Controller
      *     ),
      *     @OA\Response(response=204, description="Success."),
      *     @OA\Response(response=401, description="Returns when user is not authenticated.",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
      *     ),
      *     @OA\Response(response=403, description="Returns when user is unauthorized to perform action.",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthorized")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthorizationError")
      *     ),
      *     @OA\Response(response=404, description="Returns when no meeting exists.",
-     *         @OA\JsonContent(ref="#/components/schemas/NoMeetingExists")
+     *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
      *     ),
      *     @OA\Response(response=422, description="Validation error.",
      *         @OA\JsonContent(ref="#/components/schemas/ValidationError")
@@ -180,13 +177,13 @@ class MeetingController extends Controller
      *     ),
      *     @OA\Response(response=204, description="Success."),
      *     @OA\Response(response=401, description="Returns when user is not authenticated.",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
      *     ),
      *     @OA\Response(response=403, description="Returns when user is unauthorized to perform action.",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthorized")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthorizationError")
      *     ),
      *     @OA\Response(response=404, description="Returns when no meeting exists.",
-     *         @OA\JsonContent(ref="#/components/schemas/NoMeetingExists")
+     *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
      *     ),
      *     @OA\Response(response=422, description="Validation error.",
      *         @OA\JsonContent(ref="#/components/schemas/ValidationError")
@@ -204,13 +201,13 @@ class MeetingController extends Controller
      *     ),
      *     @OA\Response(response=204, description="Success."),
      *     @OA\Response(response=401, description="Returns when user is not authenticated.",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
      *     ),
      *     @OA\Response(response=403, description="Returns when user is unauthorized to perform action.",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthorized")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthorizationError")
      *     ),
      *     @OA\Response(response=404, description="Returns when no meeting exists.",
-     *         @OA\JsonContent(ref="#/components/schemas/NoMeetingExists")
+     *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
      *     ),
      * )
      */

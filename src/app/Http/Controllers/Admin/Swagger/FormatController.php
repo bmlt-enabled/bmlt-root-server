@@ -32,9 +32,6 @@ namespace App\Http\Controllers\Admin\Swagger;
  * @OA\Schema(schema="FormatCollection", type="array",
  *     @OA\Items(ref="#/components/schemas/Format")
  * ),
- * @OA\Schema(schema="NoFormatExists",description="Returns when no format exists.",
- *     @OA\Property(property="message", type="string", example="Not Found"),
- * ),
  */
 class FormatController extends Controller
 {
@@ -45,7 +42,7 @@ class FormatController extends Controller
      *         @OA\JsonContent(ref="#/components/schemas/FormatCollection")
      *     ),
      *     @OA\Response(response=401, description="Returns when not authenticated",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
      *     )
      * )
      */
@@ -62,10 +59,10 @@ class FormatController extends Controller
      *         @OA\JsonContent(ref="#/components/schemas/Format")
      *     ),
      *     @OA\Response(response=401, description="Returns when not authenticated.",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
      *     ),
      *     @OA\Response(response=404, description="Returns when no format exists.",
-     *         @OA\JsonContent(ref="#/components/schemas/NoFormatExists")
+     *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
      *     )
      * )
      */
@@ -82,13 +79,13 @@ class FormatController extends Controller
      *         @OA\JsonContent(ref="#/components/schemas/Format")
      *     ),
      *     @OA\Response(response=401, description="Returns when user is not authenticated.",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorIncorrectCredentials")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
      *     ),
      *     @OA\Response(response=403, description="Returns when user is unauthorized to perform action.",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
      *     ),
      *     @OA\Response(response=404, description="Returns when no format exists.",
-     *         @OA\JsonContent(ref="#/components/schemas/NoFormatExists")
+     *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
      *     ),
      *     @OA\Response(response=422, description="Validation error.",
      *         @OA\JsonContent(ref="#/components/schemas/ValidationError")
@@ -109,13 +106,13 @@ class FormatController extends Controller
      *     ),
      *     @OA\Response(response=204, description="Success."),
      *     @OA\Response(response=401, description="Returns when user is not authenticated.",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorIncorrectCredentials")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
      *     ),
      *     @OA\Response(response=403, description="Returns when user is unauthorized to perform action.",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
      *     ),
      *     @OA\Response(response=404, description="Returns when no format exists.",
-     *         @OA\JsonContent(ref="#/components/schemas/NoFormatExists")
+     *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
      *     ),
      *     @OA\Response(response=422, description="Validation error.",
      *         @OA\JsonContent(ref="#/components/schemas/ValidationError")
@@ -136,13 +133,13 @@ class FormatController extends Controller
      *     ),
      *     @OA\Response(response=204, description="Success."),
      *     @OA\Response(response=401,description="Returns when not authenticated",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
      *     ),
      *     @OA\Response(response=403, description="Returns when unauthorized",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthorized")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthorizationError")
      *     ),
      *     @OA\Response(response=404, description="Returns when no format exists.",
-     *         @OA\JsonContent(ref="#/components/schemas/NoFormatExists")
+     *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
      *     ),
      *     @OA\Response(response=422, description="Validation error.",
      *         @OA\JsonContent(ref="#/components/schemas/ValidationError")
@@ -160,13 +157,13 @@ class FormatController extends Controller
      *     ),
      *     @OA\Response(response=204, description="Success."),
      *     @OA\Response(response=401,description="Returns when not authenticated",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthenticated")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
      *     ),
      *     @OA\Response(response=403, description="Returns when unauthorized",
-     *         @OA\JsonContent(ref="#/components/schemas/ErrorUnauthorized")
+     *         @OA\JsonContent(ref="#/components/schemas/AuthorizationError")
      *     ),
      *     @OA\Response(response=404, description="Returns when no format exists.",
-     *         @OA\JsonContent(ref="#/components/schemas/NoFormatExists")
+     *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
      *     ),
      *     @OA\Response(response=422, description="Validation error.",
      *         @OA\JsonContent(ref="#/components/schemas/ValidationError")
