@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ErrorTestController;
 use App\Http\Controllers\Admin\FormatController;
 use App\Http\Controllers\Admin\MeetingController;
 use App\Http\Controllers\Admin\ServiceBodyController;
@@ -23,6 +24,7 @@ Route::get('/openapi.json', [SwaggerController::class, 'openapi'])->name('openap
 Route::post('/auth/token', [TokenController::class, 'token']);
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/errortest', [ErrorTestController::class, 'store']);
     Route::post('/auth/refresh', [TokenController::class, 'refresh']);
     Route::post('/auth/logout', [TokenController::class, 'logout']);
     Route::apiResource('formats', FormatController::class);

@@ -10,6 +10,74 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/v1/errortest": {
+            "post": {
+                "tags": [
+                    "rootServer"
+                ],
+                "summary": "Tests some errors",
+                "description": "Tests some errors.",
+                "operationId": "createErrorTest",
+                "requestBody": {
+                    "description": "Pass in error test object.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ErrorTest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Returns when POST is successful.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorTest"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user is not authenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthenticationError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bmltToken": []
+                    }
+                ]
+            }
+        },
         "/api/v1/formats": {
             "get": {
                 "tags": [
@@ -1797,6 +1865,23 @@
     },
     "components": {
         "schemas": {
+            "ErrorTest": {
+                "properties": {
+                    "arbitrary_string": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "arbitrary_int": {
+                        "type": "integer",
+                        "example": "123"
+                    },
+                    "force_server_error": {
+                        "type": "boolean",
+                        "example": "true"
+                    }
+                },
+                "type": "object"
+            },
             "AuthenticationError": {
                 "required": [
                     "message"
@@ -1852,6 +1937,18 @@
                                 "example": "error details"
                             }
                         }
+                    }
+                },
+                "type": "object"
+            },
+            "ServerError": {
+                "required": [
+                    "message"
+                ],
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Server Error"
                     }
                 },
                 "type": "object"

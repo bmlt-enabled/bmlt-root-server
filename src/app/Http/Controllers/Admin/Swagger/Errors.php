@@ -19,7 +19,10 @@ namespace App\Http\Controllers\Admin\Swagger;
  *             @OA\Items(type="string", example="error details")
  *         )
  *     ),
- * )
+ * ),
+ * @OA\Schema(schema="ServerError", required={"message"},
+ *     @OA\Property(property="message", type="string", example="Server Error")
+ * ),
  */
 class Errors extends Controller
 {
