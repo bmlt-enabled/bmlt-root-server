@@ -1828,7 +1828,7 @@
                 "properties": {
                     "message": {
                         "type": "string",
-                        "example": "This action is unauthorized."
+                        "example": "The requested resource was not found."
                     }
                 },
                 "type": "object"

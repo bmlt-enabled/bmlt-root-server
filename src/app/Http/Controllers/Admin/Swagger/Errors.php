@@ -10,7 +10,7 @@ namespace App\Http\Controllers\Admin\Swagger;
  *     @OA\Property(property="message", type="string", example="This action is unauthorized.")
  * ),
  * @OA\Schema(schema="NotFoundError", required={"message"},
- *     @OA\Property(property="message", type="string", example="This action is unauthorized.")
+ *     @OA\Property(property="message", type="string", example="The requested resource was not found.")
  * ),
  * @OA\Schema(schema="ValidationError", required={"message", "errors"},
  *     @OA\Property(property="message", type="string", example="The field is required. (and 1 more error)"),
