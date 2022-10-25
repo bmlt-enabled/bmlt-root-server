@@ -90,4 +90,19 @@ class TokenTest extends TestCase
             ->get('/api/v1/servicebodies')
             ->assertStatus(401);
     }
+
+    public function testMigratePasswordHash()
+    {
+        $user = $this->createAdminUser();
+        $user->password_string = crypt($this->userPassword, 'ab');
+        $user->save();
+
+        $this->post('/api/v1/auth/token', ['username' => $user->login_string, 'password' => $this->userPassword])
+            ->assertStatus(200);
+
+        $oldPasswordhash = $user->password_string;
+        $user->refresh();
+        $this->assertNotEmpty($user->password_string);
+        $this->assertNotEquals($oldPasswordhash, $user->password_string);
+    }
 }

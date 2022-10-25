@@ -7,6 +7,7 @@ use App\Models\Change;
 use App\Models\User;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -28,6 +29,11 @@ class UserRepository implements UserRepositoryInterface
         }
 
         return $users->get();
+    }
+
+    public function updatePassword(int $id, string $plaintextPassword)
+    {
+        $this->update($id, ['password_string' => Hash::make($plaintextPassword)]);
     }
 
     public function create(array $values): User
@@ -69,7 +75,7 @@ class UserRepository implements UserRepositoryInterface
     private function saveChange(?User $beforeUser, ?User $afterUser): void
     {
         Change::create([
-            'user_id_bigint' => request()->user()->id_bigint,
+            'user_id_bigint' => request()->user()?->id_bigint ?? $beforeUser?->id_bigint ?? $afterUser?->id_bigint,
             'service_body_id_bigint' => $afterUser?->id_bigint ?? $beforeUser->id_bigint,
             'lang_enum' => $beforeUser?->lang_enum ?: $afterUser?->lang_enum ?: legacy_config('language') ?: App::currentLocale(),
             'object_class_string' => 'c_comdef_user',

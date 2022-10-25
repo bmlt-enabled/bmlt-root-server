@@ -329,4 +329,23 @@ class LegacyAuthTest extends TestCase
                 ->content()
         );
     }
+
+    public function testMigratePasswordHash()
+    {
+        $user = $this->createServiceBodyAdmin();
+        $user->password_string = crypt($this->goodPassword, 'ab');
+        $user->save();
+        $data = [
+            'admin_action' => 'login',
+            'c_comdef_admin_login' => $user->login_string,
+            'c_comdef_admin_password' => $this->goodPassword
+        ];
+        $this->post('/', $data)
+            ->assertStatus(302)
+            ->assertSessionHas('login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d', $user->id_bigint);
+        $oldPasswordhash = $user->password_string;
+        $user->refresh();
+        $this->assertNotEmpty($user->password_string);
+        $this->assertNotEquals($oldPasswordhash, $user->password_string);
+    }
 }

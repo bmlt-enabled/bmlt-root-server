@@ -2,17 +2,26 @@
 
 namespace App\Http\Controllers\Legacy;
 
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\CatchAllController;
+use App\Interfaces\UserRepositoryInterface;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
-use App\Http\Controllers\CatchAllController;
+use Illuminate\Support\Facades\Hash;
 
 class LegacyAuthController extends Controller
 {
     private int $REQUEST_TYPE_ADMIN_XML = 1;
     private int $REQUEST_TYPE_ADMIN_JSON = 2;
     private int $REQUEST_TYPE_WEB = 3;
+
+    private UserRepositoryInterface $userRepository;
+
+    public function __construct(UserRepositoryInterface $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
 
     public function handle(Request $request)
     {
@@ -25,6 +34,10 @@ class LegacyAuthController extends Controller
             $credentials = ['login_string' => $username, 'password' => $password];
             $success = Auth::attempt($credentials);
             if ($success) {
+                if (Hash::needsRehash($request->user()->password_string)) {
+                    $this->userRepository->updatePassword($request->user()->id_bigint, $password);
+                }
+
                 $apiType = $this->getApiType($request);
                 if ($apiType != $this->REQUEST_TYPE_WEB) {
                     $user = Auth::user();
