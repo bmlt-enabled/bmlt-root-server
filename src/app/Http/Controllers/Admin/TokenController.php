@@ -28,6 +28,9 @@ class TokenController extends Controller
         $success = false;
         if ($user = $this->userRepository->getByUsername($request->username)) {
             $success = Hash::check($request->password, $user->password_string);
+            if ($success && Hash::needsRehash($user->password_string)) {
+                $this->userRepository->updatePassword($user->id_bigint, $request->password);
+            }
         } else {
             Hash::check($request->password, '');
         }

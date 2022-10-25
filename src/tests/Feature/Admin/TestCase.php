@@ -98,7 +98,7 @@ class TestCase extends BaseTestCase
             'description_string' => 'nice description',
             'email_address_string' => 'email@email.com',
             'login_string' => 'admin',
-            'password_string' => password_hash($this->userPassword, PASSWORD_BCRYPT),
+            'password_string' => password_hash($this->userPassword, PASSWORD_DEFAULT),
         ]);
     }
 

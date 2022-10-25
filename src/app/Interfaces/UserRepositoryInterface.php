@@ -11,4 +11,5 @@ interface UserRepositoryInterface
     public function create(array $values): User;
     public function update(int $id, array $values): bool;
     public function delete(int $id): bool;
+    public function updatePassword(int $id, string $plaintextPassword);
 }
