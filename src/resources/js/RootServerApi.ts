@@ -193,13 +193,13 @@ class ApiClientWrapper {
   }
 
   async handleErrors(args: {
-    error: Error,
-    handleAuthenticationError?: (error: AuthenticationError) => void,
-    handleAuthorizationError?: (error: AuthorizationError) => void,
-    handleValidationError?: (error: ValidationError) => void,
-    handleServerError?: (error: any) => void,
-    handleNetworkError?: () => void,
-    handleError?: (error: any) => void,
+    error: Error;
+    handleAuthenticationError?: (error: AuthenticationError) => void;
+    handleAuthorizationError?: (error: AuthorizationError) => void;
+    handleValidationError?: (error: ValidationError) => void;
+    handleServerError?: (error: any) => void;
+    handleNetworkError?: () => void;
+    handleError?: (error: any) => void;
   }): Promise<void> {
     const {
       error,
@@ -208,7 +208,7 @@ class ApiClientWrapper {
       handleValidationError,
       handleServerError,
       handleNetworkError,
-      handleError
+      handleError,
     } = args;
 
     // handle network errors first

@@ -24,9 +24,9 @@ export const Login = () => {
     console.log('validation error', error.errors);
   };
 
-  const handleError = ((error: any) => {
+  const handleError = (error: any) => {
     console.log('other error', error);
-  });
+  };
 
   const handleOnSubmit: SubmitHandler<formValues> = async (inputValues) => {
     try {
@@ -36,7 +36,12 @@ export const Login = () => {
       localStorage.setItem('token', JSON.stringify(token));
       navigate('/');
     } catch (error: any) {
-      await RootServerApi.handleErrors({error, handleAuthenticationError, handleValidationError, handleError});
+      await RootServerApi.handleErrors({
+        error,
+        handleAuthenticationError,
+        handleValidationError,
+        handleError,
+      });
     }
   };
 
