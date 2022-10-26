@@ -240,6 +240,7 @@ class ApiClientWrapper {
 
     if (handleValidationError && responseError.response.status === 422) {
       // message, errors
+      console.log("body", body);
       return handleValidationError(body as ValidationError);
     }
 

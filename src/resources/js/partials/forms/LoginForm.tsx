@@ -28,9 +28,13 @@ const StyledFormLabel = styled(Typography)(({ theme }) => ({
 type props = {
   handleOnSubmit: (data: any) => void;
   errorMessage?: string;
+  validationMessage?: {
+    username?: string;
+    password?: string;
+  };
 };
 
-const LoginForm = ({ handleOnSubmit, errorMessage }: props) => {
+const LoginForm = ({ handleOnSubmit, errorMessage, validationMessage }: props) => {
   const {
     register,
     handleSubmit,
@@ -46,26 +50,32 @@ const LoginForm = ({ handleOnSubmit, errorMessage }: props) => {
       <form onSubmit={handleSubmit(handleOnSubmit)} noValidate>
         <StyledInputWrapper>
           <TextField
-            error={errors?.username?.type === 'required'}
+            error={errors?.username?.type === 'required' || validationMessage?.username !== ''}
             id='login-username'
             label='Username'
             type='text'
             fullWidth
             // required
             variant='outlined'
-            helperText='Username is required'
+            helperText={
+              (validationMessage?.password !== '' && validationMessage?.password) ||
+              (errors?.password?.type === 'required' && 'Password is required')
+            }
             {...register('username', { required: false })}
           />
         </StyledInputWrapper>
         <StyledInputWrapper>
           <TextField
-            error={errors?.password?.type === 'required'}
+            error={errors?.password?.type === 'required' || validationMessage?.password !== ''}
             id='login-password'
             label='Password'
             type='password'
             fullWidth
             // required
-            helperText='Password is required'
+            helperText={
+              (validationMessage?.password !== '' && validationMessage?.password) ||
+              (errors?.password?.type === 'required' && 'Password is required')
+            }
             {...register('password', { required: false })}
           />
         </StyledInputWrapper>

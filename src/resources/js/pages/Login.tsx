@@ -15,19 +15,30 @@ type formValues = {
 export const Login = () => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
+  const [validationMessage, setValidationMessage] = useState({
+    username: '',
+    password: '',
+  });
 
   const handleAuthenticationError = (error: AuthenticationError) => {
     setErrorMessage(error.message);
   };
 
   const handleValidationError = (error: ValidationError) => {
-    console.log('validation error', error.errors);
+    setValidationMessage(
+      error.errors.username && {
+        ...validationMessage,
+        username: error.errors.username ? error.errors.username.join(' ') : '',
+        password: error.errors.password ? error.errors.password.join(' ') : '',
+      },
+    );
   };
 
   const handleError = (error: any) => {
     console.log('other error', error);
   };
 
+  console.log('validationMessage', validationMessage);
   const handleOnSubmit: SubmitHandler<formValues> = async (inputValues) => {
     try {
       const token = await RootServerApi.login(inputValues.username, inputValues.password);
@@ -47,7 +58,11 @@ export const Login = () => {
 
   return (
     <LoginLayout>
-      <LoginForm handleOnSubmit={handleOnSubmit} errorMessage={errorMessage} />
+      <LoginForm
+        handleOnSubmit={handleOnSubmit}
+        errorMessage={errorMessage}
+        validationMessage={validationMessage}
+      />
     </LoginLayout>
   );
 };
