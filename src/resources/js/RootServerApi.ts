@@ -192,7 +192,7 @@ class ApiClientWrapper {
     return this.api.deleteUser(params);
   }
 
-  async handleErrors(
+  async handleErrors(args: {
     error: Error,
     handleAuthenticationError?: (error: AuthenticationError) => void,
     handleAuthorizationError?: (error: AuthorizationError) => void,
@@ -200,7 +200,17 @@ class ApiClientWrapper {
     handleServerError?: (error: any) => void,
     handleNetworkError?: () => void,
     handleError?: (error: any) => void,
-  ): Promise<void> {
+  }): Promise<void> {
+    const {
+      error,
+      handleAuthenticationError,
+      handleAuthorizationError,
+      handleValidationError,
+      handleServerError,
+      handleNetworkError,
+      handleError
+    } = args;
+
     // handle network errors first
     if (error.message === 'Failed to fetch') {
       if (handleNetworkError) {
@@ -211,39 +221,37 @@ class ApiClientWrapper {
         return handleError(error.message);
       }
 
-      // return showErrorDialog(error.message);
-      return console.log("failed to fetch", error.message);
+      return console.log('TODO show error dialog', error.message);
     }
 
     // handle api errors
     const responseError = error as ResponseError;
-    const response = await responseError.response.json();
+    const body = await responseError.response.json();
 
     if (handleAuthenticationError && responseError.response.status === 401) {
       // message
-      return handleAuthenticationError(response as AuthenticationError);
+      return handleAuthenticationError(body as AuthenticationError);
     }
 
-    if (handleAuthorizationError && response.status === 403) {
+    if (handleAuthorizationError && responseError.response.status === 403) {
       // message
-      return handleAuthorizationError(response.body as AuthorizationError);
+      return handleAuthorizationError(body as AuthorizationError);
     }
-    
+
     if (handleValidationError && responseError.response.status === 422) {
       // message, errors
-      return handleValidationError(response as ValidationError);
+      return handleValidationError(body as ValidationError);
     }
 
-    if (handleServerError && response.status > 499) {
-      return handleServerError(response.body);
+    if (handleServerError && responseError.response.status > 499) {
+      return handleServerError(body);
     }
 
     if (handleError) {
-      return handleError(response.body);
+      return handleError(body);
     }
 
-    return console.log("uncaught error", response);
-    // console.log('other', response);
+    return console.log('TODO unhandled error, show error dialog', body);
   }
 }
 
