@@ -212,27 +212,26 @@ class ApiClientWrapper {
       }
 
       // return showErrorDialog(error.message);
-      console.log(error.message);
+      return console.log("failed to fetch", error.message);
     }
 
     // handle api errors
     const responseError = error as ResponseError;
     const response = await responseError.response.json();
 
-    console.log('status', response);
     if (handleAuthenticationError && responseError.response.status === 401) {
       // message
-      return handleAuthenticationError(response.message as AuthenticationError);
+      return handleAuthenticationError(response as AuthenticationError);
     }
 
     if (handleAuthorizationError && response.status === 403) {
       // message
       return handleAuthorizationError(response.body as AuthorizationError);
     }
-
-    if (handleValidationError && response.status === 422) {
+    
+    if (handleValidationError && responseError.response.status === 422) {
       // message, errors
-      return handleValidationError(response.body as ValidationError);
+      return handleValidationError(response as ValidationError);
     }
 
     if (handleServerError && response.status > 499) {
@@ -243,8 +242,8 @@ class ApiClientWrapper {
       return handleError(response.body);
     }
 
-    // return showErrorDialog(response.body);
-    console.log('other', response);
+    return console.log("uncaught error", response);
+    // console.log('other', response);
   }
 }
 

@@ -1,16 +1,7 @@
-import {
-  Box,
-  Button,
-  TextField,
-  OutlinedInput,
-  Typography,
-  FormControl,
-  InputLabel,
-} from '@mui/material';
+import { Box, Button, TextField, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import { useForm } from 'react-hook-form';
 import { FormSubmitError } from './errors/FormSubmitError';
-import { InputRequiredError } from './errors/InputRequiredError';
 
 const StyledButtonWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -55,31 +46,28 @@ const LoginForm = ({ handleOnSubmit, errorMessage }: props) => {
       <form onSubmit={handleSubmit(handleOnSubmit)} noValidate>
         <StyledInputWrapper>
           <TextField
+            error={errors?.username?.type === 'required'}
             id='login-username'
             label='Username'
             type='text'
             fullWidth
-            required
+            // required
             variant='outlined'
-            {...register('username', { required: true })}
+            helperText='Username is required'
+            {...register('username', { required: false })}
           />
-          {errors?.username?.type === 'required' && (
-            <InputRequiredError message='Username is required' />
-          )}
         </StyledInputWrapper>
         <StyledInputWrapper>
-          <FormControl variant='outlined' fullWidth>
-            <InputLabel htmlFor='outlined-adornment-password'>Password</InputLabel>
-            <OutlinedInput
-              id='login-password'
-              label='Password'
-              type='password'
-              {...register('password', { required: true })}
-            />
-          </FormControl>
-          {errors?.password?.type === 'required' && (
-            <InputRequiredError message='Password is required' />
-          )}
+          <TextField
+            error={errors?.password?.type === 'required'}
+            id='login-password'
+            label='Password'
+            type='password'
+            fullWidth
+            // required
+            helperText='Password is required'
+            {...register('password', { required: false })}
+          />
         </StyledInputWrapper>
         <StyledButtonWrapper sx={{ display: 'flex', justifyContent: 'center', marginTop: '' }}>
           <Button variant='contained' color='primary' type='submit'>

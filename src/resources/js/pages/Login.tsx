@@ -5,7 +5,7 @@ import LoginForm from '../partials/forms/LoginForm';
 import { SubmitHandler } from 'react-hook-form';
 // import { handleApiErrors } from '../helpers/handleApiErrors';
 import { LoginLayout } from '../layouts/LoginLayout';
-import { AuthenticationError } from 'bmlt-root-server-client';
+import { AuthenticationError, ValidationError } from 'bmlt-root-server-client';
 
 type formValues = {
   username: string;
@@ -17,11 +17,12 @@ export const Login = () => {
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleAuthenticationError = (error: AuthenticationError) => {
-    console.log('my authentication error', error);
+    setErrorMessage(error.message);
   };
-  // const handleAuthorizationError = (error: AuthorizationError) => {
-  //   console.log('my authorization error', error);
-  // };
+
+  const handleValidationError = (error: ValidationError) => {
+    console.log('validation error', error.errors);
+  };
 
   const handleOnSubmit: SubmitHandler<formValues> = async (inputValues) => {
     try {
@@ -31,12 +32,7 @@ export const Login = () => {
       localStorage.setItem('token', JSON.stringify(token));
       navigate('/');
     } catch (error: any) {
-      await RootServerApi.handleErrors(
-        error,
-        handleAuthenticationError,
-        // handleAuthorizationError,
-      );
-      setErrorMessage('Invalid username or password');
+      await RootServerApi.handleErrors(error, handleAuthenticationError, handleValidationError);
     }
   };
 
