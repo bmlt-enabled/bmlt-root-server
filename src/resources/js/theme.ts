@@ -1,20 +1,26 @@
 import { createTheme } from '@mui/material/styles';
 
+const colors = {
+  primary: '#4a90e2',
+  secondary: '#E460AB',
+  success: '#678d06',
+  error: '#ff3333',
+};
+
 export const theme = createTheme({
   palette: {
     primary: {
-      main: '#4a90e2',
+      main: colors.primary,
     },
     secondary: {
-      main: '#E460AB',
+      main: colors.secondary,
     },
     success: {
-      main: '#678d06',
+      main: colors.success,
       contrastText: '#fff',
     },
     error: {
-      main: '#c6203e',
-      contrastText: '#fff',
+      main: colors.error,
     },
   },
   typography: {
@@ -68,6 +74,16 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           margin: '1rem 0',
+        },
+      },
+    },
+    MuiFormLabel: {
+      styleOverrides: {
+        asterisk: {
+          color: colors.primary,
+          '&$error': {
+            color: colors.error,
+          },
         },
       },
     },
