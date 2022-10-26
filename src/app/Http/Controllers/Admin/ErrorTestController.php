@@ -19,6 +19,6 @@ class ErrorTestController extends ResourceController
             1 / 0;
         }
 
-        return new JsonResponse($validated);
+        return new JsonResponse($validated, status: 201);
     }
 }

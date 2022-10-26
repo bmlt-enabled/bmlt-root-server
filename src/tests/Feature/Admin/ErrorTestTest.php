@@ -16,7 +16,7 @@ class ErrorTestTest extends TestCase
         $data = [];
         $this->withHeader('Authorization', "Bearer $token")
             ->post('/api/v1/errortest', $data)
-            ->assertStatus(200);
+            ->assertStatus(201);
 
         $data = ['arbitrary_string' => 123];
         $this->withHeader('Authorization', "Bearer $token")
@@ -32,7 +32,7 @@ class ErrorTestTest extends TestCase
         $data = ['arbitrary_string' => 'a string'];
         $this->withHeader('Authorization', "Bearer $token")
             ->post('/api/v1/errortest', $data)
-            ->assertStatus(200);
+            ->assertStatus(201);
     }
 
     public function testArbitraryInt()
@@ -43,7 +43,7 @@ class ErrorTestTest extends TestCase
         $data = [];
         $this->withHeader('Authorization', "Bearer $token")
             ->post('/api/v1/errortest', $data)
-            ->assertStatus(200);
+            ->assertStatus(201);
 
         $data = ['arbitrary_int' => 'a string'];
         $this->withHeader('Authorization', "Bearer $token")
@@ -59,7 +59,7 @@ class ErrorTestTest extends TestCase
         $data = ['arbitrary_int' => 123];
         $this->withHeader('Authorization', "Bearer $token")
             ->post('/api/v1/errortest', $data)
-            ->assertStatus(200);
+            ->assertStatus(201);
     }
 
     public function testForceServerError()
