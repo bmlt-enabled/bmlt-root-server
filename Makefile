@@ -14,9 +14,9 @@ ifeq ($(CI)x, x)
 	IMAGE := rootserver
 	TAG := local
 	COMPOSER_ARGS :=
-	COMPOSER_PREFIX := docker run --pull=always -t --rm -v $(shell pwd):/code -w /code $(BASE_IMAGE):$(BASE_IMAGE_TAG)
-	LINT_PREFIX := docker run -t --rm -v $(shell pwd):/code -w /code/src $(IMAGE):$(TAG)
-	TEST_PREFIX := docker run -e XDEBUG_MODE=coverage,debug -t --rm -v $(shell pwd)/src:/var/www/html/main_server -v $(shell pwd)/docker/test-auto-config.inc.php:/var/www/html/auto-config.inc.php -w /var/www/html/main_server --network host $(IMAGE):$(TAG)
+	COMPOSER_PREFIX := docker run --pull=always -t --rm -v '$(shell pwd)':/code -w /code $(BASE_IMAGE):$(BASE_IMAGE_TAG)
+	LINT_PREFIX := docker run -t --rm -v '$(shell pwd)':/code -w /code/src $(IMAGE):$(TAG)
+	TEST_PREFIX := docker run -e XDEBUG_MODE=coverage,debug -t --rm -v '$(shell pwd)/src:/var/www/html/main_server' -v '$(shell pwd)/docker/test-auto-config.inc.php:/var/www/html/auto-config.inc.php' -w /var/www/html/main_server --network host $(IMAGE):$(TAG)
 	ifneq (,$(wildcard docker/docker-compose.dev.yml))
 		EXTRA_DOCKER_COMPOSE_ARGS := -f docker/docker-compose.dev.yml
 	endif
