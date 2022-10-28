@@ -6,7 +6,7 @@ import { SubmitHandler } from 'react-hook-form';
 import { LoginLayout } from '../layouts/LoginLayout';
 import { AuthenticationError, ValidationError } from 'bmlt-root-server-client';
 
-type FormValues = {
+type Props = {
   username: string;
   password: string;
 };
@@ -36,19 +36,19 @@ export const Login = () => {
   };
 
   console.log('validationMessage', validationMessage);
-  const handleOnSubmit: SubmitHandler<FormValues> = async (inputValues) => {
+  const handleOnSubmit: SubmitHandler<Props> = async ({ username, password }) => {
     try {
-      setValidationMessage({
-        username: '',
-        password: '',
-      });
-      setAuthenticationMessage('');
-      const token = await RootServerApi.login(inputValues.username, inputValues.password);
+      const token = await RootServerApi.login(username, password);
       console.log(token);
       RootServerApi.accessToken = token.accessToken ?? null;
       localStorage.setItem('token', JSON.stringify(token));
       navigate('/');
     } catch (error: any) {
+      setValidationMessage({
+        username: '',
+        password: '',
+      });
+      setAuthenticationMessage('');
       await RootServerApi.handleErrors({
         error,
         handleAuthenticationError,
