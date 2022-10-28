@@ -3,7 +3,6 @@ import RootServerApi from '../RootServerApi';
 import { useNavigate } from 'react-router-dom';
 import LoginForm from '../partials/forms/LoginForm';
 import { SubmitHandler } from 'react-hook-form';
-// import { handleApiErrors } from '../helpers/handleApiErrors';
 import { LoginLayout } from '../layouts/LoginLayout';
 import { AuthenticationError, ValidationError } from 'bmlt-root-server-client';
 
@@ -13,10 +12,6 @@ type formValues = {
 };
 
 export const Login = () => {
-  // const initialValidationMessage = {
-  //   username: '',
-  //   password: '',
-  // };
   const navigate = useNavigate();
   const [authenticationMessage, setAuthenticationMessage] = useState('');
   const [validationMessage, setValidationMessage] = useState({
