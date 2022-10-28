@@ -55,10 +55,10 @@ const LoginForm = ({ handleOnSubmit, authenticationMessage, validationMessage }:
             label='Username'
             type='text'
             fullWidth
-            // required
+            required
             variant='outlined'
             aria-describedby='username-error-text'
-            {...register('username', { required: false })}
+            {...register('username', { required: true })}
           />
           <FormHelperText id='username-error-text'>
             {(validationMessage?.username !== '' && validationMessage?.username) ||
@@ -72,9 +72,9 @@ const LoginForm = ({ handleOnSubmit, authenticationMessage, validationMessage }:
             label='Password'
             type='password'
             fullWidth
-            // required
+            required
             aria-describedby='password-error-text'
-            {...register('password', { required: false })}
+            {...register('password', { required: true })}
           />
           <FormHelperText id='password-error-text'>
             {(validationMessage?.password !== '' && validationMessage?.password) ||

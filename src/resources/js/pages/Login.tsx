@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import LoginForm from '../partials/forms/LoginForm';
 import { SubmitHandler } from 'react-hook-form';
 import { LoginLayout } from '../layouts/LoginLayout';
-import { AuthenticationError, ValidationError } from 'bmlt-root-server-client';
 
 type Props = {
   username: string;
@@ -18,22 +17,6 @@ export const Login = () => {
     username: '',
     password: '',
   });
-
-  const handleAuthenticationError = (error: AuthenticationError) => {
-    setAuthenticationMessage(error.message);
-  };
-
-  const handleValidationError = (error: ValidationError) => {
-    setValidationMessage({
-      ...validationMessage,
-      username: error?.errors?.username !== undefined ? error.errors.username.join(' ') : '',
-      password: error?.errors?.password !== undefined ? error.errors.password.join(' ') : '',
-    });
-  };
-
-  const handleError = (error: any) => {
-    console.log('other error', error);
-  };
 
   console.log('validationMessage', validationMessage);
   const handleOnSubmit: SubmitHandler<Props> = async ({ username, password }) => {
@@ -51,9 +34,15 @@ export const Login = () => {
       setAuthenticationMessage('');
       await RootServerApi.handleErrors({
         error,
-        handleAuthenticationError,
-        handleValidationError,
-        handleError,
+        handleAuthenticationError: (error) => setAuthenticationMessage(error.message),
+        handleValidationError: (error) => {
+          setValidationMessage({
+            ...validationMessage,
+            username: (error?.errors?.username ?? []).join(' '),
+            password: (error?.errors?.password ?? []).join(' '),
+          });
+        },
+        handleError: (error) => console.log('other error', error),
       });
     }
   };
