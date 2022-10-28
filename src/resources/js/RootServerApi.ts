@@ -1,6 +1,5 @@
 import {
   Configuration,
-  ErrorTest,
   Format,
   FormatCreate,
   FormatPartialUpdate,
@@ -19,6 +18,10 @@ import {
   UserCreate,
   UserPartialUpdate,
   UserUpdate,
+  AuthenticationError,
+  AuthorizationError,
+  ValidationError,
+  ResponseError,
 } from 'bmlt-root-server-client';
 
 class ApiClient extends RootServerApi {
@@ -189,13 +192,67 @@ class ApiClientWrapper {
     return this.api.deleteUser(params);
   }
 
-  async errorTest(
-    arbitraryString?: string,
-    arbitraryInt?: number,
-    forceServerError?: boolean,
-  ): Promise<ErrorTest> {
-    const params = { errorTest: { arbitraryString, arbitraryInt, forceServerError } };
-    return this.api.createErrorTest(params);
+  async handleErrors(args: {
+    error: Error;
+    handleAuthenticationError?: (error: AuthenticationError) => void;
+    handleAuthorizationError?: (error: AuthorizationError) => void;
+    handleValidationError?: (error: ValidationError) => void;
+    handleServerError?: (error: any) => void;
+    handleNetworkError?: () => void;
+    handleError?: (error: any) => void;
+  }): Promise<void> {
+    const {
+      error,
+      handleAuthenticationError,
+      handleAuthorizationError,
+      handleValidationError,
+      handleServerError,
+      handleNetworkError,
+      handleError,
+    } = args;
+
+    // handle network errors first
+    if (error.message === 'Failed to fetch') {
+      if (handleNetworkError) {
+        return handleNetworkError();
+      }
+
+      if (handleError) {
+        return handleError(error.message);
+      }
+
+      return console.log('TODO show error dialog', error.message);
+    }
+
+    // handle api errors
+    const responseError = error as ResponseError;
+    const body = await responseError.response.json();
+
+    if (handleAuthenticationError && responseError.response.status === 401) {
+      // message
+      return handleAuthenticationError(body as AuthenticationError);
+    }
+
+    if (handleAuthorizationError && responseError.response.status === 403) {
+      // message
+      return handleAuthorizationError(body as AuthorizationError);
+    }
+
+    if (handleValidationError && responseError.response.status === 422) {
+      // message, errors
+      console.log('body', body);
+      return handleValidationError(body as ValidationError);
+    }
+
+    if (handleServerError && responseError.response.status > 499) {
+      return handleServerError(body);
+    }
+
+    if (handleError) {
+      return handleError(body);
+    }
+
+    return console.log('TODO unhandled error, show error dialog', body);
   }
 }
 

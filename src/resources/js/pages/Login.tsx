@@ -1,53 +1,59 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import RootServerApi from '../RootServerApi';
 import { useNavigate } from 'react-router-dom';
-import { Header } from '../sections/Header';
-import { LoginForm } from '../partials/forms/LoginForm';
-import { Box } from '@mui/material';
-import { styled } from '@mui/system';
+import LoginForm from '../partials/forms/LoginForm';
+import { SubmitHandler } from 'react-hook-form';
+import { LoginLayout } from '../layouts/LoginLayout';
 
-const StyledFormWrapper = styled(Box)(({ theme }) => ({
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: '100%',
-  maxWidth: '600px',
-  padding: '20px',
-  border: '1px solid #ccc',
-  borderRadius: theme.shape.borderRadius,
-}));
+type Props = {
+  username: string;
+  password: string;
+};
 
 export const Login = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [authenticationMessage, setAuthenticationMessage] = useState('');
+  const [validationMessage, setValidationMessage] = useState({
+    username: '',
+    password: '',
+  });
 
-  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(e.target.value);
+  console.log('validationMessage', validationMessage);
+  const handleOnSubmit: SubmitHandler<Props> = async ({ username, password }) => {
+    try {
+      const token = await RootServerApi.login(username, password);
+      console.log(token);
+      RootServerApi.accessToken = token.accessToken ?? null;
+      localStorage.setItem('token', JSON.stringify(token));
+      navigate('/');
+    } catch (error: any) {
+      setValidationMessage({
+        username: '',
+        password: '',
+      });
+      setAuthenticationMessage('');
+      await RootServerApi.handleErrors({
+        error,
+        handleAuthenticationError: (error) => setAuthenticationMessage(error.message),
+        handleValidationError: (error) => {
+          setValidationMessage({
+            ...validationMessage,
+            username: (error?.errors?.username ?? []).join(' '),
+            password: (error?.errors?.password ?? []).join(' '),
+          });
+        },
+        handleError: (error) => console.log('other error', error),
+      });
+    }
   };
 
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const token = await RootServerApi.login(username, password);
-    RootServerApi.accessToken = token.accessToken ?? null;
-    localStorage.setItem('token', JSON.stringify(token));
-    navigate('/');
-  };
   return (
-    <div>
-      <Header />
-      <StyledFormWrapper>
-        <LoginForm
-          handlePasswordChange={handlePasswordChange}
-          handleUsernameChange={handleUsernameChange}
-          handleSubmit={handleSubmit}
-        />
-      </StyledFormWrapper>
-    </div>
+    <LoginLayout>
+      <LoginForm
+        handleOnSubmit={handleOnSubmit}
+        authenticationMessage={authenticationMessage}
+        validationMessage={validationMessage}
+      />
+    </LoginLayout>
   );
 };
