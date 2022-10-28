@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Box, Button, FormControl, FormHelperText, TextField, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import { useForm } from 'react-hook-form';
 import { FormSubmitError } from './errors/FormSubmitError';
@@ -9,8 +9,8 @@ const StyledButtonWrapper = styled(Box)(({ theme }) => ({
   marginTop: theme.spacing(2),
 }));
 
-const StyledInputWrapper = styled(Box)(({ theme }) => ({
-  marginBottom: theme.spacing(2),
+const StyledInputWrapper = styled(FormControl)(({ theme }) => ({
+  marginBottom: theme.spacing(4),
 }));
 
 const StyledFormWrapper = styled(Box)(({ theme }) => ({
@@ -27,14 +27,14 @@ const StyledFormLabel = styled(Typography)(({ theme }) => ({
 
 type props = {
   handleOnSubmit: (data: any) => void;
-  errorMessage?: string;
+  authenticationMessage?: string;
   validationMessage?: {
     username?: string;
     password?: string;
   };
 };
 
-const LoginForm = ({ handleOnSubmit, errorMessage, validationMessage }: props) => {
+const LoginForm = ({ handleOnSubmit, authenticationMessage, validationMessage }: props) => {
   const {
     register,
     handleSubmit,
@@ -46,9 +46,9 @@ const LoginForm = ({ handleOnSubmit, errorMessage, validationMessage }: props) =
       <StyledFormLabel variant='h3' align='center'>
         Login
       </StyledFormLabel>
-      {errorMessage && <FormSubmitError message={errorMessage} />}
+      {authenticationMessage && <FormSubmitError message={authenticationMessage} />}
       <form onSubmit={handleSubmit(handleOnSubmit)} noValidate>
-        <StyledInputWrapper>
+        <StyledInputWrapper fullWidth>
           <TextField
             error={errors?.username?.type === 'required' || validationMessage?.username !== ''}
             id='login-username'
@@ -57,14 +57,15 @@ const LoginForm = ({ handleOnSubmit, errorMessage, validationMessage }: props) =
             fullWidth
             // required
             variant='outlined'
-            helperText={
-              (validationMessage?.password !== '' && validationMessage?.password) ||
-              (errors?.password?.type === 'required' && 'Password is required')
-            }
+            aria-describedby='username-error-text'
             {...register('username', { required: false })}
           />
+          <FormHelperText id='username-error-text'>
+            {(validationMessage?.username !== '' && validationMessage?.username) ||
+              (errors?.username?.type === 'required' && 'Username is required')}
+          </FormHelperText>
         </StyledInputWrapper>
-        <StyledInputWrapper>
+        <StyledInputWrapper fullWidth>
           <TextField
             error={errors?.password?.type === 'required' || validationMessage?.password !== ''}
             id='login-password'
@@ -72,12 +73,13 @@ const LoginForm = ({ handleOnSubmit, errorMessage, validationMessage }: props) =
             type='password'
             fullWidth
             // required
-            helperText={
-              (validationMessage?.password !== '' && validationMessage?.password) ||
-              (errors?.password?.type === 'required' && 'Password is required')
-            }
+            aria-describedby='password-error-text'
             {...register('password', { required: false })}
           />
+          <FormHelperText id='password-error-text'>
+            {(validationMessage?.password !== '' && validationMessage?.password) ||
+              (errors?.password?.type === 'required' && 'Password is required')}
+          </FormHelperText>
         </StyledInputWrapper>
         <StyledButtonWrapper sx={{ display: 'flex', justifyContent: 'center', marginTop: '' }}>
           <Button variant='contained' color='primary' type='submit'>

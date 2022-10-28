@@ -13,25 +13,27 @@ type formValues = {
 };
 
 export const Login = () => {
+  // const initialValidationMessage = {
+  //   username: '',
+  //   password: '',
+  // };
   const navigate = useNavigate();
-  const [errorMessage, setErrorMessage] = useState('');
+  const [authenticationMessage, setAuthenticationMessage] = useState('');
   const [validationMessage, setValidationMessage] = useState({
     username: '',
     password: '',
   });
 
   const handleAuthenticationError = (error: AuthenticationError) => {
-    setErrorMessage(error.message);
+    setAuthenticationMessage(error.message);
   };
 
   const handleValidationError = (error: ValidationError) => {
-    setValidationMessage(
-      error.errors.username && {
-        ...validationMessage,
-        username: error.errors.username ? error.errors.username.join(' ') : '',
-        password: error.errors.password ? error.errors.password.join(' ') : '',
-      },
-    );
+    setValidationMessage({
+      ...validationMessage,
+      username: error?.errors?.username !== undefined ? error.errors.username.join(' ') : '',
+      password: error?.errors?.password !== undefined ? error.errors.password.join(' ') : '',
+    });
   };
 
   const handleError = (error: any) => {
@@ -41,6 +43,11 @@ export const Login = () => {
   console.log('validationMessage', validationMessage);
   const handleOnSubmit: SubmitHandler<formValues> = async (inputValues) => {
     try {
+      setValidationMessage({
+        username: '',
+        password: '',
+      });
+      setAuthenticationMessage('');
       const token = await RootServerApi.login(inputValues.username, inputValues.password);
       console.log(token);
       RootServerApi.accessToken = token.accessToken ?? null;
@@ -60,7 +67,7 @@ export const Login = () => {
     <LoginLayout>
       <LoginForm
         handleOnSubmit={handleOnSubmit}
-        errorMessage={errorMessage}
+        authenticationMessage={authenticationMessage}
         validationMessage={validationMessage}
       />
     </LoginLayout>

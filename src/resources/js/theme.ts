@@ -87,5 +87,15 @@ export const theme = createTheme({
         },
       },
     },
+    MuiFormHelperText: {
+      styleOverrides: {
+        root: {
+          color: colors.error,
+          position: 'absolute',
+          bottom: '-1.25rem',
+          left: '0',
+        },
+      },
+    },
   },
 });
