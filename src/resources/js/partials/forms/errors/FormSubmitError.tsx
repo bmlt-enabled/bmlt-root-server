@@ -8,11 +8,11 @@ const StyledErrorMessage = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(2),
 }));
 
-type props = {
+type Props = {
   message: string | null;
 };
 
-export const FormSubmitError = ({ message }: props) => {
+export const FormSubmitError = ({ message }: Props) => {
   return (
     <StyledErrorMessage>
       <Typography variant='caption' color='error.main'>

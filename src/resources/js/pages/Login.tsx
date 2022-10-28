@@ -6,7 +6,7 @@ import { SubmitHandler } from 'react-hook-form';
 import { LoginLayout } from '../layouts/LoginLayout';
 import { AuthenticationError, ValidationError } from 'bmlt-root-server-client';
 
-type formValues = {
+type FormValues = {
   username: string;
   password: string;
 };
@@ -36,7 +36,7 @@ export const Login = () => {
   };
 
   console.log('validationMessage', validationMessage);
-  const handleOnSubmit: SubmitHandler<formValues> = async (inputValues) => {
+  const handleOnSubmit: SubmitHandler<FormValues> = async (inputValues) => {
     try {
       setValidationMessage({
         username: '',

@@ -25,7 +25,7 @@ const StyledFormLabel = styled(Typography)(({ theme }) => ({
   color: theme.palette.primary.main,
 }));
 
-type props = {
+type Props = {
   handleOnSubmit: (data: any) => void;
   authenticationMessage?: string;
   validationMessage?: {
@@ -34,7 +34,7 @@ type props = {
   };
 };
 
-const LoginForm = ({ handleOnSubmit, authenticationMessage, validationMessage }: props) => {
+const LoginForm = ({ handleOnSubmit, authenticationMessage, validationMessage }: Props) => {
   const {
     register,
     handleSubmit,
