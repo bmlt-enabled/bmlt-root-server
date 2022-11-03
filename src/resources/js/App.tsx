@@ -8,11 +8,10 @@ import { Router } from './routes/Router';
 import { AppContextProvider } from './context/AppContext';
 
 export default function App() {
-  const url = window.location.pathname;
   return (
     <AppContextProvider>
       <ThemeProvider theme={theme}>
-        <BrowserRouter basename={url}>
+        <BrowserRouter basename={apiBaseUrl}>
           <CssBaseline />
           <Router />
         </BrowserRouter>
