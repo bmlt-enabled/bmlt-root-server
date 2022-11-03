@@ -65,11 +65,24 @@ class ApiClientWrapper {
 
   private api: ApiClient;
 
-  constructor(token?: Token | null) {
+  constructor(token: Token | null = null) {
+    if (!token) {
+      const tokenJson = localStorage.getItem('token');
+      if (tokenJson) {
+        token = JSON.parse(tokenJson) as Token;
+      }
+    }
+
     this.api = new ApiClient(token);
   }
 
   set token(token: Token | null) {
+    if (token) {
+      localStorage.setItem('token', JSON.stringify(token));
+    } else {
+      localStorage.removeItem('token');
+    }
+
     this.api.token = token;
   }
 

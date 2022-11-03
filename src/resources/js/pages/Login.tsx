@@ -5,7 +5,6 @@ import LoginForm from '../partials/forms/LoginForm';
 import { SubmitHandler } from 'react-hook-form';
 import { LoginLayout } from '../layouts/LoginLayout';
 import { AppContext } from '../context/AppContext';
-import { loadAccessToken } from '../helpers/utils';
 
 type Props = {
   username: string;
@@ -29,8 +28,6 @@ export const Login = () => {
       const token = await RootServerApi.login(username, password);
       console.log(token);
       RootServerApi.token = token;
-      localStorage.setItem('token', JSON.stringify(token));
-      loadAccessToken();
       const LoggedInUserData = await RootServerApi.getUser(token.userId);
       appContext?.setUserName(LoggedInUserData.displayName);
       navigate('/');
