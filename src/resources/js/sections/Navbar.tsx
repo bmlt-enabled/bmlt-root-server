@@ -1,7 +1,9 @@
+import React from 'react';
 import { Container, Typography, Button } from '@mui/material';
 import { styled } from '@mui/system';
 import { Link, useNavigate } from 'react-router-dom';
 import RootServerApi from '../RootServerApi';
+import { AppContext } from '../context/AppContext';
 
 const StyledNavBarWrapper = styled('div')(({ theme }) => ({
   paddingTop: theme.spacing(1),
@@ -33,6 +35,7 @@ const StyledNavWrapper = styled('nav')(({ theme }) => ({
 }));
 
 export const Navbar = () => {
+  const appContext = React.useContext(AppContext);
   const navigate = useNavigate();
   const handleLogout = async () => {
     await RootServerApi.logout();
@@ -52,7 +55,7 @@ export const Navbar = () => {
           <Link to='/my-account'>My Account</Link>
         </StyledNavWrapper>
         <StyledUserInfo>
-          <Typography color='dark.main'>UserName</Typography>
+          <Typography color='dark.main'>{appContext?.userName}</Typography>
           <Button variant='contained' color='primary' onClick={handleLogout}>
             Logout
           </Button>
