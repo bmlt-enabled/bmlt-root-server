@@ -23,7 +23,6 @@ export const Login = () => {
   const handleOnSubmit: SubmitHandler<Props> = async ({ username, password }) => {
     try {
       const token = await RootServerApi.login(username, password);
-      localStorage.setItem('token', JSON.stringify(token));
       RootServerApi.token = token;
       navigate('/');
     } catch (error: any) {
