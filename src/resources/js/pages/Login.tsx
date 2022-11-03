@@ -1,10 +1,9 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import RootServerApi from '../RootServerApi';
 import { useNavigate } from 'react-router-dom';
 import LoginForm from '../partials/forms/LoginForm';
 import { SubmitHandler } from 'react-hook-form';
 import { LoginLayout } from '../layouts/LoginLayout';
-import { AppContext } from '../context/AppContext';
 
 type Props = {
   username: string;
@@ -13,23 +12,20 @@ type Props = {
 };
 
 export const Login = () => {
-  const appContext = useContext(AppContext);
+  // const appContext = useAppContext();
   const navigate = useNavigate();
   const [authenticationMessage, setAuthenticationMessage] = useState('');
   const [validationMessage, setValidationMessage] = useState({
     username: '',
     password: '',
   });
-  const [notFoundMessage, setNotFoundMessage] = useState('');
 
   console.log('validationMessage', validationMessage);
   const handleOnSubmit: SubmitHandler<Props> = async ({ username, password }) => {
     try {
       const token = await RootServerApi.login(username, password);
-      console.log(token);
+      localStorage.setItem('token', JSON.stringify(token));
       RootServerApi.token = token;
-      const LoggedInUserData = await RootServerApi.getUser(token.userId);
-      appContext?.setUserName(LoggedInUserData.displayName);
       navigate('/');
     } catch (error: any) {
       setValidationMessage({
@@ -47,9 +43,6 @@ export const Login = () => {
             password: (error?.errors?.password ?? []).join(' '),
           });
         },
-        handleNotFoundError: () => {
-          setNotFoundMessage("User doesn't exist");
-        },
         handleError: (error) => console.log('other error', error),
       });
     }
@@ -61,7 +54,6 @@ export const Login = () => {
         handleOnSubmit={handleOnSubmit}
         authenticationMessage={authenticationMessage}
         validationMessage={validationMessage}
-        notFoundMessage={notFoundMessage}
       />
     </LoginLayout>
   );

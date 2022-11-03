@@ -2,7 +2,7 @@ import { Navigate } from 'react-router-dom';
 import RootServerApi from '../RootServerApi';
 
 type Props = {
-  children: JSX.Element;
+  children: React.ReactNode;
 };
 
 export const ProtectedLoginRoute = ({ children }: Props) => {

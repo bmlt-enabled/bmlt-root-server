@@ -35,12 +35,7 @@ type Props = {
   notFoundMessage?: string;
 };
 
-const LoginForm = ({
-  handleOnSubmit,
-  authenticationMessage,
-  validationMessage,
-  notFoundMessage,
-}: Props) => {
+const LoginForm = ({ handleOnSubmit, authenticationMessage, validationMessage }: Props) => {
   const {
     register,
     handleSubmit,
@@ -53,7 +48,6 @@ const LoginForm = ({
         Login
       </StyledFormLabel>
       {authenticationMessage && <FormSubmitError message={authenticationMessage} />}
-      {notFoundMessage && <FormSubmitError message={notFoundMessage} />}
       <form onSubmit={handleSubmit(handleOnSubmit)} noValidate>
         <StyledInputWrapper fullWidth>
           <TextField
