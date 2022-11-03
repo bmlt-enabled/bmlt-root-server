@@ -27,6 +27,8 @@ export const Login = () => {
   const handleOnSubmit: SubmitHandler<Props> = async ({ username, password }) => {
     try {
       const token = await RootServerApi.login(username, password);
+      console.log(token);
+      RootServerApi.token = token;
       localStorage.setItem('token', JSON.stringify(token));
       loadAccessToken();
       const LoggedInUserData = await RootServerApi.getUser(token.userId);

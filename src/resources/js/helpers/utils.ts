@@ -1,11 +1,11 @@
+import { Token } from 'bmlt-root-server-client';
 import RootServerApi from '../RootServerApi';
 
-export const loadAccessToken = () => {
+export const loadToken = () => {
   const tokenJson = localStorage.getItem('token');
   console.log('load token');
   if (tokenJson) {
-    const token = JSON.parse(tokenJson);
-    RootServerApi.accessToken = token.accessToken;
+    RootServerApi.token = JSON.parse(tokenJson) as Token;
   }
 };
 

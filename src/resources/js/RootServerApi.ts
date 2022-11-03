@@ -27,14 +27,24 @@ import {
 
 class ApiClient extends RootServerApi {
   private authorizationHeader: string | null = null;
+  private _token: Token | null = null;
 
-  constructor(accessToken: string | null = null) {
+  constructor(token: Token | null = null) {
     super();
-    this.accessToken = accessToken;
+    this.token = token;
     this.configuration = new Configuration({
       basePath: apiBaseUrl,
       accessToken: () => this.authorizationHeader ?? '',
     });
+  }
+
+  set token(token: Token | null) {
+    this._token = token;
+    this.accessToken = token?.accessToken ?? null;
+  }
+
+  get token(): Token | null {
+    return this._token;
   }
 
   set accessToken(accessToken: string | null) {
@@ -55,12 +65,16 @@ class ApiClientWrapper {
 
   private api: ApiClient;
 
-  constructor() {
-    this.api = new ApiClient();
+  constructor(token?: Token | null) {
+    this.api = new ApiClient(token);
   }
 
-  set accessToken(accessToken: string | null) {
-    this.api.accessToken = accessToken;
+  set token(token: Token | null) {
+    this.api.token = token;
+  }
+
+  get token(): Token | null {
+    return this.api.token;
   }
 
   get isLoggedIn(): boolean {
