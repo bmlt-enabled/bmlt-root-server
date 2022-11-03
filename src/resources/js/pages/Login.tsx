@@ -28,10 +28,8 @@ export const Login = () => {
     try {
       const token = await RootServerApi.login(username, password);
       localStorage.setItem('token', JSON.stringify(token));
-      console.log('token', token);
       loadAccessToken();
       const LoggedInUserData = await RootServerApi.getUser(token.userId);
-      console.log('LoggedInUserData', LoggedInUserData);
       appContext?.setUserName(LoggedInUserData.displayName);
       navigate('/');
     } catch (error: any) {
@@ -50,8 +48,7 @@ export const Login = () => {
             password: (error?.errors?.password ?? []).join(' '),
           });
         },
-        handleNotFoundError: (error) => {
-          console.log('not found error', error);
+        handleNotFoundError: () => {
           setNotFoundMessage("User doesn't exist");
         },
         handleError: (error) => console.log('other error', error),
