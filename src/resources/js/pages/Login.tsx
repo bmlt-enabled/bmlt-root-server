@@ -12,7 +12,6 @@ type Props = {
 };
 
 export const Login = () => {
-  // const appContext = useAppContext();
   const navigate = useNavigate();
   const [authenticationMessage, setAuthenticationMessage] = useState('');
   const [validationMessage, setValidationMessage] = useState({
