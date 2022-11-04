@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Container } from '@mui/material';
 import { Navbar } from '../sections/Navbar';
 import { Header } from '../sections/Header';
-import { AppContext } from '../context/AppContext';
+import { ActionType, AppContext } from '../AppContext';
 import RootServerApi from '../RootServerApi';
 
 type Props = {
@@ -10,36 +10,36 @@ type Props = {
 };
 
 export const AppLayout = ({ children }: Props) => {
-  const { setDisplayName } = useContext(AppContext);
+  const { dispatch } = useContext(AppContext);
   const [loading, setLoading] = useState(true);
   const [notFoundMessage, setNotFoundMessage] = useState('');
   const [authenticationMessage, setAuthenticationMessage] = useState('');
 
   useEffect(() => {
-    async function fetchUser() {
-      setLoading(true);
-      if (RootServerApi.isLoggedIn) {
-        const userId = RootServerApi?.token?.userId;
-        if (userId) {
-          try {
-            const userData = await RootServerApi.getUser(userId);
-            setDisplayName(userData.displayName);
-          } catch (error: any) {
-            console.log('error', error);
-            await RootServerApi.handleErrors({
-              error,
-              handleAuthenticationError: (error) => setAuthenticationMessage(error.message),
-              handleNotFoundError: (error) => setNotFoundMessage(error.message),
-              handleError: (error) => console.log('other error', error),
-            });
-          } finally {
-            setLoading(false);
-          }
-        }
-      }
+    if (!RootServerApi.isLoggedIn) {
+      dispatch({ type: ActionType.SET_USER, payload: null });
+      return;
     }
-    fetchUser();
-  }, []);
+
+    const userId = RootServerApi?.token?.userId;
+    if (!userId) {
+      dispatch({ type: ActionType.SET_USER, payload: null });
+      return;
+    }
+
+    setLoading(true);
+    RootServerApi.getUser(userId)
+      .then((user) => dispatch({ type: ActionType.SET_USER, payload: user }))
+      .catch((error) =>
+        RootServerApi.handleErrors({
+          error,
+          handleAuthenticationError: (error) => setAuthenticationMessage(error.message),
+          handleNotFoundError: (error) => setNotFoundMessage(error.message),
+          handleError: (error) => console.log('other error', error),
+        }),
+      )
+      .finally(() => setLoading(false));
+  }, [dispatch]);
 
   if (loading) {
     return <div>Loading...</div>;

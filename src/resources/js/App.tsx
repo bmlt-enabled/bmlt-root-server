@@ -4,7 +4,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import { BrowserRouter } from 'react-router-dom';
 import { Router } from './routes/Router';
-import { AppContextProvider } from './context/AppContext';
+import { AppContextProvider } from './AppContext';
 
 export default function App() {
   return (
