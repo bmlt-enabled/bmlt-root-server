@@ -1,10 +1,11 @@
-import { createRoot } from 'react-dom/client';
-import { theme } from './theme';
-import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
+import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
-import { Router } from './routes/Router';
+
 import { AppContextProvider } from './AppContext';
+import { Router } from './routes/Router';
+import { theme } from './theme';
 
 export default function App() {
   return (

@@ -1,4 +1,5 @@
-import { Container, Box, styled } from '@mui/system';
+import { Box, Container, styled } from '@mui/system';
+
 import { Header } from '../sections/Header';
 
 type Props = {
