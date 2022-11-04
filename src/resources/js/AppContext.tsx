@@ -22,7 +22,7 @@ const initialState = {
   user: null,
 };
 
-export const AppContext = createContext<{ state: State; dispatch: React.Dispatch<any> }>({
+export const AppContext = createContext<{ state: State; dispatch: React.Dispatch<Action> }>({
   state: initialState,
   dispatch: () => null,
 });
