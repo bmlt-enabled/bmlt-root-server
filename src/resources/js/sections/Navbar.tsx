@@ -3,7 +3,7 @@ import { Container, Typography, Button } from '@mui/material';
 import { styled } from '@mui/system';
 import { Link, useNavigate } from 'react-router-dom';
 import RootServerApi from '../RootServerApi';
-import { AppContext } from '../context/appContext';
+import { AppContext } from '../context/AppContext';
 
 const StyledNavBarWrapper = styled('div')(({ theme }) => ({
   paddingTop: theme.spacing(1),

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Container } from '@mui/material';
 import { Navbar } from '../sections/Navbar';
 import { Header } from '../sections/Header';
-import { AppContext } from '../context/appContext';
+import { AppContext } from '../context/AppContext';
 import RootServerApi from '../RootServerApi';
 
 type Props = {
