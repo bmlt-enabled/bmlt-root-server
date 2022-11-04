@@ -1,27 +1,35 @@
-import React, { useContext } from 'react';
+import React, { createContext, useReducer } from 'react';
+import appReducer from './appReducer';
 
-type ContextProps = {
-  userName: string;
-  setUserName: React.Dispatch<React.SetStateAction<string>>;
-};
+export const AppContext = createContext<any>({});
 
-// lint error if children is used inside ContextProps
 type Props = {
   children: React.ReactNode;
 };
 
-export const AppContext = React.createContext<null | ContextProps>(null);
-
 export const AppContextProvider = ({ children }: Props) => {
-  const [userName, setUserName] = React.useState('');
+  const initialState = {
+    displayName: '',
+  };
 
-  return <AppContext.Provider value={{ userName, setUserName }}>{children}</AppContext.Provider>;
-};
+  const [state, dispatch] = useReducer(appReducer, initialState);
 
-export const useAppContext = () => {
-  const appContext = useContext(AppContext);
-  if (!AppContext) {
-    throw new Error('useAppContext must be used within a AppContextProvider');
-  }
-  return appContext;
+  const setDisplayName = (payload: string) => {
+    console.log('setDisplayName', payload);
+    dispatch({
+      type: 'SET_DISPLAY_NAME',
+      payload: payload,
+    });
+  };
+
+  return (
+    <AppContext.Provider
+      value={{
+        displayName: state.displayName,
+        setDisplayName,
+      }}
+    >
+      {children}
+    </AppContext.Provider>
+  );
 };

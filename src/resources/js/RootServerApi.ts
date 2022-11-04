@@ -20,9 +20,9 @@ import {
   UserUpdate,
   AuthenticationError,
   AuthorizationError,
+  NotFoundError,
   ValidationError,
   ResponseError,
-  NotFoundError,
 } from 'bmlt-root-server-client';
 
 class ApiClient extends RootServerApi {
@@ -224,8 +224,8 @@ class ApiClientWrapper {
     error: Error;
     handleAuthenticationError?: (error: AuthenticationError) => void;
     handleAuthorizationError?: (error: AuthorizationError) => void;
-    handleValidationError?: (error: ValidationError) => void;
     handleNotFoundError?: (error: NotFoundError) => void;
+    handleValidationError?: (error: ValidationError) => void;
     handleServerError?: (error: any) => void;
     handleNetworkError?: () => void;
     handleError?: (error: any) => void;
@@ -234,8 +234,8 @@ class ApiClientWrapper {
       error,
       handleAuthenticationError,
       handleAuthorizationError,
-      handleValidationError,
       handleNotFoundError,
+      handleValidationError,
       handleServerError,
       handleNetworkError,
       handleError,

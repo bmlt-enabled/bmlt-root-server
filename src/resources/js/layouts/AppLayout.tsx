@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Container } from '@mui/material';
 import { Navbar } from '../sections/Navbar';
 import { Header } from '../sections/Header';
-import { useAppContext } from '../context/AppContext';
+import { AppContext } from '../context/appContext';
 import RootServerApi from '../RootServerApi';
 
 type Props = {
@@ -10,34 +10,34 @@ type Props = {
 };
 
 export const AppLayout = ({ children }: Props) => {
-  const appContext = useAppContext();
+  const { setDisplayName } = useContext(AppContext);
   const [loading, setLoading] = useState(true);
   const [notFoundMessage, setNotFoundMessage] = useState('');
   const [authenticationMessage, setAuthenticationMessage] = useState('');
-  async function fetchUser() {
-    setLoading(true);
-    if (RootServerApi.isLoggedIn) {
-      const userId = RootServerApi?.token?.userId;
-      if (userId) {
-        try {
-          const userData = await RootServerApi.getUser(userId);
-          appContext?.setUserName(userData.displayName);
-        } catch (error: any) {
-          await RootServerApi.handleErrors({
-            error,
-            handleAuthenticationError: (error) => setAuthenticationMessage(error.message),
-            handleNotFoundError: (error) => setNotFoundMessage(error.message),
-            handleError: (error) => console.log('other error', error),
-          });
-        } finally {
-          setLoading(false);
+
+  useEffect(() => {
+    async function fetchUser() {
+      setLoading(true);
+      if (RootServerApi.isLoggedIn) {
+        const userId = RootServerApi?.token?.userId;
+        if (userId) {
+          try {
+            const userData = await RootServerApi.getUser(userId);
+            setDisplayName(userData.displayName);
+          } catch (error: any) {
+            console.log('error', error);
+            await RootServerApi.handleErrors({
+              error,
+              handleAuthenticationError: (error) => setAuthenticationMessage(error.message),
+              handleNotFoundError: (error) => setNotFoundMessage(error.message),
+              handleError: (error) => console.log('other error', error),
+            });
+          } finally {
+            setLoading(false);
+          }
         }
       }
     }
-  }
-
-  console.log;
-  useEffect(() => {
     fetchUser();
   }, []);
 
@@ -56,10 +56,10 @@ export const AppLayout = ({ children }: Props) => {
   }
 
   return (
-    <>
+    <div>
       <Header />
       <Navbar />
       <Container maxWidth='lg'>{children}</Container>
-    </>
+    </div>
   );
 };
