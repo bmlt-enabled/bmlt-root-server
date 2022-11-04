@@ -9,6 +9,7 @@ use App\Models\MeetingLongData;
 use App\Models\ServiceBody;
 use App\Models\User;
 use App\LegacyConfig;
+use App\Repositories\MeetingRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -260,7 +261,7 @@ class GetNawsExportTest extends TestCase
         $this->assertEquals(['G001', 'G002', 'G003', 'G004', 'G005'], $worldIds);
     }
 
-    // test that meetings in a service body with no NAWS world ID dont export
+    // test that meetings in a service body with no NAWS world ID don't export
     public function testMissingServiceBodyNawsId()
     {
         $zone = $this->createZone('My Zone', 'A Zone of Some Kind', worldId: 'ZN42');
@@ -550,5 +551,47 @@ class GetNawsExportTest extends TestCase
             ->assertDownload()
             ->headers->get('content-disposition');
         $this->assertEquals(1, preg_match('/^attachment; filename=BMLT_ZN42_my_zone_\d\d\d\d_\d\d_\d\d_\d\d_\d\d_\d\d.csv$/', $f));
+    }
+
+    // test that deleted meetings are in the export if they have a world_id, and that they are omitted if the world_id is empty or 'deleted'
+    public function testDeletedMeetingsInExport()
+    {
+        $repository = new MeetingRepository();
+        $area1 = $this->createArea('Seattle Area', 'sort of Seattle', 0, worldId: 'AR123');
+        // Create some meetings.  meeting 1 and 2 will be ordinary (not deleted) meetings. meeting 3, 4, 5, and 6 will be deleted.
+        // meeting 1 and 2 should be in the export (it shouldn't matter whether they have a world_id).
+        // meeting 3 should also be in the export, since it has a world ID.
+        // meeting 4 and 5 should not be in the export since they have a world_id of '' or 'deleted' respectively.
+        // meeting 6 should be in the export, since it has a world ID of 'x' (used by NAWS for unpublished meetings not yet in their database)
+        $meeting1MainFields = ['service_body_bigint' => $area1->id_bigint, 'worldid_mixed' => 'G0042'];
+        $meeting2MainFields = ['service_body_bigint' => $area1->id_bigint, 'worldid_mixed' => ''];
+        $meeting3MainFields = ['service_body_bigint' => $area1->id_bigint, 'worldid_mixed' => 'G0055'];
+        $meeting4MainFields = ['service_body_bigint' => $area1->id_bigint, 'worldid_mixed' => ''];
+        $meeting5MainFields = ['service_body_bigint' => $area1->id_bigint, 'worldid_mixed' => 'deleted'];
+        $meeting6MainFields = ['service_body_bigint' => $area1->id_bigint, 'worldid_mixed' => 'x'];
+        $meeting1 = $this->createMeeting($meeting1MainFields);
+        $meeting2 = $this->createMeeting($meeting2MainFields);
+        $meeting3 = $this->createMeeting($meeting3MainFields);
+        $meeting4 = $this->createMeeting($meeting4MainFields);
+        $meeting5 = $this->createMeeting($meeting5MainFields);
+        $meeting6 = $this->createMeeting($meeting6MainFields);
+        $repository->delete($meeting3->id_bigint);
+        $repository->delete($meeting4->id_bigint);
+        $repository->delete($meeting5->id_bigint);
+        $repository->delete($meeting6->id_bigint);
+        $csv = $this->get("/client_interface/csv/?switcher=GetNAWSDump&sb_id=$area1->id_bigint")->streamedContent();
+        $reader = CsvReader::createFromString($csv);
+        $reader->setHeaderOffset(0);
+        $rows = iterator_to_array($reader);
+        $this->assertEquals(4, count($rows));
+        // the deleted meetings should come last
+        $this->assertTrue($rows[1]['bmlt_id'] == $meeting1->id_bigint || $rows[1]['bmlt_id'] == $meeting2->id_bigint);
+        $this->assertTrue($rows[2]['bmlt_id'] == $meeting1->id_bigint || $rows[2]['bmlt_id'] == $meeting2->id_bigint);
+        $this->assertEquals('', $rows[1]['Delete']);
+        $this->assertEquals('', $rows[2]['Delete']);
+        $this->assertEquals('D', $rows[3]['Delete']);
+        $this->assertEquals('D', $rows[4]['Delete']);
+        $this->assertTrue($rows[3]['bmlt_id'] == $meeting3->id_bigint || $rows[3]['bmlt_id'] == $meeting6->id_bigint);
+        $this->assertTrue($rows[4]['bmlt_id'] == $meeting3->id_bigint || $rows[4]['bmlt_id'] == $meeting6->id_bigint);
     }
 }

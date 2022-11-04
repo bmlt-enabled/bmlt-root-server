@@ -744,7 +744,7 @@ return new class extends Migration
         if (!Schema::hasTable('comdef_changes')) {
             Schema::create('comdef_changes', function (Blueprint $table) {
                 $table->bigIncrements('id_bigint');
-                $table->unsignedBigInteger('user_id_bigint');
+                $table->unsignedBigInteger('user_id_bigint')->nullable();
                 $table->unsignedBigInteger('service_body_id_bigint');
                 $table->string('lang_enum', 7);
                 $table->timestamp('change_date')->useCurrent()->useCurrentOnUpdate();

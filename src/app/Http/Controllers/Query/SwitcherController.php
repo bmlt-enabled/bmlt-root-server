@@ -495,24 +495,32 @@ class SwitcherController extends Controller
                 ->map(function ($meetingChange) use (&$existingMeetingIds, &$deletedMeetingData, &$seenDeletedMeetingIds) {
                     $serializedMeeting = $meetingChange->before_object;
                     if (is_null($serializedMeeting)) {
-                        // TODO write a test
+                        // This should only occur if the database is messed up, and given the difficulty of setting up a test case
+                        // we don't currently have a unit test for it.  However, it HAS been tested on real data.
                         return null;
                     }
 
                     $meetingId = $meetingChange->before_id_bigint ?? $serializedMeeting['main_table_values']['id_bigint'] ?? null;
                     if (is_null($meetingId) || !is_numeric($meetingId)) {
-                        // TODO write a test
+                        // This should only occur if the database is messed up, and given the difficulty of setting up a test case
+                        // we don't currently have a unit test for it.  However, it HAS been tested on real data.
                         return null;
                     }
 
                     $meetingId = intval($meetingId);
                     if ($existingMeetingIds->contains($meetingId)) {
-                        // TODO write a test
+                        // This case occurs if a meeting is deleted and then restored.  In that case, the restored version will already
+                        // have been exported; and we don't want to export the deleted version.  We don't have a unit test for it,
+                        // since there currently isn't a 'restore' method to use in writing the test; but it HAS been tested on real data.
+                        // TODO if a 'restore' method is added to MeetingRepository, add a unit test for this case.
                         return null;
                     }
 
                     if (in_array($meetingId, $seenDeletedMeetingIds)) {
-                        // TODO write a test
+                        // This case occurs if a meeting is deleted, then restored, then deleted again (maybe more than once).
+                        // In that case, we want the most recently deleted version for the export.  We don't have a unit test for it,
+                        // since there currently isn't a 'restore' method to use in writing the test; but it HAS been tested on real data.
+                        // TODO if a 'restore' method is added to MeetingRepository, add a unit test for this case.
                         return null;
                     }
 
@@ -522,13 +530,14 @@ class SwitcherController extends Controller
                     // we only want the newest delete for each meeting, just in case it's been deleted and restored several times
                     $seenDeletedMeetingIds[] = $meeting->id_bigint;
 
+                    // skip deleted meetings that don't have a world ID (these aren't in the NAWS database)
                     if (is_null($meeting->worldid_mixed) || empty(trim($meeting->worldid_mixed))) {
-                        // TODO write a test
                         return null;
                     }
 
-                    if (trim(strtolower($meeting->worldid_mixed)) == 'deleted' || !intval(preg_replace('|\D*?|', '', $meeting->worldid_mixed))) {
-                        // TODO write a test
+                    // skip deleted meetings with the world ID of 'deleted' (this is used by NAWS to indicate that they've
+                    // already noted that the meeting is gone)
+                    if (trim(strtolower($meeting->worldid_mixed)) == 'deleted') {
                         return null;
                     }
 
@@ -725,7 +734,6 @@ class SwitcherController extends Controller
                             $row[] = $nawsMeetingFormatsForExport[4] ?? '';
                             break;
                         case 'Delete':
-                            // TODO write a test
                             $row[] = $isDeleted ? 'D' : '';
                             break;
                         case 'LastChanged':

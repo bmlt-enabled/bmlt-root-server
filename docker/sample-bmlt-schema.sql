@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `na_comdef_changes`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `na_comdef_changes` (
   `id_bigint` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id_bigint` bigint(20) unsigned NOT NULL,
+  `user_id_bigint` bigint(20) unsigned,
   `service_body_id_bigint` bigint(20) unsigned NOT NULL,
   `lang_enum` varchar(7) NOT NULL,
   `change_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
