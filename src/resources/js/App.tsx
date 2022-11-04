@@ -4,15 +4,18 @@ import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import { BrowserRouter } from 'react-router-dom';
 import { Router } from './routes/Router';
+import { AppContextProvider } from './AppContext';
 
 export default function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <BrowserRouter basename='/main_server/'>
-        <CssBaseline />
-        <Router />
-      </BrowserRouter>
-    </ThemeProvider>
+    <AppContextProvider>
+      <ThemeProvider theme={theme}>
+        <BrowserRouter basename={apiBaseUrl}>
+          <CssBaseline />
+          <Router />
+        </BrowserRouter>
+      </ThemeProvider>
+    </AppContextProvider>
   );
 }
 

@@ -2,7 +2,7 @@ import { Container, Box, styled } from '@mui/system';
 import { Header } from '../sections/Header';
 
 type Props = {
-  children: JSX.Element;
+  children: React.ReactNode;
 };
 
 const StyledLayoutWrapper = styled(Box)({

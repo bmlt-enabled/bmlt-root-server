@@ -8,6 +8,7 @@ import { LoginLayout } from '../layouts/LoginLayout';
 type Props = {
   username: string;
   password: string;
+  setUserName: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export const Login = () => {
@@ -22,9 +23,7 @@ export const Login = () => {
   const handleOnSubmit: SubmitHandler<Props> = async ({ username, password }) => {
     try {
       const token = await RootServerApi.login(username, password);
-      console.log(token);
-      RootServerApi.accessToken = token.accessToken ?? null;
-      localStorage.setItem('token', JSON.stringify(token));
+      RootServerApi.token = token;
       navigate('/');
     } catch (error: any) {
       setValidationMessage({

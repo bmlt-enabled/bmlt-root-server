@@ -32,6 +32,7 @@ type Props = {
     username?: string;
     password?: string;
   };
+  notFoundMessage?: string;
 };
 
 const LoginForm = ({ handleOnSubmit, authenticationMessage, validationMessage }: Props) => {

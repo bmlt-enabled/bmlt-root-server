@@ -20,20 +20,31 @@ import {
   UserUpdate,
   AuthenticationError,
   AuthorizationError,
+  NotFoundError,
   ValidationError,
   ResponseError,
 } from 'bmlt-root-server-client';
 
 class ApiClient extends RootServerApi {
   private authorizationHeader: string | null = null;
+  private _token: Token | null = null;
 
-  constructor(accessToken: string | null = null) {
+  constructor(token: Token | null = null) {
     super();
-    this.accessToken = accessToken;
+    this.token = token;
     this.configuration = new Configuration({
       basePath: apiBaseUrl,
       accessToken: () => this.authorizationHeader ?? '',
     });
+  }
+
+  set token(token: Token | null) {
+    this._token = token;
+    this.accessToken = token?.accessToken ?? null;
+  }
+
+  get token(): Token | null {
+    return this._token;
   }
 
   set accessToken(accessToken: string | null) {
@@ -54,12 +65,29 @@ class ApiClientWrapper {
 
   private api: ApiClient;
 
-  constructor() {
-    this.api = new ApiClient();
+  constructor(token: Token | null = null) {
+    if (!token) {
+      const tokenJson = localStorage.getItem('token');
+      if (tokenJson) {
+        token = JSON.parse(tokenJson) as Token;
+      }
+    }
+
+    this.api = new ApiClient(token);
   }
 
-  set accessToken(accessToken: string | null) {
-    this.api.accessToken = accessToken;
+  set token(token: Token | null) {
+    if (token) {
+      localStorage.setItem('token', JSON.stringify(token));
+    } else {
+      localStorage.removeItem('token');
+    }
+
+    this.api.token = token;
+  }
+
+  get token(): Token | null {
+    return this.api.token;
   }
 
   get isLoggedIn(): boolean {
@@ -196,6 +224,7 @@ class ApiClientWrapper {
     error: Error;
     handleAuthenticationError?: (error: AuthenticationError) => void;
     handleAuthorizationError?: (error: AuthorizationError) => void;
+    handleNotFoundError?: (error: NotFoundError) => void;
     handleValidationError?: (error: ValidationError) => void;
     handleServerError?: (error: any) => void;
     handleNetworkError?: () => void;
@@ -205,6 +234,7 @@ class ApiClientWrapper {
       error,
       handleAuthenticationError,
       handleAuthorizationError,
+      handleNotFoundError,
       handleValidationError,
       handleServerError,
       handleNetworkError,
@@ -236,6 +266,10 @@ class ApiClientWrapper {
     if (handleAuthorizationError && responseError.response.status === 403) {
       // message
       return handleAuthorizationError(body as AuthorizationError);
+    }
+
+    if (handleNotFoundError && responseError.response.status === 404) {
+      return handleNotFoundError(body as NotFoundError);
     }
 
     if (handleValidationError && responseError.response.status === 422) {
