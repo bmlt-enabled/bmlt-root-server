@@ -1,4 +1,5 @@
 import { Navigate } from 'react-router-dom';
+
 import RootServerApi from '../RootServerApi';
 
 type Props = {

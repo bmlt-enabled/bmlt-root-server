@@ -1,4 +1,6 @@
 import {
+  AuthenticationError,
+  AuthorizationError,
   Configuration,
   Format,
   FormatCreate,
@@ -8,6 +10,8 @@ import {
   MeetingCreate,
   MeetingPartialUpdate,
   MeetingUpdate,
+  NotFoundError,
+  ResponseError,
   RootServerApi,
   ServiceBody,
   ServiceBodyCreate,
@@ -18,11 +22,7 @@ import {
   UserCreate,
   UserPartialUpdate,
   UserUpdate,
-  AuthenticationError,
-  AuthorizationError,
-  NotFoundError,
   ValidationError,
-  ResponseError,
 } from 'bmlt-root-server-client';
 
 class ApiClient extends RootServerApi {

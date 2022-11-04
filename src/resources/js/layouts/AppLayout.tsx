@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react';
 import { Container } from '@mui/material';
-import { Navbar } from '../sections/Navbar';
-import { Header } from '../sections/Header';
+import React, { useContext, useEffect, useState } from 'react';
+
 import { ActionType, AppContext } from '../AppContext';
 import RootServerApi from '../RootServerApi';
+import { Header } from '../sections/Header';
+import { Navbar } from '../sections/Navbar';
 
 type Props = {
   children: React.ReactNode;
