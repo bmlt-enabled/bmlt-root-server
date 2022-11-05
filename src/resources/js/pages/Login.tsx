@@ -32,28 +32,21 @@ export const Login = () => {
         password: '',
       });
       setAuthenticationMessage('');
-      await RootServerApi.handleErrors({
-        error,
+      await RootServerApi.handleErrors(error, {
         handleAuthenticationError: (error) => setAuthenticationMessage(error.message),
-        handleValidationError: (error) => {
+        handleValidationError: (error) =>
           setValidationMessage({
             ...validationMessage,
             username: (error?.errors?.username ?? []).join(' '),
             password: (error?.errors?.password ?? []).join(' '),
-          });
-        },
-        handleError: (error) => console.log('other error', error),
+          }),
       });
     }
   };
 
   return (
     <LoginLayout>
-      <LoginForm
-        handleOnSubmit={handleOnSubmit}
-        authenticationMessage={authenticationMessage}
-        validationMessage={validationMessage}
-      />
+      <LoginForm handleOnSubmit={handleOnSubmit} authenticationMessage={authenticationMessage} validationMessage={validationMessage} />
     </LoginLayout>
   );
 };
