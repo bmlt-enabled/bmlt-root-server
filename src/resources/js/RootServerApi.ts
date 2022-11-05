@@ -60,10 +60,34 @@ class ApiClient extends RootServerApi {
   }
 }
 
+type AuthenticationErrorHandler = (error: AuthenticationError) => void;
+type AuthorizationErrorHandler = (error: AuthorizationError) => void;
+type NotFoundErrorHandler = (error: NotFoundError) => void;
+type ValidationErrorHandler = (error: ValidationError) => void;
+type ServerErrorHandler = (error: any) => void;
+type NetworkErrorHandler = () => void;
+type GenericErrorHandler = (error: any) => void;
+type ErrorHandlers = {
+  handleAuthenticationError?: AuthenticationErrorHandler;
+  handleAuthorizationError?: AuthorizationErrorHandler;
+  handleNotFoundError?: NotFoundErrorHandler;
+  handleValidationError?: ValidationErrorHandler;
+  handleServerError?: ServerErrorHandler;
+  handleNetworkError?: NetworkErrorHandler;
+  handleError?: GenericErrorHandler;
+};
+
 class ApiClientWrapper {
   static instance = new ApiClientWrapper();
 
   private api: ApiClient;
+  private defaultAuthenticationErrorHandler: AuthenticationErrorHandler | null = null;
+  private defaultAuthorizationErrorHandler: AuthorizationErrorHandler | null = null;
+  private defaultNotFoundErrorHandler: NotFoundErrorHandler | null = null;
+  private defaultValidationErrorHandler: ValidationErrorHandler | null = null;
+  private defaultServerErrorHandler: ServerErrorHandler | null = null;
+  private defaultNetworkErrorHandler: NetworkErrorHandler | null = null;
+  private defaultErrorHandler: GenericErrorHandler | null = null;
 
   constructor(token: Token | null = null) {
     if (!token) {
@@ -74,6 +98,16 @@ class ApiClientWrapper {
     }
 
     this.api = new ApiClient(token);
+  }
+
+  initializeDefaultErrorHandlers(defaultErrorHandlers: ErrorHandlers): void {
+    this.defaultAuthenticationErrorHandler = defaultErrorHandlers.handleAuthenticationError ?? this.defaultAuthenticationErrorHandler;
+    this.defaultAuthorizationErrorHandler = defaultErrorHandlers.handleAuthorizationError ?? this.defaultAuthorizationErrorHandler;
+    this.defaultNotFoundErrorHandler = defaultErrorHandlers.handleNotFoundError ?? this.defaultNotFoundErrorHandler;
+    this.defaultValidationErrorHandler = defaultErrorHandlers.handleValidationError ?? this.defaultValidationErrorHandler;
+    this.defaultNetworkErrorHandler = defaultErrorHandlers.handleNetworkError ?? this.defaultNetworkErrorHandler;
+    this.defaultServerErrorHandler = defaultErrorHandlers.handleServerError ?? this.defaultServerErrorHandler;
+    this.defaultErrorHandler = defaultErrorHandlers.handleError ?? this.defaultErrorHandler;
   }
 
   set token(token: Token | null) {
@@ -220,26 +254,14 @@ class ApiClientWrapper {
     return this.api.deleteUser(params);
   }
 
-  async handleErrors(args: {
-    error: Error;
-    handleAuthenticationError?: (error: AuthenticationError) => void;
-    handleAuthorizationError?: (error: AuthorizationError) => void;
-    handleNotFoundError?: (error: NotFoundError) => void;
-    handleValidationError?: (error: ValidationError) => void;
-    handleServerError?: (error: any) => void;
-    handleNetworkError?: () => void;
-    handleError?: (error: any) => void;
-  }): Promise<void> {
-    const {
-      error,
-      handleAuthenticationError,
-      handleAuthorizationError,
-      handleNotFoundError,
-      handleValidationError,
-      handleServerError,
-      handleNetworkError,
-      handleError,
-    } = args;
+  async handleErrors(error: Error, overrideErrorHandlers?: ErrorHandlers): Promise<void> {
+    const handleAuthenticationError = overrideErrorHandlers?.handleAuthenticationError ?? this.defaultAuthenticationErrorHandler;
+    const handleAuthorizationError = overrideErrorHandlers?.handleAuthorizationError ?? this.defaultAuthorizationErrorHandler;
+    const handleNotFoundError = overrideErrorHandlers?.handleNotFoundError ?? this.defaultNotFoundErrorHandler;
+    const handleValidationError = overrideErrorHandlers?.handleValidationError ?? this.defaultValidationErrorHandler;
+    const handleNetworkError = overrideErrorHandlers?.handleNetworkError ?? this.defaultNetworkErrorHandler;
+    const handleServerError = overrideErrorHandlers?.handleServerError ?? this.defaultServerErrorHandler;
+    const handleError = overrideErrorHandlers?.handleError ?? this.defaultErrorHandler;
 
     // handle network errors first
     if (error.message === 'Failed to fetch') {
