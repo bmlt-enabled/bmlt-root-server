@@ -1,3 +1,5 @@
+import { strings } from '../localization';
+
 export const MyAccount = () => {
-  return <div>MyAccount</div>;
+  return <div>{strings.myAccountTitle}</div>;
 };

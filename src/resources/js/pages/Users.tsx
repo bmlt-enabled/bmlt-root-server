@@ -1,3 +1,5 @@
+import { strings } from '../localization';
+
 export const Users = () => {
-  return <div>Users</div>;
+  return <div>{strings.usersTitle}</div>;
 };
