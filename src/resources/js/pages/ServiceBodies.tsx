@@ -1,3 +1,5 @@
+import { strings } from '../localization';
+
 export const ServiceBodies = () => {
-  return <div>ServiceBodies</div>;
+  return <div>{strings.serviceBodiesTitle}</div>;
 };

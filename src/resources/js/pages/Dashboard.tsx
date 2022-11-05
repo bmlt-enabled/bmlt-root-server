@@ -1,3 +1,5 @@
+import { strings } from '../localization';
+
 export const Dashboard = () => {
-  return <>Dashboard</>;
+  return <div>{strings.dashboardTitle}</div>;
 };

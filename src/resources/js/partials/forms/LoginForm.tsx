@@ -2,6 +2,7 @@ import { Box, Button, FormControl, FormHelperText, TextField, Typography } from 
 import { styled } from '@mui/system';
 import { useForm } from 'react-hook-form';
 
+import { strings } from '../../localization';
 import { FormSubmitError } from './errors/FormSubmitError';
 
 const StyledButtonWrapper = styled(Box)(({ theme }) => ({
@@ -46,7 +47,7 @@ const LoginForm = ({ handleOnSubmit, authenticationMessage, validationMessage }:
   return (
     <StyledFormWrapper>
       <StyledFormLabel variant='h3' align='center'>
-        Login
+        {strings.loginTitle}
       </StyledFormLabel>
       {authenticationMessage && <FormSubmitError message={authenticationMessage} />}
       <form onSubmit={handleSubmit(handleOnSubmit)} noValidate>
@@ -54,7 +55,7 @@ const LoginForm = ({ handleOnSubmit, authenticationMessage, validationMessage }:
           <TextField
             error={errors?.username?.type === 'required' || validationMessage?.username !== ''}
             id='login-username'
-            label='Username'
+            label={strings.usernameTitle}
             type='text'
             fullWidth
             required
@@ -71,7 +72,7 @@ const LoginForm = ({ handleOnSubmit, authenticationMessage, validationMessage }:
           <TextField
             error={errors?.password?.type === 'required' || validationMessage?.password !== ''}
             id='login-password'
-            label='Password'
+            label={strings.passwordTitle}
             type='password'
             fullWidth
             required
@@ -85,7 +86,7 @@ const LoginForm = ({ handleOnSubmit, authenticationMessage, validationMessage }:
         </StyledInputWrapper>
         <StyledButtonWrapper sx={{ display: 'flex', justifyContent: 'center', marginTop: '' }}>
           <Button variant='contained' color='primary' type='submit'>
-            Log In
+            {strings.loginVerb}
           </Button>
         </StyledButtonWrapper>
       </form>

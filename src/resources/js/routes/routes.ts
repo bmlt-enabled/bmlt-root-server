@@ -1,5 +1,5 @@
 import { Dashboard } from '../pages/Dashboard';
-import { MeetingFormats } from '../pages/MeetingFormats';
+import { Formats } from '../pages/Formats';
 import { Meetings } from '../pages/Meetings';
 import { MyAccount } from '../pages/MyAccount';
 import { ServiceBodies } from '../pages/ServiceBodies';
@@ -23,8 +23,8 @@ export const routes = [
     component: Users,
   },
   {
-    path: '/meeting-formats',
-    component: MeetingFormats,
+    path: '/formats',
+    component: Formats,
   },
   {
     path: '/my-account',
