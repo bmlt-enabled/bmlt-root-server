@@ -27,7 +27,12 @@ class CatchAllController extends Controller
                 return self::legacyResponse($pathInfo);
             }
 
-            return response()->view('frontend');
+            return response()->view('frontend', [
+                'baseUrl' => $request->getBaseurl(),
+                'defaultLanguage' => legacy_config('language'),
+                'isLanguageSelectorEnabled' => legacy_config('enable_language_selector'),
+                'languageMapping' => self::getLanguageMapping(),
+            ]);
         }
 
         if (file_exists($pathInfo->path)) {
@@ -35,6 +40,21 @@ class CatchAllController extends Controller
         }
 
         abort(404);
+    }
+
+    private static function getLanguageMapping(): array
+    {
+        return collect(scandir(base_path('lang')))
+            ->reject(fn ($dir) => $dir == '.' || $dir == '..')
+            ->sort()
+            ->mapWithKeys(function ($langAbbreviation, $_) {
+                $langName = $langAbbreviation == 'dk' ? 'da' : $langAbbreviation;
+                $langName = \Locale::getDisplayLanguage($langName, $langName);
+                $langName = mb_str_split($langName);
+                $langName = mb_strtoupper($langName[0]) . implode('', array_slice($langName, 1));
+                return [$langAbbreviation => $langName];
+            })
+            ->toArray();
     }
 
     private static function isAllowedLegacyPath(LegacyPathInfo $pathInfo): bool
