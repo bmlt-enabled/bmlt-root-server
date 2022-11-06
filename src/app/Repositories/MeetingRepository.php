@@ -686,7 +686,9 @@ class MeetingRepository implements MeetingRepositoryInterface
     private function saveChange(?Meeting $beforeMeeting, ?Meeting $afterMeeting): void
     {
         Change::create([
-            'user_id_bigint' => request()->user()->id_bigint,
+            // The default user_id_bigint is null.  This is only for unit testing.  In the context of an authenticated
+            // http request there will be a user, which will have a numeric ID.
+            'user_id_bigint' => request()?->user()?->id_bigint,
             'service_body_id_bigint' => $afterMeeting?->service_body_bigint ?? $beforeMeeting->service_body_bigint,
             'lang_enum' => $beforeMeeting?->lang_enum ?: $afterMeeting?->lang_enum ?: legacy_config('language') ?: App::currentLocale(),
             'object_class_string' => 'c_comdef_meeting',
