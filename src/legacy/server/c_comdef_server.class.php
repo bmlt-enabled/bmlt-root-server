@@ -2693,7 +2693,22 @@ class c_comdef_server
                 }
 
                 include(dirname(__FILE__)."/config/comdef-config.inc.php");
-                include(dirname(dirname(__FILE__)).'/local_server/server_admin/lang/'.$lang_enum.'/server_admin_strings.inc.php');
+
+                // Get the english translations
+                include(dirname(dirname(__FILE__)).'/local_server/server_admin/lang/en/server_admin_strings.inc.php');
+                $en_comdef_server_admin_strings = array_merge($comdef_server_admin_strings ?? []);
+                $en_email_contact_strings = array_merge($email_contact_strings ?? []);
+                $en_change_type_strings = array_merge($change_type_strings ?? []);
+                $en_detailed_change_strings = array_merge($detailed_change_strings ?? []);
+
+                if ($lang_enum != 'en') {
+                    // Override the english translations with localized translations
+                    include(dirname(dirname(__FILE__)) . '/local_server/server_admin/lang/' . $lang_enum . '/server_admin_strings.inc.php');
+                    $comdef_server_admin_strings = array_merge($en_comdef_server_admin_strings, $comdef_server_admin_strings);
+                    $email_contact_strings = array_merge($en_email_contact_strings, $email_contact_strings);
+                    $change_type_strings = array_merge($en_change_type_strings, $change_type_strings);
+                    $detailed_change_strings = array_merge($en_detailed_change_strings, $detailed_change_strings);
+                }
 
                 global  $comdef_global_more_details_address,    ///< This is a format string for the way the address line is displayed in the "more details" screen.
                     $comdef_global_list_address;            ///< The same, but for the list.
