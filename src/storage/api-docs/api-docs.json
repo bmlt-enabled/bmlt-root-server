@@ -1354,7 +1354,7 @@
                     }
                 },
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Returns when POST is successful.",
                         "content": {
                             "application/json": {

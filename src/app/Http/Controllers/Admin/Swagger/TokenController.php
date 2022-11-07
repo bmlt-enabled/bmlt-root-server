@@ -21,7 +21,7 @@ class TokenController extends Controller
      *     @OA\RequestBody(required=true, description="User credentials",
      *         @OA\JsonContent(ref="#/components/schemas/TokenCredentials"),
      *     ),
-     *     @OA\Response(response=201, description="Returns when POST is successful.",
+     *     @OA\Response(response=200, description="Returns when POST is successful.",
      *         @OA\JsonContent(ref="#/components/schemas/Token")
      *     ),
      *     @OA\Response(response=401, description="Returns when credentials are incorrect.",
