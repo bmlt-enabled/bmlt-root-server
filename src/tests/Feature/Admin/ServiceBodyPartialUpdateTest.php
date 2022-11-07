@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Models\Change;
 use App\Models\ServiceBody;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -492,5 +493,19 @@ class ServiceBodyPartialUpdateTest extends TestCase
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/servicebodies/$zone->id_bigint", $data)
             ->assertStatus(204);
+    }
+
+    public function testPartialUpdateNoChangeCreatesNoChangeRecord()
+    {
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $zone = $this->createZone('zone', 'zone', adminUserId: $user->id_bigint);
+
+        $data = ['name' => $zone->name_string];
+        $this->withHeader('Authorization', "Bearer $token")
+            ->patch("/api/v1/servicebodies/$zone->id_bigint", $data)
+            ->assertStatus(204);
+
+        $this->assertEmpty(Change::query()->get());
     }
 }

@@ -688,7 +688,6 @@ class MeetingRepository implements MeetingRepositoryInterface
         $beforeObject = !is_null($beforeMeeting) ? $this->serializeForChange($beforeMeeting) : null;
         $afterObject = !is_null($afterMeeting) ? $this->serializeForChange($afterMeeting) : null;
         if (!is_null($beforeObject) && !is_null($afterObject) && $beforeObject == $afterObject) {
-            // TODO write a test
             // nothing actually changed, don't save a record
             return;
         }

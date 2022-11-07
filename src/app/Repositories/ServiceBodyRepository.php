@@ -77,6 +77,13 @@ class ServiceBodyRepository implements ServiceBodyRepositoryInterface
 
     private function saveChange(?ServiceBody $beforeServiceBody, ?ServiceBody $afterServiceBody): void
     {
+        $beforeObject = !is_null($beforeServiceBody) ? $this->serializeForChange($beforeServiceBody) : null;
+        $afterObject = !is_null($afterServiceBody) ? $this->serializeForChange($afterServiceBody) : null;
+        if (!is_null($beforeObject) && !is_null($afterObject) && $beforeObject == $afterObject) {
+            // nothing actually changed, don't save a record
+            return;
+        }
+
         Change::create([
             'user_id_bigint' => request()->user()->id_bigint,
             'service_body_id_bigint' => $afterServiceBody?->id_bigint ?? $beforeServiceBody->id_bigint,
@@ -87,8 +94,8 @@ class ServiceBodyRepository implements ServiceBodyRepositoryInterface
             'after_id_bigint' => $afterServiceBody?->id_bigint,
             'after_lang_enum' => !is_null($afterServiceBody) ? $afterServiceBody?->lang_enum ?: legacy_config('language') ?: App::currentLocale() : null,
             'change_type_enum' => is_null($beforeServiceBody) ? 'comdef_change_type_new' : (is_null($afterServiceBody) ? 'comdef_change_type_delete' : 'comdef_change_type_change'),
-            'before_object' => !is_null($beforeServiceBody) ? $this->serializeForChange($beforeServiceBody) : null,
-            'after_object' => !is_null($afterServiceBody) ? $this->serializeForChange($afterServiceBody) : null,
+            'before_object' => $beforeObject,
+            'after_object' => $afterObject,
         ]);
     }
 
