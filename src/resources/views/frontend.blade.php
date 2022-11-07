@@ -9,6 +9,7 @@
         var defaultLanguage = '{{ $defaultLanguage }}';
         var isLanguageSelectorEnabled = {{ $isLanguageSelectorEnabled ? 'true' : 'false' }};
         var languageMapping = {{!! collect($languageMapping)->map(fn ($langName, $langAbbrev) => "$langAbbrev: '$langName'")->join(', ') !!}};
+        var currentVersion = '{{ $currentVersion }}';
     </script>
 
     @viteReactRefresh
