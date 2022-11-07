@@ -763,6 +763,8 @@ class MeetingRepository implements MeetingRepositoryInterface
                         'data_bigint' => null,
                         'data_double' => null,
                     ])
+                    ->sortBy('key')
+                    ->values()
                     ->toArray()
             ),
             'longdata_table_values' => serialize(
@@ -775,6 +777,8 @@ class MeetingRepository implements MeetingRepositoryInterface
                         'key' => $data->key,
                         'data_blob' => $data->data_blob,
                     ])
+                    ->sortBy('key')
+                    ->values()
                     ->toArray()
             ),
         ]);
