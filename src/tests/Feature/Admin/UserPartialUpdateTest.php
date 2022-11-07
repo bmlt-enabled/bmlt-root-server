@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Models\Change;
 use App\Models\User;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -426,5 +427,18 @@ class UserPartialUpdateTest extends TestCase
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/users/$user->id_bigint", $data)
             ->assertStatus(204);
+    }
+
+    public function testPartialUpdateNoChangeCreatesNoChangeRecord()
+    {
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+
+        $data = ['username' => $user->login_string];
+        $this->withHeader('Authorization', "Bearer $token")
+            ->patch("/api/v1/users/$user->id_bigint", $data)
+            ->assertStatus(204);
+
+        $this->assertEmpty(Change::query()->get());
     }
 }

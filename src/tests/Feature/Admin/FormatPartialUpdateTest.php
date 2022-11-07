@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Models\Change;
 use App\Models\Format;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -595,5 +596,26 @@ class FormatPartialUpdateTest extends TestCase
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/formats/{$formats[0]->shared_id_bigint}", $data)
             ->assertStatus(204);
+    }
+
+    public function testPartialUpdateNoChangeCreatesNoChangeRecord()
+    {
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $formats = $this->createFormats();
+
+        // it is required
+        $data['translations'] = $formats->map(fn ($translation) => [
+            'key' => $translation->key_string,
+            'name' => $translation->name_string,
+            'description' => $translation->description_string,
+            'language' => $translation->lang_enum
+        ]);
+
+        $this->withHeader('Authorization', "Bearer $token")
+            ->patch("/api/v1/formats/{$formats[0]->shared_id_bigint}", $data)
+            ->assertStatus(204);
+
+        $this->assertEmpty(Change::query()->get());
     }
 }

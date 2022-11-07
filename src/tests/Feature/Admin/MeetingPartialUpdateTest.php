@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Models\Change;
 use App\Models\Format;
 use App\Models\Meeting;
 use App\Models\MeetingData;
@@ -878,5 +879,21 @@ class MeetingPartialUpdateTest extends TestCase
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/meetings/$meeting->id_bigint", $payload)
             ->assertStatus(204);
+    }
+
+    public function testPartialUpdateNoChangeCreatesNoChangeRecord()
+    {
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
+        $format = Format::query()->first();
+        $meeting = $this->createMeeting(['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)]);
+
+        $payload['name'] = $meeting->data->firstWhere('key', 'meeting_name')->data_string;
+        $this->withHeader('Authorization', "Bearer $token")
+            ->patch("/api/v1/meetings/$meeting->id_bigint", $payload)
+            ->assertStatus(204);
+
+        $this->assertEmpty(Change::query()->get());
     }
 }

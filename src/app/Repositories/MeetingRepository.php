@@ -685,6 +685,13 @@ class MeetingRepository implements MeetingRepositoryInterface
 
     private function saveChange(?Meeting $beforeMeeting, ?Meeting $afterMeeting): void
     {
+        $beforeObject = !is_null($beforeMeeting) ? $this->serializeForChange($beforeMeeting) : null;
+        $afterObject = !is_null($afterMeeting) ? $this->serializeForChange($afterMeeting) : null;
+        if (!is_null($beforeObject) && !is_null($afterObject) && $beforeObject == $afterObject) {
+            // nothing actually changed, don't save a record
+            return;
+        }
+
         Change::create([
             // The default user_id_bigint is null.  This is only for unit testing.  In the context of an authenticated
             // http request there will be a user, which will have a numeric ID.
@@ -697,8 +704,8 @@ class MeetingRepository implements MeetingRepositoryInterface
             'after_id_bigint' => $afterMeeting?->id_bigint,
             'after_lang_enum' => !is_null($afterMeeting) ? $afterMeeting?->lang_enum ?: legacy_config('language') ?: App::currentLocale() : null,
             'change_type_enum' => is_null($beforeMeeting) ? 'comdef_change_type_new' : (is_null($afterMeeting) ? 'comdef_change_type_delete' : 'comdef_change_type_change'),
-            'before_object' => !is_null($beforeMeeting) ? $this->serializeForChange($beforeMeeting) : null,
-            'after_object' => !is_null($afterMeeting) ? $this->serializeForChange($afterMeeting) : null,
+            'before_object' => $beforeObject,
+            'after_object' => $afterObject,
         ]);
 
         $changeLimit = legacy_config('change_depth_for_meetings');
@@ -755,6 +762,8 @@ class MeetingRepository implements MeetingRepositoryInterface
                         'data_bigint' => null,
                         'data_double' => null,
                     ])
+                    ->sortBy('key')
+                    ->values()
                     ->toArray()
             ),
             'longdata_table_values' => serialize(
@@ -767,6 +776,8 @@ class MeetingRepository implements MeetingRepositoryInterface
                         'key' => $data->key,
                         'data_blob' => $data->data_blob,
                     ])
+                    ->sortBy('key')
+                    ->values()
                     ->toArray()
             ),
         ]);
