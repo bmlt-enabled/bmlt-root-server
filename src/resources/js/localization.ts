@@ -30,6 +30,7 @@ export const strings = new LocalizedStrings({
     signOutTitle: 'Log ud',
   },
   es: {
+    loginTitle: 'Acceso',
     loginVerb: 'Acceder',
     passwordTitle: 'Contraseña',
     serviceBodiesTitle: 'Cuerpos de servicio',

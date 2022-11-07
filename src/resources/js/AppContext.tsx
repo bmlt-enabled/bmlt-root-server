@@ -7,6 +7,7 @@ type Props = {
 
 export enum ActionType {
   SET_USER = 'SET_USER',
+  SET_LANGUAGE = 'SET_LANGUAGE',
 }
 
 type Action = {
@@ -16,10 +17,12 @@ type Action = {
 
 type State = {
   user: User | null;
+  language: string;
 };
 
 const initialState = {
   user: null,
+  language: localStorage.getItem('language') || defaultLanguage,
 };
 
 export const AppContext = createContext<{ state: State; dispatch: React.Dispatch<Action> }>({
@@ -32,7 +35,8 @@ export const AppContextProvider = ({ children }: Props) => {
     switch (action.type) {
       case ActionType.SET_USER:
         return { ...state, user: action.payload };
-
+      case ActionType.SET_LANGUAGE:
+        return { ...state, language: action.payload };
       default:
         return state;
     }
