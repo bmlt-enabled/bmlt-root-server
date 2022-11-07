@@ -97,7 +97,7 @@ class MeetingController extends ResourceController
                     if ($fieldName == 'service_body_bigint') {
                         return ['serviceBodyId' => $request->has('serviceBodyId') ? $request->input('serviceBodyId') : $meeting->service_body_bigint];
                     } elseif ($fieldName == 'formats') {
-                        return ['formatIds' => $request->has('formatIds') ? $request->input('formatIds') : (empty($meeting->formats) ? collect([]) : collect(explode(',', $meeting->formats))->map(fn ($id) => intval($id))->toArray())];
+                        return ['formatIds' => $request->has('formatIds') ? $request->input('formatIds') : (empty($meeting->formats) ? collect([]) : collect(explode(',', $meeting->formats))->map(fn ($id) => intval($id))->reject(fn ($id) => $id == $this->getVirtualFormatId() || $id == $this->getHybridFormatId() || $id == $this->getTemporarilyClosedFormatId())->toArray())];
                     } elseif ($fieldName == 'venue_type') {
                         return ['venueType' => $request->has('venueType') ? $request->input('venueType') : $meeting->venue_type];
                     } elseif ($fieldName == 'weekday_tinyint') {
