@@ -13,15 +13,12 @@ const StyledFormControl = styled(FormControl)(({ theme }) => ({
 export const LanguageSelect = () => {
   const languageArr = Object.entries(languageMapping);
   const { state, dispatch } = useContext(AppContext);
-  // const [selectedLanguage, setSelectedLanguage] = useState(state.language);
 
   const handleLanguageChange = (e: SelectChangeEvent) => {
-    // setSelectedLanguage(event.target.value as string);
     dispatch({ type: ActionType.SET_LANGUAGE, payload: e.target.value });
   };
   return (
     <StyledFormControl size='small'>
-      {/* <InputLabel id='demo-select-small'>Language</InputLabel> */}
       <Select labelId='demo-select-small' id='demo-select-small' value={state.language} onChange={handleLanguageChange}>
         {languageArr.map((lang) => (
           <MenuItem key={lang[0]} value={lang[0]}>
