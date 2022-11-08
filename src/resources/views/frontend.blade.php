@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>BMLT Root Server</title>
     <script>
-        var apiBaseUrl = '{{ $baseUrl }}';
-        var defaultLanguage = '{{ $defaultLanguage }}';
-        var isLanguageSelectorEnabled = {{ $isLanguageSelectorEnabled ? 'true' : 'false' }};
-        var languageMapping = {{!! collect($languageMapping)->map(fn ($langName, $langAbbrev) => "$langAbbrev: '$langName'")->join(', ') !!}};
-        var currentVersion = '{{ $currentVersion }}';
+        const settings = {
+            apiBaseUrl: '{{ $baseUrl }}',
+            defaultLanguage: '{{ $defaultLanguage }}',
+            isLanguageSelectorEnabled: {{ $isLanguageSelectorEnabled ? 'true' : 'false' }},
+            languageMapping: {{!! collect($languageMapping)->map(fn ($langName, $langAbbrev) => "$langAbbrev: '$langName'")->join(', ') !!}},
+            version: '{{ $version }}'
+        };
     </script>
 
     @viteReactRefresh
