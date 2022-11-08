@@ -4,6 +4,7 @@ export const strings = new LocalizedStrings({
   en: {
     loginVerb: 'Log In',
     loginTitle: 'Login',
+    emailTitle: 'Email',
     usernameTitle: 'Username',
     passwordTitle: 'Password',
     rootServerTitle: 'Root Server',
@@ -12,9 +13,13 @@ export const strings = new LocalizedStrings({
     serviceBodiesTitle: 'Service Bodies',
     usersTitle: 'Users',
     userTitle: 'User',
+    createNewUserTitle: 'Create New User',
+    userIsATitle: 'User Is A',
     formatsTitle: 'Formats',
     myAccountTitle: 'My Account',
     signOutTitle: 'Sign Out',
+    idTitle: 'ID',
+    descriptionTitle: 'Description',
   },
   de: {
     passwordTitle: 'Passwort',

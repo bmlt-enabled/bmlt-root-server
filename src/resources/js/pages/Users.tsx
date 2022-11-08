@@ -8,7 +8,7 @@ import { strings } from '../localization';
 
 export const Users = () => {
   const [currentSelection, setCurrentSelection] = useState('-1');
-  const [selectedUser, setSelectedUser] = useState<any>({});
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [users, setUsers] = useState<User[]>([]);
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -18,7 +18,7 @@ export const Users = () => {
       if (event.target.value === user.id.toString()) {
         setSelectedUser(user);
       } else if (event.target.value === '-1') {
-        setSelectedUser({});
+        setSelectedUser(null);
       }
     });
   };
@@ -43,7 +43,7 @@ export const Users = () => {
         <FormControl>
           <InputLabel id='select-label'>{strings.userTitle}</InputLabel>
           <Select labelId='select-label' id='select' value={currentSelection} label='User' onChange={handleChange}>
-            <MenuItem value='-1'>Create New User</MenuItem>
+            <MenuItem value='-1'>{strings.createNewUserTitle}</MenuItem>
             {users.map((currentUser, i) => {
               return (
                 <MenuItem value={currentUser.id.toString()} key={i}>
@@ -54,12 +54,24 @@ export const Users = () => {
           </Select>
         </FormControl>
       </Box>
-      <p>ID: {selectedUser.id}</p>
-      <p>User Name: {selectedUser.displayName}</p>
-      <p>User Login: {selectedUser.username}</p>
-      <p>Email: {selectedUser.email}</p>
-      <p>User Is A: {selectedUser.type}</p>
-      <p>Description: {selectedUser.description}</p>
+      <p>
+        {`${strings.idTitle}:`} {selectedUser?.id}
+      </p>
+      <p>
+        {`${strings.usernameTitle}:`} {selectedUser?.displayName}
+      </p>
+      <p>
+        {`${strings.userTitle} ${strings.loginTitle}:`} {selectedUser?.username}
+      </p>
+      <p>
+        {`${strings.emailTitle}:`} {selectedUser?.email}
+      </p>
+      <p>
+        {`${strings.userIsATitle}:`} {selectedUser?.type}
+      </p>
+      <p>
+        {`${strings.descriptionTitle}:`} {selectedUser?.description}
+      </p>
     </div>
   );
 };
