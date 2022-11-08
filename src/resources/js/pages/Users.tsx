@@ -10,6 +10,7 @@ export const Users = () => {
   const [currentSelection, setCurrentSelection] = useState('-1');
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [users, setUsers] = useState<User[]>([]);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleChange = (event: SelectChangeEvent) => {
     setCurrentSelection(event.target.value as string);
@@ -29,13 +30,19 @@ export const Users = () => {
       setUsers(allUsers);
       console.log(allUsers);
     } catch (error: any) {
-      console.log(error);
+      RootServerApi.handleErrors(error, {
+        handleError: (error) => setErrorMessage(error.message),
+      });
     }
   };
 
   useEffect(() => {
     getUsers();
   }, []);
+
+  if (errorMessage) {
+    return <div>{errorMessage}</div>;
+  }
 
   return (
     <div>
