@@ -1,6 +1,8 @@
 import { User } from 'bmlt-root-server-client';
 import React, { createContext, useReducer } from 'react';
 
+import { restoreLanguage } from './localization';
+
 type Props = {
   children: React.ReactNode;
 };
@@ -22,7 +24,7 @@ type State = {
 
 const initialState = {
   user: null,
-  language: localStorage.getItem('language') || defaultLanguage,
+  language: restoreLanguage() || defaultLanguage,
 };
 
 export const AppContext = createContext<{ state: State; dispatch: React.Dispatch<Action> }>({
