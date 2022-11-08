@@ -41,7 +41,7 @@ export const Users = () => {
   }, []);
 
   if (errorMessage) {
-    return <div>{errorMessage}</div>;
+    console.log(errorMessage);
   }
 
   return (
@@ -61,24 +61,12 @@ export const Users = () => {
           </Select>
         </FormControl>
       </Box>
-      <p>
-        {`${strings.idTitle}:`} {selectedUser?.id}
-      </p>
-      <p>
-        {`${strings.usernameTitle}:`} {selectedUser?.displayName}
-      </p>
-      <p>
-        {`${strings.userTitle} ${strings.loginTitle}:`} {selectedUser?.username}
-      </p>
-      <p>
-        {`${strings.emailTitle}:`} {selectedUser?.email}
-      </p>
-      <p>
-        {`${strings.userIsATitle}:`} {selectedUser?.type}
-      </p>
-      <p>
-        {`${strings.descriptionTitle}:`} {selectedUser?.description}
-      </p>
+      <p>{`${strings.idTitle}: ${selectedUser?.id}`}</p>
+      <p>{`${strings.usernameTitle}: ${selectedUser?.displayName}`}</p>
+      <p>{`${strings.userTitle} ${strings.loginTitle}: ${selectedUser?.username}`}</p>
+      <p>{`${strings.emailTitle} ${selectedUser?.email}`}</p>
+      <p>{`${strings.userIsATitle} ${selectedUser?.type}`}</p>
+      <p>{`${strings.descriptionTitle}: ${selectedUser?.description}`}</p>
     </div>
   );
 };

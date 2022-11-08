@@ -4,7 +4,7 @@ export const strings = new LocalizedStrings({
   en: {
     loginVerb: 'Log In',
     loginTitle: 'Login',
-    emailTitle: 'Email',
+    emailTitle: 'Email:',
     usernameTitle: 'Username',
     passwordTitle: 'Password',
     rootServerTitle: 'Root Server',
@@ -14,7 +14,7 @@ export const strings = new LocalizedStrings({
     usersTitle: 'Users',
     userTitle: 'User',
     createNewUserTitle: 'Create New User',
-    userIsATitle: 'User Is A',
+    userIsATitle: 'User Is A:',
     formatsTitle: 'Formats',
     myAccountTitle: 'My Account',
     signOutTitle: 'Sign Out',
@@ -27,6 +27,10 @@ export const strings = new LocalizedStrings({
     formatsTitle: 'Formate',
     myAccountTitle: 'Mein Account',
     signOutTitle: 'Abmelden',
+    createNewUserTitle: 'CErstelle einen neuen Benutzer',
+    userIsATitle: 'Benutzer ist ein:',
+    descriptionTitle: 'Beschreibung:',
+    emailTitle: 'E-Mailadresse:',
   },
   dk: {
     loginVerb: 'Log Ind',
@@ -35,6 +39,9 @@ export const strings = new LocalizedStrings({
     formatsTitle: 'Struktur',
     myAccountTitle: 'Min konto',
     signOutTitle: 'Log ud',
+    createNewUserTitle: 'Opret En Ny Bruger',
+    userIsATitle: 'Bruger Er En:',
+    descriptionTitle: 'Beskrivelse:',
   },
   es: {
     loginTitle: 'Acceso',
@@ -44,6 +51,9 @@ export const strings = new LocalizedStrings({
     formatsTitle: 'Formatos',
     myAccountTitle: 'Mi cuenta',
     signOutTitle: 'Salir',
+    createNewUserTitle: 'Crear un nuevo usuario',
+    descriptionTitle: 'Descripción:',
+    emailTitle: 'Correo electrónica:',
   },
   fa: {},
   fr: {
@@ -54,6 +64,8 @@ export const strings = new LocalizedStrings({
     usersTitle: 'Utilisateurs',
     myAccountTitle: 'Mon Compte',
     signOutTitle: 'Déconnexion',
+    createNewUserTitle: 'Créer un nouvel utilisateur',
+    userIsATitle: 'Je suis un:',
   },
   it: {
     loginVerb: 'Entra',
@@ -61,6 +73,9 @@ export const strings = new LocalizedStrings({
     formatsTitle: 'Formatos',
     myAccountTitle: 'Il mio account',
     signOutTitle: 'Esci',
+    createNewUserTitle: 'Crea un nuovo utente',
+    userIsATitle: "L'utente è un:",
+    descriptionTitle: 'Descrizione:',
   },
   pl: {
     loginVerb: 'Zaloguj się',
@@ -70,6 +85,9 @@ export const strings = new LocalizedStrings({
     formatsTitle: 'Formaty',
     myAccountTitle: 'Moje Konto',
     signOutTitle: 'Wyloguj',
+    createNewUserTitle: 'Utwórz nowego użytkownika',
+    userIsATitle: 'Użytkownik:',
+    descriptionTitle: 'Opis:',
   },
   pt: {
     loginVerb: 'Entrar',
@@ -79,6 +97,9 @@ export const strings = new LocalizedStrings({
     formatsTitle: 'Formato',
     myAccountTitle: 'Minha Conta',
     signOutTitle: 'SAIR',
+    createNewUserTitle: 'Criar um novo usuário',
+    userIsATitle: 'O usuário é:',
+    descriptionTitle: 'Descrição:',
   },
   ru: {
     loginVerb: 'Логин',
@@ -88,12 +109,19 @@ export const strings = new LocalizedStrings({
     formatsTitle: 'Форматы',
     myAccountTitle: 'Мой Aккаунт',
     signOutTitle: 'Выход',
+    createNewUserTitle: 'Создать нового пользователя',
+    userIsATitle: 'Пользователь это:',
+    descriptionTitle: 'Описание:',
   },
   sv: {
     loginVerb: 'Logga in',
     passwordTitle: 'Lösenord',
     myAccountTitle: 'Mitt konto',
     signOutTitle: 'Logga ut',
+    createNewUserTitle: 'Skapa en användare',
+    userIsATitle: 'Användaren är en:',
+    descriptionTitle: 'Beskrivning:',
+    emailTitle: 'E-post:',
   },
 });
 
