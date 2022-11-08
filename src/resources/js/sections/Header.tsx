@@ -12,6 +12,7 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
 const StyledHeaderContainer = styled(Container)({
   display: 'flex',
   justifyContent: 'space-between',
+  alignItems: 'center',
 });
 
 export const Header = () => {
@@ -19,8 +20,11 @@ export const Header = () => {
   return (
     <StyledAppBar position='relative' elevation={0}>
       <StyledHeaderContainer maxWidth='lg'>
-        <Typography color='dark.main'>{strings.rootServerTitle}</Typography>
+        <Typography variant='h1' color='dark.main'>
+          {strings.rootServerTitle}
+        </Typography>
         <Box>
+          <Typography color='white'>Select Language</Typography>
           <LanguageSelect />
         </Box>
       </StyledHeaderContainer>

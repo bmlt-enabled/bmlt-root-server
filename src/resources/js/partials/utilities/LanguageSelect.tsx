@@ -1,7 +1,14 @@
-import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { FormControl, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { styled } from '@mui/system';
 import { useContext } from 'react';
 
 import { ActionType, AppContext } from '../../AppContext';
+
+const StyledFormControl = styled(FormControl)(({ theme }) => ({
+  borderRadius: theme.shape.borderRadius * 1,
+  minWidth: 120,
+  backgroundColor: '#ddd',
+}));
 
 export const LanguageSelect = () => {
   const languageArr = Object.entries(languageMapping);
@@ -13,23 +20,15 @@ export const LanguageSelect = () => {
     dispatch({ type: ActionType.SET_LANGUAGE, payload: e.target.value });
   };
   return (
-    <FormControl>
-      <InputLabel id='language-select-label'>Language</InputLabel>
-      <Select
-        labelId='language-select-label'
-        variant='filled'
-        autoWidth
-        id='language-select'
-        value={state.language}
-        label='Language'
-        onChange={handleLanguageChange}
-      >
+    <StyledFormControl size='small'>
+      {/* <InputLabel id='demo-select-small'>Language</InputLabel> */}
+      <Select labelId='demo-select-small' id='demo-select-small' value={state.language} onChange={handleLanguageChange}>
         {languageArr.map((lang) => (
           <MenuItem key={lang[0]} value={lang[0]}>
             {lang[1]}
           </MenuItem>
         ))}
       </Select>
-    </FormControl>
+    </StyledFormControl>
   );
 };
