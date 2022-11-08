@@ -7,18 +7,20 @@ import { User } from 'bmlt-root-server-client';
 import { useEffect, useState } from 'react';
 
 import RootServerApi from '../RootServerApi';
+import { strings } from '../localization';
 
 export const Users = () => {
-  const [currentSelection, setCurrentSelection] = useState('create-new-user');
+  const [currentSelection, setCurrentSelection] = useState('-1');
   const [selectedUser, setSelectedUser] = useState<any>({});
   const [users, setUsers] = useState<User[]>([]);
 
   const handleChange = (event: SelectChangeEvent) => {
     setCurrentSelection(event.target.value as string);
+
     users.forEach((user) => {
-      if (event.target.value === user.username) {
+      if (event.target.value === user.id.toString()) {
         setSelectedUser(user);
-      } else if (event.target.value === 'create-new-user') {
+      } else if (event.target.value === '-1') {
         setSelectedUser({});
       }
     });
@@ -42,12 +44,12 @@ export const Users = () => {
     <div>
       <Box>
         <FormControl>
-          <InputLabel id='select-label'>User</InputLabel>
+          <InputLabel id='select-label'>{strings.userTitle}</InputLabel>
           <Select labelId='select-label' id='select' value={currentSelection} label='User' onChange={handleChange}>
-            <MenuItem value='create-new-user'>Create New User</MenuItem>
+            <MenuItem value='-1'>Create New User</MenuItem>
             {users.map((currentUser, i) => {
               return (
-                <MenuItem value={currentUser.username} key={i}>
+                <MenuItem value={currentUser.id.toString()} key={i}>
                   {currentUser.displayName}
                 </MenuItem>
               );

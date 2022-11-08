@@ -11,6 +11,7 @@ export const strings = new LocalizedStrings({
     meetingsTitle: 'Meetings',
     serviceBodiesTitle: 'Service Bodies',
     usersTitle: 'Users',
+    userTitle: 'User',
     formatsTitle: 'Formats',
     myAccountTitle: 'My Account',
     signOutTitle: 'Sign Out',
