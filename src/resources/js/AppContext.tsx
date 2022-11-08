@@ -24,7 +24,7 @@ type State = {
 
 const initialState = {
   user: null,
-  language: restoreLanguage() || defaultLanguage,
+  language: restoreLanguage(),
 };
 
 export const AppContext = createContext<{ state: State; dispatch: React.Dispatch<Action> }>({

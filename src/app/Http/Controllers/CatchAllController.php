@@ -32,7 +32,7 @@ class CatchAllController extends Controller
                 'defaultLanguage' => legacy_config('language'),
                 'isLanguageSelectorEnabled' => legacy_config('enable_language_selector'),
                 'languageMapping' => self::getLanguageMapping(),
-                'currentVersion' => config('app.version'),
+                'version' => config('app.version'),
             ]);
         }
 

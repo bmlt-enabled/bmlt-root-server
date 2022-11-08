@@ -11,7 +11,7 @@ const StyledFormControl = styled(FormControl)(({ theme }) => ({
 }));
 
 export const LanguageSelect = () => {
-  const languageArr = Object.entries(languageMapping);
+  const languageArr = Object.entries(settings.languageMapping);
   const { state, dispatch } = useContext(AppContext);
 
   const handleLanguageChange = (e: SelectChangeEvent) => {
