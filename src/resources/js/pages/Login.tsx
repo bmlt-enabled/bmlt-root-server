@@ -20,7 +20,6 @@ export const Login = () => {
     password: '',
   });
 
-  console.log('validationMessage', validationMessage);
   const handleOnSubmit: SubmitHandler<Props> = async ({ username, password }) => {
     try {
       const token = await RootServerApi.login(username, password);

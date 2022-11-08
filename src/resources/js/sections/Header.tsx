@@ -16,7 +16,6 @@ const StyledHeaderContainer = styled(Container)({
 });
 
 export const Header = () => {
-  console.log('strings', strings);
   return (
     <StyledAppBar position='relative' elevation={0}>
       <StyledHeaderContainer maxWidth='lg'>
