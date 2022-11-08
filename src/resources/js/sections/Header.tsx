@@ -24,7 +24,7 @@ export const Header = () => {
           {strings.rootServerTitle}
         </Typography>
         <Box>
-          <Typography color='white'>Select Language</Typography>
+          <Typography color='white'>{strings.languageSelectTitle}</Typography>
           <LanguageSelect />
         </Box>
       </StyledHeaderContainer>

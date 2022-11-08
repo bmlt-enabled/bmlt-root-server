@@ -14,6 +14,7 @@ export const strings = new LocalizedStrings({
     formatsTitle: 'Formats',
     myAccountTitle: 'My Account',
     signOutTitle: 'Sign Out',
+    languageSelectTitle: 'Select Language',
   },
   de: {
     passwordTitle: 'Passwort',
