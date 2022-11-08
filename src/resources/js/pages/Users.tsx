@@ -49,7 +49,7 @@ export const Users = () => {
       <Box>
         <FormControl>
           <InputLabel id='select-label'>{strings.userTitle}</InputLabel>
-          <Select labelId='select-label' id='select' value={currentSelection} label='User' onChange={handleChange}>
+          <Select labelId='select-label' id='select' value={currentSelection} label={strings.userTitle} onChange={handleChange}>
             <MenuItem value='-1'>{strings.createNewUserTitle}</MenuItem>
             {users.map((currentUser, i) => {
               return (
