@@ -14,6 +14,7 @@ export const strings = new LocalizedStrings({
     formatsTitle: 'Formats',
     myAccountTitle: 'My Account',
     signOutTitle: 'Sign Out',
+    languageSelectTitle: 'Select Language',
   },
   de: {
     passwordTitle: 'Passwort',
@@ -30,6 +31,7 @@ export const strings = new LocalizedStrings({
     signOutTitle: 'Log ud',
   },
   es: {
+    loginTitle: 'Acceso',
     loginVerb: 'Acceder',
     passwordTitle: 'Contraseña',
     serviceBodiesTitle: 'Cuerpos de servicio',
@@ -98,10 +100,8 @@ export function setLanguage(language: string): void {
   localStorage.setItem('language', language);
 }
 
-export function restoreLanguage(): void {
-  const language = localStorage.getItem('language');
-
-  if (language) {
-    strings.setLanguage(language);
-  }
+export function restoreLanguage(): string {
+  const language = localStorage.getItem('language') || defaultLanguage;
+  strings.setLanguage(language);
+  return language;
 }

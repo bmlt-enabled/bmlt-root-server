@@ -3,8 +3,8 @@ import { ThemeProvider } from '@mui/material/styles';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 
+import { AppConfig } from './AppConfig';
 import { AppContextProvider } from './AppContext';
-import { Router } from './routes/Router';
 import { theme } from './theme';
 
 export default function App() {
@@ -13,7 +13,7 @@ export default function App() {
       <ThemeProvider theme={theme}>
         <BrowserRouter basename={apiBaseUrl}>
           <CssBaseline />
-          <Router />
+          <AppConfig />
         </BrowserRouter>
       </ThemeProvider>
     </AppContextProvider>
