@@ -11,7 +11,7 @@ export default function App() {
   return (
     <AppContextProvider>
       <ThemeProvider theme={theme}>
-        <BrowserRouter basename={apiBaseUrl}>
+        <BrowserRouter basename={settings.apiBaseUrl}>
           <CssBaseline />
           <AppConfig />
         </BrowserRouter>

@@ -101,7 +101,7 @@ export function setLanguage(language: string): void {
 }
 
 export function restoreLanguage(): string {
-  const language = localStorage.getItem('language') || defaultLanguage;
+  const language = localStorage.getItem('language') || settings.defaultLanguage;
   strings.setLanguage(language);
   return language;
 }

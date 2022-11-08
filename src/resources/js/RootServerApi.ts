@@ -33,7 +33,7 @@ class ApiClient extends RootServerApi {
     super();
     this.token = token;
     this.configuration = new Configuration({
-      basePath: apiBaseUrl,
+      basePath: settings.apiBaseUrl,
       accessToken: () => this.authorizationHeader ?? '',
     });
   }
