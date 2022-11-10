@@ -21,6 +21,9 @@ export const strings = new LocalizedStrings({
     userIsATitle: 'User Is A:',
     idTitle: 'ID',
     descriptionTitle: 'Description',
+    applyChangesTitle: 'Apply Changes',
+    nameTitle: 'Name',
+    ownedByTitle: 'Owned By:',
   },
   de: {
     passwordTitle: 'Passwort',
@@ -42,6 +45,8 @@ export const strings = new LocalizedStrings({
     createNewUserTitle: 'Opret En Ny Bruger',
     userIsATitle: 'Bruger Er En:',
     descriptionTitle: 'Beskrivelse:',
+    nameTitle: 'Navn',
+    ownedByTitle: 'Ejet Af:',
   },
   es: {
     loginTitle: 'Acceso',
@@ -54,6 +59,8 @@ export const strings = new LocalizedStrings({
     emailTitle: 'Correo electrónica:',
     createNewUserTitle: 'Crear un nuevo usuario',
     descriptionTitle: 'Descripción:',
+    nameTitle: 'Nombre',
+    ownedByTitle: 'Controlado Por:',
   },
   fa: {},
   fr: {
@@ -66,6 +73,8 @@ export const strings = new LocalizedStrings({
     signOutTitle: 'Déconnexion',
     createNewUserTitle: 'Créer un nouvel utilisateur',
     userIsATitle: 'Je suis un:',
+    nameTitle: 'Nom',
+    ownedByTitle: 'Appartient à:',
   },
   it: {
     loginVerb: 'Entra',
@@ -76,6 +85,7 @@ export const strings = new LocalizedStrings({
     createNewUserTitle: 'Crea un nuovo utente',
     userIsATitle: "L'utente è un:",
     descriptionTitle: 'Descrizione:',
+    nameTitle: 'Nome',
   },
   pl: {
     loginVerb: 'Zaloguj się',
@@ -88,6 +98,8 @@ export const strings = new LocalizedStrings({
     createNewUserTitle: 'Utwórz nowego użytkownika',
     userIsATitle: 'Użytkownik:',
     descriptionTitle: 'Opis:',
+    nameTitle: 'Nazwa',
+    ownedByTitle: 'Właściciel:',
   },
   pt: {
     loginVerb: 'Entrar',
@@ -100,6 +112,8 @@ export const strings = new LocalizedStrings({
     createNewUserTitle: 'Criar um novo usuário',
     userIsATitle: 'O usuário é:',
     descriptionTitle: 'Descrição:',
+    nameTitle: 'Nome',
+    ownedByTitle: 'Pertence a:',
   },
   ru: {
     loginVerb: 'Логин',
@@ -112,6 +126,8 @@ export const strings = new LocalizedStrings({
     createNewUserTitle: 'Создать нового пользователя',
     userIsATitle: 'Пользователь это:',
     descriptionTitle: 'Описание:',
+    nameTitle: 'Имя',
+    ownedByTitle: 'Принадлежит:',
   },
   sv: {
     loginVerb: 'Logga in',
@@ -122,6 +138,7 @@ export const strings = new LocalizedStrings({
     createNewUserTitle: 'Skapa en användare',
     userIsATitle: 'Användaren är en:',
     descriptionTitle: 'Beskrivning:',
+    nameTitle: 'Namn',
   },
 });
 
