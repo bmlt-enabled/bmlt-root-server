@@ -24,6 +24,7 @@ export const strings = new LocalizedStrings({
     applyChangesTitle: 'Apply Changes',
     nameTitle: 'Name',
     ownedByTitle: 'Owned By:',
+    deleteUserTitle: 'Delete User',
   },
   de: {
     passwordTitle: 'Passwort',
