@@ -24,7 +24,7 @@ export const strings = new LocalizedStrings({
     applyChangesTitle: 'Apply Changes',
     nameTitle: 'Name',
     ownedByTitle: 'Owned By:',
-    deleteUserTitle: 'Delete User',
+    deleteUserTitle: 'Delete This User',
   },
   de: {
     passwordTitle: 'Passwort',
@@ -35,6 +35,7 @@ export const strings = new LocalizedStrings({
     createNewUserTitle: 'CErstelle einen neuen Benutzer',
     userIsATitle: 'Benutzer ist ein:',
     descriptionTitle: 'Beschreibung:',
+    deleteUserTitle: 'Lösche diesen Benutzer',
   },
   dk: {
     loginVerb: 'Log Ind',
@@ -48,6 +49,7 @@ export const strings = new LocalizedStrings({
     descriptionTitle: 'Beskrivelse:',
     nameTitle: 'Navn',
     ownedByTitle: 'Ejet Af:',
+    deleteUserTitle: 'Slet Denne Bruger',
   },
   es: {
     loginTitle: 'Acceso',
@@ -62,6 +64,7 @@ export const strings = new LocalizedStrings({
     descriptionTitle: 'Descripción:',
     nameTitle: 'Nombre',
     ownedByTitle: 'Controlado Por:',
+    deleteUserTitle: 'Elimine este usuario',
   },
   fa: {},
   fr: {
@@ -76,6 +79,7 @@ export const strings = new LocalizedStrings({
     userIsATitle: 'Je suis un:',
     nameTitle: 'Nom',
     ownedByTitle: 'Appartient à:',
+    deleteUserTitle: 'Supprimer cet utilisateur',
   },
   it: {
     loginVerb: 'Entra',
@@ -87,6 +91,7 @@ export const strings = new LocalizedStrings({
     userIsATitle: "L'utente è un:",
     descriptionTitle: 'Descrizione:',
     nameTitle: 'Nome',
+    deleteUserTitle: 'Cancella questo utente',
   },
   pl: {
     loginVerb: 'Zaloguj się',
@@ -101,6 +106,7 @@ export const strings = new LocalizedStrings({
     descriptionTitle: 'Opis:',
     nameTitle: 'Nazwa',
     ownedByTitle: 'Właściciel:',
+    deleteUserTitle: 'Usuń tego użytkownika',
   },
   pt: {
     loginVerb: 'Entrar',
@@ -115,6 +121,7 @@ export const strings = new LocalizedStrings({
     descriptionTitle: 'Descrição:',
     nameTitle: 'Nome',
     ownedByTitle: 'Pertence a:',
+    deleteUserTitle: 'Apagar esse usuário',
   },
   ru: {
     loginVerb: 'Логин',
@@ -129,6 +136,7 @@ export const strings = new LocalizedStrings({
     descriptionTitle: 'Описание:',
     nameTitle: 'Имя',
     ownedByTitle: 'Принадлежит:',
+    deleteUserTitle: 'Удалить пользователя',
   },
   sv: {
     loginVerb: 'Logga in',
@@ -140,6 +148,7 @@ export const strings = new LocalizedStrings({
     userIsATitle: 'Användaren är en:',
     descriptionTitle: 'Beskrivning:',
     nameTitle: 'Namn',
+    deleteUserTitle: 'Kassera denna användare',
   },
 });
 
