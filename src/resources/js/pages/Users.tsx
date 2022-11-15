@@ -8,23 +8,35 @@ import { useForm } from 'react-hook-form';
 import RootServerApi from '../RootServerApi';
 import { strings } from '../localization';
 
+type ValidationMessage = {
+  username: string;
+  name: string;
+  password: string;
+  type: string;
+};
+
 export const Users = () => {
-  const {
-    register,
-    resetField,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-  const [currentSelection, setCurrentSelection] = useState(-1);
+  const [currentSelection, setCurrentSelection] = useState<number>(-1);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [users, setUsers] = useState<User[]>([]);
-  const [getUsersErrorMessage, setGetUsersErrorMessage] = useState('');
-  const [createUserErrorMessage, setCreateUserErrorMessage] = useState('');
-  const [validationMessage, setValidationMessage] = useState({
+  const [getUsersErrorMessage, setGetUsersErrorMessage] = useState<string>('');
+  const [createUserErrorMessage, setCreateUserErrorMessage] = useState<string>('');
+  const [validationMessage, setValidationMessage] = useState<ValidationMessage>({
     username: '',
     name: '',
     password: '',
     type: '',
+  });
+
+  const {
+    register,
+    reset,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<UserCreate>({
+    defaultValues: {
+      username: selectedUser?.username,
+    },
   });
 
   const StyledButtonWrapper = styled(Box)(({ theme }) => ({
@@ -54,7 +66,7 @@ export const Users = () => {
     color: theme.palette.primary.main,
   }));
 
-  const handleUserChange = (event: SelectChangeEvent) => {
+  const handleUserChange = (event: SelectChangeEvent): void => {
     setCurrentSelection(parseInt(event.target.value));
 
     users.forEach((user) => {
@@ -66,7 +78,7 @@ export const Users = () => {
     });
   };
 
-  const getUsers = async () => {
+  const getUsers = async (): Promise<void> => {
     try {
       const allUsers = await RootServerApi.getUsers();
       setUsers(allUsers);
@@ -78,19 +90,14 @@ export const Users = () => {
     }
   };
 
-  const resetFields = (fields: Array<string>) => {
-    fields.forEach((field) => {
-      resetField(field);
-    });
-  };
-
-  const applyChanges = async (user: Object) => {
+  const applyChanges = async (user: UserCreate): Promise<void> => {
     // "Create New User" is selected
     if (currentSelection === -1) {
       try {
-        const newUser = await RootServerApi.createUser(user as UserCreate);
+        const newUser = await RootServerApi.createUser(user);
         console.log(newUser);
-        resetFields(['username', 'displayName', 'email', 'password', 'description']);
+        reset();
+        getUsers();
       } catch (error: any) {
         setValidationMessage({
           username: '',
@@ -208,7 +215,7 @@ export const Users = () => {
           <StyledInputWrapper>
             <h3>{strings.nameTitle}</h3>
             <TextField
-              error={errors?.name?.type === 'required' || validationMessage?.name !== ''}
+              error={errors?.displayName?.type === 'required' || validationMessage?.name !== ''}
               id='name'
               // value={selectedUser?.displayName}
               type='text'
@@ -219,7 +226,8 @@ export const Users = () => {
               {...register('displayName', { required: true })}
             />
             <FormHelperText id='name-error-text'>
-              {(validationMessage?.name !== '' && validationMessage?.name) || (errors?.name?.type === 'required' && 'Name is required')}
+              {(validationMessage?.name !== '' && validationMessage?.name) ||
+                (errors?.displayName?.type === 'required' && 'Name is required')}
             </FormHelperText>
           </StyledInputWrapper>
           <StyledInputWrapper>
@@ -281,6 +289,7 @@ export const Users = () => {
                 try {
                   await RootServerApi.deleteUser(currentSelection);
                   setCurrentSelection(-1);
+                  getUsers();
                 } catch (error: any) {
                   RootServerApi.handleErrors(error, {
                     // TODO: do something useful with error message
