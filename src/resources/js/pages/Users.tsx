@@ -8,21 +8,14 @@ import { useForm } from 'react-hook-form';
 import RootServerApi from '../RootServerApi';
 import { strings } from '../localization';
 
-type ValidationMessage = {
-  username: string;
-  name: string;
-  password: string;
-  type: string;
-};
-
 export const Users = () => {
   const [currentSelection, setCurrentSelection] = useState<number>(-1);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [apiErrorMessage, setApiErrorMessage] = useState<string>('');
-  const [validationMessage, setValidationMessage] = useState<ValidationMessage>({
+  const [validationMessage, setValidationMessage] = useState<UserCreate>({
     username: '',
-    name: '',
+    displayName: '',
     password: '',
     type: '',
   });
@@ -84,7 +77,12 @@ export const Users = () => {
       console.log(allUsers);
     } catch (error: any) {
       RootServerApi.handleErrors(error, {
-        handleError: (error) => setApiErrorMessage(error.message),
+        handleError: (error) => {
+          setApiErrorMessage(error.message);
+          setTimeout(() => {
+            setApiErrorMessage('');
+          }, 5000);
+        },
       });
     }
   };
@@ -100,17 +98,22 @@ export const Users = () => {
       } catch (error: any) {
         setValidationMessage({
           username: '',
-          name: '',
+          displayName: '',
           password: '',
           type: '',
         });
         await RootServerApi.handleErrors(error, {
-          handleError: (error) => setApiErrorMessage(error.message),
+          handleError: (error) => {
+            setApiErrorMessage(error.message);
+            setTimeout(() => {
+              setApiErrorMessage('');
+            }, 5000);
+          },
           handleValidationError: (error) =>
             setValidationMessage({
               ...validationMessage,
               username: (error?.errors?.username ?? []).join(' '),
-              name: (error?.errors?.name ?? []).join(' '),
+              displayName: (error?.errors?.displayName ?? []).join(' '),
               password: (error?.errors?.password ?? []).join(' '),
               type: (error?.errors?.type ?? []).join(' '),
             }),
@@ -122,11 +125,6 @@ export const Users = () => {
   useEffect(() => {
     getUsers();
   }, []);
-
-  if (apiErrorMessage) {
-    // TODO: make popup error or something like that
-    console.log(apiErrorMessage);
-  }
 
   return (
     <div>
@@ -151,6 +149,7 @@ export const Users = () => {
           </Select>
         </FormControl>
       </Box>
+      {apiErrorMessage.length > 0 && <p style={{ color: 'red', textAlign: 'center' }}>{apiErrorMessage}</p>}
       <StyledFormWrapper>
         {currentSelection !== -1 && (
           <StyledFormLabel variant='h3' align='center'>
@@ -214,7 +213,7 @@ export const Users = () => {
           <StyledInputWrapper>
             <h3>{strings.nameTitle}</h3>
             <TextField
-              error={errors?.displayName?.type === 'required' || validationMessage?.name !== ''}
+              error={errors?.displayName?.type === 'required' || validationMessage?.displayName !== ''}
               id='name'
               // value={selectedUser?.displayName}
               type='text'
@@ -225,7 +224,7 @@ export const Users = () => {
               {...register('displayName', { required: true })}
             />
             <FormHelperText id='name-error-text'>
-              {(validationMessage?.name !== '' && validationMessage?.name) ||
+              {(validationMessage?.displayName !== '' && validationMessage?.displayName) ||
                 (errors?.displayName?.type === 'required' && 'Name is required')}
             </FormHelperText>
           </StyledInputWrapper>
@@ -286,12 +285,18 @@ export const Users = () => {
               color='primary'
               onClick={async () => {
                 try {
-                  await RootServerApi.deleteUser(currentSelection);
+                  await RootServerApi.deleteUser(999999);
                   setCurrentSelection(-1);
                   getUsers();
                 } catch (error: any) {
+                  // do it this way for custom message
                   RootServerApi.handleErrors(error, {
-                    handleError: (error) => setApiErrorMessage(error.message),
+                    handleError: (error) => {
+                      setApiErrorMessage(`Unable to delete user: ${error.message}`);
+                      setTimeout(() => {
+                        setApiErrorMessage('');
+                      }, 5000);
+                    },
                   });
                 }
               }}
