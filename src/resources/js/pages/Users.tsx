@@ -19,8 +19,7 @@ export const Users = () => {
   const [currentSelection, setCurrentSelection] = useState<number>(-1);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [users, setUsers] = useState<User[]>([]);
-  const [getUsersErrorMessage, setGetUsersErrorMessage] = useState<string>('');
-  const [createUserErrorMessage, setCreateUserErrorMessage] = useState<string>('');
+  const [apiErrorMessage, setApiErrorMessage] = useState<string>('');
   const [validationMessage, setValidationMessage] = useState<ValidationMessage>({
     username: '',
     name: '',
@@ -85,7 +84,7 @@ export const Users = () => {
       console.log(allUsers);
     } catch (error: any) {
       RootServerApi.handleErrors(error, {
-        handleError: (error) => setGetUsersErrorMessage(error.message),
+        handleError: (error) => setApiErrorMessage(error.message),
       });
     }
   };
@@ -106,7 +105,7 @@ export const Users = () => {
           type: '',
         });
         await RootServerApi.handleErrors(error, {
-          handleError: (error) => setCreateUserErrorMessage(error.message),
+          handleError: (error) => setApiErrorMessage(error.message),
           handleValidationError: (error) =>
             setValidationMessage({
               ...validationMessage,
@@ -124,9 +123,9 @@ export const Users = () => {
     getUsers();
   }, []);
 
-  if (getUsersErrorMessage || createUserErrorMessage) {
-    // make popup error or something like that
-    console.log(getUsersErrorMessage || createUserErrorMessage);
+  if (apiErrorMessage) {
+    // TODO: make popup error or something like that
+    console.log(apiErrorMessage);
   }
 
   return (
@@ -292,8 +291,7 @@ export const Users = () => {
                   getUsers();
                 } catch (error: any) {
                   RootServerApi.handleErrors(error, {
-                    // TODO: do something useful with error message
-                    handleError: (error) => console.log(error.message),
+                    handleError: (error) => setApiErrorMessage(error.message),
                   });
                 }
               }}
