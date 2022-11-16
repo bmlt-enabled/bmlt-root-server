@@ -3,7 +3,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { styled } from '@mui/system';
 import { User, UserCreate } from 'bmlt-root-server-client';
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 
 import RootServerApi from '../RootServerApi';
 import { strings } from '../localization';
@@ -25,6 +25,7 @@ export const Users = () => {
     reset,
     handleSubmit,
     setValue,
+    control,
     formState: { errors },
   } = useForm<UserCreate>();
 
@@ -86,7 +87,6 @@ export const Users = () => {
   };
 
   const applyChanges = async (user: UserCreate): Promise<void> => {
-    console.log(user);
     // "Create New User" is selected
     if (currentSelection === -1) {
       try {
@@ -94,6 +94,34 @@ export const Users = () => {
         console.log(newUser);
         reset();
         setUsers([...users, newUser]);
+      } catch (error: any) {
+        setValidationMessage({
+          username: '',
+          displayName: '',
+          password: '',
+          type: '',
+        });
+        await RootServerApi.handleErrors(error, {
+          handleError: (error) => {
+            setApiErrorMessage(error.message);
+            setTimeout(() => {
+              setApiErrorMessage('');
+            }, 5000);
+          },
+          handleValidationError: (error) =>
+            setValidationMessage({
+              ...validationMessage,
+              username: (error?.errors?.username ?? []).join(' '),
+              displayName: (error?.errors?.displayName ?? []).join(' '),
+              password: (error?.errors?.password ?? []).join(' '),
+              type: (error?.errors?.type ?? []).join(' '),
+            }),
+        });
+      }
+    } else {
+      try {
+        await RootServerApi.updateUser(currentSelection, user);
+        getUsers();
       } catch (error: any) {
         setValidationMessage({
           username: '',
@@ -126,10 +154,15 @@ export const Users = () => {
   }, []);
 
   useEffect(() => {
+    if (selectedUser?.ownerId === null) {
+      setValue('ownerId', '');
+    } else {
+      setValue('ownerId', selectedUser?.ownerId as string);
+    }
+
     setValue('username', selectedUser?.username as string);
     setValue('displayName', selectedUser?.displayName as string);
     setValue('type', selectedUser?.type as string);
-    setValue('ownerId', selectedUser?.ownerId as string);
     setValue('email', selectedUser?.email as string);
     setValue('description', selectedUser?.description as string);
   }, [selectedUser]);
@@ -168,19 +201,28 @@ export const Users = () => {
           <StyledInputWrapper>
             <h3>{strings.userIsATitle}</h3>
             <FormControl fullWidth>
-              <Select
-                error={errors?.type?.type === 'required' || validationMessage?.type !== ''}
-                labelId='type-select-label'
-                id='type-select'
+              <Controller
+                name='type'
+                control={control}
                 defaultValue=''
-                required
-                {...register('type', { required: true })}
-              >
-                <MenuItem value='admin'>Admin</MenuItem>
-                <MenuItem value='serviceBodyAdmin'>Service Body Administrator</MenuItem>
-                <MenuItem value='observer'>Service Body Observer</MenuItem>
-                <MenuItem value='disabled'>Disabled User</MenuItem>
-              </Select>
+                render={({ field: { onChange, value } }) => (
+                  <Select
+                    error={errors?.type?.type === 'required' || validationMessage?.type !== ''}
+                    labelId='type-select-label'
+                    id='type-select'
+                    defaultValue=''
+                    required
+                    value={value}
+                    {...register('type', { required: true })}
+                    onChange={onChange}
+                  >
+                    <MenuItem value='admin'>Admin</MenuItem>
+                    <MenuItem value='serviceBodyAdmin'>Service Body Administrator</MenuItem>
+                    <MenuItem value='observer'>Service Body Observer</MenuItem>
+                    <MenuItem value='disabled'>Disabled User</MenuItem>
+                  </Select>
+                )}
+              />
             </FormControl>
             <FormHelperText id='type-error-text'>
               {(validationMessage?.type !== '' && validationMessage?.type) || (errors?.type?.type === 'required' && 'Type is required')}
@@ -189,15 +231,29 @@ export const Users = () => {
           <StyledInputWrapper>
             <h3>{strings.ownedByTitle}</h3>
             <FormControl fullWidth>
-              <Select labelId='type-select-label' defaultValue='' id='type-select' {...register('ownerId', { required: false })}>
-                {users.map((currentUser, i) => {
-                  return (
-                    <MenuItem value={currentUser.id} key={i}>
-                      {currentUser.displayName}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
+              <Controller
+                name='ownerId'
+                control={control}
+                defaultValue=''
+                render={({ field: { onChange, value } }) => (
+                  <Select
+                    labelId='owner-id-label'
+                    defaultValue=''
+                    id='owner-id-select'
+                    value={value}
+                    {...register('ownerId', { required: false })}
+                    onChange={onChange}
+                  >
+                    {users.map((currentUser, i) => {
+                      return (
+                        <MenuItem value={currentUser.id} key={i}>
+                          {currentUser.displayName}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                )}
+              />
             </FormControl>
           </StyledInputWrapper>
           <StyledInputWrapper>
@@ -290,9 +346,10 @@ export const Users = () => {
                 try {
                   await RootServerApi.deleteUser(currentSelection);
                   setCurrentSelection(-1);
-                  users.filter((user) => {
+                  let newUsers = users.filter((user) => {
                     return user.id != currentSelection;
                   });
+                  setUsers(newUsers);
                   reset();
                 } catch (error: any) {
                   // do it this way for custom message
