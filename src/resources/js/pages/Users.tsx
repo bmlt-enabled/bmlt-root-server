@@ -24,12 +24,9 @@ export const Users = () => {
     register,
     reset,
     handleSubmit,
+    setValue,
     formState: { errors },
-  } = useForm<UserCreate>({
-    defaultValues: {
-      username: selectedUser?.username,
-    },
-  });
+  } = useForm<UserCreate>();
 
   const StyledButtonWrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -66,6 +63,7 @@ export const Users = () => {
         setSelectedUser(user);
       } else if (parseInt(event.target.value) === -1) {
         setSelectedUser(null);
+        reset();
       }
     });
   };
@@ -88,13 +86,14 @@ export const Users = () => {
   };
 
   const applyChanges = async (user: UserCreate): Promise<void> => {
+    console.log(user);
     // "Create New User" is selected
     if (currentSelection === -1) {
       try {
         const newUser = await RootServerApi.createUser(user);
         console.log(newUser);
         reset();
-        getUsers();
+        setUsers([...users, newUser]);
       } catch (error: any) {
         setValidationMessage({
           username: '',
@@ -125,6 +124,15 @@ export const Users = () => {
   useEffect(() => {
     getUsers();
   }, []);
+
+  useEffect(() => {
+    setValue('username', selectedUser?.username as string);
+    setValue('displayName', selectedUser?.displayName as string);
+    setValue('type', selectedUser?.type as string);
+    setValue('ownerId', selectedUser?.ownerId as string);
+    setValue('email', selectedUser?.email as string);
+    setValue('description', selectedUser?.description as string);
+  }, [selectedUser]);
 
   return (
     <div>
@@ -197,7 +205,6 @@ export const Users = () => {
             <TextField
               error={errors?.username?.type === 'required' || validationMessage?.username !== ''}
               id='username'
-              // value={selectedUser?.username}
               type='text'
               fullWidth
               required
@@ -215,7 +222,6 @@ export const Users = () => {
             <TextField
               error={errors?.displayName?.type === 'required' || validationMessage?.displayName !== ''}
               id='name'
-              // value={selectedUser?.displayName}
               type='text'
               fullWidth
               required
@@ -232,7 +238,6 @@ export const Users = () => {
             <h3>{strings.emailTitle?.slice(0, -1)}</h3>
             <TextField
               id='email'
-              // value={selectedUser?.email}
               type='text'
               fullWidth
               variant='outlined'
@@ -246,7 +251,6 @@ export const Users = () => {
               error={errors?.password?.type === 'required' || validationMessage?.password !== ''}
               // TODO: Only make required if creating new user
               id='password'
-              // value=''
               type='password'
               fullWidth
               required
@@ -264,7 +268,6 @@ export const Users = () => {
             <h3>{strings.descriptionTitle}</h3>
             <TextField
               id='description'
-              // value={selectedUser?.description}
               type='text'
               fullWidth
               variant='outlined'
@@ -285,9 +288,12 @@ export const Users = () => {
               color='primary'
               onClick={async () => {
                 try {
-                  await RootServerApi.deleteUser(999999);
+                  await RootServerApi.deleteUser(currentSelection);
                   setCurrentSelection(-1);
-                  getUsers();
+                  users.filter((user) => {
+                    return user.id != currentSelection;
+                  });
+                  reset();
                 } catch (error: any) {
                   // do it this way for custom message
                   RootServerApi.handleErrors(error, {
