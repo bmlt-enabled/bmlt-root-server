@@ -137,6 +137,8 @@ export const Users = () => {
         await RootServerApi.updateUser(currentSelection, user);
         getUsers();
         showSuccessForFiveSeconds('User successfully updated!');
+        reset();
+        setCurrentSelection(-1);
       } catch (error: any) {
         applyChangesApiError(error);
       }
