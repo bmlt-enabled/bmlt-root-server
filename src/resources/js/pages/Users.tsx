@@ -19,6 +19,9 @@ export const Users = () => {
     displayName: '',
     password: '',
     type: '',
+    email: '',
+    ownerId: '',
+    description: '',
   });
 
   const {
@@ -123,6 +126,9 @@ export const Users = () => {
       displayName: '',
       password: '',
       type: '',
+      email: '',
+      ownerId: '',
+      description: '',
     });
     await RootServerApi.handleErrors(error, {
       handleError: (error) => {
@@ -135,6 +141,9 @@ export const Users = () => {
           displayName: (error?.errors?.displayName ?? []).join(' '),
           password: (error?.errors?.password ?? []).join(' '),
           type: (error?.errors?.type ?? []).join(' '),
+          email: (error?.errors?.email ?? []).join(' '),
+          ownerId: (error?.errors?.ownerId ?? []).join(' '),
+          description: (error?.errors?.description ?? []).join(' '),
         }),
     });
   };
@@ -253,6 +262,7 @@ export const Users = () => {
                 defaultValue=''
                 render={({ field: { onChange, value } }) => (
                   <Select
+                    error={validationMessage?.ownerId !== ''}
                     labelId='owner-id-label'
                     defaultValue=''
                     id='owner-id-select'
@@ -271,6 +281,7 @@ export const Users = () => {
                 )}
               />
             </FormControl>
+            <FormHelperText id='ownerId-error-text'>{validationMessage?.ownerId !== '' && validationMessage?.ownerId}</FormHelperText>
           </StyledInputWrapper>
           <StyledInputWrapper>
             <h3>{strings.usernameTitle}</h3>
@@ -309,6 +320,7 @@ export const Users = () => {
           <StyledInputWrapper>
             <h3>{strings.emailTitle?.slice(0, -1)}</h3>
             <TextField
+              error={validationMessage?.email !== ''}
               id='email'
               type='text'
               fullWidth
@@ -316,6 +328,7 @@ export const Users = () => {
               aria-describedby='email-error-text'
               {...register('email', { required: false })}
             />
+            <FormHelperText id='email-error-text'>{validationMessage?.email !== '' && validationMessage?.email}</FormHelperText>
           </StyledInputWrapper>
           <StyledInputWrapper>
             <h3>{strings.passwordTitle}</h3>
@@ -328,17 +341,17 @@ export const Users = () => {
               required
               variant='outlined'
               aria-describedby='password-error-text'
-              {...register('password', { required: true, minLength: 12 })}
+              {...register('password', { required: true })}
             />
             <FormHelperText id='password-error-text'>
               {(validationMessage?.password !== '' && validationMessage?.password) ||
-                (errors?.password?.type === 'required' && 'Password is required') ||
-                (errors?.password?.type === 'minLength' && 'Password must be at least 12 characters')}
+                (errors?.password?.type === 'required' && 'Password is required')}
             </FormHelperText>
           </StyledInputWrapper>
           <StyledInputWrapper>
             <h3>{strings.descriptionTitle}</h3>
             <TextField
+              error={validationMessage?.description !== ''}
               id='description'
               type='text'
               fullWidth
@@ -346,6 +359,9 @@ export const Users = () => {
               aria-describedby='description-error-text'
               {...register('description', { required: false })}
             />
+            <FormHelperText id='description-error-text'>
+              {validationMessage?.description !== '' && validationMessage?.description}
+            </FormHelperText>
           </StyledInputWrapper>
           <StyledButtonWrapper sx={{ display: 'flex', justifyContent: 'center', marginTop: '' }}>
             <Button variant='contained' color='primary' type='submit'>
