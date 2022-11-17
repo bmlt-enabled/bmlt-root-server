@@ -1,8 +1,8 @@
 import { ThemeProvider } from '@mui/material/styles';
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 
 import { theme } from '../../theme';
 
-export default (ui: ReactElement): ReactElement => {
+export const provideTheme = (ui: ReactElement): ReactElement => {
   return <ThemeProvider theme={theme}>{ui}</ThemeProvider>;
 };

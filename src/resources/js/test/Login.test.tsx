@@ -3,7 +3,7 @@ import { describe, it } from 'vitest';
 
 import { strings } from '../localization';
 import LoginForm from '../partials/forms/LoginForm';
-import provideTheme from './utils/provideTheme';
+import { provideTheme } from './utils/provideTheme';
 
 describe('Login', () => {
   beforeAll(() => {
