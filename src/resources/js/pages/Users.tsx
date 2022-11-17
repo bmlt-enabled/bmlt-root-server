@@ -77,13 +77,39 @@ export const Users = () => {
     } catch (error: any) {
       RootServerApi.handleErrors(error, {
         handleError: (error) => {
-          setApiErrorMessage(error.message);
-          setTimeout(() => {
-            setApiErrorMessage('');
-          }, 5000);
+          showErrorForFiveSeconds(error.message);
         },
       });
     }
+  };
+
+  const showErrorForFiveSeconds = (error: string): void => {
+    setApiErrorMessage(error);
+    setTimeout(() => {
+      setApiErrorMessage('');
+    }, 5000);
+  };
+
+  const applyChangesApiError = async (error: any): Promise<void> => {
+    setValidationMessage({
+      username: '',
+      displayName: '',
+      password: '',
+      type: '',
+    });
+    await RootServerApi.handleErrors(error, {
+      handleError: (error) => {
+        showErrorForFiveSeconds(error.message);
+      },
+      handleValidationError: (error) =>
+        setValidationMessage({
+          ...validationMessage,
+          username: (error?.errors?.username ?? []).join(' '),
+          displayName: (error?.errors?.displayName ?? []).join(' '),
+          password: (error?.errors?.password ?? []).join(' '),
+          type: (error?.errors?.type ?? []).join(' '),
+        }),
+    });
   };
 
   const applyChanges = async (user: UserCreate): Promise<void> => {
@@ -95,56 +121,14 @@ export const Users = () => {
         reset();
         setUsers([...users, newUser]);
       } catch (error: any) {
-        setValidationMessage({
-          username: '',
-          displayName: '',
-          password: '',
-          type: '',
-        });
-        await RootServerApi.handleErrors(error, {
-          handleError: (error) => {
-            setApiErrorMessage(error.message);
-            setTimeout(() => {
-              setApiErrorMessage('');
-            }, 5000);
-          },
-          handleValidationError: (error) =>
-            setValidationMessage({
-              ...validationMessage,
-              username: (error?.errors?.username ?? []).join(' '),
-              displayName: (error?.errors?.displayName ?? []).join(' '),
-              password: (error?.errors?.password ?? []).join(' '),
-              type: (error?.errors?.type ?? []).join(' '),
-            }),
-        });
+        applyChangesApiError(error);
       }
     } else {
       try {
         await RootServerApi.updateUser(currentSelection, user);
         getUsers();
       } catch (error: any) {
-        setValidationMessage({
-          username: '',
-          displayName: '',
-          password: '',
-          type: '',
-        });
-        await RootServerApi.handleErrors(error, {
-          handleError: (error) => {
-            setApiErrorMessage(error.message);
-            setTimeout(() => {
-              setApiErrorMessage('');
-            }, 5000);
-          },
-          handleValidationError: (error) =>
-            setValidationMessage({
-              ...validationMessage,
-              username: (error?.errors?.username ?? []).join(' '),
-              displayName: (error?.errors?.displayName ?? []).join(' '),
-              password: (error?.errors?.password ?? []).join(' '),
-              type: (error?.errors?.type ?? []).join(' '),
-            }),
-        });
+        applyChangesApiError(error);
       }
     }
   };
@@ -352,13 +336,9 @@ export const Users = () => {
                   setUsers(newUsers);
                   reset();
                 } catch (error: any) {
-                  // do it this way for custom message
                   RootServerApi.handleErrors(error, {
                     handleError: (error) => {
-                      setApiErrorMessage(`Unable to delete user: ${error.message}`);
-                      setTimeout(() => {
-                        setApiErrorMessage('');
-                      }, 5000);
+                      showErrorForFiveSeconds(`Unable to delete user: ${error.message}`);
                     },
                   });
                 }
