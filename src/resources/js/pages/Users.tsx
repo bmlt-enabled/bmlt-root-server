@@ -70,6 +70,25 @@ export const Users = () => {
     });
   };
 
+  const deleteUser = async (): Promise<void> => {
+    try {
+      await RootServerApi.deleteUser(currentSelection);
+      setCurrentSelection(-1);
+      let newUsers = users.filter((user) => {
+        return user.id != currentSelection;
+      });
+      setUsers(newUsers);
+      reset();
+      showSuccessForFiveSeconds('User successfully deleted!');
+    } catch (error: any) {
+      RootServerApi.handleErrors(error, {
+        handleError: (error) => {
+          showErrorForFiveSeconds(`Unable to delete user: ${error.message}`);
+        },
+      });
+    }
+  };
+
   const getUsers = async (): Promise<void> => {
     try {
       const allUsers = await RootServerApi.getUsers();
@@ -336,28 +355,7 @@ export const Users = () => {
         </form>
         {currentSelection !== -1 && (
           <StyledButtonWrapper sx={{ display: 'flex', justifyContent: 'center', marginTop: '' }}>
-            <Button
-              variant='contained'
-              color='primary'
-              onClick={async () => {
-                try {
-                  await RootServerApi.deleteUser(currentSelection);
-                  setCurrentSelection(-1);
-                  let newUsers = users.filter((user) => {
-                    return user.id != currentSelection;
-                  });
-                  setUsers(newUsers);
-                  reset();
-                  showSuccessForFiveSeconds('User successfully deleted!');
-                } catch (error: any) {
-                  RootServerApi.handleErrors(error, {
-                    handleError: (error) => {
-                      showErrorForFiveSeconds(`Unable to delete user: ${error.message}`);
-                    },
-                  });
-                }
-              }}
-            >
+            <Button variant='contained' color='primary' onClick={deleteUser}>
               {strings.deleteUserTitle}
             </Button>
           </StyledButtonWrapper>
