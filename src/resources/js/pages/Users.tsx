@@ -13,6 +13,7 @@ export const Users = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [apiErrorMessage, setApiErrorMessage] = useState<string>('');
+  const [apiSuccessMessage, setApiSuccessMessage] = useState<string>('');
   const [validationMessage, setValidationMessage] = useState<UserCreate>({
     username: '',
     displayName: '',
@@ -90,6 +91,13 @@ export const Users = () => {
     }, 5000);
   };
 
+  const showSuccessForFiveSeconds = (message: string): void => {
+    setApiSuccessMessage(message);
+    setTimeout(() => {
+      setApiSuccessMessage('');
+    }, 5000);
+  };
+
   const applyChangesApiError = async (error: any): Promise<void> => {
     setValidationMessage({
       username: '',
@@ -120,6 +128,7 @@ export const Users = () => {
         console.log(newUser);
         reset();
         setUsers([...users, newUser]);
+        showSuccessForFiveSeconds('User successfully created!');
       } catch (error: any) {
         applyChangesApiError(error);
       }
@@ -127,6 +136,7 @@ export const Users = () => {
       try {
         await RootServerApi.updateUser(currentSelection, user);
         getUsers();
+        showSuccessForFiveSeconds('User successfully updated!');
       } catch (error: any) {
         applyChangesApiError(error);
       }
@@ -175,6 +185,7 @@ export const Users = () => {
         </FormControl>
       </Box>
       {apiErrorMessage.length > 0 && <p style={{ color: 'red', textAlign: 'center' }}>{apiErrorMessage}</p>}
+      {apiSuccessMessage.length > 0 && <p style={{ color: 'green', textAlign: 'center' }}>{apiSuccessMessage}</p>}
       <StyledFormWrapper>
         {currentSelection !== -1 && (
           <StyledFormLabel variant='h3' align='center'>
@@ -335,6 +346,7 @@ export const Users = () => {
                   });
                   setUsers(newUsers);
                   reset();
+                  showSuccessForFiveSeconds('User successfully deleted!');
                 } catch (error: any) {
                   RootServerApi.handleErrors(error, {
                     handleError: (error) => {
