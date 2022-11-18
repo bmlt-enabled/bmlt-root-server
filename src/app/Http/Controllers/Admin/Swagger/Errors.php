@@ -12,6 +12,9 @@ namespace App\Http\Controllers\Admin\Swagger;
  * @OA\Schema(schema="NotFoundError", required={"message"},
  *     @OA\Property(property="message", type="string", example="The requested resource was not found.")
  * ),
+ * @OA\Schema(schema="ConflictError", required={"message"},
+ *     @OA\Property(property="message", type="string", example="Conflict Error")
+ * ),
  * @OA\Schema(schema="ValidationError", required={"message", "errors"},
  *     @OA\Property(property="message", type="string", example="The field is required. (and 1 more error)"),
  *     @OA\Property(property="errors", type="object",
