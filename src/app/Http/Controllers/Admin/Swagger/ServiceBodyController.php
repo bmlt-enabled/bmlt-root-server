@@ -166,6 +166,9 @@ class ServiceBodyController extends Controller
      *     @OA\Response(response=404, description="Returns when no service body exists.",
      *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
      *     ),
+     *     @OA\Response(response=409, description="Returns when service body has children.",
+     *         @OA\JsonContent(ref="#/components/schemas/ConflictError")
+     *     ),
      * )
      */
     public function destroy()

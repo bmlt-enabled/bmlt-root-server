@@ -1243,6 +1243,16 @@
                                 }
                             }
                         }
+                    },
+                    "409": {
+                        "description": "Returns when service body has children.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConflictError"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -1914,6 +1924,18 @@
                     "message": {
                         "type": "string",
                         "example": "The requested resource was not found."
+                    }
+                },
+                "type": "object"
+            },
+            "ConflictError": {
+                "required": [
+                    "message"
+                ],
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Conflict Error"
                     }
                 },
                 "type": "object"

@@ -20,7 +20,6 @@ class ServiceBodyController extends ResourceController
         $this->authorizeResource(ServiceBody::class, 'serviceBody');
     }
 
-
     public function index(Request $request)
     {
         $user = $request->user();
@@ -37,12 +36,10 @@ class ServiceBodyController extends ResourceController
         return ServiceBodyResource::collection($serviceBodies);
     }
 
-
     public function show(ServiceBody $serviceBody)
     {
         return new ServiceBodyResource($serviceBody);
     }
-
 
     public function store(Request $request)
     {
@@ -70,7 +67,6 @@ class ServiceBodyController extends ResourceController
         $this->serviceBodyRepository->update($serviceBody->id_bigint, $values);
         return response()->noContent();
     }
-
 
     public function partialUpdate(Request $request, ServiceBody $serviceBody)
     {
