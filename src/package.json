@@ -5,7 +5,8 @@
         "build": "vite build",
         "lint": "tsc && prettier --check vite.config.ts resources/js && eslint vite.config.ts resources/js",
         "format": "prettier --write vite.config.ts resources/js",
-        "test": "vitest",
+        "test": "vitest run",
+        "test:watch": "vitest",
         "test:ui": "vitest --ui",
         "coverage": "vitest run --coverage",
         "typecheck": "vitest typecheck"

@@ -82,6 +82,12 @@ jobs:
         run: |
           make lint-js
 
+      - name: make test-js
+        env:
+          LARAVEL_BYPASS_ENV_CHECK: '1'
+        run: |
+          make test-js
+
   build:
     runs-on: ubuntu-22.04
     needs: [test-php, test-js]

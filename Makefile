@@ -115,6 +115,10 @@ test:  ## Runs PHP Tests
 # 	$(TEST_PREFIX) vendor/bin/phpunit tests/Feature/Admin/ServiceBodyPartialUpdateTest.php
 # 	$(TEST_PREFIX) vendor/bin/phpunit --filter testUpdateServiceBodyAsServiceBodyAdmin tests/Feature/Admin/ServiceBodyPartialUpdateTest.php
 
+.PHONY: test-js
+test-js:  ## Runs JavaScript tests
+	cd src && npm run test
+
 .PHONY: coverage
 coverage:  ## Generates HTML Coverage Report
 	$(TEST_PREFIX) vendor/phpunit/phpunit/phpunit --coverage-html tests/reports/coverage

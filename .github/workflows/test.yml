@@ -71,3 +71,9 @@ jobs:
       - name: make lint-js
         run: |
           make lint-js
+
+      - name: make test-js
+        env:
+          LARAVEL_BYPASS_ENV_CHECK: '1'
+        run: |
+          make test-js
