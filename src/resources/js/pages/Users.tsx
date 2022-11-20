@@ -77,7 +77,7 @@ export const Users = () => {
     try {
       await RootServerApi.deleteUser(currentSelection);
       setCurrentSelection(-1);
-      let newUsers = users.filter((user) => {
+      const newUsers = users.filter((user) => {
         return user.id != currentSelection;
       });
       setUsers(newUsers);
