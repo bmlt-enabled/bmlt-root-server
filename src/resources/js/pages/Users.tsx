@@ -1,7 +1,7 @@
 import { Box, Button, FormControl, FormHelperText, InputLabel, MenuItem, TextField, Typography } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { styled } from '@mui/system';
-import { User, UserCreate } from 'bmlt-root-server-client';
+import { User, UserCreate, UserUpdate } from 'bmlt-root-server-client';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -31,7 +31,7 @@ export const Users = () => {
     setValue,
     control,
     formState: { errors },
-  } = useForm<UserCreate>();
+  } = useForm<UserCreate | UserUpdate>();
 
   const StyledButtonWrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -120,7 +120,7 @@ export const Users = () => {
     }, 5000);
   };
 
-  const applyChangesApiError = async (error: any): Promise<void> => {
+  const clearValidationMessage = (): void => {
     setValidationMessage({
       username: '',
       displayName: '',
@@ -130,6 +130,11 @@ export const Users = () => {
       ownerId: '',
       description: '',
     });
+  };
+
+  const applyChangesApiError = async (error: any): Promise<void> => {
+    clearValidationMessage();
+
     await RootServerApi.handleErrors(error, {
       handleError: (error) => {
         showErrorForFiveSeconds(error.message);
@@ -148,11 +153,11 @@ export const Users = () => {
     });
   };
 
-  const applyChanges = async (user: UserCreate): Promise<void> => {
+  const applyChanges = async (user: UserCreate | UserUpdate): Promise<void> => {
     // "Create New User" is selected
     if (currentSelection === -1) {
       try {
-        const newUser = await RootServerApi.createUser(user);
+        const newUser = await RootServerApi.createUser(user as UserCreate);
         console.log(newUser);
         reset();
         setUsers([...users, newUser]);
@@ -161,8 +166,11 @@ export const Users = () => {
         applyChangesApiError(error);
       }
     } else {
+      if (user?.password?.length === 0) {
+        delete user?.password;
+      }
       try {
-        await RootServerApi.updateUser(currentSelection, user);
+        await RootServerApi.updateUser(currentSelection, user as UserUpdate);
         getUsers();
         showSuccessForFiveSeconds('User successfully updated!');
         reset();
@@ -178,6 +186,8 @@ export const Users = () => {
   }, []);
 
   useEffect(() => {
+    clearValidationMessage();
+
     if (selectedUser?.ownerId === null) {
       setValue('ownerId', '');
     } else {
@@ -333,15 +343,14 @@ export const Users = () => {
           <StyledInputWrapper>
             <h3>{strings.passwordTitle}</h3>
             <TextField
-              error={errors?.password?.type === 'required' || validationMessage?.password !== ''}
-              // TODO: Only make required if creating new user
+              error={currentSelection === -1 && (errors?.password?.type === 'required' || validationMessage?.password !== '')}
               id='password'
               type='password'
               fullWidth
-              required
+              required={currentSelection === -1 ? true : false}
               variant='outlined'
               aria-describedby='password-error-text'
-              {...register('password', { required: true })}
+              {...register('password', { required: currentSelection === -1 ? true : false })}
             />
             <FormHelperText id='password-error-text'>
               {(validationMessage?.password !== '' && validationMessage?.password) ||
