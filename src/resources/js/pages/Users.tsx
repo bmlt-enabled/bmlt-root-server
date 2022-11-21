@@ -82,11 +82,11 @@ export const Users = () => {
       });
       setUsers(newUsers);
       reset();
-      showSuccessForFiveSeconds('User successfully deleted!');
+      showSuccessMessage('User successfully deleted!');
     } catch (error: any) {
       RootServerApi.handleErrors(error, {
         handleError: (error) => {
-          showErrorForFiveSeconds(`Unable to delete user: ${error.message}`);
+          showErrorMessage(`Unable to delete user: ${error.message}`);
         },
       });
     }
@@ -100,24 +100,18 @@ export const Users = () => {
     } catch (error: any) {
       RootServerApi.handleErrors(error, {
         handleError: (error) => {
-          showErrorForFiveSeconds(error.message);
+          showErrorMessage(error.message);
         },
       });
     }
   };
 
-  const showErrorForFiveSeconds = (error: string): void => {
+  const showErrorMessage = (error: string): void => {
     setApiErrorMessage(error);
-    setTimeout(() => {
-      setApiErrorMessage('');
-    }, 5000);
   };
 
-  const showSuccessForFiveSeconds = (message: string): void => {
+  const showSuccessMessage = (message: string): void => {
     setApiSuccessMessage(message);
-    setTimeout(() => {
-      setApiSuccessMessage('');
-    }, 5000);
   };
 
   const clearValidationMessage = (): void => {
@@ -137,7 +131,7 @@ export const Users = () => {
 
     await RootServerApi.handleErrors(error, {
       handleError: (error) => {
-        showErrorForFiveSeconds(error.message);
+        showErrorMessage(error.message);
       },
       handleValidationError: (error) =>
         setValidationMessage({
@@ -154,6 +148,9 @@ export const Users = () => {
   };
 
   const applyChanges = async (user: UserCreate | UserUpdate): Promise<void> => {
+    setApiErrorMessage('');
+    setApiSuccessMessage('');
+
     // "Create New User" is selected
     if (currentSelection === -1) {
       try {
@@ -161,7 +158,7 @@ export const Users = () => {
         console.log(newUser);
         reset();
         setUsers([...users, newUser]);
-        showSuccessForFiveSeconds('User successfully created!');
+        showSuccessMessage('User successfully created!');
       } catch (error: any) {
         applyChangesApiError(error);
       }
@@ -172,7 +169,7 @@ export const Users = () => {
       try {
         await RootServerApi.updateUser(currentSelection, user as UserUpdate);
         getUsers();
-        showSuccessForFiveSeconds('User successfully updated!');
+        showSuccessMessage('User successfully updated!');
         reset();
         setCurrentSelection(-1);
       } catch (error: any) {
@@ -187,6 +184,8 @@ export const Users = () => {
 
   useEffect(() => {
     clearValidationMessage();
+    setApiErrorMessage('');
+    setApiSuccessMessage('');
 
     if (selectedUser?.ownerId === null) {
       setValue('ownerId', '');
