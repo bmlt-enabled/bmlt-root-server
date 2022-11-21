@@ -250,10 +250,10 @@ export const Users = () => {
                     {...register('type', { required: true })}
                     onChange={onChange}
                   >
-                    <MenuItem value='admin'>Admin</MenuItem>
-                    <MenuItem value='serviceBodyAdmin'>Service Body Administrator</MenuItem>
-                    <MenuItem value='observer'>Service Body Observer</MenuItem>
-                    <MenuItem value='disabled'>Disabled User</MenuItem>
+                    <MenuItem value='admin'>{strings.adminTitle}</MenuItem>
+                    <MenuItem value='serviceBodyAdmin'>{strings.serviceBodyAdminTitle}</MenuItem>
+                    <MenuItem value='observer'>{strings.observerTitle}</MenuItem>
+                    <MenuItem value='disabled'>{strings.disabledUserTitle}</MenuItem>
                   </Select>
                 )}
               />
