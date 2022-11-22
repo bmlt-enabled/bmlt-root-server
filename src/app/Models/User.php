@@ -50,11 +50,6 @@ class User extends Model implements AuthenticatableContract
     public $timestamps = false;
     protected $fillable = self::FIELDS;
 
-    public function rootServer()
-    {
-        return $this->belongsTo(RootServer::class, 'root_server_id');
-    }
-
     public function getAuthPassword()
     {
         return $this->password_string;
