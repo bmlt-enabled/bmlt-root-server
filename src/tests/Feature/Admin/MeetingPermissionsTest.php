@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin;
 
+use App\LegacyConfig;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class MeetingPermissionsTest extends TestCase
@@ -229,6 +230,20 @@ class MeetingPermissionsTest extends TestCase
             ->assertStatus(422);
     }
 
+    public function testStoreWithAggregatorEnabledAsAdmin()
+    {
+        LegacyConfig::set('is_aggregator_enabled', true);
+        try {
+            $user = $this->createAdminUser();
+            $token = $user->createToken('test')->plainTextToken;
+            $this->withHeader('Authorization', "Bearer $token")
+                ->post("/api/v1/meetings")
+                ->assertStatus(403);
+        } finally {
+            LegacyConfig::reset();
+        }
+    }
+
     // update
     //
     //
@@ -293,6 +308,22 @@ class MeetingPermissionsTest extends TestCase
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/meetings/$meeting1->id_bigint")
             ->assertStatus(422);
+    }
+
+    public function testUpdateWithAggregatorEnabledAsAdminDenied()
+    {
+        LegacyConfig::set('is_aggregator_enabled', true);
+        try {
+            $user = $this->createAdminUser();
+            $token = $user->createToken('test')->plainTextToken;
+            $area1 = $this->createArea('area1', 'area1', 0);
+            $meeting1 = $this->createMeeting(['service_body_bigint' => $area1->id_bigint]);
+            $this->withHeader('Authorization', "Bearer $token")
+                ->put("/api/v1/meetings/$meeting1->id_bigint")
+                ->assertStatus(403);
+        } finally {
+            LegacyConfig::reset();
+        }
     }
 
     // partial update
@@ -361,6 +392,22 @@ class MeetingPermissionsTest extends TestCase
             ->assertStatus(422);
     }
 
+    public function testPartialUpdateWithAggregatorEnabledAsAdminDenied()
+    {
+        LegacyConfig::set('is_aggregator_enabled', true);
+        try {
+            $user = $this->createAdminUser();
+            $token = $user->createToken('test')->plainTextToken;
+            $area1 = $this->createArea('area1', 'area1', 0);
+            $meeting1 = $this->createMeeting(['service_body_bigint' => $area1->id_bigint]);
+            $this->withHeader('Authorization', "Bearer $token")
+                ->patch("/api/v1/meetings/$meeting1->id_bigint")
+                ->assertStatus(403);
+        } finally {
+            LegacyConfig::reset();
+        }
+    }
+
     // delete
     //
     //
@@ -425,5 +472,21 @@ class MeetingPermissionsTest extends TestCase
         $this->withHeader('Authorization', "Bearer $token")
             ->delete("/api/v1/meetings/$meeting1->id_bigint")
             ->assertStatus(204);
+    }
+
+    public function testDeleteWithAggregatorEnabledAsAdmin()
+    {
+        LegacyConfig::set('is_aggregator_enabled', true);
+        try {
+            $user = $this->createAdminUser();
+            $token = $user->createToken('test')->plainTextToken;
+            $area1 = $this->createArea('area1', 'area1', 0);
+            $meeting1 = $this->createMeeting(['service_body_bigint' => $area1->id_bigint]);
+            $this->withHeader('Authorization', "Bearer $token")
+                ->delete("/api/v1/meetings/$meeting1->id_bigint")
+                ->assertStatus(403);
+        } finally {
+            LegacyConfig::reset();
+        }
     }
 }

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('name', 255);
             $table->string('url', 255);
             $table->datetime('last_successful_import')->nullable();
+            $table->timestamps();
         });
 
         if (Schema::hasTable('comdef_db_version')) {

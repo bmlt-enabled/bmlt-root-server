@@ -40,7 +40,7 @@ class FormatPolicy
 
     public function partialUpdate(User $user, Format $format)
     {
-        return $user->isAdmin();
+        return $this->update($user, $format);
     }
 
     public function delete(User $user, Format $format)
