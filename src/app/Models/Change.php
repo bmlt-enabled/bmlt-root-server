@@ -31,6 +31,11 @@ class Change extends Model
         'after_object',
     ];
 
+    public function rootServer()
+    {
+        return $this->belongsTo(RootServer::class, 'root_server_id');
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id_bigint');

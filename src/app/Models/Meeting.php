@@ -58,6 +58,11 @@ class Meeting extends Model
         return $this->data->where('key', 'meeting_name')->pluck('data_string')->first();
     }
 
+    public function rootServer()
+    {
+        return $this->belongsTo(RootServer::class, 'root_server_id');
+    }
+
     public function serviceBody()
     {
         return $this->belongsTo(ServiceBody::class, 'service_body_bigint');

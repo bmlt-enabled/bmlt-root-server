@@ -51,6 +51,11 @@ class Format extends Model
         return 'shared_id_bigint';
     }
 
+    public function rootServer()
+    {
+        return $this->belongsTo(RootServer::class, 'root_server_id');
+    }
+
     public function translations()
     {
         return $this

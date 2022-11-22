@@ -14,6 +14,20 @@ return new class extends Migration
      */
     public function up()
     {
+        Schema::create('root_servers', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->integer('source_id');
+            $table->string('name', 255);
+            $table->string('url', 255);
+            $table->boolean('is_self')->default(false);
+            $table->datetime('last_successful_import')->nullable();
+        });
+
+        $rootServerId = 1;
+        DB::table('root_servers')->insert([
+            ['id' => $rootServerId, 'source_id' => -1, 'name' => 'self', 'url' => '', 'is_self' => true],
+        ]);
+
         if (Schema::hasTable('comdef_db_version')) {
             if (!Schema::hasColumn('comdef_db_version', 'id')) {
                 Schema::table('comdef_db_version', function (Blueprint $table) {
@@ -110,8 +124,9 @@ return new class extends Migration
 
         if (Schema::hasTable('comdef_formats')) {
             if (!Schema::hasColumn('comdef_formats', 'id')) {
-                Schema::table('comdef_formats', function (Blueprint $table) {
+                Schema::table('comdef_formats', function (Blueprint $table) use ($rootServerId) {
                     $table->bigIncrements('id')->first();
+                    $table->foreignId('root_server_id')->after('id')->default($rootServerId)->constrained()->cascadeOnDelete();
                 });
 
                 $spadFormat = DB::table('comdef_formats')
@@ -132,8 +147,9 @@ return new class extends Migration
                 }
             }
         } else {
-            Schema::create('comdef_formats', function (Blueprint $table) {
+            Schema::create('comdef_formats', function (Blueprint $table) use ($rootServerId) {
                 $table->bigIncrements('id');
+                $table->foreignId('root_server_id')->default($rootServerId)->constrained()->cascadeOnDelete();
                 $table->unsignedBigInteger('shared_id_bigint');
                 $table->string('key_string', 255)->nullable();
                 $table->binary('icon_blob')->nullable();
@@ -651,9 +667,14 @@ return new class extends Migration
             ]);
         }
 
-        if (!Schema::hasTable('comdef_meetings_main')) {
-            Schema::create('comdef_meetings_main', function (Blueprint $table) {
+        if (Schema::hasTable('comdef_meetings_main')) {
+            Schema::table('comdef_meetings_main', function (Blueprint $table) use ($rootServerId) {
+                $table->foreignId('root_server_id')->after('id_bigint')->default($rootServerId)->constrained()->cascadeOnDelete();
+            });
+        } else {
+            Schema::create('comdef_meetings_main', function (Blueprint $table) use ($rootServerId) {
                 $table->bigIncrements('id_bigint');
+                $table->foreignId('root_server_id')->default($rootServerId)->constrained()->cascadeOnDelete();
                 $table->string('worldid_mixed', 255)->nullable();
                 $table->bigInteger('shared_group_id_bigint')->nullable();
                 $table->unsignedBigInteger('service_body_bigint');
@@ -685,9 +706,14 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('comdef_service_bodies')) {
-            Schema::create('comdef_service_bodies', function (Blueprint $table) {
+        if (Schema::hasTable('comdef_service_bodies')) {
+            Schema::table('comdef_service_bodies', function (Blueprint $table) use ($rootServerId) {
+                $table->foreignId('root_server_id')->after('id_bigint')->default($rootServerId)->constrained()->cascadeOnDelete();
+            });
+        } else {
+            Schema::create('comdef_service_bodies', function (Blueprint $table) use ($rootServerId) {
                 $table->bigIncrements('id_bigint');
+                $table->foreignId('root_server_id')->default($rootServerId)->constrained()->cascadeOnDelete();
                 $table->string('name_string', 255);
                 $table->text('description_string');
                 $table->string('lang_enum', 7)->default('en');
@@ -717,12 +743,14 @@ return new class extends Migration
             DB::table('comdef_users')
                 ->where('last_access_datetime', '<', '1970-01-01 00:00:00')
                 ->update(['last_access_datetime' => '1970-01-01 00:00:00']);
-            Schema::table('comdef_users', function (Blueprint $table) {
+            Schema::table('comdef_users', function (Blueprint $table) use ($rootServerId) {
                 $table->dateTime('last_access_datetime')->default('1970-01-01 00:00:00')->change();
+                $table->foreignId('root_server_id')->after('id_bigint')->default($rootServerId)->constrained()->cascadeOnDelete();
             });
         } else {
-            Schema::create('comdef_users', function (Blueprint $table) {
+            Schema::create('comdef_users', function (Blueprint $table) use ($rootServerId) {
                 $table->bigIncrements('id_bigint');
+                $table->foreignId('root_server_id')->default($rootServerId)->constrained()->cascadeOnDelete();
                 $table->unsignedTinyInteger('user_level_tinyint')->default(0);
                 $table->string('name_string', 255);
                 $table->text('description_string');
@@ -741,9 +769,14 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('comdef_changes')) {
-            Schema::create('comdef_changes', function (Blueprint $table) {
+        if (Schema::hasTable('comdef_changes')) {
+            Schema::table('comdef_changes', function (Blueprint $table) use ($rootServerId) {
+                $table->foreignId('root_server_id')->after('id_bigint')->default($rootServerId)->constrained()->cascadeOnDelete();
+            });
+        } else {
+            Schema::create('comdef_changes', function (Blueprint $table) use ($rootServerId) {
                 $table->bigIncrements('id_bigint');
+                $table->foreignId('root_server_id')->default($rootServerId)->constrained()->cascadeOnDelete();
                 $table->unsignedBigInteger('user_id_bigint')->nullable();
                 $table->unsignedBigInteger('service_body_id_bigint');
                 $table->string('lang_enum', 7);

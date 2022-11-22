@@ -45,6 +45,11 @@ class ServiceBody extends Model
     public $timestamps = false;
     protected $fillable = self::FIELDS;
 
+    public function rootServer()
+    {
+        return $this->belongsTo(RootServer::class, 'root_server_id');
+    }
+
     public function meetings()
     {
         return $this->hasMany(Meeting::class, 'service_body_bigint');
