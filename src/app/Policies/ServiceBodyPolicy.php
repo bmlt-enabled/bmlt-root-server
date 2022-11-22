@@ -34,11 +34,19 @@ class ServiceBodyPolicy
 
     public function create(User $user)
     {
+        if (legacy_config('is_aggregator_enabled')) {
+            return false;
+        }
+
         return $user->isAdmin();
     }
 
     public function update(User $user, ServiceBody $serviceBody)
     {
+        if (legacy_config('is_aggregator_enabled')) {
+            return false;
+        }
+
         if ($user->isAdmin()) {
             return true;
         }
@@ -57,6 +65,10 @@ class ServiceBodyPolicy
 
     public function delete(User $user, ServiceBody $serviceBody)
     {
+        if (legacy_config('is_aggregator_enabled')) {
+            return false;
+        }
+
         return $user->isAdmin();
     }
 }

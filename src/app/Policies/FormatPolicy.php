@@ -22,11 +22,19 @@ class FormatPolicy
 
     public function create(User $user)
     {
+        if (legacy_config('is_aggregator_enabled')) {
+            return false;
+        }
+
         return $user->isAdmin();
     }
 
     public function update(User $user, Format $format)
     {
+        if (legacy_config('is_aggregator_enabled')) {
+            return false;
+        }
+
         return $user->isAdmin();
     }
 
@@ -37,6 +45,10 @@ class FormatPolicy
 
     public function delete(User $user, Format $format)
     {
+        if (legacy_config('is_aggregator_enabled')) {
+            return false;
+        }
+
         return $user->isAdmin();
     }
 }
