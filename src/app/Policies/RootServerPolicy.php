@@ -57,10 +57,6 @@ class RootServerPolicy
             return false;
         }
 
-        if ($rootServer->is_self) {
-            return false;
-        }
-
         return $user->isAdmin();
     }
 }

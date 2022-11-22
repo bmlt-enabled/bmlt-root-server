@@ -20,7 +20,6 @@ class RootServerResource extends JsonResource
             'sourceId' => $this->source_id,
             'name' => $this->name,
             'url' => $this->url,
-            'isSelf' => (bool)$this->is_self,
             'lastSuccessfulImport' => $this->last_successful_import,
         ];
     }
