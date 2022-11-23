@@ -33,6 +33,23 @@ export const Users = () => {
     formState: { errors },
   } = useForm<UserCreate | UserUpdate>();
 
+  const MIN_PASSWORD_LENGTH = 12;
+
+  const isValidEmail = (email: any) =>
+    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+      email,
+    );
+
+  const isUserNameUnique = (userName: any) => {
+    users.forEach((user) => {
+      if (userName === user.username) {
+        return false;
+      }
+    });
+
+    return true;
+  };
+
   const StyledButtonWrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'center',
@@ -302,10 +319,12 @@ export const Users = () => {
               required
               variant='outlined'
               aria-describedby='username-error-text'
-              {...register('username', { required: true })}
+              {...register('username', { required: true, validate: isUserNameUnique, maxLength: 255 })}
             />
             <FormHelperText id='username-error-text'>
               {(validationMessage?.username !== '' && validationMessage?.username) ||
+                (errors?.username?.type === 'maxLength' && 'The username must not be greater than 255 characters.') ||
+                (errors?.username?.type === 'validate' && 'The username has already been taken.') ||
                 (errors?.username?.type === 'required' && 'Username is required')}
             </FormHelperText>
           </StyledInputWrapper>
@@ -319,10 +338,11 @@ export const Users = () => {
               required
               variant='outlined'
               aria-describedby='name-error-text'
-              {...register('displayName', { required: true })}
+              {...register('displayName', { required: true, maxLength: 255 })}
             />
             <FormHelperText id='name-error-text'>
               {(validationMessage?.displayName !== '' && validationMessage?.displayName) ||
+                (errors?.displayName?.type === 'maxLength' && 'The display name must not be greater than 255 characters.') ||
                 (errors?.displayName?.type === 'required' && 'Name is required')}
             </FormHelperText>
           </StyledInputWrapper>
@@ -335,9 +355,12 @@ export const Users = () => {
               fullWidth
               variant='outlined'
               aria-describedby='email-error-text'
-              {...register('email', { required: false })}
+              {...register('email', { required: false, validate: isValidEmail })}
             />
-            <FormHelperText id='email-error-text'>{validationMessage?.email !== '' && validationMessage?.email}</FormHelperText>
+            <FormHelperText id='email-error-text'>
+              {(validationMessage?.email !== '' && validationMessage?.email) ||
+                (errors?.email?.type === 'validate' && 'The email must be a valid email address.')}
+            </FormHelperText>
           </StyledInputWrapper>
           <StyledInputWrapper>
             <h3>{strings.passwordTitle}</h3>
@@ -349,10 +372,11 @@ export const Users = () => {
               required={currentSelection === -1 ? true : false}
               variant='outlined'
               aria-describedby='password-error-text'
-              {...register('password', { required: currentSelection === -1 ? true : false })}
+              {...register('password', { required: currentSelection === -1 ? true : false, minLength: MIN_PASSWORD_LENGTH })}
             />
             <FormHelperText id='password-error-text'>
               {(validationMessage?.password !== '' && validationMessage?.password) ||
+                (errors?.password?.type === 'minLength' && `The password must be at least ${MIN_PASSWORD_LENGTH} characters.`) ||
                 (errors?.password?.type === 'required' && 'Password is required')}
             </FormHelperText>
           </StyledInputWrapper>
@@ -365,10 +389,11 @@ export const Users = () => {
               fullWidth
               variant='outlined'
               aria-describedby='description-error-text'
-              {...register('description', { required: false })}
+              {...register('description', { required: false, maxLength: 1024 })}
             />
             <FormHelperText id='description-error-text'>
-              {validationMessage?.description !== '' && validationMessage?.description}
+              {(validationMessage?.description !== '' && validationMessage?.description) ||
+                (errors?.description?.type === 'maxLength' && 'The description must not be greater than 1024 characters.')}
             </FormHelperText>
           </StyledInputWrapper>
           <StyledButtonWrapper sx={{ display: 'flex', justifyContent: 'center', marginTop: '' }}>
