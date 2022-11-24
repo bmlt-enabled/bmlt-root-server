@@ -34,7 +34,7 @@ class ServiceBodyPolicy
 
     public function create(User $user)
     {
-        if (legacy_config('is_aggregator_enabled')) {
+        if (legacy_config('is_aggregator_mode_enabled')) {
             return false;
         }
 
@@ -43,7 +43,7 @@ class ServiceBodyPolicy
 
     public function update(User $user, ServiceBody $serviceBody)
     {
-        if (legacy_config('is_aggregator_enabled')) {
+        if (legacy_config('is_aggregator_mode_enabled')) {
             return false;
         }
 
@@ -65,7 +65,7 @@ class ServiceBodyPolicy
 
     public function delete(User $user, ServiceBody $serviceBody)
     {
-        if (legacy_config('is_aggregator_enabled')) {
+        if (legacy_config('is_aggregator_mode_enabled')) {
             return false;
         }
 

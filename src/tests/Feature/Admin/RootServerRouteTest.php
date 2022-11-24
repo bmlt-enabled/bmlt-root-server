@@ -20,7 +20,7 @@ class RootServerRouteTest extends TestCase
 
     public function testIndexRouteExists()
     {
-        LegacyConfig::set('is_aggregator_enabled', true);
+        LegacyConfig::set('is_aggregator_mode_enabled', true);
         try {
             $this->get('/api/v1/rootservers')
                 ->assertStatus(200);
@@ -41,7 +41,7 @@ class RootServerRouteTest extends TestCase
 
     public function testShowRouteExists()
     {
-        LegacyConfig::set('is_aggregator_enabled', true);
+        LegacyConfig::set('is_aggregator_mode_enabled', true);
         try {
             $rootServer = $this->createRootServer(1);
             $this->get("/api/v1/rootservers/$rootServer->id")

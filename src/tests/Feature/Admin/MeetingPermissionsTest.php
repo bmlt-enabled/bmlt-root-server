@@ -232,7 +232,7 @@ class MeetingPermissionsTest extends TestCase
 
     public function testStoreWithAggregatorEnabledAsAdmin()
     {
-        LegacyConfig::set('is_aggregator_enabled', true);
+        LegacyConfig::set('is_aggregator_mode_enabled', true);
         try {
             $user = $this->createAdminUser();
             $token = $user->createToken('test')->plainTextToken;
@@ -312,7 +312,7 @@ class MeetingPermissionsTest extends TestCase
 
     public function testUpdateWithAggregatorEnabledAsAdminDenied()
     {
-        LegacyConfig::set('is_aggregator_enabled', true);
+        LegacyConfig::set('is_aggregator_mode_enabled', true);
         try {
             $user = $this->createAdminUser();
             $token = $user->createToken('test')->plainTextToken;
@@ -394,7 +394,7 @@ class MeetingPermissionsTest extends TestCase
 
     public function testPartialUpdateWithAggregatorEnabledAsAdminDenied()
     {
-        LegacyConfig::set('is_aggregator_enabled', true);
+        LegacyConfig::set('is_aggregator_mode_enabled', true);
         try {
             $user = $this->createAdminUser();
             $token = $user->createToken('test')->plainTextToken;
@@ -476,7 +476,7 @@ class MeetingPermissionsTest extends TestCase
 
     public function testDeleteWithAggregatorEnabledAsAdmin()
     {
-        LegacyConfig::set('is_aggregator_enabled', true);
+        LegacyConfig::set('is_aggregator_mode_enabled', true);
         try {
             $user = $this->createAdminUser();
             $token = $user->createToken('test')->plainTextToken;

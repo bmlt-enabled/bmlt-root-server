@@ -18,7 +18,7 @@ class RootServerController extends ResourceController
 
     public function index(Request $request)
     {
-        if (!legacy_config('is_aggregator_enabled')) {
+        if (!legacy_config('is_aggregator_mode_enabled')) {
             abort(404);
         }
 
@@ -28,7 +28,7 @@ class RootServerController extends ResourceController
 
     public function show(RootServer $rootServer)
     {
-        if (!legacy_config('is_aggregator_enabled')) {
+        if (!legacy_config('is_aggregator_mode_enabled')) {
             abort(404);
         }
 

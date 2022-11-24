@@ -22,7 +22,7 @@ class FormatPolicy
 
     public function create(User $user)
     {
-        if (legacy_config('is_aggregator_enabled')) {
+        if (legacy_config('is_aggregator_mode_enabled')) {
             return false;
         }
 
@@ -31,7 +31,7 @@ class FormatPolicy
 
     public function update(User $user, Format $format)
     {
-        if (legacy_config('is_aggregator_enabled')) {
+        if (legacy_config('is_aggregator_mode_enabled')) {
             return false;
         }
 
@@ -45,7 +45,7 @@ class FormatPolicy
 
     public function delete(User $user, Format $format)
     {
-        if (legacy_config('is_aggregator_enabled')) {
+        if (legacy_config('is_aggregator_mode_enabled')) {
             return false;
         }
 
