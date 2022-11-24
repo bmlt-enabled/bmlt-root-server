@@ -23,6 +23,7 @@ class ServiceBodyResource extends JsonResource
             'url' => $this->uri_string ?? '',
             'helpline' => $this->kml_file_uri_string ?? '',
             'world_id' => $this->worldid_mixed ?? '',
+            'root_server_id' => $this->when(legacy_config('is_aggregator_mode_enabled'), $this->root_server_id ?? '')
         ];
     }
 }

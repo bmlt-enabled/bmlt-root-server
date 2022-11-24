@@ -2,13 +2,24 @@
 
 namespace Tests\Feature;
 
+use App\LegacyConfig;
+use App\Models\RootServer;
+use App\Models\ServiceBody;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use App\Models\ServiceBody;
 
 class GetServiceBodiesTest extends TestCase
 {
     use RefreshDatabase;
+
+    private function createRootServer(int $sourceId, string $name = 'test', string $url = 'https://test.com'): RootServer
+    {
+        return RootServer::create([
+            'source_id' => $sourceId,
+            'name' => $name,
+            'url' => $url
+        ]);
+    }
 
     private function createZone(string $name, string $description, string $uri = null, string $helpline = null, string $worldId = null, string $email = null)
     {
@@ -402,5 +413,38 @@ class GetServiceBodiesTest extends TestCase
         $this->assertTrue($this->allServiceBodiesInArray($expected, $response));
         $unexpected = [$zone2, $region2, $area2];
         $this->assertTrue($this->allServiceBodiesNotInArray($unexpected, $response));
+    }
+
+    public function testRootServerIdWithAggregatorDisabled()
+    {
+        $rootServer = $this->createRootServer(1);
+        $zone = $this->createZone("sezf", "sezf", "https://zone");
+        $zone->rootServer()->associate($rootServer);
+        $zone->save();
+        $response = $this->get('/client_interface/json/?switcher=GetServiceBodies')
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonCount(1)
+            ->json();
+        self::assertArrayNotHasKey('root_server_id', $response[0]);
+    }
+
+    public function testRootServerIdWithAggregatorEnabled()
+    {
+        LegacyConfig::set('is_aggregator_mode_enabled', true);
+        try {
+            $rootServer = $this->createRootServer(1);
+            $zone = $this->createZone("sezf", "sezf", "https://zone");
+            $zone->rootServer()->associate($rootServer);
+            $zone->save();
+            $response = $this->get('/client_interface/json/?switcher=GetServiceBodies')
+                ->assertStatus(200)
+                ->assertHeader('Content-Type', 'application/json')
+                ->assertJsonCount(1)
+                ->json();
+            self::assertEquals($rootServer->id, $response[0]['root_server_id']);
+        } finally {
+            LegacyConfig::reset();
+        }
     }
 }

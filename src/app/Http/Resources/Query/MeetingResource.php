@@ -5,6 +5,7 @@ namespace App\Http\Resources\Query;
 use App\Http\Resources\JsonResource;
 use App\Models\User;
 use App\Repositories\MeetingRepository;
+use App\Repositories\RootServerRepository;
 use App\Repositories\ServiceBodyRepository;
 use Illuminate\Support\Collection;
 
@@ -22,6 +23,9 @@ class MeetingResource extends JsonResource
 
     private static ?string $defaultDurationTime = null;
 
+    private static bool $isAggregatorModeEnabled = false;
+    private static ?Collection $rootServerUrls = null;
+
     // Allows tests to reset state
     public static function resetStaticVariables()
     {
@@ -33,6 +37,8 @@ class MeetingResource extends JsonResource
         self::$userIsAuthenticated = false;
         self::$userIsAdmin = false;
         self::$defaultDurationTime = null;
+        self::$isAggregatorModeEnabled = false;
+        self::$rootServerUrls = null;
     }
 
     /**
@@ -69,6 +75,7 @@ class MeetingResource extends JsonResource
             'published' => $this->getPublished(),
             'root_server_uri' => $this->getRootServerUri($request),
             'format_shared_id_list' => $this->getFormatSharedIdList(),
+            'root_server_id' => $this->getRootServerId(),
         ];
 
         // data table keys
@@ -102,6 +109,11 @@ class MeetingResource extends JsonResource
 
         // Default duration time
         self::$defaultDurationTime = legacy_config('default_duration_time');
+        self::$isAggregatorModeEnabled = (bool)legacy_config('is_aggregator_mode_enabled');
+        if (self::$isAggregatorModeEnabled) {
+            $rootServerRepository = new RootServerRepository();
+            self::$rootServerUrls = $rootServerRepository->search()->mapWithKeys(fn ($rs, $_) => [$rs->id => $rs->url]);
+        }
 
         // Preload meeting data templates
         self::$meetingDataTemplates = $meetingRepository->getDataTemplates();
@@ -284,7 +296,7 @@ class MeetingResource extends JsonResource
     {
         return $this->when(
             !self::$hasDataFieldKeys || self::$dataFieldKeys->has('root_server_uri'),
-            $request->getSchemeAndHttpHost() . $request->getBaseUrl()
+            $this->root_server_id && self::$rootServerUrls ? self::$rootServerUrls->get($this->root_server_id) : $request->getSchemeAndHttpHost() . $request->getBaseUrl()
         );
     }
 
@@ -293,6 +305,14 @@ class MeetingResource extends JsonResource
         return $this->when(
             !self::$hasDataFieldKeys || self::$dataFieldKeys->has('format_shared_id_list'),
             $this->getCalculatedFormatSharedIds() ?? ''
+        );
+    }
+
+    private function getRootServerId()
+    {
+        return $this->when(
+            self::$isAggregatorModeEnabled && (!self::$hasDataFieldKeys || self::$dataFieldKeys->has('root_server_id')),
+            $this->root_server_id ?? ''
         );
     }
 }

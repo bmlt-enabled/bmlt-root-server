@@ -2,14 +2,26 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use App\Http\Resources\Query\FormatResource;
+use App\LegacyConfig;
 use App\Models\Format;
 use App\Models\Meeting;
+use App\Models\RootServer;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class GetFormatsTest extends TestCase
 {
     use RefreshDatabase;
+
+    private function createRootServer(int $sourceId, string $name = 'test', string $url = 'https://test.com'): RootServer
+    {
+        return RootServer::create([
+            'source_id' => $sourceId,
+            'name' => $name,
+            'url' => $url
+        ]);
+    }
 
     private function createFormat1(string $langEnum = 'en')
     {
@@ -65,6 +77,12 @@ class GetFormatsTest extends TestCase
         }
 
         return true;
+    }
+
+    protected function tearDown(): void
+    {
+        FormatResource::resetStaticVariables();
+        parent::tearDown();
     }
 
     public function testJsonp()
@@ -246,5 +264,51 @@ class GetFormatsTest extends TestCase
             ->json();
         $expected = [$format1];
         $this->assertTrue($this->allFormatsInArray($expected, $response));
+    }
+
+    public function testRootServerUriWhenAggregatorEnabled()
+    {
+        LegacyConfig::set('is_aggregator_mode_enabled', true);
+
+        try {
+            $rootServer = $this->createRootServer(1);
+            Format::query()->delete();
+            $format1 = $this->createFormat1();
+            $format1->rootServer()->associate($rootServer);
+            $format1->save();
+            $format1->refresh();
+            $this->createMeeting([$format1->shared_id_bigint]);
+            $response = $this->get("/client_interface/json/?switcher=GetFormats")
+                ->assertStatus(200)
+                ->assertHeader('Content-Type', 'application/json')
+                ->assertJsonCount(1)
+                ->json();
+            $this->assertEquals($rootServer->url, $response[0]['root_server_uri']);
+        } finally {
+            LegacyConfig::reset();
+        }
+    }
+
+    public function testRootServerIdWhenAggregatorEnabled()
+    {
+        LegacyConfig::set('is_aggregator_mode_enabled', true);
+
+        try {
+            $rootServer = $this->createRootServer(1);
+            Format::query()->delete();
+            $format1 = $this->createFormat1();
+            $format1->rootServer()->associate($rootServer);
+            $format1->save();
+            $format1->refresh();
+            $this->createMeeting([$format1->shared_id_bigint]);
+            $response = $this->get("/client_interface/json/?switcher=GetFormats")
+                ->assertStatus(200)
+                ->assertHeader('Content-Type', 'application/json')
+                ->assertJsonCount(1)
+                ->json();
+            $this->assertEquals($rootServer->id, $response[0]['root_server_id']);
+        } finally {
+            LegacyConfig::reset();
+        }
     }
 }
