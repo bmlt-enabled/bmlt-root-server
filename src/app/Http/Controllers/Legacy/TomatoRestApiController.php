@@ -42,7 +42,7 @@ class TomatoRestApiController extends Controller
 
         $formats = $this->formatRepository->getAsTranslations(formatIds: [$formatId]);
         if ($formats->isEmpty()) {
-            return new JsonResponse(['message' => 'Endpoint is unavailable when aggregator mode is disabled.'], 404);
+            return new JsonResponse(['message' => 'Not Found'], 404);
         }
 
         return new TomatoRestApiFormatResource($formats[0]);
