@@ -936,6 +936,88 @@
                 ]
             }
         },
+        "/api/v1/rootservers": {
+            "get": {
+                "tags": [
+                    "rootServer"
+                ],
+                "summary": "Retrieves root servers",
+                "description": "Retrieve root servers.",
+                "operationId": "getRootServers",
+                "responses": {
+                    "200": {
+                        "description": "Successful response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RootServerCollection"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Returns when aggregator mode is disabled.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NotFoundError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bmltToken": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/rootservers/{rootServerId}": {
+            "get": {
+                "tags": [
+                    "rootServer"
+                ],
+                "summary": "Retrieves a root server",
+                "description": "Retrieve a single root server id.",
+                "operationId": "getRootServer",
+                "parameters": [
+                    {
+                        "name": "rootServerId",
+                        "in": "path",
+                        "description": "ID of root server",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RootServer"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Returns when no root server exists.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NotFoundError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/servicebodies": {
             "get": {
                 "tags": [
@@ -2319,6 +2401,57 @@
                 "type": "array",
                 "items": {
                     "$ref": "#/components/schemas/Meeting"
+                }
+            },
+            "RootServerBase": {
+                "properties": {
+                    "sourceId": {
+                        "type": "integer",
+                        "example": "0"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "url": {
+                        "type": "string",
+                        "example": "https://example.com/main_server"
+                    },
+                    "lastSuccessfulImport": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2022-11-25 04:16:26"
+                    }
+                },
+                "type": "object"
+            },
+            "RootServer": {
+                "required": [
+                    "id",
+                    "sourceId",
+                    "name",
+                    "url",
+                    "lastSuccessfulImport"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/RootServerBase"
+                    },
+                    {
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "example": "0"
+                            }
+                        }
+                    }
+                ]
+            },
+            "RootServerCollection": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/RootServer"
                 }
             },
             "ServiceBodyBase": {
