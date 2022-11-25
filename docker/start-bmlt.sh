@@ -46,4 +46,9 @@ then
     echo "\$new_ui_enabled = true;" >> /var/www/html/auto-config.inc.php
 fi
 
+if [ ! -z "$AGGREGATOR_MODE_ENABLED" -a "$AGGREGATOR_MODE_ENABLED" == "true" ]
+then
+    echo "\$aggregator_mode_enabled = true;" >> /var/www/html/auto-config.inc.php
+fi
+
 apachectl -D FOREGROUND
