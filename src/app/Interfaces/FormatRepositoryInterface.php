@@ -7,8 +7,14 @@ use Illuminate\Support\Collection;
 
 interface FormatRepositoryInterface
 {
-    public function search(array $langEnums = null, array $keyStrings = null, bool $showAll = false, Collection $meetings = null, bool $eagerRootServers = false): Collection;
-    public function getAsTranslations(): Collection;
+    public function search(
+        array $langEnums = null,
+        array $keyStrings = null,
+        bool $showAll = false,
+        Collection $meetings = null,
+        bool $eagerRootServers = false
+    ): Collection;
+    public function getAsTranslations(array $formatIds = null): Collection;
     public function getVirtualFormat(): Format;
     public function getHybridFormat(): Format;
     public function getTemporarilyClosedFormat(): Format;

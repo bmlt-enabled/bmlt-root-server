@@ -11,8 +11,13 @@ use Illuminate\Support\Facades\DB;
 
 class FormatRepository implements FormatRepositoryInterface
 {
-    public function search(array $langEnums = null, array $keyStrings = null, bool $showAll = false, Collection $meetings = null, bool $eagerRootServers = false): Collection
-    {
+    public function search(
+        array $langEnums = null,
+        array $keyStrings = null,
+        bool $showAll = false,
+        Collection $meetings = null,
+        bool $eagerRootServers = false
+    ): Collection {
         $formats = Format::query();
 
         if ($eagerRootServers) {
@@ -142,15 +147,17 @@ class FormatRepository implements FormatRepositoryInterface
         });
     }
 
-    public function getAsTranslations(): Collection
+    public function getAsTranslations(array $formatIds = null): Collection
     {
         return Format::query()
             ->with(['translations'])
-            ->whereIn('id', function ($query) {
-                $query
-                    ->selectRaw(DB::raw('MIN(id)'))
-                    ->from('comdef_formats')
-                    ->groupBy('shared_id_bigint');
+            ->whereIn('id', function ($query) use ($formatIds) {
+                $query->selectRaw(DB::raw('MIN(id)'));
+                $query->from('comdef_formats');
+                if (!is_null($formatIds)) {
+                    $query->whereIn('shared_id_bigint', $formatIds);
+                }
+                $query->groupBy('shared_id_bigint');
             })
             ->get();
     }

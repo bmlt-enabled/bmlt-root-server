@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Http\Resources\Query\FormatResource;
 use App\LegacyConfig;
 use App\Models\Format;
 use App\Models\Meeting;
