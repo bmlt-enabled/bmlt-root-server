@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Legacy;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Legacy\TomatoRestApiFormatResource;
+use App\Http\Responses\JsonResponse;
 use App\Interfaces\FormatRepositoryInterface;
 use Illuminate\Http\Request;
 use Spatie\ValidationRules\Rules\Delimited;
@@ -20,7 +21,7 @@ class TomatoRestApiController extends Controller
     public function formats(Request $request)
     {
         if (!legacy_config('is_aggregator_mode_enabled')) {
-            abort(404);
+            return new JsonResponse(['message' => 'Endpoint is unavailable when aggregator mode is disabled.'], 404);
         }
 
         $validated = $request->validate(['id__in' => [new Delimited('int')]]);
@@ -36,12 +37,12 @@ class TomatoRestApiController extends Controller
     public function format(int $formatId)
     {
         if (!legacy_config('is_aggregator_mode_enabled')) {
-            abort(404);
+            return new JsonResponse(['message' => 'Endpoint is unavailable when aggregator mode is disabled.'], 404);
         }
 
         $formats = $this->formatRepository->getAsTranslations(formatIds: [$formatId]);
         if ($formats->isEmpty()) {
-            abort(404);
+            return new JsonResponse(['message' => 'Endpoint is unavailable when aggregator mode is disabled.'], 404);
         }
 
         return new TomatoRestApiFormatResource($formats[0]);
