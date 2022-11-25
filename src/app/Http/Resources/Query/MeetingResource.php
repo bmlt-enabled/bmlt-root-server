@@ -291,7 +291,7 @@ class MeetingResource extends JsonResource
     {
         return $this->when(
             !self::$hasDataFieldKeys || self::$dataFieldKeys->has('root_server_uri'),
-            $this->root_server_id ? $this->rootServer->url : $request->getSchemeAndHttpHost() . $request->getBaseUrl()
+            self::$isAggregatorModeEnabled && $this->root_server_id ? $this->rootServer->url : $request->getSchemeAndHttpHost() . $request->getBaseUrl()
         );
     }
 
