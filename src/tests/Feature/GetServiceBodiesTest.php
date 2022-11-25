@@ -431,7 +431,7 @@ class GetServiceBodiesTest extends TestCase
 
     public function testRootServerIdWithAggregatorEnabled()
     {
-        LegacyConfig::set('is_aggregator_mode_enabled', true);
+        LegacyConfig::set('aggregator_mode_enabled', true);
         try {
             $rootServer = $this->createRootServer(1);
             $zone = $this->createZone("sezf", "sezf", "https://zone");

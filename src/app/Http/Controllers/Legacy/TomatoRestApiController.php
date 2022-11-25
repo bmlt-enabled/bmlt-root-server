@@ -20,7 +20,7 @@ class TomatoRestApiController extends Controller
 
     public function formats(Request $request)
     {
-        if (!legacy_config('is_aggregator_mode_enabled')) {
+        if (!legacy_config('aggregator_mode_enabled')) {
             return new JsonResponse(['message' => 'Endpoint is unavailable when aggregator mode is disabled.'], 404);
         }
 
@@ -36,7 +36,7 @@ class TomatoRestApiController extends Controller
 
     public function format(int $formatId)
     {
-        if (!legacy_config('is_aggregator_mode_enabled')) {
+        if (!legacy_config('aggregator_mode_enabled')) {
             return new JsonResponse(['message' => 'Endpoint is unavailable when aggregator mode is disabled.'], 404);
         }
 

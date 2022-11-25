@@ -108,7 +108,7 @@ class MeetingResource extends JsonResource
         self::$defaultDurationTime = legacy_config('default_duration_time');
 
         // Aggregator mode
-        self::$isAggregatorModeEnabled = (bool)legacy_config('is_aggregator_mode_enabled');
+        self::$isAggregatorModeEnabled = (bool)legacy_config('aggregator_mode_enabled');
 
         // Preload meeting data templates
         self::$meetingDataTemplates = $meetingRepository->getDataTemplates();

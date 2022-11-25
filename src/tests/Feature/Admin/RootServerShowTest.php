@@ -12,7 +12,7 @@ class RootServerShowTest extends TestCase
 
     public function testNullLastSuccessfulImport()
     {
-        LegacyConfig::set('is_aggregator_mode_enabled', true);
+        LegacyConfig::set('aggregator_mode_enabled', true);
         try {
             $rootServer = $this->createRootServer(123);
             $this->get("/api/v1/rootservers/$rootServer->id")
@@ -31,7 +31,7 @@ class RootServerShowTest extends TestCase
 
     public function testNonNullLastSuccessfulImport()
     {
-        LegacyConfig::set('is_aggregator_mode_enabled', true);
+        LegacyConfig::set('aggregator_mode_enabled', true);
         try {
             $rootServer = $this->createRootServer(123);
             $rootServer->last_successful_import = $rootServer->updated_at;

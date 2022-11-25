@@ -270,7 +270,7 @@ class SwitcherController extends Controller
             sortResultsByDistance: $sortResultsByDistance,
             searchString: $searchString,
             published: $published,
-            eagerRootServers: legacy_config('is_aggregator_mode_enabled'),
+            eagerRootServers: legacy_config('aggregator_mode_enabled'),
             sortKeys: $sortKeys,
             pageSize: $pageSize,
             pageNum: $pageNum,
@@ -282,7 +282,7 @@ class SwitcherController extends Controller
         $formats = $this->formatRepository->search(
             langEnums: [$langEnum],
             meetings: $meetings,
-            eagerRootServers: legacy_config('is_aggregator_mode_enabled'),
+            eagerRootServers: legacy_config('aggregator_mode_enabled'),
         );
 
         $formatsById = $formats->mapWithKeys(fn ($format, $_) => [$format->shared_id_bigint => $format]);
@@ -322,7 +322,7 @@ class SwitcherController extends Controller
             langEnums: $langEnums,
             keyStrings: $keyStrings,
             showAll: $showAll,
-            eagerRootServers: legacy_config('is_aggregator_mode_enabled'),
+            eagerRootServers: legacy_config('aggregator_mode_enabled'),
         );
 
         return FormatResource::collection($formats)->response();

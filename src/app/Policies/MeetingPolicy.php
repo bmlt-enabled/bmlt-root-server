@@ -34,7 +34,7 @@ class MeetingPolicy
 
     public function create(User $user)
     {
-        if (legacy_config('is_aggregator_mode_enabled')) {
+        if (legacy_config('aggregator_mode_enabled')) {
             return false;
         }
 
@@ -54,7 +54,7 @@ class MeetingPolicy
 
     public function update(User $user, Meeting $meeting)
     {
-        if (legacy_config('is_aggregator_mode_enabled')) {
+        if (legacy_config('aggregator_mode_enabled')) {
             return false;
         }
 
@@ -76,7 +76,7 @@ class MeetingPolicy
 
     public function delete(User $user, Meeting $meeting)
     {
-        if (legacy_config('is_aggregator_mode_enabled')) {
+        if (legacy_config('aggregator_mode_enabled')) {
             return false;
         }
 

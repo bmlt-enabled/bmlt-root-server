@@ -1393,7 +1393,7 @@ class GetSearchResultsTest extends TestCase
 
     public function testDataFieldKeyRootServerUriWithAggregatorEnabled()
     {
-        LegacyConfig::set('is_aggregator_mode_enabled', true);
+        LegacyConfig::set('aggregator_mode_enabled', true);
         try {
             $rootServer = $this->createRootServer(1);
             $meeting1 = $this->createMeeting();
@@ -1425,7 +1425,7 @@ class GetSearchResultsTest extends TestCase
 
     public function testDataFieldKeyRootServerIdWithAggregatorEnabled()
     {
-        LegacyConfig::set('is_aggregator_mode_enabled', true);
+        LegacyConfig::set('aggregator_mode_enabled', true);
         try {
             $rootServer = $this->createRootServer(1);
             $meeting1 = $this->createMeeting();
@@ -1778,7 +1778,7 @@ class GetSearchResultsTest extends TestCase
 
     public function testRootServerUriWithAggregatorEnabled()
     {
-        LegacyConfig::set('is_aggregator_mode_enabled', true);
+        LegacyConfig::set('aggregator_mode_enabled', true);
         try {
             $rootServer = $this->createRootServer(1);
             $meeting = $this->createMeeting();
@@ -1794,7 +1794,7 @@ class GetSearchResultsTest extends TestCase
 
     public function testRootServerIdWithAggregatorDisabled()
     {
-        LegacyConfig::set('is_aggregator_mode_enabled', false);
+        LegacyConfig::set('aggregator_mode_enabled', false);
         try {
             $rootServer = $this->createRootServer(1);
             $meeting = $this->createMeeting();
@@ -1811,7 +1811,7 @@ class GetSearchResultsTest extends TestCase
 
     public function testRootServerIdWithAggregatorEnabled()
     {
-        LegacyConfig::set('is_aggregator_mode_enabled', true);
+        LegacyConfig::set('aggregator_mode_enabled', true);
         try {
             $rootServer = $this->createRootServer(1);
             $meeting = $this->createMeeting();

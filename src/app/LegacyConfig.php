@@ -111,7 +111,7 @@ class LegacyConfig
         // If default_closed_status is TRUE, meetings that don't explicitly have an OPEN or CLOSED format are assumed CLOSED for the NAWS export.
         $config['default_closed_status'] = $g_defaultClosedStatus ?? true;
         $config['enable_language_selector'] = $g_enable_language_selector ?? false;
-        $config['is_aggregator_mode_enabled'] = $is_aggregator_mode_enabled ?? false;
+        $config['aggregator_mode_enabled'] = $aggregator_mode_enabled ?? false;
 
         self::$config = $config;
         self::$configLoaded = true;

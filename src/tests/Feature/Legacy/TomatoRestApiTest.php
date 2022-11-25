@@ -57,7 +57,7 @@ class TomatoRestApiTest extends TestCase
 
     public function testFormatsWithAggregatorEnabled()
     {
-        LegacyConfig::set('is_aggregator_mode_enabled', true);
+        LegacyConfig::set('aggregator_mode_enabled', true);
         try {
             Format::query()->delete();
             $format1English = $this->createFormat1('en');
@@ -129,7 +129,7 @@ class TomatoRestApiTest extends TestCase
 
     public function testFormatWithAggregatorEnabledNotFound()
     {
-        LegacyConfig::set('is_aggregator_mode_enabled', true);
+        LegacyConfig::set('aggregator_mode_enabled', true);
         try {
             Format::query()->delete();
             $this->get("/rest/v1/formats/1/")->assertStatus(404);
@@ -140,7 +140,7 @@ class TomatoRestApiTest extends TestCase
 
     public function testFormatWithAggregatorEnabledFound()
     {
-        LegacyConfig::set('is_aggregator_mode_enabled', true);
+        LegacyConfig::set('aggregator_mode_enabled', true);
         try {
             Format::query()->delete();
             $format1English = $this->createFormat1();

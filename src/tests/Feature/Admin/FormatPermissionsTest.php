@@ -151,7 +151,7 @@ class FormatPermissionsTest extends TestCase
 
     public function testStoreWithAggregatorEnabledAsAdmin()
     {
-        LegacyConfig::set('is_aggregator_mode_enabled', true);
+        LegacyConfig::set('aggregator_mode_enabled', true);
         try {
             $user = $this->createAdminUser();
             $token = $user->createToken('test')->plainTextToken;
@@ -225,7 +225,7 @@ class FormatPermissionsTest extends TestCase
 
     public function testUpdateWithAggregatorEnabledAsAdmin()
     {
-        LegacyConfig::set('is_aggregator_mode_enabled', true);
+        LegacyConfig::set('aggregator_mode_enabled', true);
         try {
             $user = $this->createAdminUser();
             $token = $user->createToken('test')->plainTextToken;
@@ -290,7 +290,7 @@ class FormatPermissionsTest extends TestCase
 
     public function testPartialUpdateWithAggregatorEnabledAsAdmin()
     {
-        LegacyConfig::set('is_aggregator_mode_enabled', true);
+        LegacyConfig::set('aggregator_mode_enabled', true);
         try {
             $user = $this->createAdminUser();
             $token = $user->createToken('test')->plainTextToken;
@@ -355,7 +355,7 @@ class FormatPermissionsTest extends TestCase
 
     public function testDeleteWithAggregatorEnabledAsAdmin()
     {
-        LegacyConfig::set('is_aggregator_mode_enabled', true);
+        LegacyConfig::set('aggregator_mode_enabled', true);
         try {
             $user = $this->createAdminUser();
             $token = $user->createToken('test')->plainTextToken;

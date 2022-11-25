@@ -261,7 +261,7 @@ class GetFormatsTest extends TestCase
 
     public function testRootServerUriWhenAggregatorEnabled()
     {
-        LegacyConfig::set('is_aggregator_mode_enabled', true);
+        LegacyConfig::set('aggregator_mode_enabled', true);
 
         try {
             $rootServer = $this->createRootServer(1);
@@ -284,7 +284,7 @@ class GetFormatsTest extends TestCase
 
     public function testRootServerIdWhenAggregatorEnabled()
     {
-        LegacyConfig::set('is_aggregator_mode_enabled', true);
+        LegacyConfig::set('aggregator_mode_enabled', true);
 
         try {
             $rootServer = $this->createRootServer(1);

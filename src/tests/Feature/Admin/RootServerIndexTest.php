@@ -11,7 +11,7 @@ class RootServerIndexTest extends TestCase
 
     public function test()
     {
-        LegacyConfig::set('is_aggregator_mode_enabled', true);
+        LegacyConfig::set('aggregator_mode_enabled', true);
         try {
             $this->createRootServer(123);
             $this->createRootServer(123, 'test2', 'https://test2.com');
