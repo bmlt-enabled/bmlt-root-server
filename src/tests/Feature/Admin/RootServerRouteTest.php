@@ -9,9 +9,12 @@ class RootServerRouteTest extends TestCase
 {
     use RefreshDatabase;
 
-    // index
-    //
-    //
+    protected function tearDown(): void
+    {
+        LegacyConfig::reset();
+        parent::tearDown();
+    }
+
     public function testIndexRouteNotExists()
     {
         $this->get('/api/v1/rootservers')
@@ -21,17 +24,9 @@ class RootServerRouteTest extends TestCase
     public function testIndexRouteExists()
     {
         LegacyConfig::set('aggregator_mode_enabled', true);
-        try {
-            $this->get('/api/v1/rootservers')
-                ->assertStatus(200);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $this->get('/api/v1/rootservers')->assertStatus(200);
     }
 
-    // show
-    //
-    //
     public function testShowRouteNotExists()
     {
         $rootServer = $this->createRootServer(1);
@@ -42,12 +37,7 @@ class RootServerRouteTest extends TestCase
     public function testShowRouteExists()
     {
         LegacyConfig::set('aggregator_mode_enabled', true);
-        try {
-            $rootServer = $this->createRootServer(1);
-            $this->get("/api/v1/rootservers/$rootServer->id")
-                ->assertStatus(200);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $rootServer = $this->createRootServer(1);
+        $this->get("/api/v1/rootservers/$rootServer->id")->assertStatus(200);
     }
 }

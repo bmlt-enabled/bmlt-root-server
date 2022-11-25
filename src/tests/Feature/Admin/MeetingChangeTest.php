@@ -13,6 +13,12 @@ class MeetingChangeTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function tearDown(): void
+    {
+        LegacyConfig::reset();
+        parent::tearDown();
+    }
+
     public function testNewMeetingChange()
     {
         $user = $this->createAdminUser();
@@ -381,14 +387,11 @@ class MeetingChangeTest extends TestCase
         $nextChangeId = Change::query()->max('id_bigint') + 1;
 
         LegacyConfig::set('change_depth_for_meetings', 3);
-        try {
-            $this
-                ->withHeader('Authorization', "Bearer $token")
-                ->delete("/api/v1/meetings/{$meeting1->id_bigint}")
-                ->assertStatus(204);
-        } finally {
-            LegacyConfig::reset();
-        }
+
+        $this
+            ->withHeader('Authorization', "Bearer $token")
+            ->delete("/api/v1/meetings/{$meeting1->id_bigint}")
+            ->assertStatus(204);
 
         $this->assertEquals(3, Change::query()->where('before_id_bigint', $meeting1->id_bigint)->orWhere('after_id_bigint', $meeting1->id_bigint)->count());
         $this->assertEquals(10, Change::query()->where('before_id_bigint', $meeting2->id_bigint)->orWhere('after_id_bigint', $meeting2->id_bigint)->count());
@@ -433,14 +436,11 @@ class MeetingChangeTest extends TestCase
         $nextChangeId = Change::query()->max('id_bigint') + 1;
 
         LegacyConfig::set('change_depth_for_meetings', 3);
-        try {
-            $this
-                ->withHeader('Authorization', "Bearer $token")
-                ->delete("/api/v1/meetings/{$meeting1->id_bigint}")
-                ->assertStatus(204);
-        } finally {
-            LegacyConfig::reset();
-        }
+
+        $this
+            ->withHeader('Authorization', "Bearer $token")
+            ->delete("/api/v1/meetings/{$meeting1->id_bigint}")
+            ->assertStatus(204);
 
         $this->assertEquals(3, Change::query()->where('before_id_bigint', $meeting1->id_bigint)->orWhere('after_id_bigint', $meeting1->id_bigint)->count());
         $this->assertEquals(10, Change::query()->where('before_id_bigint', $meeting2->id_bigint)->orWhere('after_id_bigint', $meeting2->id_bigint)->count());
@@ -470,14 +470,11 @@ class MeetingChangeTest extends TestCase
         }
 
         LegacyConfig::remove('change_depth_for_meetings');
-        try {
-            $this
-                ->withHeader('Authorization', "Bearer $token")
-                ->delete("/api/v1/meetings/{$meeting->id_bigint}")
-                ->assertStatus(204);
-        } finally {
-            LegacyConfig::reset();
-        }
+
+        $this
+            ->withHeader('Authorization', "Bearer $token")
+            ->delete("/api/v1/meetings/{$meeting->id_bigint}")
+            ->assertStatus(204);
 
         $this->assertEquals(11, Change::query()->count());
     }

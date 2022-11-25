@@ -121,6 +121,7 @@ class GetNawsExportTest extends TestCase
 
     protected function tearDown(): void
     {
+        LegacyConfig::reset();
         MeetingResource::resetStaticVariables();
         parent::tearDown();
     }
@@ -328,15 +329,11 @@ class GetNawsExportTest extends TestCase
         ];
         $meeting1 = $this->createMeeting($meetingMainFields);
         LegacyConfig::set('default_closed_status', false);
-        try {
-            $csv = $this->get("/client_interface/csv/?switcher=GetNAWSDump&sb_id=$area1->id_bigint")->streamedContent();
-            $reader = CsvReader::createFromString($csv);
-            $reader->setHeaderOffset(0);
-            $row = iterator_to_array($reader)[1];
-            $this->assertEquals('OPEN', $row['Closed']);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $csv = $this->get("/client_interface/csv/?switcher=GetNAWSDump&sb_id=$area1->id_bigint")->streamedContent();
+        $reader = CsvReader::createFromString($csv);
+        $reader->setHeaderOffset(0);
+        $row = iterator_to_array($reader)[1];
+        $this->assertEquals('OPEN', $row['Closed']);
     }
 
     // If a meeting has both Open and Closed formats, treat it as closed. Server admins shouldn't do this, but the

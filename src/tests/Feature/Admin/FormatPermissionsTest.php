@@ -10,6 +10,12 @@ class FormatPermissionsTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function tearDown(): void
+    {
+        LegacyConfig::reset();
+        parent::tearDown();
+    }
+
     // index
     //
     //
@@ -152,15 +158,11 @@ class FormatPermissionsTest extends TestCase
     public function testStoreWithAggregatorEnabledAsAdmin()
     {
         LegacyConfig::set('aggregator_mode_enabled', true);
-        try {
-            $user = $this->createAdminUser();
-            $token = $user->createToken('test')->plainTextToken;
-            $this->withHeader('Authorization', "Bearer $token")
-                ->post("/api/v1/formats")
-                ->assertStatus(403);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $this->withHeader('Authorization', "Bearer $token")
+            ->post("/api/v1/formats")
+            ->assertStatus(403);
     }
 
     // update
@@ -226,16 +228,12 @@ class FormatPermissionsTest extends TestCase
     public function testUpdateWithAggregatorEnabledAsAdmin()
     {
         LegacyConfig::set('aggregator_mode_enabled', true);
-        try {
-            $user = $this->createAdminUser();
-            $token = $user->createToken('test')->plainTextToken;
-            $format = Format::query()->first();
-            $this->withHeader('Authorization', "Bearer $token")
-                ->put("/api/v1/formats/$format->shared_id_bigint")
-                ->assertStatus(403);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $format = Format::query()->first();
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/formats/$format->shared_id_bigint")
+            ->assertStatus(403);
     }
 
     // partial update
@@ -291,16 +289,12 @@ class FormatPermissionsTest extends TestCase
     public function testPartialUpdateWithAggregatorEnabledAsAdmin()
     {
         LegacyConfig::set('aggregator_mode_enabled', true);
-        try {
-            $user = $this->createAdminUser();
-            $token = $user->createToken('test')->plainTextToken;
-            $format = Format::query()->first();
-            $this->withHeader('Authorization', "Bearer $token")
-                ->patch("/api/v1/formats/$format->shared_id_bigint")
-                ->assertStatus(403);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $format = Format::query()->first();
+        $this->withHeader('Authorization', "Bearer $token")
+            ->patch("/api/v1/formats/$format->shared_id_bigint")
+            ->assertStatus(403);
     }
 
     // delete
@@ -356,15 +350,11 @@ class FormatPermissionsTest extends TestCase
     public function testDeleteWithAggregatorEnabledAsAdmin()
     {
         LegacyConfig::set('aggregator_mode_enabled', true);
-        try {
-            $user = $this->createAdminUser();
-            $token = $user->createToken('test')->plainTextToken;
-            $format = Format::query()->first();
-            $this->withHeader('Authorization', "Bearer $token")
-                ->delete("/api/v1/formats/$format->shared_id_bigint")
-                ->assertStatus(403);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $format = Format::query()->first();
+        $this->withHeader('Authorization', "Bearer $token")
+            ->delete("/api/v1/formats/$format->shared_id_bigint")
+            ->assertStatus(403);
     }
 }

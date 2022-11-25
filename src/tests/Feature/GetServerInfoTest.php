@@ -8,6 +8,12 @@ use Tests\TestCase;
 
 class GetServerInfoTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        LegacyConfig::reset();
+        parent::tearDown();
+    }
+
     public function testJsonp()
     {
         $content = $this->get('/client_interface/jsonp/?switcher=GetServerInfo&callback=asdf')
@@ -51,280 +57,176 @@ class GetServerInfoTest extends TestCase
     public function testDefaultDuration()
     {
         LegacyConfig::set('default_duration_time', 'blah');
-        try {
-            $this->get('/client_interface/json/?switcher=GetServerInfo')
-                ->assertStatus(200)
-                ->assertJsonFragment(['defaultDuration' => 'blah']);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['defaultDuration' => 'blah']);
     }
 
     public function testRegionBias()
     {
         LegacyConfig::set('region_bias', 'blah');
-        try {
-            $this->get('/client_interface/json/?switcher=GetServerInfo')
-                ->assertStatus(200)
-                ->assertJsonFragment(['regionBias' => 'blah']);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['regionBias' => 'blah']);
     }
 
     public function testDistanceUnits()
     {
         LegacyConfig::set('distance_units', 'blah');
-        try {
-            $this->get('/client_interface/json/?switcher=GetServerInfo')
-                ->assertStatus(200)
-                ->assertJsonFragment(['distanceUnits' => 'blah']);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['distanceUnits' => 'blah']);
     }
 
     public function testSemanticAdmin()
     {
         LegacyConfig::set('enable_semantic_admin', true);
-        try {
-            $this->get('/client_interface/json/?switcher=GetServerInfo')
-                ->assertStatus(200)
-                ->assertJsonFragment(['semanticAdmin' => '1']);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['semanticAdmin' => '1']);
 
         LegacyConfig::set('enable_semantic_admin', false);
-        try {
-            $this->get('/client_interface/json/?switcher=GetServerInfo')
-                ->assertStatus(200)
-                ->assertJsonFragment(['semanticAdmin' => '0']);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['semanticAdmin' => '0']);
     }
 
     public function testEmailEnabled()
     {
         LegacyConfig::set('enable_email_contact', true);
-        try {
-            $this->get('/client_interface/json/?switcher=GetServerInfo')
-                ->assertStatus(200)
-                ->assertJsonFragment(['emailEnabled' => '1']);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['emailEnabled' => '1']);
 
         LegacyConfig::set('enable_email_contact', false);
-        try {
-            $this->get('/client_interface/json/?switcher=GetServerInfo')
-                ->assertStatus(200)
-                ->assertJsonFragment(['emailEnabled' => '0']);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['emailEnabled' => '0']);
     }
 
     public function testEmailIncludesServiceBodies()
     {
         LegacyConfig::set('include_service_body_admin_on_emails', true);
-        try {
-            $this->get('/client_interface/json/?switcher=GetServerInfo')
-                ->assertStatus(200)
-                ->assertJsonFragment(['emailIncludesServiceBodies' => '1']);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['emailIncludesServiceBodies' => '1']);
 
         LegacyConfig::set('include_service_body_admin_on_emails', false);
-        try {
-            $this->get('/client_interface/json/?switcher=GetServerInfo')
-                ->assertStatus(200)
-                ->assertJsonFragment(['emailIncludesServiceBodies' => '0']);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['emailIncludesServiceBodies' => '0']);
     }
 
     public function testChangesPerMeeting()
     {
         LegacyConfig::set('change_depth_for_meetings', 99999);
-        try {
-            $this->get('/client_interface/json/?switcher=GetServerInfo')
-                ->assertStatus(200)
-                ->assertJsonFragment(['changesPerMeeting' => '99999']);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['changesPerMeeting' => '99999']);
     }
 
     public function testMeetingsStatesProvinces()
     {
         LegacyConfig::set('meeting_states_and_provinces', []);
-        try {
-            $this->get('/client_interface/json/?switcher=GetServerInfo')
-                ->assertStatus(200)
-                ->assertJsonFragment(['meeting_states_and_provinces' => '']);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['meeting_states_and_provinces' => '']);
 
         LegacyConfig::set('meeting_states_and_provinces', ['abc', 'def']);
-        try {
-            $this->get('/client_interface/json/?switcher=GetServerInfo')
-                ->assertStatus(200)
-                ->assertJsonFragment(['meeting_states_and_provinces' => 'abc,def']);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['meeting_states_and_provinces' => 'abc,def']);
     }
 
     public function testMeetingsCountiesAndSubprovinces()
     {
         LegacyConfig::set('meeting_counties_and_sub_provinces', []);
-        try {
-            $this->get('/client_interface/json/?switcher=GetServerInfo')
-                ->assertStatus(200)
-                ->assertJsonFragment(['meeting_counties_and_sub_provinces' => '']);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['meeting_counties_and_sub_provinces' => '']);
 
         LegacyConfig::set('meeting_counties_and_sub_provinces', ['abc', 'def']);
-        try {
-            $this->get('/client_interface/json/?switcher=GetServerInfo')
-                ->assertStatus(200)
-                ->assertJsonFragment(['meeting_counties_and_sub_provinces' => 'abc,def']);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['meeting_counties_and_sub_provinces' => 'abc,def']);
     }
 
     public function testGoogleApiKey()
     {
         LegacyConfig::remove('google_api_key');
-        try {
-            $this->get('/client_interface/json/?switcher=GetServerInfo')
-                ->assertStatus(200)
-                ->assertJsonFragment(['google_api_key' => '']);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['google_api_key' => '']);
 
         LegacyConfig::set('google_api_key', 'blah');
-        try {
-            $this->get('/client_interface/json/?switcher=GetServerInfo')
-                ->assertStatus(200)
-                ->assertJsonFragment(['google_api_key' => 'blah']);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['google_api_key' => 'blah']);
     }
 
     public function testMeetingTimeZonesEnabled()
     {
         LegacyConfig::set('meeting_time_zones_enabled', true);
-        try {
-            $this->get('/client_interface/json/?switcher=GetServerInfo')
-                ->assertStatus(200)
-                ->assertJsonFragment(['meeting_time_zones_enabled' => '1']);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['meeting_time_zones_enabled' => '1']);
 
         LegacyConfig::set('meeting_time_zones_enabled', false);
-        try {
-            $this->get('/client_interface/json/?switcher=GetServerInfo')
-                ->assertStatus(200)
-                ->assertJsonFragment(['meeting_time_zones_enabled' => '0']);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['meeting_time_zones_enabled' => '0']);
     }
 
     public function testCenterLongitude()
     {
         LegacyConfig::remove('search_spec_map_center_longitude');
-        try {
-            $this->get('/client_interface/json/?switcher=GetServerInfo')
-                ->assertStatus(200)
-                ->assertJsonFragment(['centerLongitude' => '']);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['centerLongitude' => '']);
 
         LegacyConfig::set('search_spec_map_center_longitude', -79.793701171875);
-        try {
-            $this->get('/client_interface/json/?switcher=GetServerInfo')
-                ->assertStatus(200)
-                ->assertJsonFragment(['centerLongitude' => '-79.793701171875']);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['centerLongitude' => '-79.793701171875']);
     }
 
     public function testCenterLatitude()
     {
         LegacyConfig::remove('search_spec_map_center_latitude');
-        try {
-            $this->get('/client_interface/json/?switcher=GetServerInfo')
-                ->assertStatus(200)
-                ->assertJsonFragment(['centerLatitude' => '']);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['centerLatitude' => '']);
 
         LegacyConfig::set('search_spec_map_center_latitude', 36.065752051707);
-        try {
-            $this->get('/client_interface/json/?switcher=GetServerInfo')
-                ->assertStatus(200)
-                ->assertJsonFragment(['centerLatitude' => '36.065752051707']);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['centerLatitude' => '36.065752051707']);
     }
 
     public function testCenterZoom()
     {
         LegacyConfig::remove('search_spec_map_center_zoom');
-        try {
-            $this->get('/client_interface/json/?switcher=GetServerInfo')
-                ->assertStatus(200)
-                ->assertJsonFragment(['centerZoom' => '']);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['centerZoom' => '']);
 
         LegacyConfig::set('search_spec_map_center_zoom', 10);
-        try {
-            $this->get('/client_interface/json/?switcher=GetServerInfo')
-                ->assertStatus(200)
-                ->assertJsonFragment(['centerZoom' => '10']);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['centerZoom' => '10']);
     }
 
     public function testAutoGeocodingEnabled()
     {
         LegacyConfig::set('auto_geocoding_enabled', true);
-        try {
-            $this->get('/client_interface/json/?switcher=GetServerInfo')
-                ->assertStatus(200)
-                ->assertJsonFragment(['auto_geocoding_enabled' => true]);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['auto_geocoding_enabled' => true]);
 
         LegacyConfig::set('auto_geocoding_enabled', false);
-        try {
-            $this->get('/client_interface/json/?switcher=GetServerInfo')
-                ->assertStatus(200)
-                ->assertJsonFragment(['auto_geocoding_enabled' => false]);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['auto_geocoding_enabled' => false]);
     }
 
     public function testCommit()

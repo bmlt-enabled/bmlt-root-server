@@ -90,6 +90,12 @@ class GetServiceBodiesTest extends TestCase
         return true;
     }
 
+    protected function tearDown(): void
+    {
+        LegacyConfig::reset();
+        parent::tearDown();
+    }
+
     public function testJsonp()
     {
         $response = $this->get('/client_interface/jsonp/?switcher=GetServiceBodies&callback=asdf');
@@ -432,19 +438,15 @@ class GetServiceBodiesTest extends TestCase
     public function testRootServerIdWithAggregatorEnabled()
     {
         LegacyConfig::set('aggregator_mode_enabled', true);
-        try {
-            $rootServer = $this->createRootServer(1);
-            $zone = $this->createZone("sezf", "sezf", "https://zone");
-            $zone->rootServer()->associate($rootServer);
-            $zone->save();
-            $response = $this->get('/client_interface/json/?switcher=GetServiceBodies')
-                ->assertStatus(200)
-                ->assertHeader('Content-Type', 'application/json')
-                ->assertJsonCount(1)
-                ->json();
-            self::assertEquals($rootServer->id, $response[0]['root_server_id']);
-        } finally {
-            LegacyConfig::reset();
-        }
+        $rootServer = $this->createRootServer(1);
+        $zone = $this->createZone("sezf", "sezf", "https://zone");
+        $zone->rootServer()->associate($rootServer);
+        $zone->save();
+        $response = $this->get('/client_interface/json/?switcher=GetServiceBodies')
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonCount(1)
+            ->json();
+        self::assertEquals($rootServer->id, $response[0]['root_server_id']);
     }
 }
