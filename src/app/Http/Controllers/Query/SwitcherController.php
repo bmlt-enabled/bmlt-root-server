@@ -270,6 +270,7 @@ class SwitcherController extends Controller
             sortResultsByDistance: $sortResultsByDistance,
             searchString: $searchString,
             published: $published,
+            eagerRootServers: legacy_config('is_aggregator_mode_enabled'),
             sortKeys: $sortKeys,
             pageSize: $pageSize,
             pageNum: $pageNum,
@@ -278,7 +279,11 @@ class SwitcherController extends Controller
         // This code to calculate the formats fields is really inefficient, but necessary because
         // we don't have foreign keys between the meetings and formats tables.
         $langEnum = $request->input('lang_enum', config('app.locale'));
-        $formats = $this->formatRepository->search(langEnums: [$langEnum], meetings: $meetings);
+        $formats = $this->formatRepository->search(
+            langEnums: [$langEnum],
+            meetings: $meetings,
+            eagerRootServers: legacy_config('is_aggregator_mode_enabled'),
+        );
 
         $formatsById = $formats->mapWithKeys(fn ($format, $_) => [$format->shared_id_bigint => $format]);
         foreach ($meetings as $meeting) {
@@ -313,7 +318,12 @@ class SwitcherController extends Controller
 
         $showAll = $request->input('show_all') == '1';
 
-        $formats = $this->formatRepository->search($langEnums, $keyStrings, $showAll);
+        $formats = $this->formatRepository->search(
+            langEnums: $langEnums,
+            keyStrings: $keyStrings,
+            showAll: $showAll,
+            eagerRootServers: legacy_config('is_aggregator_mode_enabled'),
+        );
 
         return FormatResource::collection($formats)->response();
     }

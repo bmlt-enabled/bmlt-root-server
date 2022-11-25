@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Interfaces\MeetingRepositoryInterface;
 use App\Models\Change;
 use App\Models\Meeting;
 use App\Models\MeetingData;
@@ -9,7 +10,6 @@ use App\Models\MeetingLongData;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
-use App\Interfaces\MeetingRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 
 class MeetingRepository implements MeetingRepositoryInterface
@@ -43,17 +43,20 @@ class MeetingRepository implements MeetingRepositoryInterface
         string $searchString = null,
         ?bool $published = true,
         bool $eagerServiceBodies = false,
+        bool $eagerRootServers = false,
         array $sortKeys = null,
         int $pageSize = null,
         int $pageNum = null,
     ): Collection {
-        $meetings = Meeting::query();
-
+        $eagerLoadRelations = ['data', 'longdata'];
         if ($eagerServiceBodies) {
-            $meetings = $meetings->with(['data', 'longdata', 'serviceBody']);
-        } else {
-            $meetings = $meetings->with(['data', 'longdata']);
+            $eagerLoadRelations[] = 'serviceBody';
         }
+        if ($eagerRootServers) {
+            $eagerLoadRelations[] = 'rootServer';
+        }
+
+        $meetings = Meeting::with($eagerLoadRelations);
 
         if (!is_null($published)) {
             $meetings = $meetings->where('published', $published ? 1 : 0);

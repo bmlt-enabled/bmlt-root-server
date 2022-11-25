@@ -11,9 +11,13 @@ use Illuminate\Support\Facades\DB;
 
 class FormatRepository implements FormatRepositoryInterface
 {
-    public function search(array $langEnums = null, array $keyStrings = null, bool $showAll = false, Collection $meetings = null): Collection
+    public function search(array $langEnums = null, array $keyStrings = null, bool $showAll = false, Collection $meetings = null, bool $eagerRootServers = false): Collection
     {
         $formats = Format::query();
+
+        if ($eagerRootServers) {
+            $formats = $formats->with(['rootServer']);
+        }
 
         if (!is_null($langEnums)) {
             $formats = $formats->whereIn('lang_enum', $langEnums);

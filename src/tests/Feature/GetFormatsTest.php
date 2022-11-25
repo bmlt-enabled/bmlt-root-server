@@ -79,12 +79,6 @@ class GetFormatsTest extends TestCase
         return true;
     }
 
-    protected function tearDown(): void
-    {
-        FormatResource::resetStaticVariables();
-        parent::tearDown();
-    }
-
     public function testJsonp()
     {
         Format::query()->delete();

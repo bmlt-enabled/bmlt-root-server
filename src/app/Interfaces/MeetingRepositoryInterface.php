@@ -34,6 +34,7 @@ interface MeetingRepositoryInterface
         string $searchString = null,
         bool $published = true,
         bool $eagerServiceBodies = false,
+        bool $eagerRootServers = false,
         array $sortKeys = null,
         int $pageSize = null,
         int $pageNum = null,

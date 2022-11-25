@@ -5,7 +5,6 @@ namespace App\Http\Resources\Query;
 use App\Http\Resources\JsonResource;
 use App\Models\User;
 use App\Repositories\MeetingRepository;
-use App\Repositories\RootServerRepository;
 use App\Repositories\ServiceBodyRepository;
 use Illuminate\Support\Collection;
 
@@ -24,7 +23,6 @@ class MeetingResource extends JsonResource
     private static ?string $defaultDurationTime = null;
 
     private static bool $isAggregatorModeEnabled = false;
-    private static ?Collection $rootServerUrls = null;
 
     // Allows tests to reset state
     public static function resetStaticVariables()
@@ -38,7 +36,6 @@ class MeetingResource extends JsonResource
         self::$userIsAdmin = false;
         self::$defaultDurationTime = null;
         self::$isAggregatorModeEnabled = false;
-        self::$rootServerUrls = null;
     }
 
     /**
@@ -109,11 +106,9 @@ class MeetingResource extends JsonResource
 
         // Default duration time
         self::$defaultDurationTime = legacy_config('default_duration_time');
+
+        // Aggregator mode
         self::$isAggregatorModeEnabled = (bool)legacy_config('is_aggregator_mode_enabled');
-        if (self::$isAggregatorModeEnabled) {
-            $rootServerRepository = new RootServerRepository();
-            self::$rootServerUrls = $rootServerRepository->search()->mapWithKeys(fn ($rs, $_) => [$rs->id => $rs->url]);
-        }
 
         // Preload meeting data templates
         self::$meetingDataTemplates = $meetingRepository->getDataTemplates();
@@ -296,7 +291,7 @@ class MeetingResource extends JsonResource
     {
         return $this->when(
             !self::$hasDataFieldKeys || self::$dataFieldKeys->has('root_server_uri'),
-            $this->root_server_id && self::$rootServerUrls ? self::$rootServerUrls->get($this->root_server_id) : $request->getSchemeAndHttpHost() . $request->getBaseUrl()
+            $this->root_server_id ? $this->rootServer->url : $request->getSchemeAndHttpHost() . $request->getBaseUrl()
         );
     }
 
