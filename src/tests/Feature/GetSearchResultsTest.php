@@ -1872,4 +1872,106 @@ class GetSearchResultsTest extends TestCase
             ->assertJsonFragment(['id_bigint' => strval($meeting1->id_bigint)])
             ->assertJsonFragment(['id_bigint' => strval($meeting2->id_bigint)]);
     }
+
+    // aggregator mode required filters
+    //
+    //
+    public function testAggregatorModeRequiredFiltersNone()
+    {
+        LegacyConfig::set('aggregator_mode_enabled', true);
+
+        $rootServer1 = $this->createRootServer(1);
+        $meeting1 = $this->createMeeting();
+        $meeting1->rootServer()->associate($rootServer1);
+        $meeting1->save();
+
+        $this->get("/client_interface/json/?switcher=GetSearchResults")
+            ->assertStatus(200)
+            ->assertJsonCount(0);
+    }
+
+    public function testAggregatorModeRequiredFiltersMeetingIds()
+    {
+        LegacyConfig::set('aggregator_mode_enabled', true);
+
+        $rootServer1 = $this->createRootServer(1);
+        $meeting1 = $this->createMeeting();
+        $meeting1->rootServer()->associate($rootServer1);
+        $meeting1->save();
+
+        $this->get("/client_interface/json/?switcher=GetSearchResults&meeting_ids=$meeting1->id_bigint")
+            ->assertStatus(200)
+            ->assertJsonCount(1);
+    }
+
+    public function testAggregatorModeRequiredFiltersServices()
+    {
+        LegacyConfig::set('aggregator_mode_enabled', true);
+
+        $rootServer1 = $this->createRootServer(1);
+        $meeting1 = $this->createMeeting(['service_body_bigint' => 1]);
+        $meeting1->rootServer()->associate($rootServer1);
+        $meeting1->save();
+
+        $this->get("/client_interface/json/?switcher=GetSearchResults&services=1")
+            ->assertStatus(200)
+            ->assertJsonCount(1);
+    }
+
+    public function testAggregatorModeRequiredFiltersFormats()
+    {
+        LegacyConfig::set('aggregator_mode_enabled', true);
+
+        $rootServer1 = $this->createRootServer(1);
+        $format1 = $this->createFormat1();
+        $meeting1 = $this->createMeeting(['formats' => "$format1->shared_id_bigint"]);
+        $meeting1->rootServer()->associate($rootServer1);
+        $meeting1->save();
+
+        $this->get("/client_interface/json/?switcher=GetSearchResults&formats=$format1->shared_id_bigint")
+            ->assertStatus(200)
+            ->assertJsonCount(1);
+    }
+
+    public function testAggregatorModeRequiredFiltersMeetingKeyAndMeetingKeyValue()
+    {
+        LegacyConfig::set('aggregator_mode_enabled', true);
+
+        $rootServer1 = $this->createRootServer(1);
+        $meeting1 = $this->createMeeting();
+        $meeting1->rootServer()->associate($rootServer1);
+        $meeting1->save();
+
+        $this->get("/client_interface/json/?switcher=GetSearchResults&meeting_key=id_bigint&meeting_key_value=$meeting1->id_bigint")
+            ->assertStatus(200)
+            ->assertJsonCount(1);
+    }
+
+    public function testAggregatorModeRequiredFiltersGeo()
+    {
+        LegacyConfig::set('aggregator_mode_enabled', true);
+
+        $rootServer1 = $this->createRootServer(1);
+        $meeting1 = $this->createMeeting(['latitude' => 36.065752051707, 'longitude' => -79.793701171875]);
+        $meeting1->rootServer()->associate($rootServer1);
+        $meeting1->save();
+
+        $this->get("/client_interface/json/?switcher=GetSearchResults&lat_val=$meeting1->latitude&long_val=$meeting1->longitude&geo_width=1")
+            ->assertStatus(200)
+            ->assertJsonCount(1);
+    }
+
+    public function testAggregatorModeRequiredFiltersPageSizePageNum()
+    {
+        LegacyConfig::set('aggregator_mode_enabled', true);
+
+        $rootServer1 = $this->createRootServer(1);
+        $meeting1 = $this->createMeeting();
+        $meeting1->rootServer()->associate($rootServer1);
+        $meeting1->save();
+
+        $this->get("/client_interface/json/?switcher=GetSearchResults&page_size=1&page_num=1")
+            ->assertStatus(200)
+            ->assertJsonCount(1);
+    }
 }
