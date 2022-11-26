@@ -123,6 +123,7 @@ return new class extends Migration
                     $table->bigIncrements('id')->first();
                     $table->foreignId('root_server_id')->after('shared_id_bigint')->nullable()->constrained()->cascadeOnDelete();
                     $table->unsignedBigInteger('source_id')->nullable()->after('root_server_id');
+                    $table->index(['root_server_id', 'source_id'], 'root_server_id_source_id');
                 });
 
                 $spadFormat = DB::table('comdef_formats')
@@ -160,6 +161,7 @@ return new class extends Migration
                 $table->index('format_type_enum', 'format_type_enum');
                 $table->index('lang_enum', 'lang_enum');
                 $table->index('key_string', 'key_string');
+                $table->index(['root_server_id', 'source_id'], 'root_server_id_source_id');
             });
             if (!legacy_config('aggregator_mode_enabled')) {
                 // aggregator mode does not need any stock data
@@ -671,6 +673,7 @@ return new class extends Migration
             Schema::table('comdef_meetings_main', function (Blueprint $table) {
                 $table->foreignId('root_server_id')->after('id_bigint')->nullable()->constrained()->cascadeOnDelete();
                 $table->unsignedBigInteger('source_id')->nullable()->after('root_server_id');
+                $table->index(['root_server_id', 'source_id'], 'root_server_id_source_id');
             });
         } else {
             Schema::create('comdef_meetings_main', function (Blueprint $table) {
@@ -705,6 +708,7 @@ return new class extends Migration
                 $table->index('latitude', 'latitude');
                 $table->index('published', 'published');
                 $table->index('email_contact', 'email_contact');
+                $table->index(['root_server_id', 'source_id'], 'root_server_id_source_id');
             });
         }
 
@@ -712,6 +716,7 @@ return new class extends Migration
             Schema::table('comdef_service_bodies', function (Blueprint $table) {
                 $table->foreignId('root_server_id')->after('id_bigint')->nullable()->constrained()->cascadeOnDelete();
                 $table->unsignedBigInteger('source_id')->nullable()->after('root_server_id');
+                $table->index(['root_server_id', 'source_id'], 'root_server_id_source_id');
             });
         } else {
             Schema::create('comdef_service_bodies', function (Blueprint $table) {
@@ -740,6 +745,7 @@ return new class extends Migration
                 $table->index('sb_owner', 'sb_owner');
                 $table->index('sb_owner_2', 'sb_owner_2');
                 $table->index('sb_meeting_email', 'sb_meeting_email');
+                $table->index(['root_server_id', 'source_id'], 'root_server_id_source_id');
             });
         }
 
