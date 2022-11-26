@@ -16,7 +16,7 @@ return new class extends Migration
     {
         Schema::create('root_servers', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('source_id')->nullable();
+            $table->unsignedBigInteger('source_id');
             $table->string('name', 255);
             $table->string('url', 255);
             $table->datetime('last_successful_import')->nullable();
