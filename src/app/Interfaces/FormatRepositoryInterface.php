@@ -8,6 +8,8 @@ use Illuminate\Support\Collection;
 interface FormatRepositoryInterface
 {
     public function search(
+        array $rootServersInclude = null,
+        array $rootServersExclude = null,
         array $langEnums = null,
         array $keyStrings = null,
         bool $showAll = false,

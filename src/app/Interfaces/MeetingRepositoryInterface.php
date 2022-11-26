@@ -9,6 +9,8 @@ interface MeetingRepositoryInterface
 {
     public function getSearchResults(
         array $meetingIds = null,
+        array $rootServersInclude = null,
+        array $rootServersExclude = null,
         array $weekdaysInclude = null,
         array $weekdaysExclude = null,
         array $venueTypesInclude = null,

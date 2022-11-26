@@ -15,6 +15,8 @@ class ServiceBodyRepository implements ServiceBodyRepositoryInterface
     public function search(
         array $includeIds = [],
         array $excludeIds = [],
+        array $rootServersInclude = null,
+        array $rootServersExclude = null,
         bool $recurseChildren = false,
         bool $recurseParents = false
     ): Collection {
@@ -35,6 +37,14 @@ class ServiceBodyRepository implements ServiceBodyRepositoryInterface
 
         if (!empty($excludeIds)) {
             $serviceBodies = $serviceBodies->whereNotIn('id_bigint', $excludeIds);
+        }
+
+        if (!is_null($rootServersInclude)) {
+            $serviceBodies = $serviceBodies->whereIn('root_server_id', $rootServersInclude);
+        }
+
+        if (!is_null($rootServersExclude)) {
+            $serviceBodies = $serviceBodies->whereNotIn('root_server_id', $rootServersExclude);
         }
 
         return $serviceBodies->get();

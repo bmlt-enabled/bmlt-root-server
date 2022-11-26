@@ -244,8 +244,44 @@ class SwitcherController extends Controller
             $pageNum = is_numeric($pageNum) ? intval($pageNum) : 1;
         }
 
+        $isAggregatorMode = (bool)legacy_config('aggregator_mode_enabled');
+        $rootServersInclude = null;
+        $rootServersExclude = null;
+
+        if ($isAggregatorMode) {
+            $rootServerIds = $request->input('root_server_ids', []);
+            $rootServerIds = ensure_integer_array($rootServerIds);
+            $rootServersInclude = collect($rootServerIds)->filter(fn($r) => $r > 0)->map(fn($r) => $r)->toArray();
+            $rootServersInclude = count($rootServersInclude) ? $rootServersInclude : null;
+            $rootServersExclude = collect($rootServerIds)->filter(fn($r) => $r < 0)->map(fn($r) => abs($r))->toArray();
+            $rootServersExclude = count($rootServersExclude) ? $rootServersExclude : null;
+
+            $hasRequiredFilters = false;
+            if (!is_null($meetingIds)) {
+                $hasRequiredFilters = true;
+            } else if (!is_null($servicesInclude)) {
+                $hasRequiredFilters = true;
+            } else if (!is_null($formatsInclude)) {
+                $hasRequiredFilters = true;
+            } else if (!is_null($rootServersInclude)) {
+                $hasRequiredFilters = true;
+            } else if (!is_null($meetingKey) && !is_null($meetingKeyValue)) {
+                $hasRequiredFilters = true;
+            } else if (!is_null($latitude) && !is_null($longitude)) {
+                $hasRequiredFilters = true;
+            } else if (!is_null($pageSize) && !is_null($pageNum)) {
+                $hasRequiredFilters = true;
+            }
+
+            if (!$hasRequiredFilters) {
+                return new JsonResponse([]);
+            }
+        }
+
         $meetings = $this->meetingRepository->getSearchResults(
             meetingIds: $meetingIds,
+            rootServersInclude: $rootServersInclude,
+            rootServersExclude: $rootServersExclude,
             weekdaysInclude: $weekdaysInclude,
             weekdaysExclude: $weekdaysExclude,
             venueTypesInclude: $venueTypesInclude,
@@ -270,7 +306,7 @@ class SwitcherController extends Controller
             sortResultsByDistance: $sortResultsByDistance,
             searchString: $searchString,
             published: $published,
-            eagerRootServers: legacy_config('aggregator_mode_enabled'),
+            eagerRootServers: $isAggregatorMode,
             sortKeys: $sortKeys,
             pageSize: $pageSize,
             pageNum: $pageNum,
@@ -280,9 +316,11 @@ class SwitcherController extends Controller
         // we don't have foreign keys between the meetings and formats tables.
         $langEnum = $request->input('lang_enum', config('app.locale'));
         $formats = $this->formatRepository->search(
+            rootServersInclude: $rootServersInclude,
+            rootServersExclude: $rootServersExclude,
             langEnums: [$langEnum],
             meetings: $meetings,
-            eagerRootServers: legacy_config('aggregator_mode_enabled'),
+            eagerRootServers: $isAggregatorMode,
         );
 
         $formatsById = $formats->mapWithKeys(fn ($format, $_) => [$format->shared_id_bigint => $format]);
@@ -306,6 +344,19 @@ class SwitcherController extends Controller
 
     private function getFormats(Request $request): BaseJsonResponse
     {
+        $isAggregatorMode = (bool)legacy_config('aggregator_mode_enabled');
+        $rootServersInclude = null;
+        $rootServersExclude = null;
+
+        if ($isAggregatorMode) {
+            $rootServerIds = $request->input('root_server_ids', []);
+            $rootServerIds = ensure_integer_array($rootServerIds);
+            $rootServersInclude = collect($rootServerIds)->filter(fn($r) => $r > 0)->map(fn($r) => $r)->toArray();
+            $rootServersInclude = count($rootServersInclude) ? $rootServersInclude : null;
+            $rootServersExclude = collect($rootServerIds)->filter(fn($r) => $r < 0)->map(fn($r) => abs($r))->toArray();
+            $rootServersExclude = count($rootServersExclude) ? $rootServersExclude : null;
+        }
+
         $langEnums = $request->input('lang_enum', config('app.locale'));
         if (!is_array($langEnums)) {
             $langEnums = [$langEnums];
@@ -319,10 +370,12 @@ class SwitcherController extends Controller
         $showAll = $request->input('show_all') == '1';
 
         $formats = $this->formatRepository->search(
+            rootServersInclude: $rootServersInclude,
+            rootServersExclude: $rootServersExclude,
             langEnums: $langEnums,
             keyStrings: $keyStrings,
             showAll: $showAll,
-            eagerRootServers: legacy_config('aggregator_mode_enabled'),
+            eagerRootServers: $isAggregatorMode,
         );
 
         return FormatResource::collection($formats)->response();
@@ -346,10 +399,28 @@ class SwitcherController extends Controller
             }
         }
 
+        $rootServersInclude = null;
+        $rootServersExclude = null;
+        if (legacy_config('aggregator_mode_enabled')) {
+            $rootServerIds = $request->input('root_server_ids', []);
+            $rootServerIds = ensure_integer_array($rootServerIds);
+            $rootServersInclude = collect($rootServerIds)->filter(fn($r) => $r > 0)->map(fn($r) => $r)->toArray();
+            $rootServersInclude = count($rootServersInclude) ? $rootServersInclude : null;
+            $rootServersExclude = collect($rootServerIds)->filter(fn($r) => $r < 0)->map(fn($r) => abs($r))->toArray();
+            $rootServersExclude = count($rootServersExclude) ? $rootServersExclude : null;
+        }
+
         $recurseChildren = $request->input('recurse') == '1';
         $recurseParents = $request->input('parents') == '1';
 
-        $serviceBodies = $this->serviceBodyRepository->search($includeIds, $excludeIds, $recurseChildren, $recurseParents);
+        $serviceBodies = $this->serviceBodyRepository->search(
+            $includeIds,
+            $excludeIds,
+            $rootServersInclude,
+            $rootServersExclude,
+            $recurseChildren,
+            $recurseParents
+        );
 
         return ServiceBodyResource::collection($serviceBodies)->response();
     }

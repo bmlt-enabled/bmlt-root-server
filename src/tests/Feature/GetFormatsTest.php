@@ -302,4 +302,146 @@ class GetFormatsTest extends TestCase
             ->json();
         $this->assertEquals($rootServer->id, $response[0]['root_server_id']);
     }
+
+    // root server ids
+    //
+    //
+    public function testRootServerIdsWithAggregatorDisabled()
+    {
+        Format::query()->delete();
+        $rootServer1 = $this->createRootServer(1);
+        $format1 = $this->createFormat1();
+        $format1->rootServer()->associate($rootServer1);
+        $format1->save();
+        $this->createMeeting([$format1->shared_id_bigint]);
+
+        $badId = $rootServer1->id + 1;
+        $this->get("/client_interface/json/?switcher=GetFormats&root_server_ids=$badId")
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonCount(1);
+    }
+
+    public function testRootServerIdsNone()
+    {
+        LegacyConfig::set('aggregator_mode_enabled', true);
+
+        Format::query()->delete();
+        $rootServer1 = $this->createRootServer(1);
+        $format1 = $this->createFormat1();
+        $format1->rootServer()->associate($rootServer1);
+        $format1->save();
+        $this->createMeeting([$format1->shared_id_bigint]);
+
+        $badId = $rootServer1->id + 1;
+        $this->get("/client_interface/json/?switcher=GetFormats&root_server_ids=$badId")
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertExactJson([]);
+    }
+
+    public function testRootServerIdsIncludeOne()
+    {
+        LegacyConfig::set('aggregator_mode_enabled', true);
+
+        $rootServer1 = $this->createRootServer(1);
+        $format1 = $this->createFormat1();
+        $format1->rootServer()->associate($rootServer1);
+        $format1->save();
+        $this->createMeeting([$format1->shared_id_bigint]);
+
+        $rootServer2 = $this->createRootServer(2);
+        $format2 = $this->createFormat2();
+        $format2->rootServer()->associate($rootServer2);
+        $format2->save();
+        $this->createMeeting([$format2->shared_id_bigint]);
+
+        $this->get("/client_interface/json/?switcher=GetFormats&root_server_ids=$rootServer1->id")
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonCount(1)
+            ->assertJsonFragment(['id' => strval($format1->shared_id_bigint)]);
+    }
+
+    public function testRootServerIdsIncludeTwo()
+    {
+        LegacyConfig::set('aggregator_mode_enabled', true);
+
+        $rootServer1 = $this->createRootServer(1);
+        $format1 = $this->createFormat1();
+        $format1->rootServer()->associate($rootServer1);
+        $format1->save();
+        $this->createMeeting([$format1->shared_id_bigint]);
+
+        $rootServer2 = $this->createRootServer(2);
+        $format2 = $this->createFormat2();
+        $format2->rootServer()->associate($rootServer2);
+        $format2->save();
+        $this->createMeeting([$format2->shared_id_bigint]);
+
+        $rootServer3 = $this->createRootServer(3);
+        $format3 = $this->createFormat3();
+        $format3->rootServer()->associate($rootServer3);
+        $format3->save();
+        $this->createMeeting([$format3->shared_id_bigint]);
+
+        $this->get("/client_interface/json/?switcher=GetFormats&root_server_ids[]=$rootServer1->id&root_server_ids[]=$rootServer2->id")
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonCount(2)
+            ->assertJsonFragment(['id' => strval($format1->shared_id_bigint)])
+            ->assertJsonFragment(['id' => strval($format2->shared_id_bigint)]);
+    }
+
+    public function testRootServerIdsExcludeOne()
+    {
+        LegacyConfig::set('aggregator_mode_enabled', true);
+
+        $rootServer1 = $this->createRootServer(1);
+        $format1 = $this->createFormat1();
+        $format1->rootServer()->associate($rootServer1);
+        $format1->save();
+        $this->createMeeting([$format1->shared_id_bigint]);
+
+        $rootServer2 = $this->createRootServer(2);
+        $format2 = $this->createFormat2();
+        $format2->rootServer()->associate($rootServer2);
+        $format2->save();
+        $this->createMeeting([$format2->shared_id_bigint]);
+
+        $this->get("/client_interface/json/?switcher=GetFormats&root_server_ids=-$rootServer2->id")
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonCount(1)
+            ->assertJsonFragment(['id' => strval($format1->shared_id_bigint)]);
+    }
+
+    public function testRootServerIdsExcludeTwo()
+    {
+        LegacyConfig::set('aggregator_mode_enabled', true);
+
+        $rootServer1 = $this->createRootServer(1);
+        $format1 = $this->createFormat1();
+        $format1->rootServer()->associate($rootServer1);
+        $format1->save();
+        $this->createMeeting([$format1->shared_id_bigint]);
+
+        $rootServer2 = $this->createRootServer(2);
+        $format2 = $this->createFormat2();
+        $format2->rootServer()->associate($rootServer2);
+        $format2->save();
+        $this->createMeeting([$format2->shared_id_bigint]);
+
+        $rootServer3 = $this->createRootServer(3);
+        $format3 = $this->createFormat3();
+        $format3->rootServer()->associate($rootServer3);
+        $format3->save();
+        $this->createMeeting([$format3->shared_id_bigint]);
+
+        $this->get("/client_interface/json/?switcher=GetFormats&root_server_ids[]=-$rootServer2->id&root_server_ids[]=-$rootServer3->id")
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonCount(1)
+            ->assertJsonFragment(['id' => strval($format1->shared_id_bigint)]);
+    }
 }

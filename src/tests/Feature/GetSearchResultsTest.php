@@ -1399,7 +1399,7 @@ class GetSearchResultsTest extends TestCase
         $meeting1 = $this->createMeeting();
         $meeting1->rootserver()->associate($rootServer);
         $meeting1->save();
-        $data = collect($this->get("/client_interface/json/?switcher=GetSearchResults&data_field_key=root_server_uri")
+        $data = collect($this->get("/client_interface/json/?switcher=GetSearchResults&root_server_ids=$rootServer->id&data_field_key=root_server_uri")
             ->assertStatus(200)
             ->json());
         $keys = array_keys($data[0]);
@@ -1414,7 +1414,7 @@ class GetSearchResultsTest extends TestCase
         $meeting1 = $this->createMeeting();
         $meeting1->rootserver()->associate($rootServer);
         $meeting1->save();
-        $data = collect($this->get("/client_interface/json/?switcher=GetSearchResults&data_field_key=root_server_id")
+        $data = collect($this->get("/client_interface/json/?switcher=GetSearchResults&root_server_ids=$rootServer->id&data_field_key=root_server_id")
             ->assertStatus(200)
             ->json());
         $this->assertArrayNotHasKey('root_server_id', $data[0]);
@@ -1427,7 +1427,7 @@ class GetSearchResultsTest extends TestCase
         $meeting1 = $this->createMeeting();
         $meeting1->rootserver()->associate($rootServer);
         $meeting1->save();
-        $data = collect($this->get("/client_interface/json/?switcher=GetSearchResults&data_field_key=root_server_id")
+        $data = collect($this->get("/client_interface/json/?switcher=GetSearchResults&root_server_ids=$rootServer->id&data_field_key=root_server_id")
             ->assertStatus(200)
             ->json());
         $this->assertEquals($rootServer->id, $data[0]['root_server_id']);
@@ -1768,7 +1768,7 @@ class GetSearchResultsTest extends TestCase
         $meeting = $this->createMeeting();
         $meeting->rootServer()->associate($rootServer);
         $meeting->save();
-        $this->get("/client_interface/json/?switcher=GetSearchResults")
+        $this->get("/client_interface/json/?switcher=GetSearchResults&root_server_ids=$rootServer->id")
             ->assertStatus(200)
             ->assertJsonFragment(['root_server_uri' => $rootServer->url]);
     }
@@ -1780,7 +1780,7 @@ class GetSearchResultsTest extends TestCase
         $meeting = $this->createMeeting();
         $meeting->rootServer()->associate($rootServer);
         $meeting->save();
-        $response = $this->get("/client_interface/json/?switcher=GetSearchResults")
+        $response = $this->get("/client_interface/json/?switcher=GetSearchResults&root_server_ids=$rootServer->id")
             ->assertStatus(200)
             ->json();
         $this->assertArrayNotHasKey('root_server_id', $response[0]);
@@ -1793,8 +1793,83 @@ class GetSearchResultsTest extends TestCase
         $meeting = $this->createMeeting();
         $meeting->rootServer()->associate($rootServer);
         $meeting->save();
-        $this->get("/client_interface/json/?switcher=GetSearchResults")
+        $this->get("/client_interface/json/?switcher=GetSearchResults&root_server_ids=$rootServer->id")
             ->assertStatus(200)
             ->assertJsonFragment(['root_server_id' => $rootServer->id]);
+    }
+
+    // root server ids
+    //
+    //
+    public function testRootServerIdsWithAggregatorDisabled()
+    {
+        $rootServer = $this->createRootServer(1);
+        $meeting1 = $this->createMeeting();
+        $meeting1->rootServer()->associate($rootServer);
+        $meeting1->save();
+        $badId = $rootServer->id + 1;
+        $this->get("/client_interface/json/?switcher=GetSearchResults&root_server_ids=$badId")
+            ->assertStatus(200)
+            ->assertJsonCount(1);
+    }
+
+    public function testRootServerIdsNone()
+    {
+        LegacyConfig::set('aggregator_mode_enabled', true);
+
+        $rootServer = $this->createRootServer(1);
+        $meeting1 = $this->createMeeting();
+        $meeting1->rootServer()->associate($rootServer);
+        $meeting1->save();
+        $badId = $rootServer->id + 1;
+        $this->get("/client_interface/json/?switcher=GetSearchResults&root_server_ids=$badId")
+            ->assertStatus(200)
+            ->assertJsonCount(0);
+    }
+
+    public function testRootServerIdsIncludeOne()
+    {
+        LegacyConfig::set('aggregator_mode_enabled', true);
+
+        $rootServer1 = $this->createRootServer(1);
+        $meeting1 = $this->createMeeting();
+        $meeting1->rootServer()->associate($rootServer1);
+        $meeting1->save();
+
+        $rootServer2 = $this->createRootServer(2);
+        $meeting2 = $this->createMeeting();
+        $meeting2->rootServer()->associate($rootServer2);
+        $meeting2->save();
+
+        $this->get("/client_interface/json/?switcher=GetSearchResults&root_server_ids=$rootServer1->id")
+            ->assertStatus(200)
+            ->assertJsonCount(1)
+            ->assertJsonFragment(['id_bigint' => strval($meeting1->id_bigint)]);
+    }
+
+    public function testRootServerIdsIncludeTwo()
+    {
+        LegacyConfig::set('aggregator_mode_enabled', true);
+
+        $rootServer1 = $this->createRootServer(1);
+        $meeting1 = $this->createMeeting();
+        $meeting1->rootServer()->associate($rootServer1);
+        $meeting1->save();
+
+        $rootServer2 = $this->createRootServer(2);
+        $meeting2 = $this->createMeeting();
+        $meeting2->rootServer()->associate($rootServer2);
+        $meeting2->save();
+
+        $rootServer3 = $this->createRootServer(3);
+        $meeting3 = $this->createMeeting();
+        $meeting3->rootServer()->associate($rootServer3);
+        $meeting3->save();
+
+        $this->get("/client_interface/json/?switcher=GetSearchResults&root_server_ids[]=$rootServer1->id&root_server_ids[]=$rootServer2->id")
+            ->assertStatus(200)
+            ->assertJsonCount(2)
+            ->assertJsonFragment(['id_bigint' => strval($meeting1->id_bigint)])
+            ->assertJsonFragment(['id_bigint' => strval($meeting2->id_bigint)]);
     }
 }

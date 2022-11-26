@@ -18,6 +18,8 @@ class MeetingRepository implements MeetingRepositoryInterface
 
     public function getSearchResults(
         array $meetingIds = null,
+        array $rootServersInclude = null,
+        array $rootServersExclude = null,
         array $weekdaysInclude = null,
         array $weekdaysExclude = null,
         array $venueTypesInclude = null,
@@ -64,6 +66,14 @@ class MeetingRepository implements MeetingRepositoryInterface
 
         if (!is_null($meetingIds)) {
             $meetings = $meetings->whereIn('id_bigint', $meetingIds);
+        }
+
+        if (!is_null($rootServersInclude)) {
+            $meetings = $meetings->whereIn('root_server_id', $rootServersInclude);
+        }
+
+        if (!is_null($rootServersExclude)) {
+            $meetings = $meetings->whereNotIn('root_server_id', $rootServersExclude);
         }
 
         if (!is_null($weekdaysInclude)) {

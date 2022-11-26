@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\DB;
 class FormatRepository implements FormatRepositoryInterface
 {
     public function search(
+        array $rootServersInclude = null,
+        array $rootServersExclude = null,
         array $langEnums = null,
         array $keyStrings = null,
         bool $showAll = false,
@@ -22,6 +24,14 @@ class FormatRepository implements FormatRepositoryInterface
 
         if ($eagerRootServers) {
             $formats = $formats->with(['rootServer']);
+        }
+
+        if (!is_null($rootServersInclude)) {
+            $formats = $formats->whereIn('root_server_id', $rootServersInclude);
+        }
+
+        if (!is_null($rootServersExclude)) {
+            $formats = $formats->whereNotIn('root_server_id', $rootServersExclude);
         }
 
         if (!is_null($langEnums)) {

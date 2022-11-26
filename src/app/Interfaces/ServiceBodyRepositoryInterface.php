@@ -7,7 +7,14 @@ use Illuminate\Support\Collection;
 
 interface ServiceBodyRepositoryInterface
 {
-    public function search(array $includeIds = [], array $excludeIds = [], bool $recurseChildren = false, bool $recurseParents = false): Collection;
+    public function search(
+        array $includeIds = [],
+        array $excludeIds = [],
+        array $rootServersInclude = null,
+        array $rootServersExclude = null,
+        bool $recurseChildren = false,
+        bool $recurseParents = false
+    ): Collection;
     public function create(array $values): ServiceBody;
     public function update(int $id, array $values): bool;
     public function delete(int $id): bool;
