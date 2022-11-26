@@ -8,6 +8,7 @@ use App\Interfaces\RootServerRepositoryInterface;
 use App\Interfaces\ServiceBodyRepositoryInterface;
 use App\Repositories\External\ExternalRootServer;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class ImportRootServers extends Command
@@ -22,7 +23,9 @@ class ImportRootServers extends Command
         MeetingRepositoryInterface $meetingRepository,
         ServiceBodyRepositoryInterface $serviceBodyRepository
     ) {
-        $this->importRootServers($rootServerRepository);
+        return DB::transaction(function () use ($rootServerRepository) {
+            $this->importRootServers($rootServerRepository);
+        });
     }
 
     private function importRootServers(RootServerRepositoryInterface $rootServerRepository)
