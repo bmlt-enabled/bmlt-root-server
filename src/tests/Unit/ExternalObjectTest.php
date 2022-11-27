@@ -31,6 +31,11 @@ class ExternalTestObject extends ExternalObject
         return parent::validateString($values, $key);
     }
 
+    public function validateNullableString(array $values, string $key): ?string
+    {
+        return parent::validateNullableString($values, $key);
+    }
+
     public function validateUrl(array $values, string $key): string
     {
         return parent::validateUrl($values, $key);
@@ -100,6 +105,25 @@ class ExternalObjectTest extends TestCase
         $this->expectException(InvalidTestObjectException::class);
         $obj = new ExternalTestObject();
         $obj->validateString(['a' => 123], 'a');
+    }
+
+    // validateNullableString
+    //
+    //
+    public function testValidateNullableStringSuccess()
+    {
+        $obj = new ExternalTestObject();
+        $this->assertEquals('abc', $obj->validateNullableString(['a' => 'abc'], 'a'));
+        $this->assertEquals('abc', $obj->validateNullableString(['a' => ' abc '], 'a'));
+        $this->assertNull($obj->validateNullableString(['a' => 'abc'], 'b'));
+        $this->assertNull($obj->validateNullableString(['a' => null], 'a'));
+    }
+
+    public function testValidateNullableStringIntValue()
+    {
+        $this->expectException(InvalidTestObjectException::class);
+        $obj = new ExternalTestObject();
+        $obj->validateNullableString(['a' => 123], 'a');
     }
 
     // validateUrl

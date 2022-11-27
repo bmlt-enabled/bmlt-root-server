@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Interfaces\ServiceBodyRepositoryInterface;
 use App\Models\Change;
 use App\Models\ServiceBody;
+use App\Repositories\External\ExternalServiceBody;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
@@ -54,7 +55,9 @@ class ServiceBodyRepository implements ServiceBodyRepositoryInterface
     {
         return DB::transaction(function () use ($values) {
             $serviceBody = ServiceBody::create($values);
-            $this->saveChange(null, $serviceBody);
+            if (!legacy_config('aggregator_mode_enabled')) {
+                $this->saveChange(null, $serviceBody);
+            }
             return $serviceBody;
         });
     }
@@ -65,7 +68,9 @@ class ServiceBodyRepository implements ServiceBodyRepositoryInterface
             $serviceBody = ServiceBody::find($id);
             if (!is_null($serviceBody)) {
                 ServiceBody::query()->where('id_bigint', $id)->update($values);
-                $this->saveChange($serviceBody, ServiceBody::find($id));
+                if (!legacy_config('aggregator_mode_enabled')) {
+                    $this->saveChange($serviceBody, ServiceBody::find($id));
+                }
                 return true;
             }
             return false;
@@ -78,7 +83,9 @@ class ServiceBodyRepository implements ServiceBodyRepositoryInterface
             $serviceBody = ServiceBody::find($id);
             if (!is_null($serviceBody)) {
                 $serviceBody->delete();
-                $this->saveChange($serviceBody, null);
+                if (!legacy_config('aggregator_mode_enabled')) {
+                    $this->saveChange($serviceBody, null);
+                }
                 return true;
             }
             return false;
@@ -210,5 +217,75 @@ class ServiceBodyRepository implements ServiceBodyRepositoryInterface
         }
 
         return $ret;
+    }
+
+    public function import(int $rootServerId, Collection $externalObjects): void
+    {
+        $sourceIds = $externalObjects->map(fn (ExternalServiceBody $ex) => $ex->id);
+        ServiceBody::query()
+            ->where('root_server_id', $rootServerId)
+            ->whereNotIn('source_id', $sourceIds)
+            ->delete();
+
+        foreach ($externalObjects as $external) {
+            $external = $this->castExternal($external);
+            $db = ServiceBody::query()
+                ->where('root_server_id', $rootServerId)
+                ->where('source_id', $external->id)
+                ->first();
+
+            $values = [
+                'root_server_id' => $rootServerId,
+                'source_id' => $external->id,
+                'name_string' => $external->name,
+                'description_string' => $external->description,
+                'sb_type' => $external->type,
+                'uri_string' => $external->url,
+                'kml_file_uri_string' => $external->helpline,
+                'worldid_mixed' => $external->worldId,
+                'sb_meeting_email' => '',
+            ];
+            if (is_null($db)) {
+                $this->create($values);
+            } else if (!$external->isEqual($db)) {
+                $this->update($db->id_bigint, $values);
+            }
+        }
+
+        foreach ($externalObjects as $external) {
+            $external = $this->castExternal($external);
+
+            $parent = ServiceBody::query()
+                ->where('root_server_id', $rootServerId)
+                ->where('source_id', $external->parentId)
+                ->first();
+
+            $db = ServiceBody::query()
+                ->where('root_server_id', $rootServerId)
+                ->where('source_id', $external->id)
+                ->first();
+
+            if (is_null($parent)) {
+                if ($db->sb_owner != 0) {
+                    $db->sb_owner = 0;
+                    $db->save();
+                }
+                continue;
+            }
+
+            if (is_null($db)) {
+                continue;
+            }
+
+            if ($db->sb_owner != $parent->id_bigint) {
+                $db->sb_owner = $parent->id_bigint;
+                $db->save();
+            }
+        }
+    }
+
+    private function castExternal($obj): ExternalServiceBody
+    {
+        return $obj;
     }
 }

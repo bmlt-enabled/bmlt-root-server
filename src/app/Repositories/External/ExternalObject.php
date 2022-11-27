@@ -25,6 +25,19 @@ abstract class ExternalObject
         $this->throwInvalidObjectException();
     }
 
+    protected function validateNullableString(array $values, string $key): ?string
+    {
+        $value = $values[$key] ?? null;
+        if (is_null($value)) {
+            return null;
+        }
+        $value = $this->validateString($values, $key);
+        if (empty($value)) {
+            return null;
+        }
+        return $value;
+    }
+
     protected function validateUrl(array $values, string $key): string
     {
         $value = $this->validateString($values, $key);
