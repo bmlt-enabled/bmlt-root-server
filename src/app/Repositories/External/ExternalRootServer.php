@@ -17,7 +17,7 @@ class ExternalRootServer extends ExternalObject
         $this->url = $this->validateUrl($values, 'rootURL');
     }
 
-    public function compare(RootServer $rootServer): bool
+    public function isEqual(RootServer $rootServer): bool
     {
         if ($this->id != $rootServer->source_id) {
             return false;

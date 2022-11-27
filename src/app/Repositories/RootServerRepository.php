@@ -50,7 +50,7 @@ class RootServerRepository implements RootServerRepositoryInterface
             $values = ['source_id' => $externalRoot->id, 'name' => $externalRoot->name, 'url' => $externalRoot->url];
             if (is_null($dbRoot)) {
                 $this->create($values);
-            } else if (!$externalRoot->compare($dbRoot)) {
+            } else if (!$externalRoot->isEqual($dbRoot)) {
                 $this->update($dbRoot->id, $values);
             }
         }

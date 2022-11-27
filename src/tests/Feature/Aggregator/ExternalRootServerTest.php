@@ -30,7 +30,7 @@ class ExternalRootServerTest extends TestCase
         $values = $this->validValues();
         $external = new ExternalRootServer($values);
         $db = $this->getModel($values);
-        $this->assertTrue($external->compare($db));
+        $this->assertTrue($external->isEqual($db));
     }
 
     public function testId()
@@ -39,7 +39,7 @@ class ExternalRootServerTest extends TestCase
         $external = new ExternalRootServer($values);
         $db = $this->getModel($values);
         $db->source_id = 999;
-        $this->assertFalse($external->compare($db));
+        $this->assertFalse($external->isEqual($db));
     }
 
     public function testName()
@@ -48,7 +48,7 @@ class ExternalRootServerTest extends TestCase
         $external = new ExternalRootServer($values);
         $db = $this->getModel($values);
         $db->name = 'some name';
-        $this->assertFalse($external->compare($db));
+        $this->assertFalse($external->isEqual($db));
     }
 
     public function testUrl()
@@ -57,6 +57,6 @@ class ExternalRootServerTest extends TestCase
         $external = new ExternalRootServer($values);
         $db = $this->getModel($values);
         $db->url = 'https://adifferenturl';
-        $this->assertFalse($external->compare($db));
+        $this->assertFalse($external->isEqual($db));
     }
 }

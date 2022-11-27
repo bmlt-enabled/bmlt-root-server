@@ -34,8 +34,7 @@ class ImportRootServers extends Command
 
         $response = Http::get($rootServerListUrl);
         if (!$response->ok()) {
-            $status = $response->status();
-            throw new \Exception("Got bad status code $status retrieving root servers.");
+            throw new \Exception("Got bad status code {$response->status()} retrieving root servers.");
         }
 
         $externalRootServers = collect($response->json())->map(fn ($r) => new ExternalRootServer($r));
