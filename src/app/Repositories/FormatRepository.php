@@ -6,6 +6,7 @@ use App\Interfaces\FormatRepositoryInterface;
 use App\Models\Change;
 use App\Models\Format;
 use App\Models\Meeting;
+use App\Repositories\External\ExternalFormat;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -101,7 +102,9 @@ class FormatRepository implements FormatRepositoryInterface
             foreach ($sharedFormatsValues as $values) {
                 $values['shared_id_bigint'] = $sharedIdBigint;
                 $format = Format::create($values);
-                $this->saveChange(null, $format);
+                if (!legacy_config('aggregator_mode_enabled')) {
+                    $this->saveChange(null, $format);
+                }
             }
             return $format;
         });
@@ -123,7 +126,9 @@ class FormatRepository implements FormatRepositoryInterface
                     ->filter(fn ($values) => $values['lang_enum'] == $oldFormat->lang_enum)
                     ->isEmpty();
                 if ($isDeleted) {
-                    $this->saveChange($oldFormat, null);
+                    if (!legacy_config('aggregator_mode_enabled')) {
+                        $this->saveChange($oldFormat, null);
+                    }
                 }
             }
 
@@ -131,10 +136,12 @@ class FormatRepository implements FormatRepositoryInterface
                 $values['shared_id_bigint'] = $sharedId;
                 $newFormat = Format::create($values);
                 $oldFormat = $oldFormats->get($newFormat->lang_enum);
-                if (is_null($oldFormat)) {
-                    $this->saveChange(null, $newFormat);
-                } else {
-                    $this->saveChange($oldFormat, $newFormat);
+                if (!legacy_config('aggregator_mode_enabled')) {
+                    if (is_null($oldFormat)) {
+                        $this->saveChange(null, $newFormat);
+                    } else {
+                        $this->saveChange($oldFormat, $newFormat);
+                    }
                 }
             }
 
@@ -149,7 +156,9 @@ class FormatRepository implements FormatRepositoryInterface
             if ($formats->isNotEmpty()) {
                 foreach ($formats as $format) {
                     $format->delete();
-                    $this->saveChange($format, null);
+                    if (!legacy_config('aggregator_mode_enabled')) {
+                        $this->saveChange($format, null);
+                    }
                 }
                 return true;
             }
@@ -208,5 +217,72 @@ class FormatRepository implements FormatRepositoryInterface
             $format->name_string,
             $format->description_string,
         ]);
+    }
+
+    public function import(int $rootServerId, Collection $externalObjects): void
+    {
+        // deleted formats
+        $sourceIds = $externalObjects->pluck('id');
+        Format::query()
+            ->where('root_server_id', $rootServerId)
+            ->whereNotIn('source_id', $sourceIds)
+            ->delete();
+
+        $bySourceIdByLanguage = $externalObjects->groupBy(['id', 'language']);
+        foreach ($bySourceIdByLanguage as $sourceId => $byLanguage) {
+            // deleted languages
+            $languages = $byLanguage->keys();
+            Format::query()
+                ->where('root_server_id', $rootServerId)
+                ->where('source_id', $sourceId)
+                ->whereNotIn('lang_enum', $languages)
+                ->delete();
+
+            $existingFormats = Format::query()
+                ->where('root_server_id', $rootServerId)
+                ->where('source_id', $sourceId)
+                ->get();
+
+            $externalFormats = $byLanguage->map(fn ($f) => $f->first());
+
+            if ($existingFormats->isEmpty()) {
+                $values = $this->externalFormatToValuesArray($rootServerId, $sourceId, $externalFormats);
+                $this->create($values);
+            } else {
+                $isDirty = $existingFormats->count() != $externalFormats->count();
+                if (!$isDirty) {
+                    foreach ($externalFormats as $externalFormat) {
+                        $dbFormat = $existingFormats->where('lang_enum', $externalFormat->language)->first();
+                        $isDirty = is_null($dbFormat) || !$externalFormat->isEqual($dbFormat);
+                        if ($isDirty) {
+                            break;
+                        }
+                    }
+                }
+
+                if ($isDirty) {
+                    $sharedId = $existingFormats->first()->shared_id_bigint;
+                    $values = $this->externalFormatToValuesArray($rootServerId, $sourceId, $externalFormats);
+                    $this->update($sharedId, $values);
+                }
+            }
+        }
+    }
+
+    private function externalFormatToValuesArray(int $rootServerId, int $sourceId, Collection $externalFormats): array
+    {
+        return $externalFormats
+            ->map(fn (ExternalFormat $f) => [
+                'root_server_id' => $rootServerId,
+                'source_id' => $sourceId,
+                'key_string' => $f->key,
+                'name_string' => $f->name,
+                'description_string' => $f->description,
+                'lang_enum' => $f->language,
+                'format_type_enum' => $f->type,
+                'worldid_mixed' => $f->worldId,
+            ])
+            ->values()
+            ->toArray();
     }
 }

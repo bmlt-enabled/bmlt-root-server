@@ -13,6 +13,7 @@ use App\Models\MeetingData;
 use App\Models\MeetingLongData;
 use App\Models\RootServer;
 use App\Models\ServiceBody;
+use App\Repositories\External\ExternalFormat;
 use App\Repositories\External\ExternalRootServer;
 use App\Repositories\External\ExternalServiceBody;
 use App\Repositories\External\InvalidObjectException;
@@ -118,6 +119,24 @@ class ImportRootServers extends Command
 
     private function importFormats(RootServer $rootServer, FormatRepositoryInterface $formatRepository)
     {
+        try {
+            $url = rtrim($rootServer->url, '/') . '/client_interface/json/?switcher=GetFormats';
+            $response = $this->httpGet($url);
+            $externalFormats = collect($response)
+                ->map(function ($format) {
+                    try {
+                        return new ExternalFormat($format);
+                    } catch (InvalidObjectException) {
+                        // TODO: Log something and save an error to the database
+                        return null;
+                    }
+                })
+                ->reject(fn($e) => is_null($e));
+            $formatRepository->import($rootServer->id, $externalFormats);
+        } catch (\Exception $e) {
+            // TODO Log something and save an error to the database
+            return;
+        }
     }
 
     private function importMeetings(RootServer $rootServer, MeetingRepositoryInterface $meetingRepository)
