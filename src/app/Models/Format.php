@@ -37,6 +37,8 @@ class Format extends Model
     protected $table = 'comdef_formats';
     public $timestamps = false;
     protected $fillable = [
+        'root_server_id',
+        'source_id',
         'shared_id_bigint',
         'key_string',
         'worldid_mixed',
