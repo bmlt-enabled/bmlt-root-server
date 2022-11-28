@@ -6,8 +6,11 @@ use App\Interfaces\FormatRepositoryInterface;
 use App\Interfaces\MeetingRepositoryInterface;
 use App\Interfaces\RootServerRepositoryInterface;
 use App\Interfaces\ServiceBodyRepositoryInterface;
+use App\Models\Change;
 use App\Models\Format;
 use App\Models\Meeting;
+use App\Models\MeetingData;
+use App\Models\MeetingLongData;
 use App\Models\RootServer;
 use App\Models\ServiceBody;
 use App\Repositories\External\ExternalRootServer;
@@ -19,7 +22,7 @@ use Illuminate\Support\Facades\Http;
 
 class ImportRootServers extends Command
 {
-    protected $signature = 'aggregate:ImportRootServers {--list-url=https://raw.githubusercontent.com/bmlt-enabled/tomato/master/rootServerList.json}';
+    protected $signature = 'aggregator:ImportRootServers {--list-url=https://raw.githubusercontent.com/bmlt-enabled/tomato/master/rootServerList.json}';
 
     protected $description = 'Import root servers';
 
@@ -30,22 +33,36 @@ class ImportRootServers extends Command
         ServiceBodyRepositoryInterface $serviceBodyRepository
     ) {
         if (!legacy_config('aggregator_mode_enabled')) {
+            // TODO print/log something
             return;
         }
 
-        DB::transaction(function () use ($rootServerRepository, $serviceBodyRepository) {
-            ServiceBody::query()->whereNull('root_server_id')->delete();
-            Format::query()->whereNull('root_server_id')->delete();
-            Meeting::query()->whereNull('root_server_id')->delete();
+        DB::transaction(fn () => $this->clearNonAggregatorData());
+        DB::transaction(fn () => $this->importRootServersList($rootServerRepository));
+        foreach ($rootServerRepository->search() as $rootServer) {
+            DB::transaction(fn () => $this->importRootServer(
+                $rootServer,
+                $formatRepository,
+                $meetingRepository,
+                $serviceBodyRepository
+            ));
+        }
 
-            $this->importRootServers($rootServerRepository);
-            foreach ($rootServerRepository->search() as $rootServer) {
-                $this->importServiceBodies($serviceBodyRepository, $rootServer);
-            }
-        });
+        $this->analyzeTables();
     }
 
-    private function importRootServers(RootServerRepositoryInterface $rootServerRepository)
+    private function clearNonAggregatorData(): void
+    {
+        $meetingIds = Meeting::query()->whereNull('root_server_id')->pluck('id_bigint');
+        Meeting::query()->whereIn('id_bigint', $meetingIds)->delete();
+        MeetingData::query()->whereIn('meetingid_bigint', $meetingIds)->whereNot('meetingid_bigint', 0)->delete();
+        MeetingLongData::query()->whereIn('meetingid_bigint', $meetingIds)->whereNot('meetingid_bigint', 0)->delete();
+        ServiceBody::query()->whereNull('root_server_id')->delete();
+        Format::query()->whereNull('root_server_id')->delete();
+        Change::query()->delete();
+    }
+
+    private function importRootServersList(RootServerRepositoryInterface $rootServerRepository)
     {
         try {
             $url = $this->option('list-url');
@@ -66,7 +83,18 @@ class ImportRootServers extends Command
         }
     }
 
-    private function importServiceBodies(ServiceBodyRepositoryInterface $serviceBodyRepository, RootServer $rootServer)
+    private function importRootServer(
+        RootServer $rootServer,
+        FormatRepositoryInterface $formatRepository,
+        MeetingRepositoryInterface $meetingRepository,
+        ServiceBodyRepositoryInterface $serviceBodyRepository,
+    ): void {
+        $this->importServiceBodies($rootServer, $serviceBodyRepository);
+        $this->importFormats($rootServer, $formatRepository);
+        $this->importMeetings($rootServer, $meetingRepository);
+    }
+
+    private function importServiceBodies(RootServer $rootServer, ServiceBodyRepositoryInterface $serviceBodyRepository)
     {
         try {
             $url = rtrim($rootServer->url, '/') . '/client_interface/json/?switcher=GetServiceBodies';
@@ -85,6 +113,29 @@ class ImportRootServers extends Command
         } catch (\Exception $e) {
             // TODO Log something and save an error to the database
             return;
+        }
+    }
+
+    private function importFormats(RootServer $rootServer, FormatRepositoryInterface $formatRepository)
+    {
+    }
+
+    private function importMeetings(RootServer $rootServer, MeetingRepositoryInterface $meetingRepository)
+    {
+    }
+
+    private function analyzeTables(): void
+    {
+        $prefix = DB::connection()->getTablePrefix();
+        $tableNames = [
+            $prefix . (new Meeting)->getTable(),
+            $prefix . (new MeetingData)->getTable(),
+            $prefix . (new MeetingLongData)->getTable(),
+            $prefix . (new ServiceBody)->getTable(),
+            $prefix . (new Format)->getTable(),
+        ];
+        foreach ($tableNames as $tableName) {
+            DB::statement(DB::raw("ANALYZE TABLE $tableName;"));
         }
     }
 
