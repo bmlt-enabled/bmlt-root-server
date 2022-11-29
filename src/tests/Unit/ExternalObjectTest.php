@@ -26,6 +26,11 @@ class ExternalTestObject extends ExternalObject
         return parent::validateInt($values, $key);
     }
 
+    public function validateNullableInt(array $values, string $key): ?int
+    {
+        return parent::validateNullableInt($values, $key);
+    }
+
     public function validateString(array $values, string $key): string
     {
         return parent::validateString($values, $key);
@@ -39,6 +44,26 @@ class ExternalTestObject extends ExternalObject
     public function validateUrl(array $values, string $key): string
     {
         return parent::validateUrl($values, $key);
+    }
+
+    public function validateTime(array $values, string $key): string
+    {
+        return parent::validateTime($values, $key);
+    }
+
+    public function validateNullableFloat(array $values, string $key): ?float
+    {
+        return parent::validateNullableFloat($values, $key);
+    }
+
+    public function validateBool(array $values, string $key): bool
+    {
+        return parent::validateBool($values, $key);
+    }
+
+    public function validateIntArray(array $values, string $key): array
+    {
+        return parent::validateIntArray($values, $key);
     }
 }
 
@@ -74,6 +99,22 @@ class ExternalObjectTest extends TestCase
         $this->expectException(InvalidTestObjectException::class);
         $obj = new ExternalTestObject();
         $obj->validateInt(['a' => 'test'], 'a');
+    }
+
+    // validateNullableInt
+    //
+    //
+
+    // validateNullableInt
+    //
+    //
+    public function testValidateNullableIntSuccess()
+    {
+        $obj = new ExternalTestObject();
+        $this->assertEquals(123, $obj->validateNullableInt(['a' => 123], 'a'));
+        $this->assertEquals(123, $obj->validateNullableInt(['a' => '123'], 'a'));
+        $this->assertEquals(123, $obj->validateNullableInt(['a' => ' 123 '], 'a'));
+        $this->assertNull($obj->validateNullableInt(['a' => ''], 'a'));
     }
 
     // validateString
@@ -155,5 +196,109 @@ class ExternalObjectTest extends TestCase
         $this->expectException(InvalidTestObjectException::class);
         $obj = new ExternalTestObject();
         $obj->validateUrl(['a' => 'notAUrl'], 'a');
+    }
+
+    // validateTime
+    //
+    //
+    public function testValidateTimeSuccess()
+    {
+        $obj = new ExternalTestObject();
+        $this->assertEquals('00:00:00', $obj->validateTime(['a' => '00:00:00'], 'a'));
+        $this->assertEquals('01:00:00', $obj->validateTime(['a' => '01:00:00'], 'a'));
+        $this->assertEquals('00:00:00', $obj->validateTime(['a' => '24:00:00'], 'a'));
+        $this->assertEquals('00:00:00', $obj->validateTime(['a' => '00:00'], 'a'));
+        $this->assertEquals('01:00:00', $obj->validateTime(['a' => '01:00'], 'a'));
+        $this->assertEquals('00:00:00', $obj->validateTime(['a' => '24:00'], 'a'));
+    }
+
+    public function testValidateTimeBadKey()
+    {
+        $this->expectException(InvalidTestObjectException::class);
+        $obj = new ExternalTestObject();
+        $obj->validateTime(['a' => '00:00:00'], 'b');
+    }
+
+    public function testValidateTimeNullValue()
+    {
+        $this->expectException(InvalidTestObjectException::class);
+        $obj = new ExternalTestObject();
+        $obj->validateTime(['a' => null], 'a');
+    }
+
+    public function testValidateTimeEmptyString()
+    {
+        $this->expectException(InvalidTestObjectException::class);
+        $obj = new ExternalTestObject();
+        $obj->validateTime(['a' => ''], 'a');
+    }
+
+    public function testValidateTimeBadString()
+    {
+        $this->expectException(InvalidTestObjectException::class);
+        $obj = new ExternalTestObject();
+        $obj->validateTime(['a' => 'string'], 'a');
+    }
+
+    // validateNullableFloat
+    //
+    //
+    public function testValidateNullableFloatSuccess()
+    {
+        $obj = new ExternalTestObject();
+        $this->assertEquals(1.234, $obj->validateNullableFloat(['a' => '1.234'], 'a'));
+        $this->assertEquals(-1.234, $obj->validateNullableFloat(['a' => '-1.234'], 'a'));
+        $this->assertNull($obj->validateNullableFloat(['a' => ''], 'a'));
+        $this->assertNull($obj->validateNullableFloat(['a' => null], 'a'));
+        $this->assertNull($obj->validateNullableFloat(['a' => null], 'b'));
+    }
+
+    // validateBool
+    //
+    //
+    public function testValidateBoolSuccess()
+    {
+        $obj = new ExternalTestObject();
+        $this->assertIsBool($obj->validateBool(['a' => true], 'a'));
+        $this->assertTrue($obj->validateBool(['a' => true], 'a'));
+        $this->assertIsBool($obj->validateBool(['a' => 1], 'a'));
+        $this->assertTrue($obj->validateBool(['a' => 1], 'a'));
+        $this->assertIsBool($obj->validateBool(['a' => '1'], 'a'));
+        $this->assertTrue($obj->validateBool(['a' => '1'], 'a'));
+        $this->assertIsBool($obj->validateBool(['a' => true], 'a'));
+        $this->assertFalse($obj->validateBool(['a' => false], 'a'));
+        $this->assertIsBool($obj->validateBool(['a' => 0], 'a'));
+        $this->assertFalse($obj->validateBool(['a' => 0], 'a'));
+        $this->assertIsBool($obj->validateBool(['a' => '0'], 'a'));
+        $this->assertFalse($obj->validateBool(['a' => '0'], 'a'));
+        $this->assertIsBool($obj->validateBool(['a' => ''], 'a'));
+        $this->assertFalse($obj->validateBool(['a' => ''], 'a'));
+    }
+
+    public function testValidateBoolBadKey()
+    {
+        $this->expectException(InvalidTestObjectException::class);
+        $obj = new ExternalTestObject();
+        $obj->validateBool(['a' => true], 'b');
+    }
+
+    // validateIntArray
+    //
+    //
+    public function testValidateIntArraySuccess()
+    {
+        $obj = new ExternalTestObject();
+        $this->assertEquals([], $obj->validateIntArray(['a' => ''], 'a'));
+        $this->assertEquals([999], $obj->validateIntArray(['a' => '999'], 'a'));
+        $this->assertEquals([1,999], $obj->validateIntArray(['a' => '999,1'], 'a'));
+        $this->assertEquals([1,999], $obj->validateIntArray(['a' => '999, 1'], 'a'));
+        $this->assertEquals([1,999], $obj->validateIntArray(['a' => '999,999,1'], 'a'));
+    }
+
+    public function testValidateIntArrayBadKey()
+    {
+        $this->expectException(InvalidTestObjectException::class);
+        $obj = new ExternalTestObject();
+        $obj->validateIntArray(['a' => '123'], 'b');
     }
 }

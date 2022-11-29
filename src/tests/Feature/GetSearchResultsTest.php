@@ -1346,6 +1346,10 @@ class GetSearchResultsTest extends TestCase
     {
         $meeting1 = $this->createMeeting();
         foreach (Meeting::$mainFields as $fieldName) {
+            if ($fieldName == 'root_server_id') {
+                continue;
+            }
+
             try {
                 $data = collect($this->get("/client_interface/json/?switcher=GetSearchResults&data_field_key=$fieldName")
                     ->assertStatus(200)

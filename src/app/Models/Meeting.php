@@ -11,6 +11,8 @@ class Meeting extends Model
     protected $primaryKey = 'id_bigint';
     public $timestamps = false;
     protected $fillable = [
+        'root_server_id',
+        'source_id',
         'worldid_mixed',
         'service_body_bigint',
         'weekday_tinyint',
