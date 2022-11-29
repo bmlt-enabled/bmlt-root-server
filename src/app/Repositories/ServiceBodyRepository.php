@@ -227,43 +227,30 @@ class ServiceBodyRepository implements ServiceBodyRepositoryInterface
             ->whereNotIn('source_id', $sourceIds)
             ->delete();
 
+        $bySourceId = ServiceBody::query()
+            ->where('root_server_id', $rootServerId)
+            ->get()
+            ->mapWithKeys(fn ($sb, $_) => [$sb->source_id => $sb]);
+
         foreach ($externalObjects as $external) {
             $external = $this->castExternal($external);
-            $db = ServiceBody::query()
-                ->where('root_server_id', $rootServerId)
-                ->where('source_id', $external->id)
-                ->first();
-
-            $values = [
-                'root_server_id' => $rootServerId,
-                'source_id' => $external->id,
-                'name_string' => $external->name,
-                'description_string' => $external->description,
-                'sb_type' => $external->type,
-                'uri_string' => $external->url,
-                'kml_file_uri_string' => $external->helpline,
-                'worldid_mixed' => $external->worldId,
-                'sb_meeting_email' => '',
-            ];
+            $db = $bySourceId->get($external->id);
             if (is_null($db)) {
-                $this->create($values);
+                $values = $this->externalServiceBodyToValuesArray($rootServerId, $external);
+                $bySourceId->put($external->id, $this->create($values));
             } else if (!$external->isEqual($db)) {
+                $values = $this->externalServiceBodyToValuesArray($rootServerId, $external);
                 $this->update($db->id_bigint, $values);
+                $db->refresh();
+                $bySourceId->put($external->id, $db);
             }
         }
 
         foreach ($externalObjects as $external) {
             $external = $this->castExternal($external);
 
-            $parent = ServiceBody::query()
-                ->where('root_server_id', $rootServerId)
-                ->where('source_id', $external->parentId)
-                ->first();
-
-            $db = ServiceBody::query()
-                ->where('root_server_id', $rootServerId)
-                ->where('source_id', $external->id)
-                ->first();
+            $parent = $bySourceId->get($external->parentId);
+            $db = $bySourceId->get($external->id);
 
             if (is_null($parent)) {
                 if ($db->sb_owner != 0) {
@@ -287,5 +274,20 @@ class ServiceBodyRepository implements ServiceBodyRepositoryInterface
     private function castExternal($obj): ExternalServiceBody
     {
         return $obj;
+    }
+
+    private function externalServiceBodyToValuesArray(int $rootServerId, ExternalServiceBody $externalServiceBody): array
+    {
+        return [
+            'root_server_id' => $rootServerId,
+            'source_id' => $externalServiceBody->id,
+            'name_string' => $externalServiceBody->name,
+            'description_string' => $externalServiceBody->description,
+            'sb_type' => $externalServiceBody->type,
+            'uri_string' => $externalServiceBody->url,
+            'kml_file_uri_string' => $externalServiceBody->helpline,
+            'worldid_mixed' => $externalServiceBody->worldId,
+            'sb_meeting_email' => '',
+        ];
     }
 }
