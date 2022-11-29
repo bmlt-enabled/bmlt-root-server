@@ -88,7 +88,7 @@ abstract class ExternalObject
 
     protected function validateIntArray(array $values, string $key): array
     {
-        $value = $this->validateString($values, $key);
+        $value = $this->validateNullableString($values, $key);
         if (empty($value)) {
             return [];
         }

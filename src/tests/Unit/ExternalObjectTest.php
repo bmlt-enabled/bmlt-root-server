@@ -293,12 +293,6 @@ class ExternalObjectTest extends TestCase
         $this->assertEquals([1,999], $obj->validateIntArray(['a' => '999,1'], 'a'));
         $this->assertEquals([1,999], $obj->validateIntArray(['a' => '999, 1'], 'a'));
         $this->assertEquals([1,999], $obj->validateIntArray(['a' => '999,999,1'], 'a'));
-    }
-
-    public function testValidateIntArrayBadKey()
-    {
-        $this->expectException(InvalidTestObjectException::class);
-        $obj = new ExternalTestObject();
-        $obj->validateIntArray(['a' => '123'], 'b');
+        $this->assertEquals([], $obj->validateIntArray(['a' => '999,999,1'], 'b'));
     }
 }

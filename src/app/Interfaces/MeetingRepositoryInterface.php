@@ -49,4 +49,5 @@ interface MeetingRepositoryInterface
     public function create(array $values): Meeting;
     public function update(int $id, array $values): bool;
     public function delete(int $id): bool;
+    public function import(int $rootServerId, Collection $externalObjects): void;
 }

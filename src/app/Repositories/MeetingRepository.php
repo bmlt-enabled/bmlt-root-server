@@ -795,4 +795,8 @@ class MeetingRepository implements MeetingRepositoryInterface
             ),
         ]);
     }
+
+    public function import(int $rootServerId, Collection $externalObjects): void
+    {
+    }
 }

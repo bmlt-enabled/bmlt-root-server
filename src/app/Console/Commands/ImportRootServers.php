@@ -14,6 +14,7 @@ use App\Models\MeetingLongData;
 use App\Models\RootServer;
 use App\Models\ServiceBody;
 use App\Repositories\External\ExternalFormat;
+use App\Repositories\External\ExternalMeeting;
 use App\Repositories\External\ExternalRootServer;
 use App\Repositories\External\ExternalServiceBody;
 use App\Repositories\External\InvalidObjectException;
@@ -141,6 +142,24 @@ class ImportRootServers extends Command
 
     private function importMeetings(RootServer $rootServer, MeetingRepositoryInterface $meetingRepository)
     {
+        try {
+            $url = rtrim($rootServer->url, '/') . '/client_interface/json/?switcher=GetSearchResults';
+            $response = $this->httpGet($url);
+            $externalMeetings = collect($response)
+                ->map(function ($meeting) use ($rootServer) {
+                    try {
+                        return new ExternalMeeting($meeting);
+                    } catch (InvalidObjectException) {
+                        // TODO: Log something and save an error to the database
+                        return null;
+                    }
+                })
+                ->reject(fn($e) => is_null($e));
+                $meetingRepository->import($rootServer->id, $externalMeetings);
+        } catch (\Exception $e) {
+            // TODO Log something and save an error to the database
+            return;
+        }
     }
 
     private function analyzeTables(): void

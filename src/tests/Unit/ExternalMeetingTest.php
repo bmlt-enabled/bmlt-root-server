@@ -155,6 +155,7 @@ class ExternalMeetingTest extends TestCase
         $values['venue_type'] = '';
         $values['latitude'] = '';
         $values['longitude'] = '';
+        $values['format_shared_id_list'] = '';
         $meeting = new ExternalMeeting($values);
         $this->assertEquals($values['id_bigint'], $meeting->id);
         $this->assertEquals($values['service_body_bigint'], $meeting->serviceBodyId);
@@ -183,12 +184,8 @@ class ExternalMeetingTest extends TestCase
         $this->assertNull($meeting->locationText);
         $this->assertNull($meeting->busLines);
         $this->assertNull($meeting->trainLines);
-        $formatIds = collect($meeting->formatIds)->sort();
-        $expectedFormatIds = collect(explode(',', $values['format_shared_id_list']))
-            ->map(fn ($f) => intval($f))
-            ->sort()
-            ->unique();
-        $this->assertEquals($expectedFormatIds, $formatIds);
+        $this->assertIsArray($meeting->formatIds);
+        $this->assertEmpty($meeting->formatIds);
     }
 
     public function testValidWithNulls()
@@ -214,6 +211,7 @@ class ExternalMeetingTest extends TestCase
         $values['venue_type'] = null;
         $values['latitude'] = null;
         $values['longitude'] = null;
+        $values['format_shared_id_list'] = null;
         $meeting = new ExternalMeeting($values);
         $this->assertEquals($values['id_bigint'], $meeting->id);
         $this->assertEquals($values['service_body_bigint'], $meeting->serviceBodyId);
@@ -242,12 +240,8 @@ class ExternalMeetingTest extends TestCase
         $this->assertNull($meeting->locationText);
         $this->assertNull($meeting->busLines);
         $this->assertNull($meeting->trainLines);
-        $formatIds = collect($meeting->formatIds)->sort();
-        $expectedFormatIds = collect(explode(',', $values['format_shared_id_list']))
-            ->map(fn ($f) => intval($f))
-            ->sort()
-            ->unique();
-        $this->assertEquals($expectedFormatIds, $formatIds);
+        $this->assertIsArray($meeting->formatIds);
+        $this->assertEmpty($meeting->formatIds);
     }
 
     public function testValidWithMissing()
@@ -273,6 +267,7 @@ class ExternalMeetingTest extends TestCase
         unset($values['venue_type']);
         unset($values['latitude']);
         unset($values['longitude']);
+        unset($values['format_shared_id_list']);
         $meeting = new ExternalMeeting($values);
         $this->assertEquals($values['id_bigint'], $meeting->id);
         $this->assertEquals($values['service_body_bigint'], $meeting->serviceBodyId);
@@ -301,12 +296,8 @@ class ExternalMeetingTest extends TestCase
         $this->assertNull($meeting->locationText);
         $this->assertNull($meeting->busLines);
         $this->assertNull($meeting->trainLines);
-        $formatIds = collect($meeting->formatIds)->sort();
-        $expectedFormatIds = collect(explode(',', $values['format_shared_id_list']))
-            ->map(fn ($f) => intval($f))
-            ->sort()
-            ->unique();
-        $this->assertEquals($expectedFormatIds, $formatIds);
+        $this->assertIsArray($meeting->formatIds);
+        $this->assertEmpty($meeting->formatIds);
     }
 
     public function testMissingId()
@@ -546,14 +537,6 @@ class ExternalMeetingTest extends TestCase
         $this->expectException(InvalidMeetingException::class);
         $values = $this->validValues();
         $values['worldid_mixed'] = 123;
-        new ExternalMeeting($values);
-    }
-
-    public function testMissingFormatIds()
-    {
-        $this->expectException(InvalidMeetingException::class);
-        $values = $this->validValues();
-        unset($values['format_shared_id_list']);
         new ExternalMeeting($values);
     }
 
