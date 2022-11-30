@@ -36,6 +36,15 @@ data "aws_subnets" "main" {
   }
 }
 
+data "aws_subnet" "main" {
+  for_each = toset(data.aws_subnets.main.ids)
+  id       = each.value
+}
+
 data "aws_secretsmanager_secret" "docker" {
   name = "docker"
+}
+
+data "aws_iam_role" "ecs_events" {
+  name = "ecs-events"
 }
