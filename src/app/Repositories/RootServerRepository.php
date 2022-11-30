@@ -3,6 +3,9 @@
 namespace App\Repositories;
 
 use App\Interfaces\RootServerRepositoryInterface;
+use App\Models\Meeting;
+use App\Models\MeetingData;
+use App\Models\MeetingLongData;
 use App\Models\RootServer;
 use App\Repositories\External\ExternalRootServer;
 use Illuminate\Support\Collection;
@@ -43,6 +46,18 @@ class RootServerRepository implements RootServerRepositoryInterface
     {
         $sourceIds = $externalObjects->map(fn (ExternalRootServer $ex) => $ex->id);
         RootServer::query()->whereNotIn('source_id', $sourceIds)->delete();
+
+        // TODO test these
+        MeetingData::query()
+            ->whereNot('meetingid_bigint', 0)
+            ->whereNotIn('meetingid_bigint', function($query) {
+                $query->select('id_bigint')->from((new Meeting)->getTable());
+            })->delete();
+        MeetingLongData::query()
+            ->whereNot('meetingid_bigint', 0)
+            ->whereNotIn('meetingid_bigint', function($query) {
+                $query->select('id_bigint')->from((new Meeting)->getTable());
+            })->delete();
 
         foreach ($externalObjects as $externalRoot) {
             $externalRoot = $this->castExternalRootServer($externalRoot);

@@ -39,7 +39,7 @@ class ImportRootServers extends Command
             return;
         }
 
-        DB::transaction(fn () => $this->clearNonAggregatorData());
+        DB::transaction(fn () => $this->deleteNonAggregatorData());
         DB::transaction(fn () => $this->importRootServersList($rootServerRepository));
         foreach ($rootServerRepository->search() as $rootServer) {
             try {
@@ -56,7 +56,7 @@ class ImportRootServers extends Command
         }
     }
 
-    private function clearNonAggregatorData(): void
+    private function deleteNonAggregatorData(): void
     {
         $meetingIds = Meeting::query()->whereNull('root_server_id')->pluck('id_bigint');
         Meeting::query()->whereIn('id_bigint', $meetingIds)->delete();
