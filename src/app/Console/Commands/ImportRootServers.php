@@ -93,7 +93,7 @@ class ImportRootServers extends Command
 
     private function importServiceBodies(RootServer $rootServer, ServiceBodyRepositoryInterface $serviceBodyRepository)
     {
-        $this->info('importing service bodies...');
+        $this->info('importing service bodies');
         try {
             $url = rtrim($rootServer->url, '/') . '/client_interface/json/?switcher=GetServiceBodies';
             $response = $this->httpGet($url);
@@ -117,7 +117,7 @@ class ImportRootServers extends Command
 
     private function importFormats(RootServer $rootServer, FormatRepositoryInterface $formatRepository)
     {
-        $this->info('importing formats...');
+        $this->info('importing formats');
         try {
             $url = rtrim($rootServer->url, '/') . '/client_interface/json/?switcher=GetFormats';
             $response = $this->httpGet($url);
@@ -141,7 +141,7 @@ class ImportRootServers extends Command
 
     private function importMeetings(RootServer $rootServer, MeetingRepositoryInterface $meetingRepository)
     {
-        $this->info('importing meetings...');
+        $this->info('importing meetings');
         try {
             $url = rtrim($rootServer->url, '/') . '/client_interface/json/?switcher=GetSearchResults';
             $response = $this->httpGet($url);
@@ -165,7 +165,7 @@ class ImportRootServers extends Command
 
     private function analyzeTables(): void
     {
-        $this->info('analyzing tables...');
+        $this->info('analyzing tables');
         $prefix = DB::connection()->getTablePrefix();
         $tableNames = [
             $prefix . (new Meeting)->getTable(),
