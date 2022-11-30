@@ -42,7 +42,16 @@ class ImportRootServers extends Command
         DB::transaction(fn () => $this->clearNonAggregatorData());
         DB::transaction(fn () => $this->importRootServersList($rootServerRepository));
         foreach ($rootServerRepository->search() as $rootServer) {
-            DB::transaction(fn () => $this->importRootServer($rootServer, $formatRepository, $meetingRepository, $serviceBodyRepository));
+            try {
+                DB::transaction(fn() => $this->importRootServer(
+                    $rootServer,
+                    $formatRepository,
+                    $meetingRepository,
+                    $serviceBodyRepository
+                ));
+            } catch (\Exception $e) {
+                $this->error($e->getMessage());
+            }
             $this->analyzeTables();
         }
     }
@@ -74,7 +83,7 @@ class ImportRootServers extends Command
                 ->reject(fn($e) => is_null($e));
             $rootServerRepository->import($externalRootServers);
         } catch (\Exception $e) {
-            // TODO Log something and save an error to the database
+            $this->error($e->getMessage());
             throw $e;
         }
     }
@@ -94,73 +103,55 @@ class ImportRootServers extends Command
     private function importServiceBodies(RootServer $rootServer, ServiceBodyRepositoryInterface $serviceBodyRepository)
     {
         $this->info('importing service bodies');
-        try {
-            $url = rtrim($rootServer->url, '/') . '/client_interface/json/?switcher=GetServiceBodies';
-            $response = $this->httpGet($url);
-            $externalServiceBodies = collect($response)
-                ->map(function ($serviceBody) {
-                    try {
-                        return new ExternalServiceBody($serviceBody);
-                    } catch (InvalidObjectException) {
-                        // TODO: Log something and save an error to the database
-                        return null;
-                    }
-                })
-                ->reject(fn($e) => is_null($e));
-            $serviceBodyRepository->import($rootServer->id, $externalServiceBodies);
-        } catch (\Exception $e) {
-            $this->error($e->getMessage());
-            // TODO save an error to the database
-            return;
-        }
+        $url = rtrim($rootServer->url, '/') . '/client_interface/json/?switcher=GetServiceBodies';
+        $response = $this->httpGet($url);
+        $externalServiceBodies = collect($response)
+            ->map(function ($serviceBody) {
+                try {
+                    return new ExternalServiceBody($serviceBody);
+                } catch (InvalidObjectException) {
+                    // TODO: Log something and save an error to the database
+                    return null;
+                }
+            })
+            ->reject(fn($e) => is_null($e));
+        $serviceBodyRepository->import($rootServer->id, $externalServiceBodies);
     }
 
     private function importFormats(RootServer $rootServer, FormatRepositoryInterface $formatRepository)
     {
         $this->info('importing formats');
-        try {
-            $url = rtrim($rootServer->url, '/') . '/client_interface/json/?switcher=GetFormats';
-            $response = $this->httpGet($url);
-            $externalFormats = collect($response)
-                ->map(function ($format) {
-                    try {
-                        return new ExternalFormat($format);
-                    } catch (InvalidObjectException) {
-                        // TODO: Log something and save an error to the database
-                        return null;
-                    }
-                })
-                ->reject(fn($e) => is_null($e));
-            $formatRepository->import($rootServer->id, $externalFormats);
-        } catch (\Exception $e) {
-            $this->error($e->getMessage());
-            // TODO save an error to the database
-            return;
-        }
+        $url = rtrim($rootServer->url, '/') . '/client_interface/json/?switcher=GetFormats';
+        $response = $this->httpGet($url);
+        $externalFormats = collect($response)
+            ->map(function ($format) {
+                try {
+                    return new ExternalFormat($format);
+                } catch (InvalidObjectException) {
+                    // TODO: Log something and save an error to the database
+                    return null;
+                }
+            })
+            ->reject(fn($e) => is_null($e));
+        $formatRepository->import($rootServer->id, $externalFormats);
     }
 
     private function importMeetings(RootServer $rootServer, MeetingRepositoryInterface $meetingRepository)
     {
         $this->info('importing meetings');
-        try {
-            $url = rtrim($rootServer->url, '/') . '/client_interface/json/?switcher=GetSearchResults';
-            $response = $this->httpGet($url);
-            $externalMeetings = collect($response)
-                ->map(function ($meeting) {
-                    try {
-                        return new ExternalMeeting($meeting);
-                    } catch (InvalidObjectException) {
-                        // TODO: Log something and save an error to the database
-                        return null;
-                    }
-                })
-                ->reject(fn($e) => is_null($e));
-            $meetingRepository->import($rootServer->id, $externalMeetings);
-        } catch (\Exception $e) {
-            $this->error($e->getMessage());
-            // TODO save an error to the database
-            return;
-        }
+        $url = rtrim($rootServer->url, '/') . '/client_interface/json/?switcher=GetSearchResults';
+        $response = $this->httpGet($url);
+        $externalMeetings = collect($response)
+            ->map(function ($meeting) {
+                try {
+                    return new ExternalMeeting($meeting);
+                } catch (InvalidObjectException) {
+                    // TODO: Log something and save an error to the database
+                    return null;
+                }
+            })
+            ->reject(fn($e) => is_null($e));
+        $meetingRepository->import($rootServer->id, $externalMeetings);
     }
 
     private function analyzeTables(): void
