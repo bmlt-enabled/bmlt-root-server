@@ -174,7 +174,7 @@ class ImportRootServers extends Command
     {
         $response = Http::get($url);
         if (!$response->ok()) {
-            throw new \Exception("Got bad status code {$response->status()} retrieving root servers.");
+            throw new \Exception("Got bad status code {$response->status()} from $url");
         }
 
         return $response->json();
