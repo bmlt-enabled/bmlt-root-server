@@ -22,6 +22,10 @@ class CatchAllController extends Controller
     {
         $pathInfo = LegacyPathInfo::parse($request);
 
+        if (legacy_config('aggregator_mode_enabled')) {
+            return response('tomato');
+        }
+
         if (legacy_config('new_ui_enabled')) {
             if (self::isAllowedLegacyPath($pathInfo) && file_exists($pathInfo->path)) {
                 return self::legacyResponse($pathInfo);
