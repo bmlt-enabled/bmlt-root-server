@@ -50,12 +50,12 @@ class RootServerRepository implements RootServerRepositoryInterface
         // TODO test these
         MeetingData::query()
             ->whereNot('meetingid_bigint', 0)
-            ->whereNotIn('meetingid_bigint', function($query) {
+            ->whereNotIn('meetingid_bigint', function ($query) {
                 $query->select('id_bigint')->from((new Meeting)->getTable());
             })->delete();
         MeetingLongData::query()
             ->whereNot('meetingid_bigint', 0)
-            ->whereNotIn('meetingid_bigint', function($query) {
+            ->whereNotIn('meetingid_bigint', function ($query) {
                 $query->select('id_bigint')->from((new Meeting)->getTable());
             })->delete();
 
