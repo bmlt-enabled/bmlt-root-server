@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Legacy;
 
 use App\LegacyConfig;
 use App\Models\Format;
