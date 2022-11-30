@@ -18,6 +18,7 @@ use App\Repositories\External\ExternalMeeting;
 use App\Repositories\External\ExternalRootServer;
 use App\Repositories\External\ExternalServiceBody;
 use App\Repositories\External\InvalidObjectException;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -45,6 +46,7 @@ class ImportRootServers extends Command
             try {
                 DB::transaction(fn() => $this->importRootServer(
                     $rootServer,
+                    $rootServerRepository,
                     $formatRepository,
                     $meetingRepository,
                     $serviceBodyRepository
@@ -90,6 +92,7 @@ class ImportRootServers extends Command
 
     private function importRootServer(
         RootServer $rootServer,
+        RootServerRepositoryInterface $rootServerRepository,
         FormatRepositoryInterface $formatRepository,
         MeetingRepositoryInterface $meetingRepository,
         ServiceBodyRepositoryInterface $serviceBodyRepository,
@@ -98,6 +101,7 @@ class ImportRootServers extends Command
         $this->importServiceBodies($rootServer, $serviceBodyRepository);
         $this->importFormats($rootServer, $formatRepository);
         $this->importMeetings($rootServer, $meetingRepository);
+        $rootServerRepository->update($rootServer->id, ['last_successful_import' => Carbon::now()]);
     }
 
     private function importServiceBodies(RootServer $rootServer, ServiceBodyRepositoryInterface $serviceBodyRepository)
