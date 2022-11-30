@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Interfaces\ServiceBodyRepositoryInterface;
 use App\Models\Change;
+use App\Models\RootServer;
 use App\Models\ServiceBody;
 use App\Repositories\External\ExternalServiceBody;
 use Illuminate\Database\Eloquent\Builder;
@@ -221,6 +222,10 @@ class ServiceBodyRepository implements ServiceBodyRepositoryInterface
 
     public function import(int $rootServerId, Collection $externalObjects): void
     {
+        $rootServer = RootServer::query()->where('id', $rootServerId)->firstOrFail();
+        $ignoreServiceBodyIds = collect(config('aggregator.ignore_service_bodies'))->get($rootServer->url, []);
+        $externalObjects = $externalObjects->reject(fn ($ex) => in_array($ex->id, $ignoreServiceBodyIds));
+
         $sourceIds = $externalObjects->map(fn (ExternalServiceBody $ex) => $ex->id);
         ServiceBody::query()
             ->where('root_server_id', $rootServerId)

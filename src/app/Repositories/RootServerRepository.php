@@ -44,6 +44,9 @@ class RootServerRepository implements RootServerRepositoryInterface
 
     public function import(Collection $externalObjects): void
     {
+        $ignoreRootServerUrls = config('aggregator.ignore_root_servers');
+        $externalObjects = $externalObjects->reject(fn (ExternalRootServer $ex) => in_array($ex->url, $ignoreRootServerUrls));
+
         $sourceIds = $externalObjects->map(fn (ExternalRootServer $ex) => $ex->id);
         RootServer::query()->whereNotIn('source_id', $sourceIds)->delete();
 
