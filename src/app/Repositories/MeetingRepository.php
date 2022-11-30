@@ -2,14 +2,15 @@
 
 namespace App\Repositories;
 
+use App\Interfaces\MeetingRepositoryInterface;
 use App\Models\Change;
 use App\Models\Meeting;
 use App\Models\MeetingData;
 use App\Models\MeetingLongData;
+use App\Repositories\External\ExternalMeeting;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
-use App\Interfaces\MeetingRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 
 class MeetingRepository implements MeetingRepositoryInterface
@@ -18,6 +19,8 @@ class MeetingRepository implements MeetingRepositoryInterface
 
     public function getSearchResults(
         array $meetingIds = null,
+        array $rootServersInclude = null,
+        array $rootServersExclude = null,
         array $weekdaysInclude = null,
         array $weekdaysExclude = null,
         array $venueTypesInclude = null,
@@ -43,17 +46,20 @@ class MeetingRepository implements MeetingRepositoryInterface
         string $searchString = null,
         ?bool $published = true,
         bool $eagerServiceBodies = false,
+        bool $eagerRootServers = false,
         array $sortKeys = null,
         int $pageSize = null,
         int $pageNum = null,
     ): Collection {
-        $meetings = Meeting::query();
-
+        $eagerLoadRelations = ['data', 'longdata'];
         if ($eagerServiceBodies) {
-            $meetings = $meetings->with(['data', 'longdata', 'serviceBody']);
-        } else {
-            $meetings = $meetings->with(['data', 'longdata']);
+            $eagerLoadRelations[] = 'serviceBody';
         }
+        if ($eagerRootServers) {
+            $eagerLoadRelations[] = 'rootServer';
+        }
+
+        $meetings = Meeting::with($eagerLoadRelations);
 
         if (!is_null($published)) {
             $meetings = $meetings->where('published', $published ? 1 : 0);
@@ -61,6 +67,14 @@ class MeetingRepository implements MeetingRepositoryInterface
 
         if (!is_null($meetingIds)) {
             $meetings = $meetings->whereIn('id_bigint', $meetingIds);
+        }
+
+        if (!is_null($rootServersInclude)) {
+            $meetings = $meetings->whereIn('root_server_id', $rootServersInclude);
+        }
+
+        if (!is_null($rootServersExclude)) {
+            $meetings = $meetings->whereNotIn('root_server_id', $rootServersExclude);
         }
 
         if (!is_null($weekdaysInclude)) {
@@ -619,7 +633,9 @@ class MeetingRepository implements MeetingRepositoryInterface
                     ]);
                 }
             }
-            $this->saveChange(null, $meeting);
+            if (!legacy_config('aggregator_mode_enabled')) {
+                $this->saveChange(null, $meeting);
+            }
             return $meeting;
         });
     }
@@ -660,7 +676,9 @@ class MeetingRepository implements MeetingRepositoryInterface
                         ]);
                     }
                 }
-                $this->saveChange($meeting, Meeting::find($id));
+                if (!legacy_config('aggregator_mode_enabled')) {
+                    $this->saveChange($meeting, Meeting::find($id));
+                }
                 return true;
             }
             return false;
@@ -676,7 +694,9 @@ class MeetingRepository implements MeetingRepositoryInterface
                 MeetingData::query()->where('meetingid_bigint', $meeting->id_bigint)->delete();
                 MeetingLongData::query()->where('meetingid_bigint', $meeting->id_bigint)->delete();
                 Meeting::query()->where('id_bigint', $meeting->id_bigint)->delete();
-                $this->saveChange($meeting, null);
+                if (!legacy_config('aggregator_mode_enabled')) {
+                    $this->saveChange($meeting, null);
+                }
                 return true;
             }
             return false;
@@ -781,5 +801,99 @@ class MeetingRepository implements MeetingRepositoryInterface
                     ->toArray()
             ),
         ]);
+    }
+
+    public function import(int $rootServerId, Collection $externalObjects): void
+    {
+        $sourceIds = $externalObjects->map(fn (ExternalMeeting $ex) => $ex->id);
+        $meetingIds = Meeting::query()
+            ->where('root_server_id', $rootServerId)
+            ->whereNotIn('source_id', $sourceIds)
+            ->pluck('id_bigint');
+
+        Meeting::query()->whereIn('id_bigint', $meetingIds)->delete();
+        MeetingData::query()->whereIn('meetingid_bigint', $meetingIds)->delete();
+        MeetingLongData::query()->whereIn('meetingid_bigint', $meetingIds)->delete();
+
+        $formatRepository = new FormatRepository();
+        $allFormats = $formatRepository->search(rootServersInclude: [$rootServerId], showAll: true)->groupBy(['shared_id_bigint']);
+        $formatSharedIdToSourceIdMap = $allFormats->mapWithKeys(fn ($formats, $sharedId) => [$sharedId => $formats->first()->source_id]);
+        $formatSourceIdToSharedIdMap = $allFormats->mapWithKeys(fn ($formats, $sharedId) => [$formats->first()->source_id => $sharedId]);
+
+        $serviceBodyRepository = new ServiceBodyRepository();
+        $allServiceBodies = $serviceBodyRepository->search(rootServersInclude: [$rootServerId]);
+        $serviceBodyIdToSourceIdMap = $allServiceBodies->mapWithKeys(fn ($sb, $_) => [$sb->id_bigint => $sb->source_id]);
+        $serviceBodySourceIdToIdMap = $allServiceBodies->mapWithKeys(fn ($sb, $_) => [$sb->source_id => $sb->id_bigint]);
+
+        $allMeetings = $this->getSearchResults(rootServersInclude: [$rootServerId]);
+        $meetingsBySourceId = $allMeetings->mapWithKeys(fn ($meeting, $_) => [$meeting->source_id => $meeting]);
+
+        foreach ($externalObjects as $external) {
+            $external = $this->castExternal($external);
+            $db = $meetingsBySourceId->get($external->id);
+
+            $serviceBodyId = $serviceBodySourceIdToIdMap->get($external->serviceBodyId);
+            if (is_null($serviceBodyId)) {
+                if (!is_null($db)) {
+                    $db->delete();
+                }
+                continue;
+            }
+
+            if (is_null($db)) {
+                $values = $this->externalMeetingToValuesArray($rootServerId, $serviceBodyId, $external, $formatSourceIdToSharedIdMap);
+                $this->create($values);
+            } else if (!$external->isEqual($db, $serviceBodyIdToSourceIdMap, $formatSharedIdToSourceIdMap)) {
+                $values = $this->externalMeetingToValuesArray($rootServerId, $serviceBodyId, $external, $formatSourceIdToSharedIdMap);
+                $this->update($db->id_bigint, $values);
+            }
+        }
+    }
+
+    private function castExternal($obj): ExternalMeeting
+    {
+        return $obj;
+    }
+
+    private function externalMeetingToValuesArray(int $rootServerId, int $serviceBodyId, ExternalMeeting $externalMeeting, Collection $formatSourceIdToSharedIdMap): array
+    {
+
+        return [
+            'root_server_id' => $rootServerId,
+            'source_id' => $externalMeeting->id,
+            'service_body_bigint' => $serviceBodyId,
+            'formats' => collect($externalMeeting->formatIds)
+                ->map(fn ($id) => $formatSourceIdToSharedIdMap->get($id))
+                ->reject(fn ($id) => is_null($id))
+                ->sort()
+                ->unique()
+                ->values()
+                ->join(','),
+            'venue_type' => $externalMeeting->venueType,
+            'weekday_tinyint' => $externalMeeting->weekdayId - 1,
+            'start_time' => $externalMeeting->startTime,
+            'duration_time' => $externalMeeting->durationTime,
+            'latitude' => $externalMeeting->latitude,
+            'longitude' => $externalMeeting->longitude,
+            'published' => $externalMeeting->published ? 1 : 0,
+            'worldid_mixed' => $externalMeeting->worldId,
+            'meeting_name' => $externalMeeting->name,
+            'comments' => $externalMeeting->comments,
+            'virtual_meeting_additional_info' => $externalMeeting->virtualMeetingAdditionalInfo,
+            'virtual_meeting_link' => $externalMeeting->virtualMeetingLink,
+            'phone_meeting_number' => $externalMeeting->phoneMeetingNumber,
+            'location_nation' => $externalMeeting->locationNation,
+            'location_postal_code_1' => $externalMeeting->locationPostalCode1,
+            'location_province' => $externalMeeting->locationProvince,
+            'location_sub_province' => $externalMeeting->locationSubProvince,
+            'location_municipality' => $externalMeeting->locationMunicipality,
+            'location_city_subsection' => $externalMeeting->locationCitySubsection,
+            'location_neighborhood' => $externalMeeting->locationNeighborhood,
+            'location_street' => $externalMeeting->locationStreet,
+            'location_info' => $externalMeeting->locationInfo,
+            'location_text' => $externalMeeting->locationText,
+            'bus_lines' => $externalMeeting->busLines,
+            'train_lines' => $externalMeeting->trainLines,
+        ];
     }
 }

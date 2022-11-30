@@ -22,21 +22,33 @@ class FormatPolicy
 
     public function create(User $user)
     {
+        if (legacy_config('aggregator_mode_enabled')) {
+            return false;
+        }
+
         return $user->isAdmin();
     }
 
     public function update(User $user, Format $format)
     {
+        if (legacy_config('aggregator_mode_enabled')) {
+            return false;
+        }
+
         return $user->isAdmin();
     }
 
     public function partialUpdate(User $user, Format $format)
     {
-        return $user->isAdmin();
+        return $this->update($user, $format);
     }
 
     public function delete(User $user, Format $format)
     {
+        if (legacy_config('aggregator_mode_enabled')) {
+            return false;
+        }
+
         return $user->isAdmin();
     }
 }

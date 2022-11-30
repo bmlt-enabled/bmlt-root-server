@@ -2,13 +2,24 @@
 
 namespace Tests\Feature;
 
+use App\LegacyConfig;
+use App\Models\RootServer;
+use App\Models\ServiceBody;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use App\Models\ServiceBody;
 
 class GetServiceBodiesTest extends TestCase
 {
     use RefreshDatabase;
+
+    private function createRootServer(int $sourceId, string $name = 'test', string $url = 'https://test.com'): RootServer
+    {
+        return RootServer::create([
+            'source_id' => $sourceId,
+            'name' => $name,
+            'url' => $url
+        ]);
+    }
 
     private function createZone(string $name, string $description, string $uri = null, string $helpline = null, string $worldId = null, string $email = null)
     {
@@ -77,6 +88,12 @@ class GetServiceBodiesTest extends TestCase
         }
 
         return true;
+    }
+
+    protected function tearDown(): void
+    {
+        LegacyConfig::reset();
+        parent::tearDown();
     }
 
     public function testJsonp()
@@ -402,5 +419,154 @@ class GetServiceBodiesTest extends TestCase
         $this->assertTrue($this->allServiceBodiesInArray($expected, $response));
         $unexpected = [$zone2, $region2, $area2];
         $this->assertTrue($this->allServiceBodiesNotInArray($unexpected, $response));
+    }
+
+    public function testRootServerIdWithAggregatorDisabled()
+    {
+        $rootServer = $this->createRootServer(1);
+        $zone = $this->createZone("sezf", "sezf", "https://zone");
+        $zone->rootServer()->associate($rootServer);
+        $zone->save();
+        $response = $this->get('/client_interface/json/?switcher=GetServiceBodies')
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonCount(1)
+            ->json();
+        self::assertArrayNotHasKey('root_server_id', $response[0]);
+    }
+
+    public function testRootServerIdWithAggregatorEnabled()
+    {
+        LegacyConfig::set('aggregator_mode_enabled', true);
+        $rootServer = $this->createRootServer(1);
+        $zone = $this->createZone("sezf", "sezf", "https://zone");
+        $zone->rootServer()->associate($rootServer);
+        $zone->save();
+        $response = $this->get('/client_interface/json/?switcher=GetServiceBodies')
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonCount(1)
+            ->json();
+        self::assertEquals($rootServer->id, $response[0]['root_server_id']);
+    }
+
+    // root server ids
+    //
+    //
+    public function testRootServerIdsWithAggregatorDisabled()
+    {
+        $rootServer1 = $this->createRootServer(1);
+        $serviceBody1 = $this->createZone("sezf", "sezf");
+        $serviceBody1->rootServer()->associate($rootServer1);
+        $serviceBody1->save();
+        $badId = $rootServer1->id + 1;
+        $this->get("/client_interface/json/?switcher=GetServiceBodies&root_server_ids=$badId")
+            ->assertStatus(200)
+            ->assertJsonCount(1);
+    }
+
+    public function testRootServerIdsNone()
+    {
+        LegacyConfig::set('aggregator_mode_enabled', true);
+
+        $rootServer1 = $this->createRootServer(1);
+        $serviceBody1 = $this->createZone("sezf", "sezf");
+        $serviceBody1->rootServer()->associate($rootServer1);
+        $serviceBody1->save();
+        $badId = $rootServer1->id + 1;
+        $this->get("/client_interface/json/?switcher=GetServiceBodies&root_server_ids=$badId")
+            ->assertStatus(200)
+            ->assertJsonCount(0);
+    }
+
+    public function testRootServerIdsIncludeOne()
+    {
+        LegacyConfig::set('aggregator_mode_enabled', true);
+
+        $rootServer1 = $this->createRootServer(1);
+        $serviceBody1 = $this->createZone("sezf", "sezf");
+        $serviceBody1->rootServer()->associate($rootServer1);
+        $serviceBody1->save();
+
+        $rootServer2 = $this->createRootServer(2);
+        $serviceBody2 = $this->createZone("sezf2", "sezf2");
+        $serviceBody2->rootServer()->associate($rootServer2);
+        $serviceBody2->save();
+
+        $this->get("/client_interface/json/?switcher=GetServiceBodies&root_server_ids=$rootServer1->id")
+            ->assertStatus(200)
+            ->assertJsonCount(1)
+            ->assertJsonFragment(['id' => strval($serviceBody1->id_bigint)]);
+    }
+
+    public function testRootServerIdsIncludeTwo()
+    {
+        LegacyConfig::set('aggregator_mode_enabled', true);
+
+        $rootServer1 = $this->createRootServer(1);
+        $serviceBody1 = $this->createZone("sezf", "sezf");
+        $serviceBody1->rootServer()->associate($rootServer1);
+        $serviceBody1->save();
+
+        $rootServer2 = $this->createRootServer(2);
+        $serviceBody2 = $this->createZone("sezf2", "sezf2");
+        $serviceBody2->rootServer()->associate($rootServer2);
+        $serviceBody2->save();
+
+        $rootServer3 = $this->createRootServer(3);
+        $serviceBody3 = $this->createZone("sezf3", "sezf3");
+        $serviceBody3->rootServer()->associate($rootServer3);
+        $serviceBody3->save();
+
+        $this->get("/client_interface/json/?switcher=GetServiceBodies&root_server_ids[]=$rootServer2->id&root_server_ids[]=$rootServer3->id")
+            ->assertStatus(200)
+            ->assertJsonCount(2)
+            ->assertJsonFragment(['id' => strval($serviceBody2->id_bigint)])
+            ->assertJsonFragment(['id' => strval($serviceBody3->id_bigint)]);
+    }
+
+    public function testRootServerIdsExcludeOne()
+    {
+        LegacyConfig::set('aggregator_mode_enabled', true);
+
+        $rootServer1 = $this->createRootServer(1);
+        $serviceBody1 = $this->createZone("sezf", "sezf");
+        $serviceBody1->rootServer()->associate($rootServer1);
+        $serviceBody1->save();
+
+        $rootServer2 = $this->createRootServer(2);
+        $serviceBody2 = $this->createZone("sezf2", "sezf2");
+        $serviceBody2->rootServer()->associate($rootServer2);
+        $serviceBody2->save();
+
+        $this->get("/client_interface/json/?switcher=GetServiceBodies&root_server_ids=-$rootServer2->id")
+            ->assertStatus(200)
+            ->assertJsonCount(1)
+            ->assertJsonFragment(['id' => strval($serviceBody1->id_bigint)]);
+    }
+
+    public function testRootServerIdsExcludeTwo()
+    {
+        LegacyConfig::set('aggregator_mode_enabled', true);
+
+        $rootServer1 = $this->createRootServer(1);
+        $serviceBody1 = $this->createZone("sezf", "sezf");
+        $serviceBody1->rootServer()->associate($rootServer1);
+        $serviceBody1->save();
+
+        $rootServer2 = $this->createRootServer(2);
+        $serviceBody2 = $this->createZone("sezf2", "sezf2");
+        $serviceBody2->rootServer()->associate($rootServer2);
+        $serviceBody2->save();
+
+        $rootServer3 = $this->createRootServer(3);
+        $serviceBody3 = $this->createZone("sezf3", "sezf3");
+        $serviceBody3->rootServer()->associate($rootServer3);
+        $serviceBody3->save();
+
+        $this->get("/client_interface/json/?switcher=GetServiceBodies&root_server_ids[]=-$rootServer2->id&root_server_ids[]=-$rootServer3->id")
+            ->assertStatus(200)
+            ->assertJsonCount(1)
+            ->assertJsonFragment(['id' => strval($serviceBody1->id_bigint)]);
     }
 }

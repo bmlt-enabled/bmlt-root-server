@@ -14,6 +14,7 @@ return new class extends Migration
     {
         $prefix = DB::connection()->getTablePrefix();
         DB::statement(DB::raw('ALTER TABLE ' . $prefix . 'comdef_meetings_data ENGINE = InnoDB;'));
+        DB::statement(DB::raw('ALTER TABLE ' . $prefix . 'comdef_meetings_data CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci'));
     }
 
     /**

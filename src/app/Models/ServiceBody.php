@@ -28,6 +28,8 @@ class ServiceBody extends Model
     ];
 
     public const FIELDS = [
+        'root_server_id',
+        'source_id',
         'sb_owner',
         'name_string',
         'description_string',
@@ -44,6 +46,11 @@ class ServiceBody extends Model
     protected $primaryKey = 'id_bigint';
     public $timestamps = false;
     protected $fillable = self::FIELDS;
+
+    public function rootServer()
+    {
+        return $this->belongsTo(RootServer::class, 'root_server_id');
+    }
 
     public function meetings()
     {

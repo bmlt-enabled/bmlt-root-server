@@ -22,6 +22,8 @@ class MeetingResource extends JsonResource
 
     private static ?string $defaultDurationTime = null;
 
+    private static bool $isAggregatorModeEnabled = false;
+
     // Allows tests to reset state
     public static function resetStaticVariables()
     {
@@ -33,6 +35,7 @@ class MeetingResource extends JsonResource
         self::$userIsAuthenticated = false;
         self::$userIsAdmin = false;
         self::$defaultDurationTime = null;
+        self::$isAggregatorModeEnabled = false;
     }
 
     /**
@@ -69,6 +72,7 @@ class MeetingResource extends JsonResource
             'published' => $this->getPublished(),
             'root_server_uri' => $this->getRootServerUri($request),
             'format_shared_id_list' => $this->getFormatSharedIdList(),
+            'root_server_id' => $this->getRootServerId(),
         ];
 
         // data table keys
@@ -102,6 +106,9 @@ class MeetingResource extends JsonResource
 
         // Default duration time
         self::$defaultDurationTime = legacy_config('default_duration_time');
+
+        // Aggregator mode
+        self::$isAggregatorModeEnabled = (bool)legacy_config('aggregator_mode_enabled');
 
         // Preload meeting data templates
         self::$meetingDataTemplates = $meetingRepository->getDataTemplates();
@@ -284,7 +291,7 @@ class MeetingResource extends JsonResource
     {
         return $this->when(
             !self::$hasDataFieldKeys || self::$dataFieldKeys->has('root_server_uri'),
-            $request->getSchemeAndHttpHost() . $request->getBaseUrl()
+            self::$isAggregatorModeEnabled && $this->root_server_id ? $this->rootServer->url : $request->getSchemeAndHttpHost() . $request->getBaseUrl()
         );
     }
 
@@ -293,6 +300,14 @@ class MeetingResource extends JsonResource
         return $this->when(
             !self::$hasDataFieldKeys || self::$dataFieldKeys->has('format_shared_id_list'),
             $this->getCalculatedFormatSharedIds() ?? ''
+        );
+    }
+
+    private function getRootServerId()
+    {
+        return $this->when(
+            self::$isAggregatorModeEnabled && (!self::$hasDataFieldKeys || self::$dataFieldKeys->has('root_server_id')),
+            $this->root_server_id ?? ''
         );
     }
 }

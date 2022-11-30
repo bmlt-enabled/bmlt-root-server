@@ -9,6 +9,8 @@ interface MeetingRepositoryInterface
 {
     public function getSearchResults(
         array $meetingIds = null,
+        array $rootServersInclude = null,
+        array $rootServersExclude = null,
         array $weekdaysInclude = null,
         array $weekdaysExclude = null,
         array $venueTypesInclude = null,
@@ -34,6 +36,7 @@ interface MeetingRepositoryInterface
         string $searchString = null,
         bool $published = true,
         bool $eagerServiceBodies = false,
+        bool $eagerRootServers = false,
         array $sortKeys = null,
         int $pageSize = null,
         int $pageNum = null,
@@ -46,4 +49,5 @@ interface MeetingRepositoryInterface
     public function create(array $values): Meeting;
     public function update(int $id, array $values): bool;
     public function delete(int $id): bool;
+    public function import(int $rootServerId, Collection $externalObjects): void;
 }

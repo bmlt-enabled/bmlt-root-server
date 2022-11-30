@@ -45,6 +45,7 @@ services:
       DB_HOST: db
       DB_PREFIX: na
       NEW_UI_ENABLED: 'true'
+      AGGREGATOR_MODE_ENABLED: 'false'
 ```
 
 ## Developing the New UI

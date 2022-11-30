@@ -59,4 +59,8 @@ RUN a2enmod rewrite \
      && a2dismod php8.1 \
      && a2enmod php8.0
 
+# PHP memory limits
+RUN sed -i 's/^memory_limit.*$/memory_limit = 256M/' /etc/php/8.0/apache2/php.ini
+RUN sed -i 's/^memory_limit.*$/memory_limit = 256M/' /etc/php/8.0/cli/php.ini
+
 EXPOSE 8000

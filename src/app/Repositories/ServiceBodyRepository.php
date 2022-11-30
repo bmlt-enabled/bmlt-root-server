@@ -4,7 +4,9 @@ namespace App\Repositories;
 
 use App\Interfaces\ServiceBodyRepositoryInterface;
 use App\Models\Change;
+use App\Models\RootServer;
 use App\Models\ServiceBody;
+use App\Repositories\External\ExternalServiceBody;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
@@ -15,6 +17,8 @@ class ServiceBodyRepository implements ServiceBodyRepositoryInterface
     public function search(
         array $includeIds = [],
         array $excludeIds = [],
+        array $rootServersInclude = null,
+        array $rootServersExclude = null,
         bool $recurseChildren = false,
         bool $recurseParents = false
     ): Collection {
@@ -37,6 +41,14 @@ class ServiceBodyRepository implements ServiceBodyRepositoryInterface
             $serviceBodies = $serviceBodies->whereNotIn('id_bigint', $excludeIds);
         }
 
+        if (!is_null($rootServersInclude)) {
+            $serviceBodies = $serviceBodies->whereIn('root_server_id', $rootServersInclude);
+        }
+
+        if (!is_null($rootServersExclude)) {
+            $serviceBodies = $serviceBodies->whereNotIn('root_server_id', $rootServersExclude);
+        }
+
         return $serviceBodies->get();
     }
 
@@ -44,7 +56,9 @@ class ServiceBodyRepository implements ServiceBodyRepositoryInterface
     {
         return DB::transaction(function () use ($values) {
             $serviceBody = ServiceBody::create($values);
-            $this->saveChange(null, $serviceBody);
+            if (!legacy_config('aggregator_mode_enabled')) {
+                $this->saveChange(null, $serviceBody);
+            }
             return $serviceBody;
         });
     }
@@ -55,7 +69,9 @@ class ServiceBodyRepository implements ServiceBodyRepositoryInterface
             $serviceBody = ServiceBody::find($id);
             if (!is_null($serviceBody)) {
                 ServiceBody::query()->where('id_bigint', $id)->update($values);
-                $this->saveChange($serviceBody, ServiceBody::find($id));
+                if (!legacy_config('aggregator_mode_enabled')) {
+                    $this->saveChange($serviceBody, ServiceBody::find($id));
+                }
                 return true;
             }
             return false;
@@ -68,7 +84,9 @@ class ServiceBodyRepository implements ServiceBodyRepositoryInterface
             $serviceBody = ServiceBody::find($id);
             if (!is_null($serviceBody)) {
                 $serviceBody->delete();
-                $this->saveChange($serviceBody, null);
+                if (!legacy_config('aggregator_mode_enabled')) {
+                    $this->saveChange($serviceBody, null);
+                }
                 return true;
             }
             return false;
@@ -200,5 +218,81 @@ class ServiceBodyRepository implements ServiceBodyRepositoryInterface
         }
 
         return $ret;
+    }
+
+    public function import(int $rootServerId, Collection $externalObjects): void
+    {
+        $rootServer = RootServer::query()->where('id', $rootServerId)->firstOrFail();
+        $ignoreServiceBodyIds = collect(config('aggregator.ignore_service_bodies'))->get($rootServer->url, []);
+        $externalObjects = $externalObjects->reject(fn ($ex) => in_array($ex->id, $ignoreServiceBodyIds));
+
+        $sourceIds = $externalObjects->map(fn (ExternalServiceBody $ex) => $ex->id);
+        ServiceBody::query()
+            ->where('root_server_id', $rootServerId)
+            ->whereNotIn('source_id', $sourceIds)
+            ->delete();
+
+        $bySourceId = ServiceBody::query()
+            ->where('root_server_id', $rootServerId)
+            ->get()
+            ->mapWithKeys(fn ($sb, $_) => [$sb->source_id => $sb]);
+
+        foreach ($externalObjects as $external) {
+            $external = $this->castExternal($external);
+            $db = $bySourceId->get($external->id);
+            if (is_null($db)) {
+                $values = $this->externalServiceBodyToValuesArray($rootServerId, $external);
+                $bySourceId->put($external->id, $this->create($values));
+            } else if (!$external->isEqual($db)) {
+                $values = $this->externalServiceBodyToValuesArray($rootServerId, $external);
+                $this->update($db->id_bigint, $values);
+                $db->refresh();
+                $bySourceId->put($external->id, $db);
+            }
+        }
+
+        foreach ($externalObjects as $external) {
+            $external = $this->castExternal($external);
+
+            $parent = $bySourceId->get($external->parentId);
+            $db = $bySourceId->get($external->id);
+
+            if (is_null($parent)) {
+                if ($db->sb_owner !== 0) {
+                    $db->sb_owner = 0;
+                    $db->save();
+                }
+                continue;
+            }
+
+            if (is_null($db)) {
+                continue;
+            }
+
+            if ($db->sb_owner != $parent->id_bigint) {
+                $db->sb_owner = $parent->id_bigint;
+                $db->save();
+            }
+        }
+    }
+
+    private function castExternal($obj): ExternalServiceBody
+    {
+        return $obj;
+    }
+
+    private function externalServiceBodyToValuesArray(int $rootServerId, ExternalServiceBody $externalServiceBody): array
+    {
+        return [
+            'root_server_id' => $rootServerId,
+            'source_id' => $externalServiceBody->id,
+            'name_string' => $externalServiceBody->name,
+            'description_string' => $externalServiceBody->description,
+            'sb_type' => $externalServiceBody->type,
+            'uri_string' => $externalServiceBody->url,
+            'kml_file_uri_string' => $externalServiceBody->helpline,
+            'worldid_mixed' => $externalServiceBody->worldId,
+            'sb_meeting_email' => '',
+        ];
     }
 }
