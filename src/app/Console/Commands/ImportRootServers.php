@@ -42,15 +42,9 @@ class ImportRootServers extends Command
         DB::transaction(fn () => $this->clearNonAggregatorData());
         DB::transaction(fn () => $this->importRootServersList($rootServerRepository));
         foreach ($rootServerRepository->search() as $rootServer) {
-            DB::transaction(fn () => $this->importRootServer(
-                $rootServer,
-                $formatRepository,
-                $meetingRepository,
-                $serviceBodyRepository
-            ));
+            DB::transaction(fn () => $this->importRootServer($rootServer, $formatRepository, $meetingRepository, $serviceBodyRepository));
+            $this->analyzeTables();
         }
-
-        $this->analyzeTables();
     }
 
     private function clearNonAggregatorData(): void
@@ -146,7 +140,7 @@ class ImportRootServers extends Command
             $url = rtrim($rootServer->url, '/') . '/client_interface/json/?switcher=GetSearchResults';
             $response = $this->httpGet($url);
             $externalMeetings = collect($response)
-                ->map(function ($meeting) use ($rootServer) {
+                ->map(function ($meeting) {
                     try {
                         return new ExternalMeeting($meeting);
                     } catch (InvalidObjectException) {
@@ -155,7 +149,7 @@ class ImportRootServers extends Command
                     }
                 })
                 ->reject(fn($e) => is_null($e));
-                $meetingRepository->import($rootServer->id, $externalMeetings);
+            $meetingRepository->import($rootServer->id, $externalMeetings);
         } catch (\Exception $e) {
             // TODO Log something and save an error to the database
             return;

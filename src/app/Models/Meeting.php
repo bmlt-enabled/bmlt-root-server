@@ -43,6 +43,8 @@ class Meeting extends Model
         'latitude',
         'published',
         'email_contact',
+        'root_server_id',
+        'source_id',
     ];
 
     public const VENUE_TYPE_IN_PERSON = 1;

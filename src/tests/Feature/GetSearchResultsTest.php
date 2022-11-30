@@ -1346,7 +1346,7 @@ class GetSearchResultsTest extends TestCase
     {
         $meeting1 = $this->createMeeting();
         foreach (Meeting::$mainFields as $fieldName) {
-            if ($fieldName == 'root_server_id') {
+            if ($fieldName == 'root_server_id' || $fieldName == 'source_id') {
                 continue;
             }
 

@@ -55,7 +55,7 @@ class MeetingPartialUpdateTest extends TestCase
         $meeting = $this->createMeeting(['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)]);
 
         foreach (collect(Meeting::$mainFields)->merge(MeetingData::STOCK_FIELDS) as $fieldName) {
-            if ($fieldName == 'id_bigint' || $fieldName == 'formats' || $fieldName == 'time_zone' || $fieldName == 'lang_enum' || $fieldName == 'root_server_id') {
+            if ($fieldName == 'id_bigint' || $fieldName == 'formats' || $fieldName == 'time_zone' || $fieldName == 'lang_enum' || $fieldName == 'root_server_id' || $fieldName == 'source_id') {
                 continue;
             }
 

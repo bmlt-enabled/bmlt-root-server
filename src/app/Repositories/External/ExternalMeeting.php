@@ -68,7 +68,7 @@ class ExternalMeeting extends ExternalObject
         $this->formatIds = $this->validateIntArray($values, 'format_shared_id_list');
     }
 
-    public function isEqual(Meeting $meeting, Collection $formatSharedIdToSourceIdMap): bool
+    public function isEqual(Meeting $meeting, Collection $serviceBodyIdToSourceIdMap, Collection $formatSharedIdToSourceIdMap): bool
     {
         if ($this->id != $meeting->source_id) {
             return false;
@@ -76,7 +76,7 @@ class ExternalMeeting extends ExternalObject
         if ($this->worldId != $meeting->worldid_mixed) {
             return false;
         }
-        if ($this->serviceBodyId != $meeting->service_body_bigint) {
+        if ($this->serviceBodyId != $serviceBodyIdToSourceIdMap->get($meeting->service_body_bigint)) {
             return false;
         }
         if ($this->weekdayId != ($meeting->weekday_tinyint + 1)) {
@@ -92,10 +92,18 @@ class ExternalMeeting extends ExternalObject
             return false;
         }
         if ($this->latitude != $meeting->latitude) {
-            return false;
+            if (is_null($this->latitude) || is_null($meeting->latitude)) {
+                return false;
+            } else if (!$this->floatsAreEqual($this->latitude, $meeting->latitude)) {
+                return false;
+            }
         }
         if ($this->longitude != $meeting->longitude) {
-            return false;
+            if (is_null($this->longitude) || is_null($meeting->longitude)) {
+                return false;
+            } else if (!$this->floatsAreEqual($this->longitude, $meeting->longitude)) {
+                return false;
+            }
         }
         if ($this->published != (bool)$meeting->published) {
             return false;
@@ -173,6 +181,11 @@ class ExternalMeeting extends ExternalObject
         }
 
         return true;
+    }
+
+    private function floatsAreEqual(float $a, float $b): bool
+    {
+        return abs($a - $b) < PHP_FLOAT_EPSILON;
     }
 
     protected function throwInvalidObjectException(): void

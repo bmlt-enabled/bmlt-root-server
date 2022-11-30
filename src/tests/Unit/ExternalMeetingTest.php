@@ -6,6 +6,7 @@ use App\Models\Format;
 use App\Models\Meeting;
 use App\Models\MeetingData;
 use App\Models\MeetingLongData;
+use App\Models\ServiceBody;
 use App\Repositories\External\ExternalMeeting;
 use App\Repositories\External\InvalidMeetingException;
 use PHPUnit\Framework\TestCase;
@@ -46,11 +47,11 @@ class ExternalMeetingTest extends TestCase
         ];
     }
 
-    private function getModel(array $validValues, array $formatSharedIds): Meeting
+    private function getModel(array $validValues, int $serviceBodyId, array $formatSharedIds): Meeting
     {
         $meeting = new Meeting([
             'source_id' => $validValues['id_bigint'],
-            'service_body_bigint' => $validValues['service_body_bigint'],
+            'service_body_bigint' => $serviceBodyId,
             'weekday_tinyint' => $validValues['weekday_tinyint'] - 1,
             'venue_type' => $validValues['venue_type'],
             'start_time' => $validValues['start_time'],
@@ -83,6 +84,13 @@ class ExternalMeetingTest extends TestCase
             ]));
 
         return $meeting;
+    }
+
+    private function getServiceBody(int $id, int $sourceId): ServiceBody
+    {
+        $serviceBody = new ServiceBody(['source_id' => $sourceId]);
+        $serviceBody->id_bigint = $id;
+        return $serviceBody;
     }
 
     private function getFormat(int $sharedId, int $sourceId): Format
@@ -555,147 +563,172 @@ class ExternalMeetingTest extends TestCase
     {
         $f1 = $this->getFormat(1, 100);
         $f2 = $this->getFormat(2, 200);
+        $sb1 = $this->getServiceBody(1, 100);
 
         $values = $this->validValues();
         $values['format_shared_id_list'] = "$f1->source_id,$f2->source_id";
+        $values['service_body_bigint'] = $sb1->source_id;
 
         $external = new ExternalMeeting($values);
-        $db = $this->getModel($values, [$f2->shared_id_bigint, $f1->shared_id_bigint]);
+        $db = $this->getModel($values, $sb1->id_bigint, [$f2->shared_id_bigint, $f1->shared_id_bigint]);
 
-        $this->assertTrue($external->isEqual($db, collect([$f1->shared_id_bigint => $f1->source_id, $f2->shared_id_bigint => $f2->source_id])));
+        $this->assertTrue($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id, $f2->shared_id_bigint => $f2->source_id])));
     }
 
     public function testId()
     {
         $f1 = $this->getFormat(1, 100);
+        $sb1 = $this->getServiceBody(1, 100);
         $values = $this->validValues();
         $values['format_shared_id_list'] = "$f1->source_id";
+        $values['service_body_bigint'] = $sb1->source_id;
 
         $external = new ExternalMeeting($values);
-        $db = $this->getModel($values, [$f1->shared_id_bigint]);
+        $db = $this->getModel($values, $sb1->id_bigint, [$f1->shared_id_bigint]);
 
         $db->source_id = $external->id + 1;
-        $this->assertFalse($external->isEqual($db, collect([$f1->shared_id_bigint => $f1->source_id])));
+        $this->assertFalse($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id])));
     }
 
     public function testWorldId()
     {
         $f1 = $this->getFormat(1, 100);
+        $sb1 = $this->getServiceBody(1, 100);
         $values = $this->validValues();
         $values['format_shared_id_list'] = "$f1->source_id";
+        $values['service_body_bigint'] = $sb1->source_id;
 
         $external = new ExternalMeeting($values);
-        $db = $this->getModel($values, [$f1->shared_id_bigint]);
+        $db = $this->getModel($values, $sb1->id_bigint, [$f1->shared_id_bigint]);
 
         $db->worldid_mixed = 'changed';
-        $this->assertFalse($external->isEqual($db, collect([$f1->shared_id_bigint => $f1->source_id])));
+        $this->assertFalse($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id])));
     }
 
     public function testServiceBodyId()
     {
         $f1 = $this->getFormat(1, 100);
+        $sb1 = $this->getServiceBody(1, 100);
         $values = $this->validValues();
         $values['format_shared_id_list'] = "$f1->source_id";
+        $values['service_body_bigint'] = $sb1->source_id;
 
         $external = new ExternalMeeting($values);
-        $db = $this->getModel($values, [$f1->shared_id_bigint]);
+        $db = $this->getModel($values, $sb1->id_bigint, [$f1->shared_id_bigint]);
 
         $db->service_body_bigint = $external->serviceBodyId + 1;
-        $this->assertFalse($external->isEqual($db, collect([$f1->shared_id_bigint => $f1->source_id])));
+        $this->assertFalse($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id])));
     }
 
     public function testWeekdayId()
     {
         $f1 = $this->getFormat(1, 100);
+        $sb1 = $this->getServiceBody(1, 100);
         $values = $this->validValues();
         $values['format_shared_id_list'] = "$f1->source_id";
+        $values['service_body_bigint'] = $sb1->source_id;
 
         $external = new ExternalMeeting($values);
-        $db = $this->getModel($values, [$f1->shared_id_bigint]);
+        $db = $this->getModel($values, $sb1->id_bigint, [$f1->shared_id_bigint]);
 
         $db->weekday_tinyint = $external->weekdayId + 1;
-        $this->assertFalse($external->isEqual($db, collect([$f1->shared_id_bigint => $f1->source_id])));
+        $this->assertFalse($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id])));
     }
 
     public function testVenueType()
     {
         $f1 = $this->getFormat(1, 100);
+        $sb1 = $this->getServiceBody(1, 100);
         $values = $this->validValues();
         $values['format_shared_id_list'] = "$f1->source_id";
+        $values['service_body_bigint'] = $sb1->source_id;
 
         $external = new ExternalMeeting($values);
-        $db = $this->getModel($values, [$f1->shared_id_bigint]);
+        $db = $this->getModel($values, $sb1->id_bigint, [$f1->shared_id_bigint]);
 
         $db->venue_type = $external->venueType + 1;
-        $this->assertFalse($external->isEqual($db, collect([$f1->shared_id_bigint => $f1->source_id])));
+        $this->assertFalse($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id])));
 
         $db->venue_type = null;
-        $this->assertFalse($external->isEqual($db, collect([$f1->shared_id_bigint => $f1->source_id])));
+        $this->assertFalse($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id])));
     }
 
     public function testStartTime()
     {
         $f1 = $this->getFormat(1, 100);
+        $sb1 = $this->getServiceBody(1, 100);
         $values = $this->validValues();
         $values['format_shared_id_list'] = "$f1->source_id";
+        $values['service_body_bigint'] = $sb1->source_id;
 
         $external = new ExternalMeeting($values);
-        $db = $this->getModel($values, [$f1->shared_id_bigint]);
+        $db = $this->getModel($values, $sb1->id_bigint, [$f1->shared_id_bigint]);
 
         $db->start_time = '03:00:00';
-        $this->assertFalse($external->isEqual($db, collect([$f1->shared_id_bigint => $f1->source_id])));
+        $this->assertFalse($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id])));
     }
 
     public function testDurationTime()
     {
         $f1 = $this->getFormat(1, 100);
+        $sb1 = $this->getServiceBody(1, 100);
         $values = $this->validValues();
         $values['format_shared_id_list'] = "$f1->source_id";
+        $values['service_body_bigint'] = $sb1->source_id;
 
         $external = new ExternalMeeting($values);
-        $db = $this->getModel($values, [$f1->shared_id_bigint]);
+        $db = $this->getModel($values, $sb1->id_bigint, [$f1->shared_id_bigint]);
 
         $db->duration_time = '03:00:00';
-        $this->assertFalse($external->isEqual($db, collect([$f1->shared_id_bigint => $f1->source_id])));
+        $this->assertFalse($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id])));
     }
 
     public function testLatitude()
     {
         $f1 = $this->getFormat(1, 100);
+        $sb1 = $this->getServiceBody(1, 100);
+
         $values = $this->validValues();
         $values['format_shared_id_list'] = "$f1->source_id";
+        $values['service_body_bigint'] = $sb1->source_id;
 
         $external = new ExternalMeeting($values);
-        $db = $this->getModel($values, [$f1->shared_id_bigint]);
+        $db = $this->getModel($values, $sb1->id_bigint, [$f1->shared_id_bigint]);
 
         $db->latitude = 1.234;
-        $this->assertFalse($external->isEqual($db, collect([$f1->shared_id_bigint => $f1->source_id])));
+        $this->assertFalse($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id])));
     }
 
     public function testLongitude()
     {
         $f1 = $this->getFormat(1, 100);
+        $sb1 = $this->getServiceBody(1, 100);
+
         $values = $this->validValues();
         $values['format_shared_id_list'] = "$f1->source_id";
+        $values['service_body_bigint'] = $sb1->source_id;
 
         $external = new ExternalMeeting($values);
-        $db = $this->getModel($values, [$f1->shared_id_bigint]);
+        $db = $this->getModel($values, $sb1->id_bigint, [$f1->shared_id_bigint]);
 
         $db->longitude = 1.234;
-        $this->assertFalse($external->isEqual($db, collect([$f1->shared_id_bigint => $f1->source_id])));
+        $this->assertFalse($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id])));
     }
 
     public function testPublished()
     {
         $f1 = $this->getFormat(1, 100);
+        $sb1 = $this->getServiceBody(1, 100);
+
         $values = $this->validValues();
         $values['format_shared_id_list'] = "$f1->source_id";
+        $values['service_body_bigint'] = $sb1->source_id;
 
         $external = new ExternalMeeting($values);
-        $db = $this->getModel($values, [$f1->shared_id_bigint]);
+        $db = $this->getModel($values, $sb1->id_bigint, [$f1->shared_id_bigint]);
 
         $db->published = 0;
-        $this->assertFalse($external->isEqual($db, collect([$f1->shared_id_bigint => $f1->source_id])));
+        $this->assertFalse($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id])));
     }
 
     public function testFormatIds()
@@ -703,220 +736,271 @@ class ExternalMeetingTest extends TestCase
         $f1 = $this->getFormat(1, 100);
         $f2 = $this->getFormat(2, 200);
         $f3 = $this->getFormat(3, 300);
+        $sb1 = $this->getServiceBody(1, 100);
+
         $values = $this->validValues();
         $values['format_shared_id_list'] = "$f1->source_id,$f2->source_id,$f3->source_id";
+        $values['service_body_bigint'] = $sb1->source_id;
 
         $external = new ExternalMeeting($values);
-        $db = $this->getModel($values, [$f1->shared_id_bigint,$f2->shared_id_bigint]);
+        $db = $this->getModel($values, $sb1->id_bigint, [$f1->shared_id_bigint,$f2->shared_id_bigint]);
 
-        $this->assertFalse($external->isEqual($db, collect([$f1->shared_id_bigint => $f1->source_id, $f2->shared_id_bigint => $f2->source_id, $f3->shared_id_bigint => $f3->source_id])));
+        $this->assertFalse($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id, $f2->shared_id_bigint => $f2->source_id, $f3->shared_id_bigint => $f3->source_id])));
     }
 
     public function testComments()
     {
         $f1 = $this->getFormat(1, 100);
+        $sb1 = $this->getServiceBody(1, 100);
+
         $values = $this->validValues();
         $values['format_shared_id_list'] = "$f1->source_id";
+        $values['service_body_bigint'] = $sb1->source_id;
 
         $external = new ExternalMeeting($values);
-        $db = $this->getModel($values, [$f1->shared_id_bigint]);
+        $db = $this->getModel($values, $sb1->id_bigint, [$f1->shared_id_bigint]);
 
         $db->data->firstWhere(fn ($d) => $d->key == 'comments')->data_string = 'changed';
-        $this->assertFalse($external->isEqual($db, collect([$f1->shared_id_bigint => $f1->source_id])));
+        $this->assertFalse($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id])));
     }
 
     public function testVirtualMeetingAdditionalInfo()
     {
         $f1 = $this->getFormat(1, 100);
+        $sb1 = $this->getServiceBody(1, 100);
+
         $values = $this->validValues();
         $values['format_shared_id_list'] = "$f1->source_id";
+        $values['service_body_bigint'] = $sb1->source_id;
 
         $external = new ExternalMeeting($values);
-        $db = $this->getModel($values, [$f1->shared_id_bigint]);
+        $db = $this->getModel($values, $sb1->id_bigint, [$f1->shared_id_bigint]);
 
         $db->data->firstWhere(fn ($d) => $d->key == 'virtual_meeting_additional_info')->data_string = 'changed';
-        $this->assertFalse($external->isEqual($db, collect([$f1->shared_id_bigint => $f1->source_id])));
+        $this->assertFalse($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id])));
     }
 
     public function testVirtualMeetingLink()
     {
         $f1 = $this->getFormat(1, 100);
+        $sb1 = $this->getServiceBody(1, 100);
+
         $values = $this->validValues();
         $values['format_shared_id_list'] = "$f1->source_id";
+        $values['service_body_bigint'] = $sb1->source_id;
 
         $external = new ExternalMeeting($values);
-        $db = $this->getModel($values, [$f1->shared_id_bigint]);
+        $db = $this->getModel($values, $sb1->id_bigint, [$f1->shared_id_bigint]);
 
         $db->data->firstWhere(fn ($d) => $d->key == 'virtual_meeting_link')->data_string = 'changed';
-        $this->assertFalse($external->isEqual($db, collect([$f1->shared_id_bigint => $f1->source_id])));
+        $this->assertFalse($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id])));
     }
 
     public function testPhoneMeetingNumber()
     {
         $f1 = $this->getFormat(1, 100);
+        $sb1 = $this->getServiceBody(1, 100);
+
         $values = $this->validValues();
         $values['format_shared_id_list'] = "$f1->source_id";
+        $values['service_body_bigint'] = $sb1->source_id;
 
         $external = new ExternalMeeting($values);
-        $db = $this->getModel($values, [$f1->shared_id_bigint]);
+        $db = $this->getModel($values, $sb1->id_bigint, [$f1->shared_id_bigint]);
 
         $db->data->firstWhere(fn ($d) => $d->key == 'phone_meeting_number')->data_string = 'changed';
-        $this->assertFalse($external->isEqual($db, collect([$f1->shared_id_bigint => $f1->source_id])));
+        $this->assertFalse($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id])));
     }
 
     public function testLocationCitySubsection()
     {
         $f1 = $this->getFormat(1, 100);
+        $sb1 = $this->getServiceBody(1, 100);
+
         $values = $this->validValues();
         $values['format_shared_id_list'] = "$f1->source_id";
+        $values['service_body_bigint'] = $sb1->source_id;
 
         $external = new ExternalMeeting($values);
-        $db = $this->getModel($values, [$f1->shared_id_bigint]);
+        $db = $this->getModel($values, $sb1->id_bigint, [$f1->shared_id_bigint]);
 
         $db->data->firstWhere(fn ($d) => $d->key == 'location_city_subsection')->data_string = 'changed';
-        $this->assertFalse($external->isEqual($db, collect([$f1->shared_id_bigint => $f1->source_id])));
+        $this->assertFalse($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id])));
     }
 
     public function testLocationNation()
     {
         $f1 = $this->getFormat(1, 100);
+        $sb1 = $this->getServiceBody(1, 100);
+
         $values = $this->validValues();
         $values['format_shared_id_list'] = "$f1->source_id";
+        $values['service_body_bigint'] = $sb1->source_id;
 
         $external = new ExternalMeeting($values);
-        $db = $this->getModel($values, [$f1->shared_id_bigint]);
+        $db = $this->getModel($values, $sb1->id_bigint, [$f1->shared_id_bigint]);
 
         $db->data->firstWhere(fn ($d) => $d->key == 'location_nation')->data_string = 'changed';
-        $this->assertFalse($external->isEqual($db, collect([$f1->shared_id_bigint => $f1->source_id])));
+        $this->assertFalse($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id])));
     }
 
     public function testLocationPostalCode1()
     {
         $f1 = $this->getFormat(1, 100);
+        $sb1 = $this->getServiceBody(1, 100);
+
         $values = $this->validValues();
         $values['format_shared_id_list'] = "$f1->source_id";
+        $values['service_body_bigint'] = $sb1->source_id;
 
         $external = new ExternalMeeting($values);
-        $db = $this->getModel($values, [$f1->shared_id_bigint]);
+        $db = $this->getModel($values, $sb1->id_bigint, [$f1->shared_id_bigint]);
 
         $db->data->firstWhere(fn ($d) => $d->key == 'location_postal_code_1')->data_string = 'changed';
-        $this->assertFalse($external->isEqual($db, collect([$f1->shared_id_bigint => $f1->source_id])));
+        $this->assertFalse($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id])));
     }
 
     public function testLocationProvince()
     {
         $f1 = $this->getFormat(1, 100);
+        $sb1 = $this->getServiceBody(1, 100);
+
         $values = $this->validValues();
         $values['format_shared_id_list'] = "$f1->source_id";
+        $values['service_body_bigint'] = $sb1->source_id;
 
         $external = new ExternalMeeting($values);
-        $db = $this->getModel($values, [$f1->shared_id_bigint]);
+        $db = $this->getModel($values, $sb1->id_bigint, [$f1->shared_id_bigint]);
 
         $db->data->firstWhere(fn ($d) => $d->key == 'location_province')->data_string = 'changed';
-        $this->assertFalse($external->isEqual($db, collect([$f1->shared_id_bigint => $f1->source_id])));
+        $this->assertFalse($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id])));
     }
 
     public function testLocationSubProvince()
     {
         $f1 = $this->getFormat(1, 100);
+        $sb1 = $this->getServiceBody(1, 100);
+
         $values = $this->validValues();
         $values['format_shared_id_list'] = "$f1->source_id";
+        $values['service_body_bigint'] = $sb1->source_id;
 
         $external = new ExternalMeeting($values);
-        $db = $this->getModel($values, [$f1->shared_id_bigint]);
+        $db = $this->getModel($values, $sb1->id_bigint, [$f1->shared_id_bigint]);
 
         $db->data->firstWhere(fn ($d) => $d->key == 'location_sub_province')->data_string = 'changed';
-        $this->assertFalse($external->isEqual($db, collect([$f1->shared_id_bigint => $f1->source_id])));
+        $this->assertFalse($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id])));
     }
 
     public function testLocationMunicipality()
     {
         $f1 = $this->getFormat(1, 100);
+        $sb1 = $this->getServiceBody(1, 100);
+
         $values = $this->validValues();
         $values['format_shared_id_list'] = "$f1->source_id";
+        $values['service_body_bigint'] = $sb1->source_id;
 
         $external = new ExternalMeeting($values);
-        $db = $this->getModel($values, [$f1->shared_id_bigint]);
+        $db = $this->getModel($values, $sb1->id_bigint, [$f1->shared_id_bigint]);
 
         $db->data->firstWhere(fn ($d) => $d->key == 'location_municipality')->data_string = 'changed';
-        $this->assertFalse($external->isEqual($db, collect([$f1->shared_id_bigint => $f1->source_id])));
+        $this->assertFalse($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id])));
     }
 
     public function testLocationNeighborhood()
     {
         $f1 = $this->getFormat(1, 100);
+        $sb1 = $this->getServiceBody(1, 100);
+
         $values = $this->validValues();
         $values['format_shared_id_list'] = "$f1->source_id";
+        $values['service_body_bigint'] = $sb1->source_id;
 
         $external = new ExternalMeeting($values);
-        $db = $this->getModel($values, [$f1->shared_id_bigint]);
+        $db = $this->getModel($values, $sb1->id_bigint, [$f1->shared_id_bigint]);
 
         $db->data->firstWhere(fn ($d) => $d->key == 'location_neighborhood')->data_string = 'changed';
-        $this->assertFalse($external->isEqual($db, collect([$f1->shared_id_bigint => $f1->source_id])));
+        $this->assertFalse($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id])));
     }
 
     public function testLocationStreet()
     {
         $f1 = $this->getFormat(1, 100);
+        $sb1 = $this->getServiceBody(1, 100);
+
         $values = $this->validValues();
         $values['format_shared_id_list'] = "$f1->source_id";
+        $values['service_body_bigint'] = $sb1->source_id;
 
         $external = new ExternalMeeting($values);
-        $db = $this->getModel($values, [$f1->shared_id_bigint]);
+        $db = $this->getModel($values, $sb1->id_bigint, [$f1->shared_id_bigint]);
 
         $db->data->firstWhere(fn ($d) => $d->key == 'location_street')->data_string = 'changed';
-        $this->assertFalse($external->isEqual($db, collect([$f1->shared_id_bigint => $f1->source_id])));
+        $this->assertFalse($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id])));
     }
 
     public function testLocationInfo()
     {
         $f1 = $this->getFormat(1, 100);
+        $sb1 = $this->getServiceBody(1, 100);
+
         $values = $this->validValues();
         $values['format_shared_id_list'] = "$f1->source_id";
+        $values['service_body_bigint'] = $sb1->source_id;
 
         $external = new ExternalMeeting($values);
-        $db = $this->getModel($values, [$f1->shared_id_bigint]);
+        $db = $this->getModel($values, $sb1->id_bigint, [$f1->shared_id_bigint]);
 
         $db->data->firstWhere(fn ($d) => $d->key == 'location_info')->data_string = 'changed';
-        $this->assertFalse($external->isEqual($db, collect([$f1->shared_id_bigint => $f1->source_id])));
+        $this->assertFalse($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id])));
     }
 
     public function testLocationText()
     {
         $f1 = $this->getFormat(1, 100);
+        $sb1 = $this->getServiceBody(1, 100);
+
         $values = $this->validValues();
         $values['format_shared_id_list'] = "$f1->source_id";
+        $values['service_body_bigint'] = $sb1->source_id;
 
         $external = new ExternalMeeting($values);
-        $db = $this->getModel($values, [$f1->shared_id_bigint]);
+        $db = $this->getModel($values, $sb1->id_bigint, [$f1->shared_id_bigint]);
 
         $db->data->firstWhere(fn ($d) => $d->key == 'location_text')->data_string = 'changed';
-        $this->assertFalse($external->isEqual($db, collect([$f1->shared_id_bigint => $f1->source_id])));
+        $this->assertFalse($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id])));
     }
 
     public function testBusLines()
     {
         $f1 = $this->getFormat(1, 100);
+        $sb1 = $this->getServiceBody(1, 100);
+
         $values = $this->validValues();
         $values['format_shared_id_list'] = "$f1->source_id";
+        $values['service_body_bigint'] = $sb1->id_bigint;
 
         $external = new ExternalMeeting($values);
-        $db = $this->getModel($values, [$f1->shared_id_bigint]);
+        $db = $this->getModel($values, $sb1->id_bigint, [$f1->shared_id_bigint]);
 
         $db->data->firstWhere(fn ($d) => $d->key == 'bus_lines')->data_string = 'changed';
-        $this->assertFalse($external->isEqual($db, collect([$f1->shared_id_bigint => $f1->source_id])));
+        $this->assertFalse($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id])));
     }
 
     public function testTrainLines()
     {
         $f1 = $this->getFormat(1, 100);
+        $sb1 = $this->getServiceBody(1, 100);
+
         $values = $this->validValues();
         $values['format_shared_id_list'] = "$f1->source_id";
+        $values['service_body_bigint'] = $sb1->id_bigint;
 
         $external = new ExternalMeeting($values);
-        $db = $this->getModel($values, [$f1->shared_id_bigint]);
+        $db = $this->getModel($values, $sb1->id_bigint, [$f1->shared_id_bigint]);
 
         $db->data->firstWhere(fn ($d) => $d->key == 'train_lines')->data_string = 'changed';
-        $this->assertFalse($external->isEqual($db, collect([$f1->shared_id_bigint => $f1->source_id])));
+        $this->assertFalse($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id])));
     }
 }

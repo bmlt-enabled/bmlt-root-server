@@ -253,7 +253,7 @@ class ServiceBodyRepository implements ServiceBodyRepositoryInterface
             $db = $bySourceId->get($external->id);
 
             if (is_null($parent)) {
-                if ($db->sb_owner != 0) {
+                if ($db->sb_owner !== 0) {
                     $db->sb_owner = 0;
                     $db->save();
                 }
