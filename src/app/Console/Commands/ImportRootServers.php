@@ -117,7 +117,7 @@ class ImportRootServers extends Command
 
     private function importFormats(RootServer $rootServer, FormatRepositoryInterface $formatRepository)
     {
-        $this->info('importing service formats...');
+        $this->info('importing formats...');
         try {
             $url = rtrim($rootServer->url, '/') . '/client_interface/json/?switcher=GetFormats';
             $response = $this->httpGet($url);
@@ -141,7 +141,7 @@ class ImportRootServers extends Command
 
     private function importMeetings(RootServer $rootServer, MeetingRepositoryInterface $meetingRepository)
     {
-        $this->info('importing service meetings...');
+        $this->info('importing meetings...');
         try {
             $url = rtrim($rootServer->url, '/') . '/client_interface/json/?switcher=GetSearchResults';
             $response = $this->httpGet($url);
