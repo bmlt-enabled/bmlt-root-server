@@ -143,12 +143,11 @@ data "aws_ami" "ecs" {
 }
 
 resource "aws_launch_template" "bmlt_cluster" {
-  name_prefix            = local.cluster_name
-  image_id               = data.aws_ami.ecs.image_id
-  instance_type          = "t3a.small"
-  key_name               = aws_key_pair.main.key_name
-  vpc_security_group_ids = [aws_security_group.cluster.id]
-  user_data              = data.cloudinit_config.cluster.rendered
+  name_prefix   = local.cluster_name
+  image_id      = data.aws_ami.ecs.image_id
+  instance_type = "t3a.small"
+  key_name      = aws_key_pair.main.key_name
+  user_data     = data.cloudinit_config.cluster.rendered
 
   iam_instance_profile {
     name = aws_iam_instance_profile.cluster.name
@@ -156,6 +155,7 @@ resource "aws_launch_template" "bmlt_cluster" {
 
   network_interfaces {
     associate_public_ip_address = true
+    security_groups             = [aws_security_group.cluster.id]
   }
 
   tag_specifications {
@@ -382,10 +382,6 @@ data "aws_iam_policy_document" "ecs_execute_command" {
     ]
     resources = [data.aws_secretsmanager_secret.docker.arn]
   }
-
-
-
-
 }
 
 resource "aws_iam_policy" "ecs_execute_command" {
