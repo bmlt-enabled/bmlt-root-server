@@ -85,6 +85,7 @@ class ImportRootServers extends Command
         MeetingRepositoryInterface $meetingRepository,
         ServiceBodyRepositoryInterface $serviceBodyRepository,
     ): void {
+        $this->info("importing root server $rootServer->id:$rootServer->url");
         $this->importServiceBodies($rootServer, $serviceBodyRepository);
         $this->importFormats($rootServer, $formatRepository);
         $this->importMeetings($rootServer, $meetingRepository);
@@ -92,6 +93,7 @@ class ImportRootServers extends Command
 
     private function importServiceBodies(RootServer $rootServer, ServiceBodyRepositoryInterface $serviceBodyRepository)
     {
+        $this->info('importing service bodies...');
         try {
             $url = rtrim($rootServer->url, '/') . '/client_interface/json/?switcher=GetServiceBodies';
             $response = $this->httpGet($url);
@@ -107,13 +109,15 @@ class ImportRootServers extends Command
                 ->reject(fn($e) => is_null($e));
             $serviceBodyRepository->import($rootServer->id, $externalServiceBodies);
         } catch (\Exception $e) {
-            // TODO Log something and save an error to the database
+            $this->error($e->getMessage());
+            // TODO save an error to the database
             return;
         }
     }
 
     private function importFormats(RootServer $rootServer, FormatRepositoryInterface $formatRepository)
     {
+        $this->info('importing service formats...');
         try {
             $url = rtrim($rootServer->url, '/') . '/client_interface/json/?switcher=GetFormats';
             $response = $this->httpGet($url);
@@ -129,13 +133,15 @@ class ImportRootServers extends Command
                 ->reject(fn($e) => is_null($e));
             $formatRepository->import($rootServer->id, $externalFormats);
         } catch (\Exception $e) {
-            // TODO Log something and save an error to the database
+            $this->error($e->getMessage());
+            // TODO save an error to the database
             return;
         }
     }
 
     private function importMeetings(RootServer $rootServer, MeetingRepositoryInterface $meetingRepository)
     {
+        $this->info('importing service meetings...');
         try {
             $url = rtrim($rootServer->url, '/') . '/client_interface/json/?switcher=GetSearchResults';
             $response = $this->httpGet($url);
@@ -151,13 +157,15 @@ class ImportRootServers extends Command
                 ->reject(fn($e) => is_null($e));
             $meetingRepository->import($rootServer->id, $externalMeetings);
         } catch (\Exception $e) {
-            // TODO Log something and save an error to the database
+            $this->error($e->getMessage());
+            // TODO save an error to the database
             return;
         }
     }
 
     private function analyzeTables(): void
     {
+        $this->info('analyzing tables...');
         $prefix = DB::connection()->getTablePrefix();
         $tableNames = [
             $prefix . (new Meeting)->getTable(),
