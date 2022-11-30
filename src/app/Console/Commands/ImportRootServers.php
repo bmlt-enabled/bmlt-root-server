@@ -35,7 +35,7 @@ class ImportRootServers extends Command
         ServiceBodyRepositoryInterface $serviceBodyRepository
     ) {
         if (!legacy_config('aggregator_mode_enabled')) {
-            // TODO print/log something
+            $this->error('aggregator mode is not enabled');
             return;
         }
 
