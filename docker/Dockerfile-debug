@@ -20,6 +20,9 @@ RUN echo "zend_extension=$(find /usr/lib/php/ -name xdebug.so)" >> ${PHP_CLI_INI
     && echo "xdebug.log=/tmp/xdebug.log" >> ${PHP_CLI_INI_PATH} \
     && echo "xdebug.idekey=ROOT_SERVER_DEBUG" >> ${PHP_CLI_INI_PATH}
 
+COPY docker/write-config.sh /tmp/write-config.sh
 COPY docker/start-bmlt.sh /tmp/start-bmlt.sh
+COPY docker/aggregator-initialize-database.sh /tmp/aggregator-initialize-database.sh
+COPY docker/aggregator-import-root-servers.sh /tmp/aggregator-import-root-servers.sh
 
 CMD ["/bin/bash", "/tmp/start-bmlt.sh"]
