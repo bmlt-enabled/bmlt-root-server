@@ -69,35 +69,36 @@ resource "aws_iam_instance_profile" "cluster" {
 }
 
 resource "aws_autoscaling_group" "cluster" {
-  name                 = local.cluster_name
-  vpc_zone_identifier  = data.aws_subnets.main.ids
-  min_size             = 1
-  max_size             = 1
-  desired_capacity     = 1
-  launch_configuration = aws_launch_configuration.cluster.name
+  name                = local.cluster_name
+  vpc_zone_identifier = data.aws_subnets.main.ids
+  min_size            = 1
+  max_size            = 1
+  desired_capacity    = 1
+
+  launch_template {
+    id      = aws_launch_template.bmlt_cluster.id
+    version = "$Latest"
+  }
 
   dynamic "tag" {
     for_each = [
       {
-        key                 = "Name"
-        value               = "bmlt-ecs"
-        propagate_at_launch = true
+        key   = "Name"
+        value = "bmlt-ecs"
       },
       {
-        key                 = "application"
-        value               = "bmlt"
-        propagate_at_launch = true
+        key   = "application"
+        value = "bmlt"
       },
       {
-        key                 = "environment"
-        value               = "production"
-        propagate_at_launch = true
+        key   = "environment"
+        value = "production"
       },
     ]
     content {
       key                 = tag.value.key
       value               = tag.value.value
-      propagate_at_launch = tag.value.propagate_at_launch
+      propagate_at_launch = true
     }
   }
 }
@@ -141,18 +142,43 @@ data "aws_ami" "ecs" {
   }
 }
 
-resource "aws_launch_configuration" "cluster" {
-  security_groups             = [aws_security_group.cluster.id]
-  key_name                    = aws_key_pair.main.key_name
-  image_id                    = data.aws_ami.ecs.image_id
-  instance_type               = "t3a.small"
-  iam_instance_profile        = aws_iam_instance_profile.cluster.name
-  associate_public_ip_address = false
+resource "aws_launch_template" "bmlt_cluster" {
+  name_prefix            = local.cluster_name
+  image_id               = data.aws_ami.ecs.image_id
+  instance_type          = "t3a.small"
+  key_name               = aws_key_pair.main.key_name
+  vpc_security_group_ids = [aws_security_group.cluster.id]
+  user_data              = data.cloudinit_config.cluster.rendered
 
-  user_data = data.cloudinit_config.cluster.rendered
+  iam_instance_profile {
+    name = aws_iam_instance_profile.cluster.name
+  }
+
+  network_interfaces {
+    associate_public_ip_address = true
+  }
+
+  tag_specifications {
+    resource_type = "instance"
+    tags = {
+      Name        = "bmlt-ecs"
+      application = "true"
+      environment = "production"
+    }
+  }
+
+  tag_specifications {
+    resource_type = "volume"
+    tags = {
+      Name        = "bmlt-ecs"
+      application = "true"
+      environment = "production"
+    }
+  }
 
   lifecycle {
     create_before_destroy = true
+    ignore_changes        = [image_id]
   }
 }
 
