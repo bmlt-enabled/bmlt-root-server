@@ -172,7 +172,8 @@ class ImportRootServers extends Command
 
     private function httpGet(string $url): array
     {
-        $response = Http::get($url);
+        $headers = ['User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0 +aggregator'];
+        $response = Http::withHeaders($headers)->get($url);
         if (!$response->ok()) {
             throw new \Exception("Got bad status code {$response->status()} from $url");
         }
