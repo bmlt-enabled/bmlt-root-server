@@ -223,7 +223,7 @@ class ServiceBodyRepository implements ServiceBodyRepositoryInterface
     public function import(int $rootServerId, Collection $externalObjects): void
     {
         $rootServer = RootServer::query()->where('id', $rootServerId)->firstOrFail();
-        $ignoreServiceBodyIds = collect(config('aggregator.ignore_service_bodies'))->get($rootServer->url, []);
+        $ignoreServiceBodyIds = collect(config('aggregator.ignore_service_bodies'))->get($rootServer->source_id, []);
         $externalObjects = $externalObjects->reject(fn ($ex) => in_array($ex->id, $ignoreServiceBodyIds));
 
         $sourceIds = $externalObjects->map(fn (ExternalServiceBody $ex) => $ex->id);

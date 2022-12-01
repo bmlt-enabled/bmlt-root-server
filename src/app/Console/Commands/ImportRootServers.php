@@ -29,6 +29,9 @@ class ImportRootServers extends Command
 
     protected $description = 'Import root servers';
 
+    private static int $requestDelaySeconds = 0;
+    private static int $retryDelaySeconds = 3;
+
     public function handle(
         RootServerRepositoryInterface $rootServerRepository,
         FormatRepositoryInterface $formatRepository,
@@ -40,10 +43,14 @@ class ImportRootServers extends Command
             return;
         }
 
+        $rateLimits = collect(config('aggregator.rate_limit_root_servers'));
         DB::transaction(fn () => $this->deleteNonAggregatorData());
         DB::transaction(fn () => $this->importRootServersList($rootServerRepository));
         foreach ($rootServerRepository->search() as $rootServer) {
             try {
+                $delaySettings = collect($rateLimits->get($rootServer->source_id));
+                self::$requestDelaySeconds = $delaySettings->get('request_delay') ?? 0;
+                self::$retryDelaySeconds = $delaySettings->get('retry_delay') ?? 3;
                 DB::transaction(fn() => $this->importRootServer(
                     $rootServer,
                     $rootServerRepository,
@@ -132,6 +139,7 @@ class ImportRootServers extends Command
         $url = rtrim($rootServer->url, '/') . '/client_interface/json/?switcher=GetFormats';
         $externalFormats = collect([]);
         foreach ($languages as $language) {
+            $this->info("importing formats:$language");
             $response = $this->httpGet($url . "&lang_enum=$language");
             $externalFormats = $externalFormats->concat(
                 collect($response)
@@ -144,6 +152,7 @@ class ImportRootServers extends Command
                         }
                     })
                     ->reject(fn($e) => is_null($e))
+                    ->toArray()
             );
         }
 
@@ -186,8 +195,11 @@ class ImportRootServers extends Command
 
     private function httpGet(string $url): array
     {
+        sleep(self::$requestDelaySeconds);
+
         $headers = ['User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0 +aggregator'];
-        $response = Http::withHeaders($headers)->get($url);
+        $response = Http::withHeaders($headers)->retry(3, self::$retryDelaySeconds * 1000)->get($url);
+
         if (!$response->ok()) {
             throw new \Exception("Got bad status code {$response->status()} from $url");
         }
