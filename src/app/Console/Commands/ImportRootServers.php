@@ -125,18 +125,28 @@ class ImportRootServers extends Command
     private function importFormats(RootServer $rootServer, FormatRepositoryInterface $formatRepository)
     {
         $this->info('importing formats');
-        $url = rtrim($rootServer->url, '/') . '/client_interface/json/?switcher=GetFormats';
+        $url = rtrim($rootServer->url, '/') . '/client_interface/json/?switcher=GetServerInfo';
         $response = $this->httpGet($url);
-        $externalFormats = collect($response)
-            ->map(function ($format) {
-                try {
-                    return new ExternalFormat($format);
-                } catch (InvalidObjectException) {
-                    // TODO: Log something and save an error to the database
-                    return null;
-                }
-            })
-            ->reject(fn($e) => is_null($e));
+        $languages = explode(',', $response[0]['langs']);
+
+        $url = rtrim($rootServer->url, '/') . '/client_interface/json/?switcher=GetFormats';
+        $externalFormats = collect([]);
+        foreach ($languages as $language) {
+            $response = $this->httpGet($url . "&lang_enum=$language");
+            $externalFormats = $externalFormats->concat(
+                collect($response)
+                    ->map(function ($format) {
+                        try {
+                            return new ExternalFormat($format);
+                        } catch (InvalidObjectException) {
+                            // TODO: Log something and save an error to the database
+                            return null;
+                        }
+                    })
+                    ->reject(fn($e) => is_null($e))
+            );
+        }
+
         $formatRepository->import($rootServer->id, $externalFormats);
     }
 
