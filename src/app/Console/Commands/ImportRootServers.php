@@ -30,7 +30,7 @@ class ImportRootServers extends Command
     protected $description = 'Import root servers';
 
     private const DEFAULT_REQUEST_DELAY_SECONDS = 0;
-    private const DEFAULT_RETRY_DELAY_SECONDS = 0;
+    private const DEFAULT_RETRY_DELAY_SECONDS = 3;
     private static int $requestDelaySeconds = self::DEFAULT_REQUEST_DELAY_SECONDS;
     private static int $retryDelaySeconds = self::DEFAULT_RETRY_DELAY_SECONDS;
 
