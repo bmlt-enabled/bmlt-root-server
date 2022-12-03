@@ -29,8 +29,10 @@ class ImportRootServers extends Command
 
     protected $description = 'Import root servers';
 
-    private static int $requestDelaySeconds = 0;
-    private static int $retryDelaySeconds = 3;
+    private const defaultRequestDelaySeconds = 0;
+    private const defaultRetryDelaySeconds = 0;
+    private static int $requestDelaySeconds = self::defaultRequestDelaySeconds;
+    private static int $retryDelaySeconds = self::defaultRequestDelaySeconds;
 
     public function handle(
         RootServerRepositoryInterface $rootServerRepository,
@@ -49,8 +51,8 @@ class ImportRootServers extends Command
         foreach ($rootServerRepository->search() as $rootServer) {
             try {
                 $delaySettings = collect($rateLimits->get($rootServer->source_id));
-                self::$requestDelaySeconds = $delaySettings->get('request_delay') ?? 0;
-                self::$retryDelaySeconds = $delaySettings->get('retry_delay') ?? 3;
+                self::$requestDelaySeconds = $delaySettings->get('request_delay') ?? self::defaultRequestDelaySeconds;
+                self::$retryDelaySeconds = $delaySettings->get('retry_delay') ?? self::defaultRetryDelaySeconds;
                 DB::transaction(fn() => $this->importRootServer(
                     $rootServer,
                     $rootServerRepository,
