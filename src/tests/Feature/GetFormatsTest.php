@@ -303,6 +303,110 @@ class GetFormatsTest extends TestCase
         $this->assertEquals($rootServer->id, $response[0]['root_server_id']);
     }
 
+    // format ids
+    //
+    //
+    public function testIncludeFormatIdsNone()
+    {
+        Format::query()->delete();
+        $format1 = $this->createFormat1();
+        $this->createMeeting([$format1->shared_id_bigint]);
+        $badId = $format1->shared_id_bigint + 1;
+        $this->get("/client_interface/json/?switcher=GetFormats&format_ids=$badId")
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonCount(0);
+    }
+
+    public function testIncludeFormatIdsIncludeOne()
+    {
+        Format::query()->delete();
+        $format1 = $this->createFormat1();
+        $this->createMeeting([$format1->shared_id_bigint]);
+        $format2 = $this->createFormat2();
+        $this->createMeeting([$format2->shared_id_bigint]);
+        $this->get("/client_interface/json/?switcher=GetFormats&format_ids=$format1->shared_id_bigint")
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonCount(1);
+    }
+
+    public function testIncludeFormatIdsIncludeTwoWithArray()
+    {
+        Format::query()->delete();
+        $format1 = $this->createFormat1();
+        $this->createMeeting([$format1->shared_id_bigint]);
+        $format2 = $this->createFormat2();
+        $this->createMeeting([$format2->shared_id_bigint]);
+        $format3 = $this->createFormat3();
+        $this->createMeeting([$format3->shared_id_bigint]);
+        $this->get("/client_interface/json/?switcher=GetFormats&format_ids[]=$format1->shared_id_bigint&format_ids[]=$format2->shared_id_bigint")
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonCount(2);
+    }
+
+    public function testIncludeFormatIdsIncludeTwoWithCommas()
+    {
+        Format::query()->delete();
+        $format1 = $this->createFormat1();
+        $this->createMeeting([$format1->shared_id_bigint]);
+        $format2 = $this->createFormat2();
+        $this->createMeeting([$format2->shared_id_bigint]);
+        $format3 = $this->createFormat3();
+        $this->createMeeting([$format3->shared_id_bigint]);
+        $this->get("/client_interface/json/?switcher=GetFormats&format_ids=$format1->shared_id_bigint, $format2->shared_id_bigint")
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonCount(2);
+    }
+
+    public function testExcludeFormatIdsExcludeOne()
+    {
+        Format::query()->delete();
+        $format1 = $this->createFormat1();
+        $this->createMeeting([$format1->shared_id_bigint]);
+        $format2 = $this->createFormat2();
+        $this->createMeeting([$format2->shared_id_bigint]);
+        $this->get("/client_interface/json/?switcher=GetFormats&format_ids=-$format1->shared_id_bigint")
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonCount(1)
+            ->assertJsonFragment(['id' => strval($format2->shared_id_bigint)]);
+    }
+
+    public function testExcludeFormatIdsExcludeTwoWithArray()
+    {
+        Format::query()->delete();
+        $format1 = $this->createFormat1();
+        $this->createMeeting([$format1->shared_id_bigint]);
+        $format2 = $this->createFormat2();
+        $this->createMeeting([$format2->shared_id_bigint]);
+        $format3 = $this->createFormat3();
+        $this->createMeeting([$format3->shared_id_bigint]);
+        $this->get("/client_interface/json/?switcher=GetFormats&format_ids[]=-$format1->shared_id_bigint&format_ids[]=-$format2->shared_id_bigint")
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonCount(1)
+            ->assertJsonFragment(['id' => strval($format3->shared_id_bigint)]);
+    }
+
+    public function testExcludeFormatIdsExcludeTwoWithCommas()
+    {
+        Format::query()->delete();
+        $format1 = $this->createFormat1();
+        $this->createMeeting([$format1->shared_id_bigint]);
+        $format2 = $this->createFormat2();
+        $this->createMeeting([$format2->shared_id_bigint]);
+        $format3 = $this->createFormat3();
+        $this->createMeeting([$format3->shared_id_bigint]);
+        $this->get("/client_interface/json/?switcher=GetFormats&format_ids=-$format1->shared_id_bigint, -$format2->shared_id_bigint")
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonCount(1)
+            ->assertJsonFragment(['id' => strval($format3->shared_id_bigint)]);
+    }
+
     // root server ids
     //
     //

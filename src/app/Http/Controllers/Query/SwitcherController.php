@@ -357,6 +357,16 @@ class SwitcherController extends Controller
             $rootServersExclude = count($rootServersExclude) ? $rootServersExclude : null;
         }
 
+        $formatIds = $request->input('format_ids', []);
+        if (is_string($formatIds)) {
+            $formatIds = array_map(fn ($id) => trim($id), explode(',', $formatIds));
+        }
+        $formatIds = ensure_integer_array($formatIds);
+        $formatsInclude = collect($formatIds)->filter(fn($f) => $f > 0)->map(fn($f) => $f)->toArray();
+        $formatsInclude = count($formatsInclude) ? $formatsInclude : null;
+        $formatsExclude = collect($formatIds)->filter(fn($r) => $r < 0)->map(fn($r) => abs($r))->toArray();
+        $formatsExclude = count($formatsExclude) ? $formatsExclude : null;
+
         $langEnums = $request->input('lang_enum', config('app.locale'));
         if (!is_array($langEnums)) {
             $langEnums = [$langEnums];
@@ -370,6 +380,8 @@ class SwitcherController extends Controller
         $showAll = $request->input('show_all') == '1';
 
         $formats = $this->formatRepository->search(
+            formatsInclude: $formatsInclude,
+            formatsExclude: $formatsExclude,
             rootServersInclude: $rootServersInclude,
             rootServersExclude: $rootServersExclude,
             langEnums: $langEnums,
