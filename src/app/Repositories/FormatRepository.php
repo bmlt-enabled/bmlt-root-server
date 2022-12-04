@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\DB;
 class FormatRepository implements FormatRepositoryInterface
 {
     public function search(
+        array $formatsInclude = null,
+        array $formatsExclude = null,
         array $rootServersInclude = null,
         array $rootServersExclude = null,
         array $langEnums = null,
@@ -25,6 +27,14 @@ class FormatRepository implements FormatRepositoryInterface
 
         if ($eagerRootServers) {
             $formats = $formats->with(['rootServer']);
+        }
+
+        if (!is_null($formatsInclude)) {
+            $formats = $formats->whereIn('shared_id_bigint', $formatsInclude);
+        }
+
+        if (!is_null($formatsExclude)) {
+            $formats = $formats->whereNotIn('shared_id_bigint', $formatsExclude);
         }
 
         if (!is_null($rootServersInclude)) {
