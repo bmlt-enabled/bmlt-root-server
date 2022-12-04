@@ -3,13 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CatchAllController;
 use App\Http\Controllers\Legacy\LegacyAuthController;
-use App\Http\Controllers\Legacy\TomatoRestApiController;
 use App\Http\Controllers\Query\ServerInfoXmlController;
 use App\Http\Controllers\Query\SwitcherController;
-
-// legacy tomato
-Route::get('/rest/v1/formats', [TomatoRestApiController::class, 'formats']);
-Route::get('/rest/v1/formats/{formatId}', [TomatoRestApiController::class, 'format']);
 
 // legacy crouton
 Route::get('/client_interface/html', [CatchAllController::class, 'all']);
