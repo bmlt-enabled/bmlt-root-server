@@ -72,7 +72,7 @@ resource "aws_ecs_task_definition" "aggregator" {
             awslogs-stream-prefix = "aggregator"
           }
         }
-        memoryReservation = 512
+        memoryReservation = 1280
         linuxParameters = {
           initProcessEnabled = true
         }
