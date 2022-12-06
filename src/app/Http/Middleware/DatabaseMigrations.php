@@ -52,7 +52,7 @@ class DatabaseMigrations
             return true;
         }
 
-        if (!$this->migrationRepository->migrationExists('2019_12_14_000001_create_personal_access_tokens_table')) {
+        if (!$this->migrationRepository->migrationExists('2022_12_06_000000_service_body_statistics')) {
             return true;
         }
 

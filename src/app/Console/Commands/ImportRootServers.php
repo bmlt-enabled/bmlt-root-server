@@ -14,6 +14,7 @@ use App\Models\MeetingLongData;
 use App\Models\RootServer;
 use App\Models\RootServerStatistics;
 use App\Models\ServiceBody;
+use App\Models\ServiceBodyServerStatistics;
 use App\Repositories\External\ExternalFormat;
 use App\Repositories\External\ExternalMeeting;
 use App\Repositories\External\ExternalRootServer;
@@ -199,7 +200,7 @@ class ImportRootServers extends Command
             'num_zones' => ServiceBody::query()->where('root_server_id', $rootServer->id)->where('sb_type', ServiceBody::SB_TYPE_ZONE)->count(),
             'num_regions' => ServiceBody::query()->where('root_server_id', $rootServer->id)->where('sb_type', ServiceBody::SB_TYPE_REGION)->count(),
             'num_areas' => ServiceBody::query()->where('root_server_id', $rootServer->id)->where('sb_type', ServiceBody::SB_TYPE_AREA)->count(),
-            'num_groups' => $this->getNumGroups($rootServer),
+            'num_groups' => $this->getRootServerNumGroups($rootServer),
             'num_total_meetings' => Meeting::query()->where('root_server_id', $rootServer->id)->count(),
             'num_in_person_meetings' => Meeting::query()->where('root_server_id', $rootServer->id)->where('venue_type', Meeting::VENUE_TYPE_IN_PERSON)->count(),
             'num_virtual_meetings' => Meeting::query()->where('root_server_id', $rootServer->id)->where('venue_type', Meeting::VENUE_TYPE_VIRTUAL)->count(),
@@ -207,9 +208,14 @@ class ImportRootServers extends Command
             'num_unknown_meetings' => Meeting::query()->where('root_server_id', $rootServer->id)->whereNull('venue_type')->count(),
             'is_latest' => true,
         ]);
+
+        $serviceBodies = ServiceBody::query()->where('root_server_id', $rootServer->id)->get();
+        foreach ($serviceBodies as $serviceBody) {
+            $this->updateServiceBodyStatistics($serviceBody);
+        }
     }
 
-    private function getNumGroups(RootServer $rootServer): int
+    private function getRootServerNumGroups(RootServer $rootServer): int
     {
         // with world ids
         $numGroups = Meeting::query()
@@ -222,6 +228,8 @@ class ImportRootServers extends Command
         // without world ids, unique meeting names per service body
         $serviceBodies = ServiceBody::query()->where('root_server_id', $rootServer->id)->get();
         foreach ($serviceBodies as $serviceBody) {
+            $this->updateServiceBodyStatistics($serviceBody);
+
             $numGroups += MeetingData::query()
                 ->where('key', 'meeting_name')
                 ->whereIn('meetingid_bigint', function ($query) use ($serviceBody) {
@@ -242,6 +250,51 @@ class ImportRootServers extends Command
         return $numGroups;
     }
 
+    private function updateServiceBodyStatistics(ServiceBody $serviceBody)
+    {
+        ServiceBodyServerStatistics::query()->where('service_body_id', $serviceBody->id_bigint)->update(['is_latest' => false]);
+        ServiceBodyServerStatistics::create([
+            'service_body_id' => $serviceBody->id_bigint,
+            'num_groups' => $this->getServiceBodyNumGroups($serviceBody),
+            'num_total_meetings' => Meeting::query()->where('service_body_bigint', $serviceBody->id_bigint)->count(),
+            'num_in_person_meetings' => Meeting::query()->where('service_body_bigint', $serviceBody->id_bigint)->where('venue_type', Meeting::VENUE_TYPE_IN_PERSON)->count(),
+            'num_virtual_meetings' => Meeting::query()->where('service_body_bigint', $serviceBody->id_bigint)->where('venue_type', Meeting::VENUE_TYPE_VIRTUAL)->count(),
+            'num_hybrid_meetings' => Meeting::query()->where('service_body_bigint', $serviceBody->id_bigint)->where('venue_type', Meeting::VENUE_TYPE_HYBRID)->count(),
+            'num_unknown_meetings' => Meeting::query()->where('service_body_bigint', $serviceBody->id_bigint)->whereNull('venue_type')->count(),
+            'is_latest' => true,
+        ]);
+    }
+
+    private function getServiceBodyNumGroups(ServiceBody $serviceBody): int
+    {
+        // with world ids
+        $numGroups = Meeting::query()
+            ->where('service_body_bigint', $serviceBody->id_bigint)
+            ->whereNotNull('worldid_mixed')
+            ->whereNot('worldid_mixed', '')
+            ->distinct()
+            ->count('worldid_mixed');
+
+        // without world ids
+        $numGroups += MeetingData::query()
+            ->where('key', 'meeting_name')
+            ->whereIn('meetingid_bigint', function ($query) use ($serviceBody) {
+                $query
+                    ->select('id_bigint')
+                    ->from((new Meeting)->getTable())
+                    ->where('service_body_bigint', $serviceBody->id_bigint)
+                    ->where(function (Builder $query) {
+                        $query
+                            ->whereNull('worldid_mixed')
+                            ->orWhere('worldid_mixed', '');
+                    });
+            })
+            ->distinct()
+            ->count('data_string');
+
+        return $numGroups;
+    }
+
     private function analyzeTables(): void
     {
         $this->info('analyzing tables');
@@ -254,6 +307,7 @@ class ImportRootServers extends Command
             $prefix . (new Format)->getTable(),
             $prefix . (new RootServer)->getTable(),
             $prefix . (new RootServerStatistics)->getTable(),
+            $prefix . (new ServiceBodyServerStatistics)->getTable(),
         ];
         foreach ($tableNames as $tableName) {
             DB::statement(DB::raw("ANALYZE TABLE $tableName;"));
