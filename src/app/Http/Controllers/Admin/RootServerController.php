@@ -23,7 +23,7 @@ class RootServerController extends ResourceController
             return new JsonResponse(['message' => 'Endpoint is unavailable when aggregator mode is disabled.'], 404);
         }
 
-        $rootServers = $this->rootServerRepository->search();
+        $rootServers = $this->rootServerRepository->search(eagerStatistics: true);
         return RootServerResource::collection($rootServers);
     }
 

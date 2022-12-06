@@ -11,5 +11,11 @@ class RootServer extends Model
         'source_id',
         'name',
         'url',
+        'server_info',
     ];
+
+    public function statistics()
+    {
+        return $this->hasMany(RootServerStatistics::class);
+    }
 }

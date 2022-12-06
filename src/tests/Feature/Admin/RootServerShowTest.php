@@ -27,6 +27,22 @@ class RootServerShowTest extends TestCase
                 'sourceId' => $rootServer->source_id,
                 'name' => $rootServer->name,
                 'url' => $rootServer->url,
+                'statistics' => [
+                    'meetings' => [
+                        'numTotal' => null,
+                        'numInPerson' => null,
+                        'numVirtual' => null,
+                        'numHybrid' => null,
+                        'numUnknown' => null,
+                    ],
+                    'serviceBodies' => [
+                        'numAreas' => null,
+                        'numRegions' => null,
+                        'numZones' => null,
+                        'numGroups' => null,
+                    ]
+                ],
+                'serverInfo' => null,
                 'lastSuccessfulImport' => null,
             ]);
     }
@@ -44,6 +60,22 @@ class RootServerShowTest extends TestCase
                 'sourceId' => $rootServer->source_id,
                 'name' => $rootServer->name,
                 'url' => $rootServer->url,
+                'statistics' => [
+                    'meetings' => [
+                        'numTotal' => null,
+                        'numInPerson' => null,
+                        'numVirtual' => null,
+                        'numHybrid' => null,
+                        'numUnknown' => null,
+                    ],
+                    'serviceBodies' => [
+                        'numAreas' => null,
+                        'numRegions' => null,
+                        'numZones' => null,
+                        'numGroups' => null,
+                    ]
+                ],
+                'serverInfo' => null,
                 'lastSuccessfulImport' => $rootServer->last_successful_import->format('Y-m-d H:i:s'),
             ]);
     }

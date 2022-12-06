@@ -19,7 +19,26 @@ return new class extends Migration
             $table->unsignedBigInteger('source_id');
             $table->string('name', 255);
             $table->string('url', 255);
+            $table->text('server_info')->nullable();
             $table->datetime('last_successful_import')->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('root_server_statistics', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->foreignId('root_server_id')->constrained()->cascadeOnDelete();
+            $table->unsignedInteger('num_zones');
+            $table->unsignedInteger('num_regions');
+            $table->unsignedInteger('num_areas');
+            $table->unsignedInteger('num_groups');
+            $table->unsignedInteger('num_total_meetings');
+            $table->unsignedInteger('num_in_person_meetings');
+            $table->unsignedInteger('num_virtual_meetings');
+            $table->unsignedInteger('num_hybrid_meetings');
+            $table->unsignedInteger('num_unknown_meetings');
+            $table->boolean('is_latest');
+            $table->index('is_latest', 'is_latest');
+            $table->index(['is_latest', 'root_server_id'], 'is_latest_root_server_id');
             $table->timestamps();
         });
 
