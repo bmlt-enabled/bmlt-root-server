@@ -5,9 +5,9 @@ resource "aws_ecs_cluster" "aggregator" {
 resource "aws_autoscaling_group" "aggregator_cluster" {
   name                = local.aggregator_cluster_name
   vpc_zone_identifier = data.aws_subnets.main.ids
-  min_size            = 1
-  max_size            = 1
-  desired_capacity    = 1
+  min_size            = 2
+  max_size            = 2
+  desired_capacity    = 2
 
   launch_template {
     id      = aws_launch_template.aggregator_cluster.id
