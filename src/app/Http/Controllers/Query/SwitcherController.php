@@ -508,7 +508,7 @@ class SwitcherController extends Controller
             'meeting_states_and_provinces' => implode(',', legacy_config('meeting_states_and_provinces', [])),
             'meeting_counties_and_sub_provinces' => implode(',', legacy_config('meeting_counties_and_sub_provinces', [])),
             'available_keys' => $this->meetingRepository->getFieldKeys()->map(fn ($value) => $value['key'])->merge(['root_server_uri', 'format_shared_id_list'])->join(','),
-            'google_api_key' => legacy_config('google_api_key', ''),
+            'google_api_key' => legacy_config('aggregator_mode_enabled') ? null : legacy_config('google_api_key', ''),
             'dbVersion' => $this->migrationRepository->getLastMigration()['migration'],
             'dbPrefix' => legacy_config('db_prefix'),
             'meeting_time_zones_enabled' => legacy_config('meeting_time_zones_enabled') ? '1' : '0',
