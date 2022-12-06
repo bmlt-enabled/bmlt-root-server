@@ -12,9 +12,16 @@ use Illuminate\Support\Collection;
 
 class RootServerRepository implements RootServerRepositoryInterface
 {
-    public function search(): Collection
+    public function search(bool $eagerStatistics = false): Collection
     {
-        return RootServer::all();
+        $rootServers = RootServer::query();
+        if ($eagerStatistics) {
+            $rootServers = $rootServers->with(['statistics' => function ($query) {
+                $query->where('is_latest', true);
+            }]);
+        }
+
+        return $rootServers->get();
     }
 
     public function create(array $values): RootServer

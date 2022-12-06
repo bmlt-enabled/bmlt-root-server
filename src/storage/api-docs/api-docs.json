@@ -2417,6 +2417,78 @@
                         "type": "string",
                         "example": "https://example.com/main_server"
                     },
+                    "statistics": {
+                        "required": [
+                            "serviceBodies",
+                            "meetings"
+                        ],
+                        "properties": {
+                            "serviceBodies": {
+                                "required": [
+                                    "numZones",
+                                    "numRegions",
+                                    "numAreas",
+                                    "numGroups"
+                                ],
+                                "properties": {
+                                    "numZones": {
+                                        "type": "integer",
+                                        "example": "0"
+                                    },
+                                    "numRegions": {
+                                        "type": "integer",
+                                        "example": "0"
+                                    },
+                                    "numAreas": {
+                                        "type": "integer",
+                                        "example": "0"
+                                    },
+                                    "numGroups": {
+                                        "type": "integer",
+                                        "example": "0"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            "meetings": {
+                                "required": [
+                                    "numTotal",
+                                    "numInPerson",
+                                    "numVirtual",
+                                    "numHybrid",
+                                    "numUnknown"
+                                ],
+                                "properties": {
+                                    "numTotal": {
+                                        "type": "integer",
+                                        "example": "0"
+                                    },
+                                    "numInPerson": {
+                                        "type": "integer",
+                                        "example": "0"
+                                    },
+                                    "numVirtual": {
+                                        "type": "integer",
+                                        "example": "0"
+                                    },
+                                    "numHybrid": {
+                                        "type": "integer",
+                                        "example": "0"
+                                    },
+                                    "numUnknown": {
+                                        "type": "integer",
+                                        "example": "0"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "serverInfo": {
+                        "type": "string",
+                        "example": "string"
+                    },
                     "lastSuccessfulImport": {
                         "type": "string",
                         "format": "date-time",
