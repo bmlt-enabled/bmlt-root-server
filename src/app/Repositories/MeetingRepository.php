@@ -256,7 +256,7 @@ class MeetingRepository implements MeetingRepositoryInterface
         if (!is_null($pageSize)) {
             $meetings = $meetings->limit($pageSize);
             if (!is_null($pageNum)) {
-                $meetings = $meetings->offset(max(0, $pageNum - 1));
+                $meetings = $meetings->offset(max(0, ($pageNum - 1) * $pageSize));
             }
         }
 
