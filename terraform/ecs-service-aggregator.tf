@@ -72,7 +72,7 @@ resource "aws_ecs_task_definition" "aggregator" {
             awslogs-stream-prefix = "aggregator"
           }
         }
-        memoryReservation = 512
+        memoryReservation = 1280
         linuxParameters = {
           initProcessEnabled = true
         }
@@ -227,16 +227,21 @@ resource "aws_ecs_task_definition" "aggregator_import" {
 resource "aws_ecs_service" "aggregator" {
   name                               = "aggregator"
   cluster                            = aws_ecs_cluster.aggregator.id
-  desired_count                      = 1
+  desired_count                      = 2
   iam_role                           = aws_iam_role.bmlt_lb.name
   task_definition                    = aws_ecs_task_definition.aggregator.arn
   enable_execute_command             = true
-  deployment_minimum_healthy_percent = 100
+  deployment_minimum_healthy_percent = 50
 
   load_balancer {
     target_group_arn = aws_alb_target_group.aggregator.id
     container_name   = "aggregator"
     container_port   = 8000
+  }
+
+  ordered_placement_strategy {
+    type  = "spread"
+    field = "attribute:ecs.availability-zone"
   }
 
   depends_on = [
