@@ -422,7 +422,7 @@ class SwitcherController extends Controller
             $rootServersExclude = count($rootServersExclude) ? $rootServersExclude : null;
         }
 
-        $recurseChildren = $request->input('recurse') == '1';
+        $recurseChildren = $request->input('recursive') == '1';
         $recurseParents = $request->input('parents') == '1';
 
         $serviceBodies = $this->serviceBodyRepository->search(
