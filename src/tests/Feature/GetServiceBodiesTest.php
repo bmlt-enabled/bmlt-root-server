@@ -196,7 +196,7 @@ class GetServiceBodiesTest extends TestCase
         $this->assertTrue($this->allServiceBodiesNotInArray($unexpected, $response));
     }
 
-    public function testRecurseFromZone()
+    public function testRecursiveFromZone()
     {
         $zone = $this->createZone("sezf", "sezf");
         $zone2 = $this->createZone("nezf", "nezf");
@@ -204,7 +204,7 @@ class GetServiceBodiesTest extends TestCase
         $region2 = $this->createRegion("nc", "nc", $zone->id_bigint);
         $area1 = $this->createArea("marietta", "marietta", $region1->id_bigint);
         $area2 = $this->createArea("capital area", "capital area", $region2->id_bigint);
-        $response = $this->get("/client_interface/json/?switcher=GetServiceBodies&services=$zone->id_bigint&recurse=1")
+        $response = $this->get("/client_interface/json/?switcher=GetServiceBodies&services=$zone->id_bigint&recursive=1")
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/json')
             ->assertJsonCount(5)
@@ -215,14 +215,14 @@ class GetServiceBodiesTest extends TestCase
         $this->assertTrue($this->allServiceBodiesNotInArray($unexpected, $response));
     }
 
-    public function testRecurseFromOneRegion()
+    public function testRecursiveFromOneRegion()
     {
         $zone = $this->createZone("sezf", "sezf");
         $region1 = $this->createRegion("ga", "ga", $zone->id_bigint);
         $region2 = $this->createRegion("nc", "nc", $zone->id_bigint);
         $area1 = $this->createArea("marietta", "marietta", $region1->id_bigint);
         $area2 = $this->createArea("capital area", "capital area", $region2->id_bigint);
-        $response = $this->get("/client_interface/json/?switcher=GetServiceBodies&services=$region1->id_bigint&recurse=1")
+        $response = $this->get("/client_interface/json/?switcher=GetServiceBodies&services=$region1->id_bigint&recursive=1")
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/json')
             ->assertJsonCount(2)
@@ -233,14 +233,14 @@ class GetServiceBodiesTest extends TestCase
         $this->assertTrue($this->allServiceBodiesNotInArray($unexpected, $response));
     }
 
-    public function testRecurseFromMultipleRegions()
+    public function testRecursiveFromMultipleRegions()
     {
         $zone = $this->createZone("sezf", "sezf");
         $region1 = $this->createRegion("ga", "ga", $zone->id_bigint);
         $region2 = $this->createRegion("nc", "nc", $zone->id_bigint);
         $area1 = $this->createArea("marietta", "marietta", $region1->id_bigint);
         $area2 = $this->createArea("capital area", "capital area", $region2->id_bigint);
-        $response = $this->get("/client_interface/json/?switcher=GetServiceBodies&services[]=$region1->id_bigint&services[]=$region2->id_bigint&recurse=1")
+        $response = $this->get("/client_interface/json/?switcher=GetServiceBodies&services[]=$region1->id_bigint&services[]=$region2->id_bigint&recursive=1")
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/json')
             ->assertJsonCount(4)
@@ -251,14 +251,14 @@ class GetServiceBodiesTest extends TestCase
         $this->assertTrue($this->allServiceBodiesNotInArray($unexpected, $response));
     }
 
-    public function testRecurseFromArea()
+    public function testRecursiveFromArea()
     {
         $zone = $this->createZone("sezf", "sezf");
         $region1 = $this->createRegion("ga", "ga", $zone->id_bigint);
         $region2 = $this->createRegion("nc", "nc", $zone->id_bigint);
         $area1 = $this->createArea("marietta", "marietta", $region1->id_bigint);
         $area2 = $this->createArea("capital area", "capital area", $region2->id_bigint);
-        $response = $this->get("/client_interface/json/?switcher=GetServiceBodies&services=$area1->id_bigint&recurse=1")
+        $response = $this->get("/client_interface/json/?switcher=GetServiceBodies&services=$area1->id_bigint&recursive=1")
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/json')
             ->assertJsonCount(1)
@@ -391,7 +391,7 @@ class GetServiceBodiesTest extends TestCase
         $region2 = $this->createRegion("nc", "nc", $zone2->id_bigint);
         $area1 = $this->createArea("marietta", "marietta", $region1->id_bigint);
         $area2 = $this->createArea("capital area", "capital area", $region2->id_bigint);
-        $response = $this->get("/client_interface/json/?switcher=GetServiceBodies&services[]=-$region1->id_bigint&services[]=-$region2->id_bigint&recurse=1")
+        $response = $this->get("/client_interface/json/?switcher=GetServiceBodies&services[]=-$region1->id_bigint&services[]=-$region2->id_bigint&recursive=1")
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/json')
             ->assertJsonCount(2)
@@ -402,7 +402,7 @@ class GetServiceBodiesTest extends TestCase
         $this->assertTrue($this->allServiceBodiesNotInArray($unexpected, $response));
     }
 
-    public function textExcludeIncludeParentsAndRecurse()
+    public function textExcludeIncludeParentsAndRecursive()
     {
         $zone = $this->createZone("sezf", "sezf");
         $zone2 = $this->createZone("nezf", "nezf");
@@ -410,7 +410,7 @@ class GetServiceBodiesTest extends TestCase
         $region2 = $this->createRegion("nc", "nc", $zone2->id_bigint);
         $area1 = $this->createArea("marietta", "marietta", $region1->id_bigint);
         $area2 = $this->createArea("capital area", "capital area", $region2->id_bigint);
-        $response = $this->get("/client_interface/json/?switcher=GetServiceBodies&services[]=$region1->id_bigint&services[]=-$region2->id_bigint&recurse=1&parents=1")
+        $response = $this->get("/client_interface/json/?switcher=GetServiceBodies&services[]=$region1->id_bigint&services[]=-$region2->id_bigint&recursive=1&parents=1")
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/json')
             ->assertJsonCount(3)
