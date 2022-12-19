@@ -28,25 +28,25 @@ jobs:
           MYSQL_ROOT_PASSWORD: rootserver
         options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
     steps:
-      - name: checkout
+      - name: checkout 🛒
         uses: actions/checkout@v3
 
-      - name: php ${{ matrix.php }}
+      - name: php ${{ matrix.php }} 🐫
         id: setup-php
         uses: shivammathur/setup-php@2.22.0
         with:
           php-version: ${{ matrix.php }}
           tools: composer:v2.4.1
 
-      - name: make composer
+      - name: make composer 🎼
         run: |
           DEV=1 make composer
 
-      - name: make lint
+      - name: make lint 🧹
         run: |
           make lint
 
-      - name: make test
+      - name: make test 🧪
         env:
           DB_PORT: ${{ job.services.mariadb.ports[3306] }}
         run: |
@@ -57,23 +57,23 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-      - name: checkout
+      - name: checkout 🛒
         uses: actions/checkout@v3
 
-      - name: node 16
+      - name: node 16 ❇️
         uses: actions/setup-node@v3.5.1
         with:
           node-version: 16
 
-      - name: make npm
+      - name: make npm ♦️
         run: |
           make npm
 
-      - name: make lint-js
+      - name: make lint-js 🧹
         run: |
           make lint-js
 
-      - name: make test-js
+      - name: make test-js 🧪
         env:
           LARAVEL_BYPASS_ENV_CHECK: '1'
         run: |
