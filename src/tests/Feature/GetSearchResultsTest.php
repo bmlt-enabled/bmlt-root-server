@@ -1339,6 +1339,28 @@ class GetSearchResultsTest extends TestCase
         }
     }
 
+    public function testSortKeysMultipleFields()
+    {
+        $meeting1 = $this->createMeeting(['weekday_tinyint' => 1, 'start_time' => '19:00:00', ['meeting_name' => 'abc']]);
+        $meeting2 = $this->createMeeting(['weekday_tinyint' => 1, 'start_time' => '09:00:00', ['meeting_name' => 'abc']]);
+        $meeting3 = $this->createMeeting(['weekday_tinyint' => 2, 'start_time' => '23:59:59', ['meeting_name' => 'abc']]);
+        $meeting4 = $this->createMeeting(['weekday_tinyint' => 2, 'start_time' => '01:00:00', ['meeting_name' => 'abc']]);
+        $meeting5 = $this->createMeeting(['weekday_tinyint' => 3, 'start_time' => '01:00:00'], ['meeting_name' => 'def']);
+        $meeting6 = $this->createMeeting(['weekday_tinyint' => 3, 'start_time' => '01:00:00'], ['meeting_name' => 'abc']);
+
+        $data = collect($this->get("/client_interface/json/?switcher=GetSearchResults&sort_keys=weekday_tinyint,start_time,meeting_name")
+            ->assertStatus(200)
+            ->assertJsonCount(6)
+            ->json());
+
+        $this->assertEquals(strval($meeting2->id_bigint), $data[0]['id_bigint']);
+        $this->assertEquals(strval($meeting1->id_bigint), $data[1]['id_bigint']);
+        $this->assertEquals(strval($meeting4->id_bigint), $data[2]['id_bigint']);
+        $this->assertEquals(strval($meeting3->id_bigint), $data[3]['id_bigint']);
+        $this->assertEquals(strval($meeting6->id_bigint), $data[4]['id_bigint']);
+        $this->assertEquals(strval($meeting5->id_bigint), $data[5]['id_bigint']);
+    }
+
     // data_field_key
     //
     //
