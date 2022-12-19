@@ -295,7 +295,7 @@ class MeetingRepository implements MeetingRepositoryInterface
 
         return $meetings->sortBy([function ($m1, $m2) use ($sortKeys, $mainTableKeys, $dataByMeeting) {
             foreach ($sortKeys as $sortKey) {
-                if (isset($mainTableKeys[$sortKey])) {
+                if (array_key_exists($sortKey, $mainTableKeys)) {
                     $field1 = $m1->{$sortKey};
                     $field2 = $m2->{$sortKey};
                 } else {
