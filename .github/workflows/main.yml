@@ -32,31 +32,31 @@ jobs:
           MYSQL_ROOT_PASSWORD: rootserver
         options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
     steps:
-      - name: checkout
+      - name: checkout 🛒
         uses: actions/checkout@v3
 
-      - name: php ${{ matrix.php }}
+      - name: php ${{ matrix.php }} 🐫
         id: setup-php
         uses: shivammathur/setup-php@2.22.0
         with:
           php-version: ${{ matrix.php }}
           tools: composer:v2.4.1
 
-      - name: make composer
+      - name: make composer 🎼
         run: |
           DEV=1 make composer
 
-      - name: make lint
+      - name: make lint 🧹
         run: |
           make lint
 
-      - name: make test
+      - name: make test 🧪
         env:
           DB_PORT: ${{ job.services.mariadb.ports[3306] }}
         run: |
           make test
 
-      - name: Send coverage data to codecov.io
+      - name: Send coverage data to codecov.io 📀
         if: matrix.db == 'latest' && matrix.php == '8.1'
         uses: codecov/codecov-action@v3.1.1
         with:
@@ -67,23 +67,23 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-      - name: checkout
+      - name: checkout 🛒
         uses: actions/checkout@v3
 
-      - name: node 16
+      - name: node 16 ❇️
         uses: actions/setup-node@v3.5.1
         with:
           node-version: 16
 
-      - name: make npm
+      - name: make npm ♦️
         run: |
           make npm
 
-      - name: make lint-js
+      - name: make lint-js 🧹
         run: |
           make lint-js
 
-      - name: make test-js
+      - name: make test-js 🧪
         env:
           LARAVEL_BYPASS_ENV_CHECK: '1'
         run: |
@@ -96,34 +96,34 @@ jobs:
       id-token: write
       contents: write
     steps:
-      - name: Checkout
+      - name: Checkout 🛒
         uses: actions/checkout@v3
 
-      - name: php 8.0
+      - name: php 8.0 🐫
         id: setup-php
         uses: shivammathur/setup-php@2.22.0
         with:
           php-version: '8.0'
           tools: composer:v2.4.1
 
-      - name: make composer
+      - name: make composer 🎼
         run: |
           make composer
 
-      - name: setup node 16
+      - name: setup node 16 ❇️
         uses: actions/setup-node@v3.5.1
         with:
           node-version: 16
 
-      - name: make frontend
+      - name: make frontend 🐥
         run: |
           make frontend
 
-      - name: make crouton
+      - name: make crouton 🍞
         run: |
           make crouton
 
-      - name: Write .env with APP_VERSION and COMMIT_SHA
+      - name: Write .env with APP_VERSION and COMMIT_SHA 🧃
         shell: bash
         run: |
           echo COMMIT_SHA=${GITHUB_SHA} > src/.env
@@ -131,22 +131,22 @@ jobs:
             echo APP_VERSION=${GITHUB_REF_NAME} >> src/.env
           fi
 
-      - name: make zip
+      - name: make zip 🗜
         run: |
           make zip
 
-      - name: Configure S3 AWS Credentials
+      - name: Configure S3 AWS Credentials 🪪
         uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions/gh-ci-s3-artifact
           role-session-name: gh-actions
           aws-region: us-east-1
 
-      - name: Copy Artifacts to S3
+      - name: Copy Artifacts to S3 🪣
         run: |
           aws s3 cp build/bmlt-root-server.zip s3://${{ secrets.S3_BUCKET }}/bmlt-root-server/bmlt-root-server-$(cat src/config/app.php | grep "'version'" | cut -d"'" -f6)-build${GITHUB_RUN_NUMBER}-${GITHUB_SHA}.zip
 
-      - name: Configure AWS Credentials
+      - name: Configure AWS Credentials 🪪
         if: contains(github.ref_name, 'main') || contains(github.ref_name, 'unstable')
         uses: aws-actions/configure-aws-credentials@v1-node16
         with:
@@ -154,24 +154,24 @@ jobs:
           role-session-name: gh-actions-bmlt
           aws-region: us-east-1
 
-      - name: Login to Docker Hub
+      - name: Login to Docker Hub 🎫
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: make docker
+      - name: make docker 🐳
         if: contains(github.ref_name, 'main') || contains(github.ref_name, 'unstable')
         run: |
           make docker
 
-      - name: make docker-push
+      - name: make docker-push 🐋
         if: contains(github.ref_name, 'main') || contains(github.ref_name, 'unstable')
         id: docker_push_images
         run: |
           make docker-push
 
-      - name: Generate Release Notes
+      - name: Generate Release Notes 📝
         if: github.ref_type == 'tag'
         run: |
           curl -LO https://raw.githubusercontent.com/bmlt-enabled/release-notes-tool/master/gh-release-notes.sh
@@ -180,7 +180,7 @@ jobs:
           RELEASE_TYPE=$(if [[ "$GITHUB_REF_NAME" =~ "beta" ]]; then echo "true"; else echo "false"; fi)
           echo "RELEASE_TYPE=${RELEASE_TYPE}" >> $GITHUB_ENV
 
-      - name: Create Release
+      - name: Create Release 🎉
         uses: ncipollo/release-action@v1.11.1
         if: github.ref_type == 'tag'
         with:
@@ -203,17 +203,17 @@ jobs:
           - "latest"
           - "unstable"
     steps:
-      - name: Checkout
+      - name: Checkout 🛒
         uses: actions/checkout@v3
 
-      - name: Configure AWS Credentials
+      - name: Configure AWS Credentials 🪪
         uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions/gh-ci-tf-bmlt-rs
           role-session-name: gh-actions-bmlt
           aws-region: us-east-1
 
-      - name: Update ECS Service bmlt-${{ matrix.env }}
+      - name: Update ECS Service bmlt-${{ matrix.env }} ⛴
         run: |
           aws ecs update-service --cluster bmlt --service bmlt-${{ matrix.env }} --force-new-deployment
           aws ecs wait services-stable --cluster bmlt --services bmlt-${{ matrix.env }}
