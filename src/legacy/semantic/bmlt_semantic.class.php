@@ -122,7 +122,7 @@ class bmlt_semantic
             curl_setopt($resource, CURLOPT_ENCODING, 'gzip,deflate');
 
             // Pretend we're a browser, so that anti-cURL settings don't pooch us.
-            curl_setopt($resource, CURLOPT_USERAGENT, "cURL Mozilla/5.0 (Windows NT 5.1; rv:21.0) Gecko/20130401 Firefox/21.0");
+            curl_setopt($resource, CURLOPT_USERAGENT, "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36");
 
             // Trust meeeee...
             curl_setopt($resource, CURLOPT_SSL_VERIFYPEER, false);
