@@ -3,6 +3,7 @@
 * As part of a modernization effort, all of the APIs have been reimplemented. All API output formats except for `json` and `jsonp` have been removed. The `GetNAWSDump` API still supports the `csv` output format.
 * Added the `SPAD` format. If you've manually added a `SPAD` format to your server, the appropriate NAWS code will be automatically assigned when you upgrade.
 * Allow NAWS import code to update the world ID of deleted meetings. (This avoids a synchronization problem that would arise if a new meeting is deleted before its NAWS code can be uploaded.)
+* Fixed an issue with the Semantic Workshop UI on the SiteGround web host by changing the User-Agent used for API requests to self.
 
 ## 2.16.6 (August 27, 2022)
 * Fixed an issue with saving meetings when using PHP 8.x.
