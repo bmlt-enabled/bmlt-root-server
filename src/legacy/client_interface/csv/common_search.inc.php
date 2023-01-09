@@ -212,34 +212,34 @@ function SetUpSearch(
     //           The direction will be assumed 'asc', unless 'desc' is one of the keys (it can be anywhere in the list).
 ) {
     $search_string = isset($in_http_vars['SearchString']) ? trim($in_http_vars['SearchString']) : '';
-    
+
     if ($search_string && !(isset($in_http_vars['StringSearchIsAnAddress']) && $in_http_vars['StringSearchIsAnAddress']) && intval($search_string) && (preg_match('|\d+|', $search_string) || preg_match('(|\d+|,)+', $search_string))) {
         $temp_ids = explode(',', $search_string);
-        
+
         if (is_array($temp_ids) && count($temp_ids)) {
             $first = true;
-            
+
             foreach ($temp_ids as $id) {
                 $id = intval(trim($id));
-                
+
                 if ($id) {
                     if ($first) {
                         $in_http_vars['meeting_ids'] = null;
                         $first = false;
                     }
-                    
+
                     $in_http_vars['meeting_ids'][] = $id;
                 }
             }
         } else {
             $id = intval($search_string);
-            
+
             if ($id) {
                 $in_http_vars['meeting_ids'] = array ( intval($id) );
             }
         }
     }
-    
+
     // If we have a meeting ID array, then that defines the entire search. We ignore everything else
     if (isset($in_http_vars['meeting_ids']) && is_array($in_http_vars['meeting_ids']) && count($in_http_vars['meeting_ids'])) {
         $in_search_manager->SetMeetingIDArray($in_http_vars['meeting_ids']);
@@ -257,25 +257,25 @@ function SetUpSearch(
                     $templates = c_comdef_meeting::GetDataTableTemplate();
                     if ($templates && count($templates)) {
                         $additional = array ();
-                        
+
                         foreach ($templates as $template) {
                             $value = $template['key'];
                             array_push($additional, $value);
                         }
-                        
+
                         $standards = array ( 'weekday_tinyint', 'venue_type', 'id_bigint', 'worldid_mixed', 'service_body_bigint', 'lang_enum', 'duration_time', 'start_time', 'longitude', 'latitude' );
                         $templates = array_merge($standards, $additional);
-                        
+
                         if (in_array($key, $templates)) {
                             array_push($sort_fields, $key);
                         }
                     }
                 }
             }
-                
+
             $in_search_manager->SetSort($sort_fields, $dir == 'desc', count($sort_fields));
         }
-        
+
         // The first thing we do is try to resolve any address lookups.
         if ($search_string && isset($in_http_vars['StringSearchIsAnAddress']) && $in_http_vars['StringSearchIsAnAddress']) {
             $geo_search = (isset($in_http_vars['geo_width']) && $in_http_vars['geo_width']) ? true : ((isset($in_http_vars['geo_width_km']) && $in_http_vars['geo_width_km']) ? true : false);
@@ -283,13 +283,13 @@ function SetUpSearch(
             // We do a geocode to find out if this is an address.
             if (!$geo_search) {
                 $search_string = preg_replace('|,(\s*?)|', ', ', $search_string);    // This works around a bug caused by too-tight commas.
-                $geo = GetGeocodeFromString($search_string, $in_http_vars['advanced_weekdays']);
+                $geo = GetGeocodeFromString($search_string, $in_http_vars['advanced_weekdays'] ?? null);
                 if (is_array($geo) && count($geo)) {
                     $localized_strings = c_comdef_server::GetLocalStrings();
 
                     $in_http_vars['long_val'] = $geo['longitude'];
                     $in_http_vars['lat_val'] = $geo['latitude'];
-                    
+
                     if (isset($in_http_vars['SearchStringRadius']) && floatval($in_http_vars['SearchStringRadius']) != 0.0) {
                         if (intval($in_http_vars['SearchStringRadius']) < 0) {
                             $geo['radius'] = intval($in_http_vars['SearchStringRadius']);
@@ -297,7 +297,7 @@ function SetUpSearch(
                             $geo['radius'] = floatval($in_http_vars['SearchStringRadius']);
                         }
                     }
-                    
+
                     if ($localized_strings['dist_units'] == 'mi') {
                         if (isset($in_http_vars['geo_width_km'])) {
                             unset($in_http_vars['geo_width_km']);
@@ -307,7 +307,7 @@ function SetUpSearch(
                         unset($in_http_vars['geo_width']);
                         $in_http_vars['geo_width_km'] = $geo['radius'];
                     }
-                    
+
                     /* We need to undef these, because they can step on the long/lat. */
                     unset($search_string);
                     unset($in_http_vars['StringSearchIsAnAddress']);
@@ -320,7 +320,7 @@ function SetUpSearch(
         if (isset($in_http_vars['bmlt_search_type']) && ($in_http_vars['bmlt_search_type'] == 'advanced') && isset($in_http_vars['advanced_service_bodies']) && is_array($in_http_vars['advanced_service_bodies']) && count($in_http_vars['advanced_service_bodies'])) {
             $in_http_vars['services'] = $in_http_vars['advanced_service_bodies'];
         }
-        
+
         if (isset($in_http_vars['services']) && !is_array($in_http_vars['services'])) {
             $in_http_vars['services'] = array ( $in_http_vars['services'] );
         }
@@ -332,7 +332,7 @@ function SetUpSearch(
             if (isset($in_http_vars['recursive']) && $in_http_vars['recursive']) {
                 foreach ($in_http_vars['services'] as $service) {
                     $nested = GetAllContainedServiceBodyIDs(intval($service));
-                    
+
                     if (isset($nested) && is_array($nested) && count($nested)) {
                         foreach ($nested as $sb_i) {
                             $sb_i = intval($sb_i);
@@ -345,7 +345,7 @@ function SetUpSearch(
             }
 
             $sb =& $in_search_manager->GetServiceBodies();
-            
+
             foreach ($services as $service) {
                 $sb[intval($service)] = 1;
             }
@@ -373,18 +373,18 @@ function SetUpSearch(
                 unset($in_http_vars['geo_width']);
             }
         }
-        
+
         // If we aren't doing any geographic searches, then we won't have a search center.
         if (!( isset($in_http_vars['geo_width']) && $in_http_vars['geo_width'] ) && !( isset($in_http_vars['geo_width_km']) && $in_http_vars['geo_width_km'] )) {
             unset($in_http_vars['lat_val']);
             unset($in_http_vars['long_val']);
         }
-        
+
         // Next, set up the weekdays.
         if (isset($in_http_vars['bmlt_search_type']) && ($in_http_vars['bmlt_search_type'] == 'advanced') && isset($in_http_vars['advanced_weekdays']) && ((is_array($in_http_vars['advanced_weekdays']) && count($in_http_vars['advanced_weekdays'])) || isset($in_http_vars['advanced_weekdays']))) {
             $in_http_vars['weekdays'] = $in_http_vars['advanced_weekdays'];
         }
-        
+
         if (isset($in_http_vars['weekdays']) && !is_array($in_http_vars['weekdays']) && (intval(abs($in_http_vars['weekdays'])) > 0) && (intval(abs($in_http_vars['weekdays'])) < 8)) {
             $in_http_vars['weekdays'] = array ( intval($in_http_vars['weekdays']) );
         }
@@ -414,12 +414,12 @@ function SetUpSearch(
         if (isset($in_http_vars['bmlt_search_type']) && ($in_http_vars['bmlt_search_type'] == 'advanced') && isset($in_http_vars['advanced_formats']) && is_array($in_http_vars['advanced_formats']) && count($in_http_vars['advanced_formats'])) {
             $in_http_vars['formats'] = $in_http_vars['advanced_formats'];
         }
-        
+
         if (isset($in_http_vars['formats'])) {
             if (!is_array($in_http_vars['formats'])) {
                 $in_http_vars['formats'] = array ( intval($in_http_vars['formats']) );
             }
-                
+
             $fm =& $in_search_manager->GetFormats();
             foreach ($in_http_vars['formats'] as $format) {
                 $key = abs(intval($format));
@@ -430,7 +430,7 @@ function SetUpSearch(
         if (isset($in_http_vars['formats_comparison_operator']) && $in_http_vars['formats_comparison_operator'] == "OR") {
             $in_search_manager->SetFormatsComparisonOperator("OR");
         }
-        
+
         // Next, set up the languages.
         if (isset($in_http_vars['langs']) && is_array($in_http_vars['langs']) && count($in_http_vars['langs'])) {
             $lan =& $in_search_manager->GetLanguages();
@@ -438,34 +438,34 @@ function SetUpSearch(
                 $lan[$lng] = 1;
             }
         }
-        
+
         // Next, set up the advanced published option.
         if (isset($in_http_vars['advanced_published'])) {
             $in_search_manager->SetPublished(intval($in_http_vars['advanced_published']));
         } else {
             $in_search_manager->SetPublished(1);
         }
-        
+
         // Set the start window.
         $start_time = null;
         $end_time = null;
-        
+
         // Next, the minimum start time..
         if (isset($in_http_vars['StartsAfterH']) || isset($in_http_vars['StartsAfterM'])) {
             $start_hour = min(23, max(0, intval($in_http_vars['StartsAfterH'])));
             $start_minute = min(59, max(0, intval($in_http_vars['StartsAfterM'])));
             $start_time = mktime($start_hour, $start_minute);
         }
-        
+
         // Next, the maximum start time..
         if (isset($in_http_vars['StartsBeforeH']) || isset($in_http_vars['StartsBeforeM'])) {
             $end_hour = min(23, max(0, intval($in_http_vars['StartsBeforeH'])));
             $end_minute = min(59, max(0, intval($in_http_vars['StartsBeforeM'])));
             $end_time = mktime($end_hour, $end_minute);
         }
-        
+
         $in_search_manager->SetStartTime($start_time, $end_time);
-        
+
         $end_time = null;
 
         // Next, the maximum end time..
@@ -474,31 +474,31 @@ function SetUpSearch(
             $end_minute = min(59, max(0, intval($in_http_vars['EndsBeforeM'])));
             $end_time = ($end_hour * 3600) + ($end_minute * 60);
         }
-        
+
         $in_search_manager->SetEndTime($end_time);
-        
+
         // Set the duration window.
         $max_duration_time = null;
         $min_duration_time = null;
-        
+
         // Next, the minimum start time..
         if (isset($in_http_vars['MaxDurationH']) || isset($in_http_vars['MaxDurationM'])) {
             $max_duration_hour = min(23, max(0, intval($in_http_vars['MaxDurationH'])));
             $max_duration_minute = min(59, max(0, intval($in_http_vars['MaxDurationM'])));
             $max_duration_time = mktime($max_duration_hour, $max_duration_minute);
         }
-        
+
         // Next, the maximum start time..
         if (isset($in_http_vars['MinDurationH']) || isset($in_http_vars['MinDurationM'])) {
             $min_duration_hour = min(23, max(0, intval($in_http_vars['MinDurationH'])));
             $min_duration_minute = min(59, max(0, intval($in_http_vars['MinDurationM'])));
             $min_duration_time = mktime($min_duration_hour, $min_duration_minute);
         }
-        
+
         $in_search_manager->SetDuration($max_duration_time, $min_duration_time);
-    
+
         // Next, we deal with a geolocated search radius.
-        
+
         if ((isset($in_http_vars['geo_width']) && ($in_http_vars['geo_width'] != 0))
             ||  (isset($in_http_vars['geo_width_km']) && ($in_http_vars['geo_width_km'] != 0) )) {
             $long = isset($in_http_vars['long_val']) ? floatval($in_http_vars['long_val']) : 0;
@@ -507,7 +507,7 @@ function SetUpSearch(
             $radius_in_km = 0;
             $local_strings = c_comdef_server::GetLocalStrings();
             $radius_auto = $local_strings['number_of_meetings_for_auto'];
-            
+
             if (isset($in_http_vars['geo_width']) && ( $in_http_vars['geo_width'] != 0 )) {
                 if ($in_http_vars['geo_width'] < 0) {
                     $radius_auto = 0 - intval($in_http_vars['geo_width']);
@@ -521,7 +521,7 @@ function SetUpSearch(
                     $radius_in_km = floatval($in_http_vars['geo_width_km']);
                 }
             }
-            
+
             if ($radius_in_miles > 0) {
                 $in_search_manager->SetSearchRadiusAndCenterInMiles($radius_in_miles, $long, $lat);
             } elseif ($radius_in_km > 0) {
@@ -530,20 +530,20 @@ function SetUpSearch(
                 $in_search_manager->SetSearchRadiusAndCenterAuto($radius_auto, $long, $lat);
             }
         }
-            
+
         if ($search_string && (!isset($in_http_vars['meeting_key']) || !(is_array($in_http_vars['meeting_key']) && count($in_http_vars['meeting_key'])))) {
             // And last, but not least, a string search:
             $find_all = (isset($in_http_vars['SearchStringAll']) && $in_http_vars['SearchStringAll']) ? true :false;
             $literal = (isset($in_http_vars['SearchStringExact']) && $in_http_vars['SearchStringExact']) ? true :false;
             $in_search_manager->SetSearchString($search_string, $find_all, $literal);
         }
-            
+
         if (isset($in_http_vars['meeting_key']) && $in_http_vars['meeting_key']) {
             // This is true by default.
             if (!isset($in_http_vars['meeting_key_contains'])) {
                 $in_http_vars['meeting_key_contains'] = false;
             }
-            
+
             // This is false by default.
             if (!isset($in_http_vars['meeting_key_match_case'])) {
                 $in_http_vars['meeting_key_match_case'] = false;
@@ -565,19 +565,19 @@ function GetAllContainedServiceBodyIDs(
 ) {
     $in_parent_id = intval($in_parent_id);
     $ret = array( $in_parent_id );
-    
+
     $service_bodies = c_comdef_server::GetServer()->GetServiceBodyArray();
-    
+
     foreach ($service_bodies as $service_body) {
         $sb_id = intval($service_body->GetID());
         $parent_id = intval($service_body->GetOwnerID());
-        
+
         if ($in_parent_id == $parent_id) {
             $ret2 = GetAllContainedServiceBodyIDs($sb_id);
             $ret = array_merge($ret, $ret2);
         }
     }
-    
+
     return $ret;
 }
 
@@ -594,9 +594,9 @@ function BuildFormats(
     $lite = false   ///< If this is set to true, then the formats will be returned in an associative array, instead of as HTML. Default is false.
 ) {
     $formats = "";
-    
+
     $formats_obj = $in_mtg_obj->GetMeetingDataValue('formats');
-    
+
     if (is_array($formats_obj) && count($formats_obj)) {
         foreach ($formats_obj as $format) {
             if ($format instanceof c_comdef_format) {
@@ -611,13 +611,13 @@ function BuildFormats(
                     if ($formats) {
                         $formatspacer = ' ';
                     }
-                    
+
                     $formats .= "<span class=\"c_comdef_search_results_single_format\"><abbr title=\"$desc\">$formatspacer$key</abbr></span>";
                 }
             }
         }
     }
-    
+
     return $formats;
 }
 
@@ -633,19 +633,19 @@ function BuildTown(
     $location_town = c_comdef_htmlspecialchars(trim(stripslashes($in_mtg_obj->GetMeetingDataValue('location_municipality'))));
     $location_neighborhood = c_comdef_htmlspecialchars(trim(stripslashes($in_mtg_obj->GetMeetingDataValue('location_neighborhood'))));
     $location_province = c_comdef_htmlspecialchars(trim(stripslashes($in_mtg_obj->GetMeetingDataValue('location_province'))));
-    
+
     if ($location_province) {
         $location_town .= ', '.$location_province;
     }
-    
+
     if ($location_borough) {
         $location_town = "<span class=\"c_comdef_search_results_town\">$location_borough</span>, <span class=\"c_comdef_search_results_town\">$location_town</span>";
     }
-    
+
     if ($location_neighborhood) {
         $location_town = "$location_town <span class=\"c_comdef_search_results_neighborhood\">($location_neighborhood)</span>";
     }
-    
+
     return $location_town;
 }
 
@@ -661,9 +661,9 @@ function BuildTime(
     $in_integer = false ///< If true, the time is returned as an integer (Military time).
 ) {
     $localized_strings = c_comdef_server::GetLocalStrings();
-    
+
     $time = null;
-    
+
     if ($in_integer) {
         $time = intval(str_replace(':', '', $in_time)) / 100;
     } else {
@@ -675,7 +675,7 @@ function BuildTime(
             $time = c_comdef_htmlspecialchars(date($localized_strings['time_format'], strtotime($in_time)));
         }
     }
-    
+
     return $time;
 }
 
@@ -688,23 +688,23 @@ function BuildLocation(
     $in_mtg_obj ///< A reference to an instance of c_comdef_meeting.
 ) {
     $ret = "";
-    
+
     if ($in_mtg_obj instanceof c_comdef_meeting) {
         $location_text = c_comdef_htmlspecialchars(trim(stripslashes($in_mtg_obj->GetMeetingDataValue('location_text'))));
         $street = c_comdef_htmlspecialchars(trim(stripslashes($in_mtg_obj->GetMeetingDataValue('location_street'))));
         $info = c_comdef_htmlspecialchars(trim(stripslashes($in_mtg_obj->GetMeetingDataValue('location_info'))));
-        
+
         if ($location_text) {
             $ret .= $location_text;
         }
-        
+
         if ($street) {
             if ($ret) {
                 $ret .= ", ";
             }
             $ret .= $street;
         }
-        
+
         if ($info) {
             if ($ret) {
                 $ret .= " ";
@@ -712,7 +712,7 @@ function BuildLocation(
             $ret .= "($info)";
         }
     }
-    
+
     return $ret;
 }
 
@@ -733,24 +733,24 @@ function GetGeocodeFromString(
 ) {
     $ret = null;
     $localized_strings = c_comdef_server::GetLocalStrings();
-    
+
     $geo_uri = $localized_strings['comdef_server_admin_strings']['ServerMapsURL'];
-    
+
     if ($localized_strings['region_bias']) {
         $geo_uri .= '&region='.$localized_strings['region_bias'];
     }
-    
+
     if ($localized_strings['google_api_key']) {
         $geo_uri .= '&key='.$localized_strings['google_api_key'];
     }
-    
+
     // Bit of a kludge. If the string is just a number (a postcode), then we add the region bias directly to it.
     if (is_numeric($in_string) && $localized_strings['region_bias']) {
         $in_string .= " ".$localized_strings['region_bias'];
     }
-        
+
     $geo_uri = str_replace('##SEARCH_STRING##', urlencode($in_string), $geo_uri);
-    
+
     // We set up a 200-mile bounds, in order to encourage Google to look in the proper place.
     $m_p_deg = 100 / (111.321 * cos(deg2rad($localized_strings['search_spec_map_center']['latitude'])) * 1.609344);  // Degrees for 100 miles.
     $bounds_ar = strval($localized_strings['search_spec_map_center']['latitude'] - $m_p_deg).",". strval($localized_strings['search_spec_map_center']['longitude'] - $m_p_deg);       // Southwest corner
@@ -774,6 +774,6 @@ function GetGeocodeFromString(
             $ret = null;
         }
     }
-    
+
     return $ret;
 }
