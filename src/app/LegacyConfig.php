@@ -112,6 +112,7 @@ class LegacyConfig
         $config['default_closed_status'] = $g_defaultClosedStatus ?? true;
         $config['enable_language_selector'] = $g_enable_language_selector ?? false;
         $config['aggregator_mode_enabled'] = $aggregator_mode_enabled ?? false;
+        $config['aggregator_max_geo_width_km'] = isset($aggregator_max_geo_width_km) && is_numeric($aggregator_max_geo_width_km) ? floatval($aggregator_max_geo_width_km) : 1000;
 
         self::$config = $config;
         self::$configLoaded = true;
