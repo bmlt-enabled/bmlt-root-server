@@ -88,6 +88,8 @@ class SwitcherController extends Controller
 
     private function getSearchResults(Request $request): BaseJsonResponse
     {
+        $isAggregatorMode = (bool)legacy_config('aggregator_mode_enabled');
+
         $meetingIds = $request->input('meeting_ids');
         $meetingIds = !is_null($meetingIds) ? ensure_integer_array($meetingIds) : null;
 
@@ -158,10 +160,18 @@ class SwitcherController extends Controller
         $sortResultsByDistance = false;
         $needsDistanceField = false;
         if (!is_null($latitude) || !is_null($longitude)) {
-            $geoWidthMiles = $request->input('geo_width');
-            $geoWidthMiles = is_numeric($geoWidthMiles) ? floatval($geoWidthMiles) : null;
             $geoWidthKilometers = $request->input('geo_width_km');
             $geoWidthKilometers = is_numeric($geoWidthKilometers) ? floatval($geoWidthKilometers) : null;
+            $geoWidthMiles = $request->input('geo_width');
+            $geoWidthMiles = is_numeric($geoWidthMiles) ? floatval($geoWidthMiles) : null;
+
+            if ($isAggregatorMode) {
+                $maxGeoWidthKilometers = legacy_config('aggregator_max_geo_width_km');
+                $maxGeoWidthMiles = $maxGeoWidthKilometers * 0.621371;
+                $geoWidthKilometers = !is_null($geoWidthKilometers) && $geoWidthKilometers > $maxGeoWidthKilometers ? $maxGeoWidthKilometers : $geoWidthKilometers;
+                $geoWidthMiles = !is_null($geoWidthMiles) && $geoWidthMiles > $maxGeoWidthMiles ? $maxGeoWidthMiles : $geoWidthMiles;
+            }
+
             $sortResultsByDistance = $request->input('sort_results_by_distance') == '1';
             $dataFieldKeys = $request->input('data_field_key');
             $dataFieldKeys = !is_null($dataFieldKeys) ? explode(',', $dataFieldKeys) : [];
@@ -244,7 +254,6 @@ class SwitcherController extends Controller
             $pageNum = is_numeric($pageNum) ? intval($pageNum) : 1;
         }
 
-        $isAggregatorMode = (bool)legacy_config('aggregator_mode_enabled');
         $rootServersInclude = null;
         $rootServersExclude = null;
 
