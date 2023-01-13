@@ -531,7 +531,7 @@ function SetUpSearch(
             }
         }
 
-        if ($search_string && (!isset($in_http_vars['meeting_key']) || !(is_array($in_http_vars['meeting_key']) && count($in_http_vars['meeting_key'])))) {
+        if (isset($search_string) && (!isset($in_http_vars['meeting_key']) || !(is_array($in_http_vars['meeting_key']) && count($in_http_vars['meeting_key'])))) {
             // And last, but not least, a string search:
             $find_all = (isset($in_http_vars['SearchStringAll']) && $in_http_vars['SearchStringAll']) ? true :false;
             $literal = (isset($in_http_vars['SearchStringExact']) && $in_http_vars['SearchStringExact']) ? true :false;
