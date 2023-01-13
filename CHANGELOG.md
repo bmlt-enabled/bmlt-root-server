@@ -1,4 +1,7 @@
-## 3.0.0 (TBD)
+## 3.0.1 (TBD)
+* Fix for location search in admin ui.
+
+## 3.0.0 (January 13, 2023)
 * PHP 8.0 or 8.1 are now required. PHP 7.x is no longer supported.
 * As part of a modernization effort, all of the APIs have been reimplemented. All API output formats except for `json` and `jsonp` have been removed. The `GetNAWSDump` API still supports the `csv` output format.
 * Added the `SPAD` format. If you've manually added a `SPAD` format to your server, the appropriate NAWS code will be automatically assigned when you upgrade.
