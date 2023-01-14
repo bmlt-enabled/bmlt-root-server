@@ -49,7 +49,7 @@ return [
             'prefix' => legacy_config('db_prefix') ? legacy_config('db_prefix') . '_' : 'test_',
             'prefix_indexes' => true,
             'strict' => true,
-            'engine' => null,
+            'engine' => 'InnoDB',
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
@@ -69,7 +69,7 @@ return [
             'prefix' => legacy_config('db_prefix') ? legacy_config('db_prefix') . '_' : 'test_',
             'prefix_indexes' => true,
             'strict' => true,
-            'engine' => null,
+            'engine' => 'InnoDB',
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
