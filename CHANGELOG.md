@@ -1,5 +1,6 @@
-## 3.0.1 (TBD)
-* Fix for location search in admin ui.
+## 3.0.1 (January 14, 2023)
+* Fixed an issue where upgrades would fail on certain web hosts without InnoDB set as the default MySQL storage engine.
+* Fixed an issue with the 'This is a Location or PostCode' option in the Admin UI.
 
 ## 3.0.0 (January 13, 2023)
 * PHP 8.0 or 8.1 are now required. PHP 7.x is no longer supported.
