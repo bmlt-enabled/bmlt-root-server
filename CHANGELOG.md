@@ -1,3 +1,6 @@
+## 3.0.2 (TBD)
+* Fixed an issue that could cause the "History" tab in the Meeting Editor to hang on some meetings.
+
 ## 3.0.1 (January 14, 2023)
 * Fixed an issue where upgrades would fail on certain web hosts without InnoDB set as the default MySQL storage engine.
 * Fixed an issue with the 'This is a Location or PostCode' option in the Admin UI.
