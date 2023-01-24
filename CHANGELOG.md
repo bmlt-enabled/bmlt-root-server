@@ -1,4 +1,4 @@
-## 3.0.2 (TBD)
+## 3.0.2 (January 23, 2023)
 * Fixed an issue that could cause the "History" tab in the Meeting Editor to hang on some meetings.
 
 ## 3.0.1 (January 14, 2023)
