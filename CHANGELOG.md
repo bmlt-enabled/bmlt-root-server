@@ -1845,7 +1845,8 @@
 * Fixed some styling issues for browsers with JS disabled.
 * Added the [X-UA-Compatible Meta Tag](http://msdn.microsoft.com/en-us/library/cc817574.aspx) to the local server.
 
-## 1.0a2 (May 14, 2009)- Fixed [a bug](http://sourceforge.net/tracker/?func=detail&aid=2791387&group_id=228122&atid=1073410) in Meeting Administration, where meetings need to reflect changes in List View</a>
+## 1.0a2 (May 14, 2009)
+* Fixed [a bug](http://sourceforge.net/tracker/?func=detail&aid=2791387&group_id=228122&atid=1073410) in Meeting Administration, where meetings need to reflect changes in List View</a>
 * Fixed [a bug](http://sourceforge.net/tracker/?func=detail&aid=2791843&group_id=228122&atid=1073410) in Meeting Administration, where the weekday popup menu set the wrong weekday</a>
 * Added the first iteration of [the User Guide](http://magshare.magnaws.com/comdef/UserManual/)
 
