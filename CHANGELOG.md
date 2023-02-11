@@ -1,3 +1,6 @@
+## 3.0.3 (TBD)
+* Fixed an issue with the versionInt not being calculated properly for GetServerInfo.
+
 ## 3.0.2 (January 23, 2023)
 * Fixed an issue that could cause the "History" tab in the Meeting Editor to hang on some meetings.
 
