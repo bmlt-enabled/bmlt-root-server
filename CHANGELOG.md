@@ -1,4 +1,4 @@
-## 3.0.3 (TBD)X
+## 3.0.3 (TBD)
 * Fixed an issue with the `GetServerInfo` API that caused the `versionInt` to be calculated incorrectly for beta versions.
 * We'd forgotten to migrate the `GetSearchResults` API's `sort_key` parameter, so some old plugins were not working correctly. It has now been migrated.
 
