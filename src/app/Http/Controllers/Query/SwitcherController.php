@@ -261,7 +261,7 @@ class SwitcherController extends Controller
                 }
             }
             if (is_null($sortKeys)) {
-                $sortKeys = ['lang_enum', 'weekday_tinyint', 'start_time', 'id_bigint'];
+                $sortKeys = ['weekday_tinyint', 'start_time', 'duration_time'];
             }
         }
 
