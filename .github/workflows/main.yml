@@ -35,7 +35,7 @@ jobs:
       - name: checkout 🛒
         uses: actions/checkout@v3
 
-      - name: php ${{ matrix.php }} 🐫
+      - name: php ${{ matrix.php }} 🐘
         id: setup-php
         uses: shivammathur/setup-php@2.22.0
         with:
@@ -99,7 +99,7 @@ jobs:
       - name: Checkout 🛒
         uses: actions/checkout@v3
 
-      - name: php 8.0 🐫
+      - name: php 8.0 🐘
         id: setup-php
         uses: shivammathur/setup-php@2.22.0
         with:
