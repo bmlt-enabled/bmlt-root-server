@@ -1221,6 +1221,171 @@ class GetSearchResultsTest extends TestCase
             ->assertJsonFragment(['id_bigint' => strval($meeting2->id_bigint)]);
     }
 
+    // sort_key
+    //
+    //
+    public function testDefaultSortKeyWeekday()
+    {
+        LegacyConfig::set('default_sort_key', 'weekday');
+        $meeting1 = $this->createMeeting(['lang_enum' => 'a', 'weekday_tinyint' => 3, 'start_time' => '01:00:00'], ['location_municipality' => 'a']);
+        $meeting2 = $this->createMeeting(['lang_enum' => 'b', 'weekday_tinyint' => 3, 'start_time' => '01:00:00'], ['location_municipality' => 'z']);
+        $meeting3 = $this->createMeeting(['lang_enum' => 'c', 'weekday_tinyint' => 1, 'start_time' => '19:00:00'], ['location_municipality' => 'z']);
+        $meeting4 = $this->createMeeting(['lang_enum' => 'd', 'weekday_tinyint' => 1, 'start_time' => '09:00:00'], ['location_municipality' => 'a']);
+        $meeting5 = $this->createMeeting(['lang_enum' => 'e', 'weekday_tinyint' => 2, 'start_time' => '23:59:59'], ['location_municipality' => 'z']);
+        $meeting6 = $this->createMeeting(['lang_enum' => 'f', 'weekday_tinyint' => 2, 'start_time' => '01:00:00'], ['location_municipality' => 'a']);
+
+
+        $data = collect($this->get("/client_interface/json/?switcher=GetSearchResults&sort_key=weekday")
+            ->assertStatus(200)
+            ->assertJsonCount(6)
+            ->json());
+
+        $this->assertEquals(strval($meeting4->id_bigint), $data[0]['id_bigint']);
+        $this->assertEquals(strval($meeting3->id_bigint), $data[1]['id_bigint']);
+        $this->assertEquals(strval($meeting6->id_bigint), $data[2]['id_bigint']);
+        $this->assertEquals(strval($meeting5->id_bigint), $data[3]['id_bigint']);
+        $this->assertEquals(strval($meeting1->id_bigint), $data[4]['id_bigint']);
+        $this->assertEquals(strval($meeting2->id_bigint), $data[5]['id_bigint']);
+    }
+
+    public function testSortKeyWeekday()
+    {
+        $meeting1 = $this->createMeeting(['lang_enum' => 'a', 'weekday_tinyint' => 3, 'start_time' => '01:00:00'], ['location_municipality' => 'a']);
+        $meeting2 = $this->createMeeting(['lang_enum' => 'b', 'weekday_tinyint' => 3, 'start_time' => '01:00:00'], ['location_municipality' => 'z']);
+        $meeting3 = $this->createMeeting(['lang_enum' => 'c', 'weekday_tinyint' => 1, 'start_time' => '19:00:00'], ['location_municipality' => 'z']);
+        $meeting4 = $this->createMeeting(['lang_enum' => 'd', 'weekday_tinyint' => 1, 'start_time' => '09:00:00'], ['location_municipality' => 'a']);
+        $meeting5 = $this->createMeeting(['lang_enum' => 'e', 'weekday_tinyint' => 2, 'start_time' => '23:59:59'], ['location_municipality' => 'z']);
+        $meeting6 = $this->createMeeting(['lang_enum' => 'f', 'weekday_tinyint' => 2, 'start_time' => '01:00:00'], ['location_municipality' => 'a']);
+
+
+        $data = collect($this->get("/client_interface/json/?switcher=GetSearchResults&sort_key=weekday")
+            ->assertStatus(200)
+            ->assertJsonCount(6)
+            ->json());
+
+        $this->assertEquals(strval($meeting4->id_bigint), $data[0]['id_bigint']);
+        $this->assertEquals(strval($meeting3->id_bigint), $data[1]['id_bigint']);
+        $this->assertEquals(strval($meeting6->id_bigint), $data[2]['id_bigint']);
+        $this->assertEquals(strval($meeting5->id_bigint), $data[3]['id_bigint']);
+        $this->assertEquals(strval($meeting1->id_bigint), $data[4]['id_bigint']);
+        $this->assertEquals(strval($meeting2->id_bigint), $data[5]['id_bigint']);
+    }
+
+    public function testSortKeyTime()
+    {
+        $meeting1 = $this->createMeeting(['lang_enum' => 'a', 'weekday_tinyint' => 3, 'start_time' => '01:00:00'], ['location_municipality' => 'a']);
+        $meeting2 = $this->createMeeting(['lang_enum' => 'b', 'weekday_tinyint' => 3, 'start_time' => '01:00:00'], ['location_municipality' => 'z']);
+        $meeting3 = $this->createMeeting(['lang_enum' => 'c', 'weekday_tinyint' => 1, 'start_time' => '19:00:00'], ['location_municipality' => 'a']);
+        $meeting4 = $this->createMeeting(['lang_enum' => 'd', 'weekday_tinyint' => 1, 'start_time' => '09:00:00'], ['location_municipality' => 'z']);
+        $meeting5 = $this->createMeeting(['lang_enum' => 'e', 'weekday_tinyint' => 2, 'start_time' => '23:59:59'], ['location_municipality' => 'z']);
+        $meeting6 = $this->createMeeting(['lang_enum' => 'f', 'weekday_tinyint' => 2, 'start_time' => '01:00:00'], ['location_municipality' => 'a']);
+
+
+        $data = collect($this->get("/client_interface/json/?switcher=GetSearchResults&sort_key=time")
+            ->assertStatus(200)
+            ->assertJsonCount(6)
+            ->json());
+
+        $this->assertEquals(strval($meeting4->id_bigint), $data[0]['id_bigint']);
+        $this->assertEquals(strval($meeting3->id_bigint), $data[1]['id_bigint']);
+        $this->assertEquals(strval($meeting6->id_bigint), $data[2]['id_bigint']);
+        $this->assertEquals(strval($meeting5->id_bigint), $data[3]['id_bigint']);
+        $this->assertEquals(strval($meeting1->id_bigint), $data[4]['id_bigint']);
+        $this->assertEquals(strval($meeting2->id_bigint), $data[5]['id_bigint']);
+    }
+
+    public function testSortKeyTown()
+    {
+        $meeting1 = $this->createMeeting(['lang_enum' => 'a', 'weekday_tinyint' => 3, 'start_time' => '01:00:00'], ['location_municipality' => 'f']);
+        $meeting2 = $this->createMeeting(['lang_enum' => 'b', 'weekday_tinyint' => 3, 'start_time' => '01:00:00'], ['location_municipality' => 'e']);
+        $meeting3 = $this->createMeeting(['lang_enum' => 'c', 'weekday_tinyint' => 1, 'start_time' => '19:00:00'], ['location_municipality' => 'd']);
+        $meeting4 = $this->createMeeting(['lang_enum' => 'd', 'weekday_tinyint' => 1, 'start_time' => '09:00:00'], ['location_municipality' => 'a', 'location_city_subsection' => 'x']);
+        $meeting5 = $this->createMeeting(['lang_enum' => 'e', 'weekday_tinyint' => 2, 'start_time' => '23:59:59'], ['location_municipality' => 'a', 'location_city_subsection' => 'y']);
+        $meeting6 = $this->createMeeting(['lang_enum' => 'f', 'weekday_tinyint' => 2, 'start_time' => '01:00:00'], ['location_municipality' => 'a', 'location_city_subsection' => 'z']);
+
+
+        $data = collect($this->get("/client_interface/json/?switcher=GetSearchResults&sort_key=town")
+            ->assertStatus(200)
+            ->assertJsonCount(6)
+            ->json());
+
+        $this->assertEquals(strval($meeting4->id_bigint), $data[0]['id_bigint']);
+        $this->assertEquals(strval($meeting5->id_bigint), $data[1]['id_bigint']);
+        $this->assertEquals(strval($meeting6->id_bigint), $data[2]['id_bigint']);
+        $this->assertEquals(strval($meeting3->id_bigint), $data[3]['id_bigint']);
+        $this->assertEquals(strval($meeting2->id_bigint), $data[4]['id_bigint']);
+        $this->assertEquals(strval($meeting1->id_bigint), $data[5]['id_bigint']);
+    }
+
+    public function testSortKeyState()
+    {
+        $meeting1 = $this->createMeeting(['lang_enum' => 'a', 'weekday_tinyint' => 3, 'start_time' => '01:00:00'], ['location_province' => 'a']);
+        $meeting2 = $this->createMeeting(['lang_enum' => 'b', 'weekday_tinyint' => 3, 'start_time' => '01:00:00'], ['location_province' => 'd']);
+        $meeting3 = $this->createMeeting(['lang_enum' => 'c', 'weekday_tinyint' => 1, 'start_time' => '19:00:00'], ['location_province' => 'f']);
+        $meeting4 = $this->createMeeting(['lang_enum' => 'd', 'weekday_tinyint' => 1, 'start_time' => '09:00:00'], ['location_province' => 'e']);
+        $meeting5 = $this->createMeeting(['lang_enum' => 'e', 'weekday_tinyint' => 2, 'start_time' => '23:59:59'], ['location_province' => 'b']);
+        $meeting6 = $this->createMeeting(['lang_enum' => 'f', 'weekday_tinyint' => 2, 'start_time' => '01:00:00'], ['location_province' => 'c']);
+
+
+        $data = collect($this->get("/client_interface/json/?switcher=GetSearchResults&sort_key=state")
+            ->assertStatus(200)
+            ->assertJsonCount(6)
+            ->json());
+
+        $this->assertEquals(strval($meeting1->id_bigint), $data[0]['id_bigint']);
+        $this->assertEquals(strval($meeting5->id_bigint), $data[1]['id_bigint']);
+        $this->assertEquals(strval($meeting6->id_bigint), $data[2]['id_bigint']);
+        $this->assertEquals(strval($meeting2->id_bigint), $data[3]['id_bigint']);
+        $this->assertEquals(strval($meeting4->id_bigint), $data[4]['id_bigint']);
+        $this->assertEquals(strval($meeting3->id_bigint), $data[5]['id_bigint']);
+    }
+
+    public function testSortKeyWeekdayState()
+    {
+        $meeting1 = $this->createMeeting(['lang_enum' => 'a', 'weekday_tinyint' => 3, 'start_time' => '01:00:00'], ['location_province' => 'a']);
+        $meeting2 = $this->createMeeting(['lang_enum' => 'b', 'weekday_tinyint' => 3, 'start_time' => '01:00:00'], ['location_province' => 'd']);
+        $meeting3 = $this->createMeeting(['lang_enum' => 'c', 'weekday_tinyint' => 1, 'start_time' => '19:00:00'], ['location_province' => 'f']);
+        $meeting4 = $this->createMeeting(['lang_enum' => 'd', 'weekday_tinyint' => 1, 'start_time' => '09:00:00'], ['location_province' => 'e']);
+        $meeting5 = $this->createMeeting(['lang_enum' => 'e', 'weekday_tinyint' => 2, 'start_time' => '23:59:59'], ['location_province' => 'b']);
+        $meeting6 = $this->createMeeting(['lang_enum' => 'f', 'weekday_tinyint' => 2, 'start_time' => '01:00:00'], ['location_province' => 'c']);
+
+
+        $data = collect($this->get("/client_interface/json/?switcher=GetSearchResults&sort_key=weekday_state")
+            ->assertStatus(200)
+            ->assertJsonCount(6)
+            ->json());
+
+        $this->assertEquals(strval($meeting4->id_bigint), $data[0]['id_bigint']);
+        $this->assertEquals(strval($meeting3->id_bigint), $data[1]['id_bigint']);
+        $this->assertEquals(strval($meeting5->id_bigint), $data[2]['id_bigint']);
+        $this->assertEquals(strval($meeting6->id_bigint), $data[3]['id_bigint']);
+        $this->assertEquals(strval($meeting1->id_bigint), $data[4]['id_bigint']);
+        $this->assertEquals(strval($meeting2->id_bigint), $data[5]['id_bigint']);
+    }
+
+    public function testSortKeyInvalid()
+    {
+        $meeting1 = $this->createMeeting(['lang_enum' => 'a', 'weekday_tinyint' => 3, 'start_time' => '01:00:00'], ['location_province' => 'a']);
+        $meeting2 = $this->createMeeting(['lang_enum' => 'b', 'weekday_tinyint' => 3, 'start_time' => '01:00:00'], ['location_province' => 'd']);
+        $meeting3 = $this->createMeeting(['lang_enum' => 'c', 'weekday_tinyint' => 1, 'start_time' => '19:00:00'], ['location_province' => 'f']);
+        $meeting4 = $this->createMeeting(['lang_enum' => 'd', 'weekday_tinyint' => 1, 'start_time' => '09:00:00'], ['location_province' => 'e']);
+        $meeting5 = $this->createMeeting(['lang_enum' => 'e', 'weekday_tinyint' => 2, 'start_time' => '23:59:59'], ['location_province' => 'b']);
+        $meeting6 = $this->createMeeting(['lang_enum' => 'f', 'weekday_tinyint' => 2, 'start_time' => '01:00:00'], ['location_province' => 'c']);
+
+
+        $data = collect($this->get("/client_interface/json/?switcher=GetSearchResults&sort_key=asdf")
+            ->assertStatus(200)
+            ->assertJsonCount(6)
+            ->json());
+
+        $this->assertEquals(strval($meeting1->id_bigint), $data[0]['id_bigint']);
+        $this->assertEquals(strval($meeting2->id_bigint), $data[1]['id_bigint']);
+        $this->assertEquals(strval($meeting3->id_bigint), $data[2]['id_bigint']);
+        $this->assertEquals(strval($meeting4->id_bigint), $data[3]['id_bigint']);
+        $this->assertEquals(strval($meeting5->id_bigint), $data[4]['id_bigint']);
+        $this->assertEquals(strval($meeting6->id_bigint), $data[5]['id_bigint']);
+    }
+
     // sort_keys
     //
     //

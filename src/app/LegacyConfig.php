@@ -91,6 +91,10 @@ class LegacyConfig
             $config['change_depth_for_meetings'] = intval($change_depth_for_meetings);
         }
 
+        if (isset($default_sort_key)) {
+            $config['default_sort_key'] = $default_sort_key;
+        }
+
         $config['language'] = $comdef_global_language ?? 'en';
         $config['default_duration_time'] = $default_duration_time ?? '01:00:00';
         $config['region_bias'] = $region_bias ?? 'us';
