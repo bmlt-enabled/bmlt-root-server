@@ -244,7 +244,26 @@ class SwitcherController extends Controller
         }
 
         $sortKeys = $request->input('sort_keys');
-        $sortKeys = $sortKeys && $sortKeys != '' ? explode(',', $sortKeys) : ['lang_enum', 'weekday_tinyint', 'start_time', 'id_bigint'];
+        $sortKeys = empty($sortKeys) ? null : explode(',', $sortKeys);
+        if (is_null($sortKeys)) {
+            $sortAlias = $request->input('sort_key') ?? legacy_config('default_sort_key');
+            if (!is_null($sortAlias)) {
+                if ($sortAlias == 'weekday') {
+                    $sortKeys = ['weekday_tinyint', 'location_municipality', 'location_city_subsection', 'start_time', 'location_neighborhood'];
+                } elseif ($sortAlias == 'time') {
+                    $sortKeys = ['weekday_tinyint', 'start_time', 'location_municipality', 'location_city_subsection', 'location_neighborhood'];
+                } elseif ($sortAlias == 'town') {
+                    $sortKeys = ['location_municipality', 'location_city_subsection', 'location_neighborhood', 'weekday_tinyint', 'start_time'];
+                } elseif ($sortAlias == 'state') {
+                    $sortKeys = ['location_province', 'location_municipality', 'location_city_subsection', 'weekday_tinyint', 'start_time'];
+                } elseif ($sortAlias == 'weekday_state') {
+                    $sortKeys = ['weekday_tinyint', 'location_province', 'location_municipality', 'start_time', 'location_city_subsection'];
+                }
+            }
+            if (is_null($sortKeys)) {
+                $sortKeys = ['lang_enum', 'weekday_tinyint', 'start_time', 'id_bigint'];
+            }
+        }
 
         $pageSize = $request->input('page_size');
         $pageSize = is_numeric($pageSize) ? intval($pageSize) : null;
