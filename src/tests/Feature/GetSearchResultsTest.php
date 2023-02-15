@@ -1365,8 +1365,8 @@ class GetSearchResultsTest extends TestCase
 
     public function testSortKeyInvalid()
     {
-        $meeting1 = $this->createMeeting(['lang_enum' => 'a', 'weekday_tinyint' => 3, 'start_time' => '01:00:00'], ['location_province' => 'a']);
-        $meeting2 = $this->createMeeting(['lang_enum' => 'b', 'weekday_tinyint' => 3, 'start_time' => '01:00:00'], ['location_province' => 'd']);
+        $meeting1 = $this->createMeeting(['lang_enum' => 'a', 'weekday_tinyint' => 3, 'start_time' => '01:00:00', 'duration_time' => '01:30:00'], ['location_province' => 'a']);
+        $meeting2 = $this->createMeeting(['lang_enum' => 'b', 'weekday_tinyint' => 3, 'start_time' => '01:00:00', 'duration_time' => '01:00:00'], ['location_province' => 'd']);
         $meeting3 = $this->createMeeting(['lang_enum' => 'c', 'weekday_tinyint' => 1, 'start_time' => '19:00:00'], ['location_province' => 'f']);
         $meeting4 = $this->createMeeting(['lang_enum' => 'd', 'weekday_tinyint' => 1, 'start_time' => '09:00:00'], ['location_province' => 'e']);
         $meeting5 = $this->createMeeting(['lang_enum' => 'e', 'weekday_tinyint' => 2, 'start_time' => '23:59:59'], ['location_province' => 'b']);
@@ -1378,12 +1378,12 @@ class GetSearchResultsTest extends TestCase
             ->assertJsonCount(6)
             ->json());
 
-        $this->assertEquals(strval($meeting1->id_bigint), $data[0]['id_bigint']);
-        $this->assertEquals(strval($meeting2->id_bigint), $data[1]['id_bigint']);
-        $this->assertEquals(strval($meeting3->id_bigint), $data[2]['id_bigint']);
-        $this->assertEquals(strval($meeting4->id_bigint), $data[3]['id_bigint']);
-        $this->assertEquals(strval($meeting5->id_bigint), $data[4]['id_bigint']);
-        $this->assertEquals(strval($meeting6->id_bigint), $data[5]['id_bigint']);
+        $this->assertEquals(strval($meeting4->id_bigint), $data[0]['id_bigint']);
+        $this->assertEquals(strval($meeting3->id_bigint), $data[1]['id_bigint']);
+        $this->assertEquals(strval($meeting6->id_bigint), $data[2]['id_bigint']);
+        $this->assertEquals(strval($meeting5->id_bigint), $data[3]['id_bigint']);
+        $this->assertEquals(strval($meeting2->id_bigint), $data[4]['id_bigint']);
+        $this->assertEquals(strval($meeting1->id_bigint), $data[5]['id_bigint']);
     }
 
     // sort_keys

@@ -1,6 +1,7 @@
 ## 3.0.3 (TBD)
 * Fixed an issue with the `GetServerInfo` API that caused the `versionInt` to be calculated incorrectly for beta versions.
 * We'd forgotten to migrate the `GetSearchResults` API's `sort_key` parameter, so some old plugins were not working correctly. It has now been migrated.
+* Changed `GetSearchResults` API's default sort order to `weekday_tinyint, start_time, duration_time`.
 
 ## 3.0.2 (January 23, 2023)
 * Fixed an issue that could cause the "History" tab in the Meeting Editor to hang on some meetings.
