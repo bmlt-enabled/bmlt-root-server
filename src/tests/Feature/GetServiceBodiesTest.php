@@ -160,6 +160,24 @@ class GetServiceBodiesTest extends TestCase
         $this->assertTrue($this->allServiceBodiesNotInArray($unexpected, $response));
     }
 
+    public function testFilterIncludeWithCommas()
+    {
+        $zone = $this->createZone("sezf", "sezf");
+        $region1 = $this->createRegion("ga", "ga", $zone->id_bigint);
+        $region2 = $this->createRegion("nc", "nc", $zone->id_bigint);
+        $area1 = $this->createArea("marietta", "marietta", $region1->id_bigint);
+        $area2 = $this->createArea("capital area", "capital area", $region2->id_bigint);
+        $response = $this->get("/client_interface/json/?switcher=GetServiceBodies&services=$area2->id_bigint, $region1->id_bigint")
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonCount(2)
+            ->json();
+        $expected = [$area2, $region1];
+        $this->assertTrue($this->allServiceBodiesInArray($expected, $response));
+        $unexpected = [$zone, $region2, $area1];
+        $this->assertTrue($this->allServiceBodiesNotInArray($unexpected, $response));
+    }
+
     public function testFilterExcludeNoArray()
     {
         $zone = $this->createZone("sezf", "sezf");

@@ -401,6 +401,18 @@ class GetSearchResultsTest extends TestCase
             ->assertJsonFragment(['id_bigint' => strval($meeting2->id_bigint)]);
     }
 
+    public function testServicesIncludeTwoComma()
+    {
+        $meeting1 = $this->createMeeting(['service_body_bigint' => 1]);
+        $meeting2 = $this->createMeeting(['service_body_bigint' => 2]);
+        $meeting3 = $this->createMeeting(['service_body_bigint' => 3]);
+        $this->get("/client_interface/json/?switcher=GetSearchResults&services=1,2")
+            ->assertStatus(200)
+            ->assertJsonCount(2)
+            ->assertJsonFragment(['id_bigint' => strval($meeting1->id_bigint)])
+            ->assertJsonFragment(['id_bigint' => strval($meeting2->id_bigint)]);
+    }
+
     public function testServicesExcludeOne()
     {
         $meeting1 = $this->createMeeting(['service_body_bigint' => 1]);
@@ -690,6 +702,41 @@ class GetSearchResultsTest extends TestCase
                 'id_bigint' => strval($meeting3->id_bigint),
                 'format_shared_id_list' => '',
                 'formats' => '',
+            ]);
+    }
+
+    public function testFormatsExcludeTwoWithCommas()
+    {
+        $format1 = $this->createFormat1();
+        $format2 = $this->createFormat2();
+        $meeting1 = $this->createMeeting(['formats' => "$format1->shared_id_bigint,$format2->shared_id_bigint"]);
+        $meeting2 = $this->createMeeting(['formats' => "$format1->shared_id_bigint"]);
+        $meeting3 = $this->createMeeting(['formats' => '']);
+        $this->get("/client_interface/json/?switcher=GetSearchResults&formats=-$format1->shared_id_bigint&formats, $format2->shared_id_bigint")
+            ->assertStatus(200)
+            ->assertJsonCount(1)
+            ->assertJsonFragment([
+                'id_bigint' => strval($meeting3->id_bigint),
+                'format_shared_id_list' => '',
+                'formats' => '',
+            ]);
+    }
+
+    public function testFormatsIncludeTwoAndWithCommas()
+    {
+
+        $format1 = $this->createFormat1();
+        $format2 = $this->createFormat2();
+        $meeting1 = $this->createMeeting(['formats' => "$format1->shared_id_bigint,$format2->shared_id_bigint"]);
+        $meeting2 = $this->createMeeting(['formats' => "$format1->shared_id_bigint"]);
+        $meeting3 = $this->createMeeting();
+        $this->get("/client_interface/json/?switcher=GetSearchResults&formats=$format1->shared_id_bigint, $format2->shared_id_bigint")
+            ->assertStatus(200)
+            ->assertJsonCount(1)
+            ->assertJsonFragment([
+                'id_bigint' => strval($meeting1->id_bigint),
+                'format_shared_id_list' => "$format1->shared_id_bigint,$format2->shared_id_bigint",
+                'formats' => "$format1->key_string,$format2->key_string",
             ]);
     }
 
