@@ -16,12 +16,14 @@ const StyledHeaderContainer = styled(Container)({
 });
 
 export const Header = () => {
-  const languageSelectorBox = settings.isLanguageSelectorEnabled ?
+  const languageSelectorBox = settings.isLanguageSelectorEnabled ? (
     <Box>
       <Typography color='white'>{strings.languageSelectTitle}</Typography>
       <LanguageSelect />
     </Box>
-    : '';
+  ) : (
+    ''
+  );
   return (
     <StyledAppBar position='relative' elevation={0}>
       <StyledHeaderContainer maxWidth='lg'>
