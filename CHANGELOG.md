@@ -1,3 +1,6 @@
+## 3.0.4 (TBD)
+* Allow for specifying a comma seperated string instead of array for the `services` and `formats` filters.
+
 ## 3.0.3 (February 15, 2023)
 * Fixed an issue with the `GetServerInfo` API that caused the `versionInt` to be calculated incorrectly for beta versions.
 * We'd forgotten to migrate the `GetSearchResults` API's `sort_key` parameter, so some old plugins were not working correctly. It has now been migrated.
