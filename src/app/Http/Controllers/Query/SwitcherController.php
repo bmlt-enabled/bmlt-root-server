@@ -108,7 +108,8 @@ class SwitcherController extends Controller
         $venueTypesExclude = !empty($venueTypesExclude) ? $venueTypesExclude : null;
 
         $recursive = $request->input('recursive', '0') == '1';
-        $services = $request->input('services', []);
+        $services = $request->input('services', []) ?? [];
+        $services = is_string($services) ? array_map(fn ($id) => trim($id), explode(',', $services)) : $services;
         $services = ensure_integer_array($services);
         $servicesInclude = collect($services)->filter(fn ($s) => $s > 0)->toArray();
         $servicesInclude = $recursive ? $this->serviceBodyRepository->getChildren($servicesInclude) : $servicesInclude;
@@ -116,8 +117,8 @@ class SwitcherController extends Controller
         $servicesExclude = collect($services)->filter(fn ($s) => $s < 0)->map(fn ($s) => abs($s))->toArray();
         $servicesExclude = $recursive ? $this->serviceBodyRepository->getChildren($servicesExclude) : $servicesExclude;
         $servicesExclude = !empty($servicesExclude) ? $servicesExclude : null;
-
-        $formats = $request->input('formats', []);
+        $formats = $request->input('formats', []) ?? [];
+        $formats = is_string($formats) ? array_map(fn ($id) => trim($id), explode(',', $formats)) : $formats;
         $formats = ensure_integer_array($formats);
         $formatsInclude = collect($formats)->filter(fn ($f) => $f > 0)->toArray();
         $formatsInclude = !empty($formatsInclude) ? $formatsInclude : null;
@@ -423,7 +424,8 @@ class SwitcherController extends Controller
 
     private function getServiceBodies(Request $request): BaseJsonResponse
     {
-        $serviceBodyIds = $request->input('services', []);
+        $serviceBodyIds = $request->input('services', []) ?? [];
+        $serviceBodyIds = is_string($serviceBodyIds) ? array_map(fn ($id) => trim($id), explode(',', $serviceBodyIds)) : $serviceBodyIds;
         if (!is_array($serviceBodyIds)) {
             $serviceBodyIds = [$serviceBodyIds];
         }
