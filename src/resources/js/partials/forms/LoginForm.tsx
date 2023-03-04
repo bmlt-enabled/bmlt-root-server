@@ -55,6 +55,7 @@ const LoginForm = ({ handleOnSubmit, authenticationMessage, validationMessage }:
           <TextField
             error={errors?.username?.type === 'required' || validationMessage?.username !== ''}
             id='login-username'
+            inputProps={{ 'data-testid': 'login-username' } as React.InputHTMLAttributes<HTMLInputElement>}
             label={strings.usernameTitle}
             type='text'
             fullWidth
@@ -72,6 +73,7 @@ const LoginForm = ({ handleOnSubmit, authenticationMessage, validationMessage }:
           <TextField
             error={errors?.password?.type === 'required' || validationMessage?.password !== ''}
             id='login-password'
+            inputProps={{ 'data-testid': 'login-password' } as React.InputHTMLAttributes<HTMLInputElement>}
             label={strings.passwordTitle}
             type='password'
             fullWidth
