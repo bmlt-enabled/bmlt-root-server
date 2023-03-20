@@ -587,4 +587,19 @@ class GetServiceBodiesTest extends TestCase
             ->assertJsonCount(1)
             ->assertJsonFragment(['id' => strval($serviceBody1->id_bigint)]);
     }
+
+    public function testRootServerWithContactEnabled()
+    {
+        LegacyConfig::set('include_service_body_email_in_semantic', true);
+        $rootServer = $this->createRootServer(1);
+        $zone = $this->createZone("sezf", "sezf", "https://zone");
+        $zone->rootServer()->associate($rootServer);
+        $zone->save();
+        $response = $this->get('/client_interface/json/?switcher=GetServiceBodies')
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonCount(1)
+            ->json();
+        self::assertEquals($rootServer->id, $response[0]['contact_email']);
+    }
 }
