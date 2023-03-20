@@ -587,4 +587,35 @@ class GetServiceBodiesTest extends TestCase
             ->assertJsonCount(1)
             ->assertJsonFragment(['id' => strval($serviceBody1->id_bigint)]);
     }
+
+    public function testRootServerWithContactEnabled()
+    {
+        LegacyConfig::set('include_service_body_email_in_semantic', true);
+        $rootServer = $this->createRootServer(1);
+        $zone = $this->createZone('sezf', 'sezf', 'https://zone');
+        $zone->sb_meeting_email = 'blah@blah.com';
+        $zone->rootServer()->associate($rootServer);
+        $zone->save();
+        $this->get('/client_interface/json/?switcher=GetServiceBodies')
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonCount(1)
+            ->assertJsonFragment(['contact_email' => $zone->sb_meeting_email]);
+    }
+
+    public function testRootServerWithContactDisabled()
+    {
+        LegacyConfig::set('include_service_body_email_in_semantic', false);
+        $rootServer = $this->createRootServer(1);
+        $zone = $this->createZone('sezf', 'sezf', 'https://zone');
+        $zone->sb_meeting_email = 'blah@blah.com';
+        $zone->rootServer()->associate($rootServer);
+        $zone->save();
+        $response = $this->get('/client_interface/json/?switcher=GetServiceBodies')
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonCount(1)
+            ->json();
+        $this->assertArrayNotHasKey('contact_email', $response);
+    }
 }
