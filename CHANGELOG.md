@@ -1,5 +1,5 @@
 ## 3.0.4 (TBD)
-* The `services` and `formats` filter parameters for the `GetSearchResults` API now accept a comma separated string (e.g. `services=1,-12,42`) in addition to the standard array syntax.
+* The `services` and `formats` filter parameters for the `GetSearchResults` API and the `formats` filter parameter for the `GetFormats` API now accept a comma separated string (e.g. `formats=1,-12,42`) in addition to the standard array syntax.
 * We'd forgotten to migrate the `$g_include_service_body_email_in_semantic` setting. When set to `true` in `auto-config.inc.php`, the `GetServiceBodies` API was supposed to return the `contact_email` field. This setting has now been migrated, and the functionality has been restored.
 
 ## 3.0.3 (February 15, 2023)
