@@ -62,7 +62,7 @@ class ImportRootServers extends Command
                     $meetingRepository,
                     $serviceBodyRepository
                 ));
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 $this->error($e->getMessage());
             }
             $this->analyzeTables();
@@ -271,6 +271,11 @@ class ImportRootServers extends Command
             throw new \Exception("Got bad status code {$response->status()} from $url");
         }
 
-        return $response->json();
+        $data = $response->json();
+        if (!is_array($data)) {
+            throw new \Exception("Response from $url is not json");
+        }
+
+        return $data;
     }
 }
