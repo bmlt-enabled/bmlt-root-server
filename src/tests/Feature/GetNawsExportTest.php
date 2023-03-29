@@ -317,7 +317,7 @@ class GetNawsExportTest extends TestCase
         $reader = CsvReader::createFromString($csv);
         $reader->setHeaderOffset(0);
         $row = iterator_to_array($reader)[1];
-        $this->assertEquals('CLOSED', $row['Closed']);
+        $this->assertEquals('OPEN', $row['Closed']);
     }
 
     public function testOpenClosedDefaultFromAutoConfig()
