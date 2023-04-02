@@ -522,7 +522,7 @@ class SwitcherController extends Controller
         return new JsonResponse([[
             'version' => config('app.version'),
             'versionInt' => strval((intval($versionArray[0]) * 1000000) + (intval($versionArray[1]) * 1000) + intval(strstr($versionArray[2], '-', true) ?: $versionArray[2])),
-            'langs' => collect(scandir(base_path('lang')))->reject(fn ($dir) => $dir == '.' || $dir == '..')->sort()->join(','),
+            'langs' => collect(scandir(base_path('lang')))->reject(fn ($dir) => str_starts_with($dir, '.'))->sort()->join(','),
             'nativeLang' => config('app.locale'),
             'centerLongitude' => strval(legacy_config('search_spec_map_center_longitude')),
             'centerLatitude' => strval(legacy_config('search_spec_map_center_latitude')),
