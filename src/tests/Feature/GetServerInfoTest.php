@@ -62,6 +62,14 @@ class GetServerInfoTest extends TestCase
             ->assertJsonFragment(['nativeLang' => 'es']);
     }
 
+    public function testLangs()
+    {
+        $langs = collect(glob(base_path('lang') . '/*', GLOB_ONLYDIR))->transform(fn($r) => basename($r))->sort()->join(',');
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['langs' => $langs]);
+    }
+
     public function testDefaultDuration()
     {
         LegacyConfig::set('default_duration_time', 'blah');

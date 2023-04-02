@@ -252,7 +252,7 @@ class bmlt_semantic
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = array ( );
 
-        $languages = collect(scandir(base_path('lang')))->reject(fn ($dir) => $dir == '.' || $dir == '..')->sort();
+        $languages = collect(glob(base_path('lang') . '/*', GLOB_ONLYDIR))->transform(fn($r) => basename($r))->sort();
         foreach ($languages as $language) {
             $langName = $language == 'dk' ? 'da' : $language;
             $langName = Locale::getDisplayLanguage($langName, $langName);
