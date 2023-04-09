@@ -131,6 +131,9 @@ class ExternalMeeting extends ExternalObject
                     ->toBase()
             );
 
+        if ($this->name != $meetingData->get('meeting_name')) {
+            return false;
+        }
         if ($this->comments != $meetingData->get('comments')) {
             return false;
         }
