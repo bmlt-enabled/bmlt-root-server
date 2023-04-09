@@ -748,6 +748,22 @@ class ExternalMeetingTest extends TestCase
         $this->assertFalse($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id, $f2->shared_id_bigint => $f2->source_id, $f3->shared_id_bigint => $f3->source_id])));
     }
 
+    public function testName()
+    {
+        $f1 = $this->getFormat(1, 100);
+        $sb1 = $this->getServiceBody(1, 100);
+
+        $values = $this->validValues();
+        $values['format_shared_id_list'] = "$f1->source_id";
+        $values['service_body_bigint'] = $sb1->source_id;
+
+        $external = new ExternalMeeting($values);
+        $db = $this->getModel($values, $sb1->id_bigint, [$f1->shared_id_bigint]);
+
+        $db->data->firstWhere(fn ($d) => $d->key == 'meeting_name')->data_string = 'changed';
+        $this->assertFalse($external->isEqual($db, collect([$sb1->id_bigint => $sb1->source_id]), collect([$f1->shared_id_bigint => $f1->source_id])));
+    }
+
     public function testComments()
     {
         $f1 = $this->getFormat(1, 100);
