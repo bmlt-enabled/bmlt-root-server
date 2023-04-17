@@ -466,7 +466,7 @@ export const Users = () => {
             </Button>
           </StyledButtonWrapper>
         </form>
-        {currentSelection !== -1 && state.user?.type == 'admin' && (
+        {currentSelection !== -1 && state.user?.type === 'admin' && (
           <StyledButtonWrapper sx={{ display: 'flex', justifyContent: 'center', marginTop: '' }}>
             <Button variant='contained' color='primary' onClick={deleteUser}>
               {strings.deleteUserTitle}
