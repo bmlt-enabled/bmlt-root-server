@@ -2,18 +2,47 @@ import { Box, Button, FormControl, FormHelperText, InputLabel, MenuItem, TextFie
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { styled } from '@mui/system';
 import { User, UserCreate, UserUpdate } from 'bmlt-root-server-client';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import { AppContext } from '../AppContext';
 import RootServerApi from '../RootServerApi';
 import { strings } from '../localization';
 
+const StyledButtonWrapper = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'center',
+  marginTop: theme.spacing(2),
+}));
+
+const StyledInputWrapper = styled(FormControl)(({ theme }) => ({
+  marginBottom: theme.spacing(4),
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+}));
+
+const StyledFormWrapper = styled(Box)(({ theme }) => ({
+  width: '100%',
+  padding: '20px',
+  border: '1px solid #ccc',
+  borderRadius: theme.shape.borderRadius,
+  marginTop: '20px',
+}));
+
+const StyledFormLabel = styled(Typography)(({ theme }) => ({
+  marginBottom: theme.spacing(2),
+  color: theme.palette.primary.main,
+}));
+
 export const Users = () => {
+  const [users, setUsers] = useState<User[]>([]);
   const [currentSelection, setCurrentSelection] = useState<number>(-1);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [users, setUsers] = useState<User[]>([]);
   const [apiErrorMessage, setApiErrorMessage] = useState<string>('');
   const [apiSuccessMessage, setApiSuccessMessage] = useState<string>('');
+  const { state } = useContext(AppContext);
   const [validationMessage, setValidationMessage] = useState<UserCreate>({
     username: '',
     displayName: '',
@@ -51,56 +80,34 @@ export const Users = () => {
     return true;
   };
 
-  const StyledButtonWrapper = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'center',
-    marginTop: theme.spacing(2),
-  }));
-
-  const StyledInputWrapper = styled(FormControl)(({ theme }) => ({
-    marginBottom: theme.spacing(4),
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  }));
-
-  const StyledFormWrapper = styled(Box)(({ theme }) => ({
-    width: '100%',
-    padding: '20px',
-    border: '1px solid #ccc',
-    borderRadius: theme.shape.borderRadius,
-    marginTop: '20px',
-  }));
-
-  const StyledFormLabel = styled(Typography)(({ theme }) => ({
-    marginBottom: theme.spacing(2),
-    color: theme.palette.primary.main,
-  }));
-
   const handleUserChange = (event: SelectChangeEvent): void => {
-    setCurrentSelection(parseInt(event.target.value));
-
-    users.forEach((user) => {
-      if (parseInt(event.target.value) === user.id) {
-        setSelectedUser(user);
-      } else if (parseInt(event.target.value) === -1) {
-        setSelectedUser(null);
-        reset();
-      }
-    });
+    const c = parseInt(event.target.value);
+    setCurrentSelection(c);
+    if (c === -1) {
+      setSelectedUser(null);
+      reset();
+    } else {
+      users.forEach((user) => {
+        if (c === user.id) {
+          setSelectedUser(user);
+          return;
+        }
+      });
+    }
   };
 
   const deleteUser = async (): Promise<void> => {
     try {
+      const nameOfDeletedUser = users.find((u) => u.id == currentSelection);
       await RootServerApi.deleteUser(currentSelection);
+      // this action is only available to the server admin, so it's OK to assume that we can set the current selection to -1
       setCurrentSelection(-1);
       const newUsers = users.filter((user) => {
         return user.id != currentSelection;
       });
       setUsers(newUsers);
       reset();
-      showSuccessMessage('User successfully deleted!');
+      showSuccessMessage(`User ${nameOfDeletedUser?.displayName} successfully deleted!`);
     } catch (error: any) {
       RootServerApi.handleErrors(error, {
         handleError: (error) => {
@@ -111,10 +118,38 @@ export const Users = () => {
   };
 
   const getUsers = async (): Promise<void> => {
+    // Only try to get users from the database if the currently logged in user is an admin or serviceBodyAdmin -- otherwise just leave users as [].
+    // This would happen if the currently logged in user is an observer or deactivated.
+    if (state.user?.type !== 'admin' && state.user?.type !== 'serviceBodyAdmin') {
+      return;
+    }
     try {
       const allUsers = await RootServerApi.getUsers();
+      allUsers.sort((a, b) => a.displayName.localeCompare(b.displayName));
+      // The database stores -1 as the ownerID of any user without an explicit owner.  This gets returned as null in the user object.  The UI,
+      // however, thinks of any user without an explicit owner as being owned by the server admin, except for the server admin itself.  Thus
+      // the owner in the menu will show up as server admin for users without an explict owner.  (Note that the server admin itself won't ever be in
+      // this menu -- it gets filtered out.)  The loop that follows checks for this and fixes up the user objects.  This is only relevant if the
+      // currently logged in user is the server admin; otherwise no users owned by the server admin will show up on the list.  The initially selected
+      // user is 'Create New User' if the server admin is logged in; and otherwise it's the first user on the list of users.  This list omits the
+      // currently logged in user, so there is a check to see if the first user on the list is the currently logged in one.  Ick ....
+      if (state.user?.type === 'admin') {
+        setCurrentSelection(-1);
+        for (const u of allUsers) {
+          if (u.type !== 'admin' && u.ownerId === null) {
+            u.ownerId = state.user.id.toString();
+          }
+        }
+      } else if (allUsers[0].id != state.user?.id) {
+        setCurrentSelection(allUsers[0].id);
+        setSelectedUser(allUsers[0]);
+      } else if (allUsers.length > 1) {
+        setCurrentSelection(allUsers[1].id);
+        setSelectedUser(allUsers[1]);
+      }
+      // if we fall through all the conditions, allUsers.length is 1 and the current user is not the server admin.  In this case we just show a note
+      // that there aren't any users that can be edited or created.
       setUsers(allUsers);
-      console.log(allUsers);
     } catch (error: any) {
       RootServerApi.handleErrors(error, {
         handleError: (error) => {
@@ -127,6 +162,17 @@ export const Users = () => {
   const showErrorMessage = (error: string): void => {
     setApiErrorMessage(error);
   };
+
+  // Function for use in fixing 'owned by' menu.  The argument will be either '' (no selection); or the ID of the current selection,
+  // converted to a string.  If the argument is '' and the current user is -1 (denoting 'Create New User') and allUsers have been loaded,
+  // then convert the argument to the ID for the server administrator.  Otherwise leave it alone.
+  function updateOwner(s: string | undefined): string | undefined {
+    if (s === '' && currentSelection === -1) {
+      const admin = users.find((u) => u.type === 'admin');
+      return admin ? admin.id.toString() : '';
+    }
+    return s;
+  }
 
   const showSuccessMessage = (message: string): void => {
     setApiSuccessMessage(message);
@@ -168,15 +214,24 @@ export const Users = () => {
   const applyChanges = async (user: UserCreate | UserUpdate): Promise<void> => {
     setApiErrorMessage('');
     setApiSuccessMessage('');
-
+    // If the owner is the server admin, set that field to null before storing it in the database (the UI thinks
+    // of the owner as the server admin; the database thinks of the user having no owner).  Note that we aren't
+    // going to use the object stored in 'user' variable after this, so it's ok to munge its ownerId field.
+    // Hack: mollify the type system by actually setting it to '' -- this still ends up with the correct result.
+    if (user.ownerId === undefined || (state.user?.type === 'admin' && user.ownerId == state.user.id.toString())) {
+      user.ownerId = '';
+    }
     // "Create New User" is selected
     if (currentSelection === -1) {
       try {
         const newUser = await RootServerApi.createUser(user as UserCreate);
-        console.log(newUser);
         reset();
+        // fix up the owner of the new user if necessary
+        if (state.user?.type === 'admin' && newUser.ownerId === null) {
+          newUser.ownerId = state.user.id.toString();
+        }
         setUsers([...users, newUser]);
-        showSuccessMessage('User successfully created!');
+        showSuccessMessage('User ' + newUser.displayName + ' successfully created!');
       } catch (error: any) {
         applyChangesApiError(error);
       }
@@ -218,6 +273,11 @@ export const Users = () => {
     setValue('description', selectedUser?.description as string);
   }, [selectedUser]);
 
+  if (state.user?.type !== 'admin' && users.length < 2) {
+    // No child users for the currently logged in user.  Possible alternative to this design: don't show Users menu link at all.
+    return <div>{strings.noUsers}</div>;
+  }
+
   return (
     <div>
       <Box>
@@ -230,14 +290,16 @@ export const Users = () => {
             label={strings.userTitle}
             onChange={handleUserChange}
           >
-            <MenuItem value={-1}>{strings.createNewUserTitle}</MenuItem>
-            {users.map((currentUser, i) => {
-              return (
-                <MenuItem value={currentUser.id} key={i}>
-                  {currentUser.displayName}
-                </MenuItem>
-              );
-            })}
+            {state.user?.type === 'admin' && <MenuItem value={-1}>{strings.createNewUserTitle}</MenuItem>}
+            {users
+              .filter((u) => u.id !== state.user?.id)
+              .map((currentUser, i) => {
+                return (
+                  <MenuItem value={currentUser.id} key={i}>
+                    {currentUser.displayName}
+                  </MenuItem>
+                );
+              })}
           </Select>
         </FormControl>
       </Box>
@@ -259,6 +321,7 @@ export const Users = () => {
                 defaultValue=''
                 render={({ field: { onChange, value } }) => (
                   <Select
+                    disabled={state.user?.type !== 'admin'}
                     error={errors?.type?.type === 'required' || validationMessage?.type !== ''}
                     labelId='type-select-label'
                     id='type-select'
@@ -268,7 +331,6 @@ export const Users = () => {
                     {...register('type', { required: true })}
                     onChange={onChange}
                   >
-                    <MenuItem value='admin'>{strings.adminTitle}</MenuItem>
                     <MenuItem value='serviceBodyAdmin'>{strings.serviceBodyAdminTitle}</MenuItem>
                     <MenuItem value='observer'>{strings.observerTitle}</MenuItem>
                     <MenuItem value='disabled'>{strings.disabledUserTitle}</MenuItem>
@@ -289,11 +351,12 @@ export const Users = () => {
                 defaultValue=''
                 render={({ field: { onChange, value } }) => (
                   <Select
+                    disabled={state.user?.type !== 'admin'}
                     error={validationMessage?.ownerId !== ''}
                     labelId='owner-id-label'
                     defaultValue=''
                     id='owner-id-select'
-                    value={value}
+                    value={updateOwner(value)}
                     {...register('ownerId', { required: false })}
                     onChange={onChange}
                   >
@@ -403,7 +466,7 @@ export const Users = () => {
             </Button>
           </StyledButtonWrapper>
         </form>
-        {currentSelection !== -1 && (
+        {currentSelection !== -1 && state.user?.type === 'admin' && (
           <StyledButtonWrapper sx={{ display: 'flex', justifyContent: 'center', marginTop: '' }}>
             <Button variant='contained' color='primary' onClick={deleteUser}>
               {strings.deleteUserTitle}

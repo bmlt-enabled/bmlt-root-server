@@ -29,6 +29,7 @@ export const strings = new LocalizedStrings({
     serviceBodyAdminTitle: 'Service Body Administrator',
     observerTitle: 'Service Body Observer',
     disabledUserTitle: 'Disabled User',
+    noUsers: '- None -',
   },
   de: {
     passwordTitle: 'Passwort',
@@ -41,6 +42,7 @@ export const strings = new LocalizedStrings({
     descriptionTitle: 'Beschreibung:',
     deleteUserTitle: 'Lösche diesen Benutzer',
     disabledUserTitle: 'Deaktivierter Benutzer',
+    noUsers: '- Keine -',
   },
   dk: {
     loginVerb: 'Log Ind',
@@ -57,6 +59,7 @@ export const strings = new LocalizedStrings({
     deleteUserTitle: 'Slet Denne Bruger',
     observerTitle: 'Service enhed overvåger',
     disabledUserTitle: 'Deaktiveret bruger',
+    noUsers: '- None -',
   },
   es: {
     loginTitle: 'Acceso',
@@ -76,6 +79,7 @@ export const strings = new LocalizedStrings({
     serviceBodyAdminTitle: 'Administrador de cuerpo de servicio',
     observerTitle: 'Observador de cuerpo de servicio',
     disabledUserTitle: 'Usario discapacitado',
+    noUsers: '- None -',
   },
   fa: {},
   fr: {
@@ -95,6 +99,7 @@ export const strings = new LocalizedStrings({
     serviceBodyAdminTitle: "Administrateur d'une structure de service",
     observerTitle: 'Observateur',
     disabledUserTitle: 'Désactiver utilisateur',
+    noUsers: '- None -',
   },
   it: {
     loginVerb: 'Entra',
@@ -111,6 +116,7 @@ export const strings = new LocalizedStrings({
     serviceBodyAdminTitle: 'Amministratore della struttura di servizio',
     observerTitle: 'Osservatore nella struttura di servizio',
     disabledUserTitle: 'Disattiva utente',
+    noUsers: '- None -',
   },
   pl: {
     loginVerb: 'Zaloguj się',
@@ -129,6 +135,7 @@ export const strings = new LocalizedStrings({
     serviceBodyAdminTitle: 'Administrator organu służb',
     observerTitle: 'Obserwator z organu służb',
     disabledUserTitle: 'Dezaktywowany użytkownik',
+    noUsers: '- None -',
   },
   pt: {
     loginVerb: 'Entrar',
@@ -148,6 +155,7 @@ export const strings = new LocalizedStrings({
     serviceBodyAdminTitle: 'Administrador de corpo de serviço',
     observerTitle: 'Observador',
     disabledUserTitle: 'Usuário desativado',
+    noUsers: '- None -',
   },
   ru: {
     loginVerb: 'Логин',
@@ -167,6 +175,7 @@ export const strings = new LocalizedStrings({
     serviceBodyAdminTitle: 'Администратор орагана обслуживания',
     observerTitle: 'Наблюдатель органа обслуживания',
     disabledUserTitle: 'Инвалидный пользователь',
+    noUsers: '- None -',
   },
   sv: {
     loginVerb: 'Logga in',
@@ -183,6 +192,7 @@ export const strings = new LocalizedStrings({
     serviceBodyAdminTitle: 'Serviceenhet Administratör',
     observerTitle: 'Serviceenhet övervakare',
     disabledUserTitle: 'Inaktivera användare',
+    noUsers: '- None -',
   },
 });
 
