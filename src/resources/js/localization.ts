@@ -28,7 +28,7 @@ export const strings = new LocalizedStrings({
     adminTitle: 'Administrator',
     serviceBodyAdminTitle: 'Service Body Administrator',
     observerTitle: 'Service Body Observer',
-    disabledUserTitle: 'Disabled User',
+    deactivatedUserTitle: 'Deactivated User',
     noUsers: '- None -',
   },
   de: {
@@ -41,7 +41,7 @@ export const strings = new LocalizedStrings({
     userIsATitle: 'Benutzer ist ein:',
     descriptionTitle: 'Beschreibung:',
     deleteUserTitle: 'Lösche diesen Benutzer',
-    disabledUserTitle: 'Deaktivierter Benutzer',
+    deactivatedUserTitle: 'Deaktivierter Benutzer',
     noUsers: '- Keine -',
   },
   dk: {
@@ -58,7 +58,7 @@ export const strings = new LocalizedStrings({
     ownedByTitle: 'Ejet Af:',
     deleteUserTitle: 'Slet Denne Bruger',
     observerTitle: 'Service enhed overvåger',
-    disabledUserTitle: 'Deaktiveret bruger',
+    deactivatedUserTitle: 'Deaktiveret bruger',
     noUsers: '- None -',
   },
   es: {
@@ -78,7 +78,7 @@ export const strings = new LocalizedStrings({
     adminTitle: 'Administrador',
     serviceBodyAdminTitle: 'Administrador de cuerpo de servicio',
     observerTitle: 'Observador de cuerpo de servicio',
-    disabledUserTitle: 'Usario discapacitado',
+    deactivatedUserTitle: 'Usario desactivado', // TODO: check that this translation is correct
     noUsers: '- None -',
   },
   fa: {},
@@ -98,7 +98,7 @@ export const strings = new LocalizedStrings({
     adminTitle: 'Administrateur',
     serviceBodyAdminTitle: "Administrateur d'une structure de service",
     observerTitle: 'Observateur',
-    disabledUserTitle: 'Désactiver utilisateur',
+    deactivatedUserTitle: 'Utilisateur désactivé', // TODO: check that this translation is correct
     noUsers: '- None -',
   },
   it: {
@@ -115,7 +115,7 @@ export const strings = new LocalizedStrings({
     adminTitle: 'Amministratore',
     serviceBodyAdminTitle: 'Amministratore della struttura di servizio',
     observerTitle: 'Osservatore nella struttura di servizio',
-    disabledUserTitle: 'Disattiva utente',
+    deactivatedUserTitle: 'Utente disattivato', // TODO: check that this translation is correct
     noUsers: '- None -',
   },
   pl: {
@@ -134,7 +134,7 @@ export const strings = new LocalizedStrings({
     deleteUserTitle: 'Usuń tego użytkownika',
     serviceBodyAdminTitle: 'Administrator organu służb',
     observerTitle: 'Obserwator z organu służb',
-    disabledUserTitle: 'Dezaktywowany użytkownik',
+    deactivatedUserTitle: 'Dezaktywowany użytkownik',
     noUsers: '- None -',
   },
   pt: {
@@ -154,7 +154,7 @@ export const strings = new LocalizedStrings({
     adminTitle: 'Administrador',
     serviceBodyAdminTitle: 'Administrador de corpo de serviço',
     observerTitle: 'Observador',
-    disabledUserTitle: 'Usuário desativado',
+    deactivatedUserTitle: 'Usuário desativado', // TODO: check that this translation is correct
     noUsers: '- None -',
   },
   ru: {
@@ -174,7 +174,7 @@ export const strings = new LocalizedStrings({
     adminTitle: 'Администратор',
     serviceBodyAdminTitle: 'Администратор орагана обслуживания',
     observerTitle: 'Наблюдатель органа обслуживания',
-    disabledUserTitle: 'Инвалидный пользователь',
+    deactivatedUserTitle: 'Деактивированный пользователь', // TODO: check that this translation is correct
     noUsers: '- None -',
   },
   sv: {
@@ -191,7 +191,7 @@ export const strings = new LocalizedStrings({
     adminTitle: 'Administratör',
     serviceBodyAdminTitle: 'Serviceenhet Administratör',
     observerTitle: 'Serviceenhet övervakare',
-    disabledUserTitle: 'Inaktivera användare',
+    deactivatedUserTitle: 'Avaktiverad användare', // TODO: check that this translation is correct
     noUsers: '- None -',
   },
 });

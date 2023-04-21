@@ -1750,7 +1750,7 @@ class c_comdef_meeting extends t_comdef_world_type implements i_comdef_db_stored
         if ($in_user_object instanceof c_comdef_user) {
             $in_user_object->RestoreFromDB();   // The reason you do this, is to ensure that the user wasn't modified "live." It's a security precaution.
 
-            if (($in_user_object->GetUserLevel() != _USER_LEVEL_SERVER_ADMIN) && ($in_user_object->GetUserLevel() != _USER_LEVEL_DISABLED) && (($in_user_object->GetUserLevel() == _USER_LEVEL_EDITOR) || ($in_user_object->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN))) {
+            if (($in_user_object->GetUserLevel() != _USER_LEVEL_SERVER_ADMIN) && ($in_user_object->GetUserLevel() != _USER_LEVEL_DEACTIVATED) && (($in_user_object->GetUserLevel() == _USER_LEVEL_EDITOR) || ($in_user_object->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN))) {
                 // If there is an existing object, then we can't make changes unless it's allowed in the existing object.
                 $current_obj = c_comdef_server::GetServer()->GetOneMeeting($this->GetID());
 

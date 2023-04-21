@@ -51,7 +51,7 @@ class c_comdef_admin_ajax_handler
         $this->my_user = $this->my_server->GetCurrentUserObj();
 
         // We check this every chance that we get.
-        if (!$this->my_user || ($this->my_user->GetUserLevel() == _USER_LEVEL_DISABLED)) {
+        if (!$this->my_user || ($this->my_user->GetUserLevel() == _USER_LEVEL_DEACTIVATED)) {
             die('NOT AUTHORIZED');
         }
     }

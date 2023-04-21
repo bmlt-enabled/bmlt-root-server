@@ -42,7 +42,7 @@ class LegacyAuthController extends Controller
                 if ($apiType != $this->REQUEST_TYPE_WEB) {
                     $user = Auth::user();
                     if ($user) {
-                        if ($user->user_level_tinyint == User::USER_LEVEL_ADMIN || $user->user_level_tinyint == User::USER_LEVEL_DISABLED) {
+                        if ($user->user_level_tinyint == User::USER_LEVEL_ADMIN || $user->user_level_tinyint == User::USER_LEVEL_DEACTIVATED) {
                             Auth::logout();
                             $request->session()->invalidate();
                             $success = false;

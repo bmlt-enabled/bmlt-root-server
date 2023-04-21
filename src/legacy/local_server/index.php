@@ -83,7 +83,7 @@ if (isset($http_vars ['bmlt_ajax_callback'])) {
 
         // We can only go past here is we are a logged-in user.
         $user_obj = $server->GetCurrentUserObj();
-        if (($user_obj instanceof c_comdef_user) && ($user_obj->GetUserLevel() != _USER_LEVEL_DISABLED)) {
+        if (($user_obj instanceof c_comdef_user) && ($user_obj->GetUserLevel() != _USER_LEVEL_DEACTIVATED)) {
             echo '<div class="admin_page_wrapper">';
             // OK. If they make it in here, it means they are legit, so display the logged-in console.
             require_once(dirname(__FILE__).'/server_admin/main_console.php');

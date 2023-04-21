@@ -13,23 +13,23 @@ class User extends Model implements AuthenticatableContract
 
     public const USER_LEVEL_ADMIN = 1;
     public const USER_LEVEL_SERVICE_BODY_ADMIN = 2;
-    public const USER_LEVEL_DISABLED = 4;
+    public const USER_LEVEL_DEACTIVATED = 4;
     public const USER_LEVEL_OBSERVER = 5;
 
-    public const USER_TYPE_DISABLED = 'disabled';
+    public const USER_TYPE_DEACTIVATED = 'deactivated';
     public const USER_TYPE_ADMIN = 'admin';
     public const USER_TYPE_SERVICE_BODY_ADMIN = 'serviceBodyAdmin';
     public const USER_TYPE_OBSERVER = 'observer';
 
     public const USER_LEVEL_TO_USER_TYPE_MAP = [
-        self::USER_LEVEL_DISABLED => self::USER_TYPE_DISABLED,
+        self::USER_LEVEL_DEACTIVATED => self::USER_TYPE_DEACTIVATED,
         self::USER_LEVEL_ADMIN => self::USER_TYPE_ADMIN,
         self::USER_LEVEL_SERVICE_BODY_ADMIN => self::USER_TYPE_SERVICE_BODY_ADMIN,
         self::USER_LEVEL_OBSERVER => self::USER_TYPE_OBSERVER,
     ];
 
     public const USER_TYPE_TO_USER_LEVEL_MAP = [
-        self::USER_TYPE_DISABLED => self::USER_LEVEL_DISABLED,
+        self::USER_TYPE_DEACTIVATED => self::USER_LEVEL_DEACTIVATED,
         self::USER_TYPE_ADMIN => self::USER_LEVEL_ADMIN,
         self::USER_TYPE_SERVICE_BODY_ADMIN => self::USER_LEVEL_SERVICE_BODY_ADMIN,
         self::USER_TYPE_OBSERVER => self::USER_LEVEL_OBSERVER,
@@ -65,9 +65,9 @@ class User extends Model implements AuthenticatableContract
         return $this->user_level_tinyint == self::USER_LEVEL_SERVICE_BODY_ADMIN;
     }
 
-    public function isDisabled(): bool
+    public function isDeactivated(): bool
     {
-        return $this->user_level_tinyint == self::USER_LEVEL_DISABLED;
+        return $this->user_level_tinyint == self::USER_LEVEL_DEACTIVATED;
     }
 
     public function children()

@@ -27,7 +27,7 @@ require_once(dirname(__FILE__)."/../shared/classes/comdef_utilityclasses.inc.php
 define("_USER_LEVEL_SERVER_ADMIN", 1);
 define("_USER_LEVEL_SERVICE_BODY_ADMIN", 2);
 define("_USER_LEVEL_EDITOR", 3);
-define("_USER_LEVEL_DISABLED", 4);
+define("_USER_LEVEL_DEACTIVATED", 4);
 define("_USER_LEVEL_OBSERVER", 5);
 
 /***********************************************************************/
@@ -43,7 +43,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
 {
     /// An integer, containing the unique ID of this user.
     private $_id_bigint = null;
-    
+
     /**
         \brief An integer, containing the user level.
 
@@ -72,22 +72,22 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
                     data items in meetings for the Service bodies to which it has been attached..
     */
     private $_user_level_tinyint = null;
-    
+
     /// A string, containing the user's email address.
     private $_email_address_string = null;
-    
+
     /// A string, containing the user's login ID.
     private $_login_string = null;
-    
+
     /// A string, containing the user's encrypted password.
     private $_password_string = null;
-    
+
     /// A time date, indicating the last time the user was active. This will be useful for administration.
     private $_last_access = null;
 
     /// An integer containing the id of the user that owns this user.
     private $_owner_id_bigint = -1;
-    
+
     /*******************************************************************/
     /** \brief Updates or adds this instance to the database.
 
@@ -103,20 +103,20 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = false;
-            
+
         $cur_user = c_comdef_server::GetCurrentUserObj();
-        
+
         if ($cur_user instanceof c_comdef_user) {
             $cur_user_clone = clone ( $cur_user );  // This little dance is to make sure that the live object wasn't changed.
             $cur_user_clone->RestoreFromDB();
-        
+
             if ($cur_user_clone->UserCanEdit($cur_user)) {
                 // We take a snapshot of the user as it currently sits in the database as a "before" image.
                 $before = null;
                 $before_id = null;
                 $before_lang = null;
                 $before_obj = c_comdef_server::GetOneUser($this->GetID());
-                
+
                 if ($before_obj instanceof c_comdef_user) {
                     $before_obj_clone = clone $before_obj;
                     $before_obj_clone->RestoreFromDB();
@@ -127,7 +127,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
                 }
 
                 $this->DeleteFromDB_NoRecord();
-                
+
                 try {
                     $update = array();
                     if ($this->_id_bigint) {
@@ -135,13 +135,13 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
                     }
                     array_push($update, $this->_user_level_tinyint);
                     array_push($update, $this->_email_address_string);
-                    
+
                     if (null != $new_login) {
                         $this->SetLogin($new_login);
                     }
 
                     array_push($update, $this->_login_string);
-                    
+
                     if (null != $new_pass) {
                         $this->SetNewPassword($new_pass);
                     }
@@ -152,7 +152,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
                     array_push($update, $this->GetLocalDescription());
                     array_push($update, $this->GetLocalLang());
                     array_push($update, $this->GetOwnerID());
-                    
+
                     $sql = "INSERT INTO `".c_comdef_server::GetUserTableName_obj()."` (";
                     if ($this->_id_bigint) {
                         $sql .= "`id_bigint`,";
@@ -171,7 +171,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
                             $this->_id_bigint = intval($rows[0]['last_insert_id()']);
                         }
                     }
-                    
+
                     $after = $this->SerializeObject();
                     $after_id = $this->GetID();
                     $after_lang = $this->GetLocalLang();
@@ -180,7 +180,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
                     $ret = true;
                 } catch (Exception $ex) {
                     global  $_COMDEF_DEBUG;
-                    
+
                     if ($_COMDEF_DEBUG) {
                         echo "Exception Thrown in c_comdef_user::UpdateToDB()!<br />";
                         var_dump($ex);
@@ -189,10 +189,10 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
                 }
             }
         }
-        
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Deletes this instance from the database without creating a change record.
 
@@ -205,7 +205,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = false;
-        
+
         if ($this->UserCanEdit()) {
             try {
                 $sql = "DELETE FROM `".c_comdef_server::GetUserTableName_obj()."` WHERE id_bigint=?";
@@ -213,7 +213,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
                 $ret = true;
             } catch (Exception $ex) {
                 global  $_COMDEF_DEBUG;
-                
+
                 if ($_COMDEF_DEBUG) {
                     echo "Exception Thrown in c_comdef_user::DeleteFromDB()!<br />";
                     var_dump($ex);
@@ -221,10 +221,10 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
                 throw ( $ex );
             }
         }
-        
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Deletes this instance from the database, and creates a change record.
 
@@ -237,16 +237,16 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = false;
-        
+
         $user = c_comdef_server::GetCurrentUserObj();
-        
+
         if ($this->UserCanEdit($user)) {
             // We take a snapshot of the user as it currently sits in the database as a "before" image.
             $before = null;
             $before_id = null;
             $before_lang = null;
             $before_obj = c_comdef_server::GetOneUser($this->GetID());
-            
+
             if ($before_obj instanceof c_comdef_user) {
                 $before = $before_obj->SerializeObject();
                 $before_id = $before_obj->GetID();
@@ -255,12 +255,12 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
             }
 
             $ret = $this->DeleteFromDB_NoRecord();
-            
+
             if ($ret) {
                 c_comdef_server::AddNewChange($user->GetID(), 'comdef_change_type_delete', $this->GetID(), $before, null, 'c_comdef_user', $before_id, null, $before_lang, null);
             }
         }
-        
+
         return $ret;
     }
 
@@ -286,7 +286,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
 
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief Updates this instance to the current values in the DB
         (replacing current values of the instance).
@@ -318,7 +318,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
             }
         } catch (Exception $ex) {
             global  $_COMDEF_DEBUG;
-            
+
             if ($_COMDEF_DEBUG) {
                 echo "Exception Thrown in c_comdef_user::RestoreFromDB()!<br />";
                 var_dump($ex);
@@ -326,7 +326,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
             throw ( $ex );
         }
     }
-    
+
     /*******************************************************************/
     /** \brief The initial setup call for the class. If you send in values,
         the object will set itself up to use them.
@@ -377,7 +377,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
         $this->SetLocalLang($in_lang_enum);
         $this->SetLocalName($in_name_string);
         $this->SetLocalDescription($in_description_string);
-        
+
         // Set the local values.
         $this->_id_bigint = $in_id_bigint;
         $this->_user_level_tinyint = $in_user_level_tinyint;
@@ -387,7 +387,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
         $this->_owner_id_bigint = $in_owner_id_bigint;
         $this->_last_access = $in_last_access;
     }
-    
+
     /*******************************************************************/
     /** \brief Returns true if the user is enabled (levels 1-3)
 
@@ -397,9 +397,9 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
     public function IsEnabled()
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-        return ($this->_user_level_tinyint > 0) && ($this->_user_level_tinyint != _USER_LEVEL_DISABLED);
+        return ($this->_user_level_tinyint > 0) && ($this->_user_level_tinyint != _USER_LEVEL_DEACTIVATED);
     }
-    
+
     /*******************************************************************/
     /** \brief Accessor - Returns the user ID as an integer.
 
@@ -411,7 +411,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return $this->_id_bigint;
     }
-    
+
     /*******************************************************************/
     /** \brief Accessor - Sets the user ID as an integer.
     */
@@ -479,7 +479,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
         $this->RestoreFromDB();
         return $this->_user_level_tinyint;
     }
-    
+
     /*******************************************************************/
     /** \brief Accessor - Sets the user level.
         Attempts to set the user level to 1 for users other than User 1 will fail.
@@ -521,7 +521,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
             return true;
         }
     }
-    
+
     /*******************************************************************/
     /** \brief Accessor - Returns the user email address.
 
@@ -533,7 +533,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return $this->_email_address_string;
     }
-    
+
     /*******************************************************************/
     /** \brief Accessor - Sets the user email address.
     */
@@ -544,7 +544,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $this->_email_address_string = $in_email_address_string;
     }
-    
+
     /*******************************************************************/
     /** \brief Accessor - Returns the user login.
 
@@ -556,7 +556,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return $this->_login_string;
     }
-    
+
     /*******************************************************************/
     /** \brief Accessor - Sets the userlogin.
 
@@ -568,18 +568,18 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = false;
-        
+
         if ($in_login_string) {
             $users_obj = c_comdef_server::GetServer()->GetServerUsersObj();
-            
+
             // We are not allowed to select a login that is already in use. The comparison
             // is case-insensitive.
             if ($users_obj instanceof c_comdef_users) {
                 $obj_array = $users_obj->GetUsersArray();
-                
+
                 if (is_array($obj_array)) {
                     $ret = true;
-                    
+
                     foreach ($obj_array as $one_user) {
                         // We don't worry if this is our own object.
                         if ($one_user->GetID() != $this->GetID()) {
@@ -589,7 +589,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
                             }
                         }
                     }
-                    
+
                     // If we went through without a match, we change the login.
                     if ($ret) {
                         $this->_login_string = $in_login_string;
@@ -597,10 +597,10 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
                 }
             }
         }
-        
+
         return $ret;
     }
-    
+
     /*******************************************************************/
     /** \brief See if this is the given user by login and password.
 
@@ -616,17 +616,17 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $login_match = (strcasecmp($in_login_string, $this->GetLogin()) == 0);
-        
+
         // See if we need to encrypt the password.
         if ($in_pw_raw) {
             $password_match = password_verify($in_password_string, $this->GetPassword());
         } else {
             $password_match = hash_equals($this->GetPassword(), $in_password_string);
         }
-        
+
         return $login_match && $password_match;
     }
-    
+
     /*******************************************************************/
     /** \brief Accessor - Returns the user password, in encrypted form.
 
@@ -638,7 +638,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return $this->_password_string;
     }
-    
+
     /*******************************************************************/
     /** \brief Accessor - Sets the password, as an encrypted string.
     */
@@ -653,7 +653,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
             return null;
         }
     }
-    
+
     /*******************************************************************/
     /** \brief Accessor - Sets the password, encrypting it.
 
@@ -679,7 +679,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
             return null;
         }
     }
-    
+
     /*******************************************************************/
     /** \brief Accessor - Gets the last access time.
 
@@ -691,7 +691,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return $this->_last_access;
     }
-    
+
     /*******************************************************************/
     /** \brief Simply sets the last access time to now.
     */
@@ -702,7 +702,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $this->_last_access = (null != $in_time) ? $in_time : time();
     }
-    
+
     /*******************************************************************/
     /** \brief Returns a storable serialization of the object, as a string.
 
@@ -727,10 +727,10 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
                                 $this->_owner_id_bigint,
                                 $this->GetLocalLang()
                                 );
-        
+
         return serialize($serialize_array);
     }
-    
+
     /*******************************************************************/
     /** \brief This takes the serialized table, and instantiates a
         new object from it.
@@ -754,10 +754,10 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
                 $_local_description,
                 $_owner_id_bigint,
                 $_local_lang ) = unserialize($serialized_string);
-                
+
         return new c_comdef_user($in_parent, $_id_bigint, $_user_level_tinyint, $_email_address_string, $_login_string, $_password_string, $_local_lang, $_local_name, $_local_description, $_owner_id_bigint, $_last_access);
     }
-    
+
     /*******************************************************************/
     /** \brief Test to see if a user is allowed to edit an instance (change the data).
 
@@ -769,12 +769,12 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = false;
-        
+
         // We load the server user if one wasn't supplied.
         if (null == $in_user_object) {
             $in_user_object = c_comdef_server::GetCurrentUserObj();
         }
-        
+
         // We clone, in case changes have been made, and we don't want to screw them up.
         $in_user_clone = clone $in_user_object;
 
@@ -782,7 +782,7 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
         if ($in_user_clone instanceof c_comdef_user) {
             $in_user_clone->RestoreFromDB();    // The reason you do this, is to ensure that the user wasn't modified "live." It's a security precaution.
             // Server admins can edit users. Service body administrators can edit users they own. Any user can edit itself.
-            if ($in_user_clone->GetUserLevel() == _USER_LEVEL_DISABLED) {
+            if ($in_user_clone->GetUserLevel() == _USER_LEVEL_DEACTIVATED) {
                 return false;
             }
 
@@ -801,10 +801,10 @@ class c_comdef_user extends t_comdef_local_type implements i_comdef_db_stored, i
             if (c_comdef_server::IsUserServiceBodyAdmin() && $this->GetOwnerID() == c_comdef_server::GetCurrentUserObj()->GetID()) {
                 return true;
             }
-            
+
             $in_user_clone = null;
         }
-        
+
         return $ret;
     }
 }

@@ -1311,7 +1311,7 @@ class c_comdef_server
             $user_array = $users_obj->GetUsersArray();
 
             foreach ($user_array as &$user_obj) {
-                if (($user_obj->GetUserLevel() > 0) && ($in_include_disabled || ($user_obj->GetUserLevel() != _USER_LEVEL_DISABLED)) && (($user_obj->GetUserLevel() == $in_user_level_bigint) || ($in_or_higher && ($user_obj->GetUserLevel() < $in_user_level_bigint)))) {
+                if (($user_obj->GetUserLevel() > 0) && ($in_include_disabled || ($user_obj->GetUserLevel() != _USER_LEVEL_DEACTIVATED)) && (($user_obj->GetUserLevel() == $in_user_level_bigint) || ($in_or_higher && ($user_obj->GetUserLevel() < $in_user_level_bigint)))) {
                     $ret_array[$user_obj->GetID()] = $user_obj;
                 }
             }

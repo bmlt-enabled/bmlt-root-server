@@ -44,7 +44,7 @@ class c_comdef_admin_main_console
     public $my_all_service_bodies;         ///< This contains all Service bodies, cleaned for orphans.
     public $my_observable_service_bodies;  ///< This contains all observable service bodies.
     public $my_lang_ids;                   ///< Contains the enumerations for all the server langs.
-    
+
     /********************************************************************************************************//**
     \brief
     ************************************************************************************************************/
@@ -55,9 +55,9 @@ class c_comdef_admin_main_console
         $this->my_localized_strings = c_comdef_server::GetLocalStrings();
         $this->my_server = c_comdef_server::MakeServer();
         $this->my_user = $this->my_server->GetCurrentUserObj();
-        
+
         // We check this every chance that we get.
-        if (!$this->my_user || ($this->my_user->GetUserLevel() == _USER_LEVEL_DISABLED)) {
+        if (!$this->my_user || ($this->my_user->GetUserLevel() == _USER_LEVEL_DEACTIVATED)) {
             die('NOT AUTHORIZED');
         }
 
@@ -65,7 +65,7 @@ class c_comdef_admin_main_console
         usort($this->my_users, array("c_comdef_admin_main_console", "compare_names"));
         $url_path = GetURLToMainServerDirectory();
         $this->my_ajax_uri = $url_path.'?bmlt_ajax_callback=1';
-        
+
         $this->my_formats = array();
         $langs = $this->my_server->GetFormatLangs();
         $this->my_lang_ids = array_keys($langs);
@@ -83,9 +83,9 @@ class c_comdef_admin_main_console
                 }
             }
         }
-        
+
         // OK, we have a sorted array of unique format IDs. Now, we assign each one an array of format data per language.
-        
+
         foreach ($format_ids as $id) {
             $single_format = array();
             // Walk through the server languages...
@@ -108,48 +108,48 @@ class c_comdef_admin_main_console
                     }
                 }
             }
-            
+
             $this->my_formats[] = array ( 'id' => $id, 'formats' => $single_format );
         }
-        
+
         $service_bodies = $this->my_server->GetServiceBodyArray();
         usort($service_bodies, array("c_comdef_admin_main_console", "compare_names"));
         $this->my_service_bodies = array();
         $this->my_editable_service_bodies = array();
         $this->my_all_service_bodies = array();
         $this->my_observable_service_bodies = array();
-        
+
         for ($c = 0; $c < count($service_bodies); $c++) {
             $service_body = $service_bodies[$c];
             if ($service_body->UserCanEditMeetings()) {
                 array_push($this->my_service_bodies, $service_body);
             }
-            
+
             if ($service_body->UserCanEdit()) {
                 array_push($this->my_editable_service_bodies, $service_body);
             }
-            
+
             if ($service_body->UserCanObserve()) {
                 array_push($this->my_observable_service_bodies, $service_body);
             }
 
             array_push($this->my_all_service_bodies, $service_body);
         }
-        
+
         // We get all the available data fields, and create a local data member for their keys.
         $this->my_data_field_templates = c_comdef_meeting::GetDataTableTemplate();
         $longdata_obj = c_comdef_meeting::GetLongDataTableTemplate();
-        
+
         // We merge the two tables (data and longdata).
         if (is_array($this->my_data_field_templates) && count($this->my_data_field_templates) && is_array($longdata_obj) && count($longdata_obj)) {
             $this->my_data_field_templates = array_merge($this->my_data_field_templates, $longdata_obj);
         }
-        
+
         // Sort them by their field keys, so we have a consistent order.
         $flags = ( defined('SORT_NATURAL') && defined('SORT_FLAG_CASE') ) ? intval(SORT_NATURAL | SORT_FLAG_CASE) : null;
         ksort($this->my_data_field_templates, $flags);
     }
-    
+
     /********************************************************************************************************//**
     \brief Returns the HTML for the main admin console.
     \returns HTML code.
@@ -241,7 +241,7 @@ class c_comdef_admin_main_console
                 $ret .= ',';
             }
         }
-                
+
                 $ret .= '];'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_user_levels = [';
                     $ret .= '[1,\''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_1']).'\'],';
@@ -269,7 +269,7 @@ class c_comdef_admin_main_console
                     } else {
                         $first = false;
                     }
-                    
+
                     $ret .= '{';
                         $ret .= '"id":'.$format['shared_id'];
                         $ret .= ',"key":"'.str_replace('"', '\"', str_replace("\n", ' ', $format['key'])).'"';
@@ -309,7 +309,7 @@ class c_comdef_admin_main_console
                 case 'location_postal_code_1':
                 case 'location_nation':
                     break;
-                
+
                 default:    // We display these ones.
                     if (!$first) {
                         $ret .= ',';
@@ -433,7 +433,7 @@ class c_comdef_admin_main_console
             $ret .= '{"key":"'.self::js_html(str_replace("\n", ' ', $key)).'","value":"'.self::js_html(str_replace("\n", ' ', $value)).'"}';
         }
                 $ret .= (defined('__DEBUG_MODE__') ? "\n" : '').'];';
-                
+
             /****
              * End format_type_enum
              */
@@ -443,7 +443,7 @@ class c_comdef_admin_main_console
             $ret .= '<script type="text/javascript" src="'.(((dirname($_SERVER['PHP_SELF']) != '/') && (dirname($_SERVER['PHP_SELF']) != '\\')) ? dirname($_SERVER['PHP_SELF']) : '').'/local_server/server_admin/jquery.slim.min.js"></script>';
             $ret .= '<noscript class="main_noscript">'.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['noscript']).'</noscript>'.(defined('__DEBUG_MODE__') ? "\n" : '');
             // Belt and suspenders. Just make sure the user is legit.
-        if (($this->my_user instanceof c_comdef_user) && ($this->my_user->GetUserLevel() != _USER_LEVEL_DISABLED)) {
+        if (($this->my_user instanceof c_comdef_user) && ($this->my_user->GetUserLevel() != _USER_LEVEL_DEACTIVATED)) {
             // Figure out which output will be sent, according to the user level.
             switch ($this->my_user->GetUserLevel()) {
                 case _USER_LEVEL_SERVER_ADMIN:
@@ -463,21 +463,21 @@ class c_comdef_admin_main_console
                     $ret .= '<div class="bmlt_admin_observer_link_div"><a target="_blank" href="client_interface/html/" class="bmlt_admin_observer_link_a">'.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['Observer_Link_Text']).'</a></div>';
                     $ret .= $this->return_user_account_settings_panel();
                     break;
-                
+
                 default:
                     die('USER NOT AUTHORIZED');
                 break;
             }
         }
-        
+
         $ret .= '</div>'.(defined('__DEBUG_MODE__') ? "\n" : '');
         if (isset($_GET['edit_meeting']) && intval($_GET['edit_meeting'])) {
             $ret .= '<script type="text/javascript">admin_handler_object.openMeetingForEditing('.intval($_GET['edit_meeting']).');</script>'.(defined('__DEBUG_MODE__') ? "\n" : '');
         }
-        
+
         return  $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief Does an HTML sub, and also "slashes" apostrophes.
     \returns "Cleaned" text
@@ -499,7 +499,7 @@ class c_comdef_admin_main_console
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = 'NOT AUTHORIZED TO EDIT USERS';
-        
+
         if ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) {
             $ret = '<div id="bmlt_admin_format_editor_disclosure_div" class="bmlt_admin_format_editor_disclosure_div bmlt_admin_format_editor_disclosure_div_closed">'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= '<a class="bmlt_admin_format_editor_disclosure_a" href="javascript:admin_handler_object.toggleFormatEditor();">';
@@ -533,10 +533,10 @@ class c_comdef_admin_main_console
             $ret .= '</div>'.(defined('__DEBUG_MODE__') ? "\n" : '');
             $ret .= '<script type="text/javascript">admin_handler_object.populateFormatEditor()</script>'.(defined('__DEBUG_MODE__') ? "\n" : '');
         }
-        
+
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief This constructs the User editor panel. Only Server Admins get this one.
     \returns The HTML and JavaScript for the "Edit Users" section.
@@ -596,7 +596,7 @@ class c_comdef_admin_main_console
                             $ret .= '</div>'.(defined('__DEBUG_MODE__') ? "\n" : '');
                         $ret .= '</div>'.(defined('__DEBUG_MODE__') ? "\n" : '');
                     $ret .= '</div>'.(defined('__DEBUG_MODE__') ? "\n" : '');
-                    
+
                     $ret .= $this->return_single_user_editor_panel($users);
                 $ret .= '</div>'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= '<script type="text/javascript">admin_handler_object.populateUserEditor()</script>'.(defined('__DEBUG_MODE__') ? "\n" : '');
@@ -604,10 +604,10 @@ class c_comdef_admin_main_console
                 $ret = '';
             }
         }
-        
+
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief This constructs a window for the User administrator.
     \returns The HTML and JavaScript for the "User Administration" section.
@@ -674,10 +674,10 @@ class c_comdef_admin_main_console
             $ret .= '</fieldset>'.(defined('__DEBUG_MODE__') ? "\n" : '');
         $ret .= '</div>'.(defined('__DEBUG_MODE__') ? "\n" : '');
         $ret .= '<script type="text/javascript">admin_handler_object.populateUserEditor()</script>'.(defined('__DEBUG_MODE__') ? "\n" : '');
-        
+
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief This creates the HTML for a user selection popup menu.
     \returns The HTML and JavaScript for the popup menu (select element).
@@ -703,10 +703,10 @@ class c_comdef_admin_main_console
             $ret .= '<option value="0" selected="selected">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['user_editor_create_new_user_option']).'</option>';
         }
         $ret .= '</select>'.(defined('__DEBUG_MODE__') ? "\n" : '');
-        
+
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief This creates the HTML for a user level popup menu.
     \returns The HTML and JavaScript for the popup menu (select element).
@@ -723,7 +723,7 @@ class c_comdef_admin_main_console
             $ret .= '<option value="" disabled="disabled"></option>';
             $ret .= '<option value="4">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['user_editor_account_type_4']).'</option>';
         $ret .= '</select>';
-        
+
         return $ret;
     }
 
@@ -777,7 +777,7 @@ class c_comdef_admin_main_console
             $ret .= '</span>';
             $ret .= '<div class="clear_both"></div>';
         $ret .= '</div>';
-        
+
         return $ret;
     }
 
@@ -824,15 +824,15 @@ class c_comdef_admin_main_console
                         $ret .= '</div>'.(defined('__DEBUG_MODE__') ? "\n" : '');
                     $ret .= '</div>';
                 $ret .= '</div>';
-            
+
                 $ret .= $this->return_single_service_body_editor_panel();
             $ret .= '</div>';
             $ret .= '<script type="text/javascript">admin_handler_object.populateServiceBodyEditor()</script>';
         }
-        
+
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief This constructs a window for the Service Body administrator.
     \returns The HTML and JavaScript for the "Service Body Administration" section.
@@ -850,7 +850,7 @@ class c_comdef_admin_main_console
         } else {
             $ret .= $this->create_service_body_popup();
         }
-                
+
                 $ret .= '</legend>'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= '<div class="naws_link_div" id="service_body_editor_naws_link_div">';
                     $ret .= '<a id="service_body_editor_naws_link_a" href="">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_uri_naws_format_text']).'</a>';
@@ -887,7 +887,7 @@ class c_comdef_admin_main_console
                 $ret .= '</span>';
                 $ret .= '<div class="clear_both"></div>';
             $ret .= '</div>';
-            
+
             // This is the part of the form that allows us to import a list of IDs from NAWS, and replace them in our database.
             if (defined('__NAWS_IMPORT__')) {
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
@@ -924,33 +924,33 @@ class c_comdef_admin_main_console
                     $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_service_body_editor_helpline_text_input" type="text" value="" onkeyup="admin_handler_object.handleTextInputServiceBodyChange(this, 8);" onchange="admin_handler_object.handleTextInputServiceBodyChange(this, 8);" onpaste="setTimeout(function() { admin_handler_object.handleTextInputServiceBodyChange(this, 8); }, 0);" oncut="setTimeout(function() { admin_handler_object.handleTextInputServiceBodyChange(this, 8); }, 0);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
-                
+
                 $full_editors = $this->get_full_editor_users();
                 $basic_editors = $this->get_basic_editor_users();
                 $observers = $this->get_observer_users();
-                
+
         if (count($full_editors)) {
             $ret .= '<div id="service_body_admin_full_editor_list_div" class="bmlt_admin_one_line_in_a_form clear_both">';
                 $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_sb_admin_full_editor_label']).'</span>';
                 $ret .= '<span class="bmlt_admin_value_left light_italic_display">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_sb_admin_full_editor_desc']).'</span>';
                 $ret .= '<div class="clear_both"></div>';
-                
+
             foreach ($full_editors as $user) {
                     $ret .= '<span class="bmlt_admin_med_label_right"><input type="checkbox" id="service_body_admin_editor_user_'.$user->GetID().'_checkbox" onchange="admin_handler_object.serviceBodyUserChecboxHandler('.$user->GetID().',this);" onclick="admin_handler_object.serviceBodyUserChecboxHandler('.$user->GetID().',this);" /></span>';
                     $ret .= '<label class="bmlt_admin_med_label_left" for="service_body_admin_editor_user_'.$user->GetID().'_checkbox">'.htmlspecialchars($user->GetLocalName()).'</label>';
                     $ret .= '<div class="clear_both"></div>';
             }
-                    
+
                     $ret .= '</div>';
                     $ret .= '<div class="clear_both"></div>';
         }
-        
+
         if (count($observers)) {
             $ret .= '<div id="service_body_admin_observer_list_div" class="bmlt_admin_one_line_in_a_form clear_both">';
                 $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_sb_admin_observer_label']).'</span>';
                 $ret .= '<span class="bmlt_admin_value_left light_italic_display">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_screen_sb_admin_observer_desc']).'</span>';
                 $ret .= '<div class="clear_both"></div>';
-                
+
             foreach ($observers as $user) {
                     $ret .= '<span class="bmlt_admin_med_label_right"><input type="checkbox" id="service_body_admin_editor_user_'.$user->GetID().'_checkbox" onchange="admin_handler_object.serviceBodyUserChecboxHandler('.$user->GetID().',this);" onclick="admin_handler_object.serviceBodyUserChecboxHandler('.$user->GetID().',this);" /></span>';
                     $ret .= '<label class="bmlt_admin_med_label_left" for="service_body_admin_editor_user_'.$user->GetID().'_checkbox">'.htmlspecialchars($user->GetLocalName()).'</label>';
@@ -959,15 +959,15 @@ class c_comdef_admin_main_console
                     $ret .= '</div>';
                     $ret .= '<div class="clear_both"></div>';
         }
-                
+
                 $ret .= '<div class="clear_both"></div>';
                 $ret .= $this->return_service_body_editor_button_panel();
             $ret .= '</fieldset>'.(defined('__DEBUG_MODE__') ? "\n" : '');
         $ret .= '</div>'.(defined('__DEBUG_MODE__') ? "\n" : '');
-        
+
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief This gets just the Service Body Admin Users, and returns their objects in an array.
     \returns An array with the user objects (instances of c_comdef_user)
@@ -977,17 +977,17 @@ class c_comdef_admin_main_console
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = array ();
-        
+
         for ($c = 0; $c < count($this->my_users); $c++) {
             $user = $this->my_users[$c];
             if ($user->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) {
                 array_push($ret, $user);
             }
         }
-        
+
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief This gets just the Service Body Editor (Trainee) Users, and returns their objects in an array.
     \returns An array with the user objects (instances of c_comdef_user)
@@ -997,17 +997,17 @@ class c_comdef_admin_main_console
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = array ();
-        
+
         for ($c = 0; $c < count($this->my_users); $c++) {
             $user = $this->my_users[$c];
             if ($user->GetUserLevel() == _USER_LEVEL_EDITOR) {
                 array_push($ret, $user);
             }
         }
-        
+
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief This gets just the Observer Users, and returns their objects in an array.
     \returns An array with the user objects (instances of c_comdef_user)
@@ -1017,17 +1017,17 @@ class c_comdef_admin_main_console
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = array ();
-        
+
         for ($c = 0; $c < count($this->my_users); $c++) {
             $user = $this->my_users[$c];
             if ($user->GetUserLevel() == _USER_LEVEL_OBSERVER) {
                 array_push($ret, $user);
             }
         }
-        
+
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief This creates the HTML for a Service body parent selection popup menu.
     \returns The HTML and JavaScript for the popup menu (select element).
@@ -1039,16 +1039,16 @@ class c_comdef_admin_main_console
         $ret = '<select id="bmlt_admin_single_service_body_editor_parent_select" class="bmlt_admin_single_service_body_editor_parent_select" onchange="admin_handler_object.recalculateServiceBody();">'.(defined('__DEBUG_MODE__') ? "\n" : '');
 
             $ret .= '<option id="parent_popup_option_0" selected="selected" value="0">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['service_body_parent_popup_no_parent_option']).'</option>'.(defined('__DEBUG_MODE__') ? "\n" : '');
-            
+
         for ($index = 0; $index  < count($this->my_editable_service_bodies); $index++) {
             $service_body = $this->my_editable_service_bodies[$index];
             $ret .= '<option id="parent_popup_option_'.$service_body->GetID().'" value="'.$service_body->GetID().'">'.htmlspecialchars($service_body->GetLocalName()).'</option>'.(defined('__DEBUG_MODE__') ? "\n" : '');
         }
         $ret .= '</select>'.(defined('__DEBUG_MODE__') ? "\n" : '');
-        
+
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief This creates the HTML for a Service body selection popup menu.
     \returns The HTML and JavaScript for the popup menu (select element).
@@ -1069,26 +1069,26 @@ class c_comdef_admin_main_console
             }
             $ret .= '>'.htmlspecialchars($service_body->GetLocalName()).'</option>'.(defined('__DEBUG_MODE__') ? "\n" : '');
         }
-            
+
             // Service body admin adds a special one at the end for creating a new one.
         if ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) {
             if (!$first) {
                 $ret .= '<option value="" disabled="disabled"></option>';
             }
-            
+
             $ret .= '<option value="0"';
-            
+
             if ($first) {
                 $ret .= ' selected="selected"';
             }
-            
+
             $ret .= '>'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_create_new_sb_option']).'</option>'.(defined('__DEBUG_MODE__') ? "\n" : '');
         }
         $ret .= '</select>'.(defined('__DEBUG_MODE__') ? "\n" : '');
-        
+
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief This creates the HTML for a Service body selection popup menu.
     \returns The HTML and JavaScript for the popup menu (select element).
@@ -1126,10 +1126,10 @@ class c_comdef_admin_main_console
                 $ret .= htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['service_body_editor_type_c_comdef_service_body__WSC__']);
             $ret .= '</option>';
         $ret .= '</select>';
-        
+
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief This returns the user name for a given user ID.
     \returns a string, containing the name.
@@ -1140,7 +1140,7 @@ class c_comdef_admin_main_console
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = null;
-        
+
         for ($index = 0; $index  < count($this->my_users); $index++) {
             $user = $this->my_users[$index];
             if ($user->GetID() == $in_user_id) {
@@ -1148,10 +1148,10 @@ class c_comdef_admin_main_console
                 break;
             }
         }
-        
+
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief This creates the HTML for a Service body selection popup menu.
     \returns The HTML and JavaScript for the popup menu (select element).
@@ -1169,10 +1169,10 @@ class c_comdef_admin_main_console
             }
         }
         $ret .= '</select>';
-        
+
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief This constructs the Service body editor buttons as a div.
     \returns The HTML and JavaScript for the button panel.
@@ -1199,10 +1199,10 @@ class c_comdef_admin_main_console
             $ret .= '<span class="bmlt_admin_meeting_editor_form_meeting_button_right_span"><a id="bmlt_admin_service_body_editor_form_meeting_template_cancel_button" href="javascript:admin_handler_object.cancelServiceBodyEdit();" class="bmlt_admin_ajax_button button_disabled">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['service_body_cancel_button']).'</a></span>';
             $ret .= '<div class="clear_both"></div>';
         $ret .= '</div>';
-        
+
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief This constructs the meeting editor section of the console. Most user levels (not observers) have it.
     \returns The HTML and JavaScript for the "Edit Meetings" section.
@@ -1212,15 +1212,15 @@ class c_comdef_admin_main_console
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = '';
-        
+
         $can_edit = false;
-        
+
         for ($c = 0; $c < count($this->my_service_bodies); $c++) {
             if ($this->my_service_bodies[$c]->UserCanEditMeetings()) {
                 $can_edit = true;
             }
         }
-        
+
         if ($can_edit) {
             $ret = '<div id="bmlt_admin_meeting_editor_disclosure_div" class="bmlt_admin_meeting_editor_disclosure_div bmlt_admin_meeting_editor_disclosure_div_closed">';
                 $ret .= '<a class="bmlt_admin_meeting_editor_disclosure_a" href="javascript:admin_handler_object.toggleMeetingEditor();">';
@@ -1263,7 +1263,7 @@ class c_comdef_admin_main_console
                 $ret .= '<div class="clear_both"></div>';
             $ret .= '</div>';
         }
-        
+
         return $ret;
     }
 
@@ -1288,7 +1288,7 @@ class c_comdef_admin_main_console
         $ret .= '<div class="clear_both"></div>';
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief This constructs the meeting search specification panel of the meeting editor.
     \returns The HTML and JavaScript for the Edit Meetings Search Specifier section.
@@ -1349,7 +1349,7 @@ class c_comdef_admin_main_console
             $ret .= '</div>';
             $ret .= '<div class="clear_both"></div>';
         $ret .= '</div>';
-        
+
         return $ret;
     }
 
@@ -1386,7 +1386,7 @@ class c_comdef_admin_main_console
 
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief This constructs a panel that displays a choice of Service bodies for the user to choose.
     \returns The HTML and JavaScript for the Edit Meetings Search Specifier section.
@@ -1396,7 +1396,7 @@ class c_comdef_admin_main_console
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $ret = 'NOT AUTHORIZED';
-        
+
         if (count($this->my_service_bodies)) {
             $ret = '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                 $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_search_service_bodies_label']).'</span>';
@@ -1409,7 +1409,7 @@ class c_comdef_admin_main_console
                 $ret .= '<div class="clear_both"></div>';
             $ret .= '</div>';
         }
-        
+
         return $ret;
     }
 
@@ -1436,26 +1436,26 @@ class c_comdef_admin_main_console
                 $child_content .= $this->populate_service_bodies($service_body->GetID());
             }
         }
-        
+
         // At this point, we have the main Service body, as well as any child content.
-        
+
         if ($service_body_content) {
             $service_body_content = '<dt class="service_body_dt'.($child_content != '' ? ' service_body_parent_dt' : '').'">'.$service_body_content.'</dt>'.(defined('__DEBUG_MODE__') ? "\n" : '');
         }
-        
+
         if ($child_content) {
             $child_content = '<dd class="bmlt_admin_service_body'.($service_body_content != '' ? '_child' : '').'_dd">'.$child_content.'</dd>'.(defined('__DEBUG_MODE__') ? "\n" : '');
         }
-        
+
         $ret = '';
-        
+
         if ($service_body_content || $child_content) {
             $ret = '<dl class="service_body_dl">'.(defined('__DEBUG_MODE__') ? "\n" : '').$service_body_content.(defined('__DEBUG_MODE__') ? "\n" : '').$child_content.'</dl>'.(defined('__DEBUG_MODE__') ? "\n" : '');
         }
-        
+
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief This constructs the combined new meetings/search results panel.
     \returns The HTML and JavaScript for the Edit Meetings Search Results section.
@@ -1478,7 +1478,7 @@ class c_comdef_admin_main_console
 
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief This constructs a panel for creating new meetings that goes above the results.
     \returns The HTML and JavaScript for the New Meetings section.
@@ -1500,7 +1500,7 @@ class c_comdef_admin_main_console
 
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief This constructs the meeting search results panel of the meeting editor.
     \returns The HTML and JavaScript for the Search Results section.
@@ -1517,7 +1517,7 @@ class c_comdef_admin_main_console
 
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief This constructs a template to be filled in for a single meeting that will be edited.
     \returns The HTML and JavaScript for the "Edit Meetings" section.
@@ -1557,10 +1557,10 @@ class c_comdef_admin_main_console
                 $ret .= $this->return_meeting_editor_button_panel();
             $ret .= '</div>';
         $ret .= '</div>';
-        
+
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief This constructs the meeting editor buttons as a div.
     \returns The HTML and JavaScript for the button panel.
@@ -1585,10 +1585,10 @@ class c_comdef_admin_main_console
             $ret .= '<span class="bmlt_admin_meeting_editor_form_meeting_button_right_span"><a id="bmlt_admin_meeting_editor_form_meeting_template_cancel_button" href="javascript:admin_handler_object.cancelMeetingEdit(template);" class="bmlt_admin_ajax_button button">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_cancel_button']).'</a></span>';
             $ret .= '<div class="clear_both"></div>';
         $ret .= '</div>';
-        
+
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief This constructs a template to be filled in for the basic options tab.
     \returns The HTML and JavaScript for the option sheet.
@@ -1599,7 +1599,7 @@ class c_comdef_admin_main_console
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         if (($this->my_user->GetUserLevel() == _USER_LEVEL_EDITOR) || ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVICE_BODY_ADMIN) || ($this->my_user->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN)) {
             $ret = '<div id="bmlt_admin_meeting_template_basic_sheet_div" class="bmlt_admin_meeting_option_sheet_div">';
-        
+
             if ($this->my_user->GetUserLevel() != _USER_LEVEL_EDITOR) {
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right"><input type="checkbox" id="bmlt_admin_meeting_template_published_checkbox" /></span>';
@@ -1730,10 +1730,10 @@ class c_comdef_admin_main_console
                 $ret .= '</div>';
             $ret .= '</div>';
         }
-        
+
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief This constructs a template to be filled in for the location options tab.
     \returns The HTML and JavaScript for the option sheet.
@@ -1751,7 +1751,7 @@ class c_comdef_admin_main_console
                 $ret .= '<div class="bmlt_admin_single_meeting_editor_map_bottom_bar_div">';
                 $ret .= '</div>';
             $ret .= '</div>';
-            
+
             $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                 $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_venue_type']).'</span>';
                 $ret .= '<span class="bmlt_admin_value_left">';
@@ -1763,7 +1763,7 @@ class c_comdef_admin_main_console
                 $ret .= '</span>';
                 $ret .= '<div class="clear_both"></div>';
             $ret .= '</div>';
-            
+
             $ret .= '<div class="clear_both"></div>';
             $ret .= '<div id="bmlt_admin_single_location_template_long_lat_div" class="bmlt_admin_single_location_long_lat_div">';
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
@@ -1862,7 +1862,7 @@ class c_comdef_admin_main_console
                     $ret .= '<span class="bmlt_admin_value_left"><input id="bmlt_admin_single_meeting_editor_template_meeting_nation_text_input" type="text" maxlength="255" /><div class="helper_text">' . htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_nation_prompt']).'</div></span>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
-                
+
                 $ret .= '<div class="bmlt_admin_meeting_inner_div">';
                     $ret .= '<span id="bmlt_admin_single_meeting_editor_template_meeting_virtual_meta"></span>';
                     $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
@@ -1886,7 +1886,7 @@ class c_comdef_admin_main_console
 
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief
     \returns The HTML and JavaScript for the option sheet.
@@ -1919,7 +1919,7 @@ class c_comdef_admin_main_console
 
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief
     \returns The HTML and JavaScript for the option sheet.
@@ -1960,7 +1960,7 @@ class c_comdef_admin_main_console
                 case 'virtual_meeting_link':
                 case 'virtual_meeting_additional_info':
                     break;
-            
+
                 default:    // We display these ones.
                     if (array_key_exists('meeting_editor_screen_meeting_' . $key . '_label', $this->my_localized_strings['comdef_server_admin_strings'])) {
                         $prompt = $this->my_localized_strings['comdef_server_admin_strings']['meeting_editor_screen_meeting_' . $key . '_label'];
@@ -1982,7 +1982,7 @@ class c_comdef_admin_main_console
 
         return $ret;
     }
-    
+
     /********************************************************************************************************//**
     \brief
     \returns The HTML and JavaScript for the option sheet.
@@ -2156,7 +2156,7 @@ class c_comdef_admin_main_console
                             $ret .= '"';
             }
                             $ret .= '>'.htmlspecialchars($this->my_service_bodies[$c]->GetLocalName());
-                            
+
             if ($c < (count($this->my_service_bodies) - 1)) {
                 $ret .= ',';
             }
@@ -2165,7 +2165,7 @@ class c_comdef_admin_main_console
                     $ret .= '</div>';
                     $ret .= '<div class="clear_both"></div>';
                 $ret .= '</div>';
-                
+
                 $ret .= '<div class="bmlt_admin_one_line_in_a_form clear_both">';
                     $ret .= '<span class="bmlt_admin_med_label_right">'.htmlspecialchars($this->my_localized_strings['comdef_server_admin_strings']['account_email_label']).'</span>';
                     $ret .= '<span class="bmlt_admin_value_left"><input name="bmlt_admin_user_email_input" id="bmlt_admin_user_email_input" type="text" value="'.htmlspecialchars($this->my_user->GetEmailAddress()).'" onkeyup="admin_handler_object.handleTextInputChange(this);" onchange="admin_handler_object.handleTextInputChange(this);" onfocus="admin_handler_object.handleTextInputFocus(this);" onblur="admin_handler_object.handleTextInputBlur(this);" /></span>';
@@ -2192,7 +2192,7 @@ class c_comdef_admin_main_console
                 $ret .= '</div>';
             $ret .= '</div>';
         $ret .= '</div>';
-        
+
         return  $ret;
     }
 

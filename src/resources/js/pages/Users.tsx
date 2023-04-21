@@ -333,7 +333,7 @@ export const Users = () => {
                   >
                     <MenuItem value='serviceBodyAdmin'>{strings.serviceBodyAdminTitle}</MenuItem>
                     <MenuItem value='observer'>{strings.observerTitle}</MenuItem>
-                    <MenuItem value='disabled'>{strings.disabledUserTitle}</MenuItem>
+                    <MenuItem value='deactivated'>{strings.deactivatedUserTitle}</MenuItem>
                   </Select>
                 )}
               />
