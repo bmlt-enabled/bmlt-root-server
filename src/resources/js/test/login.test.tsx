@@ -1,30 +1,28 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import user from '@testing-library/user-event';
 import { describe, it } from 'vitest';
 
-import { strings } from '../localization';
 import { Login } from '../pages/Login';
 import { provideTheme } from './utils/provideTheme';
 
-describe.only('App', () => {
-  beforeAll(() => {
+describe('Login', () => {
+  const onSubmit = jest.fn();
+  beforeEach(() => {
+    onSubmit.mockClear();
     render(provideTheme(<Login />));
   });
-  it('show error if email is invalid'),
-    async () => {
-      fireEvent.input(screen.getByRole('textbox', { name: /email/i }), {
-        target: {
-          value: 'test',
-        },
-      });
-    };
-});
-
-describe('Login', () => {
-  it('renders form title', () => {
-    expect(
-      screen.getByRole('heading', {
-        level: 3,
-      }),
-    ).toHaveTextContent(strings.loginTitle!);
+  it('onSubmit make sure all fields pass validation', () => {
+    user.type(getUsername(), 'username');
+    user.type(getPassword(), 'password');
   });
 });
+
+function getUsername() {
+  return screen.getByRole('textbox', {
+    name: /username/i,
+  });
+}
+
+function getPassword() {
+  return screen.getByTestId('login-password');
+}
