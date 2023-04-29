@@ -112,14 +112,14 @@ class TestCase extends BaseTestCase
         ]);
     }
 
-    protected function createDisabledUser(): User
+    protected function createDeactivatedUser(): User
     {
         return User::create([
-            'user_level_tinyint' => USER::USER_LEVEL_DISABLED,
-            'name_string' => 'disabled',
+            'user_level_tinyint' => USER::USER_LEVEL_DEACTIVATED,
+            'name_string' => 'deactivated',
             'description_string' => '',
             'email_address_string' => '',
-            'login_string' => 'disabled',
+            'login_string' => 'deactivated',
             'password_string' => password_hash($this->userPassword, PASSWORD_BCRYPT),
         ]);
     }

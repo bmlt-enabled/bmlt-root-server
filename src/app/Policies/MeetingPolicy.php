@@ -9,7 +9,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 class MeetingPolicy
 {
-    use DeniesDisabledUser, HandlesAuthorization;
+    use DeniesDeactivatedUser, HandlesAuthorization;
 
     private ServiceBodyRepositoryInterface $serviceBodyRepository;
 

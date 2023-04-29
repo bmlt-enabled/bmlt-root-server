@@ -57,7 +57,7 @@ if (isset($g_enable_semantic_admin) && ($g_enable_semantic_admin == true)) {
 
     if ($server instanceof c_comdef_server) {
         $user_obj = $server->GetCurrentUserObj();
-        if (!($user_obj instanceof c_comdef_user) || ($user_obj->GetUserLevel() == _USER_LEVEL_DISABLED) || ($user_obj->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) || ($user_obj->GetID() == 1)) {
+        if (!($user_obj instanceof c_comdef_user) || ($user_obj->GetUserLevel() == _USER_LEVEL_DEACTIVATED) || ($user_obj->GetUserLevel() == _USER_LEVEL_SERVER_ADMIN) || ($user_obj->GetID() == 1)) {
             c_comdef_LogoutUser();
             die('NOT AUTHORIZED');
         }

@@ -5,7 +5,7 @@ require_once(__DIR__ . '/../../local_server/server_admin/c_comdef_admin_main_con
 $console_object = new c_comdef_admin_main_console($_REQUEST);
 $local_strings = $console_object->my_server->GetLocalStrings();
 $user_obj = $console_object->my_server->GetCurrentUserObj();
-if ($user_obj instanceof c_comdef_user && $user_obj->GetUserLevel() != _USER_LEVEL_DISABLED) {
+if ($user_obj instanceof c_comdef_user && $user_obj->GetUserLevel() != _USER_LEVEL_DEACTIVATED) {
     $service_body_ids = [];
     $service_body_set = [];
     $user_level = intval($user_obj->GetUserLevel());

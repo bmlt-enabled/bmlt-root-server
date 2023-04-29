@@ -286,7 +286,7 @@ function c_comdef_admin_bar(
         include(dirname(__FILE__).'/../../../server/config/get-config.php');
 
         $user_obj = $server->GetCurrentUserObj();
-        if (($user_obj instanceof c_comdef_user) && ($user_obj->GetUserLevel() != _USER_LEVEL_DISABLED) && ($user_obj->GetUserLevel() != _USER_LEVEL_OBSERVER)) {
+        if (($user_obj instanceof c_comdef_user) && ($user_obj->GetUserLevel() != _USER_LEVEL_DEACTIVATED) && ($user_obj->GetUserLevel() != _USER_LEVEL_OBSERVER)) {
             $left_link = '&nbsp;';
             $middle_link = '&nbsp;';
 

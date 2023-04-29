@@ -24,9 +24,9 @@ class ServiceBodyPermissionsTest extends TestCase
             ->assertStatus(401);
     }
 
-    public function testIndexAsDisabled()
+    public function testIndexAsDeactivated()
     {
-        $user = $this->createDisabledUser();
+        $user = $this->createDeactivatedUser();
         $token = $user->createToken('test')->plainTextToken;
         $this->withHeader('Authorization', "Bearer $token")
             ->get('/api/v1/servicebodies')
@@ -79,9 +79,9 @@ class ServiceBodyPermissionsTest extends TestCase
             ->assertStatus(401);
     }
 
-    public function testShowAsDisabled()
+    public function testShowAsDeactivated()
     {
-        $user = $this->createDisabledUser();
+        $user = $this->createDeactivatedUser();
         $token = $user->createToken('test')->plainTextToken;
         $area1 = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $this->withHeader('Authorization', "Bearer $token")
@@ -128,9 +128,9 @@ class ServiceBodyPermissionsTest extends TestCase
             ->assertStatus(401);
     }
 
-    public function testStoreAsDisabled()
+    public function testStoreAsDeactivated()
     {
-        $user = $this->createDisabledUser();
+        $user = $this->createDeactivatedUser();
         $token = $user->createToken('test')->plainTextToken;
         $this->withHeader('Authorization', "Bearer $token")
             ->post("/api/v1/servicebodies")
@@ -184,9 +184,9 @@ class ServiceBodyPermissionsTest extends TestCase
             ->assertStatus(401);
     }
 
-    public function testUpdateAsDisabled()
+    public function testUpdateAsDeactivated()
     {
-        $user = $this->createDisabledUser();
+        $user = $this->createDeactivatedUser();
         $token = $user->createToken('test')->plainTextToken;
         $area1 = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $this->withHeader('Authorization', "Bearer $token")
@@ -265,9 +265,9 @@ class ServiceBodyPermissionsTest extends TestCase
             ->assertStatus(401);
     }
 
-    public function testPartialUpdateAsDisabled()
+    public function testPartialUpdateAsDeactivated()
     {
-        $user = $this->createDisabledUser();
+        $user = $this->createDeactivatedUser();
         $token = $user->createToken('test')->plainTextToken;
         $area1 = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $this->withHeader('Authorization', "Bearer $token")
@@ -346,9 +346,9 @@ class ServiceBodyPermissionsTest extends TestCase
             ->assertStatus(401);
     }
 
-    public function testDeleteAsDisabled()
+    public function testDeleteAsDeactivated()
     {
-        $user = $this->createDisabledUser();
+        $user = $this->createDeactivatedUser();
         $token = $user->createToken('test')->plainTextToken;
         $area1 = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $this->withHeader('Authorization', "Bearer $token")

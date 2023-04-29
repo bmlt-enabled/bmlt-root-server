@@ -115,7 +115,7 @@ class MeetingResource extends JsonResource
 
         // Permissions
         $user = $request->user();
-        if (!is_null($user) && $user->user_level_tinyint != User::USER_LEVEL_DISABLED) {
+        if (!is_null($user) && $user->user_level_tinyint != User::USER_LEVEL_DEACTIVATED) {
             self::$userIsAuthenticated = true;
             if ($user->user_level_tinyint == User::USER_LEVEL_ADMIN) {
                 self::$userIsAdmin = true;

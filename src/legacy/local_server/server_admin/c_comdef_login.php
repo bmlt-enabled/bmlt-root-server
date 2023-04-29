@@ -75,7 +75,7 @@ if (isset($_GET['bad_login_form'])) {
 $user_obj = $t_server->GetCurrentUserObj();
 if (is_null($user_obj)) {
     echo c_comdef_LoginForm($t_server);
-} elseif (!($user_obj instanceof c_comdef_user) || ($user_obj->GetUserLevel() == _USER_LEVEL_DISABLED)) {
+} elseif (!($user_obj instanceof c_comdef_user) || ($user_obj->GetUserLevel() == _USER_LEVEL_DEACTIVATED)) {
     // If the login is invalid, we terminate the whole kit and kaboodle, and inform the user they are persona non grata.
     die('<div class="c_comdef_not_auth_container_div"><div class="c_comdef_not_auth_div"><h1 class="c_comdef_not_auth_1">'.c_comdef_htmlspecialchars($localized_strings['comdef_server_admin_strings']['not_auth_1']).'</h1><h2 class="c_comdef_not_auth_2">'.c_comdef_htmlspecialchars($localized_strings['comdef_server_admin_strings']['not_auth_2']).'</h2></div></div></body></html>');
 } else {
