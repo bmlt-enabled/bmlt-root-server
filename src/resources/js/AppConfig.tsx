@@ -1,6 +1,5 @@
 import { PaletteMode } from '@mui/material';
-import { CssBaseline, createTheme } from '@mui/material';
-import { ThemeProvider } from '@mui/material/styles';
+import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import { deepmerge } from '@mui/utils';
 import { useContext, useEffect, useMemo, useState } from 'react';
 

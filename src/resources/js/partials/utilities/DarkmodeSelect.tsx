@@ -5,6 +5,7 @@ import { styled } from '@mui/system';
 import { useContext } from 'react';
 
 import { ActionType, AppContext } from '../../AppContext';
+import { setMode } from '../../darkmode';
 
 const StyledButton = styled(IconButton)(({ theme }) => ({
   color: theme.palette.common.white,
@@ -15,13 +16,9 @@ export const DarkmodeSelect = () => {
   const { state, dispatch } = useContext(AppContext);
 
   const handleDarkMode = () => {
-    if (state.mode === 'light') {
-      dispatch({ type: ActionType.SET_MODE, payload: 'dark' });
-      localStorage.setItem('mode', 'dark');
-    } else {
-      dispatch({ type: ActionType.SET_MODE, payload: 'light' });
-      localStorage.setItem('mode', 'light');
-    }
+    const mode = state.mode === 'light' ? 'dark' : 'light';
+    dispatch({ type: ActionType.SET_MODE, payload: mode });
+    setMode(mode);
   };
   return <StyledButton onClick={handleDarkMode}>{state.mode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}</StyledButton>;
 };

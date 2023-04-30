@@ -9,7 +9,7 @@ import { LanguageSelect } from '../partials/utilities/LanguageSelect';
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   paddingTop: theme.spacing(2),
   paddingBottom: theme.spacing(2),
-  backgroundColor: theme.palette.primary.main,
+  // backgroundColor: theme.palette.primary.main,
 }));
 
 const StyledHeaderContainer = styled(Container)({

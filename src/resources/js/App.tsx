@@ -4,9 +4,6 @@ import { BrowserRouter } from 'react-router-dom';
 import { AppConfig } from './AppConfig';
 import { AppContextProvider } from './AppContext';
 
-/* type Props: {
-  mode: 
-} */
 export default function App() {
   return (
     <AppContextProvider>

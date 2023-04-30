@@ -1,18 +1,18 @@
 import { PaletteMode } from '@mui/material';
 
-declare module '@mui/material/styles' {
-  interface Theme {
-    white: {
-      main: string;
-    };
-  }
-  // allow configuration using `createTheme`
-  interface ThemeOptions {
-    white?: {
-      main?: string;
-    };
-  }
-}
+// declare module '@mui/material/styles' {
+//   interface Theme {
+//     white: {
+//       main: string;
+//     };
+//   }
+//   // allow configuration using `createTheme`
+//   interface ThemeOptions {
+//     white?: {
+//       main?: string;
+//     };
+//   }
+// }
 
 // type Props = {
 //   mode: string;
@@ -24,18 +24,21 @@ const colors = {
     secondary: '#E460AB',
     success: '#678d06',
     error: '#ff3333',
-    background: '#fff',
+    // background: '#fff',
   },
   dark: {
     primary: '#333',
     secondary: '#555',
     success: '#678d06',
     error: '#ff3333',
-    background: '#000',
+    // background: '#000',
   },
 };
 export const getDesignTokens = (mode: PaletteMode) => ({
   palette: {
+    white: {
+      main: colors.white,
+    },
     mode,
     ...(mode === 'light'
       ? {
@@ -52,9 +55,9 @@ export const getDesignTokens = (mode: PaletteMode) => ({
           error: {
             main: colors.light.error,
           },
-          background: {
-            default: colors.light.background,
-          },
+          // background: {
+          //   default: colors.light.background,
+          // },
         }
       : {
           primary: {
@@ -70,13 +73,10 @@ export const getDesignTokens = (mode: PaletteMode) => ({
           error: {
             main: colors.dark.error,
           },
-          background: {
-            main: colors.dark.background,
-          },
+          // background: {
+          //   main: colors.dark.background,
+          // },
         }),
-  },
-  white: {
-    main: colors.white,
   },
   typography: {
     fontFamily: 'Montserrat',
