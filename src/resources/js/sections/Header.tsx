@@ -2,11 +2,14 @@ import { AppBar, Box, Container, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 
 import { strings } from '../localization';
+import { DarkmodeSelect } from '../partials/utilities/DarkmodeSelect';
+import { GithubButton } from '../partials/utilities/GithubButton';
 import { LanguageSelect } from '../partials/utilities/LanguageSelect';
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   paddingTop: theme.spacing(2),
   paddingBottom: theme.spacing(2),
+  backgroundColor: theme.palette.primary.main,
 }));
 
 const StyledHeaderContainer = styled(Container)({
@@ -15,10 +18,14 @@ const StyledHeaderContainer = styled(Container)({
   alignItems: 'center',
 });
 
+const StyledBox = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+});
+
 export const Header = () => {
   const languageSelectorBox = settings.isLanguageSelectorEnabled ? (
     <Box>
-      <Typography color='white'>{strings.languageSelectTitle}</Typography>
       <LanguageSelect />
     </Box>
   ) : (
@@ -30,7 +37,11 @@ export const Header = () => {
         <Typography variant='h1' color='dark.main'>
           {strings.rootServerTitle}
         </Typography>
-        {languageSelectorBox}
+        <StyledBox>
+          {languageSelectorBox}
+          <DarkmodeSelect />
+          <GithubButton />
+        </StyledBox>
       </StyledHeaderContainer>
     </StyledAppBar>
   );

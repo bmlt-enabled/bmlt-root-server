@@ -1,27 +1,82 @@
-import { createTheme } from '@mui/material/styles';
+import { PaletteMode } from '@mui/material';
 
+declare module '@mui/material/styles' {
+  interface Theme {
+    white: {
+      main: string;
+    };
+  }
+  // allow configuration using `createTheme`
+  interface ThemeOptions {
+    white?: {
+      main?: string;
+    };
+  }
+}
+
+// type Props = {
+//   mode: string;
+// };
 const colors = {
-  primary: '#4a90e2',
-  secondary: '#E460AB',
-  success: '#678d06',
-  error: '#ff3333',
+  white: '#fff',
+  light: {
+    primary: '#4a90e2',
+    secondary: '#E460AB',
+    success: '#678d06',
+    error: '#ff3333',
+    background: '#fff',
+  },
+  dark: {
+    primary: '#333',
+    secondary: '#555',
+    success: '#678d06',
+    error: '#ff3333',
+    background: '#000',
+  },
 };
-
-export const theme = createTheme({
+export const getDesignTokens = (mode: PaletteMode) => ({
   palette: {
-    primary: {
-      main: colors.primary,
-    },
-    secondary: {
-      main: colors.secondary,
-    },
-    success: {
-      main: colors.success,
-      contrastText: '#fff',
-    },
-    error: {
-      main: colors.error,
-    },
+    mode,
+    ...(mode === 'light'
+      ? {
+          primary: {
+            main: colors.light.primary,
+          },
+          secondary: {
+            main: colors.light.secondary,
+          },
+          success: {
+            main: colors.light.success,
+            contrastText: '#fff',
+          },
+          error: {
+            main: colors.light.error,
+          },
+          background: {
+            default: colors.light.background,
+          },
+        }
+      : {
+          primary: {
+            main: colors.dark.primary,
+          },
+          secondary: {
+            main: colors.dark.secondary,
+          },
+          success: {
+            main: colors.dark.success,
+            contrastText: '#fff',
+          },
+          error: {
+            main: colors.dark.error,
+          },
+          background: {
+            main: colors.dark.background,
+          },
+        }),
+  },
+  white: {
+    main: colors.white,
   },
   typography: {
     fontFamily: 'Montserrat',
@@ -48,7 +103,55 @@ export const theme = createTheme({
       fontSize: '0.875rem',
     },
   },
+});
+
+export const getThemedComponents = (mode: PaletteMode) => ({
   components: {
+    ...(mode === 'light'
+      ? {
+          MuiFormLabel: {
+            styleOverrides: {
+              asterisk: {
+                color: colors.light.primary,
+                '&$error': {
+                  color: colors.light.error,
+                },
+              },
+            },
+          },
+          MuiFormHelperText: {
+            styleOverrides: {
+              root: {
+                color: colors.light.error,
+                position: 'absolute',
+                bottom: '-1.25rem',
+                left: '0',
+              },
+            },
+          },
+        }
+      : {
+          MuiFormLabel: {
+            styleOverrides: {
+              asterisk: {
+                color: colors.dark.primary,
+                '&$error': {
+                  color: colors.dark.error,
+                },
+              },
+            },
+          },
+          MuiFormHelperText: {
+            styleOverrides: {
+              root: {
+                color: colors.dark.error,
+                position: 'absolute',
+                bottom: '-1.25rem',
+                left: '0',
+              },
+            },
+          },
+        }),
     MuiButton: {
       styleOverrides: {
         root: {
@@ -74,26 +177,6 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           margin: '1rem 0',
-        },
-      },
-    },
-    MuiFormLabel: {
-      styleOverrides: {
-        asterisk: {
-          color: colors.primary,
-          '&$error': {
-            color: colors.error,
-          },
-        },
-      },
-    },
-    MuiFormHelperText: {
-      styleOverrides: {
-        root: {
-          color: colors.error,
-          position: 'absolute',
-          bottom: '-1.25rem',
-          left: '0',
         },
       },
     },

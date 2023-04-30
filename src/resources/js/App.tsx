@@ -1,21 +1,18 @@
-import { CssBaseline } from '@mui/material';
-import { ThemeProvider } from '@mui/material/styles';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 
 import { AppConfig } from './AppConfig';
 import { AppContextProvider } from './AppContext';
-import { theme } from './theme';
 
+/* type Props: {
+  mode: 
+} */
 export default function App() {
   return (
     <AppContextProvider>
-      <ThemeProvider theme={theme}>
-        <BrowserRouter basename={settings.apiBaseUrl}>
-          <CssBaseline />
-          <AppConfig />
-        </BrowserRouter>
-      </ThemeProvider>
+      <BrowserRouter basename={settings.apiBaseUrl}>
+        <AppConfig />
+      </BrowserRouter>
     </AppContextProvider>
   );
 }
