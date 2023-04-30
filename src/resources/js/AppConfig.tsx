@@ -1,9 +1,9 @@
 import { PaletteMode } from '@mui/material';
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import { deepmerge } from '@mui/utils';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 
-import { AppContext, AppContextProvider } from './AppContext';
+import { AppContext } from './AppContext';
 import { setLanguage } from './localization';
 import { Router } from './routes/Router';
 import { getDesignTokens, getThemedComponents } from './theme';

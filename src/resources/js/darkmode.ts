@@ -1,7 +1,3 @@
-type Props = {
-  mode: string;
-};
-
 export function getMode() {
   const mode = localStorage.getItem('mode');
   if (mode) {
