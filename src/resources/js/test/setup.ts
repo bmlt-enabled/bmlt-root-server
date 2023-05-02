@@ -2,3 +2,8 @@ import matchers from '@testing-library/jest-dom/matchers';
 import { expect } from 'vitest';
 
 expect.extend(matchers);
+
+(global as any).settings = {
+  apiBaseUrl: 'http://localhost',
+  defaultLanguage: 'en',
+};

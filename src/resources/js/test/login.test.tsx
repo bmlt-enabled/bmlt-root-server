@@ -1,28 +1,30 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-import user from '@testing-library/user-event';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
 import { describe, it } from 'vitest';
 
 import { Login } from '../pages/Login';
 import { provideTheme } from './utils/provideTheme';
 
 describe('Login', () => {
-  const onSubmit = jest.fn();
   beforeEach(() => {
-    onSubmit.mockClear();
-    render(provideTheme(<Login />));
+    render(
+      provideTheme(
+        <BrowserRouter>
+          <Login />
+        </BrowserRouter>,
+      ),
+    );
   });
-  it('onSubmit make sure all fields pass validation', () => {
-    user.type(getUsername(), 'username');
-    user.type(getPassword(), 'password');
+  afterEach(cleanup);
+  it('onSubmit check validation for empty username and password fields', async () => {
+    fireEvent.submit(
+      screen.getByRole('button', {
+        name: /log in/i,
+      }),
+    );
+    expect(await screen.findByText(/username is required/i)).toBeInTheDocument();
+    expect(await screen.findByText(/password is required/i)).toBeInTheDocument();
   });
+
+  // need to test react-hook-form and test for validation
 });
-
-function getUsername() {
-  return screen.getByRole('textbox', {
-    name: /username/i,
-  });
-}
-
-function getPassword() {
-  return screen.getByTestId('login-password');
-}
