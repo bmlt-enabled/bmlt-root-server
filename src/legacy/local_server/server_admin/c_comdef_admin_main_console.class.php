@@ -18,7 +18,7 @@
 defined('BMLT_EXEC') or die('Cannot Execute Directly');    // Makes sure that this file is in the correct context.
 require_once(dirname(__FILE__).'/../../server/c_comdef_server.class.php');
 require_once(dirname(__FILE__).'/../../server/shared/Array2Json.php');
-
+use App\Models\Format;
 // #define ( '__NAWS_IMPORT__', 1 )    /* Uncomment to enable the NAWS import functionality. */
 
 /************************************************************************************************************//**
@@ -39,6 +39,7 @@ class c_comdef_admin_main_console
     public $my_service_bodies;             ///< This will be an array that contains all the Service bodies this user can edit.
     public $my_users;                      ///< This will be an array of all the user objects.
     public $my_formats;                    ///< The format objects that are available for meetings.
+    public $my_format_types;               ///< The format objects that are available for meetings.
     public $my_data_field_templates;       ///< This holds the keys for all the possible data fields for this server.
     public $my_editable_service_bodies;    ///< This will contain all the Service bodies that we can actually directly edit.
     public $my_all_service_bodies;         ///< This contains all Service bodies, cleaned for orphans.
@@ -111,6 +112,9 @@ class c_comdef_admin_main_console
 
             $this->my_formats[] = array ( 'id' => $id, 'formats' => $single_format );
         }
+
+        /* Now get the format types */
+        $this->my_format_types = $this->my_server->GetFormatTypesArray();
 
         $service_bodies = $this->my_server->GetServiceBodyArray();
         usort($service_bodies, array("c_comdef_admin_main_console", "compare_names"));
@@ -1904,13 +1908,15 @@ class c_comdef_admin_main_console
                 return strnatcasecmp($a->GetKey(), $b->GetKey());
             });
         }
-        foreach ($f_array as $format) {
-            if ($format instanceof c_comdef_format) {
-                $ret .= '<div class="bmlt_admin_meeting_one_format_div">';
-                    $ret .= '<label class="left_label" for="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox">'.htmlspecialchars($format->GetKey()).'</label>';
-                    $ret .= '<span><input type="checkbox" value="'.$format->GetSharedID().'" id="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox" onchange="admin_handler_object.reactToFormatCheckbox(this, template);" onclick="admin_handler_object.reactToFormatCheckbox(this, template);" /></span>';
-                    $ret .= '<label class="right_label" for="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox">'.htmlspecialchars($format->GetLocalName()).'</label>';
-                $ret .= '</div>';
+        foreach($this->my_format_types[$this->my_server->GetLocalLang()] as $format_type) {
+            foreach ($f_array as $format) {
+                if ($format instanceof c_comdef_format && $format->GetFormatType()==$format_type->getKey()) {
+                    $ret .= '<div class="bmlt_admin_meeting_one_format_div">';
+                        $ret .= '<label class="left_label" for="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox">'.htmlspecialchars($format->GetKey()).'</label>';
+                        $ret .= '<span><input type="checkbox" value="'.$format->GetSharedID().'" id="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox" onchange="admin_handler_object.reactToFormatCheckbox(this, template);" onclick="admin_handler_object.reactToFormatCheckbox(this, template);" /></span>';
+                        $ret .= '<label class="right_label" for="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox">'.htmlspecialchars($format->GetLocalName()).'</label>';
+                    $ret .= '</div>';
+                }
             }
         }
                 $ret .= '<div class="clear_both"></div>';
