@@ -11,7 +11,7 @@ class FormatTypesTest extends TestCase
      *
      * @return void
      */
-    public function test_example()
+    public function testDummy()
     {
         $this->assertTrue(true);
     }

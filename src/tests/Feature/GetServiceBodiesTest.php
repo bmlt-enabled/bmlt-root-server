@@ -59,7 +59,7 @@ class GetServiceBodiesTest extends TestCase
                 'name' => $item->name_string,
                 'description' => $item->description_string,
                 'type' => $item->sb_type,
-                'url' => $item->uri_string,
+                'url' => $item->uri_string ?? '',
                 'helpline' => $item->kml_file_uri_string ?? '',
                 'world_id' => $item->worldid_mixed ?? '',
             ], $array)) {

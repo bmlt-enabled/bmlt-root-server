@@ -49,10 +49,12 @@ class FormatController extends ResourceController
         $this->formatRepository->update($format->shared_id_bigint, $sharedFormatsValues);
         return response()->noContent();
     }
-    private function getTypeDescriptionFromKey(string $key) {
+    private function getTypeDescriptionFromKey(string $key)
+    {
         return $this->formatRepository->getFormatTypeRepository()->getDescriptionFromKey($key);
     }
-    private function getTypeKeyFromDescription(string $s) {
+    private function getTypeKeyFromDescription(string $s)
+    {
         return $this->formatRepository->getFormatTypeRepository()->getKeyFromDescription($s);
     }
     public function partialUpdate(Request $request, Format $format)

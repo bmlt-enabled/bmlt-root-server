@@ -12,5 +12,4 @@ class FormatType extends Model
         'key_string',
         'description_string',
     ];
-
 }
