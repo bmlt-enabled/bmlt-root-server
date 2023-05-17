@@ -10,7 +10,7 @@ class FormatTypeRepository implements FormatTypeRepositoryInterface
 {
     private Collection $_formatTypesByKey;
     private array $_descriptions;
-    public function __construct() 
+    public function __construct()
     {
         $formatTypes = FormatType::query()->get();
         $this->_formatTypesByKey = $formatTypes->keyBy('key_string');

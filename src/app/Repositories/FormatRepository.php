@@ -296,7 +296,7 @@ class FormatRepository implements FormatRepositoryInterface
             ->values()
             ->toArray();
     }
-    public function getFormatTypeRepository(): FormatTypeRepositoryInterface 
+    public function getFormatTypeRepository(): FormatTypeRepositoryInterface
     {
         // TODO:  should this be lazy load?
         return new FormatTypeRepository();
