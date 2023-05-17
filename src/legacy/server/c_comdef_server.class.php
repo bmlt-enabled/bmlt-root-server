@@ -386,7 +386,7 @@ class c_comdef_server
     public function ReadFormatTypes()
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-        $sql = "SELECT * FROM `".self::GetFormatTypeTableName_obj()."` ORDER BY key_string, lang_enum";
+        $sql = "SELECT * FROM `".self::GetFormatTypeTableName_obj()."` ORDER BY key_string";
 
         $rows = c_comdef_dbsingleton::preparedQuery($sql);
 
@@ -394,16 +394,11 @@ class c_comdef_server
             $obj_array = array();
             /// Read in all the formats, and instantiate an array of objects.
             foreach ($rows as $rs) {
-                /// We aren't allowed to have two formats for the same language, and the same shared ID.
-                if (!isset($rs['lang_enum']) || !isset($obj_array[$rs['lang_enum']]) || !isset($obj_array[$rs['lang_enum']][$rs['key_string']]) || !is_object($obj_array[$rs['lang_enum']][$rs['key_string']])) {
-                    /// We use a combination of the language and the shared ID as the keys, which allows us to sort better.
-                    $obj_array[$rs['lang_enum']][$rs['key_string']] = new c_comdef_format_type(
-                        $this,
-                        $rs['key_string'],
-                        $rs['lang_enum'],
-                        $rs['description_string']
-                    );
-                }
+                $obj_array[$rs['key_string']] = new c_comdef_format_type(
+                    $this,
+                    $rs['key_string'],
+                    $rs['description_string']
+                );
             }
         }
         

@@ -17,13 +17,8 @@ class FormatTypeResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'translations' => $this->translations->map(function ($translation) {
-                return [
-                    'key' => $translation->key_string ?? '',
-                    'description' => $translation->description_string ?? '',
-                    'language' => $translation->lang_enum,
+                    'key' => $request->key_string ?? '',
+                    'description' => $request->description_string ?? '',
                 ];
-            })
-        ];
     }
 }

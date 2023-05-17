@@ -14,7 +14,32 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+DROP TABLE IF EXISTS `na_comdef_format_types`;
+CREATE TABLE `na_comdef_format_types` (
+  `key_string` varchar(10) NOT NULL,
+  `description_string` varchar(256) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Daten für Tabelle `na_comdef_format_types`
+--
+
+INSERT INTO `na_comdef_format_types` (`key_string`, `description_string`) VALUES
+('FC1', 'MEETING_FORMAT'),
+('FC2', 'LOCATION'),
+('FC3', 'COMMON_NEEDS_OR_RESTRICTION'),
+('LANG', 'LANGUAGE'),
+('O', 'OPEN_OR_CLOSED');
+
+--
+-- Indizes der exportierten Tabellen
+--
+
+--
+-- Indizes für die Tabelle `na_comdef_format_types`
+--
+ALTER TABLE `na_comdef_format_types`
+  ADD PRIMARY KEY (`key_string`);
 --
 -- Table structure for table `na_comdef_changes`
 --
@@ -308,3 +333,5 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2018-12-03 10:14:32
+
+

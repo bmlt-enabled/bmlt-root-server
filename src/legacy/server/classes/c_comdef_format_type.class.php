@@ -41,9 +41,6 @@ class c_comdef_format_type
     /// The Format Key, in Text Form.
     public $_key_string = null;
     
-    /// This will be an array of the format types (localized).
-    public $_lang_enum = null;
-    
     /// The Format Key, in Text Form.
     public $_description_string = null;
     
@@ -58,23 +55,9 @@ class c_comdef_format_type
     public function __construct(
         $in_parent_obj,                 ///< The object that "owns" this instance.
         $in_key_string = null,            ///< The format Key, as a text string (1-3 Characters).
-        $in_lang_enum = null,             ///< The language to be used for this instance (if null, the server language is used).
         $in_description_string = null     ///< A verbose description
     ) {
-        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-        global  $comdef_global_language;
-        
-        /// This is the server language.
-        if (null == $in_lang_enum) {
-            $in_lang_enum = $comdef_global_language;
-        }
-        
-        /// Should never be necessary.
-        if (null == $in_lang_enum) {
-            $in_lang_enum = "en";
-        }
-        $this->SetKey($in_key_string); 
-        $this->SetLang($in_lang_enum);
+        $this->SetKey($in_key_string);
         $this->SetDescription($in_description_string);
     }
     
@@ -88,29 +71,6 @@ class c_comdef_format_type
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $this->_key_string = null;
         $this->_key_string = $in_key_string;
-    }
-    
-    /*******************************************************************/
-    /** \brief Accessor -Returns a reference to the _key_string data member
-
-        @returns The _key_string data member, as a reference.
-    */
-    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function &GetLang()
-    {
-        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-        return $this->_lang_enum;
-    }
-       
-    /*******************************************************************/
-    /** \brief Accessor -Sets the format key (the 1-3 letter code that represents the format).
-    */
-    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function SetLang(
-        $in_string  ///< The format Key, as a text string (1-3 Characters)
-    ) {
-        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-        $this->_lang_enum = $in_string;
     }
         /*******************************************************************/
     /** \brief Accessor -Returns a reference to the _key_string data member
@@ -159,8 +119,7 @@ class c_comdef_format_type
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $s_array['key_string'] = $this->GetKey();
-        $s_array['lang_enum'] = $this->GetLocalLang();
-        $s_array['description_string'] = $this->GetLocalDescription();
+        $s_array['description_string'] = $this->GetDescription();
         
         return serialize($s_array);
     }
@@ -183,7 +142,6 @@ class c_comdef_format_type
         return new c_comdef_format(
             $in_parent,
             $s_array['key_string'],
-            $s_array['lang_enum'],
             $s_array['description_string']
         );
     }
