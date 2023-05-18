@@ -1911,33 +1911,26 @@ class c_comdef_admin_main_console
         $formats_by_formattype = array();
         foreach ($f_array as $format) {
             $type = $format->GetFormatType();
-            if (is_null($type))
-            {
+            if (is_null($type)) {
                 $type = '';
-            } else if (strpos($type,'-')>0)
-            { 
-                $type = substr($type,0,strpos($type,'-'));
+            } else if (strpos($type, '-')>0) {
+                $type = substr($type, 0, strpos($type, '-'));
             }
-            if (!isset($formats_by_formattype[$type]))
-            {
+            if (!isset($formats_by_formattype[$type])) {
                 $formats_by_formattype[$type] = array();
             }
             $formats_by_formattype[$type][] = $format;
         }
-        foreach ($this->my_format_types as $format_type)
-        {
-            if (isset($formats_by_formattype[$format_type->getKey()]))
-            {
-                if ($format_type->getUIEnum() == 'HIDDEN')
-                {
+        foreach ($this->my_format_types as $format_type) {
+            if (isset($formats_by_formattype[$format_type->getKey()])) {
+                if ($format_type->getUIEnum() == 'HIDDEN') {
                     continue;
                 }
                 $ret .= '<div class="format_tab_inner_div">';
                 $ret .= '<div>'.$format_type->getDescription().'</div>';
-                switch ($format_type->getUIEnum())
-                {
+                switch ($format_type->getUIEnum()) {
                     case 'RADIO':
-                        $ret .= $this->format_type_section_radio($format_type->getKey(),$formats_by_formattype[$format_type->getKey()]);
+                        $ret .= $this->format_type_section_radio($format_type->getKey(), $formats_by_formattype[$format_type->getKey()]);
                         break;
                     case 'CHECKBOX':
                     default:
@@ -1948,13 +1941,11 @@ class c_comdef_admin_main_console
                 $ret .= '</div>';
             }
         }
-        if (count($formats_by_formattype) > 0)
-        {
+        if (count($formats_by_formattype) > 0) {
             $ret .= '<div class="format_tab_inner_div">';
             $ret .= '<div>'.'Other or Empty'.'</div>';
 
-            foreach ($formats_by_formattype as $format_array)
-            {          
+            foreach ($formats_by_formattype as $format_array) {
                 $ret .= $this->format_type_section_checkboxes($format_array);
             }
             $ret .= '</div>';
