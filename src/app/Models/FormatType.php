@@ -11,5 +11,6 @@ class FormatType extends Model
     protected $fillable = [
         'key_string',
         'description_string',
+        'ui_enum',
     ];
 }

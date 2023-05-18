@@ -1908,24 +1908,95 @@ class c_comdef_admin_main_console
                 return strnatcasecmp($a->GetKey(), $b->GetKey());
             });
         }
-        foreach ($this->my_format_types as $format_type) {
-            foreach ($f_array as $format) {
-                if ($format instanceof c_comdef_format && $format->GetFormatType()==$format_type->getKey()) {
-                    $ret .= '<div class="bmlt_admin_meeting_one_format_div">';
-                        $ret .= '<label class="left_label" for="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox">'.htmlspecialchars($format->GetKey()).'</label>';
-                        $ret .= '<span><input type="checkbox" value="'.$format->GetSharedID().'" id="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox" onchange="admin_handler_object.reactToFormatCheckbox(this, template);" onclick="admin_handler_object.reactToFormatCheckbox(this, template);" /></span>';
-                        $ret .= '<label class="right_label" for="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox">'.htmlspecialchars($format->GetLocalName()).'</label>';
-                    $ret .= '</div>';
+        $formats_by_formattype = array();
+        foreach ($f_array as $format) {
+            $type = $format->GetFormatType();
+            if (is_null($type))
+            {
+                $type = '';
+            } else if (strpos($type,'-')>0)
+            { 
+                $type = substr($type,0,strpos($type,'-'));
+            }
+            if (!isset($formats_by_formattype[$type]))
+            {
+                $formats_by_formattype[$type] = array();
+            }
+            $formats_by_formattype[$type][] = $format;
+        }
+        foreach ($this->my_format_types as $format_type)
+        {
+            if (isset($formats_by_formattype[$format_type->getKey()]))
+            {
+                if ($format_type->getUIEnum() == 'HIDDEN')
+                {
+                    continue;
                 }
+                $ret .= '<div class="format_tab_inner_div">';
+                $ret .= '<div>'.$format_type->getDescription().'</div>';
+                switch ($format_type->getUIEnum())
+                {
+                    case 'RADIO':
+                        $ret .= $this->format_type_section_radio($format_type->getKey(),$formats_by_formattype[$format_type->getKey()]);
+                        break;
+                    case 'CHECKBOX':
+                    default:
+                        $ret .= $this->format_type_section_checkboxes($formats_by_formattype[$format_type->getKey()]);
+                        break;
+                }
+                unset($formats_by_formattype[$format_type->getKey()]);
+                $ret .= '</div>';
             }
         }
-                $ret .= '<div class="clear_both"></div>';
+        if (count($formats_by_formattype) > 0)
+        {
+            $ret .= '<div class="format_tab_inner_div">';
+            $ret .= '<div>'.'Other or Empty'.'</div>';
+
+            foreach ($formats_by_formattype as $format_array)
+            {          
+                $ret .= $this->format_type_section_checkboxes($format_array);
+            }
             $ret .= '</div>';
+        }
+        $ret .= '<div class="clear_both"></div>';
+        $ret .= '</div>';
         $ret .= '</div>';
 
         return $ret;
     }
-
+    /********************************************************************************************************//**
+    \brief
+    \returns The HTML and JavaScript for the option sheet.
+    ************************************************************************************************************/
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    private function format_type_section_radio($format_type, $formats)
+    {
+        $ret = '';
+        foreach ($formats as $format) {
+            $ret .= '<div class="bmlt_admin_meeting_one_format_div">';
+            $ret .= '<div><input id="bmlt_admin_single_meeting_editor_template_meeting_format_'.$format->GetSharedID().'" type="radio" name="'.$format_type.'" value="'.$format->GetSharedID().'" onclick="admin_handler_object.venueTypeClick(this, template)" /><label for="bmlt_admin_single_meeting_editor_template_meeting_venue_inperson">' . htmlspecialchars($format->GetLocalName()) . '</label></div>';
+            $ret .= '</div>';
+        }
+        return $ret;
+    }
+        /********************************************************************************************************//**
+    \brief
+    \returns The HTML and JavaScript for the option sheet.
+    ************************************************************************************************************/
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    private function format_type_section_checkboxes($formats)
+    {
+        $ret = '';
+        foreach ($formats as $format) {
+            $ret .= '<div class="bmlt_admin_meeting_one_format_div">';
+            $ret .= '<label class="left_label" for="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox">'.htmlspecialchars($format->GetKey()).'</label>';
+            $ret .= '<span><input type="checkbox" value="'.$format->GetSharedID().'" id="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox" onchange="admin_handler_object.reactToFormatCheckbox(this, template);" onclick="admin_handler_object.reactToFormatCheckbox(this, template);" /></span>';
+            $ret .= '<label class="right_label" for="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox">'.htmlspecialchars($format->GetLocalName()).'</label>';
+            $ret .= '</div>';
+        }
+        return $ret;
+    }
     /********************************************************************************************************//**
     \brief
     \returns The HTML and JavaScript for the option sheet.

@@ -397,7 +397,8 @@ class c_comdef_server
                 $obj_array[$rs['key_string']] = new c_comdef_format_type(
                     $this,
                     $rs['key_string'],
-                    $rs['description_string']
+                    $rs['description_string'],
+                    $rs['ui_enum']
                 );
             }
         }
