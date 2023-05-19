@@ -545,7 +545,8 @@ class SwitcherController extends Controller
             'phpVersion' => phpversion(),
             'auto_geocoding_enabled' => legacy_config('auto_geocoding_enabled'),
             'commit' => config('app.commit'),
-            'default_closed_status' => legacy_config('default_closed_status')
+            'default_closed_status' => legacy_config('default_closed_status'),
+            'aggregator_mode_enabled' => legacy_config('aggregator_mode_enabled')
         ]]);
     }
 
