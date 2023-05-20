@@ -713,6 +713,17 @@ class c_comdef_server
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return ($this->GetFormatTypesObj() instanceof c_comdef_format_types) ? $this->GetFormatTypesObj()->GetFormatTypesArray() : null;
     }
+        /*******************************************************************/
+    /** \brief Simply returns an array of the format objects.
+
+        \returns An array of c_comdef_format objects.
+    */
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function GetRadioFormatTypesArray()
+    {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+        return ($this->GetFormatTypesObj() instanceof c_comdef_format_types) ? $this->GetFormatTypesObj()->GetFormatTypesArrayFiltered('RADIO') : array();
+    }
     /*******************************************************************/
     /** \brief Simply returns the stored service IDs.
 

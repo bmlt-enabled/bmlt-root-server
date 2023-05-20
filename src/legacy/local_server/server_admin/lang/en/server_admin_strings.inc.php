@@ -151,6 +151,7 @@ $comdef_server_admin_strings = array(
     'meeting_editor_screen_meeting_venue_type_hybrid' => 'Hybrid (both in-person and virtual)',
     'meeting_editor_screen_meeting_venue_type_validation' => 'You must select a venue type.',
     'meeting_editor_screen_meeting_virtual_info_missing' => 'Virtual or hybrid meetings must have a Virtual Meeting Link, a Phone Meeting Dial-in Number, or Virtual Meeting Additional Information',
+    'meeting_editor_screen_meeting_format_radio_not_selected' => 'You must select one format from the group ${radioDescription}.',
     'meeting_editor_screen_meeting_location_warning' => 'Meeting should have a location (at least a city/town and state/province, or a zip/postal code).',
     'meeting_editor_screen_meeting_address_warning' => 'In-person or hybrid meetings should have a street address.',
     'meeting_editor_screen_meeting_url_validation' => 'Virtual Meeting Link is not a valid URL.',

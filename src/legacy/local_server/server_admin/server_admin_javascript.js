@@ -1456,7 +1456,25 @@ function BMLT_Server_Admin()
                 this.validationMessageTypes.ERROR,
                 true));
         }
-
+        for (const radioName of g_format_radios) {
+            radioElement = document.getElementById('bmlt_admin_meeting_' + in_meeting_id + '_formatType_' + radioName);
+            const buttons = radioElement.getElementsByTagName("input");
+            knt = 0;
+            for (const button of buttons) {
+                if (button.checked) {
+                    knt++;
+                }
+            }
+            if (knt == 0 || knt>1) {
+                var radioDescription = my_localized_strings['comdef_server_admin_strings']['format_type_codes'][radioName];
+                var msg = my_localized_strings['comdef_server_admin_strings']["meeting_editor_screen_meeting_format_radio_not_selected"]
+                    .replace('${radioDescription}',radioDescription);
+                errors.push(this.setTranslatedValidationMessage("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_virtual_meta",
+                msg,
+                this.validationMessageTypes.ERROR,
+                true));
+            }
+        }
         // require that the virtual meeting link contains a valid URL if it's non-empty
         if (url !== '' && !this.checkURL(url)) {
             errors.push(this.setValidationMessage("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_virtual_meeting_link_text_input",
@@ -1561,6 +1579,13 @@ function BMLT_Server_Admin()
         }
 
         return { "errors": errors, "warnings": warnings, "show_warnings": show_warnings };
+    }
+    // put an error or warning message in the appropriate spot in the DOM, and return the message
+    this.setTranslatedValidationMessage = function ( selector, r, type, use_spacer = false ) {
+        var s = "<div class='" + type + "_helper_text'>" + r + "</div>";
+        var t = (use_spacer ? "<div class='virtual_error_warn_spacer'>" + s + "</div>" : s);
+        $(selector).parent().append(t);
+        return r;
     }
 
     // put an error or warning message in the appropriate spot in the DOM, and return the message
@@ -3239,7 +3264,13 @@ function BMLT_Server_Admin()
 
             if ( format_checkbox && format_checkbox.checked ) {
                 format_array[format_array.length] = parseInt(format_checkbox.value);
-            };
+            }
+            else {
+                var format_radio = document.getElementById('bmlt_admin_meeting_' + in_meeting_id + '_format_' + main_formats[c].id + '_radio');
+                if ( format_radio && format_radio.checked ) {
+                    format_array[format_array.length] = parseInt(format_radio.value);
+                }
+            }
         };
 
         format_array.sort(function(a,b) {return a-b;});
@@ -4689,7 +4720,6 @@ function BMLT_Server_Admin()
             this.toggleVenueTypeFormat(id_bigint, 'VM', false);
         }
     }
-
     /************************************************************************************//**
     *   \brief  This sets up the Format Editor for the selected Format.                     *
     ****************************************************************************************/

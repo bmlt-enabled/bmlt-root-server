@@ -82,7 +82,22 @@ class c_comdef_format_types implements i_comdef_has_parent
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return $this->_local_copy_of_array;
     }
-    
+    /*******************************************************************/
+    /** \brief Accessor -Get the format key array filtered by UI Element.
+
+        \returns a reference to an array of c_comdef_format objects.
+    */
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function GetFormatTypesArrayFiltered($ui_elem)
+    {
+        $ret = array();
+        foreach ($this->_local_copy_of_array as $type) {
+            if ($type->GetUIEnum() == $ui_elem) {
+                $ret[] = $type->GetKey();
+            }
+        }
+        return $ret;
+    }
     /*******************************************************************/
     /** \brief Return a reference to a single object, by format key and
         language.
