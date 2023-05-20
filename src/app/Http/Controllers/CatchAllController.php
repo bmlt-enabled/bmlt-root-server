@@ -26,7 +26,7 @@ class CatchAllController extends Controller
             if (self::isAllowedLegacyPath($pathInfo) && file_exists($pathInfo->path)) {
                 return self::legacyResponse($pathInfo);
             }
-            return response('tomato');
+            return response('"the aggregator formerly known as tomato"');
         }
 
         if (legacy_config('new_ui_enabled')) {
