@@ -53,7 +53,7 @@ class CatchAllController extends Controller
     private static function getLanguageMapping(): array
     {
         return collect(scandir(base_path('lang')))
-            ->reject(fn ($dir) => $dir == '.' || $dir == '..')
+            ->reject(fn ($dir) => str_starts_with($dir, '.'))
             ->sort()
             ->mapWithKeys(function ($langAbbreviation, $_) {
                 $langName = $langAbbreviation == 'dk' ? 'da' : $langAbbreviation;
