@@ -83,7 +83,7 @@ class FormatRepository implements FormatRepositoryInterface
             ->where('lang_enum', 'en')
             ->firstOrFail();
     }
-    public function getFormatsByFormatType($key, $lang='en'): Collection
+    public function getFormatsByFormatType($key, $lang = 'en'): Collection
     {
         return Format::query()
             ->where('format_type_enum', $key)

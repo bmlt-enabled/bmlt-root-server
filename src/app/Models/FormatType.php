@@ -14,9 +14,9 @@ class FormatType extends Model
         'api_key',
     ];
     private static ?Collection $_formatTypes = null;
-    private static function getFormatTypes() {
-        if (is_null(FormatType::$_formatTypes))
-        {
+    private static function getFormatTypes()
+    {
+        if (is_null(FormatType::$_formatTypes)) {
             $_formatTypes = FormatType::query()->get();
         }
         return $_formatTypes;
@@ -41,5 +41,4 @@ class FormatType extends Model
     {
         return FormatType::getFormatTypes()->keyBy('api_key')->keys()->all();
     }
-
 }
