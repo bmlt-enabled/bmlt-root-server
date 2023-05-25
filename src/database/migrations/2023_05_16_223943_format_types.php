@@ -23,18 +23,18 @@ return new class extends Migration
         } else {
             Schema::create('comdef_format_types', function (Blueprint $table) {
                 $table->string('key_string', 10);
-                $table->text('description_string')->nullable();
-                $table->text('ui_enum')->nullable();
-                $table->index('key_string', 'key_string');
+                $table->string('api_key', 256);
+                $table->index('key_string');
+                $table->index('api_key');
             });
             if (!legacy_config('aggregator_mode_enabled')) {
                 // aggregator mode does not need any stock data
                 DB::table('comdef_format_types')->insert([
-                    ['key_string' => 'FC1', 'description_string' => 'MEETING_FORMAT', 'ui_enum' => 'CHECKBOX'],
-                    ['key_string' => 'FC2', 'description_string' =>  'LOCATION', 'ui_enum' => 'CHECKBOX'],
-                    ['key_string' => 'FC3', 'description_string' => 'COMMON_NEEDS_OR_RESTRICTION', 'ui_enum' => 'CHECKBOX'],
-                    ['key_string' => 'O', 'description_string' => 'OPEN_OR_CLOSED', 'ui_enum' => 'RADIO'],
-                    ['key_string' => 'LANG', 'description_string' => 'LANGUAGE', 'ui_enum' => 'CHECKBOX'],
+                    ['key_string' => 'FC1', 'api_key' => 'MEETING_FORMAT'],
+                    ['key_string' => 'FC2', 'api_key' =>  'LOCATION'],
+                    ['key_string' => 'FC3', 'api_key' => 'COMMON_NEEDS_OR_RESTRICTION'],
+                    ['key_string' => 'O', 'api_key' => 'OPEN_OR_CLOSED'],
+                    ['key_string' => 'LANG', 'api_key' => 'LANGUAGE'],
                 ]);
             }
         }

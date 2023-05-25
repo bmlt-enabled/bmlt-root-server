@@ -17,14 +17,14 @@
 DROP TABLE IF EXISTS `na_comdef_format_types`;
 CREATE TABLE `na_comdef_format_types` (
   `key_string` varchar(10) NOT NULL,
-  `description_string` varchar(256) NOT NULL
+  `api_key` varchar(256) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Daten für Tabelle `na_comdef_format_types`
 --
 
-INSERT INTO `na_comdef_format_types` (`key_string`, `description_string`) VALUES
+INSERT INTO `na_comdef_format_types` (`key_string`, `api_key`) VALUES
 ('FC1', 'MEETING_FORMAT'),
 ('FC2', 'LOCATION'),
 ('FC3', 'COMMON_NEEDS_OR_RESTRICTION'),

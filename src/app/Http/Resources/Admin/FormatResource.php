@@ -3,7 +3,7 @@
 namespace App\Http\Resources\Admin;
 
 use App\Http\Resources\JsonResource;
-use App\Repositories\FormatTypeRepository;
+use App\Models\FormatType;
 
 class FormatResource extends JsonResource
 {
@@ -16,11 +16,10 @@ class FormatResource extends JsonResource
 
     public function toArray($request)
     {
-        $format_type_resouce = new FormatTypeRepository();
         return [
             'id' => $this->shared_id_bigint,
             'worldId' => $this->worldid_mixed,
-            'type' => $format_type_resouce->getDescriptionFromKey($this->format_type_enum),
+            'type' => FormatType::getApiKeyFromKey($this->format_type_enum),
             'translations' => $this->translations->map(function ($translation) {
                 return [
                     'key' => $translation->key_string ?? '',

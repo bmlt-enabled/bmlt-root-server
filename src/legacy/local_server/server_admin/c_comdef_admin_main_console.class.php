@@ -182,7 +182,6 @@ class c_comdef_admin_main_console
                 $ret .= 'var g_maps_api_key_warning  = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['Maps_API_Key_Warning']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_maps_api_key_not_set  = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['Maps_API_Key_Not_Set']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_meeting_time_zones_enabled = ' . ($this->my_localized_strings['meeting_time_zones_enabled'] ? 'true' : 'false') . ';'.(defined('__DEBUG_MODE__') ? "\n" : '');
-                $ret .= 'var g_format_radios = ' . array2json($this->my_server->GetRadioFormatTypesArray()) .';'.(defined('__DEBUG_MODE__') ? "\n" : '');
                 $ret .= 'var g_service_bodies_array = [';
         for ($c = 0; $c < count($this->my_service_bodies); $c++) {
             $service_body = $this->my_service_bodies[$c];
@@ -1924,20 +1923,9 @@ class c_comdef_admin_main_console
         }
         foreach ($this->my_format_types as $format_type) {
             if (isset($formats_by_formattype[$format_type->getKey()])) {
-                if ($format_type->getUIEnum() == 'HIDDEN') {
-                    continue;
-                }
                 $ret .= '<div class="format_tab_inner_div" id="bmlt_admin_meeting_template_formatType_' . $format_type->getKey() . '">';
                 $ret .= '<div>'.$this->my_localized_strings['comdef_server_admin_strings']['format_type_codes'][$format_type->getKey()].'</div>';
-                switch ($format_type->getUIEnum()) {
-                    case 'RADIO':
-                        $ret .= $this->format_type_section_radio($format_type->getKey(), $formats_by_formattype[$format_type->getKey()]);
-                        break;
-                    case 'CHECKBOX':
-                    default:
-                        $ret .= $this->format_type_section_checkboxes($formats_by_formattype[$format_type->getKey()]);
-                        break;
-                }
+                $ret .= $this->format_type_section_checkboxes($formats_by_formattype[$format_type->getKey()]);
                 unset($formats_by_formattype[$format_type->getKey()]);
                 $ret .= '</div>';
             }
@@ -1955,23 +1943,6 @@ class c_comdef_admin_main_console
         $ret .= '</div>';
         $ret .= '</div>';
 
-        return $ret;
-    }
-    /********************************************************************************************************//**
-    \brief
-    \returns The HTML and JavaScript for the option sheet.
-    ************************************************************************************************************/
-    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    private function format_type_section_radio($format_type, $formats)
-    {
-        $ret = '';
-        foreach ($formats as $format) {
-            $ret .= '<div class="bmlt_admin_meeting_one_format_div">';
-            $ret .= '<label class="left_label" for="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_radio">'.htmlspecialchars($format->GetKey()).'</label>';
-            $ret .= '<span><input type="radio" name=format_type_'.$format_type.'" value="'.$format->GetSharedID().'" id="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox" onchange="admin_handler_object.reactToFormatCheckbox(this, template);" onclick="admin_handler_object.reactToFormatCheckbox(this, template);" /></span>';
-            $ret .= '<label class="right_label" for="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_radio">'.htmlspecialchars($format->GetLocalName()).'</label>';
-            $ret .= '</div>';
-        }
         return $ret;
     }
         /********************************************************************************************************//**

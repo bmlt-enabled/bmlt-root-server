@@ -1456,6 +1456,7 @@ function BMLT_Server_Admin()
                 this.validationMessageTypes.ERROR,
                 true));
         }
+        /** Removed while Radio Buttons are still being discussed.
         for (const radioName of g_format_radios) {
             radioElement = document.getElementById('bmlt_admin_meeting_' + in_meeting_id + '_formatType_' + radioName);
             const buttons = radioElement.getElementsByTagName("input");
@@ -1475,6 +1476,7 @@ function BMLT_Server_Admin()
                 true));
             }
         }
+        */
         // require that the virtual meeting link contains a valid URL if it's non-empty
         if (url !== '' && !this.checkURL(url)) {
             errors.push(this.setValidationMessage("#bmlt_admin_single_meeting_editor_" + in_meeting_id + "_meeting_virtual_meeting_link_text_input",

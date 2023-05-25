@@ -44,9 +44,6 @@ class c_comdef_format_type
     /// The Format Key, in Text Form.
     public $_description_string = null;
     
-    /// The Format Key, in Text Form.
-    public $_ui_enum = null;
-    
     /*******************************************************************/
     /** \brief The initial setup call for the class. If you send in values,
         the object will set itself up to use them.
@@ -56,12 +53,10 @@ class c_comdef_format_type
     public function __construct(
         $in_parent_obj,                 ///< The object that "owns" this instance.
         $in_key_string = null,            ///< The format Key, as a text string (1-3 Characters).
-        $in_description_string = null,     ///< A verbose description
-        $in_ui_enum = 'CHECKBOX'
+        $in_api_key = null               ///< For some reason, the new API defines a different key
     ) {
         $this->SetKey($in_key_string);
-        $this->SetDescription($in_description_string);
-        $this->SetUIEnum($in_ui_enum);
+        $this->SetApiKey($in_api_key);
     }
     
     /*******************************************************************/
@@ -80,7 +75,7 @@ class c_comdef_format_type
         @returns The _key_string data member, as a reference.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function &GetDescription()
+    public function &GetApiKey()
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return $this->_description_string;
@@ -90,33 +85,11 @@ class c_comdef_format_type
     /** \brief Accessor -Sets the format key (the 1-3 letter code that represents the format).
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function SetDescription(
+    public function SetApiKey(
         $in_string  ///< The format Key, as a text string (1-3 Characters)
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $this->_description_string = $in_string;
-    }
-        /*******************************************************************/
-    /** \brief Accessor -Returns a reference to the _key_string data member
-
-        @returns The _key_string data member, as a reference.
-    */
-    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function &GetUIEnum()
-    {
-        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-        return $this->_ui_enum;
-    }
-       
-    /*******************************************************************/
-    /** \brief Accessor -Sets the format key (the 1-3 letter code that represents the format).
-    */
-    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function SetUIEnum(
-        $in_string  ///< The format Key, as a text string (1-3 Characters)
-    ) {
-        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-        $this->_ui_enum = $in_string;
     }
     /*******************************************************************/
     /** \brief Accessor -Returns a reference to the _key_string data member
@@ -143,8 +116,8 @@ class c_comdef_format_type
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $s_array['key_string'] = $this->GetKey();
-        $s_array['description_string'] = $this->GetDescription();
-        $s_array['ui_enum'] = $this->GetUIEnum();
+        $s_array['api_key'] = $this->GetApiKey();
+
         return serialize($s_array);
     }
     
@@ -163,11 +136,10 @@ class c_comdef_format_type
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $s_array = unserialize($serialized_array);
         
-        return new c_comdef_format(
+        return new c_comdef_format_type(
             $in_parent,
             $s_array['key_string'],
             $s_array['description_string'],
-            $s_array['ui_enum'],
         );
     }
     

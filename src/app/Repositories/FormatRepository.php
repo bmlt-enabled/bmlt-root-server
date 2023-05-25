@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Interfaces\FormatRepositoryInterface;
-use App\Interfaces\FormatTypeRepositoryInterface;
 use App\Models\Change;
 use App\Models\Format;
 use App\Models\Meeting;
@@ -84,7 +83,13 @@ class FormatRepository implements FormatRepositoryInterface
             ->where('lang_enum', 'en')
             ->firstOrFail();
     }
-
+    public function getFormatsByFormatType($key, $lang='en'): Collection
+    {
+        return Format::query()
+            ->where('format_type_enum', $key)
+            ->where('lang_enum', 'en')
+            ->get();
+    }
     private function getUsedFormatIds(Collection $meetings = null): array
     {
         $uniqueFormatIds = [];
@@ -295,10 +300,5 @@ class FormatRepository implements FormatRepositoryInterface
             ])
             ->values()
             ->toArray();
-    }
-    public function getFormatTypeRepository(): FormatTypeRepositoryInterface
-    {
-        // TODO:  should this be lazy load?
-        return new FormatTypeRepository();
     }
 }
