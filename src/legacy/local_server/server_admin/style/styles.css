@@ -1215,7 +1215,10 @@ div.format_tab_inner_div
     float:none;
     margin:0;
 }
-
+div.format_tab_type_name_div
+{
+    color:#009;
+}
 div.bmlt_admin_meeting_option_sheet_div,
 div.format_tab_inner_div,
 div.bmlt_admin_meeting_one_format_div

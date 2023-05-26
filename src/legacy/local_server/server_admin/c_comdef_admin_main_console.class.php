@@ -1933,7 +1933,7 @@ class c_comdef_admin_main_console
         foreach ($this->my_format_types as $format_type) {
             if (isset($formats_by_formattype[$format_type->getKey()])) {
                 $ret .= '<div class="format_tab_inner_div" id="bmlt_admin_meeting_template_formatType_' . $format_type->getKey() . '">';
-                $ret .= '<div>'.$this->getDisplayTextForFormatTypeKey($format_type).'</div>';
+                $ret .= '<div class="format_tab_type_name_div">'.$this->getDisplayTextForFormatTypeKey($format_type).'</div>';
                 $ret .= $this->format_type_section_checkboxes($formats_by_formattype[$format_type->getKey()]);
                 unset($formats_by_formattype[$format_type->getKey()]);
                 $ret .= '</div>';
@@ -1941,7 +1941,7 @@ class c_comdef_admin_main_console
         }
         if (count($formats_by_formattype) > 0) {
             $ret .= '<div class="format_tab_inner_div">';
-            $ret .= '<div>'.$this->my_localized_strings['comdef_server_admin_strings']['other_or_empty_format_type'].'</div>';
+            $ret .= '<div class="format_tab_type_name_div">'.$this->my_localized_strings['comdef_server_admin_strings']['other_or_empty_format_type'].'</div>';
 
             foreach ($formats_by_formattype as $format_array) {
                 $ret .= $this->format_type_section_checkboxes($format_array);
