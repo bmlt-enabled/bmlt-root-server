@@ -12,6 +12,7 @@ class FormatType extends Model
     protected $fillable = [
         'key_string',
         'api_key',
+        'position'
     ];
     private static ?Collection $_formatTypes = null;
     private static function getFormatTypes()

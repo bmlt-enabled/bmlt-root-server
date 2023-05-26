@@ -415,7 +415,8 @@ $comdef_server_admin_strings = array(
         'LANG' => 'Language',
         'ALERT' => 'Format should be especially prominent (Clean requirement, etc.)',
     ),
-
+    'unknown_format_type' => 'Format Type: ',
+    'other_or_empty_format_type' => 'Other or empty format type',
     'cookie_monster' => 'This site uses a cookie to store your preferred language.',
     'main_prompts' => array(
         'id_bigint' => 'ID',

@@ -41,8 +41,11 @@ class c_comdef_format_type
     /// The Format Key, in Text Form.
     public $_key_string = null;
     
-    /// The Format Key, in Text Form.
-    public $_description_string = null;
+    /// For some reason, used in the new API
+    public $_api_key = null;
+
+    /// The implied order
+    public $_position = null;
     
     /*******************************************************************/
     /** \brief The initial setup call for the class. If you send in values,
@@ -53,10 +56,12 @@ class c_comdef_format_type
     public function __construct(
         $in_parent_obj,                 ///< The object that "owns" this instance.
         $in_key_string = null,            ///< The format Key, as a text string (1-3 Characters).
-        $in_api_key = null               ///< For some reason, the new API defines a different key
+        $in_api_key = null,               ///< For some reason, the new API defines a different key
+        $in_position = null
     ) {
         $this->SetKey($in_key_string);
         $this->SetApiKey($in_api_key);
+        $this->SetPosition($in_position);
     }
     
     /*******************************************************************/
@@ -78,7 +83,7 @@ class c_comdef_format_type
     public function &GetApiKey()
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-        return $this->_description_string;
+        return $this->_api_key;
     }
        
     /*******************************************************************/
@@ -89,7 +94,28 @@ class c_comdef_format_type
         $in_string  ///< The format Key, as a text string (1-3 Characters)
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-        $this->_description_string = $in_string;
+        $this->_api_key = $in_string;
+    }
+        /** \brief Accessor -Returns a reference to the _key_string data member
+
+        @returns The _key_string data member, as a reference.
+    */
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function &GetPosition()
+    {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+        return $this->_position;
+    }
+       
+    /*******************************************************************/
+    /** \brief Accessor -Sets the format key (the 1-3 letter code that represents the format).
+    */
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function SetPosition(
+        $in_string  ///< The format Key, as a text string (1-3 Characters)
+    ) {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+        $this->_position = $in_string;
     }
     /*******************************************************************/
     /** \brief Accessor -Returns a reference to the _key_string data member
@@ -117,6 +143,7 @@ class c_comdef_format_type
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $s_array['key_string'] = $this->GetKey();
         $s_array['api_key'] = $this->GetApiKey();
+        $s_array['position_int'] = $this->GetApiKey();
 
         return serialize($s_array);
     }
@@ -139,7 +166,8 @@ class c_comdef_format_type
         return new c_comdef_format_type(
             $in_parent,
             $s_array['key_string'],
-            $s_array['description_string'],
+            $s_array['api_key'],
+            $s_array['position_int'],
         );
     }
     

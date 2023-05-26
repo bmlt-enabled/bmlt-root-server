@@ -115,7 +115,9 @@ class c_comdef_admin_main_console
 
         /* Now get the format types */
         $this->my_format_types = $this->my_server->GetFormatTypesArray();
-
+        usort($this->my_format_types, function ($a, $b) {
+            return $a->GetPosition() <=> $b->GetPosition();
+        });
         $service_bodies = $this->my_server->GetServiceBodyArray();
         usort($service_bodies, array("c_comdef_admin_main_console", "compare_names"));
         $this->my_service_bodies = array();
@@ -420,23 +422,23 @@ class c_comdef_admin_main_console
             }
             $ret .= '{"key":"'.self::js_html(str_replace("\n", ' ', $key)).'","value":"'.self::js_html(str_replace("\n", ' ', $value)).'"}';
         }
-                $ret .= (defined('__DEBUG_MODE__') ? "\n" : '').'];';
+        $ret .= (defined('__DEBUG_MODE__') ? "\n" : '').'];';
             /***
              * Begin Format_type_enum
              */
-                $ret .= 'var g_formatType_popup_prompt = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['format_type_prompt']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
-                $ret .= "var g_formatType_values = [";
-                $n_first = true;
-        foreach ($this->my_localized_strings['comdef_server_admin_strings']['format_type_codes'] as $key => $value) {
-            if (!$n_first) {
-                $ret .= ','.(defined('__DEBUG_MODE__') ? "\n" : '');
-            } else {
-                $n_first = false;
-                $ret .= (defined('__DEBUG_MODE__') ? "\n" : '');
+        $ret .= 'var g_formatType_popup_prompt = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['format_type_prompt']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
+        $ret .= "var g_formatType_values = [";
+        $str = $this->my_localized_strings['comdef_server_admin_strings']['format_type_codes'][''];
+        $ret .= '{"key":"'.self::js_html(str_replace("\n", ' ', '')).'","value":"'.self::js_html(str_replace("\n", ' ', $str)).'"}';
+        foreach ($this->my_format_types as $format_type) {
+            $str = $this->my_localized_strings['comdef_server_admin_strings']['unknown_format_type'].' '.$format_type->GetApiKey();
+            if (isset($this->my_localized_strings['comdef_server_admin_strings']['format_type_codes'][$format_type->GetKey()])) {
+                $str = $this->my_localized_strings['comdef_server_admin_strings']['format_type_codes'][$format_type->GetKey()];
             }
-            $ret .= '{"key":"'.self::js_html(str_replace("\n", ' ', $key)).'","value":"'.self::js_html(str_replace("\n", ' ', $value)).'"}';
+            $ret .= ','.(defined('__DEBUG_MODE__') ? "\n" : '');
+            $ret .= '{"key":"'.self::js_html(str_replace("\n", ' ', $format_type->GetKey())).'","value":"'.self::js_html(str_replace("\n", ' ', $str)).'"}';
         }
-                $ret .= (defined('__DEBUG_MODE__') ? "\n" : '').'];';
+        $ret .= (defined('__DEBUG_MODE__') ? "\n" : '').'];';
 
             /****
              * End format_type_enum
@@ -1890,7 +1892,14 @@ class c_comdef_admin_main_console
 
         return $ret;
     }
-
+    function getDisplayTextForFormatTypeKey($type)
+    {
+        if (isset($this->my_localized_strings['comdef_server_admin_strings']['format_type_codes'][$type->getKey()])) {
+            return $this->my_localized_strings['comdef_server_admin_strings']['format_type_codes'][$type->GetKey()];
+        }
+        return $this->my_localized_strings['comdef_server_admin_strings']['unknown_format_type'].
+            $type->GetApiKey();
+    }
     /********************************************************************************************************//**
     \brief
     \returns The HTML and JavaScript for the option sheet.
@@ -1924,7 +1933,7 @@ class c_comdef_admin_main_console
         foreach ($this->my_format_types as $format_type) {
             if (isset($formats_by_formattype[$format_type->getKey()])) {
                 $ret .= '<div class="format_tab_inner_div" id="bmlt_admin_meeting_template_formatType_' . $format_type->getKey() . '">';
-                $ret .= '<div>'.$this->my_localized_strings['comdef_server_admin_strings']['format_type_codes'][$format_type->getKey()].'</div>';
+                $ret .= '<div>'.$this->getDisplayTextForFormatTypeKey($format_type).'</div>';
                 $ret .= $this->format_type_section_checkboxes($formats_by_formattype[$format_type->getKey()]);
                 unset($formats_by_formattype[$format_type->getKey()]);
                 $ret .= '</div>';
@@ -1932,7 +1941,7 @@ class c_comdef_admin_main_console
         }
         if (count($formats_by_formattype) > 0) {
             $ret .= '<div class="format_tab_inner_div">';
-            $ret .= '<div>'.'Other or Empty'.'</div>';
+            $ret .= '<div>'.$this->my_localized_strings['comdef_server_admin_strings']['other_or_empty_format_type'].'</div>';
 
             foreach ($formats_by_formattype as $format_array) {
                 $ret .= $this->format_type_section_checkboxes($format_array);
