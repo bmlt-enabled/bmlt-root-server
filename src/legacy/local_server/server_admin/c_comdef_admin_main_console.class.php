@@ -1892,7 +1892,7 @@ class c_comdef_admin_main_console
 
         return $ret;
     }
-    function getDisplayTextForFormatTypeKey($type)
+    public function getDisplayTextForFormatTypeKey($type)
     {
         if (isset($this->my_localized_strings['comdef_server_admin_strings']['format_type_codes'][$type->getKey()])) {
             return $this->my_localized_strings['comdef_server_admin_strings']['format_type_codes'][$type->GetKey()];
