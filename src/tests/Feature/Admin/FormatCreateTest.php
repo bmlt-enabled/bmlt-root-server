@@ -14,7 +14,7 @@ class FormatCreateTest extends TestCase
     {
         return [
             'worldId' => 'test',
-            'type' => FormatUpdateTest::TYPE_OPEN_CLOSED,
+            'type' => FormatTypeConsts::TYPE_OPEN_CLOSED,
             'translations' => [[
                 'key' => 'O',
                 'name' => 'Open',
@@ -126,7 +126,7 @@ class FormatCreateTest extends TestCase
             ->assertStatus(422);
 
         // it can be a valid value
-        foreach (array_keys(FormatUpdateTest::TYPE_TO_COMDEF_TYPE_MAP) as $validType) {
+        foreach (array_keys(FormatTypeConsts::TYPE_TO_COMDEF_TYPE_MAP) as $validType) {
             $data['type'] = $validType;
             $this->withHeader('Authorization', "Bearer $token")
                 ->post('/api/v1/formats', $data)

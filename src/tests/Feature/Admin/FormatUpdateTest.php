@@ -9,33 +9,6 @@ use Illuminate\Support\Collection;
 
 class FormatUpdateTest extends TestCase
 {
-    public const TYPE_MEETING_FORMAT = 'MEETING_FORMAT';
-    public const TYPE_LOCATION_CODE = 'LOCATION';
-    public const TYPE_COMMON_NEEDS = 'COMMON_NEEDS_OR_RESTRICTION';
-    public const TYPE_OPEN_CLOSED = 'OPEN_OR_CLOSED';
-    public const TYPE_LANGUAGE = 'LANGUAGE';
-
-    public const TYPE_COMDEF_MEETING_FORMAT = 'FC1';
-    public const TYPE_COMDEF_LOCATION_CODE = 'FC2';
-    public const TYPE_COMDEF_COMMON_NEEDS = 'FC3';
-    public const TYPE_COMDEF_OPEN_CLOSED = 'O';
-    public const TYPE_COMDEF_LANGUAGE = 'LANG';
-
-    public const TYPE_TO_COMDEF_TYPE_MAP = [
-        self::TYPE_MEETING_FORMAT => self::TYPE_COMDEF_MEETING_FORMAT,
-        self::TYPE_LOCATION_CODE => self::TYPE_COMDEF_LOCATION_CODE,
-        self::TYPE_COMMON_NEEDS => self::TYPE_COMDEF_COMMON_NEEDS,
-        self::TYPE_OPEN_CLOSED => self::TYPE_COMDEF_OPEN_CLOSED,
-        self::TYPE_LANGUAGE => self::TYPE_COMDEF_LANGUAGE,
-    ];
-
-    public const COMDEF_TYPE_TO_TYPE_MAP = [
-        self::TYPE_COMDEF_MEETING_FORMAT => self::TYPE_MEETING_FORMAT,
-        self::TYPE_COMDEF_LOCATION_CODE => self::TYPE_LOCATION_CODE,
-        self::TYPE_COMDEF_COMMON_NEEDS => self::TYPE_COMMON_NEEDS,
-        self::TYPE_COMDEF_OPEN_CLOSED => self::TYPE_OPEN_CLOSED,
-        self::TYPE_COMDEF_LANGUAGE => self::TYPE_LANGUAGE,
-    ];
     use RefreshDatabase;
 
     private function toPayload(Collection $formats): array
@@ -55,7 +28,7 @@ class FormatUpdateTest extends TestCase
 
             if (is_null($payload['type'])) {
                 if (!empty($format->format_type_enum)) {
-                    $payload['type'] = self::COMDEF_TYPE_TO_TYPE_MAP[$format->format_type_enum];
+                    $payload['type'] = FormatTypeConsts::COMDEF_TYPE_TO_TYPE_MAP[$format->format_type_enum];
                 }
             }
 
@@ -125,7 +98,7 @@ class FormatUpdateTest extends TestCase
         $data = $this->toPayload($formats);
 
         $data['worldId'] .= 'updated';
-        $data['type'] = self::TYPE_MEETING_FORMAT;
+        $data['type'] = FormatTypeConsts::TYPE_MEETING_FORMAT;
         foreach ($data['translations'] as $key => $translation) {
             $translation['key'] .= 'updated';
             $translation['name'] .= 'updated';
@@ -141,7 +114,7 @@ class FormatUpdateTest extends TestCase
             $translation = collect($data['translations'])->firstWhere('language', $format->lang_enum);
             $format = Format::query()->where('shared_id_bigint', $format->shared_id_bigint)->where('lang_enum', $format->lang_enum)->first();
             $this->assertEquals($data['worldId'], $format->worldid_mixed);
-            $this->assertEquals(self::TYPE_TO_COMDEF_TYPE_MAP[$data['type']], $format->format_type_enum);
+            $this->assertEquals(FormatTypeConsts::TYPE_TO_COMDEF_TYPE_MAP[$data['type']], $format->format_type_enum);
             $this->assertEquals($translation['key'], $format->key_string);
             $this->assertEquals($translation['name'], $format->name_string);
             $this->assertEquals($translation['description'], $format->description_string);
@@ -160,7 +133,7 @@ class FormatUpdateTest extends TestCase
         $data = $this->toPayload($formats);
 
         $data['worldId'] .= 'updated';
-        $data['type'] = self::TYPE_MEETING_FORMAT;
+        $data['type'] = FormatTypeConsts::TYPE_MEETING_FORMAT;
         foreach ($data['translations'] as $key => $translation) {
             $translation['key'] .= 'updated';
             $translation['name'] .= 'updated';
@@ -183,7 +156,7 @@ class FormatUpdateTest extends TestCase
             $translation = collect($data['translations'])->firstWhere('language', $format->lang_enum);
             $format = Format::query()->where('shared_id_bigint', $format->shared_id_bigint)->where('lang_enum', $format->lang_enum)->first();
             $this->assertEquals($data['worldId'], $format->worldid_mixed);
-            $this->assertEquals(self::TYPE_TO_COMDEF_TYPE_MAP[$data['type']], $format->format_type_enum);
+            $this->assertEquals(FormatTypeConsts::TYPE_TO_COMDEF_TYPE_MAP[$data['type']], $format->format_type_enum);
             $this->assertEquals($translation['key'], $format->key_string);
             $this->assertEquals($translation['name'], $format->name_string);
             $this->assertEquals($translation['description'], $format->description_string);
@@ -198,7 +171,7 @@ class FormatUpdateTest extends TestCase
         $data = $this->toPayload($formats);
 
         $data['worldId'] .= 'updated';
-        $data['type'] = self::TYPE_MEETING_FORMAT;
+        $data['type'] = FormatTypeConsts::TYPE_MEETING_FORMAT;
         foreach ($data['translations'] as $key => $translation) {
             $translation['key'] .= 'updated';
             $translation['name'] .= 'updated';
@@ -221,7 +194,7 @@ class FormatUpdateTest extends TestCase
             $translation = collect($data['translations'])->firstWhere('language', $format->lang_enum);
             $format = Format::query()->where('shared_id_bigint', $format->shared_id_bigint)->where('lang_enum', $format->lang_enum)->first();
             $this->assertEquals($data['worldId'], $format->worldid_mixed);
-            $this->assertEquals(self::TYPE_TO_COMDEF_TYPE_MAP[$data['type']], $format->format_type_enum);
+            $this->assertEquals(FormatTypeConsts::TYPE_TO_COMDEF_TYPE_MAP[$data['type']], $format->format_type_enum);
             $this->assertEquals($translation['key'], $format->key_string);
             $this->assertEquals($translation['name'], $format->name_string);
             $this->assertEquals($translation['description'], $format->description_string);
@@ -274,7 +247,7 @@ class FormatUpdateTest extends TestCase
             ->assertStatus(422);
 
         // it can be a valid value
-        foreach (array_keys(self::TYPE_TO_COMDEF_TYPE_MAP) as $validType) {
+        foreach (array_keys(FormatTypeConsts::TYPE_TO_COMDEF_TYPE_MAP) as $validType) {
             $data['type'] = $validType;
             $this->withHeader('Authorization', "Bearer $token")
                 ->put("/api/v1/formats/{$formats[0]->shared_id_bigint}", $data)
