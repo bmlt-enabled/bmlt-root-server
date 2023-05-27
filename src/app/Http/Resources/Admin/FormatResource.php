@@ -19,7 +19,7 @@ class FormatResource extends JsonResource
         return [
             'id' => $this->shared_id_bigint,
             'worldId' => $this->worldid_mixed,
-            'type' => FormatType::getApiKeyFromKey($this->format_type_enum),
+            'type' => FormatType::getApiEnumFromKey($this->format_type_enum),
             'translations' => $this->translations->map(function ($translation) {
                 return [
                     'key' => $translation->key_string ?? '',

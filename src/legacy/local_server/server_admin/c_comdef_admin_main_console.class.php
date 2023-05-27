@@ -431,7 +431,7 @@ class c_comdef_admin_main_console
         $str = $this->my_localized_strings['comdef_server_admin_strings']['format_type_codes'][''];
         $ret .= '{"key":"'.self::js_html(str_replace("\n", ' ', '')).'","value":"'.self::js_html(str_replace("\n", ' ', $str)).'"}';
         foreach ($this->my_format_types as $format_type) {
-            $str = $this->my_localized_strings['comdef_server_admin_strings']['unknown_format_type'].' '.$format_type->GetApiKey();
+            $str = $this->my_localized_strings['comdef_server_admin_strings']['unknown_format_type'].' '.$format_type->GetApiEnum();
             if (isset($this->my_localized_strings['comdef_server_admin_strings']['format_type_codes'][$format_type->GetKey()])) {
                 $str = $this->my_localized_strings['comdef_server_admin_strings']['format_type_codes'][$format_type->GetKey()];
             }
@@ -1898,7 +1898,7 @@ class c_comdef_admin_main_console
             return $this->my_localized_strings['comdef_server_admin_strings']['format_type_codes'][$type->GetKey()];
         }
         return $this->my_localized_strings['comdef_server_admin_strings']['unknown_format_type'].
-            $type->GetApiKey();
+            $type->GetApiEnum();
     }
     /********************************************************************************************************//**
     \brief

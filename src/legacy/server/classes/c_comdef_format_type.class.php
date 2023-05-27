@@ -42,7 +42,7 @@ class c_comdef_format_type
     public $_key_string = null;
     
     /// For some reason, used in the new API
-    public $_api_key = null;
+    public $_api_enum = null;
 
     /// The implied order
     public $_position = null;
@@ -56,11 +56,11 @@ class c_comdef_format_type
     public function __construct(
         $in_parent_obj,                 ///< The object that "owns" this instance.
         $in_key_string = null,            ///< The format Key, as a text string (1-3 Characters).
-        $in_api_key = null,               ///< For some reason, the new API defines a different key
+        $in_api_enum = null,               ///< For some reason, the new API defines a different key
         $in_position = null
     ) {
         $this->SetKey($in_key_string);
-        $this->SetApiKey($in_api_key);
+        $this->SetApiEnum($in_api_enum);
         $this->SetPosition($in_position);
     }
     
@@ -80,21 +80,21 @@ class c_comdef_format_type
         @returns The _key_string data member, as a reference.
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function &GetApiKey()
+    public function &GetApiEnum()
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-        return $this->_api_key;
+        return $this->_api_enum;
     }
        
     /*******************************************************************/
     /** \brief Accessor -Sets the format key (the 1-3 letter code that represents the format).
     */
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function SetApiKey(
+    public function SetApiEnum(
         $in_string  ///< The format Key, as a text string (1-3 Characters)
     ) {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-        $this->_api_key = $in_string;
+        $this->_api_enum = $in_string;
     }
         /** \brief Accessor -Returns a reference to the _key_string data member
 
@@ -142,8 +142,8 @@ class c_comdef_format_type
     {
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         $s_array['key_string'] = $this->GetKey();
-        $s_array['api_key'] = $this->GetApiKey();
-        $s_array['position_int'] = $this->GetApiKey();
+        $s_array['api_enum'] = $this->GetApiEnum();
+        $s_array['position_int'] = $this->GetPosition();
 
         return serialize($s_array);
     }
@@ -166,7 +166,7 @@ class c_comdef_format_type
         return new c_comdef_format_type(
             $in_parent,
             $s_array['key_string'],
-            $s_array['api_key'],
+            $s_array['api_enum'],
             $s_array['position_int'],
         );
     }

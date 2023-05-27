@@ -87,7 +87,7 @@ class FormatRepository implements FormatRepositoryInterface
     {
         return Format::query()
             ->where('format_type_enum', $key)
-            ->where('lang_enum', 'en')
+            ->where('lang_enum', $lang)
             ->get();
     }
     private function getUsedFormatIds(Collection $meetings = null): array

@@ -28,7 +28,7 @@ class FormatChangeTest extends TestCase
 
             if (is_null($payload['type'])) {
                 if (!empty($format->format_type_enum)) {
-                    $payload['type'] = Format::COMDEF_TYPE_TO_TYPE_MAP[$format->format_type_enum];
+                    $payload['type'] = FormatUpdateTest::COMDEF_TYPE_TO_TYPE_MAP[$format->format_type_enum];
                 }
             }
 
@@ -65,7 +65,7 @@ class FormatChangeTest extends TestCase
         $token = $user->createToken('test')->plainTextToken;
         $data = [
             'worldId' => 'test',
-            'type' => Format::TYPE_OPEN_CLOSED,
+            'type' => FormatUpdateTest::TYPE_OPEN_CLOSED,
             'translations' => [
                 [
                     'key' => 'O1',
@@ -110,7 +110,7 @@ class FormatChangeTest extends TestCase
             $this->assertNotNull($change->after_object);
             $afterObject = $change->after_object;
             $this->assertEquals($format['id'], $afterObject[0]);
-            $this->assertEquals(Format::TYPE_TO_COMDEF_TYPE_MAP[$format['type']], $afterObject[1]);
+            $this->assertEquals(FormatUpdateTest::TYPE_TO_COMDEF_TYPE_MAP[$format['type']], $afterObject[1]);
             $this->assertEquals($translation['key'], $afterObject[2]);
             $this->assertNull($afterObject[3]);
             $this->assertEquals($format['worldId'], $afterObject[4]);

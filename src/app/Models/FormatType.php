@@ -11,7 +11,7 @@ class FormatType extends Model
     public $timestamps = false;
     protected $fillable = [
         'key_string',
-        'api_key',
+        'api_enum',
         'position'
     ];
     private static ?Collection $_formatTypes = null;
@@ -22,24 +22,24 @@ class FormatType extends Model
         }
         return $_formatTypes;
     }
-    public static function getApiKeyFromKey($key)
+    public static function getApiEnumFromKey($key)
     {
         $ret = FormatType::getFormatTypes()->firstWhere('key_string', $key);
         if (is_null($ret)) {
             return null;
         }
-        return $ret->api_key;
+        return $ret->api_enum;
     }
-    public static function getKeyFromApiKey($key)
+    public static function getKeyFromApiEnum($key)
     {
-        $ret = FormatType::getFormatTypes()->firstWhere('api_key', $key);
+        $ret = FormatType::getFormatTypes()->firstWhere('api_enum', $key);
         if (is_null($ret)) {
             return null;
         }
         return $ret->key_string;
     }
-    public static function getApiKeys()
+    public static function getApiEnums()
     {
-        return FormatType::getFormatTypes()->keyBy('api_key')->keys()->all();
+        return FormatType::getFormatTypes()->keyBy('api_enum')->keys()->all();
     }
 }
