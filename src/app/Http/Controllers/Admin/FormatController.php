@@ -49,6 +49,7 @@ class FormatController extends ResourceController
         $this->formatRepository->update($format->shared_id_bigint, $sharedFormatsValues);
         return response()->noContent();
     }
+
     public function partialUpdate(Request $request, Format $format)
     {
         $request->merge(
