@@ -26,7 +26,7 @@ class CatchAllController extends Controller
             if (self::isAllowedLegacyPath($pathInfo) && file_exists($pathInfo->path)) {
                 return self::legacyResponse($pathInfo);
             }
-            return response('tomato');
+            return response('"the aggregator formerly known as tomato"');
         }
 
         if (legacy_config('new_ui_enabled')) {
@@ -53,7 +53,7 @@ class CatchAllController extends Controller
     private static function getLanguageMapping(): array
     {
         return collect(scandir(base_path('lang')))
-            ->reject(fn ($dir) => $dir == '.' || $dir == '..')
+            ->reject(fn ($dir) => str_starts_with($dir, '.'))
             ->sort()
             ->mapWithKeys(function ($langAbbreviation, $_) {
                 $langName = $langAbbreviation == 'dk' ? 'da' : $langAbbreviation;

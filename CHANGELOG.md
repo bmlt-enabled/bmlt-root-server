@@ -1,6 +1,7 @@
 ## 3.0.5 (TBD)
 * Change name `Disabled User` to `Deactivated User`.
 * When the meeting formats are being selected, the formats now appear grouped by their FormatType 
+* Add `aggregator_mode_enabled` to `GetServerInfo` endpoint.
 
 ## 3.0.4 (March 20, 2023)
 * The `services` and `formats` filter parameters for the `GetSearchResults` API and the `formats` filter parameter for the `GetFormats` API now accept a comma separated string (e.g. `formats=1,-12,42`) in addition to the standard array syntax.

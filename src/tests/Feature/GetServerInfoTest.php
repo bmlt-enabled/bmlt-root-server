@@ -251,4 +251,30 @@ class GetServerInfoTest extends TestCase
             ->assertStatus(200)
             ->assertJsonFragment(['commit' => config('app.commit')]);
     }
+
+    public function testDefaultClosedStatusEnabled()
+    {
+        LegacyConfig::set('default_closed_status', true);
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['default_closed_status' => true]);
+
+        LegacyConfig::set('default_closed_status', false);
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['default_closed_status' => false]);
+    }
+
+    public function testAggregatorModeEnabled()
+    {
+        LegacyConfig::set('aggregator_mode_enabled', true);
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['aggregator_mode_enabled' => true]);
+
+        LegacyConfig::set('aggregator_mode_enabled', false);
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['aggregator_mode_enabled' => false]);
+    }
 }
