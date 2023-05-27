@@ -15,6 +15,7 @@ class FormatType extends Model
         'position'
     ];
     private static ?Collection $_formatTypes = null;
+
     private static function getFormatTypes()
     {
         if (is_null(FormatType::$_formatTypes)) {
@@ -22,6 +23,7 @@ class FormatType extends Model
         }
         return $_formatTypes;
     }
+
     public static function getApiEnumFromKey($key)
     {
         $ret = FormatType::getFormatTypes()->firstWhere('key_string', $key);
@@ -30,6 +32,7 @@ class FormatType extends Model
         }
         return $ret->api_enum;
     }
+
     public static function getKeyFromApiEnum($key)
     {
         $ret = FormatType::getFormatTypes()->firstWhere('api_enum', $key);
@@ -38,6 +41,7 @@ class FormatType extends Model
         }
         return $ret->key_string;
     }
+
     public static function getApiEnums()
     {
         return FormatType::getFormatTypes()->keyBy('api_enum')->keys()->all();
