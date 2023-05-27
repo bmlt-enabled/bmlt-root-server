@@ -1,5 +1,6 @@
 ## 3.0.5 (TBD)
 * Change name `Disabled User` to `Deactivated User`.
+* When the meeting formats are being selected, the formats now appear grouped by their FormatType 
 * Add `aggregator_mode_enabled` to `GetServerInfo` endpoint.
 
 ## 3.0.4 (March 20, 2023)

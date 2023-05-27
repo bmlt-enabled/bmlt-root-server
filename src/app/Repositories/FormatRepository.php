@@ -84,6 +84,14 @@ class FormatRepository implements FormatRepositoryInterface
             ->firstOrFail();
     }
 
+    public function getFormatsByFormatType($key, $lang = 'en'): Collection
+    {
+        return Format::query()
+            ->where('format_type_enum', $key)
+            ->where('lang_enum', $lang)
+            ->get();
+    }
+
     private function getUsedFormatIds(Collection $meetings = null): array
     {
         $uniqueFormatIds = [];

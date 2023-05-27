@@ -3,7 +3,7 @@
 namespace App\Http\Resources\Admin;
 
 use App\Http\Resources\JsonResource;
-use App\Models\Format;
+use App\Models\FormatType;
 
 class FormatResource extends JsonResource
 {
@@ -19,7 +19,7 @@ class FormatResource extends JsonResource
         return [
             'id' => $this->shared_id_bigint,
             'worldId' => $this->worldid_mixed,
-            'type' => Format::COMDEF_TYPE_TO_TYPE_MAP[$this->format_type_enum] ?? null,
+            'type' => FormatType::getApiEnumFromKey($this->format_type_enum),
             'translations' => $this->translations->map(function ($translation) {
                 return [
                     'key' => $translation->key_string ?? '',

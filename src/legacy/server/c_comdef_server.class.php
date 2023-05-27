@@ -30,6 +30,7 @@ defined('BMLT_EXEC') or die('Cannot Execute Directly');    // Makes sure that th
 
 require_once(dirname(__FILE__)."/classes/c_comdef_dbsingleton.class.php");
 require_once(dirname(__FILE__)."/classes/c_comdef_formats.class.php");
+require_once(dirname(__FILE__)."/classes/c_comdef_format_types.class.php");
 require_once(dirname(__FILE__)."/classes/c_comdef_meetings.class.php");
 require_once(dirname(__FILE__)."/classes/c_comdef_changes.class.php");
 require_once(dirname(__FILE__)."/classes/c_comdef_users.class.php");
@@ -56,6 +57,8 @@ class c_comdef_server
 
     /// This is the name of the Formats table in the database.
     private $_format_table_name = null;
+    /// This is the name of the Formats table in the database.
+    private $_format_type_table_name = null;
     /// This is the name of the Meetings table in the database.
     private $_meeting_table_name = null;
     /// This is the name of the Changes table in the database.
@@ -68,6 +71,8 @@ class c_comdef_server
     private $_service_bodies_table_name = null;
     /// This is the container for the loaded formats.
     private $_formats_obj = null;
+    /// This is the container for the loaded format types.
+    private $_formatTypes_obj = null;
     /// This is the container for the loaded formats that are actually used in the meetings. Each element is a format shared ID.
     private $_used_format_ids = null;
     /// This is the container for the loaded users.
@@ -82,6 +87,7 @@ class c_comdef_server
     private $_server_namespace = null;
     /// This contains the actual Service Body objects as a simple array.
     private $_service_obj_array = null;
+    private $_local_type_lang_enum = null;
 
     /*******************************************************************/
     /** \brief  This is the factory for the server instantiation.
@@ -157,6 +163,7 @@ class c_comdef_server
 
             // These are all the base names of the SQL tables.
             $this->_format_table_name = $dbPrefix."_comdef_formats";
+            $this->_format_type_table_name = $dbPrefix."_comdef_format_types";
             $this->_meeting_table_name = $dbPrefix."_comdef_meetings";
             $this->_changes_table_name = $dbPrefix."_comdef_changes";
             $this->_service_bodies_table_name = $dbPrefix."_comdef_service_bodies";
@@ -370,7 +377,36 @@ class c_comdef_server
             }
         }
     }
+    /*******************************************************************/
+    /** \brief This is an internal function that reads in all of the
+        stored formats, in all provided languages, and instantiates
+        local objects for them.
+        Access them with the GetFormatsObj() member function afterwards.
+    */
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function ReadFormatTypes()
+    {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+        $sql = "SELECT * FROM `".self::GetFormatTypeTableName_obj()."` ORDER BY key_string";
 
+        $rows = c_comdef_dbsingleton::preparedQuery($sql);
+
+        if (is_array($rows) && count($rows)) {
+            $obj_array = array();
+            /// Read in all the formats, and instantiate an array of objects.
+            foreach ($rows as $rs) {
+                $obj_array[$rs['key_string']] = new c_comdef_format_type(
+                    $this,
+                    $rs['key_string'],
+                    $rs['api_enum'],
+                    $rs['position_int']
+                );
+            }
+        }
+        
+        /// Create our internal container, and give it the array.
+         $this->_formatTypes_obj = new c_comdef_format_types($this, $obj_array);
+    }
     /*******************************************************************/
     /** \brief This is an internal function that reads in all of the
         stored users and instantiates local objects for them.
@@ -651,7 +687,34 @@ class c_comdef_server
 
         return $this->_used_format_ids;
     }
+    /*******************************************************************/
+    /** \brief Simply returns a reference to the formatTypes container.
 
+        \returns A reference to the formats container object.
+    */
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function GetFormatTypesObj()
+    {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+        if (!$this->_formatTypes_obj) {
+            $this->ReadFormatTypes();
+        }
+
+        return $this->_formatTypes_obj;
+    }
+
+    /*******************************************************************/
+    /** \brief Simply returns an array of the format objects.
+
+        \returns An array of c_comdef_format objects.
+    */
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function GetFormatTypesArray()
+    {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+        return ($this->GetFormatTypesObj() instanceof c_comdef_format_types) ? $this->GetFormatTypesObj()->GetFormatTypesArray() : null;
+    }
+        /*******************************************************************/
     /*******************************************************************/
     /** \brief Simply returns the stored service IDs.
 
@@ -1044,7 +1107,17 @@ class c_comdef_server
         // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
         return self::$server_instance->_format_table_name;
     }
+    /*******************************************************************/
+    /** \brief Simply returns the name of the format table.
 
+        \returns A string, containing the name of the format table.
+    */
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public static function GetFormatTypeTableName_obj()
+    {
+        // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+        return self::$server_instance->_format_type_table_name;
+    }
     /*******************************************************************/
     /** \brief Simply returns the name of the meetings table.
 

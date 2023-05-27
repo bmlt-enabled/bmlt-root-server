@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Resources\Admin\FormatResource;
 use App\Interfaces\FormatRepositoryInterface;
 use App\Models\Format;
+use App\Models\FormatType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\Rule;
@@ -57,7 +58,7 @@ class FormatController extends ResourceController
                     if ($fieldName == 'worldId') {
                         return [$fieldName => $request->has($fieldName) ? $request->input($fieldName) : $format->worldid_mixed];
                     } elseif ($fieldName == 'type') {
-                        return [$fieldName => $request->has($fieldName) ? $request->input($fieldName) : (!is_null($format->format_type_enum) ? Format::COMDEF_TYPE_TO_TYPE_MAP[$format->format_type_enum] : null)];
+                        return [$fieldName => $request->has($fieldName) ? $request->input($fieldName) : (!is_null($format->format_type_enum) ? FormatType::getApiEnumFromKey($format->format_type_enum): null)];
                     } else {
                         return [$fieldName => $request->has($fieldName) ? $request->input($fieldName) : $format->translations->map(function ($translation) {
                             return [
@@ -95,7 +96,7 @@ class FormatController extends ResourceController
     {
         return collect($request->validate([
             'worldId' => 'nullable|string|max:30',
-            'type' => ['nullable', Rule::in(array_keys(Format::TYPE_TO_COMDEF_TYPE_MAP))],
+            'type' => ['nullable', Rule::in(FormatType::getApiEnums())],
             'translations' => [
                 'required',
                 'array',
@@ -118,7 +119,7 @@ class FormatController extends ResourceController
     {
         return collect($validated['translations'])->map(function ($translation) use ($validated) {
             return [
-                'format_type_enum' => isset($validated['type']) ? Format::TYPE_TO_COMDEF_TYPE_MAP[$validated['type']] : null,
+                'format_type_enum' => isset($validated['type']) ? FormatType::getKeyFromApiEnum($validated['type']) : null,
                 'worldid_mixed' => $validated['worldId'] ?? null,
                 'lang_enum' => $translation['language'],
                 'key_string' => $translation['key'],

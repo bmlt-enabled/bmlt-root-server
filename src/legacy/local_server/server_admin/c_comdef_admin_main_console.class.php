@@ -39,6 +39,7 @@ class c_comdef_admin_main_console
     public $my_service_bodies;             ///< This will be an array that contains all the Service bodies this user can edit.
     public $my_users;                      ///< This will be an array of all the user objects.
     public $my_formats;                    ///< The format objects that are available for meetings.
+    public $my_format_types;               ///< The format objects that are available for meetings.
     public $my_data_field_templates;       ///< This holds the keys for all the possible data fields for this server.
     public $my_editable_service_bodies;    ///< This will contain all the Service bodies that we can actually directly edit.
     public $my_all_service_bodies;         ///< This contains all Service bodies, cleaned for orphans.
@@ -112,6 +113,11 @@ class c_comdef_admin_main_console
             $this->my_formats[] = array ( 'id' => $id, 'formats' => $single_format );
         }
 
+        /* Now get the format types */
+        $this->my_format_types = $this->my_server->GetFormatTypesArray();
+        usort($this->my_format_types, function ($a, $b) {
+            return $a->GetPosition() <=> $b->GetPosition();
+        });
         $service_bodies = $this->my_server->GetServiceBodyArray();
         usort($service_bodies, array("c_comdef_admin_main_console", "compare_names"));
         $this->my_service_bodies = array();
@@ -416,23 +422,23 @@ class c_comdef_admin_main_console
             }
             $ret .= '{"key":"'.self::js_html(str_replace("\n", ' ', $key)).'","value":"'.self::js_html(str_replace("\n", ' ', $value)).'"}';
         }
-                $ret .= (defined('__DEBUG_MODE__') ? "\n" : '').'];';
+        $ret .= (defined('__DEBUG_MODE__') ? "\n" : '').'];';
             /***
              * Begin Format_type_enum
              */
-                $ret .= 'var g_formatType_popup_prompt = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['format_type_prompt']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
-                $ret .= "var g_formatType_values = [";
-                $n_first = true;
-        foreach ($this->my_localized_strings['comdef_server_admin_strings']['format_type_codes'] as $key => $value) {
-            if (!$n_first) {
-                $ret .= ','.(defined('__DEBUG_MODE__') ? "\n" : '');
-            } else {
-                $n_first = false;
-                $ret .= (defined('__DEBUG_MODE__') ? "\n" : '');
+        $ret .= 'var g_formatType_popup_prompt = \''.self::js_html($this->my_localized_strings['comdef_server_admin_strings']['format_type_prompt']).'\';'.(defined('__DEBUG_MODE__') ? "\n" : '');
+        $ret .= "var g_formatType_values = [";
+        $str = $this->my_localized_strings['comdef_server_admin_strings']['format_type_codes'][''];
+        $ret .= '{"key":"'.self::js_html(str_replace("\n", ' ', '')).'","value":"'.self::js_html(str_replace("\n", ' ', $str)).'"}';
+        foreach ($this->my_format_types as $format_type) {
+            $str = $this->my_localized_strings['comdef_server_admin_strings']['unknown_format_type'].' '.$format_type->GetApiEnum();
+            if (isset($this->my_localized_strings['comdef_server_admin_strings']['format_type_codes'][$format_type->GetKey()])) {
+                $str = $this->my_localized_strings['comdef_server_admin_strings']['format_type_codes'][$format_type->GetKey()];
             }
-            $ret .= '{"key":"'.self::js_html(str_replace("\n", ' ', $key)).'","value":"'.self::js_html(str_replace("\n", ' ', $value)).'"}';
+            $ret .= ','.(defined('__DEBUG_MODE__') ? "\n" : '');
+            $ret .= '{"key":"'.self::js_html(str_replace("\n", ' ', $format_type->GetKey())).'","value":"'.self::js_html(str_replace("\n", ' ', $str)).'"}';
         }
-                $ret .= (defined('__DEBUG_MODE__') ? "\n" : '').'];';
+        $ret .= (defined('__DEBUG_MODE__') ? "\n" : '').'];';
 
             /****
              * End format_type_enum
@@ -1886,7 +1892,14 @@ class c_comdef_admin_main_console
 
         return $ret;
     }
-
+    public function getDisplayTextForFormatTypeKey($type)
+    {
+        if (isset($this->my_localized_strings['comdef_server_admin_strings']['format_type_codes'][$type->getKey()])) {
+            return $this->my_localized_strings['comdef_server_admin_strings']['format_type_codes'][$type->GetKey()];
+        }
+        return $this->my_localized_strings['comdef_server_admin_strings']['unknown_format_type'].
+            $type->GetApiEnum();
+    }
     /********************************************************************************************************//**
     \brief
     \returns The HTML and JavaScript for the option sheet.
@@ -1904,22 +1917,60 @@ class c_comdef_admin_main_console
                 return strnatcasecmp($a->GetKey(), $b->GetKey());
             });
         }
+        $formats_by_formattype = array();
         foreach ($f_array as $format) {
-            if ($format instanceof c_comdef_format) {
-                $ret .= '<div class="bmlt_admin_meeting_one_format_div">';
-                    $ret .= '<label class="left_label" for="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox">'.htmlspecialchars($format->GetKey()).'</label>';
-                    $ret .= '<span><input type="checkbox" value="'.$format->GetSharedID().'" id="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox" onchange="admin_handler_object.reactToFormatCheckbox(this, template);" onclick="admin_handler_object.reactToFormatCheckbox(this, template);" /></span>';
-                    $ret .= '<label class="right_label" for="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox">'.htmlspecialchars($format->GetLocalName()).'</label>';
+            $type = $format->GetFormatType();
+            if (is_null($type)) {
+                $type = '';
+            } else if (strpos($type, '-')>0) {
+                $type = substr($type, 0, strpos($type, '-'));
+            }
+            if (!isset($formats_by_formattype[$type])) {
+                $formats_by_formattype[$type] = array();
+            }
+            $formats_by_formattype[$type][] = $format;
+        }
+        foreach ($this->my_format_types as $format_type) {
+            if (isset($formats_by_formattype[$format_type->getKey()])) {
+                $ret .= '<div class="format_tab_inner_div" id="bmlt_admin_meeting_template_formatType_' . $format_type->getKey() . '">';
+                $ret .= '<div class="format_tab_type_name_div">'.$this->getDisplayTextForFormatTypeKey($format_type).'</div>';
+                $ret .= $this->format_type_section_checkboxes($formats_by_formattype[$format_type->getKey()]);
+                unset($formats_by_formattype[$format_type->getKey()]);
                 $ret .= '</div>';
             }
         }
-                $ret .= '<div class="clear_both"></div>';
+        if (count($formats_by_formattype) > 0) {
+            $ret .= '<div class="format_tab_inner_div">';
+            $ret .= '<div class="format_tab_type_name_div">'.$this->my_localized_strings['comdef_server_admin_strings']['other_or_empty_format_type'].'</div>';
+
+            foreach ($formats_by_formattype as $format_array) {
+                $ret .= $this->format_type_section_checkboxes($format_array);
+            }
             $ret .= '</div>';
+        }
+        $ret .= '<div class="clear_both"></div>';
+        $ret .= '</div>';
         $ret .= '</div>';
 
         return $ret;
     }
-
+        /********************************************************************************************************//**
+    \brief
+    \returns The HTML and JavaScript for the option sheet.
+    ************************************************************************************************************/
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    private function format_type_section_checkboxes($formats)
+    {
+        $ret = '';
+        foreach ($formats as $format) {
+            $ret .= '<div class="bmlt_admin_meeting_one_format_div">';
+            $ret .= '<label class="left_label" for="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox">'.htmlspecialchars($format->GetKey()).'</label>';
+            $ret .= '<span><input type="checkbox" value="'.$format->GetSharedID().'" id="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox" onchange="admin_handler_object.reactToFormatCheckbox(this, template);" onclick="admin_handler_object.reactToFormatCheckbox(this, template);" /></span>';
+            $ret .= '<label class="right_label" for="bmlt_admin_meeting_template_format_'.$format->GetSharedID().'_checkbox">'.htmlspecialchars($format->GetLocalName()).'</label>';
+            $ret .= '</div>';
+        }
+        return $ret;
+    }
     /********************************************************************************************************//**
     \brief
     \returns The HTML and JavaScript for the option sheet.
