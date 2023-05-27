@@ -83,6 +83,7 @@ class FormatRepository implements FormatRepositoryInterface
             ->where('lang_enum', 'en')
             ->firstOrFail();
     }
+
     public function getFormatsByFormatType($key, $lang = 'en'): Collection
     {
         return Format::query()
@@ -90,6 +91,7 @@ class FormatRepository implements FormatRepositoryInterface
             ->where('lang_enum', $lang)
             ->get();
     }
+
     private function getUsedFormatIds(Collection $meetings = null): array
     {
         $uniqueFormatIds = [];
