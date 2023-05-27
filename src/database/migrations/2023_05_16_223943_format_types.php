@@ -20,8 +20,8 @@ return new class extends Migration
     public function up()
     {
         Schema::create('comdef_format_types', function (Blueprint $table) {
-            $table->string('key_string', 10);
-            $table->string('api_enum', 256);
+            $table->string('key_string', 10)->unique();
+            $table->string('api_enum', 256)->unique();
             $table->integer('position_int');
             $table->index('key_string');
             $table->index('api_enum');

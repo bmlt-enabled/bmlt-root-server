@@ -20,11 +20,6 @@
 --
 
 --
--- Indizes für die Tabelle `na_comdef_format_types`
---
-ALTER TABLE `na_comdef_format_types`
-  ADD PRIMARY KEY (`key_string`);
---
 -- Table structure for table `na_comdef_changes`
 --
 
@@ -317,5 +312,3 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2018-12-03 10:14:32
-
-
