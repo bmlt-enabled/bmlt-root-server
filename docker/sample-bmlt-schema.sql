@@ -16,10 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Indizes der exportierten Tabellen
---
-
---
 -- Table structure for table `na_comdef_changes`
 --
 
