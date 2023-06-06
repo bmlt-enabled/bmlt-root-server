@@ -264,7 +264,7 @@ class ApiClientWrapper {
     const handleError = overrideErrorHandlers?.handleError ?? this.defaultErrorHandler;
 
     // handle network errors first
-    if (error.message === 'Failed to fetch') {
+    if (error.message === 'Failed to fetch' || error.name === 'FetchError') {
       if (handleNetworkError) {
         return handleNetworkError();
       }
