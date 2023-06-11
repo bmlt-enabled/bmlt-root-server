@@ -26,11 +26,11 @@ jobs:
         ports:
           - 3306
         env:
-          MYSQL_USER: rootserver
-          MYSQL_PASSWORD: rootserver
-          MYSQL_DATABASE: rootserver
-          MYSQL_ROOT_PASSWORD: rootserver
-        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
+          MARIADB_USER: rootserver
+          MARIADB_PASSWORD: rootserver
+          MARIADB_DATABASE: rootserver
+          MARIADB_ROOT_PASSWORD: rootserver
+        options: --health-cmd="${{ (matrix.db == 'latest') && 'mariadb-admin' || 'mysqladmin' }} ping" --health-interval=5s --health-timeout=2s --health-retries=3
     steps:
       - name: checkout 🛒
         uses: actions/checkout@v3
