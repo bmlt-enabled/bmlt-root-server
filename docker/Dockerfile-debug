@@ -1,4 +1,4 @@
-FROM bmltenabled/bmlt-root-server-base:latest
+FROM bmltenabled/bmlt-root-server-base:8.1
 
 # Configure apache php
 ENV PHP_INI_PATH /etc/php/8.1/apache2/php.ini

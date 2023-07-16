@@ -16,7 +16,6 @@ RUN apt-get update \
         mcrypt \
         unzip
 
-# Install older php
 RUN apt-get update \
     && apt-get -yqq install \
         php \
