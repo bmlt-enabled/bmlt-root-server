@@ -153,7 +153,7 @@ docker-publish-base:  ## Builds Base Docker Image
 
 .PHONY: mysql
 mysql:  ## Runs mysql cli in mysql container
-	docker exec -it docker-db-1 mysql -u root -prootserver rootserver
+	docker exec -it docker-db-1 mariadb -u root -prootserver rootserver
 
 .PHONY: bash
 bash:  ## Runs bash shell in apache container
