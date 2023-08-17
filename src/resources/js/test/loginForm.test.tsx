@@ -40,8 +40,7 @@ describe('Login', () => {
     render(<App />);
     await user.type(screen.getByLabelText(/password/i), 'testtesttest');
     await user.click(screen.getByRole('button', { name: 'Log In' }));
-    // the following test should work, but it doesn't  ?????
-    // expect(screen.getByText('/Username is required/')).toBeInTheDocument();
+    expect(screen.getByText(/Username is required/)).toBeInTheDocument();
   });
 
   test('missing password', async () => {
@@ -49,8 +48,19 @@ describe('Login', () => {
     render(<App />);
     await user.type(screen.getByRole('textbox', { name: 'Username' }), 'serveradmin');
     await user.click(screen.getByRole('button', { name: 'Log In' }));
-    // the following test should work, but it doesn't  ?????
-    // expect(screen.getByText('/Password is required/')).toBeInTheDocument();
+    expect(screen.getByText(/Password is required/)).toBeInTheDocument();
+  });
+
+  test('invalid password', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.type(screen.getByRole('textbox', { name: 'Username' }), 'serveradmin');
+    await user.type(screen.getByLabelText(/password/i), 'wrongpassword');
+    expect(screen.getByRole('textbox', { name: 'Username' })).toHaveDisplayValue('serveradmin');
+    expect(screen.getByLabelText(/password/i)).toHaveDisplayValue('wrongpassword');
+    await user.click(screen.getByRole('button', { name: 'Log In' }));
+    // notworking yet
+    // await screen.findByText(/The provided credentials are incorrect./);
   });
 
   test('log in with valid username and password', async () => {
@@ -62,7 +72,8 @@ describe('Login', () => {
     expect(screen.getByLabelText(/password/i)).toHaveDisplayValue('testtesttest');
     await user.click(screen.getByRole('button', { name: 'Log In' }));
     // the following test should work, but it doesn't  ?????
-    // await screen.findByText('/Dashboard/i');
+    // await screen.findByText(/Dashboard/i);
+    await screen.findByText(/Login/i);
   });
 
 });
