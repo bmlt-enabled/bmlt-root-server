@@ -168,3 +168,7 @@ clean:  ## Clean build
 	rm -rf src/node_modules
 	rm -rf src/vendor
 	rm -rf build
+
+.PHONY: yolo
+yolo: ## YOLO
+	$(COMPOSER_PREFIX) composer update --working-dir=src
