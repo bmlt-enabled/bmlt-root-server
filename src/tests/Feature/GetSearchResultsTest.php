@@ -293,6 +293,22 @@ class GetSearchResultsTest extends TestCase
         $this->assertEquals('4', $meeting['weekday_tinyint']);
     }
 
+    public function testWeekdayIncludeTwoComma()
+    {
+        $meeting1 = $this->createMeeting(['weekday_tinyint' => 5]);
+        $meeting2 = $this->createMeeting(['weekday_tinyint' => 3]);
+        $meeting3 = $this->createMeeting(['weekday_tinyint' => 1]);
+        $data = collect($this->get("/client_interface/json/?switcher=GetSearchResults&weekdays=6,4")
+            ->assertStatus(200)
+            ->assertJsonCount(2)
+            ->json());
+
+        $meeting = $data->filter(fn ($meeting) => $meeting['id_bigint'] == $meeting1->id_bigint)->first();
+        $this->assertEquals('6', $meeting['weekday_tinyint']);
+        $meeting = $data->filter(fn ($meeting) => $meeting['id_bigint'] == $meeting2->id_bigint)->first();
+        $this->assertEquals('4', $meeting['weekday_tinyint']);
+    }
+
     public function testWeekdayExcludeOne()
     {
         $meeting1 = $this->createMeeting(['weekday_tinyint' => 5]);
@@ -309,6 +325,17 @@ class GetSearchResultsTest extends TestCase
         $meeting2 = $this->createMeeting(['weekday_tinyint' => 3]);
         $meeting3 = $this->createMeeting(['weekday_tinyint' => 1]);
         $this->get("/client_interface/json/?switcher=GetSearchResults&weekdays[]=-6&weekdays[]=-4")
+            ->assertStatus(200)
+            ->assertJsonCount(1)
+            ->assertJsonFragment(['id_bigint' => strval($meeting3->id_bigint), 'weekday_tinyint' => '2']);
+    }
+
+    public function testWeekdayExcludeTwoComma()
+    {
+        $meeting1 = $this->createMeeting(['weekday_tinyint' => 5]);
+        $meeting2 = $this->createMeeting(['weekday_tinyint' => 3]);
+        $meeting3 = $this->createMeeting(['weekday_tinyint' => 1]);
+        $this->get("/client_interface/json/?switcher=GetSearchResults&weekdays=-6,-4")
             ->assertStatus(200)
             ->assertJsonCount(1)
             ->assertJsonFragment(['id_bigint' => strval($meeting3->id_bigint), 'weekday_tinyint' => '2']);

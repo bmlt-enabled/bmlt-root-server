@@ -1,3 +1,6 @@
+## 3.0.6 (UNRELEASED)
+* The `weekdays` filter parameter for the `GetSearchResults` API now accept a comma separated string (e.g. `weekdays=1,-2`) in addition to the standard array syntax.
+
 ## 3.0.5 (June 3, 2023)
 * Change name `Disabled User` to `Deactivated User`.
 * When the meeting formats are being selected, the formats now appear grouped by their FormatType 

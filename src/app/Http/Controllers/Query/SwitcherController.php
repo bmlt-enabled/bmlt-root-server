@@ -94,6 +94,7 @@ class SwitcherController extends Controller
         $meetingIds = !is_null($meetingIds) ? ensure_integer_array($meetingIds) : null;
 
         $weekdays = $request->input('weekdays', []);
+        $weekdays = is_string($weekdays) ? array_map(fn ($id) => trim($id), explode(',', $weekdays)) : $weekdays;
         $weekdays = ensure_integer_array($weekdays);
         $weekdaysInclude = collect($weekdays)->filter(fn ($w) => $w > 0)->map(fn ($w) => $w - 1)->toArray();
         $weekdaysInclude = count($weekdaysInclude) ? $weekdaysInclude : null;
