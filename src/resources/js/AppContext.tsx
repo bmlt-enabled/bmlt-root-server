@@ -1,6 +1,7 @@
 import { User } from 'bmlt-root-server-client';
 import React, { createContext, useReducer } from 'react';
 
+import { getMode } from './darkmode';
 import { restoreLanguage } from './localization';
 
 type Props = {
@@ -10,6 +11,7 @@ type Props = {
 export enum ActionType {
   SET_USER = 'SET_USER',
   SET_LANGUAGE = 'SET_LANGUAGE',
+  SET_MODE = 'SET_MODE',
 }
 
 type Action = {
@@ -20,11 +22,13 @@ type Action = {
 type State = {
   user: User | null;
   language: string;
+  mode: string;
 };
 
 const initialState = {
   user: null,
   language: restoreLanguage(),
+  mode: getMode(),
 };
 
 export const AppContext = createContext<{ state: State; dispatch: React.Dispatch<Action> }>({
@@ -39,6 +43,8 @@ export const AppContextProvider = ({ children }: Props) => {
         return { ...state, user: action.payload };
       case ActionType.SET_LANGUAGE:
         return { ...state, language: action.payload };
+      case ActionType.SET_MODE:
+        return { ...state, mode: action.payload };
       default:
         return state;
     }
