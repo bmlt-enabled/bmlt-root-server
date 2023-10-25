@@ -95,11 +95,13 @@ async function mockHandleErrors(error: Error, overrideErrorHandlers?: ErrorHandl
     overrideErrorHandlers?.handleAuthenticationError ?? savedAuthenticationErrorHandler;
   const handleError: GenericErrorHandler | null = overrideErrorHandlers?.handleError ?? savedErrorHandler;
   // handle api errors
-  const responseError: ResponseError = error as ResponseError;
-  // for now we're ignoring the body in the response error, and just hacking it in directly
-  // const body = await responseError.response.json();
+  // for now we're ignoring the response error, and just hacking it in directly
+  // const responseError: ResponseError = error as ResponseError;
+  /// const body = await responseError.response.json();
   const body = { message: 'The provided credentials are incorrect.' };
-  if (handleAuthenticationError && responseError.response.status === 401) {
+  // temporarily ignore responseError altogether
+  // if (handleAuthenticationError && responseError.response.status === 401) {
+  if (handleAuthenticationError && error) {
     return handleAuthenticationError(body as AuthenticationError);
   }
   if (handleError) {
