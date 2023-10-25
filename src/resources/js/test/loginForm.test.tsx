@@ -66,15 +66,17 @@ async function mockLogin(username: string, password: string): Promise<Token> {
   if (username === 'serveradmin' && password === 'good-password') {
     return mockAuthToken;
   } else {
-    const msg = '{ "message": "The provided credentials are incorrect." }';
-    const unicodeMsg = Uint8Array.from(Array.from(msg).map((x) => x.charCodeAt(0)));
-    const strm = new ReadableStream({
-      start(controller) {
-        controller.enqueue(unicodeMsg);
-        controller.close();
-      },
-    });
-    const r: Response = new Response(strm, { status: 401, statusText: 'Unauthorized' });
+    // temporarily forget about trying to construct a response with a stream
+    // const msg = '{ "message": "The provided credentials are incorrect." }';
+    // const unicodeMsg = Uint8Array.from(Array.from(msg).map((x) => x.charCodeAt(0)));
+    // const strm = new ReadableStream({
+    //  start(controller) {
+    //    controller.enqueue(unicodeMsg);
+    //    controller.close();
+    //  },
+    // });
+    // const r: Response = new Response(strm, { status: 401, statusText: 'Unauthorized' });
+    const r: Response = new Response(null, { status: 401, statusText: 'Unauthorized' });
     throw new ResponseError(r, 'Response returned an error code');
   }
 }
@@ -94,7 +96,9 @@ async function mockHandleErrors(error: Error, overrideErrorHandlers?: ErrorHandl
   const handleError: GenericErrorHandler | null = overrideErrorHandlers?.handleError ?? savedErrorHandler;
   // handle api errors
   const responseError: ResponseError = error as ResponseError;
-  const body = await responseError.response.json();
+  // for now we're ignoring the body in the response error, and just hacking it in directly
+  // const body = await responseError.response.json();
+  const body = { message: 'The provided credentials are incorrect.' };
   if (handleAuthenticationError && responseError.response.status === 401) {
     return handleAuthenticationError(body as AuthenticationError);
   }
