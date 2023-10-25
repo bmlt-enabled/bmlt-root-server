@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { AuthenticationError, ResponseError, Token, User } from 'bmlt-root-server-client';
-import { Readable } from 'stream';
 import { describe, test, vi } from 'vitest';
 
 import App from '../App';
@@ -67,8 +66,15 @@ async function mockLogin(username: string, password: string): Promise<Token> {
   if (username === 'serveradmin' && password === 'good-password') {
     return mockAuthToken;
   } else {
-    const strm: any = Readable.from('{ "message": "The provided credentials are incorrect." }');
-    const r: Response = new Response(strm as ReadableStream, { status: 401, statusText: 'Unauthorized' });
+    const msg = '{ "message": "The provided credentials are incorrect." }';
+    const unicodeMsg = Uint8Array.from(Array.from(msg).map((x) => x.charCodeAt(0)));
+    const strm = new ReadableStream({
+      start(controller) {
+        controller.enqueue(unicodeMsg);
+        controller.close();
+      },
+    });
+    const r: Response = new Response(strm, { status: 401, statusText: 'Unauthorized' });
     throw new ResponseError(r, 'Response returned an error code');
   }
 }
