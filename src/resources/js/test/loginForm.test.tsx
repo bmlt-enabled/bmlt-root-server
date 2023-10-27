@@ -66,18 +66,15 @@ async function mockLogin(username: string, password: string): Promise<Token> {
   if (username === 'serveradmin' && password === 'good-password') {
     return mockAuthToken;
   } else {
-    // Trying to construct a response with a ReadableStream for the body was giving errors on github,
-    // so omitting this (at least for now).
-    // const msg = '{ "message": "The provided credentials are incorrect." }';
-    // const unicodeMsg = Uint8Array.from(Array.from(msg).map((x) => x.charCodeAt(0)));
-    // const strm = new ReadableStream({
-    //   start(controller) {
-    //     controller.enqueue(unicodeMsg);
-    //     controller.close();
-    //   },
-    // });
-    // const r: Response = new Response(strm, { status: 401, statusText: 'Unauthorized' });
-    const r: Response = new Response(null, { status: 401, statusText: 'Unauthorized' });
+    const msg = '{ "message": "The provided credentials are incorrect." }';
+    const unicodeMsg = Uint8Array.from(Array.from(msg).map((x) => x.charCodeAt(0)));
+    const strm = new ReadableStream({
+      start(controller) {
+        controller.enqueue(unicodeMsg);
+        controller.close();
+      },
+    });
+    const r: Response = new Response(strm, { status: 401, statusText: 'Unauthorized' });
     throw new ResponseError(r, 'Response returned an error code');
   }
 }
@@ -97,11 +94,15 @@ async function mockHandleErrors(error: Error, overrideErrorHandlers?: ErrorHandl
   const handleError: GenericErrorHandler | null = overrideErrorHandlers?.handleError ?? savedErrorHandler;
   // handle api errors
   const responseError: ResponseError = error as ResponseError;
-  // constructing a ReadableStream for the error body didn't work (see comment in mockLogin), so constructing
-  // the body directly instead
+  // The following commented-out code works locally but is giving an error on github.  Temporarily just
+  // constructing the error body directly.  Maybe the code in mockLogin is giving some other kind of error
+  // on gitub, and not even constructing a ResponseError?
   // const body = await responseError.response.json();
+  // if (handleAuthenticationError && responseError.response.status === 401) {
+  //   return handleAuthenticationError(body as AuthenticationError);
+  // }
   const body = { message: 'The provided credentials are incorrect.' };
-  if (handleAuthenticationError && responseError.response.status === 401) {
+  if (handleAuthenticationError && responseError) {
     return handleAuthenticationError(body as AuthenticationError);
   }
   if (handleError) {
