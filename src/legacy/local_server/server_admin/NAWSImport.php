@@ -15,7 +15,8 @@ class NAWSImport
     private $expectedColumns = array(
         'delete', 'parentname', 'committee', 'committeename', 'arearegion', 'day', 'time', 'place',
         'address', 'city', 'locborough', 'state', 'zip', 'country', 'directions', 'closed', 'wheelchr',
-        'format1', 'format2', 'format3', 'format4', 'format5', 'longitude', 'latitude', 'room'
+        'format1', 'format2', 'format3', 'format4', 'format5', 'longitude', 'latitude', 'room',
+        'phonemeetingnumber', 'virtualmeetinglink', 'virtualmeetinginfo', 'timezone'
     );
     private $server = null;
     private $areas = array();
@@ -190,7 +191,8 @@ class NAWSImport
         $ajaxHandler = new c_comdef_admin_ajax_handler(null);
         $nawsDays = array(null, 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday');
         // State is not a required column, because it is not always filled out for foreign countries
-        $requiredColumns = array('committeename', 'arearegion', 'day', 'time', 'address', 'city');
+        // to allow importing virtual meetings, also drop address and city as required columns
+        $requiredColumns = array('committeename', 'arearegion', 'day', 'time');
         for ($i = 1; $i <= count($this->nawsExportRows); $i++) {
             $row = $this->nawsExportRows[$i];
             if ($i == 1) {
@@ -301,6 +303,18 @@ class NAWSImport
                         break;
                     case 'latitude':
                         $meetingData['latitude'] = $value;
+                        break;
+                    case 'phonemeetingnumber':
+                        $meetingData['phone_meeting_number'] = $value;
+                        break;
+                    case 'virtualmeetinglink':
+                        $meetingData['virtual_meeting_link'] = $value;
+                        break;
+                    case 'virtualmeetinginfo':
+                        $meetingData['virtual_meeting_additional_info'] = $value;
+                        break;
+                    case 'timezone':
+                        $meetingData['time_zone'] = $value;
                         break;
                     case 'unpublished':
                         if ($value == '1') {
