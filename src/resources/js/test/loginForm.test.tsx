@@ -1,24 +1,25 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { AuthenticationError, ResponseError, Token, User } from 'bmlt-root-server-client';
+import { ResponseError, Token, User } from 'bmlt-root-server-client';
 import { describe, test, vi } from 'vitest';
 
 import App from '../App';
 import ApiClientWrapper from '../RootServerApi';
 
-type AuthenticationErrorHandler = (error: AuthenticationError) => void;
-type GenericErrorHandler = (error: any) => void;
-type ErrorHandlers = {
-  handleAuthenticationError?: AuthenticationErrorHandler;
-  handleError?: GenericErrorHandler;
-};
-
-vi.mock('../RootServerApi');
+// we only want to mock methods on the instance of ApiClient stored in ApiClientWrapper.api
+// we're not mocking methods on the wrapper itself (ApiClientWrapper)
+vi.mock('../RootServerApi', async () => {
+  const mod = await vi.importActual<typeof import('../RootServerApi')>('../RootServerApi');
+  return {
+    ...mod,
+    mocked: vi.fn(),
+  };
+});
 
 // define a mock authToken that expires 1 hour from now
 // (the token uses PHP's time rather than Javascript's time, so seconds from the epoch instead of milliseconds)
 const now: number = Math.round(new Date().valueOf() / 1000);
-const mockAuthToken: Token = {
+const mockedToken: Token = {
   accessToken: 'mysteryString42',
   expiresAt: now + 60 * 60,
   tokenType: 'bearer',
@@ -39,10 +40,6 @@ const mockUser: User = {
 // mocked access token
 let savedAccessToken: Token | null;
 
-// mocked error handlers (others aren't used)
-let savedAuthenticationErrorHandler: AuthenticationErrorHandler | null;
-let savedErrorHandler: GenericErrorHandler | null;
-
 function mockGetToken(): Token | null {
   return savedAccessToken;
 }
@@ -51,20 +48,20 @@ function mockSetToken(token: Token | null): void {
   savedAccessToken = token;
 }
 
-async function mockGetUser(userId: number): Promise<User> {
-  if (userId == mockUser.id) {
+async function mockGetUser(params: { userId: number }): Promise<User> {
+  if (params.userId == mockUser.id) {
     return mockUser;
   }
   throw new Error('no user found with the given userId');
 }
 
 function mockIsLoggedIn(): boolean {
-  return savedAccessToken == mockAuthToken;
+  return Boolean(savedAccessToken);
 }
 
-async function mockLogin(username: string, password: string): Promise<Token> {
-  if (username === 'serveradmin' && password === 'good-password') {
-    return mockAuthToken;
+async function mockAuthToken(authTokenRequest: { tokenCredentials: { username: string; password: string } }): Promise<Token> {
+  if (authTokenRequest.tokenCredentials.username === 'serveradmin' && authTokenRequest.tokenCredentials.password === 'good-password') {
+    return mockedToken;
   } else {
     const msg = '{ "message": "The provided credentials are incorrect." }';
     const unicodeMsg = Uint8Array.from(Array.from(msg).map((x) => x.charCodeAt(0)));
@@ -79,64 +76,16 @@ async function mockLogin(username: string, password: string): Promise<Token> {
   }
 }
 
-async function mockLogout(): Promise<void> {
+async function mockAuthLogout(): Promise<void> {
   savedAccessToken = null;
 }
 
-function mockInitializeDefaultErrorHandlers(defaultErrorHandlers: ErrorHandlers): void {
-  savedAuthenticationErrorHandler = defaultErrorHandlers.handleAuthenticationError ?? null;
-  savedErrorHandler = defaultErrorHandlers.handleError ?? null;
-}
-
-async function mockHandleErrors(error: Error, overrideErrorHandlers?: ErrorHandlers): Promise<void> {
-  const handleAuthenticationError: AuthenticationErrorHandler | null =
-    overrideErrorHandlers?.handleAuthenticationError ?? savedAuthenticationErrorHandler;
-  const handleError: GenericErrorHandler | null = overrideErrorHandlers?.handleError ?? savedErrorHandler;
-  // handle api errors
-  const responseError: ResponseError = error as ResponseError;
-  // The following commented-out code works locally but is giving an error on github.  Temporarily just
-  // constructing the error body directly.  Maybe the code in mockLogin is giving some other kind of error
-  // on gitub, and not even constructing a ResponseError?
-  // const body = await responseError.response.json();
-  // if (handleAuthenticationError && responseError.response.status === 401) {
-  //   return handleAuthenticationError(body as AuthenticationError);
-  // }
-  const body = { message: 'The provided credentials are incorrect.' };
-  if (handleAuthenticationError && responseError) {
-    return handleAuthenticationError(body as AuthenticationError);
-  }
-  if (handleError) {
-    return handleError(body);
-  }
-  // TODO: is there a better way to handle this?  Here is the code being mocked:
-  // return console.log('TODO unhandled error, show error dialog', body);
-  throw new Error('unhandled error -- something went wrong');
-}
-
-// mock getters and setters
-vi.spyOn(ApiClientWrapper, 'token', 'get').mockImplementation(mockGetToken);
-vi.spyOn(ApiClientWrapper, 'token', 'set').mockImplementation(mockSetToken);
-vi.spyOn(ApiClientWrapper, 'isLoggedIn', 'get').mockImplementation(mockIsLoggedIn);
-
-// The following commented-out statements would be the standard way to mock methods such as login and getUser,
-// but typescript doesn't realize that for example ApiClientWrapper.login returns a MockInstance rather than the
-// actual login method.  Hence the more verbose vi.spyOn statements below.
-// ApiClientWrapper.login.mockImplementation(mockLogin);
-// ApiClientWrapper.getUser.mockImplementation(mockGetUser);
-// ApiClientWrapper.logout.mockImplementation(mockLogout);
-// ApiClientWrapper.initializeDefaultErrorHandlers.mockImplementation(mockInitializeDefaultErrorHandlers);
-// ApiClientWrapper.handleErrors.mockImplementation(mockHandleErrors);
-
-vi.spyOn(ApiClientWrapper, 'login').mockImplementation(mockLogin);
-vi.spyOn(ApiClientWrapper, 'getUser').mockImplementation(mockGetUser);
-vi.spyOn(ApiClientWrapper, 'logout').mockImplementation(mockLogout);
-vi.spyOn(ApiClientWrapper, 'initializeDefaultErrorHandlers').mockImplementation(mockInitializeDefaultErrorHandlers);
-vi.spyOn(ApiClientWrapper, 'handleErrors').mockImplementation(mockHandleErrors);
-
-// alternative for mocking would be to mock this version of RootServerApi:
-// import { RootServerApi } from '../../../node_modules/bmlt-root-server-client/src/apis/RootServerApi';
-// vi.mock('../../../node_modules/bmlt-root-server-client/src/apis/RootServerApi');
-// RootServerApi.prototype.authToken.mockResolvedValue(mockAuthToken);
+vi.spyOn(ApiClientWrapper.api, 'token', 'get').mockImplementation(mockGetToken);
+vi.spyOn(ApiClientWrapper.api, 'token', 'set').mockImplementation(mockSetToken);
+vi.spyOn(ApiClientWrapper.api, 'isLoggedIn', 'get').mockImplementation(mockIsLoggedIn);
+vi.spyOn(ApiClientWrapper.api, 'getUser').mockImplementation(mockGetUser);
+vi.spyOn(ApiClientWrapper.api, 'authToken').mockImplementation(mockAuthToken);
+vi.spyOn(ApiClientWrapper.api, 'authLogout').mockImplementation(mockAuthLogout);
 
 describe('Login', () => {
   test('check login page before logging in', () => {

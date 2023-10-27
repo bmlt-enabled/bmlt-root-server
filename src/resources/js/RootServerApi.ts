@@ -80,7 +80,7 @@ type ErrorHandlers = {
 class ApiClientWrapper {
   static instance = new ApiClientWrapper();
 
-  private api: ApiClient;
+  public api: ApiClient;
   private defaultAuthenticationErrorHandler: AuthenticationErrorHandler | null = null;
   private defaultAuthorizationErrorHandler: AuthorizationErrorHandler | null = null;
   private defaultNotFoundErrorHandler: NotFoundErrorHandler | null = null;
