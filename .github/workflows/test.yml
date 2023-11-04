@@ -60,7 +60,7 @@ jobs:
       - name: checkout 🛒
         uses: actions/checkout@v3
 
-      - name: node 16 ❇️
+      - name: node 20 ❇️
         uses: actions/setup-node@v3.5.1
         with:
           node-version: 16
