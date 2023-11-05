@@ -6,16 +6,6 @@ import { describe, test, vi } from 'vitest';
 import App from '../App';
 import ApiClientWrapper from '../RootServerApi';
 
-// we only want to mock methods on the instance of ApiClient stored in ApiClientWrapper.api
-// we're not mocking methods on the wrapper itself (ApiClientWrapper)
-vi.mock('../RootServerApi', async () => {
-  const mod = await vi.importActual<typeof import('../RootServerApi')>('../RootServerApi');
-  return {
-    ...mod,
-    mocked: vi.fn(),
-  };
-});
-
 // define a mock authToken that expires 1 hour from now
 // (the token uses PHP's time rather than Javascript's time, so seconds from the epoch instead of milliseconds)
 const now: number = Math.round(new Date().valueOf() / 1000);
