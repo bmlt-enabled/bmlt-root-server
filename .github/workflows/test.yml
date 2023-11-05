@@ -63,7 +63,7 @@ jobs:
       - name: node 20 ❇️
         uses: actions/setup-node@v3.5.1
         with:
-          node-version: 16
+          node-version: 20
 
       - name: make npm ♦️
         run: |
