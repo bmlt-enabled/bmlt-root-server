@@ -80,7 +80,7 @@ type ErrorHandlers = {
 class ApiClientWrapper {
   static instance = new ApiClientWrapper();
 
-  private api: ApiClient;
+  public api: ApiClient;
   private defaultAuthenticationErrorHandler: AuthenticationErrorHandler | null = null;
   private defaultAuthorizationErrorHandler: AuthorizationErrorHandler | null = null;
   private defaultNotFoundErrorHandler: NotFoundErrorHandler | null = null;
@@ -264,7 +264,7 @@ class ApiClientWrapper {
     const handleError = overrideErrorHandlers?.handleError ?? this.defaultErrorHandler;
 
     // handle network errors first
-    if (error.message === 'Failed to fetch') {
+    if (error.message === 'Failed to fetch' || error.name === 'FetchError') {
       if (handleNetworkError) {
         return handleNetworkError();
       }
