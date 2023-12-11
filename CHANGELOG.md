@@ -2,6 +2,7 @@
 * The `weekdays` filter parameter for the `GetSearchResults` API now accept a comma separated string (e.g. `weekdays=1,-2`) in addition to the standard array syntax.
 * Added unit tests for login in the new UI. (These are also intended to be prototypes for other UI unit tests.)
 * Updated the NAWS import functionality for use by NAWS when importing virtual meetings, by importing the virtual meeting fields and time zone, and allowing the address and city to be blank.
+* Fixed a bug with trying to log in as a deactivated user
 
 ## 3.0.5 (June 3, 2023)
 * Change name `Disabled User` to `Deactivated User`.
