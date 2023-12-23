@@ -667,7 +667,7 @@ class SwitcherController extends Controller
                     }
 
                     $deletedMeetingData[$meeting->id_bigint] = collect($serializedMeeting['data_table_values'])
-                        ->mapWithKeys(fn ($data, $_) => [$data['key'] => $data['data_string']])
+                        ->mapWithKeys(fn ($data, $_) => [$data['key'] => $data['data_string'] ?? strval($data['data_bigint'])])
                         ->merge(collect($serializedMeeting['longdata_table_values'])->mapWithKeys(fn ($data, $_) => [$data['key'] => $data['data_blob']]));
 
                     return $meeting;
