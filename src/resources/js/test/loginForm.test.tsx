@@ -1,3 +1,4 @@
+/* Unit tests for the initial login screen */
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ResponseError, Token, User } from 'bmlt-root-server-client';
@@ -26,8 +27,18 @@ const mockAreaAdmin: User = {
   username: 'RiverCityArea',
 };
 
-const allMockUsers = [mockServerAdmin, mockAreaAdmin];
-const allMockPasswords = ['serveradmin-password', 'rivercity-password'];
+const mockObserver: User = {
+  description: 'River City Area Observer',
+  displayName: 'River Observer',
+  email: 'nobody@bmlt.app',
+  id: 7,
+  ownerId: '5',
+  type: 'observer',
+  username: 'RiverObserver',
+};
+
+const allMockUsers = [mockServerAdmin, mockAreaAdmin, mockObserver];
+const allMockPasswords = ['serveradmin-password', 'rivercity-password', 'river-observer-password'];
 
 // mocked access token
 let savedAccessToken: Token | null;
@@ -163,6 +174,17 @@ describe('Login', () => {
     // after a successful login, we should see the dashboard, including the word 'Dashboard' and the user name
     await screen.findByText(/Dashboard/);
     await screen.findByText(/River City Area/);
+  });
+
+  test('log in with valid username and password for an observer', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.type(screen.getByRole('textbox', { name: 'Username' }), 'RiverObserver');
+    await user.type(screen.getByLabelText(/password/i), 'river-observer-password');
+    await user.click(screen.getByRole('button', { name: 'Log In' }));
+    // after a successful login, we should see the dashboard, including the word 'Dashboard' and the user name
+    await screen.findByText(/Dashboard/);
+    await screen.findByText(/River Observer/);
   });
 });
 

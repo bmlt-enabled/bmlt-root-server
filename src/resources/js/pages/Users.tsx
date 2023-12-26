@@ -313,28 +313,31 @@ export const Users = () => {
         )}
         <form onSubmit={handleSubmit(applyChanges)} noValidate>
           <StyledInputWrapper>
-            <h3>{strings.userIsATitle}</h3>
             <FormControl fullWidth>
               <Controller
                 name='type'
                 control={control}
                 defaultValue=''
                 render={({ field: { onChange, value } }) => (
-                  <Select
-                    disabled={state.user?.type !== 'admin'}
-                    error={errors?.type?.type === 'required' || validationMessage?.type !== ''}
-                    labelId='type-select-label'
-                    id='type-select'
-                    defaultValue=''
-                    required
-                    value={value}
-                    {...register('type', { required: true })}
-                    onChange={onChange}
-                  >
-                    <MenuItem value='serviceBodyAdmin'>{strings.serviceBodyAdminTitle}</MenuItem>
-                    <MenuItem value='observer'>{strings.observerTitle}</MenuItem>
-                    <MenuItem value='deactivated'>{strings.deactivatedUserTitle}</MenuItem>
-                  </Select>
+                  <div>
+                    <InputLabel id='type-select'>{strings.userIsATitle}</InputLabel>
+                    <Select
+                      disabled={state.user?.type !== 'admin'}
+                      error={errors?.type?.type === 'required' || validationMessage?.type !== ''}
+                      labelId='type-select-label'
+                      id='type-select'
+                      label={strings.userIsATitle}
+                      defaultValue=''
+                      required
+                      value={value}
+                      {...register('type', { required: true })}
+                      onChange={onChange}
+                    >
+                      <MenuItem value='serviceBodyAdmin'>{strings.serviceBodyAdminTitle}</MenuItem>
+                      <MenuItem value='observer'>{strings.observerTitle}</MenuItem>
+                      <MenuItem value='deactivated'>{strings.deactivatedUserTitle}</MenuItem>
+                    </Select>
+                  </div>
                 )}
               />
             </FormControl>
@@ -343,42 +346,45 @@ export const Users = () => {
             </FormHelperText>
           </StyledInputWrapper>
           <StyledInputWrapper>
-            <h3>{strings.ownedByTitle}</h3>
             <FormControl fullWidth>
               <Controller
                 name='ownerId'
                 control={control}
                 defaultValue=''
                 render={({ field: { onChange, value } }) => (
-                  <Select
-                    disabled={state.user?.type !== 'admin'}
-                    error={validationMessage?.ownerId !== ''}
-                    labelId='owner-id-label'
-                    defaultValue=''
-                    id='owner-id-select'
-                    value={updateOwner(value)}
-                    {...register('ownerId', { required: false })}
-                    onChange={onChange}
-                  >
-                    {users.map((currentUser, i) => {
-                      return (
-                        <MenuItem value={currentUser.id} key={i}>
-                          {currentUser.displayName}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
+                  <div>
+                    <InputLabel id='owner-id'>{strings.ownedByTitle}</InputLabel>
+                    <Select
+                      disabled={state.user?.type !== 'admin'}
+                      error={validationMessage?.ownerId !== ''}
+                      labelId='owner-id-label'
+                      defaultValue=''
+                      id='owner-id'
+                      label={strings.ownedByTitle}
+                      value={updateOwner(value)}
+                      {...register('ownerId', { required: false })}
+                      onChange={onChange}
+                    >
+                      {users.map((currentUser, i) => {
+                        return (
+                          <MenuItem value={currentUser.id} key={i}>
+                            {currentUser.displayName}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </div>
                 )}
               />
             </FormControl>
             <FormHelperText id='ownerId-error-text'>{validationMessage?.ownerId !== '' && validationMessage?.ownerId}</FormHelperText>
           </StyledInputWrapper>
           <StyledInputWrapper>
-            <h3>{strings.usernameTitle}</h3>
             <TextField
               error={errors?.username?.type === 'required' || validationMessage?.username !== ''}
               id='username'
               type='text'
+              label={strings.usernameTitle}
               fullWidth
               required
               variant='outlined'
@@ -393,11 +399,11 @@ export const Users = () => {
             </FormHelperText>
           </StyledInputWrapper>
           <StyledInputWrapper>
-            <h3>{strings.nameTitle}</h3>
             <TextField
               error={errors?.displayName?.type === 'required' || validationMessage?.displayName !== ''}
               id='name'
               type='text'
+              label={strings.nameTitle}
               fullWidth
               required
               variant='outlined'
@@ -411,11 +417,11 @@ export const Users = () => {
             </FormHelperText>
           </StyledInputWrapper>
           <StyledInputWrapper>
-            <h3>{strings.emailTitle?.slice(0, -1)}</h3>
             <TextField
               error={validationMessage?.email !== ''}
               id='email'
               type='text'
+              label={strings.emailTitle?.slice(0, -1)}
               fullWidth
               variant='outlined'
               aria-describedby='email-error-text'
@@ -427,11 +433,11 @@ export const Users = () => {
             </FormHelperText>
           </StyledInputWrapper>
           <StyledInputWrapper>
-            <h3>{strings.passwordTitle}</h3>
             <TextField
               error={currentSelection === -1 && (errors?.password?.type === 'required' || validationMessage?.password !== '')}
               id='password'
               type='password'
+              label={strings.passwordTitle}
               fullWidth
               required={currentSelection === -1 ? true : false}
               variant='outlined'
@@ -445,11 +451,11 @@ export const Users = () => {
             </FormHelperText>
           </StyledInputWrapper>
           <StyledInputWrapper>
-            <h3>{strings.descriptionTitle}</h3>
             <TextField
               error={validationMessage?.description !== ''}
               id='description'
               type='text'
+              label={strings.descriptionTitle}
               fullWidth
               variant='outlined'
               aria-describedby='description-error-text'
