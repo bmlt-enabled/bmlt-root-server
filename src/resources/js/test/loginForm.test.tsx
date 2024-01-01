@@ -1,4 +1,4 @@
-/* Unit tests for the initial login screen */
+/* Unit tests for the initial login screen, including the language selection menu when enabled */
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ResponseError, Token, User } from 'bmlt-root-server-client';
@@ -71,6 +71,16 @@ async function mockGetUser(params: { userId: number }): Promise<User> {
   throw new Error('unknown user -- something went wrong');
 }
 
+async function mockGetUsers(_?: any): Promise<User[]> {
+  if (!savedAccessToken) {
+    throw new Error('internal error -- trying to get users when no simulated user is logged in');
+  } else if (savedAccessToken.userId === mockServerAdmin.id) {
+    return [mockServerAdmin, mockAreaAdmin, mockObserver];
+  } else {
+    throw new Error('internal error -- user ID not handled by this mock');
+  }
+}
+
 function mockIsLoggedIn(): boolean {
   return Boolean(savedAccessToken);
 }
@@ -104,12 +114,20 @@ beforeAll(async () => {
   vi.spyOn(ApiClientWrapper.api, 'token', 'set').mockImplementation(mockSetToken);
   vi.spyOn(ApiClientWrapper.api, 'isLoggedIn', 'get').mockImplementation(mockIsLoggedIn);
   vi.spyOn(ApiClientWrapper.api, 'getUser').mockImplementation(mockGetUser);
+  vi.spyOn(ApiClientWrapper.api, 'getUsers').mockImplementation(mockGetUsers);
   vi.spyOn(ApiClientWrapper.api, 'authToken').mockImplementation(mockAuthToken);
   vi.spyOn(ApiClientWrapper.api, 'authLogout').mockImplementation(mockAuthLogout);
 });
 
 beforeEach(async () => {
   savedAccessToken = null;
+});
+
+// The language selection tests may change the default language and enable the language selector.  Make sure these are reset.
+afterEach(async () => {
+  const settings = (global as any).settings;
+  settings['defaultLanguage'] = 'en';
+  settings['isLanguageSelectorEnabled'] = false;
 });
 
 describe('Login', () => {
@@ -186,6 +204,70 @@ describe('Login', () => {
     await screen.findByText(/Dashboard/);
     await screen.findByText(/River Observer/);
   });
+});
+
+describe('language selection tests', () => {
+  test('check default (language selection menu not shown)', async () => {
+    render(<App />);
+    const lang = screen.queryByLabelText('Select Language');
+    expect(lang).toBeNull();
+  });
+
+  // Check that language selection menu is shown when it is enabled and that it works, by selecting German.
+  // This test goes a little further than the others in this file, in that it mocks clicking on one of links
+  // ('Users'), and making sure that part is still in German.  The bulk of the tests of the 'Users' page are in a
+  // separate test file though.
+  test('check language selection menu', async () => {
+    const settings = (global as any).settings;
+    // English is the default, so we don't need to set it:
+    // settings['defaultLanguage'] = 'en';
+    settings['isLanguageSelectorEnabled'] = true;
+    settings['languageMapping'] = { de: 'Deutsch', en: 'English' };
+    const user = userEvent.setup();
+    render(<App />);
+    const lang = await screen.findByLabelText('Select Language');
+    await user.click(lang);
+    const de = await screen.findByRole('option', { name: 'Deutsch' });
+    await user.click(de);
+    // login screen should now be in German
+    await user.type(screen.getByRole('textbox', { name: 'Benutzername' }), 'serveradmin'); // Benutzername = Username
+    await user.type(screen.getByLabelText(/passwort/i), 'serveradmin-password'); // Passwort = Password
+    await user.click(screen.getByRole('button', { name: 'Anmelden' })); // Anmelden = Log In
+    // after a successful login, we should see the dashboard, including a link to the Users page
+    // (which will be called Benutzer in German)
+    const link = await screen.findByRole('link', { name: 'Benutzer' });
+    await user.click(link);
+    // we should see the default 'Create New User' even without clicking on the dropdown (Erstelle einen neuen Benutzer in German)
+    await screen.findByText(/Erstelle einen neuen Benutzer/);
+    // log out, and make sure we're back at the login screen, still in German
+    await user.click(screen.getByRole('button', { name: 'Abmelden' })); // Abmelden = Sign Out
+    // Anmeldung = Login (this is loginTitle, not loginVerb)
+    expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent('Anmeldung');
+  });
+
+  /*
+TO DO: THIS TEST ISN'T WORKING YET
+  test('check non-English default language', async () => {
+    const settings = (global as any).settings;
+    settings['defaultLanguage'] = 'de';
+    const user = userEvent.setup();
+    render(<App />);
+    // login screen should be in German
+    await user.type(screen.getByRole('textbox', { name: 'Benutzername' }), 'serveradmin');   // Benutzername = Username
+    await user.type(screen.getByLabelText(/passwort/i), 'serveradmin-password');   // Passwort = Password
+    await user.click(screen.getByRole('button', { name: 'Anmelden' }));  // Anmelden = Log In
+    // after a successful login, we should see the dashboard, including a link to the Users page
+    // (which will be called Benutzer in German)
+    const link = await screen.findByRole('link', { name: 'Benutzer' });
+    await user.click(link);
+    // we should see the default 'Create New User' even without clicking on the dropdown (Erstelle einen neuen Benutzer in German)
+    await screen.findByText(/Erstelle einen neuen Benutzer/);
+    // log out, and make sure we're back at the login screen, still in German
+    await user.click(screen.getByRole('button', { name: 'Abmelden' }));  // Abmelden = Sign Out
+    // Anmeldung = Login (this is loginTitle, not loginVerb)
+    expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent('Anmeldung');
+  });
+  */
 });
 
 afterAll(async () => {
