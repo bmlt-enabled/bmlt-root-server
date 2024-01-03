@@ -32,7 +32,7 @@ see [CONTRIBUTING.md](CONTRIBUTING.md) in the GitHub repository.
 REQUIREMENTS
 ------------
 
-The root server requires a MySQL 5.7 database or higher and PHP 8.0 or higher.
+The root server requires a MySQL 5.7 database or higher and PHP 8.1 or higher.
 
 For more information about server requirements, see the "Things You Will Need Before You Install" section of
 [Installing a New Root Server](https://bmlt.app/setting-up-the-bmlt/).
