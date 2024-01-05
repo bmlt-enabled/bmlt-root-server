@@ -5,7 +5,6 @@
 * Fixed an issue when using NAWS Export with certain very old data sets. 
 
 ## 3.0.5 (June 3, 2023)
-* In the new UI only, change name `Disabled User` to `Deactivated User`.
 * When the meeting formats are being selected, the formats now appear grouped by their FormatType 
 * Add `aggregator_mode_enabled` to `GetServerInfo` endpoint.
 
