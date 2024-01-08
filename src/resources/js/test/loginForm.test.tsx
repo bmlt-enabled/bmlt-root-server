@@ -123,10 +123,9 @@ beforeEach(async () => {
   savedAccessToken = null;
 });
 
-// The language selection tests may change the default language and enable the language selector.  Make sure these are reset.
+// One of the language selection tests enables the language selector.  Make sure it is reset after any test.
 afterEach(async () => {
   const settings = (global as any).settings;
-  settings['defaultLanguage'] = 'en';
   settings['isLanguageSelectorEnabled'] = false;
 });
 
@@ -219,12 +218,11 @@ describe('language selection tests', () => {
   // separate test file though.
   test('check language selection menu', async () => {
     const settings = (global as any).settings;
-    // English is the default, so we don't need to set it:
-    // settings['defaultLanguage'] = 'en';
     settings['isLanguageSelectorEnabled'] = true;
     settings['languageMapping'] = { de: 'Deutsch', en: 'English' };
     const user = userEvent.setup();
     render(<App />);
+    // we're still using English here, so the 'Select Language' label is in English
     const lang = await screen.findByLabelText('Select Language');
     await user.click(lang);
     const de = await screen.findByRole('option', { name: 'Deutsch' });
@@ -239,35 +237,18 @@ describe('language selection tests', () => {
     await user.click(link);
     // we should see the default 'Create New User' even without clicking on the dropdown (Erstelle einen neuen Benutzer in German)
     await screen.findByText(/Erstelle einen neuen Benutzer/);
-    // log out, and make sure we're back at the login screen, still in German
+    // Log out, and make sure we're back at the login screen.  Now it should be entirely in German, including the
+    // language selection menu label.
     await user.click(screen.getByRole('button', { name: 'Abmelden' })); // Abmelden = Sign Out
     // Anmeldung = Login (this is loginTitle, not loginVerb)
-    expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent('Anmeldung');
+    expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent('Anmeldung'); // Anmeldung = Log In
+    expect(screen.getByLabelText('Sprache auswählen')).toBeInTheDocument(); // Sprache auswählen = Select Language
   });
 
-  /*
-TO DO: THIS TEST ISN'T WORKING YET
-  test('check non-English default language', async () => {
-    const settings = (global as any).settings;
-    settings['defaultLanguage'] = 'de';
-    const user = userEvent.setup();
-    render(<App />);
-    // login screen should be in German
-    await user.type(screen.getByRole('textbox', { name: 'Benutzername' }), 'serveradmin');   // Benutzername = Username
-    await user.type(screen.getByLabelText(/passwort/i), 'serveradmin-password');   // Passwort = Password
-    await user.click(screen.getByRole('button', { name: 'Anmelden' }));  // Anmelden = Log In
-    // after a successful login, we should see the dashboard, including a link to the Users page
-    // (which will be called Benutzer in German)
-    const link = await screen.findByRole('link', { name: 'Benutzer' });
-    await user.click(link);
-    // we should see the default 'Create New User' even without clicking on the dropdown (Erstelle einen neuen Benutzer in German)
-    await screen.findByText(/Erstelle einen neuen Benutzer/);
-    // log out, and make sure we're back at the login screen, still in German
-    await user.click(screen.getByRole('button', { name: 'Abmelden' }));  // Abmelden = Sign Out
-    // Anmeldung = Login (this is loginTitle, not loginVerb)
-    expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent('Anmeldung');
-  });
-  */
+  // Caution: state.language is memoized, and changing settings['defaultLanguage'] in a test doesn't get picked up.
+  // You can change it in setup.ts, to mock having it in the auto config file, but that changes the default language
+  // to German for *all* the tests.  So if you add any additional tests for non-English languages, the easiest path
+  // is to select the other language explicitly from the language selection menu (as in the above test).
 });
 
 afterAll(async () => {
