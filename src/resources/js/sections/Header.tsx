@@ -1,4 +1,4 @@
-import { AppBar, Box, Container, Typography } from '@mui/material';
+import { AppBar, Box, Container, InputLabel, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 
 import { strings } from '../localization';
@@ -18,7 +18,7 @@ const StyledHeaderContainer = styled(Container)({
 export const Header = () => {
   const languageSelectorBox = settings.isLanguageSelectorEnabled ? (
     <Box>
-      <Typography color='white'>{strings.languageSelectTitle}</Typography>
+      <InputLabel id='language-select-label'>{strings.languageSelectTitle}</InputLabel>
       <LanguageSelect />
     </Box>
   ) : (

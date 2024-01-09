@@ -19,7 +19,7 @@ export const LanguageSelect = () => {
   };
   return (
     <StyledFormControl size='small'>
-      <Select labelId='demo-select-small' id='demo-select-small' value={state.language} onChange={handleLanguageChange}>
+      <Select labelId='language-select-label' id='language-select' value={state.language} onChange={handleLanguageChange}>
         {languageArr.map((lang) => (
           <MenuItem key={lang[0]} value={lang[0]}>
             {lang[1]}

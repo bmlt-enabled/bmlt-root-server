@@ -270,7 +270,7 @@ class ApiClientWrapper {
       }
 
       if (handleError) {
-        return handleError(error.message);
+        return handleError(error);
       }
 
       return console.log('TODO show error dialog', error.message);
