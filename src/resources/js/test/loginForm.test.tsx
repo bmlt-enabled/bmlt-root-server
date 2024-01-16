@@ -236,7 +236,7 @@ describe('language selection tests', () => {
     const link = await screen.findByRole('link', { name: 'Benutzer' });
     await user.click(link);
     // we should see the default 'Create New User' even without clicking on the dropdown (Erstelle einen neuen Benutzer in German)
-    await screen.findByText(/Erstelle einen neuen Benutzer/);
+    await screen.findByRole('button', { name: /benutzer erstelle einen neuen benutzer/i });
     // Log out, and make sure we're back at the login screen.  Now it should be entirely in German, including the
     // language selection menu label.
     await user.click(screen.getByRole('button', { name: 'Abmelden' })); // Abmelden = Sign Out
