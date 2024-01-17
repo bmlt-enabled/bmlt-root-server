@@ -255,7 +255,7 @@ describe('check for correct lists of users in User dropdown menu', () => {
     const user = await startWithUsersTab(mockServerAdmin);
     // The default should be 'Create New User'.  This default should be what is shown before
     // clicking on the dropdown
-    await screen.findByRole('button', { name: /user create new user/i });
+    await screen.findByRole('button', { name: /create new user/i });
     // Now click the dropdown menu.  We should see all of the users (except the serveradmin),
     // plus an option to create a new user.
     const dropdown = await screen.findByLabelText('User');

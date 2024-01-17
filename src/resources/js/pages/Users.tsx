@@ -326,7 +326,6 @@ export const Users = () => {
                         disabled={state.user?.type !== 'admin'}
                         error={validationMessage?.ownerId !== ''}
                         labelId='owner-id-label'
-                        defaultValue=''
                         id='owner-id'
                         label={strings.ownedByTitle}
                         value={updateOwner(value)}
@@ -356,6 +355,7 @@ export const Users = () => {
               id='username'
               type='text'
               label={strings.usernameTitle}
+              placeholder={strings.usernameTitle}
               fullWidth
               required
               variant='outlined'
@@ -376,6 +376,7 @@ export const Users = () => {
               id='name'
               type='text'
               label={strings.nameTitle}
+              placeholder={strings.nameTitle}
               fullWidth
               required
               variant='outlined'
@@ -395,6 +396,7 @@ export const Users = () => {
               id='email'
               type='text'
               label={strings.emailTitle?.slice(0, -1)}
+              placeholder={strings.emailTitle?.slice(0, -1)}
               fullWidth
               variant='outlined'
               aria-describedby='email-error-text'
@@ -412,6 +414,7 @@ export const Users = () => {
               id='password'
               type='password'
               label={strings.passwordTitle}
+              placeholder={strings.passwordTitle}
               fullWidth
               required={currentSelection === -1 ? true : false}
               variant='outlined'
@@ -431,6 +434,7 @@ export const Users = () => {
               id='description'
               type='text'
               label={strings.descriptionTitle}
+              placeholder={strings.descriptionTitle}
               fullWidth
               variant='outlined'
               aria-describedby='description-error-text'
