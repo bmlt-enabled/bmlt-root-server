@@ -319,7 +319,7 @@ describe('check the contents of all the fields displayed in the editor', () => {
     const userType = await screen.findByRole('button', { name: 'User Is A:' });
     // the replace method below gets rid of zero-width spaces
     // TODO: is there a better way to do this?  Maybe get tabindex, or some other way to find the current selection?
-    expect(userType.textContent?.replace(/\u200B/g, '')).toBe('Service Body Administrator');
+    expect(userType.textContent).toBe('Service Body Administrator');
     const ownedBy = await screen.findByRole('button', { name: 'Owned By:' });
     expect(ownedBy.textContent).toBe('Server Administrator');
     const userName = (await screen.findByRole('textbox', { name: 'Username' })) as HTMLInputElement;
