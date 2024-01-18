@@ -1,39 +1,24 @@
-import { Box, Button, FormControl, FormHelperText, InputLabel, MenuItem, TextField, Typography } from '@mui/material';
+import { Box, Button, FormHelperText, Grid, InputLabel, MenuItem, TextField } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { styled } from '@mui/system';
 import { User, UserCreate, UserUpdate } from 'bmlt-root-server-client';
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { AppContext } from '../AppContext';
 import RootServerApi from '../RootServerApi';
 import { strings } from '../localization';
+import FormControlWrapper from '../partials/forms/FormControlWrapper';
+import FormWrapper from '../partials/forms/FormWrapper';
+import FormSubmitError from '../partials/forms/errors/FormSubmitError';
+import FormSubmitSuccess from '../partials/forms/errors/FormSubmitSuccess';
+import { UserSelect } from '../partials/utilities/UserSelect';
 
 const StyledButtonWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   marginTop: theme.spacing(2),
-}));
-
-const StyledInputWrapper = styled(FormControl)(({ theme }) => ({
-  marginBottom: theme.spacing(4),
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'center',
-  alignItems: 'center',
-}));
-
-const StyledFormWrapper = styled(Box)(({ theme }) => ({
-  width: '100%',
-  padding: '20px',
-  border: '1px solid #ccc',
-  borderRadius: theme.shape.borderRadius,
-  marginTop: '20px',
-}));
-
-const StyledFormLabel = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(2),
-  color: theme.palette.primary.main,
+  gap: theme.spacing(2),
 }));
 
 export const Users = () => {
@@ -62,6 +47,10 @@ export const Users = () => {
     formState: { errors },
   } = useForm<UserCreate | UserUpdate>();
 
+  const updateValue = useCallback(setValue, [setValue]);
+  const updateApiErrorMessage = useCallback(setApiErrorMessage, [setApiErrorMessage]);
+  const updateApiSuccessMessage = useCallback(setApiSuccessMessage, [setApiSuccessMessage]);
+
   const MIN_PASSWORD_LENGTH = 12;
 
   const isValidEmail = (email: any) =>
@@ -81,6 +70,7 @@ export const Users = () => {
   };
 
   const handleUserChange = (event: SelectChangeEvent): void => {
+    reset();
     const c = parseInt(event.target.value);
     setCurrentSelection(c);
     if (c === -1) {
@@ -117,7 +107,7 @@ export const Users = () => {
     }
   };
 
-  const getUsers = async (): Promise<void> => {
+  const getUsers = useCallback(async (): Promise<void> => {
     // Only try to get users from the database if the currently logged in user is an admin or serviceBodyAdmin -- otherwise just leave users as [].
     // This would happen if the currently logged in user is an observer or deactivated.
     if (state.user?.type !== 'admin' && state.user?.type !== 'serviceBodyAdmin') {
@@ -157,7 +147,7 @@ export const Users = () => {
         },
       });
     }
-  };
+  }, [state.user?.type, state.user?.id]);
 
   const showErrorMessage = (error: string): void => {
     setApiErrorMessage(error);
@@ -178,7 +168,7 @@ export const Users = () => {
     setApiSuccessMessage(message);
   };
 
-  const clearValidationMessage = (): void => {
+  const clearValidationMessage = useCallback((): void => {
     setValidationMessage({
       username: '',
       displayName: '',
@@ -188,7 +178,7 @@ export const Users = () => {
       ownerId: '',
       description: '',
     });
-  };
+  }, []);
 
   const applyChangesApiError = async (error: any): Promise<void> => {
     clearValidationMessage();
@@ -253,25 +243,25 @@ export const Users = () => {
 
   useEffect(() => {
     getUsers();
-  }, []);
+  }, [getUsers]);
 
   useEffect(() => {
     clearValidationMessage();
-    setApiErrorMessage('');
-    setApiSuccessMessage('');
+    updateApiErrorMessage('');
+    updateApiSuccessMessage('');
 
     if (selectedUser?.ownerId === null) {
-      setValue('ownerId', '');
+      updateValue('ownerId', '');
     } else {
-      setValue('ownerId', selectedUser?.ownerId as string);
+      updateValue('ownerId', selectedUser?.ownerId as string);
     }
 
-    setValue('username', selectedUser?.username as string);
-    setValue('displayName', selectedUser?.displayName as string);
-    setValue('type', selectedUser?.type as string);
-    setValue('email', selectedUser?.email as string);
-    setValue('description', selectedUser?.description as string);
-  }, [selectedUser]);
+    updateValue('username', selectedUser?.username as string);
+    updateValue('displayName', selectedUser?.displayName as string);
+    updateValue('type', selectedUser?.type as string);
+    updateValue('email', selectedUser?.email as string);
+    updateValue('description', selectedUser?.description as string);
+  }, [selectedUser, updateValue, updateApiErrorMessage, updateApiSuccessMessage, clearValidationMessage]);
 
   if (state.user?.type !== 'admin' && users.length < 2) {
     // No child users for the currently logged in user.  Possible alternative to this design: don't show Users menu link at all.
@@ -280,111 +270,92 @@ export const Users = () => {
 
   return (
     <div>
-      <Box>
-        <FormControl>
-          <InputLabel id='user-select-label'>{strings.userTitle}</InputLabel>
-          <Select
-            labelId='user-select-label'
-            id='user-select'
-            value={currentSelection.toString()}
-            label={strings.userTitle}
-            onChange={handleUserChange}
-          >
-            {state.user?.type === 'admin' && <MenuItem value={-1}>{strings.createNewUserTitle}</MenuItem>}
-            {users
-              .filter((u) => u.id !== state.user?.id)
-              .map((currentUser, i) => {
-                return (
-                  <MenuItem value={currentUser.id} key={i}>
-                    {currentUser.displayName}
-                  </MenuItem>
-                );
-              })}
-          </Select>
-        </FormControl>
-      </Box>
-      {apiErrorMessage.length > 0 && <p style={{ color: 'red', textAlign: 'center' }}>{apiErrorMessage}</p>}
-      {apiSuccessMessage.length > 0 && <p style={{ color: 'green', textAlign: 'center' }}>{apiSuccessMessage}</p>}
-      <StyledFormWrapper>
-        {currentSelection !== -1 && (
-          <StyledFormLabel variant='h3' align='center'>
-            {`${strings.userTitle} ${strings.idTitle} #${selectedUser?.id}`}
-          </StyledFormLabel>
-        )}
+      {apiErrorMessage.length > 0 && <FormSubmitError message={apiErrorMessage} />}
+      {apiSuccessMessage.length > 0 && <FormSubmitSuccess message={apiSuccessMessage} />}
+      <FormWrapper
+        heading={currentSelection === -1 ? `${strings.createNewUserTitle}` : `${strings.userTitle} ${strings.idTitle} #${selectedUser?.id}`}
+      >
+        <UserSelect users={users} handleUserChange={handleUserChange} currentSelection={currentSelection} />
         <form onSubmit={handleSubmit(applyChanges)} noValidate>
-          <StyledInputWrapper>
-            <FormControl fullWidth>
-              <Controller
-                name='type'
-                control={control}
-                defaultValue=''
-                render={({ field: { onChange, value } }) => (
-                  <div>
-                    <InputLabel id='type-select'>{strings.userIsATitle}</InputLabel>
-                    <Select
-                      disabled={state.user?.type !== 'admin'}
-                      error={errors?.type?.type === 'required' || validationMessage?.type !== ''}
-                      labelId='type-select-label'
-                      id='type-select'
-                      label={strings.userIsATitle}
-                      defaultValue=''
-                      required
-                      value={value}
-                      {...register('type', { required: true })}
-                      onChange={onChange}
-                    >
-                      <MenuItem value='serviceBodyAdmin'>{strings.serviceBodyAdminTitle}</MenuItem>
-                      <MenuItem value='observer'>{strings.observerTitle}</MenuItem>
-                      <MenuItem value='deactivated'>{strings.deactivatedUserTitle}</MenuItem>
-                    </Select>
-                  </div>
-                )}
-              />
-            </FormControl>
-            <FormHelperText id='type-error-text'>
-              {(validationMessage?.type !== '' && validationMessage?.type) || (errors?.type?.type === 'required' && 'Type is required')}
-            </FormHelperText>
-          </StyledInputWrapper>
-          <StyledInputWrapper>
-            <FormControl fullWidth>
-              <Controller
-                name='ownerId'
-                control={control}
-                defaultValue=''
-                render={({ field: { onChange, value } }) => (
-                  <div>
-                    <InputLabel id='owner-id'>{strings.ownedByTitle}</InputLabel>
-                    <Select
-                      disabled={state.user?.type !== 'admin'}
-                      error={validationMessage?.ownerId !== ''}
-                      labelId='owner-id-label'
-                      defaultValue=''
-                      id='owner-id'
-                      label={strings.ownedByTitle}
-                      value={updateOwner(value)}
-                      {...register('ownerId', { required: false })}
-                      onChange={onChange}
-                    >
-                      {users.map((currentUser, i) => {
-                        return (
-                          <MenuItem value={currentUser.id} key={i}>
-                            {currentUser.displayName}
-                          </MenuItem>
-                        );
-                      })}
-                    </Select>
-                  </div>
-                )}
-              />
-            </FormControl>
-            <FormHelperText id='ownerId-error-text'>{validationMessage?.ownerId !== '' && validationMessage?.ownerId}</FormHelperText>
-          </StyledInputWrapper>
-          <StyledInputWrapper>
+          <Grid container spacing={2}>
+            <Grid item md={6}>
+              <FormControlWrapper>
+                <Controller
+                  name='type'
+                  control={control}
+                  defaultValue='serviceBodyAdmin'
+                  render={({ field: { onChange, value } }) => (
+                    <div>
+                      <InputLabel id='type-select'>{strings.userIsATitle}</InputLabel>
+                      <Select
+                        sx={{ width: '100%' }}
+                        disabled={state.user?.type !== 'admin'}
+                        error={errors?.type?.type === 'required' || validationMessage?.type !== ''}
+                        labelId='type-select-label'
+                        id='type-select'
+                        label={strings.userIsATitle}
+                        required
+                        value={value}
+                        {...register('type', { required: true })}
+                        onChange={onChange}
+                      >
+                        <MenuItem value='serviceBodyAdmin'>{strings.serviceBodyAdminTitle}</MenuItem>
+                        <MenuItem value='observer'>{strings.observerTitle}</MenuItem>
+                        <MenuItem value='deactivated'>{strings.deactivatedUserTitle}</MenuItem>
+                      </Select>
+                    </div>
+                  )}
+                />
+
+                <FormHelperText id='type-error-text'>
+                  {(validationMessage?.type !== '' && validationMessage?.type) || (errors?.type?.type === 'required' && 'Type is required')}
+                </FormHelperText>
+              </FormControlWrapper>
+            </Grid>
+            <Grid item md={6}>
+              <FormControlWrapper>
+                <Controller
+                  name='ownerId'
+                  control={control}
+                  defaultValue=''
+                  render={({ field: { onChange, value } }) => (
+                    <div>
+                      <InputLabel id='owner-id'>{strings.ownedByTitle}</InputLabel>
+                      <Select
+                        sx={{ width: '100%' }}
+                        disabled={state.user?.type !== 'admin'}
+                        error={validationMessage?.ownerId !== ''}
+                        labelId='owner-id-label'
+                        id='owner-id'
+                        label={strings.ownedByTitle}
+                        value={updateOwner(value)}
+                        {...register('ownerId', { required: false })}
+                        onChange={onChange}
+                      >
+                        {users.map((currentUser, i) => {
+                          return (
+                            <MenuItem value={currentUser.id} key={i}>
+                              {currentUser.displayName}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                    </div>
+                  )}
+                />
+
+                <FormHelperText id='ownerId-error-text'>{validationMessage?.ownerId !== '' && validationMessage?.ownerId}</FormHelperText>
+              </FormControlWrapper>
+            </Grid>
+          </Grid>
+          <FormControlWrapper>
             <TextField
+              InputLabelProps={{ shrink: true }}
               error={errors?.username?.type === 'required' || validationMessage?.username !== ''}
               id='username'
               type='text'
               label={strings.usernameTitle}
+              placeholder={strings.usernameTitle}
               fullWidth
               required
               variant='outlined'
@@ -397,13 +368,15 @@ export const Users = () => {
                 (errors?.username?.type === 'validate' && 'The username has already been taken.') ||
                 (errors?.username?.type === 'required' && 'Username is required')}
             </FormHelperText>
-          </StyledInputWrapper>
-          <StyledInputWrapper>
+          </FormControlWrapper>
+          <FormControlWrapper>
             <TextField
+              InputLabelProps={{ shrink: true }}
               error={errors?.displayName?.type === 'required' || validationMessage?.displayName !== ''}
               id='name'
               type='text'
               label={strings.nameTitle}
+              placeholder={strings.nameTitle}
               fullWidth
               required
               variant='outlined'
@@ -415,13 +388,15 @@ export const Users = () => {
                 (errors?.displayName?.type === 'maxLength' && 'The display name must not be greater than 255 characters.') ||
                 (errors?.displayName?.type === 'required' && 'Name is required')}
             </FormHelperText>
-          </StyledInputWrapper>
-          <StyledInputWrapper>
+          </FormControlWrapper>
+          <FormControlWrapper>
             <TextField
+              InputLabelProps={{ shrink: true }}
               error={validationMessage?.email !== ''}
               id='email'
               type='text'
               label={strings.emailTitle?.slice(0, -1)}
+              placeholder={strings.emailTitle?.slice(0, -1)}
               fullWidth
               variant='outlined'
               aria-describedby='email-error-text'
@@ -431,13 +406,15 @@ export const Users = () => {
               {(validationMessage?.email !== '' && validationMessage?.email) ||
                 (errors?.email?.type === 'validate' && 'The email must be a valid email address.')}
             </FormHelperText>
-          </StyledInputWrapper>
-          <StyledInputWrapper>
+          </FormControlWrapper>
+          <FormControlWrapper>
             <TextField
+              InputLabelProps={{ shrink: true }}
               error={currentSelection === -1 && (errors?.password?.type === 'required' || validationMessage?.password !== '')}
               id='password'
               type='password'
               label={strings.passwordTitle}
+              placeholder={strings.passwordTitle}
               fullWidth
               required={currentSelection === -1 ? true : false}
               variant='outlined'
@@ -449,13 +426,15 @@ export const Users = () => {
                 (errors?.password?.type === 'minLength' && `The password must be at least ${MIN_PASSWORD_LENGTH} characters.`) ||
                 (errors?.password?.type === 'required' && 'Password is required')}
             </FormHelperText>
-          </StyledInputWrapper>
-          <StyledInputWrapper>
+          </FormControlWrapper>
+          <FormControlWrapper>
             <TextField
+              InputLabelProps={{ shrink: true }}
               error={validationMessage?.description !== ''}
               id='description'
               type='text'
               label={strings.descriptionTitle}
+              placeholder={strings.descriptionTitle}
               fullWidth
               variant='outlined'
               aria-describedby='description-error-text'
@@ -465,21 +444,19 @@ export const Users = () => {
               {(validationMessage?.description !== '' && validationMessage?.description) ||
                 (errors?.description?.type === 'maxLength' && 'The description must not be greater than 1024 characters.')}
             </FormHelperText>
-          </StyledInputWrapper>
-          <StyledButtonWrapper sx={{ display: 'flex', justifyContent: 'center', marginTop: '' }}>
+          </FormControlWrapper>
+          <StyledButtonWrapper>
             <Button variant='contained' color='primary' type='submit'>
               {strings.applyChangesTitle}
             </Button>
+            {currentSelection !== -1 && state.user?.type === 'admin' && (
+              <Button variant='contained' color='error' onClick={deleteUser}>
+                {strings.deleteUserTitle}
+              </Button>
+            )}
           </StyledButtonWrapper>
         </form>
-        {currentSelection !== -1 && state.user?.type === 'admin' && (
-          <StyledButtonWrapper sx={{ display: 'flex', justifyContent: 'center', marginTop: '' }}>
-            <Button variant='contained' color='primary' onClick={deleteUser}>
-              {strings.deleteUserTitle}
-            </Button>
-          </StyledButtonWrapper>
-        )}
-      </StyledFormWrapper>
+      </FormWrapper>
     </div>
   );
 };

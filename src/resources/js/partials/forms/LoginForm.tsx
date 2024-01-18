@@ -1,30 +1,16 @@
-import { Box, Button, FormControl, FormHelperText, TextField, Typography } from '@mui/material';
+import { Box, Button, FormHelperText, TextField } from '@mui/material';
 import { styled } from '@mui/system';
 import { useForm } from 'react-hook-form';
 
 import { strings } from '../../localization';
-import { FormSubmitError } from './errors/FormSubmitError';
+import FormControlWrapper from './FormControlWrapper';
+import FormWrapper from './FormWrapper';
+import FormSubmitError from './errors/FormSubmitError';
 
 const StyledButtonWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   marginTop: theme.spacing(2),
-}));
-
-const StyledInputWrapper = styled(FormControl)(({ theme }) => ({
-  marginBottom: theme.spacing(4),
-}));
-
-const StyledFormWrapper = styled(Box)(({ theme }) => ({
-  width: '100%',
-  padding: '20px',
-  border: '1px solid #ccc',
-  borderRadius: theme.shape.borderRadius,
-}));
-
-const StyledFormLabel = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(2),
-  color: theme.palette.primary.main,
 }));
 
 type Props = {
@@ -45,13 +31,10 @@ const LoginForm = ({ handleOnSubmit, authenticationMessage, validationMessage }:
   } = useForm();
 
   return (
-    <StyledFormWrapper>
-      <StyledFormLabel variant='h3' align='center'>
-        {strings.loginTitle}
-      </StyledFormLabel>
+    <FormWrapper heading={`${strings.loginTitle}`}>
       {authenticationMessage && <FormSubmitError message={authenticationMessage} />}
       <form onSubmit={handleSubmit(handleOnSubmit)} noValidate>
-        <StyledInputWrapper fullWidth>
+        <FormControlWrapper>
           <TextField
             error={errors?.username?.type === 'required' || validationMessage?.username !== ''}
             id='login-username'
@@ -67,8 +50,8 @@ const LoginForm = ({ handleOnSubmit, authenticationMessage, validationMessage }:
             {(validationMessage?.username !== '' && validationMessage?.username) ||
               (errors?.username?.type === 'required' && 'Username is required')}
           </FormHelperText>
-        </StyledInputWrapper>
-        <StyledInputWrapper fullWidth>
+        </FormControlWrapper>
+        <FormControlWrapper>
           <TextField
             error={errors?.password?.type === 'required' || validationMessage?.password !== ''}
             id='login-password'
@@ -83,14 +66,14 @@ const LoginForm = ({ handleOnSubmit, authenticationMessage, validationMessage }:
             {(validationMessage?.password !== '' && validationMessage?.password) ||
               (errors?.password?.type === 'required' && 'Password is required')}
           </FormHelperText>
-        </StyledInputWrapper>
+        </FormControlWrapper>
         <StyledButtonWrapper sx={{ display: 'flex', justifyContent: 'center', marginTop: '' }}>
           <Button variant='contained' color='primary' type='submit'>
             {strings.loginVerb}
           </Button>
         </StyledButtonWrapper>
       </form>
-    </StyledFormWrapper>
+    </FormWrapper>
   );
 };
 

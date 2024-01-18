@@ -255,7 +255,7 @@ describe('check for correct lists of users in User dropdown menu', () => {
     const user = await startWithUsersTab(mockServerAdmin);
     // The default should be 'Create New User'.  This default should be what is shown before
     // clicking on the dropdown
-    await screen.findByText(/Create New User/);
+    await screen.findByRole('button', { name: /create new user/i });
     // Now click the dropdown menu.  We should see all of the users (except the serveradmin),
     // plus an option to create a new user.
     const dropdown = await screen.findByLabelText('User');
@@ -317,9 +317,7 @@ describe('check the contents of all the fields displayed in the editor', () => {
     // the 'User Is A:' and 'Owned By:' buttons should be enabled, but no need to test for that here --
     // that gets tested later when we click them
     const userType = await screen.findByRole('button', { name: 'User Is A:' });
-    // the replace method below gets rid of zero-width spaces
-    // TODO: is there a better way to do this?  Maybe get tabindex, or some other way to find the current selection?
-    expect(userType.textContent?.replace(/\u200B/g, '')).toBe('');
+    expect(userType.textContent).toBe('Service Body Administrator');
     const ownedBy = await screen.findByRole('button', { name: 'Owned By:' });
     expect(ownedBy.textContent).toBe('Server Administrator');
     const userName = (await screen.findByRole('textbox', { name: 'Username' })) as HTMLInputElement;

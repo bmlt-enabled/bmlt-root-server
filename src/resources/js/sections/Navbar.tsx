@@ -13,6 +13,7 @@ const StyledNavBarWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
+  marginBottom: theme.spacing(4),
 }));
 
 const StyledUserInfo = styled('div')(({ theme }) => ({

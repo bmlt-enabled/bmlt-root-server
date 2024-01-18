@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 
-const StyledErrorMessage = styled(Box)(({ theme }) => ({
+const StyledSuccessMessage = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -12,14 +12,14 @@ type Props = {
   message: string | null;
 };
 
-const FormSubmitError = ({ message }: Props) => {
+const FormSubmitSuccess = ({ message }: Props) => {
   return (
-    <StyledErrorMessage>
-      <Typography variant='caption' color='error.main'>
+    <StyledSuccessMessage>
+      <Typography variant='caption' color='success.main'>
         {message}
       </Typography>
-    </StyledErrorMessage>
+    </StyledSuccessMessage>
   );
 };
 
-export default FormSubmitError;
+export default FormSubmitSuccess;
