@@ -317,8 +317,6 @@ describe('check the contents of all the fields displayed in the editor', () => {
     // the 'User Is A:' and 'Owned By:' buttons should be enabled, but no need to test for that here --
     // that gets tested later when we click them
     const userType = await screen.findByRole('button', { name: 'User Is A:' });
-    // the replace method below gets rid of zero-width spaces
-    // TODO: is there a better way to do this?  Maybe get tabindex, or some other way to find the current selection?
     expect(userType.textContent).toBe('Service Body Administrator');
     const ownedBy = await screen.findByRole('button', { name: 'Owned By:' });
     expect(ownedBy.textContent).toBe('Server Administrator');
