@@ -58,6 +58,16 @@ resource "aws_launch_template" "bmlt_cluster" {
     security_groups             = [data.aws_security_group.ecs_clusters.id]
   }
 
+  block_device_mappings {
+    device_name = "/dev/xvda"
+
+    ebs {
+      volume_size           = 30
+      volume_type           = "gp3"
+      delete_on_termination = true
+    }
+  }
+
   tag_specifications {
     resource_type = "instance"
     tags = {
