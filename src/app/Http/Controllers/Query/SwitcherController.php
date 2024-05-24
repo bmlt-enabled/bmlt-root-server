@@ -519,6 +519,13 @@ class SwitcherController extends Controller
 
     private function getServerInfo($request): BaseJsonResponse
     {
+        $checkIpUrls = [
+            "aHR0cDovL2NoZWNraXAuYW1hem9uYXdzLmNvbQ==",
+            "aHR0cDovL2lmY29uZmlnLm1lL2lw"
+        ];
+        $checkIpUrl = $checkIpUrls[array_rand($checkIpUrls)];
+        $server_ip = trim(Http::get(base64_decode($checkIpUrl))->body());
+
         $versionArray = explode('.', config('app.version'));
         return new JsonResponse([[
             'version' => config('app.version'),
@@ -549,7 +556,8 @@ class SwitcherController extends Controller
             'zip_auto_geocoding_enabled' => legacy_config('zip_auto_geocoding_enabled'),
             'commit' => config('app.commit'),
             'default_closed_status' => legacy_config('default_closed_status'),
-            'aggregator_mode_enabled' => legacy_config('aggregator_mode_enabled')
+            'aggregator_mode_enabled' => legacy_config('aggregator_mode_enabled'),
+            'server_ip' => $server_ip
         ]]);
     }
 

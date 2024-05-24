@@ -303,4 +303,18 @@ class GetServerInfoTest extends TestCase
             ->assertStatus(200)
             ->assertJsonFragment(['aggregator_mode_enabled' => false]);
     }
+
+    public function testServerIP()
+    {
+        $response = $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200);
+        $responseData = $response->json();
+        $this->assertIsArray($responseData);
+        $this->assertNotEmpty($responseData);
+        $firstItem = $responseData[0];
+        $this->assertArrayHasKey('server_ip', $firstItem);
+        $serverIp = $firstItem['server_ip'];
+        $this->assertIsString($serverIp);
+        $this->assertTrue(filter_var($serverIp, FILTER_VALIDATE_IP) !== false);
+    }
 }
