@@ -2,8 +2,9 @@
 
 namespace App\Repositories;
 
-use Illuminate\Support\Facades\Http;
 use App\Interfaces\ServerAddressLookupRepositoryInterface;
+use Illuminate\Http\Client\HttpClientException;
+use Illuminate\Support\Facades\Http;
 
 class ServerAddressLookupRepository implements ServerAddressLookupRepositoryInterface
 {
@@ -12,26 +13,30 @@ class ServerAddressLookupRepository implements ServerAddressLookupRepositoryInte
         "aHR0cDovL2lmY29uZmlnLm1lL2lw"
     ];
 
-    private const ERROR_STATUS_CODE = 'Error: Unexpected status code in response.';
-    private const ERROR_INVALID_IP = 'Error: Invalid IP in response.';
+    const ERROR_STATUS_CODE = 'Error: Unexpected status code in response.';
+    const ERROR_INVALID_IP = 'Error: Invalid IP in response.';
+    const ERROR_CONNECTION = "Error: Couldn't establish connection.";
 
     public function get(): string
     {
+        $url = $this->urls[array_rand($this->urls)];
+        $url = base64_decode($url);
+
         try {
-            $url = base64_decode($this->urls[array_rand($this->urls)]);
             $response = Http::get($url);
-            if (!$response->ok()) {
-                return self::ERROR_STATUS_CODE;
-            }
-
-            $ip = trim($response->body());
-            if (!filter_var($ip, FILTER_VALIDATE_IP)) {
-                return self::ERROR_INVALID_IP;
-            }
-
-            return $ip;
-        } catch (\Exception $e) {
-            return 'Error: ' . $e->getMessage();
+        } catch (HttpClientException) {
+            throw new \Exception(self::ERROR_CONNECTION);
         }
+
+        if (!$response->ok()) {
+            throw new \Exception(self::ERROR_STATUS_CODE);
+        }
+
+        $ip = trim($response->body());
+        if (!filter_var($ip, FILTER_VALIDATE_IP)) {
+            throw new \Exception(self::ERROR_INVALID_IP);
+        }
+
+        return $ip;
     }
 }
