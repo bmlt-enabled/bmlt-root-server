@@ -3,16 +3,49 @@
 namespace Tests\Feature;
 
 use App\LegacyConfig;
-use Illuminate\Support\Facades\Config;
+use App\Interfaces\ServerAddressLookupRepositoryInterface;
 use App\Repositories\ServerAddressLookupRepository;
-use Mockery;
+use Illuminate\Support\Facades\Config;
 use Tests\TestCase;
+
+class MockServerAddressLookupRepository implements ServerAddressLookupRepositoryInterface
+{
+    private string $error = '';
+    private string $address = '1.1.1.1';
+
+    public function setError(string $error): void
+    {
+        $this->error = $error;
+    }
+
+    public function setAddress(string $address): void
+    {
+        $this->address = $address;
+    }
+
+    public function get(): string
+    {
+        if ($this->error !== '') {
+            throw new \Exception($this->error);
+        }
+
+        return $this->address;
+    }
+}
 
 class GetServerInfoTest extends TestCase
 {
+    private MockServerAddressLookupRepository $mockServerAddressLookupRepository;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->mockServerAddressLookupRepository = new MockServerAddressLookupRepository();
+        $this->app->instance(ServerAddressLookupRepository::class, $this->mockServerAddressLookupRepository);
+    }
+
     protected function tearDown(): void
     {
-        Mockery::close();
         LegacyConfig::reset();
         parent::tearDown();
     }
@@ -307,32 +340,19 @@ class GetServerInfoTest extends TestCase
             ->assertJsonFragment(['aggregator_mode_enabled' => false]);
     }
 
-    public function testServerIP()
+    public function testServerIPSuccess()
     {
-        $mockRepository = Mockery::mock(ServerAddressLookupRepository::class);
-        $mockRepository->shouldReceive('get')
-            ->once()
-            ->andReturn('123.123.123.123');
-        $this->app->instance(ServerAddressLookupRepository::class, $mockRepository);
-        $response = $this->get('/client_interface/json/?switcher=GetServerInfo')
-            ->assertStatus(200)
-            ->assertJsonFragment([
-                'server_ip' => '123.123.123.123'
-            ]);
-        $this->assertTrue(filter_var($response[0]['server_ip'], FILTER_VALIDATE_IP) !== false);
-    }
-
-    public function testServerIPEmpty()
-    {
-        $mockRepository = Mockery::mock(ServerAddressLookupRepository::class);
-        $mockRepository->shouldReceive('get')
-            ->once()
-            ->andReturn('');
-        $this->app->instance(ServerAddressLookupRepository::class, $mockRepository);
+        $this->mockServerAddressLookupRepository->setAddress('123.123.123.123');
         $this->get('/client_interface/json/?switcher=GetServerInfo')
             ->assertStatus(200)
-            ->assertJsonFragment([
-                'server_ip' => ''
-            ]);
+            ->assertJsonFragment(['server_ip' => '123.123.123.123']);
+    }
+
+    public function testServerIPError()
+    {
+        $this->mockServerAddressLookupRepository->setError('test error');
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['server_ip' => 'test error']);
     }
 }

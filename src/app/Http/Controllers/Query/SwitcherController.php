@@ -524,6 +524,11 @@ class SwitcherController extends Controller
     private function getServerInfo($request): BaseJsonResponse
     {
         $versionArray = explode('.', config('app.version'));
+        try {
+            $serverIp = $this->serverAddressLookupRepository->get();
+        } catch (\Exception $e) {
+            $serverIp = $e->getMessage();
+        }
         return new JsonResponse([[
             'version' => config('app.version'),
             'versionInt' => strval((intval($versionArray[0]) * 1000000) + (intval($versionArray[1]) * 1000) + intval(strstr($versionArray[2], '-', true) ?: $versionArray[2])),
@@ -554,7 +559,7 @@ class SwitcherController extends Controller
             'commit' => config('app.commit'),
             'default_closed_status' => legacy_config('default_closed_status'),
             'aggregator_mode_enabled' => legacy_config('aggregator_mode_enabled'),
-            'server_ip' => $this->serverAddressLookupRepository->get()
+            'server_ip' => $serverIp
         ]]);
     }
 
