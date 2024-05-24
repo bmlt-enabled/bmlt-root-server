@@ -13,6 +13,7 @@ use App\Interfaces\FormatRepositoryInterface;
 use App\Interfaces\MeetingRepositoryInterface;
 use App\Interfaces\MigrationRepositoryInterface;
 use App\Interfaces\ServiceBodyRepositoryInterface;
+use App\Interfaces\ServerAddressLookupRepositoryInterface;
 use App\Models\Change;
 use App\Models\Meeting;
 use Illuminate\Http\Request;
@@ -28,19 +29,22 @@ class SwitcherController extends Controller
     private MeetingRepositoryInterface $meetingRepository;
     private MigrationRepositoryInterface $migrationRepository;
     private ServiceBodyRepositoryInterface $serviceBodyRepository;
+    private ServerAddressLookupRepositoryInterface $serverAddressLookupRepository;
 
     public function __construct(
         ChangeRepositoryInterface $changeRepository,
         FormatRepositoryInterface $formatRepository,
         MeetingRepositoryInterface $meetingRepository,
         MigrationRepositoryInterface $migrationRepository,
-        ServiceBodyRepositoryInterface $serviceBodyRepository
+        ServiceBodyRepositoryInterface $serviceBodyRepository,
+        ServerAddressLookupRepositoryInterface $serverAddressLookupRepository
     ) {
         $this->changeRepository = $changeRepository;
         $this->formatRepository = $formatRepository;
         $this->meetingRepository = $meetingRepository;
         $this->migrationRepository = $migrationRepository;
         $this->serviceBodyRepository = $serviceBodyRepository;
+        $this->serverAddressLookupRepository = $serverAddressLookupRepository;
     }
 
     public function get(Request $request, string $dataFormat)
@@ -519,13 +523,6 @@ class SwitcherController extends Controller
 
     private function getServerInfo($request): BaseJsonResponse
     {
-        $checkIpUrls = [
-            "aHR0cDovL2NoZWNraXAuYW1hem9uYXdzLmNvbQ==",
-            "aHR0cDovL2lmY29uZmlnLm1lL2lw"
-        ];
-        $checkIpUrl = $checkIpUrls[array_rand($checkIpUrls)];
-        $server_ip = trim(Http::get(base64_decode($checkIpUrl))->body());
-
         $versionArray = explode('.', config('app.version'));
         return new JsonResponse([[
             'version' => config('app.version'),
@@ -557,7 +554,7 @@ class SwitcherController extends Controller
             'commit' => config('app.commit'),
             'default_closed_status' => legacy_config('default_closed_status'),
             'aggregator_mode_enabled' => legacy_config('aggregator_mode_enabled'),
-            'server_ip' => $server_ip
+            'server_ip' => $this->serverAddressLookupRepository->get()
         ]]);
     }
 

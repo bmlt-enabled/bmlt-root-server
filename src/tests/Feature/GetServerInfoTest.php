@@ -4,12 +4,15 @@ namespace Tests\Feature;
 
 use App\LegacyConfig;
 use Illuminate\Support\Facades\Config;
+use App\Repositories\ServerAddressLookupRepository;
+use Mockery;
 use Tests\TestCase;
 
 class GetServerInfoTest extends TestCase
 {
     protected function tearDown(): void
     {
+        Mockery::close();
         LegacyConfig::reset();
         parent::tearDown();
     }
@@ -306,15 +309,30 @@ class GetServerInfoTest extends TestCase
 
     public function testServerIP()
     {
+        $mockRepository = Mockery::mock(ServerAddressLookupRepository::class);
+        $mockRepository->shouldReceive('get')
+            ->once()
+            ->andReturn('123.123.123.123');
+        $this->app->instance(ServerAddressLookupRepository::class, $mockRepository);
         $response = $this->get('/client_interface/json/?switcher=GetServerInfo')
-            ->assertStatus(200);
-        $responseData = $response->json();
-        $this->assertIsArray($responseData);
-        $this->assertNotEmpty($responseData);
-        $firstItem = $responseData[0];
-        $this->assertArrayHasKey('server_ip', $firstItem);
-        $serverIp = $firstItem['server_ip'];
-        $this->assertIsString($serverIp);
-        $this->assertTrue(filter_var($serverIp, FILTER_VALIDATE_IP) !== false);
+            ->assertStatus(200)
+            ->assertJsonFragment([
+                'server_ip' => '123.123.123.123'
+            ]);
+        $this->assertTrue(filter_var($response[0]['server_ip'], FILTER_VALIDATE_IP) !== false);
+    }
+
+    public function testServerIPEmpty()
+    {
+        $mockRepository = Mockery::mock(ServerAddressLookupRepository::class);
+        $mockRepository->shouldReceive('get')
+            ->once()
+            ->andReturn('');
+        $this->app->instance(ServerAddressLookupRepository::class, $mockRepository);
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment([
+                'server_ip' => ''
+            ]);
     }
 }

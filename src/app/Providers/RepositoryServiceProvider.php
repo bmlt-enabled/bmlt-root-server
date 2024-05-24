@@ -9,6 +9,7 @@ use App\Interfaces\MigrationRepositoryInterface;
 use App\Interfaces\RootServerRepositoryInterface;
 use App\Interfaces\ServiceBodyRepositoryInterface;
 use App\Interfaces\UserRepositoryInterface;
+use App\Interfaces\ServerAddressLookupRepositoryInterface;
 use App\Models\RootServer;
 use App\Repositories\ChangeRepository;
 use App\Repositories\FormatRepository;
@@ -17,6 +18,7 @@ use App\Repositories\MigrationRepository;
 use App\Repositories\RootServerRepository;
 use App\Repositories\ServiceBodyRepository;
 use App\Repositories\UserRepository;
+use App\Repositories\ServerAddressLookupRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -35,6 +37,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(RootServerRepositoryInterface::class, RootServerRepository::class);
         $this->app->bind(ServiceBodyRepositoryInterface::class, ServiceBodyRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+        $this->app->bind(ServerAddressLookupRepositoryInterface::class, ServerAddressLookupRepository::class);
     }
 
     /**
