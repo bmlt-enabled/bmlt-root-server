@@ -2,7 +2,8 @@
 * The `weekdays` filter parameter for the `GetSearchResults` API now accept a comma separated string (e.g. `weekdays=1,-2`) in addition to the standard array syntax.
 * Updated the NAWS import functionality for use by NAWS when importing virtual meetings, by importing the virtual meeting fields and time zone, and allowing the address and city to be blank.
 * Fixed a bug with trying to log in as a deactivated user.
-* Fixed an issue when using NAWS Export with certain very old data sets. 
+* Fixed an issue when using NAWS Export with certain very old data sets.
+* Fixed an issue where the new admin API did not set the meeting lang_enum field.
 
 ## 3.0.5 (June 3, 2023)
 * When the meeting formats are being selected, the formats now appear grouped by their FormatType 

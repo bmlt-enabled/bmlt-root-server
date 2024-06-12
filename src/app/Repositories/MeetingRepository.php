@@ -605,6 +605,7 @@ class MeetingRepository implements MeetingRepositoryInterface
     public function create(array $values): Meeting
     {
         $values = collect($values);
+        $values->put('lang_enum', App::currentLocale());
         $mainValues = $values->reject(fn ($_, $fieldName) => !in_array($fieldName, Meeting::$mainFields))->toArray();
         $dataTemplates = $this->getDataTemplates();
         $dataValues = $values->reject(fn ($_, $fieldName) => !$dataTemplates->has($fieldName));

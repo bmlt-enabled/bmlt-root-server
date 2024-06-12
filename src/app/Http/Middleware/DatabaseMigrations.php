@@ -52,7 +52,7 @@ class DatabaseMigrations
             return true;
         }
 
-        if (!$this->migrationRepository->migrationExists('2023_05_16_223943_format_types')) {
+        if (!$this->migrationRepository->migrationExists('2024_06_12_164303_fix_meeting_lang_enum')) {
             return true;
         }
 
