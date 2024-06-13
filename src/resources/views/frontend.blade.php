@@ -14,10 +14,8 @@
         };
     </script>
 
-    @viteReactRefresh
-    @vite('resources/js/App.tsx')
+    @vite('resources/js/app.ts')
 </head>
 <body>
-<div id="root"></div>
 </body>
 </html>

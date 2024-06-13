@@ -13,3 +13,4 @@ terraform.tfvars
 build
 docker/docker-compose.dev.yml
 .vscode
+.svelte-kit
