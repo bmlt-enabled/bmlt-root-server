@@ -35,6 +35,7 @@ $text-color-dark: #ddd; // Light text color
 
 .dark #export-form,
 .dark input[type='text'],
+.dark input[type='password'],
 .dark button,
 .dark #inner-box,
 .dark #footer {
@@ -62,13 +63,15 @@ $text-color-dark: #ddd; // Light text color
 }
 
 .dark input[type='text'],
+.dark input[type='password'],
 .dark button {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
 }
 
-.dark input[type='text'] {
+.dark input[type='text'],
+.dark input[type='password'] {
   border: 1px solid $border-color;
   background-color: #444; // Darker input background
   color: $text-color-dark;
@@ -161,6 +164,7 @@ $text-color-dark-light: #333;
 
 .light #export-form,
 .light input[type='text'],
+.light input[type='password'],
 .light button,
 .light #inner-box,
 .light #footer {
@@ -188,13 +192,15 @@ $text-color-dark-light: #333;
 }
 
 .light input[type='text'],
+.light input[type='password'],
 .light button {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
 }
 
-.light input[type='text'] {
+.light input[type='text'],
+.light input[type='password'] {
   border: 1px solid $border-color-light;
 }
 
@@ -250,5 +256,13 @@ $text-color-dark-light: #333;
 }
 
 .light .version {
+  color: $text-color-dark-light;
+}
+
+.dark .form-txt {
+  color: $text-color-dark;
+}
+
+.light .form-txt {
   color: $text-color-dark-light;
 }

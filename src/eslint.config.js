@@ -29,5 +29,11 @@ export default [
   },
   {
     ignores: ['build/', 'dist/', '*.md']
+  },
+  {
+    files: ['**/*.ts', '**/*.svelte'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off'
+    }
   }
 ];
