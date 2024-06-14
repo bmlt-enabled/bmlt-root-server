@@ -1,7 +1,7 @@
 name: main
 on:
   push:
-    branches: ['main']
+    branches: ['svelte-wip']
     tags: ['*']
 
 env:
@@ -149,7 +149,7 @@ jobs:
           aws s3 cp build/bmlt-root-server.zip s3://${{ secrets.S3_BUCKET }}/bmlt-root-server/bmlt-root-server-$(cat src/config/app.php | grep "'version'" | cut -d"'" -f6)-build${GITHUB_RUN_NUMBER}-${GITHUB_SHA}.zip
 
       - name: Configure AWS Credentials 🪪
-        if: contains(github.ref_name, 'main') || contains(github.ref_name, 'unstable')
+        if: contains(github.ref_name, 'main') || contains(github.ref_name, 'svelte-wip')
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions/gh-ci-tf-bmlt-rs
@@ -163,12 +163,12 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: make docker 🐳
-        if: contains(github.ref_name, 'main') || contains(github.ref_name, 'unstable')
+        if: contains(github.ref_name, 'main') || contains(github.ref_name, 'svelte-wip')
         run: |
           make docker
 
       - name: make docker-push 🐋
-        if: contains(github.ref_name, 'main') || contains(github.ref_name, 'unstable')
+        if: contains(github.ref_name, 'main') || contains(github.ref_name, 'svelte-wip')
         id: docker_push_images
         run: |
           make docker-push
@@ -197,12 +197,12 @@ jobs:
     permissions:
       id-token: write
       contents: write
-    if: contains(github.ref_name, 'main')
+    if: contains(github.ref_name, 'main') || contains(github.ref_name, 'svelte-wip')
     strategy:
       fail-fast: false
       matrix:
         env:
-          - "latest"
+#          - "latest"
           - "unstable"
     steps:
       - name: Checkout 🛒
