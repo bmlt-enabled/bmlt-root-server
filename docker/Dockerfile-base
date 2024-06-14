@@ -16,22 +16,19 @@ RUN apt-get update \
         mcrypt \
         unzip
 
-# Install older php
 RUN apt-get update \
-    && add-apt-repository ppa:ondrej/php \
     && apt-get -yqq install \
-        php8.0 \
-        php8.0-curl \
-        php8.0-dev \
-        php8.0-gd \
-        php8.0-mbstring \
-        php8.0-mysql \
-        php8.0-pdo \
-        php8.0-xdebug \
-        php8.0-xml \
-        php8.0-zip \
-        php8.0-intl \
-    && update-alternatives --set php /usr/bin/php8.0
+        php \
+        php-curl \
+        php-dev \
+        php-gd \
+        php-mbstring \
+        php-mysql \
+        php-pdo \
+        php-xdebug \
+        php-xml \
+        php-zip \
+        php-intl
 
 # Install composer
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
@@ -55,12 +52,10 @@ COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
 COPY auto-config.inc.php /var/www/html/auto-config.inc.php
 RUN ln -sf /proc/self/fd/1 /var/log/apache2/access.log && \
     ln -sf /proc/self/fd/1 /var/log/apache2/error.log
-RUN a2enmod rewrite \
-     && a2dismod php8.1 \
-     && a2enmod php8.0
+RUN a2enmod rewrite
 
 # PHP memory limits
-RUN sed -i 's/^memory_limit.*$/memory_limit = 256M/' /etc/php/8.0/apache2/php.ini
-RUN sed -i 's/^memory_limit.*$/memory_limit = 320M/' /etc/php/8.0/cli/php.ini
+RUN sed -i 's/^memory_limit.*$/memory_limit = 256M/' /etc/php/8.1/apache2/php.ini
+RUN sed -i 's/^memory_limit.*$/memory_limit = 320M/' /etc/php/8.1/cli/php.ini
 
 EXPOSE 8000
