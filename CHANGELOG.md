@@ -1,4 +1,4 @@
-## 3.0.6 (UNRELEASED)
+## 3.1.0 (UNRELEASED)
 * PHP 8.1 and higher are now required. PHP 8.0 is no longer supported.
 * The `weekdays` filter parameter for the `GetSearchResults` API now accept a comma separated string (e.g. `weekdays=1,-2`) in addition to the standard array syntax.
 * Updated the NAWS import functionality for use by NAWS when importing virtual meetings, by importing the virtual meeting fields and time zone, and allowing the address and city to be blank.
