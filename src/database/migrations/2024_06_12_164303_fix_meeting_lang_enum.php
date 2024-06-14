@@ -12,9 +12,11 @@ return new class extends Migration
      */
     public function up()
     {
-        DB::table('comdef_meetings_main')
-            ->whereNull('lang_enum')
-            ->update(['lang_enum' => config('app.locale')]);
+        if (!legacy_config('aggregator_mode_enabled')) {
+            DB::table('comdef_meetings_main')
+                ->whereNull('lang_enum')
+                ->update(['lang_enum' => config('app.locale')]);
+        }
     }
 
     /**
