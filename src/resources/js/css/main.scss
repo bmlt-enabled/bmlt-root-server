@@ -244,3 +244,11 @@ $text-color-dark-light: #333;
 .light body {
   background-color: #fff;
 }
+
+.dark .version {
+  color: $text-color-dark;
+}
+
+.light .version {
+  color: $text-color-dark-light;
+}

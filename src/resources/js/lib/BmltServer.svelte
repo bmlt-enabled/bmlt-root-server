@@ -1,6 +1,10 @@
 <script lang="ts">
+  /*global settings */
+
   import { theme } from '../stores/themeStore';
   import ThemeSwitcher from '../components/ThemeSwitcher.svelte';
+
+  let version = settings.version;
 
   if (typeof window !== 'undefined') {
     const savedTheme = window.localStorage.getItem('theme');
@@ -12,9 +16,9 @@
 
 <section class={$theme}>
   <div id="export-form">
-    <h1>BMLT Root Server</h1>
+    <h1>BMLT Root Server {version}</h1>
     <div id="footer">
-      <a href="https://github.com/bmlt-enabled/bmlt-root-server/issues/new" class="footer-link" target="_blank">Issues?</a>
+      <a href="#/login" class="footer-link">Login</a>
     </div>
     <ThemeSwitcher />
   </div>
