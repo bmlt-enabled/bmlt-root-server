@@ -1,25 +1,6 @@
 <script lang="ts">
-  /*global settings */
-
-  import { theme } from '../stores/themeStore';
-  import ThemeSwitcher from '../components/ThemeSwitcher.svelte';
-
-  let version = settings.version;
-
-  if (typeof window !== 'undefined') {
-    const savedTheme = window.localStorage.getItem('theme');
-    if (savedTheme) {
-      theme.set(savedTheme);
-    }
-  }
+  import Nav from '../components/NavBar.svelte';
 </script>
 
-<section class={$theme}>
-  <div id="export-form">
-    <h1>BMLT Root Server {version}</h1>
-    <div id="footer">
-      <a href="#/login" class="footer-link">Login</a>
-    </div>
-    <ThemeSwitcher />
-  </div>
-</section>
+<Nav />
+<h1 class="mt-2 text-gray-700 dark:text-gray-300">Home</h1>
