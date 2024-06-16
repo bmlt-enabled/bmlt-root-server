@@ -4,11 +4,14 @@
   import RootServerApi from '../lib/RootServerApi';
   import { Helper, Label, Input, InputAddon, ButtonGroup } from 'flowbite-svelte';
   import { UserCircleSolid } from 'flowbite-svelte-icons';
+  import { strings } from '../localization/localization';
 
   const authenticationMessage = writable('');
   const validationMessage = writable({ username: '', password: '' });
   const username = writable('');
   const password = writable('');
+  // @ts-expect-error translation
+  let usernameTitle = strings.usernameTitle;
 
   const handleOnSubmit = async () => {
     try {
@@ -36,7 +39,7 @@
 
 <form on:submit|preventDefault={handleOnSubmit}>
   <div class="mb-6">
-    <Label for="website-admin" class="mb-2 block">Username</Label>
+    <Label for="website-admin" class="mb-2 block">{usernameTitle}</Label>
     <ButtonGroup class="w-full">
       <InputAddon>
         <UserCircleSolid class="h-4 w-4 text-gray-500 dark:text-gray-400" />
