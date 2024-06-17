@@ -31,7 +31,7 @@
     "flowbite-svelte-icons": "^1.6.1",
     "globals": "^15.4.0",
     "jest": "^29.3.1",
-    "jsdom": "^20.0.3",
+    "jsdom": "^24.1.0",
     "laravel-vite-plugin": "^1.0.4",
     "postcss": "^8.4.38",
     "prettier": "^3.1.1",
@@ -53,6 +53,7 @@
   },
   "dependencies": {
     "bmlt-root-server-client": "^1.0.7",
+    "localized-strings": "^0.2.4",
     "svelte-spa-router": "^4.0.1"
   }
 }

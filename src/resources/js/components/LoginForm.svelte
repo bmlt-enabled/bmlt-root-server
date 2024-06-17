@@ -10,8 +10,6 @@
   const validationMessage = writable({ username: '', password: '' });
   const username = writable('');
   const password = writable('');
-  // @ts-expect-error translation
-  let usernameTitle = strings.usernameTitle;
 
   const handleOnSubmit = async () => {
     try {
@@ -39,7 +37,7 @@
 
 <form on:submit|preventDefault={handleOnSubmit}>
   <div class="mb-6">
-    <Label for="website-admin" class="mb-2 block">{usernameTitle}</Label>
+    <Label for="website-admin" class="mb-2 block">{strings.usernameTitle}</Label>
     <ButtonGroup class="w-full">
       <InputAddon>
         <UserCircleSolid class="h-4 w-4 text-gray-500 dark:text-gray-400" />
@@ -47,7 +45,7 @@
       <Input id="website-admin" bind:value={$username} placeholder="username" />
     </ButtonGroup>
     <Helper class="mt-2" color="red"><span class="font-medium">{$validationMessage.username}</span></Helper>
-    <Label for="website-admin" class="mb-2 block">Password</Label>
+    <Label for="website-admin" class="mb-2 block">{strings.passwordTitle}</Label>
     <ButtonGroup class="w-full">
       <InputAddon>
         <UserCircleSolid class="h-4 w-4 text-gray-500 dark:text-gray-400" />
