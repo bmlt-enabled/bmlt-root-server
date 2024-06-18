@@ -49,7 +49,7 @@ services:
 ```
 
 ## Developing the New UI
-The new UI is developed using [React](https://reactjs.org/), and the code is located in the `resources/js` directory.
+The new UI is developed using [Svelte](https://svelte.dev/), and the code is located in the `resources/js` directory.
 
 You can enable the new UI in the docker container by setting the `NEW_UI_ENABLED` environment variable to `'true'` in `docker/docker-compose.dev.yml`.
 
