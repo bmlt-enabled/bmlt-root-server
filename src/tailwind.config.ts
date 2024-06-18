@@ -5,6 +5,9 @@ export default {
     './resources/js/**/*.{html,js,svelte,ts}',
     './node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}'
   ],
+  plugins: [
+    require('flowbite/plugin')
+  ],
   darkMode: 'selector',
   theme: {
     extend: {
@@ -25,7 +28,4 @@ export default {
       }
     }
   },
-  plugins: [
-    require('flowbite/plugin')
-  ],
 } satisfies Config

@@ -58,6 +58,14 @@ class ApiClient extends RootServerApi {
   get isLoggedIn(): boolean {
     return Boolean(this.authorizationHeader);
   }
+
+  get isTokenExpired(): boolean {
+    if (!this._token || !this._token.expiresAt) {
+      return true;
+    }
+    const currentTime = Math.floor(Date.now() / 1000);
+    return this._token.expiresAt < currentTime;
+  }
 }
 
 type AuthenticationErrorHandler = (error: AuthenticationError) => void;
@@ -126,6 +134,10 @@ class ApiClientWrapper {
 
   get isLoggedIn(): boolean {
     return this.api.isLoggedIn;
+  }
+
+  get isTokenExpired(): boolean {
+    return this.api.isTokenExpired;
   }
 
   async login(username: string, password: string): Promise<Token> {
