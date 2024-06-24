@@ -1,4 +1,10 @@
 <script lang="ts">
+
+  // TODO: remove this statement after Svelte 5 is out. This is a hack to avoid getting spurious warnings about
+  // unknown props -- it tricks the Svelte runtime into thinking that we are using 'params' for something.
+  // Svelte 5 is supposed to fix this problem (see https://github.com/sveltejs/svelte/issues/4652).
+  $$restProps;
+
   import Nav from '../components/NavBar.svelte';
   import { onMount } from 'svelte';
   import { replace } from 'svelte-spa-router';
