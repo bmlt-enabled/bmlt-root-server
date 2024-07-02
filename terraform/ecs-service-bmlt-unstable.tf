@@ -46,7 +46,7 @@ resource "aws_ecs_task_definition" "bmlt_unstable" {
         ]
         links            = ["bmlt-db"]
         workingDirectory = "/tmp"
-        image            = "bmltenabled/bmlt-root-server:latest"
+        image            = "bmltenabled/bmlt-root-server:unstable"
         repositoryCredentials = {
           credentialsParameter = data.aws_secretsmanager_secret.docker.arn
         }
@@ -130,7 +130,7 @@ resource "aws_ecs_service" "bmlt_unstable" {
     container_port   = 8000
   }
 
-  lifecycle {
-    ignore_changes = [task_definition]
-  }
+#   lifecycle {
+#     ignore_changes = [task_definition]
+#   }
 }

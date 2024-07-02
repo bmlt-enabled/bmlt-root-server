@@ -1,7 +1,7 @@
 name: test
 on:
   push:
-    branches-ignore: ['main']
+    branches-ignore: ['svelte-wip']
 
 jobs:
   test-php:
@@ -70,6 +70,8 @@ jobs:
           make npm
 
       - name: make lint-js 🧹
+        env:
+          LARAVEL_BYPASS_ENV_CHECK: '1'
         run: |
           make lint-js
 
