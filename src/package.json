@@ -5,16 +5,12 @@
     "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
-    "check": "svelte-check --tsconfig ./tsconfig.json",
-    "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
-    "lint": "prettier --check vite.config.ts resources/js && eslint vite.config.ts resources/js",
+    "lint": "prettier --check vite.config.ts resources/js && eslint vite.config.ts resources/js && svelte-check --tsconfig ./tsconfig.json",
     "format": "prettier --write vite.config.ts resources/js",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
-    "coverage": "vitest run --coverage",
-    "typecheck": "vitest typecheck",
-    "validate": "prettier --write vite.config.ts resources/js && prettier --check vite.config.ts resources/js && eslint vite.config.ts resources/js && svelte-check --tsconfig ./tsconfig.json && vitest run"
+    "coverage": "vitest run --coverage"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^3.1.1",

@@ -146,6 +146,10 @@ class ApiClientWrapper {
     return this.api.authToken(authTokenRequest);
   }
 
+  async refreshToken(): Promise<Token> {
+    return this.api.authRefresh();
+  }
+
   async logout(): Promise<void> {
     return this.api.authLogout();
   }

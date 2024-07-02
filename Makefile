@@ -143,7 +143,7 @@ lint-fix:  ## PHP Lint Fix
 
 .PHONY: lint-js
 lint-js:  ## JavaScript Lint
-	cd src && npm run lint && npm run check
+	cd src && npm run lint
 
 .PHONY: phpstan
 phpstan:  ## PHP Larastan Code Analysis
