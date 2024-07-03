@@ -15,6 +15,7 @@ const strings = new LocalizedStrings({
     emailTitle: 'Email:',
     formatsTitle: 'Formats',
     idTitle: 'ID',
+    invalidUsernameOrPassword: 'Invalid username or password.',
     languageSelectTitle: 'Select Language',
     loginTitle: 'Login',
     loginVerb: 'Log In',
