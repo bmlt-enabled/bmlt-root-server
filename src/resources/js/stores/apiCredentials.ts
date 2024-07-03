@@ -13,7 +13,7 @@ export class ApiCredentialsStore {
 
   constructor() {
     this.store = writable(null);
-    this.refreshTokenTimeout = setTimeout(() => {}, Number.MAX_SAFE_INTEGER);
+    this.refreshTokenTimeout = setTimeout(() => {}, 2147483647);
     const raw = localStorage.getItem(ACCESS_TOKEN_STORAGE_KEY);
     if (raw) {
       this.set(JSON.parse(raw) as Token);
