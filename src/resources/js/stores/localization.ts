@@ -1,6 +1,9 @@
 import LocalizedStrings from 'localized-strings';
 
-export const strings = new LocalizedStrings({
+import { writable } from 'svelte/store';
+import type { Subscriber, Unsubscriber } from 'svelte/store';
+
+const strings = new LocalizedStrings({
   en: {
     adminTitle: 'Administrator',
     applyChangesTitle: 'Apply Changes',
@@ -213,17 +216,30 @@ export const strings = new LocalizedStrings({
   }
 });
 
-export const getLanguage = (): string => {
-  return strings.getLanguage();
-};
+const LANGUAGE_STORAGE_KEY = 'bmltLanguage';
 
-export const setLanguage = (language: string): void => {
-  strings.setLanguage(language);
-  localStorage.setItem('language', language);
-};
+class Translations {
+  private store = writable(strings);
 
-export const restoreLanguage = (): string => {
-  const language = localStorage.getItem('language') || settings.defaultLanguage;
-  strings.setLanguage(language);
-  return language;
-};
+  constructor() {
+    const language = localStorage.getItem(LANGUAGE_STORAGE_KEY) || settings.defaultLanguage;
+    strings.setLanguage(language);
+    this.store.set(strings);
+  }
+
+  get subscribe(): (run: Subscriber<typeof strings>) => Unsubscriber {
+    return this.store.subscribe;
+  }
+
+  getLanguage(): string {
+    return strings.getLanguage();
+  }
+
+  setLanguage(language: string): void {
+    strings.setLanguage(language);
+    localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
+    this.store.set(strings);
+  }
+}
+
+export const translations = new Translations();

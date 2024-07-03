@@ -1,14 +1,15 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   import { DarkMode, Navbar, NavBrand, NavLi, NavUl, NavHamburger } from 'flowbite-svelte';
-  import { isLoggedIn, isTokenExpired, checkAuth } from '../stores/authStore';
-  /*global settings */
-  let globalSettings = settings;
-  onMount(() => {
-    checkAuth();
-  });
 
-  $: showLogin = !$isLoggedIn || $isTokenExpired;
+  import { apiCredentials } from '../stores/apiCredentials';
+  import { translations } from '../stores/localization';
+
+  const globalSettings = settings;
+
+  async function logout(event: Event) {
+    event.preventDefault();
+    await apiCredentials.logout();
+  }
 </script>
 
 <Navbar>
@@ -21,11 +22,7 @@
   </NavBrand>
   <NavUl>
     <NavLi href="#/">Home</NavLi>
-    <NavLi href="#/meetings">Meetings</NavLi>
-    {#if showLogin}
-      <NavLi href="#/login">Login</NavLi>
-    {:else}
-      <NavLi href="#/logout">Logout</NavLi>
-    {/if}
+    <NavLi href="#/meetings">{$translations.meetingsTitle}</NavLi>
+    <NavLi href="#" on:click={logout}>Logout</NavLi>
   </NavUl>
 </Navbar>
