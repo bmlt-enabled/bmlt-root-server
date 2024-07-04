@@ -1,13 +1,15 @@
 <script lang="ts">
   import { validator } from '@felte/validator-yup';
   import { createForm } from 'felte';
-  import { Button, Helper, Input, Label, Select } from 'flowbite-svelte';
+  import { Button, Helper, Input, Label, P, Select } from 'flowbite-svelte';
   import * as yup from 'yup';
 
   import Nav from '../components/NavBar.svelte';
   import { authenticatedUser } from '../stores/apiCredentials';
   import { spinner } from '../stores/spinner';
   import { translations } from '../stores/localization';
+  import RootServerApi from '../lib/RootServerApi';
+  import { onMount } from 'svelte';
 
   const { form, data, errors } = createForm({
     initialValues: {
@@ -39,9 +41,61 @@
     })
   });
 
-  let users = [{ value: 'bronx_asc_admin', name: 'Bronx ASC Administrator' }];
-  let userIs = [{ value: 'service_body_admin', name: 'Service Body Administrator' }];
-  let ownedBy = [{ value: 'greater_ny_admin', name: 'Greater New York Regional Administrator' }];
+  let users = [];
+  let selectedUser = null;
+  let errorMessage = '';
+
+  const getUsers = async (): Promise<void> => {
+    if ($authenticatedUser?.type !== 'admin' && $authenticatedUser?.type !== 'serviceBodyAdmin') {
+      return;
+    }
+    try {
+      const allUsers = await RootServerApi.getUsers();
+      allUsers.sort((a, b) => a.displayName.localeCompare(b.displayName));
+
+      if ($authenticatedUser?.type === 'admin') {
+        for (const u of allUsers) {
+          if (u.type !== 'admin' && u.ownerId === null) {
+            u.ownerId = $authenticatedUser.id.toString();
+          }
+        }
+      }
+
+      users = allUsers;
+    } catch (error: any) {
+      RootServerApi.handleErrors(error, {
+        handleError: (error) => {
+          errorMessage = error.message;
+        }
+      });
+    }
+  };
+
+  onMount(() => {
+    getUsers();
+  });
+
+  $: if (selectedUser) {
+    const user = users.find((u) => u.username === selectedUser);
+    if (user) {
+      $data.userIs = user.type;
+      $data.ownedBy = user.ownerId ? user.ownerId.toString() : '';
+      $data.email = user.email;
+      $data.name = user.displayName;
+      $data.username = user.username;
+      $data.description = user.description;
+      $data.password = ''; // Clear password field for security reasons
+    }
+  }
+
+  const userIsOptions = [
+    { value: 'serviceBodyAdmin', name: 'Service Body Administrator' },
+    { value: 'observer', name: 'Observer' },
+    { value: 'deactivated', name: 'Deactivated' }
+  ];
+
+  $: userOptions = users.map((user) => ({ value: user.username, name: user.displayName }));
+  $: ownedByOptions = users.map((user) => ({ value: user.id.toString(), name: user.displayName }));
 </script>
 
 <Nav />
@@ -52,7 +106,7 @@
     <form use:form>
       <div class="mb-6">
         <Label for="user" class="mb-2">{$translations.userTitle}</Label>
-        <Select id="user" items={users} name="user" bind:value={$data.user} />
+        <Select id="user" items={userOptions} name="user" bind:value={selectedUser} />
         <Helper class="mt-2" color="red">
           {#if $errors.user}
             {$errors.user}
@@ -62,7 +116,7 @@
       <div class="mb-6 grid gap-6 md:grid-cols-2">
         <div>
           <Label for="user-is" class="mb-2">{$translations.userIsATitle}</Label>
-          <Select id="user-is" items={userIs} name="userIs" bind:value={$data.userIs} />
+          <Select id="user-is" items={userIsOptions} name="userIs" bind:value={$data.userIs} />
           <Helper class="mt-2" color="red">
             {#if $errors.userIs}
               {$errors.userIs}
@@ -71,7 +125,7 @@
         </div>
         <div>
           <Label for="owned-by" class="mb-2">{$translations.ownedByTitle}</Label>
-          <Select id="owned-by" items={ownedBy} name="ownedBy" bind:value={$data.ownedBy} />
+          <Select id="owned-by" items={ownedByOptions} name="ownedBy" bind:value={$data.ownedBy} />
           <Helper class="mt-2" color="red">
             {#if $errors.ownedBy}
               {$errors.ownedBy}
@@ -124,6 +178,11 @@
           {/if}
         </Helper>
       </div>
+      {#if errorMessage}
+        <div class="mb-4">
+          <P color="text-red-700 dark:text-red-500">{errorMessage}</P>
+        </div>
+      {/if}
       <Button type="submit">{$translations.applyChangesTitle}</Button>
     </form>
   </div>
