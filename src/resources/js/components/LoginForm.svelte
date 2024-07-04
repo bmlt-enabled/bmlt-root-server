@@ -1,10 +1,11 @@
 <script lang="ts">
   import { validator } from '@felte/validator-yup';
   import { createForm } from 'felte';
-  import { Button, DarkMode, Helper, Input, Label, P, Select } from 'flowbite-svelte';
+  import { Button, Helper, Input, Label, P, Select } from 'flowbite-svelte';
   import { push } from 'svelte-spa-router';
   import * as yup from 'yup';
 
+  import DarkMode from './DarkMode.svelte';
   import RootServerApi from '../lib/RootServerApi';
   import { translations } from '../stores/localization';
   import type { ApiCredentialsStore } from '../stores/apiCredentials';
