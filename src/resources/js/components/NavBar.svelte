@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { DarkMode, Navbar, NavBrand, NavLi, NavUl, NavHamburger } from 'flowbite-svelte';
+  import { Navbar, NavBrand, NavLi, NavUl, NavHamburger } from 'flowbite-svelte';
 
+  import DarkMode from './DarkMode.svelte';
   import { apiCredentials } from '../stores/apiCredentials';
   import { translations } from '../stores/localization';
 
