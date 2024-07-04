@@ -21,6 +21,7 @@
   ];
   let selectedUserId = -1;
   let errorMessage = '';
+  let disableUserType = false;
 
   const { form, data, errors } = createForm({
     initialValues: {
@@ -39,22 +40,27 @@
       spinner.hide();
     },
     extend: validator({
-      schema: yup.object({
-        user: yup.string().required('User is required'),
-        // User type will need more custom validation that only requires the field when not an admin, and
-        // we will need logic clears and disables the field with you're an admin and you've selected yourself.
-        userType: yup.string().required('User type is required'),
-        ownedBy: yup.number().required('Owner is required'),
-        email: yup.string().email('Invalid email'),
-        // Needs max length
-        name: yup.string().required('Name is required'),
-        // Needs max length
-        username: yup.string().required('Username is required'),
-        // We should set a password length requirement, and this field should not be required
-        password: yup.string(),
-        // We should set a max length
-        description: yup.string()
-      })
+      schema: yup
+        .object({
+          user: yup.string().required('User is required'),
+          userType: yup.string(),
+          ownedBy: yup.number(),
+          email: yup.string().max(255, 'email cannot be longer than 255 characters').email('Invalid email'),
+          name: yup.string().max(255, 'name cannot be longer than 255 characters').required('Name is required'),
+          username: yup.string().max(255, 'username cannot be longer than 255 characters').required('Username is required'),
+          password: yup.string().min(12, 'password must be at least 12 characters long').max(255, 'password cannot be longer than 255 characters'),
+          description: yup.string().max(255, 'description cannot be longer than 255 characters')
+        })
+        .test('userType-validation', 'User type validation failed', function (value) {
+          const { userType, ownedBy } = value;
+          if (userType !== 'admin' && !ownedBy) {
+            return new yup.ValidationError('Owner is required for non-admin users', null, 'ownedBy');
+          }
+          if (userType !== 'admin' && !userType) {
+            return new yup.ValidationError('User Type is required for non-admin users', null, 'ownedBy');
+          }
+          return true;
+        })
     })
   });
 
@@ -99,6 +105,7 @@
     $data.username = user.username;
     $data.description = user.description;
     $data.password = ''; // Clear password field for security reasons
+    disableUserType = user.id === $authenticatedUser?.id && $authenticatedUser?.type === 'admin';
   }
 
   $: if (selectedUserId) {
@@ -125,7 +132,7 @@
     <div class="mb-6 grid gap-6 md:grid-cols-2">
       <div>
         <Label for="user-type" class="mb-2">{$translations.userIsATitle}</Label>
-        <Select id="user-type" items={userTypeItems} name="userType" bind:value={$data.userType} />
+        <Select id="user-type" items={userTypeItems} name="userType" bind:value={$data.userType} disabled={disableUserType} />
         <Helper class="mt-2" color="red">
           {#if $errors.userType}
             {$errors.userType}
@@ -134,7 +141,7 @@
       </div>
       <div>
         <Label for="owned-by" class="mb-2">{$translations.ownedByTitle}</Label>
-        <Select id="owned-by" items={userItems} name="ownedBy" bind:value={$data.ownedBy} />
+        <Select id="owned-by" items={userItems} name="ownedBy" bind:value={$data.ownedBy} disabled={disableUserType} />
         <Helper class="mt-2" color="red">
           {#if $errors.ownedBy}
             {$errors.ownedBy}
