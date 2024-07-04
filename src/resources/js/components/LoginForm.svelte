@@ -8,6 +8,7 @@
   import DarkMode from './DarkMode.svelte';
   import RootServerApi from '../lib/RootServerApi';
   import { translations } from '../stores/localization';
+  import { spinner } from '../stores/spinner';
   import type { ApiCredentialsStore } from '../stores/apiCredentials';
 
   export let apiCredentials: ApiCredentialsStore;
@@ -23,10 +24,12 @@
       password: ''
     },
     onSubmit: async (values) => {
+      spinner.show();
       await apiCredentials.login(values.username, values.password);
     },
     onSuccess: () => {
       push('/');
+      spinner.hide();
     },
     onError: async (error) => {
       await RootServerApi.handleErrors(error as Error, {
@@ -40,6 +43,7 @@
           });
         }
       });
+      spinner.hide();
     },
     extend: validator({
       schema: yup.object({
@@ -95,7 +99,7 @@
           </div>
         {/if}
         <div class="mb-2">
-          <Button type="submit">{$translations.loginVerb}</Button>
+          <Button class="w-full" type="submit">{$translations.loginVerb}</Button>
         </div>
       </form>
     </div>
