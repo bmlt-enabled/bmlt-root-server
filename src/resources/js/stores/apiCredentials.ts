@@ -3,6 +3,7 @@ import type { Subscriber, Writable, Unsubscriber } from 'svelte/store';
 
 import type { Token, User } from 'bmlt-root-server-client';
 
+import { spinner } from './spinner';
 import RootServerApi from '../lib/RootServerApi';
 
 const ACCESS_TOKEN_STORAGE_KEY = 'bmltToken';
@@ -91,9 +92,11 @@ export class ApiCredentialsStore {
     const token = get(this.store);
     if (token) {
       try {
+        spinner.show();
         await RootServerApi.logout();
       } finally {
         this.clearInternal();
+        spinner.hide();
       }
     }
   }
@@ -135,10 +138,12 @@ apiCredentials.subscribe(async () => {
     }
 
     try {
+      spinner.show();
       const apiUser = await RootServerApi.getUser(userId);
       authenticatedUser.set(apiUser);
     } finally {
       lastUserId = userId;
+      spinner.hide();
     }
   } else {
     lastUserId = 0;

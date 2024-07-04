@@ -4,6 +4,7 @@
   import LoginForm from './components/LoginForm.svelte';
   import Home from './routes/Home.svelte';
   import Meetings from './routes/Meetings.svelte';
+  import SpinnerModal from './components/SpinnerModal.svelte';
   import { apiCredentials } from './stores/apiCredentials';
 
   const routes = {
@@ -21,3 +22,4 @@
 {:else}
   <LoginForm {apiCredentials} />
 {/if}
+<SpinnerModal />
