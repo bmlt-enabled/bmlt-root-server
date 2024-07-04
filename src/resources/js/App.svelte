@@ -4,11 +4,13 @@
   import LoginForm from './components/LoginForm.svelte';
   import Home from './routes/Home.svelte';
   import Meetings from './routes/Meetings.svelte';
+  import Users from './routes/Users.svelte';
   import SpinnerModal from './components/SpinnerModal.svelte';
   import { apiCredentials } from './stores/apiCredentials';
 
   const routes = {
     '/meetings': Meetings,
+    '/users': Users,
     '*': Home
   };
 </script>

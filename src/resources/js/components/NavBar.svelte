@@ -24,6 +24,7 @@
   <NavUl>
     <NavLi href="#/">Home</NavLi>
     <NavLi href="#/meetings">{$translations.meetingsTitle}</NavLi>
+    <NavLi href="#/users">{$translations.usersTitle}</NavLi>
     <NavLi href="#" on:click={logout}>Logout</NavLi>
   </NavUl>
 </Navbar>
