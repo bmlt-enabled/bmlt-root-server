@@ -10,12 +10,23 @@
   import { translations } from '../stores/localization';
   import RootServerApi from '../lib/RootServerApi';
   import { onMount } from 'svelte';
+  import type { User } from 'bmlt-root-server-client';
+
+  let usersById: Record<number, User> = {};
+  let userItems = [{ value: -1, name: '' }];
+  const userTypeItems = [
+    { value: 'serviceBodyAdmin', name: 'Service Body Administrator' },
+    { value: 'observer', name: 'Observer' },
+    { value: 'deactivated', name: 'Deactivated' }
+  ];
+  let selectedUserId = -1;
+  let errorMessage = '';
 
   const { form, data, errors } = createForm({
     initialValues: {
       user: '',
-      userIs: '',
-      ownedBy: '',
+      userType: '',
+      ownedBy: -1,
       email: '',
       name: '',
       username: '',
@@ -30,160 +41,157 @@
     extend: validator({
       schema: yup.object({
         user: yup.string().required('User is required'),
-        userIs: yup.string().required('User role is required'),
-        ownedBy: yup.string().required('Owner is required'),
-        email: yup.string().email('Invalid email').required('Email is required'),
+        // User type will need more custom validation that only requires the field when not an admin, and
+        // we will need logic clears and disables the field with you're an admin and you've selected yourself.
+        userType: yup.string().required('User type is required'),
+        ownedBy: yup.number().required('Owner is required'),
+        email: yup.string().email('Invalid email'),
+        // Needs max length
         name: yup.string().required('Name is required'),
+        // Needs max length
         username: yup.string().required('Username is required'),
-        password: yup.string().required('Password is required'),
+        // We should set a password length requirement, and this field should not be required
+        password: yup.string(),
+        // We should set a max length
         description: yup.string()
       })
     })
   });
 
-  let users = [];
-  let selectedUser = null;
-  let errorMessage = '';
-
-  const getUsers = async (): Promise<void> => {
-    if ($authenticatedUser?.type !== 'admin' && $authenticatedUser?.type !== 'serviceBodyAdmin') {
-      return;
-    }
+  async function getUsers(): Promise<void> {
     try {
-      const allUsers = await RootServerApi.getUsers();
-      allUsers.sort((a, b) => a.displayName.localeCompare(b.displayName));
+      const users = await RootServerApi.getUsers();
 
-      if ($authenticatedUser?.type === 'admin') {
-        for (const u of allUsers) {
-          if (u.type !== 'admin' && u.ownerId === null) {
-            u.ownerId = $authenticatedUser.id.toString();
+      const _usersById: Record<number, User> = {};
+      for (const user of users) {
+        _usersById[user.id] = user;
+        if ($authenticatedUser?.type === 'admin') {
+          if (user.ownerId === null) {
+            user.ownerId = $authenticatedUser.id.toString();
           }
         }
       }
 
-      users = allUsers;
+      usersById = _usersById;
+      userItems = users.map((user) => ({ value: user.id, name: user.displayName })).sort((a, b) => a.name.localeCompare(b.name));
     } catch (error: any) {
+      // If this happens, it's basically a fatal error. We should implement the default error
+      // handler in RootServerApi.handleErrors so that it pops up an error modal rather than
+      // implementing a custom error handler on each page. If we need different error handling
+      // we can easily stub in a custom error handler later.
       RootServerApi.handleErrors(error, {
         handleError: (error) => {
           errorMessage = error.message;
         }
       });
     }
-  };
-
-  onMount(() => {
-    getUsers();
-  });
-
-  $: if (selectedUser) {
-    const user = users.find((u) => u.username === selectedUser);
-    if (user) {
-      $data.userIs = user.type;
-      $data.ownedBy = user.ownerId ? user.ownerId.toString() : '';
-      $data.email = user.email;
-      $data.name = user.displayName;
-      $data.username = user.username;
-      $data.description = user.description;
-      $data.password = ''; // Clear password field for security reasons
-    }
   }
 
-  const userIsOptions = [
-    { value: 'serviceBodyAdmin', name: 'Service Body Administrator' },
-    { value: 'observer', name: 'Observer' },
-    { value: 'deactivated', name: 'Deactivated' }
-  ];
+  function populateForm() {
+    const user = usersById[selectedUserId];
+    if (!user) {
+      return;
+    }
+    $data.userType = user.type;
+    $data.ownedBy = user.ownerId ? parseInt(user.ownerId) : -1;
+    $data.email = user.email;
+    $data.name = user.displayName;
+    $data.username = user.username;
+    $data.description = user.description;
+    $data.password = ''; // Clear password field for security reasons
+  }
 
-  $: userOptions = users.map((user) => ({ value: user.username, name: user.displayName }));
-  $: ownedByOptions = users.map((user) => ({ value: user.id.toString(), name: user.displayName }));
+  $: if (selectedUserId) {
+    populateForm();
+  }
+
+  onMount(getUsers);
 </script>
 
 <Nav />
 
-{#if $authenticatedUser}
-  <div class="mx-auto max-w-xl p-4">
-    <h2 class="mb-4 text-center text-xl font-semibold dark:text-white">{$translations.userTitle} {$translations.idTitle} #{$authenticatedUser.id}</h2>
-    <form use:form>
-      <div class="mb-6">
-        <Label for="user" class="mb-2">{$translations.userTitle}</Label>
-        <Select id="user" items={userOptions} name="user" bind:value={selectedUser} />
+<div class="mx-auto max-w-xl p-4">
+  <h2 class="mb-4 text-center text-xl font-semibold dark:text-white">{$translations.userTitle}</h2>
+  <form use:form>
+    <div class="mb-6">
+      <Label for="user" class="mb-2">{$translations.userTitle}</Label>
+      <Select id="user" items={userItems} name="user" bind:value={selectedUserId} />
+      <Helper class="mt-2" color="red">
+        {#if $errors.user}
+          {$errors.user}
+        {/if}
+      </Helper>
+    </div>
+    <div class="mb-6 grid gap-6 md:grid-cols-2">
+      <div>
+        <Label for="user-type" class="mb-2">{$translations.userIsATitle}</Label>
+        <Select id="user-type" items={userTypeItems} name="userType" bind:value={$data.userType} />
         <Helper class="mt-2" color="red">
-          {#if $errors.user}
-            {$errors.user}
+          {#if $errors.userType}
+            {$errors.userType}
           {/if}
         </Helper>
       </div>
-      <div class="mb-6 grid gap-6 md:grid-cols-2">
-        <div>
-          <Label for="user-is" class="mb-2">{$translations.userIsATitle}</Label>
-          <Select id="user-is" items={userIsOptions} name="userIs" bind:value={$data.userIs} />
-          <Helper class="mt-2" color="red">
-            {#if $errors.userIs}
-              {$errors.userIs}
-            {/if}
-          </Helper>
-        </div>
-        <div>
-          <Label for="owned-by" class="mb-2">{$translations.ownedByTitle}</Label>
-          <Select id="owned-by" items={ownedByOptions} name="ownedBy" bind:value={$data.ownedBy} />
-          <Helper class="mt-2" color="red">
-            {#if $errors.ownedBy}
-              {$errors.ownedBy}
-            {/if}
-          </Helper>
-        </div>
-      </div>
-      <div class="mb-6">
-        <Label for="email" class="mb-2">{$translations.emailTitle}</Label>
-        <Input type="email" id="email" name="email" bind:value={$data.email} required />
+      <div>
+        <Label for="owned-by" class="mb-2">{$translations.ownedByTitle}</Label>
+        <Select id="owned-by" items={userItems} name="ownedBy" bind:value={$data.ownedBy} />
         <Helper class="mt-2" color="red">
-          {#if $errors.email}
-            {$errors.email}
+          {#if $errors.ownedBy}
+            {$errors.ownedBy}
           {/if}
         </Helper>
       </div>
-      <div class="mb-6">
-        <Label for="name" class="mb-2">{$translations.nameTitle}</Label>
-        <Input type="text" id="name" name="name" bind:value={$data.name} required />
-        <Helper class="mt-2" color="red">
-          {#if $errors.name}
-            {$errors.name}
-          {/if}
-        </Helper>
+    </div>
+    <div class="mb-6">
+      <Label for="email" class="mb-2">{$translations.emailTitle}</Label>
+      <Input type="email" id="email" name="email" bind:value={$data.email} />
+      <Helper class="mt-2" color="red">
+        {#if $errors.email}
+          {$errors.email}
+        {/if}
+      </Helper>
+    </div>
+    <div class="mb-6">
+      <Label for="name" class="mb-2">{$translations.nameTitle}</Label>
+      <Input type="text" id="name" name="name" bind:value={$data.name} required />
+      <Helper class="mt-2" color="red">
+        {#if $errors.name}
+          {$errors.name}
+        {/if}
+      </Helper>
+    </div>
+    <div class="mb-6">
+      <Label for="description" class="mb-2">{$translations.descriptionTitle}</Label>
+      <Input type="text" id="description" name="description" bind:value={$data.description} />
+      <Helper class="mt-2" color="red">
+        {#if $errors.description}
+          {$errors.description}
+        {/if}
+      </Helper>
+    </div>
+    <div class="mb-6">
+      <Label for="username" class="mb-2">{$translations.usernameTitle}</Label>
+      <Input type="text" id="username" name="username" bind:value={$data.username} required />
+      <Helper class="mt-2" color="red">
+        {#if $errors.username}
+          {$errors.username}
+        {/if}
+      </Helper>
+    </div>
+    <div class="mb-6">
+      <Label for="password" class="mb-2">{$translations.passwordTitle}</Label>
+      <Input type="password" id="password" name="password" bind:value={$data.password} required />
+      <Helper class="mt-2" color="red">
+        {#if $errors.password}
+          {$errors.password}
+        {/if}
+      </Helper>
+    </div>
+    {#if errorMessage}
+      <div class="mb-4">
+        <P color="text-red-700 dark:text-red-500">{errorMessage}</P>
       </div>
-      <div class="mb-6">
-        <Label for="description" class="mb-2">{$translations.descriptionTitle}</Label>
-        <Input type="text" id="description" name="description" bind:value={$data.description} />
-        <Helper class="mt-2" color="red">
-          {#if $errors.description}
-            {$errors.description}
-          {/if}
-        </Helper>
-      </div>
-      <div class="mb-6">
-        <Label for="username" class="mb-2">{$translations.usernameTitle}</Label>
-        <Input type="text" id="username" name="username" bind:value={$data.username} required />
-        <Helper class="mt-2" color="red">
-          {#if $errors.username}
-            {$errors.username}
-          {/if}
-        </Helper>
-      </div>
-      <div class="mb-6">
-        <Label for="password" class="mb-2">{$translations.passwordTitle}</Label>
-        <Input type="password" id="password" name="password" bind:value={$data.password} required />
-        <Helper class="mt-2" color="red">
-          {#if $errors.password}
-            {$errors.password}
-          {/if}
-        </Helper>
-      </div>
-      {#if errorMessage}
-        <div class="mb-4">
-          <P color="text-red-700 dark:text-red-500">{errorMessage}</P>
-        </div>
-      {/if}
-      <Button type="submit">{$translations.applyChangesTitle}</Button>
-    </form>
-  </div>
-{/if}
+    {/if}
+    <Button type="submit">{$translations.applyChangesTitle}</Button>
+  </form>
+</div>
