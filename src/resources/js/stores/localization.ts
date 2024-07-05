@@ -30,7 +30,7 @@ const strings = new LocalizedStrings({
     serviceBodiesTitle: 'Service Bodies',
     serviceBodyAdminTitle: 'Service Body Administrator',
     signOutTitle: 'Sign Out',
-    userIsATitle: 'User Is A:',
+    userTypeTitle: 'User Type:',
     userTitle: 'User',
     usernameTitle: 'Username',
     usersTitle: 'Users'
