@@ -54,7 +54,7 @@
             displayName: (error?.errors?.displayName ?? []).join(' '),
             username: (error?.errors?.username ?? []).join(' '),
             password: (error?.errors?.password ?? []).join(' '),
-            description: (error?.errors?.description ?? []).join(' '),
+            description: (error?.errors?.description ?? []).join(' ')
           });
         }
       });
@@ -77,7 +77,7 @@
             return true;
           }
           if (!password.trim()) {
-            return context.createError({message: 'password must contain non-whitespace characters'});
+            return context.createError({ message: 'password must contain non-whitespace characters' });
           }
           return password.length >= 12 && password.length <= 255;
         }),
