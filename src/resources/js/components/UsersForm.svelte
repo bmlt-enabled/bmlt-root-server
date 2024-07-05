@@ -25,7 +25,7 @@
   const { form, data, errors, setInitialValues, reset } = createForm({
     initialValues: {
       type: '',
-      ownedBy: -1,
+      ownerId: -1,
       email: '',
       displayName: '',
       username: '',
@@ -37,7 +37,7 @@
       console.log(values);
       // Rather than blindly casing values as a UserCreate object, we should
       // actually build a UserCreate object. That way we are explicit about
-      // every field, including the funky ones like ownedBy and type.
+      // every field, including the funky ones like ownerId and type.
     },
     onError: async (error) => {
       console.log(error);
@@ -49,7 +49,7 @@
           // test them.
           errors.set({
             type: (error?.errors?.type ?? []).join(' '),
-            ownedBy: (error?.errors?.ownedBy ?? []).join(' '),
+            ownerId: (error?.errors?.ownerId ?? []).join(' '),
             email: (error?.errors?.email ?? []).join(' '),
             displayName: (error?.errors?.displayName ?? []).join(' '),
             username: (error?.errors?.username ?? []).join(' '),
@@ -67,7 +67,7 @@
       // TODO compare these required fields against what is required by the API
       schema: yup.object({
         type: yup.string().required(),
-        ownedBy: yup.number(),
+        ownerId: yup.number(),
         email: yup.string().max(255).email(),
         displayName: yup.string().max(255).required(),
         username: yup.string().max(255).required(),
@@ -93,7 +93,7 @@
     // values in the form fields to be replaced when the UsersForm is refreshed.
     setInitialValues({
       type: user?.type ?? '',
-      ownedBy: user?.ownerId ? parseInt(user.ownerId) : -1,
+      ownerId: user?.ownerId ? user.ownerId : -1,
       email: user?.email ?? '',
       displayName: user?.displayName ?? '',
       username: user?.username ?? '',
@@ -120,11 +120,11 @@
       </Helper>
     </div>
     <div>
-      <Label for="ownedBy" class="mb-2">{$translations.ownedByTitle}</Label>
-      <Select id="ownedBy" items={userItems} name="ownedBy" disabled={selectedUserId === $authenticatedUser?.id || $data.type === 'admin'} />
+      <Label for="ownerId" class="mb-2">{$translations.ownerIdTitle}</Label>
+      <Select id="ownerId" items={userItems} name="ownerId" disabled={selectedUserId === $authenticatedUser?.id || $data.type === 'admin'} />
       <Helper class="mt-2" color="red">
-        {#if $errors.ownedBy}
-          {$errors.ownedBy}
+        {#if $errors.ownerId}
+          {$errors.ownerId}
         {/if}
       </Helper>
     </div>

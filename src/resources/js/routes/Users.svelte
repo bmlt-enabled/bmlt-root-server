@@ -24,7 +24,7 @@
         _usersById[user.id] = user;
         if ($authenticatedUser?.type === 'admin') {
           if (user.ownerId === null) {
-            user.ownerId = $authenticatedUser.id.toString();
+            user.ownerId = $authenticatedUser.id;
           }
         }
       }
