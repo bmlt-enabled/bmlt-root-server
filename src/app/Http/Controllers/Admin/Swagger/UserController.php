@@ -9,7 +9,7 @@ namespace App\Http\Controllers\Admin\Swagger;
  *     @OA\Property(property="displayName", type="string", example="string"),
  *     @OA\Property(property="description", type="string", example="string"),
  *     @OA\Property(property="email", type="string", example="string"),
- *     @OA\Property(property="ownerId", type="string", example="0")
+ *     @OA\Property(property="ownerId", type="integer", example="0")
  * ),
  * @OA\Schema(schema="User", required={"id", "username", "type", "displayName", "description", "email", "ownerId"},
  *     @OA\Property(property="id", type="integer", example="0"),
