@@ -37,7 +37,7 @@
       console.log(values);
       // Rather than blindly casing values as a UserCreate object, we should
       // actually build a UserCreate object. That way we are explicit about
-      // every field, including the funky ones like ownedBy.
+      // every field, including the funky ones like ownedBy and type.
     },
     onError: async (error) => {
       console.log(error);
@@ -112,7 +112,7 @@
   <div class="mb-6 grid gap-6 md:grid-cols-2">
     <div>
       <Label for="type" class="mb-2">{$translations.userTypeTitle}</Label>
-      <Select id="type" items={userTypeItems} name="type" disabled={selectedUserId === $authenticatedUser?.id && $authenticatedUser?.type === 'admin'} />
+      <Select id="type" items={userTypeItems} name="type" disabled={selectedUserId === $authenticatedUser?.id} />
       <Helper class="mt-2" color="red">
         {#if $errors.type}
           {$errors.type}
@@ -121,7 +121,7 @@
     </div>
     <div>
       <Label for="ownedBy" class="mb-2">{$translations.ownedByTitle}</Label>
-      <Select id="ownedBy" items={userItems} name="ownedBy" disabled={$data.type === 'admin'} />
+      <Select id="ownedBy" items={userItems} name="ownedBy" disabled={selectedUserId === $authenticatedUser?.id || $data.type === 'admin'} />
       <Helper class="mt-2" color="red">
         {#if $errors.ownedBy}
           {$errors.ownedBy}
