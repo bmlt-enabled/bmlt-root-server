@@ -2,12 +2,13 @@ import '@testing-library/jest-dom/vitest';
 
 // @ts-expect-error set from backend
 global.settings = {
-  apiBaseUrl: 'http://localhost:8000',
+  apiBaseUrl: '/',
   defaultLanguage: 'en',
   isLanguageSelectorEnabled: true,
   languageMapping: {
     en: 'English',
-    fr: 'French'
+    de: 'Deutsch',
+    fr: 'Français'
   },
   version: '1.0.0'
 };

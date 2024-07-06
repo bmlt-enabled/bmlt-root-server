@@ -72,7 +72,7 @@
       <form use:form>
         <div class="mb-4">
           <Label for="username" class="mb-2">{$translations.usernameTitle}</Label>
-          <Input type="text" name="username" />
+          <Input type="text" name="username" id="username" />
           <Helper class="mt-2" color="red">
             {#if $errors.username}
               {$errors.username}
@@ -81,7 +81,7 @@
         </div>
         <div class="mb-4">
           <Label for="password" class="mb-2">{$translations.passwordTitle}</Label>
-          <Input type="password" name="password" />
+          <Input type="password" name="password" id="password" />
           <Helper class="mt-2" color="red">
             {#if $errors.password}
               {$errors.password}
@@ -91,7 +91,7 @@
         {#if globalSettings.isLanguageSelectorEnabled}
           <div class="mb-4">
             <Label for="languageSelection" class="mb-2">{$translations.languageSelectTitle}</Label>
-            <Select items={languageOptions} bind:value={selectedLanguage} />
+            <Select id="languageSelection" items={languageOptions} bind:value={selectedLanguage} />
           </div>
         {/if}
         {#if errorMessage}
