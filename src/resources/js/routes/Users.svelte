@@ -1,7 +1,7 @@
 <script lang="ts">
   import { TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch } from 'flowbite-svelte';
   import Nav from '../components/NavBar.svelte';
-  import UsersModal from '../components/UsersModal.svelte';
+  import UserModal from '../components/UserModal.svelte';
 
   import { authenticatedUser } from '../stores/apiCredentials';
   import { spinner } from '../stores/spinner';
@@ -10,38 +10,29 @@
   import { onMount } from 'svelte';
   import type { User } from 'bmlt-root-server-client';
 
+  let users: User[] = [];
   let showModal = false;
   let searchTerm = '';
-  let usersById: Record<number, User> = {};
-  let userItems = [{ value: -1, name: '', username: '' }];
-  let selectedUserId = -1;
+  let selectedUser: User;
 
   async function getUsers(): Promise<void> {
     try {
       spinner.show();
-      const users = await RootServerApi.getUsers();
-
-      const _usersById: Record<number, User> = {};
-      for (const user of users) {
-        _usersById[user.id] = user;
-        if ($authenticatedUser?.type === 'admin') {
-          if (user.ownerId === null) {
-            user.ownerId = $authenticatedUser.id;
-          }
-        }
-      }
-
-      usersById = _usersById;
-      userItems = users.map((user) => ({ value: user.id, name: user.displayName, username: user.username })).sort((a, b) => a.name.localeCompare(b.name));
+      users = (await RootServerApi.getUsers()).filter((user) => user.id !== $authenticatedUser?.id).sort((a, b) => a.displayName.localeCompare(b.displayName));
       spinner.hide();
     } catch (error: any) {
       RootServerApi.handleErrors(error);
     }
   }
 
-  function editUser(userId: number) {
-    selectedUserId = userId;
+  function editUser(user: User) {
+    selectedUser = user;
     showModal = true;
+  }
+
+  function deleteUser(user: User) {
+    // TODO
+    selectedUser = user;
   }
 
   function closeModal() {
@@ -49,27 +40,27 @@
   }
 
   onMount(getUsers);
-  $: filteredUsers = userItems.filter((user) => user.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
+
+  $: filteredUsers = users.filter((user) => user.displayName.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
 </script>
 
 <Nav />
 
-<div class="mx-auto max-w-xl p-2">
+<div class="mx-auto max-w-4xl p-2">
   <h2 class="mb-4 text-center text-xl font-semibold dark:text-white">{$translations.usersTitle}</h2>
 
   <TableSearch placeholder="Search by name" hoverable={true} bind:inputValue={searchTerm}>
     <TableHead>
       <TableHeadCell>Name</TableHeadCell>
-      <TableHeadCell>Username</TableHeadCell>
       <TableHeadCell></TableHeadCell>
     </TableHead>
     <TableBody>
       {#each filteredUsers as user}
         <TableBodyRow>
-          <TableBodyCell>{user.name}</TableBodyCell>
-          <TableBodyCell>{user.username}</TableBodyCell>
-          <TableBodyCell>
-            <button on:click={() => editUser(user.value)} class="text-blue-500 hover:underline">Edit</button>
+          <TableBodyCell class="whitespace-normal">{user.displayName}</TableBodyCell>
+          <TableBodyCell class="text-right">
+            <button on:click={() => editUser(user)} class="mr-4 text-blue-700 dark:text-blue-500">Edit</button>
+            <button on:click={() => deleteUser(user)} class="text-blue-700 dark:text-blue-500">Delete</button>
           </TableBodyCell>
         </TableBodyRow>
       {/each}
@@ -77,4 +68,4 @@
   </TableSearch>
 </div>
 
-<UsersModal bind:showModal {selectedUserId} {usersById} on:close={closeModal} />
+<UserModal bind:showModal {users} {selectedUser} on:close={closeModal} />
