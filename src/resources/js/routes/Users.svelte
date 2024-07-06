@@ -18,7 +18,7 @@
   async function getUsers(): Promise<void> {
     try {
       spinner.show();
-      users = (await RootServerApi.getUsers()).filter((user) => user.id !== $authenticatedUser?.id).sort((a, b) => a.displayName.localeCompare(b.displayName));
+      users = (await RootServerApi.getUsers()).sort((a, b) => a.displayName.localeCompare(b.displayName));
       spinner.hide();
     } catch (error: any) {
       RootServerApi.handleErrors(error);
@@ -41,7 +41,7 @@
 
   onMount(getUsers);
 
-  $: filteredUsers = users.filter((user) => user.displayName.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
+  $: filteredUsers = users.filter((user) => user.id !== $authenticatedUser?.id).filter((user) => user.displayName.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
 </script>
 
 <Nav />
