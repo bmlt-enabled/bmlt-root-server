@@ -15,9 +15,7 @@
   export let users: User[];
 
   const dispatch = createEventDispatcher();
-
-  let ownerItems = users.map((user) => ({ value: user.id.toString(), name: user.displayName })).sort((a, b) => a.name.localeCompare(b.name));
-
+  const userOwnerItems = users.map((user) => ({ value: user.id.toString(), name: user.displayName })).sort((a, b) => a.name.localeCompare(b.name));
   const userTypeItems = [
     { value: 'deactivated', name: 'Deactivated' },
     { value: 'observer', name: 'Observer' },
@@ -123,7 +121,7 @@
     </div>
     <div>
       <Label for="ownerId" class="mb-2">{$translations.ownerIdTitle}</Label>
-      <Select id="ownerId" items={ownerItems} name="ownerId" disabled={$authenticatedUser?.type !== 'admin'} />
+      <Select id="ownerId" items={userOwnerItems} name="ownerId" disabled={$authenticatedUser?.type !== 'admin'} />
       <Helper class="mt-2" color="red">
         {#if $errors.ownerId}
           {$errors.ownerId}
