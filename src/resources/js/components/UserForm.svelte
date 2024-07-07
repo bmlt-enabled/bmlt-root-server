@@ -109,7 +109,7 @@
 </script>
 
 <form use:form>
-  <div class="mb-6 grid gap-6 md:grid-cols-2 {$authenticatedUser?.type !== 'admin' ? 'hidden' : ''}">
+  <div class="mb-4 grid gap-6 md:grid-cols-2 {$authenticatedUser?.type !== 'admin' ? 'hidden' : ''}">
     <div>
       <Label for="type" class="mb-2">{$translations.userTypeTitle}</Label>
       <Select id="type" items={userTypeItems} name="type" disabled={selectedUser.id === $authenticatedUser?.id} />
@@ -129,7 +129,7 @@
       </Helper>
     </div>
   </div>
-  <div class="mb-6">
+  <div class="mb-4">
     <Label for="displayName" class="mb-2">{$translations.nameTitle}</Label>
     <Input type="text" id="displayName" name="displayName" required />
     <Helper class="mt-2" color="red">
@@ -138,7 +138,7 @@
       {/if}
     </Helper>
   </div>
-  <div class="mb-6">
+  <div class="mb-4">
     <Label for="email" class="mb-2">{$translations.emailTitle}</Label>
     <Input type="email" id="email" name="email" />
     <Helper class="mt-2" color="red">
@@ -147,7 +147,7 @@
       {/if}
     </Helper>
   </div>
-  <div class="mb-6">
+  <div class="mb-4">
     <Label for="description" class="mb-2">{$translations.descriptionTitle}</Label>
     <Input type="text" id="description" name="description" />
     <Helper class="mt-2" color="red">
@@ -156,7 +156,7 @@
       {/if}
     </Helper>
   </div>
-  <div class="mb-6">
+  <div class="mb-4">
     <Label for="username" class="mb-2">{$translations.usernameTitle}</Label>
     <Input type="text" id="username" name="username" required />
     <Helper class="mt-2" color="red">
@@ -165,7 +165,7 @@
       {/if}
     </Helper>
   </div>
-  <div class="mb-6">
+  <div class="mb-4">
     <Label for="password" class="mb-2">{$translations.passwordTitle}</Label>
     <Input type="password" id="password" name="password" required />
     <Helper class="mt-2" color="red">
