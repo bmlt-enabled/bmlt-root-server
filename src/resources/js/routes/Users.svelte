@@ -71,7 +71,7 @@
           <TableBodyCell class="whitespace-normal">{user.displayName}</TableBodyCell>
           {#if $authenticatedUser?.type === 'admin'}
             <TableBodyCell class="pl-0 text-center">
-              <Button color="none" on:click={(e) => deleteUser(e, user)} class="p-0 text-blue-700 dark:text-blue-500">
+              <Button color="none" on:click={(e) => deleteUser(e, user)} class="text-blue-700 dark:text-blue-500">
                 <TrashBinOutline ariaLabel={`${$translations.deleteUser}`} />
               </Button>
             </TableBodyCell>
