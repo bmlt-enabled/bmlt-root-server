@@ -1,5 +1,6 @@
 <script lang="ts">
   import { TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch } from 'flowbite-svelte';
+  import { TrashBinOutline } from 'flowbite-svelte-icons';
   import Nav from '../components/NavBar.svelte';
   import UserModal from '../components/UserModal.svelte';
 
@@ -33,6 +34,7 @@
   function deleteUser(user: User) {
     // TODO
     selectedUser = user;
+    console.log('delete');
   }
 
   function closeModal() {
@@ -46,21 +48,20 @@
 
 <Nav />
 
-<div class="mx-auto max-w-4xl p-2">
+<div class="mx-auto max-w-3xl p-2">
   <h2 class="mb-4 text-center text-xl font-semibold dark:text-white">{$translations.usersTitle}</h2>
 
   <TableSearch placeholder="Search by name" hoverable={true} bind:inputValue={searchTerm}>
     <TableHead>
       <TableHeadCell>Name</TableHeadCell>
-      <TableHeadCell></TableHeadCell>
+      <TableHeadCell class="text-center">Delete</TableHeadCell>
     </TableHead>
     <TableBody>
       {#each filteredUsers as user}
-        <TableBodyRow>
+        <TableBodyRow class="cursor-pointer" on:click={() => editUser(user)}>
           <TableBodyCell class="whitespace-normal">{user.displayName}</TableBodyCell>
-          <TableBodyCell class="text-right">
-            <button on:click={() => editUser(user)} class="mr-4 text-blue-700 dark:text-blue-500">Edit</button>
-            <button on:click={() => deleteUser(user)} class="text-blue-700 dark:text-blue-500">Delete</button>
+          <TableBodyCell class="text-center">
+            <button on:click|stopPropagation={() => deleteUser(user)} class="text-blue-700 dark:text-blue-500"><TrashBinOutline /></button>
           </TableBodyCell>
         </TableBodyRow>
       {/each}
