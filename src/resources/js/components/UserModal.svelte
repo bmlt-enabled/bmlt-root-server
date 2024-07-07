@@ -9,8 +9,8 @@
   export let users: User[];
 </script>
 
-<Modal bind:open={showModal} size="sm" autoclose outsideclose>
+<Modal bind:open={showModal} size="sm" outsideclose>
   <div class="p-2">
-    <UserForm {users} {selectedUser} />
+    <UserForm {users} {selectedUser} on:success={() => (showModal = false)} />
   </div>
 </Modal>

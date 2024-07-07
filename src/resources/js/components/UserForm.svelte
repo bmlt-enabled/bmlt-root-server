@@ -2,6 +2,7 @@
   import { validator } from '@felte/validator-yup';
   import { createForm } from 'felte';
   import { Button, Helper, Input, Label, Select } from 'flowbite-svelte';
+  import { createEventDispatcher } from 'svelte';
   import * as yup from 'yup';
 
   import { spinner } from '../stores/spinner';
@@ -13,10 +14,9 @@
   export let selectedUser: User;
   export let users: User[];
 
-  let usersById = Object.fromEntries(users.map((user) => [user.id, user]));
-  let userItems = Object.values(usersById)
-    .map((user) => ({ value: user.id, name: user.displayName }))
-    .sort((a, b) => a.name.localeCompare(b.name));
+  const dispatch = createEventDispatcher();
+
+  let ownerItems = users.map((user) => ({ value: user.id.toString(), name: user.displayName })).sort((a, b) => a.name.localeCompare(b.name));
 
   const userTypeItems = [
     { value: 'deactivated', name: 'Deactivated' },
@@ -27,7 +27,7 @@
   const { form, errors, setInitialValues, reset } = createForm({
     initialValues: {
       type: '',
-      ownerId: -1,
+      ownerId: '',
       email: '',
       displayName: '',
       username: '',
@@ -64,12 +64,13 @@
     },
     onSuccess: () => {
       spinner.hide();
+      dispatch('success');
     },
     extend: validator({
       // TODO compare these required fields against what is required by the API
       schema: yup.object({
         type: yup.string().required(),
-        ownerId: yup.number(),
+        ownerId: yup.string().required(),
         email: yup.string().max(255).email(),
         displayName: yup.string().max(255).required(),
         username: yup.string().max(255).required(),
@@ -89,21 +90,16 @@
   });
 
   function populateForm() {
-    const user = usersById[selectedUser.id];
     // The only reason we use setInitialValues and reesethere instead of setData is to make development
     // easier. It is super annoying that each time we save the file, hot module replacement causes the
     // values in the form fields to be replaced when the UsersForm is refreshed.
-    let ownerId = user?.ownerId ?? -1;
-    if (ownerId === -1 && $authenticatedUser?.type === 'admin') {
-      ownerId = $authenticatedUser.id;
-    }
     setInitialValues({
-      type: user?.type ?? '',
-      ownerId: ownerId,
-      email: user?.email ?? '',
-      displayName: user?.displayName ?? '',
-      username: user?.username ?? '',
-      description: user?.description ?? '',
+      type: selectedUser.type,
+      ownerId: selectedUser.ownerId?.toString() ?? ($authenticatedUser?.type === 'admin' ? $authenticatedUser.id.toString() : ''),
+      email: selectedUser.email,
+      displayName: selectedUser.displayName,
+      username: selectedUser.username,
+      description: selectedUser.description,
       password: ''
     });
     reset();
@@ -127,7 +123,7 @@
     </div>
     <div>
       <Label for="ownerId" class="mb-2">{$translations.ownerIdTitle}</Label>
-      <Select id="ownerId" items={userItems} name="ownerId" disabled={$authenticatedUser?.type !== 'admin'} />
+      <Select id="ownerId" items={ownerItems} name="ownerId" disabled={$authenticatedUser?.type !== 'admin'} />
       <Helper class="mt-2" color="red">
         {#if $errors.ownerId}
           {$errors.ownerId}
