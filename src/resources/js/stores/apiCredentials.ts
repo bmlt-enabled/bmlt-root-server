@@ -11,6 +11,7 @@ const ACCESS_TOKEN_STORAGE_KEY = 'bmltToken';
 export class ApiCredentialsStore {
   private store: Writable<Token | null>;
   private refreshTokenTimeout: NodeJS.Timeout;
+  private isTokenVerifiedValid = false;
 
   constructor() {
     this.store = writable(null);
@@ -35,6 +36,8 @@ export class ApiCredentialsStore {
   private clearInternal(): void {
     clearTimeout(this.refreshTokenTimeout);
     this.store.set(null);
+    authenticatedUser.set(null);
+    this.isTokenVerifiedValid = false;
     localStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
   }
 
@@ -45,14 +48,30 @@ export class ApiCredentialsStore {
       if (expiresInSeconds) {
         // Token should still be good, so let's give it to the client
         RootServerApi.token = token;
-      }
 
-      if (expiresInSeconds) {
+        // We make sure this token is actually still valid by retrieving the currently authenticated user.
+        if (!this.isTokenVerifiedValid) {
+          setTimeout(async () => {
+            try {
+              spinner.show();
+              authenticatedUser.set(await RootServerApi.getUser(token.userId));
+              this.isTokenVerifiedValid = true;
+              this.set(token);
+            } catch {
+              this.logout();
+            } finally {
+              spinner.hide();
+            }
+          }, 0);
+
+          return;
+        }
+
         // Token should still be valid
         this.setInternal(token);
 
-        // Refresh immediately if token has <= 6 minutes, otherwise refresh in 5 minutes
-        const timeoutSeconds = expiresInSeconds <= 360 ? 0 : 300;
+        // Refresh immediately if token has <= 1 hour, otherwise refresh in 5 minutes
+        const timeoutSeconds = expiresInSeconds <= 3600 ? 0 : 300;
 
         this.refreshTokenTimeout = setTimeout(async () => {
           try {
@@ -121,32 +140,3 @@ export class ApiCredentialsStore {
 
 export const apiCredentials = new ApiCredentialsStore();
 export const authenticatedUser: Writable<User | null> = writable(null);
-
-let lastUserId = 0;
-apiCredentials.subscribe(async () => {
-  if (apiCredentials.isLoggedIn) {
-    const userId = apiCredentials.userId;
-
-    if (!userId) {
-      lastUserId = 0;
-      authenticatedUser.set(null);
-      return;
-    }
-
-    if (userId === lastUserId) {
-      return;
-    }
-
-    try {
-      spinner.show();
-      const apiUser = await RootServerApi.getUser(userId);
-      authenticatedUser.set(apiUser);
-    } finally {
-      lastUserId = userId;
-      spinner.hide();
-    }
-  } else {
-    lastUserId = 0;
-    authenticatedUser.set(null);
-  }
-});
