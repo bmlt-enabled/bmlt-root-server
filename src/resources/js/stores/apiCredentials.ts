@@ -6,12 +6,13 @@ import type { Token, User } from 'bmlt-root-server-client';
 import { spinner } from './spinner';
 import RootServerApi from '../lib/RootServerApi';
 
+export const authenticatedUser: Writable<User | null> = writable(null);
+
 const ACCESS_TOKEN_STORAGE_KEY = 'bmltToken';
 
 export class ApiCredentialsStore {
   private store: Writable<Token | null>;
   private refreshTokenTimeout: NodeJS.Timeout;
-  private isTokenVerifiedValid = false;
 
   constructor() {
     this.store = writable(null);
@@ -37,67 +38,58 @@ export class ApiCredentialsStore {
     clearTimeout(this.refreshTokenTimeout);
     this.store.set(null);
     authenticatedUser.set(null);
-    this.isTokenVerifiedValid = false;
     localStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
   }
 
-  set(token: Token): void {
+  async set(token: Token): Promise<void> {
     if (token) {
       const expiresInSeconds = this.secondsUntilExpiration(token);
 
       if (expiresInSeconds) {
         // Token should still be good, so let's give it to the client
         RootServerApi.token = token;
-
-        // We make sure this token is actually still valid by retrieving the currently authenticated user.
-        if (!this.isTokenVerifiedValid) {
-          setTimeout(async () => {
-            try {
-              spinner.show();
-              authenticatedUser.set(await RootServerApi.getUser(token.userId));
-              this.isTokenVerifiedValid = true;
-              this.set(token);
-            } catch {
-              this.logout();
-            } finally {
-              spinner.hide();
-            }
-          }, 0);
-
-          return;
-        }
-
-        // Token should still be valid
         this.setInternal(token);
+
+        // We make sure this token is actually still valid by retrieving the currently authenticated user
+        if (!get(authenticatedUser)) {
+          try {
+            spinner.show();
+            authenticatedUser.set(await RootServerApi.getUser(token.userId));
+          } catch {
+            this.logout();
+            return;
+          } finally {
+            spinner.hide();
+          }
+        }
 
         // Refresh immediately if token has <= 1 hour, otherwise refresh in 5 minutes
         const timeoutSeconds = expiresInSeconds <= 3600 ? 0 : 300;
-
-        this.refreshTokenTimeout = setTimeout(async () => {
-          try {
-            const newToken = await RootServerApi.refreshToken();
-            this.set(newToken);
-          } catch (err: any) {
-            if (err?.response?.status === 401) {
-              // The existing token was not valid... we are logged out.
-              this.clearInternal();
-              return;
-            }
-
-            // If there's at least a minute left on the refreshToken, try again in 5 secs
-            if (this.secondsUntilExpiration(token) > 60) {
-              setTimeout(() => this.set(token), 5 * 1000);
-            } else {
-              this.logout();
-            }
-          }
-        }, timeoutSeconds * 1000);
-
+        this.refreshTokenTimeout = setTimeout(() => this.refreshToken(token), timeoutSeconds * 1000);
         return;
       }
     }
 
     this.logout();
+  }
+
+  private async refreshToken(token: Token) {
+    try {
+      this.set(await RootServerApi.refreshToken());
+    } catch (err: any) {
+      if (err?.response?.status === 401) {
+        // The existing token was not valid... we are logged out.
+        this.clearInternal();
+        return;
+      }
+
+      // If there's at least a minute left on the refreshToken, try again in 5 secs
+      if (this.secondsUntilExpiration(token) > 60) {
+        setTimeout(() => this.set(token), 5 * 1000);
+      } else {
+        this.logout();
+      }
+    }
   }
 
   async login(username: string, password: string): Promise<Token> {
@@ -139,4 +131,3 @@ export class ApiCredentialsStore {
 }
 
 export const apiCredentials = new ApiCredentialsStore();
-export const authenticatedUser: Writable<User | null> = writable(null);

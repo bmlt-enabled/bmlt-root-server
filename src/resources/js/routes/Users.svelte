@@ -20,9 +20,10 @@
     try {
       spinner.show();
       users = (await RootServerApi.getUsers()).sort((a, b) => a.displayName.localeCompare(b.displayName));
-      spinner.hide();
     } catch (error: any) {
       RootServerApi.handleErrors(error);
+    } finally {
+      spinner.hide();
     }
   }
 
