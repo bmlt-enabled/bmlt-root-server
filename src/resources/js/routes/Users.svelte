@@ -66,12 +66,12 @@
     </TableHead>
     <TableBody>
       {#each filteredUsers as user}
-        <TableBodyRow class="cursor-pointer" on:click={() => editUser(user)} aria-label={`${$translations.editUser} ${user.displayName}`}>
+        <TableBodyRow class="cursor-pointer" on:click={() => editUser(user)} aria-label={`${$translations.editUser}`}>
           <TableBodyCell class="whitespace-normal" title={$translations.editUser}>{user.displayName}</TableBodyCell>
           {#if $authenticatedUser?.type === 'admin'}
             <TableBodyCell class="text-center">
               <button on:click|stopPropagation={() => deleteUser(user)} class="text-blue-700 dark:text-blue-500">
-                <TrashBinOutline title={{ id: 'user-delete', title: $translations.deleteUser }} aria-label={`${$translations.deleteUser} ${user.displayName}`} />
+                <TrashBinOutline title={{ id: 'user-delete', title: $translations.deleteUser }} ariaLabel={`${$translations.deleteUser}`} />
               </button>
             </TableBodyCell>
           {/if}
