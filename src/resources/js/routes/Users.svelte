@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch } from 'flowbite-svelte';
+  import { Button, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch } from 'flowbite-svelte';
   import { TrashBinOutline } from 'flowbite-svelte-icons';
   import Nav from '../components/NavBar.svelte';
   import UserModal from '../components/UserModal.svelte';
@@ -26,20 +26,21 @@
     }
   }
 
+  function addUser() {
+    // TODO
+    console.log('add');
+  }
+
   function editUser(user: User) {
     selectedUser = user;
     showModal = true;
   }
 
-  function deleteUser(user: User) {
+  function deleteUser(event: MouseEvent, user: User) {
     // TODO
+    event.stopPropagation();
     selectedUser = user;
     console.log('delete');
-  }
-
-  function addUser() {
-    // TODO
-    console.log('add');
   }
 
   function closeModal() {
@@ -58,21 +59,21 @@
   <TableSearch placeholder={$translations.searchByName} hoverable={true} bind:inputValue={searchTerm}>
     <TableHead>
       <TableHeadCell>Name</TableHeadCell>
-      {#if $authenticatedUser?.type === 'admin'}
-        <TableHeadCell>
-          <button on:click={() => addUser()} class="text-blue-700 dark:text-blue-500" title={`${$translations.addUser}`} aria-label={`${$translations.addUser}`}>{$translations.addUser}</button>
-        </TableHeadCell>
-      {/if}
+      <TableHeadCell class="pl-0 text-center">
+        {#if $authenticatedUser?.type === 'admin'}
+          <Button on:click={() => addUser()} class="w-full whitespace-nowrap" aria-label={`${$translations.addUser}`}>{$translations.addUser}</Button>
+        {/if}
+      </TableHeadCell>
     </TableHead>
     <TableBody>
       {#each filteredUsers as user}
-        <TableBodyRow class="cursor-pointer" on:click={() => editUser(user)} aria-label={`${$translations.editUser}`}>
-          <TableBodyCell class="whitespace-normal" title={$translations.editUser}>{user.displayName}</TableBodyCell>
+        <TableBodyRow on:click={() => editUser(user)} aria-label={`${$translations.editUser}`} class="cursor-pointer">
+          <TableBodyCell class="whitespace-normal">{user.displayName}</TableBodyCell>
           {#if $authenticatedUser?.type === 'admin'}
-            <TableBodyCell class="text-center">
-              <button on:click|stopPropagation={() => deleteUser(user)} class="text-blue-700 dark:text-blue-500">
-                <TrashBinOutline title={{ id: 'user-delete', title: $translations.deleteUser }} ariaLabel={`${$translations.deleteUser}`} />
-              </button>
+            <TableBodyCell class="pl-0 text-center">
+              <Button color="none" on:click={(e) => deleteUser(e, user)} class="p-0 text-blue-700 dark:text-blue-500">
+                <TrashBinOutline ariaLabel={`${$translations.deleteUser}`} />
+              </Button>
             </TableBodyCell>
           {/if}
         </TableBodyRow>
