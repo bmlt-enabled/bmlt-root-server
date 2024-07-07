@@ -59,11 +59,11 @@
   <TableSearch placeholder={$translations.searchByName} hoverable={true} bind:inputValue={searchTerm}>
     <TableHead>
       <TableHeadCell>Name</TableHeadCell>
-      <TableHeadCell class="pl-0 text-center">
-        {#if $authenticatedUser?.type === 'admin'}
+      {#if $authenticatedUser?.type === 'admin'}
+        <TableHeadCell class="pl-0 text-center">
           <Button on:click={() => addUser()} class="w-full whitespace-nowrap" aria-label={$translations.addUser}>{$translations.addUser}</Button>
-        {/if}
-      </TableHeadCell>
+        </TableHeadCell>
+      {/if}
     </TableHead>
     <TableBody>
       {#each filteredUsers as user}
