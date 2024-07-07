@@ -1,6 +1,6 @@
 <script lang="ts">
   import { TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch } from 'flowbite-svelte';
-  import { TrashBinOutline, UserAddOutline } from 'flowbite-svelte-icons';
+  import { TrashBinOutline } from 'flowbite-svelte-icons';
   import Nav from '../components/NavBar.svelte';
   import UserModal from '../components/UserModal.svelte';
 
@@ -55,25 +55,23 @@
 
 <div class="mx-auto max-w-3xl p-2">
   <h2 class="mb-4 text-center text-xl font-semibold dark:text-white">{$translations.usersTitle}</h2>
-  <TableSearch placeholder="Search by name" hoverable={true} bind:inputValue={searchTerm}>
+  <TableSearch placeholder={$translations.searchByName} hoverable={true} bind:inputValue={searchTerm}>
     <TableHead>
       <TableHeadCell>Name</TableHeadCell>
       {#if $authenticatedUser?.type === 'admin'}
         <TableHeadCell>
-          <button on:click|stopPropagation={() => addUser()} class="text-blue-700 dark:text-blue-500">
-            <UserAddOutline title={{ id: 'user-add', title: 'User Add' }} />
-          </button>
+          <button on:click={() => addUser()} class="text-blue-700 dark:text-blue-500" title={`${$translations.addUser}`} aria-label={`${$translations.addUser}`}>{$translations.addUser}</button>
         </TableHeadCell>
       {/if}
     </TableHead>
     <TableBody>
       {#each filteredUsers as user}
-        <TableBodyRow class="cursor-pointer" on:click={() => editUser(user)}>
-          <TableBodyCell class="whitespace-normal" title="User Edit">{user.displayName}</TableBodyCell>
+        <TableBodyRow class="cursor-pointer" on:click={() => editUser(user)} aria-label={`${$translations.editUser} ${user.displayName}`}>
+          <TableBodyCell class="whitespace-normal" title={$translations.editUser}>{user.displayName}</TableBodyCell>
           {#if $authenticatedUser?.type === 'admin'}
             <TableBodyCell class="text-center">
               <button on:click|stopPropagation={() => deleteUser(user)} class="text-blue-700 dark:text-blue-500">
-                <TrashBinOutline title={{ id: 'user-delete', title: 'User Delete' }} />
+                <TrashBinOutline title={{ id: 'user-delete', title: $translations.deleteUser }} aria-label={`${$translations.deleteUser} ${user.displayName}`} />
               </button>
             </TableBodyCell>
           {/if}

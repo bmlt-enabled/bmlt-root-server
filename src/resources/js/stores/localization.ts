@@ -7,10 +7,11 @@ const strings = new LocalizedStrings({
   en: {
     adminTitle: 'Administrator',
     applyChangesTitle: 'Apply Changes',
-    createNewUserTitle: 'Create New User',
+    addUser: 'Add User',
     dashboardTitle: 'Dashboard',
     deactivatedUserTitle: 'Deactivated User',
-    deleteUserTitle: 'Delete This User',
+    deleteUser: 'Delete User',
+    editUser: 'Edit User',
     descriptionTitle: 'Description',
     emailTitle: 'Email:',
     formatsTitle: 'Formats',
@@ -27,13 +28,15 @@ const strings = new LocalizedStrings({
     ownerIdTitle: 'Owned By:',
     passwordTitle: 'Password',
     rootServerTitle: 'Root Server',
+    searchByName: 'Search by name',
     serviceBodiesTitle: 'Service Bodies',
     serviceBodyAdminTitle: 'Service Body Administrator',
-    signOutTitle: 'Sign Out',
+    logout: 'Logout',
     userTypeTitle: 'User Type:',
     userTitle: 'User',
     usernameTitle: 'Username',
-    usersTitle: 'Users'
+    usersTitle: 'Users',
+    homeTitle: 'Home'
   },
   de: {
     adminTitle: 'Administrator',

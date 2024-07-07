@@ -22,9 +22,9 @@
     <span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white">BMLT ({globalSettings.version})</span>
   </NavBrand>
   <NavUl>
-    <NavLi href="#/">Home</NavLi>
+    <NavLi href="#/">{$translations.homeTitle}</NavLi>
     <NavLi href="#/meetings">{$translations.meetingsTitle}</NavLi>
     <NavLi href="#/users">{$translations.usersTitle}</NavLi>
-    <NavLi href="#" on:click={logout}>Logout</NavLi>
+    <NavLi href="#" on:click={logout}>{$translations.logout}</NavLi>
   </NavUl>
 </Navbar>
