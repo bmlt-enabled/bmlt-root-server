@@ -54,7 +54,7 @@
   <TableSearch placeholder="Search by name" hoverable={true} bind:inputValue={searchTerm}>
     <TableHead>
       <TableHeadCell>Name</TableHeadCell>
-      <TableHeadCell class="text-center">Delete</TableHeadCell>
+      <TableHeadCell />
     </TableHead>
     <TableBody>
       {#each filteredUsers as user}
