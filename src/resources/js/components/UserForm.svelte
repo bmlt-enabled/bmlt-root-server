@@ -111,7 +111,7 @@
 </script>
 
 <form use:form>
-  <div class="mb-6 grid gap-6 md:grid-cols-2">
+  <div class="mb-6 grid gap-6 md:grid-cols-2 {$authenticatedUser?.type !== 'admin' ? 'hidden' : ''}">
     <div>
       <Label for="type" class="mb-2">{$translations.userTypeTitle}</Label>
       <Select id="type" items={userTypeItems} name="type" disabled={selectedUser.id === $authenticatedUser?.id} />
@@ -132,20 +132,20 @@
     </div>
   </div>
   <div class="mb-6">
-    <Label for="email" class="mb-2">{$translations.emailTitle}</Label>
-    <Input type="email" id="email" name="email" />
-    <Helper class="mt-2" color="red">
-      {#if $errors.email}
-        {$errors.email}
-      {/if}
-    </Helper>
-  </div>
-  <div class="mb-6">
     <Label for="displayName" class="mb-2">{$translations.nameTitle}</Label>
     <Input type="text" id="displayName" name="displayName" required />
     <Helper class="mt-2" color="red">
       {#if $errors.displayName}
         {$errors.displayName}
+      {/if}
+    </Helper>
+  </div>
+  <div class="mb-6">
+    <Label for="email" class="mb-2">{$translations.emailTitle}</Label>
+    <Input type="email" id="email" name="email" />
+    <Helper class="mt-2" color="red">
+      {#if $errors.email}
+        {$errors.email}
       {/if}
     </Helper>
   </div>
