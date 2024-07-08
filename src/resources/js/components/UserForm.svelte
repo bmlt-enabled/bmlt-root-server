@@ -35,17 +35,7 @@
     onSubmit: async (values) => {
       spinner.show();
       console.log(values);
-      const user = {
-        type: values.type,
-        ownerId: values.ownerId,
-        email: values.email,
-        displayName: values.displayName,
-        username: values.username,
-        password: values.password,
-        description: values.description
-      };
-      // TODO need to find a way to update the user in the list of users after update
-      await RootServerApi.updateUser(selectedUser.id, user);
+      await RootServerApi.updateUser(selectedUser.id, values);
     },
     onError: async (error) => {
       console.log(error);
@@ -98,15 +88,12 @@
         description: yup
           .string()
           .transform((v) => v.trim())
-          .max(255, 'description cannot be longer than 255 characters')
+          .max(255)
       }),
       castValues: true
     })
   });
 
-  function blah(value: string) {
-    return value.trim();
-  }
   function populateForm() {
     // The only reason we use setInitialValues and reesethere instead of setData is to make development
     // easier. It is super annoying that each time we save the file, hot module replacement causes the
