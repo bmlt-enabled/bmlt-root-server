@@ -120,7 +120,7 @@
       </Helper>
     </div>
     <div class={$authenticatedUser?.type !== 'admin' ? 'hidden' : ''}>
-      <Label for="ownerId" class="mb-2">{$translations.ownerIdTitle}</Label>
+      <Label for="ownerId" class="mb-2">{$translations.ownedByTitle}</Label>
       <Select id="ownerId" items={userOwnerItems} name="ownerId" disabled={$authenticatedUser?.type !== 'admin'} />
       <Helper class="mt-2" color="red">
         {#if $errors.ownerId}
