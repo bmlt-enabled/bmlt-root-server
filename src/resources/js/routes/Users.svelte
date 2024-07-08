@@ -59,19 +59,23 @@
   <h2 class="mb-4 text-center text-xl font-semibold dark:text-white">{$translations.usersTitle}</h2>
   <TableSearch placeholder={$translations.searchByName} hoverable={true} bind:inputValue={searchTerm}>
     <TableHead>
-      <TableHeadCell>Name</TableHeadCell>
-      {#if $authenticatedUser?.type === 'admin'}
-        <TableHeadCell class="pl-0 text-right">
-          <Button on:click={() => addUser()} class="whitespace-nowrap" aria-label={$translations.addUser}>{$translations.addUser}</Button>
-        </TableHeadCell>
-      {/if}
+      <TableHeadCell colspan={$authenticatedUser?.type === 'admin' ? '2' : '1'}>
+        {#if $authenticatedUser?.type === 'admin'}
+          <div class="flex">
+            <div class="mt-2.5 grow">Name</div>
+            <div><Button on:click={() => addUser()} class="whitespace-nowrap" aria-label={$translations.addUser}>{$translations.addUser}</Button></div>
+          </div>
+        {:else}
+          Name
+        {/if}
+      </TableHeadCell>
     </TableHead>
     <TableBody>
       {#each filteredUsers as user}
         <TableBodyRow on:click={() => editUser(user)} class="cursor-pointer" aria-label={$translations.editUser}>
           <TableBodyCell class="whitespace-normal">{user.displayName}</TableBodyCell>
           {#if $authenticatedUser?.type === 'admin'}
-            <TableBodyCell class="pl-0 text-right">
+            <TableBodyCell class="text-right">
               <Button color="none" on:click={(e) => deleteUser(e, user)} class="text-blue-700 dark:text-blue-500">
                 <TrashBinOutline title={{ id: 'deleteUser', title: $translations.deleteUser }} ariaLabel={$translations.deleteUser} />
               </Button>
