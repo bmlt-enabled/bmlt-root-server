@@ -109,17 +109,17 @@
 </script>
 
 <form use:form>
-  <div class="mb-4 grid gap-4 md:grid-cols-2 {$authenticatedUser?.type !== 'admin' ? 'hidden' : ''}">
-    <div>
+  <div class="grid gap-2 md:grid-cols-2">
+    <div class={$authenticatedUser?.type !== 'admin' ? 'hidden' : ''}>
       <Label for="type" class="mb-2">{$translations.userTypeTitle}</Label>
-      <Select id="type" items={userTypeItems} name="type" disabled={selectedUser.id === $authenticatedUser?.id} />
+      <Select id="type" items={userTypeItems} name="type" disabled={$authenticatedUser?.type !== 'admin'} />
       <Helper class="mt-2" color="red">
         {#if $errors.type}
           {$errors.type}
         {/if}
       </Helper>
     </div>
-    <div>
+    <div class={$authenticatedUser?.type !== 'admin' ? 'hidden' : ''}>
       <Label for="ownerId" class="mb-2">{$translations.ownerIdTitle}</Label>
       <Select id="ownerId" items={userOwnerItems} name="ownerId" disabled={$authenticatedUser?.type !== 'admin'} />
       <Helper class="mt-2" color="red">
@@ -128,51 +128,53 @@
         {/if}
       </Helper>
     </div>
+    <div class="md:col-span-2">
+      <Label for="displayName" class="mb-2">{$translations.nameTitle}</Label>
+      <Input type="text" id="displayName" name="displayName" required />
+      <Helper class="mt-2" color="red">
+        {#if $errors.displayName}
+          {$errors.displayName}
+        {/if}
+      </Helper>
+    </div>
+    <div class="md:col-span-2">
+      <Label for="email" class="mb-2">{$translations.emailTitle}</Label>
+      <Input type="email" id="email" name="email" />
+      <Helper class="mt-2" color="red">
+        {#if $errors.email}
+          {$errors.email}
+        {/if}
+      </Helper>
+    </div>
+    <div class="md:col-span-2">
+      <Label for="description" class="mb-2">{$translations.descriptionTitle}</Label>
+      <Input type="text" id="description" name="description" />
+      <Helper class="mt-2" color="red">
+        {#if $errors.description}
+          {$errors.description}
+        {/if}
+      </Helper>
+    </div>
+    <div class="md:col-span-2">
+      <Label for="username" class="mb-2">{$translations.usernameTitle}</Label>
+      <Input type="text" id="username" name="username" required />
+      <Helper class="mt-2" color="red">
+        {#if $errors.username}
+          {$errors.username}
+        {/if}
+      </Helper>
+    </div>
+    <div class="md:col-span-2">
+      <Label for="password" class="mb-2">{$translations.passwordTitle}</Label>
+      <Input type="password" id="password" name="password" required />
+      <Helper class="mt-2" color="red">
+        {#if $errors.password}
+          {$errors.password}
+        {/if}
+      </Helper>
+    </div>
+    <div class="md:col-span-2">
+      <Button type="submit" class="w-full">{$translations.applyChangesTitle}</Button>
+    </div>
   </div>
-  <div class="mb-4">
-    <Label for="displayName" class="mb-2">{$translations.nameTitle}</Label>
-    <Input type="text" id="displayName" name="displayName" required />
-    <Helper class="mt-2" color="red">
-      {#if $errors.displayName}
-        {$errors.displayName}
-      {/if}
-    </Helper>
-  </div>
-  <div class="mb-4">
-    <Label for="email" class="mb-2">{$translations.emailTitle}</Label>
-    <Input type="email" id="email" name="email" />
-    <Helper class="mt-2" color="red">
-      {#if $errors.email}
-        {$errors.email}
-      {/if}
-    </Helper>
-  </div>
-  <div class="mb-4">
-    <Label for="description" class="mb-2">{$translations.descriptionTitle}</Label>
-    <Input type="text" id="description" name="description" />
-    <Helper class="mt-2" color="red">
-      {#if $errors.description}
-        {$errors.description}
-      {/if}
-    </Helper>
-  </div>
-  <div class="mb-4">
-    <Label for="username" class="mb-2">{$translations.usernameTitle}</Label>
-    <Input type="text" id="username" name="username" required />
-    <Helper class="mt-2" color="red">
-      {#if $errors.username}
-        {$errors.username}
-      {/if}
-    </Helper>
-  </div>
-  <div class="mb-4">
-    <Label for="password" class="mb-2">{$translations.passwordTitle}</Label>
-    <Input type="password" id="password" name="password" required />
-    <Helper class="mt-2" color="red">
-      {#if $errors.password}
-        {$errors.password}
-      {/if}
-    </Helper>
-  </div>
-  <Button type="submit" class="w-full">{$translations.applyChangesTitle}</Button>
 </form>
