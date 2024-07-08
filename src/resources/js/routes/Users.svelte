@@ -61,8 +61,8 @@
     <TableHead>
       <TableHeadCell>Name</TableHeadCell>
       {#if $authenticatedUser?.type === 'admin'}
-        <TableHeadCell class="pl-0 text-center">
-          <Button on:click={() => addUser()} class="w-full whitespace-nowrap" aria-label={$translations.addUser}>{$translations.addUser}</Button>
+        <TableHeadCell class="pl-0 text-right">
+          <Button on:click={() => addUser()} class="whitespace-nowrap" aria-label={$translations.addUser}>{$translations.addUser}</Button>
         </TableHeadCell>
       {/if}
     </TableHead>
@@ -71,7 +71,7 @@
         <TableBodyRow on:click={() => editUser(user)} class="cursor-pointer" aria-label={$translations.editUser}>
           <TableBodyCell class="whitespace-normal">{user.displayName}</TableBodyCell>
           {#if $authenticatedUser?.type === 'admin'}
-            <TableBodyCell class="pl-0 text-center">
+            <TableBodyCell class="pl-0 text-right">
               <Button color="none" on:click={(e) => deleteUser(e, user)} class="text-blue-700 dark:text-blue-500">
                 <TrashBinOutline title={{ id: 'deleteUser', title: $translations.deleteUser }} ariaLabel={$translations.deleteUser} />
               </Button>
