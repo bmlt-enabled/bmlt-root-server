@@ -11,6 +11,6 @@
 
 <Modal bind:open={showModal} size="sm" outsideclose>
   <div class="p-2">
-    <UserForm {users} {selectedUser} on:success={() => (showModal = false)} />
+    <UserForm {users} {selectedUser} on:saved />
   </div>
 </Modal>

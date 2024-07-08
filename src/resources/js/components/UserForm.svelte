@@ -7,7 +7,7 @@
 
   import { spinner } from '../stores/spinner';
   import RootServerApi from '../lib/RootServerApi';
-  import type { User } from 'bmlt-root-server-client';
+  import type { User, UserUpdate } from 'bmlt-root-server-client';
   import { translations } from '../stores/localization';
   import { authenticatedUser } from '../stores/apiCredentials';
 
@@ -21,6 +21,7 @@
     { value: 'observer', name: 'Observer' },
     { value: 'serviceBodyAdmin', name: 'Service Body Administrator' }
   ];
+  let submittedUser: UserUpdate;
 
   const { form, errors, setInitialValues, reset } = createForm({
     initialValues: {
@@ -34,7 +35,7 @@
     },
     onSubmit: async (values) => {
       spinner.show();
-      console.log(values);
+      submittedUser = values;
       await RootServerApi.updateUser(selectedUser.id, values);
     },
     onError: async (error) => {
@@ -60,7 +61,9 @@
     },
     onSuccess: () => {
       spinner.hide();
-      dispatch('success');
+      const user = { ...selectedUser, ...submittedUser };
+      delete user.password;
+      dispatch('saved', { user });
     },
     extend: validator({
       schema: yup.object({
@@ -95,7 +98,7 @@
   });
 
   function populateForm() {
-    // The only reason we use setInitialValues and reesethere instead of setData is to make development
+    // The only reason we use setInitialValues and reset here instead of setData is to make development
     // easier. It is super annoying that each time we save the file, hot module replacement causes the
     // values in the form fields to be replaced when the UsersForm is refreshed.
     setInitialValues({

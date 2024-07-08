@@ -44,6 +44,13 @@
     console.log('delete');
   }
 
+  function onSaved(event: CustomEvent) {
+    const user = event.detail.user as User;
+    const i = users.findIndex((u) => u.id === user.id);
+    users[i] = user;
+    closeModal();
+  }
+
   function closeModal() {
     showModal = false;
   }
@@ -87,4 +94,4 @@
   </TableSearch>
 </div>
 
-<UserModal bind:showModal {users} {selectedUser} on:close={closeModal} />
+<UserModal bind:showModal {users} {selectedUser} on:saved={onSaved} on:close={closeModal} />
