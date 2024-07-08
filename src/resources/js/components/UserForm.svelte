@@ -49,10 +49,6 @@
       console.log(error);
       await RootServerApi.handleErrors(error as Error, {
         handleValidationError: (error) => {
-          console.log(error);
-          // TODO validate that these fields match what is in the 422 error schema
-          // from the openapi json spec, and actually try to force these errors to
-          // test them.
           errors.set({
             type: (error?.errors?.type ?? []).join(' '),
             ownerId: (error?.errors?.ownerId ?? []).join(' '),
