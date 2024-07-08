@@ -25,7 +25,7 @@
   const { form, errors, setInitialValues, reset } = createForm({
     initialValues: {
       type: '',
-      ownerId: '',
+      ownerId: -1,
       email: '',
       displayName: '',
       username: '',
@@ -34,10 +34,17 @@
     },
     onSubmit: async (values) => {
       spinner.show();
-      console.log(values);
-      // Rather than blindly casing values as a UserCreate object, we should
-      // actually build a UserCreate object. That way we are explicit about
-      // every field, including the funky ones like ownerId and type.
+      const user = {
+        type: values.type,
+        ownerId: values.ownerId,
+        email: values.email,
+        displayName: values.displayName,
+        username: values.username,
+        password: values.password,
+        description: values.description
+      };
+      // TODO need to find a way to update the user in the list of users after update
+      await RootServerApi.updateUser(selectedUser.id, user);
     },
     onError: async (error) => {
       console.log(error);
@@ -65,25 +72,42 @@
       dispatch('success');
     },
     extend: validator({
-      // TODO compare these required fields against what is required by the API
       schema: yup.object({
         type: yup.string().required(),
-        ownerId: yup.string().required(),
+        ownerId: yup
+          .number()
+          .transform((v) => parseInt(v))
+          .required(),
         email: yup.string().max(255).email(),
-        displayName: yup.string().max(255).required(),
-        username: yup.string().max(255).required(),
-        password: yup.string().test('password-valid', 'password must be between 12 and 255 characters', (password, context) => {
-          if (!password) {
-            // empty password means no change, which passes validation
-            return true;
-          }
-          if (!password.trim()) {
-            return context.createError({ message: 'password must contain non-whitespace characters' });
-          }
-          return password.length >= 12 && password.length <= 255;
-        }),
-        description: yup.string().max(255, 'description cannot be longer than 255 characters')
-      })
+        displayName: yup
+          .string()
+          .transform((v) => v.trim())
+          .max(255)
+          .required(),
+        username: yup
+          .string()
+          .transform((v) => v.trim())
+          .max(255)
+          .required(),
+        password: yup
+          .string()
+          .transform((v) => (v.trim() ? v : undefined))
+          .test('password-valid', 'password must be between 12 and 255 characters', (password, context) => {
+            if (!password) {
+              // empty password means no change, which passes validation
+              return true;
+            }
+            if (!password.trim()) {
+              return context.createError({ message: 'password must contain non-whitespace characters' });
+            }
+            return password.length >= 12 && password.length <= 255;
+          }),
+        description: yup
+          .string()
+          .transform((v) => v.trim())
+          .max(255, 'description cannot be longer than 255 characters')
+      }),
+      castValues: true
     })
   });
 
@@ -93,7 +117,7 @@
     // values in the form fields to be replaced when the UsersForm is refreshed.
     setInitialValues({
       type: selectedUser.type,
-      ownerId: selectedUser.ownerId?.toString() ?? ($authenticatedUser?.type === 'admin' ? $authenticatedUser.id.toString() : ''),
+      ownerId: selectedUser.ownerId ?? ($authenticatedUser?.type === 'admin' ? $authenticatedUser.id : -1),
       email: selectedUser.email,
       displayName: selectedUser.displayName,
       username: selectedUser.username,
