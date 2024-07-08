@@ -34,6 +34,7 @@
     },
     onSubmit: async (values) => {
       spinner.show();
+      console.log(values);
       const user = {
         type: values.type,
         ownerId: values.ownerId,
@@ -91,17 +92,9 @@
           .required(),
         password: yup
           .string()
-          .transform((v) => (v.trim() ? v : undefined))
-          .test('password-valid', 'password must be between 12 and 255 characters', (password, context) => {
-            if (!password) {
-              // empty password means no change, which passes validation
-              return true;
-            }
-            if (!password.trim()) {
-              return context.createError({ message: 'password must contain non-whitespace characters' });
-            }
-            return password.length >= 12 && password.length <= 255;
-          }),
+          .transform((v) => (v ? v : undefined))
+          .min(12)
+          .max(255),
         description: yup
           .string()
           .transform((v) => v.trim())
@@ -111,6 +104,9 @@
     })
   });
 
+  function blah(value: string) {
+    return value.trim();
+  }
   function populateForm() {
     // The only reason we use setInitialValues and reesethere instead of setData is to make development
     // easier. It is super annoying that each time we save the file, hot module replacement causes the
