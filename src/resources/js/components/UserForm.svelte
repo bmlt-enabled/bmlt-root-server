@@ -40,8 +40,7 @@
       spinner.show();
       if (selectedUser) {
         await RootServerApi.updateUser(selectedUser.id, values);
-        values.password = '';
-        savedUser = { ...{ id: selectedUser.id }, ...values };
+        savedUser = await RootServerApi.getUser(selectedUser.id);
       } else {
         savedUser = await RootServerApi.createUser(values);
       }

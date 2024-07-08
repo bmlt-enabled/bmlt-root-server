@@ -48,10 +48,11 @@
     const user = event.detail.user as User;
     const i = users.findIndex((u) => u.id === user.id);
     if (i === -1) {
-      users = [...users, user].sort((a, b) => a.displayName.localeCompare(b.displayName));
+      users = [...users, user];
     } else {
       users[i] = user;
     }
+    users.sort((a, b) => a.displayName.localeCompare(b.displayName));
     closeModal();
   }
 
