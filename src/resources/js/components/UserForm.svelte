@@ -109,7 +109,7 @@
 </script>
 
 <form use:form>
-  <div class="mb-4 grid gap-6 md:grid-cols-2 {$authenticatedUser?.type !== 'admin' ? 'hidden' : ''}">
+  <div class="mb-4 grid gap-4 md:grid-cols-2 {$authenticatedUser?.type !== 'admin' ? 'hidden' : ''}">
     <div>
       <Label for="type" class="mb-2">{$translations.userTypeTitle}</Label>
       <Select id="type" items={userTypeItems} name="type" disabled={selectedUser.id === $authenticatedUser?.id} />
