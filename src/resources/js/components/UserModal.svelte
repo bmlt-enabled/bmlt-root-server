@@ -5,7 +5,7 @@
   import UserForm from './UserForm.svelte';
 
   export let showModal: boolean;
-  export let selectedUser: User;
+  export let selectedUser: User | null;
   export let users: User[];
 </script>
 

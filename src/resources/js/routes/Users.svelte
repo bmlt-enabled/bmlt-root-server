@@ -14,7 +14,7 @@
   let users: User[] = [];
   let showModal = false;
   let searchTerm = '';
-  let selectedUser: User;
+  let selectedUser: User | null;
 
   async function getUsers(): Promise<void> {
     try {
@@ -28,13 +28,13 @@
   }
 
   function addUser() {
-    // TODO
-    console.log('add');
+    selectedUser = null;
+    openModal();
   }
 
   function editUser(user: User) {
     selectedUser = user;
-    showModal = true;
+    openModal();
   }
 
   function deleteUser(event: MouseEvent, user: User) {
@@ -47,8 +47,16 @@
   function onSaved(event: CustomEvent) {
     const user = event.detail.user as User;
     const i = users.findIndex((u) => u.id === user.id);
-    users[i] = user;
+    if (i === -1) {
+      users = [...users, user].sort((a, b) => a.displayName.localeCompare(b.displayName));
+    } else {
+      users[i] = user;
+    }
     closeModal();
+  }
+
+  function openModal() {
+    showModal = true;
   }
 
   function closeModal() {

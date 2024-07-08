@@ -7,26 +7,29 @@
 
   import { spinner } from '../stores/spinner';
   import RootServerApi from '../lib/RootServerApi';
-  import type { User, UserUpdate } from 'bmlt-root-server-client';
+  import type { User } from 'bmlt-root-server-client';
   import { translations } from '../stores/localization';
   import { authenticatedUser } from '../stores/apiCredentials';
 
-  export let selectedUser: User;
+  export let selectedUser: User | null;
   export let users: User[];
 
   const dispatch = createEventDispatcher();
   const userOwnerItems = users.map((user) => ({ value: user.id.toString(), name: user.displayName })).sort((a, b) => a.name.localeCompare(b.name));
+  const USER_TYPE_DEACTIVATED = 'deactivated';
+  const USER_TYPE_OBSERVER = 'observer';
+  const USER_TYPE_SERVICE_BODY_ADMIN = 'serviceBodyAdmin';
   const userTypeItems = [
-    { value: 'deactivated', name: 'Deactivated' },
-    { value: 'observer', name: 'Observer' },
-    { value: 'serviceBodyAdmin', name: 'Service Body Administrator' }
+    { value: USER_TYPE_DEACTIVATED, name: 'Deactivated' },
+    { value: USER_TYPE_OBSERVER, name: 'Observer' },
+    { value: USER_TYPE_SERVICE_BODY_ADMIN, name: 'Service Body Administrator' }
   ];
-  let submittedUser: UserUpdate;
+  let savedUser: User;
 
   const { form, errors, setInitialValues, reset } = createForm({
     initialValues: {
-      type: '',
-      ownerId: -1,
+      type: USER_TYPE_SERVICE_BODY_ADMIN,
+      ownerId: $authenticatedUser?.id,
       email: '',
       displayName: '',
       username: '',
@@ -35,8 +38,13 @@
     },
     onSubmit: async (values) => {
       spinner.show();
-      submittedUser = values;
-      await RootServerApi.updateUser(selectedUser.id, values);
+      if (selectedUser) {
+        await RootServerApi.updateUser(selectedUser.id, values);
+        values.password = '';
+        savedUser = { ...{ id: selectedUser.id }, ...values };
+      } else {
+        savedUser = await RootServerApi.createUser(values);
+      }
     },
     onError: async (error) => {
       console.log(error);
@@ -61,9 +69,7 @@
     },
     onSuccess: () => {
       spinner.hide();
-      const user = { ...selectedUser, ...submittedUser };
-      delete user.password;
-      dispatch('saved', { user });
+      dispatch('saved', { user: savedUser });
     },
     extend: validator({
       schema: yup.object({
@@ -86,8 +92,22 @@
         password: yup
           .string()
           .transform((v) => (v ? v : undefined))
-          .min(12)
-          .max(255),
+          .test('validatePassword', 'password must be between 12 and 255 characters', (password) => {
+            const isEditing = selectedUser !== null;
+            if (!password) {
+              return isEditing ? true : false;
+            }
+
+            if (password.length < 12) {
+              return false;
+            }
+
+            if (password.length > 255) {
+              return false;
+            }
+
+            return true;
+          }),
         description: yup
           .string()
           .transform((v) => v.trim())
@@ -102,12 +122,12 @@
     // easier. It is super annoying that each time we save the file, hot module replacement causes the
     // values in the form fields to be replaced when the UsersForm is refreshed.
     setInitialValues({
-      type: selectedUser.type,
-      ownerId: selectedUser.ownerId ?? ($authenticatedUser?.type === 'admin' ? $authenticatedUser.id : -1),
-      email: selectedUser.email,
-      displayName: selectedUser.displayName,
-      username: selectedUser.username,
-      description: selectedUser.description,
+      type: selectedUser?.type ?? USER_TYPE_SERVICE_BODY_ADMIN,
+      ownerId: selectedUser?.ownerId ?? ($authenticatedUser?.type === 'admin' ? $authenticatedUser.id : -1),
+      email: selectedUser?.email ?? '',
+      displayName: selectedUser?.displayName ?? '',
+      username: selectedUser?.username ?? '',
+      description: selectedUser?.description ?? '',
       password: ''
     });
     reset();
