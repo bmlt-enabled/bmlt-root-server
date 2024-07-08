@@ -12,6 +12,7 @@
   import type { User } from 'bmlt-root-server-client';
 
   let users: User[] = [];
+  let filteredUsers: User[] = [];
   let showModal = false;
   let searchTerm = '';
   let selectedUser: User | null;
@@ -19,7 +20,7 @@
   async function getUsers(): Promise<void> {
     try {
       spinner.show();
-      users = (await RootServerApi.getUsers()).sort((a, b) => a.displayName.localeCompare(b.displayName));
+      users = await RootServerApi.getUsers();
     } catch (error: any) {
       RootServerApi.handleErrors(error);
     } finally {
@@ -52,7 +53,6 @@
     } else {
       users[i] = user;
     }
-    users.sort((a, b) => a.displayName.localeCompare(b.displayName));
     closeModal();
   }
 
@@ -66,7 +66,12 @@
 
   onMount(getUsers);
 
-  $: filteredUsers = users.filter((user) => user.id !== $authenticatedUser?.id).filter((user) => user.displayName.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
+  $: {
+    filteredUsers = users
+      .sort((u1, u2) => u1.displayName.localeCompare(u2.displayName))
+      .filter((u) => u.id !== $authenticatedUser?.id)
+      .filter((u) => u.displayName.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
+  }
 </script>
 
 <Nav />
