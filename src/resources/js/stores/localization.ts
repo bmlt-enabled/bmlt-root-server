@@ -10,6 +10,7 @@ const strings = new LocalizedStrings({
     addUser: 'Add User',
     dashboardTitle: 'Dashboard',
     deactivatedUserTitle: 'Deactivated User',
+    delete: 'Delete',
     deleteUser: 'Delete User',
     editUser: 'Edit User',
     descriptionTitle: 'Description',
@@ -37,10 +38,8 @@ const strings = new LocalizedStrings({
     usernameTitle: 'Username',
     usersTitle: 'Users',
     homeTitle: 'Home',
-    confirmAreYouSure: 'Are you sure you want to delete the user?',
-    confirmActionCantBeUndone: 'I understand that this action cannot be undone',
-    confirmYes: "Yes, I'm sure",
-    confirmYouMust: 'You must confirm the action'
+    confirmDeleteUser: 'Are you sure you want to delete this user?',
+    confirmYesImSure: "Yes, I'm sure."
   },
   de: {
     adminTitle: 'Administrator',
