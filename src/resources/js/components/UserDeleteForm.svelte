@@ -11,51 +11,44 @@
   import { spinner } from '../stores/spinner';
   import { translations } from '../stores/localization';
 
-  export let selectedUser: User | null;
+  export let deleteUser: User;
 
   const dispatch = createEventDispatcher();
-  let checkboxChecked: boolean = false;
 
   const { form, errors } = createForm({
-    initialValues: { userId: selectedUser?.id, confirmCheckbox: false },
+    initialValues: { userId: deleteUser?.id, confirmed: false },
     onSubmit: async () => {
       spinner.show();
-      if (selectedUser) {
-        await RootServerApi.deleteUser(selectedUser.id);
-        dispatch('userDeleted', { userId: selectedUser.id });
-      }
+      await RootServerApi.deleteUser(deleteUser.id);
     },
     onError: async (error) => {
       console.log(error);
+      await RootServerApi.handleErrors(error as Error);
       spinner.hide();
     },
     onSuccess: () => {
       spinner.hide();
+      dispatch('deleted', { userId: deleteUser.id });
     },
     extend: validator({
       schema: yup.object({
-        confirmCheckbox: yup.boolean().oneOf([true], $translations.confirmYouMust)
+        confirmed: yup.boolean().oneOf([true], $translations.confirmYouMust)
       })
     })
   });
-
-  function closeModal() {
-    dispatch('close');
-  }
 </script>
 
 <form use:form>
   <div class="text-center">
     <ExclamationCircleOutline class="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-gray-200" />
-    <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">{$translations.confirmAreYouSure}? <br />{selectedUser?.displayName}</h3>
+    <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">{$translations.confirmAreYouSure} <br />{deleteUser?.displayName}</h3>
     <div class="mb-5">
-      <Checkbox id="confirmCheckbox" name="confirmCheckbox" bind:checked={checkboxChecked}>{$translations.confirmActionCantBeUndone}</Checkbox>
+      <Checkbox id="confirmed" name="confirmed">{$translations.confirmActionCantBeUndone}</Checkbox>
     </div>
-    <Button type="submit" color="red" class="me-2" disabled={!checkboxChecked}>{$translations.confirmYes}</Button>
-    <Button type="button" on:click={closeModal} color="alternative">{$translations.confirmNo}</Button>
+    <Button type="submit" color="red" class="me-2">{$translations.confirmYes}</Button>
     <Helper class="mt-2" color="red">
-      {#if $errors.confirmCheckbox}
-        {$errors.confirmCheckbox}
+      {#if $errors.confirmed}
+        {$errors.confirmed}
       {/if}
     </Helper>
   </div>

@@ -15,9 +15,10 @@
   let users: User[] = [];
   let filteredUsers: User[] = [];
   let showModal = false;
-  let showUserDeleteModal = false;
+  let showDeleteModal = false;
   let searchTerm = '';
   let selectedUser: User | null;
+  let deleteUser: User;
 
   async function getUsers(): Promise<void> {
     try {
@@ -30,20 +31,20 @@
     }
   }
 
-  function addUser() {
+  function handleAdd() {
     selectedUser = null;
     openModal();
   }
 
-  function editUser(user: User) {
+  function handleEdit(user: User) {
     selectedUser = user;
     openModal();
   }
 
-  function deleteUser(event: MouseEvent, user: User) {
+  function handleDelete(event: MouseEvent, user: User) {
     event.stopPropagation();
-    selectedUser = user;
-    showUserDeleteModal = true;
+    deleteUser = user;
+    showDeleteModal = true;
   }
 
   function onSaved(event: CustomEvent) {
@@ -58,9 +59,9 @@
   }
 
   function onDeleted(event: CustomEvent) {
-    const { userId } = event.detail;
+    const userId = event.detail.userId;
     users = users.filter((u) => u.id !== userId);
-    showUserDeleteModal = false;
+    showDeleteModal = false;
   }
 
   function openModal() {
@@ -91,7 +92,7 @@
         {#if $authenticatedUser?.type === 'admin'}
           <div class="flex">
             <div class="mt-2.5 grow">Name</div>
-            <div><Button on:click={() => addUser()} class="whitespace-nowrap" aria-label={$translations.addUser}>{$translations.addUser}</Button></div>
+            <div><Button on:click={() => handleAdd()} class="whitespace-nowrap" aria-label={$translations.addUser}>{$translations.addUser}</Button></div>
           </div>
         {:else}
           Name
@@ -100,11 +101,11 @@
     </TableHead>
     <TableBody>
       {#each filteredUsers as user}
-        <TableBodyRow on:click={() => editUser(user)} class="cursor-pointer" aria-label={$translations.editUser}>
+        <TableBodyRow on:click={() => handleEdit(user)} class="cursor-pointer" aria-label={$translations.editUser}>
           <TableBodyCell class="whitespace-normal">{user.displayName}</TableBodyCell>
           {#if $authenticatedUser?.type === 'admin'}
             <TableBodyCell class="text-right">
-              <Button color="none" on:click={(e) => deleteUser(e, user)} class="text-blue-700 dark:text-blue-500">
+              <Button color="none" on:click={(e) => handleDelete(e, user)} class="text-blue-700 dark:text-blue-500">
                 <TrashBinOutline title={{ id: 'deleteUser', title: $translations.deleteUser }} ariaLabel={$translations.deleteUser} />
               </Button>
             </TableBodyCell>
@@ -116,4 +117,4 @@
 </div>
 
 <UserModal bind:showModal {users} {selectedUser} on:saved={onSaved} on:close={closeModal} />
-<UserDeleteModal bind:showUserDeleteModal {selectedUser} on:userDeleted={onDeleted} />
+<UserDeleteModal bind:showDeleteModal {deleteUser} on:deleted={onDeleted} />
