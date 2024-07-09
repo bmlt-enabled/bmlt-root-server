@@ -36,7 +36,12 @@ const strings = new LocalizedStrings({
     userTitle: 'User',
     usernameTitle: 'Username',
     usersTitle: 'Users',
-    homeTitle: 'Home'
+    homeTitle: 'Home',
+    confirmAreYouSure: 'Are you sure you want to delete the user',
+    confirmActionCantBeUndone: 'I understand that this action cannot be undone',
+    confirmYes: "Yes, I'm sure",
+    confirmNo: 'No, cancel',
+    confirmYouMust: 'You must confirm the action'
   },
   de: {
     adminTitle: 'Administrator',

@@ -3,6 +3,7 @@
   import { TrashBinOutline } from 'flowbite-svelte-icons';
   import Nav from '../components/NavBar.svelte';
   import UserModal from '../components/UserModal.svelte';
+  import UserDeleteModal from '../components/UserDeleteModal.svelte';
 
   import { authenticatedUser } from '../stores/apiCredentials';
   import { spinner } from '../stores/spinner';
@@ -14,6 +15,7 @@
   let users: User[] = [];
   let filteredUsers: User[] = [];
   let showModal = false;
+  let showUserDeleteModal = false;
   let searchTerm = '';
   let selectedUser: User | null;
 
@@ -22,7 +24,7 @@
       spinner.show();
       users = await RootServerApi.getUsers();
     } catch (error: any) {
-      RootServerApi.handleErrors(error);
+      await RootServerApi.handleErrors(error);
     } finally {
       spinner.hide();
     }
@@ -39,10 +41,9 @@
   }
 
   function deleteUser(event: MouseEvent, user: User) {
-    // TODO
     event.stopPropagation();
     selectedUser = user;
-    console.log('delete');
+    showUserDeleteModal = true;
   }
 
   function onSaved(event: CustomEvent) {
@@ -54,6 +55,12 @@
       users[i] = user;
     }
     closeModal();
+  }
+
+  function onDeleted(event: CustomEvent) {
+    const { userId } = event.detail;
+    users = users.filter((u) => u.id !== userId);
+    showUserDeleteModal = false;
   }
 
   function openModal() {
@@ -109,3 +116,4 @@
 </div>
 
 <UserModal bind:showModal {users} {selectedUser} on:saved={onSaved} on:close={closeModal} />
+<UserDeleteModal bind:showUserDeleteModal {selectedUser} on:userDeleted={onDeleted} />
