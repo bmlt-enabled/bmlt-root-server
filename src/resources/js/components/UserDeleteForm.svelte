@@ -2,6 +2,8 @@
   import { Button, Checkbox, P } from 'flowbite-svelte';
   import { createForm } from 'felte';
   import { createEventDispatcher } from 'svelte';
+  import { validator } from '@felte/validator-yup';
+  import * as yup from 'yup';
 
   import RootServerApi from '../lib/RootServerApi';
   import type { User } from 'bmlt-root-server-client';
@@ -27,7 +29,12 @@
     onSuccess: () => {
       spinner.hide();
       dispatch('deleted', { userId: deleteUser.id });
-    }
+    },
+    extend: validator({
+      schema: yup.object({
+        confirmed: yup.boolean().oneOf([true])
+      })
+    })
   });
 </script>
 
@@ -39,7 +46,7 @@
       <Checkbox bind:checked={confirmed} class="justify-center" name="confirmed">{$translations.confirmYesImSure}</Checkbox>
     </div>
     <div class="mb-5">
-      <Button type="submit" class="w-full" disabled={!confirmed}>{$translations.delete}</Button>
+      <Button type="submit" class="w-full" disabled={!confirmed ? true : null}>{$translations.delete}</Button>
     </div>
   </div>
 </form>
