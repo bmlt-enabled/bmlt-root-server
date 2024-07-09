@@ -47,8 +47,8 @@
     showDeleteModal = true;
   }
 
-  function onSaved(event: CustomEvent) {
-    const user = event.detail.user as User;
+  function onSaved(event: CustomEvent<{ user: User }>) {
+    const user = event.detail.user;
     const i = users.findIndex((u) => u.id === user.id);
     if (i === -1) {
       users = [...users, user];
@@ -58,9 +58,8 @@
     closeModal();
   }
 
-  function onDeleted(event: CustomEvent) {
-    const userId = event.detail.userId;
-    users = users.filter((u) => u.id !== userId);
+  function onDeleted(event: CustomEvent<{ userId: number }>) {
+    users = users.filter((u) => u.id !== event.detail.userId);
     showDeleteModal = false;
   }
 

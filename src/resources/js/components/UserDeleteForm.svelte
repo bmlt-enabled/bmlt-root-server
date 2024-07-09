@@ -13,7 +13,7 @@
 
   export let deleteUser: User;
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher<{ deleted: { userId: number } }>();
 
   const { form, errors } = createForm({
     initialValues: { userId: deleteUser?.id, confirmed: false },
