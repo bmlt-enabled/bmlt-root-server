@@ -37,6 +37,7 @@ const strings = new LocalizedStrings({
     userTitle: 'User',
     usernameTitle: 'Username',
     usersTitle: 'Users',
+    noUsersTitle: 'No users found.',
     homeTitle: 'Home',
     confirmDeleteUser: 'Are you sure you want to delete this user?',
     confirmYesImSure: "Yes, I'm sure."

@@ -199,7 +199,13 @@
       </Helper>
     </div>
     <div class="md:col-span-2">
-      <Button type="submit" class="w-full">{$translations.applyChangesTitle}</Button>
+      <Button type="submit" class="w-full">
+        {#if selectedUser}
+          {$translations.applyChangesTitle}
+        {:else}
+          {$translations.addUser}
+        {/if}
+      </Button>
     </div>
   </div>
 </form>
