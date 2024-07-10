@@ -1,9 +1,13 @@
-## 3.0.6 (UNRELEASED)
+## 3.1.1 (UNRELEASED)
+* Added `server_ip` to `GetServerInfo`.
+
+## 3.1.0 (June 28, 2024)
+* PHP 8.1 and higher are now required. PHP 8.0 is no longer supported.
 * The `weekdays` filter parameter for the `GetSearchResults` API now accept a comma separated string (e.g. `weekdays=1,-2`) in addition to the standard array syntax.
 * Updated the NAWS import functionality for use by NAWS when importing virtual meetings, by importing the virtual meeting fields and time zone, and allowing the address and city to be blank.
 * Fixed a bug with trying to log in as a deactivated user.
 * Fixed an issue when using NAWS Export with certain very old data sets.
-* Added `server_ip` to `GeServerInfo`.
+* Fixed an issue where the new admin API did not set the meeting lang_enum field.
 
 ## 3.0.5 (June 3, 2023)
 * When the meeting formats are being selected, the formats now appear grouped by their FormatType 
