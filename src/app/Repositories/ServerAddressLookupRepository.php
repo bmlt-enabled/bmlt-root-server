@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Http;
 class ServerAddressLookupRepository implements ServerAddressLookupRepositoryInterface
 {
     protected array $urls = [
-        "aHR0cDovL2NoZWNraXAuYW1hem9uYXdzLmNvbQ==",
-        "aHR0cDovL2lmY29uZmlnLm1lL2lw"
+        "aHR0cHM6Ly9jaGVja2lwLmFtYXpvbmF3cy5jb20=",
+        "aHR0cHM6Ly9pZmNvbmZpZy5tZS9pcA=="
     ];
 
     const ERROR_STATUS_CODE = 'Error: Unexpected status code in response.';
