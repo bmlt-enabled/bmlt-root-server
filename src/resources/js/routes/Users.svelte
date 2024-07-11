@@ -13,6 +13,7 @@
   import type { User } from 'bmlt-root-server-client';
   import UserForm from '../components/UserForm.svelte';
 
+  let isLoaded = false;
   let users: User[] = [];
   let filteredUsers: User[] = [];
   let showModal = false;
@@ -25,6 +26,7 @@
     try {
       spinner.show();
       users = await RootServerApi.getUsers();
+      isLoaded = true;
     } catch (error: any) {
       await RootServerApi.handleErrors(error);
     } finally {
@@ -86,41 +88,43 @@
 
 <div class="mx-auto max-w-3xl p-2">
   <h2 class="mb-4 text-center text-xl font-semibold dark:text-white">{$translations.usersTitle}</h2>
-  {#if users.length > 1}
-    <TableSearch placeholder={$translations.searchByName} hoverable={true} bind:inputValue={searchTerm}>
-      <TableHead>
-        <TableHeadCell colspan={$authenticatedUser?.type === 'admin' ? '2' : '1'}>
-          {#if $authenticatedUser?.type === 'admin'}
-            <div class="flex">
-              <div class="mt-2.5 grow">Name</div>
-              <div><Button on:click={() => handleAdd()} class="whitespace-nowrap" aria-label={$translations.addUser}>{$translations.addUser}</Button></div>
-            </div>
-          {:else}
-            Name
-          {/if}
-        </TableHeadCell>
-      </TableHead>
-      <TableBody>
-        {#each filteredUsers as user}
-          <TableBodyRow on:click={() => handleEdit(user)} class="cursor-pointer" aria-label={$translations.editUser}>
-            <TableBodyCell class="whitespace-normal">{user.displayName}</TableBodyCell>
+  {#if isLoaded}
+    {#if users.length > 1}
+      <TableSearch placeholder={$translations.searchByName} hoverable={true} bind:inputValue={searchTerm}>
+        <TableHead>
+          <TableHeadCell colspan={$authenticatedUser?.type === 'admin' ? '2' : '1'}>
             {#if $authenticatedUser?.type === 'admin'}
-              <TableBodyCell class="text-right">
-                <Button color="none" on:click={(e) => handleDelete(e, user)} class="text-blue-700 dark:text-blue-500">
-                  <TrashBinOutline title={{ id: 'deleteUser', title: $translations.deleteUser }} ariaLabel={$translations.deleteUser} />
-                </Button>
-              </TableBodyCell>
+              <div class="flex">
+                <div class="mt-2.5 grow">Name</div>
+                <div><Button on:click={() => handleAdd()} class="whitespace-nowrap" aria-label={$translations.addUser}>{$translations.addUser}</Button></div>
+              </div>
+            {:else}
+              Name
             {/if}
-          </TableBodyRow>
-        {/each}
-      </TableBody>
-    </TableSearch>
-  {:else if $authenticatedUser?.type === 'admin' && users.length}
-    <div class="p-2">
-      <UserForm {users} {selectedUser} on:saved={onSaved} />
-    </div>
-  {:else}
-    <P class="text-center">{$translations.noUsersTitle}</P>
+          </TableHeadCell>
+        </TableHead>
+        <TableBody>
+          {#each filteredUsers as user}
+            <TableBodyRow on:click={() => handleEdit(user)} class="cursor-pointer" aria-label={$translations.editUser}>
+              <TableBodyCell class="whitespace-normal">{user.displayName}</TableBodyCell>
+              {#if $authenticatedUser?.type === 'admin'}
+                <TableBodyCell class="text-right">
+                  <Button color="none" on:click={(e) => handleDelete(e, user)} class="text-blue-700 dark:text-blue-500">
+                    <TrashBinOutline title={{ id: 'deleteUser', title: $translations.deleteUser }} ariaLabel={$translations.deleteUser} />
+                  </Button>
+                </TableBodyCell>
+              {/if}
+            </TableBodyRow>
+          {/each}
+        </TableBody>
+      </TableSearch>
+    {:else if $authenticatedUser?.type === 'admin' && users.length}
+      <div class="p-2">
+        <UserForm {users} {selectedUser} on:saved={onSaved} />
+      </div>
+    {:else}
+      <P class="text-center">{$translations.noUsersTitle}</P>
+    {/if}
   {/if}
 </div>
 
