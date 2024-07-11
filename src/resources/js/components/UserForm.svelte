@@ -15,7 +15,10 @@
   export let users: User[];
 
   const dispatch = createEventDispatcher<{ saved: { user: User } }>();
-  const userOwnerItems = users.map((user) => ({ value: user.id.toString(), name: user.displayName })).sort((a, b) => a.name.localeCompare(b.name));
+  const userOwnerItems = users
+    .filter((u) => selectedUser?.id !== u.id)
+    .map((u) => ({ value: u.id.toString(), name: u.displayName }))
+    .sort((a, b) => a.name.localeCompare(b.name));
   const USER_TYPE_DEACTIVATED = 'deactivated';
   const USER_TYPE_OBSERVER = 'observer';
   const USER_TYPE_SERVICE_BODY_ADMIN = 'serviceBodyAdmin';
