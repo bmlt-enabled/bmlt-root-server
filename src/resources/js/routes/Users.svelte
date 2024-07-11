@@ -99,7 +99,7 @@
                 <div><Button on:click={() => handleAdd()} class="whitespace-nowrap" aria-label={$translations.addUser}>{$translations.addUser}</Button></div>
               </div>
             {:else}
-              Name
+              {$translations.nameTitle}
             {/if}
           </TableHeadCell>
         </TableHead>
