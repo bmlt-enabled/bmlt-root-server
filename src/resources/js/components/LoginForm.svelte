@@ -2,7 +2,7 @@
   import { validator } from '@felte/validator-yup';
   import { createForm } from 'felte';
   import { Button, Helper, Input, Label, P, Select } from 'flowbite-svelte';
-  import { push } from 'svelte-spa-router';
+  import { createEventDispatcher } from 'svelte';
   import * as yup from 'yup';
 
   import DarkMode from './DarkMode.svelte';
@@ -14,6 +14,7 @@
   export let apiCredentials: ApiCredentialsStore;
 
   const globalSettings = settings;
+  const dispatch = createEventDispatcher();
   const languageOptions = Object.entries(globalSettings.languageMapping).map((lang) => ({ value: lang[0], name: lang[1] }));
   let selectedLanguage = translations.getLanguage();
   let errorMessage: string | undefined;
@@ -28,8 +29,8 @@
       await apiCredentials.login(values.username, values.password);
     },
     onSuccess: () => {
-      push('/');
       spinner.hide();
+      dispatch('authenticated');
     },
     onError: async (error) => {
       await RootServerApi.handleErrors(error as Error, {
