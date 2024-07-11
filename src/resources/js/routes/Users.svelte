@@ -86,7 +86,7 @@
 
 <div class="mx-auto max-w-3xl p-2">
   <h2 class="mb-4 text-center text-xl font-semibold dark:text-white">{$translations.usersTitle}</h2>
-  {#if filteredUsers.length > 0}
+  {#if users.length > 1}
     <TableSearch placeholder={$translations.searchByName} hoverable={true} bind:inputValue={searchTerm}>
       <TableHead>
         <TableHeadCell colspan={$authenticatedUser?.type === 'admin' ? '2' : '1'}>
