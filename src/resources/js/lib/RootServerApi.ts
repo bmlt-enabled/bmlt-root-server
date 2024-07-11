@@ -119,12 +119,6 @@ class ApiClientWrapper {
   }
 
   set token(token: Token | null) {
-    if (token) {
-      localStorage.setItem('token', JSON.stringify(token));
-    } else {
-      localStorage.removeItem('token');
-    }
-
     this.api.token = token;
   }
 
