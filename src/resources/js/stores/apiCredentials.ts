@@ -95,7 +95,7 @@ export class ApiCredentialsStore {
   async login(username: string, password: string): Promise<Token> {
     this.clearInternal();
     const token = await RootServerApi.login(username, password);
-    this.set(token);
+    await this.set(token);
     return token;
   }
 
