@@ -115,7 +115,7 @@
         {/each}
       </TableBody>
     </TableSearch>
-  {:else if $authenticatedUser?.type === 'admin'}
+  {:else if $authenticatedUser?.type === 'admin' && users.length}
     <div class="p-2">
       <UserForm {users} {selectedUser} on:saved={onSaved} />
     </div>
