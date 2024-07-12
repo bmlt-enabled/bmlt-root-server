@@ -14,9 +14,9 @@ beforeEach(async () => {
 });
 
 describe('language selection tests', () => {
-  test('check language selection menu', () => {
+  test('check language selection menu', async () => {
     render(App);
-    const langs: HTMLSelectElement = screen.getByRole('combobox', { name: 'Select Language' });
+    const langs: HTMLSelectElement = await screen.findByRole('combobox', { name: 'Select Language' });
     expect(langs.length).toBe(4);
     expect(langs.item(0)?.label).toBe('Choose option ...');
     expect(langs.item(1)?.label).toBe('English');
@@ -24,10 +24,11 @@ describe('language selection tests', () => {
     expect(langs.item(3)?.label).toBe('Français');
   });
 
-  test('test isLanguageSelectorEnabled == false', () => {
+  test('test isLanguageSelectorEnabled == false', async () => {
     const settings = (global as any).settings;
     settings['isLanguageSelectorEnabled'] = false;
     render(App);
+    // TODO: this isn't right.  Should do findByRole instead, and check that an exception is raised
     expect(screen.queryByRole('combobox', { name: 'Select Language' })).toBeNull();
   });
   // TODO: test clicking on German and checking the labels -- see last login test in the react code

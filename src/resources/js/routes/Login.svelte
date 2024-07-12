@@ -3,7 +3,8 @@
 
   import { apiCredentials } from '../stores/apiCredentials';
   import LoginForm from '../components/LoginForm.svelte';
-  import { onMount } from 'svelte';
+  // svelte-hack' -- import hacked to get onMount to work correctly for unit tests
+  import { onMount } from 'svelte/internal';
 
   function redirect() {
     replace($querystring?.startsWith('route=') ? $querystring.slice(6) : '/');
