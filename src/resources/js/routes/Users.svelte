@@ -9,7 +9,8 @@
   import { spinner } from '../stores/spinner';
   import { translations } from '../stores/localization';
   import RootServerApi from '../lib/RootServerApi';
-  import { onMount } from 'svelte';
+  // svelte-hack' -- import hacked to get onMount to work correctly for unit tests
+  import { onMount } from 'svelte/internal';
   import type { User } from 'bmlt-root-server-client';
   import UserForm from '../components/UserForm.svelte';
 
