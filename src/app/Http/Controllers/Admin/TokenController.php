@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Admin\UserResource;
 use App\Http\Responses\JsonResponse;
 use App\Interfaces\UserRepositoryInterface;
 use App\Models\User;
@@ -29,9 +28,9 @@ class TokenController extends Controller
     public function token(Request $request)
     {
         $request->validate(['username' => 'required', 'password' => 'required']);
-        $user = $this->userRepository->getByUsername($request->username);
-        $success = false;
 
+        $success = false;
+        $user = $this->userRepository->getByUsername($request->username);
         if ($user) {
             $success = Hash::check($request->password, $user->password_string);
             if ($success && Hash::needsRehash($user->password_string)) {
@@ -45,7 +44,7 @@ class TokenController extends Controller
             return new JsonResponse(['message' => 'The provided credentials are incorrect.'], 401);
         }
 
-        if ($user && $user->isDeactivated()) {
+        if ($user->isDeactivated()) {
             return new JsonResponse(['message' => 'User is deactivated.'], 403);
         }
 
