@@ -35,7 +35,7 @@
     onError: async (error) => {
       await RootServerApi.handleErrors(error as Error, {
         handleAuthorizationError: (error) => {
-            errorMessage = error?.message
+          errorMessage = error?.message;
         },
         handleAuthenticationError: () => {
           errorMessage = $translations.invalidUsernameOrPassword;
