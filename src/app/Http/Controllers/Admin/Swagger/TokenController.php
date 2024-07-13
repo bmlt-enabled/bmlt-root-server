@@ -10,8 +10,8 @@ namespace App\Http\Controllers\Admin\Swagger;
  *     @OA\Property(property="user_id", type="integer", example="1"),
  * ),
  * @OA\Schema(schema="TokenCredentials", required={"username","password"},
- *     @OA\Property(property="password", type="string", format="password", example="PassWord12345"),
  *     @OA\Property(property="username", type="string", format="username", example="MyUsername"),
+ *     @OA\Property(property="password", type="string", format="password", example="PassWord12345"),
  * ),
  */
 class TokenController extends Controller
@@ -27,8 +27,8 @@ class TokenController extends Controller
      *     @OA\Response(response=401, description="Returns when credentials are incorrect.",
      *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
      *     ),
-     *     @OA\Response(response=403, description="Returns when user is deactivated.",
-     * *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
+     *     @OA\Response(response=403, description="Returns when unauthorized.",
+     * *         @OA\JsonContent(ref="#/components/schemas/AuthorizationError")
      * *     ),
      *     @OA\Response(response=422, description="Validation error.",
      *         @OA\JsonContent(ref="#/components/schemas/ValidationError")
