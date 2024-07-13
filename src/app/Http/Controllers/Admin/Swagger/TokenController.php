@@ -28,8 +28,8 @@ class TokenController extends Controller
      *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
      *     ),
      *     @OA\Response(response=403, description="Returns when unauthorized.",
-     * *         @OA\JsonContent(ref="#/components/schemas/AuthorizationError")
-     * *     ),
+     *         @OA\JsonContent(ref="#/components/schemas/AuthorizationError")
+     *     ),
      *     @OA\Response(response=422, description="Validation error.",
      *         @OA\JsonContent(ref="#/components/schemas/ValidationError")
      *     ),
