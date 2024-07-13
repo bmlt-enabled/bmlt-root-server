@@ -32,6 +32,9 @@ class TokenController extends Controller
 
         $success = false;
         if ($user = $this->userRepository->getByUsername($request->username)) {
+            if ($user->isDeactivated()) {
+                return new JsonResponse(['message' => 'User is deactivated.'], 403);
+            }
             $success = Hash::check($request->password, $user->password_string);
             if ($success && Hash::needsRehash($user->password_string)) {
                 $this->userRepository->updatePassword($user->id_bigint, $request->password);

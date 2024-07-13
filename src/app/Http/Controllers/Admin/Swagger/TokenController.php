@@ -27,6 +27,9 @@ class TokenController extends Controller
      *     @OA\Response(response=401, description="Returns when credentials are incorrect.",
      *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
      *     ),
+     *     @OA\Response(response=403, description="Returns when user is deactivated.",
+     * *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
+     * *     ),
      *     @OA\Response(response=422, description="Validation error.",
      *         @OA\JsonContent(ref="#/components/schemas/ValidationError")
      *     ),
