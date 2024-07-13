@@ -1461,6 +1461,16 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "Returns when user is deactivated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeactivatedError"
+                                }
+                            }
+                        }
+                    },
                     "422": {
                         "description": "Validation error.",
                         "content": {
@@ -1989,6 +1999,18 @@
                     "message": {
                         "type": "string",
                         "example": "This action is unauthorized."
+                    }
+                },
+                "type": "object"
+            },
+            "DeactivatedError": {
+                "required": [
+                    "message"
+                ],
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "User is deactivated."
                     }
                 },
                 "type": "object"
@@ -2678,15 +2700,15 @@
                     "password"
                 ],
                 "properties": {
-                    "password": {
-                        "type": "string",
-                        "format": "password",
-                        "example": "PassWord12345"
-                    },
                     "username": {
                         "type": "string",
                         "format": "username",
                         "example": "MyUsername"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "PassWord12345"
                     }
                 },
                 "type": "object"

@@ -9,6 +9,9 @@ namespace App\Http\Controllers\Admin\Swagger;
  * @OA\Schema(schema="AuthorizationError", required={"message"},
  *     @OA\Property(property="message", type="string", example="This action is unauthorized.")
  * ),
+ * @OA\Schema(schema="DeactivatedError", required={"message"},
+ *     @OA\Property(property="message", type="string", example="User is deactivated.")
+ * ),
  * @OA\Schema(schema="NotFoundError", required={"message"},
  *     @OA\Property(property="message", type="string", example="The requested resource was not found.")
  * ),
