@@ -108,5 +108,5 @@
       </form>
     </div>
   </div>
-  <DarkMode class="ml-4" />
+  <DarkMode />
 </div>
