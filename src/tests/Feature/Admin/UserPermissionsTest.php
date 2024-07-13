@@ -23,7 +23,10 @@ class UserPermissionsTest extends TestCase
         $token = $user->createToken('test')->plainTextToken;
         $this->withHeader('Authorization', "Bearer $token")
             ->get('/api/v1/users')
-            ->assertStatus(403);
+            ->assertStatus(403)
+            ->assertJson([
+                'message' => 'User is deactivated.'
+            ]);
     }
 
     public function testIndexAsServiceBodyObserver()
