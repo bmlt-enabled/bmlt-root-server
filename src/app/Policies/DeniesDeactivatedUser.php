@@ -8,7 +8,7 @@ trait DeniesDeactivatedUser
     public function before(User $user, $ability)
     {
         if ($user->isDeactivated()) {
-            return false;
+            abort(403, 'User is deactivated.');
         }
     }
 }
