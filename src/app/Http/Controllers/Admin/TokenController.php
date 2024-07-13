@@ -29,9 +29,10 @@ class TokenController extends Controller
     public function token(Request $request)
     {
         $request->validate(['username' => 'required', 'password' => 'required']);
-
+        $user = $this->userRepository->getByUsername($request->username);
         $success = false;
-        if ($user = $this->userRepository->getByUsername($request->username)) {
+
+        if ($user) {
             $success = Hash::check($request->password, $user->password_string);
             if ($success && Hash::needsRehash($user->password_string)) {
                 $this->userRepository->updatePassword($user->id_bigint, $request->password);
@@ -42,6 +43,10 @@ class TokenController extends Controller
 
         if (!$success) {
             return new JsonResponse(['message' => 'The provided credentials are incorrect.'], 401);
+        }
+
+        if ($user && $user->isDeactivated()) {
+            return new JsonResponse(['message' => 'User is deactivated.'], 403);
         }
 
         $this->pruneExpiredTokens();

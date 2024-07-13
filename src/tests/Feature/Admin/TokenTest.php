@@ -105,4 +105,14 @@ class TokenTest extends TestCase
         $this->assertNotEmpty($user->password_string);
         $this->assertNotEquals($oldPasswordhash, $user->password_string);
     }
+
+    public function testTokenAsDeactivated()
+    {
+        $user = $this->createDeactivatedUser();
+        $this->post('/api/v1/auth/token', ['username' => $user->login_string, 'password' => $this->userPassword])
+            ->assertStatus(403)
+            ->assertJson([
+                'message' => 'User is deactivated.'
+            ]);
+    }
 }
