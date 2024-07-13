@@ -40,7 +40,8 @@ const strings = new LocalizedStrings({
     noUsersTitle: 'No users found.',
     homeTitle: 'Home',
     confirmDeleteUser: 'Are you sure you want to delete this user?',
-    confirmYesImSure: "Yes, I'm sure."
+    confirmYesImSure: "Yes, I'm sure.",
+    userIsDeactivated: 'User is deactivated.'
   },
   de: {
     adminTitle: 'Administrator',

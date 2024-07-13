@@ -34,11 +34,11 @@
     },
     onError: async (error) => {
       await RootServerApi.handleErrors(error as Error, {
-        handleAuthorizationError: (error) => {
-          errorMessage = error?.message;
-        },
         handleAuthenticationError: () => {
           errorMessage = $translations.invalidUsernameOrPassword;
+        },
+        handleAuthorizationError: () => {
+          errorMessage = $translations.userIsDeactivated;
         },
         handleValidationError: (error) => {
           errors.set({
