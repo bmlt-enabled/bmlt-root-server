@@ -9,8 +9,9 @@ Mock users as follows:
         Rural Area
       Small Region
       Small Region Observer
-Server Administrator is a server admin, the next 6 are service body admins, and Small Region Observer
-is an observer.
+      Small Region Deactivated
+Server Administrator is a server admin and the next 6 are service body admins.  Small Region Observer
+is an observer.  Small Region Deactivated is a deactivated user.
 */
 
 import { replace } from 'svelte-spa-router';
@@ -104,6 +105,16 @@ const mockSmallRegionObserver: User = {
   username: 'SmallObserver'
 };
 
+const mockSmallRegionDeactivated: User = {
+  description: 'Small Region Deactivated',
+  displayName: 'Small Deactivated',
+  email: 'smalldeactivated@bmlt.app',
+  id: 9,
+  ownerId: 2,
+  type: 'deactivated',
+  username: 'SmallDeactivated'
+};
+
 const allUsersAndPasswords = [
   { user: mockServerAdmin, password: 'serveradmin-password' },
   { user: mockNorthernZoneAdmin, password: 'northern-zone-password' },
@@ -112,7 +123,8 @@ const allUsersAndPasswords = [
   { user: mockRiverCityAreaAdmin, password: 'river-city-area-password' },
   { user: mockMountainAreaAdmin, password: 'mountain-area-password' },
   { user: mockRuralAreaAdmin, password: 'rural-area-password' },
-  { user: mockSmallRegionObserver, password: 'small-region-observer-password' }
+  { user: mockSmallRegionObserver, password: 'small-region-observer-password' },
+  { user: mockSmallRegionDeactivated, password: 'small-region-deactivated-password' }
 ];
 
 function findPassword(name: string): string {
@@ -161,9 +173,19 @@ async function mockGetUsers(initOverrides?: RequestInit | runtime.InitOverrideFu
   if (!mockSavedAccessToken) {
     throw new Error('internal error -- trying to get users when no simulated user is logged in');
   } else if (mockSavedAccessToken.userId === mockServerAdmin.id) {
-    return [mockServerAdmin, mockNorthernZoneAdmin, mockBigRegionAdmin, mockSmallRegionAdmin, mockRiverCityAreaAdmin, mockMountainAreaAdmin, mockRuralAreaAdmin, mockSmallRegionObserver];
+    return [
+      mockServerAdmin,
+      mockNorthernZoneAdmin,
+      mockBigRegionAdmin,
+      mockSmallRegionAdmin,
+      mockRiverCityAreaAdmin,
+      mockMountainAreaAdmin,
+      mockRuralAreaAdmin,
+      mockSmallRegionObserver,
+      mockSmallRegionDeactivated
+    ];
   } else if (mockSavedAccessToken.userId === mockNorthernZoneAdmin.id) {
-    return [mockNorthernZoneAdmin, mockBigRegionAdmin, mockSmallRegionAdmin, mockSmallRegionObserver];
+    return [mockNorthernZoneAdmin, mockBigRegionAdmin, mockSmallRegionAdmin, mockSmallRegionObserver, mockSmallRegionDeactivated];
   } else if (mockSavedAccessToken.userId === mockBigRegionAdmin.id) {
     return [mockBigRegionAdmin, mockRiverCityAreaAdmin, mockMountainAreaAdmin, mockRuralAreaAdmin];
   } else if (mockSavedAccessToken.userId === mockSmallRegionAdmin.id) {
@@ -176,6 +198,8 @@ async function mockGetUsers(initOverrides?: RequestInit | runtime.InitOverrideFu
     return [mockRuralAreaAdmin];
   } else if (mockSavedAccessToken.userId === mockSmallRegionObserver.id) {
     return [mockSmallRegionObserver];
+  } else if (mockSavedAccessToken.userId === mockSmallRegionDeactivated.id) {
+    return [mockSmallRegionDeactivated];
   } else {
     throw new Error('internal error -- user ID not found in mockGetUsers');
   }
@@ -185,24 +209,31 @@ function mockIsLoggedIn(): boolean {
   return Boolean(mockSavedAccessToken);
 }
 
-async function mockAuthToken(authTokenRequest: { tokenCredentials: { username: string; password: string } }): Promise<Token> {
-  const n = authTokenRequest.tokenCredentials.username;
-  const p = authTokenRequest.tokenCredentials.password;
-  for (let i = 0; i < allUsersAndPasswords.length; i++) {
-    if (allUsersAndPasswords[i].user.username === n && allUsersAndPasswords[i].password === p) {
-      return generateMockToken(allUsersAndPasswords[i].user);
-    }
-  }
-  const msg = '{ "message": "The provided credentials are incorrect." }';
-  const unicodeMsg = Uint8Array.from(Array.from(msg).map((x) => x.charCodeAt(0)));
+function makeResponse(msg: string, status: number): Response {
+  const m = `{ "message": "${msg}" }`;
+  const unicodeMsg = Uint8Array.from(Array.from(m).map((x) => x.charCodeAt(0)));
   const strm = new ReadableStream({
     start(controller) {
       controller.enqueue(unicodeMsg);
       controller.close();
     }
   });
-  const r = new Response(strm, { status: 401, statusText: 'Unauthorized' });
-  throw new ResponseError(r, 'Response returned an error code');
+  return new Response(strm, { status: status, statusText: 'Unauthorized' });
+}
+
+async function mockAuthToken(authTokenRequest: { tokenCredentials: { username: string; password: string } }): Promise<Token> {
+  const n = authTokenRequest.tokenCredentials.username;
+  const p = authTokenRequest.tokenCredentials.password;
+  for (let i = 0; i < allUsersAndPasswords.length; i++) {
+    if (allUsersAndPasswords[i].user.username === n && allUsersAndPasswords[i].password === p) {
+      if (allUsersAndPasswords[i].user.type === 'deactivated') {
+        throw new ResponseError(makeResponse('User is deactivated.', 403), 'Response returned an error code');
+      } else {
+        return generateMockToken(allUsersAndPasswords[i].user);
+      }
+    }
+  }
+  throw new ResponseError(makeResponse('The provided credentials are incorrect.', 401), 'Response returned an error code');
 }
 
 async function mockAuthLogout(): Promise<void> {
