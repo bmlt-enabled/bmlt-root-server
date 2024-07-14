@@ -28,7 +28,7 @@ else
 	ifeq ($(strip $(GITHUB_REF_NAME)),main)
 		TAG := latest
 	endif
-	ifeq ($(strip $(GITHUB_REF_NAME)),svelte-wip)
+	ifeq ($(strip $(GITHUB_REF_NAME)),unstable)
 		TAG := unstable
 	endif
 	COMPOSER_ARGS := --classmap-authoritative
