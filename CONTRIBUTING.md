@@ -49,13 +49,42 @@ services:
 ```
 
 ## Developing the New UI
-The new UI is developed using [React](https://reactjs.org/), and the code is located in the `resources/js` directory.
+The new UI is developed using [Svelte](https://svelte.dev/), and the code is located in the `resources/js` directory.
 
 You can enable the new UI in the docker container by setting the `NEW_UI_ENABLED` environment variable to `'true'` in `docker/docker-compose.dev.yml`.
 
 To install the UI's dependencies, run the `npm install` command from the `src` directory.
 
 When working on the UI, you'll need to have the [Vite](https://vitejs.dev/) dev server running. To start the dev server, run `npm run dev` from the `src` directory. While the dev server is running, the UI is served out of the `resources/js` directory instead of the normal `public` directory, and [hot module replacement](https://vitejs.dev/guide/features.html#hot-module-replacement) is enabled.
+
+### Debugging the New UI
+This assumes you are using [VS Code](https://code.visualstudio.com) to develop the new UI.
+
+#### Debugging the Browser
+First, follow the instructions above for running the root server under Docker with `NEW_UI_ENABLED` set to `'true'`. This mostly just involves running `make dev`.
+
+Then, create `.vscode/launch.json` with a `chrome` debug configuration:
+
+```
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome against localhost",
+            "url": "http://localhost:8000/main_server/",
+            "webRoot": "${workspaceFolder}/src/resources/js"
+        }
+    ]
+}
+```
+
+You should now be able to set breakpoints, launch this debug configuration, and step through the code.
+
+#### Debugging the Tests
+
+This works exactly as described in the [vitest documentation](https://v0.vitest.dev/guide/debugging.html). Set any breakpoints, launch a new JavaScript Debug Terminal, and run `npm run test`.
 
 ## Some useful `make` commands
 

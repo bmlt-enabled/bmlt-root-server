@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Admin\UserResource;
 use App\Http\Responses\JsonResponse;
 use App\Interfaces\UserRepositoryInterface;
 use App\Models\User;
@@ -21,12 +20,18 @@ class TokenController extends Controller
         $this->userRepository = $userRepository;
     }
 
+    private function pruneExpiredTokens()
+    {
+        Artisan::call('sanctum:prune-expired', ['--no-interaction' => true, '--hours' => 1]);
+    }
+
     public function token(Request $request)
     {
         $request->validate(['username' => 'required', 'password' => 'required']);
 
         $success = false;
-        if ($user = $this->userRepository->getByUsername($request->username)) {
+        $user = $this->userRepository->getByUsername($request->username);
+        if ($user) {
             $success = Hash::check($request->password, $user->password_string);
             if ($success && Hash::needsRehash($user->password_string)) {
                 $this->userRepository->updatePassword($user->id_bigint, $request->password);
@@ -39,7 +44,11 @@ class TokenController extends Controller
             return new JsonResponse(['message' => 'The provided credentials are incorrect.'], 401);
         }
 
-        Artisan::call('sanctum:prune-expired', ['--no-interaction' => true]);
+        if ($user->isDeactivated()) {
+            return new JsonResponse(['message' => 'User is deactivated.'], 403);
+        }
+
+        $this->pruneExpiredTokens();
 
         return new JsonResponse($this->createToken($user));
     }
@@ -55,6 +64,8 @@ class TokenController extends Controller
         $currentToken = $user->currentAccessToken();
         $currentToken->expires_at = time() + 10;
         $currentToken->save();
+
+        $this->pruneExpiredTokens();
 
         return new JsonResponse($this->createToken($user));
     }

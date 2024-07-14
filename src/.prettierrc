@@ -3,13 +3,12 @@
   "singleQuote": true,
   "semi": true,
   "tabWidth": 2,
-  "trailingComma": "all",
-  "printWidth": 140,
   "bracketSameLine": false,
   "useTabs": false,
   "arrowParens": "always",
   "endOfLine": "auto",
-  "importOrder": ["^components/(.*)$", "^[./]"],
-  "importOrderSeparation": true,
-  "importOrderSortSpecifiers": true
+  "trailingComma": "none",
+  "printWidth": 200,
+  "plugins": ["prettier-plugin-svelte", "prettier-plugin-tailwindcss"],
+  "overrides": [{ "files": "*.svelte", "options": { "parser": "svelte" } }]
 }

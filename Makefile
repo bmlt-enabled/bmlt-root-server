@@ -14,6 +14,7 @@ ifeq ($(CI)x, x)
 	IMAGE := rootserver
 	TAG := local
 	COMPOSER_ARGS :=
+	NPM_FLAG := install
 	COMPOSER_PREFIX := docker run --pull=always -t --rm -v '$(shell pwd)':/code -w /code $(BASE_IMAGE):$(BASE_IMAGE_TAG)
 	LINT_PREFIX := docker run -t --rm -v '$(shell pwd)':/code -w /code/src $(IMAGE):$(TAG)
 	TEST_PREFIX := docker run -e XDEBUG_MODE=coverage,debug -t --rm -v '$(shell pwd)/src:/var/www/html/main_server' -v '$(shell pwd)/docker/test-auto-config.inc.php:/var/www/html/auto-config.inc.php' -w /var/www/html/main_server --network host $(IMAGE):$(TAG)
@@ -31,6 +32,7 @@ else
 		TAG := unstable
 	endif
 	COMPOSER_ARGS := --classmap-authoritative
+	NPM_FLAG := ci
 	ifeq ($(DEV)x, x)
 		COMPOSER_ARGS := $(COMPOSER_ARGS) --no-dev
 	endif
@@ -55,7 +57,7 @@ $(CROUTON_JS):
 	rm -rf src/public/client_interface/html/croutonjs/examples
 
 $(NODE_MODULES):
-	cd src && npm install
+	cd src && npm $(NPM_FLAG)
 
 $(FRONTEND): $(NODE_MODULES)
 	cd src && npm run build
