@@ -168,6 +168,5 @@ clean:  ## Clean build
 	rm -rf src/public/local_server
 	rm -rf src/public/semantic
 	rm -rf src/node_modules
-	rm -rf src/.svelte-kit
 	rm -rf src/vendor
 	rm -rf build
