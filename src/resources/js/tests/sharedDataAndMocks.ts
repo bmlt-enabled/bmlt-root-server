@@ -13,6 +13,7 @@ Server Administrator is a server admin, the next 6 are service body admins, and 
 is an observer.
 */
 
+import { replace } from 'svelte-spa-router';
 import { render, screen } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
@@ -218,9 +219,10 @@ export function setupMocks() {
   vi.spyOn(ApiClientWrapper.api, 'authLogout').mockImplementation(mockAuthLogout);
 }
 
-export function sharedBeforeEach() {
+export async function sharedBeforeEach() {
   // TODO: fix this.  Hack for now -- make sure we weren't left in a logged in state
-  apiCredentials.logout();
+  replace('/');
+  await apiCredentials.logout();
   mockSavedAccessToken = null;
 }
 
