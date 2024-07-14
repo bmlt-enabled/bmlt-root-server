@@ -10,4 +10,3 @@ icon.png export-ignore
 phpunit.xml export-ignore
 /Misc export-ignore
 /doc export-ignore
-.svelte-kit export-ignore
