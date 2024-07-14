@@ -93,5 +93,13 @@ describe('login page tests', () => {
     // TODO: probably the UI should be changed so that Users isn't visible, or is greyed out, for observers
     expect(await screen.findByRole('link', { name: 'Users', hidden: true })).toBeEnabled();
   });
-  // TODO: need to add a test for a deactivated user
+
+  test('log in with valid username and password for a deactivated user', async () => {
+    const user = userEvent.setup();
+    render(App);
+    await user.type(await screen.findByRole('textbox', { name: 'Username' }), 'SmallDeactivated');
+    await user.type(await screen.findByLabelText('Password'), 'small-region-deactivated-password');
+    await user.click(await screen.findByRole('button', { name: 'Log In' }));
+    expect(await screen.findByText('User is deactivated.')).toBeInTheDocument();
+  });
 });
