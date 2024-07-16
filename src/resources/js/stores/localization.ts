@@ -31,6 +31,11 @@ const strings = new LocalizedStrings({
     rootServerTitle: 'Root Server',
     searchByName: 'Search by name',
     serviceBodiesTitle: 'Service Bodies',
+    addServiceBody: 'Add Service Body',
+    serviceBodyTypeTitle: 'Service Body Type',
+    deleteServiceBody: 'Delete Service Body',
+    noServiceBodiesTitle: 'No service bodies found.',
+    confirmDeleteServiceBody: 'Are you sure you want to delete this service body?',
     serviceBodyAdminTitle: 'Service Body Administrator',
     logout: 'Logout',
     userTypeTitle: 'User Type',
@@ -42,7 +47,12 @@ const strings = new LocalizedStrings({
     confirmDeleteUser: 'Are you sure you want to delete this user?',
     confirmYesImSure: "Yes, I'm sure.",
     userIsDeactivated: 'User is deactivated.',
-    userDeleteConflictError: 'Error: User is assigned to service bodies.'
+    userDeleteConflictError: 'Error: User is assigned to service bodies.',
+    websiteUrlTitle: 'Web Site URL',
+    parentIdTitle: 'Service Body Parent',
+    helplineTitle: 'Helpline',
+    worldIdTitle: 'World Committee Code',
+    primaryAdminTitle: 'Primary Admin'
   },
   de: {
     adminTitle: 'Administrator',
