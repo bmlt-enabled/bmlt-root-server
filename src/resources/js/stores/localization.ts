@@ -37,6 +37,7 @@ const strings = new LocalizedStrings({
     noServiceBodiesTitle: 'No service bodies found.',
     confirmDeleteServiceBody: 'Are you sure you want to delete this service body?',
     serviceBodyAdminTitle: 'Service Body Administrator',
+    serviceBodiesNoParent: 'No Parent (Top-Level)',
     logout: 'Logout',
     userTypeTitle: 'User Type',
     userTitle: 'User',

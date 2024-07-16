@@ -16,7 +16,7 @@
   export let serviceBodies: ServiceBody[];
 
   const dispatch = createEventDispatcher<{ saved: { serviceBody: ServiceBody } }>();
-  const noParentItem = { value: '-1', name: 'No Parent (Top-Level)' };
+  const noParentItem = { value: '-1', name: $translations.serviceBodiesNoParent ?? '' };
   const parentIdItems = serviceBodies
     .filter((u) => selectedServiceBody?.id !== u.id)
     .map((u) => ({ value: u.id.toString(), name: u.name }))
