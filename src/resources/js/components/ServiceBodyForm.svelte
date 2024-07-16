@@ -16,14 +16,13 @@
   export let serviceBodies: ServiceBody[];
 
   const dispatch = createEventDispatcher<{ saved: { serviceBody: ServiceBody } }>();
-  const userOwnerItems = serviceBodies
+  const noParentItem = { value: '-1', name: 'No Parent (Top-Level)' };
+  const parentIdItems = serviceBodies
     .filter((u) => selectedServiceBody?.id !== u.id)
     .map((u) => ({ value: u.id.toString(), name: u.name }))
     .sort((a, b) => a.name.localeCompare(b.name));
-  const userEditorItems = $usersData
-    .filter((u) => selectedServiceBody?.id !== u.id)
-    .map((u) => ({ value: u.id.toString(), name: u.displayName }))
-    .sort((a, b) => a.name.localeCompare(b.name));
+  parentIdItems.unshift(noParentItem);
+  const userEditorItems = $usersData.map((u) => ({ value: u.id, name: u.displayName })).sort((a, b) => a.name.localeCompare(b.name));
 
   const SB_TYPE_GROUP = 'GR';
   const SB_TYPE_COOP = 'CO';
@@ -134,11 +133,14 @@
     // The only reason we use setInitialValues and reset here instead of setData is to make development
     // easier. It is super annoying that each time we save the file, hot module replacement causes the
     // values in the form fields to be replaced when the UsersForm is refreshed.
+
+    assignedUserIdsSelected = selectedServiceBody?.assignedUserIds ?? [];
+
     setInitialValues({
       type: selectedServiceBody?.type ?? SB_TYPE_AREA,
       // TODO: Handle no parent, admin userId, assignedUserIds
-      parentId: selectedServiceBody?.parentId ?? ($authenticatedUser?.type === 'admin' ? $authenticatedUser.id : -1),
-      adminUserId: -1,
+      parentId: selectedServiceBody?.parentId ?? -1,
+      adminUserId: selectedServiceBody?.adminUserId ?? -1,
       email: selectedServiceBody?.email ?? '',
       name: selectedServiceBody?.name ?? '',
       url: selectedServiceBody?.url ?? '',
@@ -181,7 +183,7 @@
     <div class={$authenticatedUser?.type !== 'admin' ? 'hidden' : ''}>
       <Label for="parentId" class="mb-2">{$translations.parentIdTitle}</Label>
       <!--            TODO: Handle No Parent, assignedUserIds-->
-      <Select id="parentId" items={userOwnerItems} name="parentId" disabled={$authenticatedUser?.type !== 'admin'} />
+      <Select id="parentId" items={parentIdItems} name="parentId" disabled={$authenticatedUser?.type !== 'admin'} />
       <Helper class="mt-2" color="red">
         {#if $errors.parentId}
           {$errors.parentId}
