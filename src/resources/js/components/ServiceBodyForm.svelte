@@ -1,7 +1,7 @@
 <script lang="ts">
   import { validator } from '@felte/validator-yup';
   import { createForm } from 'felte';
-  import { Button, Helper, Input, Label, Select, Textarea } from 'flowbite-svelte';
+  import { Button, Helper, Input, Label, MultiSelect, Select, Textarea } from 'flowbite-svelte';
   import { createEventDispatcher } from 'svelte';
   import * as yup from 'yup';
 
@@ -40,6 +40,7 @@
     { value: SB_TYPE_WORLD, name: 'World Service Conference' }
   ];
   let savedServiceBody: ServiceBody;
+  let assignedUserIdsSelected: number[] = [];
 
   const { form, errors, setInitialValues, reset } = createForm({
     initialValues: {
@@ -116,7 +117,7 @@
           .string()
           .transform((v) => v.trim())
           .max(255),
-        description: yup.string().transform((v) => v.trim()),
+        description: yup.string(),
         assignedUserIds: yup.array().of(yup.number().transform((v) => parseInt(v)))
       }),
       castValues: true
@@ -180,6 +181,18 @@
           {$errors.parentId}
         {/if}
       </Helper>
+    </div>
+    <div class="md:col-span-2">
+      <div class={$authenticatedUser?.type !== 'admin' ? 'hidden' : ''}>
+        <Label for="type" class="mb-2">{$translations.meetingListEditorsTitle}</Label>
+        <!--        TODO: User selection, observers?-->
+        <MultiSelect id="assignedUserIds" items={serviceBodyTypeItems} bind:value={assignedUserIdsSelected} />
+        <Helper class="mt-2" color="red">
+          {#if $errors.assignedUserIds}
+            {$errors.assignedUserIds}
+          {/if}
+        </Helper>
+      </div>
     </div>
     <div class="md:col-span-2">
       <Label for="name" class="mb-2">{$translations.nameTitle}</Label>

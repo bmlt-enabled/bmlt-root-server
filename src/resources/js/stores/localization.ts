@@ -52,7 +52,8 @@ const strings = new LocalizedStrings({
     parentIdTitle: 'Service Body Parent',
     helplineTitle: 'Helpline',
     worldIdTitle: 'World Committee Code',
-    primaryAdminTitle: 'Primary Admin'
+    primaryAdminTitle: 'Primary Admin',
+    meetingListEditorsTitle: 'Meeting List Editors'
   },
   de: {
     adminTitle: 'Administrator',
