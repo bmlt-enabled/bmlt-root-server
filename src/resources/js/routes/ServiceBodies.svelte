@@ -6,34 +6,19 @@
   import ServiceBodyForm from '../components/ServiceBodyForm.svelte';
 
   import { authenticatedUser } from '../stores/apiCredentials';
-  import { spinner } from '../stores/spinner';
   import { translations } from '../stores/localization';
-  import RootServerApi from '../lib/RootServerApi';
-  // svelte-hack' -- import hacked to get onMount to work correctly for unit tests
-  import { onMount } from 'svelte/internal';
+  import { serviceBodiesData, isLoaded } from '../stores/serviceBodies';
+  import { get } from 'svelte/store';
   import type { ServiceBody } from 'bmlt-root-server-client';
   import ServiceBodyDeleteModal from '../components/ServiceBodyDeleteModal.svelte';
 
-  let isLoaded = false;
-  let serviceBodies: ServiceBody[] = [];
+  let serviceBodies: ServiceBody[];
   let filteredServiceBodies: ServiceBody[] = [];
   let showModal = false;
   let showDeleteModal = false;
   let searchTerm = '';
   let selectedServiceBody: ServiceBody | null;
   let deleteServiceBody: ServiceBody;
-
-  async function getServiceBodies(): Promise<void> {
-    try {
-      spinner.show();
-      serviceBodies = await RootServerApi.getServiceBodies();
-      isLoaded = true;
-    } catch (error: any) {
-      await RootServerApi.handleErrors(error);
-    } finally {
-      spinner.hide();
-    }
-  }
 
   function handleAdd() {
     selectedServiceBody = null;
@@ -55,17 +40,20 @@
 
   function onSaved(event: CustomEvent<{ serviceBody: ServiceBody }>) {
     const serviceBody = event.detail.serviceBody;
-    const i = serviceBodies.findIndex((u) => u.id === serviceBody.id);
+    const i = get(serviceBodiesData).findIndex((u) => u.id === serviceBody.id);
     if (i === -1) {
-      serviceBodies = [...serviceBodies, serviceBody];
+      serviceBodiesData.update((bodies) => [...bodies, serviceBody]);
     } else {
-      serviceBodies[i] = serviceBody;
+      serviceBodiesData.update((bodies) => {
+        bodies[i] = serviceBody;
+        return bodies;
+      });
     }
     closeModal();
   }
 
   function onDeleted(event: CustomEvent<{ serviceBodyId: number }>) {
-    serviceBodies = serviceBodies.filter((u) => u.id !== event.detail.serviceBodyId);
+    serviceBodiesData.update((bodies) => bodies.filter((u) => u.id !== event.detail.serviceBodyId));
     showDeleteModal = false;
   }
 
@@ -77,11 +65,10 @@
     showModal = false;
   }
 
-  onMount(getServiceBodies);
-
   $: {
-    filteredServiceBodies = serviceBodies.sort((u1, u2) => u1.name.localeCompare(u2.name)).filter((u) => u.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
+    filteredServiceBodies = $serviceBodiesData.sort((u1, u2) => u1.name.localeCompare(u2.name)).filter((u) => u.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
   }
+  $: serviceBodies = $serviceBodiesData;
 </script>
 
 <Nav />
@@ -89,7 +76,7 @@
 <div class="mx-auto max-w-3xl p-2">
   <h2 class="mb-4 text-center text-xl font-semibold dark:text-white">{$translations.serviceBodiesTitle}</h2>
   {#if isLoaded}
-    {#if serviceBodies.length > 1}
+    {#if $serviceBodiesData.length > 0}
       <TableSearch placeholder={$translations.searchByName} hoverable={true} bind:inputValue={searchTerm}>
         <TableHead>
           <TableHeadCell colspan={$authenticatedUser?.type === 'admin' ? '2' : '1'}>

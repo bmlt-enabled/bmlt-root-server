@@ -6,34 +6,19 @@
   import UserDeleteModal from '../components/UserDeleteModal.svelte';
 
   import { authenticatedUser } from '../stores/apiCredentials';
-  import { spinner } from '../stores/spinner';
   import { translations } from '../stores/localization';
-  import RootServerApi from '../lib/RootServerApi';
-  // svelte-hack' -- import hacked to get onMount to work correctly for unit tests
-  import { onMount } from 'svelte/internal';
+  import { usersData, isLoaded } from '../stores/users';
+  import { get } from 'svelte/store';
   import type { User } from 'bmlt-root-server-client';
   import UserForm from '../components/UserForm.svelte';
 
-  let isLoaded = false;
-  let users: User[] = [];
+  let users: User[];
   let filteredUsers: User[] = [];
   let showModal = false;
   let showDeleteModal = false;
   let searchTerm = '';
   let selectedUser: User | null;
   let deleteUser: User;
-
-  async function getUsers(): Promise<void> {
-    try {
-      spinner.show();
-      users = await RootServerApi.getUsers();
-      isLoaded = true;
-    } catch (error: any) {
-      await RootServerApi.handleErrors(error);
-    } finally {
-      spinner.hide();
-    }
-  }
 
   function handleAdd() {
     selectedUser = null;
@@ -53,17 +38,20 @@
 
   function onSaved(event: CustomEvent<{ user: User }>) {
     const user = event.detail.user;
-    const i = users.findIndex((u) => u.id === user.id);
+    const i = get(usersData).findIndex((u) => u.id === user.id);
     if (i === -1) {
-      users = [...users, user];
+      usersData.update((users) => [...users, user]);
     } else {
-      users[i] = user;
+      usersData.update((users) => {
+        users[i] = user;
+        return users;
+      });
     }
     closeModal();
   }
 
   function onDeleted(event: CustomEvent<{ userId: number }>) {
-    users = users.filter((u) => u.id !== event.detail.userId);
+    usersData.update((users) => users.filter((u) => u.id !== event.detail.userId));
     showDeleteModal = false;
   }
 
@@ -75,14 +63,13 @@
     showModal = false;
   }
 
-  onMount(getUsers);
-
   $: {
-    filteredUsers = users
+    filteredUsers = $usersData
       .sort((u1, u2) => u1.displayName.localeCompare(u2.displayName))
       .filter((u) => u.id !== $authenticatedUser?.id)
       .filter((u) => u.displayName.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
   }
+  $: users = $usersData;
 </script>
 
 <Nav />
@@ -90,7 +77,7 @@
 <div class="mx-auto max-w-3xl p-2">
   <h2 class="mb-4 text-center text-xl font-semibold dark:text-white">{$translations.usersTitle}</h2>
   {#if isLoaded}
-    {#if users.length > 1}
+    {#if $usersData.length > 1}
       <TableSearch placeholder={$translations.searchByName} hoverable={true} bind:inputValue={searchTerm}>
         <TableHead>
           <TableHeadCell colspan={$authenticatedUser?.type === 'admin' ? '2' : '1'}>

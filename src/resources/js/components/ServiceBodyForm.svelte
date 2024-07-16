@@ -10,6 +10,7 @@
   import type { ServiceBody } from 'bmlt-root-server-client';
   import { translations } from '../stores/localization';
   import { authenticatedUser } from '../stores/apiCredentials';
+  import { usersData } from '../stores/users';
 
   export let selectedServiceBody: ServiceBody | null;
   export let serviceBodies: ServiceBody[];
@@ -19,6 +20,11 @@
     .filter((u) => selectedServiceBody?.id !== u.id)
     .map((u) => ({ value: u.id.toString(), name: u.name }))
     .sort((a, b) => a.name.localeCompare(b.name));
+  const userEditorItems = $usersData
+    .filter((u) => selectedServiceBody?.id !== u.id)
+    .map((u) => ({ value: u.id.toString(), name: u.displayName }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+
   const SB_TYPE_GROUP = 'GR';
   const SB_TYPE_COOP = 'CO';
   const SB_TYPE_GSU = 'GS';
@@ -154,7 +160,7 @@
     <div class={$authenticatedUser?.type !== 'admin' ? 'hidden' : ''}>
       <Label for="type" class="mb-2">{$translations.primaryAdminTitle}</Label>
       <!--        TODO: This should be list of users if server admin or just text with user name prob if not-->
-      <Select id="type" items={serviceBodyTypeItems} name="adminUserId" disabled={$authenticatedUser?.type !== 'admin'} />
+      <Select id="type" items={userEditorItems} name="adminUserId" disabled={$authenticatedUser?.type !== 'admin'} />
       <Helper class="mt-2" color="red">
         {#if $errors.adminUserId}
           {$errors.adminUserId}
@@ -183,16 +189,14 @@
       </Helper>
     </div>
     <div class="md:col-span-2">
-      <div class={$authenticatedUser?.type !== 'admin' ? 'hidden' : ''}>
-        <Label for="type" class="mb-2">{$translations.meetingListEditorsTitle}</Label>
-        <!--        TODO: User selection, observers?-->
-        <MultiSelect id="assignedUserIds" items={serviceBodyTypeItems} bind:value={assignedUserIdsSelected} />
-        <Helper class="mt-2" color="red">
-          {#if $errors.assignedUserIds}
-            {$errors.assignedUserIds}
-          {/if}
-        </Helper>
-      </div>
+      <Label for="type" class="mb-2">{$translations.meetingListEditorsTitle}</Label>
+      <!--        TODO: User selection, observers?-->
+      <MultiSelect id="assignedUserIds" items={userEditorItems} bind:value={assignedUserIdsSelected} />
+      <Helper class="mt-2" color="red">
+        {#if $errors.assignedUserIds}
+          {$errors.assignedUserIds}
+        {/if}
+      </Helper>
     </div>
     <div class="md:col-span-2">
       <Label for="name" class="mb-2">{$translations.nameTitle}</Label>
