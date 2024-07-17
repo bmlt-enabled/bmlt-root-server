@@ -259,7 +259,7 @@
         {#if selectedServiceBody}
           {$translations.applyChangesTitle}
         {:else}
-          {$translations.addUser}
+          {$translations.addServiceBody}
         {/if}
       </Button>
     </div>

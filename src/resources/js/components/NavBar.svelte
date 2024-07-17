@@ -24,8 +24,8 @@
   <NavUl>
     <NavLi href="#/">{$translations.homeTitle}</NavLi>
     <NavLi href="#/meetings">{$translations.meetingsTitle}</NavLi>
-    <!--      // TODO: this currently hides nav item but user can still access route-->
-    <!--      although it will say no users. Seems like we could update route guard to account for this-->
+    <!--  // TODO:  this currently hides nav item but user can still access route-->
+    <!--  // TODO:  although it will say no users. Seems like we could update route guard to account for this -->
     <!--    {#if $usersData.length > 1 || $authenticatedUser?.type === 'admin'}-->
     <!--      <NavLi href="#/users">{$translations.usersTitle}</NavLi>-->
     <!--    {/if}-->
