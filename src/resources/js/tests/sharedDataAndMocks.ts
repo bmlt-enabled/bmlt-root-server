@@ -14,16 +14,19 @@ Server Administrator is a server admin and the next 6 are service body admins.  
 is an observer.  Small Region Deactivated is a deactivated user.
 */
 
-import { replace } from 'svelte-spa-router';
+import { get } from 'svelte/store';
 import { render, screen } from '@testing-library/svelte';
+import { replace } from 'svelte-spa-router';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
-import App from '../App.svelte';
+
 import { ResponseError } from 'bmlt-root-server-client';
 import type { Token, User } from 'bmlt-root-server-client';
+
 import ApiClientWrapper from '../lib/RootServerApi';
+import { apiCredentials, authenticatedUser } from '../stores/apiCredentials';
+import App from '../App.svelte';
 import runtime from '../../../node_modules/bmlt-root-server-client/dist/runtime';
-import { apiCredentials } from '../stores/apiCredentials';
 
 const mockServerAdmin: User = {
   description: 'Main Server Administrator',
@@ -136,27 +139,17 @@ function findPassword(name: string): string {
   throw new Error('internal testing error - could not find password for given username');
 }
 
-// mocked access token
-let mockSavedAccessToken: Token | null;
-
-// define a mock authToken that expires 1 hour from now
-function generateMockToken(u: User): Token {
+// define a mock authToken that expires 24 hours from now
+// to trigger a call to authRefresh, set the token to expire in 1 hour instead
+function generateMockAuthToken(userId: number): Token {
   // the token uses PHP's time rather than Javascript's time, so seconds from the epoch instead of milliseconds
   const now: number = Math.round(new Date().valueOf() / 1000);
   return {
     accessToken: 'mysteryString42',
-    expiresAt: now + 60 * 60,
+    expiresAt: now + 60 * 60 * 24,
     tokenType: 'bearer',
-    userId: u.id
+    userId: userId
   };
-}
-
-function mockGetToken(): Token | null {
-  return mockSavedAccessToken;
-}
-
-function mockSetToken(token: Token | null): void {
-  mockSavedAccessToken = token;
 }
 
 async function mockGetUser(params: { userId: number }): Promise<User> {
@@ -170,9 +163,10 @@ async function mockGetUser(params: { userId: number }): Promise<User> {
 // The value of initOverrides is not used in the mock, so tell the linter it's ok.
 // eslint-disable-next-line
 async function mockGetUsers(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<User[]> {
-  if (!mockSavedAccessToken) {
+  const userId = get(authenticatedUser)?.id;
+  if (!userId) {
     throw new Error('internal error -- trying to get users when no simulated user is logged in');
-  } else if (mockSavedAccessToken.userId === mockServerAdmin.id) {
+  } else if (userId === mockServerAdmin.id) {
     return [
       mockServerAdmin,
       mockNorthernZoneAdmin,
@@ -184,29 +178,25 @@ async function mockGetUsers(initOverrides?: RequestInit | runtime.InitOverrideFu
       mockSmallRegionObserver,
       mockSmallRegionDeactivated
     ];
-  } else if (mockSavedAccessToken.userId === mockNorthernZoneAdmin.id) {
+  } else if (userId === mockNorthernZoneAdmin.id) {
     return [mockNorthernZoneAdmin, mockBigRegionAdmin, mockSmallRegionAdmin, mockSmallRegionObserver, mockSmallRegionDeactivated];
-  } else if (mockSavedAccessToken.userId === mockBigRegionAdmin.id) {
+  } else if (userId === mockBigRegionAdmin.id) {
     return [mockBigRegionAdmin, mockRiverCityAreaAdmin, mockMountainAreaAdmin, mockRuralAreaAdmin];
-  } else if (mockSavedAccessToken.userId === mockSmallRegionAdmin.id) {
+  } else if (userId === mockSmallRegionAdmin.id) {
     return [mockSmallRegionAdmin];
-  } else if (mockSavedAccessToken.userId === mockRiverCityAreaAdmin.id) {
+  } else if (userId === mockRiverCityAreaAdmin.id) {
     return [mockRiverCityAreaAdmin];
-  } else if (mockSavedAccessToken.userId === mockMountainAreaAdmin.id) {
+  } else if (userId === mockMountainAreaAdmin.id) {
     return [mockMountainAreaAdmin];
-  } else if (mockSavedAccessToken.userId === mockRuralAreaAdmin.id) {
+  } else if (userId === mockRuralAreaAdmin.id) {
     return [mockRuralAreaAdmin];
-  } else if (mockSavedAccessToken.userId === mockSmallRegionObserver.id) {
+  } else if (userId === mockSmallRegionObserver.id) {
     return [mockSmallRegionObserver];
-  } else if (mockSavedAccessToken.userId === mockSmallRegionDeactivated.id) {
+  } else if (userId === mockSmallRegionDeactivated.id) {
     return [mockSmallRegionDeactivated];
   } else {
     throw new Error('internal error -- user ID not found in mockGetUsers');
   }
-}
-
-function mockIsLoggedIn(): boolean {
-  return Boolean(mockSavedAccessToken);
 }
 
 function makeResponse(msg: string, status: number): Response {
@@ -229,32 +219,39 @@ async function mockAuthToken(authTokenRequest: { tokenCredentials: { username: s
       if (allUsersAndPasswords[i].user.type === 'deactivated') {
         throw new ResponseError(makeResponse('User is deactivated.', 403), 'Response returned an error code');
       } else {
-        return generateMockToken(allUsersAndPasswords[i].user);
+        return generateMockAuthToken(allUsersAndPasswords[i].user.id);
       }
     }
   }
   throw new ResponseError(makeResponse('The provided credentials are incorrect.', 401), 'Response returned an error code');
 }
 
+async function mockAuthRefresh(): Promise<Token> {
+  const userId = get(authenticatedUser)?.id;
+  if (userId) {
+    return generateMockAuthToken(userId);
+  } else {
+    throw new Error('internal error -- authenticated user not found');
+  }
+}
+
 async function mockAuthLogout(): Promise<void> {
-  mockSavedAccessToken = null;
+  // Nothing to do here!
+  // For mocking authentication we just rely on the authenticatedUser in the ApiCredentialsStore
 }
 
 export function setupMocks() {
-  vi.spyOn(ApiClientWrapper.api, 'token', 'get').mockImplementation(mockGetToken);
-  vi.spyOn(ApiClientWrapper.api, 'token', 'set').mockImplementation(mockSetToken);
-  vi.spyOn(ApiClientWrapper.api, 'isLoggedIn', 'get').mockImplementation(mockIsLoggedIn);
   vi.spyOn(ApiClientWrapper.api, 'getUser').mockImplementation(mockGetUser);
   vi.spyOn(ApiClientWrapper.api, 'getUsers').mockImplementation(mockGetUsers);
   vi.spyOn(ApiClientWrapper.api, 'authToken').mockImplementation(mockAuthToken);
+  vi.spyOn(ApiClientWrapper.api, 'authRefresh').mockImplementation(mockAuthRefresh);
   vi.spyOn(ApiClientWrapper.api, 'authLogout').mockImplementation(mockAuthLogout);
 }
 
-export async function sharedBeforeEach() {
-  // TODO: fix this.  Hack for now -- make sure we weren't left in a logged in state
+export async function sharedAfterEach() {
+  // clean up - don't leave in a logged in state (will be a no-op if we aren't logged in at this point)
   replace('/');
   await apiCredentials.logout();
-  mockSavedAccessToken = null;
 }
 
 // utility function to log in as a specific user, and open the provided tab

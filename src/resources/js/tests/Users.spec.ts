@@ -1,11 +1,11 @@
-import { screen } from '@testing-library/svelte';
-// TODO: temporarily not used
-// import userEvent from '@testing-library/user-event';
-import '@testing-library/jest-dom';
-import type { User, UserCreate, UserUpdate } from 'bmlt-root-server-client';
 import { beforeAll, beforeEach, describe, test, vi } from 'vitest';
+import { screen } from '@testing-library/svelte';
+import '@testing-library/jest-dom';
+
+import type { User, UserCreate, UserUpdate } from 'bmlt-root-server-client';
+
 import ApiClientWrapper from '../lib/RootServerApi';
-import { loginAndOpenTab, setupMocks, sharedBeforeEach } from './sharedDataAndMocks';
+import { loginAndOpenTab, setupMocks, sharedAfterEach } from './sharedDataAndMocks';
 
 // in addition to the shared mocks, here we also mock createUser, updateUser, and deleteUser (which are only used by this tab)
 
@@ -41,14 +41,15 @@ beforeAll(async () => {
   vi.spyOn(ApiClientWrapper.api, 'createUser').mockImplementation(mockCreateUser);
   vi.spyOn(ApiClientWrapper.api, 'updateUser').mockImplementation(mockUpdateUser);
   vi.spyOn(ApiClientWrapper.api, 'deleteUser').mockImplementation(mockDeleteUser);
-  // TODO: not needed???
-  // vi.spyOn(window, 'confirm').mockReturnValue(true);
 });
 
 beforeEach(async () => {
-  await sharedBeforeEach();
   mockSavedUserCreate = null;
   mockSavedUserUpdate = null;
+});
+
+afterEach(async () => {
+  await sharedAfterEach();
 });
 
 describe('check content in User tab when logged in as various users', () => {

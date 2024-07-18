@@ -1,16 +1,17 @@
+import { beforeAll, describe, expect, test } from 'vitest';
 import { render, screen } from '@testing-library/svelte';
-import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
-import { beforeAll, beforeEach, describe, expect, test } from 'vitest';
+import userEvent from '@testing-library/user-event';
+
 import App from '../App.svelte';
-import { setupMocks, sharedBeforeEach } from './sharedDataAndMocks';
+import { setupMocks, sharedAfterEach } from './sharedDataAndMocks';
 
 beforeAll(async () => {
   setupMocks();
 });
 
-beforeEach(async () => {
-  sharedBeforeEach();
+afterEach(async () => {
+  await sharedAfterEach();
 });
 
 describe('login page tests', () => {
