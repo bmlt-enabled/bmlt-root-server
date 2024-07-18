@@ -4,22 +4,14 @@
   import * as XLSX from 'xlsx';
   import { translations } from '../stores/localization';
 
-  translations.setLanguage('en');
-  let data = Object.entries($translations).filter(([, value]) => typeof value === 'string');
-
+  let data = translations.getTranslationsForLanguage('en');
   let downloadUrl: string = exportCSV(data);
 
-  function processExportData(data: any[]): any[] {
-    return data.map((row) =>
-      Object.keys(row).reduce((acc, key) => {
-        acc[key] = row[key];
-        return acc;
-      }, {} as any)
-    );
-  }
-
-  function exportCSV(data: any[]): string {
-    const processedData = processExportData(data);
+  function exportCSV(data: Record<string, string>): string {
+    const processedData = Object.entries(data).map(([key, value]) => ({
+      Key: key,
+      Value: value
+    }));
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.json_to_sheet(processedData);
     XLSX.utils.book_append_sheet(wb, ws, 'Data');
