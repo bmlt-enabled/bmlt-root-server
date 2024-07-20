@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Button, Checkbox, P } from 'flowbite-svelte';
+  import { Button, Checkbox, Helper, P } from 'flowbite-svelte';
   import { createForm } from 'felte';
   import { createEventDispatcher } from 'svelte';
   import { validator } from '@felte/validator-yup';
@@ -12,6 +12,7 @@
 
   export let deleteUser: User;
   let confirmed = false;
+  let errorMessage: string | undefined;
 
   const dispatch = createEventDispatcher<{ deleted: { userId: number } }>();
 
@@ -22,8 +23,12 @@
       await RootServerApi.deleteUser(deleteUser.id);
     },
     onError: async (error) => {
-      console.log(error);
-      await RootServerApi.handleErrors(error as Error);
+      await RootServerApi.handleErrors(error as Error, {
+        handleConflictError: () => {
+          confirmed = false;
+          errorMessage = $translations.userDeleteConflictError;
+        }
+      });
       spinner.hide();
     },
     onSuccess: () => {
@@ -44,6 +49,11 @@
     <P class="mb-5">{deleteUser.displayName}</P>
     <div class="mb-5">
       <Checkbox bind:checked={confirmed} class="justify-center" name="confirmed">{$translations.confirmYesImSure}</Checkbox>
+      <Helper align="center" class="mt-4" color="red">
+        {#if errorMessage}
+          {errorMessage}
+        {/if}
+      </Helper>
     </div>
     <div class="mb-5">
       <Button type="submit" class="w-full" disabled={!confirmed ? true : null}>{$translations.delete}</Button>

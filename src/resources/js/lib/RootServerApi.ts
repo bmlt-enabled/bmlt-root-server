@@ -4,6 +4,7 @@ import {
   RootServerApi,
   type AuthenticationError,
   type AuthorizationError,
+  type ConflictError,
   type Format,
   type FormatCreate,
   type FormatPartialUpdate,
@@ -71,6 +72,7 @@ class ApiClient extends RootServerApi {
 type AuthenticationErrorHandler = (error: AuthenticationError) => void;
 type AuthorizationErrorHandler = (error: AuthorizationError) => void;
 type NotFoundErrorHandler = (error: NotFoundError) => void;
+type ConflictErrorHandler = (error: ConflictError) => void;
 type ValidationErrorHandler = (error: ValidationError) => void;
 type ServerErrorHandler = (error: ResponseError) => void;
 type NetworkErrorHandler = () => void;
@@ -79,6 +81,7 @@ type ErrorHandlers = {
   handleAuthenticationError?: AuthenticationErrorHandler;
   handleAuthorizationError?: AuthorizationErrorHandler;
   handleNotFoundError?: NotFoundErrorHandler;
+  handleConflictError?: ConflictErrorHandler;
   handleValidationError?: ValidationErrorHandler;
   handleServerError?: ServerErrorHandler;
   handleNetworkError?: NetworkErrorHandler;
@@ -92,6 +95,7 @@ class ApiClientWrapper {
   private defaultAuthenticationErrorHandler: AuthenticationErrorHandler | null = null;
   private defaultAuthorizationErrorHandler: AuthorizationErrorHandler | null = null;
   private defaultNotFoundErrorHandler: NotFoundErrorHandler | null = null;
+  private defaultConflictErrorHandler: ConflictErrorHandler | null = null;
   private defaultValidationErrorHandler: ValidationErrorHandler | null = null;
   private defaultServerErrorHandler: ServerErrorHandler | null = null;
   private defaultNetworkErrorHandler: NetworkErrorHandler | null = null;
@@ -268,6 +272,7 @@ class ApiClientWrapper {
     const handleAuthenticationError = overrideErrorHandlers?.handleAuthenticationError ?? this.defaultAuthenticationErrorHandler;
     const handleAuthorizationError = overrideErrorHandlers?.handleAuthorizationError ?? this.defaultAuthorizationErrorHandler;
     const handleNotFoundError = overrideErrorHandlers?.handleNotFoundError ?? this.defaultNotFoundErrorHandler;
+    const handleConflictError = overrideErrorHandlers?.handleConflictError ?? this.defaultConflictErrorHandler;
     const handleValidationError = overrideErrorHandlers?.handleValidationError ?? this.defaultValidationErrorHandler;
     const handleNetworkError = overrideErrorHandlers?.handleNetworkError ?? this.defaultNetworkErrorHandler;
     const handleServerError = overrideErrorHandlers?.handleServerError ?? this.defaultServerErrorHandler;
@@ -302,6 +307,10 @@ class ApiClientWrapper {
 
     if (handleNotFoundError && responseError.response.status === 404) {
       return handleNotFoundError(body as NotFoundError);
+    }
+
+    if (handleConflictError && responseError.response.status === 409) {
+      return handleConflictError(body as ConflictError);
     }
 
     if (handleValidationError && responseError.response.status === 422) {
