@@ -74,4 +74,9 @@ class User extends Model implements AuthenticatableContract
     {
         return $this->hasMany(self::class, 'owner_id_bigint');
     }
+
+    public function serviceBodies()
+    {
+        return $this->hasMany(ServiceBody::class, 'principal_user_bigint');
+    }
 }

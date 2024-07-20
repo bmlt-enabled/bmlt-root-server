@@ -220,6 +220,21 @@ class ServiceBodyRepository implements ServiceBodyRepositoryInterface
         return $ret;
     }
 
+    public function removeUser(int $userId)
+    {
+        $serviceBodyIds = $this->getAssignedServiceBodyIds($userId)->toArray();
+        foreach ($this->search($serviceBodyIds) as $serviceBody) {
+            $editorIds = empty($serviceBody->editors_string) ? [] : array_map(fn ($v) => intval($v), explode(',', $serviceBody->editors_string));
+            $values = [
+                'editors_string' => collect($editorIds)
+                    ->filter(fn ($v) => $v != $userId)
+                    ->map(fn ($v) => strval($v))
+                    ->join(',')
+            ];
+            $this->update($serviceBody->id_bigint, $values);
+        }
+    }
+
     public function import(int $rootServerId, Collection $externalObjects): void
     {
         $rootServer = RootServer::query()->where('id', $rootServerId)->firstOrFail();

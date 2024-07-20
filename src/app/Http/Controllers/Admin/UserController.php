@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Resources\Admin\UserResource;
+use App\Http\Responses\JsonResponse;
 use App\Interfaces\UserRepositoryInterface;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -117,6 +118,11 @@ class UserController extends ResourceController
 
     public function destroy(User $user)
     {
+        if ($user->serviceBodies()->exists()) {
+            return new JsonResponse([
+                'message' => 'You cannot delete a user while service bodies are assigned to it.'
+            ], 409);
+        }
         $this->userRepository->delete($user->id_bigint);
         return response()->noContent();
     }

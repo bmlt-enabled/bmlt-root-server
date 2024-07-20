@@ -163,8 +163,8 @@ class UserController extends Controller
      *     @OA\Response(response=404, description="Returns when no user exists.",
      *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
      *     ),
-     *     @OA\Response(response=422, description="Validation error.",
-     *         @OA\JsonContent(ref="#/components/schemas/ValidationError")
+     *     @OA\Response(response=409, description="Returns when user is still referenced by service bodies.",
+     *         @OA\JsonContent(ref="#/components/schemas/ConflictError")
      *     ),
      * )
      */

@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Interfaces\ServiceBodyRepositoryInterface;
 use App\Interfaces\UserRepositoryInterface;
 use App\Models\Change;
 use App\Models\User;
@@ -11,6 +12,13 @@ use Illuminate\Support\Facades\Hash;
 
 class UserRepository implements UserRepositoryInterface
 {
+    private ServiceBodyRepositoryInterface $serviceBodyRepository;
+
+    public function __construct(ServiceBodyRepositoryInterface $serviceBodyRepository)
+    {
+        $this->serviceBodyRepository = $serviceBodyRepository;
+    }
+
     public function getById(int $id)
     {
         return User::query()->where('id_bigint', $id)->first();
@@ -68,6 +76,12 @@ class UserRepository implements UserRepositoryInterface
         return DB::transaction(function () use ($id) {
             $user = User::find($id);
             if (!is_null($user)) {
+                // We have to explicitly remove the user from the service body because of the way editors
+                // are stored. Unfortunately, they are stored as a comma delimited list of strings, making
+                // it impossible to create a foreign key. Once the legacy code is deleted and we are able
+                // to make schema changes, we'll fix this so that deletes cascade via a foreign key, making
+                // this call to ->removeUser unnecessary.
+                $this->serviceBodyRepository->removeUser($id);
                 $user->children()->update(['owner_id_bigint' => -1]);
                 $user->delete();
                 $this->saveChange($user, null);
