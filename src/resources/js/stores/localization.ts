@@ -41,7 +41,8 @@ const strings = new LocalizedStrings({
     homeTitle: 'Home',
     confirmDeleteUser: 'Are you sure you want to delete this user?',
     confirmYesImSure: "Yes, I'm sure.",
-    userIsDeactivated: 'User is deactivated.'
+    userIsDeactivated: 'User is deactivated.',
+    userDeleteConflictError: 'Error: User is assigned to service bodies.'
   },
   de: {
     adminTitle: 'Administrator',
