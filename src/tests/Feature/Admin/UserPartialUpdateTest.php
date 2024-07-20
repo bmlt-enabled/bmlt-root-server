@@ -16,63 +16,73 @@ class UserPartialUpdateTest extends TestCase
         $user1 = $this->createAdminUser();
         $token = $user1->createToken('test')->plainTextToken;
         $user2 = $this->createServiceBodyAdminUser();
+        $user3 = $this->createServiceBodyObserverUser();
 
         $data = ['username' => 'new username'];
         $this->withHeader('Authorization', "Bearer $token")
-            ->patch("/api/v1/users/$user2->id_bigint", $data)
+            ->patch("/api/v1/users/$user3->id_bigint", $data)
             ->assertStatus(204);
-        $user2->refresh();
-        $this->assertEquals($data['username'], $user2->login_string);
+        $user3->refresh();
+        $this->assertEquals($data['username'], $user3->login_string);
 
         $data = ['password' => 'this is a valid password'];
         $this->withHeader('Authorization', "Bearer $token")
-            ->patch("/api/v1/users/$user2->id_bigint", $data)
+            ->patch("/api/v1/users/$user3->id_bigint", $data)
             ->assertStatus(204);
-        $oldPasswordHash = $user2->password_string;
-        $user2->refresh();
-        $this->assertNotEquals($oldPasswordHash, $user2->password_string);
+        $oldPasswordHash = $user3->password_string;
+        $user3->refresh();
+        $this->assertNotEquals($oldPasswordHash, $user3->password_string);
 
         $data = ['type' => User::USER_TYPE_ADMIN];
         $this->withHeader('Authorization', "Bearer $token")
-            ->patch("/api/v1/users/$user2->id_bigint", $data)
+            ->patch("/api/v1/users/$user3->id_bigint", $data)
             ->assertStatus(204);
-        $user2->refresh();
-        $this->assertEquals(User::USER_TYPE_TO_USER_LEVEL_MAP[$data['type']], $user2->user_level_tinyint);
+        $user3->refresh();
+        $this->assertEquals(User::USER_TYPE_TO_USER_LEVEL_MAP[$data['type']], $user3->user_level_tinyint);
 
         $data = ['displayName' => 'pretty name'];
         $this->withHeader('Authorization', "Bearer $token")
-            ->patch("/api/v1/users/$user2->id_bigint", $data)
+            ->patch("/api/v1/users/$user3->id_bigint", $data)
             ->assertStatus(204);
-        $user2->refresh();
-        $this->assertEquals($data['displayName'], $user2->name_string);
+        $user3->refresh();
+        $this->assertEquals($data['displayName'], $user3->name_string);
 
         $data = ['description' => 'pretty new description'];
         $this->withHeader('Authorization', "Bearer $token")
-            ->patch("/api/v1/users/$user2->id_bigint", $data)
+            ->patch("/api/v1/users/$user3->id_bigint", $data)
             ->assertStatus(204);
-        $user2->refresh();
-        $this->assertEquals($data['description'], $user2->description_string);
+        $user3->refresh();
+        $this->assertEquals($data['description'], $user3->description_string);
 
         $data = ['email' => 'new@email.com'];
         $this->withHeader('Authorization', "Bearer $token")
-            ->patch("/api/v1/users/$user2->id_bigint", $data)
+            ->patch("/api/v1/users/$user3->id_bigint", $data)
             ->assertStatus(204);
-        $user2->refresh();
-        $this->assertEquals($data['email'], $user2->email_address_string);
+        $user3->refresh();
+        $this->assertEquals($data['email'], $user3->email_address_string);
 
+        // ownerId to server admin
         $data = ['ownerId' => $user1->id_bigint];
         $this->withHeader('Authorization', "Bearer $token")
-            ->patch("/api/v1/users/$user2->id_bigint", $data)
+            ->patch("/api/v1/users/$user3->id_bigint", $data)
             ->assertStatus(204);
-        $user2->refresh();
-        $this->assertEquals($data['ownerId'], $user2->owner_id_bigint);
+        $user3->refresh();
+        $this->assertEquals(-1, $user3->owner_id_bigint);
+
+        // ownerId to service body admin
+        $data = ['ownerId' => $user2->id_bigint];
+        $this->withHeader('Authorization', "Bearer $token")
+            ->patch("/api/v1/users/$user3->id_bigint", $data)
+            ->assertStatus(204);
+        $user3->refresh();
+        $this->assertEquals($data['ownerId'], $user3->owner_id_bigint);
 
         $data = ['ownerId' => null];
         $this->withHeader('Authorization', "Bearer $token")
-            ->patch("/api/v1/users/$user2->id_bigint", $data)
+            ->patch("/api/v1/users/$user3->id_bigint", $data)
             ->assertStatus(204);
-        $user2->refresh();
-        $this->assertEquals(-1, $user2->owner_id_bigint);
+        $user3->refresh();
+        $this->assertEquals(-1, $user3->owner_id_bigint);
     }
 
     public function testPartialUpdateUserAsServiceBodyAdmin()

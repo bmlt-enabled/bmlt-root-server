@@ -46,8 +46,9 @@ class UserChangeTest extends TestCase
 
     public function testChangedUserChange()
     {
-        $user = $this->createAdminUser();
-        $token = $user->createToken('test')->plainTextToken;
+        $admin = $this->createAdminUser();
+        $token = $admin->createToken('test')->plainTextToken;
+        $user = $this->createServiceBodyAdminUser();
         $data = [
             'username' => 'test',
             'password' => 'this is a valid password',
@@ -64,7 +65,7 @@ class UserChangeTest extends TestCase
             ->assertStatus(204);
 
         $change = Change::query()->first();
-        $this->assertEquals($user->id_bigint, $change->user_id_bigint);
+        $this->assertEquals($admin->id_bigint, $change->user_id_bigint);
         $this->assertEquals($user->id_bigint, $change->service_body_id_bigint);
         $this->assertEquals(App::currentLocale(), $change->lang_enum);
         $this->assertEquals('c_comdef_user', $change->object_class_string);

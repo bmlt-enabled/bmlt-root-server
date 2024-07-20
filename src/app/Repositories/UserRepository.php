@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\Hash;
 
 class UserRepository implements UserRepositoryInterface
 {
+    public function getById(int $id)
+    {
+        return User::query()->where('id_bigint', $id)->first();
+    }
+
     public function getByUsername(string $username)
     {
         return User::query()->where('login_string', $username)->first();
