@@ -22,5 +22,6 @@ interface ServiceBodyRepositoryInterface
     public function getAdminServiceBodyIds(int $userId): Collection;
     public function getChildren(array $parents): array;
     public function getParents(array $children): array;
+    public function removeUser(int $userId);
     public function import(int $rootServerId, Collection $externalObjects): void;
 }

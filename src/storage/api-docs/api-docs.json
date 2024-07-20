@@ -1859,12 +1859,12 @@
                             }
                         }
                     },
-                    "422": {
-                        "description": "Validation error.",
+                    "409": {
+                        "description": "Returns when user is still referenced by service bodies.",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ValidationError"
+                                    "$ref": "#/components/schemas/ConflictError"
                                 }
                             }
                         }
