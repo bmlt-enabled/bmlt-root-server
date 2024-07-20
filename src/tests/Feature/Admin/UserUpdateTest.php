@@ -50,7 +50,8 @@ class UserUpdateTest extends TestCase
         $this->assertEquals($data['displayName'], $user2->name_string);
         $this->assertEquals($data['description'], $user2->description_string);
         $this->assertEquals($data['email'], $user2->email_address_string);
-        $this->assertEquals($data['ownerId'], $user2->owner_id_bigint);
+        // setting the user owner to an admin should always come out as -1
+        $this->assertEquals(-1, $user2->owner_id_bigint);
 
         // validate nulling out ownerId comes out as -1 in the database
         $data['ownerId'] = null;
@@ -98,6 +99,31 @@ class UserUpdateTest extends TestCase
         // assert these did not change
         $this->assertEquals($oldType, $user2->user_level_tinyint);
         $this->assertEquals($oldOwner, $user2->owner_id_bigint);
+    }
+
+    public function testUpdateUserOwnerToServiceBodyAdmin()
+    {
+        $admin = $this->createAdminUser();
+        $token = $admin->createToken('test')->plainTextToken;
+        $sbAdmin = $this->createServiceBodyAdminUser();
+        $user = $this->createServiceBodyObserverUser();
+
+        $data = [
+            'username' => 'new username',
+            'password' => 'this is a valid password',
+            'type' => User::USER_TYPE_ADMIN,
+            'displayName' => 'pretty name',
+            'description' => 'test description',
+            'email' => 'test@test.com',
+            'ownerId' => $sbAdmin->id_bigint,
+        ];
+
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/users/$user->id_bigint", $data)
+            ->assertStatus(204);
+
+        $user->refresh();
+        $this->assertEquals($sbAdmin->id_bigint, $user->owner_id_bigint);
     }
 
     public function testUpdateUserAsServiceBodyObserver()
@@ -166,7 +192,7 @@ class UserUpdateTest extends TestCase
         $this->assertEquals($data['displayName'], $user2->name_string);
         $this->assertEquals('', $user2->description_string);
         $this->assertEquals('', $user2->email_address_string);
-        $this->assertEquals($data['ownerId'], $user2->owner_id_bigint);
+        $this->assertEquals(-1, $user2->owner_id_bigint);
 
         // validate nulling out ownerId comes out as -1 in the database
         $data['ownerId'] = null;

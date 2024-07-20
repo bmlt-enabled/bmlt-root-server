@@ -57,6 +57,12 @@ class UserController extends ResourceController
             'email' => 'nullable|email',
             'ownerId' => 'nullable|present|int|exists:comdef_users,id_bigint',
         ]);
+
+        $ownerId = $validated['ownerId'];
+        if ($ownerId && $this->userRepository->getById($ownerId)?->isAdmin()) {
+            $validated['ownerId'] = -1;
+        }
+
         $user = $this->userRepository->create([
             'login_string' => $validated['username'],
             'password_string' => Hash::make($validated['password']),
@@ -117,7 +123,7 @@ class UserController extends ResourceController
 
     private function validateForUpdate(Request $request, User $user): Collection
     {
-        return collect($request->validate([
+        $validated = collect($request->validate([
             'username' => ['required', 'string', 'max:255', Rule::unique('comdef_users', 'login_string')->ignore($user->id_bigint, 'id_bigint')],
             'password' => [Password::min(12)],
             'type' => ['required', Rule::in(array_values(User::USER_LEVEL_TO_USER_TYPE_MAP))],
@@ -126,6 +132,13 @@ class UserController extends ResourceController
             'email' => 'nullable|email',
             'ownerId' => 'nullable|present|int|exists:comdef_users,id_bigint',
         ]));
+
+        $ownerId = $validated->get('ownerId');
+        if ($ownerId && $this->userRepository->getById($ownerId)?->isAdmin()) {
+            $validated->put('ownerId', -1);
+        }
+
+        return $validated;
     }
 
     private function buildValuesArrayForUpdate(Request $request, User $user, Collection $validated): array

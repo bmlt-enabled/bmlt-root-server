@@ -47,7 +47,25 @@ class UserCreateTest extends TestCase
         $this->assertEquals(-1, $user->owner_id_bigint);
     }
 
-    public function testCreateSuccessWithOwner()
+    public function testCreateSuccessWithServerAdminOwner()
+    {
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $data = $this->validPayload();
+        $data['ownerId'] = $user->id_bigint;
+
+        $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/users', $data)
+            ->assertStatus(201)
+            ->assertJsonFragment(['username' => $data['username']])
+            ->assertJsonFragment(['type' => $data['type']])
+            ->assertJsonFragment(['displayName' => $data['displayName']])
+            ->assertJsonFragment(['description' => $data['description']])
+            ->assertJsonFragment(['email' => $data['email']])
+            ->assertJsonFragment(['ownerId' => null]);
+    }
+
+    public function testCreateSuccessWithServiceBodyAdminOwner()
     {
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
