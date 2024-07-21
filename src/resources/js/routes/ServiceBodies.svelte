@@ -7,18 +7,48 @@
 
   import { authenticatedUser } from '../stores/apiCredentials';
   import { translations } from '../stores/localization';
-  import { serviceBodiesData, isLoaded } from '../stores/serviceBodies';
-  import { get } from 'svelte/store';
-  import type { ServiceBody } from 'bmlt-root-server-client';
-  import ServiceBodyDeleteModal from '../components/ServiceBodyDeleteModal.svelte';
 
-  let serviceBodies: ServiceBody[];
+  import type { ServiceBody, User } from 'bmlt-root-server-client';
+  import ServiceBodyDeleteModal from '../components/ServiceBodyDeleteModal.svelte';
+  import { spinner } from '../stores/spinner';
+  import RootServerApi from '../lib/RootServerApi';
+  // svelte-hack' -- import hacked to get onMount to work correctly for unit tests
+  import { onMount } from 'svelte/internal';
+
+  let isLoaded = false;
+  let users: User[] = [];
+  let serviceBodies: ServiceBody[] = [];
   let filteredServiceBodies: ServiceBody[] = [];
   let showModal = false;
   let showDeleteModal = false;
   let searchTerm = '';
   let selectedServiceBody: ServiceBody | null;
   let deleteServiceBody: ServiceBody;
+
+  async function getUsers(): Promise<void> {
+    try {
+      spinner.show();
+      users = await RootServerApi.getUsers();
+      users.sort((u1, u2) => u1.displayName.localeCompare(u2.displayName));
+      isLoaded = true;
+    } catch (error: any) {
+      await RootServerApi.handleErrors(error);
+    } finally {
+      spinner.hide();
+    }
+  }
+
+  async function getServiceBodies(): Promise<void> {
+    try {
+      spinner.show();
+      serviceBodies = await RootServerApi.getServiceBodies();
+      isLoaded = true;
+    } catch (error: any) {
+      await RootServerApi.handleErrors(error);
+    } finally {
+      spinner.hide();
+    }
+  }
 
   function handleAdd() {
     selectedServiceBody = null;
@@ -27,7 +57,6 @@
 
   function handleEdit(serviceBody: ServiceBody) {
     selectedServiceBody = serviceBody;
-    console.log(serviceBody);
     openModal();
   }
 
@@ -35,25 +64,21 @@
     event.stopPropagation();
     deleteServiceBody = serviceBody;
     showDeleteModal = true;
-    console.log(serviceBody);
   }
 
   function onSaved(event: CustomEvent<{ serviceBody: ServiceBody }>) {
     const serviceBody = event.detail.serviceBody;
-    const i = get(serviceBodiesData).findIndex((u) => u.id === serviceBody.id);
+    const i = serviceBodies.findIndex((s) => s.id === serviceBody.id);
     if (i === -1) {
-      serviceBodiesData.update((bodies) => [...bodies, serviceBody]);
+      serviceBodies = [...serviceBodies, serviceBody];
     } else {
-      serviceBodiesData.update((bodies) => {
-        bodies[i] = serviceBody;
-        return bodies;
-      });
+      serviceBodies[i] = serviceBody;
     }
     closeModal();
   }
 
   function onDeleted(event: CustomEvent<{ serviceBodyId: number }>) {
-    serviceBodiesData.update((bodies) => bodies.filter((u) => u.id !== event.detail.serviceBodyId));
+    serviceBodies = serviceBodies.filter((s) => s.id !== event.detail.serviceBodyId);
     showDeleteModal = false;
   }
 
@@ -65,10 +90,14 @@
     showModal = false;
   }
 
+  onMount(async () => {
+    await getUsers();
+    await getServiceBodies();
+  });
+
   $: {
-    filteredServiceBodies = $serviceBodiesData.sort((u1, u2) => u1.name.localeCompare(u2.name)).filter((u) => u.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
+    filteredServiceBodies = serviceBodies.sort((s1, s2) => s1.name.localeCompare(s2.name)).filter((s) => s.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
   }
-  $: serviceBodies = $serviceBodiesData;
 </script>
 
 <Nav />
@@ -76,7 +105,7 @@
 <div class="mx-auto max-w-3xl p-2">
   <h2 class="mb-4 text-center text-xl font-semibold dark:text-white">{$translations.serviceBodiesTitle}</h2>
   {#if isLoaded}
-    {#if $serviceBodiesData.length > 0}
+    {#if serviceBodies && serviceBodies.length > 0}
       <TableSearch placeholder={$translations.searchByName} hoverable={true} bind:inputValue={searchTerm}>
         <TableHead>
           <TableHeadCell colspan={$authenticatedUser?.type === 'admin' ? '2' : '1'}>
@@ -107,7 +136,7 @@
       </TableSearch>
     {:else if $authenticatedUser?.type === 'admin'}
       <div class="p-2">
-        <ServiceBodyForm {serviceBodies} {selectedServiceBody} on:saved={onSaved} />
+        <ServiceBodyForm {serviceBodies} {selectedServiceBody} {users} on:saved={onSaved} />
       </div>
     {:else}
       <P class="text-center">{$translations.noServiceBodiesTitle}</P>
@@ -115,5 +144,5 @@
   {/if}
 </div>
 
-<ServiceBodyModal bind:showModal {serviceBodies} {selectedServiceBody} on:saved={onSaved} on:close={closeModal} />
+<ServiceBodyModal bind:showModal {serviceBodies} {selectedServiceBody} {users} on:saved={onSaved} on:close={closeModal} />
 <ServiceBodyDeleteModal bind:showDeleteModal {deleteServiceBody} on:deleted={onDeleted} />

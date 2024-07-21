@@ -7,13 +7,13 @@
 
   import { spinner } from '../stores/spinner';
   import RootServerApi from '../lib/RootServerApi';
-  import type { ServiceBody } from 'bmlt-root-server-client';
+  import type { ServiceBody, User } from 'bmlt-root-server-client';
   import { translations } from '../stores/localization';
   import { authenticatedUser } from '../stores/apiCredentials';
-  import { usersData } from '../stores/users';
 
   export let selectedServiceBody: ServiceBody | null;
   export let serviceBodies: ServiceBody[];
+  export let users: User[];
 
   const dispatch = createEventDispatcher<{ saved: { serviceBody: ServiceBody } }>();
   const noParentItem = { value: '-1', name: $translations.serviceBodiesNoParent ?? '' };
@@ -22,7 +22,7 @@
     .map((u) => ({ value: u.id.toString(), name: u.name }))
     .sort((a, b) => a.name.localeCompare(b.name));
   parentIdItems.unshift(noParentItem);
-  const userEditorItems = $usersData.map((u) => ({ value: u.id, name: u.displayName })).sort((a, b) => a.name.localeCompare(b.name));
+  const userEditorItems = users.map((u) => ({ value: u.id, name: u.displayName })).sort((a, b) => a.name.localeCompare(b.name));
 
   const SB_TYPE_GROUP = 'GR';
   const SB_TYPE_COOP = 'CO';
