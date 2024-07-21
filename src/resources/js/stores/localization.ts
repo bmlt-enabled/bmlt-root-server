@@ -5,7 +5,7 @@ import type { Subscriber, Unsubscriber } from 'svelte/store';
 
 const strings = new LocalizedStrings({
   en: {
-    adminTitle: 'Administrator',
+    administratorTitle: 'Administrator',
     applyChangesTitle: 'Apply Changes',
     addUser: 'Add User',
     dashboardTitle: 'Dashboard',
@@ -54,7 +54,7 @@ const strings = new LocalizedStrings({
     parentIdTitle: 'Service Body Parent',
     helplineTitle: 'Helpline',
     worldIdTitle: 'World Committee Code',
-    primaryAdminTitle: 'Primary Admin',
+    adminTitle: 'Admin',
     meetingListEditorsTitle: 'Meeting List Editors'
   },
   de: {

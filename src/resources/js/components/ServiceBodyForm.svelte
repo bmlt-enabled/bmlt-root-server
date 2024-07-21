@@ -16,42 +16,34 @@
   export let users: User[];
 
   const dispatch = createEventDispatcher<{ saved: { serviceBody: ServiceBody } }>();
-  const noParentItem = { value: '-1', name: $translations.serviceBodiesNoParent ?? '' };
-  const parentIdItems = serviceBodies
-    .filter((u) => selectedServiceBody?.id !== u.id)
-    .map((u) => ({ value: u.id.toString(), name: u.name }))
-    .sort((a, b) => a.name.localeCompare(b.name));
-  parentIdItems.unshift(noParentItem);
-  const userEditorItems = users.map((u) => ({ value: u.id, name: u.displayName })).sort((a, b) => a.name.localeCompare(b.name));
-
-  const SB_TYPE_GROUP = 'GR';
-  const SB_TYPE_COOP = 'CO';
-  const SB_TYPE_GSU = 'GS';
-  const SB_TYPE_LSU = 'LS';
+  const parentIdItems = [
+    ...[{ value: '-1', name: $translations.serviceBodiesNoParent ?? '' }],
+    ...serviceBodies
+      .filter((u) => selectedServiceBody?.id !== u.id)
+      .map((u) => ({ value: u.id.toString(), name: u.name }))
+      .sort((a, b) => a.name.localeCompare(b.name))
+  ];
+  const userItems = users.map((u) => ({ value: u.id, name: u.displayName })).sort((a, b) => a.name.localeCompare(b.name));
   const SB_TYPE_AREA = 'AS';
-  const SB_TYPE_METRO = 'MA';
-  const SB_TYPE_REGION = 'RS';
-  const SB_TYPE_ZONE = 'ZF';
-  const SB_TYPE_WORLD = 'WS';
-  const serviceBodyTypeItems = [
-    { value: SB_TYPE_GROUP, name: 'Group' },
-    { value: SB_TYPE_COOP, name: 'Co-Op' },
-    { value: SB_TYPE_GSU, name: 'Group Service Unit' },
-    { value: SB_TYPE_LSU, name: 'Local Service Unit' },
+  const typeItems = [
+    { value: 'GR', name: 'Group' },
+    { value: 'CO', name: 'Co-Op' },
+    { value: 'GS', name: 'Group Service Unit' },
+    { value: 'LS', name: 'Local Service Unit' },
     { value: SB_TYPE_AREA, name: 'Area Service Committee' },
-    { value: SB_TYPE_METRO, name: 'Metro Area' },
-    { value: SB_TYPE_REGION, name: 'Regional Service Conference' },
-    { value: SB_TYPE_ZONE, name: 'Zonal Forum' },
-    { value: SB_TYPE_WORLD, name: 'World Service Conference' }
+    { value: 'MA', name: 'Metro Area' },
+    { value: 'RS', name: 'Regional Service Conference' },
+    { value: 'ZF', name: 'Zonal Forum' },
+    { value: 'WS', name: 'World Service Conference' }
   ];
   let savedServiceBody: ServiceBody;
   let assignedUserIdsSelected: number[] = [];
 
   const { form, errors, setInitialValues, reset } = createForm({
     initialValues: {
-      type: SB_TYPE_AREA,
-      parentId: $authenticatedUser?.id,
       adminUserId: -1,
+      type: SB_TYPE_AREA,
+      parentId: -1,
       email: '',
       name: '',
       url: '',
@@ -62,21 +54,22 @@
     },
     onSubmit: async (values) => {
       spinner.show();
-      if (selectedServiceBody) {
-        await RootServerApi.updateServiceBody(selectedServiceBody.id, values);
-        savedServiceBody = await RootServerApi.getServiceBody(selectedServiceBody.id);
-      } else {
-        savedServiceBody = await RootServerApi.createServiceBody(values);
-      }
+      console.log(values);
+      //   if (selectedServiceBody) {
+      //     await RootServerApi.updateServiceBody(selectedServiceBody.id, values);
+      //     savedServiceBody = await RootServerApi.getServiceBody(selectedServiceBody.id);
+      //   } else {
+      //     savedServiceBody = await RootServerApi.createServiceBody(values);
+      //   }
     },
     onError: async (error) => {
       console.log(error);
       await RootServerApi.handleErrors(error as Error, {
         handleValidationError: (error) => {
           errors.set({
+            adminUserId: (error?.errors?.adminUserId ?? []).join(' '),
             type: (error?.errors?.type ?? []).join(' '),
             parentId: (error?.errors?.parentId ?? []).join(' '),
-            adminUserId: (error?.errors?.adminUserId ?? []).join(' '),
             email: (error?.errors?.email ?? []).join(' '),
             name: (error?.errors?.name ?? []).join(' '),
             url: (error?.errors?.url ?? []).join(' '),
@@ -91,19 +84,19 @@
     },
     onSuccess: () => {
       spinner.hide();
-      dispatch('saved', { serviceBody: savedServiceBody });
+      //dispatch('saved', { serviceBody: savedServiceBody });
     },
     extend: validator({
       schema: yup.object({
-        type: yup.string().required(),
-        parentId: yup
-          .number()
-          .transform((v) => parseInt(v))
-          .required(),
         adminUserId: yup
           .number()
           .transform((v) => parseInt(v))
           .required(),
+        type: yup.string().required(),
+        parentId: yup
+          .number()
+          .nullable()
+          .transform((v) => (parseInt(v) === -1 ? null : parseInt(v))),
         email: yup.string().max(255).email(),
         name: yup
           .string()
@@ -137,10 +130,10 @@
     assignedUserIdsSelected = selectedServiceBody?.assignedUserIds ?? [];
 
     setInitialValues({
-      type: selectedServiceBody?.type ?? SB_TYPE_AREA,
-      // TODO: Handle no parent, admin userId, assignedUserIds
-      parentId: selectedServiceBody?.parentId ?? -1,
       adminUserId: selectedServiceBody?.adminUserId ?? -1,
+      type: selectedServiceBody?.type ?? SB_TYPE_AREA,
+      // TODO: Handle assignedUserIds
+      parentId: selectedServiceBody?.parentId ?? -1,
       email: selectedServiceBody?.email ?? '',
       name: selectedServiceBody?.name ?? '',
       url: selectedServiceBody?.url ?? '',
@@ -158,22 +151,19 @@
 </script>
 
 <form use:form>
-  <div class="md:col-span-2">
-    <div class={$authenticatedUser?.type !== 'admin' ? 'hidden' : ''}>
-      <Label for="type" class="mb-2">{$translations.primaryAdminTitle}</Label>
-      <!--        TODO: This should be list of users if server admin or just text with user name prob if not-->
-      <Select id="type" items={userEditorItems} name="adminUserId" disabled={$authenticatedUser?.type !== 'admin'} />
+  <div class="grid gap-4 md:grid-cols-2">
+    <div class="md:col-span-2 {$authenticatedUser?.type !== 'admin' ? 'hidden' : ''}">
+      <Label for="type" class="mb-2">{$translations.adminTitle}</Label>
+      <Select id="type" items={userItems} name="adminUserId" disabled={$authenticatedUser?.type !== 'admin'} />
       <Helper class="mt-2" color="red">
         {#if $errors.adminUserId}
           {$errors.adminUserId}
         {/if}
       </Helper>
     </div>
-  </div>
-  <div class="grid gap-4 md:grid-cols-2">
     <div class={$authenticatedUser?.type !== 'admin' ? 'hidden' : ''}>
       <Label for="type" class="mb-2">{$translations.serviceBodyTypeTitle}</Label>
-      <Select id="type" items={serviceBodyTypeItems} name="type" disabled={$authenticatedUser?.type !== 'admin'} />
+      <Select id="type" items={typeItems} name="type" disabled={$authenticatedUser?.type !== 'admin'} />
       <Helper class="mt-2" color="red">
         {#if $errors.type}
           {$errors.type}
@@ -182,7 +172,6 @@
     </div>
     <div class={$authenticatedUser?.type !== 'admin' ? 'hidden' : ''}>
       <Label for="parentId" class="mb-2">{$translations.parentIdTitle}</Label>
-      <!--            TODO: Handle No Parent, assignedUserIds-->
       <Select id="parentId" items={parentIdItems} name="parentId" disabled={$authenticatedUser?.type !== 'admin'} />
       <Helper class="mt-2" color="red">
         {#if $errors.parentId}
@@ -193,7 +182,7 @@
     <div class="md:col-span-2">
       <Label for="type" class="mb-2">{$translations.meetingListEditorsTitle}</Label>
       <!--        TODO: User selection, observers?-->
-      <MultiSelect id="assignedUserIds" items={userEditorItems} bind:value={assignedUserIdsSelected} />
+      <MultiSelect id="assignedUserIds" items={userItems} bind:value={assignedUserIdsSelected} />
       <Helper class="mt-2" color="red">
         {#if $errors.assignedUserIds}
           {$errors.assignedUserIds}
