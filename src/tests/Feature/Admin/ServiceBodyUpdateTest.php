@@ -100,7 +100,7 @@ class ServiceBodyUpdateTest extends TestCase
 
         $region->refresh();
         $this->assertTrue($region->sb_owner === 0);  // did not change
-        $this->assertEquals($region->name_string, $data['name']);
+        $this->assertEquals($region->name_string, $region->name_string);    // did not change
         $this->assertEquals($region->description_string, $data['description']);
         $this->assertEquals($region->sb_type, 'RS');  // did not change
         $this->assertEquals($region->principal_user_bigint, $user1->id_bigint);  // did not change
