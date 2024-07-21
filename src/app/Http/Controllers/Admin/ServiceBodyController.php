@@ -47,7 +47,7 @@ class ServiceBodyController extends ResourceController
         $values = [
             'sb_owner' => $validated['parentId'] ?? 0,
             'name_string' => $validated['name'],
-            'description_string' => $validated['description'],
+            'description_string' => $validated['description'] ?? '',
             'sb_type' => $validated['type'],
             'principal_user_bigint' => $validated['adminUserId'],
             'editors_string' => collect($validated['assignedUserIds'])->map(fn ($v) => strval($v))->join(','),
@@ -124,7 +124,7 @@ class ServiceBodyController extends ResourceController
         return collect($request->validate([
             'parentId' => 'nullable|present|int|exists:comdef_service_bodies,id_bigint',
             'name' => 'required|string|max:255',
-            'description' => 'required|string',
+            'description' => 'nullable|string',
             'type' => ['required', Rule::in(ServiceBody::VALID_SB_TYPES)],
             'adminUserId' => 'required|exists:comdef_users,id_bigint',
             'assignedUserIds' => 'present|array',
@@ -154,7 +154,7 @@ class ServiceBodyController extends ResourceController
                 if ($fieldName == 'name_string') {
                     return ['name_string' => $validated['name']];
                 } elseif ($fieldName == 'description_string') {
-                    return [$fieldName => $validated['description']];
+                    return [$fieldName => $validated['description'] ?? ''];
                 } elseif ($fieldName == 'editors_string') {
                     return [$fieldName => collect($validated['assignedUserIds'])->map(fn ($v) => strval($v))->join(',')];
                 } elseif ($fieldName == 'uri_string') {

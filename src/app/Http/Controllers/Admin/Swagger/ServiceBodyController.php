@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin\Swagger;
 
 /**
  * @OA\Schema(schema="ServiceBodyBase",
- *     @OA\Property(property="parentId", type="integer", example="0"),
+ *     @OA\Property(property="parentId", type="integer", nullable="true", example="0"),
  *     @OA\Property(property="name", type="string", example="string"),
  *     @OA\Property(property="description", type="string", example="string"),
  *     @OA\Property(property="type", type="string", example="string"),
@@ -12,10 +12,10 @@ namespace App\Http\Controllers\Admin\Swagger;
  *     @OA\Property(property="assignedUserIds", type="array",
  *        @OA\Items(type="integer", example="0",)
  *     ),
- *     @OA\Property(property="url", type="string", example="string"),
- *     @OA\Property(property="helpline", type="string", example="string"),
- *     @OA\Property(property="email", type="string", example="string"),
- *     @OA\Property(property="worldId", type="string", example="string")
+ *     @OA\Property(property="url", type="string", nullable="true", example="string"),
+ *     @OA\Property(property="helpline", type="string", nullable="true", example="string"),
+ *     @OA\Property(property="email", type="string", nullable="true", example="string"),
+ *     @OA\Property(property="worldId", type="string", nullable="true", example="string")
  * ),
  * @OA\Schema(schema="ServiceBody", required={"id", "parentId", "name", "description", "type", "adminUserId", "assignedUserIds", "url", "helpline", "email", "worldId" },
  *     allOf={ @OA\Schema(ref="#/components/schemas/ServiceBodyBase") },

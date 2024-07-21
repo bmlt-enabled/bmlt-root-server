@@ -250,17 +250,17 @@ class ServiceBodyPartialUpdateTest extends TestCase
         $zone = $this->createZone('zone', 'zone', adminUserId: $user->id_bigint);
         $data = [];
 
-        // it can't be null
+        // it can be null
         $data['description'] = null;
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/servicebodies/$zone->id_bigint", $data)
-            ->assertStatus(422);
+            ->assertStatus(204);
 
-        // it can't be empty
+        // it can be empty
         $data['description'] = '   ';
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/servicebodies/$zone->id_bigint", $data)
-            ->assertStatus(422);
+            ->assertStatus(204);
 
         // valid
         $data['description'] = 'test';

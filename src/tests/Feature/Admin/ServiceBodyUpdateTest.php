@@ -240,23 +240,23 @@ class ServiceBodyUpdateTest extends TestCase
         $zone = $this->createZone('zone', 'zone', adminUserId: $user->id_bigint);
         $data = $this->toPayload($zone);
 
-        // it is required
+        // it is not required
         unset($data['description']);
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
-            ->assertStatus(422);
+            ->assertStatus(204);
 
-        // it can't be null
+        // it can be null
         $data['description'] = null;
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
-            ->assertStatus(422);
+            ->assertStatus(204);
 
-        // it can't be empty
+        // it can be empty
         $data['description'] = '   ';
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/servicebodies/$zone->id_bigint", $data)
-            ->assertStatus(422);
+            ->assertStatus(204);
 
         // valid
         $data['description'] = 'test';

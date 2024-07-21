@@ -7,7 +7,7 @@
 
   import { spinner } from '../stores/spinner';
   import RootServerApi from '../lib/RootServerApi';
-  import type { ServiceBody, User } from 'bmlt-root-server-client';
+  import type { ServiceBody, ServiceBodyCreate, User } from 'bmlt-root-server-client';
   import { translations } from '../stores/localization';
   import { authenticatedUser } from '../stores/apiCredentials';
 
@@ -44,23 +44,34 @@
       adminUserId: -1,
       type: SB_TYPE_AREA,
       parentId: -1,
-      email: '',
+      assignedUserIds: [] as number[],
       name: '',
+      email: '',
+      description: '',
       url: '',
       helpline: '',
-      description: '',
-      worldId: '',
-      assignedUserIds: [] as number[]
+      worldId: ''
     },
     onSubmit: async (values) => {
       spinner.show();
-      console.log(values);
-      //   if (selectedServiceBody) {
-      //     await RootServerApi.updateServiceBody(selectedServiceBody.id, values);
-      //     savedServiceBody = await RootServerApi.getServiceBody(selectedServiceBody.id);
-      //   } else {
-      //     savedServiceBody = await RootServerApi.createServiceBody(values);
-      //   }
+      // null out optional fields if they're empty
+      const serviceBody: ServiceBodyCreate = {
+        ...values,
+        ...{
+          parentId: values.parentId !== -1 ? values.parentId : null,
+          email: values.email ? values.email : null,
+          url: values.url ? values.url : null,
+          helpline: values.helpline ? values.helpline : null,
+          worldId: values.worldId ? values.worldId : null
+        }
+      };
+      console.log(serviceBody);
+      if (selectedServiceBody) {
+        await RootServerApi.updateServiceBody(selectedServiceBody.id, serviceBody);
+        savedServiceBody = await RootServerApi.getServiceBody(selectedServiceBody.id);
+      } else {
+        savedServiceBody = await RootServerApi.createServiceBody(serviceBody);
+      }
     },
     onError: async (error) => {
       console.log(error);
@@ -70,13 +81,13 @@
             adminUserId: (error?.errors?.adminUserId ?? []).join(' '),
             type: (error?.errors?.type ?? []).join(' '),
             parentId: (error?.errors?.parentId ?? []).join(' '),
-            email: (error?.errors?.email ?? []).join(' '),
+            assignedUserIds: (error?.errors?.assignedUserIds ?? []).join(' '),
             name: (error?.errors?.name ?? []).join(' '),
+            email: (error?.errors?.email ?? []).join(' '),
+            description: (error?.errors?.description ?? []).join(' '),
             url: (error?.errors?.url ?? []).join(' '),
             helpline: (error?.errors?.helpline ?? []).join(' '),
-            description: (error?.errors?.description ?? []).join(' '),
-            worldId: (error?.errors?.worldId ?? []).join(' '),
-            assignedUserIds: (error?.errors?.assignedUserIds ?? []).join(' ')
+            worldId: (error?.errors?.worldId ?? []).join(' ')
           });
         }
       });
@@ -84,7 +95,7 @@
     },
     onSuccess: () => {
       spinner.hide();
-      //dispatch('saved', { serviceBody: savedServiceBody });
+      dispatch('saved', { serviceBody: savedServiceBody });
     },
     extend: validator({
       schema: yup.object({
@@ -93,18 +104,18 @@
           .transform((v) => parseInt(v))
           .required(),
         type: yup.string().required(),
-        parentId: yup
-          .number()
-          .nullable()
-          .transform((v) => (parseInt(v) === -1 ? null : parseInt(v))),
-        email: yup.string().max(255).email(),
+        parentId: yup.number().required(),
+        assignedUserIds: yup.array().of(yup.number().transform((v) => parseInt(v))),
         name: yup
           .string()
           .transform((v) => v.trim())
           .max(255)
           .required(),
+        email: yup.string().email().max(255),
+        description: yup.string().transform((v) => v.trim()),
         url: yup
           .string()
+          .url()
           .transform((v) => v.trim())
           .max(255),
         helpline: yup
@@ -114,9 +125,7 @@
         worldId: yup
           .string()
           .transform((v) => v.trim())
-          .max(255),
-        description: yup.string(),
-        assignedUserIds: yup.array().of(yup.number().transform((v) => parseInt(v)))
+          .max(255)
       }),
       castValues: true
     })
@@ -132,15 +141,14 @@
     setInitialValues({
       adminUserId: selectedServiceBody?.adminUserId ?? -1,
       type: selectedServiceBody?.type ?? SB_TYPE_AREA,
-      // TODO: Handle assignedUserIds
       parentId: selectedServiceBody?.parentId ?? -1,
-      email: selectedServiceBody?.email ?? '',
+      assignedUserIds: selectedServiceBody?.assignedUserIds ?? [],
       name: selectedServiceBody?.name ?? '',
+      email: selectedServiceBody?.email ?? '',
+      description: selectedServiceBody?.description ?? '',
       url: selectedServiceBody?.url ?? '',
       helpline: selectedServiceBody?.helpline ?? '',
-      description: selectedServiceBody?.description ?? '',
-      worldId: selectedServiceBody?.worldId ?? '',
-      assignedUserIds: selectedServiceBody?.assignedUserIds ?? []
+      worldId: selectedServiceBody?.worldId ?? ''
     });
     reset();
   }
@@ -190,6 +198,7 @@
       </Helper>
     </div>
     <div class="md:col-span-2">
+      <!-- TODO should service body admins be able to rename service bodies? -->
       <Label for="name" class="mb-2">{$translations.nameTitle}</Label>
       <Input type="text" id="name" name="name" required />
       <Helper class="mt-2" color="red">

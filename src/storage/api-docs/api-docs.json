@@ -2538,7 +2538,8 @@
                 "properties": {
                     "parentId": {
                         "type": "integer",
-                        "example": "0"
+                        "example": "0",
+                        "nullable": "true"
                     },
                     "name": {
                         "type": "string",
@@ -2565,19 +2566,23 @@
                     },
                     "url": {
                         "type": "string",
-                        "example": "string"
+                        "example": "string",
+                        "nullable": "true"
                     },
                     "helpline": {
                         "type": "string",
-                        "example": "string"
+                        "example": "string",
+                        "nullable": "true"
                     },
                     "email": {
                         "type": "string",
-                        "example": "string"
+                        "example": "string",
+                        "nullable": "true"
                     },
                     "worldId": {
                         "type": "string",
-                        "example": "string"
+                        "example": "string",
+                        "nullable": "true"
                     }
                 },
                 "type": "object"
