@@ -54,16 +54,10 @@
     },
     onSubmit: async (values) => {
       spinner.show();
-      // null out optional fields if they're empty
       const serviceBody: ServiceBodyCreate = {
         ...values,
-        ...{
-          parentId: values.parentId !== -1 ? values.parentId : null,
-          email: values.email ? values.email : null,
-          url: values.url ? values.url : null,
-          helpline: values.helpline ? values.helpline : null,
-          worldId: values.worldId ? values.worldId : null
-        }
+        // the api expects those with no parent to be null
+        ...{ parentId: values.parentId !== -1 ? values.parentId : null }
       };
       console.log(serviceBody);
       if (selectedServiceBody) {
