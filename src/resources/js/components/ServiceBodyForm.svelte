@@ -93,13 +93,10 @@
     },
     extend: validator({
       schema: yup.object({
-        adminUserId: yup
-          .number()
-          .transform((v) => parseInt(v))
-          .required(),
+        adminUserId: yup.number().required(),
         type: yup.string().required(),
         parentId: yup.number().required(),
-        assignedUserIds: yup.array().of(yup.number().transform((v) => parseInt(v))),
+        assignedUserIds: yup.array().of(yup.number()),
         name: yup
           .string()
           .transform((v) => v.trim())
@@ -192,9 +189,8 @@
       </Helper>
     </div>
     <div class="md:col-span-2">
-      <!-- TODO should service body admins be able to rename service bodies? -->
       <Label for="name" class="mb-2">{$translations.nameTitle}</Label>
-      <Input type="text" id="name" name="name" required />
+      <Input type="text" id="name" name="name" required disabled={$authenticatedUser?.type !== 'admin'} />
       <Helper class="mt-2" color="red">
         {#if $errors.name}
           {$errors.name}
