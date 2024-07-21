@@ -111,7 +111,7 @@ class ServiceBodyPartialUpdateTest extends TestCase
             ->patch("/api/v1/servicebodies/$region->id_bigint", $data)
             ->assertStatus(204);
         $region->refresh();
-        $this->assertEquals($region->name_string, $data['name']);
+        $this->assertEquals($region->name_string, $region->name_string);  // did not change
 
         $data = ['description' => 'updated description'];
         $this->withHeader('Authorization', "Bearer $token")

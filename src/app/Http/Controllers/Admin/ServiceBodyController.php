@@ -149,11 +149,11 @@ class ServiceBodyController extends ResourceController
                         return [$fieldName => $validated['type']];
                     } elseif ($fieldName == 'principal_user_bigint') {
                         return [$fieldName => $validated['adminUserId']];
+                    } elseif ($fieldName == 'name_string') {
+                        return ['name_string' => $validated['name']];
                     }
                 }
-                if ($fieldName == 'name_string') {
-                    return ['name_string' => $validated['name']];
-                } elseif ($fieldName == 'description_string') {
+                if ($fieldName == 'description_string') {
                     return [$fieldName => $validated['description'] ?? ''];
                 } elseif ($fieldName == 'editors_string') {
                     return [$fieldName => collect($validated['assignedUserIds'])->map(fn ($v) => strval($v))->join(',')];
