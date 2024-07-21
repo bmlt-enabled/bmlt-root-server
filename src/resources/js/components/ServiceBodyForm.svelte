@@ -116,7 +116,7 @@
         worldId: yup
           .string()
           .transform((v) => v.trim())
-          .max(255)
+          .max(30)
       }),
       castValues: true
     })
