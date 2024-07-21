@@ -12,7 +12,7 @@
 
   export let deleteServiceBody: ServiceBody;
   let confirmed = false;
-  let errorMessage = '';
+  let errorMessage: string | undefined;
 
   const dispatch = createEventDispatcher<{ deleted: { serviceBodyId: number } }>();
 
@@ -23,9 +23,12 @@
       await RootServerApi.deleteServiceBody(deleteServiceBody.id);
     },
     onError: async (error) => {
-      console.log(error);
-      // TODO: Handle Error You cannot delete a service body while other service bodies or meetings are assigned to it.
-      await RootServerApi.handleErrors(error as Error);
+      await RootServerApi.handleErrors(error as Error, {
+        handleConflictError: () => {
+          confirmed = false;
+          errorMessage = $translations.serviceBodyDeleteConflictError;
+        }
+      });
       spinner.hide();
     },
     onSuccess: () => {

@@ -49,6 +49,7 @@ const strings = new LocalizedStrings({
     confirmYesImSure: "Yes, I'm sure.",
     userIsDeactivated: 'User is deactivated.',
     userDeleteConflictError: 'Error: User is assigned to service bodies.',
+    serviceBodyDeleteConflictError: 'Error: Service Body either has other service bodies or meetings assigned to it.',
     websiteUrlTitle: 'Web Site URL',
     parentIdTitle: 'Service Body Parent',
     helplineTitle: 'Helpline',
