@@ -54,12 +54,13 @@
     },
     onSubmit: async (values) => {
       spinner.show();
+      // Assign the selected users to the form values
+      values.assignedUserIds = assignedUserIdsSelected;
       const serviceBody: ServiceBodyCreate = {
         ...values,
         // the api expects those with no parent to be null
         ...{ parentId: values.parentId !== -1 ? values.parentId : null }
       };
-      console.log(serviceBody);
       if (selectedServiceBody) {
         await RootServerApi.updateServiceBody(selectedServiceBody.id, serviceBody);
         savedServiceBody = await RootServerApi.getServiceBody(selectedServiceBody.id);
@@ -179,9 +180,9 @@
       </Helper>
     </div>
     <div class="md:col-span-2">
-      <Label for="type" class="mb-2">{$translations.meetingListEditorsTitle}</Label>
       <!--        TODO: User selection, observers?-->
-      <MultiSelect id="assignedUserIds" items={userItems} bind:value={assignedUserIdsSelected} />
+      <Label for="assignedUserIds" class="mb-2">{$translations.meetingListEditorsTitle}</Label>
+      <MultiSelect id="assignedUserIds" items={userItems} name="assignedUserIds" bind:value={assignedUserIdsSelected} />
       <Helper class="mt-2" color="red">
         {#if $errors.assignedUserIds}
           {$errors.assignedUserIds}
