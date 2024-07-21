@@ -29,7 +29,7 @@
   async function getUsers(): Promise<void> {
     try {
       spinner.show();
-      users = (await RootServerApi.getUsers()).filter((u) => u.id !== $authenticatedUser?.id);
+      users = await RootServerApi.getUsers();
       usersLoaded = true;
     } catch (error: any) {
       await RootServerApi.handleErrors(error);

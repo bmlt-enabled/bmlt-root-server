@@ -23,7 +23,10 @@
       .map((u) => ({ value: u.id.toString(), name: u.name }))
       .sort((a, b) => a.name.localeCompare(b.name))
   ];
-  const userItems = users.map((u) => ({ value: u.id, name: u.displayName })).sort((a, b) => a.name.localeCompare(b.name));
+  const userItems = [
+    { value: '-1', name: $translations.serviceBodiesNoPrimaryAdmin ?? '' },
+    ...users.map((u) => ({ value: u.id.toString(), name: u.displayName })).sort((a, b) => a.name.localeCompare(b.name))
+  ];
   const SB_TYPE_AREA = 'AS';
   const typeItems = [
     { value: 'GR', name: 'Group' },

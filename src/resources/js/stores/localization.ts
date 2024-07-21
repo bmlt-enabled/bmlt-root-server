@@ -38,6 +38,7 @@ const strings = new LocalizedStrings({
     confirmDeleteServiceBody: 'Are you sure you want to delete this service body?',
     serviceBodyAdminTitle: 'Service Body Administrator',
     serviceBodiesNoParent: 'No Parent (Top-Level)',
+    serviceBodiesNoPrimaryAdmin: 'No Primary Admin',
     logout: 'Logout',
     userTypeTitle: 'User Type',
     userTitle: 'User',
