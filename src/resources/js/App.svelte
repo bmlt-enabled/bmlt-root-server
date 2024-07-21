@@ -7,8 +7,8 @@
   import Home from './routes/Home.svelte';
   import Login from './routes/Login.svelte';
   import Meetings from './routes/Meetings.svelte';
-  import Users from './routes/Users.svelte';
   import ServiceBodies from './routes/ServiceBodies.svelte';
+  import Users from './routes/Users.svelte';
   import SpinnerModal from './components/SpinnerModal.svelte';
   import { apiCredentials } from './stores/apiCredentials';
 
@@ -22,7 +22,7 @@
       component: Users,
       conditions: [requiresAuthentication]
     }),
-    '/service-bodies': wrap({
+    '/servicebodies': wrap({
       component: ServiceBodies,
       conditions: [requiresAuthentication]
     }),

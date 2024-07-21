@@ -1,21 +1,22 @@
 <script lang="ts">
   import { Button, P, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch } from 'flowbite-svelte';
   import { TrashBinOutline } from 'flowbite-svelte-icons';
-  import Nav from '../components/NavBar.svelte';
-  import ServiceBodyModal from '../components/ServiceBodyModal.svelte';
-  import ServiceBodyForm from '../components/ServiceBodyForm.svelte';
-
-  import { authenticatedUser } from '../stores/apiCredentials';
-  import { translations } from '../stores/localization';
-
-  import type { ServiceBody, User } from 'bmlt-root-server-client';
-  import ServiceBodyDeleteModal from '../components/ServiceBodyDeleteModal.svelte';
-  import { spinner } from '../stores/spinner';
-  import RootServerApi from '../lib/RootServerApi';
   // svelte-hack' -- import hacked to get onMount to work correctly for unit tests
   import { onMount } from 'svelte/internal';
 
-  let isLoaded = false;
+  import type { ServiceBody, User } from 'bmlt-root-server-client';
+
+  import Nav from '../components/NavBar.svelte';
+  import ServiceBodyDeleteModal from '../components/ServiceBodyDeleteModal.svelte';
+  import ServiceBodyForm from '../components/ServiceBodyForm.svelte';
+  import ServiceBodyModal from '../components/ServiceBodyModal.svelte';
+  import RootServerApi from '../lib/RootServerApi';
+  import { authenticatedUser } from '../stores/apiCredentials';
+  import { translations } from '../stores/localization';
+  import { spinner } from '../stores/spinner';
+
+  let usersLoaded = false;
+  let serviceBodiesLoaded = false;
   let users: User[] = [];
   let serviceBodies: ServiceBody[] = [];
   let filteredServiceBodies: ServiceBody[] = [];
@@ -28,9 +29,8 @@
   async function getUsers(): Promise<void> {
     try {
       spinner.show();
-      users = await RootServerApi.getUsers();
-      users.sort((u1, u2) => u1.displayName.localeCompare(u2.displayName));
-      isLoaded = true;
+      users = (await RootServerApi.getUsers()).filter((u) => u.id !== $authenticatedUser?.id);
+      usersLoaded = true;
     } catch (error: any) {
       await RootServerApi.handleErrors(error);
     } finally {
@@ -42,7 +42,7 @@
     try {
       spinner.show();
       serviceBodies = await RootServerApi.getServiceBodies();
-      isLoaded = true;
+      serviceBodiesLoaded = true;
     } catch (error: any) {
       await RootServerApi.handleErrors(error);
     } finally {
@@ -90,13 +90,16 @@
     showModal = false;
   }
 
-  onMount(async () => {
-    await getUsers();
-    await getServiceBodies();
+  onMount(() => {
+    getUsers();
+    getServiceBodies();
   });
 
   $: {
-    filteredServiceBodies = serviceBodies.sort((s1, s2) => s1.name.localeCompare(s2.name)).filter((s) => s.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
+    // prettier-ignore
+    filteredServiceBodies = serviceBodies
+      .sort((s1, s2) => s1.name.localeCompare(s2.name))
+      .filter((s) => s.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
   }
 </script>
 
@@ -104,15 +107,17 @@
 
 <div class="mx-auto max-w-3xl p-2">
   <h2 class="mb-4 text-center text-xl font-semibold dark:text-white">{$translations.serviceBodiesTitle}</h2>
-  {#if isLoaded}
-    {#if serviceBodies && serviceBodies.length > 0}
+  {#if usersLoaded && serviceBodiesLoaded}
+    {#if serviceBodies.length}
       <TableSearch placeholder={$translations.searchByName} hoverable={true} bind:inputValue={searchTerm}>
         <TableHead>
           <TableHeadCell colspan={$authenticatedUser?.type === 'admin' ? '2' : '1'}>
             {#if $authenticatedUser?.type === 'admin'}
               <div class="flex">
                 <div class="mt-2.5 grow">Name</div>
-                <div><Button on:click={() => handleAdd()} class="whitespace-nowrap" aria-label={$translations.addServiceBody}>{$translations.addServiceBody}</Button></div>
+                <div>
+                  <Button on:click={() => handleAdd()} class="whitespace-nowrap" aria-label={$translations.addServiceBody}>{$translations.addServiceBody}</Button>
+                </div>
               </div>
             {:else}
               {$translations.nameTitle}
