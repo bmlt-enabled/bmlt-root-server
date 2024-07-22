@@ -146,23 +146,23 @@ class ServiceBodyCreateTest extends TestCase
         $token = $user->createToken('test')->plainTextToken;
         $data = $this->validPayload($user);
 
-        // it is required
+        // it is not required
         unset($data['description']);
         $this->withHeader('Authorization', "Bearer $token")
             ->post('/api/v1/servicebodies', $data)
-            ->assertStatus(422);
+            ->assertStatus(201);
 
-        // it can't be null
+        // it can be null
         $data['description'] = null;
         $this->withHeader('Authorization', "Bearer $token")
             ->post('/api/v1/servicebodies', $data)
-            ->assertStatus(422);
+            ->assertStatus(201);
 
-        // it can't be empty
+        // it can be empty
         $data['description'] = '   ';
         $this->withHeader('Authorization', "Bearer $token")
             ->post('/api/v1/servicebodies', $data)
-            ->assertStatus(422);
+            ->assertStatus(201);
 
         // valid
         $data['description'] = 'test';

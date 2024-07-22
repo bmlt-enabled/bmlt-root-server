@@ -6,7 +6,7 @@
     error, StackOverflow and GitHub Issues tell you to mock the function in setup.ts. This
     does not seem to work with vitest, because vitest uses jsdom internally, and jsdom
     constructs its own window object which does not seem mockable. All other changes were
-    were just to make TypeScript happy.
+    just to make TypeScript happy.
   */
   import { twMerge } from 'tailwind-merge';
   export let btnClass = 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none rounded-lg text-sm p-2.5';

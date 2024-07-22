@@ -6,34 +6,34 @@
   import * as yup from 'yup';
 
   import RootServerApi from '../lib/RootServerApi';
-  import type { User } from 'bmlt-root-server-client';
+  import type { ServiceBody } from 'bmlt-root-server-client';
   import { spinner } from '../stores/spinner';
   import { translations } from '../stores/localization';
 
-  export let deleteUser: User;
+  export let deleteServiceBody: ServiceBody;
   let confirmed = false;
   let errorMessage: string | undefined;
 
-  const dispatch = createEventDispatcher<{ deleted: { userId: number } }>();
+  const dispatch = createEventDispatcher<{ deleted: { serviceBodyId: number } }>();
 
   const { form } = createForm({
-    initialValues: { userId: deleteUser?.id, confirmed: false },
+    initialValues: { ServiceBodyId: deleteServiceBody?.id, confirmed: false },
     onSubmit: async () => {
       spinner.show();
-      await RootServerApi.deleteUser(deleteUser.id);
+      await RootServerApi.deleteServiceBody(deleteServiceBody.id);
     },
     onError: async (error) => {
       await RootServerApi.handleErrors(error as Error, {
         handleConflictError: () => {
           confirmed = false;
-          errorMessage = $translations.userDeleteConflictError;
+          errorMessage = $translations.serviceBodyDeleteConflictError;
         }
       });
       spinner.hide();
     },
     onSuccess: () => {
       spinner.hide();
-      dispatch('deleted', { userId: deleteUser.id });
+      dispatch('deleted', { serviceBodyId: deleteServiceBody.id });
     },
     extend: validator({
       schema: yup.object({
@@ -45,8 +45,8 @@
 
 <form use:form>
   <div>
-    <P class="mb-5">{$translations.confirmDeleteUser}</P>
-    <P class="mb-5">{deleteUser.displayName}</P>
+    <P class="mb-5">{$translations.confirmDeleteServiceBody}</P>
+    <P class="mb-5">{deleteServiceBody.name}</P>
     <div class="mb-5">
       <Checkbox bind:checked={confirmed} name="confirmed">{$translations.confirmYesImSure}</Checkbox>
       <Helper class="mt-4" color="red">

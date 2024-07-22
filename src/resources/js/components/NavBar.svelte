@@ -24,6 +24,7 @@
   <NavUl>
     <NavLi href="#/">{$translations.homeTitle}</NavLi>
     <NavLi href="#/meetings">{$translations.meetingsTitle}</NavLi>
+    <NavLi href="#/servicebodies">{$translations.serviceBodiesTitle}</NavLi>
     <NavLi href="#/users">{$translations.usersTitle}</NavLi>
     <NavLi href="#" on:click={logout}>{$translations.logout}</NavLi>
   </NavUl>

@@ -2538,7 +2538,8 @@
                 "properties": {
                     "parentId": {
                         "type": "integer",
-                        "example": "0"
+                        "example": "0",
+                        "nullable": "true"
                     },
                     "name": {
                         "type": "string",

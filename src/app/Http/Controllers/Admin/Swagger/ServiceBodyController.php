@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin\Swagger;
 
 /**
  * @OA\Schema(schema="ServiceBodyBase",
- *     @OA\Property(property="parentId", type="integer", example="0"),
+ *     @OA\Property(property="parentId", type="integer", nullable="true", example="0"),
  *     @OA\Property(property="name", type="string", example="string"),
  *     @OA\Property(property="description", type="string", example="string"),
  *     @OA\Property(property="type", type="string", example="string"),
