@@ -153,6 +153,15 @@
 
 <form use:form>
   <div class="grid gap-4 md:grid-cols-2">
+    <div class="md:col-span-2">
+      <Label for="name" class="mb-2">{$translations.nameTitle}</Label>
+      <Input type="text" id="name" name="name" required disabled={$authenticatedUser?.type !== 'admin'} />
+      <Helper class="mt-2" color="red">
+        {#if $errors.name}
+          {$errors.name}
+        {/if}
+      </Helper>
+    </div>
     <div class="md:col-span-2 {$authenticatedUser?.type !== 'admin' ? 'hidden' : ''}">
       <Label for="type" class="mb-2">{$translations.adminTitle}</Label>
       <Select id="type" items={selectUserItems} name="adminUserId" disabled={$authenticatedUser?.type !== 'admin'} />
@@ -187,15 +196,6 @@
       <Helper class="mt-2" color="red">
         {#if $errors.assignedUserIds}
           {$errors.assignedUserIds}
-        {/if}
-      </Helper>
-    </div>
-    <div class="md:col-span-2">
-      <Label for="name" class="mb-2">{$translations.nameTitle}</Label>
-      <Input type="text" id="name" name="name" required disabled={$authenticatedUser?.type !== 'admin'} />
-      <Helper class="mt-2" color="red">
-        {#if $errors.name}
-          {$errors.name}
         {/if}
       </Helper>
     </div>

@@ -2566,23 +2566,19 @@
                     },
                     "url": {
                         "type": "string",
-                        "example": "string",
-                        "nullable": "true"
+                        "example": "string"
                     },
                     "helpline": {
                         "type": "string",
-                        "example": "string",
-                        "nullable": "true"
+                        "example": "string"
                     },
                     "email": {
                         "type": "string",
-                        "example": "string",
-                        "nullable": "true"
+                        "example": "string"
                     },
                     "worldId": {
                         "type": "string",
-                        "example": "string",
-                        "nullable": "true"
+                        "example": "string"
                     }
                 },
                 "type": "object"
