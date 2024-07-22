@@ -48,8 +48,8 @@
     <P class="mb-5">{$translations.confirmDeleteUser}</P>
     <P class="mb-5">{deleteUser.displayName}</P>
     <div class="mb-5">
-      <Checkbox bind:checked={confirmed} class="justify-center" name="confirmed">{$translations.confirmYesImSure}</Checkbox>
-      <Helper align="center" class="mt-4" color="red">
+      <Checkbox bind:checked={confirmed} name="confirmed">{$translations.confirmYesImSure}</Checkbox>
+      <Helper class="mt-4" color="red">
         {#if errorMessage}
           {errorMessage}
         {/if}

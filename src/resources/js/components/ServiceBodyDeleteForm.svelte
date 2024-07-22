@@ -48,15 +48,15 @@
     <P class="mb-5">{$translations.confirmDeleteServiceBody}</P>
     <P class="mb-5">{deleteServiceBody.name}</P>
     <div class="mb-5">
-      <Checkbox bind:checked={confirmed} class="justify-center" name="confirmed">{$translations.confirmYesImSure}</Checkbox>
+      <Checkbox bind:checked={confirmed} name="confirmed">{$translations.confirmYesImSure}</Checkbox>
+      <Helper class="mt-4" color="red">
+        {#if errorMessage}
+          {errorMessage}
+        {/if}
+      </Helper>
     </div>
     <div class="mb-5">
       <Button type="submit" class="w-full" disabled={!confirmed ? true : null}>{$translations.delete}</Button>
     </div>
-    <Helper class="mt-2" color="red">
-      {#if errorMessage}
-        <P color="text-red-700 dark:text-red-500">{errorMessage}</P>
-      {/if}
-    </Helper>
   </div>
 </form>
