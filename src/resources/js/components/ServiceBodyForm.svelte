@@ -23,10 +23,8 @@
       .map((u) => ({ value: u.id.toString(), name: u.name }))
       .sort((a, b) => a.name.localeCompare(b.name))
   ];
-  const userItems = [
-    { value: '-1', name: $translations.serviceBodiesNoPrimaryAdmin ?? '' },
-    ...users.map((u) => ({ value: u.id.toString(), name: u.displayName })).sort((a, b) => a.name.localeCompare(b.name))
-  ];
+  const userItems = users.map((u) => ({ value: u.id, name: u.displayName })).sort((a, b) => a.name.localeCompare(b.name));
+  const selectUserItems = [{ value: '-1', name: $translations.serviceBodiesNoPrimaryAdmin ?? '' }, ...userItems];
   const SB_TYPE_AREA = 'AS';
   const typeItems = [
     { value: 'GR', name: 'Group' },
@@ -157,7 +155,7 @@
   <div class="grid gap-4 md:grid-cols-2">
     <div class="md:col-span-2 {$authenticatedUser?.type !== 'admin' ? 'hidden' : ''}">
       <Label for="type" class="mb-2">{$translations.adminTitle}</Label>
-      <Select id="type" items={userItems} name="adminUserId" disabled={$authenticatedUser?.type !== 'admin'} />
+      <Select id="type" items={selectUserItems} name="adminUserId" disabled={$authenticatedUser?.type !== 'admin'} />
       <Helper class="mt-2" color="red">
         {#if $errors.adminUserId}
           {$errors.adminUserId}
