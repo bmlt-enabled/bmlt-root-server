@@ -40,7 +40,7 @@
   let savedServiceBody: ServiceBody;
   let assignedUserIdsSelected: number[] = [];
 
-  const { form, errors, setInitialValues, reset } = createForm({
+  const { errors, form, isDirty, reset, setInitialValues } = createForm({
     initialValues: {
       adminUserId: -1,
       type: SB_TYPE_AREA,
@@ -143,11 +143,19 @@
       helpline: selectedServiceBody?.helpline ?? '',
       worldId: selectedServiceBody?.worldId ?? ''
     });
+    isDirty.set(false);
     reset();
   }
 
   $: if (selectedServiceBody) {
     populateForm();
+  }
+
+  // This hack is required until https://github.com/themesberg/flowbite-svelte/issues/1395 is fixed.
+  function disableButtonHack(event: MouseEvent) {
+    if (!$isDirty) {
+      event.preventDefault();
+    }
   }
 </script>
 
@@ -245,7 +253,7 @@
       </Helper>
     </div>
     <div class="md:col-span-2">
-      <Button type="submit" class="w-full">
+      <Button type="submit" class="w-full" disabled={!$isDirty} on:click={disableButtonHack}>
         {#if selectedServiceBody}
           {$translations.applyChangesTitle}
         {:else}

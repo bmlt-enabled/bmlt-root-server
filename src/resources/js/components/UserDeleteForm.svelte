@@ -56,7 +56,7 @@
       </Helper>
     </div>
     <div class="mb-5">
-      <Button type="submit" class="w-full" disabled={!confirmed ? true : null}>{$translations.delete}</Button>
+      <Button type="submit" class="w-full" disabled={!confirmed ? true : false}>{$translations.delete}</Button>
     </div>
   </div>
 </form>
