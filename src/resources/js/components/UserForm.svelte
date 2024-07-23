@@ -29,7 +29,7 @@
   ];
   let savedUser: User;
 
-  const { form, errors, setInitialValues, reset } = createForm({
+  const { errors, form, isDirty, reset, setInitialValues } = createForm({
     initialValues: {
       type: USER_TYPE_SERVICE_BODY_ADMIN,
       ownerId: $authenticatedUser?.id,
@@ -128,11 +128,19 @@
       description: selectedUser?.description ?? '',
       password: ''
     });
+    isDirty.set(false);
     reset();
   }
 
   $: if (selectedUser) {
     populateForm();
+  }
+
+  // This hack is required until https://github.com/themesberg/flowbite-svelte/issues/1395 is fixed.
+  function disableButtonHack(event: MouseEvent) {
+    if (!$isDirty) {
+      event.preventDefault();
+    }
   }
 </script>
 
@@ -202,7 +210,7 @@
       </Helper>
     </div>
     <div class="md:col-span-2">
-      <Button type="submit" class="w-full">
+      <Button type="submit" class="w-full" disabled={!$isDirty} on:click={disableButtonHack}>
         {#if selectedUser}
           {$translations.applyChangesTitle}
         {:else}
