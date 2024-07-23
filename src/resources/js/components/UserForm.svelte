@@ -7,6 +7,7 @@
 
   import { spinner } from '../stores/spinner';
   import RootServerApi from '../lib/RootServerApi';
+  import { formIsDirty } from '../lib/utils';
   import type { User } from 'bmlt-root-server-client';
   import { translations } from '../stores/localization';
   import { authenticatedUser } from '../stores/apiCredentials';
@@ -27,18 +28,19 @@
     { value: USER_TYPE_OBSERVER, name: 'Observer' },
     { value: USER_TYPE_SERVICE_BODY_ADMIN, name: 'Service Body Administrator' }
   ];
+  const initialValues = {
+    type: selectedUser?.type ?? USER_TYPE_SERVICE_BODY_ADMIN,
+    ownerId: selectedUser?.ownerId ?? ($authenticatedUser?.type === 'admin' ? $authenticatedUser.id : -1),
+    email: selectedUser?.email ?? '',
+    displayName: selectedUser?.displayName ?? '',
+    username: selectedUser?.username ?? '',
+    password: '',
+    description: selectedUser?.description ?? ''
+  };
   let savedUser: User;
 
-  const { errors, form, isDirty } = createForm({
-    initialValues: {
-      type: selectedUser?.type ?? USER_TYPE_SERVICE_BODY_ADMIN,
-      ownerId: selectedUser?.ownerId ?? ($authenticatedUser?.type === 'admin' ? $authenticatedUser.id : -1),
-      email: selectedUser?.email ?? '',
-      displayName: selectedUser?.displayName ?? '',
-      username: selectedUser?.username ?? '',
-      password: '',
-      description: selectedUser?.description ?? ''
-    },
+  const { data, errors, form, isDirty } = createForm({
+    initialValues: initialValues,
     onSubmit: async (values) => {
       spinner.show();
       if (selectedUser) {
@@ -121,6 +123,8 @@
       event.preventDefault();
     }
   }
+
+  $: isDirty.set(formIsDirty(initialValues, $data));
 </script>
 
 <form use:form>
