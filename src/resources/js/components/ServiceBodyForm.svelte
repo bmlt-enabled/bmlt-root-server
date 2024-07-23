@@ -7,6 +7,7 @@
 
   import { spinner } from '../stores/spinner';
   import RootServerApi from '../lib/RootServerApi';
+  import { formIsDirty } from '../lib/utils';
   import type { ServiceBody, ServiceBodyCreate, User } from 'bmlt-root-server-client';
   import { translations } from '../stores/localization';
   import { authenticatedUser } from '../stores/apiCredentials';
@@ -37,26 +38,25 @@
     { value: 'ZF', name: 'Zonal Forum' },
     { value: 'WS', name: 'World Service Conference' }
   ];
-  let savedServiceBody: ServiceBody;
+  const initialValues = {
+    adminUserId: selectedServiceBody?.adminUserId ?? -1,
+    type: selectedServiceBody?.type ?? SB_TYPE_AREA,
+    parentId: selectedServiceBody?.parentId ?? -1,
+    assignedUserIds: selectedServiceBody?.assignedUserIds ?? [],
+    name: selectedServiceBody?.name ?? '',
+    email: selectedServiceBody?.email ?? '',
+    description: selectedServiceBody?.description ?? '',
+    url: selectedServiceBody?.url ?? '',
+    helpline: selectedServiceBody?.helpline ?? '',
+    worldId: selectedServiceBody?.worldId ?? ''
+  };
   let assignedUserIdsSelected = selectedServiceBody?.assignedUserIds ?? [];
+  let savedServiceBody: ServiceBody;
 
-  const { errors, form, isDirty } = createForm({
-    initialValues: {
-      adminUserId: selectedServiceBody?.adminUserId ?? -1,
-      type: selectedServiceBody?.type ?? SB_TYPE_AREA,
-      parentId: selectedServiceBody?.parentId ?? -1,
-      assignedUserIds: selectedServiceBody?.assignedUserIds ?? [],
-      name: selectedServiceBody?.name ?? '',
-      email: selectedServiceBody?.email ?? '',
-      description: selectedServiceBody?.description ?? '',
-      url: selectedServiceBody?.url ?? '',
-      helpline: selectedServiceBody?.helpline ?? '',
-      worldId: selectedServiceBody?.worldId ?? ''
-    },
+  const { data, errors, form, isDirty, setData } = createForm({
+    initialValues: initialValues,
     onSubmit: async (values) => {
       spinner.show();
-      // Assign the selected users to the form values
-      values.assignedUserIds = assignedUserIdsSelected;
       const serviceBody: ServiceBodyCreate = {
         ...values,
         // the api expects those with no parent to be null
@@ -130,6 +130,9 @@
       event.preventDefault();
     }
   }
+
+  $: setData('assignedUserIds', assignedUserIdsSelected);
+  $: isDirty.set(formIsDirty(initialValues, $data));
 </script>
 
 <form use:form>
@@ -173,9 +176,10 @@
     <div class="md:col-span-2">
       <!--        TODO: User selection, observers?-->
       <Label for="assignedUserIds" class="mb-2">{$translations.meetingListEditorsTitle}</Label>
-      <MultiSelect id="assignedUserIds" items={userItems} name="assignedUserIds" bind:value={assignedUserIdsSelected} on:change={() => isDirty.set(true)} />
+      <MultiSelect id="assignedUserIds" items={userItems} name="assignedUserIds" bind:value={assignedUserIdsSelected} />
       <Helper class="mt-2" color="red">
-        {#if $errors.assignedUserIds}
+        <!-- For some reason yup fills the errors store with empty objects for this array. The === 'string' ensures only server side errors will display. -->
+        {#if $errors.assignedUserIds && typeof $errors.assignedUserIds[0] === 'string'}
           {$errors.assignedUserIds}
         {/if}
       </Helper>
