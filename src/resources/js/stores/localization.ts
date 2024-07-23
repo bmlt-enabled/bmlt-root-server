@@ -49,7 +49,7 @@ const strings = new LocalizedStrings({
     confirmDeleteUser: 'Are you sure you want to delete this user?',
     confirmYesImSure: "Yes, I'm sure.",
     userIsDeactivated: 'User is deactivated.',
-    userDeleteConflictError: 'Error: The user could not be deleted because it is associated with at least one service body.',
+    userDeleteConflictError: 'Error: The user could not be deleted because it is still associated with at least one service body or is the parent of another user.',
     serviceBodyDeleteConflictError: 'Error: The service body could not be deleted because it is still associated with meetings or is a parent of other service bodies.',
     websiteUrlTitle: 'Web Site URL',
     parentIdTitle: 'Service Body Parent',

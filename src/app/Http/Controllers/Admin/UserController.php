@@ -118,9 +118,9 @@ class UserController extends ResourceController
 
     public function destroy(User $user)
     {
-        if ($user->serviceBodies()->exists()) {
+        if ($user->children()->exists() || $user->serviceBodies()->exists()) {
             return new JsonResponse([
-                'message' => 'You cannot delete a user while service bodies are assigned to it.'
+                'message' => 'You cannot delete a user while other users or service bodies are assigned to it.'
             ], 409);
         }
         $this->userRepository->delete($user->id_bigint);
