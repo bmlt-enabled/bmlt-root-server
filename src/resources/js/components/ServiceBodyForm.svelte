@@ -38,20 +38,20 @@
     { value: 'WS', name: 'World Service Conference' }
   ];
   let savedServiceBody: ServiceBody;
-  let assignedUserIdsSelected: number[] = [];
+  let assignedUserIdsSelected = selectedServiceBody?.assignedUserIds ?? [];
 
-  const { errors, form, isDirty, reset, setInitialValues } = createForm({
+  const { errors, form, isDirty } = createForm({
     initialValues: {
-      adminUserId: -1,
-      type: SB_TYPE_AREA,
-      parentId: -1,
-      assignedUserIds: [] as number[],
-      name: '',
-      email: '',
-      description: '',
-      url: '',
-      helpline: '',
-      worldId: ''
+      adminUserId: selectedServiceBody?.adminUserId ?? -1,
+      type: selectedServiceBody?.type ?? SB_TYPE_AREA,
+      parentId: selectedServiceBody?.parentId ?? -1,
+      assignedUserIds: selectedServiceBody?.assignedUserIds ?? [],
+      name: selectedServiceBody?.name ?? '',
+      email: selectedServiceBody?.email ?? '',
+      description: selectedServiceBody?.description ?? '',
+      url: selectedServiceBody?.url ?? '',
+      helpline: selectedServiceBody?.helpline ?? '',
+      worldId: selectedServiceBody?.worldId ?? ''
     },
     onSubmit: async (values) => {
       spinner.show();
@@ -124,33 +124,6 @@
     })
   });
 
-  function populateForm() {
-    // The only reason we use setInitialValues and reset here instead of setData is to make development
-    // easier. It is super annoying that each time we save the file, hot module replacement causes the
-    // values in the form fields to be replaced when the UsersForm is refreshed.
-
-    assignedUserIdsSelected = selectedServiceBody?.assignedUserIds ?? [];
-
-    setInitialValues({
-      adminUserId: selectedServiceBody?.adminUserId ?? -1,
-      type: selectedServiceBody?.type ?? SB_TYPE_AREA,
-      parentId: selectedServiceBody?.parentId ?? -1,
-      assignedUserIds: selectedServiceBody?.assignedUserIds ?? [],
-      name: selectedServiceBody?.name ?? '',
-      email: selectedServiceBody?.email ?? '',
-      description: selectedServiceBody?.description ?? '',
-      url: selectedServiceBody?.url ?? '',
-      helpline: selectedServiceBody?.helpline ?? '',
-      worldId: selectedServiceBody?.worldId ?? ''
-    });
-    isDirty.set(false);
-    reset();
-  }
-
-  $: if (selectedServiceBody) {
-    populateForm();
-  }
-
   // This hack is required until https://github.com/themesberg/flowbite-svelte/issues/1395 is fixed.
   function disableButtonHack(event: MouseEvent) {
     if (!$isDirty) {
@@ -200,7 +173,7 @@
     <div class="md:col-span-2">
       <!--        TODO: User selection, observers?-->
       <Label for="assignedUserIds" class="mb-2">{$translations.meetingListEditorsTitle}</Label>
-      <MultiSelect id="assignedUserIds" items={userItems} name="assignedUserIds" bind:value={assignedUserIdsSelected} />
+      <MultiSelect id="assignedUserIds" items={userItems} name="assignedUserIds" bind:value={assignedUserIdsSelected} on:change={() => isDirty.set(true)} />
       <Helper class="mt-2" color="red">
         {#if $errors.assignedUserIds}
           {$errors.assignedUserIds}
