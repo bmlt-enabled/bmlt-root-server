@@ -29,15 +29,15 @@
   ];
   let savedUser: User;
 
-  const { errors, form, isDirty, reset, setInitialValues } = createForm({
+  const { errors, form, isDirty } = createForm({
     initialValues: {
-      type: USER_TYPE_SERVICE_BODY_ADMIN,
-      ownerId: $authenticatedUser?.id,
-      email: '',
-      displayName: '',
-      username: '',
+      type: selectedUser?.type ?? USER_TYPE_SERVICE_BODY_ADMIN,
+      ownerId: selectedUser?.ownerId ?? ($authenticatedUser?.type === 'admin' ? $authenticatedUser.id : -1),
+      email: selectedUser?.email ?? '',
+      displayName: selectedUser?.displayName ?? '',
+      username: selectedUser?.username ?? '',
       password: '',
-      description: ''
+      description: selectedUser?.description ?? ''
     },
     onSubmit: async (values) => {
       spinner.show();
@@ -114,27 +114,6 @@
       castValues: true
     })
   });
-
-  function populateForm() {
-    // The only reason we use setInitialValues and reset here instead of setData is to make development
-    // easier. It is super annoying that each time we save the file, hot module replacement causes the
-    // values in the form fields to be replaced when the UsersForm is refreshed.
-    setInitialValues({
-      type: selectedUser?.type ?? USER_TYPE_SERVICE_BODY_ADMIN,
-      ownerId: selectedUser?.ownerId ?? ($authenticatedUser?.type === 'admin' ? $authenticatedUser.id : -1),
-      email: selectedUser?.email ?? '',
-      displayName: selectedUser?.displayName ?? '',
-      username: selectedUser?.username ?? '',
-      description: selectedUser?.description ?? '',
-      password: ''
-    });
-    isDirty.set(false);
-    reset();
-  }
-
-  $: if (selectedUser) {
-    populateForm();
-  }
 
   // This hack is required until https://github.com/themesberg/flowbite-svelte/issues/1395 is fixed.
   function disableButtonHack(event: MouseEvent) {
