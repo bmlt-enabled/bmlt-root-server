@@ -1,7 +1,7 @@
 <script lang="ts">
   import { validator } from '@felte/validator-yup';
   import { createForm } from 'felte';
-  import { Badge, Button, Helper, Input, Label, MultiSelect, Select, Textarea, type ColorVariant } from 'flowbite-svelte';
+  import { Badge, Button, Helper, Input, Label, MultiSelect, Select, Textarea } from 'flowbite-svelte';
   import { createEventDispatcher } from 'svelte';
   import * as yup from 'yup';
 
@@ -20,19 +20,37 @@
   const parentIdItems = [
     ...[{ value: '-1', name: $translations.serviceBodiesNoParent ?? '' }],
     ...serviceBodies
-      .filter((u) => selectedServiceBody?.id !== u.id)
-      .map((u) => ({ value: u.id.toString(), name: u.name }))
+      .filter((sb) => selectedServiceBody?.id !== sb.id)
+      .map((sb) => ({ value: sb.id.toString(), name: sb.name }))
       .sort((a, b) => a.name.localeCompare(b.name))
   ];
-  const userTypeToColor: Record<string, ColorVariant> = {
-    admin: 'green',
-    serviceBodyAdmin: 'green',
-    observer: 'yellow',
-    deactivated: 'red'
-  };
-  const userItems = users.map((u) => ({ value: u.id, name: u.displayName })).sort((a, b) => a.name.localeCompare(b.name));
   const userIdToUser = Object.fromEntries(users.map((u) => [u.id, u]));
-  const selectUserItems = [{ value: '-1', name: $translations.serviceBodiesNoPrimaryAdmin ?? '' }, ...userItems];
+  const userItems = users
+    .filter((u) => {
+      // We hide observer users, because they simply aren't allowed to edit meetings.
+      // If an observer user is somehow already selected as an admin or meeting editor,
+      // we allow it to be displayed in the list to give the user a chance to remove it.
+      if (u.type !== 'observer') {
+        return true;
+      }
+      if (selectedServiceBody?.adminUserId === u.id) {
+        return true;
+      }
+      if ((selectedServiceBody?.assignedUserIds ?? []).includes(u.id)) {
+        return true;
+      }
+      return false;
+    })
+    .map((u) => ({ value: u.id, name: u.displayName }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  const adminUserItems = userItems.map((u) => {
+    const isDeactivated = userIdToUser[u.value].type === 'deactivated';
+    return {
+      value: u.value,
+      name: isDeactivated ? `[${$translations.deactivatedTitle?.toUpperCase()}] ${u.name}` : u.name
+    };
+  });
   const SB_TYPE_AREA = 'AS';
   const typeItems = [
     { value: 'GR', name: 'Group' },
@@ -131,6 +149,15 @@
     })
   });
 
+  function badgeColor(id: string) {
+    if (userIdToUser[id].type === 'deactivated') {
+      return 'red';
+    } else if (userIdToUser[id].type === 'observer') {
+      return 'yellow';
+    } else {
+      return 'green';
+    }
+  }
   // This hack is required until https://github.com/themesberg/flowbite-svelte/issues/1395 is fixed.
   function disableButtonHack(event: MouseEvent) {
     if (!$isDirty) {
@@ -155,7 +182,7 @@
     </div>
     <div class="md:col-span-2 {$authenticatedUser?.type !== 'admin' ? 'hidden' : ''}">
       <Label for="type" class="mb-2">{$translations.adminTitle}</Label>
-      <Select id="type" items={selectUserItems} name="adminUserId" disabled={$authenticatedUser?.type !== 'admin'} />
+      <Select id="type" items={adminUserItems} name="adminUserId" class="dark:bg-gray-600" disabled={$authenticatedUser?.type !== 'admin'} />
       <Helper class="mt-2" color="red">
         {#if $errors.adminUserId}
           {$errors.adminUserId}
@@ -164,7 +191,7 @@
     </div>
     <div class={$authenticatedUser?.type !== 'admin' ? 'hidden' : ''}>
       <Label for="type" class="mb-2">{$translations.serviceBodyTypeTitle}</Label>
-      <Select id="type" items={typeItems} name="type" disabled={$authenticatedUser?.type !== 'admin'} />
+      <Select id="type" items={typeItems} name="type" class="dark:bg-gray-600" disabled={$authenticatedUser?.type !== 'admin'} />
       <Helper class="mt-2" color="red">
         {#if $errors.type}
           {$errors.type}
@@ -173,7 +200,7 @@
     </div>
     <div class={$authenticatedUser?.type !== 'admin' ? 'hidden' : ''}>
       <Label for="parentId" class="mb-2">{$translations.parentIdTitle}</Label>
-      <Select id="parentId" items={parentIdItems} name="parentId" disabled={$authenticatedUser?.type !== 'admin'} />
+      <Select id="parentId" items={parentIdItems} name="parentId" class="dark:bg-gray-600" disabled={$authenticatedUser?.type !== 'admin'} />
       <Helper class="mt-2" color="red">
         {#if $errors.parentId}
           {$errors.parentId}
@@ -181,10 +208,9 @@
       </Helper>
     </div>
     <div class="md:col-span-2">
-      <!--        TODO: User selection, observers?-->
       <Label for="assignedUserIds" class="mb-2">{$translations.meetingListEditorsTitle}</Label>
-      <MultiSelect id="assignedUserIds" items={userItems} name="assignedUserIds" bind:value={assignedUserIdsSelected} let:item let:clear>
-        <Badge color={userTypeToColor[userIdToUser[item.value].type]} dismissable params={{ duration: 100 }} on:close={clear}>
+      <MultiSelect id="assignedUserIds" items={userItems} name="assignedUserIds" class="bg-gray-50 dark:bg-gray-600" bind:value={assignedUserIdsSelected} let:item let:clear>
+        <Badge rounded color={badgeColor(item.value)} dismissable params={{ duration: 100 }} on:close={clear}>
           {item.name}
         </Badge>
       </MultiSelect>
