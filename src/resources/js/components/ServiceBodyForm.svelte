@@ -1,7 +1,7 @@
 <script lang="ts">
   import { validator } from '@felte/validator-yup';
   import { createForm } from 'felte';
-  import { Badge, Button, Helper, Input, Label, MultiSelect, Select, Textarea } from 'flowbite-svelte';
+  import { Badge, Button, Helper, Input, Label, MultiSelect, Select, Textarea, type ColorVariant } from 'flowbite-svelte';
   import { createEventDispatcher } from 'svelte';
   import * as yup from 'yup';
 
@@ -24,19 +24,14 @@
       .map((u) => ({ value: u.id.toString(), name: u.name }))
       .sort((a, b) => a.name.localeCompare(b.name))
   ];
-  const userItems = users
-    .map((u) => {
-      let color;
-      if (u.type === 'observer') {
-        color = 'yellow';
-      } else if (u.type === 'deactivated') {
-        color = 'red';
-      } else {
-        color = 'green';
-      }
-      return { value: u.id, name: u.displayName, color };
-    })
-    .sort((a, b) => a.name.localeCompare(b.name));
+  const userTypeToColor: Record<string, ColorVariant> = {
+    admin: 'green',
+    serviceBodyAdmin: 'green',
+    observer: 'yellow',
+    deactivated: 'red'
+  };
+  const userItems = users.map((u) => ({ value: u.id, name: u.displayName })).sort((a, b) => a.name.localeCompare(b.name));
+  const userIdToUser = Object.fromEntries(users.map((u) => [u.id, u]));
   const selectUserItems = [{ value: '-1', name: $translations.serviceBodiesNoPrimaryAdmin ?? '' }, ...userItems];
   const SB_TYPE_AREA = 'AS';
   const typeItems = [
@@ -189,7 +184,7 @@
       <!--        TODO: User selection, observers?-->
       <Label for="assignedUserIds" class="mb-2">{$translations.meetingListEditorsTitle}</Label>
       <MultiSelect id="assignedUserIds" items={userItems} name="assignedUserIds" bind:value={assignedUserIdsSelected} let:item let:clear>
-        <Badge color={item.color} dismissable params={{ duration: 100 }} on:close={clear}>
+        <Badge color={userTypeToColor[userIdToUser[item.value].type]} dismissable params={{ duration: 100 }} on:close={clear}>
           {item.name}
         </Badge>
       </MultiSelect>
