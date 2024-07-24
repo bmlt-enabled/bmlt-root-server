@@ -25,32 +25,13 @@
       .sort((a, b) => a.name.localeCompare(b.name))
   ];
   const userIdToUser = Object.fromEntries(users.map((u) => [u.id, u]));
-  const userItems = users
-    .filter((u) => {
-      // We hide observer users, because they simply aren't allowed to edit meetings.
-      // If an observer user is somehow already selected as an admin or meeting editor,
-      // we allow it to be displayed in the list to give the user a chance to remove it.
-      if (u.type !== 'observer') {
-        return true;
-      }
-      if (selectedServiceBody?.adminUserId === u.id) {
-        return true;
-      }
-      if ((selectedServiceBody?.assignedUserIds ?? []).includes(u.id)) {
-        return true;
-      }
-      return false;
-    })
-    .map((u) => ({ value: u.id, name: u.displayName }))
-    .sort((a, b) => a.name.localeCompare(b.name));
-
-  const adminUserItems = userItems.map((u) => {
-    const isDeactivated = userIdToUser[u.value].type === 'deactivated';
-    return {
-      value: u.value,
-      name: isDeactivated ? `[${$translations.deactivatedTitle?.toUpperCase()}] ${u.name}` : u.name
-    };
-  });
+  const userItems = users.map((u) => ({ value: u.id, name: u.displayName })).sort((a, b) => a.name.localeCompare(b.name));
+  const adminUserItems = userItems
+    // We hide observer users from the admin list, because they simply aren't allowed to edit meetings. If an observer user
+    // is somehow already selected as an admin, we allow it to be displayed in the list to give the user a chance to assign
+    // another admin.
+    .filter((u) => userIdToUser[u.value].type !== 'observer' || selectedServiceBody?.adminUserId === userIdToUser[u.value].id)
+    .map((u) => ({ value: u.value, name: userIdToUser[u.value].type === 'deactivated' ? `[${$translations.deactivatedTitle?.toUpperCase()}] ${u.name}` : u.name }));
   const SB_TYPE_AREA = 'AS';
   const typeItems = [
     { value: 'GR', name: 'Group' },
