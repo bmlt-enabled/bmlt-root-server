@@ -131,7 +131,7 @@
   <div class="grid gap-4 md:grid-cols-2">
     <div class={$authenticatedUser?.type !== 'admin' ? 'hidden' : ''}>
       <Label for="type" class="mb-2">{$translations.userTypeTitle}</Label>
-      <Select id="type" items={userTypeItems} name="type" disabled={$authenticatedUser?.type !== 'admin'} />
+      <Select id="type" items={userTypeItems} name="type" class="dark:bg-gray-600" disabled={$authenticatedUser?.type !== 'admin'} />
       <Helper class="mt-2" color="red">
         {#if $errors.type}
           {$errors.type}
@@ -140,7 +140,7 @@
     </div>
     <div class={$authenticatedUser?.type !== 'admin' ? 'hidden' : ''}>
       <Label for="ownerId" class="mb-2">{$translations.ownedByTitle}</Label>
-      <Select id="ownerId" items={userOwnerItems} name="ownerId" disabled={$authenticatedUser?.type !== 'admin'} />
+      <Select id="ownerId" items={userOwnerItems} name="ownerId" class="dark:bg-gray-600" disabled={$authenticatedUser?.type !== 'admin'} />
       <Helper class="mt-2" color="red">
         {#if $errors.ownerId}
           {$errors.ownerId}
