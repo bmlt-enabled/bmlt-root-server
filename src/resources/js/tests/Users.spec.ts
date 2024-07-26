@@ -6,6 +6,7 @@ import type { User, UserCreate, UserUpdate } from 'bmlt-root-server-client';
 
 import ApiClientWrapper from '../lib/RootServerApi';
 import { loginAndOpenTab, setupMocks, sharedAfterEach } from './sharedDataAndMocks';
+import userEvent from '@testing-library/user-event';
 
 // in addition to the shared mocks, here we also mock createUser, updateUser, and deleteUser (which are only used by this tab)
 
@@ -98,77 +99,121 @@ describe('check content in User tab when logged in as various users', () => {
   });
 });
 
-describe('check the contents of all the fields displayed in the popup dialog boxes', () => {
-  test('logged in as serveradmin; select an existing user to edit (Big Region)', async () => {
+describe('check editing, adding, and deleting users using the popup dialog boxes', () => {
+  test('logged in as serveradmin; edit Big Region', async () => {
+    // For each field displayed in the popup, check the default contents, edit the field, and check the result.
+    // Then save the edits, and check the contents of the User Update request.
     const user = await loginAndOpenTab('serveradmin', 'Users');
     await user.click(await screen.findByRole('cell', { name: 'Big Region' }));
-    // check all the fields in the dialog box and their default values
+    // The applyChanges button should be disabled at this point since there haven't been any edits.
+    // We'll need to find the Apply Changes button again later, after there have been changes -- for some reason it's
+    // a different button after it's enabled.
+    const b = await screen.findByRole('button', { name: 'Apply Changes' });
+    // This test ought to work but doesn't, so check for 'cursor-not-allowed' instead
+    // expect(b).toBeDisabled();
+    expect(b.attributes.getNamedItem('class')?.value.includes('cursor-not-allowed')).toBeTruthy();
     const userType = (await screen.findByRole('combobox', { name: 'User Type' })) as HTMLSelectElement;
     expect(userType.value).toBe('serviceBodyAdmin');
-    // could check for all options, but for now just check one other User Type option is there
-    expect(await screen.findByRole('option', { name: 'Observer' })).toBeInTheDocument();
+    await userEvent.selectOptions(userType, ['Observer']);
+    expect(userType.value).toBe('observer');
     const ownedBy = (await screen.findByRole('combobox', { name: 'Owned By' })) as HTMLSelectElement;
     expect(ownedBy.value).toBe('2'); // id of Northern Zone
-    // check for one other possible owner (server admin)
-    expect(await screen.findByRole('option', { name: 'Server Administrator' })).toBeInTheDocument();
+    await userEvent.selectOptions(ownedBy, ['1']);
+    expect(ownedBy.value).toBe('1');
     const displayName = (await screen.findByRole('textbox', { name: 'Name' })) as HTMLInputElement;
     expect(displayName.value).toBe('Big Region');
+    await user.clear(displayName);
+    await user.type(displayName, 'Bigger Region');
     const email = (await screen.findByRole('textbox', { name: 'Email' })) as HTMLInputElement;
     expect(email.value).toBe('big@bmlt.app');
+    await user.clear(email);
+    await user.type(email, 'bigger@bmlt.app');
+    expect(email.value).toBe('bigger@bmlt.app');
     const description = (await screen.findByRole('textbox', { name: 'Description' })) as HTMLInputElement;
     expect(description.value).toBe('Big Region Administrator');
+    // just for variety we don't clear description, just append to it
+    await user.type(description, ' now bigger');
+    expect(description.value).toBe('Big Region Administrator now bigger');
     const userName = (await screen.findByRole('textbox', { name: 'Username' })) as HTMLInputElement;
     expect(userName.value).toBe('BigRegion');
+    await user.clear(userName);
+    await user.type(userName, 'BiggerRegion');
+    expect(userName.value).toBe('BiggerRegion');
     const password = (await screen.findByLabelText('Password')) as HTMLInputElement;
     expect(password.value).toBe('');
+    await user.type(password, 'new password');
+    expect(password.value).toBe('new password');
+    const applyChanges = await screen.findByRole('button', { name: 'Apply Changes' });
+    // no need to explicitly test that applyChanges is enabled, since clicking on it wouldn't work if it were disabled
+    await user.click(applyChanges);
+    // check all the fields in the mock User Update for their new values
+    expect(mockSavedUserUpdate?.type).toBe('observer');
+    expect(mockSavedUserUpdate?.ownerId).toBe(1);
+    expect(mockSavedUserUpdate?.displayName).toBe('Bigger Region');
+    expect(mockSavedUserUpdate?.email).toBe('bigger@bmlt.app');
+    expect(mockSavedUserUpdate?.description).toBe('Big Region Administrator now bigger');
+    expect(mockSavedUserUpdate?.username).toBe('BiggerRegion');
+    expect(mockSavedUserUpdate?.password).toBe('new password');
+    // check that user create and user delete weren't touched
+    expect(mockSavedUserCreate).toBe(null);
+    expect(mockDeletedUserId).toBe(null);
   });
-
   test('logged in as serveradmin; select Add User', async () => {
     const user = await loginAndOpenTab('serveradmin', 'Users');
-    const b = await screen.findByRole('button', { name: 'Add User' });
-    await user.click(b);
-    // TODO: not able to find any of the expected fields in the popup -- it's like it's not popping up
-  });
-});
-
-describe('check editing, adding, and deleting users', () => {
-  test('logged in as serveradmin; edit Big Region', async () => {
-    const user = await loginAndOpenTab('serveradmin', 'Users');
-    await user.click(await screen.findByRole('cell', { name: 'Big Region' }));
-    // try changing everything
+    await user.click(await screen.findByRole('button', { name: 'Add User' }));
+    // check that the User Type menu is there but don't change the default (we already tested changing it in the update user test)
     const userType = (await screen.findByRole('combobox', { name: 'User Type' })) as HTMLSelectElement;
     expect(userType.value).toBe('serviceBodyAdmin');
-    // could check for all options, but for now just check one other User Type option is there
-    const obs = await screen.findByRole('option', { name: 'Observer' });
-    user.click(obs);
     const ownedBy = (await screen.findByRole('combobox', { name: 'Owned By' })) as HTMLSelectElement;
-    expect(ownedBy.value).toBe('2'); // id of Northern Zone
-    // check for one other possible owner (server admin)
-    expect(await screen.findByRole('option', { name: 'Server Administrator' })).toBeInTheDocument();
+    expect(ownedBy.value).toBe('1'); // id of serveradmin
+    await userEvent.selectOptions(ownedBy, ['2']);
+    expect(ownedBy.value).toBe('2');
     const displayName = (await screen.findByRole('textbox', { name: 'Name' })) as HTMLInputElement;
-    expect(displayName.value).toBe('Big Region');
+    await user.type(displayName, 'Weird Region');
+    expect(displayName.value).toBe('Weird Region');
     const email = (await screen.findByRole('textbox', { name: 'Email' })) as HTMLInputElement;
-    expect(email.value).toBe('big@bmlt.app');
+    await user.type(email, 'weird@bmlt.app');
+    expect(email.value).toBe('weird@bmlt.app');
     const description = (await screen.findByRole('textbox', { name: 'Description' })) as HTMLInputElement;
-    expect(description.value).toBe('Big Region Administrator');
+    await user.type(description, 'a weird description');
+    expect(description.value).toBe('a weird description');
     const userName = (await screen.findByRole('textbox', { name: 'Username' })) as HTMLInputElement;
-    expect(userName.value).toBe('BigRegion');
+    await user.type(userName, 'WeirdRegion');
+    expect(userName.value).toBe('WeirdRegion');
     const password = (await screen.findByLabelText('Password')) as HTMLInputElement;
-    expect(password.value).toBe('');
-    const applyChanges = await screen.findByRole('button', { name: 'Apply Changes' });
-    user.click(applyChanges);
-    // TODO: it seems like the applyChanges button isn't being clicked in fact.  At this point in the test we should be
-    // able to check mockSavedUserUpdate for the changes
-    // some fake tests for now to get this by the linter
-    expect(mockSavedUserCreate).toBe(null);
+    await user.type(password, 'weird password');
+    expect(password.value).toBe('weird password');
+    // at this point there are *two* 'Add User' buttons.  Click the second one.  (Kind of funky ...)
+    const addButtons = await screen.findAllByRole('button', { name: 'Add User' });
+    await user.click(addButtons[1]);
+    expect(mockSavedUserCreate?.type).toBe('serviceBodyAdmin');
+    expect(mockSavedUserCreate?.ownerId).toBe(2);
+    expect(mockSavedUserCreate?.displayName).toBe('Weird Region');
+    expect(mockSavedUserCreate?.email).toBe('weird@bmlt.app');
+    expect(mockSavedUserCreate?.description).toBe('a weird description');
+    expect(mockSavedUserCreate?.username).toBe('WeirdRegion');
+    expect(mockSavedUserCreate?.password).toBe('weird password');
     expect(mockSavedUserUpdate).toBe(null);
     expect(mockDeletedUserId).toBe(null);
   });
-  // TODO: test canceling an edit
-  test('logged in as serveradmin; select Add User', async () => {
+  test('logged in as serveradmin; select Add User, fill in bad data, and check for error messages', async () => {
     const user = await loginAndOpenTab('serveradmin', 'Users');
-    const b = await screen.findByRole('button', { name: 'Add User' });
-    await user.click(b);
-    // TODO: not able to find any of the expected fields in the popup -- similarly, it seems like the button isn't being pressed
+    await user.click(await screen.findByRole('button', { name: 'Add User' }));
+    const password = (await screen.findByLabelText('Password')) as HTMLInputElement;
+    await user.type(password, 'short');
+    const addButtons = await screen.findAllByRole('button', { name: 'Add User' });
+    await user.click(addButtons[1]);
+    expect(await screen.findByText('displayName is a required field')).toBeInTheDocument();
+    expect(await screen.findByText('username is a required field')).toBeInTheDocument();
+    expect(await screen.findByText('password must be between 12 and 255 characters')).toBeInTheDocument();
+  });
+  test('logged in as Northern Zone; edit Big Region', async () => {
+    // We already tested the editing form when logged in as serveradmin.  Here just test that the User Type
+    // and Owned By menus are disabled and also hidden, and that one field (Name) is present and enabled.
+    const user = await loginAndOpenTab('NorthernZone', 'Users');
+    await user.click(await screen.findByRole('cell', { name: 'Big Region' }));
+    expect(await screen.findByRole('combobox', { name: 'User Type', hidden: true })).toBeDisabled();
+    expect(await screen.findByRole('combobox', { name: 'Owned By', hidden: true })).toBeDisabled();
+    expect(await screen.findByRole('textbox', { name: 'Name' })).toBeEnabled();
   });
 });
