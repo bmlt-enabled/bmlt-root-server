@@ -1,12 +1,12 @@
 import { beforeAll, beforeEach, describe, test, vi } from 'vitest';
 import { screen } from '@testing-library/svelte';
 import '@testing-library/jest-dom';
+import userEvent from '@testing-library/user-event';
 
 import type { User, UserCreate, UserUpdate } from 'bmlt-root-server-client';
 
 import ApiClientWrapper from '../lib/RootServerApi';
 import { loginAndOpenTab, setupMocks, sharedAfterEach } from './sharedDataAndMocks';
-import userEvent from '@testing-library/user-event';
 
 // in addition to the shared mocks, here we also mock createUser, updateUser, and deleteUser (which are only used by this tab)
 
@@ -124,6 +124,7 @@ describe('check editing, adding, and deleting users using the popup dialog boxes
     expect(displayName.value).toBe('Big Region');
     await user.clear(displayName);
     await user.type(displayName, 'Bigger Region');
+    expect(displayName.value).toBe('Bigger Region');
     const email = (await screen.findByRole('textbox', { name: 'Email' })) as HTMLInputElement;
     expect(email.value).toBe('big@bmlt.app');
     await user.clear(email);
@@ -158,6 +159,7 @@ describe('check editing, adding, and deleting users using the popup dialog boxes
     expect(mockSavedUserCreate).toBe(null);
     expect(mockDeletedUserId).toBe(null);
   });
+
   test('logged in as serveradmin; select Add User', async () => {
     const user = await loginAndOpenTab('serveradmin', 'Users');
     await user.click(await screen.findByRole('button', { name: 'Add User' }));
@@ -196,6 +198,7 @@ describe('check editing, adding, and deleting users using the popup dialog boxes
     expect(mockSavedUserUpdate).toBe(null);
     expect(mockDeletedUserId).toBe(null);
   });
+
   test('logged in as serveradmin; select Add User, fill in bad data, and check for error messages', async () => {
     const user = await loginAndOpenTab('serveradmin', 'Users');
     await user.click(await screen.findByRole('button', { name: 'Add User' }));
@@ -207,6 +210,7 @@ describe('check editing, adding, and deleting users using the popup dialog boxes
     expect(await screen.findByText('username is a required field')).toBeInTheDocument();
     expect(await screen.findByText('password must be between 12 and 255 characters')).toBeInTheDocument();
   });
+
   test('logged in as Northern Zone; edit Big Region', async () => {
     // We already tested the editing form when logged in as serveradmin.  Here just test that the User Type
     // and Owned By menus are disabled and also hidden, and that one field (Name) is present and enabled.
@@ -215,5 +219,13 @@ describe('check editing, adding, and deleting users using the popup dialog boxes
     expect(await screen.findByRole('combobox', { name: 'User Type', hidden: true })).toBeDisabled();
     expect(await screen.findByRole('combobox', { name: 'Owned By', hidden: true })).toBeDisabled();
     expect(await screen.findByRole('textbox', { name: 'Name' })).toBeEnabled();
+  });
+
+  test('logged in as serveradmin; delete Small Region', async () => {
+    // TODO: finish this test.  mockDeletedUserId should end up set to 4
+  });
+
+  test('logged in as serveradmin; try to delete Big Region', async () => {
+    // TODO: finish this test.  This should fail because Big Region has children.
   });
 });
