@@ -71,4 +71,16 @@ describe('language selection tests', () => {
     }
     expect(errorName).toBe('TestingLibraryElementError');
   });
+
+  test('test ensure same keys exist for all languages and are sorted', () => {
+    const allTranslations = translations.getTranslationsForAllLanguages();
+    const languages = Object.keys(allTranslations);
+    const referenceLanguage = 'en';
+    const referenceKeys = Object.keys(allTranslations[referenceLanguage]).sort();
+
+    languages.forEach((language) => {
+      const currentKeys = Object.keys(allTranslations[language]);
+      expect(currentKeys).toEqual(referenceKeys);
+    });
+  });
 });

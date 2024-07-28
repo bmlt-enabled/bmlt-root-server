@@ -7,8 +7,8 @@ const strings = new LocalizedStrings({
   en: {
     addServiceBody: 'Add Service Body',
     addUser: 'Add User',
-    administratorTitle: 'Administrator',
     adminTitle: 'Admin',
+    administratorTitle: 'Administrator',
     applyChangesTitle: 'Apply Changes',
     confirmDeleteServiceBody: 'Are you sure you want to delete this service body?',
     confirmDeleteUser: 'Are you sure you want to delete this user?',
@@ -51,10 +51,10 @@ const strings = new LocalizedStrings({
     serviceBodyTypeTitle: 'Service Body Type',
     userDeleteConflictError: 'Error: The user could not be deleted because it is still associated with at least one service body or is the parent of another user.',
     userIsDeactivated: 'User is deactivated.',
-    usernameTitle: 'Username',
     userTitle: 'User',
-    usersTitle: 'Users',
     userTypeTitle: 'User Type',
+    usernameTitle: 'Username',
+    usersTitle: 'Users',
     websiteUrlTitle: 'Web Site URL',
     welcome: 'Welcome',
     worldIdTitle: 'World Committee Code'
@@ -62,8 +62,8 @@ const strings = new LocalizedStrings({
   de: {
     addServiceBody: 'Service-Body hinzufügen',
     addUser: 'Benutzer hinzufügen',
-    administratorTitle: 'Administrator/Administratorin', // TOFIX: translate this way, or just Administrator?
     adminTitle: 'Admin', // TOFIX: translate
+    administratorTitle: 'Administrator/Administratorin', // TOFIX: translate this way, or just Administrator?
     applyChangesTitle: 'Änderung anwenden',
     confirmDeleteServiceBody: 'Bist du sicher, dass du diesen Service-Body löschen möchten?',
     confirmDeleteUser: 'Bist du sicher, dass du diesen Benutzer löschen möchten?',
@@ -106,163 +106,13 @@ const strings = new LocalizedStrings({
     serviceBodyTypeTitle: 'Service Body Type', // TOFIX: translate
     userDeleteConflictError: 'Error: The user could not be deleted because it is still associated with at least one service body or is the parent of another user.', // TOFIX: translate
     userIsDeactivated: 'User is deactivated.', // TOFIX: translate
-    usernameTitle: 'Benutzername',
     userTitle: 'Benutzer',
-    usersTitle: 'Benutzer',
     userTypeTitle: 'User Type', // TOFIX: translate
+    usernameTitle: 'Benutzername',
+    usersTitle: 'Benutzer',
     websiteUrlTitle: 'Web Site URL', // TOFIX: translate
     welcome: 'Willkommen',
     worldIdTitle: 'World Committee Code' // TOFIX: translate
-  },
-  dk: {
-    loginVerb: 'Log Ind',
-    passwordTitle: 'Kodeord',
-    serviceBodiesTitle: 'Service Enheder',
-    formatsTitle: 'Struktur',
-    myAccountTitle: 'Min konto',
-    signOutTitle: 'Log ud',
-    createNewUserTitle: 'Opret En Ny Bruger',
-    userIsATitle: 'Bruger Er En:',
-    descriptionTitle: 'Beskrivelse:',
-    nameTitle: 'Navn',
-    ownedByTitle: 'Ejet Af',
-    deleteUserTitle: 'Slet Denne Bruger',
-    observerTitle: 'Service enhed overvåger',
-    deactivatedUserTitle: 'Deaktiveret bruger',
-    noUsers: '- None -'
-  },
-  es: {
-    loginTitle: 'Acceso',
-    loginVerb: 'Acceder',
-    passwordTitle: 'Contraseña',
-    serviceBodiesTitle: 'Cuerpos de servicio',
-    formatsTitle: 'Formatos',
-    myAccountTitle: 'Mi cuenta',
-    signOutTitle: 'Salir',
-    emailTitle: 'Correo electrónica',
-    createNewUserTitle: 'Crear un nuevo usuario',
-    descriptionTitle: 'Descripción:',
-    nameTitle: 'Nombre',
-    ownedByTitle: 'Controlado Por',
-    deleteUserTitle: 'Elimine este usuario',
-    adminTitle: 'Administrador',
-    serviceBodyAdminTitle: 'Administrador de cuerpo de servicio',
-    observerTitle: 'Observador de cuerpo de servicio',
-    deactivatedUserTitle: 'Usario desactivado', // TODO: check that this translation is correct
-    noUsers: '- None -'
-  },
-  fa: {},
-  fr: {
-    loginVerb: 'Connexion',
-    passwordTitle: 'Mot de passe',
-    meetingsTitle: 'Réunions',
-    serviceBodiesTitle: 'Composantes de structure de service',
-    usersTitle: 'Utilisateurs',
-    myAccountTitle: 'Mon Compte',
-    signOutTitle: 'Déconnexion',
-    createNewUserTitle: 'Créer un nouvel utilisateur',
-    userIsATitle: 'Je suis un:',
-    nameTitle: 'Nom',
-    ownedByTitle: 'Appartient à',
-    deleteUserTitle: 'Supprimer cet utilisateur',
-    adminTitle: 'Administrateur',
-    serviceBodyAdminTitle: "Administrateur d'une structure de service",
-    observerTitle: 'Observateur',
-    deactivatedUserTitle: 'Utilisateur désactivé', // TODO: check that this translation is correct
-    noUsers: '- None -'
-  },
-  it: {
-    loginVerb: 'Entra',
-    serviceBodiesTitle: 'Strutture di Servizio',
-    formatsTitle: 'Formatos',
-    myAccountTitle: 'Il mio account',
-    signOutTitle: 'Esci',
-    createNewUserTitle: 'Crea un nuovo utente',
-    userIsATitle: "L'utente è un:",
-    descriptionTitle: 'Descrizione:',
-    nameTitle: 'Nome',
-    deleteUserTitle: 'Cancella questo utente',
-    adminTitle: 'Amministratore',
-    serviceBodyAdminTitle: 'Amministratore della struttura di servizio',
-    observerTitle: 'Osservatore nella struttura di servizio',
-    deactivatedUserTitle: 'Utente disattivato', // TODO: check that this translation is correct
-    noUsers: '- None -'
-  },
-  pl: {
-    loginVerb: 'Zaloguj się',
-    passwordTitle: 'Hasło',
-    serviceBodiesTitle: 'Organy Służb',
-    usersTitle: 'Użytkownicy',
-    formatsTitle: 'Formaty',
-    myAccountTitle: 'Moje Konto',
-    signOutTitle: 'Wyloguj',
-    createNewUserTitle: 'Utwórz nowego użytkownika',
-    userIsATitle: 'Użytkownik:',
-    descriptionTitle: 'Opis:',
-    nameTitle: 'Nazwa',
-    ownedByTitle: 'Właściciel',
-    deleteUserTitle: 'Usuń tego użytkownika',
-    serviceBodyAdminTitle: 'Administrator organu służb',
-    observerTitle: 'Obserwator z organu służb',
-    deactivatedUserTitle: 'Dezaktywowany użytkownik',
-    noUsers: '- None -'
-  },
-  pt: {
-    loginVerb: 'Entrar',
-    passwordTitle: 'Senha',
-    meetingsTitle: 'Reuniões',
-    usersTitle: 'Usuários',
-    formatsTitle: 'Formato',
-    myAccountTitle: 'Minha Conta',
-    signOutTitle: 'SAIR',
-    createNewUserTitle: 'Criar um novo usuário',
-    userIsATitle: 'O usuário é:',
-    descriptionTitle: 'Descrição:',
-    nameTitle: 'Nome',
-    ownedByTitle: 'Pertence a',
-    deleteUserTitle: 'Apagar esse usuário',
-    adminTitle: 'Administrador',
-    serviceBodyAdminTitle: 'Administrador de corpo de serviço',
-    observerTitle: 'Observador',
-    deactivatedUserTitle: 'Usuário desativado', // TODO: check that this translation is correct
-    noUsers: '- None -'
-  },
-  ru: {
-    loginVerb: 'Логин',
-    passwordTitle: 'Пароль',
-    serviceBodiesTitle: 'Органы Oбслуживания',
-    usersTitle: 'Пользователи',
-    formatsTitle: 'Форматы',
-    myAccountTitle: 'Мой Aккаунт',
-    signOutTitle: 'Выход',
-    createNewUserTitle: 'Создать нового пользователя',
-    userIsATitle: 'Пользователь это:',
-    descriptionTitle: 'Описание:',
-    nameTitle: 'Имя',
-    ownedByTitle: 'Принадлежит',
-    deleteUserTitle: 'Удалить пользователя',
-    adminTitle: 'Администратор',
-    serviceBodyAdminTitle: 'Администратор орагана обслуживания',
-    observerTitle: 'Наблюдатель органа обслуживания',
-    deactivatedUserTitle: 'Деактивированный пользователь', // TODO: check that this translation is correct
-    noUsers: '- None -'
-  },
-  sv: {
-    loginVerb: 'Logga in',
-    passwordTitle: 'Lösenord',
-    myAccountTitle: 'Mitt konto',
-    signOutTitle: 'Logga ut',
-    emailTitle: 'E-post',
-    createNewUserTitle: 'Skapa en användare',
-    userIsATitle: 'Användaren är en:',
-    descriptionTitle: 'Beskrivning:',
-    nameTitle: 'Namn',
-    deleteUserTitle: 'Kassera denna användare',
-    adminTitle: 'Administratör',
-    serviceBodyAdminTitle: 'Serviceenhet Administratör',
-    observerTitle: 'Serviceenhet övervakare',
-    deactivatedUserTitle: 'Avaktiverad användare', // TODO: check that this translation is correct
-    noUsers: '- None -'
   }
 });
 
