@@ -162,8 +162,8 @@
       </Helper>
     </div>
     <div class="md:col-span-2 {$authenticatedUser?.type !== 'admin' ? 'hidden' : ''}">
-      <Label for="type" class="mb-2">{$translations.adminTitle}</Label>
-      <Select id="type" items={adminUserItems} name="adminUserId" class="dark:bg-gray-600" disabled={$authenticatedUser?.type !== 'admin'} />
+      <Label for="adminUserId" class="mb-2">{$translations.adminTitle}</Label>
+      <Select id="adminUserId" items={adminUserItems} name="adminUserId" class="dark:bg-gray-600" disabled={$authenticatedUser?.type !== 'admin'} />
       <Helper class="mt-2" color="red">
         {#if $errors.adminUserId}
           {$errors.adminUserId}
@@ -240,7 +240,7 @@
     </div>
     <div class="md:col-span-2">
       <Label for="worldId" class="mb-2">{$translations.worldIdTitle}</Label>
-      <Input type="text" id="helpline" name="worldId" />
+      <Input type="text" id="worldId" name="worldId" />
       <Helper class="mt-2" color="red">
         {#if $errors.worldId}
           {$errors.worldId}
