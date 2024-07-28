@@ -290,6 +290,11 @@ class Translations {
     localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
     this.store.set(strings);
   }
+
+  getTranslationsForLanguage(language: string | null): Record<string, string> {
+    // @ts-expect-error library missing type def for getContent() and we trust this lib is prob never changing
+    return strings._props[language ?? this.getLanguage()] || {};
+  }
 }
 
 export const translations = new Translations();
