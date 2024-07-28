@@ -50,9 +50,11 @@ const strings = new LocalizedStrings({
     serviceBodyAdminTitle: 'Service Body Administrator', // TOFIX: translate
     serviceBodyDeleteConflictError: 'Error: The service body could not be deleted because it is still associated with meetings or is a parent of other service bodies.', // TOFIX: translate
     serviceBodyTypeTitle: 'Service Body Type', // TOFIX: translate
+    settingsTitle: 'Settings', // TOFIX: translate
     userDeleteConflictError: 'Error: The user could not be deleted because it is still associated with at least one service body or is the parent of another user.', // TOFIX: translate
     userIsDeactivated: 'User is deactivated.', // TOFIX: translate
     usernameTitle: 'Benutzername',
+    userProfileTitle: 'User Profile', // TOFIX: translate
     usersTitle: 'Benutzer',
     userTitle: 'Benutzer',
     userTypeTitle: 'User Type', // TOFIX: translate
@@ -105,9 +107,11 @@ const strings = new LocalizedStrings({
     serviceBodyAdminTitle: 'Service Body Administrator',
     serviceBodyDeleteConflictError: 'Error: The service body could not be deleted because it is still associated with meetings or is a parent of other service bodies.',
     serviceBodyTypeTitle: 'Service Body Type',
+    settingsTitle: 'Settings',
     userDeleteConflictError: 'Error: The user could not be deleted because it is still associated with at least one service body or is the parent of another user.',
     userIsDeactivated: 'User is deactivated.',
     usernameTitle: 'Username',
+    userProfileTitle: 'User Profile',
     usersTitle: 'Users',
     userTitle: 'User',
     userTypeTitle: 'User Type',

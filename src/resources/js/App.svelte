@@ -9,6 +9,7 @@
   import Meetings from './routes/Meetings.svelte';
   import ServiceBodies from './routes/ServiceBodies.svelte';
   import Users from './routes/Users.svelte';
+  import UserProfile from './routes/UserProfile.svelte';
   import SpinnerModal from './components/SpinnerModal.svelte';
   import { apiCredentials } from './stores/apiCredentials';
 
@@ -24,6 +25,10 @@
     }),
     '/servicebodies': wrap({
       component: ServiceBodies,
+      conditions: [requiresAuthentication]
+    }),
+    '/userprofile': wrap({
+      component: UserProfile,
       conditions: [requiresAuthentication]
     }),
     '*': wrap({

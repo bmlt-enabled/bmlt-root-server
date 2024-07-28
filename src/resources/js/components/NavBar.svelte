@@ -1,8 +1,9 @@
 <script lang="ts">
-  import { Navbar, NavBrand, NavLi, NavUl, NavHamburger } from 'flowbite-svelte';
+  import { Avatar, Dropdown, DropdownHeader, DropdownDivider, DropdownItem, Navbar, NavBrand, NavLi, NavUl, NavHamburger } from 'flowbite-svelte';
 
   import DarkMode from './DarkMode.svelte';
   import { apiCredentials } from '../stores/apiCredentials';
+  import { authenticatedUser } from '../stores/apiCredentials';
   import { translations } from '../stores/localization';
 
   const globalSettings = settings;
@@ -16,6 +17,13 @@
 <Navbar>
   <NavHamburger />
   <div class="ml-auto flex items-center">
+    <Avatar id="userdropdown" data-testid="userdropdown" class="cursor-pointer" />
+    <Dropdown triggeredBy="#userdropdown">
+      <DropdownHeader>
+        <span class="block text-sm">{$authenticatedUser?.displayName}</span>
+      </DropdownHeader>
+      <DropdownItem href="#/userprofile">{$translations.settingsTitle}</DropdownItem>
+    </Dropdown>
     <DarkMode size="lg" class="inline-block hover:text-gray-900 dark:hover:text-white" />
   </div>
   <NavBrand href="#/">
