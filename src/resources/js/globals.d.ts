@@ -5,3 +5,9 @@ declare const settings: {
   languageMapping: Record<string, string>;
   version: string;
 };
+
+declare module 'localized-strings' {
+  export interface LocalizedStringsMethods {
+    getContent(): any;
+  }
+}

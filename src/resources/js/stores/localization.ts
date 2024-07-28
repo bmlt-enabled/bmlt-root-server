@@ -291,9 +291,12 @@ class Translations {
     this.store.set(strings);
   }
 
-  getTranslationsForLanguage(language: string | null): Record<string, string> {
-    // @ts-expect-error library missing type def for getContent() and we trust this lib is prob never changing
-    return strings._props[language ?? this.getLanguage()] || {};
+  getTranslationsForLanguage(language: string | null = null): Record<string, string> {
+    return strings.getContent()[language ?? this.getLanguage()];
+  }
+
+  getTranslationsForAllLanguages(): Record<string, Record<string, string>> {
+    return strings.getContent();
   }
 }
 
