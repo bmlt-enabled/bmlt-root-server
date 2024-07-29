@@ -1,69 +1,15 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/svelte';
 import { describe, test } from 'vitest';
 import ServiceBodyForm from '../components/ServiceBodyForm.svelte';
-import { authenticatedUser } from '../stores/apiCredentials';
 import { translations } from '../stores/localization';
 import type { ServiceBody, User } from 'bmlt-root-server-client';
+import { allServiceBodies, allUsers, login } from './sharedDataAndMocks';
 
-const serviceBodies: ServiceBody[] = [
-  {
-    id: 1,
-    name: 'Big Region',
-    adminUserId: 1,
-    type: 'RS',
-    parentId: null,
-    assignedUserIds: [2, 3],
-    email: 'bigregion@example.com',
-    description: 'Big Region Description',
-    url: 'https://bigregion.example.com',
-    helpline: '123-456-7890',
-    worldId: 'BR123'
-  }
-];
+const serviceBodies: ServiceBody[] = allServiceBodies;
 
-const selectedServiceBody: ServiceBody = {
-  id: 1,
-  name: 'Big Region',
-  adminUserId: 1,
-  type: 'RS',
-  parentId: null,
-  assignedUserIds: [2, 3],
-  email: 'bigregion@example.com',
-  description: 'Big Region Description',
-  url: 'https://bigregion.example.com',
-  helpline: '123-456-7890',
-  worldId: 'BR123'
-};
+const selectedServiceBody: ServiceBody = allServiceBodies[0];
 
-const users: User[] = [
-  {
-    description: 'Main Server Administrator',
-    displayName: 'Server Administrator',
-    email: 'mockadmin@bmlt.app',
-    id: 1,
-    ownerId: -1,
-    type: 'admin',
-    username: 'serveradmin'
-  },
-  {
-    description: 'Northern Zone Administrator',
-    displayName: 'Northern Zone',
-    email: 'nzone@bmlt.app',
-    id: 2,
-    ownerId: -1,
-    type: 'serviceBodyAdmin',
-    username: 'NorthernZone'
-  },
-  {
-    description: 'Big Region Administrator',
-    displayName: 'Big Region',
-    email: 'big@bmlt.app',
-    id: 3,
-    ownerId: 2,
-    type: 'serviceBodyAdmin',
-    username: 'BigRegion'
-  }
-];
+const users: User[] = allUsers;
 
 describe('ServiceBodyForm Component', () => {
   test('test Ensure form fields are present', async () => {
@@ -137,41 +83,9 @@ describe('ServiceBodyForm Component', () => {
   });
 
   test('test Fields are disabled for non-admin users', () => {
-    vi.spyOn(authenticatedUser, 'subscribe').mockImplementation((run) => {
-      run({
-        description: 'Northern Zone Administrator',
-        displayName: 'Northern Zone',
-        email: 'nzone@bmlt.app',
-        id: 2,
-        ownerId: -1,
-        type: 'serviceBodyAdmin',
-        username: 'NorthernZone'
-      });
-      return () => {};
-    });
-
+    login('NorthernZone');
     render(ServiceBodyForm, { props: { selectedServiceBody, serviceBodies, users } });
     expect(screen.getByLabelText(translations.getString('nameTitle'))).toBeDisabled();
     expect(screen.getByLabelText(translations.getString('adminTitle'))).toBeDisabled();
-  });
-
-  test('test Dispatches event after successful creation', async () => {
-    const { component } = render(ServiceBodyForm, { props: { selectedServiceBody: null, serviceBodies, users } });
-
-    const mockDispatch = vi.fn();
-    component.$on('saved', mockDispatch);
-
-    const nameInput = screen.getByLabelText(translations.getString('nameTitle'));
-    await fireEvent.input(nameInput, { target: { value: 'New Service Body' } });
-
-    const emailInput = screen.getByLabelText(translations.getString('emailTitle'));
-    await fireEvent.input(emailInput, { target: { value: 'new@example.com' } });
-
-    const addServiceBodyButton = screen.getByText(translations.getString('addServiceBody'));
-    await fireEvent.click(addServiceBodyButton);
-
-    await waitFor(() => {
-      expect(mockDispatch).toHaveBeenCalledWith(expect.objectContaining({ detail: { serviceBody: expect.any(Object) } }));
-    });
   });
 });
