@@ -142,6 +142,10 @@ class Translations {
     this.store.set(strings);
   }
 
+  getString(key: string, language?: string): string {
+    return strings.getString(key, language ?? this.getLanguage());
+  }
+
   getTranslationsForLanguage(language: string | null = null): Record<string, string> {
     return strings.getContent()[language ?? this.getLanguage()];
   }

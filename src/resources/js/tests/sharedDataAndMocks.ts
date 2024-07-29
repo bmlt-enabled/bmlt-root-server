@@ -21,12 +21,14 @@ import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 
 import { ResponseError } from 'bmlt-root-server-client';
-import type { Token, User } from 'bmlt-root-server-client';
+import type { Token, User, ServiceBody } from 'bmlt-root-server-client';
 
 import ApiClientWrapper from '../lib/RootServerApi';
 import { apiCredentials, authenticatedUser } from '../stores/apiCredentials';
 import App from '../App.svelte';
 import runtime from '../../../node_modules/bmlt-root-server-client/dist/runtime';
+
+type UserEventInstance = ReturnType<typeof userEvent.setup>;
 
 const mockServerAdmin: User = {
   description: 'Main Server Administrator',
@@ -117,6 +119,34 @@ const mockSmallRegionDeactivated: User = {
   type: 'deactivated',
   username: 'SmallDeactivated'
 };
+
+const mockNorthernZone: ServiceBody = {
+  id: 1,
+  name: 'Northern Zone',
+  adminUserId: 1,
+  type: 'ZF',
+  parentId: null,
+  assignedUserIds: [2, 3],
+  email: 'nzone@bmlt.app',
+  description: 'Northern Zone Description',
+  url: 'https://nzone.example.com',
+  helpline: '123-456-7890',
+  worldId: 'ZF123'
+};
+
+export const allUsers = [
+  mockServerAdmin,
+  mockNorthernZoneAdmin,
+  mockBigRegionAdmin,
+  mockSmallRegionAdmin,
+  mockRiverCityAreaAdmin,
+  mockMountainAreaAdmin,
+  mockRuralAreaAdmin,
+  mockSmallRegionObserver,
+  mockSmallRegionDeactivated
+];
+
+export const allServiceBodies: ServiceBody[] = [mockNorthernZone];
 
 const allUsersAndPasswords = [
   { user: mockServerAdmin, password: 'serveradmin-password' },
@@ -255,8 +285,7 @@ export async function sharedAfterEach() {
 }
 
 // utility function to log in as a specific user, and open the provided tab
-// TODO: not sure how to declare return type.  Thought it should be Promise<UserEvent> but that doesn't work.
-export async function loginAndOpenTab(username: string, tab: string): Promise<any> {
+export async function loginAndOpenTab(username: string, tab: string): Promise<UserEventInstance> {
   const user = userEvent.setup();
   render(App);
   await user.type(await screen.findByRole('textbox', { name: 'Username' }), username);
@@ -264,5 +293,14 @@ export async function loginAndOpenTab(username: string, tab: string): Promise<an
   await user.click(await screen.findByRole('button', { name: 'Log In' }));
   const link = await screen.findByRole('link', { name: tab, hidden: true });
   await user.click(link);
+  return user;
+}
+
+export async function login(username: string): Promise<UserEventInstance> {
+  const user = userEvent.setup();
+  render(App);
+  await user.type(await screen.findByRole('textbox', { name: 'Username' }), username);
+  await user.type(await screen.findByLabelText('Password'), findPassword(username));
+  await user.click(await screen.findByRole('button', { name: 'Log In' }));
   return user;
 }
