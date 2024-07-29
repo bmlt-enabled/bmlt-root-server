@@ -228,4 +228,14 @@ describe('check editing, adding, and deleting users using the popup dialog boxes
   test('logged in as serveradmin; try to delete Big Region', async () => {
     // TODO: finish this test.  This should fail because Big Region has children.
   });
+
+  test('confirm modal appears when attempting to close with unsaved changes', async () => {
+    const user = await loginAndOpenTab('serveradmin', 'Users');
+    await user.click(await screen.findByRole('cell', { name: 'Big Region' }));
+    const description = (await screen.findByRole('textbox', { name: 'Description' })) as HTMLInputElement;
+    await user.clear(description);
+    await user.type(description, 'Bigger Region');
+    await user.click(await screen.findByRole('button', { name: 'Close modal' }));
+    expect(screen.getByText('You have unsaved changes. Do you really want to close?')).toBeInTheDocument();
+  });
 });

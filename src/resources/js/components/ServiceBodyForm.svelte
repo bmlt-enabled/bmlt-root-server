@@ -7,7 +7,7 @@
 
   import { spinner } from '../stores/spinner';
   import RootServerApi from '../lib/RootServerApi';
-  import { formIsDirty } from '../lib/utils';
+  import { isDirty, formIsDirty } from '../lib/utils';
   import type { ServiceBody, ServiceBodyCreate, User } from 'bmlt-root-server-client';
   import { translations } from '../stores/localization';
   import { authenticatedUser } from '../stores/apiCredentials';
@@ -59,7 +59,7 @@
   let assignedUserIdsSelected = selectedServiceBody?.assignedUserIds ?? [];
   let savedServiceBody: ServiceBody;
 
-  const { data, errors, form, isDirty, setData } = createForm({
+  const { data, errors, form, setData } = createForm({
     initialValues: initialValues,
     onSubmit: async (values) => {
       spinner.show();
@@ -147,7 +147,9 @@
   }
 
   $: setData('assignedUserIds', assignedUserIdsSelected);
-  $: isDirty.set(formIsDirty(initialValues, $data));
+  $: {
+    formIsDirty(initialValues, $data);
+  }
 </script>
 
 <form use:form>
