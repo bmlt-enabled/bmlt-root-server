@@ -11,6 +11,8 @@ const strings = new LocalizedStrings({
     administratorTitle: 'Administrator/Administratorin', // TOFIX: translate this way, or just Administrator?
     adminTitle: 'Admin', // TOFIX: translate
     applyChangesTitle: 'Änderung anwenden',
+    cancel: 'Cancel', // TOFIX: translate
+    closeWithoutSaving: 'Close without saving', // TOFIX: translate
     confirmDeleteServiceBody: 'Bist du sicher, dass du diesen Service-Body löschen möchten?',
     confirmDeleteUser: 'Bist du sicher, dass du diesen Benutzer löschen möchten?',
     confirmYesImSure: 'Ja, ich bin sicher.',
@@ -58,7 +60,8 @@ const strings = new LocalizedStrings({
     userTypeTitle: 'User Type', // TOFIX: translate
     websiteUrlTitle: 'Web Site URL', // TOFIX: translate
     welcome: 'Willkommen',
-    worldIdTitle: 'World Committee Code' // TOFIX: translate
+    worldIdTitle: 'World Committee Code', // TOFIX: translate
+    youHaveUnsavedChanges: 'You have unsaved changes. Do you really want to close?' // TOFIX: translate
   },
   en: {
     addServiceBody: 'Add Service Body',
@@ -66,6 +69,8 @@ const strings = new LocalizedStrings({
     administratorTitle: 'Administrator',
     adminTitle: 'Admin',
     applyChangesTitle: 'Apply Changes',
+    cancel: 'Cancel',
+    closeWithoutSaving: 'Close without saving',
     confirmDeleteServiceBody: 'Are you sure you want to delete this service body?',
     confirmDeleteUser: 'Are you sure you want to delete this user?',
     confirmYesImSure: "Yes, I'm sure.",
@@ -113,7 +118,8 @@ const strings = new LocalizedStrings({
     userTypeTitle: 'User Type',
     websiteUrlTitle: 'Web Site URL',
     welcome: 'Welcome',
-    worldIdTitle: 'World Committee Code'
+    worldIdTitle: 'World Committee Code',
+    youHaveUnsavedChanges: 'You have unsaved changes. Do you really want to close?'
   }
 });
 
