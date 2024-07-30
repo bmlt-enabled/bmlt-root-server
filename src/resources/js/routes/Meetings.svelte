@@ -7,5 +7,5 @@
 
 <Nav />
 <Card class="mx-auto my-8 w-full max-w-lg bg-white p-8 text-center shadow-lg dark:bg-gray-800">
-  <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{$translations.meetingsTitle}</h5>
+  <h2 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{$translations.meetingsTitle}</h2>
 </Card>

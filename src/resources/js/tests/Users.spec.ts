@@ -3,23 +3,15 @@ import { screen } from '@testing-library/svelte';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 
-import { loginAndOpenTab, mockDeletedUserId, mockSavedUserCreate, mockSavedUserUpdate, setupMocks, sharedAfterEach, sharedBeforeEach } from './sharedDataAndMocks';
+import { login, mockDeletedUserId, mockSavedUserCreate, mockSavedUserUpdate, sharedAfterEach, sharedBeforeAll, sharedBeforeEach } from './sharedDataAndMocks';
 
-beforeAll(async () => {
-  setupMocks();
-});
-
-beforeEach(async () => {
-  sharedBeforeEach();
-});
-
-afterEach(async () => {
-  await sharedAfterEach();
-});
+beforeAll(sharedBeforeAll);
+beforeEach(sharedBeforeEach);
+afterEach(sharedAfterEach);
 
 describe('check content in User tab when logged in as various users', () => {
   test('check layout when logged in as serveradmin', async () => {
-    await loginAndOpenTab('serveradmin', 'Users');
+    await login('serveradmin', 'Users');
     expect(await screen.findByRole('heading', { name: 'Users', level: 2 })).toBeInTheDocument();
     expect(await screen.findByRole('textbox', { name: 'Search' })).toBeInTheDocument();
     // There should be 8 users, with 2 cells per user (display name and a delete icon)
@@ -32,7 +24,7 @@ describe('check content in User tab when logged in as various users', () => {
   });
 
   test('check layout when logged in as Northern Zone', async () => {
-    loginAndOpenTab('NorthernZone', 'Users');
+    login('NorthernZone', 'Users');
     // There should be 4 users, with 1 cell per user (display name but no delete icon)
     const cells = await screen.findAllByRole('cell');
     expect(cells.length).toBe(4);
@@ -43,7 +35,7 @@ describe('check content in User tab when logged in as various users', () => {
   });
 
   test('check layout when logged in as Big Region', async () => {
-    loginAndOpenTab('BigRegion', 'Users');
+    login('BigRegion', 'Users');
     // There should be 3 users, with 1 cell per user (display name but no delete icon)
     const cells = await screen.findAllByRole('cell');
     expect(cells.length).toBe(3);
@@ -53,12 +45,12 @@ describe('check content in User tab when logged in as various users', () => {
   });
 
   test('check layout when logged in as Small Region', async () => {
-    loginAndOpenTab('SmallRegion', 'Users');
+    login('SmallRegion', 'Users');
     expect(await screen.findByText('No users found.')).toBeInTheDocument();
   });
 
   test('check layout when logged in as Small Region Observer', async () => {
-    loginAndOpenTab('SmallObserver', 'Users');
+    login('SmallObserver', 'Users');
     expect(await screen.findByText('No users found.')).toBeInTheDocument();
   });
 });
@@ -67,7 +59,7 @@ describe('check editing, adding, and deleting users using the popup dialog boxes
   test('logged in as serveradmin; edit Big Region', async () => {
     // For each field displayed in the popup, check the default contents, edit the field, and check the result.
     // Then save the edits, and check the contents of the User Update request.
-    const user = await loginAndOpenTab('serveradmin', 'Users');
+    const user = await login('serveradmin', 'Users');
     await user.click(await screen.findByRole('cell', { name: 'Big Region' }));
     // The applyChanges button should be disabled at this point since there haven't been any edits.
     // We'll need to find the Apply Changes button again later, after there have been changes -- for some reason it's
@@ -125,7 +117,7 @@ describe('check editing, adding, and deleting users using the popup dialog boxes
   });
 
   test('logged in as serveradmin; select Add User', async () => {
-    const user = await loginAndOpenTab('serveradmin', 'Users');
+    const user = await login('serveradmin', 'Users');
     await user.click(await screen.findByRole('button', { name: 'Add User' }));
     // check that the User Type menu is there but don't change the default (we already tested changing it in the update user test)
     const userType = (await screen.findByRole('combobox', { name: 'User Type' })) as HTMLSelectElement;
@@ -164,7 +156,7 @@ describe('check editing, adding, and deleting users using the popup dialog boxes
   });
 
   test('logged in as serveradmin; select Add User, fill in bad data, and check for error messages', async () => {
-    const user = await loginAndOpenTab('serveradmin', 'Users');
+    const user = await login('serveradmin', 'Users');
     await user.click(await screen.findByRole('button', { name: 'Add User' }));
     const password = (await screen.findByLabelText('Password')) as HTMLInputElement;
     await user.type(password, 'short');
@@ -178,7 +170,7 @@ describe('check editing, adding, and deleting users using the popup dialog boxes
   test('logged in as Northern Zone; edit Big Region', async () => {
     // We already tested the editing form when logged in as serveradmin.  Here just test that the User Type
     // and Owned By menus are disabled and also hidden, and that one field (Name) is present and enabled.
-    const user = await loginAndOpenTab('NorthernZone', 'Users');
+    const user = await login('NorthernZone', 'Users');
     await user.click(await screen.findByRole('cell', { name: 'Big Region' }));
     expect(await screen.findByRole('combobox', { name: 'User Type', hidden: true })).toBeDisabled();
     expect(await screen.findByRole('combobox', { name: 'Owned By', hidden: true })).toBeDisabled();
@@ -186,7 +178,7 @@ describe('check editing, adding, and deleting users using the popup dialog boxes
   });
 
   test('logged in as serveradmin; delete Small Region', async () => {
-    const user = await loginAndOpenTab('serveradmin', 'Users');
+    const user = await login('serveradmin', 'Users');
     await user.click(await screen.findByRole('button', { name: 'Delete User Small Region' }));
     await user.click(await screen.findByRole('checkbox', { name: "Yes, I'm sure." }));
     await user.click(await screen.findByRole('button', { name: 'Delete' }));
@@ -197,7 +189,7 @@ describe('check editing, adding, and deleting users using the popup dialog boxes
 
   test('logged in as serveradmin; try to delete Big Region', async () => {
     // this should fail because Big Region has children
-    const user = await loginAndOpenTab('serveradmin', 'Users');
+    const user = await login('serveradmin', 'Users');
     await user.click(await screen.findByRole('button', { name: 'Delete User Big Region' }));
     await user.click(await screen.findByRole('checkbox', { name: "Yes, I'm sure." }));
     await user.click(await screen.findByRole('button', { name: 'Delete' }));
@@ -209,7 +201,7 @@ describe('check editing, adding, and deleting users using the popup dialog boxes
 
   test('logged in as serveradmin; try to delete Small Region Observer', async () => {
     // this should fail because Small Observer is observing the Northern Zone
-    const user = await loginAndOpenTab('serveradmin', 'Users');
+    const user = await login('serveradmin', 'Users');
     await user.click(await screen.findByRole('button', { name: 'Delete User Small Observer' }));
     await user.click(await screen.findByRole('checkbox', { name: "Yes, I'm sure." }));
     await user.click(await screen.findByRole('button', { name: 'Delete' }));
@@ -220,7 +212,7 @@ describe('check editing, adding, and deleting users using the popup dialog boxes
   });
 
   test('confirm modal appears when attempting to close with unsaved changes', async () => {
-    const user = await loginAndOpenTab('serveradmin', 'Users');
+    const user = await login('serveradmin', 'Users');
     await user.click(await screen.findByRole('cell', { name: 'Big Region' }));
     const description = (await screen.findByRole('textbox', { name: 'Description' })) as HTMLInputElement;
     await user.clear(description);

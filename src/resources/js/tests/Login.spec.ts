@@ -1,18 +1,15 @@
 import { beforeAll, describe, expect, test } from 'vitest';
 import { render, screen } from '@testing-library/svelte';
+import { replace } from 'svelte-spa-router';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 
 import App from '../App.svelte';
-import { setupMocks, sharedAfterEach } from './sharedDataAndMocks';
+import { sharedAfterEach, sharedBeforeAll, sharedBeforeEach } from './sharedDataAndMocks';
 
-beforeAll(async () => {
-  setupMocks();
-});
-
-afterEach(async () => {
-  await sharedAfterEach();
-});
+beforeAll(sharedBeforeAll);
+beforeEach(sharedBeforeEach);
+afterEach(sharedAfterEach);
 
 describe('login page tests', () => {
   test('check login page before logging in', async () => {
@@ -61,11 +58,9 @@ describe('login page tests', () => {
     expect(await screen.findByRole('textbox', { name: 'Username' })).toHaveDisplayValue('serveradmin');
     expect(await screen.findByLabelText('Password')).toHaveDisplayValue('serveradmin-password');
     await user.click(await screen.findByRole('button', { name: 'Log In' }));
-    // after a successful login, we should see 'Welcome Server Administrator' and the navbar
+    // after a successful login, we should see 'Welcome Server Administrator'
     await screen.findByText('Welcome Server Administrator');
-    // check for one element in the navbar
-    // TODO: shouldn't need to say hidden!
-    expect(await screen.findByRole('link', { name: 'Users', hidden: true })).toBeEnabled();
+    // navbar is tested in a different test (below)
     // log out, and make sure we're back at the login screen
     await user.click(await screen.findByRole('link', { name: 'Logout', hidden: true }));
     expect(await screen.findByRole('button', { name: 'Log In' })).toBeEnabled();
@@ -102,5 +97,30 @@ describe('login page tests', () => {
     await user.type(await screen.findByLabelText('Password'), 'small-region-deactivated-password');
     await user.click(await screen.findByRole('button', { name: 'Log In' }));
     expect(await screen.findByText('User is deactivated.')).toBeInTheDocument();
+  });
+});
+
+// test that each link in the navbar is live and goes someplace appropriate
+describe('navbar tests', () => {
+  test('navbar tests', async () => {
+    const user = userEvent.setup();
+    render(App);
+    await user.type(await screen.findByRole('textbox', { name: 'Username' }), 'serveradmin');
+    await user.type(await screen.findByLabelText('Password'), 'serveradmin-password');
+    await user.click(await screen.findByRole('button', { name: 'Log In' }));
+    // TODO: shouldn't need to say hidden for each of the links
+    await user.click(await screen.findByRole('link', { name: 'Meetings', hidden: true }));
+    expect(await screen.findByRole('heading', { level: 2, name: 'Meetings' })).toBeInTheDocument();
+    // TODO: the test fails without the replace('/') command.  Is this ok to include?
+    replace('/');
+    await user.click(await screen.findByRole('link', { name: 'Service Bodies', hidden: true }));
+    // expect(await screen.findByRole('heading', { level: 2, name: 'Service Bodies',  })).toBeInTheDocument();
+    replace('/');
+    await user.click(await screen.findByRole('link', { name: 'Users', hidden: true }));
+    expect(await screen.findByRole('heading', { level: 2, name: 'Users' })).toBeInTheDocument();
+    replace('/');
+    await user.click(await screen.findByRole('link', { name: 'Home', hidden: true }));
+    expect(await screen.findByRole('heading', { level: 5, name: 'Welcome Server Administrator' })).toBeInTheDocument();
+    // Logout is tested above
   });
 });

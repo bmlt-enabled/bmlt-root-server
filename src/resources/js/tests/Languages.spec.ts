@@ -4,12 +4,11 @@ import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 
 import App from '../App.svelte';
-import { setupMocks, sharedAfterEach } from './sharedDataAndMocks';
+import { sharedAfterEach, sharedBeforeAll, sharedBeforeEach } from './sharedDataAndMocks';
 import { translations } from '../stores/localization';
 
-beforeAll(async () => {
-  setupMocks();
-});
+beforeAll(sharedBeforeAll);
+beforeEach(sharedBeforeEach);
 
 afterEach(async () => {
   await sharedAfterEach();

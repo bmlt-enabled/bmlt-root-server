@@ -315,7 +315,8 @@ async function mockDeleteUser({ userId: id }: { userId: number }): Promise<void>
   mockDeletedUserId = id;
 }
 
-export function setupMocks() {
+export function sharedBeforeAll() {
+  // set up mocks
   vi.spyOn(ApiClientWrapper.api, 'getUser').mockImplementation(mockGetUser);
   vi.spyOn(ApiClientWrapper.api, 'getUsers').mockImplementation(mockGetUsers);
   vi.spyOn(ApiClientWrapper.api, 'authToken').mockImplementation(mockAuthToken);
@@ -338,23 +339,16 @@ export async function sharedAfterEach() {
   await apiCredentials.logout();
 }
 
-// utility function to log in as a specific user, and open the provided tab
-export async function loginAndOpenTab(username: string, tab: string): Promise<UserEventInstance> {
+// utility function to log in as a specific user, and optionally open the provided tab
+export async function login(username: string, tab: string | null = null): Promise<UserEventInstance> {
   const user = userEvent.setup();
   render(App);
   await user.type(await screen.findByRole('textbox', { name: 'Username' }), username);
   await user.type(await screen.findByLabelText('Password'), findPassword(username));
   await user.click(await screen.findByRole('button', { name: 'Log In' }));
-  const link = await screen.findByRole('link', { name: tab, hidden: true });
-  await user.click(link);
-  return user;
-}
-
-export async function login(username: string): Promise<UserEventInstance> {
-  const user = userEvent.setup();
-  render(App);
-  await user.type(await screen.findByRole('textbox', { name: 'Username' }), username);
-  await user.type(await screen.findByLabelText('Password'), findPassword(username));
-  await user.click(await screen.findByRole('button', { name: 'Log In' }));
+  if (tab) {
+    const link = await screen.findByRole('link', { name: tab, hidden: true });
+    await user.click(link);
+  }
   return user;
 }
