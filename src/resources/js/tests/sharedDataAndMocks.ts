@@ -21,7 +21,7 @@ import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 
 import { ResponseError } from 'bmlt-root-server-client';
-import type { Token, User, ServiceBody } from 'bmlt-root-server-client';
+import type { Token, ServiceBody, User, UserCreate, UserUpdate } from 'bmlt-root-server-client';
 
 import ApiClientWrapper from '../lib/RootServerApi';
 import { apiCredentials, authenticatedUser } from '../stores/apiCredentials';
@@ -126,7 +126,7 @@ const mockNorthernZone: ServiceBody = {
   adminUserId: 1,
   type: 'ZF',
   parentId: null,
-  assignedUserIds: [2, 3],
+  assignedUserIds: [2, 3, 8],
   email: 'nzone@bmlt.app',
   description: 'Northern Zone Description',
   url: 'https://nzone.example.com',
@@ -167,6 +167,20 @@ function findPassword(name: string): string {
     }
   }
   throw new Error('internal testing error - could not find password for given username');
+}
+
+function userHasDependents(id: number): boolean {
+  for (let i = 0; i < allUsersAndPasswords.length; i++) {
+    if (allUsersAndPasswords[i].user.ownerId === id) {
+      return true;
+    }
+  }
+  for (let i = 0; i < allServiceBodies.length; i++) {
+    if (allServiceBodies[i].assignedUserIds.includes(id)) {
+      return true;
+    }
+  }
+  return false;
 }
 
 // define a mock authToken that expires 24 hours from now
@@ -270,12 +284,52 @@ async function mockAuthLogout(): Promise<void> {
   // For mocking authentication we just rely on the authenticatedUser in the ApiCredentialsStore
 }
 
+// mocks for editing, creating, and deleting a user
+export let mockSavedUserCreate: UserCreate | null;
+export let mockSavedUserUpdate: UserUpdate | null;
+export let mockDeletedUserId: number | null = null;
+
+async function mockCreateUser({ userCreate: user }: { userCreate: UserCreate }): Promise<User> {
+  mockSavedUserCreate = user;
+  return {
+    username: user.username,
+    type: user.type,
+    displayName: user.displayName,
+    description: user.description || '',
+    email: user.email || '',
+    ownerId: user.ownerId || -1,
+    id: 42 // just make up an ID.  This assumes we aren't making more than one user in a test, or saving the new user between tests.
+  };
+}
+
+// we aren't using the userId in the mock
+// eslint-disable-next-line
+async function mockUpdateUser({ userId: _, userUpdate: user }: { userId: number; userUpdate: UserUpdate }): Promise<void> {
+  mockSavedUserUpdate = user;
+}
+
+async function mockDeleteUser({ userId: id }: { userId: number }): Promise<void> {
+  if (userHasDependents(id)) {
+    throw new ResponseError(makeResponse('Conflict', 409), 'Response returned an error code');
+  }
+  mockDeletedUserId = id;
+}
+
 export function setupMocks() {
   vi.spyOn(ApiClientWrapper.api, 'getUser').mockImplementation(mockGetUser);
   vi.spyOn(ApiClientWrapper.api, 'getUsers').mockImplementation(mockGetUsers);
   vi.spyOn(ApiClientWrapper.api, 'authToken').mockImplementation(mockAuthToken);
   vi.spyOn(ApiClientWrapper.api, 'authRefresh').mockImplementation(mockAuthRefresh);
   vi.spyOn(ApiClientWrapper.api, 'authLogout').mockImplementation(mockAuthLogout);
+  vi.spyOn(ApiClientWrapper.api, 'createUser').mockImplementation(mockCreateUser);
+  vi.spyOn(ApiClientWrapper.api, 'updateUser').mockImplementation(mockUpdateUser);
+  vi.spyOn(ApiClientWrapper.api, 'deleteUser').mockImplementation(mockDeleteUser);
+}
+
+export function sharedBeforeEach() {
+  mockSavedUserCreate = null;
+  mockSavedUserUpdate = null;
+  mockDeletedUserId = null;
 }
 
 export async function sharedAfterEach() {

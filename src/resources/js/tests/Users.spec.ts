@@ -1,52 +1,16 @@
-import { beforeAll, beforeEach, describe, test, vi } from 'vitest';
+import { beforeAll, beforeEach, describe, test } from 'vitest';
 import { screen } from '@testing-library/svelte';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 
-import type { User, UserCreate, UserUpdate } from 'bmlt-root-server-client';
-
-import ApiClientWrapper from '../lib/RootServerApi';
-import { loginAndOpenTab, setupMocks, sharedAfterEach } from './sharedDataAndMocks';
-
-// in addition to the shared mocks, here we also mock createUser, updateUser, and deleteUser (which are only used by this tab)
-
-let mockSavedUserCreate: UserCreate | null;
-let mockSavedUserUpdate: UserUpdate | null;
-let mockDeletedUserId: number | null = null;
-
-async function mockCreateUser({ userCreate: user }: { userCreate: UserCreate }): Promise<User> {
-  mockSavedUserCreate = user;
-  return {
-    username: user.username,
-    type: user.type,
-    displayName: user.displayName,
-    description: user.description || '',
-    email: user.email || '',
-    ownerId: user.ownerId || -1,
-    id: 42 // just make up an ID.  This assumes we aren't making more than one user in a test, or saving the new user between tests.
-  };
-}
-
-// we aren't using the userId in the mock
-// eslint-disable-next-line
-async function mockUpdateUser({ userId: _, userUpdate: user }: { userId: number; userUpdate: UserUpdate }): Promise<void> {
-  mockSavedUserUpdate = user;
-}
-
-async function mockDeleteUser({ userId: id }: { userId: number }): Promise<void> {
-  mockDeletedUserId = id;
-}
+import { loginAndOpenTab, mockDeletedUserId, mockSavedUserCreate, mockSavedUserUpdate, setupMocks, sharedAfterEach, sharedBeforeEach } from './sharedDataAndMocks';
 
 beforeAll(async () => {
   setupMocks();
-  vi.spyOn(ApiClientWrapper.api, 'createUser').mockImplementation(mockCreateUser);
-  vi.spyOn(ApiClientWrapper.api, 'updateUser').mockImplementation(mockUpdateUser);
-  vi.spyOn(ApiClientWrapper.api, 'deleteUser').mockImplementation(mockDeleteUser);
 });
 
 beforeEach(async () => {
-  mockSavedUserCreate = null;
-  mockSavedUserUpdate = null;
+  sharedBeforeEach();
 });
 
 afterEach(async () => {
@@ -222,11 +186,37 @@ describe('check editing, adding, and deleting users using the popup dialog boxes
   });
 
   test('logged in as serveradmin; delete Small Region', async () => {
-    // TODO: finish this test.  mockDeletedUserId should end up set to 4
+    const user = await loginAndOpenTab('serveradmin', 'Users');
+    await user.click(await screen.findByRole('button', { name: 'Delete User Small Region' }));
+    await user.click(await screen.findByRole('checkbox', { name: "Yes, I'm sure." }));
+    await user.click(await screen.findByRole('button', { name: 'Delete' }));
+    expect(mockDeletedUserId).toBe(4);
+    expect(mockSavedUserCreate).toBe(null);
+    expect(mockSavedUserUpdate).toBe(null);
   });
 
   test('logged in as serveradmin; try to delete Big Region', async () => {
-    // TODO: finish this test.  This should fail because Big Region has children.
+    // this should fail because Big Region has children
+    const user = await loginAndOpenTab('serveradmin', 'Users');
+    await user.click(await screen.findByRole('button', { name: 'Delete User Big Region' }));
+    await user.click(await screen.findByRole('checkbox', { name: "Yes, I'm sure." }));
+    await user.click(await screen.findByRole('button', { name: 'Delete' }));
+    expect(await screen.findByText(/Error: The user could not be deleted/)).toBeInTheDocument();
+    expect(mockDeletedUserId).toBe(null);
+    expect(mockSavedUserCreate).toBe(null);
+    expect(mockSavedUserUpdate).toBe(null);
+  });
+
+  test('logged in as serveradmin; try to delete Small Region Observer', async () => {
+    // this should fail because Small Observer is observing the Northern Zone
+    const user = await loginAndOpenTab('serveradmin', 'Users');
+    await user.click(await screen.findByRole('button', { name: 'Delete User Small Observer' }));
+    await user.click(await screen.findByRole('checkbox', { name: "Yes, I'm sure." }));
+    await user.click(await screen.findByRole('button', { name: 'Delete' }));
+    expect(await screen.findByText(/Error: The user could not be deleted/)).toBeInTheDocument();
+    expect(mockDeletedUserId).toBe(null);
+    expect(mockSavedUserCreate).toBe(null);
+    expect(mockSavedUserUpdate).toBe(null);
   });
 
   test('confirm modal appears when attempting to close with unsaved changes', async () => {
