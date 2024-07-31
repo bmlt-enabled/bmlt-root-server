@@ -6,6 +6,7 @@ import type { Subscriber, Unsubscriber } from 'svelte/store';
 /*eslint sort-keys: ["error", "asc", {caseSensitive: false}]*/
 const strings = new LocalizedStrings({
   de: {
+    accountTitle: 'Account',
     addServiceBody: 'Service-Body hinzufügen',
     addUser: 'Benutzer hinzufügen',
     administratorTitle: 'Administrator/Administratorin', // TOFIX: translate this way, or just Administrator?
@@ -36,7 +37,6 @@ const strings = new LocalizedStrings({
     logout: 'Abmelden',
     meetingListEditorsTitle: 'Meeting List Editors', // TOFIX: translate
     meetingsTitle: 'Meetings',
-    myAccountTitle: 'Mein Account',
     nameTitle: 'Name', // TOFIX: translate
     noServiceBodiesTitle: 'No service bodies found.', // TOFIX: translate
     noUsers: '- Keine -',
@@ -64,6 +64,7 @@ const strings = new LocalizedStrings({
     youHaveUnsavedChanges: 'You have unsaved changes. Do you really want to close?' // TOFIX: translate
   },
   en: {
+    accountTitle: 'Account',
     addServiceBody: 'Add Service Body',
     addUser: 'Add User',
     administratorTitle: 'Administrator',
@@ -94,7 +95,6 @@ const strings = new LocalizedStrings({
     logout: 'Logout',
     meetingListEditorsTitle: 'Meeting List Editors',
     meetingsTitle: 'Meetings',
-    myAccountTitle: 'My Account',
     nameTitle: 'Name',
     noServiceBodiesTitle: 'No service bodies found.',
     noUsers: '- None -',

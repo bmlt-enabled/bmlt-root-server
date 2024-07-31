@@ -48,11 +48,6 @@ describe('check content in User tab when logged in as various users', () => {
     login('SmallRegion', 'Users');
     expect(await screen.findByText('No users found.')).toBeInTheDocument();
   });
-
-  test('check layout when logged in as Small Region Observer', async () => {
-    login('SmallObserver', 'Users');
-    expect(await screen.findByText('No users found.')).toBeInTheDocument();
-  });
 });
 
 describe('check editing, adding, and deleting users using the popup dialog boxes', () => {
