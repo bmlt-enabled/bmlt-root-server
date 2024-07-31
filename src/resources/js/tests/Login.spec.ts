@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, test } from 'vitest';
-import { render, screen } from '@testing-library/svelte';
+import { render, screen, waitFor } from '@testing-library/svelte';
 import { replace } from 'svelte-spa-router';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
@@ -14,13 +14,15 @@ afterEach(sharedAfterEach);
 describe('login page tests', () => {
   test('check login page before logging in', async () => {
     render(App);
-    expect(document.title).toBe('BMLT Root Server');
-    expect(await screen.findByText('Root Server (1.0.0)')).toBeInTheDocument();
-    expect(await screen.findByRole('textbox', { name: 'Username' })).toBeInTheDocument();
-    expect(await screen.findByLabelText('Password')).toBeInTheDocument();
-    expect(await screen.findByRole('combobox', { name: 'Select Language' })).toBeInTheDocument();
-    expect(await screen.findByRole('button', { name: 'Log In' })).toBeEnabled();
-    expect(await screen.findByRole('button', { name: 'Dark mode' })).toBeEnabled();
+    await waitFor(() => {
+      expect(document.title).toBe('BMLT Root Server');
+      expect(screen.getByText('Root Server (1.0.0)')).toBeInTheDocument();
+      expect(screen.getByRole('textbox', { name: 'Username' })).toBeInTheDocument();
+      expect(screen.getByLabelText('Password')).toBeInTheDocument();
+      expect(screen.getByRole('combobox', { name: 'Select Language' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Log In' })).toBeEnabled();
+      expect(screen.getByRole('button', { name: 'Dark mode' })).toBeEnabled();
+    });
   });
 
   test('missing username', async () => {
@@ -43,26 +45,26 @@ describe('login page tests', () => {
     const user = userEvent.setup();
     render(App);
     await user.type(await screen.findByRole('textbox', { name: 'Username' }), 'serveradmin');
-    await user.type(await screen.findByLabelText('Password'), 'bad-password');
-    expect(await screen.findByRole('textbox', { name: 'Username' })).toHaveDisplayValue('serveradmin');
-    expect(await screen.findByLabelText('Password')).toHaveDisplayValue('bad-password');
-    await user.click(await screen.findByRole('button', { name: 'Log In' }));
-    await screen.findByText('Invalid username or password.');
+    await user.type(screen.getByLabelText('Password'), 'bad-password');
+    expect(screen.getByRole('textbox', { name: 'Username' })).toHaveDisplayValue('serveradmin');
+    expect(screen.getByLabelText('Password')).toHaveDisplayValue('bad-password');
+    await user.click(screen.getByRole('button', { name: 'Log In' }));
+    expect(screen.getByText('Invalid username or password.')).toBeInTheDocument();
   });
 
   test('log in with valid username and password for the server administrator, then log out', async () => {
     const user = userEvent.setup();
     render(App);
     await user.type(await screen.findByRole('textbox', { name: 'Username' }), 'serveradmin');
-    await user.type(await screen.findByLabelText('Password'), 'serveradmin-password');
-    expect(await screen.findByRole('textbox', { name: 'Username' })).toHaveDisplayValue('serveradmin');
-    expect(await screen.findByLabelText('Password')).toHaveDisplayValue('serveradmin-password');
-    await user.click(await screen.findByRole('button', { name: 'Log In' }));
+    await user.type(screen.getByLabelText('Password'), 'serveradmin-password');
+    expect(screen.getByRole('textbox', { name: 'Username' })).toHaveDisplayValue('serveradmin');
+    expect(screen.getByLabelText('Password')).toHaveDisplayValue('serveradmin-password');
+    await user.click(screen.getByRole('button', { name: 'Log In' }));
     // after a successful login, we should see 'Welcome Server Administrator'
-    await screen.findByText('Welcome Server Administrator');
+    expect(screen.getByText('Welcome Server Administrator')).toBeInTheDocument();
     // navbar is tested in a different test (below)
     // log out, and make sure we're back at the login screen
-    await user.click(await screen.findByRole('link', { name: 'Logout', hidden: true }));
+    await user.click(screen.getByRole('link', { name: 'Logout', hidden: true }));
     expect(await screen.findByRole('button', { name: 'Log In' })).toBeEnabled();
   });
 
@@ -70,33 +72,33 @@ describe('login page tests', () => {
     const user = userEvent.setup();
     render(App);
     await user.type(await screen.findByRole('textbox', { name: 'Username' }), 'RiverCityArea');
-    await user.type(await screen.findByLabelText('Password'), 'river-city-area-password');
-    await user.click(await screen.findByRole('button', { name: 'Log In' }));
+    await user.type(screen.getByLabelText('Password'), 'river-city-area-password');
+    await user.click(screen.getByRole('button', { name: 'Log In' }));
     // after a successful login, we should see 'Welcome River City Area' and the navbar
-    await screen.findByText('Welcome River City Area');
+    expect(screen.getByText('Welcome River City Area')).toBeInTheDocument();
     // TODO: shouldn't need to say hidden!
-    expect(await screen.findByRole('link', { name: 'Users', hidden: true })).toBeEnabled();
+    expect(screen.getByRole('link', { name: 'Users', hidden: true })).toBeEnabled();
   });
 
   test('log in with valid username and password for an observer', async () => {
     const user = userEvent.setup();
     render(App);
     await user.type(await screen.findByRole('textbox', { name: 'Username' }), 'SmallObserver');
-    await user.type(await screen.findByLabelText('Password'), 'small-region-observer-password');
-    await user.click(await screen.findByRole('button', { name: 'Log In' }));
+    await user.type(screen.getByLabelText('Password'), 'small-region-observer-password');
+    await user.click(screen.getByRole('button', { name: 'Log In' }));
     // after a successful login, we should see 'Welcome Small Observer' and the navbar
-    await screen.findByText('Welcome Small Observer');
+    expect(screen.getByText('Welcome Small Observer')).toBeInTheDocument();
     // TODO: probably the UI should be changed so that Users isn't visible, or is greyed out, for observers
-    expect(await screen.findByRole('link', { name: 'Users', hidden: true })).toBeEnabled();
+    expect(screen.getByRole('link', { name: 'Users', hidden: true })).toBeEnabled();
   });
 
   test('log in with valid username and password for a deactivated user', async () => {
     const user = userEvent.setup();
     render(App);
     await user.type(await screen.findByRole('textbox', { name: 'Username' }), 'SmallDeactivated');
-    await user.type(await screen.findByLabelText('Password'), 'small-region-deactivated-password');
-    await user.click(await screen.findByRole('button', { name: 'Log In' }));
-    expect(await screen.findByText('User is deactivated.')).toBeInTheDocument();
+    await user.type(screen.getByLabelText('Password'), 'small-region-deactivated-password');
+    await user.click(screen.getByRole('button', { name: 'Log In' }));
+    expect(screen.getByText('User is deactivated.')).toBeInTheDocument();
   });
 });
 
@@ -106,20 +108,20 @@ describe('navbar tests', () => {
     const user = userEvent.setup();
     render(App);
     await user.type(await screen.findByRole('textbox', { name: 'Username' }), 'serveradmin');
-    await user.type(await screen.findByLabelText('Password'), 'serveradmin-password');
-    await user.click(await screen.findByRole('button', { name: 'Log In' }));
+    await user.type(screen.getByLabelText('Password'), 'serveradmin-password');
+    await user.click(screen.getByRole('button', { name: 'Log In' }));
     // TODO: shouldn't need to say hidden for each of the links
-    await user.click(await screen.findByRole('link', { name: 'Meetings', hidden: true }));
+    await user.click(screen.getByRole('link', { name: 'Meetings', hidden: true }));
     expect(await screen.findByRole('heading', { level: 2, name: 'Meetings' })).toBeInTheDocument();
     // TODO: the test fails without the replace('/') command.  Is this ok to include?
     replace('/');
-    await user.click(await screen.findByRole('link', { name: 'Service Bodies', hidden: true }));
-    // expect(await screen.findByRole('heading', { level: 2, name: 'Service Bodies',  })).toBeInTheDocument();
+    await user.click(screen.getByRole('link', { name: 'Service Bodies', hidden: true }));
+    expect(await screen.findByRole('heading', { level: 2, name: 'Service Bodies' })).toBeInTheDocument();
     replace('/');
-    await user.click(await screen.findByRole('link', { name: 'Users', hidden: true }));
+    await user.click(screen.getByRole('link', { name: 'Users', hidden: true }));
     expect(await screen.findByRole('heading', { level: 2, name: 'Users' })).toBeInTheDocument();
     replace('/');
-    await user.click(await screen.findByRole('link', { name: 'Home', hidden: true }));
+    await user.click(screen.getByRole('link', { name: 'Home', hidden: true }));
     expect(await screen.findByRole('heading', { level: 5, name: 'Welcome Server Administrator' })).toBeInTheDocument();
     // Logout is tested above
   });
