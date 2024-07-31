@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, test } from 'vitest';
-import { render, screen } from '@testing-library/svelte';
+import { render, screen, waitFor } from '@testing-library/svelte';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 
@@ -28,22 +28,24 @@ describe('language selection tests', () => {
     expect(langs.item(3)?.label).toBe('Français');
     await userEvent.selectOptions(langs, ['Deutsch']);
     // login screen should now be in German, including the Language Selection menu title
-    expect(await screen.findByRole('combobox', { name: 'Sprache auswählen' })).toBeEnabled();
-    await user.type(await screen.findByRole('textbox', { name: 'Benutzername' }), 'serveradmin');
-    await user.type(await screen.findByLabelText('Passwort'), 'serveradmin-password');
-    expect(await screen.findByRole('textbox', { name: 'Benutzername' })).toHaveDisplayValue('serveradmin');
-    expect(await screen.findByLabelText('Passwort')).toHaveDisplayValue('serveradmin-password');
-    await user.click(await screen.findByRole('button', { name: 'Anmelden' }));
+    expect(screen.getByRole('combobox', { name: 'Sprache auswählen' })).toBeEnabled();
+    await user.type(screen.getByRole('textbox', { name: 'Benutzername' }), 'serveradmin');
+    await user.type(screen.getByLabelText('Passwort'), 'serveradmin-password');
+    expect(screen.getByRole('textbox', { name: 'Benutzername' })).toHaveDisplayValue('serveradmin');
+    expect(screen.getByLabelText('Passwort')).toHaveDisplayValue('serveradmin-password');
+    await user.click(screen.getByRole('button', { name: 'Anmelden' }));
     // after a successful login, we should see 'Willkommen Server Administrator' and the navbar
-    expect(await screen.findByText('Willkommen Server Administrator')).toBeInTheDocument();
+    expect(screen.getByText('Willkommen Server Administrator')).toBeInTheDocument();
     // check for one element in the navbar
     // TODO: shouldn't need to say hidden!
-    expect(await screen.findByRole('link', { name: 'Benutzer', hidden: true })).toBeEnabled();
+    expect(screen.getByRole('link', { name: 'Benutzer', hidden: true })).toBeEnabled();
     // Log out
-    await user.click(await screen.findByRole('link', { name: 'Abmelden', hidden: true }));
+    await user.click(screen.getByRole('link', { name: 'Abmelden', hidden: true }));
     // Make sure we're back at the login screen (which should still be in German)
-    expect(await screen.findByRole('button', { name: 'Anmelden' })).toBeEnabled();
-    expect(await screen.findByRole('combobox', { name: 'Sprache auswählen' })).toBeEnabled();
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Anmelden' })).toBeEnabled();
+      expect(screen.getByRole('combobox', { name: 'Sprache auswählen' })).toBeEnabled();
+    });
   });
 
   test('test language selection menu with a bad login', async () => {
