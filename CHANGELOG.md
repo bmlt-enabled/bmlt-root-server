@@ -1,3 +1,6 @@
+## 3.1.1 (UNRELEASED)
+* Added `server_ip` to `GetServerInfo`.
+
 ## 3.1.0 (June 28, 2024)
 * PHP 8.1 and higher are now required. PHP 8.0 is no longer supported.
 * The `weekdays` filter parameter for the `GetSearchResults` API now accept a comma separated string (e.g. `weekdays=1,-2`) in addition to the standard array syntax.
