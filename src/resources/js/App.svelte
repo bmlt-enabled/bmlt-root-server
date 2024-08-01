@@ -4,6 +4,8 @@
   import { wrap } from 'svelte-spa-router/wrap';
   import type { ConditionsFailedEvent } from 'svelte-spa-router';
 
+  import Account from './routes/Account.svelte';
+  import Formats from './routes/Formats.svelte';
   import Home from './routes/Home.svelte';
   import Login from './routes/Login.svelte';
   import Meetings from './routes/Meetings.svelte';
@@ -18,12 +20,20 @@
       component: Meetings,
       conditions: [requiresAuthentication]
     }),
-    '/users': wrap({
-      component: Users,
+    '/formats': wrap({
+      component: Formats,
       conditions: [requiresAuthentication]
     }),
     '/servicebodies': wrap({
       component: ServiceBodies,
+      conditions: [requiresAuthentication]
+    }),
+    '/users': wrap({
+      component: Users,
+      conditions: [requiresAuthentication]
+    }),
+    '/account': wrap({
+      component: Account,
       conditions: [requiresAuthentication]
     }),
     '*': wrap({

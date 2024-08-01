@@ -3,6 +3,7 @@
 
   import DarkMode from './DarkMode.svelte';
   import { apiCredentials } from '../stores/apiCredentials';
+  import { authenticatedUser } from '../stores/apiCredentials';
   import { translations } from '../stores/localization';
 
   const globalSettings = settings;
@@ -24,8 +25,14 @@
   <NavUl>
     <NavLi href="#/">{$translations.homeTitle}</NavLi>
     <NavLi href="#/meetings">{$translations.meetingsTitle}</NavLi>
-    <NavLi href="#/servicebodies">{$translations.serviceBodiesTitle}</NavLi>
-    <NavLi href="#/users">{$translations.usersTitle}</NavLi>
+    {#if $authenticatedUser?.type === 'admin'}
+      <NavLi href="#/formats">{$translations.formatsTitle}</NavLi>
+    {/if}
+    {#if $authenticatedUser?.type !== 'observer'}
+      <NavLi href="#/servicebodies">{$translations.serviceBodiesTitle}</NavLi>
+      <NavLi href="#/users">{$translations.usersTitle}</NavLi>
+    {/if}
+    <NavLi href="#/account">{$translations.accountTitle}</NavLi>
     <NavLi href="#" on:click={logout}>{$translations.logout}</NavLi>
   </NavUl>
 </Navbar>
