@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom/vitest';
+import { vi } from 'vitest';
 
 // @ts-expect-error set from backend
 global.settings = {
@@ -12,3 +13,7 @@ global.settings = {
   },
   version: '1.0.0'
 };
+
+if (typeof window.URL.createObjectURL === 'undefined') {
+  window.URL.createObjectURL = vi.fn();
+}
