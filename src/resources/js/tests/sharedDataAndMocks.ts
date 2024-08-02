@@ -21,7 +21,7 @@ import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 
 import { ResponseError } from 'bmlt-root-server-client';
-import type { Token, ServiceBody, User, UserCreate, UserUpdate } from 'bmlt-root-server-client';
+import type { Token, ServiceBody, ServiceBodyCreate, ServiceBodyUpdate, User, UserCreate, UserUpdate } from 'bmlt-root-server-client';
 
 import ApiClientWrapper from '../lib/RootServerApi';
 import { apiCredentials, authenticatedUser } from '../stores/apiCredentials';
@@ -134,6 +134,76 @@ const mockNorthernZone: ServiceBody = {
   worldId: 'ZF123'
 };
 
+const mockBigRegion: ServiceBody = {
+  id: 2,
+  name: 'Big Region',
+  adminUserId: 3,
+  type: 'RG',
+  parentId: 1,
+  assignedUserIds: [2, 3],
+  email: 'big@bmlt.app',
+  description: 'Big Region Description',
+  url: 'https://bigregion.example.com',
+  helpline: '123-555-1212',
+  worldId: 'RG125'
+};
+
+const mockSmallRegion: ServiceBody = {
+  id: 3,
+  name: 'Small Region',
+  adminUserId: 2,
+  type: 'RG',
+  parentId: null,
+  assignedUserIds: [2],
+  email: 'small@bmlt.app',
+  description: 'Small Region Description',
+  url: 'https://smallregion.example.com',
+  helpline: '555-867-5309',
+  worldId: 'RG558'
+};
+
+const mockRiverCityArea: ServiceBody = {
+  id: 4,
+  name: 'River City Area',
+  adminUserId: 2,
+  type: 'AS',
+  parentId: 2,
+  assignedUserIds: [3, 2, 5],
+  email: 'rivercity@bmlt.app',
+  description: 'River City Area Description',
+  url: 'https://rivercityarea.example.com',
+  helpline: '803-555-1212',
+  worldId: 'AS128'
+};
+
+const mockMountainArea: ServiceBody = {
+  id: 5,
+  name: 'Mountain Area',
+  adminUserId: 2,
+  type: 'AS',
+  parentId: 3,
+  assignedUserIds: [2, 6],
+  email: 'mountain@bmlt.app',
+  description: 'Mountain Area Description',
+  url: 'https://mountainarea.example.com',
+  helpline: '803-555-4242',
+  worldId: 'AS428'
+};
+
+const mockRuralArea: ServiceBody = {
+  id: 6,
+  name: 'Rural Area',
+  adminUserId: 7,
+  type: 'AS',
+  parentId: 3,
+  assignedUserIds: [2, 7],
+  email: 'rural@bmlt.app',
+  description: 'Rural Area Description',
+  url: 'https://ruralarea.example.com',
+  helpline: '803-555-7247',
+  worldId: 'AS778'
+};
+
 export const allUsers = [
   mockServerAdmin,
   mockNorthernZoneAdmin,
@@ -146,7 +216,7 @@ export const allUsers = [
   mockSmallRegionDeactivated
 ];
 
-export const allServiceBodies: ServiceBody[] = [mockNorthernZone];
+export const allServiceBodies: ServiceBody[] = [mockNorthernZone, mockBigRegion, mockSmallRegion, mockRiverCityArea, mockMountainArea, mockRuralArea];
 
 const allUsersAndPasswords = [
   { user: mockServerAdmin, password: 'serveradmin-password' },
@@ -177,6 +247,15 @@ function userHasDependents(id: number): boolean {
   }
   for (let i = 0; i < allServiceBodies.length; i++) {
     if (allServiceBodies[i].assignedUserIds.includes(id)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function serviceBodyHasDependents(id: number): boolean {
+  for (let i = 0; i < allServiceBodies.length; i++) {
+    if (allServiceBodies[i].parentId === id) {
       return true;
     }
   }
@@ -315,6 +394,58 @@ async function mockDeleteUser({ userId: id }: { userId: number }): Promise<void>
   mockDeletedUserId = id;
 }
 
+// Service Body Mock Functions
+async function mockGetServiceBody(params: { serviceBodyId: number }): Promise<ServiceBody> {
+  const mockServiceBody = allServiceBodies.find((s) => s.id === params.serviceBodyId);
+  if (mockServiceBody) {
+    return mockServiceBody;
+  }
+  throw new Error('unknown service body -- something went wrong');
+}
+
+async function mockGetServiceBodies(): Promise<ServiceBody[]> {
+  const userId = get(authenticatedUser)?.id;
+  if (!userId) {
+    throw new Error('internal error -- trying to get service bodies when no simulated user is logged in');
+  } else {
+    return [mockNorthernZone, mockBigRegion, mockSmallRegion, mockRiverCityArea, mockMountainArea, mockRuralArea];
+  }
+}
+
+// mocks for editing, creating, and deleting a Service Body
+export let mockSavedServiceBodyCreate: ServiceBodyCreate | null;
+export let mockSavedServiceBodyUpdate: ServiceBodyUpdate | null;
+export let mockDeletedServiceBodyId: number | null = null;
+
+async function mockCreateServiceBody({ serviceBodyCreate: serviceBody }: { serviceBodyCreate: ServiceBodyCreate }): Promise<ServiceBody> {
+  mockSavedServiceBodyCreate = serviceBody;
+  return {
+    adminUserId: serviceBody.adminUserId,
+    type: serviceBody.type,
+    parentId: serviceBody.parentId,
+    assignedUserIds: serviceBody.assignedUserIds,
+    name: serviceBody.name,
+    email: serviceBody.email || '',
+    description: serviceBody.description || '',
+    url: serviceBody.url || '',
+    helpline: serviceBody.helpline || '',
+    worldId: serviceBody.worldId || '',
+    id: 9
+  };
+}
+
+// eslint-disable-next-line
+async function mockUpdateServiceBody({ serviceBodyId: _, serviceBodyUpdate: serviceBody }: { serviceBodyId: number; serviceBodyUpdate: ServiceBodyUpdate }): Promise<void> {
+  mockSavedServiceBodyUpdate = serviceBody;
+}
+
+async function mockDeleteServiceBody({ serviceBodyId: id }: { serviceBodyId: number }): Promise<void> {
+  if (serviceBodyHasDependents(id)) {
+    throw new ResponseError(makeResponse('Conflict', 409), 'Response returned an error code');
+  }
+  mockDeletedServiceBodyId = id;
+}
+
 export function sharedBeforeAll() {
   // set up mocks
   vi.spyOn(ApiClientWrapper.api, 'getUser').mockImplementation(mockGetUser);
@@ -325,12 +456,21 @@ export function sharedBeforeAll() {
   vi.spyOn(ApiClientWrapper.api, 'createUser').mockImplementation(mockCreateUser);
   vi.spyOn(ApiClientWrapper.api, 'updateUser').mockImplementation(mockUpdateUser);
   vi.spyOn(ApiClientWrapper.api, 'deleteUser').mockImplementation(mockDeleteUser);
+  vi.spyOn(ApiClientWrapper.api, 'getServiceBody').mockImplementation(mockGetServiceBody);
+  vi.spyOn(ApiClientWrapper.api, 'getServiceBodies').mockImplementation(mockGetServiceBodies);
+  vi.spyOn(ApiClientWrapper.api, 'createServiceBody').mockImplementation(mockCreateServiceBody);
+  vi.spyOn(ApiClientWrapper.api, 'updateServiceBody').mockImplementation(mockUpdateServiceBody);
+  vi.spyOn(ApiClientWrapper.api, 'deleteServiceBody').mockImplementation(mockDeleteServiceBody);
 }
 
 export function sharedBeforeEach() {
   mockSavedUserCreate = null;
   mockSavedUserUpdate = null;
   mockDeletedUserId = null;
+
+  mockSavedServiceBodyCreate = null;
+  mockSavedServiceBodyUpdate = null;
+  mockDeletedServiceBodyId = null;
 }
 
 export async function sharedAfterEach() {
