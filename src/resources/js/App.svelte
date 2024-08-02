@@ -12,7 +12,7 @@
   import ServiceBodies from './routes/ServiceBodies.svelte';
   import Users from './routes/Users.svelte';
   import SpinnerModal from './components/SpinnerModal.svelte';
-  import { apiCredentials } from './stores/apiCredentials';
+  import { apiCredentials, authenticatedUser } from './stores/apiCredentials';
 
   const routes = {
     '/login': Login,
@@ -22,15 +22,15 @@
     }),
     '/formats': wrap({
       component: Formats,
-      conditions: [requiresAuthentication]
+      conditions: [requiresAuthenticationServerAdmin]
     }),
     '/servicebodies': wrap({
       component: ServiceBodies,
-      conditions: [requiresAuthentication]
+      conditions: [requiresAuthenticationAdmin]
     }),
     '/users': wrap({
       component: Users,
-      conditions: [requiresAuthentication]
+      conditions: [requiresAuthenticationAdmin]
     }),
     '/account': wrap({
       component: Account,
@@ -44,6 +44,14 @@
 
   function requiresAuthentication(): boolean {
     return !!$apiCredentials;
+  }
+
+  function requiresAuthenticationAdmin(): boolean {
+    return requiresAuthentication() && $authenticatedUser?.type != 'observer';
+  }
+
+  function requiresAuthenticationServerAdmin(): boolean {
+    return requiresAuthentication() && $authenticatedUser?.type === 'admin';
   }
 
   function conditionsFailed(event: ConditionsFailedEvent) {
