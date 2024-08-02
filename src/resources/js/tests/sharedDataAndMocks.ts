@@ -65,7 +65,7 @@ const mockSmallRegionAdmin: User = {
   displayName: 'Small Region',
   email: 'small@bmlt.app',
   id: 4,
-  ownerId: 2,
+  ownerId: -1,
   type: 'serviceBodyAdmin',
   username: 'SmallRegion'
 };
@@ -181,7 +181,7 @@ const mockMountainArea: ServiceBody = {
   name: 'Mountain Area',
   adminUserId: 2,
   type: 'AS',
-  parentId: 3,
+  parentId: 2,
   assignedUserIds: [2, 6],
   email: 'mountain@bmlt.app',
   description: 'Mountain Area Description',
@@ -195,7 +195,7 @@ const mockRuralArea: ServiceBody = {
   name: 'Rural Area',
   adminUserId: 7,
   type: 'AS',
-  parentId: 3,
+  parentId: 2,
   assignedUserIds: [2, 7],
   email: 'rural@bmlt.app',
   description: 'Rural Area Description',

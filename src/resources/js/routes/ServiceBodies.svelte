@@ -131,7 +131,7 @@
               {#if $authenticatedUser?.type === 'admin'}
                 <TableBodyCell class="text-right">
                   <Button color="none" on:click={(e) => handleDelete(e, serviceBody)} class="text-blue-700 dark:text-blue-500">
-                    <TrashBinOutline title={{ id: 'deleteServiceBody', title: $translations.deleteServiceBody }} ariaLabel={$translations.deleteServiceBody} />
+                    <TrashBinOutline title={{ id: 'deleteServiceBody', title: $translations.deleteServiceBody }} ariaLabel={$translations.deleteServiceBody + ' ' + serviceBody.name} />
                   </Button>
                 </TableBodyCell>
               {/if}
