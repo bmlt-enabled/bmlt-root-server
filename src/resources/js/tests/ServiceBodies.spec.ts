@@ -30,3 +30,16 @@ describe('check content in Service Body tab when logged in as various users', ()
     expect(screen.getByRole('cell', { name: 'Mountain Area' })).toBeInTheDocument();
   });
 });
+
+describe('check editing, adding, and deleting service bodies using the popup dialog boxes', () => {
+  test('test Confirm modal appears when attempting to close with unsaved changes', async () => {
+    const user = await login('serveradmin', 'Service Bodies');
+    await user.click(screen.getByRole('link', { name: 'Service Bodies', hidden: true }));
+    await user.click(screen.getByRole('cell', { name: 'Rural Area' }));
+    const helpline = screen.getByRole('textbox', { name: 'Helpline' }) as HTMLInputElement;
+    await user.clear(helpline);
+    await user.type(helpline, '555-867-5309');
+    await user.click(await screen.findByRole('button', { name: 'Close modal' }));
+    expect(screen.getByText('You have unsaved changes. Do you really want to close?')).toBeInTheDocument();
+  });
+});

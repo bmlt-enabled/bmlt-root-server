@@ -15,7 +15,7 @@ is an observer.  Small Region Deactivated is a deactivated user.
 */
 
 import { get } from 'svelte/store';
-import { render, screen } from '@testing-library/svelte';
+import { render, screen, waitFor } from '@testing-library/svelte';
 import { replace } from 'svelte-spa-router';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
@@ -475,7 +475,7 @@ export function sharedBeforeEach() {
 
 export async function sharedAfterEach() {
   // clean up - don't leave in a logged in state (will be a no-op if we aren't logged in at this point)
-  replace('/');
+  await replace('/');
   await apiCredentials.logout();
 }
 
@@ -487,8 +487,11 @@ export async function login(username: string, tab: string | null = null): Promis
   await user.type(await screen.findByLabelText('Password'), findPassword(username));
   await user.click(await screen.findByRole('button', { name: 'Log In' }));
   if (tab) {
-    const link = await screen.findByRole('link', { name: tab, hidden: true });
-    await user.click(link);
+    await waitFor(async () => {
+      const link = await screen.findByRole('link', { name: tab, hidden: true });
+      expect(link).toBeInTheDocument();
+      await user.click(link);
+    });
   }
   return user;
 }

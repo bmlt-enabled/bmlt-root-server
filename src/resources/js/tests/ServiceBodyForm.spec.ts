@@ -1,16 +1,12 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/svelte';
 import { describe, test } from 'vitest';
 import ServiceBodyForm from '../components/ServiceBodyForm.svelte';
-import ServiceBodyModal from '../components/ServiceBodyModal.svelte';
 import { translations } from '../stores/localization';
 import type { ServiceBody, User } from 'bmlt-root-server-client';
 import { allServiceBodies, allUsers, login } from './sharedDataAndMocks';
-import userEvent from '@testing-library/user-event';
 
 const serviceBodies: ServiceBody[] = allServiceBodies;
-
 const selectedServiceBody: ServiceBody = allServiceBodies[0];
-
 const users: User[] = allUsers;
 
 describe('ServiceBodyForm Component', () => {
@@ -89,14 +85,5 @@ describe('ServiceBodyForm Component', () => {
     render(ServiceBodyForm, { props: { selectedServiceBody, serviceBodies, users } });
     expect(screen.getByLabelText(translations.getString('nameTitle'))).toBeDisabled();
     expect(screen.getByLabelText(translations.getString('adminTitle'))).toBeDisabled();
-  });
-
-  test('test Confirm modal appears when attempting to close with unsaved changes', async () => {
-    render(ServiceBodyModal, { props: { selectedServiceBody, serviceBodies, users, showModal: true } });
-    const user = userEvent.setup();
-    const description = (await screen.findByLabelText(translations.getString('descriptionTitle'))) as HTMLInputElement;
-    await user.type(description, 'My Description');
-    await user.click(await screen.findByRole('button', { name: 'Close modal' }));
-    expect(screen.getByText(translations.getString('youHaveUnsavedChanges'))).toBeInTheDocument();
   });
 });
