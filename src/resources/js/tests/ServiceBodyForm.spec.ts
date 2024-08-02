@@ -92,6 +92,7 @@ describe('ServiceBodyForm Component', () => {
   });
 
   test('test Confirm modal appears when attempting to close with unsaved changes', async () => {
+    await login('NorthernZone');
     render(ServiceBodyModal, { props: { selectedServiceBody, serviceBodies, users, showModal: true } });
     const user = userEvent.setup();
     const description = (await screen.findByLabelText(translations.getString('descriptionTitle'))) as HTMLInputElement;

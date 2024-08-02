@@ -47,6 +47,13 @@ describe('check content in User tab when logged in as various users', () => {
   test('check layout when logged in as Small Region', async () => {
     login('SmallRegion', 'Users');
     expect(await screen.findByText('No users found.')).toBeInTheDocument();
+    expect(screen.queryByText('Formats')).not.toBeInTheDocument();
+  });
+
+  test('check layout when logged in as Small Observer', async () => {
+    await login('SmallObserver', 'Home');
+    expect(screen.queryByText('Users')).not.toBeInTheDocument();
+    expect(screen.queryByText('Service Bodies')).not.toBeInTheDocument();
   });
 });
 
