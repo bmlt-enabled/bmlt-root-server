@@ -123,10 +123,7 @@ describe('navbar tests', () => {
     expect(await screen.findByRole('heading', { level: 2, name: 'Formats' })).toBeInTheDocument();
     replace('/');
     await user.click(await screen.findByRole('link', { name: 'Service Bodies', hidden: true }));
-    // TODO: the following test results in an error message:
-    //     TODO show error dialog The request failed and the interceptors did not return an alternative response
-    // so commented out for now
-    // expect(await screen.findByRole('heading', { level: 2, name: 'Service Bodies',  })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { level: 2, name: 'Service Bodies' })).toBeInTheDocument();
     replace('/');
     await user.click(await screen.findByRole('link', { name: 'Users', hidden: true }));
     expect(await screen.findByRole('heading', { level: 2, name: 'Users' })).toBeInTheDocument();
