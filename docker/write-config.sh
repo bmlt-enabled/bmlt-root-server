@@ -50,3 +50,8 @@ if [ ! -z "$AGGREGATOR_MODE_ENABLED" -a "$AGGREGATOR_MODE_ENABLED" == "true" ]
 then
     echo "\$aggregator_mode_enabled = true;" >> /var/www/html/auto-config.inc.php
 fi
+
+if [ ! -z "$AGGREGATOR_MAX_GEO_WIDTH_KM" ]
+then
+    echo "\$aggregator_max_geo_width_km = ${AGGREGATOR_MAX_GEO_WIDTH_KM};" >> /var/www/html/auto-config.inc.php
+fi
