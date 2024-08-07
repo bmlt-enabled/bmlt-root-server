@@ -6,12 +6,15 @@ import type { Subscriber, Unsubscriber } from 'svelte/store';
 /*eslint sort-keys: ["error", "asc", {caseSensitive: false}]*/
 const strings = new LocalizedStrings({
   de: {
+    accountSettingsTitle: 'Account Einstellungen',
     accountTitle: 'Account',
+    accountTypeTitle: 'AccountTyp',
     addServiceBody: 'Service-Body hinzufügen',
     addUser: 'Benutzer hinzufügen',
     administratorTitle: 'Administrator/Administratorin', // TOFIX: translate this way, or just Administrator?
     adminTitle: 'Admin', // TOFIX: translate
     applyChangesTitle: 'Änderung anwenden',
+    associatedServiceBodies: 'Associated service bodies', // TOFIX: translate
     cancel: 'Cancel', // TOFIX: translate
     closeWithoutSaving: 'Close without saving', // TOFIX: translate
     confirmDeleteServiceBody: 'Bist du sicher, dass du diesen Service-Body löschen möchten?',
@@ -32,14 +35,15 @@ const strings = new LocalizedStrings({
     idTitle: 'ID',
     invalidUsernameOrPassword: 'Ungültiger Benutzername oder Passwort.',
     languageSelectTitle: 'Sprache auswählen',
+    loading: 'loading ...', // TOFIX: translate
     loginTitle: 'Anmeldung',
     loginVerb: 'Anmelden',
     logout: 'Abmelden',
     meetingListEditorsTitle: 'Meeting List Editors', // TOFIX: translate
     meetingsTitle: 'Meetings',
-    nameTitle: 'Name', // TOFIX: translate
+    nameTitle: 'Name',
+    none: '- Keine -',
     noServiceBodiesTitle: 'No service bodies found.', // TOFIX: translate
-    noUsers: '- Keine -',
     noUsersTitle: 'No users found.', // TOFIX: translate
     observerTitle: 'Service-Body Beobachter',
     ownedByTitle: 'Gehört',
@@ -47,6 +51,7 @@ const strings = new LocalizedStrings({
     passwordTitle: 'Passwort',
     rootServerTitle: 'Root Server',
     searchByName: 'Search by name', // TOFIX: translate
+    serverAdministratorTitle: 'Main Server Administrator', // TOFIX: translate
     serviceBodiesNoParent: 'No Parent (Top-Level)', // TOFIX: translate
     serviceBodiesTitle: 'Service Bodies', // TOFIX: translate
     serviceBodyAdminTitle: 'Service Body Administrator', // TOFIX: translate
@@ -57,19 +62,22 @@ const strings = new LocalizedStrings({
     usernameTitle: 'Benutzername',
     usersTitle: 'Benutzer',
     userTitle: 'Benutzer',
-    userTypeTitle: 'User Type', // TOFIX: translate
+    userTypeTitle: 'Benutzertyp',
     websiteUrlTitle: 'Web Site URL', // TOFIX: translate
     welcome: 'Willkommen',
     worldIdTitle: 'World Committee Code', // TOFIX: translate
     youHaveUnsavedChanges: 'You have unsaved changes. Do you really want to close?' // TOFIX: translate
   },
   en: {
+    accountSettingsTitle: 'Account Settings',
     accountTitle: 'Account',
+    accountTypeTitle: 'Account Type',
     addServiceBody: 'Add Service Body',
     addUser: 'Add User',
     administratorTitle: 'Administrator',
     adminTitle: 'Admin',
     applyChangesTitle: 'Apply Changes',
+    associatedServiceBodies: 'Associated service bodies',
     cancel: 'Cancel',
     closeWithoutSaving: 'Close without saving',
     confirmDeleteServiceBody: 'Are you sure you want to delete this service body?',
@@ -90,14 +98,15 @@ const strings = new LocalizedStrings({
     idTitle: 'ID',
     invalidUsernameOrPassword: 'Invalid username or password.',
     languageSelectTitle: 'Select Language',
+    loading: 'loading ...',
     loginTitle: 'Login',
     loginVerb: 'Log In',
     logout: 'Logout',
     meetingListEditorsTitle: 'Meeting List Editors',
     meetingsTitle: 'Meetings',
     nameTitle: 'Name',
+    none: '- None -',
     noServiceBodiesTitle: 'No service bodies found.',
-    noUsers: '- None -',
     noUsersTitle: 'No users found.',
     observerTitle: 'Service Body Observer',
     ownedByTitle: 'Owned By',
@@ -105,6 +114,7 @@ const strings = new LocalizedStrings({
     passwordTitle: 'Password',
     rootServerTitle: 'Root Server',
     searchByName: 'Search by name',
+    serverAdministratorTitle: 'Main Server Administrator',
     serviceBodiesNoParent: 'No Parent (Top-Level)',
     serviceBodiesTitle: 'Service Bodies',
     serviceBodyAdminTitle: 'Service Body Administrator',

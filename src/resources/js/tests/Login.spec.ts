@@ -129,7 +129,7 @@ describe('navbar tests', () => {
     expect(await screen.findByRole('heading', { level: 2, name: 'Users' })).toBeInTheDocument();
     replace('/');
     await user.click(await screen.findByRole('link', { name: 'Account', hidden: true }));
-    expect(await screen.findByRole('heading', { level: 2, name: 'Account' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { level: 2, name: 'Account Settings' })).toBeInTheDocument();
     replace('/');
     await user.click(await screen.findByRole('link', { name: 'Home', hidden: true }));
     expect(await screen.findByRole('heading', { level: 5, name: 'Welcome Server Administrator' })).toBeInTheDocument();
