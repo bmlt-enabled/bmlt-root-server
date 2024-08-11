@@ -111,6 +111,8 @@ class LegacyConfig
         $config['search_spec_map_center_zoom'] = isset($search_spec_map_center) && is_array($search_spec_map_center) && isset($search_spec_map_center['zoom']) ? $search_spec_map_center['zoom'] : 6;
         $config['number_of_meetings_for_auto'] = isset($number_of_meetings_for_auto) && is_numeric($number_of_meetings_for_auto) ? intval($number_of_meetings_for_auto) : 10;
         $config['auto_geocoding_enabled'] = isset($auto_geocoding_enabled) ? boolval($auto_geocoding_enabled) : true;
+        $config['county_auto_geocoding_enabled'] = isset($county_auto_geocoding_enabled) ? boolval($county_auto_geocoding_enabled) : false;
+        $config['zip_auto_geocoding_enabled'] = isset($zip_auto_geocoding_enabled) ? boolval($zip_auto_geocoding_enabled) : false;
         $config['new_ui_enabled'] = $new_ui_enabled ?? false;
         // If default_closed_status is TRUE, meetings that don't explicitly have an OPEN or CLOSED format are assumed CLOSED for the NAWS export.
         $config['default_closed_status'] = $g_defaultClosedStatus ?? true;

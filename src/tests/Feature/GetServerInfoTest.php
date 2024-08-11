@@ -245,6 +245,32 @@ class GetServerInfoTest extends TestCase
             ->assertJsonFragment(['auto_geocoding_enabled' => false]);
     }
 
+    public function testCountyAutoGeocodingEnabled()
+    {
+        LegacyConfig::set('county_auto_geocoding_enabled', true);
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['county_auto_geocoding_enabled' => true]);
+
+        LegacyConfig::set('county_auto_geocoding_enabled', false);
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['county_auto_geocoding_enabled' => false]);
+    }
+
+    public function testZipAutoGeocodingEnabled()
+    {
+        LegacyConfig::set('zip_auto_geocoding_enabled', true);
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['zip_auto_geocoding_enabled' => true]);
+
+        LegacyConfig::set('zip_auto_geocoding_enabled', false);
+        $this->get('/client_interface/json/?switcher=GetServerInfo')
+            ->assertStatus(200)
+            ->assertJsonFragment(['zip_auto_geocoding_enabled' => false]);
+    }
+
     public function testCommit()
     {
         $this->get('/client_interface/json/?switcher=GetServerInfo')
