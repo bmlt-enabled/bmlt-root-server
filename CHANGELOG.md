@@ -1,4 +1,4 @@
-## 3.1.1 (UNRELEASED)
+## 3.1.1 (August 11, 2024)
 * Add `county_auto_geocoding_enabled` and `zip_auto_geocoding_enabled` to `GetServerInfo` endpoint.
 
 ## 3.1.0 (June 28, 2024)
