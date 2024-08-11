@@ -545,6 +545,8 @@ class SwitcherController extends Controller
             'meeting_time_zones_enabled' => legacy_config('meeting_time_zones_enabled') ? '1' : '0',
             'phpVersion' => phpversion(),
             'auto_geocoding_enabled' => legacy_config('auto_geocoding_enabled'),
+            'county_auto_geocoding_enabled' => legacy_config('county_auto_geocoding_enabled'),
+            'zip_auto_geocoding_enabled' => legacy_config('zip_auto_geocoding_enabled'),
             'commit' => config('app.commit'),
             'default_closed_status' => legacy_config('default_closed_status'),
             'aggregator_mode_enabled' => legacy_config('aggregator_mode_enabled')
