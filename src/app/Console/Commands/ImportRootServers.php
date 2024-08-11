@@ -256,7 +256,7 @@ class ImportRootServers extends Command
             $prefix . (new RootServerStatistics)->getTable(),
         ];
         foreach ($tableNames as $tableName) {
-            DB::statement(DB::raw("ANALYZE TABLE $tableName;"));
+            DB::statement("ANALYZE TABLE $tableName;");
         }
     }
 

@@ -179,7 +179,7 @@ class PrimeDatabaseFromLegacyTomato extends Command
             $prefix . (new Format)->getTable(),
         ];
         foreach ($tableNames as $tableName) {
-            DB::statement(DB::raw("ANALYZE TABLE $tableName;"));
+            DB::statement("ANALYZE TABLE $tableName;");
         }
     }
 
