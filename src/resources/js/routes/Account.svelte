@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Button, Helper, Input, Label, Listgroup, Table, TableBody, TableBodyCell, TableBodyRow } from 'flowbite-svelte';
+  import { AccordionItem, Accordion, Button, Helper, Input, Label, Listgroup, Table, TableBody, TableBodyCell, TableBodyRow } from 'flowbite-svelte';
   import { createEventDispatcher } from 'svelte';
   import { createForm } from 'felte';
   // svelte-hack' -- import hacked to get onMount to work correctly for unit tests
@@ -221,19 +221,21 @@
         </TableBodyRow>
         {#if $authenticatedUser?.type === 'serviceBodyAdmin'}
           <TableBodyRow>
-            <TableBodyCell class="align-top">
-              {$translations.associatedServiceBodies}
-            </TableBodyCell>
-            <TableBodyCell>
-              {#if !serviceBodiesLoaded}
-                {$translations.loading}
-              {:else if associatedServiceBodyNames.length === 0}
-                {$translations.none}
-              {:else}
-                <Listgroup items={associatedServiceBodyNames} let:item>
-                  {item}
-                </Listgroup>
-              {/if}
+            <TableBodyCell colSpan={2}>
+              <Accordion>
+                <AccordionItem>
+                  <span slot="header">{$translations.associatedServiceBodies}</span>
+                  {#if !serviceBodiesLoaded}
+                    {$translations.loading}
+                  {:else if associatedServiceBodyNames.length === 0}
+                    {$translations.none}
+                  {:else}
+                    <Listgroup items={associatedServiceBodyNames} let:item>
+                      {item}
+                    </Listgroup>
+                  {/if}
+                </AccordionItem>
+              </Accordion>
             </TableBodyCell>
           </TableBodyRow>
         {/if}
