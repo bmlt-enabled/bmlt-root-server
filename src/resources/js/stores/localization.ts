@@ -14,7 +14,6 @@ const strings = new LocalizedStrings({
     administratorTitle: 'Administrator/Administratorin', // TOFIX: translate this way, or just Administrator?
     adminTitle: 'Admin', // TOFIX: translate
     applyChangesTitle: 'Änderung anwenden',
-    associatedServiceBodies: 'Associated service bodies', // TOFIX: translate
     cancel: 'Cancel', // TOFIX: translate
     closeWithoutSaving: 'Close without saving', // TOFIX: translate
     confirmDeleteServiceBody: 'Bist du sicher, dass du diesen Service-Body löschen möchten?',
@@ -27,6 +26,7 @@ const strings = new LocalizedStrings({
     deleteServiceBody: 'Service-Body löschen',
     deleteUser: 'Lösche diesen Benutzer',
     descriptionTitle: 'Beschreibung',
+    editableServiceBodies: 'Service bodies this user can edit', // TOFIX: translate
     editUser: 'Benutzer bearbeiten',
     emailTitle: 'E-Mail-Adresse',
     formatsTitle: 'Formate',
@@ -77,7 +77,6 @@ const strings = new LocalizedStrings({
     administratorTitle: 'Administrator',
     adminTitle: 'Admin',
     applyChangesTitle: 'Apply Changes',
-    associatedServiceBodies: 'Associated service bodies',
     cancel: 'Cancel',
     closeWithoutSaving: 'Close without saving',
     confirmDeleteServiceBody: 'Are you sure you want to delete this service body?',
@@ -90,6 +89,7 @@ const strings = new LocalizedStrings({
     deleteServiceBody: 'Delete Service Body',
     deleteUser: 'Delete User',
     descriptionTitle: 'Description',
+    editableServiceBodies: 'Service bodies this user can edit',
     editUser: 'Edit User',
     emailTitle: 'Email',
     formatsTitle: 'Formats',

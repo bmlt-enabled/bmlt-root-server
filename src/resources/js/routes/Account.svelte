@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Button, Helper, Input, Label, Listgroup, Table, TableBody, TableBodyCell, TableBodyRow } from 'flowbite-svelte';
+  import { AccordionItem, Accordion, Button, Helper, Input, Label, Listgroup, Table, TableBody, TableBodyCell, TableBodyRow } from 'flowbite-svelte';
   import { createEventDispatcher } from 'svelte';
   import { createForm } from 'felte';
   // svelte-hack' -- import hacked to get onMount to work correctly for unit tests
@@ -19,7 +19,7 @@
 
   let serviceBodies: ServiceBody[] = [];
   let serviceBodiesLoaded = false;
-  let associatedServiceBodyNames: string[] = [];
+  let editableServiceBodyNames: string[] = [];
 
   const dispatch = createEventDispatcher<{ saved: { user: User } }>();
   let userType = 'unknown';
@@ -135,46 +135,47 @@
   // helper function to compute the set of service bodies that the currently logged in user can edit.
   // s is the starting service body
   // children is an array of sets of children, indexed by the id of the parent service body
-  // associatedServiceBodies is the set of service bodies that is being accumulated
-  function recursivelyAddServiceBodies(s: ServiceBody, children: Set<ServiceBody>[], associatedServiceBodies: Set<ServiceBody>) {
-    associatedServiceBodies.add(s);
+  // editableServiceBodies is the set of service bodies that is being accumulated
+  function recursivelyAddServiceBodies(s: ServiceBody, children: Set<ServiceBody>[], editableServiceBodies: Set<ServiceBody>) {
+    editableServiceBodies.add(s);
     if (children[s.id]) {
       for (const c of children[s.id]) {
-        recursivelyAddServiceBodies(c, children, associatedServiceBodies);
+        recursivelyAddServiceBodies(c, children, editableServiceBodies);
       }
     }
   }
 
   onMount(() => {
-    // we only show the service bodies that can be edited if this is a serviceBodyAdmin
-    if ($authenticatedUser?.type === 'serviceBodyAdmin') {
-      getServiceBodies();
-    }
+    getServiceBodies();
   });
 
   $: {
     const id = $authenticatedUser?.id;
     if (serviceBodiesLoaded && id) {
-      // children is an array with indices = service body ids, values a set of children of that service body
-      // (not recursively - the recursion is handled elsewhere)
-      const children: Set<ServiceBody>[] = [];
-      for (const s of serviceBodies) {
-        const p = s.parentId;
-        if (p) {
-          if (children[p]) {
-            children[p].add(s);
-          } else {
-            children[p] = new Set([s]);
+      const editableServiceBodies: Set<ServiceBody> = new Set();
+      if ($authenticatedUser.type === 'admin') {
+        serviceBodies.forEach((s) => editableServiceBodies.add(s));
+      } else if ($authenticatedUser.type === 'serviceBodyAdmin') {
+        // children is an array with indices = service body ids, values a set of children of that service body
+        // (not recursively - the recursion is handled elsewhere)
+        const children: Set<ServiceBody>[] = [];
+        for (const s of serviceBodies) {
+          const p = s.parentId;
+          if (p) {
+            if (children[p]) {
+              children[p].add(s);
+            } else {
+              children[p] = new Set([s]);
+            }
+          }
+        }
+        for (const s of serviceBodies) {
+          if (s.adminUserId === id || s.assignedUserIds.includes(id)) {
+            recursivelyAddServiceBodies(s, children, editableServiceBodies);
           }
         }
       }
-      const associatedServiceBodies: Set<ServiceBody> = new Set();
-      for (const s of serviceBodies) {
-        if (s.adminUserId === id || s.assignedUserIds.includes(id)) {
-          recursivelyAddServiceBodies(s, children, associatedServiceBodies);
-        }
-      }
-      associatedServiceBodyNames = Array.from(associatedServiceBodies)
+      editableServiceBodyNames = Array.from(editableServiceBodies)
         .map((s) => s.name)
         .sort();
     }
@@ -198,46 +199,42 @@
     <TableBody>
       <TableBodyRow>
         <TableBodyCell>{$translations.accountTypeTitle}</TableBodyCell>
-        <TableBodyCell>
-          {userType}
-        </TableBodyCell>
+      </TableBodyRow>
+      <TableBodyRow>
+        <TableBodyCell>{userType}</TableBodyCell>
       </TableBodyRow>
       {#if $authenticatedUser?.type !== 'admin'}
         <TableBodyRow>
-          <TableBodyCell>
-            {$translations.nameTitle}
-          </TableBodyCell>
-          <TableBodyCell>
-            {$authenticatedUser?.displayName}
-          </TableBodyCell>
+          <TableBodyCell>{$translations.nameTitle}</TableBodyCell>
         </TableBodyRow>
         <TableBodyRow>
-          <TableBodyCell>
-            {$translations.usernameTitle}
-          </TableBodyCell>
-          <TableBodyCell>
-            {$authenticatedUser?.username}
-          </TableBodyCell>
+          <TableBodyCell>{$authenticatedUser?.displayName}</TableBodyCell>
         </TableBodyRow>
-        {#if $authenticatedUser?.type === 'serviceBodyAdmin'}
-          <TableBodyRow>
-            <TableBodyCell class="align-top">
-              {$translations.associatedServiceBodies}
-            </TableBodyCell>
-            <TableBodyCell>
+        <TableBodyRow>
+          <TableBodyCell>{$translations.usernameTitle}</TableBodyCell>
+        </TableBodyRow>
+        <TableBodyRow>
+          <TableBodyCell>{$authenticatedUser?.username}</TableBodyCell>
+        </TableBodyRow>
+      {/if}
+      <TableBodyRow>
+        <TableBodyCell>
+          <Accordion>
+            <AccordionItem>
+              <span slot="header">{$translations.editableServiceBodies}</span>
               {#if !serviceBodiesLoaded}
                 {$translations.loading}
-              {:else if associatedServiceBodyNames.length === 0}
+              {:else if editableServiceBodyNames.length === 0}
                 {$translations.none}
               {:else}
-                <Listgroup items={associatedServiceBodyNames} let:item>
+                <Listgroup items={editableServiceBodyNames} let:item>
                   {item}
                 </Listgroup>
               {/if}
-            </TableBodyCell>
-          </TableBodyRow>
-        {/if}
-      {/if}
+            </AccordionItem>
+          </Accordion>
+        </TableBodyCell>
+      </TableBodyRow>
     </TableBody>
   </Table>
   <p>&nbsp;</p>
