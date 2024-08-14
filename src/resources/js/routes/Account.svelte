@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { AccordionItem, Accordion, Button, Helper, Input, Label, Listgroup, Table, TableBody, TableBodyCell, TableBodyRow } from 'flowbite-svelte';
+  import { AccordionItem, Accordion, Button, Helper, Input, Label, Listgroup } from 'flowbite-svelte';
   import { createEventDispatcher } from 'svelte';
   import { createForm } from 'felte';
   // svelte-hack' -- import hacked to get onMount to work correctly for unit tests
@@ -39,7 +39,8 @@
   }
   const initialValues = {
     displayName: $authenticatedUser?.displayName ?? '',
-    // just leave type and ownerId alone (they would never be changed here)
+    userType: userType, // this isn't part of the UserUpdate type, and can't be changed here, but it is needed for the form
+    type: $authenticatedUser?.type ?? '', // this isn't used in the form, but is required for the UserUpdate type
     email: $authenticatedUser?.email ?? '',
     username: $authenticatedUser?.username ?? '',
     description: $authenticatedUser?.description ?? '',
@@ -52,7 +53,7 @@
     onSubmit: async (values) => {
       spinner.show();
       if ($authenticatedUser) {
-        await RootServerApi.partialUpdateUser($authenticatedUser.id, values);
+        await RootServerApi.updateUser($authenticatedUser.id, values);
         savedUser = await RootServerApi.getUser($authenticatedUser.id);
         authenticatedUser.set(savedUser);
       } else {
@@ -195,70 +196,29 @@
 
 <div class="mx-auto max-w-3xl p-2">
   <h2 class="mb-4 text-center text-xl font-semibold dark:text-white">{$translations.accountSettingsTitle}</h2>
-  <Table>
-    <TableBody>
-      <TableBodyRow>
-        <TableBodyCell>{$translations.accountTypeTitle}</TableBodyCell>
-      </TableBodyRow>
-      <TableBodyRow>
-        <TableBodyCell>{userType}</TableBodyCell>
-      </TableBodyRow>
-      {#if $authenticatedUser?.type !== 'admin'}
-        <TableBodyRow>
-          <TableBodyCell>{$translations.nameTitle}</TableBodyCell>
-        </TableBodyRow>
-        <TableBodyRow>
-          <TableBodyCell>{$authenticatedUser?.displayName}</TableBodyCell>
-        </TableBodyRow>
-        <TableBodyRow>
-          <TableBodyCell>{$translations.usernameTitle}</TableBodyCell>
-        </TableBodyRow>
-        <TableBodyRow>
-          <TableBodyCell>{$authenticatedUser?.username}</TableBodyCell>
-        </TableBodyRow>
-      {/if}
-      <TableBodyRow>
-        <TableBodyCell>
-          <Accordion>
-            <AccordionItem>
-              <span slot="header">{$translations.editableServiceBodies}</span>
-              {#if !serviceBodiesLoaded}
-                {$translations.loading}
-              {:else if editableServiceBodyNames.length === 0}
-                {$translations.none}
-              {:else}
-                <Listgroup items={editableServiceBodyNames} let:item>
-                  {item}
-                </Listgroup>
-              {/if}
-            </AccordionItem>
-          </Accordion>
-        </TableBodyCell>
-      </TableBodyRow>
-    </TableBody>
-  </Table>
-  <p>&nbsp;</p>
   <form use:form>
     <div class="md grid gap-4">
-      <div class={$authenticatedUser?.type !== 'admin' ? 'hidden' : ''}>
-        <div class="md">
-          <Label for="displayName" class="mb-2">{$translations.nameTitle}</Label>
-          <Input type="text" id="displayName" name="displayName" required />
-          <Helper class="mt-2" color="red">
-            {#if $errors.displayName}
-              {$errors.displayName}
-            {/if}
-          </Helper>
-        </div>
-        <div class="md">
-          <Label for="username" class="mb-2">{$translations.usernameTitle}</Label>
-          <Input type="text" id="username" name="username" required />
-          <Helper class="mt-2" color="red">
-            {#if $errors.username}
-              {$errors.username}
-            {/if}
-          </Helper>
-        </div>
+      <div class="md">
+        <Label for="displayName" class="mb-2">{$translations.nameTitle}</Label>
+        <Input type="text" id="displayName" name="displayName" required disabled={$authenticatedUser?.type !== 'admin'} />
+        <Helper class="mt-2" color="red">
+          {#if $errors.displayName}
+            {$errors.displayName}
+          {/if}
+        </Helper>
+      </div>
+      <div class="md">
+        <Label for="username" class="mb-2">{$translations.usernameTitle}</Label>
+        <Input type="text" id="username" name="username" required disabled={$authenticatedUser?.type !== 'admin'} />
+        <Helper class="mt-2" color="red">
+          {#if $errors.username}
+            {$errors.username}
+          {/if}
+        </Helper>
+      </div>
+      <div class="md">
+        <Label for="userType" class="mb-2">{$translations.accountTypeTitle}</Label>
+        <Input type="text" id="userType" name="userType" required disabled />
       </div>
       <div class="md">
         <Label for="email" class="mb-2">{$translations.emailTitle}</Label>
@@ -292,6 +252,20 @@
           {$translations.applyChangesTitle}
         </Button>
       </div>
+      <Accordion>
+        <AccordionItem>
+          <span slot="header">{$translations.editableServiceBodies}</span>
+          {#if !serviceBodiesLoaded}
+            {$translations.loading}
+          {:else if editableServiceBodyNames.length === 0}
+            {$translations.none}
+          {:else}
+            <Listgroup items={editableServiceBodyNames} let:item>
+              {item}
+            </Listgroup>
+          {/if}
+        </AccordionItem>
+      </Accordion>
     </div>
   </form>
 </div>
