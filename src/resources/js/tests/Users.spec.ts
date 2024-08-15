@@ -67,9 +67,7 @@ describe('check editing, adding, and deleting users using the popup dialog boxes
     // We'll need to find the Apply Changes button again later, after there have been changes -- for some reason it's
     // a different button after it's enabled.
     const b = screen.getByRole('button', { name: 'Apply Changes' });
-    // This test ought to work but doesn't, so check for 'cursor-not-allowed' instead
-    // expect(b).toBeDisabled();
-    expect(b.attributes.getNamedItem('class')?.value.includes('cursor-not-allowed')).toBeTruthy();
+    expect(b).toBeDisabled();
     const userType = screen.getByRole('combobox', { name: 'User Type' }) as HTMLSelectElement;
     expect(userType.value).toBe('serviceBodyAdmin');
     await userEvent.selectOptions(userType, ['Observer']);

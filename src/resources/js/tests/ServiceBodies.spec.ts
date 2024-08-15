@@ -53,7 +53,6 @@ describe('check editing, adding, and deleting service bodies using the popup dia
     // a different button after it's enabled.
     const b = screen.getByRole('button', { name: 'Apply Changes' });
     expect(b).toBeDisabled();
-    expect(b.attributes.getNamedItem('class')?.value.includes('cursor-not-allowed')).toBeTruthy();
     const name = screen.getByRole('textbox', { name: 'Name' }) as HTMLInputElement;
     expect(name.value).toBe('Rural Area');
     await user.clear(name);

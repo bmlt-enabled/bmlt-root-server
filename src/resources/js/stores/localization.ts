@@ -26,7 +26,7 @@ const strings = new LocalizedStrings({
     deleteServiceBody: 'Service-Body löschen',
     deleteUser: 'Lösche diesen Benutzer',
     descriptionTitle: 'Beschreibung',
-    editableServiceBodies: 'Service bodies this user can edit', // TOFIX: translate
+    editableServiceBodies: 'Service bodies this user can edit (not changeable here)', // TOFIX: translate
     editUser: 'Benutzer bearbeiten',
     emailTitle: 'E-Mail-Adresse',
     formatsTitle: 'Formate',
@@ -89,7 +89,7 @@ const strings = new LocalizedStrings({
     deleteServiceBody: 'Delete Service Body',
     deleteUser: 'Delete User',
     descriptionTitle: 'Description',
-    editableServiceBodies: 'Service bodies this user can edit',
+    editableServiceBodies: 'Service bodies this user can edit (not changeable here)',
     editUser: 'Edit User',
     emailTitle: 'Email',
     formatsTitle: 'Formats',
