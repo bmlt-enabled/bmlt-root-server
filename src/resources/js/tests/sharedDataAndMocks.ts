@@ -30,7 +30,7 @@ import runtime from '../../../node_modules/bmlt-root-server-client/dist/runtime'
 
 type UserEventInstance = ReturnType<typeof userEvent.setup>;
 
-const mockServerAdmin: User = {
+export const mockServerAdmin: User = {
   description: 'Main Server Administrator',
   displayName: 'Server Administrator',
   email: 'mockadmin@bmlt.app',
@@ -40,7 +40,7 @@ const mockServerAdmin: User = {
   username: 'serveradmin'
 };
 
-const mockNorthernZoneAdmin: User = {
+export const mockNorthernZoneAdmin: User = {
   description: 'Northern Zone Administrator',
   displayName: 'Northern Zone',
   email: 'nzone@bmlt.app',
@@ -50,7 +50,7 @@ const mockNorthernZoneAdmin: User = {
   username: 'NorthernZone'
 };
 
-const mockBigRegionAdmin: User = {
+export const mockBigRegionAdmin: User = {
   description: 'Big Region Administrator',
   displayName: 'Big Region',
   email: 'big@bmlt.app',
@@ -60,7 +60,7 @@ const mockBigRegionAdmin: User = {
   username: 'BigRegion'
 };
 
-const mockSmallRegionAdmin: User = {
+export const mockSmallRegionAdmin: User = {
   description: 'Small Region Administrator',
   displayName: 'Small Region',
   email: 'small@bmlt.app',
@@ -70,7 +70,7 @@ const mockSmallRegionAdmin: User = {
   username: 'SmallRegion'
 };
 
-const mockRiverCityAreaAdmin: User = {
+export const mockRiverCityAreaAdmin: User = {
   description: 'River City Area Administrator',
   displayName: 'River City Area',
   email: 'river@bmlt.app',
@@ -80,7 +80,7 @@ const mockRiverCityAreaAdmin: User = {
   username: 'RiverCityArea'
 };
 
-const mockMountainAreaAdmin: User = {
+export const mockMountainAreaAdmin: User = {
   description: 'Mountain Area Administrator',
   displayName: 'Mountain Area',
   email: 'mountain@bmlt.app',
@@ -90,7 +90,7 @@ const mockMountainAreaAdmin: User = {
   username: 'MountainArea'
 };
 
-const mockRuralAreaAdmin: User = {
+export const mockRuralAreaAdmin: User = {
   description: 'Rural Area Administrator',
   displayName: 'Rural Area',
   email: 'rural@bmlt.app',
@@ -100,7 +100,7 @@ const mockRuralAreaAdmin: User = {
   username: 'RuralArea'
 };
 
-const mockSmallRegionObserver: User = {
+export const mockSmallRegionObserver: User = {
   description: 'Small Region Observer',
   displayName: 'Small Observer',
   email: 'smallobserver@bmlt.app',
@@ -110,7 +110,7 @@ const mockSmallRegionObserver: User = {
   username: 'SmallObserver'
 };
 
-const mockSmallRegionDeactivated: User = {
+export const mockSmallRegionDeactivated: User = {
   description: 'Small Region Deactivated',
   displayName: 'Small Deactivated',
   email: 'smalldeactivated@bmlt.app',
