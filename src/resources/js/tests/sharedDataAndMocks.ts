@@ -7,11 +7,22 @@ Mock users as follows:
         River City Area
         Mountain Area
         Rural Area
+        Rural Area Admin 2
+      Big Region Admin 2
       Small Region
       Small Region Observer
       Small Region Deactivated
-Server Administrator is a server admin and the next 6 are service body admins.  Small Region Observer
-is an observer.  Small Region Deactivated is a deactivated user.
+Server Administrator is a server admin and the next 8 are service body admins.
+Big Region Admin 2 and Rural Area Admin 2 are extra service body admins (not primary admins).
+Small Region Observer is an observer.  Small Region Deactivated is a deactivated user.
+
+Mock service bodies are as follows:
+  Northern Zone
+    Big Region
+      River City Area
+      Mountain Area
+      Rural Area
+    Small Region
 */
 
 import { get } from 'svelte/store';
@@ -30,7 +41,7 @@ import runtime from '../../../node_modules/bmlt-root-server-client/dist/runtime'
 
 type UserEventInstance = ReturnType<typeof userEvent.setup>;
 
-export const mockServerAdmin: User = {
+export const serverAdmin: User = {
   description: 'Main Server Administrator',
   displayName: 'Server Administrator',
   email: 'mockadmin@bmlt.app',
@@ -40,7 +51,7 @@ export const mockServerAdmin: User = {
   username: 'serveradmin'
 };
 
-export const mockNorthernZoneAdmin: User = {
+export const northernZoneAdmin: User = {
   description: 'Northern Zone Administrator',
   displayName: 'Northern Zone',
   email: 'nzone@bmlt.app',
@@ -50,17 +61,17 @@ export const mockNorthernZoneAdmin: User = {
   username: 'NorthernZone'
 };
 
-export const mockBigRegionAdmin: User = {
+export const bigRegionAdmin: User = {
   description: 'Big Region Administrator',
   displayName: 'Big Region',
   email: 'big@bmlt.app',
   id: 3,
-  ownerId: 2,
+  ownerId: northernZoneAdmin.id,
   type: 'serviceBodyAdmin',
   username: 'BigRegion'
 };
 
-export const mockSmallRegionAdmin: User = {
+export const smallRegionAdmin: User = {
   description: 'Small Region Administrator',
   displayName: 'Small Region',
   email: 'small@bmlt.app',
@@ -70,63 +81,83 @@ export const mockSmallRegionAdmin: User = {
   username: 'SmallRegion'
 };
 
-export const mockRiverCityAreaAdmin: User = {
+export const riverCityAreaAdmin: User = {
   description: 'River City Area Administrator',
   displayName: 'River City Area',
   email: 'river@bmlt.app',
   id: 5,
-  ownerId: 3,
+  ownerId: bigRegionAdmin.id,
   type: 'serviceBodyAdmin',
   username: 'RiverCityArea'
 };
 
-export const mockMountainAreaAdmin: User = {
+export const mountainAreaAdmin: User = {
   description: 'Mountain Area Administrator',
   displayName: 'Mountain Area',
   email: 'mountain@bmlt.app',
   id: 6,
-  ownerId: 3,
+  ownerId: bigRegionAdmin.id,
   type: 'serviceBodyAdmin',
   username: 'MountainArea'
 };
 
-export const mockRuralAreaAdmin: User = {
+export const ruralAreaAdmin: User = {
   description: 'Rural Area Administrator',
   displayName: 'Rural Area',
   email: 'rural@bmlt.app',
   id: 7,
-  ownerId: 3,
+  ownerId: bigRegionAdmin.id,
   type: 'serviceBodyAdmin',
   username: 'RuralArea'
 };
 
-export const mockSmallRegionObserver: User = {
+export const smallRegionObserver: User = {
   description: 'Small Region Observer',
   displayName: 'Small Observer',
   email: 'smallobserver@bmlt.app',
   id: 8,
-  ownerId: 2,
+  ownerId: northernZoneAdmin.id,
   type: 'observer',
   username: 'SmallObserver'
 };
 
-export const mockSmallRegionDeactivated: User = {
+export const smallRegionDeactivated: User = {
   description: 'Small Region Deactivated',
   displayName: 'Small Deactivated',
   email: 'smalldeactivated@bmlt.app',
   id: 9,
-  ownerId: 2,
+  ownerId: northernZoneAdmin.id,
   type: 'deactivated',
   username: 'SmallDeactivated'
 };
 
-const mockNorthernZone: ServiceBody = {
-  id: 1,
+export const bigRegionAdmin2: User = {
+  description: 'Big Region Second Administrator',
+  displayName: 'Big Region Admin 2',
+  email: 'big2@bmlt.app',
+  id: 10,
+  ownerId: northernZoneAdmin.id,
+  type: 'serviceBodyAdmin',
+  username: 'BigRegion2'
+};
+
+export const ruralAreaAdmin2: User = {
+  description: 'Rural Area Second Administrator',
+  displayName: 'Rural Area Admin 2',
+  email: 'rural2@bmlt.app',
+  id: 11,
+  ownerId: bigRegionAdmin.id,
+  type: 'serviceBodyAdmin',
+  username: 'RuralArea2'
+};
+
+export const northernZone: ServiceBody = {
+  id: 101,
   name: 'Northern Zone',
-  adminUserId: 1,
+  adminUserId: northernZoneAdmin.id,
   type: 'ZF',
   parentId: null,
-  assignedUserIds: [2, 3, 8],
+  assignedUserIds: [],
   email: 'nzone@bmlt.app',
   description: 'Northern Zone Description',
   url: 'https://nzone.example.com',
@@ -134,13 +165,13 @@ const mockNorthernZone: ServiceBody = {
   worldId: 'ZF123'
 };
 
-const mockBigRegion: ServiceBody = {
-  id: 2,
+export const bigRegion: ServiceBody = {
+  id: 102,
   name: 'Big Region',
-  adminUserId: 3,
+  adminUserId: bigRegionAdmin.id,
   type: 'RG',
-  parentId: 1,
-  assignedUserIds: [2, 3],
+  parentId: northernZone.id,
+  assignedUserIds: [bigRegionAdmin2.id],
   email: 'big@bmlt.app',
   description: 'Big Region Description',
   url: 'https://bigregion.example.com',
@@ -148,13 +179,13 @@ const mockBigRegion: ServiceBody = {
   worldId: 'RG125'
 };
 
-const mockSmallRegion: ServiceBody = {
-  id: 3,
+export const smallRegion: ServiceBody = {
+  id: 103,
   name: 'Small Region',
-  adminUserId: 2,
+  adminUserId: smallRegionAdmin.id,
   type: 'RG',
-  parentId: null,
-  assignedUserIds: [2],
+  parentId: northernZone.id,
+  assignedUserIds: [smallRegionObserver.id, smallRegionDeactivated.id],
   email: 'small@bmlt.app',
   description: 'Small Region Description',
   url: 'https://smallregion.example.com',
@@ -162,13 +193,13 @@ const mockSmallRegion: ServiceBody = {
   worldId: 'RG558'
 };
 
-const mockRiverCityArea: ServiceBody = {
-  id: 4,
+export const riverCityArea: ServiceBody = {
+  id: 104,
   name: 'River City Area',
-  adminUserId: 2,
+  adminUserId: riverCityAreaAdmin.id,
   type: 'AS',
-  parentId: 2,
-  assignedUserIds: [3, 2, 5],
+  parentId: bigRegion.id,
+  assignedUserIds: [],
   email: 'rivercity@bmlt.app',
   description: 'River City Area Description',
   url: 'https://rivercityarea.example.com',
@@ -176,13 +207,13 @@ const mockRiverCityArea: ServiceBody = {
   worldId: 'AS128'
 };
 
-const mockMountainArea: ServiceBody = {
-  id: 5,
+export const mountainArea: ServiceBody = {
+  id: 105,
   name: 'Mountain Area',
-  adminUserId: 2,
+  adminUserId: mountainAreaAdmin.id,
   type: 'AS',
-  parentId: 2,
-  assignedUserIds: [2, 6],
+  parentId: bigRegion.id,
+  assignedUserIds: [],
   email: 'mountain@bmlt.app',
   description: 'Mountain Area Description',
   url: 'https://mountainarea.example.com',
@@ -190,13 +221,13 @@ const mockMountainArea: ServiceBody = {
   worldId: 'AS428'
 };
 
-const mockRuralArea: ServiceBody = {
-  id: 6,
+export const ruralArea: ServiceBody = {
+  id: 106,
   name: 'Rural Area',
-  adminUserId: 7,
+  adminUserId: ruralAreaAdmin.id,
   type: 'AS',
-  parentId: 2,
-  assignedUserIds: [2, 7],
+  parentId: bigRegion.id,
+  assignedUserIds: [ruralAreaAdmin2.id],
   email: 'rural@bmlt.app',
   description: 'Rural Area Description',
   url: 'https://ruralarea.example.com',
@@ -205,29 +236,33 @@ const mockRuralArea: ServiceBody = {
 };
 
 export const allUsers = [
-  mockServerAdmin,
-  mockNorthernZoneAdmin,
-  mockBigRegionAdmin,
-  mockSmallRegionAdmin,
-  mockRiverCityAreaAdmin,
-  mockMountainAreaAdmin,
-  mockRuralAreaAdmin,
-  mockSmallRegionObserver,
-  mockSmallRegionDeactivated
+  serverAdmin,
+  northernZoneAdmin,
+  bigRegionAdmin,
+  smallRegionAdmin,
+  riverCityAreaAdmin,
+  mountainAreaAdmin,
+  ruralAreaAdmin,
+  smallRegionObserver,
+  smallRegionDeactivated,
+  bigRegionAdmin2,
+  ruralAreaAdmin2
 ];
 
-export const allServiceBodies: ServiceBody[] = [mockNorthernZone, mockBigRegion, mockSmallRegion, mockRiverCityArea, mockMountainArea, mockRuralArea];
+export const allServiceBodies: ServiceBody[] = [northernZone, bigRegion, smallRegion, riverCityArea, mountainArea, ruralArea];
 
 const allUsersAndPasswords = [
-  { user: mockServerAdmin, password: 'serveradmin-password' },
-  { user: mockNorthernZoneAdmin, password: 'northern-zone-password' },
-  { user: mockBigRegionAdmin, password: 'big-region-password' },
-  { user: mockSmallRegionAdmin, password: 'small-region-password' },
-  { user: mockRiverCityAreaAdmin, password: 'river-city-area-password' },
-  { user: mockMountainAreaAdmin, password: 'mountain-area-password' },
-  { user: mockRuralAreaAdmin, password: 'rural-area-password' },
-  { user: mockSmallRegionObserver, password: 'small-region-observer-password' },
-  { user: mockSmallRegionDeactivated, password: 'small-region-deactivated-password' }
+  { user: serverAdmin, password: 'serveradmin-password' },
+  { user: northernZoneAdmin, password: 'northern-zone-password' },
+  { user: bigRegionAdmin, password: 'big-region-password' },
+  { user: smallRegionAdmin, password: 'small-region-password' },
+  { user: riverCityAreaAdmin, password: 'river-city-area-password' },
+  { user: mountainAreaAdmin, password: 'mountain-area-password' },
+  { user: ruralAreaAdmin, password: 'rural-area-password' },
+  { user: smallRegionObserver, password: 'small-region-observer-password' },
+  { user: smallRegionDeactivated, password: 'small-region-deactivated-password' },
+  { user: bigRegionAdmin2, password: 'big-region2-password' },
+  { user: ruralAreaAdmin2, password: 'rural-area2-password' }
 ];
 
 function findPassword(name: string): string {
@@ -289,34 +324,36 @@ async function mockGetUsers(initOverrides?: RequestInit | runtime.InitOverrideFu
   const userId = get(authenticatedUser)?.id;
   if (!userId) {
     throw new Error('internal error -- trying to get users when no simulated user is logged in');
-  } else if (userId === mockServerAdmin.id) {
+  } else if (userId === serverAdmin.id) {
     return [
-      mockServerAdmin,
-      mockNorthernZoneAdmin,
-      mockBigRegionAdmin,
-      mockSmallRegionAdmin,
-      mockRiverCityAreaAdmin,
-      mockMountainAreaAdmin,
-      mockRuralAreaAdmin,
-      mockSmallRegionObserver,
-      mockSmallRegionDeactivated
+      serverAdmin,
+      northernZoneAdmin,
+      bigRegionAdmin,
+      smallRegionAdmin,
+      riverCityAreaAdmin,
+      mountainAreaAdmin,
+      ruralAreaAdmin,
+      smallRegionObserver,
+      smallRegionDeactivated,
+      bigRegionAdmin2,
+      ruralAreaAdmin2
     ];
-  } else if (userId === mockNorthernZoneAdmin.id) {
-    return [mockNorthernZoneAdmin, mockBigRegionAdmin, mockSmallRegionAdmin, mockSmallRegionObserver, mockSmallRegionDeactivated];
-  } else if (userId === mockBigRegionAdmin.id) {
-    return [mockBigRegionAdmin, mockRiverCityAreaAdmin, mockMountainAreaAdmin, mockRuralAreaAdmin];
-  } else if (userId === mockSmallRegionAdmin.id) {
-    return [mockSmallRegionAdmin];
-  } else if (userId === mockRiverCityAreaAdmin.id) {
-    return [mockRiverCityAreaAdmin];
-  } else if (userId === mockMountainAreaAdmin.id) {
-    return [mockMountainAreaAdmin];
-  } else if (userId === mockRuralAreaAdmin.id) {
-    return [mockRuralAreaAdmin];
-  } else if (userId === mockSmallRegionObserver.id) {
-    return [mockSmallRegionObserver];
-  } else if (userId === mockSmallRegionDeactivated.id) {
-    return [mockSmallRegionDeactivated];
+  } else if (userId === northernZoneAdmin.id) {
+    return [northernZoneAdmin, bigRegionAdmin, smallRegionAdmin, smallRegionObserver, smallRegionDeactivated, bigRegionAdmin2];
+  } else if (userId === bigRegionAdmin.id) {
+    return [bigRegionAdmin, riverCityAreaAdmin, mountainAreaAdmin, ruralAreaAdmin, ruralAreaAdmin2];
+  } else if (userId === smallRegionAdmin.id) {
+    return [smallRegionAdmin];
+  } else if (userId === riverCityAreaAdmin.id) {
+    return [riverCityAreaAdmin];
+  } else if (userId === mountainAreaAdmin.id) {
+    return [mountainAreaAdmin];
+  } else if (userId === ruralAreaAdmin.id) {
+    return [ruralAreaAdmin, ruralAreaAdmin2];
+  } else if (userId === smallRegionObserver.id) {
+    return [smallRegionObserver];
+  } else if (userId === smallRegionDeactivated.id) {
+    return [smallRegionDeactivated];
   } else {
     throw new Error('internal error -- user ID not found in mockGetUsers');
   }
@@ -408,7 +445,7 @@ async function mockGetServiceBodies(): Promise<ServiceBody[]> {
   if (!userId) {
     throw new Error('internal error -- trying to get service bodies when no simulated user is logged in');
   } else {
-    return [mockNorthernZone, mockBigRegion, mockSmallRegion, mockRiverCityArea, mockMountainArea, mockRuralArea];
+    return [northernZone, bigRegion, smallRegion, riverCityArea, mountainArea, ruralArea];
   }
 }
 
