@@ -47,8 +47,13 @@ describe('check content in Account tab when logged in as various users', () => {
     expect(mockSavedUserUpdate?.description).toBe('Main Server Poobah');
     expect(mockSavedUserUpdate?.username).toBe('serverpoobah');
     expect(mockSavedUserUpdate?.password).toBe('new password');
-    const expand = screen.getByRole('button', { name: /service bodies this user can edit/i });
-    await user.click(expand);
+    // Clicking the expand icon is not causing the list to expand, so the commented-out tests below on the list of
+    // editable services bodies fail.  To work around this problem, the service body list is factored out into a separate
+    // component (AccountServiceBodyList), and tested separately.
+    // TODO: if we can get the simulated click on the expand icon to work, the separate AccountServiceBodyList list component
+    // could be folded back in.  Although the code is not too bad as is.
+    // const expand = screen.getByRole('button', { name: /service bodies this user can edit/i });
+    // await user.click(expand);
     // TODO: clicking the expand icon is not causing the list to expand, so the following tests fail:
     // (may be able to change to getByText once expanding the list is working)
     // expect(await screen.findByText('Northern Zone')).toBeInTheDocument();
@@ -58,6 +63,4 @@ describe('check content in Account tab when logged in as various users', () => {
     // expect(await screen.findByText('Mountain Area')).toBeInTheDocument();
     // expect(await screen.findByText('Rural Area')).toBeInTheDocument();
   });
-  // TODO: add tests of the service bodies that can be edited for a couple of other users.
-  // Need to figure out how to simulate clicking on the expand icon for these to work.
 });

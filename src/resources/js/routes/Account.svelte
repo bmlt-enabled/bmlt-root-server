@@ -1,14 +1,11 @@
 <script lang="ts">
-  import { AccordionItem, Accordion, Button, Helper, Input, Label, Listgroup } from 'flowbite-svelte';
+  import { AccordionItem, Accordion, Button, Helper, Input, Label } from 'flowbite-svelte';
   import { createEventDispatcher } from 'svelte';
   import { createForm } from 'felte';
-  // svelte-hack' -- import hacked to get onMount to work correctly for unit tests
-  import { onMount } from 'svelte/internal';
   import { validator } from '@felte/validator-yup';
   import * as yup from 'yup';
 
-  import type { ServiceBody } from 'bmlt-root-server-client';
-
+  import AccountServiceBodyList from '../components/AccountServiceBodyList.svelte';
   import { authenticatedUser } from '../stores/apiCredentials';
   import { formIsDirty } from '../lib/utils';
   import Nav from '../components/NavBar.svelte';
@@ -16,10 +13,6 @@
   import { spinner } from '../stores/spinner';
   import { translations } from '../stores/localization';
   import type { User } from 'bmlt-root-server-client';
-
-  let serviceBodies: ServiceBody[] = [];
-  let serviceBodiesLoaded = false;
-  let editableServiceBodyNames: string[] = [];
 
   const dispatch = createEventDispatcher<{ saved: { user: User } }>();
   let userType = 'unknown';
@@ -121,67 +114,6 @@
     })
   });
 
-  async function getServiceBodies(): Promise<void> {
-    try {
-      spinner.show();
-      serviceBodies = await RootServerApi.getServiceBodies();
-      serviceBodiesLoaded = true;
-    } catch (error: any) {
-      await RootServerApi.handleErrors(error);
-    } finally {
-      spinner.hide();
-    }
-  }
-
-  // helper function to compute the set of service bodies that the currently logged in user can edit.
-  // s is the starting service body
-  // children is an array of sets of children, indexed by the id of the parent service body
-  // editableServiceBodies is the set of service bodies that is being accumulated
-  function recursivelyAddServiceBodies(s: ServiceBody, children: Set<ServiceBody>[], editableServiceBodies: Set<ServiceBody>) {
-    editableServiceBodies.add(s);
-    if (children[s.id]) {
-      for (const c of children[s.id]) {
-        recursivelyAddServiceBodies(c, children, editableServiceBodies);
-      }
-    }
-  }
-
-  onMount(() => {
-    getServiceBodies();
-  });
-
-  $: {
-    const id = $authenticatedUser?.id;
-    if (serviceBodiesLoaded && id) {
-      const editableServiceBodies: Set<ServiceBody> = new Set();
-      if ($authenticatedUser.type === 'admin') {
-        serviceBodies.forEach((s) => editableServiceBodies.add(s));
-      } else if ($authenticatedUser.type === 'serviceBodyAdmin') {
-        // children is an array with indices = service body ids, values a set of children of that service body
-        // (not recursively - the recursion is handled elsewhere)
-        const children: Set<ServiceBody>[] = [];
-        for (const s of serviceBodies) {
-          const p = s.parentId;
-          if (p) {
-            if (children[p]) {
-              children[p].add(s);
-            } else {
-              children[p] = new Set([s]);
-            }
-          }
-        }
-        for (const s of serviceBodies) {
-          if (s.adminUserId === id || s.assignedUserIds.includes(id)) {
-            recursivelyAddServiceBodies(s, children, editableServiceBodies);
-          }
-        }
-      }
-      editableServiceBodyNames = Array.from(editableServiceBodies)
-        .map((s) => s.name)
-        .sort();
-    }
-  }
-
   // This hack is required until https://github.com/themesberg/flowbite-svelte/issues/1395 is fixed.
   function disableButtonHack(event: MouseEvent) {
     if (!$isDirty) {
@@ -255,15 +187,7 @@
       <Accordion>
         <AccordionItem>
           <span slot="header">{$translations.editableServiceBodies}</span>
-          {#if !serviceBodiesLoaded}
-            {$translations.loading}
-          {:else if editableServiceBodyNames.length === 0}
-            {$translations.none}
-          {:else}
-            <Listgroup items={editableServiceBodyNames} let:item>
-              {item}
-            </Listgroup>
-          {/if}
+          <AccountServiceBodyList user={$authenticatedUser} />
         </AccordionItem>
       </Accordion>
     </div>

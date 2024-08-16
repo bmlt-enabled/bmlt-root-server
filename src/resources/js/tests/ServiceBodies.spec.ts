@@ -67,15 +67,15 @@ describe('check editing, adding, and deleting service bodies using the popup dia
     await userEvent.selectOptions(serviceBodiesType, ['RS']);
     expect(serviceBodiesType.value).toBe('RS');
     const serviceBodyParent = screen.getByRole('combobox', { name: 'Service Body Parent' }) as HTMLSelectElement;
-    expect(serviceBodyParent.value).toBe('2'); // id of Big Region
-    await userEvent.selectOptions(serviceBodyParent, ['1']);
-    expect(serviceBodyParent.value).toBe('1');
+    expect(serviceBodyParent.value).toBe('102'); // id of Big Region
+    await userEvent.selectOptions(serviceBodyParent, ['101']);
+    expect(serviceBodyParent.value).toBe('101');
     const meetingListEditors = screen.getByLabelText('Meeting List Editors') as HTMLSelectElement;
     const initialSelectedOptions = Array.from(meetingListEditors.selectedOptions).map((option) => option.value);
-    expect(initialSelectedOptions).toEqual(['2', '7']);
-    await userEvent.selectOptions(meetingListEditors, ['2', '6']);
+    expect(initialSelectedOptions).toEqual(['11']);
+    await userEvent.selectOptions(meetingListEditors, ['2', '6', '11']);
     const selectedOptions = Array.from(meetingListEditors.selectedOptions).map((option) => option.value);
-    expect(selectedOptions).toEqual(['6', '2', '7']);
+    expect(selectedOptions).toEqual(['6', '2', '11']);
     const email = screen.getByRole('textbox', { name: 'Email' }) as HTMLInputElement;
     expect(email.value).toBe('rural@bmlt.app');
     await user.clear(email);
@@ -107,8 +107,8 @@ describe('check editing, adding, and deleting service bodies using the popup dia
     expect(mockSavedServiceBodyUpdate?.name).toBe('More Rural Area');
     expect(mockSavedServiceBodyUpdate?.adminUserId).toBe(6);
     expect(mockSavedServiceBodyUpdate?.type).toBe('RS');
-    expect(mockSavedServiceBodyUpdate?.parentId).toBe(1);
-    expect(mockSavedServiceBodyUpdate?.assignedUserIds).toStrictEqual([6, 2, 7]);
+    expect(mockSavedServiceBodyUpdate?.parentId).toBe(101);
+    expect(mockSavedServiceBodyUpdate?.assignedUserIds).toStrictEqual([6, 2, 11]);
     expect(mockSavedServiceBodyUpdate?.email).toBe('morerural@bmlt.app');
     expect(mockSavedServiceBodyUpdate?.description).toBe('Rural Area Description now more rural');
     expect(mockSavedServiceBodyUpdate?.url).toBe('https://moreruralarea.example.com');
@@ -127,15 +127,15 @@ describe('check editing, adding, and deleting service bodies using the popup dia
     const serviceBodyType = screen.getByRole('combobox', { name: 'Service Body Type' }) as HTMLSelectElement;
     expect(serviceBodyType.value).toBe('AS'); // default area service
     const serviceBodyParent = screen.getByRole('combobox', { name: 'Service Body Parent' }) as HTMLSelectElement;
-    expect(serviceBodyParent.value).toBe('-1'); // Server Admin
+    expect(serviceBodyParent.value).toBe('-1'); // no parent
     const serviceBodyAdmin = screen.getByRole('combobox', { name: 'Admin' }) as HTMLSelectElement;
     await userEvent.selectOptions(serviceBodyAdmin, ['Mountain Area']);
     expect(serviceBodyAdmin.value).toBe('6'); // id of Mountain Area User
     const serviceBodiesType = screen.getByRole('combobox', { name: 'Service Body Type' }) as HTMLSelectElement;
     await userEvent.selectOptions(serviceBodiesType, ['RS']);
     expect(serviceBodiesType.value).toBe('RS');
-    await userEvent.selectOptions(serviceBodyParent, ['1']);
-    expect(serviceBodyParent.value).toBe('1');
+    await userEvent.selectOptions(serviceBodyParent, ['101']);
+    expect(serviceBodyParent.value).toBe('101');
     const meetingListEditors = screen.getByLabelText('Meeting List Editors') as HTMLSelectElement;
     await userEvent.selectOptions(meetingListEditors, ['2', '6']);
     const selectedOptions = Array.from(meetingListEditors.selectedOptions).map((option) => option.value);
@@ -163,7 +163,7 @@ describe('check editing, adding, and deleting service bodies using the popup dia
     await user.click(addButtons[1]);
     expect(mockSavedServiceBodyCreate?.adminUserId).toBe(6);
     expect(mockSavedServiceBodyCreate?.type).toBe('RS');
-    expect(mockSavedServiceBodyCreate?.parentId).toBe(1);
+    expect(mockSavedServiceBodyCreate?.parentId).toBe(101);
     expect(mockSavedServiceBodyCreate?.assignedUserIds).toStrictEqual([6, 2]);
     expect(mockSavedServiceBodyCreate?.name).toBe('More Rural Area');
     expect(mockSavedServiceBodyCreate?.email).toBe('morerural@bmlt.app');
@@ -200,7 +200,7 @@ describe('check editing, adding, and deleting service bodies using the popup dia
     await user.click(await screen.findByRole('button', { name: 'Delete Service Body Small Region' }));
     await user.click(await screen.findByRole('checkbox', { name: "Yes, I'm sure." }));
     await user.click(await screen.findByRole('button', { name: 'Delete' }));
-    expect(mockDeletedServiceBodyId).toBe(3);
+    expect(mockDeletedServiceBodyId).toBe(103);
     expect(mockSavedServiceBodyCreate).toBe(null);
     expect(mockSavedServiceBodyUpdate).toBe(null);
   });

@@ -14,9 +14,9 @@ describe('check content in User tab when logged in as various users', () => {
     await login('serveradmin', 'Users');
     expect(await screen.findByRole('heading', { name: 'Users', level: 2 })).toBeInTheDocument();
     expect(await screen.findByRole('textbox', { name: 'Search' })).toBeInTheDocument();
-    // There should be 8 users, with 2 cells per user (display name and a delete icon)
+    // There should be 10 users, with 2 cells per user (display name and a delete icon)
     const cells = screen.getAllByRole('cell');
-    expect(cells.length).toBe(16);
+    expect(cells.length).toBe(20);
     // check for a couple of representative users
     expect(screen.getByRole('cell', { name: 'Big Region' })).toBeInTheDocument();
     expect(screen.getByRole('cell', { name: 'Small Observer' })).toBeInTheDocument();
@@ -25,23 +25,25 @@ describe('check content in User tab when logged in as various users', () => {
 
   test('check layout when logged in as Northern Zone', async () => {
     login('NorthernZone', 'Users');
-    // There should be 4 users, with 1 cell per user (display name but no delete icon)
+    // There should be 5 users, with 1 cell per user (display name but no delete icon)
     const cells = await screen.findAllByRole('cell');
-    expect(cells.length).toBe(4);
+    expect(cells.length).toBe(5);
     expect(screen.getByRole('cell', { name: 'Big Region' })).toBeInTheDocument();
     expect(screen.getByRole('cell', { name: 'Small Region' })).toBeInTheDocument();
     expect(screen.getByRole('cell', { name: 'Small Observer' })).toBeInTheDocument();
     expect(screen.getByRole('cell', { name: 'Small Deactivated' })).toBeInTheDocument();
+    expect(screen.getByRole('cell', { name: 'Big Region Admin 2' })).toBeInTheDocument();
   });
 
   test('check layout when logged in as Big Region', async () => {
     login('BigRegion', 'Users');
-    // There should be 3 users, with 1 cell per user (display name but no delete icon)
+    // There should be 4 users, with 1 cell per user (display name but no delete icon)
     const cells = await screen.findAllByRole('cell');
-    expect(cells.length).toBe(3);
+    expect(cells.length).toBe(4);
     expect(screen.getByRole('cell', { name: 'Mountain Area' })).toBeInTheDocument();
     expect(screen.getByRole('cell', { name: 'River City Area' })).toBeInTheDocument();
     expect(screen.getByRole('cell', { name: 'Rural Area' })).toBeInTheDocument();
+    expect(screen.getByRole('cell', { name: 'Rural Area Admin 2' })).toBeInTheDocument();
   });
 
   test('check layout when logged in as Small Region', async () => {
