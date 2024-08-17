@@ -1,21 +1,5 @@
 /* Shared sample data and mocks for UI unit tests.
 
-Mock users as follows:
-  Server Administrator
-    Northern Zone
-      Big Region
-        River City Area
-        Mountain Area
-        Rural Area
-        Rural Area Admin 2
-      Big Region Admin 2
-      Small Region
-      Small Region Observer
-      Small Region Deactivated
-Server Administrator is a server admin and the next 8 are service body admins.
-Big Region Admin 2 and Rural Area Admin 2 are extra service body admins (not primary admins).
-Small Region Observer is an observer.  Small Region Deactivated is a deactivated user.
-
 Mock service bodies are as follows:
   Northern Zone
     Big Region
@@ -23,6 +7,26 @@ Mock service bodies are as follows:
       Mountain Area
       Rural Area
     Small Region
+
+Mock users as follows.  There is a serveradmin:
+  Server Administrator
+
+Here are the admins for the above service bodies:
+  Northern Zone Administrator
+    Big Region Administrator
+      River City Area Administrator
+      Mountain Area Administrator
+      Rural Area Administrator
+    Small Region Administrator
+
+There are a couple of extra service body admins to test other functionality:
+  Big Region Admin 2 (owned by serveradmin rather than Northern Zone Admin, to test content for Northern Zone Admin)
+  Rural Area Admin 2 (owned by Big Region Admin)
+
+And an observer and a deactivated user:
+  Small Region Observer (owned by Northern Zone Admin)
+  Small Region Deactivated (owned by Northern Zone Admin)
+
 */
 
 import { get } from 'svelte/store';
@@ -76,7 +80,7 @@ export const smallRegionAdmin: User = {
   displayName: 'Small Region',
   email: 'small@bmlt.app',
   id: 4,
-  ownerId: -1,
+  ownerId: northernZoneAdmin.id,
   type: 'serviceBodyAdmin',
   username: 'SmallRegion'
 };
@@ -136,7 +140,7 @@ export const bigRegionAdmin2: User = {
   displayName: 'Big Region Admin 2',
   email: 'big2@bmlt.app',
   id: 10,
-  ownerId: northernZoneAdmin.id,
+  ownerId: -1,
   type: 'serviceBodyAdmin',
   username: 'BigRegion2'
 };
@@ -325,37 +329,9 @@ async function mockGetUsers(initOverrides?: RequestInit | runtime.InitOverrideFu
   if (!userId) {
     throw new Error('internal error -- trying to get users when no simulated user is logged in');
   } else if (userId === serverAdmin.id) {
-    return [
-      serverAdmin,
-      northernZoneAdmin,
-      bigRegionAdmin,
-      smallRegionAdmin,
-      riverCityAreaAdmin,
-      mountainAreaAdmin,
-      ruralAreaAdmin,
-      smallRegionObserver,
-      smallRegionDeactivated,
-      bigRegionAdmin2,
-      ruralAreaAdmin2
-    ];
-  } else if (userId === northernZoneAdmin.id) {
-    return [northernZoneAdmin, bigRegionAdmin, smallRegionAdmin, smallRegionObserver, smallRegionDeactivated, bigRegionAdmin2];
-  } else if (userId === bigRegionAdmin.id) {
-    return [bigRegionAdmin, riverCityAreaAdmin, mountainAreaAdmin, ruralAreaAdmin, ruralAreaAdmin2];
-  } else if (userId === smallRegionAdmin.id) {
-    return [smallRegionAdmin];
-  } else if (userId === riverCityAreaAdmin.id) {
-    return [riverCityAreaAdmin];
-  } else if (userId === mountainAreaAdmin.id) {
-    return [mountainAreaAdmin];
-  } else if (userId === ruralAreaAdmin.id) {
-    return [ruralAreaAdmin, ruralAreaAdmin2];
-  } else if (userId === smallRegionObserver.id) {
-    return [smallRegionObserver];
-  } else if (userId === smallRegionDeactivated.id) {
-    return [smallRegionDeactivated];
+    return allUsers;
   } else {
-    throw new Error('internal error -- user ID not found in mockGetUsers');
+    return allUsers.filter((u) => u.id === userId || u.ownerId === userId);
   }
 }
 

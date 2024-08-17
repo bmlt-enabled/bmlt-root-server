@@ -32,8 +32,9 @@
   }
   const initialValues = {
     displayName: $authenticatedUser?.displayName ?? '',
-    userType: userType, // this isn't part of the UserUpdate type, and can't be changed here, but it is needed for the form
+    userType: userType, // this isn't part of the UserUpdate type, and is read-only in the form
     type: $authenticatedUser?.type ?? '', // this isn't used in the form, but is required for the UserUpdate type
+    ownerId: $authenticatedUser?.ownerId, // this isn't used in the form, but is required for the UserUpdate type
     email: $authenticatedUser?.email ?? '',
     username: $authenticatedUser?.username ?? '',
     description: $authenticatedUser?.description ?? '',
