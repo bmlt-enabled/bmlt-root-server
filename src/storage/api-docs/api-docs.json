@@ -486,6 +486,63 @@
                 ]
             }
         },
+        "/api/v1/logs/laravel": {
+            "get": {
+                "tags": [
+                    "rootServer"
+                ],
+                "summary": "Retrieves laravel log",
+                "description": "Retrieve the laravel log if it exists.",
+                "operationId": "getLaravelLog",
+                "responses": {
+                    "200": {
+                        "description": "Returns when user is authenticated.",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user is not authenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthenticationError"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Returns when user is unauthorized to perform action.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthenticationError"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Returns when no laravel log file exists.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NotFoundError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bmltToken": []
+                    }
+                ]
+            }
+        },
         "/api/v1/meetings": {
             "get": {
                 "tags": [
@@ -2160,6 +2217,7 @@
                     "$ref": "#/components/schemas/Format"
                 }
             },
+            "LaravelLogBase": {},
             "MeetingBase": {
                 "properties": {
                     "serviceBodyId": {
@@ -2838,5 +2896,11 @@
                 }
             }
         }
-    }
+    },
+    "tags": [
+        {
+            "name": "rootServer",
+            "description": "rootServer"
+        }
+    ]
 }

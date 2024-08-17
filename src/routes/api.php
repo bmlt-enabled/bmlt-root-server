@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\ServiceBodyController;
 use App\Http\Controllers\Admin\TokenController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SwaggerController;
+use App\Http\Controllers\Admin\LaravelLogController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,6 +31,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/errortest', [ErrorTestController::class, 'store']);
     Route::post('/auth/refresh', [TokenController::class, 'refresh']);
     Route::post('/auth/logout', [TokenController::class, 'logout']);
+    Route::get('/logs/laravel', [LaravelLogController::class, 'laravelLog']);
     Route::apiResource('formats', FormatController::class);
     Route::patch('/formats/{format}', [FormatController::class, 'partialUpdate']);
     Route::apiResource('meetings', MeetingController::class);
