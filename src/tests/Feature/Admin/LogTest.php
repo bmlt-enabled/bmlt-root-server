@@ -5,7 +5,7 @@ namespace Tests\Feature\Admin;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\File;
 
-class LaravelLogTest extends TestCase
+class LogTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -21,7 +21,8 @@ class LaravelLogTest extends TestCase
             ->get('/api/v1/logs/laravel')
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'text/plain; charset=UTF-8')
-            ->assertHeader('Content-Disposition', 'attachment; filename=laravel.log');
+            ->assertHeader('Content-Encoding', 'gzip')
+            ->assertHeader('Content-Disposition', 'attachment; filename=laravel.log.gz');
     }
 
     public function testLogDownloadNoLogFailure()

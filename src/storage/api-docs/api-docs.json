@@ -498,9 +498,10 @@
                     "200": {
                         "description": "Returns when user is authenticated.",
                         "content": {
-                            "text/plain": {
+                            "application/octet-stream": {
                                 "schema": {
-                                    "type": "string"
+                                    "type": "string",
+                                    "format": "binary"
                                 }
                             }
                         }
@@ -520,7 +521,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/AuthenticationError"
+                                    "$ref": "#/components/schemas/AuthorizationError"
                                 }
                             }
                         }
