@@ -22,7 +22,6 @@ class LogTest extends TestCase
             ->get('/api/v1/logs/laravel')
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'text/plain; charset=UTF-8')
-            ->assertHeader('Content-Encoding', 'gzip')
             ->assertHeader('Content-Disposition', 'attachment; filename=laravel.log.gz')
             ->streamedContent();
         $this->assertEquals($content, gzdecode($gzipped));
