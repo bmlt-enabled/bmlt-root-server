@@ -14,7 +14,7 @@ class LogController extends Controller
     {
         $user = $request->user();
         if (!$user->isAdmin()) {
-            return response()->json(['error' => 'Unauthorized.'], 403);
+            return response()->json(['message' => 'Unauthorized.'], 403);
         }
 
         $logs = Storage::disk('logs');

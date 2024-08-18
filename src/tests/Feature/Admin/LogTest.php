@@ -47,7 +47,7 @@ class LogTest extends TestCase
         $this->withHeader('Authorization', "Bearer $token")
             ->get("/api/v1/logs/laravel")
             ->assertStatus(403)
-            ->assertJson(['error' => 'Unauthorized.']);
+            ->assertJson(['message' => 'Unauthorized.']);
     }
 
     public function testLaravelLogDownloadAsUnauthenticatedDenied()
@@ -64,7 +64,7 @@ class LogTest extends TestCase
         $this->withHeader('Authorization', "Bearer $token")
             ->get("/api/v1/logs/laravel")
             ->assertStatus(403)
-            ->assertJson(['error' => 'Unauthorized.']);
+            ->assertJson(['message' => 'Unauthorized.']);
     }
 
     public function testLaravelLogDownloadAsDeactivatedDenied()
@@ -74,6 +74,6 @@ class LogTest extends TestCase
         $this->withHeader('Authorization', "Bearer $token")
             ->get("/api/v1/logs/laravel")
             ->assertStatus(403)
-            ->assertJson(['error' => 'Unauthorized.']);
+            ->assertJson(['message' => 'Unauthorized.']);
     }
 }
