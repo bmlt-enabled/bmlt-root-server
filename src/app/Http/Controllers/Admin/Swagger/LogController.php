@@ -23,7 +23,7 @@ class LogController extends Controller
      *     ),
      * )
      */
-    public function index()
+    public function laravel()
     {
     }
 }

@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class LogController extends Controller
 {
-    public function laravel(Request $request): JsonResponse|Response
+    public function laravel(Request $request): JsonResponse|StreamedResponse
     {
         $user = $request->user();
         if (!$user->isAdmin()) {
@@ -18,16 +18,21 @@ class LogController extends Controller
 
         $filePath = storage_path('logs/laravel.log');
 
-        if (file_exists($filePath)) {
-            $fileContent = file_get_contents($filePath);
-            $gzippedContent = gzencode($fileContent, 9); // 9 is Highest Compression Level
-            return response($gzippedContent, 200)
-                ->header('Content-Type', 'text/plain; charset=UTF-8')
-                ->header('Content-Encoding', 'gzip')
-                ->header('Content-Disposition', 'attachment; filename=laravel.log.gz')
-                ->header('Content-Length', strlen($gzippedContent));
-        } else {
+        if (!file_exists($filePath)) {
             return response()->json(['message' => 'Log file not found.'], 404);
         }
+
+        return response()->streamDownload(function () use ($filePath) {
+            $file = fopen($filePath, 'r');
+            $chunkSize = 65536; // 64KB chunks
+            while (!feof($file)) {
+                $chunk = fread($file, $chunkSize);
+                echo gzencode($chunk, 9);
+            }
+            fclose($file);
+        }, 'laravel.log.gz', [
+            'Content-Type' => 'text/plain; charset=UTF-8',
+            'Content-Encoding' => 'gzip',
+        ]);
     }
 }

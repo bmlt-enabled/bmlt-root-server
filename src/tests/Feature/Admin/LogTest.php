@@ -4,6 +4,7 @@ namespace Tests\Feature\Admin;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class LogTest extends TestCase
 {
@@ -22,10 +23,11 @@ class LogTest extends TestCase
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'text/plain; charset=UTF-8')
             ->assertHeader('Content-Encoding', 'gzip')
-            ->assertHeader('Content-Disposition', 'attachment; filename=laravel.log.gz');
+            ->assertHeader('Content-Disposition', 'attachment; filename=laravel.log.gz')
+            ->streamedContent();
     }
 
-    public function testLogDownloadNoLogFailure()
+    public function testLogDownloadFileNotFound()
     {
         if (File::exists(storage_path('logs/laravel.log'))) {
             File::delete(storage_path('logs/laravel.log'));
