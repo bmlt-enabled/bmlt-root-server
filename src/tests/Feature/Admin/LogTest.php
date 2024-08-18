@@ -3,44 +3,41 @@
 namespace Tests\Feature\Admin;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
 class LogTest extends TestCase
 {
     use RefreshDatabase;
-//
-// TODO: Add tests that don't mutate the filesystem. Figure way to mock
-//
-//    public function testLaravelLogDownloadSuccess()
-//    {
-//        if (!File::exists(storage_path('logs'))) {
-//            File::makeDirectory(storage_path('logs'), 0755, true);
-//        }
-//        File::put(storage_path('logs/laravel.log'), 'Sample log content');
-//        $user = $this->createAdminUser();
-//        $token = $user->createToken('test')->plainTextToken;
-//        $this->withHeader('Authorization', "Bearer $token")
-//            ->get('/api/v1/logs/laravel')
-//            ->assertStatus(200)
-//            ->assertHeader('Content-Type', 'text/plain; charset=UTF-8')
-//            ->assertHeader('Content-Encoding', 'gzip')
-//            ->assertHeader('Content-Disposition', 'attachment; filename=laravel.log.gz')
-//            ->streamedContent();
-//    }
-//
-//    public function testLogDownloadFileNotFound()
-//    {
-//        if (File::exists(storage_path('logs/laravel.log'))) {
-//            File::delete(storage_path('logs/laravel.log'));
-//        }
-//        $user = $this->createAdminUser();
-//        $token = $user->createToken('test')->plainTextToken;
-//        $this->withHeader('Authorization', "Bearer $token")
-//            ->get('/api/v1/logs/laravel')
-//            ->assertJson(['message' => 'Log file not found.'])
-//            ->assertStatus(404);
-//    }
+
+    public function testLaravelLogDownloadSuccess()
+    {
+        Storage::fake('logs');
+        $content = 'Sample log content';
+        Storage::disk('logs')->put('laravel.log', $content);
+
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $gzipped = $this->withHeader('Authorization', "Bearer $token")
+            ->get('/api/v1/logs/laravel')
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'text/plain; charset=UTF-8')
+            ->assertHeader('Content-Encoding', 'gzip')
+            ->assertHeader('Content-Disposition', 'attachment; filename=laravel.log.gz')
+            ->streamedContent();
+        $this->assertEquals($content, gzdecode($gzipped));
+    }
+
+    public function testLogDownloadFileNotFound()
+    {
+        Storage::fake('logs');
+
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $this->withHeader('Authorization', "Bearer $token")
+            ->get('/api/v1/logs/laravel')
+            ->assertJson(['message' => 'Log file not found.'])
+            ->assertStatus(404);
+    }
 
     public function testLaravelLogDownloadAsServiceBodyAdmin()
     {
