@@ -67,6 +67,10 @@ class ApiClient extends RootServerApi {
     const currentTime = Math.floor(Date.now() / 1000);
     return this._token.expiresAt < currentTime;
   }
+
+  async getLaravelLog(): Promise<Blob> {
+    return this.getLaravelLogRaw().then((response) => response.value());
+  }
 }
 
 type AuthenticationErrorHandler = (error: AuthenticationError) => void;
@@ -266,6 +270,10 @@ class ApiClientWrapper {
   async deleteUser(id: number): Promise<void> {
     const params = { userId: id };
     return this.api.deleteUser(params);
+  }
+
+  async getLaravelLog(): Promise<Blob> {
+    return this.api.getLaravelLog();
   }
 
   async handleErrors(error: Error, overrideErrorHandlers?: ErrorHandlers): Promise<void> {

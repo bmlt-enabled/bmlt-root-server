@@ -498,7 +498,7 @@
                     "200": {
                         "description": "Returns when user is authenticated.",
                         "content": {
-                            "application/octet-stream": {
+                            "application/gzip": {
                                 "schema": {
                                     "type": "string",
                                     "format": "binary"
