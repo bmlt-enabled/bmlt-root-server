@@ -3,6 +3,7 @@
 namespace Tests\Feature\Admin;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
 class LogTest extends TestCase
@@ -12,7 +13,7 @@ class LogTest extends TestCase
     public function testLaravelLogDownloadSuccess()
     {
         Storage::fake('logs');
-        $content = 'Sample log content';
+        $content = Str::random(1000);
         Storage::disk('logs')->put('laravel.log', $content);
 
         $user = $this->createAdminUser();
