@@ -2218,7 +2218,6 @@
                     "$ref": "#/components/schemas/Format"
                 }
             },
-            "LaravelLogBase": {},
             "MeetingBase": {
                 "properties": {
                     "serviceBodyId": {

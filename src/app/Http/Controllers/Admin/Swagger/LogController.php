@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers\Admin\Swagger;
 
-/**
- * @OA\Schema(schema="LaravelLogBase"),
- */
 class LogController extends Controller
 {
     /**
