@@ -121,6 +121,23 @@
     }
   }
 
+  async function downloadLaravelLog() {
+    try {
+      const logBlob = await RootServerApi.getLaravelLog();
+      const logUrl = URL.createObjectURL(logBlob);
+      const link = document.createElement('a');
+      link.href = logUrl;
+      link.download = 'laravel.log.gz';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(logUrl);
+    } catch (error) {
+      alert('No logs found.');
+      console.error('Error downloading Laravel log:', error);
+    }
+  }
+
   $: isDirty.set(formIsDirty(initialValues, $data));
 </script>
 
@@ -192,4 +209,9 @@
       </Accordion>
     </div>
   </form>
+  <div class="md grid gap-2 p-5">
+    {#if $authenticatedUser?.type === 'admin'}
+      <Button on:click={downloadLaravelLog}>Download Laravel Log</Button>
+    {/if}
+  </div>
 </div>
