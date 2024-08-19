@@ -1,4 +1,5 @@
 import { writable } from 'svelte/store';
+import { translations } from '../stores/localization';
 
 export const isDirty = writable(false);
 
@@ -29,4 +30,24 @@ export function formIsDirty(initialValues: any, currentValues: any): boolean {
   }
   isDirty.set(false);
   return false;
+}
+
+export function convertTo12Hour(time: string): string {
+  const [hour, minute] = time.split(':');
+  let hourNum = parseInt(hour, 10);
+  const ampm = hourNum >= 12 ? translations.getString('postMeridiem') : translations.getString('anteMeridiem');
+
+  if (hourNum > 12) {
+    hourNum -= 12;
+  } else if (hourNum === 0) {
+    hourNum = 12;
+  }
+
+  return `${hourNum.toString().padStart(2, '0')}:${minute} ${ampm}`;
+}
+
+export function is24hrTime() {
+  const date = new Date();
+  const timeString = date.toLocaleTimeString();
+  return !timeString.includes('AM') && !timeString.includes('PM');
 }
