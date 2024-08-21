@@ -36,7 +36,7 @@ import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 
 import { ResponseError } from 'bmlt-root-server-client';
-import type { Token, ServiceBody, ServiceBodyCreate, ServiceBodyUpdate, User, UserCreate, UserUpdate } from 'bmlt-root-server-client';
+import type { Token, ServiceBody, ServiceBodyCreate, ServiceBodyUpdate, User, UserCreate, UserPartialUpdate, UserUpdate } from 'bmlt-root-server-client';
 
 import ApiClientWrapper from '../lib/RootServerApi';
 import { apiCredentials, authenticatedUser } from '../stores/apiCredentials';
@@ -239,20 +239,6 @@ export const ruralArea: ServiceBody = {
   worldId: 'AS778'
 };
 
-export const allUsers = [
-  serverAdmin,
-  northernZoneAdmin,
-  bigRegionAdmin,
-  smallRegionAdmin,
-  riverCityAreaAdmin,
-  mountainAreaAdmin,
-  ruralAreaAdmin,
-  smallRegionObserver,
-  smallRegionDeactivated,
-  bigRegionAdmin2,
-  ruralAreaAdmin2
-];
-
 export const allServiceBodies: ServiceBody[] = [northernZone, bigRegion, smallRegion, riverCityArea, mountainArea, ruralArea];
 
 const allUsersAndPasswords = [
@@ -268,6 +254,16 @@ const allUsersAndPasswords = [
   { user: bigRegionAdmin2, password: 'big-region2-password' },
   { user: ruralAreaAdmin2, password: 'rural-area2-password' }
 ];
+
+export const allUsers = allUsersAndPasswords.map((x) => x.user);
+
+// mocked values for editing, creating, and deleting a user
+export let mockSavedUserCreate: UserCreate | null;
+export let mockSavedUserUpdate: UserUpdate | null;
+export let mockSavedUserPartialUpdate: UserPartialUpdate | null;
+export let mockDeletedUserId: number | null = null;
+let mockSavedUserUpdateId: number | null;
+let mockSavedUserPartialUpdateId: number | null;
 
 function findPassword(name: string): string {
   for (let i = 0; i < allUsersAndPasswords.length; i++) {
@@ -315,23 +311,40 @@ function generateMockAuthToken(userId: number): Token {
 }
 
 async function mockGetUser(params: { userId: number }): Promise<User> {
-  const mockUser = allUsersAndPasswords.find((u) => u.user.id === params.userId);
-  if (mockUser) {
-    return mockUser.user;
+  const mockUser = allUsers.find((u) => u.id === params.userId);
+  if (!mockUser || params.userId === mockDeletedUserId) {
+    // this error would be thrown if the userId is either something completely random,
+    // or of a newly created user (we're not trying to mock that), or a user that was just deleted
+    throw new Error('error in mockGetUser -- unknown or recently deleted user');
   }
-  throw new Error('unknown user -- something went wrong');
+  // unfortunately svelte might munge the user object, so return a copy
+  if (mockSavedUserUpdate && mockUser.id === mockSavedUserUpdateId) {
+    return { ...mockUser, ...mockSavedUserUpdate };
+  } else if (mockSavedUserPartialUpdate && mockUser.id === mockSavedUserPartialUpdateId) {
+    return { ...mockUser, ...mockSavedUserPartialUpdate };
+  } else {
+    return { ...mockUser };
+  }
 }
 
 // The value of initOverrides is not used in the mock, so tell the linter it's ok.
 // eslint-disable-next-line
 async function mockGetUsers(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<User[]> {
+  if (mockSavedUserCreate || mockSavedUserUpdate || mockSavedUserPartialUpdate || mockDeletedUserId) {
+    // If we want mockGetUsers to work after creating, deleting, or updating a user, we'd need to account for
+    // the new/changed/deleted user when computing the result.  Right now none of the unit tests need this.
+    throw new Error('internal error -- mockGetUsers not set up to work after creating, deleting, or updating a user');
+  }
   const userId = get(authenticatedUser)?.id;
   if (!userId) {
     throw new Error('internal error -- trying to get users when no simulated user is logged in');
-  } else if (userId === serverAdmin.id) {
-    return allUsers;
+  }
+  // unfortunately svelte might munge the user object, so return a deep copy of allUsers
+  const allUsersCopy: User[] = allUsers.map((u) => ({ ...u }));
+  if (userId === serverAdmin.id) {
+    return allUsersCopy;
   } else {
-    return allUsers.filter((u) => u.id === userId || u.ownerId === userId);
+    return allUsersCopy.filter((u) => u.id === userId || u.ownerId === userId);
   }
 }
 
@@ -376,12 +389,10 @@ async function mockAuthLogout(): Promise<void> {
   // For mocking authentication we just rely on the authenticatedUser in the ApiCredentialsStore
 }
 
-// mocks for editing, creating, and deleting a user
-export let mockSavedUserCreate: UserCreate | null;
-export let mockSavedUserUpdate: UserUpdate | null;
-export let mockDeletedUserId: number | null = null;
-
 async function mockCreateUser({ userCreate: user }: { userCreate: UserCreate }): Promise<User> {
+  if (mockSavedUserCreate) {
+    throw new Error('internal error -- mocking not currently set up to create more than one user');
+  }
   mockSavedUserCreate = user;
   return {
     username: user.username,
@@ -394,10 +405,14 @@ async function mockCreateUser({ userCreate: user }: { userCreate: UserCreate }):
   };
 }
 
-// we aren't using the userId in the mock
-// eslint-disable-next-line
-async function mockUpdateUser({ userId: _, userUpdate: user }: { userId: number; userUpdate: UserUpdate }): Promise<void> {
-  mockSavedUserUpdate = user;
+async function mockUpdateUser({ userId: id, userUpdate: u }: { userId: number; userUpdate: UserUpdate }): Promise<void> {
+  mockSavedUserUpdateId = id;
+  mockSavedUserUpdate = u;
+}
+
+async function mockPartialUpdateUser({ userId: id, userPartialUpdate: u }: { userId: number; userPartialUpdate: UserPartialUpdate }): Promise<void> {
+  mockSavedUserPartialUpdateId = id;
+  mockSavedUserPartialUpdate = u;
 }
 
 async function mockDeleteUser({ userId: id }: { userId: number }): Promise<void> {
@@ -468,6 +483,7 @@ export function sharedBeforeAll() {
   vi.spyOn(ApiClientWrapper.api, 'authLogout').mockImplementation(mockAuthLogout);
   vi.spyOn(ApiClientWrapper.api, 'createUser').mockImplementation(mockCreateUser);
   vi.spyOn(ApiClientWrapper.api, 'updateUser').mockImplementation(mockUpdateUser);
+  vi.spyOn(ApiClientWrapper.api, 'partialUpdateUser').mockImplementation(mockPartialUpdateUser);
   vi.spyOn(ApiClientWrapper.api, 'deleteUser').mockImplementation(mockDeleteUser);
   vi.spyOn(ApiClientWrapper.api, 'getServiceBody').mockImplementation(mockGetServiceBody);
   vi.spyOn(ApiClientWrapper.api, 'getServiceBodies').mockImplementation(mockGetServiceBodies);
@@ -479,6 +495,9 @@ export function sharedBeforeAll() {
 export function sharedBeforeEach() {
   mockSavedUserCreate = null;
   mockSavedUserUpdate = null;
+  mockSavedUserUpdateId = null;
+  mockSavedUserPartialUpdate = null;
+  mockSavedUserPartialUpdateId = null;
   mockDeletedUserId = null;
 
   mockSavedServiceBodyCreate = null;

@@ -33,22 +33,28 @@
   const initialValues = {
     displayName: $authenticatedUser?.displayName ?? '',
     userType: userType, // this isn't part of the UserUpdate type, and is read-only in the form
-    type: $authenticatedUser?.type ?? '', // this isn't used in the form, but is required for the UserUpdate type
-    ownerId: $authenticatedUser?.ownerId, // this isn't used in the form, but is required for the UserUpdate type
     email: $authenticatedUser?.email ?? '',
     username: $authenticatedUser?.username ?? '',
     description: $authenticatedUser?.description ?? '',
     password: ''
+    // type and ownerId aren't changed and aren't in the form (we're using partialUserUpdate)
   };
   let savedUser: User;
+  let savedData: { displayName: string; userType: string; email: string; username: string; description: string; password: string };
 
   const { data, errors, form, isDirty } = createForm({
     initialValues: initialValues,
     onSubmit: async (values) => {
       spinner.show();
       if ($authenticatedUser) {
-        await RootServerApi.updateUser($authenticatedUser.id, values);
+        await RootServerApi.partialUpdateUser($authenticatedUser.id, values);
         savedUser = await RootServerApi.getUser($authenticatedUser.id);
+        savedData = $data;
+        // the following check is needed so that svelte notices the form is dirty if the user edits something
+        // other than the password, saves, and then edits just the password field
+        if (!savedData?.password) {
+          savedData.password = '';
+        }
         authenticatedUser.set(savedUser);
       } else {
         // this should never happen
@@ -122,7 +128,7 @@
     }
   }
 
-  $: isDirty.set(formIsDirty(initialValues, $data));
+  $: isDirty.set(savedData ? formIsDirty(savedData, $data) : formIsDirty(initialValues, $data));
 </script>
 
 <Nav />
