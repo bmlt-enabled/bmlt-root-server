@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "aa2a3271574961013695bde4692ea5c9",
+    "content-hash": "d9c4d2fc0067444c3a3c887b906e8941",
     "packages": [
         {
             "name": "brick/math",
@@ -3135,16 +3135,16 @@
         },
         {
             "name": "phpoffice/phpspreadsheet",
-            "version": "1.29.0",
+            "version": "1.29.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPOffice/PhpSpreadsheet.git",
-                "reference": "fde2ccf55eaef7e86021ff1acce26479160a0fa0"
+                "reference": "59ee38f7480904cd6487e5cbdea4d80ff2758719"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/fde2ccf55eaef7e86021ff1acce26479160a0fa0",
-                "reference": "fde2ccf55eaef7e86021ff1acce26479160a0fa0",
+                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/59ee38f7480904cd6487e5cbdea4d80ff2758719",
+                "reference": "59ee38f7480904cd6487e5cbdea4d80ff2758719",
                 "shasum": ""
             },
             "require": {
@@ -3179,7 +3179,7 @@
                 "phpcompatibility/php-compatibility": "^9.3",
                 "phpstan/phpstan": "^1.1",
                 "phpstan/phpstan-phpunit": "^1.0",
-                "phpunit/phpunit": "^8.5 || ^9.0 || ^10.0",
+                "phpunit/phpunit": "^8.5 || ^9.0",
                 "squizlabs/php_codesniffer": "^3.7",
                 "tecnickcom/tcpdf": "^6.5"
             },
@@ -3234,9 +3234,9 @@
             ],
             "support": {
                 "issues": "https://github.com/PHPOffice/PhpSpreadsheet/issues",
-                "source": "https://github.com/PHPOffice/PhpSpreadsheet/tree/1.29.0"
+                "source": "https://github.com/PHPOffice/PhpSpreadsheet/tree/1.29.1"
             },
-            "time": "2023-06-14T22:48:31+00:00"
+            "time": "2024-09-03T00:55:32+00:00"
         },
         {
             "name": "phpoption/phpoption",
@@ -3675,16 +3675,16 @@
         },
         {
             "name": "psr/log",
-            "version": "3.0.0",
+            "version": "3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "fe5ea303b0887d5caefd3d431c3e61ad47037001"
+                "reference": "79dff0b268932c640297f5208d6298f71855c03e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/fe5ea303b0887d5caefd3d431c3e61ad47037001",
-                "reference": "fe5ea303b0887d5caefd3d431c3e61ad47037001",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/79dff0b268932c640297f5208d6298f71855c03e",
+                "reference": "79dff0b268932c640297f5208d6298f71855c03e",
                 "shasum": ""
             },
             "require": {
@@ -3719,9 +3719,9 @@
                 "psr-3"
             ],
             "support": {
-                "source": "https://github.com/php-fig/log/tree/3.0.0"
+                "source": "https://github.com/php-fig/log/tree/3.0.1"
             },
-            "time": "2021-07-14T16:46:02+00:00"
+            "time": "2024-08-21T13:31:24+00:00"
         },
         {
             "name": "psr/simple-cache",
@@ -4214,16 +4214,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v6.4.10",
+            "version": "v6.4.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "504974cbe43d05f83b201d6498c206f16fc0cdbc"
+                "reference": "42686880adaacdad1835ee8fc2a9ec5b7bd63998"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/504974cbe43d05f83b201d6498c206f16fc0cdbc",
-                "reference": "504974cbe43d05f83b201d6498c206f16fc0cdbc",
+                "url": "https://api.github.com/repos/symfony/console/zipball/42686880adaacdad1835ee8fc2a9ec5b7bd63998",
+                "reference": "42686880adaacdad1835ee8fc2a9ec5b7bd63998",
                 "shasum": ""
             },
             "require": {
@@ -4288,7 +4288,7 @@
                 "terminal"
             ],
             "support": {
-                "source": "https://github.com/symfony/console/tree/v6.4.10"
+                "source": "https://github.com/symfony/console/tree/v6.4.11"
             },
             "funding": [
                 {
@@ -4304,7 +4304,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-07-26T12:30:32+00:00"
+            "time": "2024-08-15T22:48:29+00:00"
         },
         {
             "name": "symfony/css-selector",
@@ -6028,16 +6028,16 @@
         },
         {
             "name": "symfony/string",
-            "version": "v6.4.10",
+            "version": "v6.4.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/string.git",
-                "reference": "ccf9b30251719567bfd46494138327522b9a9446"
+                "reference": "5bc3eb632cf9c8dbfd6529d89be9950d1518883b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/string/zipball/ccf9b30251719567bfd46494138327522b9a9446",
-                "reference": "ccf9b30251719567bfd46494138327522b9a9446",
+                "url": "https://api.github.com/repos/symfony/string/zipball/5bc3eb632cf9c8dbfd6529d89be9950d1518883b",
+                "reference": "5bc3eb632cf9c8dbfd6529d89be9950d1518883b",
                 "shasum": ""
             },
             "require": {
@@ -6094,7 +6094,7 @@
                 "utf8"
             ],
             "support": {
-                "source": "https://github.com/symfony/string/tree/v6.4.10"
+                "source": "https://github.com/symfony/string/tree/v6.4.11"
             },
             "funding": [
                 {
@@ -6110,7 +6110,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-07-22T10:21:14+00:00"
+            "time": "2024-08-12T09:55:28+00:00"
         },
         {
             "name": "symfony/translation",
@@ -9949,5 +9949,5 @@
         "php": "^8.1.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
