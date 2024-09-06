@@ -284,6 +284,26 @@ export const discussionFormat: Format = {
   type: 'MEETING_FORMAT'
 };
 
+export const basicTextFormat: Format = {
+  id: 19,
+  translations: [
+    { key: 'BT', language: 'en', name: 'Basic Text', description: 'This meeting is focused on discussion of the Basic Text of Narcotics Anonymous.' },
+    { key: 'BT', language: 'es', name: 'Texto Básico', description: 'Esta reunión se centra en la discusión del texto básico de Narcóticos Anónimos.' }
+  ],
+  worldId: 'BT',
+  type: 'MEETING_FORMAT'
+};
+
+export const jtFormat: Format = {
+  id: 21,
+  translations: [
+    { key: 'JT', language: 'en', name: '"Just for Today"', description: 'This meeting is focused on discussion of the Just For Today text.' },
+    { key: 'JT', language: 'es', name: 'Solo por Hoy', description: 'Esta reunión se centra en la discusión del texto Solo por Hoy.' }
+  ],
+  worldId: 'JFT',
+  type: 'MEETING_FORMAT'
+};
+
 export const ruralMeeting: Meeting = {
   busLines: undefined,
   comments: undefined,
@@ -364,11 +384,131 @@ export const mountainMeeting: Meeting = {
   worldId: 'G00222222'
 };
 
+export const riverCityMeeting: Meeting = {
+  busLines: undefined,
+  comments: undefined,
+  contactEmail1: undefined,
+  contactEmail2: undefined,
+  contactName1: undefined,
+  contactName2: undefined,
+  contactPhone1: undefined,
+  contactPhone2: undefined,
+  day: 2,
+  duration: '01:30',
+  email: '',
+  formatIds: [openFormat.id, basicTextFormat.id],
+  id: 1041,
+  latitude: 34.123456,
+  locationCitySubsection: undefined,
+  locationInfo: undefined,
+  locationMunicipality: 'River City',
+  locationNation: 'USA',
+  locationNeighborhood: undefined,
+  locationPostalCode1: '29201',
+  locationProvince: 'SC',
+  locationStreet: '789 River St',
+  locationSubProvince: 'Richland',
+  locationText: 'River Community Center',
+  longitude: -81.0346,
+  name: 'River Reflections',
+  phoneMeetingNumber: undefined,
+  published: true,
+  serviceBodyId: riverCityArea.id,
+  startTime: '18:00',
+  temporarilyVirtual: false,
+  timeZone: 'America/New_York',
+  trainLine: undefined,
+  venueType: 1,
+  virtualMeetingAdditionalInfo: undefined,
+  virtualMeetingLink: undefined,
+  worldId: 'G00333333'
+};
+
+export const smallRegionMeeting: Meeting = {
+  busLines: undefined,
+  comments: undefined,
+  contactEmail1: undefined,
+  contactEmail2: undefined,
+  contactName1: undefined,
+  contactName2: undefined,
+  contactPhone1: undefined,
+  contactPhone2: undefined,
+  day: 1,
+  duration: '01:15',
+  email: '',
+  formatIds: [closedFormat.id, jtFormat.id],
+  id: 1031,
+  latitude: 38.89511,
+  locationCitySubsection: undefined,
+  locationInfo: undefined,
+  locationMunicipality: 'Smallville',
+  locationNation: 'USA',
+  locationNeighborhood: undefined,
+  locationPostalCode1: '20500',
+  locationProvince: 'DC',
+  locationStreet: '1600 Small St NW',
+  locationSubProvince: undefined,
+  locationText: 'Smallville Hall',
+  longitude: -77.03637,
+  name: 'Small Beginnings',
+  phoneMeetingNumber: undefined,
+  published: true,
+  serviceBodyId: smallRegion.id,
+  startTime: '17:45',
+  temporarilyVirtual: false,
+  timeZone: 'America/New_York',
+  trainLine: undefined,
+  venueType: 1,
+  virtualMeetingAdditionalInfo: undefined,
+  virtualMeetingLink: undefined,
+  worldId: 'G00444444'
+};
+
+export const bigRegionMeeting: Meeting = {
+  busLines: undefined,
+  comments: undefined,
+  contactEmail1: undefined,
+  contactEmail2: undefined,
+  contactName1: undefined,
+  contactName2: undefined,
+  contactPhone1: undefined,
+  contactPhone2: undefined,
+  day: 5,
+  duration: '02:00',
+  email: '',
+  formatIds: [closedFormat.id, discussionFormat.id],
+  id: 1021,
+  latitude: 40.712776,
+  locationCitySubsection: undefined,
+  locationInfo: undefined,
+  locationMunicipality: 'Big City',
+  locationNation: 'USA',
+  locationNeighborhood: undefined,
+  locationPostalCode1: '10001',
+  locationProvince: 'NY',
+  locationStreet: '500 Big Ave',
+  locationSubProvince: 'Manhattan',
+  locationText: 'Big Region Headquarters',
+  longitude: -74.005974,
+  name: 'Big Region Gathering',
+  phoneMeetingNumber: undefined,
+  published: true,
+  serviceBodyId: bigRegion.id,
+  startTime: '20:00',
+  temporarilyVirtual: false,
+  timeZone: 'America/New_York',
+  trainLine: undefined,
+  venueType: 1,
+  virtualMeetingAdditionalInfo: undefined,
+  virtualMeetingLink: undefined,
+  worldId: 'G00555555'
+};
+
 export const allServiceBodies: ServiceBody[] = [northernZone, bigRegion, smallRegion, riverCityArea, mountainArea, ruralArea];
 
-export const allFormats: Format[] = [closedFormat, openFormat, discussionFormat];
+export const allFormats: Format[] = [closedFormat, openFormat, discussionFormat, basicTextFormat, jtFormat];
 
-export const allMeetings: Meeting[] = [ruralMeeting, mountainMeeting];
+export const allMeetings: Meeting[] = [ruralMeeting, mountainMeeting, riverCityMeeting, bigRegionMeeting, smallRegionMeeting];
 
 const allUsersAndPasswords = [
   { user: serverAdmin, password: 'serveradmin-password' },
