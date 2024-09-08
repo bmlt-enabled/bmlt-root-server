@@ -36,7 +36,22 @@ import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 
 import { ResponseError } from 'bmlt-root-server-client';
-import type { Token, ServiceBody, ServiceBodyCreate, ServiceBodyUpdate, User, UserCreate, UserPartialUpdate, UserUpdate } from 'bmlt-root-server-client';
+import type {
+  Meeting,
+  Format,
+  FormatCreate,
+  FormatUpdate,
+  MeetingCreate,
+  MeetingUpdate,
+  ServiceBody,
+  ServiceBodyCreate,
+  ServiceBodyUpdate,
+  Token,
+  User,
+  UserCreate,
+  UserPartialUpdate,
+  UserUpdate
+} from 'bmlt-root-server-client';
 
 import ApiClientWrapper from '../lib/RootServerApi';
 import { apiCredentials, authenticatedUser } from '../stores/apiCredentials';
@@ -239,7 +254,261 @@ export const ruralArea: ServiceBody = {
   worldId: 'AS778'
 };
 
+export const closedFormat: Format = {
+  id: 4,
+  translations: [
+    { key: 'C', language: 'en', name: 'Closed', description: 'This meeting is closed to non-addicts. You should attend only if you believe that you may have a problem with substance abuse.' },
+    { key: 'C', language: 'es', name: 'Cerrado', description: 'Esta reunión está cerrada a los no adictos. Usted debe asistir solamente si cree que puede tener un problema con abuso de drogas.' }
+  ],
+  worldId: 'CLOSED',
+  type: 'OPEN_OR_CLOSED'
+};
+
+export const openFormat: Format = {
+  id: 17,
+  translations: [
+    { key: 'O', language: 'en', name: 'Open', description: 'This meeting is open to addicts and non-addicts alike. All are welcome.' },
+    { key: 'O', language: 'es', name: 'Abierta', description: 'Esta reunión está abierta a los adictos y a los no adictos por igual. Todos son bienvenidos.' }
+  ],
+  worldId: 'OPEN',
+  type: 'OPEN_OR_CLOSED'
+};
+
+export const discussionFormat: Format = {
+  id: 22,
+  translations: [
+    { key: 'D', language: 'en', name: 'Discussion', description: 'This meeting invites participation by all attendees.' },
+    { key: 'D', language: 'es', name: 'Discusión', description: 'Esta reunión invita la participación de todos los asistentes.' }
+  ],
+  worldId: 'DISC',
+  type: 'MEETING_FORMAT'
+};
+
+export const basicTextFormat: Format = {
+  id: 19,
+  translations: [
+    { key: 'BT', language: 'en', name: 'Basic Text', description: 'This meeting is focused on discussion of the Basic Text of Narcotics Anonymous.' },
+    { key: 'BT', language: 'es', name: 'Texto Básico', description: 'Esta reunión se centra en la discusión del texto básico de Narcóticos Anónimos.' }
+  ],
+  worldId: 'BT',
+  type: 'MEETING_FORMAT'
+};
+
+export const jtFormat: Format = {
+  id: 21,
+  translations: [
+    { key: 'JT', language: 'en', name: '"Just for Today"', description: 'This meeting is focused on discussion of the Just For Today text.' },
+    { key: 'JT', language: 'es', name: 'Solo por Hoy', description: 'Esta reunión se centra en la discusión del texto Solo por Hoy.' }
+  ],
+  worldId: 'JFT',
+  type: 'MEETING_FORMAT'
+};
+
+export const ruralMeeting: Meeting = {
+  busLines: undefined,
+  comments: undefined,
+  contactEmail1: undefined,
+  contactEmail2: undefined,
+  contactName1: undefined,
+  contactName2: undefined,
+  contactPhone1: undefined,
+  contactPhone2: undefined,
+  day: 4,
+  duration: '01:00',
+  email: '',
+  formatIds: [closedFormat.id, discussionFormat.id],
+  id: 1061,
+  latitude: 41.088456,
+  locationCitySubsection: undefined,
+  locationInfo: undefined,
+  locationMunicipality: 'Nyack',
+  locationNation: 'USA',
+  locationNeighborhood: undefined,
+  locationPostalCode1: '10960',
+  locationProvince: 'NY',
+  locationStreet: '67 S. Rural Dr',
+  locationSubProvince: 'Rockland',
+  locationText: 'The Rural Church',
+  longitude: -73.918978,
+  name: 'Real Talk',
+  phoneMeetingNumber: undefined,
+  published: true,
+  serviceBodyId: ruralArea.id,
+  startTime: '19:30',
+  temporarilyVirtual: false,
+  timeZone: 'America/New_York',
+  trainLine: undefined,
+  venueType: 1,
+  virtualMeetingAdditionalInfo: undefined,
+  virtualMeetingLink: undefined,
+  worldId: 'G00212222'
+};
+
+export const mountainMeeting: Meeting = {
+  busLines: undefined,
+  comments: undefined,
+  contactEmail1: undefined,
+  contactEmail2: undefined,
+  contactName1: undefined,
+  contactName2: undefined,
+  contactPhone1: undefined,
+  contactPhone2: undefined,
+  day: 6,
+  duration: '01:00',
+  email: '',
+  formatIds: [openFormat.id],
+  id: 1051,
+  latitude: 39.4817,
+  locationCitySubsection: undefined,
+  locationInfo: undefined,
+  locationMunicipality: 'Breckenridge',
+  locationNation: 'USA',
+  locationNeighborhood: undefined,
+  locationPostalCode1: '80014',
+  locationProvince: 'CO',
+  locationStreet: '123 Summit Rd',
+  locationSubProvince: 'Summit',
+  locationText: 'The Mountain Club',
+  longitude: -106.0384,
+  name: 'Mountain Meeting',
+  phoneMeetingNumber: undefined,
+  published: true,
+  serviceBodyId: mountainArea.id,
+  startTime: '19:00',
+  temporarilyVirtual: false,
+  timeZone: 'America/Denver',
+  trainLine: undefined,
+  venueType: 1,
+  virtualMeetingAdditionalInfo: undefined,
+  virtualMeetingLink: undefined,
+  worldId: 'G00222222'
+};
+
+export const riverCityMeeting: Meeting = {
+  busLines: undefined,
+  comments: undefined,
+  contactEmail1: undefined,
+  contactEmail2: undefined,
+  contactName1: undefined,
+  contactName2: undefined,
+  contactPhone1: undefined,
+  contactPhone2: undefined,
+  day: 2,
+  duration: '01:30',
+  email: '',
+  formatIds: [openFormat.id, basicTextFormat.id],
+  id: 1041,
+  latitude: 34.123456,
+  locationCitySubsection: undefined,
+  locationInfo: undefined,
+  locationMunicipality: 'River City',
+  locationNation: 'USA',
+  locationNeighborhood: undefined,
+  locationPostalCode1: '29201',
+  locationProvince: 'SC',
+  locationStreet: '789 River St',
+  locationSubProvince: 'Richland',
+  locationText: 'River Community Center',
+  longitude: -81.0346,
+  name: 'River Reflections',
+  phoneMeetingNumber: undefined,
+  published: true,
+  serviceBodyId: riverCityArea.id,
+  startTime: '18:00',
+  temporarilyVirtual: false,
+  timeZone: 'America/New_York',
+  trainLine: undefined,
+  venueType: 1,
+  virtualMeetingAdditionalInfo: undefined,
+  virtualMeetingLink: undefined,
+  worldId: 'G00333333'
+};
+
+export const smallRegionMeeting: Meeting = {
+  busLines: undefined,
+  comments: undefined,
+  contactEmail1: undefined,
+  contactEmail2: undefined,
+  contactName1: undefined,
+  contactName2: undefined,
+  contactPhone1: undefined,
+  contactPhone2: undefined,
+  day: 1,
+  duration: '01:15',
+  email: '',
+  formatIds: [closedFormat.id, jtFormat.id],
+  id: 1031,
+  latitude: 38.89511,
+  locationCitySubsection: undefined,
+  locationInfo: undefined,
+  locationMunicipality: 'Smallville',
+  locationNation: 'USA',
+  locationNeighborhood: undefined,
+  locationPostalCode1: '20500',
+  locationProvince: 'DC',
+  locationStreet: '1600 Small St NW',
+  locationSubProvince: undefined,
+  locationText: 'Smallville Hall',
+  longitude: -77.03637,
+  name: 'Small Beginnings',
+  phoneMeetingNumber: undefined,
+  published: true,
+  serviceBodyId: smallRegion.id,
+  startTime: '17:45',
+  temporarilyVirtual: false,
+  timeZone: 'America/New_York',
+  trainLine: undefined,
+  venueType: 1,
+  virtualMeetingAdditionalInfo: undefined,
+  virtualMeetingLink: undefined,
+  worldId: 'G00444444'
+};
+
+export const bigRegionMeeting: Meeting = {
+  busLines: undefined,
+  comments: undefined,
+  contactEmail1: undefined,
+  contactEmail2: undefined,
+  contactName1: undefined,
+  contactName2: undefined,
+  contactPhone1: undefined,
+  contactPhone2: undefined,
+  day: 5,
+  duration: '02:00',
+  email: '',
+  formatIds: [closedFormat.id, discussionFormat.id],
+  id: 1021,
+  latitude: 40.712776,
+  locationCitySubsection: undefined,
+  locationInfo: undefined,
+  locationMunicipality: 'Big City',
+  locationNation: 'USA',
+  locationNeighborhood: undefined,
+  locationPostalCode1: '10001',
+  locationProvince: 'NY',
+  locationStreet: '500 Big Ave',
+  locationSubProvince: 'Manhattan',
+  locationText: 'Big Region Headquarters',
+  longitude: -74.005974,
+  name: 'Big Region Gathering',
+  phoneMeetingNumber: undefined,
+  published: true,
+  serviceBodyId: bigRegion.id,
+  startTime: '20:00',
+  temporarilyVirtual: false,
+  timeZone: 'America/New_York',
+  trainLine: undefined,
+  venueType: 1,
+  virtualMeetingAdditionalInfo: undefined,
+  virtualMeetingLink: undefined,
+  worldId: 'G00555555'
+};
+
 export const allServiceBodies: ServiceBody[] = [northernZone, bigRegion, smallRegion, riverCityArea, mountainArea, ruralArea];
+
+export const allFormats: Format[] = [closedFormat, openFormat, discussionFormat, basicTextFormat, jtFormat];
+
+export const allMeetings: Meeting[] = [ruralMeeting, mountainMeeting, riverCityMeeting, bigRegionMeeting, smallRegionMeeting];
 
 const allUsersAndPasswords = [
   { user: serverAdmin, password: 'serveradmin-password' },
@@ -474,6 +743,124 @@ async function mockDeleteServiceBody({ serviceBodyId: id }: { serviceBodyId: num
   mockDeletedServiceBodyId = id;
 }
 
+// Format Mock Functions
+async function mockGetFormat(params: { formatId: number }): Promise<Format> {
+  const mockFormat = allFormats.find((f) => f.id === params.formatId);
+  if (mockFormat) {
+    return mockFormat;
+  }
+  throw new Error('unknown format -- something went wrong');
+}
+
+async function mockGetFormats(): Promise<Format[]> {
+  const userId = get(authenticatedUser)?.id;
+  if (!userId) {
+    throw new Error('internal error -- trying to get formats when no simulated user is logged in');
+  } else {
+    return allFormats;
+  }
+}
+
+// mocks for editing, creating, and deleting a Format
+export let mockSavedFormatCreate: FormatCreate | null;
+export let mockSavedFormatUpdate: FormatUpdate | null;
+export let mockDeletedFormatId: number | null = null;
+
+async function mockCreateFormat({ formatCreate: format }: { formatCreate: FormatCreate }): Promise<Format> {
+  mockSavedFormatCreate = format;
+  return {
+    translations: format.translations || [{ key: 'O', language: 'en', name: 'Open', description: 'This meeting is open to addicts and non-addicts alike. All are welcome.' }],
+    type: format.type || '',
+    worldId: format.worldId || '',
+    id: 19
+  };
+}
+
+// eslint-disable-next-line
+async function mockUpdateFormat({ formatId: _, formatUpdate: format }: { formatId: number; formatUpdate: FormatUpdate }): Promise<void> {
+  mockSavedFormatUpdate = format;
+}
+
+async function mockDeleteFormat({ formatId: id }: { formatId: number }): Promise<void> {
+  // Do we need to check for dependants? If meeting is using format. this should use foreign keys.
+  mockDeletedFormatId = id;
+}
+
+// Meeting Mock Functions
+async function mockGetMeeting(params: { meetingId: number }): Promise<Meeting> {
+  const mockMeeting = allMeetings.find((m) => m.id === params.meetingId);
+  if (mockMeeting) {
+    return mockMeeting;
+  }
+  throw new Error('unknown meeting -- something went wrong');
+}
+
+async function mockGetMeetings(): Promise<Meeting[]> {
+  const userId = get(authenticatedUser)?.id;
+  if (!userId) {
+    throw new Error('internal error -- trying to get meetings when no simulated user is logged in');
+  } else {
+    return allMeetings;
+  }
+}
+
+// mocks for editing, creating, and deleting a Meeting
+export let mockSavedMeetingCreate: MeetingCreate | null;
+export let mockSavedMeetingUpdate: MeetingUpdate | null;
+export let mockDeletedMeetingId: number | null = null;
+
+async function mockCreateMeeting({ meetingCreate: meeting }: { meetingCreate: MeetingCreate }): Promise<Meeting> {
+  mockSavedMeetingCreate = meeting;
+  return {
+    busLines: meeting.busLines || '',
+    comments: meeting.comments || '',
+    contactEmail1: meeting.contactEmail1 || '',
+    contactEmail2: meeting.contactEmail2 || '',
+    contactName1: meeting.contactName1 || '',
+    contactName2: meeting.contactName2 || '',
+    contactPhone1: meeting.contactPhone1 || '',
+    contactPhone2: meeting.contactPhone2 || '',
+    day: meeting.day || 1,
+    duration: meeting.duration || '01:00',
+    email: meeting.email || '',
+    formatIds: meeting.formatIds || [],
+    id: 463,
+    latitude: meeting.latitude || 39.4817,
+    locationCitySubsection: meeting.locationCitySubsection || '',
+    locationInfo: meeting.locationInfo || '',
+    locationMunicipality: meeting.locationMunicipality || '',
+    locationNation: meeting.locationNation || '',
+    locationNeighborhood: meeting.locationNeighborhood || '',
+    locationPostalCode1: meeting.locationPostalCode1 || '',
+    locationProvince: meeting.locationProvince || '',
+    locationStreet: meeting.locationStreet || '',
+    locationSubProvince: meeting.locationSubProvince || '',
+    locationText: meeting.locationText || '',
+    longitude: meeting.longitude || -106.0384,
+    name: meeting.name || 'NA Meeting',
+    phoneMeetingNumber: meeting.email || '',
+    published: meeting.published || false,
+    serviceBodyId: mountainArea.id,
+    startTime: '19:00',
+    temporarilyVirtual: meeting.temporarilyVirtual || false,
+    timeZone: meeting.timeZone || 'America/Denver',
+    trainLine: meeting.trainLine || '',
+    venueType: meeting.venueType || 1,
+    virtualMeetingAdditionalInfo: meeting.virtualMeetingAdditionalInfo || '',
+    virtualMeetingLink: meeting.virtualMeetingLink || '',
+    worldId: meeting.worldId || ''
+  };
+}
+
+// eslint-disable-next-line
+async function mockUpdateMeeting({ meetingId: _, meetingUpdate: meeting }: { meetingId: number; meetingUpdate: MeetingUpdate }): Promise<void> {
+  mockSavedMeetingUpdate = meeting;
+}
+
+async function mockDeleteMeeting({ meetingId: id }: { meetingId: number }): Promise<void> {
+  mockDeletedMeetingId = id;
+}
+
 export function sharedBeforeAll() {
   // set up mocks
   vi.spyOn(ApiClientWrapper.api, 'getUser').mockImplementation(mockGetUser);
@@ -490,6 +877,16 @@ export function sharedBeforeAll() {
   vi.spyOn(ApiClientWrapper.api, 'createServiceBody').mockImplementation(mockCreateServiceBody);
   vi.spyOn(ApiClientWrapper.api, 'updateServiceBody').mockImplementation(mockUpdateServiceBody);
   vi.spyOn(ApiClientWrapper.api, 'deleteServiceBody').mockImplementation(mockDeleteServiceBody);
+  vi.spyOn(ApiClientWrapper.api, 'getFormat').mockImplementation(mockGetFormat);
+  vi.spyOn(ApiClientWrapper.api, 'getFormats').mockImplementation(mockGetFormats);
+  vi.spyOn(ApiClientWrapper.api, 'createFormat').mockImplementation(mockCreateFormat);
+  vi.spyOn(ApiClientWrapper.api, 'updateFormat').mockImplementation(mockUpdateFormat);
+  vi.spyOn(ApiClientWrapper.api, 'deleteFormat').mockImplementation(mockDeleteFormat);
+  vi.spyOn(ApiClientWrapper.api, 'getMeeting').mockImplementation(mockGetMeeting);
+  vi.spyOn(ApiClientWrapper.api, 'getMeetings').mockImplementation(mockGetMeetings);
+  vi.spyOn(ApiClientWrapper.api, 'createMeeting').mockImplementation(mockCreateMeeting);
+  vi.spyOn(ApiClientWrapper.api, 'updateMeeting').mockImplementation(mockUpdateMeeting);
+  vi.spyOn(ApiClientWrapper.api, 'deleteMeeting').mockImplementation(mockDeleteMeeting);
 }
 
 export function sharedBeforeEach() {
@@ -503,6 +900,14 @@ export function sharedBeforeEach() {
   mockSavedServiceBodyCreate = null;
   mockSavedServiceBodyUpdate = null;
   mockDeletedServiceBodyId = null;
+
+  mockSavedFormatCreate = null;
+  mockSavedFormatUpdate = null;
+  mockDeletedFormatId = null;
+
+  mockSavedMeetingCreate = null;
+  mockSavedMeetingUpdate = null;
+  mockDeletedMeetingId = null;
 }
 
 export async function sharedAfterEach() {
