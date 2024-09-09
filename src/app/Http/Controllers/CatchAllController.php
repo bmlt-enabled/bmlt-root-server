@@ -35,11 +35,24 @@ class CatchAllController extends Controller
             }
 
             return response()->view('frontend', [
+                'autoGeocodingEnabled' => legacy_config('auto_geocoding_enabled'),
                 'baseUrl' => $request->getBaseurl(),
+                'centerLongitude' => legacy_config('search_spec_map_center_longitude'),
+                'centerLatitude' => legacy_config('search_spec_map_center_latitude'),
+                'centerZoom' => legacy_config('search_spec_map_center_zoom'),
+                'countyAutoGeocodingEnabled' => legacy_config('county_auto_geocoding_enabled'),
+                'defaultClosedStatus' => legacy_config('default_closed_status'),
+                'defaultDuration' => legacy_config('default_duration_time'),
                 'defaultLanguage' => legacy_config('language'),
+                'distanceUnits' => legacy_config('distance_units'),
+                'googleApikey' => legacy_config('google_api_key', ''),
                 'isLanguageSelectorEnabled' => legacy_config('enable_language_selector'),
                 'languageMapping' => self::getLanguageMapping(),
+                'meetingStatesAndProvinces' => implode(',', legacy_config('meeting_states_and_provinces', [])),
+                'meetingCountiesAndSubProvinces' => implode(',', legacy_config('meeting_counties_and_sub_provinces', [])),
+                'regionBias' => legacy_config('region_bias'),
                 'version' => config('app.version'),
+                'zipAutoGeocodingEnabled' => legacy_config('zip_auto_geocoding_enabled'),
             ]);
         }
 
