@@ -4,11 +4,16 @@
   import { Button, Checkbox, Hr, Label, Input, Helper, Select, MultiSelect, Badge } from 'flowbite-svelte';
   import { createEventDispatcher } from 'svelte';
   import * as yup from 'yup';
+  import { Loader } from '@googlemaps/js-api-loader';
+  import { writable } from 'svelte/store';
 
+  const showMap = writable(false);
+  // svelte-hack' -- import hacked to get onMount to work correctly for unit tests
+  import { onMount } from 'svelte/internal';
   import { spinner } from '../stores/spinner';
   import RootServerApi from '../lib/RootServerApi';
   import { formIsDirty } from '../lib/utils';
-  import type { Format, Meeting, ServiceBody } from 'bmlt-root-server-client';
+  import type { Format, Meeting, MeetingPartialUpdate, ServiceBody } from 'bmlt-root-server-client';
   import { translations } from '../stores/localization';
   import MeetingDeleteModal from './MeetingDeleteModal.svelte';
   import { TrashBinOutline } from 'flowbite-svelte-icons';
@@ -17,6 +22,7 @@
   export let formats: Format[];
   export let serviceBodies: ServiceBody[];
 
+  const globalSettings = settings;
   const seenNames = new Set<string>();
   const ignoredFormats = ['VM', 'HY', 'TC'];
   const filteredFormats = formats
@@ -52,6 +58,11 @@
   const VENUE_TYPE_VIRTUAL = 2;
   const VENUE_TYPE_HYBRID = 3;
   const VALID_VENUE_TYPES = [VENUE_TYPE_IN_PERSON, VENUE_TYPE_VIRTUAL, VENUE_TYPE_HYBRID];
+
+  let map: google.maps.Map;
+  let mapElement: HTMLElement;
+  let marker: google.maps.marker.AdvancedMarkerElement | null;
+  let geocodingError: string | null = null;
   let isPublishedChecked = true;
   let showDeleteModal = false;
   let deleteMeeting: Meeting;
@@ -69,6 +80,7 @@
     deleted: { meetingId: number };
   }>();
 
+  const defaultLatLng = { lat: Number(globalSettings.centerLatitude ?? -79.793701171875), lng: Number(globalSettings.centerLongitude ?? 36.065752051707) };
   const initialValues = {
     serviceBodyId: selectedMeeting?.serviceBodyId ?? -1,
     formatIds: selectedMeeting?.formatIds ?? [],
@@ -78,8 +90,8 @@
     startTime: selectedMeeting?.startTime ?? '12:00',
     duration: selectedMeeting?.duration ?? '01:00',
     timeZone: selectedMeeting?.timeZone ?? '',
-    latitude: selectedMeeting?.latitude ?? 34.2354926,
-    longitude: selectedMeeting?.longitude ?? -118.5633768,
+    latitude: selectedMeeting?.latitude ?? defaultLatLng.lat,
+    longitude: selectedMeeting?.longitude ?? defaultLatLng.lng,
     published: selectedMeeting?.published ?? false,
     email: selectedMeeting?.email ?? '',
     worldId: selectedMeeting?.worldId ?? '',
@@ -107,13 +119,35 @@
     trainLine: selectedMeeting?.trainLine ?? '',
     comments: selectedMeeting?.comments ?? ''
   };
-  let formatIdsSelected = selectedMeeting?.formatIds ?? [];
+  let latitude = initialValues.latitude;
+  let longitude = initialValues.longitude;
+  let manualDrag = false;
+  let formatIdsSelected = initialValues.formatIds;
   let savedMeeting: Meeting;
 
   const { data, errors, form, setData, isDirty } = createForm({
     initialValues: initialValues,
     onSubmit: async (values) => {
       spinner.show();
+      if (globalSettings.autoGeocodingEnabled && !manualDrag) {
+        const geocodeResult = await geocode(values);
+        if (typeof geocodeResult === 'string') {
+          geocodingError = geocodeResult;
+          spinner.hide();
+          return;
+        }
+        if (geocodeResult) {
+          values.latitude = geocodeResult.lat;
+          values.longitude = geocodeResult.lng;
+          if (globalSettings.countyAutoGeocodingEnabled) {
+            values.locationSubProvince = geocodeResult.county;
+          }
+          if (globalSettings.zipAutoGeocodingEnabled) {
+            values.locationPostalCode1 = geocodeResult.zipCode;
+          }
+        }
+      }
+
       if (selectedMeeting) {
         await RootServerApi.updateMeeting(selectedMeeting.id, values);
         savedMeeting = await RootServerApi.getMeeting(selectedMeeting.id);
@@ -253,6 +287,117 @@
     }
   }
 
+  function geocode(meeting: MeetingPartialUpdate): Promise<{ lat: number; lng: number; county: string; zipCode: string } | null | string> {
+    return new Promise((resolve) => {
+      if (!meeting.locationNation) {
+        meeting.locationNation = globalSettings.regionBias;
+      }
+
+      const address = [
+        meeting.locationStreet,
+        meeting.locationCitySubsection,
+        meeting.locationMunicipality,
+        meeting.locationProvince,
+        meeting.locationSubProvince,
+        meeting.locationPostalCode1,
+        meeting.locationNation
+      ]
+        .filter(Boolean)
+        .join(', ');
+
+      const geocoder = new google.maps.Geocoder();
+      let county = '';
+      let zipCode = '';
+
+      geocoder.geocode({ address: address }, (results, status) => {
+        if (status === google.maps.GeocoderStatus.OK && results) {
+          const location = results[0].geometry.location;
+          for (let i = 0; i < results[0].address_components.length; i++) {
+            const component = results[0].address_components[i];
+            if (component.types.includes('postal_code')) {
+              zipCode = component.long_name;
+            }
+            if (component.types.includes('administrative_area_level_2')) {
+              county = component.long_name;
+              if (county.endsWith(' County')) {
+                county = county.substring(0, county.length - 7);
+              }
+            }
+          }
+          resolve({
+            lat: location.lat(),
+            lng: location.lng(),
+            county: county || '',
+            zipCode: zipCode || ''
+          });
+        } else {
+          console.error('Geocoding failed:', status);
+          resolve(`Geocoding failed: ${status}`);
+        }
+      });
+    });
+  }
+
+  function createMarker(mapInstance: google.maps.Map, position: google.maps.LatLngLiteral): void {
+    const naMarkerImage = document.createElement('img');
+    naMarkerImage.src = 'images/NAMarkerR.png';
+    marker = new google.maps.marker.AdvancedMarkerElement({
+      position: position,
+      map: mapInstance,
+      gmpDraggable: true,
+      content: naMarkerImage
+    });
+
+    marker.addListener('dragend', () => {
+      if (marker && marker.position) {
+        const newPosition = marker.position;
+        if (newPosition) {
+          longitude = typeof newPosition.lng === 'function' ? newPosition.lng() : newPosition.lng;
+          latitude = typeof newPosition.lat === 'function' ? newPosition.lat() : newPosition.lat;
+          setData('longitude', longitude);
+          setData('latitude', latitude);
+          manualDrag = true;
+        }
+      }
+    });
+  }
+
+  onMount(async () => {
+    const loader = new Loader({
+      apiKey: globalSettings.googleApikey,
+      version: 'beta',
+      libraries: ['places', 'marker', 'geocoding']
+    });
+
+    const { Map } = await loader.importLibrary('maps');
+
+    mapElement = document.getElementById('locationMap') as HTMLElement;
+
+    if (mapElement) {
+      map = new Map(mapElement, {
+        center: defaultLatLng,
+        zoom: Number(globalSettings.centerZoom ?? 15),
+        draggableCursor: 'crosshair',
+        mapId: 'bmlt'
+      });
+
+      showMap.subscribe((value) => {
+        mapElement.style.display = value ? 'block' : 'none';
+        if (value && map) {
+          map.setCenter({ lat: latitude, lng: longitude });
+          createMarker(map, { lat: latitude, lng: longitude });
+        }
+      });
+    }
+  });
+
+  $: {
+    if (selectedMeeting) {
+      showMap.set(true);
+      manualDrag = false;
+    }
+  }
+
   $: setData('formatIds', formatIdsSelected);
   $: isDirty.set(formIsDirty(initialValues, $data));
 </script>
@@ -388,9 +533,15 @@
     </div>
   </div>
   <div class="grid gap-4 md:grid-cols-2">
+    <div class="md:col-span-2">
+      <!-- Cant use accordion yet because it actually removes from dom-->
+      <div id="locationMap" style="height: 500px;" bind:this={mapElement} />
+    </div>
+  </div>
+  <div class="grid gap-4 md:grid-cols-2">
     <div class="w-full">
       <Label for="longitude" class="mb-2">{$translations.longitudeTitle}</Label>
-      <Input type="text" id="longitude" name="longitude" required />
+      <Input type="text" id="longitude" name="longitude" bind:value={longitude} required />
       <Helper class="mt-2" color="red">
         {#if $errors.longitude}
           {$errors.longitude}
@@ -399,7 +550,7 @@
     </div>
     <div class="w-full">
       <Label for="latitude" class="mb-2">{$translations.latitudeTitle}</Label>
-      <Input type="text" id="latitude" name="latitude" required />
+      <Input type="text" id="latitude" name="latitude" bind:value={latitude} required />
       <Helper class="mt-2" color="red">
         {#if $errors.latitude}
           {$errors.latitude}
@@ -651,6 +802,11 @@
   <Hr classHr="my-8" />
   <div class="grid gap-4 md:grid-cols-2">
     <div class="md:col-span-2">
+      {#if geocodingError}
+        <Helper class="mt-2" color="red">
+          {geocodingError}
+        </Helper>
+      {/if}
       <Button type="submit" class="w-full" disabled={!$isDirty} on:click={disableButtonHack}>
         {#if selectedMeeting}
           {$translations.applyChangesTitle}
