@@ -50,8 +50,8 @@
   }
 </script>
 
-<Modal bind:open={showModal} size="sm">
-  <div class="modal-content p-2">
+<Modal bind:open={showModal} size="sm" class="modal-content">
+  <div class="p-2">
     <UserForm {users} {selectedUser} on:saved />
   </div>
 </Modal>

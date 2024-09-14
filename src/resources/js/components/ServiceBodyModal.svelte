@@ -50,8 +50,8 @@
   }
 </script>
 
-<Modal bind:open={showModal} size="sm">
-  <div class="modal-content p-4">
+<Modal bind:open={showModal} size="sm" class="modal-content">
+  <div class="p-4">
     <ServiceBodyForm {serviceBodies} {selectedServiceBody} {users} on:saved />
   </div>
 </Modal>
