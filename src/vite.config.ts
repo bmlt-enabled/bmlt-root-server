@@ -9,5 +9,8 @@ export default defineConfig({
       input: ['resources/js/app.ts'],
       refresh: true
     })
-  ]
+  ],
+  build: {
+    chunkSizeWarningLimit: 1000
+  }
 });

@@ -213,13 +213,14 @@ describe('check editing, adding, and deleting users using the popup dialog boxes
     expect(mockSavedUserUpdate).toBe(null);
   });
 
-  test('confirm modal appears when attempting to close with unsaved changes', async () => {
+  test('confirm modal appears when attempting to click outside modal with unsaved changes', async () => {
     const user = await login('serveradmin', 'Users');
     await user.click(await screen.findByRole('cell', { name: 'Big Region' }));
     const description = screen.getByRole('textbox', { name: 'Description' }) as HTMLInputElement;
     await user.clear(description);
     await user.type(description, 'Bigger Region');
-    await user.click(await screen.findByRole('button', { name: 'Close modal' }));
+    const outsideElement = document.body;
+    await user.click(outsideElement);
     expect(screen.getByText('You have unsaved changes. Do you really want to close?')).toBeInTheDocument();
   });
 });

@@ -64,8 +64,8 @@
   }
 </script>
 
-<Modal bind:open={showModal} size="md">
-  <div class="modal-content p-2">
+<Modal bind:open={showModal} size="md" class="modal-content">
+  <div class="p-2">
     <MeetingEditForm {selectedMeeting} {serviceBodies} {formats} on:saved={onSaved} on:deleted={onDeleted} />
   </div>
 </Modal>
