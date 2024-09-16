@@ -59,6 +59,7 @@ const strings = new LocalizedStrings({
     languageSelectTitle: 'Sprache auswählen',
     latitudeTitle: 'Latitude', // TOFIX: translate
     loading: 'loading ...', // TOFIX: translate
+    locationMapTitle: 'Location Map', // TOFIX: translate
     locationTextTitle: 'Location Text', // TOFIX: translate
     loginTitle: 'Anmeldung',
     loginVerb: 'Anmelden',
@@ -171,6 +172,7 @@ const strings = new LocalizedStrings({
     languageSelectTitle: 'Select Language',
     latitudeTitle: 'Latitude',
     loading: 'loading ...',
+    locationMapTitle: 'Location Map',
     locationTextTitle: 'Location Text',
     loginTitle: 'Login',
     loginVerb: 'Log In',
