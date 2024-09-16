@@ -2360,7 +2360,7 @@
                         "type": "string",
                         "example": "string"
                     },
-                    "train_line": {
+                    "train_lines": {
                         "type": "string",
                         "example": "string"
                     },

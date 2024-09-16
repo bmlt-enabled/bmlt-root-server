@@ -118,7 +118,7 @@
     contactEmail1: selectedMeeting?.contactEmail1 ?? '',
     contactEmail2: selectedMeeting?.contactEmail2 ?? '',
     busLines: selectedMeeting?.busLines ?? '',
-    trainLine: selectedMeeting?.trainLine ?? '',
+    trainLines: selectedMeeting?.trainLines ?? '',
     comments: selectedMeeting?.comments ?? ''
   };
   let latitude = initialValues.latitude;
@@ -196,7 +196,7 @@
             contactEmail1: (error?.errors?.contact_email_1 ?? []).join(' '),
             contactEmail2: (error?.errors?.contact_email_2 ?? []).join(' '),
             busLines: (error?.errors?.bus_lines ?? []).join(' '),
-            trainLine: (error?.errors?.train_line ?? []).join(' '),
+            trainLines: (error?.errors?.train_lines ?? []).join(' '),
             comments: (error?.errors?.comments ?? []).join(' ')
           });
         }
@@ -253,7 +253,7 @@
         contactEmail1: yup.string().transform((v) => v.trim()),
         contactEmail2: yup.string().transform((v) => v.trim()),
         busLines: yup.string().transform((v) => v.trim()),
-        trainLine: yup.string().transform((v) => v.trim()),
+        trainLines: yup.string().transform((v) => v.trim()),
         comments: yup.string().transform((v) => v.trim())
       }),
       castValues: true
@@ -727,7 +727,7 @@
   </div>
   <div class="grid gap-4 md:grid-cols-2">
     <div class="w-full">
-      <Label for="busLines" class="mb-2">{$translations.busLineTitle}</Label>
+      <Label for="busLines" class="mb-2">{$translations.busLinesTitle}</Label>
       <Input type="text" id="busLines" name="busLines" />
       <Helper class="mt-2" color="red">
         {#if $errors.busLines}
@@ -736,11 +736,11 @@
       </Helper>
     </div>
     <div class="w-full">
-      <Label for="trainLine" class="mb-2">{$translations.trainLineTitle}</Label>
-      <Input type="text" id="trainLine" name="trainLine" />
+      <Label for="trainLines" class="mb-2">{$translations.trainLinesTitle}</Label>
+      <Input type="text" id="trainLines" name="trainLines" />
       <Helper class="mt-2" color="red">
-        {#if $errors.trainLine}
-          {$errors.trainLine}
+        {#if $errors.trainLines}
+          {$errors.trainLines}
         {/if}
       </Helper>
     </div>
