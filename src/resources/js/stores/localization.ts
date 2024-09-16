@@ -18,7 +18,7 @@ const strings = new LocalizedStrings({
     anteMeridiem: 'AM',
     applyChangesTitle: 'Änderung anwenden',
     boroughTitle: 'Borough/City Subsection', // TODO: translate
-    busLineTitle: 'Bus Line', // TODO: translate
+    busLinesTitle: 'Bus Lines', // TODO: translate
     cancel: 'Stornieren',
     chooseDay: 'Tag wählen',
     chooseStartTime: 'Startzeit wählen',
@@ -112,7 +112,7 @@ const strings = new LocalizedStrings({
     timeEvening: 'Evening',
     timeMorning: 'Morning',
     timeZoneTitle: 'Time Zone', // TODO: translate
-    trainLineTitle: 'Train Line', // TODO: translate
+    trainLinesTitle: 'Train Lines', // TODO: translate
     unpublished: 'Unpublished',
     userDeleteConflictError: 'Error: The user could not be deleted because it is still associated with at least one service body or is the parent of another user.', // TODO: translate
     userIsDeactivated: 'User is deactivated.', // TODO: translate
@@ -142,7 +142,7 @@ const strings = new LocalizedStrings({
     anteMeridiem: 'AM',
     applyChangesTitle: 'Apply Changes',
     boroughTitle: 'Borough/City Subsection',
-    busLineTitle: 'Bus Line',
+    busLinesTitle: 'Bus Lines',
     cancel: 'Cancel',
     chooseDay: 'Choose day',
     chooseStartTime: 'Choose start time',
@@ -236,7 +236,7 @@ const strings = new LocalizedStrings({
     timeEvening: 'Evening',
     timeMorning: 'Morning',
     timeZoneTitle: 'Time Zone',
-    trainLineTitle: 'Train Line',
+    trainLinesTitle: 'Train Lines',
     unpublished: 'Unpublished',
     userDeleteConflictError: 'Error: The user could not be deleted because it is still associated with at least one service body or is the parent of another user.',
     userIsDeactivated: 'User is deactivated.',
