@@ -31,7 +31,7 @@
   let showModal = false;
   let sortColumn: string | null = null;
   let sortDirection: 'asc' | 'desc' = 'asc';
-  let weekdayChoices = $translations.days_of_week.map((day, index) => ({
+  let weekdayChoices = $translations.daysOfWeek.map((day, index) => ({
     value: index.toString(),
     label: day
   }));
@@ -257,7 +257,7 @@
   <TableBody>
     {#each currentPageItems as meeting (meeting.id)}
       <TableBodyRow on:click={() => handleEdit(meeting)}>
-        <TableBodyCell tdClass={meeting.published ? 'px-4 py-3' : 'bg-yellow-400 px-4 py-3'}>{$translations.days_of_week[meeting.day]}</TableBodyCell>
+        <TableBodyCell tdClass={meeting.published ? 'px-4 py-3' : 'bg-yellow-400 px-4 py-3'}>{$translations.daysOfWeek[meeting.day]}</TableBodyCell>
         <TableBodyCell tdClass={meeting.published ? 'px-4 py-3' : 'bg-yellow-400 px-4 py-3 text-nowrap'}>{is24hrTime() ? meeting.startTime : convertTo12Hour(meeting.startTime)}</TableBodyCell>
         <TableBodyCell tdClass={meeting.published ? 'px-4 py-3' : 'bg-yellow-400 px-4 py-3'}>{meeting.name}</TableBodyCell>
         <TableBodyCell tdClass={meeting.published ? 'px-4 py-3' : 'bg-yellow-400 px-4 py-3 text-wrap'}>
