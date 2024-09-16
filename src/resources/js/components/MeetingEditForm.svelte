@@ -542,12 +542,6 @@
     </div>
   {/if}
   <div class="grid gap-4 md:grid-cols-2">
-    <div class="md:col-span-2">
-      <!-- Cant use accordion yet because it actually removes from dom-->
-      <div id="locationMap" style="height: 500px;" bind:this={mapElement} />
-    </div>
-  </div>
-  <div class="grid gap-4 md:grid-cols-2">
     <div class="w-full">
       <Label for="longitude" class="mb-2">{$translations.longitudeTitle}</Label>
       <Input type="text" id="longitude" name="longitude" bind:value={longitude} required />
