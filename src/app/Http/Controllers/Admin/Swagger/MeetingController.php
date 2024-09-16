@@ -41,7 +41,7 @@ namespace App\Http\Controllers\Admin\Swagger;
  *     @OA\Property(property="contact_email_1", type="string", example="string"),
  *     @OA\Property(property="contact_email_2", type="string", example="string"),
  *     @OA\Property(property="bus_lines", type="string", example="string"),
- *     @OA\Property(property="train_line", type="string", example="string"),
+ *     @OA\Property(property="train_lines", type="string", example="string"),
  *     @OA\Property(property="comments", type="string", example="string"),
  * ),
  * @OA\Schema(schema="Meeting", required={"id", "serviceBodyId", "formatIds", "venueType", "temporarilyVirtual", "day", "startTime", "duration", "timeZone", "latitude", "longitude", "published", "email", "worldId", "name"},
