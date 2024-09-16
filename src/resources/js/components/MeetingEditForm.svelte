@@ -9,6 +9,7 @@
 
   const showMap = writable(false);
   // svelte-hack' -- import hacked to get onMount to work correctly for unit tests
+  import MapAccordion from './MapAccordion.svelte';
   import { onMount } from 'svelte/internal';
   import { spinner } from '../stores/spinner';
   import RootServerApi from '../lib/RootServerApi';
@@ -437,7 +438,6 @@
       </div>
     {/if}
   </div>
-
   <div class="grid gap-4 md:grid-cols-2">
     <div class="md:col-span-2">
       <Label for="name" class="mb-2">{$translations.nameTitle}</Label>
@@ -532,12 +532,15 @@
       </Helper>
     </div>
   </div>
-  <div class="grid gap-4 md:grid-cols-2">
-    <div class="md:col-span-2">
-      <!-- Cant use accordion yet because it actually removes from dom-->
-      <div id="locationMap" style="height: 500px;" bind:this={mapElement} />
+  {#if selectedMeeting}
+    <div class="grid gap-4 md:grid-cols-2">
+      <div class="md:col-span-2">
+        <MapAccordion title={$translations.locationMapTitle}>
+          <div id="locationMap" bind:this={mapElement} />
+        </MapAccordion>
+      </div>
     </div>
-  </div>
+  {/if}
   <div class="grid gap-4 md:grid-cols-2">
     <div class="w-full">
       <Label for="longitude" class="mb-2">{$translations.longitudeTitle}</Label>
