@@ -67,7 +67,7 @@
   let isPublishedChecked = true;
   let showDeleteModal = false;
   let deleteMeeting: Meeting;
-  const weekdayChoices = $translations.days_of_week.map((day, index) => ({
+  const weekdayChoices = $translations.daysOfWeek.map((day, index) => ({
     value: index,
     name: day
   }));

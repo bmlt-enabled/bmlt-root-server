@@ -9,22 +9,24 @@ const strings = new LocalizedStrings({
     accountSettingsTitle: 'Account Einstellungen',
     accountTitle: 'Account',
     accountTypeTitle: 'AccountTyp',
-    addMeeting: 'Add Meeting', // TOFIX: translate
+    addFormat: 'Format hinzufügen',
+    addMeeting: 'Meeting hinzufügen',
     addServiceBody: 'Service-Body hinzufügen',
     addUser: 'Benutzer hinzufügen',
-    administratorTitle: 'Administrator/Administratorin', // TOFIX: translate this way, or just Administrator?
-    adminTitle: 'Admin', // TOFIX: translate,
+    administratorTitle: 'Administrator/Administratorin', // TODO: translate this way, or just Administrator?
+    adminTitle: 'Admin', // TODO: translate,
     anteMeridiem: 'AM',
     applyChangesTitle: 'Änderung anwenden',
-    boroughTitle: 'Borough/City Subsection', // TOFIX: translate
-    busLineTitle: 'Bus Line', // TOFIX: translate
-    cancel: 'Cancel', // TOFIX: translate
-    chooseDay: 'Choose day',
-    chooseStartTime: 'Choose start time',
-    cityTownTitle: 'City/Town', // TOFIX: translate?
-    closeWithoutSaving: 'Close without saving', // TOFIX: translate
-    commentsTitle: 'Comments', // TOFIX: translate
-    confirmDeleteMeeting: 'Are you sure you want to delete this meeting?',
+    boroughTitle: 'Borough/City Subsection', // TODO: translate
+    busLineTitle: 'Bus Line', // TODO: translate
+    cancel: 'Stornieren',
+    chooseDay: 'Tag wählen',
+    chooseStartTime: 'Startzeit wählen',
+    cityTownTitle: 'Stadt',
+    closeWithoutSaving: 'Close without saving', // TODO: translate
+    commentsTitle: 'Comments', // TODO: translate
+    confirmDeleteFormat: 'Are you sure you want to delete this format?', // TODO: translate
+    confirmDeleteMeeting: 'Are you sure you want to delete this meeting?', // TODO: translate
     confirmDeleteServiceBody: 'Bist du sicher, dass du diesen Service-Body löschen möchten?',
     confirmDeleteUser: 'Bist du sicher, dass du diesen Benutzer löschen möchten?',
     confirmYesImSure: 'Ja, ich bin sicher.',
@@ -34,94 +36,102 @@ const strings = new LocalizedStrings({
     contact2EmailTitle: 'Contact 2 Email',
     contact2NameTitle: 'Contact 2 Name',
     contact2PhoneTitle: 'Contact 2 Phone',
-    countySubProvinceTitle: 'County/Sub-Province', // TOFIX: translate?
-    dashboardTitle: 'Dashboard', // TOFIX: translate?
+    countySubProvinceTitle: 'County/Sub-Province', // TODO: translate?
+    dashboardTitle: 'Dashboard', // TODO: translate?
     day: 'Day',
-    days_of_week: ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'],
-    dayTitle: 'Weekday', // TOFIX: translate?
+    daysOfWeek: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
+    dayTitle: 'Wochentag',
     deactivatedTitle: 'Deaktiviert',
     deactivatedUserTitle: 'Deaktivierter Benutzer',
     delete: 'löschen',
-    deleteMeeting: 'Delete Meeting',
+    deleteFormat: 'Format löschen',
+    deleteMeeting: 'Meeting löschen',
     deleteServiceBody: 'Service-Body löschen',
     deleteUser: 'Lösche diesen Benutzer',
     descriptionTitle: 'Beschreibung',
-    durationTitle: 'Duration', // TOFIX: translate?
-    editableServiceBodies: 'Service bodies this user can edit (not changeable here)', // TOFIX: translate
+    durationTitle: 'Duration', // TODO: translate
+    editableServiceBodies: 'Service bodies this user can edit (not changeable here)', // TODO: translate
+    editFormat: 'Format bearbeiten',
     editUser: 'Benutzer bearbeiten',
     emailTitle: 'E-Mail-Adresse',
-    extraInfoTitle: 'Extra Info', // TOFIX: translate?
+    extraInfoTitle: 'Extra Info', // TODO: translate
     formatsTitle: 'Formate',
     helplineTitle: 'Helpline',
     homeTitle: 'Startseite',
     idTitle: 'ID',
     invalidUsernameOrPassword: 'Ungültiger Benutzername oder Passwort.',
+    keyTitle: 'Schlüssel',
     languageSelectTitle: 'Sprache auswählen',
-    latitudeTitle: 'Latitude', // TOFIX: translate
-    loading: 'loading ...', // TOFIX: translate
+    latitudeTitle: 'Breitengrad',
+    loading: 'geladen ...',
     locationMapTitle: 'Location Map', // TOFIX: translate
-    locationTextTitle: 'Location Text', // TOFIX: translate
+    locationTextTitle: 'Location Text', // TODO: translate
     loginTitle: 'Anmeldung',
     loginVerb: 'Anmelden',
     logout: 'Abmelden',
-    longitudeTitle: 'Longitude', // TOFIX: translate
-    meetingIsPublishedTitle: 'Meeting is Published',
-    meetingListEditorsTitle: 'Meeting List Editors', // TOFIX: translate
+    longitudeTitle: 'Längengrad',
+    meetingIsPublishedTitle: 'Meeting is Published', // TODO: translate
+    meetingListEditorsTitle: 'Meeting List Editors', // TODO: translate
     meetingsTitle: 'Meetings',
-    meetingUnpublishedNote: 'Note: Unpublishing a meeting indicates a temporary closure. If this meeting has closed permanently, please delete it.',
+    meetingUnpublishedNote: 'Note: Unpublishing a meeting indicates a temporary closure. If this meeting has closed permanently, please delete it.', // TODO: translate
     nameTitle: 'Name',
-    nationTitle: 'Nation', // TOFIX: translate
-    neighborhoodTitle: 'Neighborhood', // TOFIX: translate
+    nationTitle: 'Nation', // TODO: translate
+    neighborhoodTitle: 'Neighborhood', // TODO: translate
+    noFormatsTitle: 'No formats found.', // TODO: translate
     none: '- Keine -',
-    noServiceBodiesTitle: 'No service bodies found.', // TOFIX: translate
-    noUsersTitle: 'No users found.', // TOFIX: translate
+    noServiceBodiesTitle: 'No service bodies found.', // TODO: translate
+    noTranslationAvailable: 'keine deutsche Version verfügbar',
+    noUsersTitle: 'No users found.', // TODO: translate
+    noWhitespaceInKey: 'Whitespace not allowed in key', // TODO: translate
     observerTitle: 'Service-Body Beobachter',
     ownedByTitle: 'Gehört',
     paginationOf: 'of',
     paginationShowing: 'Showing',
-    parentIdTitle: 'Service Body Parent', // TOFIX: translate
+    parentIdTitle: 'Service Body Parent', // TODO: translate
     passwordTitle: 'Passwort',
-    phoneMeetingTitle: 'Phone Meeting Dial-in Number', // TOFIX: translate
+    phoneMeetingTitle: 'Phone Meeting Dial-in Number', // TODO: translate
     postMeridiem: 'PM',
     published: 'Published',
     rootServerTitle: 'Root Server',
-    searchByName: 'Search by name', // TOFIX: translate
-    serverAdministratorTitle: 'Main Server Administrator', // TOFIX: translate
-    serviceBodiesNoParent: 'No Parent (Top-Level)', // TOFIX: translate
-    serviceBodiesTitle: 'Service Bodies', // TOFIX: translate
-    serviceBodyAdminTitle: 'Service Body Administrator', // TOFIX: translate
-    serviceBodyDeleteConflictError: 'Error: The service body could not be deleted because it is still associated with meetings or is a parent of other service bodies.', // TOFIX: translate
-    serviceBodyTitle: 'Service Body', // TOFIX: translate
-    serviceBodyTypeTitle: 'Service Body Type', // TOFIX: translate
-    startTimeTitle: 'Start Time', // TOFIX: translate
-    stateTitle: 'State/Province', // TOFIX: translate
-    streetTitle: 'Street', // TOFIX: translate
+    searchByName: 'Search by name', // TODO: translate
+    serverAdministratorTitle: 'Main Server Administrator', // TODO: translate
+    serviceBodiesNoParent: 'No Parent (Top-Level)', // TODO: translate
+    serviceBodiesTitle: 'Service Bodies', // TODO: translate
+    serviceBodyAdminTitle: 'Service Body Administrator', // TODO: translate
+    serviceBodyDeleteConflictError: 'Error: The service body could not be deleted because it is still associated with meetings or is a parent of other service bodies.', // TODO: translate
+    serviceBodyTitle: 'Service Body', // TODO: translate
+    serviceBodyTypeTitle: 'Service Body Type', // TODO: translate
+    showAllTranslations: 'Show all translations', // TODO: translate
+    startTimeTitle: 'Start Time', // TODO: translate
+    stateTitle: 'State/Province', // TODO: translate
+    streetTitle: 'Street', // TODO: translate
     time: 'Time',
     timeAfternoon: 'Afternoon',
     timeEvening: 'Evening',
     timeMorning: 'Morning',
-    timeZoneTitle: 'Time Zone', // TOFIX: translate
-    trainLineTitle: 'Train Line', // TOFIX: translate
+    timeZoneTitle: 'Time Zone', // TODO: translate
+    trainLineTitle: 'Train Line', // TODO: translate
     unpublished: 'Unpublished',
-    userDeleteConflictError: 'Error: The user could not be deleted because it is still associated with at least one service body or is the parent of another user.', // TOFIX: translate
-    userIsDeactivated: 'User is deactivated.', // TOFIX: translate
+    userDeleteConflictError: 'Error: The user could not be deleted because it is still associated with at least one service body or is the parent of another user.', // TODO: translate
+    userIsDeactivated: 'User is deactivated.', // TODO: translate
     usernameTitle: 'Benutzername',
     usersTitle: 'Benutzer',
     userTitle: 'Benutzer',
     userTypeTitle: 'Benutzertyp',
-    venueTypeTitle: 'Venue Type', // TOFIX: translate
-    virtualMeetingAdditionalInfoTitle: 'Virtual Meeting Additional Information', // TOFIX: translate
-    virtualMeetingTitle: 'Virtual Meeting Link', // TOFIX: translate
-    websiteUrlTitle: 'Web Site URL', // TOFIX: translate
+    venueTypeTitle: 'Venue Type', // TODO: translate
+    virtualMeetingAdditionalInfoTitle: 'Virtual Meeting Additional Information', // TODO: translate
+    virtualMeetingTitle: 'Virtual Meeting Link', // TODO: translate
+    websiteUrlTitle: 'Web Site URL', // TODO: translate
     welcome: 'Willkommen',
-    worldIdTitle: 'World Committee Code', // TOFIX: translate
-    youHaveUnsavedChanges: 'You have unsaved changes. Do you really want to close?', // TOFIX: translate
-    zipCodeTitle: 'Zip Code/Postal Code' // TOFIX: translate
+    worldIdTitle: 'World Committee Code', // TODO: translate
+    youHaveUnsavedChanges: 'You have unsaved changes. Do you really want to close?', // TODO: translate
+    zipCodeTitle: 'Zip Code/Postal Code' // TODO: translate
   },
   en: {
     accountSettingsTitle: 'Account Settings',
     accountTitle: 'Account',
     accountTypeTitle: 'Account Type',
+    addFormat: 'Add Format',
     addMeeting: 'Add Meeting',
     addServiceBody: 'Add Service Body',
     addUser: 'Add User',
@@ -137,6 +147,7 @@ const strings = new LocalizedStrings({
     cityTownTitle: 'City/Town',
     closeWithoutSaving: 'Close without saving',
     commentsTitle: 'Comments',
+    confirmDeleteFormat: 'Are you sure you want to delete this format?',
     confirmDeleteMeeting: 'Are you sure you want to delete this meeting?',
     confirmDeleteServiceBody: 'Are you sure you want to delete this service body?',
     confirmDeleteUser: 'Are you sure you want to delete this user?',
@@ -150,17 +161,19 @@ const strings = new LocalizedStrings({
     countySubProvinceTitle: 'County/Sub-Province',
     dashboardTitle: 'Dashboard',
     day: 'Day',
-    days_of_week: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+    daysOfWeek: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
     dayTitle: 'Weekday',
     deactivatedTitle: 'Deactivated',
     deactivatedUserTitle: 'Deactivated User',
     delete: 'Delete',
+    deleteFormat: 'Delete Format',
     deleteMeeting: 'Delete Meeting',
     deleteServiceBody: 'Delete Service Body',
     deleteUser: 'Delete User',
     descriptionTitle: 'Description',
     durationTitle: 'Duration',
     editableServiceBodies: 'Service bodies this user can edit (not changeable here)',
+    editFormat: 'Edit Format',
     editUser: 'Edit User',
     emailTitle: 'Email',
     extraInfoTitle: 'Extra Info',
@@ -169,10 +182,11 @@ const strings = new LocalizedStrings({
     homeTitle: 'Home',
     idTitle: 'ID',
     invalidUsernameOrPassword: 'Invalid username or password.',
+    keyTitle: 'Key',
     languageSelectTitle: 'Select Language',
     latitudeTitle: 'Latitude',
     loading: 'loading ...',
-    locationMapTitle: 'Location Map',
+    locationMapTitle: 'Location Map', // TOFIX: translate
     locationTextTitle: 'Location Text',
     loginTitle: 'Login',
     loginVerb: 'Log In',
@@ -185,9 +199,12 @@ const strings = new LocalizedStrings({
     nameTitle: 'Name',
     nationTitle: 'Nation',
     neighborhoodTitle: 'Neighborhood',
+    noFormatsTitle: 'No formats found.',
     none: '- None -',
     noServiceBodiesTitle: 'No service bodies found.',
+    noTranslationAvailable: 'no English version available',
     noUsersTitle: 'No users found.',
+    noWhitespaceInKey: 'Whitespace not allowed in key',
     observerTitle: 'Service Body Observer',
     ownedByTitle: 'Owned By',
     paginationOf: 'of',
@@ -206,6 +223,7 @@ const strings = new LocalizedStrings({
     serviceBodyDeleteConflictError: 'Error: The service body could not be deleted because it is still associated with meetings or is a parent of other service bodies.',
     serviceBodyTitle: 'Service Body',
     serviceBodyTypeTitle: 'Service Body Type',
+    showAllTranslations: 'Show all translations',
     startTimeTitle: 'Start Time',
     stateTitle: 'State/Province',
     streetTitle: 'Street',
@@ -250,6 +268,10 @@ class Translations {
 
   getLanguage(): string {
     return strings.getLanguage();
+  }
+
+  getAvailableLanguages(): string[] {
+    return strings.getAvailableLanguages();
   }
 
   setLanguage(language: string): void {
