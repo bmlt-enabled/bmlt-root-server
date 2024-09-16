@@ -9,6 +9,7 @@
 
   const showMap = writable(false);
   // svelte-hack' -- import hacked to get onMount to work correctly for unit tests
+  import DurationSelector from './DurationSelector.svelte';
   import MapAccordion from './MapAccordion.svelte';
   import { onMount } from 'svelte/internal';
   import { spinner } from '../stores/spinner';
@@ -481,7 +482,7 @@
     </div>
     <div class="w-full">
       <Label for="duration" class="mb-2">{$translations.durationTitle}</Label>
-      <Input type="text" id="duration" name="duration" />
+      <DurationSelector bind:duration={initialValues.duration} on:update={(e) => setData('duration', e.detail.duration)} />
       <Helper class="mt-2" color="red">
         {#if $errors.duration}
           {$errors.duration}

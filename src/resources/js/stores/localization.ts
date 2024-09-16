@@ -58,6 +58,7 @@ const strings = new LocalizedStrings({
     formatsTitle: 'Formate',
     helplineTitle: 'Helpline',
     homeTitle: 'Startseite',
+    hoursTitle: 'Hours', // TODO: translate
     idTitle: 'ID',
     invalidUsernameOrPassword: 'Ungültiger Benutzername oder Passwort.',
     keyTitle: 'Schlüssel',
@@ -74,6 +75,7 @@ const strings = new LocalizedStrings({
     meetingListEditorsTitle: 'Meeting List Editors', // TODO: translate
     meetingsTitle: 'Meetings',
     meetingUnpublishedNote: 'Note: Unpublishing a meeting indicates a temporary closure. If this meeting has closed permanently, please delete it.', // TODO: translate
+    minutesTitle: 'Minutes', // TODO: translate
     nameTitle: 'Name',
     nationTitle: 'Nation', // TODO: translate
     neighborhoodTitle: 'Neighborhood', // TODO: translate
@@ -180,6 +182,7 @@ const strings = new LocalizedStrings({
     formatsTitle: 'Formats',
     helplineTitle: 'Helpline',
     homeTitle: 'Home',
+    hoursTitle: 'Hours',
     idTitle: 'ID',
     invalidUsernameOrPassword: 'Invalid username or password.',
     keyTitle: 'Key',
@@ -196,6 +199,7 @@ const strings = new LocalizedStrings({
     meetingListEditorsTitle: 'Meeting List Editors',
     meetingsTitle: 'Meetings',
     meetingUnpublishedNote: 'Note: Unpublishing a meeting indicates a temporary closure. If this meeting has closed permanently, please delete it.',
+    minutesTitle: 'Minutes',
     nameTitle: 'Name',
     nationTitle: 'Nation',
     neighborhoodTitle: 'Neighborhood',
