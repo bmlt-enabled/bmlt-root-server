@@ -11,6 +11,7 @@
   // svelte-hack' -- import hacked to get onMount to work correctly for unit tests
   import DurationSelector from './DurationSelector.svelte';
   import MapAccordion from './MapAccordion.svelte';
+  import BasicTabs from './BasicTabs.svelte';
   import { onMount } from 'svelte/internal';
   import { spinner } from '../stores/spinner';
   import RootServerApi from '../lib/RootServerApi';
@@ -24,6 +25,7 @@
   export let formats: Format[];
   export let serviceBodies: ServiceBody[];
 
+  const tabs = [$translations.tabsBasic, $translations.tabsLocation, $translations.tabsOther];
   const globalSettings = settings;
   const seenNames = new Set<string>();
   const ignoredFormats = ['VM', 'HY', 'TC'];
@@ -405,404 +407,410 @@
 </script>
 
 <form use:form>
-  <div class="grid items-center gap-4 md:grid-cols-3">
-    <div class="w-full">
-      <Checkbox name="published" bind:checked={isPublishedChecked}>
-        {$translations.meetingIsPublishedTitle}
-      </Checkbox>
-      {#if !isPublishedChecked}
-        <Helper class="mt-2" color="red">
-          {$translations.meetingUnpublishedNote}
-        </Helper>
-      {/if}
-      {#if $errors.published}
-        <Helper class="mt-2" color="red">
-          {$errors.published}
-        </Helper>
-      {/if}
-    </div>
-    {#if selectedMeeting}
-      <div class="flex w-full items-center justify-between md:col-span-2">
-        <div class="text-gray-700 dark:text-gray-300">
-          <strong>Meeting ID:</strong>
-          {selectedMeeting.id}
+  <BasicTabs {tabs}>
+    <div slot="tab-content-0">
+      <div class="grid items-center gap-4 md:grid-cols-3">
+        <div class="w-full">
+          <Checkbox name="published" bind:checked={isPublishedChecked}>
+            {$translations.meetingIsPublishedTitle}
+          </Checkbox>
+          {#if !isPublishedChecked}
+            <Helper class="mt-2" color="red">
+              {$translations.meetingUnpublishedNote}
+            </Helper>
+          {/if}
+          {#if $errors.published}
+            <Helper class="mt-2" color="red">
+              {$errors.published}
+            </Helper>
+          {/if}
         </div>
-        <Button
-          color="none"
-          on:click={(e) => selectedMeeting && handleDelete(e, selectedMeeting)}
-          class="text-red-600 dark:text-red-500"
-          aria-label={$translations.deleteMeeting + ' ' + (selectedMeeting?.name ?? '')}
-        >
-          <TrashBinOutline title={{ id: 'deleteMeeting', title: $translations.deleteMeeting }} ariaLabel={$translations.deleteMeeting} />
-          <span class="sr-only">{$translations.deleteMeeting}</span>
-        </Button>
+        {#if selectedMeeting}
+          <div class="flex w-full items-center justify-between md:col-span-2">
+            <div class="text-gray-700 dark:text-gray-300">
+              <strong>Meeting ID:</strong>
+              {selectedMeeting.id}
+            </div>
+            <Button
+              color="none"
+              on:click={(e) => selectedMeeting && handleDelete(e, selectedMeeting)}
+              class="text-red-600 dark:text-red-500"
+              aria-label={$translations.deleteMeeting + ' ' + (selectedMeeting?.name ?? '')}
+            >
+              <TrashBinOutline title={{ id: 'deleteMeeting', title: $translations.deleteMeeting }} ariaLabel={$translations.deleteMeeting} />
+              <span class="sr-only">{$translations.deleteMeeting}</span>
+            </Button>
+          </div>
+        {/if}
       </div>
-    {/if}
-  </div>
-  <div class="grid gap-4 md:grid-cols-2">
-    <div class="md:col-span-2">
-      <Label for="name" class="mb-2">{$translations.nameTitle}</Label>
-      <Input type="text" id="name" name="name" required />
-      <Helper class="mt-2" color="red">
-        {#if $errors.name}
-          {$errors.name}
-        {/if}
-      </Helper>
-    </div>
-  </div>
-  <div class="grid gap-4 md:grid-cols-2">
-    <div class="md:col-span-2">
-      <Label for="timeZone" class="mb-2">{$translations.timeZoneTitle}</Label>
-      <Input type="text" id="timeZone" name="timeZone" required />
-      <Helper class="mt-2" color="red">
-        {#if $errors.timeZone}
-          {$errors.timeZone}
-        {/if}
-      </Helper>
-    </div>
-  </div>
-  <div class="grid gap-4 md:grid-cols-3">
-    <div class="w-full">
-      <Label for="day" class="mb-2">{$translations.dayTitle}</Label>
-      <Select id="day" items={weekdayChoices} name="day" class="dark:bg-gray-600" />
-      <Helper class="mt-2" color="red">
-        {#if $errors.day}
-          {$errors.day}
-        {/if}
-      </Helper>
-    </div>
-    <div class="w-full">
-      <Label for="startTime" class="mb-2">{$translations.startTimeTitle}</Label>
-      <Input type="time" id="startTime" name="startTime" />
-      <Helper class="mt-2" color="red">
-        {#if $errors.startTime}
-          {$errors.startTime}
-        {/if}
-      </Helper>
-    </div>
-    <div class="w-full">
-      <Label for="duration" class="mb-2">{$translations.durationTitle}</Label>
-      <DurationSelector bind:duration={initialValues.duration} on:update={(e) => setData('duration', e.detail.duration)} />
-      <Helper class="mt-2" color="red">
-        {#if $errors.duration}
-          {$errors.duration}
-        {/if}
-      </Helper>
-    </div>
-  </div>
-  <div class="grid gap-4 md:grid-cols-2">
-    <div class="md:col-span-2">
-      <Label for="serviceBodyId" class="mb-2">{$translations.serviceBodyTitle}</Label>
-      <Select id="serviceBodyId" items={serviceBodyIdItems} name="serviceBodyId" class="dark:bg-gray-600" />
-      <Helper class="mt-2" color="red">
-        {#if $errors.serviceBodyId}
-          {$errors.serviceBodyId}
-        {/if}
-      </Helper>
-    </div>
-  </div>
-  <div class="grid gap-4 md:grid-cols-2">
-    <div class="w-full">
-      <Label for="email" class="mb-2">{$translations.emailTitle}</Label>
-      <Input type="email" id="email" name="email" />
-      <Helper class="mt-2" color="red">
-        {#if $errors.email}
-          {$errors.email}
-        {/if}
-      </Helper>
-    </div>
-    <div class="w-full">
-      <Label for="worldId" class="mb-2">{$translations.worldIdTitle}</Label>
-      <Input type="text" id="worldId" name="worldId" />
-      <Helper class="mt-2" color="red">
-        {#if $errors.worldId}
-          {$errors.worldId}
-        {/if}
-      </Helper>
-    </div>
-  </div>
-  <Hr classHr="my-8" />
-  <div class="grid gap-4 md:grid-cols-2">
-    <div class="md:col-span-2">
-      <Label for="venueType" class="mb-2">{$translations.venueTypeTitle}</Label>
-      <Select id="venueType" items={venueTypeItems} name="venueType" class="dark:bg-gray-600" />
-      <Helper class="mt-2" color="red">
-        {#if $errors.venueType}
-          {$errors.venueType}
-        {/if}
-      </Helper>
-    </div>
-  </div>
-  {#if selectedMeeting}
-    <div class="grid gap-4 md:grid-cols-2">
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="md:col-span-2">
+          <Label for="name" class="mb-2">{$translations.nameTitle}</Label>
+          <Input type="text" id="name" name="name" required />
+          <Helper class="mt-2" color="red">
+            {#if $errors.name}
+              {$errors.name}
+            {/if}
+          </Helper>
+        </div>
+      </div>
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="md:col-span-2">
+          <Label for="timeZone" class="mb-2">{$translations.timeZoneTitle}</Label>
+          <Input type="text" id="timeZone" name="timeZone" required />
+          <Helper class="mt-2" color="red">
+            {#if $errors.timeZone}
+              {$errors.timeZone}
+            {/if}
+          </Helper>
+        </div>
+      </div>
+      <div class="grid gap-4 md:grid-cols-3">
+        <div class="w-full">
+          <Label for="day" class="mb-2">{$translations.dayTitle}</Label>
+          <Select id="day" items={weekdayChoices} name="day" class="dark:bg-gray-600" />
+          <Helper class="mt-2" color="red">
+            {#if $errors.day}
+              {$errors.day}
+            {/if}
+          </Helper>
+        </div>
+        <div class="w-full">
+          <Label for="startTime" class="mb-2">{$translations.startTimeTitle}</Label>
+          <Input type="time" id="startTime" name="startTime" />
+          <Helper class="mt-2" color="red">
+            {#if $errors.startTime}
+              {$errors.startTime}
+            {/if}
+          </Helper>
+        </div>
+        <div class="w-full">
+          <Label for="duration" class="mb-2">{$translations.durationTitle}</Label>
+          <DurationSelector bind:duration={initialValues.duration} on:update={(e) => setData('duration', e.detail.duration)} />
+          <Helper class="mt-2" color="red">
+            {#if $errors.duration}
+              {$errors.duration}
+            {/if}
+          </Helper>
+        </div>
+      </div>
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="md:col-span-2">
+          <Label for="serviceBodyId" class="mb-2">{$translations.serviceBodyTitle}</Label>
+          <Select id="serviceBodyId" items={serviceBodyIdItems} name="serviceBodyId" class="dark:bg-gray-600" />
+          <Helper class="mt-2" color="red">
+            {#if $errors.serviceBodyId}
+              {$errors.serviceBodyId}
+            {/if}
+          </Helper>
+        </div>
+      </div>
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="w-full">
+          <Label for="email" class="mb-2">{$translations.emailTitle}</Label>
+          <Input type="email" id="email" name="email" />
+          <Helper class="mt-2" color="red">
+            {#if $errors.email}
+              {$errors.email}
+            {/if}
+          </Helper>
+        </div>
+        <div class="w-full">
+          <Label for="worldId" class="mb-2">{$translations.worldIdTitle}</Label>
+          <Input type="text" id="worldId" name="worldId" />
+          <Helper class="mt-2" color="red">
+            {#if $errors.worldId}
+              {$errors.worldId}
+            {/if}
+          </Helper>
+        </div>
+      </div>
       <div class="md:col-span-2">
-        <MapAccordion title={$translations.locationMapTitle}>
-          <div id="locationMap" bind:this={mapElement} />
-        </MapAccordion>
+        <Label for="formatIds" class="mb-2">{$translations.formatsTitle}</Label>
+        <MultiSelect id="formatIds" items={formatItems} name="formatIds" class="bg-gray-50 dark:bg-gray-600" bind:value={formatIdsSelected} let:item let:clear>
+          <Badge rounded color={badgeColor(item.value)} dismissable params={{ duration: 100 }} on:close={clear}>
+            {item.name}
+          </Badge>
+        </MultiSelect>
+        <Helper class="mt-2" color="red">
+          <!-- For some reason yup fills the errors store with empty objects for this array. The === 'string' ensures only server side errors will display. -->
+          {#if $errors.formatIds && typeof $errors.formatIds[0] === 'string'}
+            {$errors.formatIds}
+          {/if}
+        </Helper>
       </div>
     </div>
-  {/if}
-  <div class="grid gap-4 md:grid-cols-2">
-    <div class="w-full">
-      <Label for="longitude" class="mb-2">{$translations.longitudeTitle}</Label>
-      <Input type="text" id="longitude" name="longitude" bind:value={longitude} required />
-      <Helper class="mt-2" color="red">
-        {#if $errors.longitude}
-          {$errors.longitude}
-        {/if}
-      </Helper>
-    </div>
-    <div class="w-full">
-      <Label for="latitude" class="mb-2">{$translations.latitudeTitle}</Label>
-      <Input type="text" id="latitude" name="latitude" bind:value={latitude} required />
-      <Helper class="mt-2" color="red">
-        {#if $errors.latitude}
-          {$errors.latitude}
-        {/if}
-      </Helper>
-    </div>
-  </div>
-  <div class="grid gap-4 md:grid-cols-2">
-    <div class="md:col-span-2">
-      <Label for="locationText" class="mb-2">{$translations.locationTextTitle}</Label>
-      <Input type="text" id="locationText" name="locationText" />
-      <Helper class="mt-2" color="red">
-        {#if $errors.locationText}
-          {$errors.locationText}
-        {/if}
-      </Helper>
-    </div>
-  </div>
-  <div class="grid gap-4 md:grid-cols-2">
-    <div class="md:col-span-2">
-      <Label for="locationInfo" class="mb-2">{$translations.extraInfoTitle}</Label>
-      <Input type="text" id="locationInfo" name="locationInfo" />
-      <Helper class="mt-2" color="red">
-        {#if $errors.locationInfo}
-          {$errors.locationInfo}
-        {/if}
-      </Helper>
-    </div>
-  </div>
-  <div class="grid gap-4 md:grid-cols-2">
-    <div class="md:col-span-2">
-      <Label for="locationStreet" class="mb-2">{$translations.streetTitle}</Label>
-      <Input type="text" id="locationStreet" name="locationStreet" />
-      <Helper class="mt-2" color="red">
-        {#if $errors.locationStreet}
-          {$errors.locationStreet}
-        {/if}
-      </Helper>
-    </div>
-  </div>
-  <div class="grid gap-4 md:grid-cols-2">
-    <div class="w-full">
-      <Label for="locationNeighborhood" class="mb-2">{$translations.neighborhoodTitle}</Label>
-      <Input type="text" id="locationNeighborhood" name="locationNeighborhood" />
-      <Helper class="mt-2" color="red">
-        {#if $errors.locationNeighborhood}
-          {$errors.locationNeighborhood}
-        {/if}
-      </Helper>
-    </div>
-    <div class="w-full">
-      <Label for="locationCitySubsection" class="mb-2">{$translations.boroughTitle}</Label>
-      <Input type="text" id="locationCitySubsection" name="locationCitySubsection" />
-      <Helper class="mt-2" color="red">
-        {#if $errors.locationCitySubsection}
-          {$errors.locationCitySubsection}
-        {/if}
-      </Helper>
-    </div>
-  </div>
-  <div class="grid gap-4 md:grid-cols-2">
-    <div class="w-full">
-      <Label for="locationMunicipality" class="mb-2">{$translations.cityTownTitle}</Label>
-      <Input type="text" id="locationMunicipality" name="locationMunicipality" />
-      <Helper class="mt-2" color="red">
-        {#if $errors.locationMunicipality}
-          {$errors.locationMunicipality}
-        {/if}
-      </Helper>
-    </div>
-    <div class="w-full">
-      <Label for="locationSubProvince" class="mb-2">{$translations.countySubProvinceTitle}</Label>
-      <Input type="text" id="locationSubProvince" name="locationSubProvince" />
-      <Helper class="mt-2" color="red">
-        {#if $errors.locationSubProvince}
-          {$errors.locationSubProvince}
-        {/if}
-      </Helper>
-    </div>
-  </div>
-  <div class="grid gap-4 md:grid-cols-3">
-    <div class="w-full">
-      <Label for="locationProvince" class="mb-2">{$translations.stateTitle}</Label>
-      <Input type="text" id="locationProvince" name="locationProvince" />
-      <Helper class="mt-2" color="red">
-        {#if $errors.locationProvince}
-          {$errors.locationProvince}
-        {/if}
-      </Helper>
-    </div>
-    <div class="w-full">
-      <Label for="locationPostalCode1" class="mb-2">{$translations.zipCodeTitle}</Label>
-      <Input type="text" id="locationPostalCode1" name="locationPostalCode1" />
-      <Helper class="mt-2" color="red">
-        {#if $errors.locationPostalCode1}
-          {$errors.locationPostalCode1}
-        {/if}
-      </Helper>
-    </div>
-    <div class="w-full">
-      <Label for="locationNation" class="mb-2">{$translations.nationTitle}</Label>
-      <Input type="text" id="locationNation" name="locationNation" />
-      <Helper class="mt-2" color="red">
-        {#if $errors.locationNation}
-          {$errors.locationNation}
-        {/if}
-      </Helper>
-    </div>
-  </div>
-  <Hr classHr="my-8" />
-  <div class="grid gap-4 md:grid-cols-2">
-    <div class="md:col-span-2">
-      <Label for="phoneMeetingNumber" class="mb-2">{$translations.phoneMeetingTitle}</Label>
-      <Input type="text" id="phoneMeetingNumber" name="phoneMeetingNumber" />
-      <Helper class="mt-2" color="red">
-        {#if $errors.phoneMeetingNumber}
-          {$errors.phoneMeetingNumber}
-        {/if}
-      </Helper>
-    </div>
-  </div>
-  <div class="grid gap-4 md:grid-cols-2">
-    <div class="md:col-span-2">
-      <Label for="virtualMeetingLink" class="mb-2">{$translations.virtualMeetingTitle}</Label>
-      <Input type="text" id="virtualMeetingLink" name="virtualMeetingLink" />
-      <Helper class="mt-2" color="red">
-        {#if $errors.virtualMeetingLink}
-          {$errors.virtualMeetingLink}
-        {/if}
-      </Helper>
-    </div>
-  </div>
-  <div class="grid gap-4 md:grid-cols-2">
-    <div class="md:col-span-2">
-      <Label for="virtualMeetingAdditionalInfo" class="mb-2">{$translations.virtualMeetingAdditionalInfoTitle}</Label>
-      <Input type="text" id="virtualMeetingAdditionalInfo" name="virtualMeetingAdditionalInfo" />
-      <Helper class="mt-2" color="red">
-        {#if $errors.virtualMeetingAdditionalInfo}
-          {$errors.virtualMeetingAdditionalInfo}
-        {/if}
-      </Helper>
-    </div>
-  </div>
-  <Hr classHr="my-8" />
-  <div class="md:col-span-2">
-    <Label for="formatIds" class="mb-2">{$translations.formatsTitle}</Label>
-    <MultiSelect id="formatIds" items={formatItems} name="formatIds" class="bg-gray-50 dark:bg-gray-600" bind:value={formatIdsSelected} let:item let:clear>
-      <Badge rounded color={badgeColor(item.value)} dismissable params={{ duration: 100 }} on:close={clear}>
-        {item.name}
-      </Badge>
-    </MultiSelect>
-    <Helper class="mt-2" color="red">
-      <!-- For some reason yup fills the errors store with empty objects for this array. The === 'string' ensures only server side errors will display. -->
-      {#if $errors.formatIds && typeof $errors.formatIds[0] === 'string'}
-        {$errors.formatIds}
+
+    <div slot="tab-content-1">
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="md:col-span-2">
+          <Label for="venueType" class="mb-2">{$translations.venueTypeTitle}</Label>
+          <Select id="venueType" items={venueTypeItems} name="venueType" class="dark:bg-gray-600" />
+          <Helper class="mt-2" color="red">
+            {#if $errors.venueType}
+              {$errors.venueType}
+            {/if}
+          </Helper>
+        </div>
+      </div>
+      {#if selectedMeeting}
+        <div class="grid gap-4 md:grid-cols-2">
+          <div class="md:col-span-2">
+            <MapAccordion title={$translations.locationMapTitle}>
+              <div id="locationMap" bind:this={mapElement} />
+            </MapAccordion>
+          </div>
+        </div>
       {/if}
-    </Helper>
-  </div>
-  <Hr classHr="my-8" />
-  <div class="grid gap-4 md:grid-cols-2">
-    <div class="md:col-span-2">
-      <Label for="comments" class="mb-2">{$translations.commentsTitle}</Label>
-      <Input type="text" id="comments" name="comments" />
-      <Helper class="mt-2" color="red">
-        {#if $errors.comments}
-          {$errors.comments}
-        {/if}
-      </Helper>
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="w-full">
+          <Label for="longitude" class="mb-2">{$translations.longitudeTitle}</Label>
+          <Input type="text" id="longitude" name="longitude" bind:value={longitude} required />
+          <Helper class="mt-2" color="red">
+            {#if $errors.longitude}
+              {$errors.longitude}
+            {/if}
+          </Helper>
+        </div>
+        <div class="w-full">
+          <Label for="latitude" class="mb-2">{$translations.latitudeTitle}</Label>
+          <Input type="text" id="latitude" name="latitude" bind:value={latitude} required />
+          <Helper class="mt-2" color="red">
+            {#if $errors.latitude}
+              {$errors.latitude}
+            {/if}
+          </Helper>
+        </div>
+      </div>
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="md:col-span-2">
+          <Label for="locationText" class="mb-2">{$translations.locationTextTitle}</Label>
+          <Input type="text" id="locationText" name="locationText" />
+          <Helper class="mt-2" color="red">
+            {#if $errors.locationText}
+              {$errors.locationText}
+            {/if}
+          </Helper>
+        </div>
+      </div>
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="md:col-span-2">
+          <Label for="locationInfo" class="mb-2">{$translations.extraInfoTitle}</Label>
+          <Input type="text" id="locationInfo" name="locationInfo" />
+          <Helper class="mt-2" color="red">
+            {#if $errors.locationInfo}
+              {$errors.locationInfo}
+            {/if}
+          </Helper>
+        </div>
+      </div>
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="md:col-span-2">
+          <Label for="locationStreet" class="mb-2">{$translations.streetTitle}</Label>
+          <Input type="text" id="locationStreet" name="locationStreet" />
+          <Helper class="mt-2" color="red">
+            {#if $errors.locationStreet}
+              {$errors.locationStreet}
+            {/if}
+          </Helper>
+        </div>
+      </div>
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="w-full">
+          <Label for="locationNeighborhood" class="mb-2">{$translations.neighborhoodTitle}</Label>
+          <Input type="text" id="locationNeighborhood" name="locationNeighborhood" />
+          <Helper class="mt-2" color="red">
+            {#if $errors.locationNeighborhood}
+              {$errors.locationNeighborhood}
+            {/if}
+          </Helper>
+        </div>
+        <div class="w-full">
+          <Label for="locationCitySubsection" class="mb-2">{$translations.boroughTitle}</Label>
+          <Input type="text" id="locationCitySubsection" name="locationCitySubsection" />
+          <Helper class="mt-2" color="red">
+            {#if $errors.locationCitySubsection}
+              {$errors.locationCitySubsection}
+            {/if}
+          </Helper>
+        </div>
+      </div>
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="w-full">
+          <Label for="locationMunicipality" class="mb-2">{$translations.cityTownTitle}</Label>
+          <Input type="text" id="locationMunicipality" name="locationMunicipality" />
+          <Helper class="mt-2" color="red">
+            {#if $errors.locationMunicipality}
+              {$errors.locationMunicipality}
+            {/if}
+          </Helper>
+        </div>
+        <div class="w-full">
+          <Label for="locationSubProvince" class="mb-2">{$translations.countySubProvinceTitle}</Label>
+          <Input type="text" id="locationSubProvince" name="locationSubProvince" />
+          <Helper class="mt-2" color="red">
+            {#if $errors.locationSubProvince}
+              {$errors.locationSubProvince}
+            {/if}
+          </Helper>
+        </div>
+      </div>
+      <div class="grid gap-4 md:grid-cols-3">
+        <div class="w-full">
+          <Label for="locationProvince" class="mb-2">{$translations.stateTitle}</Label>
+          <Input type="text" id="locationProvince" name="locationProvince" />
+          <Helper class="mt-2" color="red">
+            {#if $errors.locationProvince}
+              {$errors.locationProvince}
+            {/if}
+          </Helper>
+        </div>
+        <div class="w-full">
+          <Label for="locationPostalCode1" class="mb-2">{$translations.zipCodeTitle}</Label>
+          <Input type="text" id="locationPostalCode1" name="locationPostalCode1" />
+          <Helper class="mt-2" color="red">
+            {#if $errors.locationPostalCode1}
+              {$errors.locationPostalCode1}
+            {/if}
+          </Helper>
+        </div>
+        <div class="w-full">
+          <Label for="locationNation" class="mb-2">{$translations.nationTitle}</Label>
+          <Input type="text" id="locationNation" name="locationNation" />
+          <Helper class="mt-2" color="red">
+            {#if $errors.locationNation}
+              {$errors.locationNation}
+            {/if}
+          </Helper>
+        </div>
+      </div>
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="md:col-span-2">
+          <Label for="phoneMeetingNumber" class="mb-2">{$translations.phoneMeetingTitle}</Label>
+          <Input type="text" id="phoneMeetingNumber" name="phoneMeetingNumber" />
+          <Helper class="mt-2" color="red">
+            {#if $errors.phoneMeetingNumber}
+              {$errors.phoneMeetingNumber}
+            {/if}
+          </Helper>
+        </div>
+      </div>
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="md:col-span-2">
+          <Label for="virtualMeetingLink" class="mb-2">{$translations.virtualMeetingTitle}</Label>
+          <Input type="text" id="virtualMeetingLink" name="virtualMeetingLink" />
+          <Helper class="mt-2" color="red">
+            {#if $errors.virtualMeetingLink}
+              {$errors.virtualMeetingLink}
+            {/if}
+          </Helper>
+        </div>
+      </div>
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="md:col-span-2">
+          <Label for="virtualMeetingAdditionalInfo" class="mb-2">{$translations.virtualMeetingAdditionalInfoTitle}</Label>
+          <Input type="text" id="virtualMeetingAdditionalInfo" name="virtualMeetingAdditionalInfo" />
+          <Helper class="mt-2" color="red">
+            {#if $errors.virtualMeetingAdditionalInfo}
+              {$errors.virtualMeetingAdditionalInfo}
+            {/if}
+          </Helper>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="grid gap-4 md:grid-cols-2">
-    <div class="w-full">
-      <Label for="busLines" class="mb-2">{$translations.busLinesTitle}</Label>
-      <Input type="text" id="busLines" name="busLines" />
-      <Helper class="mt-2" color="red">
-        {#if $errors.busLines}
-          {$errors.busLines}
-        {/if}
-      </Helper>
+
+    <div slot="tab-content-2">
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="md:col-span-2">
+          <Label for="comments" class="mb-2">{$translations.commentsTitle}</Label>
+          <Input type="text" id="comments" name="comments" />
+          <Helper class="mt-2" color="red">
+            {#if $errors.comments}
+              {$errors.comments}
+            {/if}
+          </Helper>
+        </div>
+      </div>
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="w-full">
+          <Label for="busLines" class="mb-2">{$translations.busLinesTitle}</Label>
+          <Input type="text" id="busLines" name="busLines" />
+          <Helper class="mt-2" color="red">
+            {#if $errors.busLines}
+              {$errors.busLines}
+            {/if}
+          </Helper>
+        </div>
+        <div class="w-full">
+          <Label for="trainLines" class="mb-2">{$translations.trainLinesTitle}</Label>
+          <Input type="text" id="trainLines" name="trainLines" />
+          <Helper class="mt-2" color="red">
+            {#if $errors.trainLines}
+              {$errors.trainLines}
+            {/if}
+          </Helper>
+        </div>
+      </div>
+      <div class="grid gap-4 md:grid-cols-3">
+        <div class="w-full">
+          <Label for="contactName1" class="mb-2">{$translations.contact1NameTitle}</Label>
+          <Input type="text" id="contactName1" name="contactName1" />
+          <Helper class="mt-2" color="red">
+            {#if $errors.contactName1}
+              {$errors.contactName1}
+            {/if}
+          </Helper>
+        </div>
+        <div class="w-full">
+          <Label for="contactPhone1" class="mb-2">{$translations.contact1PhoneTitle}</Label>
+          <Input type="text" id="contactPhone1" name="contactPhone1" />
+          <Helper class="mt-2" color="red">
+            {#if $errors.contactPhone1}
+              {$errors.contactPhone1}
+            {/if}
+          </Helper>
+        </div>
+        <div class="w-full">
+          <Label for="contactEmail1" class="mb-2">{$translations.contact1EmailTitle}</Label>
+          <Input type="text" id="contactEmail1" name="contactEmail1" />
+          <Helper class="mt-2" color="red">
+            {#if $errors.contactEmail1}
+              {$errors.contactEmail1}
+            {/if}
+          </Helper>
+        </div>
+      </div>
+      <div class="grid gap-4 md:grid-cols-3">
+        <div class="w-full">
+          <Label for="contactName2" class="mb-2">{$translations.contact2NameTitle}</Label>
+          <Input type="text" id="contactName2" name="contactName2" />
+          <Helper class="mt-2" color="red">
+            {#if $errors.contactName2}
+              {$errors.contactName2}
+            {/if}
+          </Helper>
+        </div>
+        <div class="w-full">
+          <Label for="contactPhone2" class="mb-2">{$translations.contact2PhoneTitle}</Label>
+          <Input type="text" id="contactPhone2" name="contactPhone2" />
+          <Helper class="mt-2" color="red">
+            {#if $errors.contactPhone2}
+              {$errors.contactPhone2}
+            {/if}
+          </Helper>
+        </div>
+        <div class="w-full">
+          <Label for="contactEmail2" class="mb-2">{$translations.contact2EmailTitle}</Label>
+          <Input type="text" id="contactEmail2" name="contactEmail" />
+          <Helper class="mt-2" color="red">
+            {#if $errors.contactEmail2}
+              {$errors.contactEmail2}
+            {/if}
+          </Helper>
+        </div>
+      </div>
     </div>
-    <div class="w-full">
-      <Label for="trainLines" class="mb-2">{$translations.trainLinesTitle}</Label>
-      <Input type="text" id="trainLines" name="trainLines" />
-      <Helper class="mt-2" color="red">
-        {#if $errors.trainLines}
-          {$errors.trainLines}
-        {/if}
-      </Helper>
-    </div>
-  </div>
-  <div class="grid gap-4 md:grid-cols-3">
-    <div class="w-full">
-      <Label for="contactName1" class="mb-2">{$translations.contact1NameTitle}</Label>
-      <Input type="text" id="contactName1" name="contactName1" />
-      <Helper class="mt-2" color="red">
-        {#if $errors.contactName1}
-          {$errors.contactName1}
-        {/if}
-      </Helper>
-    </div>
-    <div class="w-full">
-      <Label for="contactPhone1" class="mb-2">{$translations.contact1PhoneTitle}</Label>
-      <Input type="text" id="contactPhone1" name="contactPhone1" />
-      <Helper class="mt-2" color="red">
-        {#if $errors.contactPhone1}
-          {$errors.contactPhone1}
-        {/if}
-      </Helper>
-    </div>
-    <div class="w-full">
-      <Label for="contactEmail1" class="mb-2">{$translations.contact1EmailTitle}</Label>
-      <Input type="text" id="contactEmail1" name="contactEmail1" />
-      <Helper class="mt-2" color="red">
-        {#if $errors.contactEmail1}
-          {$errors.contactEmail1}
-        {/if}
-      </Helper>
-    </div>
-  </div>
-  <div class="grid gap-4 md:grid-cols-3">
-    <div class="w-full">
-      <Label for="contactName2" class="mb-2">{$translations.contact2NameTitle}</Label>
-      <Input type="text" id="contactName2" name="contactName2" />
-      <Helper class="mt-2" color="red">
-        {#if $errors.contactName2}
-          {$errors.contactName2}
-        {/if}
-      </Helper>
-    </div>
-    <div class="w-full">
-      <Label for="contactPhone2" class="mb-2">{$translations.contact2PhoneTitle}</Label>
-      <Input type="text" id="contactPhone2" name="contactPhone2" />
-      <Helper class="mt-2" color="red">
-        {#if $errors.contactPhone2}
-          {$errors.contactPhone2}
-        {/if}
-      </Helper>
-    </div>
-    <div class="w-full">
-      <Label for="contactEmail2" class="mb-2">{$translations.contact2EmailTitle}</Label>
-      <Input type="text" id="contactEmail2" name="contactEmail" />
-      <Helper class="mt-2" color="red">
-        {#if $errors.contactEmail2}
-          {$errors.contactEmail2}
-        {/if}
-      </Helper>
-    </div>
-  </div>
+  </BasicTabs>
   <Hr classHr="my-8" />
   <div class="grid gap-4 md:grid-cols-2">
     <div class="md:col-span-2">

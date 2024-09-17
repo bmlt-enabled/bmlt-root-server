@@ -107,6 +107,9 @@ const strings = new LocalizedStrings({
     startTimeTitle: 'Start Time', // TODO: translate
     stateTitle: 'State/Province', // TODO: translate
     streetTitle: 'Street', // TODO: translate
+    tabsBasic: 'Basic', // TODO: translate
+    tabsLocation: 'Location', // TODO: translate
+    tabsOther: 'Other', // TODO: translate
     time: 'Time',
     timeAfternoon: 'Afternoon',
     timeEvening: 'Evening',
@@ -231,6 +234,9 @@ const strings = new LocalizedStrings({
     startTimeTitle: 'Start Time',
     stateTitle: 'State/Province',
     streetTitle: 'Street',
+    tabsBasic: 'Basic',
+    tabsLocation: 'Location',
+    tabsOther: 'Other',
     time: 'Time',
     timeAfternoon: 'Afternoon',
     timeEvening: 'Evening',
