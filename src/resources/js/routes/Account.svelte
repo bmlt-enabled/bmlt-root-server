@@ -42,7 +42,7 @@
   let savedUser: User;
   let savedData: { displayName: string; userType: string; email: string; username: string; description: string; password: string };
 
-  const { data, errors, form, isDirty } = createForm({
+  const { data, errors, form, isDirty, reset } = createForm({
     initialValues: initialValues,
     onSubmit: async (values) => {
       spinner.show();
@@ -186,10 +186,17 @@
           {/if}
         </Helper>
       </div>
-      <div class="md">
-        <Button type="submit" class="w-full" disabled={!$isDirty} on:click={disableButtonHack}>
-          {$translations.applyChangesTitle}
-        </Button>
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="w-full">
+          <Button type="button" class="w-full" color="red" disabled={!$isDirty} on:click={reset}>
+            {$translations.clearFormTitle}
+          </Button>
+        </div>
+        <div class="w-full">
+          <Button type="submit" class="w-full" disabled={!$isDirty} on:click={disableButtonHack}>
+            {$translations.applyChangesTitle}
+          </Button>
+        </div>
       </div>
       <Accordion>
         <AccordionItem>

@@ -23,6 +23,7 @@ const strings = new LocalizedStrings({
     chooseDay: 'Tag wählen',
     chooseStartTime: 'Startzeit wählen',
     cityTownTitle: 'Stadt',
+    clearFormTitle: 'Clear Form', // TODO: translate
     closeWithoutSaving: 'Close without saving', // TODO: translate
     commentsTitle: 'Comments', // TODO: translate
     confirmDeleteFormat: 'Are you sure you want to delete this format?', // TODO: translate
@@ -150,6 +151,7 @@ const strings = new LocalizedStrings({
     chooseDay: 'Choose day',
     chooseStartTime: 'Choose start time',
     cityTownTitle: 'City/Town',
+    clearFormTitle: 'Clear Form',
     closeWithoutSaving: 'Close without saving',
     commentsTitle: 'Comments',
     confirmDeleteFormat: 'Are you sure you want to delete this format?',
