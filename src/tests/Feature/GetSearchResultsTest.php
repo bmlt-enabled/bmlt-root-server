@@ -1698,6 +1698,31 @@ class GetSearchResultsTest extends TestCase
         $this->assertEquals($rootServer->id, $data[0]['root_server_id']);
     }
 
+    public function testDataFieldKeySourceIdWithAggregatorDisabled()
+    {
+        $rootServer = $this->createRootServer(1);
+        $meeting1 = $this->createMeeting();
+        $meeting1->rootserver()->associate($rootServer);
+        $meeting1->save();
+        $data = collect($this->get("/client_interface/json/?switcher=GetSearchResults&root_server_ids=$rootServer->id&data_field_key=source_id")
+            ->assertStatus(200)
+            ->json());
+        $this->assertArrayNotHasKey('source_id', $data[0]);
+    }
+
+    public function testDataFieldKeySourceIdWithAggregatorEnabled()
+    {
+        LegacyConfig::set('aggregator_mode_enabled', true);
+        $rootServer = $this->createRootServer(1);
+        $meeting1 = $this->createMeeting();
+        $meeting1->rootserver()->associate($rootServer);
+        $meeting1->save();
+        $data = collect($this->get("/client_interface/json/?switcher=GetSearchResults&root_server_ids=$rootServer->id&data_field_key=source_id")
+            ->assertStatus(200)
+            ->json());
+        $this->assertEquals($meeting1->source_id, $data[0]['source_id']);
+    }
+
     public function testDataFieldKeyDataFields()
     {
         $dataFieldTemplates = MeetingData::query()->where('meetingid_bigint', 0)->get();
