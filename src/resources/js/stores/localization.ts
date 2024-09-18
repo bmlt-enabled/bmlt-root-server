@@ -14,7 +14,8 @@ const strings = new LocalizedStrings({
     addServiceBody: 'Service-Body hinzufügen',
     addUser: 'Benutzer hinzufügen',
     administratorTitle: 'Administrator/Administratorin', // TODO: translate this way, or just Administrator?
-    adminTitle: 'Admin', // TODO: translate,
+    adminTitle: 'Admin', // TODO: translate
+    allDays: 'All days', // TODO: translate
     anteMeridiem: 'AM',
     applyChangesTitle: 'Änderung anwenden',
     boroughTitle: 'Borough/City Subsection', // TODO: translate
@@ -96,7 +97,9 @@ const strings = new LocalizedStrings({
     postMeridiem: 'PM',
     published: 'Published',
     rootServerTitle: 'Root Server',
+    search: 'Search', // TODO: translate
     searchByName: 'Search by name', // TODO: translate
+    searchMeetings: 'Search meetings...', // TODO: translate
     serverAdministratorTitle: 'Main Server Administrator', // TODO: translate
     serviceBodiesNoParent: 'No Parent (Top-Level)', // TODO: translate
     serviceBodiesTitle: 'Service Bodies', // TODO: translate
@@ -143,6 +146,7 @@ const strings = new LocalizedStrings({
     addUser: 'Add User',
     administratorTitle: 'Administrator',
     adminTitle: 'Admin',
+    allDays: 'All days',
     anteMeridiem: 'AM',
     applyChangesTitle: 'Apply Changes',
     boroughTitle: 'Borough/City Subsection',
@@ -224,7 +228,9 @@ const strings = new LocalizedStrings({
     postMeridiem: 'PM',
     published: 'Published',
     rootServerTitle: 'Root Server',
+    search: 'Search',
     searchByName: 'Search by name',
+    searchMeetings: 'Search meetings...',
     serverAdministratorTitle: 'Main Server Administrator',
     serviceBodiesNoParent: 'No Parent (Top-Level)',
     serviceBodiesTitle: 'Service Bodies',
