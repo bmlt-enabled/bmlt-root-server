@@ -9,6 +9,7 @@ import {
   type FormatCreate,
   type FormatPartialUpdate,
   type FormatUpdate,
+  type GetMeetingsRequest,
   type Meeting,
   type MeetingCreate,
   type MeetingPartialUpdate,
@@ -156,8 +157,14 @@ class ApiClientWrapper {
     return this.api.authLogout();
   }
 
-  async getMeetings(): Promise<Meeting[]> {
-    return this.api.getMeetings();
+  async getMeetings({ meetingIds = '', days = '', serviceBodyIds = '', searchString = '' }: GetMeetingsRequest = {}): Promise<Meeting[]> {
+    const params = {
+      ...(searchString && { searchString }),
+      ...(days && { days }),
+      ...(meetingIds && { meetingIds }),
+      ...(serviceBodyIds && { serviceBodyIds })
+    };
+    return this.api.getMeetings(params);
   }
 
   async getMeeting(id: number): Promise<Meeting> {
