@@ -24,17 +24,12 @@
   const showPage: number = 5;
   let totalPages: number = 0;
   let pagesToShow: number[] = [];
-  let selectedDays: string[] = [];
   let selectedTimes: string[] = [];
   let selectedPublished: string[] = [];
   let selectedMeeting: Meeting | null;
   let showModal = false;
   let sortColumn: string | null = null;
   let sortDirection: 'asc' | 'desc' = 'asc';
-  let weekdayChoices = $translations.daysOfWeek.map((day, index) => ({
-    value: index.toString(),
-    label: day
-  }));
   let timeChoices = [
     { value: 'morning', label: $translations.timeMorning },
     { value: 'afternoon', label: $translations.timeAfternoon },
@@ -47,7 +42,6 @@
 
   $: filteredItems = meetings
     .filter((meeting) => {
-      const matchesDay = selectedDays.length > 0 ? selectedDays.includes(meeting.day.toString()) : true;
       const matchesPublished = selectedPublished.length > 0 ? selectedPublished.includes(String(meeting.published)) : true;
       const matchesSearch =
         // search by name, id or location
@@ -70,7 +64,7 @@
           }
           return false;
         });
-      return matchesTime && matchesPublished && matchesDay && matchesSearch;
+      return matchesTime && matchesPublished && matchesSearch;
     })
     .sort((a, b) => {
       // Sort by day then time
@@ -192,7 +186,7 @@
   $: currentPageItems = filteredItems.slice(currentPosition, currentPosition + itemsPerPage);
 </script>
 
-<TableSearch placeholder="Search" hoverable={true} bind:inputValue={searchTerm} {divClass} {innerDivClass} {searchClass} {classInput}>
+<TableSearch placeholder={$translations.filter} hoverable={true} bind:inputValue={searchTerm} {divClass} {innerDivClass} {searchClass} {classInput}>
   <div slot="header" class="flex w-full flex-shrink-0 flex-col items-stretch justify-end space-y-2 md:w-auto md:flex-row md:items-center md:space-x-3 md:space-y-0">
     {#if $authenticatedUser?.type !== 'observer'}
       <Button on:click={() => handleAdd()}><PlusOutline class="mr-2 h-3.5 w-3.5" />{$translations.addMeeting}</Button>
@@ -205,11 +199,6 @@
     <Dropdown class="w-48 space-y-2 p-3 text-sm">
       <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">{$translations.chooseStartTime}</h6>
       <Checkbox name="times" choices={timeChoices} bind:group={selectedTimes} groupInputClass="ms-2" groupLabelClass="" />
-    </Dropdown>
-    <Button color="alternative">{$translations.day}<FilterSolid class="ml-2 h-3 w-3 " /></Button>
-    <Dropdown class="w-48 space-y-2 p-3 text-sm">
-      <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">{$translations.chooseDay}</h6>
-      <Checkbox name="weekdays" choices={weekdayChoices} bind:group={selectedDays} groupInputClass="ms-2" groupLabelClass="" />
     </Dropdown>
   </div>
   <TableHead>
