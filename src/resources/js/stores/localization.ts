@@ -57,6 +57,7 @@ const strings = new LocalizedStrings({
     editUser: 'Benutzer bearbeiten',
     emailTitle: 'E-Mail-Adresse',
     extraInfoTitle: 'Extra Info', // TODO: translate
+    filter: 'Filter', // TODO: translate
     formatsTitle: 'Formate',
     helplineTitle: 'Helpline',
     homeTitle: 'Startseite',
@@ -188,6 +189,7 @@ const strings = new LocalizedStrings({
     editUser: 'Edit User',
     emailTitle: 'Email',
     extraInfoTitle: 'Extra Info',
+    filter: 'Filter',
     formatsTitle: 'Formats',
     helplineTitle: 'Helpline',
     homeTitle: 'Home',
