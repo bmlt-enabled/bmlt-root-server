@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch, Button, Dropdown, Checkbox, ButtonGroup } from 'flowbite-svelte';
+  import { TableBody, Select, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch, Button, Dropdown, Checkbox, ButtonGroup } from 'flowbite-svelte';
 
   import { PlusOutline, FilterSolid, ChevronDownOutline, ChevronUpOutline, ChevronRightOutline, ChevronLeftOutline } from 'flowbite-svelte-icons';
 
@@ -9,11 +9,14 @@
   import { authenticatedUser } from '../stores/apiCredentials';
   import type { Meeting, ServiceBody, Format } from 'bmlt-root-server-client';
   import MeetingEditModal from './MeetingEditModal.svelte';
+  import { spinner } from '../stores/spinner';
+  import RootServerApi from '../lib/RootServerApi';
 
-  export let meetings: Meeting[];
   export let formats: Format[];
   export let serviceBodies: ServiceBody[];
 
+  let meetings: Meeting[] = [];
+  let selectedDays: string = '';
   let divClass = 'bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden';
   let innerDivClass = 'flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4';
   let searchClass = 'w-full md:w-1/2 relative';
@@ -30,15 +33,40 @@
   let showModal = false;
   let sortColumn: string | null = null;
   let sortDirection: 'asc' | 'desc' = 'asc';
-  let timeChoices = [
+  const weekdayChoices = [
+    { value: '', name: $translations.allDays },
+    ...$translations.daysOfWeek.map((day, index) => ({
+      value: index,
+      name: day
+    }))
+  ];
+  const timeChoices = [
     { value: 'morning', label: $translations.timeMorning },
     { value: 'afternoon', label: $translations.timeAfternoon },
     { value: 'evening', label: $translations.timeEvening }
   ];
-  let publishedChoices = [
+  const publishedChoices = [
     { value: 'true', label: $translations.published },
     { value: 'false', label: $translations.unpublished }
   ];
+
+  async function getMeetings(searchString: string = '', days: string = ''): Promise<void> {
+    try {
+      spinner.show();
+      meetings = await RootServerApi.getMeetings({
+        searchString,
+        days
+      });
+    } catch (error: any) {
+      await RootServerApi.handleErrors(error);
+    } finally {
+      spinner.hide();
+    }
+  }
+
+  function searchMeetings() {
+    getMeetings(searchTerm, selectedDays);
+  }
 
   $: filteredItems = meetings
     .filter((meeting) => {
@@ -188,60 +216,71 @@
 
 <TableSearch placeholder={$translations.filter} hoverable={true} bind:inputValue={searchTerm} {divClass} {innerDivClass} {searchClass} {classInput}>
   <div slot="header" class="flex w-full flex-shrink-0 flex-col items-stretch justify-end space-y-2 md:w-auto md:flex-row md:items-center md:space-x-3 md:space-y-0">
-    {#if $authenticatedUser?.type !== 'observer'}
+    <Select class="w-40 space-y-2 p-3 text-sm" id="day" placeholder={$translations.day} items={weekdayChoices} bind:value={selectedDays} name="day" />
+    {#if meetings.length}
+      <Button color="alternative">{$translations.published}<FilterSolid class="ml-2 h-3 w-3 " /></Button>
+      <Dropdown class="w-48 space-y-2 p-3 text-sm">
+        <Checkbox name="times" choices={publishedChoices} bind:group={selectedPublished} groupInputClass="ms-2" groupLabelClass="" />
+      </Dropdown>
+      <Button color="alternative">{$translations.time}<FilterSolid class="ml-2 h-3 w-3 " /></Button>
+      <Dropdown class="w-48 space-y-2 p-3 text-sm">
+        <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">{$translations.chooseStartTime}</h6>
+        <Checkbox name="times" choices={timeChoices} bind:group={selectedTimes} groupInputClass="ms-2" groupLabelClass="" />
+      </Dropdown>
+    {/if}
+    <Button on:click={searchMeetings}>{$translations.search}</Button>
+    {#if $authenticatedUser?.type !== 'observer' && meetings.length}
       <Button on:click={() => handleAdd()}><PlusOutline class="mr-2 h-3.5 w-3.5" />{$translations.addMeeting}</Button>
     {/if}
-    <Button color="alternative">{$translations.published}<FilterSolid class="ml-2 h-3 w-3 " /></Button>
-    <Dropdown class="w-48 space-y-2 p-3 text-sm">
-      <Checkbox name="times" choices={publishedChoices} bind:group={selectedPublished} groupInputClass="ms-2" groupLabelClass="" />
-    </Dropdown>
-    <Button color="alternative">{$translations.time}<FilterSolid class="ml-2 h-3 w-3 " /></Button>
-    <Dropdown class="w-48 space-y-2 p-3 text-sm">
-      <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">{$translations.chooseStartTime}</h6>
-      <Checkbox name="times" choices={timeChoices} bind:group={selectedTimes} groupInputClass="ms-2" groupLabelClass="" />
-    </Dropdown>
   </div>
   <TableHead>
-    <TableHeadCell padding="px-4 py-3" scope="col" on:click={() => handleSort('day')}>
-      Day
-      {#if sortColumn === 'day'}
-        {#if sortDirection === 'asc'}
-          <ChevronUpOutline class="ml-1 inline-block h-3 w-3" />
-        {:else}
-          <ChevronDownOutline class="ml-1 inline-block h-3 w-3" />
+    {#if meetings.length}
+      <TableHeadCell padding="px-4 py-3" scope="col" on:click={() => handleSort('day')}>
+        Day
+        {#if sortColumn === 'day'}
+          {#if sortDirection === 'asc'}
+            <ChevronUpOutline class="ml-1 inline-block h-3 w-3" />
+          {:else}
+            <ChevronDownOutline class="ml-1 inline-block h-3 w-3" />
+          {/if}
         {/if}
-      {/if}
-    </TableHeadCell>
-    <TableHeadCell padding="px-4 py-3" scope="col" on:click={() => handleSort('startTime')}>
-      Time
-      {#if sortColumn === 'startTime'}
-        {#if sortDirection === 'asc'}
-          <ChevronUpOutline class="ml-1 inline-block h-3 w-3" />
-        {:else}
-          <ChevronDownOutline class="ml-1 inline-block h-3 w-3" />
+      </TableHeadCell>
+      <TableHeadCell padding="px-4 py-3" scope="col" on:click={() => handleSort('startTime')}>
+        Time
+        {#if sortColumn === 'startTime'}
+          {#if sortDirection === 'asc'}
+            <ChevronUpOutline class="ml-1 inline-block h-3 w-3" />
+          {:else}
+            <ChevronDownOutline class="ml-1 inline-block h-3 w-3" />
+          {/if}
         {/if}
-      {/if}
-    </TableHeadCell>
-    <TableHeadCell padding="px-4 py-3" scope="col" on:click={() => handleSort('name')}>
-      Meeting
-      {#if sortColumn === 'name'}
-        {#if sortDirection === 'asc'}
-          <ChevronUpOutline class="ml-1 inline-block h-3 w-3" />
-        {:else}
-          <ChevronDownOutline class="ml-1 inline-block h-3 w-3" />
+      </TableHeadCell>
+      <TableHeadCell padding="px-4 py-3" scope="col" on:click={() => handleSort('name')}>
+        Meeting
+        {#if sortColumn === 'name'}
+          {#if sortDirection === 'asc'}
+            <ChevronUpOutline class="ml-1 inline-block h-3 w-3" />
+          {:else}
+            <ChevronDownOutline class="ml-1 inline-block h-3 w-3" />
+          {/if}
         {/if}
-      {/if}
-    </TableHeadCell>
-    <TableHeadCell padding="px-4 py-3" scope="col" on:click={() => handleSort('locationStreet')}>
-      Location
-      {#if sortColumn === 'location'}
-        {#if sortDirection === 'asc'}
-          <ChevronUpOutline class="ml-1 inline-block h-3 w-3" />
-        {:else}
-          <ChevronDownOutline class="ml-1 inline-block h-3 w-3" />
+      </TableHeadCell>
+      <TableHeadCell padding="px-4 py-3" scope="col" on:click={() => handleSort('locationStreet')}>
+        Location
+        {#if sortColumn === 'location'}
+          {#if sortDirection === 'asc'}
+            <ChevronUpOutline class="ml-1 inline-block h-3 w-3" />
+          {:else}
+            <ChevronDownOutline class="ml-1 inline-block h-3 w-3" />
+          {/if}
         {/if}
-      {/if}
-    </TableHeadCell>
+      </TableHeadCell>
+    {:else}
+      <TableHeadCell style="background-color: rgb(31 41 55);" scope="col"></TableHeadCell>
+      <TableHeadCell style="background-color: rgb(31 41 55);" scope="col"></TableHeadCell>
+      <TableHeadCell style="background-color: rgb(31 41 55);" scope="col"></TableHeadCell>
+      <TableHeadCell style="background-color: rgb(31 41 55);" scope="col"></TableHeadCell>
+    {/if}
   </TableHead>
   <TableBody>
     {#each currentPageItems as meeting (meeting.id)}
@@ -257,25 +296,26 @@
       </TableBodyRow>
     {/each}
   </TableBody>
-
   <div slot="footer" class="flex flex-col items-start justify-between space-y-3 p-4 md:flex-row md:items-center md:space-y-0" aria-label="Table navigation">
-    <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
-      {$translations.paginationShowing}
-      <span class="font-semibold text-gray-900 dark:text-white">{startRange}-{endRange}</span>
-      {$translations.paginationOf}
-      <span class="font-semibold text-gray-900 dark:text-white">{filteredItems.length}</span>
-    </span>
-    <ButtonGroup>
-      <Button on:click={loadPreviousPage} disabled={currentPosition === 0}>
-        <ChevronLeftOutline size="xs" class="m-1.5" />
-      </Button>
-      {#each pagesToShow as pageNumber}
-        <Button on:click={() => goToPage(pageNumber)}>{pageNumber}</Button>
-      {/each}
-      <Button on:click={loadNextPage} disabled={currentPosition + itemsPerPage >= filteredItems.length}>
-        <ChevronRightOutline size="xs" class="m-1.5" />
-      </Button>
-    </ButtonGroup>
+    {#if meetings.length}
+      <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+        {$translations.paginationShowing}
+        <span class="font-semibold text-gray-900 dark:text-white">{startRange}-{endRange}</span>
+        {$translations.paginationOf}
+        <span class="font-semibold text-gray-900 dark:text-white">{filteredItems.length}</span>
+      </span>
+      <ButtonGroup>
+        <Button on:click={loadPreviousPage} disabled={currentPosition === 0}>
+          <ChevronLeftOutline size="xs" class="m-1.5" />
+        </Button>
+        {#each pagesToShow as pageNumber}
+          <Button on:click={() => goToPage(pageNumber)}>{pageNumber}</Button>
+        {/each}
+        <Button on:click={loadNextPage} disabled={currentPosition + itemsPerPage >= filteredItems.length}>
+          <ChevronRightOutline size="xs" class="m-1.5" />
+        </Button>
+      </ButtonGroup>
+    {/if}
   </div>
 </TableSearch>
 
