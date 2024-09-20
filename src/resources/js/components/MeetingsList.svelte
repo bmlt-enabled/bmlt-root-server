@@ -18,6 +18,7 @@
 
   let meetings: Meeting[] = [];
   let selectedDays: string[] = [];
+  let selectedServiceBodies: string[] = [];
   let divClass = 'bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-visible';
   let innerDivClass = 'flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4';
   let searchClass = 'w-full md:w-1/2 relative';
@@ -48,12 +49,13 @@
     { value: 'false', label: $translations.unpublished }
   ];
 
-  async function getMeetings(searchString: string = '', days: string = ''): Promise<void> {
+  async function getMeetings(searchString: string = '', days: string = '', serviceBodyIds: string = ''): Promise<void> {
     try {
       spinner.show();
       meetings = await RootServerApi.getMeetings({
         searchString,
-        days
+        days,
+        serviceBodyIds
       });
     } catch (error: any) {
       await RootServerApi.handleErrors(error);
@@ -63,7 +65,7 @@
   }
 
   function searchMeetings() {
-    getMeetings(searchTerm, selectedDays.join(','));
+    getMeetings(searchTerm, selectedDays.join(','), selectedServiceBodies.join(','));
   }
 
   $: filteredItems = meetings
@@ -216,7 +218,7 @@
   <div slot="header" class="flex w-full flex-shrink-0 flex-col items-stretch justify-end space-y-2 md:w-auto md:flex-row md:items-center md:space-x-3 md:space-y-0">
     <Button color="alternative">{$translations.serviceBodiesTitle}</Button>
     <Dropdown class="top-full z-50 w-80 space-y-2 p-3 text-sm">
-      <ServiceBodiesTree {serviceBodies} />
+      <ServiceBodiesTree {serviceBodies} bind:selectedValues={selectedServiceBodies} />
     </Dropdown>
     <Button color="alternative">{$translations.day}</Button>
     <Dropdown class="top-full z-50 w-48 space-y-2 p-3 text-sm">

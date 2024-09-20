@@ -19,7 +19,6 @@
 
   const toggleCheck = () => {
     tree.checked = !tree.checked;
-    console.log(tree);
     dispatch('toggle', {
       node: tree
     });

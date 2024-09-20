@@ -12,6 +12,7 @@
   }
 
   export let serviceBodies: ServiceBody[];
+  export let selectedValues: string[] = [];
 
   let trees: TreeNode[] = convertServiceBodiesToTreeNodes(serviceBodies);
 
@@ -87,6 +88,23 @@
       parent = treeMap[parent.label];
     }
     trees = trees;
+    selectedValues = collectSelectedValues(trees);
+  }
+
+  function collectSelectedValues(trees: TreeNode[]): string[] {
+    const selected: string[] = [];
+
+    function traverse(node: TreeNode) {
+      if (node.checked) {
+        selected.push(node.value);
+      }
+      if (node.children) {
+        node.children.forEach(traverse);
+      }
+    }
+
+    trees.forEach(traverse);
+    return selected;
   }
 </script>
 
