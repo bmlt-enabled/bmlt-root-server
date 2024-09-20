@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { TableBody, Select, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch, Button, Dropdown, Checkbox, ButtonGroup } from 'flowbite-svelte';
+  import { TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch, Button, Dropdown, Checkbox, ButtonGroup } from 'flowbite-svelte';
 
   import { PlusOutline, FilterSolid, ChevronDownOutline, ChevronUpOutline, ChevronRightOutline, ChevronLeftOutline } from 'flowbite-svelte-icons';
 
@@ -11,13 +11,15 @@
   import MeetingEditModal from './MeetingEditModal.svelte';
   import { spinner } from '../stores/spinner';
   import RootServerApi from '../lib/RootServerApi';
+  import ServiceBodiesTree from './ServiceBodiesTree.svelte';
 
   export let formats: Format[];
   export let serviceBodies: ServiceBody[];
 
   let meetings: Meeting[] = [];
-  let selectedDays: string = '';
-  let divClass = 'bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden';
+  let selectedDays: string[] = [];
+  let selectedServiceBodies: string[] = [];
+  let divClass = 'bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-visible';
   let innerDivClass = 'flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4';
   let searchClass = 'w-full md:w-1/2 relative';
   let classInput = 'text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2  pl-10';
@@ -33,13 +35,10 @@
   let showModal = false;
   let sortColumn: string | null = null;
   let sortDirection: 'asc' | 'desc' = 'asc';
-  const weekdayChoices = [
-    { value: '', name: $translations.allDays },
-    ...$translations.daysOfWeek.map((day, index) => ({
-      value: index,
-      name: day
-    }))
-  ];
+  const weekdayChoices = $translations.daysOfWeek.map((day, index) => ({
+    value: index.toString(),
+    label: day
+  }));
   const timeChoices = [
     { value: 'morning', label: $translations.timeMorning },
     { value: 'afternoon', label: $translations.timeAfternoon },
@@ -50,12 +49,13 @@
     { value: 'false', label: $translations.unpublished }
   ];
 
-  async function getMeetings(searchString: string = '', days: string = ''): Promise<void> {
+  async function getMeetings(searchString: string = '', days: string = '', serviceBodyIds: string = ''): Promise<void> {
     try {
       spinner.show();
       meetings = await RootServerApi.getMeetings({
         searchString,
-        days
+        days,
+        serviceBodyIds
       });
     } catch (error: any) {
       await RootServerApi.handleErrors(error);
@@ -65,7 +65,7 @@
   }
 
   function searchMeetings() {
-    getMeetings(searchTerm, selectedDays);
+    getMeetings(searchTerm, selectedDays.join(','), selectedServiceBodies.join(','));
   }
 
   $: filteredItems = meetings
@@ -216,7 +216,15 @@
 
 <TableSearch placeholder={$translations.filter} hoverable={true} bind:inputValue={searchTerm} {divClass} {innerDivClass} {searchClass} {classInput}>
   <div slot="header" class="flex w-full flex-shrink-0 flex-col items-stretch justify-end space-y-2 md:w-auto md:flex-row md:items-center md:space-x-3 md:space-y-0">
-    <Select class="w-40 space-y-2 p-3 text-sm" id="day" placeholder={$translations.day} items={weekdayChoices} bind:value={selectedDays} name="day" />
+    <Button color="alternative">{$translations.serviceBodiesTitle}</Button>
+    <Dropdown class="top-full z-50 w-80 space-y-2 p-3 text-sm">
+      <ServiceBodiesTree {serviceBodies} bind:selectedValues={selectedServiceBodies} />
+    </Dropdown>
+    <Button color="alternative">{$translations.day}</Button>
+    <Dropdown class="top-full z-50 w-48 space-y-2 p-3 text-sm">
+      <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">{$translations.chooseDay}</h6>
+      <Checkbox name="weekdays" choices={weekdayChoices} bind:group={selectedDays} groupInputClass="ms-2" groupLabelClass="" />
+    </Dropdown>
     {#if meetings.length}
       <Button color="alternative">{$translations.published}<FilterSolid class="ml-2 h-3 w-3 " /></Button>
       <Dropdown class="w-48 space-y-2 p-3 text-sm">
