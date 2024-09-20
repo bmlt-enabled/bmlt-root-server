@@ -2,12 +2,12 @@
   import { createEventDispatcher } from 'svelte';
 
   interface TreeNode {
-      label: string;
-      value: string;
-      checked?: boolean;
-      indeterminate?: boolean;
-      expanded?: boolean;
-      children?: TreeNode[];
+    label: string;
+    value: string;
+    checked?: boolean;
+    indeterminate?: boolean;
+    expanded?: boolean;
+    children?: TreeNode[];
   }
 
   export let tree: TreeNode;
