@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { Checkbox, Li } from 'flowbite-svelte';
+
   import { createEventDispatcher } from 'svelte';
 
   interface TreeNode {
@@ -26,25 +28,21 @@
 </script>
 
 <ul>
-  <li>
+  <Li>
     {#if tree.children}
-      <input type="checkbox" data-label={tree.label} checked={tree.checked} indeterminate={tree.indeterminate} on:click={toggleCheck} />
-      <button type="button" on:click={toggleExpansion} class="arrow" class:arrowDown={tree.expanded} aria-expanded={tree.expanded} aria-label="Toggle node"></button>
-      <button type="button" on:click={toggleCheck} aria-label="Toggle check">
-        {tree.label}
-      </button>
+      <Checkbox data-label={tree.label} checked={tree.checked} indeterminate={tree.indeterminate} on:click={toggleCheck}
+        >{tree.label}&nbsp;<button type="button" on:click={toggleExpansion} class="arrow" class:arrowDown={tree.expanded} aria-expanded={tree.expanded} aria-label="Toggle node"></button>
+      </Checkbox>
       {#if tree.expanded}
         {#each tree.children as child}
           <svelte:self tree={child} on:toggle />
         {/each}
       {/if}
     {:else}
-      <input type="checkbox" data-label={tree.label} checked={tree.checked} indeterminate={tree.indeterminate} on:click={toggleCheck} />
-      <button type="button" on:click={toggleCheck} aria-label="Toggle check">
-        {tree.label}
-      </button>
+      <Checkbox data-label={tree.label} checked={tree.checked} indeterminate={tree.indeterminate} on:click={toggleCheck}>{tree.label}</Checkbox>
+      <button type="button" on:click={toggleCheck} aria-label="Toggle check"></button>
     {/if}
-  </li>
+  </Li>
 </ul>
 
 <style>

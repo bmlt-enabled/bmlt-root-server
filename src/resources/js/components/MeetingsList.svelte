@@ -217,7 +217,7 @@
 <TableSearch placeholder={$translations.filter} hoverable={true} bind:inputValue={searchTerm} {divClass} {innerDivClass} {searchClass} {classInput}>
   <div slot="header" class="flex w-full flex-shrink-0 flex-col items-stretch justify-end space-y-2 md:w-auto md:flex-row md:items-center md:space-x-3 md:space-y-0">
     <Button color="alternative">{$translations.serviceBodiesTitle}</Button>
-    <Dropdown class="top-full z-50 w-80 space-y-2 p-3 text-sm">
+    <Dropdown class="w-90 top-full z-50 space-y-2 p-3 text-sm">
       <ServiceBodiesTree {serviceBodies} bind:selectedValues={selectedServiceBodies} />
     </Dropdown>
     <Button color="alternative">{$translations.day}</Button>
