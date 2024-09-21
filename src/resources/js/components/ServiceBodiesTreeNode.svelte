@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Checkbox, Li } from 'flowbite-svelte';
+  import { Checkbox, Label } from 'flowbite-svelte';
 
   import { createEventDispatcher } from 'svelte';
 
@@ -28,24 +28,31 @@
 </script>
 
 <ul>
-  <Li>
+  <li>
     {#if tree.children}
-      <Checkbox data-label={tree.label} checked={tree.checked} indeterminate={tree.indeterminate} on:click={toggleCheck}
-        >{tree.label}&nbsp;
+      <div class="flex items-center space-x-2">
         {#if tree.children.length > 0}
           <button type="button" on:click={toggleExpansion} class="arrow" class:arrowDown={tree.expanded} aria-expanded={tree.expanded} aria-label="Toggle node"></button>
         {/if}
-      </Checkbox>
+        <Checkbox id={tree.value} data-label={tree.label} checked={tree.checked} indeterminate={tree.indeterminate} on:click={toggleCheck} />
+        <Label for={tree.value} class="ml-2">{tree.label}</Label>
+      </div>
       {#if tree.expanded}
-        {#each tree.children as child}
-          <svelte:self tree={child} on:toggle />
-        {/each}
+        <ul>
+          {#each tree.children as child}
+            <li>
+              <svelte:self tree={child} on:toggle />
+            </li>
+          {/each}
+        </ul>
       {/if}
     {:else}
-      <Checkbox data-label={tree.label} checked={tree.checked} indeterminate={tree.indeterminate} on:click={toggleCheck}>{tree.label}</Checkbox>
-      <button type="button" on:click={toggleCheck} aria-label="Toggle check"></button>
+      <div class="flex items-center space-x-2">
+        <Checkbox data-label={tree.label} checked={tree.checked} indeterminate={tree.indeterminate} on:click={toggleCheck} />
+        <Label for={tree.label} class="ml-2">{tree.label}</Label>
+      </div>
     {/if}
-  </Li>
+  </li>
 </ul>
 
 <style>
