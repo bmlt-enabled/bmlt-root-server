@@ -31,7 +31,10 @@
   <Li>
     {#if tree.children}
       <Checkbox data-label={tree.label} checked={tree.checked} indeterminate={tree.indeterminate} on:click={toggleCheck}
-        >{tree.label}&nbsp;<button type="button" on:click={toggleExpansion} class="arrow" class:arrowDown={tree.expanded} aria-expanded={tree.expanded} aria-label="Toggle node"></button>
+        >{tree.label}&nbsp;
+        {#if tree.children.length > 0}
+          <button type="button" on:click={toggleExpansion} class="arrow" class:arrowDown={tree.expanded} aria-expanded={tree.expanded} aria-label="Toggle node"></button>
+        {/if}
       </Checkbox>
       {#if tree.expanded}
         {#each tree.children as child}
