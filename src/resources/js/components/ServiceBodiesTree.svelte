@@ -14,6 +14,7 @@
   export let serviceBodies: ServiceBody[];
   export let selectedValues: string[] = [];
 
+  const treeMap: Record<string, TreeNode> = {};
   let trees: TreeNode[] = convertServiceBodiesToTreeNodes(serviceBodies);
 
   function convertServiceBodiesToTreeNodes(serviceBodies: ServiceBody[]): TreeNode[] {
@@ -39,7 +40,6 @@
     return roots;
   }
 
-  const treeMap: Record<string, TreeNode> = {};
   function initTreeMap(trees: TreeNode[]) {
     trees.forEach((tree) => {
       processTree(tree);

@@ -4,7 +4,7 @@
 
   import { PlusOutline, FilterSolid, ChevronDownOutline, ChevronUpOutline, ChevronRightOutline, ChevronLeftOutline } from 'flowbite-svelte-icons';
 
-  import { convertTo12Hour, is24hrTime } from '../lib/utils';
+  import { convertTo12Hour, is24hrTime, isCommaSeparatedNumbers } from '../lib/utils';
   import { translations } from '../stores/localization';
   import { authenticatedUser } from '../stores/apiCredentials';
   import type { Meeting, ServiceBody, Format } from 'bmlt-root-server-client';
@@ -17,6 +17,7 @@
   export let serviceBodies: ServiceBody[];
 
   let meetings: Meeting[] = [];
+  let meetingIds: string = '';
   let selectedDays: string[] = [];
   let selectedServiceBodies: string[] = [];
   let divClass = 'bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-visible';
@@ -49,13 +50,14 @@
     { value: 'false', label: $translations.unpublished }
   ];
 
-  async function getMeetings(searchString: string = '', days: string = '', serviceBodyIds: string = ''): Promise<void> {
+  async function getMeetings(searchString: string = '', days: string = '', serviceBodyIds: string = '', meetingIds: string = ''): Promise<void> {
     try {
       spinner.show();
       meetings = await RootServerApi.getMeetings({
         searchString,
         days,
-        serviceBodyIds
+        serviceBodyIds,
+        meetingIds
       });
     } catch (error: any) {
       await RootServerApi.handleErrors(error);
@@ -65,7 +67,11 @@
   }
 
   function searchMeetings() {
-    getMeetings(searchTerm, selectedDays.join(','), selectedServiceBodies.join(','));
+    if (isCommaSeparatedNumbers(searchTerm)) {
+      meetingIds = searchTerm;
+      searchTerm = '';
+    }
+    getMeetings(searchTerm, selectedDays.join(','), selectedServiceBodies.join(','), meetingIds);
   }
 
   $: filteredItems = meetings

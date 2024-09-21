@@ -46,8 +46,13 @@ export function convertTo12Hour(time: string): string {
   return `${hourNum.toString().padStart(2, '0')}:${minute} ${ampm}`;
 }
 
-export function is24hrTime() {
+export function is24hrTime(): boolean {
   const date = new Date();
   const timeString = date.toLocaleTimeString();
   return !(timeString.includes('AM') || timeString.includes('PM'));
+}
+
+export function isCommaSeparatedNumbers(str: string): boolean {
+  const regex: RegExp = /^(\d+)(,\d+)*$/;
+  return regex.test(str);
 }
