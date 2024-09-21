@@ -23,6 +23,7 @@
       nodeMap[sb.id] = {
         label: sb.name,
         value: sb.id.toString(),
+        checked: selectedValues.includes(sb.id.toString()),
         children: []
       };
     });
