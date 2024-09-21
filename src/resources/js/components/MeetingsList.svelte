@@ -229,7 +229,7 @@
     <Button color="alternative">{$translations.day}</Button>
     <Dropdown class="top-full z-50 w-48 space-y-2 p-3 text-sm">
       <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">{$translations.chooseDay}</h6>
-      <Checkbox name="weekdays" choices={weekdayChoices} bind:group={selectedDays} groupInputClass="ms-2" groupLabelClass="" />
+      <Checkbox name="weekdays" choices={weekdayChoices} bind:group={selectedDays} groupLabelClass="justify-between" />
     </Dropdown>
     {#if meetings.length}
       <Button color="alternative">{$translations.published}<FilterSolid class="ml-2 h-3 w-3 " /></Button>
