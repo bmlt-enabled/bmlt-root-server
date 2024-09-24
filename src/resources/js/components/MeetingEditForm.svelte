@@ -16,6 +16,7 @@
   import { spinner } from '../stores/spinner';
   import RootServerApi from '../lib/RootServerApi';
   import { formIsDirty } from '../lib/utils';
+  import { timeZones } from '../lib/timeZones';
   import type { Format, Meeting, MeetingPartialUpdate, ServiceBody } from 'bmlt-root-server-client';
   import { translations } from '../stores/localization';
   import MeetingDeleteModal from './MeetingDeleteModal.svelte';
@@ -79,6 +80,10 @@
     { value: VENUE_TYPE_VIRTUAL, name: 'Virtual' },
     { value: VENUE_TYPE_HYBRID, name: 'Hybrid' }
   ];
+  const timeZoneChoices = timeZones.map((tz) => ({
+    value: tz,
+    name: tz
+  }));
   const dispatch = createEventDispatcher<{
     saved: { meeting: Meeting };
     deleted: { meetingId: number };
@@ -220,8 +225,11 @@
         temporarilyVirtual: yup.bool(),
         day: yup.number().integer().min(0).max(6).required(),
         startTime: yup.string().required(), // TODO: Validation
-        duration: yup.string().required(), // TODO: Validation
-        timeZone: yup.string().max(40),
+        duration: yup
+          .string()
+          .matches(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/)
+          .required(), // HH:mm:ss
+        timeZone: yup.string().oneOf(timeZones, 'Invalid time zone').max(40),
         latitude: yup.number().min(-90).max(90).required(),
         longitude: yup.number().min(-180).max(180).required(),
         published: yup.bool().required(),
@@ -457,7 +465,7 @@
       <div class="grid gap-4 md:grid-cols-2">
         <div class="md:col-span-2">
           <Label for="timeZone" class="mb-2">{$translations.timeZoneTitle}</Label>
-          <Input type="text" id="timeZone" name="timeZone" required />
+          <Select id="timeZone" items={timeZoneChoices} name="timeZone" class="dark:bg-gray-600" />
           <Helper class="mt-2" color="red">
             {#if $errors.timeZone}
               {$errors.timeZone}
