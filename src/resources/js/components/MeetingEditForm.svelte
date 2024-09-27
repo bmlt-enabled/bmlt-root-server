@@ -227,7 +227,7 @@
         startTime: yup.string().required(), // TODO: Validation
         duration: yup
           .string()
-          .matches(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/)
+          .matches(/^([0-1]\d|2[0-3]):([0-5]\d)$/)
           .required(), // HH:mm:ss
         timeZone: yup.string().oneOf(timeZones, 'Invalid time zone').max(40),
         latitude: yup.number().min(-90).max(90).required(),
