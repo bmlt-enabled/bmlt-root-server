@@ -13,6 +13,7 @@ use App\Interfaces\FormatRepositoryInterface;
 use App\Interfaces\MeetingRepositoryInterface;
 use App\Interfaces\MigrationRepositoryInterface;
 use App\Interfaces\ServiceBodyRepositoryInterface;
+use App\Interfaces\ServerAddressLookupRepositoryInterface;
 use App\Models\Change;
 use App\Models\Meeting;
 use Illuminate\Http\Request;
@@ -28,19 +29,22 @@ class SwitcherController extends Controller
     private MeetingRepositoryInterface $meetingRepository;
     private MigrationRepositoryInterface $migrationRepository;
     private ServiceBodyRepositoryInterface $serviceBodyRepository;
+    private ServerAddressLookupRepositoryInterface $serverAddressLookupRepository;
 
     public function __construct(
         ChangeRepositoryInterface $changeRepository,
         FormatRepositoryInterface $formatRepository,
         MeetingRepositoryInterface $meetingRepository,
         MigrationRepositoryInterface $migrationRepository,
-        ServiceBodyRepositoryInterface $serviceBodyRepository
+        ServiceBodyRepositoryInterface $serviceBodyRepository,
+        ServerAddressLookupRepositoryInterface $serverAddressLookupRepository
     ) {
         $this->changeRepository = $changeRepository;
         $this->formatRepository = $formatRepository;
         $this->meetingRepository = $meetingRepository;
         $this->migrationRepository = $migrationRepository;
         $this->serviceBodyRepository = $serviceBodyRepository;
+        $this->serverAddressLookupRepository = $serverAddressLookupRepository;
     }
 
     public function get(Request $request, string $dataFormat)
@@ -520,6 +524,11 @@ class SwitcherController extends Controller
     private function getServerInfo($request): BaseJsonResponse
     {
         $versionArray = explode('.', config('app.version'));
+        try {
+            $serverIp = $this->serverAddressLookupRepository->get();
+        } catch (\Exception $e) {
+            $serverIp = $e->getMessage();
+        }
         return new JsonResponse([[
             'version' => config('app.version'),
             'versionInt' => strval((intval($versionArray[0]) * 1000000) + (intval($versionArray[1]) * 1000) + intval(strstr($versionArray[2], '-', true) ?: $versionArray[2])),
@@ -549,7 +558,8 @@ class SwitcherController extends Controller
             'zip_auto_geocoding_enabled' => legacy_config('zip_auto_geocoding_enabled'),
             'commit' => config('app.commit'),
             'default_closed_status' => legacy_config('default_closed_status'),
-            'aggregator_mode_enabled' => legacy_config('aggregator_mode_enabled')
+            'aggregator_mode_enabled' => legacy_config('aggregator_mode_enabled'),
+            'server_ip' => $serverIp
         ]]);
     }
 
