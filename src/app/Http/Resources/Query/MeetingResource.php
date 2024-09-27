@@ -73,6 +73,7 @@ class MeetingResource extends JsonResource
             'root_server_uri' => $this->getRootServerUri($request),
             'format_shared_id_list' => $this->getFormatSharedIdList(),
             'root_server_id' => $this->getRootServerId(),
+            'source_id' => $this->getSourceId(),
         ];
 
         // data table keys
@@ -308,6 +309,14 @@ class MeetingResource extends JsonResource
         return $this->when(
             self::$isAggregatorModeEnabled && (!self::$hasDataFieldKeys || self::$dataFieldKeys->has('root_server_id')),
             $this->root_server_id ?? ''
+        );
+    }
+
+    private function getSourceId()
+    {
+        return $this->when(
+            self::$isAggregatorModeEnabled && (!self::$hasDataFieldKeys || self::$dataFieldKeys->has('source_id')),
+            $this->source_id ?? ''
         );
     }
 }
