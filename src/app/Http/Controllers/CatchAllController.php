@@ -45,7 +45,7 @@ class CatchAllController extends Controller
                 'defaultDuration' => legacy_config('default_duration_time'),
                 'defaultLanguage' => legacy_config('language'),
                 'distanceUnits' => legacy_config('distance_units'),
-                'googleApikey' => legacy_config('google_api_key', ''),
+                'googleApiKey' => legacy_config('google_api_key', ''),
                 'isLanguageSelectorEnabled' => legacy_config('enable_language_selector'),
                 'languageMapping' => self::getLanguageMapping(),
                 'meetingStatesAndProvinces' => implode(',', legacy_config('meeting_states_and_provinces', [])),
