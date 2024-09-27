@@ -8,7 +8,7 @@ use App\Interfaces\MeetingRepositoryInterface;
 use App\Interfaces\ServiceBodyRepositoryInterface;
 use App\Models\Meeting;
 use App\Repositories\ServiceBodyRepository;
-use App\Rules\IANATimezone;
+use App\Rules\IANATimeZone;
 use App\Rules\VenueTypeLocation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -165,7 +165,7 @@ class MeetingController extends ResourceController
                 'email' => 'nullable|email|max:255',
                 'worldId' => 'nullable|string|max:30',
                 'name' => 'required|string|max:128',
-                'timeZone' => ['nullable', 'string', 'max:40', new IANATimezone],
+                'timeZone' => ['nullable', 'string', 'max:40', new IANATimeZone],
             ], $this->getDataFieldValidators())
         ));
     }

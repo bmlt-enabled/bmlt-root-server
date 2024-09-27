@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use DateTimeZone;
 
-class IANATimezone implements ValidationRule
+class IANATimeZone implements ValidationRule
 {
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
