@@ -16,7 +16,7 @@
             defaultDuration: '{{ $defaultDuration }}',
             defaultLanguage: '{{ $defaultLanguage }}',
             distanceUnits: '{{ $distanceUnits }}',
-            googleApikey: '{{ $googleApikey }}',
+            googleApiKey: '{{ $googleApiKey }}',
             isLanguageSelectorEnabled: {{ $isLanguageSelectorEnabled ? 'true' : 'false' }},
             languageMapping: {{!! collect($languageMapping)->map(fn ($langName, $langAbbrev) => "$langAbbrev: '$langName'")->join(', ') !!}},
             meetingStatesAndProvinces: {!! json_encode(legacy_config('meeting_states_and_provinces', [])) !!},

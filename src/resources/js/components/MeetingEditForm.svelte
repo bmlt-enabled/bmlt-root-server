@@ -376,7 +376,7 @@
 
   onMount(async () => {
     const loader = new Loader({
-      apiKey: globalSettings.googleApikey,
+      apiKey: globalSettings.googleApiKey,
       version: 'beta',
       libraries: ['places', 'marker', 'geocoding']
     });

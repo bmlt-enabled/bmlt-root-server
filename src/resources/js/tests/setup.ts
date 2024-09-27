@@ -12,7 +12,7 @@ global.settings = {
   defaultDuration: '01:00:00',
   defaultLanguage: 'en',
   distanceUnits: 'mi',
-  googleApikey: '',
+  googleApiKey: '',
   isLanguageSelectorEnabled: true,
   languageMapping: {
     en: 'English',

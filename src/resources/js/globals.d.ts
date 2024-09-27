@@ -9,7 +9,7 @@ declare const settings: {
   defaultDuration: string;
   defaultLanguage: string;
   distanceUnits: string;
-  googleApikey: string;
+  googleApiKey: string;
   isLanguageSelectorEnabled: boolean;
   languageMapping: Record<string, string>;
   meetingStatesAndProvinces: string[];
