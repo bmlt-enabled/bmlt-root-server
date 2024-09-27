@@ -8,6 +8,7 @@ use App\Interfaces\MeetingRepositoryInterface;
 use App\Interfaces\ServiceBodyRepositoryInterface;
 use App\Models\Meeting;
 use App\Repositories\ServiceBodyRepository;
+use App\Rules\IANATimezone;
 use App\Rules\VenueTypeLocation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -102,6 +103,8 @@ class MeetingController extends ResourceController
                         return ['venueType' => $request->has('venueType') ? $request->input('venueType') : $meeting->venue_type];
                     } elseif ($fieldName == 'weekday_tinyint') {
                         return ['day' => $request->has('day') ? $request->input('day') : $meeting->weekday_tinyint];
+                    } elseif ($fieldName == 'time_zone') {
+                        return ['timeZone' => $request->has('timeZone') ? $request->input('timeZone') : $meeting->time_zone];
                     } elseif ($fieldName == 'start_time') {
                         return ['startTime' => $request->has('startTime') ? $request->input('startTime') : (empty($meeting->start_time) ? null : (\DateTime::createFromFormat('H:i:s', $meeting->start_time) ?: \DateTime::createFromFormat('H:i', $meeting->start_time))->format('H:i'))];
                     } elseif ($fieldName == 'duration_time') {
@@ -162,6 +165,7 @@ class MeetingController extends ResourceController
                 'email' => 'nullable|email|max:255',
                 'worldId' => 'nullable|string|max:30',
                 'name' => 'required|string|max:128',
+                'timeZone' => ['nullable', 'string', 'max:40', new IANATimezone],
             ], $this->getDataFieldValidators())
         ));
     }
@@ -230,6 +234,7 @@ class MeetingController extends ResourceController
             'formats' => $this->buildFormatsString($validated),
             'venue_type' => $validated['venueType'],
             'weekday_tinyint' => $validated['day'],
+            'time_zone' => $validated['timeZone'],
             'start_time' => \DateTime::createFromFormat('H:i', $validated['startTime'])->format('H:i:s'),
             'duration_time' => \DateTime::createFromFormat('H:i', $validated['duration'])->format('H:i:s'),
             'latitude' => $validated['latitude'],

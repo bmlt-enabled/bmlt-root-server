@@ -35,6 +35,7 @@ class MeetingCreateTest extends TestCase
             'location_postal_code_1' => '27610',
             'virtual_meeting_link' => 'https://zoom.us',
             'phone_meeting_number' => '5555555555',
+            'timeZone' => 'America/New_York',
             'worldId' => 'nice world id',
         ];
     }
@@ -1091,5 +1092,32 @@ class MeetingCreateTest extends TestCase
 
         $dbMeeting = Meeting::query()->first();
         $this->assertEquals('es', $dbMeeting->lang_enum);
+    }
+
+    public function testStoreMeetingTimeZone()
+    {
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
+        $format = Format::query()->first();
+        $payload = $this->validPayload($area, [$format]);
+
+        // it can't be an invalid value
+        $payload['timeZone'] = "America/Raleigh";
+        $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/meetings', $payload)
+            ->assertStatus(422);
+
+        // it can be a valid value
+        $payload['timeZone'] = "America/Chicago";
+        $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/meetings', $payload)
+            ->assertStatus(201);
+
+        // it can be null
+        $payload['timeZone'] = null;
+        $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/meetings', $payload)
+            ->assertStatus(201);
     }
 }

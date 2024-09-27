@@ -26,6 +26,7 @@ class MeetingPartialUpdateTest extends TestCase
             'latitude' => 35.7079,
             'longitude' => 79.8136,
             'published' => 1,
+            'time_zone' => 'America/New_York'
         ])
         ->reject(fn ($_, $key) => in_array($key, $removeFieldKeys))
         ->merge($mainFields)

@@ -45,6 +45,7 @@ class MeetingChangeTest extends TestCase
             'location_postal_code_1' => '27610',
             'virtual_meeting_link' => 'https://zoom.us',
             'phone_meeting_number' => '5555555555',
+            'timeZone' => 'America/New_York',
             'worldId' => 'nice world id',
         ];
 
@@ -134,6 +135,7 @@ class MeetingChangeTest extends TestCase
             'location_postal_code_1' => '27610',
             'virtual_meeting_link' => 'https://zoom.us',
             'phone_meeting_number' => '5555555555',
+            'timeZone' => 'America/New_York',
             'worldId' => 'nice world id',
         ];
 
@@ -275,6 +277,7 @@ class MeetingChangeTest extends TestCase
             'location_postal_code_1' => '27610',
             'virtual_meeting_link' => 'https://zoom.us',
             'phone_meeting_number' => '5555555555',
+            'timeZone' => 'America/New_York',
             'worldId' => 'nice world id',
         ];
 
