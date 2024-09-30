@@ -153,10 +153,6 @@
   }
 
   $: isDirty.set(formIsDirty(initialValues, $data));
-
-  // TODO: the form below has an 'if' to expand the accordion item just for the current language.  This inelegantly repeats the
-  // accordion item contents. Either figure out how to conditionally have either '<AccordionItem open>' or just '<Accordion>',
-  // or else factor out the item contents into a separate component.
 </script>
 
 <form use:form>
@@ -170,69 +166,36 @@
     <div class="md:col-span-2">
       <Accordion multiple>
         {#each allLanguages as lang}
-          {#if $translations.getLanguage() === lang}
-            <AccordionItem open>
-              <span slot="header">{mappings[lang]}</span>
-              <div>
-                <Label for="{lang}_key" class="mb-2">{getLabel('keyTitle', lang)}</Label>
-                <Input type="text" id="{lang}_key" name="{lang}_key" />
-                <Helper class="mb-2" color="red">
-                  {#if $errors[lang + '_key']}
-                    {$errors[lang + '_key']}
-                  {/if}
-                </Helper>
-              </div>
-              <div>
-                <Label for="{lang}_name" class="mb-2">{getLabel('nameTitle', lang)}</Label>
-                <Input type="text" id="{lang}_name" name="{lang}_name" />
-                <Helper class="mb-2" color="red">
-                  {#if $errors[lang + '_name']}
-                    {$errors[lang + '_name']}
-                  {/if}
-                </Helper>
-              </div>
-              <div>
-                <Label for="{lang}_description" class="mb-2">{getLabel('descriptionTitle', lang)}</Label>
-                <Input type="text" id="{lang}_description" name="{lang}_description" />
-                <Helper class="mb-2" color="red">
-                  {#if $errors[lang + '_description']}
-                    {$errors[lang + '_description']}
-                  {/if}
-                </Helper>
-              </div>
-            </AccordionItem>
-          {:else}
-            <AccordionItem>
-              <span slot="header">{mappings[lang]}</span>
-              <div>
-                <Label for="{lang}_key" class="mb-2">{getLabel('keyTitle', lang)}</Label>
-                <Input type="text" id="{lang}_key" name="{lang}_key" />
-                <Helper class="mb-2" color="red">
-                  {#if $errors[lang + '_key']}
-                    {$errors[lang + '_key']}
-                  {/if}
-                </Helper>
-              </div>
-              <div>
-                <Label for="{lang}_name" class="mb-2">{getLabel('nameTitle', lang)}</Label>
-                <Input type="text" id="{lang}_name" name="{lang}_name" />
-                <Helper class="mb-2" color="red">
-                  {#if $errors[lang + '_name']}
-                    {$errors[lang + '_name']}
-                  {/if}
-                </Helper>
-              </div>
-              <div>
-                <Label for="{lang}_description" class="mb-2">{getLabel('descriptionTitle', lang)}</Label>
-                <Input type="text" id="{lang}_description" name="{lang}_description" />
-                <Helper class="mb-2" color="red">
-                  {#if $errors[lang + '_description']}
-                    {$errors[lang + '_description']}
-                  {/if}
-                </Helper>
-              </div>
-            </AccordionItem>
-          {/if}
+          <AccordionItem open={$translations.getLanguage() === lang}>
+            <span slot="header">{mappings[lang]}</span>
+            <div>
+              <Label for="{lang}_key" class="mb-2">{getLabel('keyTitle', lang)}</Label>
+              <Input type="text" id="{lang}_key" name="{lang}_key" />
+              <Helper class="mb-2" color="red">
+                {#if $errors[lang + '_key']}
+                  {$errors[lang + '_key']}
+                {/if}
+              </Helper>
+            </div>
+            <div>
+              <Label for="{lang}_name" class="mb-2">{getLabel('nameTitle', lang)}</Label>
+              <Input type="text" id="{lang}_name" name="{lang}_name" />
+              <Helper class="mb-2" color="red">
+                {#if $errors[lang + '_name']}
+                  {$errors[lang + '_name']}
+                {/if}
+              </Helper>
+            </div>
+            <div>
+              <Label for="{lang}_description" class="mb-2">{getLabel('descriptionTitle', lang)}</Label>
+              <Input type="text" id="{lang}_description" name="{lang}_description" />
+              <Helper class="mb-2" color="red">
+                {#if $errors[lang + '_description']}
+                  {$errors[lang + '_description']}
+                {/if}
+              </Helper>
+            </div>
+          </AccordionItem>
         {/each}
       </Accordion>
     </div>
