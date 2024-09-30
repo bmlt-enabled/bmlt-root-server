@@ -21,7 +21,6 @@
   let showDeleteModal = false;
   let searchTerm = '';
   let selectedFormat: Format | null;
-  let formatName: string;
   let deleteFormat: Format;
 
   const language = translations.getLanguage();
@@ -98,9 +97,6 @@
   onMount(getFormats);
 
   $: {
-    if (selectedFormat) {
-      formatName = getFormatName(selectedFormat);
-    }
     // prettier-ignore
     filteredFormats = formats
       .sort((f1, f2) => getFormatName(f1).localeCompare(getFormatName(f2)))
@@ -151,4 +147,4 @@
 </div>
 
 <FormatModal bind:showModal {selectedFormat} on:saved={onSaved} on:close={closeModal} />
-<FormatDeleteModal bind:showDeleteModal {deleteFormat} {formatName} on:deleted={onDeleted} />
+<FormatDeleteModal bind:showDeleteModal {deleteFormat} formatName={deleteFormat ? getFormatName(deleteFormat) : ''} on:deleted={onDeleted} />
