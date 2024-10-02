@@ -18,6 +18,7 @@
   import { formIsDirty } from '../lib/utils';
   import { timeZones } from '../lib/timeZone/timeZones';
   import { tzFind } from '../lib/timeZone/find';
+  import { Geocoder } from '../lib/geocoder';
   import type { Format, Meeting, MeetingPartialUpdate, ServiceBody } from 'bmlt-root-server-client';
   import { translations } from '../stores/localization';
   import MeetingDeleteModal from './MeetingDeleteModal.svelte';
@@ -135,27 +136,32 @@
   let formatIdsSelected = initialValues.formatIds;
   let savedMeeting: Meeting;
 
+  async function handleGeocoding(values: MeetingPartialUpdate) {
+    const geocoder = new Geocoder(values);
+    const geocodeResult = await geocoder.geocode();
+    if (typeof geocodeResult === 'string') {
+      geocodingError = geocodeResult;
+      spinner.hide();
+      return;
+    }
+    if (geocodeResult) {
+      values.latitude = geocodeResult.lat;
+      values.longitude = geocodeResult.lng;
+      if (globalSettings.countyAutoGeocodingEnabled) {
+        values.locationSubProvince = geocodeResult.county;
+      }
+      if (globalSettings.zipAutoGeocodingEnabled) {
+        values.locationPostalCode1 = geocodeResult.zipCode;
+      }
+    }
+  }
+
   const { data, errors, form, setData, isDirty } = createForm({
     initialValues: initialValues,
     onSubmit: async (values) => {
       spinner.show();
       if (globalSettings.autoGeocodingEnabled && !manualDrag) {
-        const geocodeResult = await geocode(values);
-        if (typeof geocodeResult === 'string') {
-          geocodingError = geocodeResult;
-          spinner.hide();
-          return;
-        }
-        if (geocodeResult) {
-          values.latitude = geocodeResult.lat;
-          values.longitude = geocodeResult.lng;
-          if (globalSettings.countyAutoGeocodingEnabled) {
-            values.locationSubProvince = geocodeResult.county;
-          }
-          if (globalSettings.zipAutoGeocodingEnabled) {
-            values.locationPostalCode1 = geocodeResult.zipCode;
-          }
-        }
+        await handleGeocoding(values);
       }
 
       if (!values.timeZone && values.latitude && values.longitude) {
@@ -308,57 +314,6 @@
     if (!$isDirty) {
       event.preventDefault();
     }
-  }
-
-  function geocode(meeting: MeetingPartialUpdate): Promise<{ lat: number; lng: number; county: string; zipCode: string } | null | string> {
-    return new Promise((resolve) => {
-      if (!meeting.locationNation) {
-        meeting.locationNation = globalSettings.regionBias;
-      }
-
-      const address = [
-        meeting.locationStreet,
-        meeting.locationCitySubsection,
-        meeting.locationMunicipality,
-        meeting.locationProvince,
-        meeting.locationSubProvince,
-        meeting.locationPostalCode1,
-        meeting.locationNation
-      ]
-        .filter(Boolean)
-        .join(', ');
-
-      const geocoder = new google.maps.Geocoder();
-      let county = '';
-      let zipCode = '';
-
-      geocoder.geocode({ address: address }, (results, status) => {
-        if (status === google.maps.GeocoderStatus.OK && results) {
-          const location = results[0].geometry.location;
-          for (let i = 0; i < results[0].address_components.length; i++) {
-            const component = results[0].address_components[i];
-            if (component.types.includes('postal_code')) {
-              zipCode = component.long_name;
-            }
-            if (component.types.includes('administrative_area_level_2')) {
-              county = component.long_name;
-              if (county.endsWith(' County')) {
-                county = county.substring(0, county.length - 7);
-              }
-            }
-          }
-          resolve({
-            lat: location.lat(),
-            lng: location.lng(),
-            county: county || '',
-            zipCode: zipCode || ''
-          });
-        } else {
-          console.error('Geocoding failed:', status);
-          resolve(`Geocoding failed: ${status}`);
-        }
-      });
-    });
   }
 
   function createMarker(mapInstance: google.maps.Map, position: google.maps.LatLngLiteral): void {
