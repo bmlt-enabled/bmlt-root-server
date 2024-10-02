@@ -243,7 +243,7 @@
       </Dropdown>
     {/if}
     <Button on:click={searchMeetings}>{$translations.search}</Button>
-    {#if $authenticatedUser?.type !== 'observer' && meetings.length}
+    {#if $authenticatedUser?.type !== 'observer'}
       <Button on:click={() => handleAdd()}><PlusOutline class="mr-2 h-3.5 w-3.5" />{$translations.addMeeting}</Button>
     {/if}
   </div>
@@ -290,10 +290,10 @@
         {/if}
       </TableHeadCell>
     {:else}
-      <TableHeadCell style="background-color: rgb(31 41 55);" scope="col"></TableHeadCell>
-      <TableHeadCell style="background-color: rgb(31 41 55);" scope="col"></TableHeadCell>
-      <TableHeadCell style="background-color: rgb(31 41 55);" scope="col"></TableHeadCell>
-      <TableHeadCell style="background-color: rgb(31 41 55);" scope="col"></TableHeadCell>
+      <TableHeadCell class="bg-white dark:bg-gray-800" scope="col"></TableHeadCell>
+      <TableHeadCell class="bg-white dark:bg-gray-800" scope="col"></TableHeadCell>
+      <TableHeadCell class="bg-white dark:bg-gray-800" scope="col"></TableHeadCell>
+      <TableHeadCell class="bg-white dark:bg-gray-800" scope="col"></TableHeadCell>
     {/if}
   </TableHead>
   <TableBody>
