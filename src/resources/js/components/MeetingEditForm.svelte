@@ -16,7 +16,8 @@
   import { spinner } from '../stores/spinner';
   import RootServerApi from '../lib/RootServerApi';
   import { formIsDirty } from '../lib/utils';
-  import { timeZones } from '../lib/timeZones';
+  import { timeZones } from '../lib/timeZone/timeZones';
+  import { tzFind } from '../lib/timeZone/find';
   import type { Format, Meeting, MeetingPartialUpdate, ServiceBody } from 'bmlt-root-server-client';
   import { translations } from '../stores/localization';
   import MeetingDeleteModal from './MeetingDeleteModal.svelte';
@@ -157,6 +158,13 @@
         }
       }
 
+      if (!values.timeZone && values.latitude && values.longitude) {
+        let tzData = await tzFind(values.latitude, values.longitude);
+        if (tzData.length > 0) {
+          values.timeZone = tzData[0];
+        }
+      }
+
       if (selectedMeeting) {
         await RootServerApi.updateMeeting(selectedMeeting.id, values);
         savedMeeting = await RootServerApi.getMeeting(selectedMeeting.id);
@@ -229,7 +237,10 @@
           .string()
           .matches(/^([0-1]\d|2[0-3]):([0-5]\d)$/)
           .required(), // HH:mm
-        timeZone: yup.string().oneOf(timeZones, 'Invalid time zone').max(40),
+        timeZone: yup
+          .string()
+          .oneOf([...timeZones, ''], 'Invalid time zone')
+          .max(40),
         latitude: yup.number().min(-90).max(90).required(),
         longitude: yup.number().min(-180).max(180).required(),
         published: yup.bool().required(),
