@@ -476,7 +476,7 @@
       <div class="grid gap-4 md:grid-cols-2">
         <div class="md:col-span-2">
           <Label for="timeZone" class="mb-2">{$translations.timeZoneTitle}</Label>
-          <Select id="timeZone" items={timeZoneChoices} name="timeZone" class="dark:bg-gray-600" />
+          <Select id="timeZone" items={timeZoneChoices} name="timeZone" class="dark:bg-gray-600" placeholder={$translations.timeZoneSelectPlaceholder} />
           <Helper class="mt-2" color="red">
             {#if $errors.timeZone}
               {$errors.timeZone}
