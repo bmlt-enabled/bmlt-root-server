@@ -101,7 +101,7 @@
     timeZone: selectedMeeting?.timeZone ?? '',
     latitude: selectedMeeting?.latitude ?? defaultLatLng.lat,
     longitude: selectedMeeting?.longitude ?? defaultLatLng.lng,
-    published: selectedMeeting?.published ?? false,
+    published: selectedMeeting?.published ?? true,
     email: selectedMeeting?.email ?? '',
     worldId: selectedMeeting?.worldId ?? '',
     name: selectedMeeting?.name ?? '',
