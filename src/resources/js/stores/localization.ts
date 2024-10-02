@@ -173,6 +173,7 @@ const strings = new LocalizedStrings({
     timeAfternoon: 'Afternoon',
     timeEvening: 'Evening',
     timeMorning: 'Morning',
+    timeZoneSelectPlaceholder: 'Choose option (or leave blank to auto-detect from location)', // TODO: translate
     timeZoneTitle: 'Time Zone', // TODO: translate
     trainLinesTitle: 'Train Lines', // TODO: translate
     unpublished: 'Unpublished',
@@ -358,6 +359,7 @@ const strings = new LocalizedStrings({
     timeAfternoon: 'Afternoon',
     timeEvening: 'Evening',
     timeMorning: 'Morning',
+    timeZoneSelectPlaceholder: 'Choose option (or leave blank to auto-detect from location)',
     timeZoneTitle: 'Time Zone',
     trainLinesTitle: 'Train Lines',
     unpublished: 'Unpublished',
