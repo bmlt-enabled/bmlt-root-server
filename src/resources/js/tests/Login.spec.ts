@@ -78,6 +78,8 @@ describe('login page tests', () => {
     expect(screen.getByText('Welcome River City Area')).toBeInTheDocument();
     // TODO: shouldn't need to say hidden!
     expect(screen.getByRole('link', { name: 'Users', hidden: true })).toBeEnabled();
+    // Formats should not be shown for area admin
+    expect(screen.queryByRole('link', { name: 'Formats', hidden: true })).toBe(null);
   });
 
   test('log in with valid username and password for an observer', async () => {

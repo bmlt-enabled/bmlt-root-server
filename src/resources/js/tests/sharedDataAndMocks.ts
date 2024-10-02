@@ -304,6 +304,13 @@ export const jtFormat: Format = {
   type: 'MEETING_FORMAT'
 };
 
+export const agnosticFormat: Format = {
+  id: 23,
+  translations: [{ key: 'Ag', language: 'de', name: 'Agnostisch', description: 'Agnostiker- und Atheistenfreundliches Meeting.' }],
+  worldId: '',
+  type: 'COMMON_NEEDS_OR_RESTRICTION'
+};
+
 export const ruralMeeting: Meeting = {
   busLines: undefined,
   comments: undefined,
@@ -506,7 +513,7 @@ export const bigRegionMeeting: Meeting = {
 
 export const allServiceBodies: ServiceBody[] = [northernZone, bigRegion, smallRegion, riverCityArea, mountainArea, ruralArea];
 
-export const allFormats: Format[] = [closedFormat, openFormat, discussionFormat, basicTextFormat, jtFormat];
+export const allFormats: Format[] = [agnosticFormat, basicTextFormat, closedFormat, discussionFormat, jtFormat, openFormat];
 
 export const allMeetings: Meeting[] = [ruralMeeting, mountainMeeting, riverCityMeeting, bigRegionMeeting, smallRegionMeeting];
 
@@ -617,7 +624,7 @@ async function mockGetUsers(initOverrides?: RequestInit | runtime.InitOverrideFu
   }
 }
 
-function makeResponse(msg: string, status: number): Response {
+function makeResponse(msg: string, status: number, statusText: string): Response {
   const m = `{ "message": "${msg}" }`;
   const unicodeMsg = Uint8Array.from(Array.from(m).map((x) => x.charCodeAt(0)));
   const strm = new ReadableStream({
@@ -626,7 +633,7 @@ function makeResponse(msg: string, status: number): Response {
       controller.close();
     }
   });
-  return new Response(strm, { status: status, statusText: 'Unauthorized' });
+  return new Response(strm, { status: status, statusText: statusText });
 }
 
 async function mockAuthToken(authTokenRequest: { tokenCredentials: { username: string; password: string } }): Promise<Token> {
@@ -635,13 +642,13 @@ async function mockAuthToken(authTokenRequest: { tokenCredentials: { username: s
   for (let i = 0; i < allUsersAndPasswords.length; i++) {
     if (allUsersAndPasswords[i].user.username === n && allUsersAndPasswords[i].password === p) {
       if (allUsersAndPasswords[i].user.type === 'deactivated') {
-        throw new ResponseError(makeResponse('User is deactivated.', 403), 'Response returned an error code');
+        throw new ResponseError(makeResponse('User is deactivated.', 403, 'Unauthorized'), 'Response returned an error code');
       } else {
         return generateMockAuthToken(allUsersAndPasswords[i].user.id);
       }
     }
   }
-  throw new ResponseError(makeResponse('The provided credentials are incorrect.', 401), 'Response returned an error code');
+  throw new ResponseError(makeResponse('The provided credentials are incorrect.', 401, 'Unauthorized'), 'Response returned an error code');
 }
 
 async function mockAuthRefresh(): Promise<Token> {
@@ -686,7 +693,7 @@ async function mockPartialUpdateUser({ userId: id, userPartialUpdate: u }: { use
 
 async function mockDeleteUser({ userId: id }: { userId: number }): Promise<void> {
   if (userHasDependents(id)) {
-    throw new ResponseError(makeResponse('Conflict', 409), 'Response returned an error code');
+    throw new ResponseError(makeResponse('Conflict', 409, 'Unauthorized'), 'Response returned an error code');
   }
   mockDeletedUserId = id;
 }
@@ -738,7 +745,7 @@ async function mockUpdateServiceBody({ serviceBodyId: _, serviceBodyUpdate: serv
 
 async function mockDeleteServiceBody({ serviceBodyId: id }: { serviceBodyId: number }): Promise<void> {
   if (serviceBodyHasDependents(id)) {
-    throw new ResponseError(makeResponse('Conflict', 409), 'Response returned an error code');
+    throw new ResponseError(makeResponse('Conflict', 409, 'Unauthorized'), 'Response returned an error code');
   }
   mockDeletedServiceBodyId = id;
 }
@@ -767,6 +774,9 @@ export let mockSavedFormatUpdate: FormatUpdate | null;
 export let mockDeletedFormatId: number | null = null;
 
 async function mockCreateFormat({ formatCreate: format }: { formatCreate: FormatCreate }): Promise<Format> {
+  if (format.translations.length === 0) {
+    throw new ResponseError(makeResponse('The translations field is required.', 422, 'Unprocessable Content'), 'Response returned an error code');
+  }
   mockSavedFormatCreate = format;
   return {
     translations: format.translations || [{ key: 'O', language: 'en', name: 'Open', description: 'This meeting is open to addicts and non-addicts alike. All are welcome.' }],
@@ -778,6 +788,9 @@ async function mockCreateFormat({ formatCreate: format }: { formatCreate: Format
 
 // eslint-disable-next-line
 async function mockUpdateFormat({ formatId: _, formatUpdate: format }: { formatId: number; formatUpdate: FormatUpdate }): Promise<void> {
+  if (format.translations.length === 0) {
+    throw new ResponseError(makeResponse('The translations field is required.', 422, 'Unprocessable Content'), 'Response returned an error code');
+  }
   mockSavedFormatUpdate = format;
 }
 

@@ -137,6 +137,7 @@ const strings = new LocalizedStrings({
     ],
     nawsFormatTitle: 'NAWS Format', // TODO: translate
     neighborhoodTitle: 'Neighborhood', // TODO: translate
+    noFormatTranslationsError: 'At least one translation is required.', // TODO: translate
     none: '- Keine -',
     noServiceBodiesTitle: 'No service bodies found.', // TODO: translate
     noTranslationAvailable: 'keine deutsche Version verfügbar',
@@ -323,6 +324,7 @@ const strings = new LocalizedStrings({
     ],
     nawsFormatTitle: 'NAWS Format',
     neighborhoodTitle: 'Neighborhood',
+    noFormatTranslationsError: 'At least one translation is required.',
     none: '- None -',
     noServiceBodiesTitle: 'No service bodies found.',
     noTranslationAvailable: 'no English version available',
