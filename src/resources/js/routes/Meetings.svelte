@@ -18,6 +18,7 @@
     try {
       spinner.show();
       serviceBodies = await RootServerApi.getServiceBodies();
+      serviceBodies = serviceBodies.sort((s1, s2) => s1.name.localeCompare(s2.name));
       serviceBodiesLoaded = true;
     } catch (error: any) {
       await RootServerApi.handleErrors(error);
