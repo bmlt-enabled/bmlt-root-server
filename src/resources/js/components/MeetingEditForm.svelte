@@ -136,6 +136,16 @@
   let formatIdsSelected = initialValues.formatIds;
   let savedMeeting: Meeting;
 
+  function hasLocationChanged(initialValues: MeetingPartialUpdate, values: MeetingPartialUpdate) {
+    return (
+      initialValues.locationStreet !== values.locationStreet ||
+      initialValues.locationCitySubsection !== values.locationCitySubsection ||
+      initialValues.locationMunicipality !== values.locationMunicipality ||
+      initialValues.locationProvince !== values.locationProvince ||
+      initialValues.locationSubProvince !== values.locationSubProvince
+    );
+  }
+
   async function handleGeocoding(values: MeetingPartialUpdate) {
     const geocoder = new Geocoder(values);
     const geocodeResult = await geocoder.geocode();
@@ -159,8 +169,11 @@
     initialValues: initialValues,
     onSubmit: async (values) => {
       spinner.show();
-      if (globalSettings.autoGeocodingEnabled && !manualDrag) {
-        await handleGeocoding(values);
+
+      if (hasLocationChanged(initialValues, values)) {
+        if (globalSettings.autoGeocodingEnabled && !manualDrag) {
+          await handleGeocoding(values);
+        }
       }
 
       if (!values.timeZone && values.latitude && values.longitude) {
