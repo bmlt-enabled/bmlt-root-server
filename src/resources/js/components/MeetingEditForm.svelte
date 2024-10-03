@@ -425,7 +425,7 @@
   onMount(() => {
     mapElement = document.getElementById('locationMap') as HTMLElement;
     if (mapElement) {
-      if (!globalSettings.googleApiKey) {
+      if (globalSettings.googleApiKey) {
         createGoogleMap();
       } else {
         createLeafletMap();
