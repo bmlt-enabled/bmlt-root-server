@@ -1,9 +1,22 @@
-<script>
+<script lang="ts">
+  import L from 'leaflet';
   export let title = 'Accordion Title';
+  export let map: google.maps.Map | L.Map;
   let isOpen = false;
+
+  function isLeafletMap(map: google.maps.Map | L.Map | null): map is L.Map {
+    return typeof (map as L.Map).invalidateSize === 'function';
+  }
 
   function toggleAccordion() {
     isOpen = !isOpen;
+    if (isOpen && map) {
+      setTimeout(() => {
+        if (isLeafletMap(map)) {
+          map.invalidateSize();
+        }
+      }, 300); // length of transition delay
+    }
   }
 </script>
 
