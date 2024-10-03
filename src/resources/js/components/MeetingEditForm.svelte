@@ -357,9 +357,9 @@
   }
 
   function createLeafletMap() {
-    map = L.map(mapElement).setView([latitude, longitude], Number(globalSettings.centerZoom ?? 15));
+    map = L.map(mapElement).setView([latitude, longitude], Number(globalSettings.centerZoom ?? 18));
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
+      maxZoom: 22,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
     const naMarkerImage = L.icon({
@@ -388,7 +388,7 @@
     if (mapElement) {
       map = new Map(mapElement, {
         center: { lat: latitude, lng: longitude },
-        zoom: Number(globalSettings.centerZoom ?? 15),
+        zoom: Number(globalSettings.centerZoom ?? 18),
         draggableCursor: 'crosshair',
         mapId: 'bmlt'
       });
@@ -605,7 +605,7 @@
       {#if selectedMeeting}
         <div class="grid gap-4 md:grid-cols-2">
           <div class="md:col-span-2">
-            <MapAccordion title={$translations.locationMapTitle}>
+            <MapAccordion title={$translations.locationMapTitle} {map}>
               <div id="locationMap" bind:this={mapElement} />
             </MapAccordion>
           </div>
