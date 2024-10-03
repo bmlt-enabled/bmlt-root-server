@@ -4,6 +4,8 @@
   import { Button, Checkbox, Hr, Label, Input, Helper, Select, MultiSelect, Badge } from 'flowbite-svelte';
   import { createEventDispatcher } from 'svelte';
   import * as yup from 'yup';
+  import L from 'leaflet';
+  import type { DragEndEvent, Map, Marker } from 'leaflet';
   import { Loader } from '@googlemaps/js-api-loader';
   import { writable } from 'svelte/store';
 
@@ -18,6 +20,7 @@
   import { formIsDirty } from '../lib/utils';
   import { timeZones } from '../lib/timeZone/timeZones';
   import { tzFind } from '../lib/timeZone/find';
+  import { Geocoder } from '../lib/geocoder';
   import type { Format, Meeting, MeetingPartialUpdate, ServiceBody } from 'bmlt-root-server-client';
   import { translations } from '../stores/localization';
   import MeetingDeleteModal from './MeetingDeleteModal.svelte';
@@ -65,9 +68,9 @@
   const VENUE_TYPE_HYBRID = 3;
   const VALID_VENUE_TYPES = [VENUE_TYPE_IN_PERSON, VENUE_TYPE_VIRTUAL, VENUE_TYPE_HYBRID];
 
-  let map: google.maps.Map;
+  let map: google.maps.Map | L.Map;
   let mapElement: HTMLElement;
-  let marker: google.maps.marker.AdvancedMarkerElement | null;
+  let marker: google.maps.marker.AdvancedMarkerElement | L.Marker | null;
   let geocodingError: string | null = null;
   let isPublishedChecked = true;
   let showDeleteModal = false;
@@ -135,26 +138,48 @@
   let formatIdsSelected = initialValues.formatIds;
   let savedMeeting: Meeting;
 
+  function shouldGeocode(initialValues: MeetingPartialUpdate, values: MeetingPartialUpdate, isNewMeeting: boolean) {
+    if (isNewMeeting && values.venueType != VENUE_TYPE_VIRTUAL) {
+      return true;
+    }
+
+    return (
+      initialValues.locationStreet !== values.locationStreet ||
+      initialValues.locationCitySubsection !== values.locationCitySubsection ||
+      initialValues.locationMunicipality !== values.locationMunicipality ||
+      initialValues.locationProvince !== values.locationProvince ||
+      initialValues.locationSubProvince !== values.locationSubProvince
+    );
+  }
+
+  async function handleGeocoding(values: MeetingPartialUpdate) {
+    const geocoder = new Geocoder(values);
+    const geocodeResult = await geocoder.geocode();
+    if (typeof geocodeResult === 'string') {
+      geocodingError = geocodeResult;
+      return;
+    }
+    if (geocodeResult) {
+      values.latitude = geocodeResult.lat;
+      values.longitude = geocodeResult.lng;
+      if (globalSettings.countyAutoGeocodingEnabled) {
+        values.locationSubProvince = geocodeResult.county;
+      }
+      if (globalSettings.zipAutoGeocodingEnabled) {
+        values.locationPostalCode1 = geocodeResult.zipCode;
+      }
+    }
+  }
+
   const { data, errors, form, setData, isDirty } = createForm({
     initialValues: initialValues,
     onSubmit: async (values) => {
       spinner.show();
-      if (globalSettings.autoGeocodingEnabled && !manualDrag) {
-        const geocodeResult = await geocode(values);
-        if (typeof geocodeResult === 'string') {
-          geocodingError = geocodeResult;
-          spinner.hide();
-          return;
-        }
-        if (geocodeResult) {
-          values.latitude = geocodeResult.lat;
-          values.longitude = geocodeResult.lng;
-          if (globalSettings.countyAutoGeocodingEnabled) {
-            values.locationSubProvince = geocodeResult.county;
-          }
-          if (globalSettings.zipAutoGeocodingEnabled) {
-            values.locationPostalCode1 = geocodeResult.zipCode;
-          }
+
+      const isNewMeeting = !selectedMeeting;
+      if (shouldGeocode(initialValues, values, isNewMeeting)) {
+        if (globalSettings.autoGeocodingEnabled && !manualDrag) {
+          await handleGeocoding(values);
         }
       }
 
@@ -310,105 +335,106 @@
     }
   }
 
-  function geocode(meeting: MeetingPartialUpdate): Promise<{ lat: number; lng: number; county: string; zipCode: string } | null | string> {
-    return new Promise((resolve) => {
-      if (!meeting.locationNation) {
-        meeting.locationNation = globalSettings.regionBias;
-      }
+  // Type guards
+  function isGoogleMarker(marker: google.maps.marker.AdvancedMarkerElement | Marker): marker is google.maps.marker.AdvancedMarkerElement {
+    return (marker as google.maps.marker.AdvancedMarkerElement).position !== undefined;
+  }
 
-      const address = [
-        meeting.locationStreet,
-        meeting.locationCitySubsection,
-        meeting.locationMunicipality,
-        meeting.locationProvince,
-        meeting.locationSubProvince,
-        meeting.locationPostalCode1,
-        meeting.locationNation
-      ]
-        .filter(Boolean)
-        .join(', ');
+  function isGoogleMap(map: google.maps.Map | Map): map is google.maps.Map {
+    return (map as google.maps.Map).setCenter !== undefined;
+  }
 
-      const geocoder = new google.maps.Geocoder();
-      let county = '';
-      let zipCode = '';
+  function isLeafletMap(map: google.maps.Map | Map): map is Map {
+    return (map as Map).setView !== undefined;
+  }
 
-      geocoder.geocode({ address: address }, (results, status) => {
-        if (status === google.maps.GeocoderStatus.OK && results) {
-          const location = results[0].geometry.location;
-          for (let i = 0; i < results[0].address_components.length; i++) {
-            const component = results[0].address_components[i];
-            if (component.types.includes('postal_code')) {
-              zipCode = component.long_name;
-            }
-            if (component.types.includes('administrative_area_level_2')) {
-              county = component.long_name;
-              if (county.endsWith(' County')) {
-                county = county.substring(0, county.length - 7);
-              }
-            }
-          }
-          resolve({
-            lat: location.lat(),
-            lng: location.lng(),
-            county: county || '',
-            zipCode: zipCode || ''
-          });
-        } else {
-          console.error('Geocoding failed:', status);
-          resolve(`Geocoding failed: ${status}`);
-        }
-      });
+  function setMapCenter(map: google.maps.Map | L.Map, lat: number, lng: number) {
+    if (isGoogleMap(map)) {
+      map.setCenter({ lat, lng });
+    } else if (isLeafletMap(map)) {
+      map.setView([lat, lng]);
+    }
+  }
+
+  function createLeafletMap() {
+    map = L.map(mapElement).setView([latitude, longitude], Number(globalSettings.centerZoom ?? 15));
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+    const naMarkerImage = L.icon({
+      iconUrl: 'images/NAMarkerR.png',
+      iconSize: [44, 64]
+    });
+
+    marker = L.marker([latitude, longitude], { icon: naMarkerImage, draggable: true }).addTo(map);
+
+    marker.on('dragend', (e: DragEndEvent) => {
+      const { lat, lng } = e.target.getLatLng();
+      latitude = lat;
+      longitude = lng;
+      manualDrag = true;
     });
   }
 
-  function createMarker(mapInstance: google.maps.Map, position: google.maps.LatLngLiteral): void {
-    const naMarkerImage = document.createElement('img');
-    naMarkerImage.src = 'images/NAMarkerR.png';
-    marker = new google.maps.marker.AdvancedMarkerElement({
-      position: position,
-      map: mapInstance,
-      gmpDraggable: true,
-      content: naMarkerImage
-    });
-
-    marker.addListener('dragend', () => {
-      if (marker && marker.position) {
-        const newPosition = marker.position;
-        if (newPosition) {
-          longitude = typeof newPosition.lng === 'function' ? newPosition.lng() : newPosition.lng;
-          latitude = typeof newPosition.lat === 'function' ? newPosition.lat() : newPosition.lat;
-          setData('longitude', longitude);
-          setData('latitude', latitude);
-          manualDrag = true;
-        }
-      }
-    });
-  }
-
-  onMount(async () => {
+  async function createGoogleMap() {
     const loader = new Loader({
       apiKey: globalSettings.googleApiKey,
       version: 'beta',
       libraries: ['places', 'marker', 'geocoding']
     });
-
     const { Map } = await loader.importLibrary('maps');
-
     mapElement = document.getElementById('locationMap') as HTMLElement;
-
     if (mapElement) {
       map = new Map(mapElement, {
-        center: defaultLatLng,
+        center: { lat: latitude, lng: longitude },
         zoom: Number(globalSettings.centerZoom ?? 15),
         draggableCursor: 'crosshair',
         mapId: 'bmlt'
       });
+      createGoogleMarker();
+    }
+  }
+
+  function createGoogleMarker() {
+    const position = { lat: latitude, lng: longitude };
+    const naMarkerImage = document.createElement('img');
+    naMarkerImage.src = 'images/NAMarkerR.png';
+    if (isGoogleMap(map)) {
+      marker = new google.maps.marker.AdvancedMarkerElement({
+        position: position,
+        map: map,
+        gmpDraggable: true,
+        content: naMarkerImage
+      });
+      marker.addListener('dragend', () => {
+        if (marker && isGoogleMarker(marker) && marker.position) {
+          const newPosition = marker.position;
+          if (newPosition) {
+            longitude = typeof newPosition.lng === 'function' ? newPosition.lng() : newPosition.lng;
+            latitude = typeof newPosition.lat === 'function' ? newPosition.lat() : newPosition.lat;
+            setData('longitude', longitude);
+            setData('latitude', latitude);
+            manualDrag = true;
+          }
+        }
+      });
+    }
+  }
+
+  onMount(() => {
+    mapElement = document.getElementById('locationMap') as HTMLElement;
+    if (mapElement) {
+      if (globalSettings.googleApiKey) {
+        createGoogleMap();
+      } else {
+        createLeafletMap();
+      }
 
       showMap.subscribe((value) => {
         mapElement.style.display = value ? 'block' : 'none';
         if (value && map) {
-          map.setCenter({ lat: latitude, lng: longitude });
-          createMarker(map, { lat: latitude, lng: longitude });
+          setMapCenter(map, latitude, longitude);
         }
       });
     }
@@ -424,6 +450,10 @@
   $: setData('formatIds', formatIdsSelected);
   $: isDirty.set(formIsDirty(initialValues, $data));
 </script>
+
+<svelte:head>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.1/dist/leaflet.css" />
+</svelte:head>
 
 <form use:form>
   <BasicTabs {tabs}>
