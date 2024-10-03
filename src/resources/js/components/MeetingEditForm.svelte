@@ -141,7 +141,6 @@
     const geocodeResult = await geocoder.geocode();
     if (typeof geocodeResult === 'string') {
       geocodingError = geocodeResult;
-      spinner.hide();
       return;
     }
     if (geocodeResult) {
