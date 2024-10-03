@@ -136,7 +136,11 @@
   let formatIdsSelected = initialValues.formatIds;
   let savedMeeting: Meeting;
 
-  function hasLocationChanged(initialValues: MeetingPartialUpdate, values: MeetingPartialUpdate) {
+  function shouldGeocode(initialValues: MeetingPartialUpdate, values: MeetingPartialUpdate, isNewMeeting: boolean) {
+    if (isNewMeeting && values.venueType != VENUE_TYPE_VIRTUAL) {
+      return true;
+    }
+
     return (
       initialValues.locationStreet !== values.locationStreet ||
       initialValues.locationCitySubsection !== values.locationCitySubsection ||
@@ -170,7 +174,8 @@
     onSubmit: async (values) => {
       spinner.show();
 
-      if (hasLocationChanged(initialValues, values)) {
+      const isNewMeeting = !selectedMeeting;
+      if (shouldGeocode(initialValues, values, isNewMeeting)) {
         if (globalSettings.autoGeocodingEnabled && !manualDrag) {
           await handleGeocoding(values);
         }
