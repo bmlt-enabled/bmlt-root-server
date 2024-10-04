@@ -32,6 +32,7 @@
     // another admin.
     .filter((u) => userIdToUser[u.value].type !== 'observer' || selectedServiceBody?.adminUserId === userIdToUser[u.value].id)
     .map((u) => ({ value: u.value, name: userIdToUser[u.value].type === 'deactivated' ? `[${$translations.deactivatedTitle?.toUpperCase()}] ${u.name}` : u.name }));
+  const userCanEditServiceBody = $authenticatedUser?.type == 'admin' || ($authenticatedUser?.type == 'serviceBodyAdmin' && selectedServiceBody?.adminUserId == $authenticatedUser?.id);
   const SB_TYPE_AREA = 'AS';
   const typeItems = [
     { value: 'GR', name: 'Group' },
@@ -192,7 +193,16 @@
     </div>
     <div class="md:col-span-2">
       <Label for="assignedUserIds" class="mb-2">{$translations.meetingListEditorsTitle}</Label>
-      <MultiSelect id="assignedUserIds" items={userItems} name="assignedUserIds" class="bg-gray-50 dark:bg-gray-600" bind:value={assignedUserIdsSelected} let:item let:clear>
+      <MultiSelect
+        id="assignedUserIds"
+        items={userItems}
+        name="assignedUserIds"
+        class="bg-gray-50 dark:bg-gray-600"
+        bind:value={assignedUserIdsSelected}
+        readonly={!userCanEditServiceBody}
+        let:item
+        let:clear
+      >
         <Badge rounded color={badgeColor(item.value)} dismissable params={{ duration: 100 }} on:close={clear}>
           {item.name}
         </Badge>
@@ -206,7 +216,7 @@
     </div>
     <div class="md:col-span-2">
       <Label for="email" class="mb-2">{$translations.emailTitle}</Label>
-      <Input type="email" id="email" name="email" />
+      <Input type="email" id="email" name="email" readonly={!userCanEditServiceBody} />
       <Helper class="mt-2" color="red">
         {#if $errors.email}
           {$errors.email}
@@ -215,7 +225,7 @@
     </div>
     <div class="md:col-span-2">
       <Label for="description" class="mb-2">{$translations.descriptionTitle}</Label>
-      <Textarea id="description" name="description" rows="4" />
+      <Textarea id="description" name="description" rows="4" readonly={!userCanEditServiceBody} />
       <Helper class="mt-2" color="red">
         {#if $errors.description}
           {$errors.description}
@@ -224,7 +234,7 @@
     </div>
     <div class="md:col-span-2">
       <Label for="url" class="mb-2">{$translations.websiteUrlTitle}</Label>
-      <Input type="text" id="url" name="url" />
+      <Input type="text" id="url" name="url" readonly={!userCanEditServiceBody} />
       <Helper class="mt-2" color="red">
         {#if $errors.url}
           {$errors.url}
@@ -233,7 +243,7 @@
     </div>
     <div class="md:col-span-2">
       <Label for="helpline" class="mb-2">{$translations.helplineTitle}</Label>
-      <Input type="text" id="helpline" name="helpline" />
+      <Input type="text" id="helpline" name="helpline" readonly={!userCanEditServiceBody} />
       <Helper class="mt-2" color="red">
         {#if $errors.helpline}
           {$errors.helpline}
@@ -242,21 +252,23 @@
     </div>
     <div class="md:col-span-2">
       <Label for="worldId" class="mb-2">{$translations.worldIdTitle}</Label>
-      <Input type="text" id="worldId" name="worldId" />
+      <Input type="text" id="worldId" name="worldId" readonly={!userCanEditServiceBody} />
       <Helper class="mt-2" color="red">
         {#if $errors.worldId}
           {$errors.worldId}
         {/if}
       </Helper>
     </div>
-    <div class="md:col-span-2">
-      <Button type="submit" class="w-full" disabled={!$isDirty} on:click={disableButtonHack}>
-        {#if selectedServiceBody}
-          {$translations.applyChangesTitle}
-        {:else}
-          {$translations.addServiceBody}
-        {/if}
-      </Button>
-    </div>
+    {#if userCanEditServiceBody}
+      <div class="md:col-span-2">
+        <Button type="submit" class="w-full" disabled={!$isDirty} on:click={disableButtonHack}>
+          {#if selectedServiceBody}
+            {$translations.applyChangesTitle}
+          {:else}
+            {$translations.addServiceBody}
+          {/if}
+        </Button>
+      </div>
+    {/if}
   </div>
 </form>
