@@ -44,7 +44,7 @@ class MeetingRepository implements MeetingRepositoryInterface
         bool $needsDistanceField = false,
         bool $sortResultsByDistance = false,
         string $searchString = null,
-        ?bool $published = true,
+        ?bool $published = null,
         bool $eagerServiceBodies = false,
         bool $eagerRootServers = false,
         array $sortKeys = null,

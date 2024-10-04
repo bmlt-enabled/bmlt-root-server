@@ -63,6 +63,22 @@ class MeetingIndexTest extends TestCase
             ->assertJsonFragment(['id' => $meeting2->id_bigint]);
     }
 
+    public function testIndexMeetingsMeetingIdsFilterWithUnpublished()
+    {
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+
+        $meeting1 = $this->createMeeting([]);
+        $meeting2 = $this->createMeeting(['published' => 0]);
+        $meeting3 = $this->createMeeting([]);
+        $this->withHeader('Authorization', "Bearer $token")
+            ->get("/api/v1/meetings?meetingIds={$meeting1->id_bigint},{$meeting2->id_bigint}")
+            ->assertStatus(200)
+            ->assertJsonCount(2)
+            ->assertJsonFragment(['id' => $meeting1->id_bigint])
+            ->assertJsonFragment(['id' => $meeting2->id_bigint]);
+    }
+
     public function testIndexMeetingsDaysFilter()
     {
         $user = $this->createAdminUser();
