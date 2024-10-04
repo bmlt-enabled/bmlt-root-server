@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch, Button, Dropdown, Checkbox, ButtonGroup } from 'flowbite-svelte';
-
+  import { TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch, Button, Dropdown, Checkbox, ButtonGroup, Indicator } from 'flowbite-svelte';
   import { PlusOutline, FilterSolid, ChevronDownOutline, ChevronUpOutline, ChevronRightOutline, ChevronLeftOutline } from 'flowbite-svelte-icons';
 
   import { convertTo12Hour, is24hrTime, isCommaSeparatedNumbers } from '../lib/utils';
@@ -222,21 +221,43 @@
 
 <TableSearch placeholder={$translations.filter} hoverable={true} bind:inputValue={searchTerm} {divClass} {innerDivClass} {searchClass} {classInput}>
   <div slot="header" class="flex w-full flex-shrink-0 flex-col items-stretch justify-end space-y-2 md:w-auto md:flex-row md:items-center md:space-x-3 md:space-y-0">
-    <Button color="alternative">{$translations.serviceBodiesTitle}</Button>
+    <Button color="alternative" class="relative">
+      {$translations.serviceBodiesTitle}
+      {#if selectedServiceBodies.length > 0}
+        <Indicator color="red" size="sm" placement="top-right" />
+      {/if}
+    </Button>
     <Dropdown class="w-90 top-full z-50 space-y-2 p-3 text-sm">
       <ServiceBodiesTree {serviceBodies} bind:selectedValues={selectedServiceBodies} />
     </Dropdown>
-    <Button color="alternative">{$translations.day}</Button>
+    <Button color="alternative" class="relative">
+      {$translations.day}
+      {#if selectedDays.length > 0}
+        <Indicator color="red" size="sm" placement="top-right" />
+      {/if}
+    </Button>
     <Dropdown class="top-full z-50 w-48 space-y-2 p-3 text-sm">
       <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">{$translations.chooseDay}</h6>
       <Checkbox name="weekdays" choices={weekdayChoices} bind:group={selectedDays} groupLabelClass="justify-between" />
     </Dropdown>
     {#if meetings.length}
-      <Button color="alternative">{$translations.published}<FilterSolid class="ml-2 h-3 w-3 " /></Button>
+      <Button color="alternative" class="relative">
+        {$translations.published}
+        {#if selectedPublished.length > 0}
+          <Indicator color="red" size="sm" placement="top-right" />
+        {/if}
+        <FilterSolid class="ml-2 h-3 w-3 " />
+      </Button>
       <Dropdown class="w-48 space-y-2 p-3 text-sm">
         <Checkbox name="times" choices={publishedChoices} bind:group={selectedPublished} groupInputClass="ms-2" groupLabelClass="" />
       </Dropdown>
-      <Button color="alternative">{$translations.time}<FilterSolid class="ml-2 h-3 w-3 " /></Button>
+      <Button color="alternative" class="relative">
+        {$translations.time}
+        {#if selectedTimes.length > 0}
+          <Indicator color="red" size="sm" placement="top-right" />
+        {/if}
+        <FilterSolid class="ml-2 h-3 w-3 " />
+      </Button>
       <Dropdown class="w-48 space-y-2 p-3 text-sm">
         <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">{$translations.chooseStartTime}</h6>
         <Checkbox name="times" choices={timeChoices} bind:group={selectedTimes} groupInputClass="ms-2" groupLabelClass="" />
