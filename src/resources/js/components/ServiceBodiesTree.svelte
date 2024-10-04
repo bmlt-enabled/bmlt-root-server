@@ -83,7 +83,6 @@
         } else {
           parent.indeterminate = false;
         }
-        parent.checked = false;
       }
 
       parent = treeMap[parent.label];
