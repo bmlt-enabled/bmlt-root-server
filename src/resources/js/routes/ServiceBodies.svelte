@@ -98,8 +98,15 @@
   $: {
     // prettier-ignore
     filteredServiceBodies = serviceBodies
-      .sort((s1, s2) => s1.name.localeCompare(s2.name))
-      .filter((s) => s.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
+          .sort((s1, s2) => s1.name.localeCompare(s2.name))
+          .filter(s =>
+              // Filter based on the search term
+              s.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1 &&
+              // Users that are service body editors but not admins do not have permissions
+              // to perform CUD Actions on Service Bodies, so we hide them.
+              // Ensure that if the user's ID is in assignedUserIds, it's different from adminUserId
+              (!s.assignedUserIds.includes(<number>$authenticatedUser?.id) || s.adminUserId === $authenticatedUser?.id)
+          );
   }
 </script>
 
@@ -108,7 +115,7 @@
 <div class="mx-auto max-w-3xl p-2">
   <h2 class="mb-4 text-center text-xl font-semibold dark:text-white">{$translations.serviceBodiesTitle}</h2>
   {#if usersLoaded && serviceBodiesLoaded}
-    {#if serviceBodies.length}
+    {#if filteredServiceBodies.length}
       <TableSearch placeholder={$translations.searchByName} hoverable={true} bind:inputValue={searchTerm}>
         <TableHead>
           <TableHeadCell colspan={$authenticatedUser?.type === 'admin' ? '2' : '1'}>
