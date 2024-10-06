@@ -90,23 +90,31 @@
     showModal = false;
   }
 
+  function isAdminForServiceBody(userId: number, sb: ServiceBody): boolean {
+    let s: ServiceBody | undefined = sb;
+    while (s) {
+      if (s.adminUserId === userId) {
+        return true;
+      }
+      s = serviceBodies.find((x) => x.id === s?.parentId);
+    }
+    return false;
+  }
+
   onMount(() => {
     getUsers();
     getServiceBodies();
   });
 
   $: {
+    // filteredServiceBodies will be an array of service bodies that the authenticated user can edit
     // prettier-ignore
-    filteredServiceBodies = serviceBodies
-          .sort((s1, s2) => s1.name.localeCompare(s2.name))
-          .filter(s =>
-              // Filter based on the search term
-              s.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1 &&
-              // Users that are service body editors but not admins do not have permissions
-              // to perform CUD Actions on Service Bodies, so we hide them.
-              // Ensure that if the user's ID is in assignedUserIds, it's different from adminUserId
-              (!s.assignedUserIds.includes(<number>$authenticatedUser?.id) || s.adminUserId === $authenticatedUser?.id)
-          );
+    if ($authenticatedUser) {
+      filteredServiceBodies = serviceBodies
+        .sort((s1, s2) => s1.name.localeCompare(s2.name))
+        .filter((s) => s.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1 && 
+            ($authenticatedUser.type === 'admin' || isAdminForServiceBody($authenticatedUser.id, s)));
+    }
   }
 </script>
 

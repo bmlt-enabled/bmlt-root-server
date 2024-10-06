@@ -23,19 +23,23 @@ describe('check content in Service Body tab when logged in as various users', ()
 
   test('check layout when logged in as Northern Zone', async () => {
     await login('NorthernZone', 'Service Bodies');
-    // There should be 4 users, with 1 cell per user (display name but no delete icon)
+    // There should be 6 service bodies, with 1 cell per service body (display name but no delete icon)
     const cells = await screen.findAllByRole('cell');
     expect(cells.length).toBe(6);
+    expect(screen.getByRole('cell', { name: 'Northern Zone' })).toBeInTheDocument();
     expect(screen.getByRole('cell', { name: 'Big Region' })).toBeInTheDocument();
-    expect(screen.getByRole('cell', { name: 'Rural Area' })).toBeInTheDocument();
     expect(screen.getByRole('cell', { name: 'Mountain Area' })).toBeInTheDocument();
+    expect(screen.getByRole('cell', { name: 'River City Area' })).toBeInTheDocument();
+    expect(screen.getByRole('cell', { name: 'Rural Area' })).toBeInTheDocument();
+    expect(screen.getByRole('cell', { name: 'Small Region' })).toBeInTheDocument();
   });
 
   test('check layout when logged in as Big Region', async () => {
     login('BigRegion', 'Service Bodies');
-    // There should be 3 users, with 1 cell per user (display name but no delete icon)
+    // There should be 4 service bodies, with 1 cell per service body (display name but no delete icon)
     const cells = await screen.findAllByRole('cell');
-    expect(cells.length).toBe(6);
+    expect(cells.length).toBe(4);
+    expect(screen.getByRole('cell', { name: 'Big Region' })).toBeInTheDocument();
     expect(screen.getByRole('cell', { name: 'Mountain Area' })).toBeInTheDocument();
     expect(screen.getByRole('cell', { name: 'River City Area' })).toBeInTheDocument();
     expect(screen.getByRole('cell', { name: 'Rural Area' })).toBeInTheDocument();
