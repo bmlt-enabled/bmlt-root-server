@@ -20,6 +20,7 @@
         on:click={() => setActiveTab(index)}
         class={activeTab === index ? inactiveClasses : activeClasses}
         aria-selected={activeTab === index}
+        aria-label={tab}
         role="tab"
       >
         {tab}
