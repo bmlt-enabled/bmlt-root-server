@@ -10,10 +10,10 @@
   import { writable } from 'svelte/store';
 
   const showMap = writable(false);
-  // svelte-hack' -- import hacked to get onMount to work correctly for unit tests
   import DurationSelector from './DurationSelector.svelte';
   import MapAccordion from './MapAccordion.svelte';
   import BasicTabs from './BasicTabs.svelte';
+  // 'svelte-hack' -- import hacked to get onMount to work correctly for unit tests
   import { onMount } from 'svelte/internal';
   import { spinner } from '../stores/spinner';
   import RootServerApi from '../lib/RootServerApi';

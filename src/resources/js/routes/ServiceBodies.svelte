@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Button, P, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch } from 'flowbite-svelte';
   import { TrashBinOutline } from 'flowbite-svelte-icons';
-  // svelte-hack' -- import hacked to get onMount to work correctly for unit tests
+  // 'svelte-hack' -- import hacked to get onMount to work correctly for unit tests
   import { onMount } from 'svelte/internal';
 
   import type { ServiceBody, User } from 'bmlt-root-server-client';

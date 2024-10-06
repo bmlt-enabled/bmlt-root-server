@@ -1,5 +1,5 @@
 <script lang="ts">
-  // svelte-hack' -- import hacked to get onMount to work correctly for unit tests
+  // 'svelte-hack' -- import hacked to get onMount to work correctly for unit tests
   import { onMount } from 'svelte/internal';
 
   import Nav from '../components/NavBar.svelte';

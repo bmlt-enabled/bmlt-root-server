@@ -1,11 +1,11 @@
 <script lang="ts">
   // This is separated out from Account.svelte to allow unit testing the list of service bodies that the currently logged in user
   // can edit.  It looks like the problem is that onMount doesn't work correctly for components when doing unit tests, in this case
-  // for AccordionItem.  onMount is fixed for this component using the svelte-hack (below), but that doesn't work for library
+  // for AccordionItem.  onMount is fixed for this component using 'svelte-hack' (below), but that doesn't work for library
   // components like AccordionItem, and we don't want to fork everything in the library.
   // If onMount is fixed, this component could be integrated back into Account.svelte (although it's pretty clean as it is).
   import { Listgroup } from 'flowbite-svelte';
-  // svelte-hack' -- import hacked to get onMount to work correctly for unit tests
+  // 'svelte-hack' -- import hacked to get onMount to work correctly for unit tests
   import { onMount } from 'svelte/internal';
 
   import type { ServiceBody, User } from 'bmlt-root-server-client';

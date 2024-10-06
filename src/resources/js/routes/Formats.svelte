@@ -9,7 +9,7 @@
   import { spinner } from '../stores/spinner';
   import { translations } from '../stores/localization';
   import RootServerApi from '../lib/RootServerApi';
-  // svelte-hack' -- import hacked to get onMount to work correctly for unit tests
+  // 'svelte-hack' -- import hacked to get onMount to work correctly for unit tests
   import { onMount } from 'svelte/internal';
   import type { Format } from 'bmlt-root-server-client';
   import FormatForm from '../components/FormatForm.svelte';
