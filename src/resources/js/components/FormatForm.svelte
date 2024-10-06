@@ -112,7 +112,6 @@
       }
     },
     onError: async (error) => {
-      console.log(error);
       await RootServerApi.handleErrors(error as Error, {
         handleValidationError: (error) => {
           const errorObject: any = {};
