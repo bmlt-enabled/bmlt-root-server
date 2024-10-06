@@ -79,7 +79,8 @@
   }
 
   // Get the name of the format in the current language.  If no translation for that language is available, return the name in
-  // English; if no English version either, than pick anything.
+  // English; if no English version, then just pick the first one in the array.  If that doesn't exist either then return a blank.
+  // This last case only arises when trying to create a format with no translations; the UI signals an error if that happens.
   export function getFormatName(format: Format): string {
     const n = format.translations.find((t) => t.language === language);
     if (n) {
@@ -88,8 +89,10 @@
       const e = format.translations.find((t) => t.language === 'en');
       if (e) {
         return e.name + ' (' + $translations.noTranslationAvailable + ')';
-      } else {
+      } else if (format.translations[0]) {
         return format.translations[0].name + ' (' + $translations.noTranslationAvailable + ')';
+      } else {
+        return '';
       }
     }
   }

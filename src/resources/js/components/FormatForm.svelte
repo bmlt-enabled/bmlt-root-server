@@ -24,6 +24,8 @@
   if (selectedFormat && selectedFormat.type) {
     initialValues.type = selectedFormat.type;
   }
+  // true if no format translations were entered (bit of a hack to allow an appropriate error message to be displayed)
+  let noFormatTranslations: boolean;
 
   const yupSchema: any = {};
 
@@ -93,19 +95,20 @@
     initialValues: initialValues,
     onSubmit: async (values) => {
       spinner.show();
-      const translations = [];
+      const trs = [];
       for (const lang of allLanguages) {
-        // Check whether any of key, name, or description is present; if so add a translation for language n.  The key and name
-        // are required, and the validator should (eventually) be updated to give an error if they are missing.
+        // Check whether any of key, name, or description is present; if so add a translation for language n.  All three
+        // are required, and the UI will signal an error if one or more is missing.
         if (values[lang + '_key'] || values[lang + '_name'] || values[lang + '_description']) {
-          translations.push({ key: values[lang + '_key'], name: values[lang + '_name'], description: values[lang + '_description'], language: lang });
+          trs.push({ key: values[lang + '_key'], name: values[lang + '_name'], description: values[lang + '_description'], language: lang });
         }
       }
+      noFormatTranslations = trs.length === 0;
       if (selectedFormat) {
-        await RootServerApi.updateFormat(selectedFormat.id, { worldId: values.worldId, type: values.type, translations: translations });
+        await RootServerApi.updateFormat(selectedFormat.id, { worldId: values.worldId, type: values.type, translations: trs });
         savedFormat = await RootServerApi.getFormat(selectedFormat.id);
       } else {
-        savedFormat = await RootServerApi.createFormat({ worldId: values.worldId, type: values.type, translations: translations });
+        savedFormat = await RootServerApi.createFormat({ worldId: values.worldId, type: values.type, translations: trs });
       }
     },
     onError: async (error) => {
@@ -113,18 +116,20 @@
       await RootServerApi.handleErrors(error as Error, {
         handleValidationError: (error) => {
           const errorObject: any = {};
-          for (const lang of allLanguages) {
-            const k = error?.errors[lang + '_key'] ?? [];
-            // If there is a name or description but the key is missing, note that there is an error.  (To avoid a
-            // circularity, this isn't done in yup, which would otherwise be the logical place for this check.)
-            if (!$data[lang + '_key'] && ($data[lang + '_name'] || $data[lang + '_description'])) {
-              k.push($translations.keyIsRequired);
+          if (error && error.errors) {
+            for (const lang of allLanguages) {
+              const k = error.errors[lang + '_key'] ?? [];
+              // If there is a name or description but the key is missing, note that there is an error.  (To avoid a
+              // circularity, this isn't done in yup, which would otherwise be the logical place for this check.)
+              if (!$data[lang + '_key'] && ($data[lang + '_name'] || $data[lang + '_description'])) {
+                k.push($translations.keyIsRequired);
+              }
+              errorObject[lang + '_key'] = k.join(' ');
+              const n = error?.errors[lang + '_name'] ?? [];
+              errorObject[lang + '_name'] = n.join(' ');
+              const d = error?.errors[lang + '_description'] ?? [];
+              errorObject[lang + '_description'] = d.join(' ');
             }
-            errorObject[lang + '_key'] = k.join(' ');
-            const n = error?.errors[lang + '_name'] ?? [];
-            errorObject[lang + '_name'] = n.join(' ');
-            const d = error?.errors[lang + '_description'] ?? [];
-            errorObject[lang + '_description'] = d.join(' ');
           }
           errors.set(errorObject);
         }
@@ -199,6 +204,13 @@
         {/each}
       </Accordion>
     </div>
+    {#if noFormatTranslations}
+      <div class="md:col-span-2">
+        <Helper class="mb-2" color="red">
+          {$translations.noFormatTranslationsError}
+        </Helper>
+      </div>
+    {/if}
     <div class="md:col-span-2">
       <Label for="worldId" class="mb-2 md:col-span-2">{$translations.nawsFormatTitle}</Label>
       <Select id="worldId" items={$translations.nawsFormats} name="worldId" class="dark:bg-gray-600" />
