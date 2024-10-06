@@ -221,7 +221,7 @@
 
 <TableSearch placeholder={$translations.filter} hoverable={true} bind:inputValue={searchTerm} {divClass} {innerDivClass} {searchClass} {classInput}>
   <div slot="header" class="flex w-full flex-shrink-0 flex-col items-stretch justify-end space-y-2 md:w-auto md:flex-row md:items-center md:space-x-3 md:space-y-0">
-    <Button color="alternative" class="relative">
+    <Button color="alternative" class="relative" aria-label={$translations.serviceBodiesTitle}>
       {$translations.serviceBodiesTitle}
       {#if selectedServiceBodies.length > 0}
         <Indicator color="red" size="sm" placement="top-right" />
@@ -230,7 +230,7 @@
     <Dropdown class="w-90 top-full z-50 space-y-2 p-3 text-sm">
       <ServiceBodiesTree {serviceBodies} bind:selectedValues={selectedServiceBodies} />
     </Dropdown>
-    <Button color="alternative" class="relative">
+    <Button color="alternative" class="relative" aria-label={$translations.day}>
       {$translations.day}
       {#if selectedDays.length > 0}
         <Indicator color="red" size="sm" placement="top-right" />
@@ -265,7 +265,7 @@
     {/if}
     <Button on:click={searchMeetings}>{$translations.search}</Button>
     {#if $authenticatedUser?.type !== 'observer'}
-      <Button on:click={() => handleAdd()}><PlusOutline class="mr-2 h-3.5 w-3.5" />{$translations.addMeeting}</Button>
+      <Button on:click={() => handleAdd()} aria-label={$translations.addMeeting}><PlusOutline class="mr-2 h-3.5 w-3.5" />{$translations.addMeeting}</Button>
     {/if}
   </div>
   <TableHead>
