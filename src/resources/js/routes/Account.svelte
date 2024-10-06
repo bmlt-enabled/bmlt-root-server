@@ -200,7 +200,7 @@
       </div>
       <Accordion>
         <AccordionItem>
-          <span slot="header">{$translations.editableServiceBodies}</span>
+          <span slot="header">{$translations.serviceBodiesWithEditableMeetings}</span>
           <AccountServiceBodyList user={$authenticatedUser} />
         </AccordionItem>
       </Accordion>

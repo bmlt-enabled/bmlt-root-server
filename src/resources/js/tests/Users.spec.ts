@@ -48,7 +48,7 @@ describe('check content in User tab when logged in as various users', () => {
 
   test('check layout when logged in as Small Region', async () => {
     login('SmallRegion', 'Users');
-    expect(await screen.findByText('No users found.')).toBeInTheDocument();
+    expect(await screen.findByText('No other users found that this user can edit')).toBeInTheDocument();
     expect(screen.queryByText('Formats')).not.toBeInTheDocument();
   });
 

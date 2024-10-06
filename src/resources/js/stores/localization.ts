@@ -52,7 +52,6 @@ const strings = new LocalizedStrings({
     deleteUser: 'Lösche diesen Benutzer',
     descriptionTitle: 'Beschreibung',
     durationTitle: 'Duration', // TODO: translate
-    editableServiceBodies: 'Service bodies this user can edit (not changeable here)', // TODO: translate
     editFormat: 'Format bearbeiten',
     editUser: 'Benutzer bearbeiten',
     emailTitle: 'E-Mail-Adresse',
@@ -139,9 +138,9 @@ const strings = new LocalizedStrings({
     neighborhoodTitle: 'Neighborhood', // TODO: translate
     noFormatTranslationsError: 'At least one translation is required.', // TODO: translate
     none: '- Keine -',
-    noServiceBodiesTitle: 'No service bodies found.', // TODO: translate
+    noServiceBodiesTitle: 'No service bodies found that this user can edit', // TODO: translate
     noTranslationAvailable: 'keine deutsche Version verfügbar',
-    noUsersTitle: 'No users found.', // TODO: translate
+    noUsersTitle: 'No other users found that this user can edit', // TODO: translate
     noWhitespaceInKey: 'Whitespace not allowed in key', // TODO: translate
     observerTitle: 'Service-Body Beobachter',
     ownedByTitle: 'Gehört',
@@ -159,6 +158,7 @@ const strings = new LocalizedStrings({
     serverAdministratorTitle: 'Main Server Administrator', // TODO: translate
     serviceBodiesNoParent: 'No Parent (Top-Level)', // TODO: translate
     serviceBodiesTitle: 'Service Bodies', // TODO: translate
+    serviceBodiesWithEditableMeetings: 'This user can edit meetings in these service bodies:', // TODO: translate
     serviceBodyAdminTitle: 'Service Body Administrator', // TODO: translate
     serviceBodyDeleteConflictError: 'Error: The service body could not be deleted because it is still associated with meetings or is a parent of other service bodies.', // TODO: translate
     serviceBodyTitle: 'Service Body', // TODO: translate
@@ -240,7 +240,6 @@ const strings = new LocalizedStrings({
     deleteUser: 'Delete User',
     descriptionTitle: 'Description',
     durationTitle: 'Duration',
-    editableServiceBodies: 'Service bodies this user can edit (not changeable here)',
     editFormat: 'Edit Format',
     editUser: 'Edit User',
     emailTitle: 'Email',
@@ -326,9 +325,9 @@ const strings = new LocalizedStrings({
     neighborhoodTitle: 'Neighborhood',
     noFormatTranslationsError: 'At least one translation is required.',
     none: '- None -',
-    noServiceBodiesTitle: 'No service bodies found.',
+    noServiceBodiesTitle: 'No service bodies found that this user can edit',
     noTranslationAvailable: 'no English version available',
-    noUsersTitle: 'No users found.',
+    noUsersTitle: 'No other users found that this user can edit',
     noWhitespaceInKey: 'Whitespace not allowed in key',
     observerTitle: 'Service Body Observer',
     ownedByTitle: 'Owned By',
@@ -346,6 +345,7 @@ const strings = new LocalizedStrings({
     serverAdministratorTitle: 'Main Server Administrator',
     serviceBodiesNoParent: 'No Parent (Top-Level)',
     serviceBodiesTitle: 'Service Bodies',
+    serviceBodiesWithEditableMeetings: 'This user can edit meetings in these service bodies:',
     serviceBodyAdminTitle: 'Service Body Administrator',
     serviceBodyDeleteConflictError: 'Error: The service body could not be deleted because it is still associated with meetings or is a parent of other service bodies.',
     serviceBodyTitle: 'Service Body',

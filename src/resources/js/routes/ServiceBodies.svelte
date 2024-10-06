@@ -90,16 +90,31 @@
     showModal = false;
   }
 
+  function isAdminForServiceBody(userId: number, sb: ServiceBody): boolean {
+    let s: ServiceBody | undefined = sb;
+    while (s) {
+      if (s.adminUserId === userId) {
+        return true;
+      }
+      s = serviceBodies.find((x) => x.id === s?.parentId);
+    }
+    return false;
+  }
+
   onMount(() => {
     getUsers();
     getServiceBodies();
   });
 
   $: {
+    // filteredServiceBodies will be an array of service bodies that the authenticated user can edit
     // prettier-ignore
-    filteredServiceBodies = serviceBodies
-      .sort((s1, s2) => s1.name.localeCompare(s2.name))
-      .filter((s) => s.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
+    if ($authenticatedUser) {
+      filteredServiceBodies = serviceBodies
+        .sort((s1, s2) => s1.name.localeCompare(s2.name))
+        .filter((s) => s.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1 && 
+            ($authenticatedUser.type === 'admin' || isAdminForServiceBody($authenticatedUser.id, s)));
+    }
   }
 </script>
 
@@ -108,7 +123,7 @@
 <div class="mx-auto max-w-3xl p-2">
   <h2 class="mb-4 text-center text-xl font-semibold dark:text-white">{$translations.serviceBodiesTitle}</h2>
   {#if usersLoaded && serviceBodiesLoaded}
-    {#if serviceBodies.length}
+    {#if filteredServiceBodies.length}
       <TableSearch placeholder={$translations.searchByName} hoverable={true} bind:inputValue={searchTerm}>
         <TableHead>
           <TableHeadCell colspan={$authenticatedUser?.type === 'admin' ? '2' : '1'}>
