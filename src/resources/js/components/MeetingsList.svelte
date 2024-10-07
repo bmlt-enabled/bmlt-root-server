@@ -75,6 +75,7 @@
 
   $: filteredItems = meetings
     .filter((meeting) => {
+      const matchesDay = selectedDays.length > 0 ? selectedDays.includes(meeting.day.toString()) : true;
       const matchesPublished = selectedPublished.length > 0 ? selectedPublished.includes(String(meeting.published)) : true;
       const matchesSearch =
         // search by name, id or location
@@ -97,7 +98,7 @@
           }
           return false;
         });
-      return matchesTime && matchesPublished && matchesSearch;
+      return matchesTime && matchesPublished && matchesDay && matchesSearch;
     })
     .sort((a, b) => {
       // Sort by day then time
