@@ -257,7 +257,10 @@
         venueType: yup.number().oneOf(VALID_VENUE_TYPES).required(),
         temporarilyVirtual: yup.bool(),
         day: yup.number().integer().min(0).max(6).required(),
-        startTime: yup.string().required(), // TODO: Validation
+        startTime: yup
+          .string()
+          .matches(/^([0-1]\d|2[0-3]):([0-5]\d)$/)
+          .required(), // HH:mm
         duration: yup
           .string()
           .matches(/^([0-1]\d|2[0-3]):([0-5]\d)$/)
