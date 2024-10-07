@@ -55,3 +55,37 @@ if [ ! -z "$AGGREGATOR_MAX_GEO_WIDTH_KM" ]
 then
     echo "\$aggregator_max_geo_width_km = ${AGGREGATOR_MAX_GEO_WIDTH_KM};" >> /var/www/html/auto-config.inc.php
 fi
+
+if [ ! -z "$MEETING_STATES_AND_PROVINCES" ]
+then
+    IFS=',' read -r -a array <<< "$MEETING_STATES_AND_PROVINCES"
+    echo -n "\$meeting_states_and_provinces = [" >> /var/www/html/auto-config.inc.php
+    for ((i=0; i<${#array[@]}; i++))
+    do
+        if [ $i -eq $((${#array[@]}-1)) ]
+        then
+            # No trailing comma if last item
+            echo -n "\"${array[i]}\"" >> /var/www/html/auto-config.inc.php
+        else
+            echo -n "\"${array[i]}\"," >> /var/www/html/auto-config.inc.php
+        fi
+    done
+    echo "];" >> /var/www/html/auto-config.inc.php
+fi
+
+if [ ! -z "$MEETING_COUNTIES_AND_SUB_PROVINCES" ]
+then
+    IFS=',' read -r -a array <<< "$MEETING_COUNTIES_AND_SUB_PROVINCES"
+    echo -n "\$meeting_counties_and_sub_provinces = [" >> /var/www/html/auto-config.inc.php
+    for ((i=0; i<${#array[@]}; i++))
+    do
+        if [ $i -eq $((${#array[@]}-1)) ]
+        then
+            # No trailing comma if last item
+            echo -n "\"${array[i]}\"" >> /var/www/html/auto-config.inc.php
+        else
+            echo -n "\"${array[i]}\"," >> /var/www/html/auto-config.inc.php
+        fi
+    done
+    echo "];" >> /var/www/html/auto-config.inc.php
+fi
