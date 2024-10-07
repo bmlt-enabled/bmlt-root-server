@@ -19,7 +19,7 @@
   let meetingIds: string = '';
   let selectedDays: string[] = [];
   let selectedServiceBodies: string[] = [];
-  let divClass = 'bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-visible';
+  let divClass = 'bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-visible pt-3';
   let innerDivClass = 'flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4';
   let searchClass = 'w-full md:w-1/2 relative';
   let classInput = 'text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2  pl-10';
@@ -332,7 +332,7 @@
       </TableBodyRow>
     {/each}
   </TableBody>
-  <div slot="footer" class="flex flex-col items-start justify-between space-y-3 p-4 md:flex-row md:items-center md:space-y-0" aria-label="Table navigation">
+  <div slot="footer" class="flex flex-col items-start justify-between space-y-3 p-4 md:flex-row md:items-center md:space-y-0 {meetings.length ? '' : 'hidden'}" aria-label="Table navigation">
     {#if meetings.length}
       <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
         {$translations.paginationShowing}
