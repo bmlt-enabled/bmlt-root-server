@@ -31,6 +31,10 @@ resource "aws_ecs_task_definition" "bmlt_latest" {
             value = var.GOOGLE_API_KEY
           },
           {
+            name  = "MEETING_STATES_AND_PROVINCES",
+            value = "CT,MA,NH,NJ,NY,PA,VT"
+          },
+          {
             name  = "DB_DATABASE",
             value = "rootserver"
           },
