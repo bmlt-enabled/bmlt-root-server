@@ -79,6 +79,18 @@
     value: index,
     name: day
   }));
+  const statesAndProvincesChoices = globalSettings.meetingStatesAndProvinces
+    .map((state) => ({
+      value: state,
+      name: state
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+  const countiesAndSubProvincesChoices = globalSettings.meetingCountiesAndSubProvinces
+    .map((county) => ({
+      value: county,
+      name: county
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name));
   const venueTypeItems = [
     { value: VENUE_TYPE_IN_PERSON, name: 'In-Person' },
     { value: VENUE_TYPE_VIRTUAL, name: 'Virtual' },
@@ -699,7 +711,11 @@
         </div>
         <div class="w-full">
           <Label for="locationSubProvince" class="mb-2">{$translations.countySubProvinceTitle}</Label>
-          <Input type="text" id="locationSubProvince" name="locationSubProvince" />
+          {#if countiesAndSubProvincesChoices.length > 0}
+            <Select id="locationSubProvince" items={countiesAndSubProvincesChoices} name="locationSubProvince" class="dark:bg-gray-600" />
+          {:else}
+            <Input type="text" id="locationSubProvince" name="locationSubProvince" />
+          {/if}
           <Helper class="mt-2" color="red">
             {#if $errors.locationSubProvince}
               {$errors.locationSubProvince}
@@ -710,7 +726,11 @@
       <div class="grid gap-4 md:grid-cols-3">
         <div class="w-full">
           <Label for="locationProvince" class="mb-2">{$translations.stateTitle}</Label>
-          <Input type="text" id="locationProvince" name="locationProvince" />
+          {#if statesAndProvincesChoices.length > 0}
+            <Select id="locationProvince" items={statesAndProvincesChoices} name="locationProvince" class="dark:bg-gray-600" />
+          {:else}
+            <Input type="text" id="locationProvince" name="locationProvince" />
+          {/if}
           <Helper class="mt-2" color="red">
             {#if $errors.locationProvince}
               {$errors.locationProvince}
