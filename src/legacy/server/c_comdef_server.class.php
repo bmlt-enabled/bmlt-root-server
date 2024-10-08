@@ -403,7 +403,7 @@ class c_comdef_server
                 );
             }
         }
-        
+
         /// Create our internal container, and give it the array.
          $this->_formatTypes_obj = new c_comdef_format_types($this, $obj_array);
     }
@@ -2802,8 +2802,12 @@ class c_comdef_server
                 c_comdef_server::$server_local_strings['zip_auto_geocoding_enabled'] = isset($zip_auto_geocoding_enabled) ? $zip_auto_geocoding_enabled : false;
                 c_comdef_server::$server_local_strings['county_auto_geocoding_enabled'] = isset($county_auto_geocoding_enabled) ? $county_auto_geocoding_enabled : false;
                 c_comdef_server::$server_local_strings['sort_formats'] = isset($sort_formats) ? $sort_formats : true;
-                c_comdef_server::$server_local_strings['meeting_counties_and_sub_provinces'] = isset($meeting_counties_and_sub_provinces) ? $meeting_counties_and_sub_provinces : array();
-                c_comdef_server::$server_local_strings['meeting_states_and_provinces'] = isset($meeting_states_and_provinces) ? $meeting_states_and_provinces : array();
+                c_comdef_server::$server_local_strings['meeting_counties_and_sub_provinces'] = isset($meeting_counties_and_sub_provinces) && is_string($meeting_counties_and_sub_provinces)
+                    ? collect(explode(',', $meeting_counties_and_sub_provinces))->map(fn($id) => trim($id))->toArray()
+                    : ($meeting_counties_and_sub_provinces ?? []);
+                c_comdef_server::$server_local_strings['meeting_states_and_provinces'] = isset($meeting_states_and_provinces) && is_string($meeting_states_and_provinces)
+                    ? collect(explode(',', $meeting_states_and_provinces))->map(fn($id) => trim($id))->toArray()
+                    : ($meeting_states_and_provinces ?? []);
                 c_comdef_server::$server_local_strings['google_api_key'] = isset($gkey) ? $gkey : '';
                 c_comdef_server::$server_local_strings['dbPrefix'] = $dbPrefix;
                 c_comdef_server::$server_local_strings['region_bias'] = isset($region_bias) ? $region_bias : 'us';

@@ -55,3 +55,13 @@ if [ ! -z "$AGGREGATOR_MAX_GEO_WIDTH_KM" ]
 then
     echo "\$aggregator_max_geo_width_km = ${AGGREGATOR_MAX_GEO_WIDTH_KM};" >> /var/www/html/auto-config.inc.php
 fi
+
+if [ ! -z "$MEETING_STATES_AND_PROVINCES" ]
+then
+    echo "\$meeting_states_and_provinces = \"${MEETING_STATES_AND_PROVINCES}\";" >> /var/www/html/auto-config.inc.php
+fi
+
+if [ ! -z "$MEETING_COUNTIES_AND_SUB_PROVINCES" ]
+then
+    echo "\$meeting_counties_and_sub_provinces = \"${MEETING_COUNTIES_AND_SUB_PROVINCES}\";" >> /var/www/html/auto-config.inc.php
+fi
