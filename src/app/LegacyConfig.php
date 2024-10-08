@@ -103,8 +103,12 @@ class LegacyConfig
         $config['enable_email_contact'] = isset($g_enable_email_contact) && $g_enable_email_contact;
         $config['include_service_body_admin_on_emails'] = isset($include_service_body_admin_on_emails) && $include_service_body_admin_on_emails;
         $config['change_depth_for_meetings'] = $change_depth_for_meetings ?? 0;
-        $config['meeting_states_and_provinces'] = $meeting_states_and_provinces ?? [];
-        $config['meeting_counties_and_sub_provinces'] = $meeting_counties_and_sub_provinces ?? [];
+        $config['meeting_states_and_provinces'] = isset($meeting_states_and_provinces) && is_string($meeting_states_and_provinces)
+            ? collect(explode(',', $meeting_states_and_provinces))->map(fn($id) => trim($id))->toArray()
+            : ($meeting_states_and_provinces ?? []);
+        $config['meeting_counties_and_sub_provinces'] = isset($meeting_counties_and_sub_provinces) && is_string($meeting_counties_and_sub_provinces)
+            ? collect(explode(',', $meeting_counties_and_sub_provinces))->map(fn($id) => trim($id))->toArray()
+            : ($meeting_counties_and_sub_provinces ?? []);
         $config['meeting_time_zones_enabled'] = isset($meeting_time_zones_enabled) && $meeting_time_zones_enabled;
         $config['search_spec_map_center_longitude'] = isset($search_spec_map_center) && is_array($search_spec_map_center) && isset($search_spec_map_center['longitude']) ? $search_spec_map_center['longitude'] : -118.563659;
         $config['search_spec_map_center_latitude'] = isset($search_spec_map_center) && is_array($search_spec_map_center) && isset($search_spec_map_center['latitude']) ? $search_spec_map_center['latitude'] : 34.235918;
