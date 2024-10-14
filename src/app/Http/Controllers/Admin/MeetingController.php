@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Resources\Admin\MeetingResource;
+use App\Http\Resources\Query\MeetingChangeResource;
+use App\Interfaces\ChangeRepositoryInterface;
 use App\Interfaces\FormatRepositoryInterface;
 use App\Interfaces\MeetingRepositoryInterface;
 use App\Interfaces\ServiceBodyRepositoryInterface;
@@ -10,6 +12,7 @@ use App\Models\Meeting;
 use App\Repositories\ServiceBodyRepository;
 use App\Rules\IANATimeZone;
 use App\Rules\VenueTypeLocation;
+use Illuminate\Http\JsonResponse as BaseJsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
@@ -21,12 +24,14 @@ class MeetingController extends ResourceController
     private FormatRepositoryInterface $formatRepository;
     private MeetingRepositoryInterface $meetingRepository;
     private ServiceBodyRepository $serviceBodyRepository;
+    private ChangeRepositoryInterface $changeRepository;
 
-    public function __construct(FormatRepositoryInterface $formatRepository, MeetingRepositoryInterface $meetingRepository, ServiceBodyRepositoryInterface $serviceBodyRepository)
+    public function __construct(FormatRepositoryInterface $formatRepository, MeetingRepositoryInterface $meetingRepository, ServiceBodyRepositoryInterface $serviceBodyRepository, ChangeRepositoryInterface $changeRepository)
     {
         $this->formatRepository = $formatRepository;
         $this->meetingRepository = $meetingRepository;
         $this->serviceBodyRepository = $serviceBodyRepository;
+        $this->changeRepository = $changeRepository;
         $this->authorizeResource(Meeting::class);
     }
 
@@ -253,5 +258,11 @@ class MeetingController extends ResourceController
                     ->reject(fn ($value, $_) => is_null($value))
             )
             ->toArray();
+    }
+
+    public function getChanges(int $meetingId): BaseJsonResponse
+    {
+        $changes = $this->changeRepository->getMeetingChanges(null, null, $meetingId, null);
+        return MeetingChangeResource::collection($changes)->response();
     }
 }

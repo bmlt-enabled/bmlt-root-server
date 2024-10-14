@@ -36,6 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/formats/{format}', [FormatController::class, 'partialUpdate']);
     Route::apiResource('meetings', MeetingController::class);
     Route::patch('/meetings/{meeting}', [MeetingController::class, 'partialUpdate']);
+    Route::get('/meetings/{meetingId}/changes', [MeetingController::class, 'getChanges']);
     Route::apiResource('servicebodies', ServiceBodyController::class, ['parameters' => ['servicebodies' => 'serviceBody']]);
     Route::patch('/servicebodies/{serviceBody}', [ServiceBodyController::class, 'partialUpdate']);
     Route::apiResource('users', UserController::class);

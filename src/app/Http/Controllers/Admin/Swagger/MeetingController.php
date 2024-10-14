@@ -60,7 +60,98 @@ namespace App\Http\Controllers\Admin\Swagger;
  * @OA\Schema(schema="MeetingCollection", type="array",
  *     @OA\Items(ref="#/components/schemas/Meeting")
  * ),
- */
+ * @OA\Schema(
+ *     schema="MeetingChangeResource",
+ *     type="object",
+ *     @OA\Property(
+ *         property="date_int",
+ *         type="string",
+ *         example="1728920106",
+ *         description="Timestamp in integer format."
+ *     ),
+ *     @OA\Property(
+ *         property="date_string",
+ *         type="string",
+ *         example="3:35 PM, 10/14/2024",
+ *         description="Human-readable date and time."
+ *     ),
+ *     @OA\Property(
+ *         property="change_type",
+ *         type="string",
+ *         example="comdef_change_type_change",
+ *         description="Type of change."
+ *     ),
+ *     @OA\Property(
+ *         property="change_id",
+ *         type="string",
+ *         example="13139",
+ *         description="Unique ID of the change."
+ *     ),
+ *     @OA\Property(
+ *         property="meeting_id",
+ *         type="string",
+ *         example="26",
+ *         description="ID of the meeting related to the change."
+ *     ),
+ *     @OA\Property(
+ *         property="meeting_name",
+ *         type="string",
+ *         example="Just for Today 1",
+ *         description="Name of the meeting related to the change."
+ *     ),
+ *     @OA\Property(
+ *         property="user_id",
+ *         type="string",
+ *         example="3",
+ *         description="ID of the user who made the change."
+ *     ),
+ *     @OA\Property(
+ *         property="user_name",
+ *         type="string",
+ *         example="Greater New York Regional Administrator",
+ *         description="Name of the user who made the change."
+ *     ),
+ *     @OA\Property(
+ *         property="service_body_id",
+ *         type="string",
+ *         example="1005",
+ *         description="ID of the service body related to the meeting."
+ *     ),
+ *     @OA\Property(
+ *         property="service_body_name",
+ *         type="string",
+ *         example="Bronx Area Service",
+ *         description="Name of the service body related to the meeting."
+ *     ),
+ *     @OA\Property(
+ *         property="meeting_exists",
+ *         type="string",
+ *         example="1",
+ *         description="Flag indicating if the meeting exists."
+ *     ),
+ *     @OA\Property(
+ *         property="details",
+ *         type="string",
+ *         example="email_contact was deleted. time_zone was added as America/New_York. Meeting Name was changed from Just for Today #1 to Just for Today 1.",
+ *         description="Details about the changes."
+ *     ),
+ *     @OA\Property(
+ *         property="json_data",
+ *         type="object",
+ *         @OA\Property(
+ *             property="before",
+ *             ref="#/components/schemas/MeetingBase",
+ *             description="Meeting data before the change."
+ *         ),
+ *         @OA\Property(
+ *             property="after",
+ *             ref="#/components/schemas/MeetingBase",
+ *             description="Meeting data after the change."
+ *         ),
+ *     ),
+ * )
+*
+*/
 
 class MeetingController extends Controller
 {
@@ -212,6 +303,43 @@ class MeetingController extends Controller
      * )
      */
     public function destroy()
+    {
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/v1/meetings/{meetingId}/changes",
+     *     summary="Retrieve changes for a meeting",
+     *     description="Retrieve all changes made to a specific meeting.",
+     *     operationId="getMeetingChanges",
+     *     tags={"rootServer"},
+     *     security={{"bmltToken":{}}},
+     *     @OA\Parameter(
+     *         description="ID of the meeting",
+     *         in="path",
+     *         name="meetingId",
+     *         required=true,
+     *         example="1",
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of changes for the meeting.",
+     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/MeetingChangeResource"))
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized.",
+     *         @OA\JsonContent(ref="#/components/schemas/AuthenticationError")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Meeting not found.",
+     *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
+     *     )
+     * )
+     */
+    public function getChanges()
     {
     }
 }
