@@ -22,7 +22,7 @@ class MeetingChangesShowPermissionsTest extends TestCase
         $user = $this->createDeactivatedUser();
         $token = $user->createToken('test')->plainTextToken;
         $this->withHeader('Authorization', "Bearer $token")
-            ->get('/api/v1/meetings/3/changes')
+            ->get('/api/v1/meetings/1/changes')
             ->assertStatus(403);
     }
 
