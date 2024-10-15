@@ -20,6 +20,7 @@ const strings = new LocalizedStrings({
     applyChangesTitle: 'Änderung anwenden',
     boroughTitle: 'Borough/City Subsection', // TODO: translate
     busLinesTitle: 'Bus Lines', // TODO: translate
+    by: 'by', // TODO: translate
     cancel: 'Stornieren',
     chooseDay: 'Tag wählen',
     chooseStartTime: 'Startzeit wählen',
@@ -168,8 +169,9 @@ const strings = new LocalizedStrings({
     stateTitle: 'State/Province', // TODO: translate
     streetTitle: 'Street', // TODO: translate
     tabsBasic: 'Basic', // TODO: translate
+    tabsChanges: 'Changes', // TODO: translate
     tabsLocation: 'Location', // TODO: translate
-    tabsOther: 'Other', // TODO: translate
+    tabsOther: 'Other', // TODO: translate,
     time: 'Time',
     timeAfternoon: 'Afternoon',
     timeEvening: 'Evening',
@@ -208,6 +210,7 @@ const strings = new LocalizedStrings({
     applyChangesTitle: 'Apply Changes',
     boroughTitle: 'Borough/City Subsection',
     busLinesTitle: 'Bus Lines',
+    by: 'by',
     cancel: 'Cancel',
     chooseDay: 'Choose day',
     chooseStartTime: 'Choose start time',
@@ -355,6 +358,7 @@ const strings = new LocalizedStrings({
     stateTitle: 'State/Province',
     streetTitle: 'Street',
     tabsBasic: 'Basic',
+    tabsChanges: 'Changes',
     tabsLocation: 'Location',
     tabsOther: 'Other',
     time: 'Time',

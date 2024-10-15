@@ -2293,17 +2293,17 @@
             },
             "MeetingChangeResource": {
                 "properties": {
-                    "date_string": {
+                    "dateString": {
                         "description": "Human-readable date and time.",
                         "type": "string",
                         "example": "3:35 PM, 10/14/2024"
                     },
-                    "user_name": {
+                    "userName": {
                         "description": "Name of the user who made the change.",
                         "type": "string",
                         "example": "Greater New York Regional Administrator"
                     },
-                    "service_body_name": {
+                    "serviceBodyName": {
                         "description": "Name of the service body related to the meeting.",
                         "type": "string",
                         "example": "Bronx Area Service"

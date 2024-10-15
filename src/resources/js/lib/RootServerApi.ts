@@ -11,6 +11,7 @@ import {
   type FormatUpdate,
   type GetMeetingsRequest,
   type Meeting,
+  type MeetingChangeResource,
   type MeetingCreate,
   type MeetingPartialUpdate,
   type MeetingUpdate,
@@ -170,6 +171,11 @@ class ApiClientWrapper {
   async getMeeting(id: number): Promise<Meeting> {
     const params = { meetingId: id };
     return this.api.getMeeting(params);
+  }
+
+  async getMeetingChanges(id: number): Promise<Array<MeetingChangeResource>> {
+    const params = { meetingId: id };
+    return this.api.getMeetingChanges(params);
   }
 
   async createMeeting(meeting: MeetingCreate): Promise<Meeting> {
