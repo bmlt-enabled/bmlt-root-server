@@ -444,6 +444,7 @@
     try {
       spinner.show();
       changes = await RootServerApi.getMeetingChanges(meetingId);
+      changes.reverse();
       changesLoaded = true;
     } catch (error: any) {
       await RootServerApi.handleErrors(error);
