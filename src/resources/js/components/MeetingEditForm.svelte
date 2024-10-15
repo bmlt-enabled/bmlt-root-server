@@ -1,7 +1,7 @@
 <script lang="ts">
   import { validator } from '@felte/validator-yup';
   import { createForm } from 'felte';
-  import { Button, Checkbox, Hr, Label, Input, Helper, Select, MultiSelect, Badge } from 'flowbite-svelte';
+  import { Button, Checkbox, Hr, Label, Input, Listgroup, Helper, Select, MultiSelect, Badge } from 'flowbite-svelte';
   import { createEventDispatcher } from 'svelte';
   import * as yup from 'yup';
   import L from 'leaflet';
@@ -902,23 +902,25 @@
     </div>
     <div slot="tab-content-3">
       {#if changesLoaded && changes.length > 0}
-        <div class="space-y-4">
+        <div class="space-y-6">
           {#each changes as change}
             <div class="rounded-lg bg-gray-100 p-4 shadow-sm dark:bg-gray-800">
-              <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                {change.dateString}
-                {$translations.by}
-                {change.userName}
-              </h3>
-              <div class="mt-2 whitespace-pre-wrap text-sm text-gray-600 dark:text-gray-400">
-                {#if change.details && change.details.split('.').length > 0}
-                  <ul class="list-inside list-disc">
-                    {#each change.details.split('.').filter((detail) => detail.trim().length > 0) as changeDetail (changeDetail)}
-                      <li>{changeDetail.trim()}</li>
-                    {/each}
-                  </ul>
-                {/if}
+              <div class="mb-2 flex items-center justify-between">
+                <h5 class="text-lg font-semibold text-gray-900 dark:text-white">
+                  {change.dateString}
+                  {$translations.by}
+                  {change.userName}
+                </h5>
               </div>
+              {#if change.details && change.details.split('.').length > 0}
+                <ul class="space-y-1">
+                  {#each change.details.split('.').filter((detail) => detail.trim().length > 0) as changeDetail (changeDetail)}
+                    <li class="text-sm text-gray-600 dark:text-gray-400">
+                      {changeDetail.trim()}
+                    </li>
+                  {/each}
+                </ul>
+              {/if}
             </div>
           {/each}
         </div>
