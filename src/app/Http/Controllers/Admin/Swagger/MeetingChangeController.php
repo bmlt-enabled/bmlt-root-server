@@ -7,19 +7,19 @@ namespace App\Http\Controllers\Admin\Swagger;
  *     schema="MeetingChangeResource",
  *     type="object",
  *     @OA\Property(
- *         property="date_string",
+ *         property="dateString",
  *         type="string",
  *         example="3:35 PM, 10/14/2024",
  *         description="Human-readable date and time."
  *     ),
  *     @OA\Property(
- *         property="user_name",
+ *         property="userName",
  *         type="string",
  *         example="Greater New York Regional Administrator",
  *         description="Name of the user who made the change."
  *     ),
  *     @OA\Property(
- *         property="service_body_name",
+ *         property="serviceBodyName",
  *         type="string",
  *         example="Bronx Area Service",
  *         description="Name of the service body related to the meeting."

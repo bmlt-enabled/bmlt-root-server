@@ -16,6 +16,7 @@
   // 'svelte-hack' -- import hacked to get onMount to work correctly for unit tests
   import { onMount } from 'svelte/internal';
   import { spinner } from '../stores/spinner';
+  import type { MeetingChangeResource } from 'bmlt-root-server-client';
   import RootServerApi from '../lib/RootServerApi';
   import { formIsDirty } from '../lib/utils';
   import { timeZones } from '../lib/timeZone/timeZones';
@@ -30,7 +31,7 @@
   export let formats: Format[];
   export let serviceBodies: ServiceBody[];
 
-  const tabs = [$translations.tabsBasic, $translations.tabsLocation, $translations.tabsOther];
+  const tabs = [$translations.tabsBasic, $translations.tabsLocation, $translations.tabsOther, $translations.tabsChanges];
   const globalSettings = settings;
   const seenNames = new Set<string>();
   const ignoredFormats = ['VM', 'HY', 'TC'];
@@ -149,6 +150,8 @@
   let manualDrag = false;
   let formatIdsSelected = initialValues.formatIds;
   let savedMeeting: Meeting;
+  let changes: MeetingChangeResource[];
+  let changesLoaded = false;
 
   function shouldGeocode(initialValues: MeetingPartialUpdate, values: MeetingPartialUpdate, isNewMeeting: boolean) {
     if (isNewMeeting && values.venueType != VENUE_TYPE_VIRTUAL) {
@@ -437,7 +440,22 @@
     }
   }
 
+  async function getChanges(meetingId: number): Promise<void> {
+    try {
+      spinner.show();
+      changes = await RootServerApi.getMeetingChanges(meetingId);
+      changesLoaded = true;
+    } catch (error: any) {
+      await RootServerApi.handleErrors(error);
+    } finally {
+      spinner.hide();
+    }
+  }
+
   onMount(() => {
+    if (selectedMeeting) {
+      getChanges(selectedMeeting.id);
+    }
     mapElement = document.getElementById('locationMap') as HTMLElement;
     if (mapElement) {
       if (globalSettings.googleApiKey) {
@@ -881,6 +899,30 @@
           </Helper>
         </div>
       </div>
+    </div>
+    <div slot="tab-content-3">
+      {#if changesLoaded && changes.length > 0}
+        <div class="space-y-4">
+          {#each changes as change}
+            <div class="rounded-lg bg-gray-100 p-4 shadow-sm dark:bg-gray-800">
+              <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                {change.dateString}
+                {$translations.by}
+                {change.userName}
+              </h3>
+              <div class="mt-2 whitespace-pre-wrap text-sm text-gray-600 dark:text-gray-400">
+                {#if change.details && change.details.split('.').length > 0}
+                  <ul class="list-inside list-disc">
+                    {#each change.details.split('.').filter((detail) => detail.trim().length > 0) as changeDetail (changeDetail)}
+                      <li>{changeDetail.trim()}</li>
+                    {/each}
+                  </ul>
+                {/if}
+              </div>
+            </div>
+          {/each}
+        </div>
+      {/if}
     </div>
   </BasicTabs>
   <Hr classHr="my-8" />

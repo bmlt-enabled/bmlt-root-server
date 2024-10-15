@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Resources\Admin\MeetingChangeResource;
 use App\Interfaces\ChangeRepositoryInterface;
-use App\Models\Change;
 use App\Models\Meeting;
 use Illuminate\Http\JsonResponse as BaseJsonResponse;
 
