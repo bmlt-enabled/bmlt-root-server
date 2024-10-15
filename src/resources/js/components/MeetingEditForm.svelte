@@ -1,7 +1,7 @@
 <script lang="ts">
   import { validator } from '@felte/validator-yup';
   import { createForm } from 'felte';
-  import { Button, Checkbox, Hr, Label, Input, Listgroup, Helper, Select, MultiSelect, Badge } from 'flowbite-svelte';
+  import { Button, Checkbox, Hr, Label, Input, Helper, Select, MultiSelect, Badge } from 'flowbite-svelte';
   import { createEventDispatcher } from 'svelte';
   import * as yup from 'yup';
   import L from 'leaflet';
