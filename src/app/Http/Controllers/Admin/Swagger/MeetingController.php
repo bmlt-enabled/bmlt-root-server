@@ -59,7 +59,7 @@ namespace App\Http\Controllers\Admin\Swagger;
  * ),
  * @OA\Schema(schema="MeetingCollection", type="array",
  *     @OA\Items(ref="#/components/schemas/Meeting")
- * ),
+ * )
  */
 
 class MeetingController extends Controller

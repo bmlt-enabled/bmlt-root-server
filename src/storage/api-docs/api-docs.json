@@ -544,6 +544,79 @@
                 ]
             }
         },
+        "/api/v1/meetings/{meetingId}/changes": {
+            "get": {
+                "tags": [
+                    "rootServer"
+                ],
+                "summary": "Retrieve changes for a meeting",
+                "description": "Retrieve all changes made to a specific meeting.",
+                "operationId": "getMeetingChanges",
+                "parameters": [
+                    {
+                        "name": "meetingId",
+                        "in": "path",
+                        "description": "ID of the meeting",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of changes for the meeting.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/MeetingChangeResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthenticationError"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Returns when unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthorizationError"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Meeting not found.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NotFoundError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bmltToken": []
+                    }
+                ]
+            }
+        },
         "/api/v1/meetings": {
             "get": {
                 "tags": [
@@ -2217,6 +2290,31 @@
                 "items": {
                     "$ref": "#/components/schemas/Format"
                 }
+            },
+            "MeetingChangeResource": {
+                "properties": {
+                    "date_string": {
+                        "description": "Human-readable date and time.",
+                        "type": "string",
+                        "example": "3:35 PM, 10/14/2024"
+                    },
+                    "user_name": {
+                        "description": "Name of the user who made the change.",
+                        "type": "string",
+                        "example": "Greater New York Regional Administrator"
+                    },
+                    "service_body_name": {
+                        "description": "Name of the service body related to the meeting.",
+                        "type": "string",
+                        "example": "Bronx Area Service"
+                    },
+                    "details": {
+                        "description": "Details about the changes.",
+                        "type": "string",
+                        "example": "email_contact was deleted. time_zone was added as America/New_York. Meeting Name was changed from Just for Today #1 to Just for Today 1."
+                    }
+                },
+                "type": "object"
             },
             "MeetingBase": {
                 "properties": {
