@@ -14,7 +14,7 @@
 </script>
 
 <div>
-  <div class="flex flex-wrap space-x-2 border-b sm:space-x-3">
+  <div class="flex flex-wrap space-x-2 sm:space-x-3 border-b">
     {#each tabs as tab, index}
       <Button
         color={activeTab === index ? 'light' : 'dark'}
