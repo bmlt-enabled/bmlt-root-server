@@ -20,7 +20,7 @@ class MeetingChangeController extends ResourceController
     public function index(Meeting $meeting): BaseJsonResponse
     {
         $changes = $this->changeRepository->getMeetingChanges(null, null, $meeting->id_bigint, null)
-            ->sortBy(fn ($change) => strtotime($change->change_date));
+            ->sortByDesc(fn ($change) => strtotime($change->change_date));
         return MeetingChangeResource::collection($changes)->response();
     }
 }

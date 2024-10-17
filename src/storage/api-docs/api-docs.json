@@ -2309,9 +2309,12 @@
                         "example": "Bronx Area Service"
                     },
                     "details": {
-                        "description": "Details about the changes.",
-                        "type": "string",
-                        "example": "email_contact was deleted. time_zone was added as America/New_York. Meeting Name was changed from Just for Today #1 to Just for Today 1."
+                        "description": "List of details about the changes.",
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "example": "email_contact was deleted."
+                        }
                     }
                 },
                 "type": "object"

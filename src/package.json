@@ -58,7 +58,7 @@
     "@googlemaps/js-api-loader": "^1.16.8",
     "@turf/boolean-point-in-polygon": "^7.1.0",
     "@turf/helpers": "^7.1.0",
-    "bmlt-root-server-client": "^1.1.8",
+    "bmlt-root-server-client": "^1.1.9",
     "felte": "^1.2.14",
     "geobuf": "^3.0.2",
     "leaflet": "^1.9.4",

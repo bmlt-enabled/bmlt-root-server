@@ -444,7 +444,6 @@
     try {
       spinner.show();
       changes = await RootServerApi.getMeetingChanges(meetingId);
-      changes.reverse();
       changesLoaded = true;
     } catch (error: any) {
       await RootServerApi.handleErrors(error);
@@ -903,21 +902,21 @@
     </div>
     <div slot="tab-content-3">
       {#if changesLoaded && changes.length > 0}
-        <div class="space-y-6">
-          {#each changes as change}
-            <div class="rounded-lg bg-gray-100 p-4 shadow-sm dark:bg-gray-800">
-              <div class="mb-2 flex items-center justify-between">
-                <h5 class="text-lg font-semibold text-gray-900 dark:text-white">
-                  {change.dateString}
+        <div class="space-y-3">
+          {#each changes as { dateString, details, userName }}
+            <div class="rounded-lg bg-gray-100 p-3 shadow-sm dark:bg-gray-800">
+              <div class="mb-0 flex items-center justify-between">
+                <h6 class="text-lg font-semibold text-gray-900 dark:text-white">
+                  {dateString}
                   {$translations.by}
-                  {change.userName}
-                </h5>
+                  {userName}
+                </h6>
               </div>
-              {#if change.details && change.details.split('.').length > 0}
-                <ul class="space-y-1">
-                  {#each change.details.split('.').filter((detail) => detail.trim().length > 0) as changeDetail (changeDetail)}
+              {#if details && details.length > 0}
+                <ul class="mt-1 space-y-1">
+                  {#each details as detail}
                     <li class="text-sm text-gray-600 dark:text-gray-400">
-                      {changeDetail.trim()}
+                      {detail.trim()}
                     </li>
                   {/each}
                 </ul>
