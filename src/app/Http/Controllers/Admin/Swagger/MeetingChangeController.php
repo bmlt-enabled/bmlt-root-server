@@ -26,9 +26,12 @@ namespace App\Http\Controllers\Admin\Swagger;
  *     ),
  *     @OA\Property(
  *         property="details",
- *         type="string",
- *         example="email_contact was deleted. time_zone was added as America/New_York. Meeting Name was changed from Just for Today #1 to Just for Today 1.",
- *         description="Details about the changes."
+ *         type="array",
+ *         @OA\Items(
+ *           type="string",
+ *           example="email_contact was deleted."
+ *         ),
+ *         description="List of details about the changes."
  *     )
  * )
  *

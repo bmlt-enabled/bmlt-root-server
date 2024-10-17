@@ -23,7 +23,7 @@ trait ChangeDetailsTrait
         'comdef_change_type_rollback' => 'rolled_back',
     ];
 
-    public function getChangeDetailsString(): string
+    public function getChangeDetails(bool $asArray = false): string|array
     {
         $objectType = self::$objectClassToStrMap[$this->object_class_string];
         $changeType = self::$changeTypeToStrMap[$this->change_type_enum];
@@ -169,7 +169,7 @@ trait ChangeDetailsTrait
             }
         }
 
-        return implode(' ', $changeStrings);
+        return $asArray ? $changeStrings : implode(' ', $changeStrings);
     }
 
     private function getBeforeObject(): ?array

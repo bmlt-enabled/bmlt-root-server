@@ -60,7 +60,7 @@ class MeetingChangeResource extends JsonResource
             'service_body_id' => strval($this->service_body_id_bigint),
             'service_body_name' => $this->serviceBody?->name_string ?? '',
             'meeting_exists' => $this->getAfterObject() ? '1' : '0',
-            'details' => $this->getChangeDetailsString(),
+            'details' => $this->getChangeDetails(),
             'json_data' => $this->getJsonDataArray(),
         ];
     }
