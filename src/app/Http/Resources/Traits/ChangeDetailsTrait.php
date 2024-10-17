@@ -31,13 +31,13 @@ trait ChangeDetailsTrait
         if ($objectType != 'meeting' || $changeType != 'changed') {
             $translationKey = 'change_type.' . $objectType . '_' . $changeType;
             $translation = __($translationKey);
-            return $translation == $translationKey ? '' : $translation;
+            return $asArray ? [$translation] : ($translation == $translationKey ? '' : $translation);
         }
 
         $beforeObject = $this->getBeforeObject();
         $afterObject = $this->getAfterObject();
         if (!$beforeObject || !$afterObject) {
-            return '';
+            return $asArray ? [] : '';
         }
 
         $beforeValues = collect($beforeObject['main_table_values'] ?? [])->merge(
