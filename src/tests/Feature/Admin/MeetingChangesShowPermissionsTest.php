@@ -69,7 +69,7 @@ class MeetingChangesShowPermissionsTest extends TestCase
         $this->assertNotEmpty($changes);
         $this->assertEquals($changes[0]['userName'], $user->name_string);
         $this->assertEquals($changes[0]['serviceBodyName'], $area->name_string);
-        $this->assertEquals($changes[0]['details'], 'The meeting was created.');
+        $this->assertEquals($changes[0]['details'][0], 'The meeting was created.');
         $this->assertStringContainsString(date('m/d/Y'), $changes[0]['dateString']);
     }
 }
