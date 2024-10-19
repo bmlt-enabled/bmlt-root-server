@@ -103,7 +103,7 @@ There are some additional commands as well; `make help` will list them.
 
 Use this command to replace the supplied test database with your own:
 ```
-docker exec -i docker-db-1 sh -c 'exec mysql -uroot -prootserver rootserver' < mydb.sql
+docker exec -i docker-db-1 sh -c 'exec mariadb -uroot -prootserver rootserver' < mydb.sql
 ```
 
 ## Running tests

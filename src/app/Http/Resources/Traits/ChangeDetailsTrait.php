@@ -94,7 +94,7 @@ trait ChangeDetailsTrait
                     $changeStrings[] = __('change_detail.was_unpublished') . '.';
                     continue;
                 }
-                $changeStrings[] = $fieldPrompt . ' ' . __('change_detail.was_deleted') . '.';
+                $changeStrings[] = $fieldPrompt . ' ' . __('change_detail.was_changed_from') . ' "' . $beforeValue . '" ' . __('change_detail.to') . ' "' . $afterValue . '".';
             } elseif (is_null($beforeValue) && !is_null($afterValue)) {
                 if (!$isVisible) {
                     $changeStrings[] = $fieldPrompt . ' ' . __('change_detail.was_changed') . '.';
