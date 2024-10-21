@@ -841,7 +841,7 @@ class GetChangesTest extends TestCase
                         'service_body_id' => '1',
                         'service_body_name' => '',
                         'meeting_exists' => '1',
-                        'details' => "$prompt was deleted.",
+                        'details' => "$prompt was changed from \"before\" to \"\".",
                         'json_data' => [
                             'before' => collect($this->getMainValuesPublicArray($change->beforeMeeting, $beforeValues))->merge($beforeValues)->toArray(),
                             'after' => collect($this->getMainValuesPublicArray($change->afterMeeting, $afterValues))->merge($afterValues)->toArray(),
@@ -973,7 +973,7 @@ class GetChangesTest extends TestCase
                         'service_body_id' => '1',
                         'service_body_name' => '',
                         'meeting_exists' => '1',
-                        'details' => "$prompt was deleted.",
+                        'details' => "$prompt was changed from \"before\" to \"\".",
                         'json_data' => [
                             'before' => collect($this->getMainValuesPublicArray($change->beforeMeeting, $beforeValues))->merge($beforeValues)->toArray(),
                             'after' => collect($this->getMainValuesPublicArray($change->afterMeeting, $afterValues))->merge($afterValues)->toArray(),
