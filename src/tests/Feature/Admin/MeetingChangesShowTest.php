@@ -109,6 +109,6 @@ class MeetingChangesShowTest extends TestCase
             ->get("/api/v1/meetings/{$meeting->id_bigint}/changes")
             ->assertStatus(200)
             ->json();
-        $this->assertEquals('Meeting Name was changed from "Sunday Serenity" to "new name".', $changes[1]['details'][0]);
+        $this->assertEquals('Meeting Name was changed from "Sunday Serenity" to "new name".', $changes[0]['details'][0]);
     }
 }
