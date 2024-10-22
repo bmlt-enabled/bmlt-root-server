@@ -100,15 +100,15 @@ class MeetingChangesShowTest extends TestCase
             ->json();
         $meeting = Meeting::query()->where('id_bigint', $meeting['id'])->first();
         $payload['name'] = 'new name';
-        $this
-            ->withHeader('Authorization', "Bearer $token")
+        $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/meetings/{$meeting->id_bigint}", $payload)
             ->assertStatus(204);
-        $changes = $this
-            ->withHeader('Authorization', "Bearer $token")
-            ->get("/api/v1/meetings/{$meeting->id_bigint}/changes")
-            ->assertStatus(200)
-            ->json();
+        $changes = collect(
+            $this->withHeader('Authorization', "Bearer $token")
+                ->get("/api/v1/meetings/{$meeting->id_bigint}/changes")
+                ->assertStatus(200)
+                ->json()
+        )->sortBy('dateString')->values();
         $this->assertEquals('Meeting Name was changed from "Sunday Serenity" to "new name".', $changes[1]['details'][0]);
     }
 }
