@@ -58,6 +58,7 @@ const strings = new LocalizedStrings({
     emailTitle: 'E-Mail-Adresse',
     extraInfoTitle: 'Extra Info', // TODO: translate
     filter: 'Filter', // TODO: translate
+    formatDeleteConflictError: 'Error: The format could not be deleted because it is still associated with meetings.', // TODO: translate
     formatId: 'Format ID', // TODO: translate
     formatsTitle: 'Formate',
     formatTypeCodes: [
@@ -248,6 +249,7 @@ const strings = new LocalizedStrings({
     emailTitle: 'Email',
     extraInfoTitle: 'Extra Info',
     filter: 'Filter',
+    formatDeleteConflictError: 'Error: The format could not be deleted because it is still associated with meetings.',
     formatId: 'Format ID',
     formatsTitle: 'Formats',
     formatTypeCodes: [
