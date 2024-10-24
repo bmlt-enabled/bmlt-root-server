@@ -28,6 +28,10 @@
         handleConflictError: () => {
           confirmed = false;
           errorMessage = $translations.formatDeleteConflictError;
+        },
+        handleValidationError: () => {
+          confirmed = false;
+          errorMessage = $translations.formatValidationError;
         }
       });
       spinner.hide();

@@ -18,11 +18,11 @@ class MeetingChangesShowPermissionsTest extends TestCase
 
     public function testIndexAsDeactivated()
     {
-        $this->createMeeting();
+        $meeting = $this->createMeeting();
         $user = $this->createDeactivatedUser();
         $token = $user->createToken('test')->plainTextToken;
         $this->withHeader('Authorization', "Bearer $token")
-            ->get('/api/v1/meetings/1/changes')
+            ->get("/api/v1/meetings/$meeting->id_bigint/changes")
             ->assertStatus(403);
     }
 

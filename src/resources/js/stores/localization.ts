@@ -72,6 +72,7 @@ const strings = new LocalizedStrings({
       { name: 'None', value: '' }
     ],
     formatTypeTitle: 'Format Type', // TODO: translate
+    formatValidationError: 'Error: This format is protected and cannot be deleted.', // TODO: translate
     helplineTitle: 'Helpline',
     homeTitle: 'Startseite',
     hoursTitle: 'Hours', // TODO: translate
@@ -262,6 +263,7 @@ const strings = new LocalizedStrings({
       { name: 'None', value: '' }
     ],
     formatTypeTitle: 'Format Type',
+    formatValidationError: 'Error: This format is protected and cannot be deleted.',
     helplineTitle: 'Helpline',
     homeTitle: 'Home',
     hoursTitle: 'Hours',
