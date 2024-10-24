@@ -186,7 +186,7 @@
     }
   }
 
-  const { data, errors, form, setData, isDirty } = createForm({
+  const { data, errors, form, setData, isDirty, validate } = createForm({
     initialValues: initialValues,
     onSubmit: async (values) => {
       spinner.show();
@@ -452,6 +452,11 @@
     }
   }
 
+  function handleTabChange(index: number) {
+    console.log(index);
+    validate();
+  }
+
   onMount(() => {
     if (selectedMeeting) {
       getChanges(selectedMeeting.id);
@@ -489,7 +494,7 @@
 </svelte:head>
 
 <form use:form>
-  <BasicTabs {tabs}>
+  <BasicTabs {tabs} on:change={(e) => handleTabChange(e.detail.index)}>
     <div slot="tab-content-0">
       <div class="grid items-center gap-4 md:grid-cols-3">
         <div class="w-full">
