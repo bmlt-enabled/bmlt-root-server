@@ -14,6 +14,8 @@
   import type { Format } from 'bmlt-root-server-client';
   import FormatForm from '../components/FormatForm.svelte';
 
+  const reservedFormatKeys = ['HY', 'TC', 'VM'];
+
   let isLoaded = false;
   let formats: Format[] = [];
   let filteredFormats: Format[] = [];
@@ -78,6 +80,10 @@
     showModal = false;
   }
 
+  function isReserved(f: Format): boolean {
+    return f.translations.find((t) => t.language === 'en' && reservedFormatKeys.includes(t.key)) !== undefined;
+  }
+
   // Get the name of the format in the current language.  If no translation for that language is available, return the name in
   // English; if no English version, then just pick the first one in the array.  If that doesn't exist either then return a blank.
   // This last case only arises when trying to create a format with no translations; the UI signals an error if that happens.
@@ -132,7 +138,13 @@
               <TableBodyCell class="whitespace-normal">{getFormatName(format)}</TableBodyCell>
               {#if $authenticatedUser?.type === 'admin'}
                 <TableBodyCell class="text-right">
-                  <Button color="none" on:click={(e) => handleDelete(e, format)} class="text-blue-700 dark:text-blue-500" aria-label={$translations.deleteFormat + ' ' + getFormatName(format)}>
+                  <Button
+                    color="none"
+                    on:click={(e) => handleDelete(e, format)}
+                    class="text-blue-700 dark:text-blue-500"
+                    disabled={isReserved(format)}
+                    aria-label={$translations.deleteFormat + ' ' + getFormatName(format)}
+                  >
                     <TrashBinOutline title={{ id: 'deleteFormat', title: $translations.deleteFormat }} ariaLabel={$translations.deleteFormat} />
                   </Button>
                 </TableBodyCell>
@@ -143,11 +155,11 @@
       </TableSearch>
     {:else}
       <div class="p-2">
-        <FormatForm {selectedFormat} on:saved={onSaved} />
+        <FormatForm {selectedFormat} {reservedFormatKeys} on:saved={onSaved} />
       </div>
     {/if}
   {/if}
 </div>
 
-<FormatModal bind:showModal {selectedFormat} on:saved={onSaved} on:close={closeModal} />
+<FormatModal bind:showModal {selectedFormat} {reservedFormatKeys} on:saved={onSaved} on:close={closeModal} />
 <FormatDeleteModal bind:showDeleteModal {deleteFormat} formatName={deleteFormat ? getFormatName(deleteFormat) : ''} on:deleted={onDeleted} />

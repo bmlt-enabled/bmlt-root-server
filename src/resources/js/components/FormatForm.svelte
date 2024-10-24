@@ -12,6 +12,7 @@
   import { translations } from '../stores/localization';
 
   export let selectedFormat: Format | null;
+  export let reservedFormatKeys: string[];
 
   const globalSettings = settings;
   const mappings = globalSettings.languageMapping;
@@ -123,6 +124,18 @@
               if (!$data[lang + '_key'] && ($data[lang + '_name'] || $data[lang + '_description'])) {
                 k.push($translations.keyIsRequired);
               }
+              // For English translations only: check that we're not trying to set the key of some other format to one of the
+              // reserved keys HY, TC, or VM.  If the format already exists and is one of HY, TC, or VM, it's OK to edit the
+              // name or description -- the condition includes a check to allow this.  (The key will be read-only.)
+              if (lang === 'en' && initialValues[lang + '_key'] !== $data[lang + '_key'] && reservedFormatKeys.includes($data[lang + '_key'])) {
+                k.push($translations.keyIsReserved);
+              }
+              // a translation is required for all languages for the reserved formats HY, TC, and VM -- it's an error
+              // if we're trying to delete one of these (just need to check the key, since if the key is there the name and
+              // description will be required)
+              if (reservedFormatKeys.includes(initialValues.en_key) && !$data[lang + '_key']) {
+                k.push($translations.formatTranslationIsRequired);
+              }
               errorObject[lang + '_key'] = k.join(' ');
               const n = error?.errors[lang + '_name'] ?? [];
               errorObject[lang + '_name'] = n.join(' ');
@@ -156,6 +169,15 @@
     return t ? t : $translations.getString(title, 'en');
   }
 
+  function isReservedKey(lang: string): boolean {
+    if (lang === 'en') {
+      const e = selectedFormatTranslations.find((t) => t.language === 'en');
+      return e !== undefined && reservedFormatKeys.includes(e.key);
+    } else {
+      return false;
+    }
+  }
+
   $: isDirty.set(formIsDirty(initialValues, $data));
 </script>
 
@@ -174,7 +196,7 @@
             <span slot="header">{mappings[lang]}</span>
             <div>
               <Label for="{lang}_key" class="mb-2">{getLabel('keyTitle', lang)}</Label>
-              <Input type="text" id="{lang}_key" name="{lang}_key" />
+              <Input type="text" id="{lang}_key" name="{lang}_key" disabled={isReservedKey(lang)} />
               <Helper class="mb-2" color="red">
                 {#if $errors[lang + '_key']}
                   {$errors[lang + '_key']}

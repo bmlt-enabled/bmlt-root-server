@@ -311,6 +311,20 @@ export const agnosticFormat: Format = {
   type: 'COMMON_NEEDS_OR_RESTRICTION'
 };
 
+export const virtualMeetingFormat: Format = {
+  id: 24,
+  translations: [{ key: 'VM', language: 'en', name: 'Virtual Meeting', description: 'Meets Virtually' }],
+  worldId: 'VM',
+  type: 'FC2'
+};
+
+export const beginnersFormat: Format = {
+  id: 25,
+  translations: [{ key: 'B', language: 'en', name: 'Beginners', description: 'This meeting is focused on the needs of new members of NA.' }],
+  worldId: 'BEG',
+  type: 'FC3'
+};
+
 export const ruralMeeting: Meeting = {
   busLines: undefined,
   comments: undefined,
@@ -513,7 +527,7 @@ export const bigRegionMeeting: Meeting = {
 
 export const allServiceBodies: ServiceBody[] = [northernZone, bigRegion, smallRegion, riverCityArea, mountainArea, ruralArea];
 
-export const allFormats: Format[] = [agnosticFormat, basicTextFormat, closedFormat, discussionFormat, jtFormat, openFormat];
+export const allFormats: Format[] = [agnosticFormat, basicTextFormat, beginnersFormat, closedFormat, discussionFormat, jtFormat, openFormat, virtualMeetingFormat];
 
 export const allMeetings: Meeting[] = [ruralMeeting, mountainMeeting, riverCityMeeting, bigRegionMeeting, smallRegionMeeting];
 
@@ -567,6 +581,15 @@ function userHasDependents(id: number): boolean {
 function serviceBodyHasDependents(id: number): boolean {
   for (let i = 0; i < allServiceBodies.length; i++) {
     if (allServiceBodies[i].parentId === id) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function formatInUse(id: number): boolean {
+  for (const m of allMeetings) {
+    if (m.formatIds.includes(id)) {
       return true;
     }
   }
@@ -795,7 +818,9 @@ async function mockUpdateFormat({ formatId: _, formatUpdate: format }: { formatI
 }
 
 async function mockDeleteFormat({ formatId: id }: { formatId: number }): Promise<void> {
-  // Do we need to check for dependants? If meeting is using format. this should use foreign keys.
+  if (formatInUse(id)) {
+    throw new ResponseError(makeResponse('Conflict', 409, 'Unauthorized'), 'Response returned an error code');
+  }
   mockDeletedFormatId = id;
 }
 
