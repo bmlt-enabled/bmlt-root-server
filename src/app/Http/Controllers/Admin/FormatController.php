@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Resources\Admin\FormatResource;
+use App\Http\Responses\JsonResponse;
 use App\Interfaces\FormatRepositoryInterface;
 use App\Models\Format;
 use App\Models\FormatType;
@@ -88,6 +89,13 @@ class FormatController extends ResourceController
             $this->formatRepository->getTemporarilyClosedFormat()->shared_id_bigint,
             $this->formatRepository->getHybridFormat()->shared_id_bigint,
         ])]]);
+
+        if ($format->meetings()->exists()) {
+            return new JsonResponse([
+                'message' => 'You cannot delete a format while meetings are using it.'
+            ], 409);
+        }
+
         $this->formatRepository->delete($format->shared_id_bigint);
         return response()->noContent();
     }
