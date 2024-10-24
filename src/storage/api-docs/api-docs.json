@@ -386,6 +386,16 @@
                             }
                         }
                     },
+                    "409": {
+                        "description": "Returns when format has meetings assigned.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConflictError"
+                                }
+                            }
+                        }
+                    },
                     "422": {
                         "description": "Validation error.",
                         "content": {

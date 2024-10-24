@@ -165,6 +165,9 @@ class FormatController extends Controller
      *     @OA\Response(response=404, description="Returns when no format exists.",
      *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
      *     ),
+     *     @OA\Response(response=409, description="Returns when format has meetings assigned.",
+     *         @OA\JsonContent(ref="#/components/schemas/ConflictError")
+     *     ),
      *     @OA\Response(response=422, description="Validation error.",
      *         @OA\JsonContent(ref="#/components/schemas/ValidationError")
      *     ),
