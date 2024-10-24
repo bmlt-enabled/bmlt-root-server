@@ -24,7 +24,12 @@
       await RootServerApi.deleteFormat(deleteFormat.id);
     },
     onError: async (error) => {
-      await RootServerApi.handleErrors(error as Error);
+      await RootServerApi.handleErrors(error as Error, {
+        handleConflictError: () => {
+          confirmed = false;
+          errorMessage = $translations.formatDeleteConflictError;
+        }
+      });
       spinner.hide();
     },
     onSuccess: () => {
