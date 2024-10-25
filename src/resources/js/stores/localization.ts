@@ -15,14 +15,12 @@ const strings = new LocalizedStrings({
     addUser: 'Benutzer hinzufügen',
     administratorTitle: 'Administrator/Administratorin', // TODO: translate this way, or just Administrator?
     adminTitle: 'Admin', // TODO: translate
-    allDays: 'All days', // TODO: translate
     anteMeridiem: 'AM',
     applyChangesTitle: 'Änderung anwenden',
     boroughTitle: 'Borough/City Subsection', // TODO: translate
     busLinesTitle: 'Bus Lines', // TODO: translate
     by: 'by', // TODO: translate
     cancel: 'Stornieren',
-    chooseDay: 'Tag wählen',
     chooseStartTime: 'Startzeit wählen',
     cityTownTitle: 'Stadt',
     clearFormTitle: 'Clear Form', // TODO: translate
@@ -156,8 +154,11 @@ const strings = new LocalizedStrings({
     published: 'Published',
     rootServerTitle: 'Root Server',
     search: 'Search', // TODO: translate
+    searchByDay: 'Search by day', // TODO: translate
     searchByName: 'Search by name', // TODO: translate
+    searchByServiceBody: 'Search by Service Body', // TODO: translate
     searchMeetings: 'Search meetings...', // TODO: translate
+    selectAllDays: 'Select All days', // TODO: translate
     serverAdministratorTitle: 'Main Server Administrator', // TODO: translate
     serviceBodiesNoParent: 'No Parent (Top-Level)', // TODO: translate
     serviceBodiesTitle: 'Service Bodies', // TODO: translate
@@ -182,6 +183,7 @@ const strings = new LocalizedStrings({
     timeZoneTitle: 'Time Zone', // TODO: translate
     trainLinesTitle: 'Train Lines', // TODO: translate
     unpublished: 'Unpublished',
+    unselectAllDays: 'Unselect All days', // TODO: translate
     userDeleteConflictError: 'Error: The user could not be deleted because it is still associated with at least one service body or is the parent of another user.', // TODO: translate
     userIsDeactivated: 'User is deactivated.', // TODO: translate
     usernameTitle: 'Benutzername',
@@ -207,14 +209,12 @@ const strings = new LocalizedStrings({
     addUser: 'Add User',
     administratorTitle: 'Administrator',
     adminTitle: 'Admin',
-    allDays: 'All days',
     anteMeridiem: 'AM',
     applyChangesTitle: 'Apply Changes',
     boroughTitle: 'Borough/City Subsection',
     busLinesTitle: 'Bus Lines',
     by: 'by',
     cancel: 'Cancel',
-    chooseDay: 'Choose day',
     chooseStartTime: 'Choose start time',
     cityTownTitle: 'City/Town',
     clearFormTitle: 'Clear Form',
@@ -347,8 +347,11 @@ const strings = new LocalizedStrings({
     published: 'Published',
     rootServerTitle: 'Root Server',
     search: 'Search',
+    searchByDay: 'Search by day',
     searchByName: 'Search by name',
+    searchByServiceBody: 'Search by Service Body',
     searchMeetings: 'Search meetings...',
+    selectAllDays: 'Select All days',
     serverAdministratorTitle: 'Main Server Administrator',
     serviceBodiesNoParent: 'No Parent (Top-Level)',
     serviceBodiesTitle: 'Service Bodies',
@@ -373,6 +376,7 @@ const strings = new LocalizedStrings({
     timeZoneTitle: 'Time Zone',
     trainLinesTitle: 'Train Lines',
     unpublished: 'Unpublished',
+    unselectAllDays: 'Unselect All days',
     userDeleteConflictError: 'Error: The user could not be deleted because it is still associated with at least one service body or is the parent of another user.',
     userIsDeactivated: 'User is deactivated.',
     usernameTitle: 'Username',

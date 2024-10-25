@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch, Button, Dropdown, Checkbox, ButtonGroup, Indicator } from 'flowbite-svelte';
-  import { PlusOutline, FilterSolid, ChevronDownOutline, ChevronUpOutline, ChevronRightOutline, ChevronLeftOutline } from 'flowbite-svelte-icons';
+  import { Button, ButtonGroup, Checkbox, Dropdown, Indicator, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch } from 'flowbite-svelte';
+  import { ChevronDownOutline, ChevronLeftOutline, ChevronRightOutline, ChevronUpOutline, FilterSolid, PlusOutline } from 'flowbite-svelte-icons';
 
   import { convertTo12Hour, is24hrTime, isCommaSeparatedNumbers } from '../lib/utils';
   import { translations } from '../stores/localization';
@@ -17,8 +17,7 @@
 
   let meetings: Meeting[] = [];
   let meetingIds: string = '';
-  let selectedDays: string[] = [];
-  let selectedServiceBodies: string[] = [];
+  let selectedServiceBodies: string[] = serviceBodies.map((serviceBody) => serviceBody.id.toString());
   let divClass = 'bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-visible pt-3';
   let innerDivClass = 'flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4';
   let searchClass = 'w-full md:w-1/2 relative';
@@ -39,6 +38,7 @@
     value: index.toString(),
     label: day
   }));
+  let selectedDays: string[] = weekdayChoices.map((day) => day.value);
   const timeChoices = [
     { value: 'morning', label: $translations.timeMorning },
     { value: 'afternoon', label: $translations.timeAfternoon },
@@ -213,11 +213,21 @@
     showModal = false;
   }
 
+  function toggleAllDays() {
+    if (selectedDays.length === weekdayChoices.length) {
+      selectedDays = [];
+    } else {
+      selectedDays = weekdayChoices.map((day) => day.value);
+    }
+  }
+
   onMount(() => {
     renderPagination(filteredItems.length);
   });
 
   $: currentPageItems = filteredItems.slice(currentPosition, currentPosition + itemsPerPage);
+
+  $: isAllDaysSelected = selectedDays.length === weekdayChoices.length;
 </script>
 
 <TableSearch placeholder={$translations.filter} hoverable={true} bind:inputValue={searchTerm} {divClass} {innerDivClass} {searchClass} {classInput}>
@@ -229,6 +239,7 @@
       {/if}
     </Button>
     <Dropdown class="w-90 top-full z-50 space-y-2 p-3 text-sm">
+      <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">{$translations.searchByServiceBody}</h6>
       <ServiceBodiesTree {serviceBodies} bind:selectedValues={selectedServiceBodies} />
     </Dropdown>
     <Button color="alternative" class="relative" aria-label={$translations.day}>
@@ -238,7 +249,10 @@
       {/if}
     </Button>
     <Dropdown class="top-full z-50 w-48 space-y-2 p-3 text-sm">
-      <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">{$translations.chooseDay}</h6>
+      <h6 class="text-sm font-medium text-gray-900 dark:text-white">{$translations.searchByDay}</h6>
+      <Button on:click={toggleAllDays} size="xs" color="primary" class="w-full">
+        {isAllDaysSelected ? $translations.unselectAllDays : $translations.selectAllDays}
+      </Button>
       <Checkbox name="weekdays" choices={weekdayChoices} bind:group={selectedDays} groupLabelClass="justify-between" />
     </Dropdown>
     {#if meetings.length}
