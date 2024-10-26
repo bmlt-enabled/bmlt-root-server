@@ -2,8 +2,8 @@
   import { Button, Helper, Input, Label, Listgroup } from 'flowbite-svelte';
   import { createEventDispatcher } from 'svelte';
   import { createForm } from 'felte';
-  // svelte-hack' -- import hacked to get onMount to work correctly for unit tests
-  import { onMount } from 'svelte/internal';
+
+  import { onMount } from 'svelte';
   import { validator } from '@felte/validator-yup';
   import * as yup from 'yup';
 

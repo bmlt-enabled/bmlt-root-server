@@ -1,8 +1,7 @@
 <script lang="ts">
   import { Button, P, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch } from 'flowbite-svelte';
   import { TrashBinOutline } from 'flowbite-svelte-icons';
-  // 'svelte-hack' -- import hacked to get onMount to work correctly for unit tests
-  import { onMount } from 'svelte/internal';
+  import { onMount } from 'svelte';
 
   import type { ServiceBody, User } from 'bmlt-root-server-client';
 
@@ -112,7 +111,7 @@
     if ($authenticatedUser) {
       filteredServiceBodies = serviceBodies
         .sort((s1, s2) => s1.name.localeCompare(s2.name))
-        .filter((s) => s.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1 && 
+        .filter((s) => s.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1 &&
             ($authenticatedUser.type === 'admin' || isAdminForServiceBody($authenticatedUser.id, s)));
     }
   }
@@ -126,7 +125,7 @@
     {#if filteredServiceBodies.length}
       <TableSearch placeholder={$translations.searchByName} hoverable={true} bind:inputValue={searchTerm}>
         <TableHead>
-          <TableHeadCell colspan={$authenticatedUser?.type === 'admin' ? '2' : '1'}>
+          <TableHeadCell colspan={$authenticatedUser?.type === 'admin' ? 2 : 1}>
             {#if $authenticatedUser?.type === 'admin'}
               <div class="flex">
                 <div class="mt-2.5 grow">Name</div>

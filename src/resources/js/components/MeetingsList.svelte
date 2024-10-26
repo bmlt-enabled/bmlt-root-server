@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import type { SvelteComponent } from 'svelte';
-  import { Button, ButtonGroup, Checkbox, Dropdown, Indicator, Label, Select, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch } from 'flowbite-svelte';
+  import { Button, ButtonGroup, Checkbox, Dropdown, Indicator, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch } from 'flowbite-svelte';
   import { ChevronDownOutline, ChevronLeftOutline, ChevronRightOutline, ChevronUpOutline, FilterSolid, PlusOutline } from 'flowbite-svelte-icons';
 
   import { convertTo12Hour, is24hrTime, isCommaSeparatedNumbers } from '../lib/utils';
@@ -19,14 +18,13 @@
   let meetings: Meeting[] = [];
   let meetingIds: string = '';
   let selectedServiceBodies: string[] = serviceBodies.map((serviceBody) => serviceBody.id.toString());
-  let divClass = 'bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-visible pt-3';
+  let divClass = 'bg-white dark:bg-gray-6100 relative shadow-md sm:rounded-lg overflow-visible pt-3';
   let innerDivClass = 'flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4';
   let searchClass = 'w-full md:w-1/2 relative';
-  let classInput = 'text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2  pl-10';
+  let inputClass = 'text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2  pl-10';
   let searchTerm: string = '';
   let currentPosition: number = 0;
-  let itemsPerPage: number = 20;
-  const itemsPerPageItems = [10, 20, 40, 60, 80, 100].map((value) => ({ value, name: value.toString() }));
+  const itemsPerPage: number = 20;
   const showPage: number = 5;
   let totalPages: number = 0;
   let pagesToShow: number[] = [];
@@ -34,7 +32,6 @@
   let selectedPublished: string[] = [];
   let selectedMeeting: Meeting | null;
   let showModal = false;
-  let tableSearchRef: SvelteComponent | null = null;
   let sortColumn: string | null = null;
   let sortDirection: 'asc' | 'desc' = 'asc';
   const weekdayChoices = $translations.daysOfWeek.map((day, index) => ({
@@ -154,11 +151,6 @@
     renderPagination(filteredItems.length);
   };
 
-  const updateItemsPerPage = () => {
-    currentPosition = 0; // Reset to first page when itemsPerPage changes
-    renderPagination(filteredItems.length);
-  };
-
   function handleSort(column: keyof Meeting) {
     if (sortColumn === column) {
       sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
@@ -231,44 +223,27 @@
     }
   }
 
-  function handleEnterKey(event: KeyboardEvent) {
-    if (event.key === 'Enter') {
-      searchMeetings();
-    }
-  }
-
   onMount(() => {
     renderPagination(filteredItems.length);
-    const searchInputElement = tableSearchRef?.shadowRoot?.getElementById('table-search') || (document.getElementById('table-search') as HTMLInputElement | null);
-    if (searchInputElement) {
-      searchInputElement.addEventListener('keydown', handleEnterKey);
-    }
-    return () => {
-      if (searchInputElement) {
-        searchInputElement.removeEventListener('keydown', handleEnterKey);
-      }
-    };
   });
 
   $: currentPageItems = filteredItems.slice(currentPosition, currentPosition + itemsPerPage);
 
-  $: isAllDaysSelected = selectedDays.length === weekdayChoices.length;
+  let isAllDaysSelected = selectedDays.length === weekdayChoices.length;
 </script>
 
-<TableSearch placeholder={$translations.filter} bind:this={tableSearchRef} hoverable={true} bind:inputValue={searchTerm} {divClass} {innerDivClass} {searchClass} {classInput}>
+<TableSearch placeholder={$translations.filter} hoverable={true} bind:inputValue={searchTerm} {divClass} {innerDivClass} {searchClass} {inputClass}>
   <div slot="header" class="flex w-full flex-shrink-0 flex-col items-stretch justify-end space-y-2 md:w-auto md:flex-row md:items-center md:space-x-3 md:space-y-0">
-    {#if serviceBodies.length > 1}
-      <Button color="alternative" class="relative" aria-label={$translations.serviceBodiesTitle}>
-        {$translations.serviceBodiesTitle}
-        {#if selectedServiceBodies.length > 0}
-          <Indicator color="red" size="sm" placement="top-right" />
-        {/if}
-      </Button>
-      <Dropdown class="w-90 top-full z-50 space-y-2 p-3 text-sm" open={true}>
-        <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">{$translations.searchByServiceBody}</h6>
-        <ServiceBodiesTree {serviceBodies} bind:selectedValues={selectedServiceBodies} />
-      </Dropdown>
-    {/if}
+    <Button color="alternative" class="relative" aria-label={$translations.serviceBodiesTitle}>
+      {$translations.serviceBodiesTitle}
+      {#if selectedServiceBodies.length > 0}
+        <Indicator color="red" size="sm" placement="top-right" />
+      {/if}
+    </Button>
+    <Dropdown class="w-90 top-full z-50 space-y-2 p-3 text-sm">
+      <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">{$translations.searchByServiceBody}</h6>
+      <ServiceBodiesTree {serviceBodies} bind:selectedValues={selectedServiceBodies} />
+    </Dropdown>
     <Button color="alternative" class="relative" aria-label={$translations.day}>
       {$translations.day}
       {#if selectedDays.length > 0}
@@ -282,27 +257,29 @@
       </Button>
       <Checkbox name="weekdays" choices={weekdayChoices} bind:group={selectedDays} groupLabelClass="justify-between" />
     </Dropdown>
-    <Button color="alternative" class="relative">
-      {$translations.published}
-      {#if selectedPublished.length > 0}
-        <Indicator color="red" size="sm" placement="top-right" />
-      {/if}
-      <FilterSolid class="ml-2 h-3 w-3 " />
-    </Button>
-    <Dropdown class="w-48 space-y-2 p-3 text-sm">
-      <Checkbox name="times" choices={publishedChoices} bind:group={selectedPublished} groupInputClass="ms-2" groupLabelClass="" />
-    </Dropdown>
-    <Button color="alternative" class="relative">
-      {$translations.time}
-      {#if selectedTimes.length > 0}
-        <Indicator color="red" size="sm" placement="top-right" />
-      {/if}
-      <FilterSolid class="ml-2 h-3 w-3 " />
-    </Button>
-    <Dropdown class="w-48 space-y-2 p-3 text-sm">
-      <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">{$translations.chooseStartTime}</h6>
-      <Checkbox name="times" choices={timeChoices} bind:group={selectedTimes} groupInputClass="ms-2" groupLabelClass="" />
-    </Dropdown>
+    {#if meetings.length}
+      <Button color="alternative" class="relative">
+        {$translations.published}
+        {#if selectedPublished.length > 0}
+          <Indicator color="red" size="sm" placement="top-right" />
+        {/if}
+        <FilterSolid class="ml-2 h-3 w-3 " />
+      </Button>
+      <Dropdown class="w-48 space-y-2 p-3 text-sm">
+        <Checkbox name="times" choices={publishedChoices} bind:group={selectedPublished} groupInputClass="ms-2" groupLabelClass="" />
+      </Dropdown>
+      <Button color="alternative" class="relative">
+        {$translations.time}
+        {#if selectedTimes.length > 0}
+          <Indicator color="red" size="sm" placement="top-right" />
+        {/if}
+        <FilterSolid class="ml-2 h-3 w-3 " />
+      </Button>
+      <Dropdown class="w-48 space-y-2 p-3 text-sm">
+        <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">{$translations.chooseStartTime}</h6>
+        <Checkbox name="times" choices={timeChoices} bind:group={selectedTimes} groupInputClass="ms-2" groupLabelClass="" />
+      </Dropdown>
+    {/if}
     <Button on:click={searchMeetings}>{$translations.search}</Button>
     {#if $authenticatedUser?.type !== 'observer'}
       <Button on:click={() => handleAdd()} aria-label={$translations.addMeeting}><PlusOutline class="mr-2 h-3.5 w-3.5" />{$translations.addMeeting}</Button>
@@ -310,7 +287,7 @@
   </div>
   <TableHead>
     {#if meetings.length}
-      <TableHeadCell padding="px-4 py-3 whitespace-nowrap" scope="col" on:click={() => handleSort('day')}>
+      <TableHeadCell padding="px-4 py-3" scope="col" on:click={() => handleSort('day')}>
         Day
         {#if sortColumn === 'day'}
           {#if sortDirection === 'asc'}
@@ -320,7 +297,7 @@
           {/if}
         {/if}
       </TableHeadCell>
-      <TableHeadCell padding="px-4 py-3 whitespace-nowrap" scope="col" on:click={() => handleSort('startTime')}>
+      <TableHeadCell padding="px-4 py-3" scope="col" on:click={() => handleSort('startTime')}>
         Time
         {#if sortColumn === 'startTime'}
           {#if sortDirection === 'asc'}
@@ -360,10 +337,8 @@
   <TableBody>
     {#each currentPageItems as meeting (meeting.id)}
       <TableBodyRow on:click={() => handleEdit(meeting)}>
-        <TableBodyCell tdClass={meeting.published ? 'px-4 py-3 whitespace-nowrap' : 'bg-yellow-400 px-4 py-3 whitespace-nowrap min-w-[100px]'}>{$translations.daysOfWeek[meeting.day]}</TableBodyCell>
-        <TableBodyCell tdClass={meeting.published ? 'px-4 py-3 whitespace-nowrap' : 'bg-yellow-400 px-4 py-3 whitespace-nowrap min-w-[100px]'}
-          >{is24hrTime() ? meeting.startTime : convertTo12Hour(meeting.startTime)}</TableBodyCell
-        >
+        <TableBodyCell tdClass={meeting.published ? 'px-4 py-3' : 'bg-yellow-400 px-4 py-3'}>{$translations.daysOfWeek[meeting.day]}</TableBodyCell>
+        <TableBodyCell tdClass={meeting.published ? 'px-4 py-3' : 'bg-yellow-400 px-4 py-3 text-nowrap'}>{is24hrTime() ? meeting.startTime : convertTo12Hour(meeting.startTime)}</TableBodyCell>
         <TableBodyCell tdClass={meeting.published ? 'px-4 py-3' : 'bg-yellow-400 px-4 py-3'}>{meeting.name}</TableBodyCell>
         <TableBodyCell tdClass={meeting.published ? 'px-4 py-3' : 'bg-yellow-400 px-4 py-3 text-wrap'}>
           {[meeting.locationStreet, meeting.locationCitySubsection, meeting.locationMunicipality, meeting.locationProvince, meeting.locationSubProvince, meeting.locationPostalCode1]
@@ -375,16 +350,11 @@
   </TableBody>
   <div slot="footer" class="flex flex-col items-start justify-between space-y-3 p-4 md:flex-row md:items-center md:space-y-0 {meetings.length ? '' : 'hidden'}" aria-label="Table navigation">
     {#if meetings.length}
-      <span class="flex items-center space-x-1 text-sm font-normal text-gray-500 dark:text-gray-400">
-        <span>{$translations.paginationShowing}</span>
+      <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+        {$translations.paginationShowing}
         <span class="font-semibold text-gray-900 dark:text-white">{startRange}-{endRange}</span>
-        <span>{$translations.paginationOf}</span>
+        {$translations.paginationOf}
         <span class="font-semibold text-gray-900 dark:text-white">{filteredItems.length}</span>
-        <span class="mx-2 text-gray-500 dark:text-gray-400">/</span>
-        <span class="ml-4 flex items-center space-x-1">
-          <Label for="itemsPerPage" class="text-sm font-medium text-gray-700 dark:text-gray-300">{$translations.meetingsPerPage}</Label>
-          <Select id="itemsPerPage" items={itemsPerPageItems} bind:value={itemsPerPage} name="itemsPerPage" class="w-20 dark:bg-gray-600" on:change={updateItemsPerPage} />
-        </span>
       </span>
       <ButtonGroup>
         <Button on:click={loadPreviousPage} disabled={currentPosition === 0}>

@@ -13,8 +13,7 @@
   import DurationSelector from './DurationSelector.svelte';
   import MapAccordion from './MapAccordion.svelte';
   import BasicTabs from './BasicTabs.svelte';
-  // 'svelte-hack' -- import hacked to get onMount to work correctly for unit tests
-  import { onMount } from 'svelte/internal';
+  import { onMount } from 'svelte';
   import { spinner } from '../stores/spinner';
   import type { MeetingChangeResource } from 'bmlt-root-server-client';
   import RootServerApi from '../lib/RootServerApi';
@@ -730,7 +729,7 @@
         <div class="grid gap-4 md:grid-cols-2">
           <div class="md:col-span-2">
             <MapAccordion title={$translations.locationMapTitle} {map}>
-              <div id="locationMap" bind:this={mapElement} />
+              <div id="locationMap" bind:this={mapElement}></div>
             </MapAccordion>
           </div>
         </div>
@@ -1031,7 +1030,7 @@
       {/if}
     </div>
   </BasicTabs>
-  <Hr classHr="my-8" />
+  <Hr hrClass="my-8" />
   <div class="grid gap-4 md:grid-cols-2">
     <div class="md:col-span-2">
       {#if geocodingError}
