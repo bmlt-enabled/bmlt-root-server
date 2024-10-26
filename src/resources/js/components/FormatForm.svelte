@@ -62,9 +62,9 @@
   const selectedFormatTranslations = selectedFormat ? selectedFormat.translations : [];
   for (const n of allLanguages) {
     const tr = selectedFormatTranslations.find((t) => t.language === n);
-    initialValues[n + '_key'] = tr ? tr.key : '';
-    initialValues[n + '_name'] = tr ? tr.name : '';
-    initialValues[n + '_description'] = tr ? tr.description : '';
+    initialValues[n + '_key'] = tr && tr.key ? tr.key : '';
+    initialValues[n + '_name'] = tr && tr.name ? tr.name : '';
+    initialValues[n + '_description'] = tr && tr.description ? tr.description : '';
     initialValues[n + '_language'] = n;
     yupSchema[n + '_key'] = yup
       .string()
