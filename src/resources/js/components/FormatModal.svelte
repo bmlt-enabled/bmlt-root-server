@@ -9,6 +9,7 @@
 
   export let showModal: boolean;
   export let selectedFormat: Format | null;
+  export let reservedFormatKeys: string[];
 
   let showConfirmModal = false;
   let forceClose = false;
@@ -51,7 +52,7 @@
 
 <Modal bind:open={showModal} size="sm" class="modal-content">
   <div class="p-4">
-    <FormatForm {selectedFormat} on:saved />
+    <FormatForm {selectedFormat} {reservedFormatKeys} on:saved />
   </div>
 </Modal>
 

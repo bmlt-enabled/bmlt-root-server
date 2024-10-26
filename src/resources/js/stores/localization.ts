@@ -59,6 +59,7 @@ const strings = new LocalizedStrings({
     formatDeleteConflictError: 'Error: The format could not be deleted because it is still associated with meetings.', // TODO: translate
     formatId: 'Format ID', // TODO: translate
     formatsTitle: 'Formate',
+    formatTranslationIsRequired: 'a translation is required for all languages for reserved formats', // TODO: translate
     formatTypeCodes: [
       // TODO: translate
       { name: 'Attendance by non-addicts (Open, Closed)', value: 'OPEN_OR_CLOSED' },
@@ -77,6 +78,7 @@ const strings = new LocalizedStrings({
     idTitle: 'ID',
     invalidUsernameOrPassword: 'Ungültiger Benutzername oder Passwort.',
     keyIsRequired: 'Schlüssel ist erforderlich',
+    keyIsReserved: 'Schlüssel ist reserviert -- bitte verwende etwas anderes',
     keyTitle: 'Schlüssel',
     languageSelectTitle: 'Sprache auswählen',
     latitudeTitle: 'Breitengrad',
@@ -253,6 +255,7 @@ const strings = new LocalizedStrings({
     formatDeleteConflictError: 'Error: The format could not be deleted because it is still associated with meetings.',
     formatId: 'Format ID',
     formatsTitle: 'Formats',
+    formatTranslationIsRequired: 'a translation is required for all languages for reserved formats',
     formatTypeCodes: [
       { name: 'Attendance by non-addicts (Open, Closed)', value: 'OPEN_OR_CLOSED' },
       { name: 'Common Needs and Restrictions (Mens Meeting, LGTBQ, No Children, etc.)', value: 'COMMON_NEEDS_OR_RESTRICTION' },
@@ -270,6 +273,7 @@ const strings = new LocalizedStrings({
     idTitle: 'ID',
     invalidUsernameOrPassword: 'Invalid username or password.',
     keyIsRequired: 'key is required',
+    keyIsReserved: 'key is reserved  -- please use something else',
     keyTitle: 'Key',
     languageSelectTitle: 'Select Language',
     latitudeTitle: 'Latitude',

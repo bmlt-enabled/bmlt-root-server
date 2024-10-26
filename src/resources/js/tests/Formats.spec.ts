@@ -17,9 +17,9 @@ describe('check content in Formats tab', () => {
     await login('serveradmin', 'Formats');
     expect(await screen.findByRole('heading', { name: 'Formats', level: 2 })).toBeInTheDocument();
     expect(await screen.findByRole('textbox', { name: 'Search' })).toBeInTheDocument();
-    // There should be 6 formats, with 2 cells per format (name and a delete icon)
+    // There should be 8 formats, with 2 cells per format (name and a delete icon)
     const cells = screen.getAllByRole('cell');
-    expect(cells.length).toBe(12);
+    expect(cells.length).toBe(16);
     // check for a couple of representative formats
     expect(screen.getByRole('cell', { name: 'Closed' })).toBeInTheDocument();
     expect(screen.getByRole('cell', { name: 'Basic Text' })).toBeInTheDocument();
@@ -50,12 +50,29 @@ describe('check content in Formats tab', () => {
 
   test('delete a format', async () => {
     const user = await login('serveradmin', 'Formats');
+    await user.click(await screen.findByRole('button', { name: 'Delete Format Beginners' }));
+    await user.click(await screen.findByRole('checkbox', { name: "Yes, I'm sure." }));
+    await user.click(await screen.findByRole('button', { name: 'Delete' }));
+    expect(mockDeletedFormatId).toBe(25);
+    expect(mockSavedFormatCreate).toBe(null);
+    expect(mockSavedFormatUpdate).toBe(null);
+  });
+
+  test('try to delete a format that is in use', async () => {
+    const user = await login('serveradmin', 'Formats');
     await user.click(await screen.findByRole('button', { name: 'Delete Format Basic Text' }));
     await user.click(await screen.findByRole('checkbox', { name: "Yes, I'm sure." }));
     await user.click(await screen.findByRole('button', { name: 'Delete' }));
-    expect(mockDeletedFormatId).toBe(19);
+    expect(screen.getByText(/Error: The format could not be deleted because it is still associated with meetings./)).toBeInTheDocument();
+    expect(mockDeletedFormatId).toBe(null);
     expect(mockSavedFormatCreate).toBe(null);
     expect(mockSavedFormatUpdate).toBe(null);
+  });
+
+  test('delete should be disabled for reserved formats', async () => {
+    await login('serveradmin', 'Formats');
+    const d = await screen.findByRole('button', { name: 'Delete Format Virtual Meeting' });
+    expect(d).toBeDisabled();
   });
 
   // Alas can't do much testing with create format, due to the problem with the Accordion (see comment at top).
