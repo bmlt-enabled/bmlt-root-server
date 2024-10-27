@@ -32,17 +32,8 @@
   export let serviceBodies: ServiceBody[];
 
   const tabs = selectedMeeting
-      ? [
-          $translations.tabsBasic,
-          $translations.tabsLocation,
-          $translations.tabsOther,
-          $translations.tabsChanges
-      ]
-      : [
-          $translations.tabsBasic,
-          $translations.tabsLocation,
-          $translations.tabsOther
-      ];
+    ? [$translations.tabsBasic, $translations.tabsLocation, $translations.tabsOther, $translations.tabsChanges]
+    : [$translations.tabsBasic, $translations.tabsLocation, $translations.tabsOther];
   const TAB_CHANGES = 3;
   const globalSettings = settings;
   const seenNames = new Set<string>();
