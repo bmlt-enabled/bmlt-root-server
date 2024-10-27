@@ -31,7 +31,10 @@
   export let formats: Format[];
   export let serviceBodies: ServiceBody[];
 
-  const tabs = [$translations.tabsBasic, $translations.tabsLocation, $translations.tabsOther, $translations.tabsChanges];
+  const tabs = selectedMeeting
+    ? [$translations.tabsBasic, $translations.tabsLocation, $translations.tabsOther, $translations.tabsChanges]
+    : [$translations.tabsBasic, $translations.tabsLocation, $translations.tabsOther];
+  const TAB_CHANGES = 3;
   const globalSettings = settings;
   const seenNames = new Set<string>();
   const ignoredFormats = ['VM', 'HY', 'TC'];
@@ -452,10 +455,11 @@
     }
   }
 
+  function handleTabChange(index: number) {
+    if (TAB_CHANGES === index && selectedMeeting) getChanges(selectedMeeting.id);
+  }
+
   onMount(() => {
-    if (selectedMeeting) {
-      getChanges(selectedMeeting.id);
-    }
     mapElement = document.getElementById('locationMap') as HTMLElement;
     if (mapElement) {
       if (globalSettings.googleApiKey) {
@@ -489,7 +493,7 @@
 </svelte:head>
 
 <form use:form>
-  <BasicTabs {tabs}>
+  <BasicTabs {tabs} on:change={(e) => handleTabChange(e.detail.index)}>
     <div slot="tab-content-0">
       <div class="grid items-center gap-4 md:grid-cols-3">
         <div class="w-full">
