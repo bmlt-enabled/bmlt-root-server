@@ -31,7 +31,19 @@
   export let formats: Format[];
   export let serviceBodies: ServiceBody[];
 
-  const tabs = [$translations.tabsBasic, $translations.tabsLocation, $translations.tabsOther, $translations.tabsChanges];
+  const tabs = selectedMeeting
+      ? [
+          $translations.tabsBasic,
+          $translations.tabsLocation,
+          $translations.tabsOther,
+          $translations.tabsChanges
+      ]
+      : [
+          $translations.tabsBasic,
+          $translations.tabsLocation,
+          $translations.tabsOther
+      ];
+  const TAB_CHANGES = 3;
   const globalSettings = settings;
   const seenNames = new Set<string>();
   const ignoredFormats = ['VM', 'HY', 'TC'];
@@ -186,7 +198,7 @@
     }
   }
 
-  const { data, errors, form, setData, isDirty, validate } = createForm({
+  const { data, errors, form, setData, isDirty } = createForm({
     initialValues: initialValues,
     onSubmit: async (values) => {
       spinner.show();
@@ -453,14 +465,10 @@
   }
 
   function handleTabChange(index: number) {
-    console.log(index);
-    validate();
+    if (TAB_CHANGES === index && selectedMeeting) getChanges(selectedMeeting.id);
   }
 
   onMount(() => {
-    if (selectedMeeting) {
-      getChanges(selectedMeeting.id);
-    }
     mapElement = document.getElementById('locationMap') as HTMLElement;
     if (mapElement) {
       if (globalSettings.googleApiKey) {
