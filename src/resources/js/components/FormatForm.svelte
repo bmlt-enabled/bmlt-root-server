@@ -68,11 +68,13 @@
     initialValues[n + '_language'] = n;
     yupSchema[n + '_key'] = yup
       .string()
+      .default('')
       .transform((v) => v.trim())
       .max(6)
       .matches(/^\S*$/, $translations.noWhitespaceInKey); // allow empty keys (see longer comment above)
     yupSchema[n + '_name'] = yup
       .string()
+      .default('')
       .transform((v) => v.trim())
       .max(50)
       .when(n + '_key', {
@@ -81,6 +83,7 @@
       });
     yupSchema[n + '_description'] = yup
       .string()
+      .default('')
       .transform((v) => v.trim())
       .max(255)
       .when(n + '_key', {
