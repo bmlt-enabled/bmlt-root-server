@@ -62,17 +62,19 @@
   const selectedFormatTranslations = selectedFormat ? selectedFormat.translations : [];
   for (const n of allLanguages) {
     const tr = selectedFormatTranslations.find((t) => t.language === n);
-    initialValues[n + '_key'] = tr ? tr.key : '';
-    initialValues[n + '_name'] = tr ? tr.name : '';
-    initialValues[n + '_description'] = tr ? tr.description : '';
+    initialValues[n + '_key'] = tr?.key ?? '';
+    initialValues[n + '_name'] = tr?.name ?? '';
+    initialValues[n + '_description'] = tr?.description ?? '';
     initialValues[n + '_language'] = n;
     yupSchema[n + '_key'] = yup
       .string()
+      .default('')
       .transform((v) => v.trim())
       .max(6)
       .matches(/^\S*$/, $translations.noWhitespaceInKey); // allow empty keys (see longer comment above)
     yupSchema[n + '_name'] = yup
       .string()
+      .default('')
       .transform((v) => v.trim())
       .max(50)
       .when(n + '_key', {
@@ -81,6 +83,7 @@
       });
     yupSchema[n + '_description'] = yup
       .string()
+      .default('')
       .transform((v) => v.trim())
       .max(255)
       .when(n + '_key', {
