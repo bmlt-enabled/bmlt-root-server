@@ -69,6 +69,8 @@
     if (isCommaSeparatedNumbers(searchTerm)) {
       meetingIds = searchTerm;
       searchTerm = '';
+    } else {
+      meetingIds = '';
     }
     getMeetings(searchTerm, selectedDays.join(','), selectedServiceBodies.join(','), meetingIds);
   }
