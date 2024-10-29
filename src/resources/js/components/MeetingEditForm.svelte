@@ -311,14 +311,23 @@
         locationPostalCode1: yup.string().transform((v) => v.trim()),
         locationNation: yup.string().transform((v) => v.trim()),
         phoneMeetingNumber: yup.string().transform((v) => v.trim()),
-        virtualMeetingLink: yup.string().transform((v) => v.trim()).url(),
+        virtualMeetingLink: yup
+          .string()
+          .transform((v) => v.trim())
+          .url(),
         virtualMeetingAdditionalInfo: yup.string().transform((v) => v.trim()),
         contactName1: yup.string().transform((v) => v.trim()),
         contactName2: yup.string().transform((v) => v.trim()),
         contactPhone1: yup.string().transform((v) => v.trim()),
         contactPhone2: yup.string().transform((v) => v.trim()),
-        contactEmail1: yup.string().transform((v) => v.trim()).email(),
-        contactEmail2: yup.string().transform((v) => v.trim()).email(),
+        contactEmail1: yup
+          .string()
+          .transform((v) => v.trim())
+          .email(),
+        contactEmail2: yup
+          .string()
+          .transform((v) => v.trim())
+          .email(),
         busLines: yup.string().transform((v) => v.trim()),
         trainLines: yup.string().transform((v) => v.trim()),
         comments: yup.string().transform((v) => v.trim())
