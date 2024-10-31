@@ -175,7 +175,8 @@
     const geocodeResult = await geocoder.geocode();
     if (typeof geocodeResult === 'string') {
       geocodingError = geocodeResult;
-      return;
+      spinner.hide();
+      throw new Error(geocodeResult);
     }
     if (geocodeResult) {
       values.latitude = geocodeResult.lat;
@@ -944,7 +945,7 @@
   <div class="grid gap-4 md:grid-cols-2">
     <div class="md:col-span-2">
       {#if geocodingError}
-        <Helper class="mt-2" color="red">
+        <Helper class="mb-4 mt-2 pb-2 text-lg" color="red">
           {geocodingError}
         </Helper>
       {/if}
