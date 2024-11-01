@@ -89,6 +89,7 @@ const strings = new LocalizedStrings({
     loginVerb: 'Anmelden',
     logout: 'Abmelden',
     longitudeTitle: 'Längengrad',
+    meetingErrorsSomewhere: 'Tabs with one or more errors:', // TODO: translate
     meetingIsPublishedTitle: 'Meeting is Published', // TODO: translate
     meetingListEditorsTitle: 'Meeting List Editors', // TODO: translate
     meetingsTitle: 'Meetings',
@@ -284,6 +285,7 @@ const strings = new LocalizedStrings({
     loginVerb: 'Log In',
     logout: 'Logout',
     longitudeTitle: 'Longitude',
+    meetingErrorsSomewhere: 'Tabs with one or more errors:',
     meetingIsPublishedTitle: 'Meeting is Published',
     meetingListEditorsTitle: 'Meeting List Editors',
     meetingsTitle: 'Meetings',
