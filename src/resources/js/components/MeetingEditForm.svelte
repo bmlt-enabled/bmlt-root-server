@@ -1011,11 +1011,14 @@
   <Hr classHr="my-8" />
   <div class="grid gap-4 md:grid-cols-2">
     <div class="md:col-span-2">
-      {#if geocodingError}
-        <Helper class="mb-4 mt-2 pb-2 text-lg" color="red">
+      <Helper class="mb-4 mt-2 pb-2 text-lg" color="red">
+        {#if geocodingError}
           {geocodingError}
-        </Helper>
-      {/if}
+        {/if}
+        {#if hasBasicErrors($errors) || hasLocationErrors($errors) || hasOtherErrors($errors)}
+          {warnErrorsSomewhere($errors)}
+        {/if}
+      </Helper>
       <Button type="submit" class="w-full" disabled={!$isDirty} on:click={disableButtonHack}>
         {#if selectedMeeting}
           {$translations.applyChangesTitle}
@@ -1023,11 +1026,6 @@
           {$translations.addMeeting}
         {/if}
       </Button>
-      <Helper class="mt-2" color="red">
-        {#if hasBasicErrors($errors) || hasLocationErrors($errors) || hasOtherErrors($errors)}
-          {warnErrorsSomewhere($errors)}
-        {/if}
-      </Helper>
     </div>
   </div>
 </form>
