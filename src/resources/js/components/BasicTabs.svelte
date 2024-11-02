@@ -1,11 +1,12 @@
 <script lang="ts">
-  import { Button } from 'flowbite-svelte';
+  import { Button, Indicator } from 'flowbite-svelte';
   import { createEventDispatcher } from 'svelte';
 
   export let tabs: string[] = [];
-  export let inactiveClasses: string = 'p-4 text-primary-600 bg-gray-100 rounded-t-lg dark:bg-gray-700 dark:text-gray-200 px-3.5 py-2.5 text-xs sm:px-5 sm:py-3 sm:text-sm';
+  export let errorTabs: string[] = [];
+  export let inactiveClasses: string = 'p-4 text-primary-600 bg-gray-100 rounded-t-lg dark:bg-gray-700 dark:text-gray-200 px-3.5 py-2.5 text-xs sm:px-5 sm:py-3 sm:text-sm relative';
   export let activeClasses: string =
-    'p-4 text-gray-500 bg-white rounded-t-lg hover:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white px-3.5 py-2.5 text-xs sm:px-5 sm:py-3 sm:text-sm';
+    'p-4 text-gray-500 bg-white rounded-t-lg hover:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white px-3.5 py-2.5 text-xs sm:px-5 sm:py-3 sm:text-sm relative';
 
   export let activeTab: number = 0;
   const dispatch = createEventDispatcher<{ change: { index: number } }>();
@@ -28,6 +29,9 @@
         role="tab"
       >
         {tab}
+        {#if errorTabs.includes(tab)}
+          <Indicator color="red" size="sm" placement="top-right" />
+        {/if}
       </Button>
     {/each}
   </div>

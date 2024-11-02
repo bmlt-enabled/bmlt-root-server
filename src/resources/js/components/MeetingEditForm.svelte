@@ -34,6 +34,7 @@
   const tabs = selectedMeeting
     ? [$translations.tabsBasic, $translations.tabsLocation, $translations.tabsOther, $translations.tabsChanges]
     : [$translations.tabsBasic, $translations.tabsLocation, $translations.tabsOther];
+  let errorTabs: string[] = [];
   const TAB_CHANGES = 3;
   const globalSettings = settings;
   const seenNames = new Set<string>();
@@ -522,18 +523,11 @@
     );
   }
 
-  function warnErrorsSomewhere(errors: any): string {
-    const errorTabs = [];
-    if (hasBasicErrors(errors)) {
-      errorTabs.push($translations.tabsBasic);
-    }
-    if (hasLocationErrors(errors)) {
-      errorTabs.push($translations.tabsLocation);
-    }
-    if (hasOtherErrors(errors)) {
-      errorTabs.push($translations.tabsOther);
-    }
-    return $translations.meetingErrorsSomewhere + ' ' + errorTabs.join(', ');
+  $: {
+    errorTabs = [];
+    if (hasBasicErrors($errors)) errorTabs.push(tabs[0]);
+    if (hasLocationErrors($errors)) errorTabs.push(tabs[1]);
+    if (hasOtherErrors($errors)) errorTabs.push(tabs[2]);
   }
 
   onMount(() => {
@@ -570,7 +564,7 @@
 </svelte:head>
 
 <form use:form>
-  <BasicTabs {tabs} on:change={(e) => handleTabChange(e.detail.index)}>
+  <BasicTabs {tabs} {errorTabs} on:change={(e) => handleTabChange(e.detail.index)}>
     <div slot="tab-content-0">
       <div class="grid items-center gap-4 md:grid-cols-3">
         <div class="w-full">
@@ -1016,7 +1010,7 @@
           {geocodingError}
         {/if}
         {#if hasBasicErrors($errors) || hasLocationErrors($errors) || hasOtherErrors($errors)}
-          {warnErrorsSomewhere($errors)}
+          {$translations.meetingErrorsSomewhere + ' ' + errorTabs.join(', ')}
         {/if}
       </Helper>
       <Button type="submit" class="w-full" disabled={!$isDirty} on:click={disableButtonHack}>
