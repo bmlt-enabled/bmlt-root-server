@@ -75,6 +75,8 @@ const strings = new LocalizedStrings({
     helplineTitle: 'Helpline',
     homeTitle: 'Startseite',
     hoursTitle: 'Hours', // TODO: translate
+    hybridLocationStreetErrorMessage: 'Hybrid meetings must have a street address.', // TODO: translate
+    hybridPhoneMeetingNumberErrorMessage: 'Hybrid meetings must include a Virtual Meeting Link or a Phone Meeting Dial-in Number.', // TODO: translate
     idTitle: 'ID',
     invalidUsernameOrPassword: 'Ungültiger Benutzername oder Passwort.',
     keyIsRequired: 'Schlüssel ist erforderlich',
@@ -84,6 +86,7 @@ const strings = new LocalizedStrings({
     latitudeTitle: 'Breitengrad',
     loading: 'geladen ...',
     locationMapTitle: 'Location Map', // TOFIX: translate
+    locationStreetErrorMessage: 'In-person meetings must have a street address.', // TODO: translate
     locationTextTitle: 'Location Text', // TODO: translate
     loginTitle: 'Anmeldung',
     loginVerb: 'Anmelden',
@@ -152,6 +155,7 @@ const strings = new LocalizedStrings({
     paginationShowing: 'Showing',
     parentIdTitle: 'Service Body Parent', // TODO: translate
     passwordTitle: 'Passwort',
+    phoneMeetingNumberErrorMessage: 'Virtual meetings must include a Virtual Meeting Link or a Phone Meeting Dial-in Number.', // TODO: translate
     phoneMeetingTitle: 'Phone Meeting Dial-in Number', // TODO: translate
     postMeridiem: 'PM',
     published: 'Published',
@@ -271,6 +275,8 @@ const strings = new LocalizedStrings({
     helplineTitle: 'Helpline',
     homeTitle: 'Home',
     hoursTitle: 'Hours',
+    hybridLocationStreetErrorMessage: 'Hybrid meetings must have a street address.',
+    hybridPhoneMeetingNumberErrorMessage: 'Hybrid meetings must include a Virtual Meeting Link or a Phone Meeting Dial-in Number.',
     idTitle: 'ID',
     invalidUsernameOrPassword: 'Invalid username or password.',
     keyIsRequired: 'key is required',
@@ -279,7 +285,8 @@ const strings = new LocalizedStrings({
     languageSelectTitle: 'Select Language',
     latitudeTitle: 'Latitude',
     loading: 'loading ...',
-    locationMapTitle: 'Location Map', // TOFIX: translate
+    locationMapTitle: 'Location Map',
+    locationStreetErrorMessage: 'In-person meetings must have a street address.',
     locationTextTitle: 'Location Text',
     loginTitle: 'Login',
     loginVerb: 'Log In',
@@ -348,6 +355,7 @@ const strings = new LocalizedStrings({
     paginationShowing: 'Showing',
     parentIdTitle: 'Service Body Parent',
     passwordTitle: 'Password',
+    phoneMeetingNumberErrorMessage: 'Virtual meetings must include a Virtual Meeting Link or a Phone Meeting Dial-in Number.',
     phoneMeetingTitle: 'Phone Meeting Dial-in Number',
     postMeridiem: 'PM',
     published: 'Published',

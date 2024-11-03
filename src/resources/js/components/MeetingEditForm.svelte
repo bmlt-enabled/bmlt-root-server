@@ -238,7 +238,16 @@
             name: (error?.errors?.name ?? []).join(' '),
             locationText: (error?.errors?.location_text ?? []).join(' '),
             locationInfo: (error?.errors?.location_info ?? []).join(' '),
-            locationStreet: (error?.errors?.location_street ?? []).join(' '),
+            locationStreet: (error?.errors?.location_street ?? [])
+              .map((err) => {
+                if (err === 'In-person meetings must have a street address.') {
+                  return $translations.locationStreetErrorMessage;
+                } else if (err === 'Hybrid meetings must have a street address.') {
+                  return $translations.hybridLocationStreetErrorMessage;
+                }
+                return err;
+              })
+              .join(' '),
             locationNeighborhood: (error?.errors?.location_neighborhood ?? []).join(' '),
             locationCitySubsection: (error?.errors?.location_city_subsection ?? []).join(' '),
             locationMunicipality: (error?.errors?.location_municipality ?? []).join(' '),
@@ -246,7 +255,16 @@
             locationProvince: (error?.errors?.location_province ?? []).join(' '),
             locationPostalCode1: (error?.errors?.location_postal_code_1 ?? []).join(' '),
             locationNation: (error?.errors?.location_nation ?? []).join(' '),
-            phoneMeetingNumber: (error?.errors?.phone_meeting_number ?? []).join(' '),
+            phoneMeetingNumber: (error?.errors?.phone_meeting_number ?? [])
+              .map((err) => {
+                if (err === 'Virtual meetings must include a Virtual Meeting Link or a Phone Meeting Dial-in Number.') {
+                  return $translations.phoneMeetingNumberErrorMessage;
+                } else if (err === 'Hybrid meetings must include a Virtual Meeting Link or a Phone Meeting Dial-in Number.') {
+                  return $translations.hybridPhoneMeetingNumberErrorMessage;
+                }
+                return err;
+              })
+              .join(' '),
             virtualMeetingLink: (error?.errors?.virtual_meeting_link ?? []).join(' '),
             virtualMeetingAdditionalInfo: (error?.errors?.virtual_meeting_additional_info ?? []).join(' '),
             contactName1: (error?.errors?.contact_name_1 ?? []).join(' '),
