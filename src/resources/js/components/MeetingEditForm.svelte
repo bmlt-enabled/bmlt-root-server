@@ -304,7 +304,16 @@
           .required(),
         locationText: yup.string().transform((v) => v.trim()),
         locationInfo: yup.string().transform((v) => v.trim()),
-        locationStreet: yup.string().transform((v) => v.trim()),
+        locationStreet: yup
+          .string()
+          .default('')
+          .transform((v) => v.trim())
+          .max(255)
+          .when('venueType', {
+            is: (venueType: number) => [VENUE_TYPE_IN_PERSON, VENUE_TYPE_HYBRID].includes(venueType),
+            then: (schema) => schema.required($translations.locationStreetErrorMessage),
+            otherwise: (schema) => schema.notRequired()
+          }),
         locationNeighborhood: yup.string().transform((v) => v.trim()),
         locationCitySubsection: yup.string().transform((v) => v.trim()),
         locationMunicipality: yup.string().transform((v) => v.trim()),
