@@ -111,6 +111,7 @@
   }>();
 
   const defaultLatLng = { lat: Number(globalSettings.centerLatitude ?? -79.793701171875), lng: Number(globalSettings.centerLongitude ?? 36.065752051707) };
+  const defaultDuration = globalSettings.defaultDuration ?? '01:00';
   const initialValues = {
     serviceBodyId: selectedMeeting?.serviceBodyId ?? -1,
     formatIds: selectedMeeting?.formatIds ?? [],
@@ -118,7 +119,7 @@
     temporarilyVirtual: selectedMeeting?.temporarilyVirtual ?? false,
     day: selectedMeeting?.day ?? 0,
     startTime: selectedMeeting?.startTime ?? '12:00',
-    duration: selectedMeeting?.duration ?? '01:00',
+    duration: selectedMeeting?.duration ?? defaultDuration,
     timeZone: selectedMeeting?.timeZone ?? '',
     latitude: selectedMeeting?.latitude ?? defaultLatLng.lat,
     longitude: selectedMeeting?.longitude ?? defaultLatLng.lng,
