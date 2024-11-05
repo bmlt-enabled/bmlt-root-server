@@ -6,6 +6,7 @@ sed -i '/dbServer/d' /var/www/html/auto-config.inc.php
 sed -i '/dbPrefix/d' /var/www/html/auto-config.inc.php
 sed -i '/do_not_force_port/d' /var/www/html/auto-config.inc.php
 sed -i '/default_duration_time/d' /var/www/html/auto-config.inc.php
+sed -i '/g_enable_language_selector/d' /var/www/html/auto-config.inc.php
 
 if [ ! -z $GKEY ]
 then
@@ -67,7 +68,10 @@ then
     echo "\$meeting_counties_and_sub_provinces = \"${MEETING_COUNTIES_AND_SUB_PROVINCES}\";" >> /var/www/html/auto-config.inc.php
 fi
 
-if [ ! -z "$DEFAULT_DURATION_TIME" -a "$DEFAULT_DURATION_TIME" == "1:00:00" ]
-then
-    echo "\$default_duration_time = \"$DEFAULT_DURATION_TIME\";" >> /var/www/html/auto-config.inc.php
+echo "\$default_duration_time = \"${DEFAULT_DURATION_TIME:-01:00:00}\";" >> /var/www/html/auto-config.inc.php
+
+if [ "$ENABLE_LANGUAGE_SELECTOR" == "false" ]; then
+    echo "\$g_enable_language_selector = false;" >> /var/www/html/auto-config.inc.php
+else
+    echo "\$g_enable_language_selector = true;" >> /var/www/html/auto-config.inc.php
 fi
