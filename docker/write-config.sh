@@ -5,6 +5,7 @@ sed -i '/dbPassword/d' /var/www/html/auto-config.inc.php
 sed -i '/dbServer/d' /var/www/html/auto-config.inc.php
 sed -i '/dbPrefix/d' /var/www/html/auto-config.inc.php
 sed -i '/do_not_force_port/d' /var/www/html/auto-config.inc.php
+sed -i '/default_duration_time/d' /var/www/html/auto-config.inc.php
 
 if [ ! -z $GKEY ]
 then
@@ -64,4 +65,9 @@ fi
 if [ ! -z "$MEETING_COUNTIES_AND_SUB_PROVINCES" ]
 then
     echo "\$meeting_counties_and_sub_provinces = \"${MEETING_COUNTIES_AND_SUB_PROVINCES}\";" >> /var/www/html/auto-config.inc.php
+fi
+
+if [ ! -z "$DEFAULT_DURATION_TIME" -a "$DEFAULT_DURATION_TIME" == "1:00:00" ]
+then
+    echo "\$default_duration_time = \"$DEFAULT_DURATION_TIME\";" >> /var/www/html/auto-config.inc.php
 fi
