@@ -3,6 +3,7 @@ import '@testing-library/jest-dom/vitest';
 // @ts-expect-error set from backend
 global.settings = {
   apiBaseUrl: '/',
+  bmltTitle: '',
   autoGeocodingEnabled: true,
   centerLongitude: -118.563659,
   centerLatitude: 34.235918,

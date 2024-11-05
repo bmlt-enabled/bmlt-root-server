@@ -8,6 +8,7 @@
         const settings = {
             apiBaseUrl: '{{ $baseUrl }}',
             autoGeocodingEnabled: {{ $autoGeocodingEnabled ? 'true' : 'false' }},
+            bmltTitle: '{{ $bmltTitle }}',
             centerLongitude: '{{ $centerLongitude }}',
             centerLatitude: '{{ $centerLatitude }}',
             centerZoom: '{{ $centerZoom }}',
