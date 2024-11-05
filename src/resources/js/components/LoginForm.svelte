@@ -67,6 +67,11 @@
 </script>
 
 <div class="mx-auto flex flex-col items-center justify-center px-6 py-8 md:h-screen lg:py-0">
+  {#if globalSettings.bmltTitle}
+    <div class="mb-4 text-4xl font-bold text-black dark:text-white">
+      {globalSettings.bmltTitle}
+    </div>
+  {/if}
   <div class="mb-6 flex items-center text-2xl font-semibold text-gray-900 dark:text-white">
     {$translations.rootServerTitle} ({globalSettings.version})
   </div>

@@ -7,6 +7,7 @@ sed -i '/dbPrefix/d' /var/www/html/auto-config.inc.php
 sed -i '/do_not_force_port/d' /var/www/html/auto-config.inc.php
 sed -i '/default_duration_time/d' /var/www/html/auto-config.inc.php
 sed -i '/g_enable_language_selector/d' /var/www/html/auto-config.inc.php
+sed -i '/bmlt_title/d' /var/www/html/auto-config.inc.php
 
 if [ ! -z $GKEY ]
 then
@@ -69,6 +70,7 @@ then
 fi
 
 echo "\$default_duration_time = \"${DEFAULT_DURATION_TIME:-01:00:00}\";" >> /var/www/html/auto-config.inc.php
+echo "\$bmlt_title = \"${BMLT_TITLE:-BMLT Administration}\";" >> /var/www/html/auto-config.inc.php
 
 if [ "$ENABLE_LANGUAGE_SELECTOR" == "false" ]; then
     echo "\$g_enable_language_selector = false;" >> /var/www/html/auto-config.inc.php
