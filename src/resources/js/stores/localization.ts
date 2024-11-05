@@ -84,6 +84,7 @@ const strings = new LocalizedStrings({
     latitudeTitle: 'Breitengrad',
     loading: 'geladen ...',
     locationMapTitle: 'Location Map', // TOFIX: translate
+    locationStreetErrorMessage: 'Hybrid or In-person meetings must have a street address.', // TOFIX: translate
     locationTextTitle: 'Location Text', // TODO: translate
     loginTitle: 'Anmeldung',
     loginVerb: 'Anmelden',
@@ -280,6 +281,7 @@ const strings = new LocalizedStrings({
     latitudeTitle: 'Latitude',
     loading: 'loading ...',
     locationMapTitle: 'Location Map', // TOFIX: translate
+    locationStreetErrorMessage: 'Hybrid or In-person meetings must have a street address.',
     locationTextTitle: 'Location Text',
     loginTitle: 'Login',
     loginVerb: 'Log In',
