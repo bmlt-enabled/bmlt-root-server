@@ -13,33 +13,33 @@ const strings = new LocalizedStrings({
     addMeeting: 'Meeting hinzufügen',
     addServiceBody: 'Service-Body hinzufügen',
     addUser: 'Benutzer hinzufügen',
-    administratorTitle: 'Administrator/Administratorin', // TODO: translate this way, or just Administrator?
-    adminTitle: 'Admin', // TODO: translate
+    administratorTitle: 'Administrator*in',
+    adminTitle: 'Admin',
     anteMeridiem: 'AM',
     applyChangesTitle: 'Änderung anwenden',
-    boroughTitle: 'Borough/City Subsection', // TODO: translate
-    busLinesTitle: 'Bus Lines', // TODO: translate
-    by: 'by', // TODO: translate
+    boroughTitle: 'Stadtviertel', // TODO: check this - English is Borough/City Subsection
+    busLinesTitle: 'Buslinien',
+    by: 'von',
     cancel: 'Stornieren',
     chooseStartTime: 'Startzeit wählen',
     cityTownTitle: 'Stadt',
-    clearFormTitle: 'Clear Form', // TODO: translate
-    closeWithoutSaving: 'Close without saving', // TODO: translate
-    commentsTitle: 'Comments', // TODO: translate
-    confirmDeleteFormat: 'Are you sure you want to delete this format?', // TODO: translate
-    confirmDeleteMeeting: 'Are you sure you want to delete this meeting?', // TODO: translate
+    clearFormTitle: 'Formular löschen',
+    closeWithoutSaving: 'Schließen ohne zu speichern',
+    commentsTitle: 'Kommentare',
+    confirmDeleteFormat: 'Bist du sicher, dass du dieses Format löschen möchten?',
+    confirmDeleteMeeting: 'Bist du sicher, dass du dieses Meeting löschen möchten?',
     confirmDeleteServiceBody: 'Bist du sicher, dass du diesen Service-Body löschen möchten?',
     confirmDeleteUser: 'Bist du sicher, dass du diesen Benutzer löschen möchten?',
     confirmYesImSure: 'Ja, ich bin sicher.',
-    contact1EmailTitle: 'Contact 1 Email',
-    contact1NameTitle: 'Contact 1 Name',
-    contact1PhoneTitle: 'Contact 1 Phone',
-    contact2EmailTitle: 'Contact 2 Email',
-    contact2NameTitle: 'Contact 2 Name',
-    contact2PhoneTitle: 'Contact 2 Phone',
-    countySubProvinceTitle: 'County/Sub-Province', // TODO: translate?
-    dashboardTitle: 'Dashboard', // TODO: translate?
-    day: 'Day',
+    contact1EmailTitle: 'Kontakt 1 E-Mail',
+    contact1NameTitle: 'Kontakt 1 Name',
+    contact1PhoneTitle: 'Kontakt 1 Telefon',
+    contact2EmailTitle: 'Kontakt 2 E-Mail',
+    contact2NameTitle: 'Kontakt 2 Name',
+    contact2PhoneTitle: 'Kontakt 2 Telefon',
+    countySubProvinceTitle: 'Bezirk', //  // TODO: check this - English is County/Sub-Province
+    dashboardTitle: 'Dashboard',
+    day: 'Tag',
     daysOfWeek: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
     dayTitle: 'Wochentag',
     deactivatedTitle: 'Deaktiviert',
@@ -50,31 +50,30 @@ const strings = new LocalizedStrings({
     deleteServiceBody: 'Service-Body löschen',
     deleteUser: 'Lösche diesen Benutzer',
     descriptionTitle: 'Beschreibung',
-    durationTitle: 'Duration', // TODO: translate
+    durationTitle: 'Dauer',
     editFormat: 'Format bearbeiten',
     editUser: 'Benutzer bearbeiten',
     emailTitle: 'E-Mail-Adresse',
-    extraInfoTitle: 'Extra Info', // TODO: translate
-    filter: 'Filter', // TODO: translate
-    formatDeleteConflictError: 'Error: The format could not be deleted because it is still associated with meetings.', // TODO: translate
-    formatId: 'Format ID', // TODO: translate
+    extraInfoTitle: 'Weitere Informationen',
+    filter: 'Filter',
+    formatDeleteConflictError: 'Fehler: Das Format konnte nicht gelöscht werden, da es noch mit Meetings verknüpft ist.',
+    formatId: 'Format-ID',
     formatsTitle: 'Formate',
-    formatTranslationIsRequired: 'a translation is required for all languages for reserved formats', // TODO: translate
+    formatTranslationIsRequired: 'Für reservierte Formate ist eine Übersetzung für alle Sprachen erforderlich',
     formatTypeCodes: [
-      // TODO: translate
-      { name: 'Attendance by non-addicts (Open, Closed)', value: 'OPEN_OR_CLOSED' },
-      { name: 'Common Needs and Restrictions (Mens Meeting, LGTBQ, No Children, etc.)', value: 'COMMON_NEEDS_OR_RESTRICTION' },
-      { name: 'Format should be especially prominent (Clean requirement, etc.)', value: 'ALERT' },
-      { name: 'Language', value: 'LANGUAGE' },
-      { name: 'Location Code (Wheelchair Accessible, Limited Parking, etc.)', value: 'LOCATION' },
-      { name: 'Meeting Format (Speaker, Book Study, etc.)', value: 'MEETING_FORMAT' },
-      { name: 'None', value: '' }
+      { name: 'Teilnahme von Nichtsüchtigen (offen, geschlossen)', value: 'OPEN_OR_CLOSED' },
+      { name: 'Allgemeine Bedürfnisse und Einschränkungen (Männermeeting, LGBTQ, keine Kinder usw.)', value: 'COMMON_NEEDS_OR_RESTRICTION' },
+      { name: 'Das Format sollte besonders hervorgehoben werden (Cleanzeitanforderung usw.).', value: 'ALERT' },
+      { name: 'Sprache', value: 'LANGUAGE' },
+      { name: 'Standortcode (Rollstuhlgerecht, begrenzte Parkmöglichkeiten usw.)', value: 'LOCATION' },
+      { name: 'Meetingformat (Sprecher, Lesen aus NA-Literatur usw.)', value: 'MEETING_FORMAT' },
+      { name: 'Keine', value: '' }
     ],
-    formatTypeTitle: 'Format Type', // TODO: translate
-    formatValidationError: 'Error: This format is protected and cannot be deleted.', // TODO: translate
+    formatTypeTitle: 'Formattyp',
+    formatValidationError: 'Fehler: Dieses Format ist geschützt und kann nicht gelöscht werden.',
     helplineTitle: 'Helpline',
     homeTitle: 'Startseite',
-    hoursTitle: 'Hours', // TODO: translate
+    hoursTitle: 'Std.',
     idTitle: 'ID',
     invalidUsernameOrPassword: 'Ungültiger Benutzername oder Passwort.',
     keyIsRequired: 'Schlüssel ist erforderlich',
@@ -83,21 +82,22 @@ const strings = new LocalizedStrings({
     languageSelectTitle: 'Sprache auswählen',
     latitudeTitle: 'Breitengrad',
     loading: 'geladen ...',
-    locationMapTitle: 'Location Map', // TOFIX: translate
-    locationStreetErrorMessage: 'Hybrid or In-person meetings must have a street address.', // TOFIX: translate
-    locationTextTitle: 'Location Text', // TODO: translate
+    locationMapTitle: 'Lageplan',
+    locationStreetErrorMessage: 'Für Hybrid- oder präsenz-Meetings muss eine Straßenadresse angegeben werden.',
+    locationTextTitle: 'Standorttext',
     loginTitle: 'Anmeldung',
     loginVerb: 'Anmelden',
     logout: 'Abmelden',
     longitudeTitle: 'Längengrad',
-    meetingErrorsSomewhere: 'Tabs with one or more errors:', // TODO: translate
-    meetingIsPublishedTitle: 'Meeting is Published', // TODO: translate
-    meetingListEditorsTitle: 'Meeting List Editors', // TODO: translate
+    meetingErrorsSomewhere: 'Seiten mit einem oder mehreren Fehlern:',
+    meetingIsPublishedTitle: 'Meeting ist veröffentlicht',
+    meetingListEditorsTitle: 'Meetingsliste Editors', // TODO: check translation
     meetingsTitle: 'Meetings',
-    meetingUnpublishedNote: 'Note: Unpublishing a meeting indicates a temporary closure. If this meeting has closed permanently, please delete it.', // TODO: translate
-    minutesTitle: 'Minutes', // TODO: translate
+    meetingUnpublishedNote:
+      'Hinweis: Das Aufheben der Veröffentlichung eines Meetings bedeutet, dass es vorübergehend geschlossen wurde. Wenn dieses Meeting dauerhaft geschlossen wurde, lösch es bitte.',
+    minutesTitle: 'Minuten',
     nameTitle: 'Name',
-    nationTitle: 'Nation', // TODO: translate
+    nationTitle: 'Nation',
     nawsFormats: [
       { name: '12 Konzepte', value: 'CPT' },
       { name: 'Fremdsprache', value: 'LANG' },
@@ -139,69 +139,69 @@ const strings = new LocalizedStrings({
       { name: 'Frauen', value: 'W' },
       { name: 'Junge Menschen', value: 'Y' }
     ],
-    nawsFormatTitle: 'NAWS Format', // TODO: translate
-    neighborhoodTitle: 'Neighborhood', // TODO: translate
-    noFormatTranslationsError: 'At least one translation is required.', // TODO: translate
+    nawsFormatTitle: 'NAWS Format',
+    neighborhoodTitle: 'Nachbarschaft',
+    noFormatTranslationsError: 'Es ist mindestens eine Übersetzung erforderlich.',
     none: '- Keine -',
-    noServiceBodiesTitle: 'No service bodies found that this user can edit', // TODO: translate
+    noServiceBodiesTitle: 'Es wurden keine Service-Bodies gefunden, die dieser Benutzer bearbeiten kann',
     noTranslationAvailable: 'keine deutsche Version verfügbar',
-    noUsersTitle: 'No other users found that this user can edit', // TODO: translate
-    noWhitespaceInKey: 'Whitespace not allowed in key', // TODO: translate
+    noUsersTitle: 'Es wurden keine anderen Benutzer gefunden, die dieser Benutzer bearbeiten kann',
+    noWhitespaceInKey: 'Leerzeichen im Schlüssel sind nicht erlaubt',
     observerTitle: 'Service-Body Beobachter',
     ownedByTitle: 'Gehört',
-    paginationOf: 'of',
-    paginationShowing: 'Showing',
-    parentIdTitle: 'Service Body Parent', // TODO: translate
+    paginationOf: 'von',
+    paginationShowing: 'Zeigt',
+    parentIdTitle: 'Service-Body Eltern', // TODO: check translation
     passwordTitle: 'Passwort',
-    phoneMeetingTitle: 'Phone Meeting Dial-in Number', // TODO: translate
+    phoneMeetingTitle: 'Telefonnummer für Telefonmeeting',
     postMeridiem: 'PM',
-    published: 'Published',
-    rootServerTitle: 'Root Server',
-    search: 'Search', // TODO: translate
-    searchByDay: 'Search by day', // TODO: translate
-    searchByName: 'Search by name', // TODO: translate
-    searchByServiceBody: 'Search by Service Body', // TODO: translate
-    searchMeetings: 'Search meetings...', // TODO: translate
-    selectAllDays: 'Select All days', // TODO: translate
-    serverAdministratorTitle: 'Main Server Administrator', // TODO: translate
-    serviceBodiesNoParent: 'No Parent (Top-Level)', // TODO: translate
-    serviceBodiesTitle: 'Service Bodies', // TODO: translate
-    serviceBodiesWithEditableMeetings: 'This user can edit meetings in these service bodies:', // TODO: translate
-    serviceBodyAdminTitle: 'Service Body Administrator', // TODO: translate
-    serviceBodyDeleteConflictError: 'Error: The service body could not be deleted because it is still associated with meetings or is a parent of other service bodies.', // TODO: translate
-    serviceBodyTitle: 'Service Body', // TODO: translate
-    serviceBodyTypeTitle: 'Service Body Type', // TODO: translate
-    showAllTranslations: 'Show all translations', // TODO: translate
-    startTimeTitle: 'Start Time', // TODO: translate
-    stateTitle: 'State/Province', // TODO: translate
-    streetTitle: 'Street', // TODO: translate
-    tabsBasic: 'Basic', // TODO: translate
-    tabsChanges: 'Changes', // TODO: translate
-    tabsLocation: 'Location', // TODO: translate
-    tabsOther: 'Other', // TODO: translate,
-    time: 'Time',
-    timeAfternoon: 'Afternoon',
-    timeEvening: 'Evening',
-    timeMorning: 'Morning',
-    timeZoneSelectPlaceholder: 'Choose option (or leave blank to auto-detect from location)', // TODO: translate
-    timeZoneTitle: 'Time Zone', // TODO: translate
-    trainLinesTitle: 'Train Lines', // TODO: translate
-    unpublished: 'Unpublished',
-    unselectAllDays: 'Unselect All days', // TODO: translate
-    userDeleteConflictError: 'Error: The user could not be deleted because it is still associated with at least one service body or is the parent of another user.', // TODO: translate
-    userIsDeactivated: 'User is deactivated.', // TODO: translate
+    published: 'Veröffentlicht',
+    rootServerTitle: 'Root-Server',
+    search: 'Suchen',
+    searchByDay: 'Suche nach Tag',
+    searchByName: 'Suche nach Name',
+    searchByServiceBody: 'Suche nach Service-Body',
+    searchMeetings: 'Suche Meetings...',
+    selectAllDays: 'Alle Tage wählen',
+    serverAdministratorTitle: 'Hauptserveradministrator*in',
+    serviceBodiesNoParent: 'Kein übergeordnetes Element (oberste Ebene)',
+    serviceBodiesTitle: 'Service-Bodies',
+    serviceBodiesWithEditableMeetings: 'Dieser Benutzer kann Meetings in diesen Service-Bodies bearbeiten:',
+    serviceBodyAdminTitle: 'Service-Body Administrator*in',
+    serviceBodyDeleteConflictError: 'Fehler: Der Service-Body konnte nicht gelöscht werden, da er noch mit Meetings verknüpft ist oder anderen Service-Bodies übergeordnet ist.',
+    serviceBodyTitle: 'Service-Body',
+    serviceBodyTypeTitle: 'Service-Body-Typ',
+    showAllTranslations: 'Alle Übersetzungen anzeigen',
+    startTimeTitle: 'Startzeit',
+    stateTitle: 'Staat/Provinz',
+    streetTitle: 'Straße',
+    tabsBasic: 'Basic',
+    tabsChanges: 'Änderungen',
+    tabsLocation: 'Standort',
+    tabsOther: 'Andere',
+    time: 'Zeit',
+    timeAfternoon: 'Nachmittag',
+    timeEvening: 'Abend',
+    timeMorning: 'Morgen',
+    timeZoneSelectPlaceholder: 'Option auswählen (oder leer lassen, um die automatische Erkennung anhand des Standorts zu aktivieren)',
+    timeZoneTitle: 'Zeitzone',
+    trainLinesTitle: 'Zuglinien',
+    unpublished: 'Unveröffentlicht',
+    unselectAllDays: 'Auswahl für „Alle Tage“ aufheben',
+    userDeleteConflictError: 'Fehler: Der Benutzer konnte nicht gelöscht werden, da er noch mindestens einem Service-Body zugeordnet ist oder das übergeordnete Element eines anderen Benutzers ist.',
+    userIsDeactivated: 'Benutzer ist deaktiviert.',
     usernameTitle: 'Benutzername',
     usersTitle: 'Benutzer',
     userTitle: 'Benutzer',
     userTypeTitle: 'Benutzertyp',
-    venueTypeTitle: 'Venue Type', // TODO: translate
-    virtualMeetingAdditionalInfoTitle: 'Virtual Meeting Additional Information', // TODO: translate
-    virtualMeetingTitle: 'Virtual Meeting Link', // TODO: translate
-    websiteUrlTitle: 'Web Site URL', // TODO: translate
+    venueTypeTitle: 'Art des Veranstaltungsortes',
+    virtualMeetingAdditionalInfoTitle: 'Online-Meetings Weitere Informationen',
+    virtualMeetingTitle: 'Online-Meeting URL',
+    websiteUrlTitle: 'Website-URL',
     welcome: 'Willkommen',
-    worldIdTitle: 'World Committee Code', // TODO: translate
-    youHaveUnsavedChanges: 'You have unsaved changes. Do you really want to close?', // TODO: translate
-    zipCodeTitle: 'Zip Code/Postal Code' // TODO: translate
+    worldIdTitle: 'World-Committee ID',
+    youHaveUnsavedChanges: 'Du hast nicht gespeicherte Änderungen. Möchtest du wirklich schließen?',
+    zipCodeTitle: 'Postleitzahl'
   },
   en: {
     accountSettingsTitle: 'Account Settings',
