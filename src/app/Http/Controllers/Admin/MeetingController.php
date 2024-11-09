@@ -283,7 +283,7 @@ class MeetingController extends ResourceController
             )
             ->merge(
                 $customFields
-                    ->mapWithKeys(fn ($fieldName) => $validated->has("customFields") && array_key_exists($fieldName, $validated["customFields"]) ? [$fieldName => $validated["customFields"][$fieldName]] : [null => null])
+                    ->mapWithKeys(fn ($fieldName) => [$fieldName => $validated->get('customFields')[$fieldName] ?? null])
                     ->reject(fn ($value, $_) => is_null($value))
             )
             ->toArray();
