@@ -91,8 +91,7 @@ class CatchAllController extends Controller
             ->map(fn ($t) => [
                 'name' => $t->key,
                 'displayName' => $t->field_prompt,
-                'language' => $t->lang_enum,
-                'isVisible' => ($t->visibility === 0)
+                'language' => $t->lang_enum
             ])
             ->values();
     }

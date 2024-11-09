@@ -9,7 +9,7 @@ global.settings = {
   centerLatitude: 34.235918,
   centerZoom: 6,
   countyAutoGeocodingEnabled: false,
-  customFields: [{ name: 'zone', displayName: 'zone', language: 'en', isVisible: false }],
+  customFields: [{ name: 'zone', displayName: 'zone', language: 'en' }],
   defaultClosedStatus: true,
   defaultDuration: '01:00:00',
   defaultLanguage: 'en',
