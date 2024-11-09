@@ -44,6 +44,7 @@ interface MeetingRepositoryInterface
     public function getFieldKeys(): Collection;
     public function getFieldValues(string $fieldName, array $specificFormats = [], bool $allFormats = false): Collection;
     public function getMainFields(): Collection;
+    public function getCustomFields(): Collection;
     public function getDataTemplates(): Collection;
     public function getBoundingBox(): array;
     public function create(array $values): Meeting;

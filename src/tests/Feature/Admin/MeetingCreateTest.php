@@ -884,6 +884,54 @@ class MeetingCreateTest extends TestCase
         }
     }
 
+    public function testStoreMeetingValidateCustomDataFields()
+    {
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
+        $format = Format::query()->first();
+        $customFieldName = "customFieldName";
+        $this->addCustomField($customFieldName);
+
+        $payload = $this->validPayload($area, [$format]);
+
+        // the field has to be a valid field
+        $payload["customFields"] = ["invalidFieldName" => "test value"];
+        $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/meetings', $payload)
+            ->assertStatus(422);
+
+        // the field can be null
+        $payload["customFields"] = [$customFieldName => null];
+        $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/meetings', $payload)
+            ->assertStatus(201);
+
+        // the list can be empty
+        $payload["customFields"] = [];
+        $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/meetings', $payload)
+            ->assertStatus(201);
+
+        // the list is not required
+        unset($payload["customFields"]);
+        $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/meetings', $payload)
+            ->assertStatus(201);
+
+        // the field value cannot be more than 512 characters
+        $payload["customFields"] = [$customFieldName => str_repeat('t', 513)];
+        $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/meetings', $payload)
+            ->assertStatus(422);
+
+        // the field value can be exactly 512 characters
+        $payload["customFields"] = [$customFieldName => str_repeat('t', 512)];
+        $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/meetings', $payload)
+            ->assertStatus(201);
+    }
+
     public function testStoreMeetingValidateInPersonStreet()
     {
         $user = $this->createAdminUser();
@@ -1031,48 +1079,6 @@ class MeetingCreateTest extends TestCase
         $payload['location_municipality'] = null;
         $payload['location_province'] = null;
         $payload['location_postal_code_1'] = null;
-        $this->withHeader('Authorization', "Bearer $token")
-            ->post('/api/v1/meetings', $payload)
-            ->assertStatus(201);
-    }
-
-    public function testStoreMeetingValidateExtraDataField()
-    {
-        $user = $this->createAdminUser();
-        $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
-        $format = Format::query()->first();
-        $payload = $this->validPayload($area, [$format]);
-
-        MeetingData::create([
-            'meetingid_bigint' => 0,
-            'key' => 'blahblah',
-            'field_prompt' => 'blahblah',
-            'lang_enum' => 'en',
-            'data_string' => 'blahblah',
-            'visibility' => 0,
-        ]);
-
-        // it is not required
-        unset($payload['blahblah']);
-        $this->withHeader('Authorization', "Bearer $token")
-            ->post('/api/v1/meetings', $payload)
-            ->assertStatus(201);
-
-        // it can be null
-        $payload['blahblah'] = null;
-        $this->withHeader('Authorization', "Bearer $token")
-            ->post('/api/v1/meetings', $payload)
-            ->assertStatus(201);
-
-        // it can't be longer than 512
-        $payload['blahblah'] = str_repeat('t', 513);
-        $this->withHeader('Authorization', "Bearer $token")
-            ->post('/api/v1/meetings', $payload)
-            ->assertStatus(422);
-
-        // it can be 512
-        $payload['blahblah'] = str_repeat('t', 512);
         $this->withHeader('Authorization', "Bearer $token")
             ->post('/api/v1/meetings', $payload)
             ->assertStatus(201);

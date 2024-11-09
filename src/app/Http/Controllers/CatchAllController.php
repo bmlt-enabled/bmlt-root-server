@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
 use App\Http\Controllers\Legacy\LegacyPathInfo;
+use App\Interfaces\MeetingRepositoryInterface;
 
 class CatchAllController extends Controller
 {
@@ -42,6 +44,7 @@ class CatchAllController extends Controller
                 'centerLatitude' => legacy_config('search_spec_map_center_latitude'),
                 'centerZoom' => legacy_config('search_spec_map_center_zoom'),
                 'countyAutoGeocodingEnabled' => legacy_config('county_auto_geocoding_enabled'),
+                'customFields' => self::getCustomFields(),
                 'defaultClosedStatus' => legacy_config('default_closed_status'),
                 'defaultDuration' => legacy_config('default_duration_time'),
                 'defaultLanguage' => legacy_config('language'),
@@ -77,6 +80,21 @@ class CatchAllController extends Controller
                 return [$langAbbreviation => $langName];
             })
             ->toArray();
+    }
+
+    private static function getCustomFields(): Collection
+    {
+        $meetingRepository = resolve(MeetingRepositoryInterface::class);
+        $customFields = $meetingRepository->getCustomFields();
+        return $meetingRepository->getDataTemplates()
+            ->reject(fn ($t) => !$customFields->contains($t->key))
+            ->map(fn ($t) => [
+                'name' => $t->key,
+                'displayName' => $t->field_prompt,
+                'language' => $t->lang_enum,
+                'isVisible' => ($t->visibility === 0)
+            ])
+            ->values();
     }
 
     private static function isAllowedLegacyPath(LegacyPathInfo $pathInfo): bool

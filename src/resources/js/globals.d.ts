@@ -6,6 +6,7 @@ declare const settings: {
   centerLatitude: number;
   centerZoom: number;
   countyAutoGeocodingEnabled: boolean;
+  customFields: { name: string; fieldPrompt: string; language: string; isVisible: boolean }[];
   defaultClosedStatus: boolean;
   defaultDuration: string;
   defaultLanguage: string;

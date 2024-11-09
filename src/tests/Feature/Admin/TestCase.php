@@ -95,6 +95,18 @@ class TestCase extends BaseTestCase
         return $meeting;
     }
 
+    protected function addCustomField(string $name)
+    {
+        MeetingData::create([
+            'meetingid_bigint' => 0,
+            'key' => $name,
+            'field_prompt' => $name,
+            'lang_enum' => 'en',
+            'data_string' => $name,
+            'visibility' => 0,
+        ]);
+    }
+
     // users
     //
     //
