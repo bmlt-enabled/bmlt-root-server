@@ -149,7 +149,9 @@
     busLines: selectedMeeting?.busLines ?? '',
     trainLines: selectedMeeting?.trainLines ?? '',
     comments: selectedMeeting?.comments ?? '',
-    customFields: Object.fromEntries(globalSettings.customFields.map((field) => [field.name, '']))
+    customFields: selectedMeeting?.customFields
+      ? { ...Object.fromEntries(globalSettings.customFields.map((field) => [field.name, ''])), ...selectedMeeting.customFields }
+      : Object.fromEntries(globalSettings.customFields.map((field) => [field.name, '']))
   };
   let latitude = initialValues.latitude;
   let longitude = initialValues.longitude;
@@ -158,8 +160,6 @@
   let savedMeeting: Meeting;
   let changes: MeetingChangeResource[];
   let changesLoaded = false;
-  console.log(selectedMeeting);
-
 
   function shouldGeocode(initialValues: MeetingPartialUpdate, values: MeetingPartialUpdate, isNewMeeting: boolean) {
     if (isNewMeeting && values.venueType != VENUE_TYPE_VIRTUAL) {
@@ -261,11 +261,7 @@
             busLines: (error?.errors?.bus_lines ?? []).join(' '),
             trainLines: (error?.errors?.train_lines ?? []).join(' '),
             comments: (error?.errors?.comments ?? []).join(' '),
-            customFields: error?.errors?.customFields
-              ? Object.entries(error.errors.customFields)
-                  .map(([key, value]) => `${key}: ${value}`)
-                  .join(' ')
-              : ''
+            customFields: error?.errors?.customFields ? Object.fromEntries(Object.entries(error.errors.customFields).map(([key, value]) => [key, Array.isArray(value) ? value.join(' ') : value])) : {}
           });
         }
       });
@@ -995,7 +991,7 @@
         <div class="grid gap-4 md:grid-cols-2">
           <div class="md:col-span-2">
             <Label for={name} class="mb-2">{displayName}</Label>
-            <Input type="text" id={name} name="customFields[{name}]" bind:value={$data.customFields[name]} />
+            <Input type="text" id={name} name={$data.customFields[name]} bind:value={$data.customFields[name]} />
             {#if $errors.customFields?.[name]}
               <Helper class="mt-2" color="red">
                 {$errors.customFields[name]}
