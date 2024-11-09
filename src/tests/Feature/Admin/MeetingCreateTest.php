@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Http\Resources\Admin\MeetingResource;
 use App\Models\Format;
 use App\Models\Meeting;
 use App\Models\MeetingData;
@@ -13,6 +14,12 @@ use Illuminate\Support\Facades\Config;
 class MeetingCreateTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function tearDown(): void
+    {
+        MeetingResource::resetStaticVariables();
+        parent::tearDown();
+    }
 
     private function validPayload($serviceBody, array $formats): array
     {
@@ -165,6 +172,8 @@ class MeetingCreateTest extends TestCase
             ->assertStatus(201)
             ->json();
 
+        $this->assertCount(0, $data['customFields']);
+
         foreach ($fieldNames as $fieldName) {
             if (in_array($fieldName, $nonNullableFields) || $fieldName == 'root_server_id' || $fieldName == 'source_id') {
                 continue;
@@ -179,6 +188,100 @@ class MeetingCreateTest extends TestCase
             $actualValue = $data[$fieldName];
 
             $this->assertNull($actualValue);
+        }
+    }
+
+    public function testStoreMeetingWithNoCustomFields()
+    {
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
+        $format = Format::query()->first();
+        $payload = $this->validPayload($area, [$format]);
+
+        $data = $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/meetings', $payload)
+            ->assertStatus(201)
+            ->json();
+
+        $this->assertArrayHasKey('customFields', $data);
+        $this->assertCount(0, $data['customFields']);
+    }
+
+    public function testStoreMeetingWithCustomFields()
+    {
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
+        $format = Format::query()->first();
+        $customFields = ['customField1' => 'value1', 'customField2' => 'value2'];
+        foreach (array_keys($customFields) as $fieldName) {
+            $this->addCustomField($fieldName);
+        }
+
+        $payload = $this->validPayload($area, [$format]);
+        $payload['customFields'] = $customFields;
+
+        $data = $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/meetings', $payload)
+            ->assertStatus(201)
+            ->json();
+
+        $this->assertArrayHasKey('customFields', $data);
+        $this->assertCount(count($customFields), $data['customFields']);
+        foreach ($customFields as $fieldName => $expectedValue) {
+            $this->assertEquals($expectedValue, $data['customFields'][$fieldName]);
+        }
+    }
+
+    public function testStoreMeetingWithNullCustomFields()
+    {
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
+        $format = Format::query()->first();
+        $customFields = ['customField1' => null, 'customField2' => null];
+        foreach (array_keys($customFields) as $fieldName) {
+            $this->addCustomField($fieldName);
+        }
+
+        $payload = $this->validPayload($area, [$format]);
+        $payload['customFields'] = $customFields;
+
+        $data = $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/meetings', $payload)
+            ->assertStatus(201)
+            ->json();
+
+        $this->assertArrayHasKey('customFields', $data);
+        $this->assertCount(count($customFields), $data['customFields']);
+        foreach ($customFields as $fieldName => $expectedValue) {
+            $this->assertEquals($expectedValue, $data['customFields'][$fieldName]);
+        }
+    }
+
+    public function testStoreMeetingWithNullCustomFieldsNotSet()
+    {
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
+        $format = Format::query()->first();
+        $customFields = ['customField1' => null, 'customField2' => null];
+        foreach (array_keys($customFields) as $fieldName) {
+            $this->addCustomField($fieldName);
+        }
+
+        $payload = $this->validPayload($area, [$format]);
+
+        $data = $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/meetings', $payload)
+            ->assertStatus(201)
+            ->json();
+
+        $this->assertArrayHasKey('customFields', $data);
+        $this->assertCount(count($customFields), $data['customFields']);
+        foreach ($customFields as $fieldName => $expectedValue) {
+            $this->assertEquals($expectedValue, $data['customFields'][$fieldName]);
         }
     }
 
@@ -884,6 +987,54 @@ class MeetingCreateTest extends TestCase
         }
     }
 
+    public function testStoreMeetingValidateCustomDataFields()
+    {
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
+        $format = Format::query()->first();
+        $customFieldName = "customFieldName";
+        $this->addCustomField($customFieldName);
+
+        $payload = $this->validPayload($area, [$format]);
+
+        // the field has to be a valid field
+        $payload["customFields"] = ["invalidFieldName" => "test value"];
+        $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/meetings', $payload)
+            ->assertStatus(422);
+
+        // the field can be null
+        $payload["customFields"] = [$customFieldName => null];
+        $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/meetings', $payload)
+            ->assertStatus(201);
+
+        // the list can be empty
+        $payload["customFields"] = [];
+        $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/meetings', $payload)
+            ->assertStatus(201);
+
+        // the list is not required
+        unset($payload["customFields"]);
+        $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/meetings', $payload)
+            ->assertStatus(201);
+
+        // the field value cannot be more than 512 characters
+        $payload["customFields"] = [$customFieldName => str_repeat('t', 513)];
+        $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/meetings', $payload)
+            ->assertStatus(422);
+
+        // the field value can be exactly 512 characters
+        $payload["customFields"] = [$customFieldName => str_repeat('t', 512)];
+        $this->withHeader('Authorization', "Bearer $token")
+            ->post('/api/v1/meetings', $payload)
+            ->assertStatus(201);
+    }
+
     public function testStoreMeetingValidateInPersonStreet()
     {
         $user = $this->createAdminUser();
@@ -1031,48 +1182,6 @@ class MeetingCreateTest extends TestCase
         $payload['location_municipality'] = null;
         $payload['location_province'] = null;
         $payload['location_postal_code_1'] = null;
-        $this->withHeader('Authorization', "Bearer $token")
-            ->post('/api/v1/meetings', $payload)
-            ->assertStatus(201);
-    }
-
-    public function testStoreMeetingValidateExtraDataField()
-    {
-        $user = $this->createAdminUser();
-        $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
-        $format = Format::query()->first();
-        $payload = $this->validPayload($area, [$format]);
-
-        MeetingData::create([
-            'meetingid_bigint' => 0,
-            'key' => 'blahblah',
-            'field_prompt' => 'blahblah',
-            'lang_enum' => 'en',
-            'data_string' => 'blahblah',
-            'visibility' => 0,
-        ]);
-
-        // it is not required
-        unset($payload['blahblah']);
-        $this->withHeader('Authorization', "Bearer $token")
-            ->post('/api/v1/meetings', $payload)
-            ->assertStatus(201);
-
-        // it can be null
-        $payload['blahblah'] = null;
-        $this->withHeader('Authorization', "Bearer $token")
-            ->post('/api/v1/meetings', $payload)
-            ->assertStatus(201);
-
-        // it can't be longer than 512
-        $payload['blahblah'] = str_repeat('t', 513);
-        $this->withHeader('Authorization', "Bearer $token")
-            ->post('/api/v1/meetings', $payload)
-            ->assertStatus(422);
-
-        // it can be 512
-        $payload['blahblah'] = str_repeat('t', 512);
         $this->withHeader('Authorization', "Bearer $token")
             ->post('/api/v1/meetings', $payload)
             ->assertStatus(201);

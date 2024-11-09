@@ -148,7 +148,10 @@
     contactEmail2: selectedMeeting?.contactEmail2 ?? '',
     busLines: selectedMeeting?.busLines ?? '',
     trainLines: selectedMeeting?.trainLines ?? '',
-    comments: selectedMeeting?.comments ?? ''
+    comments: selectedMeeting?.comments ?? '',
+    customFields: selectedMeeting?.customFields
+      ? { ...Object.fromEntries(globalSettings.customFields.map((field) => [field.name, ''])), ...selectedMeeting.customFields }
+      : Object.fromEntries(globalSettings.customFields.map((field) => [field.name, '']))
   };
   let latitude = initialValues.latitude;
   let longitude = initialValues.longitude;
@@ -196,7 +199,6 @@
     initialValues: initialValues,
     onSubmit: async (values) => {
       spinner.show();
-
       const isNewMeeting = !selectedMeeting;
       if (shouldGeocode(initialValues, values, isNewMeeting)) {
         if (globalSettings.autoGeocodingEnabled && !manualDrag) {
@@ -258,7 +260,8 @@
             contactEmail2: (error?.errors?.contact_email_2 ?? []).join(' '),
             busLines: (error?.errors?.bus_lines ?? []).join(' '),
             trainLines: (error?.errors?.train_lines ?? []).join(' '),
-            comments: (error?.errors?.comments ?? []).join(' ')
+            comments: (error?.errors?.comments ?? []).join(' '),
+            customFields: error?.errors?.customFields ? Object.fromEntries(Object.entries(error.errors.customFields).map(([key, value]) => [key, Array.isArray(value) ? value.join(' ') : value])) : {}
           });
         }
       });
@@ -984,6 +987,19 @@
           {/if}
         </div>
       </div>
+      {#each globalSettings.customFields as { name, displayName }}
+        <div class="grid gap-4 md:grid-cols-2">
+          <div class="md:col-span-2">
+            <Label for={name} class="mb-2">{displayName}</Label>
+            <Input type="text" id={name} name={$data.customFields[name]} bind:value={$data.customFields[name]} />
+            {#if $errors.customFields?.[name]}
+              <Helper class="mt-2" color="red">
+                {$errors.customFields[name]}
+              </Helper>
+            {/if}
+          </div>
+        </div>
+      {/each}
     </div>
     <div slot="tab-content-3">
       {#if changesLoaded && changes.length > 0}

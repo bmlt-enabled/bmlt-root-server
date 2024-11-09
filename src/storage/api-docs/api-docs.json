@@ -2478,6 +2478,16 @@
                     "comments": {
                         "type": "string",
                         "example": "string"
+                    },
+                    "customFields": {
+                        "type": "object",
+                        "example": {
+                            "key1": "value1",
+                            "key2": "value2"
+                        },
+                        "additionalProperties": {
+                            "type": "string"
+                        }
                     }
                 },
                 "type": "object"

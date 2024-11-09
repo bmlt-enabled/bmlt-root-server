@@ -88,13 +88,18 @@ class MeetingController extends ResourceController
             ->toBase()
             ->merge($meeting->longdata->mapWithKeys(fn ($data, $_) => [$data->key => $data->data_blob])->toBase());
 
+        $customFields = $this->getCustomFields();
+        $stockDataFields = $this->getDataTemplates()
+            ->reject(fn ($_, $key) => $customFields->contains($key))
+            ->map(fn ($_, $key) => $key);
+
         // Since a patch is only a partial representation of the meeting, we fill in all of the gaps
         // with data from the actual meeting. This allows us to share code with the store and update
         // (POST and PUT) handlers.
         $request->merge(
             collect(Meeting::$mainFields)
-                ->merge($this->getDataTemplates()->map(fn ($_, $key) => $key))
-                ->mapWithKeys(function ($fieldName, $_) use ($request, $meeting, $meetingData) {
+                ->merge($stockDataFields)
+                ->mapWithKeys(function ($fieldName) use ($request, $meeting, $meetingData) {
                     if ($fieldName == 'service_body_bigint') {
                         return ['serviceBodyId' => $request->has('serviceBodyId') ? $request->input('serviceBodyId') : $meeting->service_body_bigint];
                     } elseif ($fieldName == 'formats') {
@@ -123,6 +128,14 @@ class MeetingController extends ResourceController
                         return [$fieldName => $request->has($fieldName) ? $request->input($fieldName) : $meetingData->get($fieldName)];
                     }
                 })
+                ->merge([
+                    'customFields' => collect($request->input('customFields', []))
+                        ->keys()
+                        ->concat($customFields->toArray())
+                        ->unique()
+                        ->mapWithKeys(fn ($fieldName) => [$fieldName => $request->input('customFields', [])[$fieldName] ?? $meetingData->get($fieldName)])
+                        ->toArray()
+                ])
                 ->toArray()
         );
 
@@ -145,6 +158,15 @@ class MeetingController extends ResourceController
             $dataTemplates = $this->meetingRepository->getDataTemplates();
         }
         return $dataTemplates;
+    }
+
+    private function getCustomFields(): Collection
+    {
+        static $customFields = null;
+        if (is_null($customFields) || App::runningUnitTests()) {
+            $customFields = $this->meetingRepository->getCustomFields();
+        }
+        return $customFields;
     }
 
     private function validateInputs(Request $request)
@@ -172,8 +194,9 @@ class MeetingController extends ResourceController
 
     private function getDataFieldValidators(): array
     {
+        $customFields = $this->getCustomFields();
         return $this->getDataTemplates()
-            ->reject(fn ($_, $fieldName) => $fieldName == 'meeting_name')
+            ->reject(fn ($_, $fieldName) => $fieldName == 'meeting_name' || $customFields->contains($fieldName))
             ->mapWithKeys(function ($_, $fieldName) {
                 if (in_array($fieldName, VenueTypeLocation::FIELDS)) {
                     return [$fieldName => ['max:512', new VenueTypeLocation]];
@@ -181,6 +204,10 @@ class MeetingController extends ResourceController
                     return [$fieldName => 'nullable|string|max:512'];
                 }
             })
+            ->merge([
+                'customFields' => 'array:' . $this->getCustomFields()->join(','),
+                'customFields.*' => 'nullable|string|max:512',
+            ])
             ->toArray();
     }
 
@@ -245,11 +272,18 @@ class MeetingController extends ResourceController
             'meeting_name' => $validated['name'],
         ];
 
+        $customFields = $this->getCustomFields();
+
         return collect($values)
             ->merge(
                 $this->getDataTemplates()
-                    ->reject(fn ($_, $fieldName) => $fieldName == 'meeting_name')
+                    ->reject(fn ($_, $fieldName) => $fieldName == 'meeting_name' || $customFields->contains($fieldName))
                     ->mapWithKeys(fn ($_, $fieldName) => $validated->has($fieldName) ? [$fieldName => $validated[$fieldName]] : [null => null])
+                    ->reject(fn ($value, $_) => is_null($value))
+            )
+            ->merge(
+                $customFields
+                    ->mapWithKeys(fn ($fieldName) => [$fieldName => $validated->get('customFields')[$fieldName] ?? null])
                     ->reject(fn ($value, $_) => is_null($value))
             )
             ->toArray();

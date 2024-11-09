@@ -511,6 +511,16 @@ class MeetingRepository implements MeetingRepositoryInterface
         return collect(Meeting::$mainFields);
     }
 
+    public function getCustomFields(): Collection
+    {
+        return MeetingData::query()
+            ->select('key')
+            ->distinct()
+            ->where('meetingid_bigint', 0)
+            ->whereNotIn('key', MeetingData::STOCK_FIELDS)
+            ->pluck('key');
+    }
+
     public function getDataTemplates(): Collection
     {
         $serverLanguage = App::currentLocale();

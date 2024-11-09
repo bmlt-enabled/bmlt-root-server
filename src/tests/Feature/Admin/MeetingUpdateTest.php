@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Http\Resources\Admin\MeetingResource;
 use App\Models\Format;
 use App\Models\Meeting;
 use App\Models\MeetingData;
@@ -22,6 +23,12 @@ class MeetingUpdateTest extends TestCase
     private static ?int $hybridFormatId = null;
     private static ?int $temporarilyClosedFormatId = null;
     private static ?Collection $hiddenFormatIds = null;
+
+    protected function tearDown(): void
+    {
+        MeetingResource::resetStaticVariables();
+        parent::tearDown();
+    }
 
     private function initializeData()
     {
@@ -219,6 +226,43 @@ class MeetingUpdateTest extends TestCase
 
         $meeting->refresh();
         $this->assertEquals(count($requiredFields), $meeting->data->count());
+    }
+
+    public function testUpdateMeetingCustomFields()
+    {
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
+        $format = Format::query()->first();
+        $customFields = ['customField1' => 'value1', 'customField2' => 'value2', 'customField3' => 'value3'];
+        foreach (array_keys($customFields) as $fieldName) {
+            $this->addCustomField($fieldName);
+        }
+        $meeting = $this->createMeeting(
+            ['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)],
+            array_merge(
+                ['location_street' => '813 Darby St', 'location_municipality' => 'Raleigh', 'location_province' => 'NC', 'virtual_meeting_link' => 'https://zoom.us'],
+                $customFields
+            )
+        );
+
+        $payload = $this->toPayload($meeting);
+        $payload['customFields'] = [
+            'customField1' => 'updated1',
+            'customField2' => null
+        ];
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/meetings/$meeting->id_bigint", $payload)
+            ->assertStatus(204);
+
+        $data = $this->withHeader('Authorization', "Bearer $token")
+            ->get("/api/v1/meetings/$meeting->id_bigint")
+            ->json();
+
+        $this->assertEquals(count($customFields), count($data['customFields']));
+        $this->assertEquals('updated1', $data['customFields']['customField1']);
+        $this->assertEquals(null, $data['customFields']['customField2']);
+        $this->assertEquals(null, $data['customFields']['customField3']);
     }
 
     public function testUpdateMeetingValidateServiceBodyId()
@@ -789,6 +833,52 @@ class MeetingUpdateTest extends TestCase
         }
     }
 
+    public function testUpdateMeetingValidateCustomFields()
+    {
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
+        $format = Format::query()->first();
+        $meeting = $this->createMeeting(
+            ['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)],
+            ['location_street' => '813 Darby St', 'location_municipality' => 'Raleigh', 'location_province' => 'NC', 'virtual_meeting_link' => 'https://zoom.us']
+        );
+        $customFieldName = "customFieldName";
+        $this->addCustomField($customFieldName);
+
+        $payload = $this->toPayload($meeting);
+
+        // the field can be null
+        $payload["customFields"] = [$customFieldName => null];
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/meetings/$meeting->id_bigint", $payload)
+            ->assertStatus(204);
+
+        // the list can be empty
+        $payload["customFields"] = [];
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/meetings/$meeting->id_bigint", $payload)
+            ->assertStatus(204);
+
+        // the list is not required
+        unset($payload['customFields']);
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/meetings/$meeting->id_bigint", $payload)
+            ->assertStatus(204);
+
+        // it can't be more than 512 chars
+        $payload["customFields"] = [$customFieldName => str_repeat('t', 513)];
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/meetings/$meeting->id_bigint", $payload)
+            ->assertStatus(422);
+
+        // it can be 512 characters
+        $payload["customFields"] = [$customFieldName => str_repeat('t', 512)];
+        $this->withHeader('Authorization', "Bearer $token")
+            ->put("/api/v1/meetings/$meeting->id_bigint", $payload)
+            ->assertStatus(204);
+    }
+
     public function testUpdateMeetingValidateInPersonStreet()
     {
         $user = $this->createAdminUser();
@@ -956,52 +1046,6 @@ class MeetingUpdateTest extends TestCase
         $payload['location_municipality'] = null;
         $payload['location_province'] = null;
         $payload['location_postal_code_1'] = null;
-        $this->withHeader('Authorization', "Bearer $token")
-            ->put("/api/v1/meetings/$meeting->id_bigint", $payload)
-            ->assertStatus(204);
-    }
-
-    public function testUpdateMeetingValidateExtraDataField()
-    {
-        $user = $this->createAdminUser();
-        $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
-        $format = Format::query()->first();
-        $meeting = $this->createMeeting(
-            ['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)],
-            ['location_street' => '813 Darby St', 'location_municipality' => 'Raleigh', 'location_province' => 'NC', 'virtual_meeting_link' => 'https://zoom.us']
-        );
-        $payload = $this->toPayload($meeting);
-
-        MeetingData::create([
-            'meetingid_bigint' => 0,
-            'key' => 'blahblah',
-            'field_prompt' => 'blahblah',
-            'lang_enum' => 'en',
-            'data_string' => 'blahblah',
-            'visibility' => 0,
-        ]);
-
-        // it is not required
-        unset($payload['blahblah']);
-        $this->withHeader('Authorization', "Bearer $token")
-            ->put("/api/v1/meetings/$meeting->id_bigint", $payload)
-            ->assertStatus(204);
-
-        // it can be null
-        $payload['blahblah'] = null;
-        $this->withHeader('Authorization', "Bearer $token")
-            ->put("/api/v1/meetings/$meeting->id_bigint", $payload)
-            ->assertStatus(204);
-
-        // it can't be longer than 512
-        $payload['blahblah'] = str_repeat('t', 513);
-        $this->withHeader('Authorization', "Bearer $token")
-            ->put("/api/v1/meetings/$meeting->id_bigint", $payload)
-            ->assertStatus(422);
-
-        // it can be 512
-        $payload['blahblah'] = str_repeat('t', 512);
         $this->withHeader('Authorization', "Bearer $token")
             ->put("/api/v1/meetings/$meeting->id_bigint", $payload)
             ->assertStatus(204);
