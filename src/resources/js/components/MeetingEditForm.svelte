@@ -158,6 +158,8 @@
   let savedMeeting: Meeting;
   let changes: MeetingChangeResource[];
   let changesLoaded = false;
+  console.log(selectedMeeting);
+
 
   function shouldGeocode(initialValues: MeetingPartialUpdate, values: MeetingPartialUpdate, isNewMeeting: boolean) {
     if (isNewMeeting && values.venueType != VENUE_TYPE_VIRTUAL) {
