@@ -2478,9 +2478,23 @@
                     "comments": {
                         "type": "string",
                         "example": "string"
+                    },
+                    "custom_fields": {
+                        "type": "object",
+                        "example": {
+                            "key1": "value1",
+                            "key2": "value2"
+                        },
+                        "additionalProperties": {
+                            "schema": "MeetingController",
+                            "type": "string"
+                        }
                     }
                 },
                 "type": "object"
+            },
+            "MeetingController": {
+                "type": "string"
             },
             "Meeting": {
                 "required": [
