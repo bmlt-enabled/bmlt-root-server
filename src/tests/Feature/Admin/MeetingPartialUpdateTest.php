@@ -118,8 +118,50 @@ class MeetingPartialUpdateTest extends TestCase
         }
     }
 
-    // TODO Write some tests specific to custom fields. Need to make sure excluded custom fields are
-    // not modified, and that included custom fields are.
+    public function testPartialMeetingUpdateCustomFieldsNotModified()
+    {
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
+        $format = Format::query()->first();
+        $customFields = ['customField1' => 'value1', 'customField2' => 'value2', 'customField3' => 'value3'];
+        foreach (array_keys($customFields) as $fieldName) {
+            $this->addCustomField($fieldName);
+        }
+        $meeting = $this->createMeeting(['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)], $customFields);
+
+        $payload = ['name' => 'updated name'];
+        $this->withHeader('Authorization', "Bearer $token")
+            ->patch("/api/v1/meetings/$meeting->id_bigint", $payload)
+            ->assertStatus(204);
+
+        $this->withHeader('Authorization', "Bearer $token")
+            ->get("/api/v1/meetings/$meeting->id_bigint")
+            ->assertJsonFragment($payload)
+            ->assertJsonFragment(['customFields' => $customFields]);
+    }
+
+    public function testPartialMeetingUpdateCustomFieldsModified()
+    {
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
+        $format = Format::query()->first();
+        $customFields = ['customField1' => 'value1', 'customField2' => 'value2', 'customField3' => 'value3'];
+        foreach (array_keys($customFields) as $fieldName) {
+            $this->addCustomField($fieldName);
+        }
+        $meeting = $this->createMeeting(['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)], $customFields);
+
+        $payload = ['customFields' => ['customField1' => 'updated']];
+        $this->withHeader('Authorization', "Bearer $token")
+            ->patch("/api/v1/meetings/$meeting->id_bigint", $payload)
+            ->assertStatus(204);
+
+        $this->withHeader('Authorization', "Bearer $token")
+            ->get("/api/v1/meetings/$meeting->id_bigint")
+            ->assertJsonFragment(['customFields' => array_merge($customFields, $payload['customFields'])]);
+    }
 
     public function testPartialMeetingUpdateFormats()
     {
@@ -639,6 +681,13 @@ class MeetingPartialUpdateTest extends TestCase
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/meetings/$meeting->id_bigint", $payload)
             ->assertStatus(204);
+
+        // the fields have to be exist
+        $payload = [];
+        $payload["customFields"] = ['incorrect' => 'asdf'];
+        $this->withHeader('Authorization', "Bearer $token")
+            ->patch("/api/v1/meetings/$meeting->id_bigint", $payload)
+            ->assertStatus(422);
 
         // it can't be more than 512 chars
         $payload = [];

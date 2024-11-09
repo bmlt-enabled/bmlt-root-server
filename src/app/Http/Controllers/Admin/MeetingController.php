@@ -129,13 +129,12 @@ class MeetingController extends ResourceController
                     }
                 })
                 ->merge([
-                    "customFields" => $customFields->mapWithKeys(
-                        function ($fieldName) use ($request, $meetingData) {
-                            $customFields = $request->input('customFields', []);
-                            return [$fieldName => $customFields[$fieldName] ?? $meetingData->get($fieldName)];
-                        }
-                    )
-                    ->toArray()
+                    'customFields' => collect($request->input('customFields', []))
+                        ->keys()
+                        ->concat($customFields->toArray())
+                        ->unique()
+                        ->mapWithKeys(fn ($fieldName) => [$fieldName => $request->input('customFields', [])[$fieldName] ?? $meetingData->get($fieldName)])
+                        ->toArray()
                 ])
                 ->toArray()
         );
