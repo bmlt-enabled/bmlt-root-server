@@ -47,13 +47,10 @@ class TestCase extends BaseTestCase
 
     protected function createMeeting(array $mainFields = [], array $dataFields = [], array $longDataFields = [])
     {
-        static $dataFieldTemplates;
-        if (!isset($dataFieldTemplates)) {
-            $dataFieldTemplates = MeetingData::query()
-                ->where('meetingid_bigint', 0)
-                ->get()
-                ->mapWithKeys(fn ($value, $_) => [$value->key => $value]);
-        }
+        $dataFieldTemplates = MeetingData::query()
+            ->where('meetingid_bigint', 0)
+            ->get()
+            ->mapWithKeys(fn ($value, $_) => [$value->key => $value]);
 
         $meeting = Meeting::create(array_merge(self::$meetingMainFieldDefaults, $mainFields));
 
@@ -93,6 +90,18 @@ class TestCase extends BaseTestCase
         }
 
         return $meeting;
+    }
+
+    protected function addCustomField(string $name)
+    {
+        MeetingData::create([
+            'meetingid_bigint' => 0,
+            'key' => $name,
+            'field_prompt' => $name,
+            'lang_enum' => 'en',
+            'data_string' => $name,
+            'visibility' => 0,
+        ]);
     }
 
     // users

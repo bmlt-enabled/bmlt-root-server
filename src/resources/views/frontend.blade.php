@@ -13,6 +13,7 @@
             centerLatitude: '{{ $centerLatitude }}',
             centerZoom: '{{ $centerZoom }}',
             countyAutoGeocodingEnabled: {{ $countyAutoGeocodingEnabled ? 'true' : 'false' }},
+            customFields: {!! json_encode($customFields) !!},
             defaultClosedStatus: {{ $defaultClosedStatus ? 'true' : 'false' }},
             defaultDuration: '{{ $defaultDuration }}',
             defaultLanguage: '{{ $defaultLanguage }}',

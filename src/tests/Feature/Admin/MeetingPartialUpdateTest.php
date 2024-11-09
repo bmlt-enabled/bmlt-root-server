@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Http\Resources\Admin\MeetingResource;
 use App\Models\Change;
 use App\Models\Format;
 use App\Models\Meeting;
@@ -14,6 +15,12 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class MeetingPartialUpdateTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function tearDown(): void
+    {
+        MeetingResource::resetStaticVariables();
+        parent::tearDown();
+    }
 
     protected function createMeeting(array $mainFields = [], array $dataFields = [], array $longDataFields = [], array $removeFieldKeys = [])
     {
@@ -110,6 +117,9 @@ class MeetingPartialUpdateTest extends TestCase
             }
         }
     }
+
+    // TODO Write some tests specific to custom fields. Need to make sure excluded custom fields are
+    // not modified, and that included custom fields are.
 
     public function testPartialMeetingUpdateFormats()
     {
@@ -592,6 +602,59 @@ class MeetingPartialUpdateTest extends TestCase
         }
     }
 
+    public function testPartialUpdateMeetingValidateCustomDataFields()
+    {
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
+        $format = Format::query()->first();
+        $customFieldName = "customFieldName";
+        $this->addCustomField($customFieldName);
+
+        // the field can be null
+        $meeting = $this->createMeeting(['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)]);
+        $payload = [];
+        $payload["customFields"] = [$customFieldName => null];
+        $this->withHeader('Authorization', "Bearer $token")
+            ->patch("/api/v1/meetings/$meeting->id_bigint", $payload)
+            ->assertStatus(204);
+
+        // the list can be empty
+        $meeting = $this->createMeeting(['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)]);
+        $payload = [];
+        $payload["customFields"] = [];
+        $this->withHeader('Authorization', "Bearer $token")
+            ->patch("/api/v1/meetings/$meeting->id_bigint", $payload)
+            ->assertStatus(204);
+
+        // the list is not required
+        MeetingData::query()->where('meetingid_bigint', $meeting->id_bigint)->delete();
+        MeetingLongData::query()->where('meetingid_bigint', $meeting->id_bigint)->delete();
+        $meeting->delete();
+        $meeting = $this->createMeeting(
+            ['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)],
+            removeFieldKeys: [$customFieldName]
+        );
+        $payload = [];
+        $this->withHeader('Authorization', "Bearer $token")
+            ->patch("/api/v1/meetings/$meeting->id_bigint", $payload)
+            ->assertStatus(204);
+
+        // it can't be more than 512 chars
+        $payload = [];
+        $payload["customFields"] = [$customFieldName => str_repeat('t', 513)];
+        $this->withHeader('Authorization', "Bearer $token")
+            ->patch("/api/v1/meetings/$meeting->id_bigint", $payload)
+            ->assertStatus(422);
+
+        // it can be 512 characters
+        $payload = [];
+        $payload["customFields"] = [$customFieldName => str_repeat('t', 512)];
+        $this->withHeader('Authorization', "Bearer $token")
+            ->patch("/api/v1/meetings/$meeting->id_bigint", $payload)
+            ->assertStatus(204);
+    }
+
     public function testPartialUpdateMeetingValidateInPersonStreet()
     {
         $user = $this->createAdminUser();
@@ -841,42 +904,6 @@ class MeetingPartialUpdateTest extends TestCase
         );
         $payload = [];
         $payload['venueType'] = Meeting::VENUE_TYPE_VIRTUAL;
-        $this->withHeader('Authorization', "Bearer $token")
-            ->patch("/api/v1/meetings/$meeting->id_bigint", $payload)
-            ->assertStatus(204);
-    }
-
-    public function testPartialUpdateMeetingValidateExtraDataField()
-    {
-        $user = $this->createAdminUser();
-        $token = $user->createToken('test')->plainTextToken;
-        $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
-        $format = Format::query()->first();
-        $meeting = $this->createMeeting(['service_body_bigint' => $area->id_bigint, 'formats' => strval($format->shared_id_bigint)]);
-
-        MeetingData::create([
-            'meetingid_bigint' => 0,
-            'key' => 'blahblah',
-            'field_prompt' => 'blahblah',
-            'lang_enum' => 'en',
-            'data_string' => 'blahblah',
-            'visibility' => 0,
-        ]);
-
-        // it can be null
-        $payload['blahblah'] = null;
-        $this->withHeader('Authorization', "Bearer $token")
-            ->patch("/api/v1/meetings/$meeting->id_bigint", $payload)
-            ->assertStatus(204);
-
-        // it can't be longer than 512
-        $payload['blahblah'] = str_repeat('t', 513);
-        $this->withHeader('Authorization', "Bearer $token")
-            ->patch("/api/v1/meetings/$meeting->id_bigint", $payload)
-            ->assertStatus(422);
-
-        // it can be 512
-        $payload['blahblah'] = str_repeat('t', 512);
         $this->withHeader('Authorization', "Bearer $token")
             ->patch("/api/v1/meetings/$meeting->id_bigint", $payload)
             ->assertStatus(204);

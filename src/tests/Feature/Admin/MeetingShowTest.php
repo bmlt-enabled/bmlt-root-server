@@ -2,12 +2,19 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Http\Resources\Admin\MeetingResource;
 use App\Repositories\MeetingRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class MeetingShowTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function tearDown(): void
+    {
+        MeetingResource::resetStaticVariables();
+        parent::tearDown();
+    }
 
     public function testShowMeetingServiceBodyId()
     {
@@ -375,6 +382,85 @@ class MeetingShowTest extends TestCase
             ->json();
 
         $this->assertNull($data['name']);
+    }
+
+    public function testShowMeetingCustomFieldsDontExist()
+    {
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+
+        $meeting = $this->createMeeting();
+        $data = $this->withHeader('Authorization', "Bearer $token")
+            ->get("/api/v1/meetings/$meeting->id_bigint")
+            ->assertStatus(200)
+            ->json();
+
+        $this->assertEquals(0, count($data['customFields']));
+    }
+
+    public function testShowMeetingCustomFieldsNotNull()
+    {
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+
+        $customFields = ['customField1' => 'value1', 'customField2' => 'value2'];
+        foreach (array_keys($customFields) as $fieldName) {
+            $this->addCustomField($fieldName);
+        }
+        $meeting = $this->createMeeting([], $customFields);
+        $data = $this->withHeader('Authorization', "Bearer $token")
+            ->get("/api/v1/meetings/$meeting->id_bigint")
+            ->assertStatus(200)
+            ->json();
+
+        $this->assertEquals(count($customFields), count($data['customFields']));
+        foreach ($data['customFields'] as $fieldName => $actualValue) {
+            $this->assertEquals($customFields[$fieldName], $actualValue);
+        }
+    }
+
+    public function testShowMeetingCustomFieldsNull()
+    {
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+
+        $customFields = ['customField1' => null, 'customField2' => null];
+        foreach (array_keys($customFields) as $fieldName) {
+            $this->addCustomField($fieldName);
+        }
+        $meeting = $this->createMeeting([], $customFields);
+
+        $data = $this->withHeader('Authorization', "Bearer $token")
+            ->get("/api/v1/meetings/$meeting->id_bigint")
+            ->assertStatus(200)
+            ->json();
+
+        $this->assertEquals(count($customFields), count($data['customFields']));
+        foreach ($data['customFields'] as $fieldName => $actualValue) {
+            $this->assertEquals($customFields[$fieldName], $actualValue);
+        }
+    }
+
+    public function testShowMeetingCustomFieldsUnset()
+    {
+        $user = $this->createAdminUser();
+        $token = $user->createToken('test')->plainTextToken;
+
+        $customFields = ['customField1' => null, 'customField2' => null];
+        foreach (array_keys($customFields) as $fieldName) {
+            $this->addCustomField($fieldName);
+        }
+        $meeting = $this->createMeeting([]);
+
+        $data = $this->withHeader('Authorization', "Bearer $token")
+            ->get("/api/v1/meetings/$meeting->id_bigint")
+            ->assertStatus(200)
+            ->json();
+
+        $this->assertEquals(count($customFields), count($data['customFields']));
+        foreach ($data['customFields'] as $fieldName => $actualValue) {
+            $this->assertEquals($customFields[$fieldName], $actualValue);
+        }
     }
 
     public function testShowMeetingDataFieldsNotNull()
