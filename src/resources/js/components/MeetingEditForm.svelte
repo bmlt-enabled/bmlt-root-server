@@ -110,6 +110,7 @@
     deleted: { meetingId: number };
   }>();
 
+  console.log(selectedMeeting);
   const defaultLatLng = { lat: Number(globalSettings.centerLatitude ?? -79.793701171875), lng: Number(globalSettings.centerLongitude ?? 36.065752051707) };
   const defaultDuration = globalSettings.defaultDuration ?? '01:00';
   const initialValues = {
@@ -148,7 +149,8 @@
     contactEmail2: selectedMeeting?.contactEmail2 ?? '',
     busLines: selectedMeeting?.busLines ?? '',
     trainLines: selectedMeeting?.trainLines ?? '',
-    comments: selectedMeeting?.comments ?? ''
+    comments: selectedMeeting?.comments ?? '',
+    customFields: selectedMeeting?.customFields ?? []
   };
   let latitude = initialValues.latitude;
   let longitude = initialValues.longitude;
@@ -258,7 +260,8 @@
             contactEmail2: (error?.errors?.contact_email_2 ?? []).join(' '),
             busLines: (error?.errors?.bus_lines ?? []).join(' '),
             trainLines: (error?.errors?.train_lines ?? []).join(' '),
-            comments: (error?.errors?.comments ?? []).join(' ')
+            comments: (error?.errors?.comments ?? []).join(' '),
+            customFields: (error?.errors?.customFields ?? []).map((fieldError: any) => (fieldError ? Object.values(fieldError).join(' ') : ''))
           });
         }
       });
@@ -984,6 +987,19 @@
           {/if}
         </div>
       </div>
+      {#each globalSettings.customFields as { name, displayName }}
+        <div class="grid gap-4 md:grid-cols-2">
+          <div class="md:col-span-2">
+            <Label for={name} class="mb-2">{displayName}</Label>
+            <Input type="text" id={name} {name} />
+            {#if $errors.customFields}
+              <Helper class="mt-2" color="red">
+                {$errors.customFields}
+              </Helper>
+            {/if}
+          </div>
+        </div>
+      {/each}
     </div>
     <div slot="tab-content-3">
       {#if changesLoaded && changes.length > 0}
