@@ -23,9 +23,21 @@ export function formIsDirty(initialValues: any, currentValues: any): boolean {
           return true;
         }
       }
-    } else if (initialValues[key] !== currentValues[key]) {
-      isDirty.set(true);
-      return true;
+    }
+    // handle customFields
+    else if (typeof initialValues[key] === 'object' && initialValues[key] !== null) {
+      if (formIsDirty(initialValues[key], currentValues[key])) {
+        isDirty.set(true);
+        return true;
+      }
+    } else {
+      // Treat null and undefined as ''
+      const initial = initialValues[key] ?? '';
+      const current = currentValues[key] ?? '';
+      if (initial !== current) {
+        isDirty.set(true);
+        return true;
+      }
     }
   }
   isDirty.set(false);

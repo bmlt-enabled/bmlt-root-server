@@ -991,7 +991,7 @@
         <div class="grid gap-4 md:grid-cols-2">
           <div class="md:col-span-2">
             <Label for={name} class="mb-2">{displayName}</Label>
-            <Input type="text" id={name} name={$data.customFields[name]} bind:value={$data.customFields[name]} />
+            <Input type="text" id={name} name={initialValues.customFields[name]} bind:value={initialValues.customFields[name]} />
             {#if $errors.customFields?.[name]}
               <Helper class="mt-2" color="red">
                 {$errors.customFields[name]}
