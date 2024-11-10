@@ -150,7 +150,10 @@
     trainLines: selectedMeeting?.trainLines ?? '',
     comments: selectedMeeting?.comments ?? '',
     customFields: selectedMeeting?.customFields
-      ? { ...Object.fromEntries(globalSettings.customFields.map((field) => [field.name, ''])), ...selectedMeeting.customFields }
+      ? {
+          ...Object.fromEntries(globalSettings.customFields.map((field) => [field.name, ''])),
+          ...Object.fromEntries(Object.entries(selectedMeeting.customFields).map(([key, value]) => [key, value ?? '']))
+        }
       : Object.fromEntries(globalSettings.customFields.map((field) => [field.name, '']))
   };
   let latitude = initialValues.latitude;
@@ -615,7 +618,7 @@
       </div>
       <div class="grid gap-4 md:grid-cols-2">
         <div class="md:col-span-2">
-          <Label for="name" class="mb-2">{$translations.nameTitle}</Label>
+          <Label for="name" class="mb-2 mt-2">{$translations.nameTitle}</Label>
           <Input type="text" id="name" name="name" required />
           {#if $errors.name}
             <Helper class="mt-2" color="red">
@@ -626,7 +629,7 @@
       </div>
       <div class="grid gap-4 md:grid-cols-2">
         <div class="md:col-span-2">
-          <Label for="timeZone" class="mb-2">{$translations.timeZoneTitle}</Label>
+          <Label for="timeZone" class="mb-2 mt-2">{$translations.timeZoneTitle}</Label>
           <Select id="timeZone" items={timeZoneChoices} name="timeZone" class="dark:bg-gray-600" placeholder={$translations.timeZoneSelectPlaceholder} />
           {#if $errors.timeZone}
             <Helper class="mt-2" color="red">
@@ -637,7 +640,7 @@
       </div>
       <div class="grid gap-4 md:grid-cols-3">
         <div class="w-full">
-          <Label for="day" class="mb-2">{$translations.dayTitle}</Label>
+          <Label for="day" class="mb-2 mt-2">{$translations.dayTitle}</Label>
           <Select id="day" items={weekdayChoices} name="day" class="dark:bg-gray-600" />
           {#if $errors.day}
             <Helper class="mt-2" color="red">
@@ -646,7 +649,7 @@
           {/if}
         </div>
         <div class="w-full">
-          <Label for="startTime" class="mb-2">{$translations.startTimeTitle}</Label>
+          <Label for="startTime" class="mb-2 mt-2">{$translations.startTimeTitle}</Label>
           <Input type="time" id="startTime" name="startTime" />
           {#if $errors.startTime}
             <Helper class="mt-2" color="red">
@@ -655,7 +658,7 @@
           {/if}
         </div>
         <div class="w-full">
-          <Label for="duration" class="mb-2">{$translations.durationTitle}</Label>
+          <Label for="duration" class="mb-2 mt-2">{$translations.durationTitle}</Label>
           <DurationSelector bind:duration={initialValues.duration} on:update={(e) => setData('duration', e.detail.duration)} />
           {#if $errors.duration}
             <Helper class="mt-2" color="red">
@@ -666,7 +669,7 @@
       </div>
       <div class="grid gap-4 md:grid-cols-2">
         <div class="md:col-span-2">
-          <Label for="serviceBodyId" class="mb-2">{$translations.serviceBodyTitle}</Label>
+          <Label for="serviceBodyId" class="mb-2 mt-2">{$translations.serviceBodyTitle}</Label>
           <Select id="serviceBodyId" items={serviceBodyIdItems} name="serviceBodyId" class="dark:bg-gray-600" />
           {#if $errors.serviceBodyId}
             <Helper class="mt-2" color="red">
@@ -677,7 +680,7 @@
       </div>
       <div class="grid gap-4 md:grid-cols-2">
         <div class="w-full">
-          <Label for="email" class="mb-2">{$translations.emailTitle}</Label>
+          <Label for="email" class="mb-2 mt-2">{$translations.emailTitle}</Label>
           <Input type="email" id="email" name="email" />
           {#if $errors.email}
             <Helper class="mt-2" color="red">
@@ -686,7 +689,7 @@
           {/if}
         </div>
         <div class="w-full">
-          <Label for="worldId" class="mb-2">{$translations.worldIdTitle}</Label>
+          <Label for="worldId" class="mb-2 mt-2">{$translations.worldIdTitle}</Label>
           <Input type="text" id="worldId" name="worldId" />
           {#if $errors.worldId}
             <Helper class="mt-2" color="red">
@@ -696,7 +699,7 @@
         </div>
       </div>
       <div class="md:col-span-2">
-        <Label for="formatIds" class="mb-2">{$translations.formatsTitle}</Label>
+        <Label for="formatIds" class="mb-2 mt-2">{$translations.formatsTitle}</Label>
         <MultiSelect id="formatIds" items={formatItems} name="formatIds" class="bg-gray-50 dark:bg-gray-600" bind:value={formatIdsSelected} let:item let:clear>
           <Badge rounded color={badgeColor(item.value)} dismissable params={{ duration: 100 }} on:close={clear}>
             {item.name}
@@ -714,7 +717,7 @@
     <div slot="tab-content-1">
       <div class="grid gap-4 md:grid-cols-2">
         <div class="md:col-span-2">
-          <Label for="venueType" class="mb-2">{$translations.venueTypeTitle}</Label>
+          <Label for="venueType" class="mb-2 mt-2">{$translations.venueTypeTitle}</Label>
           <Select id="venueType" items={venueTypeItems} name="venueType" class="dark:bg-gray-600" />
           {#if $errors.venueType}
             <Helper class="mt-2" color="red">
@@ -734,7 +737,7 @@
       {/if}
       <div class="grid gap-4 md:grid-cols-2">
         <div class="w-full">
-          <Label for="longitude" class="mb-2">{$translations.longitudeTitle}</Label>
+          <Label for="longitude" class="mb-2 mt-2">{$translations.longitudeTitle}</Label>
           <Input type="text" id="longitude" name="longitude" bind:value={longitude} required />
           {#if $errors.longitude}
             <Helper class="mt-2" color="red">
@@ -743,7 +746,7 @@
           {/if}
         </div>
         <div class="w-full">
-          <Label for="latitude" class="mb-2">{$translations.latitudeTitle}</Label>
+          <Label for="latitude" class="mb-2 mt-2">{$translations.latitudeTitle}</Label>
           <Input type="text" id="latitude" name="latitude" bind:value={latitude} required />
           {#if $errors.latitude}
             <Helper class="mt-2" color="red">
@@ -754,7 +757,7 @@
       </div>
       <div class="grid gap-4 md:grid-cols-2">
         <div class="md:col-span-2">
-          <Label for="locationText" class="mb-2">{$translations.locationTextTitle}</Label>
+          <Label for="locationText" class="mb-2 mt-2">{$translations.locationTextTitle}</Label>
           <Input type="text" id="locationText" name="locationText" />
           {#if $errors.locationText}
             <Helper class="mt-2" color="red">
@@ -765,7 +768,7 @@
       </div>
       <div class="grid gap-4 md:grid-cols-2">
         <div class="md:col-span-2">
-          <Label for="locationInfo" class="mb-2">{$translations.extraInfoTitle}</Label>
+          <Label for="locationInfo" class="mb-2 mt-2">{$translations.extraInfoTitle}</Label>
           <Input type="text" id="locationInfo" name="locationInfo" />
           {#if $errors.locationInfo}
             <Helper class="mt-2" color="red">
@@ -776,7 +779,7 @@
       </div>
       <div class="grid gap-4 md:grid-cols-2">
         <div class="md:col-span-2">
-          <Label for="locationStreet" class="mb-2">{$translations.streetTitle}</Label>
+          <Label for="locationStreet" class="mb-2 mt-2">{$translations.streetTitle}</Label>
           <Input type="text" id="locationStreet" name="locationStreet" />
           {#if $errors.locationStreet}
             <Helper class="mt-2" color="red">
@@ -787,7 +790,7 @@
       </div>
       <div class="grid gap-4 md:grid-cols-2">
         <div class="w-full">
-          <Label for="locationNeighborhood" class="mb-2">{$translations.neighborhoodTitle}</Label>
+          <Label for="locationNeighborhood" class="mb-2 mt-2">{$translations.neighborhoodTitle}</Label>
           <Input type="text" id="locationNeighborhood" name="locationNeighborhood" />
           {#if $errors.locationNeighborhood}
             <Helper class="mt-2" color="red">
@@ -796,7 +799,7 @@
           {/if}
         </div>
         <div class="w-full">
-          <Label for="locationCitySubsection" class="mb-2">{$translations.boroughTitle}</Label>
+          <Label for="locationCitySubsection" class="mb-2 mt-2">{$translations.boroughTitle}</Label>
           <Input type="text" id="locationCitySubsection" name="locationCitySubsection" />
           {#if $errors.locationCitySubsection}
             <Helper class="mt-2" color="red">
@@ -807,7 +810,7 @@
       </div>
       <div class="grid gap-4 md:grid-cols-2">
         <div class="w-full">
-          <Label for="locationMunicipality" class="mb-2">{$translations.cityTownTitle}</Label>
+          <Label for="locationMunicipality" class="mb-2 mt-2">{$translations.cityTownTitle}</Label>
           <Input type="text" id="locationMunicipality" name="locationMunicipality" />
           {#if $errors.locationMunicipality}
             <Helper class="mt-2" color="red">
@@ -816,7 +819,7 @@
           {/if}
         </div>
         <div class="w-full">
-          <Label for="locationSubProvince" class="mb-2">{$translations.countySubProvinceTitle}</Label>
+          <Label for="locationSubProvince" class="mb-2 mt-2">{$translations.countySubProvinceTitle}</Label>
           {#if countiesAndSubProvincesChoices.length > 0}
             <Select id="locationSubProvince" items={countiesAndSubProvincesChoices} name="locationSubProvince" class="dark:bg-gray-600" />
           {:else}
@@ -831,7 +834,7 @@
       </div>
       <div class="grid gap-4 md:grid-cols-3">
         <div class="w-full">
-          <Label for="locationProvince" class="mb-2">{$translations.stateTitle}</Label>
+          <Label for="locationProvince" class="mb-2 mt-2">{$translations.stateTitle}</Label>
           {#if statesAndProvincesChoices.length > 0}
             <Select id="locationProvince" items={statesAndProvincesChoices} name="locationProvince" class="dark:bg-gray-600" />
           {:else}
@@ -844,7 +847,7 @@
           {/if}
         </div>
         <div class="w-full">
-          <Label for="locationPostalCode1" class="mb-2">{$translations.zipCodeTitle}</Label>
+          <Label for="locationPostalCode1" class="mb-2 mt-2">{$translations.zipCodeTitle}</Label>
           <Input type="text" id="locationPostalCode1" name="locationPostalCode1" />
           {#if $errors.locationPostalCode1}
             <Helper class="mt-2" color="red">
@@ -853,7 +856,7 @@
           {/if}
         </div>
         <div class="w-full">
-          <Label for="locationNation" class="mb-2">{$translations.nationTitle}</Label>
+          <Label for="locationNation" class="mb-2 mt-2">{$translations.nationTitle}</Label>
           <Input type="text" id="locationNation" name="locationNation" />
           {#if $errors.locationNation}
             <Helper class="mt-2" color="red">
@@ -864,7 +867,7 @@
       </div>
       <div class="grid gap-4 md:grid-cols-2">
         <div class="md:col-span-2">
-          <Label for="phoneMeetingNumber" class="mb-2">{$translations.phoneMeetingTitle}</Label>
+          <Label for="phoneMeetingNumber" class="mb-2 mt-2">{$translations.phoneMeetingTitle}</Label>
           <Input type="text" id="phoneMeetingNumber" name="phoneMeetingNumber" />
           {#if $errors.phoneMeetingNumber}
             <Helper class="mt-2" color="red">
@@ -875,7 +878,7 @@
       </div>
       <div class="grid gap-4 md:grid-cols-2">
         <div class="md:col-span-2">
-          <Label for="virtualMeetingLink" class="mb-2">{$translations.virtualMeetingTitle}</Label>
+          <Label for="virtualMeetingLink" class="mb-2 mt-2">{$translations.virtualMeetingTitle}</Label>
           <Input type="text" id="virtualMeetingLink" name="virtualMeetingLink" />
           {#if $errors.virtualMeetingLink}
             <Helper class="mt-2" color="red">
@@ -886,7 +889,7 @@
       </div>
       <div class="grid gap-4 md:grid-cols-2">
         <div class="md:col-span-2">
-          <Label for="virtualMeetingAdditionalInfo" class="mb-2">{$translations.virtualMeetingAdditionalInfoTitle}</Label>
+          <Label for="virtualMeetingAdditionalInfo" class="mb-2 mt-2">{$translations.virtualMeetingAdditionalInfoTitle}</Label>
           <Input type="text" id="virtualMeetingAdditionalInfo" name="virtualMeetingAdditionalInfo" />
           {#if $errors.virtualMeetingAdditionalInfo}
             <Helper class="mt-2" color="red">
@@ -900,7 +903,7 @@
     <div slot="tab-content-2">
       <div class="grid gap-4 md:grid-cols-2">
         <div class="md:col-span-2">
-          <Label for="comments" class="mb-2">{$translations.commentsTitle}</Label>
+          <Label for="comments" class="mb-2 mt-2">{$translations.commentsTitle}</Label>
           <Input type="text" id="comments" name="comments" />
           {#if $errors.comments}
             <Helper class="mt-2" color="red">
@@ -911,7 +914,7 @@
       </div>
       <div class="grid gap-4 md:grid-cols-2">
         <div class="w-full">
-          <Label for="busLines" class="mb-2">{$translations.busLinesTitle}</Label>
+          <Label for="busLines" class="mb-2 mt-2">{$translations.busLinesTitle}</Label>
           <Input type="text" id="busLines" name="busLines" />
           {#if $errors.busLines}
             <Helper class="mt-2" color="red">
@@ -920,7 +923,7 @@
           {/if}
         </div>
         <div class="w-full">
-          <Label for="trainLines" class="mb-2">{$translations.trainLinesTitle}</Label>
+          <Label for="trainLines" class="mb-2 mt-2">{$translations.trainLinesTitle}</Label>
           <Input type="text" id="trainLines" name="trainLines" />
           {#if $errors.trainLines}
             <Helper class="mt-2" color="red">
@@ -931,7 +934,7 @@
       </div>
       <div class="grid gap-4 md:grid-cols-3">
         <div class="w-full">
-          <Label for="contactName1" class="mb-2">{$translations.contact1NameTitle}</Label>
+          <Label for="contactName1" class="mb-2 mt-2">{$translations.contact1NameTitle}</Label>
           <Input type="text" id="contactName1" name="contactName1" />
           {#if $errors.contactName1}
             <Helper class="mt-2" color="red">
@@ -940,7 +943,7 @@
           {/if}
         </div>
         <div class="w-full">
-          <Label for="contactPhone1" class="mb-2">{$translations.contact1PhoneTitle}</Label>
+          <Label for="contactPhone1" class="mb-2 mt-2">{$translations.contact1PhoneTitle}</Label>
           <Input type="text" id="contactPhone1" name="contactPhone1" />
           {#if $errors.contactPhone1}
             <Helper class="mt-2" color="red">
@@ -949,7 +952,7 @@
           {/if}
         </div>
         <div class="w-full">
-          <Label for="contactEmail1" class="mb-2">{$translations.contact1EmailTitle}</Label>
+          <Label for="contactEmail1" class="mb-2 mt-2">{$translations.contact1EmailTitle}</Label>
           <Input type="text" id="contactEmail1" name="contactEmail1" />
           {#if $errors.contactEmail1}
             <Helper class="mt-2" color="red">
@@ -960,7 +963,7 @@
       </div>
       <div class="grid gap-4 md:grid-cols-3">
         <div class="w-full">
-          <Label for="contactName2" class="mb-2">{$translations.contact2NameTitle}</Label>
+          <Label for="contactName2" class="mb-2 mt-2">{$translations.contact2NameTitle}</Label>
           <Input type="text" id="contactName2" name="contactName2" />
           {#if $errors.contactName2}
             <Helper class="mt-2" color="red">
@@ -969,7 +972,7 @@
           {/if}
         </div>
         <div class="w-full">
-          <Label for="contactPhone2" class="mb-2">{$translations.contact2PhoneTitle}</Label>
+          <Label for="contactPhone2" class="mb-2 mt-2">{$translations.contact2PhoneTitle}</Label>
           <Input type="text" id="contactPhone2" name="contactPhone2" />
           {#if $errors.contactPhone2}
             <Helper class="mt-2" color="red">
@@ -978,7 +981,7 @@
           {/if}
         </div>
         <div class="w-full">
-          <Label for="contactEmail2" class="mb-2">{$translations.contact2EmailTitle}</Label>
+          <Label for="contactEmail2" class="mb-2 mt-2">{$translations.contact2EmailTitle}</Label>
           <Input type="text" id="contactEmail2" name="contactEmail2" />
           {#if $errors.contactEmail2}
             <Helper class="mt-2" color="red">
@@ -990,7 +993,7 @@
       {#each globalSettings.customFields as { name, displayName }}
         <div class="grid gap-4 md:grid-cols-2">
           <div class="md:col-span-2">
-            <Label for={name} class="mb-2">{displayName}</Label>
+            <Label for={name} class="mb-2 mt-2">{displayName}</Label>
             <Input type="text" id={name} name={$data.customFields[name]} bind:value={$data.customFields[name]} />
             {#if $errors.customFields?.[name]}
               <Helper class="mt-2" color="red">

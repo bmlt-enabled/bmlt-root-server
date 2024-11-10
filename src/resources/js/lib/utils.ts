@@ -23,6 +23,11 @@ export function formIsDirty(initialValues: any, currentValues: any): boolean {
           return true;
         }
       }
+    } else if (typeof initialValues[key] === 'object') {
+      if (formIsDirty(initialValues[key], currentValues[key])) {
+        isDirty.set(true);
+        return true;
+      }
     } else if (initialValues[key] !== currentValues[key]) {
       isDirty.set(true);
       return true;
