@@ -293,7 +293,7 @@
   </div>
   <TableHead>
     {#if meetings.length}
-      <TableHeadCell padding="px-4 py-3" scope="col" on:click={() => handleSort('day')}>
+      <TableHeadCell padding="px-4 py-3 whitespace-nowrap" scope="col" on:click={() => handleSort('day')}>
         Day
         {#if sortColumn === 'day'}
           {#if sortDirection === 'asc'}
@@ -303,7 +303,7 @@
           {/if}
         {/if}
       </TableHeadCell>
-      <TableHeadCell padding="px-4 py-3" scope="col" on:click={() => handleSort('startTime')}>
+      <TableHeadCell padding="px-4 py-3 whitespace-nowrap" scope="col" on:click={() => handleSort('startTime')}>
         Time
         {#if sortColumn === 'startTime'}
           {#if sortDirection === 'asc'}
@@ -343,8 +343,10 @@
   <TableBody>
     {#each currentPageItems as meeting (meeting.id)}
       <TableBodyRow on:click={() => handleEdit(meeting)}>
-        <TableBodyCell tdClass={meeting.published ? 'px-4 py-3' : 'bg-yellow-400 px-4 py-3'}>{$translations.daysOfWeek[meeting.day]}</TableBodyCell>
-        <TableBodyCell tdClass={meeting.published ? 'px-4 py-3' : 'bg-yellow-400 px-4 py-3 text-nowrap'}>{is24hrTime() ? meeting.startTime : convertTo12Hour(meeting.startTime)}</TableBodyCell>
+        <TableBodyCell tdClass={meeting.published ? 'px-4 py-3' : 'bg-yellow-400 px-4 py-3 whitespace-nowrap min-w-[100px]'}>{$translations.daysOfWeek[meeting.day]}</TableBodyCell>
+        <TableBodyCell tdClass={meeting.published ? 'px-4 py-3' : 'bg-yellow-400 px-4 py-3 whitespace-nowrap min-w-[100px]'}
+          >{is24hrTime() ? meeting.startTime : convertTo12Hour(meeting.startTime)}</TableBodyCell
+        >
         <TableBodyCell tdClass={meeting.published ? 'px-4 py-3' : 'bg-yellow-400 px-4 py-3'}>{meeting.name}</TableBodyCell>
         <TableBodyCell tdClass={meeting.published ? 'px-4 py-3' : 'bg-yellow-400 px-4 py-3 text-wrap'}>
           {[meeting.locationStreet, meeting.locationCitySubsection, meeting.locationMunicipality, meeting.locationProvince, meeting.locationSubProvince, meeting.locationPostalCode1]
