@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { Button, ButtonGroup, Checkbox, Dropdown, Indicator, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch } from 'flowbite-svelte';
+  import { Button, ButtonGroup, Checkbox, Dropdown, Indicator, Label, Select, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch } from 'flowbite-svelte';
   import { ChevronDownOutline, ChevronLeftOutline, ChevronRightOutline, ChevronUpOutline, FilterSolid, PlusOutline } from 'flowbite-svelte-icons';
 
   import { convertTo12Hour, is24hrTime, isCommaSeparatedNumbers } from '../lib/utils';
@@ -24,7 +24,8 @@
   let classInput = 'text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2  pl-10';
   let searchTerm: string = '';
   let currentPosition: number = 0;
-  const itemsPerPage: number = 20;
+  let itemsPerPage: number = 20;
+  const itemsPerPageItems = [10, 20, 40, 60, 80, 100].map((value) => ({ value, name: value.toString() }));
   const showPage: number = 5;
   let totalPages: number = 0;
   let pagesToShow: number[] = [];
@@ -148,6 +149,11 @@
   };
 
   const updateDataAndPagination = () => {
+    renderPagination(filteredItems.length);
+  };
+
+  const updateItemsPerPage = () => {
+    currentPosition = 0; // Reset to first page when itemsPerPage changes
     renderPagination(filteredItems.length);
   };
 
@@ -350,11 +356,16 @@
   </TableBody>
   <div slot="footer" class="flex flex-col items-start justify-between space-y-3 p-4 md:flex-row md:items-center md:space-y-0 {meetings.length ? '' : 'hidden'}" aria-label="Table navigation">
     {#if meetings.length}
-      <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
-        {$translations.paginationShowing}
+      <span class="flex items-center space-x-1 text-sm font-normal text-gray-500 dark:text-gray-400">
+        <span>{$translations.paginationShowing}</span>
         <span class="font-semibold text-gray-900 dark:text-white">{startRange}-{endRange}</span>
-        {$translations.paginationOf}
+        <span>{$translations.paginationOf}</span>
         <span class="font-semibold text-gray-900 dark:text-white">{filteredItems.length}</span>
+        <span class="mx-2 text-gray-500 dark:text-gray-400">/</span>
+        <span class="ml-4 flex items-center space-x-1">
+          <Label for="itemsPerPage" class="text-sm font-medium text-gray-700 dark:text-gray-300">{$translations.meetingsPerPage}</Label>
+          <Select id="itemsPerPage" items={itemsPerPageItems} bind:value={itemsPerPage} name="itemsPerPage" class="w-20 dark:bg-gray-600" on:change={updateItemsPerPage} />
+        </span>
       </span>
       <ButtonGroup>
         <Button on:click={loadPreviousPage} disabled={currentPosition === 0}>

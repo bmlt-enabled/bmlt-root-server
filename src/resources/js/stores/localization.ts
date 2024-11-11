@@ -92,6 +92,7 @@ const strings = new LocalizedStrings({
     meetingErrorsSomewhere: 'Seiten mit einem oder mehreren Fehlern:',
     meetingIsPublishedTitle: 'Meeting ist veröffentlicht',
     meetingListEditorsTitle: 'Meetingsliste Editors', // TODO: check translation
+    meetingsPerPage: 'Meetings per page', // TODO: Translate
     meetingsTitle: 'Meetings',
     meetingUnpublishedNote:
       'Hinweis: Das Aufheben der Veröffentlichung eines Meetings bedeutet, dass es vorübergehend geschlossen wurde. Wenn dieses Meeting dauerhaft geschlossen wurde, lösch es bitte.',
@@ -290,6 +291,7 @@ const strings = new LocalizedStrings({
     meetingErrorsSomewhere: 'Tabs with one or more errors:',
     meetingIsPublishedTitle: 'Meeting is Published',
     meetingListEditorsTitle: 'Meeting List Editors',
+    meetingsPerPage: 'Meetings per page',
     meetingsTitle: 'Meetings',
     meetingUnpublishedNote: 'Note: Unpublishing a meeting indicates a temporary closure. If this meeting has closed permanently, please delete it.',
     minutesTitle: 'Minutes',
