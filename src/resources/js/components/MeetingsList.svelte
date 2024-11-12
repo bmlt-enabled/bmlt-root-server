@@ -240,16 +240,16 @@
 
 <TableSearch placeholder={$translations.filter} hoverable={true} bind:inputValue={searchTerm} {divClass} {innerDivClass} {searchClass} {classInput}>
   <div slot="header" class="flex w-full flex-shrink-0 flex-col items-stretch justify-end space-y-2 md:w-auto md:flex-row md:items-center md:space-x-3 md:space-y-0">
-    <Button color="alternative" class="relative" aria-label={$translations.serviceBodiesTitle}>
-      {$translations.serviceBodiesTitle}
-      {#if selectedServiceBodies.length > 0}
+    {#if serviceBodies.length > 1}
+      <Button color="alternative" class="relative" aria-label={$translations.serviceBodiesTitle}>
+        {$translations.serviceBodiesTitle}
         <Indicator color="red" size="sm" placement="top-right" />
-      {/if}
-    </Button>
-    <Dropdown class="w-90 top-full z-50 space-y-2 p-3 text-sm">
-      <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">{$translations.searchByServiceBody}</h6>
-      <ServiceBodiesTree {serviceBodies} bind:selectedValues={selectedServiceBodies} />
-    </Dropdown>
+      </Button>
+      <Dropdown class="w-90 top-full z-50 space-y-2 p-3 text-sm" open={true}>
+        <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">{$translations.searchByServiceBody}</h6>
+        <ServiceBodiesTree {serviceBodies} bind:selectedValues={selectedServiceBodies} />
+      </Dropdown>
+    {/if}
     <Button color="alternative" class="relative" aria-label={$translations.day}>
       {$translations.day}
       {#if selectedDays.length > 0}
@@ -263,29 +263,27 @@
       </Button>
       <Checkbox name="weekdays" choices={weekdayChoices} bind:group={selectedDays} groupLabelClass="justify-between" />
     </Dropdown>
-    {#if meetings.length}
-      <Button color="alternative" class="relative">
-        {$translations.published}
-        {#if selectedPublished.length > 0}
-          <Indicator color="red" size="sm" placement="top-right" />
-        {/if}
-        <FilterSolid class="ml-2 h-3 w-3 " />
-      </Button>
-      <Dropdown class="w-48 space-y-2 p-3 text-sm">
-        <Checkbox name="times" choices={publishedChoices} bind:group={selectedPublished} groupInputClass="ms-2" groupLabelClass="" />
-      </Dropdown>
-      <Button color="alternative" class="relative">
-        {$translations.time}
-        {#if selectedTimes.length > 0}
-          <Indicator color="red" size="sm" placement="top-right" />
-        {/if}
-        <FilterSolid class="ml-2 h-3 w-3 " />
-      </Button>
-      <Dropdown class="w-48 space-y-2 p-3 text-sm">
-        <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">{$translations.chooseStartTime}</h6>
-        <Checkbox name="times" choices={timeChoices} bind:group={selectedTimes} groupInputClass="ms-2" groupLabelClass="" />
-      </Dropdown>
-    {/if}
+    <Button color="alternative" class="relative">
+      {$translations.published}
+      {#if selectedPublished.length > 0}
+        <Indicator color="red" size="sm" placement="top-right" />
+      {/if}
+      <FilterSolid class="ml-2 h-3 w-3 " />
+    </Button>
+    <Dropdown class="w-48 space-y-2 p-3 text-sm">
+      <Checkbox name="times" choices={publishedChoices} bind:group={selectedPublished} groupInputClass="ms-2" groupLabelClass="" />
+    </Dropdown>
+    <Button color="alternative" class="relative">
+      {$translations.time}
+      {#if selectedTimes.length > 0}
+        <Indicator color="red" size="sm" placement="top-right" />
+      {/if}
+      <FilterSolid class="ml-2 h-3 w-3 " />
+    </Button>
+    <Dropdown class="w-48 space-y-2 p-3 text-sm">
+      <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">{$translations.chooseStartTime}</h6>
+      <Checkbox name="times" choices={timeChoices} bind:group={selectedTimes} groupInputClass="ms-2" groupLabelClass="" />
+    </Dropdown>
     <Button on:click={searchMeetings}>{$translations.search}</Button>
     {#if $authenticatedUser?.type !== 'observer'}
       <Button on:click={() => handleAdd()} aria-label={$translations.addMeeting}><PlusOutline class="mr-2 h-3.5 w-3.5" />{$translations.addMeeting}</Button>
