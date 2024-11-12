@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { AccordionItem, Accordion, Button, Helper, Input, Label } from 'flowbite-svelte';
+  import { Button, Helper, Input, Label } from 'flowbite-svelte';
   import { createEventDispatcher } from 'svelte';
   import { createForm } from 'felte';
   import { validator } from '@felte/validator-yup';
@@ -13,6 +13,7 @@
   import { spinner } from '../stores/spinner';
   import { translations } from '../stores/localization';
   import type { User } from 'bmlt-root-server-client';
+  import BasicAccordion from '../components/BasicAccordion.svelte';
 
   const dispatch = createEventDispatcher<{ saved: { user: User } }>();
   let userType = 'unknown';
@@ -198,12 +199,9 @@
           </Button>
         </div>
       </div>
-      <Accordion>
-        <AccordionItem>
-          <span slot="header">{$translations.serviceBodiesWithEditableMeetings}</span>
-          <AccountServiceBodyList user={$authenticatedUser} />
-        </AccordionItem>
-      </Accordion>
+      <BasicAccordion header={$translations.serviceBodiesWithEditableMeetings}>
+        <AccountServiceBodyList user={$authenticatedUser} />
+      </BasicAccordion>
     </div>
   </form>
 </div>

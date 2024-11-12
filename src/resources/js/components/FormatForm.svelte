@@ -1,7 +1,9 @@
 <script lang="ts">
   import { validator } from '@felte/validator-yup';
   import { createForm } from 'felte';
-  import { AccordionItem, Accordion, Button, Helper, Input, Label, Select } from 'flowbite-svelte';
+  import { Button, Helper, Input, Label, Select } from 'flowbite-svelte';
+  import BasicAccordion from './BasicAccordion.svelte';
+
   import { createEventDispatcher } from 'svelte';
   import * as yup from 'yup';
 
@@ -193,40 +195,37 @@
       </div>
     {/if}
     <div class="md:col-span-2">
-      <Accordion multiple>
-        {#each allLanguages as lang}
-          <AccordionItem open={$translations.getLanguage() === lang}>
-            <span slot="header">{mappings[lang]}</span>
-            <div>
-              <Label for="{lang}_key" class="mb-2">{getLabel('keyTitle', lang)}</Label>
-              <Input type="text" id="{lang}_key" name="{lang}_key" disabled={isReservedKey(lang)} />
-              <Helper class="mb-2" color="red">
-                {#if $errors[lang + '_key']}
-                  {$errors[lang + '_key']}
-                {/if}
-              </Helper>
-            </div>
-            <div>
-              <Label for="{lang}_name" class="mb-2">{getLabel('nameTitle', lang)}</Label>
-              <Input type="text" id="{lang}_name" name="{lang}_name" />
-              <Helper class="mb-2" color="red">
-                {#if $errors[lang + '_name']}
-                  {$errors[lang + '_name']}
-                {/if}
-              </Helper>
-            </div>
-            <div>
-              <Label for="{lang}_description" class="mb-2">{getLabel('descriptionTitle', lang)}</Label>
-              <Input type="text" id="{lang}_description" name="{lang}_description" />
-              <Helper class="mb-2" color="red">
-                {#if $errors[lang + '_description']}
-                  {$errors[lang + '_description']}
-                {/if}
-              </Helper>
-            </div>
-          </AccordionItem>
-        {/each}
-      </Accordion>
+      {#each allLanguages as lang}
+        <BasicAccordion header={mappings[lang]} open={$translations.getLanguage() === lang}>
+          <div>
+            <Label for="{lang}_key" class="mb-2">{getLabel('keyTitle', lang)}</Label>
+            <Input type="text" id="{lang}_key" name="{lang}_key" disabled={isReservedKey(lang)} />
+            <Helper class="mb-2" color="red">
+              {#if $errors[lang + '_key']}
+                {$errors[lang + '_key']}
+              {/if}
+            </Helper>
+          </div>
+          <div>
+            <Label for="{lang}_name" class="mb-2">{getLabel('nameTitle', lang)}</Label>
+            <Input type="text" id="{lang}_name" name="{lang}_name" />
+            <Helper class="mb-2" color="red">
+              {#if $errors[lang + '_name']}
+                {$errors[lang + '_name']}
+              {/if}
+            </Helper>
+          </div>
+          <div>
+            <Label for="{lang}_description" class="mb-2">{getLabel('descriptionTitle', lang)}</Label>
+            <Input type="text" id="{lang}_description" name="{lang}_description" />
+            <Helper class="mb-2" color="red">
+              {#if $errors[lang + '_description']}
+                {$errors[lang + '_description']}
+              {/if}
+            </Helper>
+          </div>
+        </BasicAccordion>
+      {/each}
     </div>
     {#if noFormatTranslations}
       <div class="md:col-span-2">
