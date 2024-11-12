@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import type { SvelteComponent } from 'svelte';
   import { Button, ButtonGroup, Checkbox, Dropdown, Indicator, Label, Select, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch } from 'flowbite-svelte';
   import { ChevronDownOutline, ChevronLeftOutline, ChevronRightOutline, ChevronUpOutline, FilterSolid, PlusOutline } from 'flowbite-svelte-icons';
 
@@ -33,6 +34,7 @@
   let selectedPublished: string[] = [];
   let selectedMeeting: Meeting | null;
   let showModal = false;
+  let tableSearchRef: SvelteComponent | null = null;
   let sortColumn: string | null = null;
   let sortDirection: 'asc' | 'desc' = 'asc';
   const weekdayChoices = $translations.daysOfWeek.map((day, index) => ({
@@ -229,8 +231,23 @@
     }
   }
 
+  function handleEnterKey(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      searchMeetings();
+    }
+  }
+
   onMount(() => {
     renderPagination(filteredItems.length);
+    const searchInputElement = tableSearchRef?.shadowRoot?.getElementById('table-search') || (document.getElementById('table-search') as HTMLInputElement | null);
+    if (searchInputElement) {
+      searchInputElement.addEventListener('keydown', handleEnterKey);
+    }
+    return () => {
+      if (searchInputElement) {
+        searchInputElement.removeEventListener('keydown', handleEnterKey);
+      }
+    };
   });
 
   $: currentPageItems = filteredItems.slice(currentPosition, currentPosition + itemsPerPage);
@@ -238,7 +255,7 @@
   $: isAllDaysSelected = selectedDays.length === weekdayChoices.length;
 </script>
 
-<TableSearch placeholder={$translations.filter} hoverable={true} bind:inputValue={searchTerm} {divClass} {innerDivClass} {searchClass} {classInput}>
+<TableSearch placeholder={$translations.filter} bind:this={tableSearchRef} hoverable={true} bind:inputValue={searchTerm} {divClass} {innerDivClass} {searchClass} {classInput}>
   <div slot="header" class="flex w-full flex-shrink-0 flex-col items-stretch justify-end space-y-2 md:w-auto md:flex-row md:items-center md:space-x-3 md:space-y-0">
     {#if serviceBodies.length > 1}
       <Button color="alternative" class="relative" aria-label={$translations.serviceBodiesTitle}>
