@@ -63,9 +63,13 @@
   function onDeleted(event: CustomEvent<{ meetingId: number }>) {
     dispatch('deleted', { meetingId: event.detail.meetingId });
   }
+
+  const dialogClass = 'fixed top-0 start-0 end-0 h-[95vh] md:inset-0 z-50 w-full p-4 flex';
+  const defaultClass = 'modal-content relative flex flex-col mx-auto h-full min-h-[95vh] max-h-[95vh]';
+  const bodyClass = 'p-4 md:p-5 space-y-4 flex-1 overflow-y-auto overscroll-contain';
 </script>
 
-<Modal bind:open={showModal} size="md" class="modal-content">
+<Modal bind:open={showModal} size="md" classDialog={dialogClass} class={defaultClass} classBody={bodyClass}>
   <div class="p-2">
     <MeetingEditForm {selectedMeeting} {serviceBodies} {formats} on:saved={onSaved} on:deleted={onDeleted} />
   </div>
