@@ -64,8 +64,8 @@
     dispatch('deleted', { meetingId: event.detail.meetingId });
   }
 
-  const dialogClass = 'fixed top-0 start-0 end-0 h-[95vh] md:inset-0 z-50 w-full p-4 flex';
-  const defaultClass = 'modal-content relative flex flex-col mx-auto h-full min-h-[95vh] max-h-[95vh]';
+  const dialogClass = 'fixed top-0 start-0 end-0 h-[85vh] md:h-[95vh] h-modal md:inset-0 md:h-full z-50 w-full p-4 flex';
+  const defaultClass = 'modal-content min-h-[85vh] max-h-[85vh] md:min-h-[95vh] md:max-h-[95vh]';
   const bodyClass = 'p-4 md:p-5 space-y-4 flex-1 overflow-y-auto overscroll-contain';
 </script>
 
