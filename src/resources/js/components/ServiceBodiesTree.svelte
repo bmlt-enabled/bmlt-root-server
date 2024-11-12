@@ -1,6 +1,8 @@
 <script lang="ts">
+  import { Button } from 'flowbite-svelte';
   import Node from './ServiceBodiesTreeNode.svelte';
   import type { ServiceBody } from 'bmlt-root-server-client';
+  import { translations } from '../stores/localization';
 
   interface TreeNode {
     label: string;
@@ -88,7 +90,7 @@
 
       parent = treeMap[parent.label];
     }
-    trees = trees;
+    trees = [...trees];
     selectedValues = collectSelectedValues(trees);
   }
 
@@ -107,13 +109,52 @@
     trees.forEach(traverse);
     return selected;
   }
+
+  function selectAll() {
+    trees.forEach((node) => {
+      checkAllNodes(node, true);
+    });
+    trees = [...trees];
+    selectedValues = collectSelectedValues(trees);
+  }
+
+  function unselectAll() {
+    trees.forEach((node) => {
+      checkAllNodes(node, false);
+    });
+    trees = [...trees];
+    selectedValues = [];
+  }
+
+  function checkAllNodes(node: TreeNode, check: boolean) {
+    node.checked = check;
+    node.indeterminate = false;
+    if (node.children) {
+      node.children.forEach((child) => checkAllNodes(child, check));
+    }
+  }
+  function toggleAll() {
+    if (isAllSelected) {
+      unselectAll();
+    } else {
+      selectAll();
+    }
+  }
+
+  $: isAllSelected = trees.every((node) => isNodeFullySelected(node));
+  function isNodeFullySelected(node: TreeNode): boolean {
+    return !!node.checked && (!node.children || node.children.every(isNodeFullySelected));
+  }
 </script>
+
+<div class="mb-4">
+  <Button on:click={toggleAll} size="xs" color="primary" class="w-full">
+    {isAllSelected ? $translations.unselectAllServiceBodies : $translations.selectAllServiceBodies}
+  </Button>
+</div>
 
 <div>
   {#each trees as tree}
     <Node {tree} on:toggle={rebuildTree} />
   {/each}
 </div>
-
-<style>
-</style>
