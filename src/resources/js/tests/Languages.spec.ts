@@ -20,13 +20,13 @@ describe('language selection tests', () => {
   test('test language selection menu with a successful login', async () => {
     const user = userEvent.setup();
     render(App);
-    const langs: HTMLSelectElement = await screen.findByRole('combobox', { name: 'Select Language' });
-    expect(langs.length).toBe(4);
-    expect(langs.item(0)?.label).toBe('Choose option ...');
-    expect(langs.item(1)?.label).toBe('English');
-    expect(langs.item(2)?.label).toBe('Deutsch');
-    expect(langs.item(3)?.label).toBe('Français');
-    await userEvent.selectOptions(langs, ['Deutsch']);
+    const select_lang: HTMLSelectElement = await screen.findByRole('combobox', { name: 'Select Language' });
+    expect(select_lang.length).toBe(4);
+    expect(select_lang.item(0)?.label).toBe('Choose option ...');
+    expect(select_lang.item(1)?.label).toBe('English');
+    expect(select_lang.item(2)?.label).toBe('Deutsch');
+    expect(select_lang.item(3)?.label).toBe('Français');
+    await userEvent.selectOptions(select_lang, ['Deutsch']);
     // login screen should now be in German, including the Language Selection menu title
     expect(screen.getByRole('combobox', { name: 'Sprache auswählen' })).toBeEnabled();
     await user.type(screen.getByRole('textbox', { name: 'Benutzername' }), 'serveradmin');

@@ -287,6 +287,7 @@ export const discussionFormat: Format = {
 export const basicTextFormat: Format = {
   id: 19,
   translations: [
+    { key: 'BT', language: 'de', name: 'BasicText', description: 'Lesen aus dem Basic Text' },
     { key: 'BT', language: 'en', name: 'Basic Text', description: 'This meeting is focused on discussion of the Basic Text of Narcotics Anonymous.' },
     { key: 'BT', language: 'es', name: 'Texto Básico', description: 'Esta reunión se centra en la discusión del texto básico de Narcóticos Anónimos.' }
   ],
@@ -961,6 +962,23 @@ export async function login(username: string, tab: string | null = null): Promis
   await user.type(await screen.findByRole('textbox', { name: 'Username' }), username);
   await user.type(await screen.findByLabelText('Password'), findPassword(username));
   await user.click(await screen.findByRole('button', { name: 'Log In' }));
+  if (tab) {
+    const link = await screen.findByRole('link', { name: tab, hidden: true });
+    await user.click(link);
+  }
+  return user;
+}
+
+// similar utility function for German
+// Caution: if this is used, put the default language back to English after the test is run using afterEach
+export async function loginDeutsch(username: string, tab: string | null = null): Promise<UserEventInstance> {
+  const user = userEvent.setup();
+  render(App);
+  const select_lang: HTMLSelectElement = await screen.findByRole('combobox', { name: 'Select Language' });
+  await userEvent.selectOptions(select_lang, ['Deutsch']);
+  await user.type(await screen.findByRole('textbox', { name: 'Benutzername' }), username);
+  await user.type(await screen.findByLabelText('Passwort'), findPassword(username));
+  await user.click(await screen.findByRole('button', { name: 'Anmelden' }));
   if (tab) {
     const link = await screen.findByRole('link', { name: tab, hidden: true });
     await user.click(link);
