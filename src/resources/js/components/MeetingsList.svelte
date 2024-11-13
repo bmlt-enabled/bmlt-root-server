@@ -260,7 +260,9 @@
     {#if serviceBodies.length > 1}
       <Button color="alternative" class="relative" aria-label={$translations.serviceBodiesTitle}>
         {$translations.serviceBodiesTitle}
-        <Indicator color="red" size="sm" placement="top-right" />
+        {#if selectedServiceBodies.length > 0}
+          <Indicator color="red" size="sm" placement="top-right" />
+        {/if}
       </Button>
       <Dropdown class="w-90 top-full z-50 space-y-2 p-3 text-sm" open={true}>
         <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">{$translations.searchByServiceBody}</h6>
