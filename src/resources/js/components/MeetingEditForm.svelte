@@ -608,7 +608,7 @@
               color="none"
               on:click={(e) => selectedMeeting && handleDelete(e, selectedMeeting)}
               class="text-red-600 dark:text-red-500"
-              aria-label={$translations.deleteMeeting + ' ' + (selectedMeeting?.name ?? '')}
+              aria-label={$translations.deleteMeeting + ' ' + (selectedMeeting?.id ?? '')}
             >
               <TrashBinOutline title={{ id: 'deleteMeeting', title: $translations.deleteMeeting }} ariaLabel={$translations.deleteMeeting} />
               <span class="sr-only">{$translations.deleteMeeting}</span>
@@ -658,7 +658,7 @@
           {/if}
         </div>
         <div class="w-full">
-          <Label for="duration" class="mb-2 mt-2">{$translations.durationTitle}</Label>
+          <span class="mb-2 mt-2 block text-sm font-medium text-gray-900 rtl:text-right dark:text-gray-300">{$translations.durationTitle}</span>
           <DurationSelector bind:duration={initialValues.duration} on:update={(e) => setData('duration', e.detail.duration)} />
           {#if $errors.duration}
             <Helper class="mt-2" color="red">
