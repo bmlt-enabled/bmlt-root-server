@@ -1,5 +1,5 @@
 import { beforeAll, beforeEach, describe, test } from 'vitest';
-import { screen } from '@testing-library/svelte';
+import { screen, waitFor } from '@testing-library/svelte';
 import '@testing-library/jest-dom';
 
 import { login, mockSavedUserPartialUpdate, sharedAfterEach, sharedBeforeAll, sharedBeforeEach } from './sharedDataAndMocks';
@@ -49,13 +49,8 @@ describe('check content in Account tab when logged in as various users', () => {
     expect(mockSavedUserPartialUpdate?.description).toBe('Main Server Poobah');
     expect(mockSavedUserPartialUpdate?.username).toBe('serverpoobah');
     expect(mockSavedUserPartialUpdate?.password).toBe('new password');
-    // Mock clicking the expand icon is not causing the list to expand, so we can't test the list of editable service
-    // bodies.  To work around this problem, the service body list is factored out into a separate component
-    // (AccountServiceBodyList), and tested separately.
-    // TODO: if we can get the simulated click on the expand icon to work, the separate AccountServiceBodyList
-    // component could be folded back in.  Although the code is not too bad as is.
-    // const expand = screen.getByRole('button', { name: /service bodies this user can edit/i });
-    // await user.click(expand);
+    const expand = screen.getByRole('button', { name: /toggle accordion/i });
+    await user.click(expand);
     // Now make a further change.  The applyChanges button should be enabled again after a further change.
     await user.clear(description);
     await user.type(description, 'Main Server Imperial Wizard');
@@ -87,5 +82,85 @@ describe('check content in Account tab when logged in as various users', () => {
     await user.click(applyChanges);
     expect(applyChanges).toBeDisabled();
     expect(mockSavedUserPartialUpdate?.password).toBe('poobah password');
+  });
+});
+
+describe('check lists of service bodies different users can edit', () => {
+  test('check toggling the accordion', async () => {
+    const user = await login('serveradmin', 'Account');
+    const toggle = await screen.findByRole('button', { name: /toggle accordion/i });
+    expect(toggle.ariaExpanded).toBe('false');
+    // TODO: this test fails -- toBeVisible seems to be always true, even if the accordion is collapsed
+    // expect(await screen.findByText('Northern Zone')).not.toBeVisible();
+    await user.click(toggle);
+    expect(toggle.ariaExpanded).toBe('true');
+    expect(await screen.findByText('Northern Zone')).toBeVisible();
+  });
+
+  test('check serveradmin account', async () => {
+    await login('serveradmin', 'Account');
+    await waitFor(() => {
+      expect(screen.queryByText('Northern Zone')).toBeInTheDocument();
+      expect(screen.queryByText('Big Region')).toBeInTheDocument();
+      expect(screen.queryByText('Small Region')).toBeInTheDocument();
+      expect(screen.queryByText('River City Area')).toBeInTheDocument();
+      expect(screen.queryByText('Mountain Area')).toBeInTheDocument();
+      expect(screen.queryByText('Rural Area')).toBeInTheDocument();
+    });
+  });
+
+  test('check Northern Zone admin', async () => {
+    await login('NorthernZone', 'Account');
+    await waitFor(() => {
+      expect(screen.queryByText('Northern Zone')).toBeInTheDocument();
+      expect(screen.queryByText('Big Region')).toBeInTheDocument();
+      expect(screen.queryByText('Small Region')).toBeInTheDocument();
+      expect(screen.queryByText('River City Area')).toBeInTheDocument();
+      expect(screen.queryByText('Mountain Area')).toBeInTheDocument();
+      expect(screen.queryByText('Rural Area')).toBeInTheDocument();
+    });
+  });
+
+  test('check Big Region admin', async () => {
+    await login('BigRegion', 'Account');
+    await waitFor(() => {
+      expect(screen.queryByText('Northern Zone')).toBe(null);
+      expect(screen.queryByText('Big Region')).toBeInTheDocument();
+      expect(screen.queryByText('Small Region')).toBe(null);
+      expect(screen.queryByText('River City Area')).toBeInTheDocument();
+      expect(screen.queryByText('Mountain Area')).toBeInTheDocument();
+      expect(screen.queryByText('Rural Area')).toBeInTheDocument();
+    });
+  });
+
+  test('check Big Region admin 2', async () => {
+    await login('BigRegion2', 'Account');
+    await waitFor(() => {
+      expect(screen.queryByText('Northern Zone')).toBe(null);
+      expect(screen.queryByText('Big Region')).toBeInTheDocument();
+      expect(screen.queryByText('Small Region')).toBe(null);
+      expect(screen.queryByText('River City Area')).toBeInTheDocument();
+      expect(screen.queryByText('Mountain Area')).toBeInTheDocument();
+      expect(screen.queryByText('Rural Area')).toBeInTheDocument();
+    });
+  });
+
+  test('check Small Region admin', async () => {
+    await login('SmallRegion', 'Account');
+    await waitFor(() => {
+      expect(screen.queryByText('Northern Zone')).toBe(null);
+      expect(screen.queryByText('Big Region')).toBe(null);
+      expect(screen.queryByText('Small Region')).toBeInTheDocument();
+      expect(screen.queryByText('River City Area')).toBe(null);
+      expect(screen.queryByText('Mountain Area')).toBe(null);
+      expect(screen.queryByText('Rural Area')).toBe(null);
+    });
+  });
+
+  test('check Small Region observer', async () => {
+    await login('SmallObserver', 'Account');
+    await waitFor(() => {
+      expect(screen.queryByText('- None -')).toBeInTheDocument();
+    });
   });
 });

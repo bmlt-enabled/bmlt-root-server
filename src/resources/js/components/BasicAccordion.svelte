@@ -1,6 +1,7 @@
 <script lang="ts">
   export let header: string;
   export let open: boolean = false;
+  export let label: string = 'Toggle accordion';
 
   function accordionToggle() {
     open = !open;
@@ -11,7 +12,7 @@
   <button
     type="button"
     aria-expanded={open}
-    aria-label="Toggle accordion"
+    aria-label={label}
     class="flex w-full items-center justify-between rounded-md px-4 py-4 text-left text-sm font-semibold text-gray-300 hover:bg-gray-700 focus:outline-none"
     on:click={accordionToggle}
     on:keydown={(e) => (e.key === 'Enter' || e.key === ' ') && accordionToggle()}
