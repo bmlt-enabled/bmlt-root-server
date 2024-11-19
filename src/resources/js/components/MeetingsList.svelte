@@ -243,6 +243,9 @@
     if (searchInputElement) {
       searchInputElement.addEventListener('keydown', handleEnterKey);
     }
+    if (serviceBodies.length === 1) {
+      searchMeetings();
+    }
     return () => {
       if (searchInputElement) {
         searchInputElement.removeEventListener('keydown', handleEnterKey);
