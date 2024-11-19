@@ -14,7 +14,7 @@
   }
 </script>
 
-<Navbar>
+<Navbar class="dark:bg-gray-900">
   <NavHamburger />
   <div class="ml-auto flex items-center">
     <DarkMode size="lg" class="inline-block hover:text-gray-900 dark:hover:text-white" />
