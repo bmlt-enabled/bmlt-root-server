@@ -9,8 +9,8 @@
   import { spinner } from '../stores/spinner';
   import { translations } from '../stores/localization';
   import RootServerApi from '../lib/RootServerApi';
-  // 'svelte-hack' -- import hacked to get onMount to work correctly for unit tests
-  import { onMount } from 'svelte/internal';
+
+  import { onMount } from 'svelte';
   import type { Format } from 'bmlt-root-server-client';
   import FormatForm from '../components/FormatForm.svelte';
 
@@ -125,7 +125,7 @@
     {#if formats.length > 0}
       <TableSearch placeholder={$translations.searchByName} hoverable={true} bind:inputValue={searchTerm}>
         <TableHead>
-          <TableHeadCell colspan="2">
+          <TableHeadCell colspan={2}>
             <div class="flex">
               <div class="mt-2.5 grow">{$translations.nameTitle}</div>
               <div><Button on:click={() => handleAdd()} class="whitespace-nowrap" aria-label={$translations.addFormat}>{$translations.addFormat}</Button></div>

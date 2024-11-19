@@ -215,7 +215,7 @@
     </div>
     <div class="md:col-span-2">
       <Label for="description" class="mb-2">{$translations.descriptionTitle}</Label>
-      <Textarea id="description" name="description" rows="4" />
+      <Textarea id="description" name="description" rows={4} />
       <Helper class="mt-2" color="red">
         {#if $errors.description}
           {$errors.description}

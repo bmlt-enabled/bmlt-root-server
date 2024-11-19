@@ -9,8 +9,8 @@
   import { spinner } from '../stores/spinner';
   import { translations } from '../stores/localization';
   import RootServerApi from '../lib/RootServerApi';
-  // 'svelte-hack' -- import hacked to get onMount to work correctly for unit tests
-  import { onMount } from 'svelte/internal';
+
+  import { onMount } from 'svelte';
   import type { User } from 'bmlt-root-server-client';
   import UserForm from '../components/UserForm.svelte';
 
@@ -93,7 +93,7 @@
     {#if users.length > 1}
       <TableSearch placeholder={$translations.searchByName} hoverable={true} bind:inputValue={searchTerm}>
         <TableHead>
-          <TableHeadCell colspan={$authenticatedUser?.type === 'admin' ? '2' : '1'}>
+          <TableHeadCell colspan={$authenticatedUser?.type === 'admin' ? 2 : 1}>
             {#if $authenticatedUser?.type === 'admin'}
               <div class="flex">
                 <div class="mt-2.5 grow">Name</div>
