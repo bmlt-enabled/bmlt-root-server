@@ -34,5 +34,5 @@
     <slot />
   </div>
 
-  <div class="w-full border-t border-gray-700" />
+  <div class="w-full border-t border-gray-700"></div>
 </div>
