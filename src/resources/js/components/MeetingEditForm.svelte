@@ -425,15 +425,12 @@
     });
   }
 
-  async function createGoogleMap() {
-    const loader = new Loader({
-      apiKey: globalSettings.googleApiKey,
-      version: 'beta',
-      libraries: ['places', 'marker', 'geocoding']
-    });
-    const { Map } = await loader.importLibrary('maps');
+  async function createGoogleMap(loader: Loader) {
+    if (!globalSettings.googleApiKey) return;
+
     mapElement = document.getElementById('locationMap') as HTMLElement;
     if (mapElement) {
+      const { Map } = await loader.importLibrary('maps');
       map = new Map(mapElement, {
         center: { lat: latitude, lng: longitude },
         zoom: Number(globalSettings.centerZoom ?? 18),
@@ -546,22 +543,26 @@
     if (hasOtherErrors($errors)) errorTabs.push(tabs[2]);
   }
 
-  onMount(() => {
-    mapElement = document.getElementById('locationMap') as HTMLElement;
-    if (mapElement) {
-      if (globalSettings.googleApiKey) {
-        createGoogleMap();
-      } else {
-        createLeafletMap();
-      }
+  onMount(async () => {
+    if (globalSettings.googleApiKey) {
+      const loader = new Loader({
+        apiKey: globalSettings.googleApiKey,
+        version: 'beta',
+        libraries: ['places', 'marker', 'geocoding']
+      });
+      await createGoogleMap(loader);
+    } else {
+      createLeafletMap();
+    }
 
-      showMap.subscribe((value) => {
+    showMap.subscribe((value) => {
+      if (mapElement) {
         mapElement.style.display = value ? 'block' : 'none';
         if (value && map) {
           setMapCenter(map, latitude, longitude);
         }
-      });
-    }
+      }
+    });
   });
 
   $: {
@@ -726,15 +727,13 @@
           {/if}
         </div>
       </div>
-      {#if selectedMeeting}
-        <div class="grid gap-4 md:grid-cols-2">
-          <div class="md:col-span-2">
-            <MapAccordion title={$translations.locationMapTitle} {map}>
-              <div id="locationMap" bind:this={mapElement}></div>
-            </MapAccordion>
-          </div>
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="md:col-span-2">
+          <MapAccordion title={$translations.locationMapTitle} {map}>
+            <div id="locationMap" bind:this={mapElement}></div>
+          </MapAccordion>
         </div>
-      {/if}
+      </div>
       <div class="grid gap-4 md:grid-cols-2">
         <div class="w-full">
           <Label for="longitude" class="mb-2 mt-2">{$translations.longitudeTitle}</Label>
