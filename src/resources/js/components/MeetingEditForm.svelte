@@ -111,7 +111,12 @@
   }>();
 
   const defaultLatLng = { lat: Number(globalSettings.centerLatitude ?? -79.793701171875), lng: Number(globalSettings.centerLongitude ?? 36.065752051707) };
-  const defaultDuration = globalSettings.defaultDuration ?? '01:00';
+  let defaultDuration = '01:00';
+  // older autoconfig files store the default duration including seconds -- remove the seconds if needed for compatibility
+  if (globalSettings.defaultDuration) {
+    const [hours, minutes] = globalSettings.defaultDuration.split(':').map((part) => part.padStart(2, '0'));
+    defaultDuration = hours + ':' + minutes;
+  }
   const initialValues = {
     serviceBodyId: selectedMeeting?.serviceBodyId ?? -1,
     formatIds: selectedMeeting?.formatIds ?? [],
