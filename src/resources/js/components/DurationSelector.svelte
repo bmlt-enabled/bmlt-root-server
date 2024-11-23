@@ -12,10 +12,10 @@
     value: i.toString().padStart(2, '0'),
     name: i.toString().padStart(2, '0')
   }));
-  const minuteOptions = Array.from({ length: 60 }, (_, i) => ({
-    value: i.toString().padStart(2, '0'),
-    name: i.toString().padStart(2, '0')
-  }));
+  const minuteOptions: { value: string; name: string }[] = [];
+  for (let i = 0; i < 60; i = i + 5) {
+    minuteOptions.push({ value: i.toString().padStart(2, '0'), name: i.toString().padStart(2, '0') });
+  }
   const updateDuration = () => {
     const updatedDuration = `${hours}:${minutes}`;
     dispatch('update', { duration: updatedDuration });
