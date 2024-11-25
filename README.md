@@ -40,7 +40,7 @@ For more information about server requirements, see the "Things You Will Need Be
 INSTALLATION
 ------------
 
-For instructions on installing the root server, see [Installing a New Root Server](https://bmlt.app/setting-up-the-bmlt/)
+For instructions on installing the root server, see [installation/README.md](installation/README.md) in the GitHub repository.
 
 OLDER REPOSITORIES
 ------------------
