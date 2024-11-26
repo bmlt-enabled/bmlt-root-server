@@ -1,5 +1,7 @@
 ## 4.0.0 (UNRELEASED)
-* Added new user interface.
+* Added new user interface implemented in Svelte.  This includes a brand-new UI code base and various improvements. It is mostly backward compatible, except as noted here:
+  - Dropped support for the installer wizard -- see `installation/README.md` for new directions.
+  - Deprecated the auto-config parameter `$default_minute_interval` (now just set to 5 minutes).
 
 ## 3.1.1 (August 11, 2024)
 * Add `county_auto_geocoding_enabled` and `zip_auto_geocoding_enabled` to `GetServerInfo` endpoint.
