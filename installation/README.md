@@ -3,7 +3,7 @@
 As of version 4.0.0 of the root server, we are dropping support for the Installer Wizard. Setting up a completely new root server
 is at this point an infrequent event, and hopefully these directions will be clear enough.
 
-For a more detailed but older tutorial please see https://bmlt.app/setting-up-the-bmlt/ -- that tutorial is based on the Installer Wizard however, so you'll need to adapt it accordingly. But it may be useful to explain some of the steps. Differences are noted below.
+For a more detailed but older tutorial please see https://bmlt.app/setting-up-the-bmlt/. That tutorial is based on the Installer Wizard, so you'll need to adapt it accordingly. But it may be useful to explain some of the steps. Differences are noted below.
 
 ## Setting Up an Empty MySQL Database
 
@@ -11,7 +11,7 @@ Set up an empty MySQL database, along with a MySQL user that has access to it.  
 
 ## Uploading the BMLT Server Zip File
 
-Get the current version of the server from https://bmlt.app/downloads/, and upload it to your web hosting provider's server. (The directions for this step in the older tutorial are also still valid.) For this part of the step, upload the zip file *without* unzipping it on your local machine. Then unzip it on your server. You should end up with a directory `main_server` under the directory that holds the files that show up on your website. Thus, if your web hosting server has a directory `public_html` for the files that show up on your website, put `main_server` in that directory, like this: `public_html/main_server`.
+Get the latest version of the server from https://github.com/bmlt-enabled/bmlt-root-server/releases, and upload it to your web hosting provider's server. (The directions for this step in the older tutorial are also still valid.) For this part of the step, upload the zip file *without* unzipping it on your local machine. Then unzip it on your server. You should end up with a directory `main_server` under the directory that holds the files that show up on your website. Thus, if your web hosting server has a directory `public_html` for the files that show up on your website, put `main_server` in that directory, like this: `public_html/main_server`.
 
 In addition, unzip the file on your laptop or desktop machine -- you'll need to get a couple of files from it in the following steps. But don't try to upload the unzipped file -- that can result in problems with dropped files and such.
 
@@ -25,7 +25,7 @@ In the unzipped version of the BMLT Server on your local machine, locate the dir
 
 This step is also different from the old tutorial.
 
-In the unzipped version of the BMLT Server, look again in the directory `installer` and find the file `initial-auto-config.txt`. Upload this file to your server, put it in the directory that holds your `main_server` directory, and rename it to `auto-config.inc.php`.  This file should have the permissions `-rw-r--r--` (`0644` in octal). This means that the owner of the file can read and write it, and the owning group and others can read it.
+In the unzipped version of the BMLT Server, look again in the directory `installer` and find the file `auto-config.inc.php`. Upload this file to your server and put it in the directory that holds your `main_server` directory.  Verify that this file still has the permissions `-rw-r--r--` (`0644` in octal). This means that the owner of the file can read and write it, and the owning group and others can read it.
 
 Note that the file `auto-config.inc.php` is not inside `main_server`, but rather at the same level. This is a little weird, but does have the advantage that you can upload a new version of the server easily without touching the `auto-config.inc.php` file.  So your directory structure should look something like this:
 ```
@@ -41,7 +41,7 @@ Now edit the `auto-config.inc.php` file with new parameters as needed. You can d
 
 There are various other parameters in the file, but the default values may well be what you want.
 
-Alternatively, you can edit the `initial-auto-config.txt` file on your local machine, and then upload the edited file, thus avoiding needing to edit it on your web host. If you do that, be sure and use an editor intended for editing source code and not something like Microsoft Word.
+There are a couple of alternative ways to add the auto-config file. Rather than the above, you can locate the file in the `main_server/installation` directory on the server and copy it from there.  Or you could edit the `auto-config.inc.php` file on your local machine, and then upload the edited file, thus avoiding needing to edit it on your web host. If you edit it on your local machine, be sure and use an editor intended for editing source code and not something like Microsoft Word.
 
 ## Initial Log In
 
