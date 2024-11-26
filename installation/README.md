@@ -19,13 +19,13 @@ In addition, unzip the file on your laptop or desktop machine -- you'll need to 
 
 This step is different from the old tutorial.
 
-In the unzipped version of the BMLT Server on your local machine, locate the directory `installer` and find the file `initial-database.sql` in that directory.  Import the contents of this file into the empty MySQL database that you set up in the first step.  (If you are using cPanel, find the `phpMyAdmin` tool under `Databases`, select your new database, and then click `Import`.)
+In the unzipped version of the BMLT Server on your local machine, locate the directory `installation` and find the file `initial-database.sql` in that directory.  Import the contents of this file into the empty MySQL database that you set up in the first step.  (If you are using cPanel, find the `phpMyAdmin` tool under `Databases`, select your new database, and then click `Import`.)
 
 ## Adding the auto-config File
 
 This step is also different from the old tutorial.
 
-In the unzipped version of the BMLT Server, look again in the directory `installer` and find the file `initial-auto-config.txt`. Upload this file to your server, put it in the directory that holds your `main_server` directory, and rename it to `auto-config.inc.php`.  This file should have the permissions `-rw-r--r--` (`0644` in octal). This means that the owner of the file can read and write it, and the owning group and others can read it.
+In the unzipped version of the BMLT Server, look again in the directory `installation` and find the file `initial-auto-config.txt`. Upload this file to your server, put it in the directory that holds your `main_server` directory, and rename it to `auto-config.inc.php`.  This file should have the permissions `-rw-r--r--` (`0644` in octal). This means that the owner of the file can read and write it, and the owning group and others can read it.
 
 Note that the file `auto-config.inc.php` is not inside `main_server`, but rather at the same level. This is a little weird, but does have the advantage that you can upload a new version of the server easily without touching the `auto-config.inc.php` file.  So your directory structure should look something like this:
 ```
