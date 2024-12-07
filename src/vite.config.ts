@@ -2,6 +2,14 @@ import { defineConfig } from 'vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import laravel from 'laravel-vite-plugin';
 import { svelteTesting } from '@testing-library/svelte/vite';
+import type { InlineConfig } from 'vitest/node';
+import type { UserConfig } from 'vite';
+
+// This fixes type issue while enabling us to still use single config
+// for testing and not have a separate vitest.config.ts file
+interface VitestConfigExport extends UserConfig {
+  test: InlineConfig;
+}
 
 export default defineConfig({
   plugins: [
@@ -21,4 +29,4 @@ export default defineConfig({
   build: {
     chunkSizeWarningLimit: 1000
   }
-});
+} as VitestConfigExport);
