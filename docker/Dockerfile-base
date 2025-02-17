@@ -38,12 +38,12 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&
     && rm composer-setup.php
 
 # Configure apache
-ENV APACHE_RUN_USER www-data
-ENV APACHE_RUN_GROUP www-data
-ENV APACHE_RUN_DIR www-data
-ENV APACHE_LOG_DIR /var/log/apache2
-ENV APACHE_LOCK_DIR /var/lock/apache2
-ENV APACHE_PID_FILE /var/run/apache2.pid
+ENV APACHE_RUN_USER=www-data
+ENV APACHE_RUN_GROUP=www-data
+ENV APACHE_RUN_DIR=www-data
+ENV APACHE_LOG_DIR=/var/log/apache2
+ENV APACHE_LOCK_DIR=/var/lock/apache2
+ENV APACHE_PID_FILE=/var/run/apache2.pid
 RUN /bin/bash -c "source /etc/apache2/envvars"
 RUN chown -R www-data: /var/www
 RUN sed -i 's/Listen 80/Listen 8000/' /etc/apache2/ports.conf

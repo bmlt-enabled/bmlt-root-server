@@ -4,7 +4,7 @@ import { writable } from 'svelte/store';
 import type { Subscriber, Unsubscriber } from 'svelte/store';
 
 /*eslint sort-keys: ["error", "asc", {caseSensitive: false}]*/
-const strings = new LocalizedStrings({
+const strings = new (LocalizedStrings as any)({
   de: {
     accountSettingsTitle: 'Account Einstellungen',
     accountTitle: 'Account',
