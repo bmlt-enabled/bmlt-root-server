@@ -37,10 +37,11 @@
   let tableSearchRef: SvelteComponent | null = null;
   let sortColumn: string | null = null;
   let sortDirection: 'asc' | 'desc' = 'asc';
-  const weekdayChoices = $translations.daysOfWeek.map((day, index) => ({
+  const weekdayChoices = ($translations.daysOfWeek as string[]).map((day: string, index: number) => ({
     value: index.toString(),
     label: day
   }));
+
   let selectedDays: string[] = weekdayChoices.map((day) => day.value);
   const timeChoices = [
     { value: 'morning', label: $translations.timeMorning },

@@ -1,9 +1,9 @@
 FROM bmltenabled/bmlt-root-server-base:8.1
 
 # Configure apache php
-ENV PHP_INI_PATH /etc/php/8.1/apache2/php.ini
-ENV PHP_CLI_INI_PATH /etc/php/8.1/cli/php.ini
-ENV PHP_XDEBUG_ENABLED: 1
+ENV PHP_INI_PATH=/etc/php/8.1/apache2/php.ini
+ENV PHP_CLI_INI_PATH=/etc/php/8.1/cli/php.ini
+ENV PHP_XDEBUG_ENABLED=1
 RUN echo "zend_extension=$(find /usr/lib/php/ -name xdebug.so)" >> ${PHP_INI_PATH} \
     && echo "xdebug.mode=coverage,debug" >> ${PHP_INI_PATH} \
     && echo "xdebug.client_port=9003" >> ${PHP_INI_PATH} \
