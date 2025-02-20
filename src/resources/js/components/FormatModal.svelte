@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import { Modal } from 'flowbite-svelte';
   import { get } from 'svelte/store';
 
@@ -7,11 +9,16 @@
   import { isDirty } from '../lib/utils';
   import UnsavedChangesModal from './UnsavedChangesModal.svelte';
 
-  export let showModal: boolean;
-  export let selectedFormat: Format | null;
-  export let reservedFormatKeys: string[];
+  interface Props {
+    showModal: boolean;
+    selectedFormat: Format | null;
+    reservedFormatKeys: string[];
+    onSaveSuccess?: (format: Format) => void; // Callback function prop
+  }
 
-  let showConfirmModal = false;
+  let { showModal = $bindable(), selectedFormat, reservedFormatKeys, onSaveSuccess }: Props = $props();
+
+  let showConfirmModal = $state(false);
   let forceClose = false;
 
   function handleClose() {
@@ -41,18 +48,18 @@
     }
   }
 
-  $: {
+  run(() => {
     if (showModal) {
       document.addEventListener('mousedown', handleOutsideClick);
     } else {
       document.removeEventListener('mousedown', handleOutsideClick);
     }
-  }
+  });
 </script>
 
 <Modal bind:open={showModal} size="sm" class="modal-content">
   <div class="p-4">
-    <FormatForm {selectedFormat} {reservedFormatKeys} on:saved />
+    <FormatForm {selectedFormat} {reservedFormatKeys} {onSaveSuccess} />
   </div>
 </Modal>
 

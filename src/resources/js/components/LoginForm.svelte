@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import { validator } from '@felte/validator-yup';
   import { createForm } from 'felte';
   import { Button, Helper, Input, Label, P, Select } from 'flowbite-svelte';
@@ -11,13 +13,17 @@
   import { spinner } from '../stores/spinner';
   import type { ApiCredentialsStore } from '../stores/apiCredentials';
 
-  export let apiCredentials: ApiCredentialsStore;
+  interface Props {
+    apiCredentials: ApiCredentialsStore;
+  }
+
+  let { apiCredentials }: Props = $props();
 
   const globalSettings = settings;
   const dispatch = createEventDispatcher();
   const languageOptions = Object.entries(globalSettings.languageMapping).map((lang) => ({ value: lang[0], name: lang[1] }));
-  let selectedLanguage = translations.getLanguage();
-  let errorMessage: string | undefined;
+  let selectedLanguage = $state(translations.getLanguage());
+  let errorMessage: string | undefined = $state();
 
   const { form, data, errors } = createForm({
     initialValues: {
@@ -57,13 +63,17 @@
     })
   });
 
-  $: if (selectedLanguage) {
-    translations.setLanguage(selectedLanguage);
-  }
+  run(() => {
+    if (selectedLanguage) {
+      translations.setLanguage(selectedLanguage);
+    }
+  });
 
-  $: if ($data) {
-    errorMessage = '';
-  }
+  run(() => {
+    if ($data) {
+      errorMessage = '';
+    }
+  });
 </script>
 
 <div class="mx-auto flex flex-col items-center justify-center px-6 py-8 md:h-screen lg:py-0">

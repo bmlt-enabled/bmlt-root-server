@@ -10,9 +10,13 @@
   import { spinner } from '../stores/spinner';
   import { translations } from '../stores/localization';
 
-  export let deleteMeeting: Meeting;
-  let confirmed = false;
-  let errorMessage: string | undefined;
+  interface Props {
+    deleteMeeting: Meeting;
+  }
+
+  let { deleteMeeting }: Props = $props();
+  let confirmed = $state(false);
+  let errorMessage: string | undefined = $state();
 
   const dispatch = createEventDispatcher<{ deleted: { meetingId: number } }>();
 

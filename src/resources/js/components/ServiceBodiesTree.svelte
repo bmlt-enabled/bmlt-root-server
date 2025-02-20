@@ -13,11 +13,15 @@
     children?: TreeNode[];
   }
 
-  export let serviceBodies: ServiceBody[];
-  export let selectedValues: string[] = [];
+  interface Props {
+    serviceBodies: ServiceBody[];
+    selectedValues?: string[];
+  }
+
+  let { serviceBodies, selectedValues = $bindable([]) }: Props = $props();
 
   const treeMap: Record<string, TreeNode> = {};
-  let trees: TreeNode[] = convertServiceBodiesToTreeNodes(serviceBodies);
+  let trees: TreeNode[] = $state(convertServiceBodiesToTreeNodes(serviceBodies));
 
   function convertServiceBodiesToTreeNodes(serviceBodies: ServiceBody[]): TreeNode[] {
     const nodeMap: { [key: number]: TreeNode } = {};
@@ -141,10 +145,10 @@
     }
   }
 
-  $: isAllSelected = trees.every((node) => isNodeFullySelected(node));
   function isNodeFullySelected(node: TreeNode): boolean {
     return !!node.checked && (!node.children || node.children.every(isNodeFullySelected));
   }
+  let isAllSelected = $derived(trees.every((node) => isNodeFullySelected(node)));
 </script>
 
 <div class="mb-4">

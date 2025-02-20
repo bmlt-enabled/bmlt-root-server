@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import { validator } from '@felte/validator-yup';
   import { createForm } from 'felte';
   import { Button, Checkbox, Hr, Label, Input, Helper, Select, MultiSelect, Badge } from 'flowbite-svelte';
@@ -27,14 +29,18 @@
   import MeetingDeleteModal from './MeetingDeleteModal.svelte';
   import { TrashBinOutline } from 'flowbite-svelte-icons';
 
-  export let selectedMeeting: Meeting | null;
-  export let formats: Format[];
-  export let serviceBodies: ServiceBody[];
+  interface Props {
+    selectedMeeting: Meeting | null;
+    formats: Format[];
+    serviceBodies: ServiceBody[];
+  }
+
+  let { selectedMeeting, formats, serviceBodies }: Props = $props();
 
   const tabs = selectedMeeting
     ? [$translations.tabsBasic, $translations.tabsLocation, $translations.tabsOther, $translations.tabsChanges]
     : [$translations.tabsBasic, $translations.tabsLocation, $translations.tabsOther];
-  let errorTabs: string[] = [];
+  let errorTabs: string[] = $state([]);
   const TAB_CHANGES = 3;
   const globalSettings = settings;
   const seenNames = new Set<string>();
@@ -73,13 +79,13 @@
   const VENUE_TYPE_HYBRID = 3;
   const VALID_VENUE_TYPES = [VENUE_TYPE_IN_PERSON, VENUE_TYPE_VIRTUAL, VENUE_TYPE_HYBRID];
 
-  let map: google.maps.Map | L.Map;
-  let mapElement: HTMLElement;
+  let map: google.maps.Map | L.Map = $state();
+  let mapElement: HTMLElement = $state();
   let marker: google.maps.marker.AdvancedMarkerElement | L.Marker | null;
-  let geocodingError: string | null = null;
-  let isPublishedChecked = true;
-  let showDeleteModal = false;
-  let deleteMeeting: Meeting;
+  let geocodingError: string | null = $state(null);
+  let isPublishedChecked = $state(true);
+  let showDeleteModal = $state(false);
+  let deleteMeeting: Meeting = $state();
   const weekdayChoices = $translations.daysOfWeek.map((day: string, index: number) => ({
     value: index,
     name: day
@@ -117,7 +123,7 @@
     const [hours, minutes] = globalSettings.defaultDuration.split(':').map((part) => part.padStart(2, '0'));
     defaultDuration = hours + ':' + minutes;
   }
-  const initialValues = {
+  const initialValues = $state({
     serviceBodyId: selectedMeeting?.serviceBodyId ?? -1,
     formatIds: selectedMeeting?.formatIds ?? [],
     venueType: selectedMeeting?.venueType ?? VENUE_TYPE_IN_PERSON,
@@ -160,14 +166,14 @@
           ...Object.fromEntries(Object.entries(selectedMeeting.customFields).map(([key, value]) => [key, value ?? '']))
         }
       : Object.fromEntries(globalSettings.customFields.map((field) => [field.name, '']))
-  };
-  let latitude = initialValues.latitude;
-  let longitude = initialValues.longitude;
-  let manualDrag = false;
-  let formatIdsSelected = initialValues.formatIds;
+  });
+  let latitude = $state(initialValues.latitude);
+  let longitude = $state(initialValues.longitude);
+  let manualDrag = $state(false);
+  let formatIdsSelected = $state(initialValues.formatIds);
   let savedMeeting: Meeting;
-  let changes: MeetingChangeResource[];
-  let changesLoaded = false;
+  let changes: MeetingChangeResource[] = $state();
+  let changesLoaded = $state(false);
 
   function shouldGeocode(initialValues: MeetingPartialUpdate, values: MeetingPartialUpdate, isNewMeeting: boolean) {
     if (isNewMeeting && values.venueType != VENUE_TYPE_VIRTUAL) {
@@ -544,12 +550,12 @@
     );
   }
 
-  $: {
+  run(() => {
     errorTabs = [];
     if (hasBasicErrors($errors)) errorTabs.push(tabs[0]);
     if (hasLocationErrors($errors)) errorTabs.push(tabs[1]);
     if (hasOtherErrors($errors)) errorTabs.push(tabs[2]);
-  }
+  });
 
   onMount(() => {
     mapElement = document.getElementById('locationMap') as HTMLElement;
@@ -569,15 +575,19 @@
     }
   });
 
-  $: {
+  run(() => {
     if (selectedMeeting) {
       showMap.set(true);
       manualDrag = false;
     }
-  }
+  });
 
-  $: setData('formatIds', formatIdsSelected);
-  $: isDirty.set(formIsDirty(initialValues, $data));
+  run(() => {
+    setData('formatIds', formatIdsSelected);
+  });
+  run(() => {
+    isDirty.set(formIsDirty(initialValues, $data));
+  });
 </script>
 
 <svelte:head>
@@ -586,6 +596,7 @@
 
 <form use:form>
   <BasicTabs {tabs} {errorTabs} on:change={(e) => handleTabChange(e.detail.index)}>
+    <!-- @migration-task: migrate this slot by hand, `tab-content-0` is an invalid identifier -->
     <div slot="tab-content-0">
       <div class="grid items-center gap-4 md:grid-cols-3">
         <div class="w-full">
@@ -705,10 +716,12 @@
       </div>
       <div class="md:col-span-2">
         <Label for="formatIds" class="mb-2 mt-2">{$translations.formatsTitle}</Label>
-        <MultiSelect id="formatIds" items={formatItems} name="formatIds" class="bg-gray-50 dark:bg-gray-600" bind:value={formatIdsSelected} let:item let:clear>
-          <Badge rounded color={badgeColor(item.value)} dismissable params={{ duration: 100 }} on:close={clear}>
-            {item.name}
-          </Badge>
+        <MultiSelect id="formatIds" items={formatItems} name="formatIds" class="bg-gray-50 dark:bg-gray-600" bind:value={formatIdsSelected}>
+          {#snippet children({ item, clear })}
+            <Badge rounded color={badgeColor(item.value)} dismissable params={{ duration: 100 }} on:close={clear}>
+              {item.name}
+            </Badge>
+          {/snippet}
         </MultiSelect>
         <!-- For some reason yup fills the errors store with empty objects for this array. The === 'string' ensures only server side errors will display. -->
         {#if $errors.formatIds && typeof $errors.formatIds[0] === 'string'}
@@ -719,6 +732,7 @@
       </div>
     </div>
 
+    <!-- @migration-task: migrate this slot by hand, `tab-content-1` is an invalid identifier -->
     <div slot="tab-content-1">
       <div class="grid gap-4 md:grid-cols-2">
         <div class="md:col-span-2">
@@ -905,6 +919,7 @@
       </div>
     </div>
 
+    <!-- @migration-task: migrate this slot by hand, `tab-content-2` is an invalid identifier -->
     <div slot="tab-content-2">
       <div class="grid gap-4 md:grid-cols-2">
         <div class="md:col-span-2">
@@ -1009,6 +1024,7 @@
         </div>
       {/each}
     </div>
+    <!-- @migration-task: migrate this slot by hand, `tab-content-3` is an invalid identifier -->
     <div slot="tab-content-3">
       {#if changesLoaded && changes.length > 0}
         <div class="space-y-3">

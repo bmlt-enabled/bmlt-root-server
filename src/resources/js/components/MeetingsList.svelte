@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import { onMount } from 'svelte';
   import type { SvelteComponent } from 'svelte';
   import { Button, ButtonGroup, Checkbox, Dropdown, Indicator, Label, Select, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch } from 'flowbite-svelte';
@@ -13,36 +15,40 @@
   import RootServerApi from '../lib/RootServerApi';
   import ServiceBodiesTree from './ServiceBodiesTree.svelte';
 
-  export let formats: Format[];
-  export let serviceBodies: ServiceBody[];
+  interface Props {
+    formats: Format[];
+    serviceBodies: ServiceBody[];
+  }
 
-  let meetings: Meeting[] = [];
+  let { formats, serviceBodies }: Props = $props();
+
+  let meetings: Meeting[] = $state([]);
   let meetingIds: string = '';
-  let selectedServiceBodies: string[] = serviceBodies.map((serviceBody) => serviceBody.id.toString());
+  let selectedServiceBodies: string[] = $state(serviceBodies.map((serviceBody) => serviceBody.id.toString()));
   let divClass = 'bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-visible pt-3';
   let innerDivClass = 'flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4';
   let searchClass = 'w-full md:w-1/2 relative';
   let inputClass = 'text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2 pl-10 dark:bg-gray-700 dark:text-white';
-  let searchTerm: string = '';
-  let currentPosition: number = 0;
-  let itemsPerPage: number = 20;
+  let searchTerm: string = $state('');
+  let currentPosition: number = $state(0);
+  let itemsPerPage: number = $state(20);
   const itemsPerPageItems = [10, 20, 40, 60, 80, 100].map((value) => ({ value, name: value.toString() }));
   const showPage: number = 5;
   let totalPages: number = 0;
-  let pagesToShow: number[] = [];
-  let selectedTimes: string[] = [];
-  let selectedPublished: string[] = [];
-  let selectedMeeting: Meeting | null;
-  let showModal = false;
-  let tableSearchRef: SvelteComponent | null = null;
-  let sortColumn: string | null = null;
-  let sortDirection: 'asc' | 'desc' = 'asc';
+  let pagesToShow: number[] = $state([]);
+  let selectedTimes: string[] = $state([]);
+  let selectedPublished: string[] = $state([]);
+  let selectedMeeting: Meeting | null = $state();
+  let showModal = $state(false);
+  let tableSearchRef: SvelteComponent | null = $state(null);
+  let sortColumn: string | null = $state(null);
+  let sortDirection: 'asc' | 'desc' = $state('asc');
   const weekdayChoices = ($translations.daysOfWeek as string[]).map((day: string, index: number) => ({
     value: index.toString(),
     label: day
   }));
 
-  let selectedDays: string[] = weekdayChoices.map((day) => day.value);
+  let selectedDays: string[] = $state(weekdayChoices.map((day) => day.value));
   const timeChoices = [
     { value: 'morning', label: $translations.timeMorning },
     { value: 'afternoon', label: $translations.timeAfternoon },
@@ -79,49 +85,10 @@
     getMeetings(searchTerm, selectedDays.join(','), selectedServiceBodies.join(','), meetingIds);
   }
 
-  $: filteredItems = meetings
-    .filter((meeting) => {
-      const matchesDay = selectedDays.length > 0 ? selectedDays.includes(meeting.day.toString()) : true;
-      const matchesPublished = selectedPublished.length > 0 ? selectedPublished.includes(String(meeting.published)) : true;
-      const matchesSearch =
-        // search by name, id or location
-        meeting.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        String(meeting.id).includes(searchTerm) ||
-        [meeting.locationStreet, meeting.locationCitySubsection, meeting.locationMunicipality, meeting.locationProvince, meeting.locationSubProvince, meeting.locationPostalCode1]
-          .filter(Boolean)
-          .join(', ')
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
-      const matchesTime =
-        selectedTimes.length === 0 ||
-        selectedTimes.some((time) => {
-          if (time === 'morning') {
-            return meeting.startTime >= '00:00' && meeting.startTime < '12:00';
-          } else if (time === 'afternoon') {
-            return meeting.startTime >= '12:00' && meeting.startTime < '18:00';
-          } else if (time === 'evening') {
-            return meeting.startTime >= '18:00' && meeting.startTime <= '23:59';
-          }
-          return false;
-        });
-      return matchesTime && matchesPublished && matchesDay && matchesSearch;
-    })
-    .sort((a, b) => {
-      // Sort by day then time
-      const dayComparison = a.day - b.day;
-      if (dayComparison !== 0) return dayComparison;
-      return a.startTime.localeCompare(b.startTime);
-    });
-
-  $: {
-    currentPosition = 0;
-    renderPagination(filteredItems.length);
-  }
-
   let startPage: number;
   let endPage: number;
-  let startRange: number;
-  let endRange: number;
+  let startRange: number = $state();
+  let endRange: number = $state();
 
   const renderPagination = (totalItems: number) => {
     totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -254,64 +221,108 @@
     };
   });
 
-  $: currentPageItems = filteredItems.slice(currentPosition, currentPosition + itemsPerPage);
-
   let isAllDaysSelected = selectedDays.length === weekdayChoices.length;
+  let filteredItems;
+  run(() => {
+    filteredItems = meetings
+      .filter((meeting) => {
+        const matchesDay = selectedDays.length > 0 ? selectedDays.includes(meeting.day.toString()) : true;
+        const matchesPublished = selectedPublished.length > 0 ? selectedPublished.includes(String(meeting.published)) : true;
+        const matchesSearch =
+          // search by name, id or location
+          meeting.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          String(meeting.id).includes(searchTerm) ||
+          [meeting.locationStreet, meeting.locationCitySubsection, meeting.locationMunicipality, meeting.locationProvince, meeting.locationSubProvince, meeting.locationPostalCode1]
+            .filter(Boolean)
+            .join(', ')
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase());
+        const matchesTime =
+          selectedTimes.length === 0 ||
+          selectedTimes.some((time) => {
+            if (time === 'morning') {
+              return meeting.startTime >= '00:00' && meeting.startTime < '12:00';
+            } else if (time === 'afternoon') {
+              return meeting.startTime >= '12:00' && meeting.startTime < '18:00';
+            } else if (time === 'evening') {
+              return meeting.startTime >= '18:00' && meeting.startTime <= '23:59';
+            }
+            return false;
+          });
+        return matchesTime && matchesPublished && matchesDay && matchesSearch;
+      })
+      .sort((a, b) => {
+        // Sort by day then time
+        const dayComparison = a.day - b.day;
+        if (dayComparison !== 0) return dayComparison;
+        return a.startTime.localeCompare(b.startTime);
+      });
+  });
+  run(() => {
+    currentPosition = 0;
+    renderPagination(filteredItems.length);
+  });
+  let currentPageItems;
+  run(() => {
+    currentPageItems = filteredItems.slice(currentPosition, currentPosition + itemsPerPage);
+  });
 </script>
 
 <TableSearch placeholder={$translations.filter} bind:this={tableSearchRef} hoverable={true} bind:inputValue={searchTerm} {divClass} {innerDivClass} {searchClass} {inputClass}>
-  <div slot="header" class="flex w-full flex-shrink-0 flex-col items-stretch justify-end space-y-2 md:w-auto md:flex-row md:items-center md:space-x-3 md:space-y-0">
-    {#if serviceBodies.length > 1}
-      <Button color="alternative" class="relative" aria-label={$translations.serviceBodiesTitle}>
-        {$translations.serviceBodiesTitle}
-        {#if selectedServiceBodies.length > 0}
+  {#snippet header()}
+    <div class="flex w-full flex-shrink-0 flex-col items-stretch justify-end space-y-2 md:w-auto md:flex-row md:items-center md:space-x-3 md:space-y-0">
+      {#if serviceBodies.length > 1}
+        <Button color="alternative" class="relative" aria-label={$translations.serviceBodiesTitle}>
+          {$translations.serviceBodiesTitle}
+          {#if selectedServiceBodies.length > 0}
+            <Indicator color="red" size="sm" placement="top-right" />
+          {/if}
+        </Button>
+        <Dropdown class="w-90 top-full z-50 space-y-2 p-3 text-sm" open={true}>
+          <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">{$translations.searchByServiceBody}</h6>
+          <ServiceBodiesTree {serviceBodies} bind:selectedValues={selectedServiceBodies} />
+        </Dropdown>
+      {/if}
+      <Button color="alternative" class="relative" aria-label={$translations.day}>
+        {$translations.day}
+        {#if selectedDays.length > 0}
           <Indicator color="red" size="sm" placement="top-right" />
         {/if}
       </Button>
-      <Dropdown class="w-90 top-full z-50 space-y-2 p-3 text-sm" open={true}>
-        <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">{$translations.searchByServiceBody}</h6>
-        <ServiceBodiesTree {serviceBodies} bind:selectedValues={selectedServiceBodies} />
+      <Dropdown class="top-full z-50 w-48 space-y-2 p-3 text-sm">
+        <h6 class="text-sm font-medium text-gray-900 dark:text-white">{$translations.searchByDay}</h6>
+        <Button on:click={toggleAllDays} size="xs" color="primary" class="w-full">
+          {isAllDaysSelected ? $translations.unselectAllDays : $translations.selectAllDays}
+        </Button>
+        <Checkbox name="weekdays" choices={weekdayChoices} bind:group={selectedDays} groupLabelClass="justify-between" />
       </Dropdown>
-    {/if}
-    <Button color="alternative" class="relative" aria-label={$translations.day}>
-      {$translations.day}
-      {#if selectedDays.length > 0}
-        <Indicator color="red" size="sm" placement="top-right" />
-      {/if}
-    </Button>
-    <Dropdown class="top-full z-50 w-48 space-y-2 p-3 text-sm">
-      <h6 class="text-sm font-medium text-gray-900 dark:text-white">{$translations.searchByDay}</h6>
-      <Button on:click={toggleAllDays} size="xs" color="primary" class="w-full">
-        {isAllDaysSelected ? $translations.unselectAllDays : $translations.selectAllDays}
+      <Button color="alternative" class="relative">
+        {$translations.published}
+        {#if selectedPublished.length > 0}
+          <Indicator color="red" size="sm" placement="top-right" />
+        {/if}
+        <FilterSolid class="ml-2 h-3 w-3 " />
       </Button>
-      <Checkbox name="weekdays" choices={weekdayChoices} bind:group={selectedDays} groupLabelClass="justify-between" />
-    </Dropdown>
-    <Button color="alternative" class="relative">
-      {$translations.published}
-      {#if selectedPublished.length > 0}
-        <Indicator color="red" size="sm" placement="top-right" />
+      <Dropdown class="w-48 space-y-2 p-3 text-sm">
+        <Checkbox name="times" choices={publishedChoices} bind:group={selectedPublished} groupInputClass="ms-2" groupLabelClass="" />
+      </Dropdown>
+      <Button color="alternative" class="relative">
+        {$translations.time}
+        {#if selectedTimes.length > 0}
+          <Indicator color="red" size="sm" placement="top-right" />
+        {/if}
+        <FilterSolid class="ml-2 h-3 w-3 " />
+      </Button>
+      <Dropdown class="w-48 space-y-2 p-3 text-sm">
+        <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">{$translations.chooseStartTime}</h6>
+        <Checkbox name="times" choices={timeChoices} bind:group={selectedTimes} groupInputClass="ms-2" groupLabelClass="" />
+      </Dropdown>
+      <Button on:click={searchMeetings}>{$translations.search}</Button>
+      {#if $authenticatedUser?.type !== 'observer'}
+        <Button on:click={() => handleAdd()} aria-label={$translations.addMeeting}><PlusOutline class="mr-2 h-3.5 w-3.5" />{$translations.addMeeting}</Button>
       {/if}
-      <FilterSolid class="ml-2 h-3 w-3 " />
-    </Button>
-    <Dropdown class="w-48 space-y-2 p-3 text-sm">
-      <Checkbox name="times" choices={publishedChoices} bind:group={selectedPublished} groupInputClass="ms-2" groupLabelClass="" />
-    </Dropdown>
-    <Button color="alternative" class="relative">
-      {$translations.time}
-      {#if selectedTimes.length > 0}
-        <Indicator color="red" size="sm" placement="top-right" />
-      {/if}
-      <FilterSolid class="ml-2 h-3 w-3 " />
-    </Button>
-    <Dropdown class="w-48 space-y-2 p-3 text-sm">
-      <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">{$translations.chooseStartTime}</h6>
-      <Checkbox name="times" choices={timeChoices} bind:group={selectedTimes} groupInputClass="ms-2" groupLabelClass="" />
-    </Dropdown>
-    <Button on:click={searchMeetings}>{$translations.search}</Button>
-    {#if $authenticatedUser?.type !== 'observer'}
-      <Button on:click={() => handleAdd()} aria-label={$translations.addMeeting}><PlusOutline class="mr-2 h-3.5 w-3.5" />{$translations.addMeeting}</Button>
-    {/if}
-  </div>
+    </div>
+  {/snippet}
   <TableHead>
     {#if meetings.length}
       <TableHeadCell padding="px-4 py-3 whitespace-nowrap" scope="col" on:click={() => handleSort('day')}>
@@ -377,32 +388,34 @@
       </TableBodyRow>
     {/each}
   </TableBody>
-  <div slot="footer" class="flex flex-col items-start justify-between space-y-3 p-4 md:flex-row md:items-center md:space-y-0 {meetings.length ? '' : 'hidden'}" aria-label="Table navigation">
-    {#if meetings.length}
-      <span class="flex items-center space-x-1 text-sm font-normal text-gray-500 dark:text-gray-400">
-        <span>{$translations.paginationShowing}</span>
-        <span class="font-semibold text-gray-900 dark:text-white">{startRange}-{endRange}</span>
-        <span>{$translations.paginationOf}</span>
-        <span class="font-semibold text-gray-900 dark:text-white">{filteredItems.length}</span>
-        <span class="mx-2 text-gray-500 dark:text-gray-400">/</span>
-        <span class="ml-4 flex items-center space-x-1">
-          <Label for="itemsPerPage" class="text-sm font-medium text-gray-700 dark:text-gray-300">{$translations.meetingsPerPage}</Label>
-          <Select id="itemsPerPage" items={itemsPerPageItems} bind:value={itemsPerPage} name="itemsPerPage" class="w-20 dark:bg-gray-600" on:change={updateItemsPerPage} />
+  {#snippet footer()}
+    <div class="flex flex-col items-start justify-between space-y-3 p-4 md:flex-row md:items-center md:space-y-0 {meetings.length ? '' : 'hidden'}" aria-label="Table navigation">
+      {#if meetings.length}
+        <span class="flex items-center space-x-1 text-sm font-normal text-gray-500 dark:text-gray-400">
+          <span>{$translations.paginationShowing}</span>
+          <span class="font-semibold text-gray-900 dark:text-white">{startRange}-{endRange}</span>
+          <span>{$translations.paginationOf}</span>
+          <span class="font-semibold text-gray-900 dark:text-white">{filteredItems.length}</span>
+          <span class="mx-2 text-gray-500 dark:text-gray-400">/</span>
+          <span class="ml-4 flex items-center space-x-1">
+            <Label for="itemsPerPage" class="text-sm font-medium text-gray-700 dark:text-gray-300">{$translations.meetingsPerPage}</Label>
+            <Select id="itemsPerPage" items={itemsPerPageItems} bind:value={itemsPerPage} name="itemsPerPage" class="w-20 dark:bg-gray-600" on:change={updateItemsPerPage} />
+          </span>
         </span>
-      </span>
-      <ButtonGroup>
-        <Button on:click={loadPreviousPage} disabled={currentPosition === 0}>
-          <ChevronLeftOutline size="xs" class="m-1.5" />
-        </Button>
-        {#each pagesToShow as pageNumber}
-          <Button on:click={() => goToPage(pageNumber)}>{pageNumber}</Button>
-        {/each}
-        <Button on:click={loadNextPage} disabled={currentPosition + itemsPerPage >= filteredItems.length}>
-          <ChevronRightOutline size="xs" class="m-1.5" />
-        </Button>
-      </ButtonGroup>
-    {/if}
-  </div>
+        <ButtonGroup>
+          <Button on:click={loadPreviousPage} disabled={currentPosition === 0}>
+            <ChevronLeftOutline size="xs" class="m-1.5" />
+          </Button>
+          {#each pagesToShow as pageNumber}
+            <Button on:click={() => goToPage(pageNumber)}>{pageNumber}</Button>
+          {/each}
+          <Button on:click={loadNextPage} disabled={currentPosition + itemsPerPage >= filteredItems.length}>
+            <ChevronRightOutline size="xs" class="m-1.5" />
+          </Button>
+        </ButtonGroup>
+      {/if}
+    </div>
+  {/snippet}
 </TableSearch>
 
 <MeetingEditModal bind:showModal {selectedMeeting} {serviceBodies} {formats} on:saved={onSaved} on:close={closeModal} on:deleted={onDeleted} />

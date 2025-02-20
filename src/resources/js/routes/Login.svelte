@@ -11,7 +11,7 @@
   }
 
   onMount(() => {
-    // If someone browses to this page while we are already logged in, just redirect
+    // If someone browses to this page while we are already logged in, redirect
     if ($apiCredentials) {
       redirect();
     }

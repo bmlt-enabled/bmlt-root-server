@@ -4,10 +4,14 @@
 
   import { translations } from '../stores/localization';
 
-  export let duration: string = '00:00';
+  interface Props {
+    duration?: string;
+  }
+
+  let { duration = '00:00' }: Props = $props();
 
   const dispatch = createEventDispatcher();
-  let [hours, minutes] = duration.split(':').map((part) => part.padStart(2, '0'));
+  let [hours, minutes] = $state(duration.split(':').map((part) => part.padStart(2, '0')));
   const hourOptions = Array.from({ length: 24 }, (_, i) => ({
     value: i.toString().padStart(2, '0'),
     name: i.toString().padStart(2, '0')

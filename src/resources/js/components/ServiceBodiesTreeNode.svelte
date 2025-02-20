@@ -1,4 +1,5 @@
 <script lang="ts">
+  import ServiceBodiesTreeNode from './ServiceBodiesTreeNode.svelte';
   import { Checkbox, Label } from 'flowbite-svelte';
 
   import { createEventDispatcher } from 'svelte';
@@ -12,7 +13,11 @@
     children?: TreeNode[];
   }
 
-  export let tree: TreeNode;
+  interface Props {
+    tree: TreeNode;
+  }
+
+  let { tree = $bindable() }: Props = $props();
 
   const dispatch = createEventDispatcher<{ toggle: { node: TreeNode } }>();
   const toggleExpansion = () => {
@@ -32,7 +37,7 @@
     {#if tree.children}
       <div class="flex items-center space-x-2">
         {#if tree.children.length > 0}
-          <button type="button" on:click={toggleExpansion} class="arrow" class:arrowDown={tree.expanded} aria-expanded={tree.expanded} aria-label="Toggle node"></button>
+          <button type="button" onclick={toggleExpansion} class="arrow" class:arrowDown={tree.expanded} aria-expanded={tree.expanded} aria-label="Toggle node"></button>
         {/if}
         <Checkbox id={tree.value} data-label={tree.label} checked={tree.checked} indeterminate={tree.indeterminate} on:click={toggleCheck} />
         <Label for={tree.value} class="ml-2">{tree.label}</Label>
@@ -41,7 +46,7 @@
         <ul>
           {#each tree.children as child}
             <li>
-              <svelte:self tree={child} on:toggle />
+              <ServiceBodiesTreeNode tree={child} on:toggle />
             </li>
           {/each}
         </ul>

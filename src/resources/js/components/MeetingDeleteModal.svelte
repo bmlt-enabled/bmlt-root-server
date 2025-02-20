@@ -4,8 +4,12 @@
   import type { Meeting } from 'bmlt-root-server-client';
   import MeetingDeleteForm from './MeetingDeleteForm.svelte';
 
-  export let showDeleteModal: boolean;
-  export let deleteMeeting: Meeting;
+  interface Props {
+    showDeleteModal: boolean;
+    deleteMeeting: Meeting;
+  }
+
+  let { showDeleteModal = $bindable(), deleteMeeting }: Props = $props();
 </script>
 
 <Modal bind:open={showDeleteModal} size="sm" outsideclose>

@@ -6,12 +6,17 @@
   import { isDirty } from '../lib/utils';
   import UnsavedChangesModal from './UnsavedChangesModal.svelte';
 
-  export let showModal: boolean;
-  export let selectedServiceBody: ServiceBody | null;
-  export let serviceBodies: ServiceBody[];
-  export let users: User[];
+  interface Props {
+    showModal: boolean;
+    selectedServiceBody: ServiceBody | null;
+    serviceBodies: ServiceBody[];
+    users: User[];
+    onSaveSuccess?: (serviceBody: ServiceBody) => void; // Callback function prop
+  }
 
-  let showConfirmModal = false;
+  let { showModal = $bindable(), selectedServiceBody, serviceBodies, users, onSaveSuccess }: Props = $props();
+
+  let showConfirmModal = $state(false);
   let forceClose = false;
 
   function handleClose() {
@@ -42,18 +47,18 @@
     }
   }
 
-  $: {
+  $effect(() => {
     if (showModal) {
       document.addEventListener('mousedown', handleOutsideClick);
     } else {
       document.removeEventListener('mousedown', handleOutsideClick);
     }
-  }
+  });
 </script>
 
 <Modal bind:open={showModal} size="sm" class="modal-content">
   <div class="p-4">
-    <ServiceBodyForm {serviceBodies} {selectedServiceBody} {users} on:saved />
+    <ServiceBodyForm {serviceBodies} {selectedServiceBody} {users} {onSaveSuccess} />
   </div>
 </Modal>
 

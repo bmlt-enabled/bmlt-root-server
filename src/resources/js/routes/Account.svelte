@@ -16,9 +16,9 @@
   import type { ServiceBody, User } from 'bmlt-root-server-client';
   import BasicAccordion from '../components/BasicAccordion.svelte';
 
-  let serviceBodies: ServiceBody[] = [];
-  let serviceBodiesLoaded = false;
-  let editableServiceBodyNames: string[] = [];
+  let serviceBodies: ServiceBody[] = $state([]);
+  let serviceBodiesLoaded = $state(false);
+  let editableServiceBodyNames: string[] = $state([]);
 
   const dispatch = createEventDispatcher<{ saved: { user: User } }>();
   let userType = 'unknown';
@@ -46,7 +46,7 @@
     // type and ownerId aren't changed and aren't in the form (we're using partialUserUpdate)
   };
   let savedUser: User;
-  let savedData: { displayName: string; userType: string; email: string; username: string; description: string; password: string };
+  let savedData: { displayName: string; userType: string; email: string; username: string; description: string; password: string } = $state();
 
   const { data, errors, form, isDirty, reset } = createForm({
     initialValues: initialValues,
@@ -163,7 +163,7 @@
     getServiceBodies();
   });
 
-  $: {
+  $effect(() => {
     const id = $authenticatedUser?.id;
     if (serviceBodiesLoaded && id) {
       const editableServiceBodies: Set<ServiceBody> = new Set();
@@ -193,9 +193,8 @@
         .map((s) => s.name)
         .sort();
     }
-  }
-
-  $: isDirty.set(savedData ? formIsDirty(savedData, $data) : formIsDirty(initialValues, $data));
+    isDirty.set(savedData ? formIsDirty(savedData, $data) : formIsDirty(initialValues, $data));
+  });
 </script>
 
 <Nav />
@@ -271,8 +270,10 @@
         {:else if editableServiceBodyNames.length === 0}
           {$translations.none}
         {:else}
-          <Listgroup items={editableServiceBodyNames} let:item>
-            {item}
+          <Listgroup items={editableServiceBodyNames}>
+            {#snippet children({ item })}
+              {item}
+            {/snippet}
           </Listgroup>
         {/if}
       </BasicAccordion>

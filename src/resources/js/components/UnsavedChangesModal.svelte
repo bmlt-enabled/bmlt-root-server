@@ -3,7 +3,11 @@
   import { Modal, Button, P } from 'flowbite-svelte';
   import { translations } from '../stores/localization';
 
-  export let open: boolean;
+  interface Props {
+    open: boolean;
+  }
+
+  let { open = $bindable() }: Props = $props();
 
   const dispatch = createEventDispatcher();
 

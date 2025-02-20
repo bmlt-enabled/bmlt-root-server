@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import Router from 'svelte-spa-router';
   import { push } from 'svelte-spa-router';
   import { wrap } from 'svelte-spa-router/wrap';
@@ -62,9 +64,11 @@
     }
   }
 
-  $: if (!$apiCredentials) {
-    push('/login');
-  }
+  run(() => {
+    if (!$apiCredentials) {
+      push('/login');
+    }
+  });
 </script>
 
 <svelte:head>

@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import { Modal } from 'flowbite-svelte';
   import { get } from 'svelte/store';
   import { createEventDispatcher } from 'svelte';
@@ -8,16 +10,20 @@
   import { isDirty } from '../lib/utils';
   import UnsavedChangesModal from './UnsavedChangesModal.svelte';
 
-  export let showModal: boolean;
-  export let selectedMeeting: Meeting | null;
-  export let formats: Format[];
-  export let serviceBodies: ServiceBody[];
+  interface Props {
+    showModal: boolean;
+    selectedMeeting: Meeting | null;
+    formats: Format[];
+    serviceBodies: ServiceBody[];
+  }
+
+  let { showModal = $bindable(), selectedMeeting, formats, serviceBodies }: Props = $props();
 
   const dispatch = createEventDispatcher<{
     deleted: { meetingId: number };
     saved: { meeting: Meeting };
   }>();
-  let showConfirmModal = false;
+  let showConfirmModal = $state(false);
   let forceClose = false;
 
   function handleClose() {
@@ -48,13 +54,13 @@
     }
   }
 
-  $: {
+  run(() => {
     if (showModal) {
       document.addEventListener('mousedown', handleOutsideClick);
     } else {
       document.removeEventListener('mousedown', handleOutsideClick);
     }
-  }
+  });
 
   function onSaved(event: CustomEvent<{ meeting: Meeting }>) {
     dispatch('saved', { meeting: event.detail.meeting });

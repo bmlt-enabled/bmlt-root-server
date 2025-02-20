@@ -7,11 +7,16 @@
   import { isDirty } from '../lib/utils';
   import UnsavedChangesModal from './UnsavedChangesModal.svelte';
 
-  export let showModal: boolean;
-  export let selectedUser: User | null;
-  export let users: User[];
+  interface Props {
+    showModal: boolean;
+    selectedUser: User | null;
+    users: User[];
+    onSaveSuccess?: (user: User) => void; // Callback function prop
+  }
 
-  let showConfirmModal = false;
+  let { showModal = $bindable(), selectedUser, users, onSaveSuccess }: Props = $props();
+
+  let showConfirmModal = $state(false);
   let forceClose = false;
 
   function handleClose() {
@@ -42,18 +47,18 @@
     }
   }
 
-  $: {
+  $effect(() => {
     if (showModal) {
       document.addEventListener('mousedown', handleOutsideClick);
     } else {
       document.removeEventListener('mousedown', handleOutsideClick);
     }
-  }
+  });
 </script>
 
 <Modal bind:open={showModal} size="sm" class="modal-content">
   <div class="p-2">
-    <UserForm {users} {selectedUser} on:saved />
+    <UserForm {users} {selectedUser} {onSaveSuccess} />
   </div>
 </Modal>
 
