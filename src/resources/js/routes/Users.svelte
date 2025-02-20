@@ -14,14 +14,14 @@
   import type { User } from 'bmlt-root-server-client';
   import UserForm from '../components/UserForm.svelte';
 
-  let isLoaded = false;
-  let users: User[] = [];
-  let filteredUsers: User[] = [];
-  let showModal = false;
-  let showDeleteModal = false;
-  let searchTerm = '';
-  let selectedUser: User | null;
-  let deleteUser: User;
+  let isLoaded = $state(false);
+  let users: User[] = $state([]);
+  let filteredUsers: User[] = $state([]);
+  let showModal = $state(false);
+  let showDeleteModal = $state(false);
+  let searchTerm = $state('');
+  let selectedUser: User | null = $state(null);
+  let deleteUser: User | null = $state(null);
 
   async function getUsers(): Promise<void> {
     try {
@@ -51,8 +51,7 @@
     showDeleteModal = true;
   }
 
-  function onSaved(event: CustomEvent<{ user: User }>) {
-    const user = event.detail.user;
+  function onSaved(user: User) {
     const i = users.findIndex((u) => u.id === user.id);
     if (i === -1) {
       users = [...users, user];
@@ -62,8 +61,8 @@
     closeModal();
   }
 
-  function onDeleted(event: CustomEvent<{ userId: number }>) {
-    users = users.filter((u) => u.id !== event.detail.userId);
+  function onDeleted(user: User) {
+    users = users.filter((u) => u.id !== user.id);
     showDeleteModal = false;
   }
 
@@ -77,12 +76,12 @@
 
   onMount(getUsers);
 
-  $: {
+  $effect(() => {
     filteredUsers = users
       .sort((u1, u2) => u1.displayName.localeCompare(u2.displayName))
       .filter((u) => u.id !== $authenticatedUser?.id)
       .filter((u) => u.displayName.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
-  }
+  });
 </script>
 
 <Nav />
@@ -97,7 +96,7 @@
             {#if $authenticatedUser?.type === 'admin'}
               <div class="flex">
                 <div class="mt-2.5 grow">Name</div>
-                <div><Button on:click={() => handleAdd()} class="whitespace-nowrap" aria-label={$translations.addUser}>{$translations.addUser}</Button></div>
+                <div><Button onclick={() => handleAdd()} class="whitespace-nowrap" aria-label={$translations.addUser}>{$translations.addUser}</Button></div>
               </div>
             {:else}
               {$translations.nameTitle}
@@ -105,12 +104,12 @@
           </TableHeadCell>
         </TableHead>
         <TableBody>
-          {#each filteredUsers as user}
-            <TableBodyRow on:click={() => handleEdit(user)} class="cursor-pointer" aria-label={$translations.editUser}>
+          {#each filteredUsers as user (user.id)}
+            <TableBodyRow onclick={() => handleEdit(user)} class="cursor-pointer" aria-label={$translations.editUser}>
               <TableBodyCell class="whitespace-normal">{user.displayName}</TableBodyCell>
               {#if $authenticatedUser?.type === 'admin'}
                 <TableBodyCell class="text-right">
-                  <Button color="none" on:click={(e) => handleDelete(e, user)} class="text-blue-700 dark:text-blue-500" aria-label={$translations.deleteUser + ' ' + user.displayName}>
+                  <Button color="none" onclick={(e: MouseEvent) => handleDelete(e, user)} class="text-blue-700 dark:text-blue-500" aria-label={$translations.deleteUser + ' ' + user.displayName}>
                     <TrashBinOutline title={{ id: 'deleteUser', title: $translations.deleteUser }} ariaLabel={$translations.deleteUser} />
                   </Button>
                 </TableBodyCell>
@@ -121,7 +120,7 @@
       </TableSearch>
     {:else if $authenticatedUser?.type === 'admin'}
       <div class="p-2">
-        <UserForm {users} {selectedUser} on:saved={onSaved} />
+        <UserForm {users} {selectedUser} onSaveSuccess={onSaved} />
       </div>
     {:else}
       <P class="text-center">{$translations.noUsersTitle}</P>
@@ -129,5 +128,7 @@
   {/if}
 </div>
 
-<UserModal bind:showModal {users} {selectedUser} on:saved={onSaved} on:close={closeModal} />
-<UserDeleteModal bind:showDeleteModal {deleteUser} on:deleted={onDeleted} />
+<UserModal bind:showModal {users} {selectedUser} onSaveSuccess={onSaved} onClose={closeModal} />
+{#if deleteUser}
+  <UserDeleteModal bind:showDeleteModal {deleteUser} onDeleteSuccess={onDeleted} />
+{/if}

@@ -3,8 +3,6 @@
   import { createForm } from 'felte';
   import { Button, Helper, Input, Label, Select } from 'flowbite-svelte';
   import BasicAccordion from './BasicAccordion.svelte';
-
-  import { createEventDispatcher } from 'svelte';
   import * as yup from 'yup';
 
   import { spinner } from '../stores/spinner';
@@ -13,14 +11,19 @@
   import type { Format } from 'bmlt-root-server-client';
   import { translations } from '../stores/localization';
 
-  export let selectedFormat: Format | null;
-  export let reservedFormatKeys: string[];
+  interface Props {
+    selectedFormat: Format | null;
+    reservedFormatKeys: string[];
+    onSaveSuccess?: (format: Format) => void; // Callback function prop
+  }
+
+  let { selectedFormat, reservedFormatKeys, onSaveSuccess }: Props = $props();
 
   const globalSettings = settings;
   const mappings = globalSettings.languageMapping;
   const allLanguages: string[] = Object.getOwnPropertyNames(mappings);
 
-  const initialValues: any = { worldId: '', type: '' };
+  const initialValues: any = $state({ worldId: '', type: '' });
   if (selectedFormat && selectedFormat.worldId) {
     initialValues.worldId = selectedFormat.worldId;
   }
@@ -28,7 +31,7 @@
     initialValues.type = selectedFormat.type;
   }
   // true if no format translations were entered (bit of a hack to allow an appropriate error message to be displayed)
-  let noFormatTranslations: boolean;
+  let noFormatTranslations: boolean = $state(false);
 
   const yupSchema: any = {};
 
@@ -96,7 +99,6 @@
   }
 
   let savedFormat: Format;
-  const dispatch = createEventDispatcher<{ saved: { format: Format } }>();
   const { data, errors, form, isDirty } = createForm({
     initialValues: initialValues,
     onSubmit: async (values) => {
@@ -155,7 +157,7 @@
     },
     onSuccess: () => {
       spinner.hide();
-      dispatch('saved', { format: savedFormat });
+      onSaveSuccess?.(savedFormat); // Call the callback function instead of dispatch
     },
     extend: validator({ schema: yup.object(yupSchema), castValues: true })
   });
@@ -183,7 +185,9 @@
     }
   }
 
-  $: isDirty.set(formIsDirty(initialValues, $data));
+  $effect(() => {
+    isDirty.set(formIsDirty(initialValues, $data));
+  });
 </script>
 
 <form use:form>
@@ -195,7 +199,7 @@
       </div>
     {/if}
     <div class="md:col-span-2">
-      {#each allLanguages as lang}
+      {#each allLanguages as lang (lang)}
         <BasicAccordion header={mappings[lang]} open={$translations.getLanguage() === lang} label={'Toggle accordion ' + lang}>
           <div>
             <Label for="{lang}_key" class="mb-2" aria-label="{lang} key">{getLabel('keyTitle', lang)}</Label>
@@ -243,7 +247,7 @@
       <Select id="type" items={$translations.formatTypeCodes} name="type" class="dark:bg-gray-600" />
     </div>
     <div class="md:col-span-2">
-      <Button type="submit" class="w-full" disabled={!$isDirty} on:click={disableButtonHack}>
+      <Button type="submit" class="w-full" disabled={!$isDirty} onclick={disableButtonHack}>
         {#if selectedFormat}
           {$translations.applyChangesTitle}
         {:else}

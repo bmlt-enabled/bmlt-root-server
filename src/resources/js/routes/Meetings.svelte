@@ -8,10 +8,10 @@
   import type { Format, ServiceBody } from 'bmlt-root-server-client';
   import MeetingsList from '../components/MeetingsList.svelte';
 
-  let serviceBodies: ServiceBody[] = [];
-  let formats: Format[] = [];
-  let serviceBodiesLoaded = false;
-  let formatsLoaded = false;
+  let serviceBodies: ServiceBody[] = $state([]);
+  let formats: Format[] = $state([]);
+  let serviceBodiesLoaded = $state(false);
+  let formatsLoaded = $state(false);
 
   async function getServiceBodies(): Promise<void> {
     try {

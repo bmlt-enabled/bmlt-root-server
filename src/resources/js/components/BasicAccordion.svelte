@@ -1,7 +1,12 @@
 <script lang="ts">
-  export let header: string;
-  export let open: boolean = false;
-  export let label: string = 'Toggle accordion';
+  interface Props {
+    header: string;
+    open?: boolean;
+    label?: string;
+    children?: import('svelte').Snippet;
+  }
+
+  let { header, open = $bindable(false), label = 'Toggle accordion', children }: Props = $props();
 
   function accordionToggle() {
     open = !open;
@@ -14,8 +19,8 @@
     aria-expanded={open}
     aria-label={label}
     class="flex w-full items-center justify-between rounded-md px-4 py-4 text-left text-sm font-semibold text-gray-300 hover:bg-gray-700 focus:outline-none"
-    on:click={accordionToggle}
-    on:keydown={(e) => (e.key === 'Enter' || e.key === ' ') && accordionToggle()}
+    onclick={accordionToggle}
+    onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && accordionToggle()}
   >
     <span class="w-full">{header}</span>
 
@@ -31,7 +36,7 @@
   </button>
 
   <div class={open ? 'w-full bg-gray-800 px-4 py-2 text-gray-200' : 'hidden'}>
-    <slot />
+    {@render children?.()}
   </div>
 
   <div class="w-full border-t border-gray-700"></div>

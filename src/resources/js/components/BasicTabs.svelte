@@ -1,28 +1,39 @@
 <script lang="ts">
   import { Button, Indicator } from 'flowbite-svelte';
-  import { createEventDispatcher } from 'svelte';
+  import type { Snippet } from 'svelte';
 
-  export let tabs: string[] = [];
-  export let errorTabs: string[] = [];
-  export let inactiveClasses: string = 'p-4 text-primary-600 bg-gray-100 rounded-t-lg dark:bg-gray-700 dark:text-gray-200 px-3.5 py-2.5 text-xs sm:px-5 sm:py-3 sm:text-sm relative';
-  export let activeClasses: string =
-    'p-4 text-gray-500 bg-white rounded-t-lg hover:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white px-3.5 py-2.5 text-xs sm:px-5 sm:py-3 sm:text-sm relative';
+  interface Props {
+    changeActiveTab: (index: number) => void;
+    tabs: string[];
+    errorTabs: string[];
+    tabsSnippets: Snippet[];
+    inactiveClasses?: string;
+    activeClasses?: string;
+    activeTab?: number;
+  }
 
-  export let activeTab: number = 0;
-  const dispatch = createEventDispatcher<{ change: { index: number } }>();
+  let {
+    changeActiveTab,
+    tabs,
+    errorTabs,
+    tabsSnippets,
+    inactiveClasses = 'p-4 text-primary-600 bg-gray-100 rounded-t-lg dark:bg-gray-700 dark:text-gray-200 px-3.5 py-2.5 text-xs sm:px-5 sm:py-3 sm:text-sm relative',
+    activeClasses = 'p-4 text-gray-500 bg-white rounded-t-lg hover:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white px-3.5 py-2.5 text-xs sm:px-5 sm:py-3 sm:text-sm relative',
+    activeTab = 0
+  }: Props = $props();
 
   function setActiveTab(index: number) {
-    dispatch('change', { index });
+    changeActiveTab(index);
     activeTab = index;
   }
 </script>
 
 <div>
   <div class="flex flex-wrap space-x-2 border-b sm:space-x-3">
-    {#each tabs as tab, index}
+    {#each tabs as tab, index (index)}
       <Button
         color={activeTab === index ? 'light' : 'dark'}
-        on:click={() => setActiveTab(index)}
+        onclick={() => setActiveTab(index)}
         class={activeTab === index ? inactiveClasses : activeClasses}
         aria-selected={activeTab === index}
         aria-label={tab}
@@ -36,17 +47,10 @@
     {/each}
   </div>
   <div class="mt-4">
-    <div class={activeTab === 0 ? '' : 'hidden'}>
-      <slot name="tab-content-0" />
-    </div>
-    <div class={activeTab === 1 ? '' : 'hidden'}>
-      <slot name="tab-content-1" />
-    </div>
-    <div class={activeTab === 2 ? '' : 'hidden'}>
-      <slot name="tab-content-2" />
-    </div>
-    <div class={activeTab === 3 ? '' : 'hidden'}>
-      <slot name="tab-content-3" />
-    </div>
+    {#each tabsSnippets as s, i}
+      <div class={activeTab === i ? '' : 'hidden'}>
+        {@render s()}
+      </div>
+    {/each}
   </div>
 </div>

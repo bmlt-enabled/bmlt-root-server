@@ -16,14 +16,14 @@
 
   const reservedFormatKeys = ['HY', 'TC', 'VM'];
 
-  let isLoaded = false;
-  let formats: Format[] = [];
-  let filteredFormats: Format[] = [];
-  let showModal = false;
-  let showDeleteModal = false;
-  let searchTerm = '';
-  let selectedFormat: Format | null;
-  let deleteFormat: Format;
+  let isLoaded = $state(false);
+  let formats: Format[] = $state([]);
+  let filteredFormats: Format[] = $state([]);
+  let showModal = $state(false);
+  let showDeleteModal = $state(false);
+  let searchTerm = $state('');
+  let selectedFormat: Format | null = $state(null);
+  let deleteFormat: Format | null = $state(null);
 
   const language = translations.getLanguage();
 
@@ -56,8 +56,7 @@
     showDeleteModal = true;
   }
 
-  function onSaved(event: CustomEvent<{ format: Format }>) {
-    const format = event.detail.format;
+  function onSaved(format: Format) {
     const i = formats.findIndex((f) => f.id === format.id);
     if (i === -1) {
       formats = [...formats, format].sort((a, b) => getFormatName(a).localeCompare(getFormatName(b)));
@@ -67,8 +66,8 @@
     closeModal();
   }
 
-  function onDeleted(event: CustomEvent<{ formatId: number }>) {
-    formats = formats.filter((f) => f.id !== event.detail.formatId);
+  function onDeleted(format: Format) {
+    formats = formats.filter((f) => f.id !== format.id);
     showDeleteModal = false;
   }
 
@@ -105,12 +104,12 @@
 
   onMount(getFormats);
 
-  $: {
+  $effect(() => {
     // prettier-ignore
     filteredFormats = formats
-      .sort((f1, f2) => getFormatName(f1).localeCompare(getFormatName(f2)))
-      .filter((f) => getFormatName(f).toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
-  }
+          .sort((f1, f2) => getFormatName(f1).localeCompare(getFormatName(f2)))
+          .filter((f) => getFormatName(f).toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
+  });
 
   // In the HTML below, we can assume that the authenticatedUser is the admin -- if not, just show a blank page.
   // Formats won't appear in the nav bar, but somebody could get to this page directly.  (There isn't any private
@@ -128,19 +127,19 @@
           <TableHeadCell colspan={2}>
             <div class="flex">
               <div class="mt-2.5 grow">{$translations.nameTitle}</div>
-              <div><Button on:click={() => handleAdd()} class="whitespace-nowrap" aria-label={$translations.addFormat}>{$translations.addFormat}</Button></div>
+              <div><Button onclick={() => handleAdd()} class="whitespace-nowrap" aria-label={$translations.addFormat}>{$translations.addFormat}</Button></div>
             </div>
           </TableHeadCell>
         </TableHead>
         <TableBody>
-          {#each filteredFormats as format}
-            <TableBodyRow on:click={() => handleEdit(format)} class="cursor-pointer" aria-label={$translations.editFormat}>
+          {#each filteredFormats as format (format.id)}
+            <TableBodyRow onclick={() => handleEdit(format)} class="cursor-pointer" aria-label={$translations.editFormat}>
               <TableBodyCell class="whitespace-normal">{getFormatName(format)}</TableBodyCell>
               {#if $authenticatedUser?.type === 'admin'}
                 <TableBodyCell class="text-right">
                   <Button
                     color="none"
-                    on:click={(e) => handleDelete(e, format)}
+                    onclick={(e: MouseEvent) => handleDelete(e, format)}
                     class="text-blue-700 dark:text-blue-500"
                     disabled={isReserved(format)}
                     aria-label={$translations.deleteFormat + ' ' + getFormatName(format)}
@@ -155,11 +154,13 @@
       </TableSearch>
     {:else}
       <div class="p-2">
-        <FormatForm {selectedFormat} {reservedFormatKeys} on:saved={onSaved} />
+        <FormatForm {selectedFormat} {reservedFormatKeys} onSaveSuccess={onSaved} />
       </div>
     {/if}
   {/if}
 </div>
 
-<FormatModal bind:showModal {selectedFormat} {reservedFormatKeys} on:saved={onSaved} on:close={closeModal} />
-<FormatDeleteModal bind:showDeleteModal {deleteFormat} formatName={deleteFormat ? getFormatName(deleteFormat) : ''} on:deleted={onDeleted} />
+<FormatModal bind:showModal {selectedFormat} {reservedFormatKeys} onSaveSuccess={onSaved} onClose={closeModal} />
+{#if deleteFormat}
+  <FormatDeleteModal bind:showDeleteModal {deleteFormat} formatName={deleteFormat ? getFormatName(deleteFormat) : ''} onDeleteSuccess={onDeleted} />
+{/if}
