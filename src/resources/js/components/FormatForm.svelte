@@ -199,7 +199,7 @@
       </div>
     {/if}
     <div class="md:col-span-2">
-      {#each allLanguages as lang}
+      {#each allLanguages as lang (lang)}
         <BasicAccordion header={mappings[lang]} open={$translations.getLanguage() === lang} label={'Toggle accordion ' + lang}>
           <div>
             <Label for="{lang}_key" class="mb-2" aria-label="{lang} key">{getLabel('keyTitle', lang)}</Label>

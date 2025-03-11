@@ -1010,7 +1010,7 @@
           {/if}
         </div>
       </div>
-      {#each globalSettings.customFields as { name, displayName }}
+      {#each globalSettings.customFields as { name, displayName } (name)}
         <div class="grid gap-4 md:grid-cols-2">
           <div class="md:col-span-2">
             <Label for={name} class="mb-2 mt-2">{displayName}</Label>
@@ -1028,7 +1028,7 @@
     <div slot="tab-content-3">
       {#if changesLoaded && changes.length > 0}
         <div class="space-y-3">
-          {#each changes as { dateString, details, userName }}
+          {#each changes as { dateString, details, userName } (userName)}
             <div class="rounded-lg bg-gray-100 p-3 shadow-sm dark:bg-gray-800">
               <div class="mb-0 flex items-center justify-between">
                 <h6 class="text-lg font-semibold text-gray-900 dark:text-white">
@@ -1039,7 +1039,7 @@
               </div>
               {#if details && details.length > 0}
                 <ul class="mt-1 space-y-1">
-                  {#each details as detail}
+                  {#each details as detail (detail)}
                     <li class="text-sm text-gray-600 dark:text-gray-400">
                       {detail.trim()}
                     </li>

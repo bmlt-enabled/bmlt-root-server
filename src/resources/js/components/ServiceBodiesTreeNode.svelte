@@ -44,7 +44,7 @@
       </div>
       {#if tree.expanded}
         <ul>
-          {#each tree.children as child}
+          {#each tree.children as child (child)}
             <li>
               <ServiceBodiesTreeNode tree={child} on:toggle />
             </li>

@@ -20,7 +20,7 @@
 
 <div>
   <div class="flex flex-wrap space-x-2 border-b sm:space-x-3">
-    {#each tabs as tab, index}
+    {#each tabs as tab, index (index)}
       <Button
         color={activeTab === index ? 'light' : 'dark'}
         on:click={() => setActiveTab(index)}

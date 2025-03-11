@@ -406,7 +406,7 @@
           <Button on:click={loadPreviousPage} disabled={currentPosition === 0}>
             <ChevronLeftOutline size="xs" class="m-1.5" />
           </Button>
-          {#each pagesToShow as pageNumber}
+          {#each pagesToShow as pageNumber (pageNumber)}
             <Button on:click={() => goToPage(pageNumber)}>{pageNumber}</Button>
           {/each}
           <Button on:click={loadNextPage} disabled={currentPosition + itemsPerPage >= filteredItems.length}>

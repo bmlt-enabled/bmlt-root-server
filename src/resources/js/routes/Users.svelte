@@ -104,7 +104,7 @@
           </TableHeadCell>
         </TableHead>
         <TableBody>
-          {#each filteredUsers as user}
+          {#each filteredUsers as user (user.id)}
             <TableBodyRow on:click={() => handleEdit(user)} class="cursor-pointer" aria-label={$translations.editUser}>
               <TableBodyCell class="whitespace-normal">{user.displayName}</TableBodyCell>
               {#if $authenticatedUser?.type === 'admin'}

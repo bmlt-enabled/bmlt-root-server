@@ -132,7 +132,7 @@
           </TableHeadCell>
         </TableHead>
         <TableBody>
-          {#each filteredFormats as format}
+          {#each filteredFormats as format (format.id)}
             <TableBodyRow on:click={() => handleEdit(format)} class="cursor-pointer" aria-label={$translations.editFormat}>
               <TableBodyCell class="whitespace-normal">{getFormatName(format)}</TableBodyCell>
               {#if $authenticatedUser?.type === 'admin'}

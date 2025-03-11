@@ -138,7 +138,7 @@
           </TableHeadCell>
         </TableHead>
         <TableBody>
-          {#each filteredServiceBodies as serviceBody}
+          {#each filteredServiceBodies as serviceBody (serviceBody.id)}
             <TableBodyRow on:click={() => handleEdit(serviceBody)} class="cursor-pointer" aria-label={$translations.editUser}>
               <TableBodyCell class="whitespace-normal">{serviceBody.name}</TableBodyCell>
               {#if $authenticatedUser?.type === 'admin'}
