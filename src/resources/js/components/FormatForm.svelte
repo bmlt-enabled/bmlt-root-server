@@ -31,7 +31,7 @@
     initialValues.type = selectedFormat.type;
   }
   // true if no format translations were entered (bit of a hack to allow an appropriate error message to be displayed)
-  let noFormatTranslations: boolean = $state(null);
+  let noFormatTranslations: boolean = $state(false);
 
   const yupSchema: any = {};
 

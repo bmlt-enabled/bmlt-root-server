@@ -13,6 +13,18 @@
   import { translations } from '../stores/localization';
   import { authenticatedUser } from '../stores/apiCredentials';
 
+  import type { SelectOptionType } from 'flowbite-svelte';
+
+  type SelectOptionType<T = any> = {
+      value: T;
+      name: string;
+  };
+
+  type MultiSelectSnippetProps = {
+      item: SelectOptionType<string | number>;
+      clear: () => void;
+  };
+
   interface Props {
     selectedServiceBody: ServiceBody | null;
     serviceBodies: ServiceBody[];
@@ -200,7 +212,7 @@
     <div class="md:col-span-2">
       <Label for="assignedUserIds" class="mb-2">{$translations.meetingListEditorsTitle}</Label>
       <MultiSelect id="assignedUserIds" items={userItems} name="assignedUserIds" class="bg-gray-50 dark:bg-gray-600" bind:value={assignedUserIdsSelected}>
-        {#snippet children({ item, clear })}
+         {#snippet children({ item, clear }: MultiSelectSnippetProps)}
           <Badge rounded color={badgeColor(item.value)} dismissable params={{ duration: 100 }} on:close={clear}>
             {item.name}
           </Badge>
