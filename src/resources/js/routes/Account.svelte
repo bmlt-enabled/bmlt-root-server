@@ -1,6 +1,5 @@
 <script lang="ts">
   import { Button, Helper, Input, Label, Listgroup } from 'flowbite-svelte';
-  import { createEventDispatcher } from 'svelte';
   import { createForm } from 'felte';
 
   import { onMount } from 'svelte';
@@ -20,7 +19,6 @@
   let serviceBodiesLoaded = $state(false);
   let editableServiceBodyNames: string[] = $state([]);
 
-  const dispatch = createEventDispatcher<{ saved: { user: User } }>();
   let userType = 'unknown';
   switch ($authenticatedUser?.type) {
     case 'serviceBodyAdmin':
@@ -46,7 +44,7 @@
     // type and ownerId aren't changed and aren't in the form (we're using partialUserUpdate)
   };
   let savedUser: User;
-  let savedData: { displayName: string; userType: string; email: string; username: string; description: string; password: string } = $state();
+  let savedData: { displayName: string; userType: string; email: string; username: string; description: string; password: string } | undefined = $state();
 
   const { data, errors, form, isDirty, reset } = createForm({
     initialValues: initialValues,
@@ -84,7 +82,6 @@
     },
     onSuccess: () => {
       spinner.hide();
-      dispatch('saved', { user: savedUser });
     },
     extend: validator({
       schema: yup.object({
@@ -127,45 +124,15 @@
     })
   });
 
-  // This hack is required until https://github.com/themesberg/flowbite-svelte/issues/1395 is fixed.
-  function disableButtonHack(event: MouseEvent) {
-    if (!$isDirty) {
-      event.preventDefault();
-    }
-  }
-
   async function getServiceBodies(): Promise<void> {
+    const id = $authenticatedUser?.id;
+    if (!id) {
+      throw new Error('internal error - trying to access account information without an authenticated user');
+    }
     try {
       spinner.show();
       serviceBodies = await RootServerApi.getServiceBodies();
       serviceBodiesLoaded = true;
-    } catch (error: any) {
-      await RootServerApi.handleErrors(error);
-    } finally {
-      spinner.hide();
-    }
-  }
-
-  // helper function to compute the set of service bodies that the currently logged in user can edit.
-  // s is the starting service body
-  // children is an array of sets of children, indexed by the id of the parent service body
-  // editableServiceBodies is the set of service bodies that is being accumulated
-  function recursivelyAddServiceBodies(s: ServiceBody, children: Set<ServiceBody>[], editableServiceBodies: Set<ServiceBody>) {
-    editableServiceBodies.add(s);
-    if (children[s.id]) {
-      for (const c of children[s.id]) {
-        recursivelyAddServiceBodies(c, children, editableServiceBodies);
-      }
-    }
-  }
-
-  onMount(() => {
-    getServiceBodies();
-  });
-
-  $effect(() => {
-    const id = $authenticatedUser?.id;
-    if (serviceBodiesLoaded && id) {
       const editableServiceBodies: Set<ServiceBody> = new Set();
       if ($authenticatedUser?.type === 'admin') {
         serviceBodies.forEach((s) => editableServiceBodies.add(s));
@@ -192,7 +159,29 @@
       editableServiceBodyNames = Array.from(editableServiceBodies)
         .map((s) => s.name)
         .sort();
+    } catch (error: any) {
+      await RootServerApi.handleErrors(error);
+    } finally {
+      spinner.hide();
     }
+  }
+
+  // helper function to compute the set of service bodies that the currently logged in user can edit.
+  // s is the starting service body
+  // children is an array of sets of children, indexed by the id of the parent service body
+  // editableServiceBodies is the set of service bodies that is being accumulated
+  function recursivelyAddServiceBodies(s: ServiceBody, children: Set<ServiceBody>[], editableServiceBodies: Set<ServiceBody>) {
+    editableServiceBodies.add(s);
+    if (children[s.id]) {
+      for (const c of children[s.id]) {
+        recursivelyAddServiceBodies(c, children, editableServiceBodies);
+      }
+    }
+  }
+
+  onMount(getServiceBodies);
+
+  $effect(() => {
     isDirty.set(savedData ? formIsDirty(savedData, $data) : formIsDirty(initialValues, $data));
   });
 </script>
@@ -259,7 +248,7 @@
           </Button>
         </div>
         <div class="w-full">
-          <Button type="submit" class="w-full" disabled={!$isDirty} on:click={disableButtonHack}>
+          <Button type="submit" class="w-full" disabled={!$isDirty}>
             {$translations.applyChangesTitle}
           </Button>
         </div>
@@ -270,10 +259,8 @@
         {:else if editableServiceBodyNames.length === 0}
           {$translations.none}
         {:else}
-          <Listgroup items={editableServiceBodyNames}>
-            {#snippet children({ item })}
-              {item}
-            {/snippet}
+          <Listgroup items={editableServiceBodyNames} let:item>
+            {item}
           </Listgroup>
         {/if}
       </BasicAccordion>
