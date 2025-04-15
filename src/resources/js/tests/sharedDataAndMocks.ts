@@ -556,6 +556,9 @@ export let mockDeletedUserId: number | null = null;
 let mockSavedUserUpdateId: number | null;
 let mockSavedUserPartialUpdateId: number | null;
 
+// if 'badUser' is true, getServiceBodies should throw an exception
+let badUser = false;
+
 function findPassword(name: string): string {
   for (let i = 0; i < allUsersAndPasswords.length; i++) {
     if (allUsersAndPasswords[i].user.username === name) {
@@ -732,6 +735,9 @@ async function mockGetServiceBody(params: { serviceBodyId: number }): Promise<Se
 }
 
 async function mockGetServiceBodies(): Promise<ServiceBody[]> {
+  if (badUser) {
+    throw new Error('bad user -- unable to get service bodies');
+  }
   const userId = get(authenticatedUser)?.id;
   if (!userId) {
     throw new Error('internal error -- trying to get service bodies when no simulated user is logged in');
@@ -947,6 +953,8 @@ export function sharedBeforeEach() {
   mockSavedMeetingCreate = null;
   mockSavedMeetingUpdate = null;
   mockDeletedMeetingId = null;
+
+  badUser = false;
 }
 
 export async function sharedAfterEach() {
@@ -984,4 +992,9 @@ export async function loginDeutsch(username: string, tab: string | null = null):
     await user.click(link);
   }
   return user;
+}
+
+export async function badLogin(username: string, tab: string | null = null): Promise<UserEventInstance> {
+  badUser = true;
+  return login(username, tab);
 }

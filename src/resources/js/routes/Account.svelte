@@ -2,7 +2,6 @@
   import { Button, Helper, Input, Label, Listgroup } from 'flowbite-svelte';
   import { createForm } from 'felte';
 
-  import { onMount } from 'svelte';
   import { validator } from '@felte/validator-yup';
   import * as yup from 'yup';
 
@@ -14,10 +13,6 @@
   import { translations } from '../stores/localization';
   import type { ServiceBody, User } from 'bmlt-root-server-client';
   import BasicAccordion from '../components/BasicAccordion.svelte';
-
-  let serviceBodies: ServiceBody[] = $state([]);
-  let serviceBodiesLoaded = $state(false);
-  let editableServiceBodyNames: string[] = $state([]);
 
   let userType = 'unknown';
   switch ($authenticatedUser?.type) {
@@ -124,46 +119,32 @@
     })
   });
 
-  async function getServiceBodies(): Promise<void> {
-    const id = $authenticatedUser?.id;
-    if (!id) {
-      throw new Error('internal error - trying to access account information without an authenticated user');
-    }
-    try {
-      spinner.show();
-      serviceBodies = await RootServerApi.getServiceBodies();
-      serviceBodiesLoaded = true;
-      const editableServiceBodies: Set<ServiceBody> = new Set();
-      if ($authenticatedUser?.type === 'admin') {
-        serviceBodies.forEach((s) => editableServiceBodies.add(s));
-      } else if ($authenticatedUser?.type === 'serviceBodyAdmin') {
-        // children is an array with indices = service body ids, values a set of children of that service body
-        // (not recursively - the recursion is handled elsewhere)
-        const children: Set<ServiceBody>[] = [];
-        for (const s of serviceBodies) {
-          const p = s.parentId;
-          if (p) {
-            if (children[p]) {
-              children[p].add(s);
-            } else {
-              children[p] = new Set([s]);
-            }
-          }
-        }
-        for (const s of serviceBodies) {
-          if (s.adminUserId === id || s.assignedUserIds.includes(id)) {
-            recursivelyAddServiceBodies(s, children, editableServiceBodies);
+  function findEditableServiceBodyNames(serviceBodies: ServiceBody[]): string[] {
+    const id = $authenticatedUser?.id as number;
+    const editableServiceBodies: Set<ServiceBody> = new Set();
+    if ($authenticatedUser?.type === 'admin') {
+      serviceBodies.forEach((s) => editableServiceBodies.add(s));
+    } else if ($authenticatedUser?.type === 'serviceBodyAdmin') {
+      // children is an array with indices = service body ids, values a set of children of that service body
+      // (not recursively - the recursion is handled elsewhere)
+      const children: Set<ServiceBody>[] = [];
+      for (const s of serviceBodies) {
+        const p = s.parentId;
+        if (p) {
+          if (children[p]) {
+            children[p].add(s);
+          } else {
+            children[p] = new Set([s]);
           }
         }
       }
-      editableServiceBodyNames = Array.from(editableServiceBodies)
-        .map((s) => s.name)
-        .sort();
-    } catch (error: any) {
-      await RootServerApi.handleErrors(error);
-    } finally {
-      spinner.hide();
+      for (const s of serviceBodies) {
+        if (s.adminUserId === id || s.assignedUserIds.includes(id)) {
+          recursivelyAddServiceBodies(s, children, editableServiceBodies);
+        }
+      }
     }
+    return Array.from(editableServiceBodies).map((s) => s.name).sort();
   }
 
   // helper function to compute the set of service bodies that the currently logged in user can edit.
@@ -179,7 +160,9 @@
     }
   }
 
-  onMount(getServiceBodies);
+  async function getServiceBodyNames() {
+    return RootServerApi.getServiceBodies().then(findEditableServiceBodyNames);
+  }
 
   $effect(() => {
     isDirty.set(savedData ? formIsDirty(savedData, $data) : formIsDirty(initialValues, $data));
@@ -243,7 +226,7 @@
       </div>
       <div class="grid gap-4 md:grid-cols-2">
         <div class="w-full">
-          <Button type="button" class="w-full" color="red" disabled={!$isDirty} on:click={reset}>
+          <Button type="button" class="w-full" color="red" disabled={!$isDirty} onclick={reset}>
             {$translations.clearFormTitle}
           </Button>
         </div>
@@ -254,15 +237,19 @@
         </div>
       </div>
       <BasicAccordion header={$translations.serviceBodiesWithEditableMeetings}>
-        {#if !serviceBodiesLoaded}
+        {#await getServiceBodyNames()}
           {$translations.loading}
-        {:else if editableServiceBodyNames.length === 0}
-          {$translations.none}
-        {:else}
-          <Listgroup items={editableServiceBodyNames} let:item>
-            {item}
-          </Listgroup>
-        {/if}
+        {:then names}
+          {#if names.length === 0}
+            {$translations.none}
+          {:else}
+            <Listgroup items={names} let:item>
+              {item}
+            </Listgroup>
+          {/if}
+        {:catch error}
+          <p style="color: red">{error.message}</p>
+        {/await}
       </BasicAccordion>
     </div>
   </form>
