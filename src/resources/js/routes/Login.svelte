@@ -18,4 +18,4 @@
   });
 </script>
 
-<LoginForm {apiCredentials} on:authenticated={redirect} />
+<LoginForm {apiCredentials} authenticated={redirect} />
