@@ -144,7 +144,9 @@
         }
       }
     }
-    return Array.from(editableServiceBodies).map((s) => s.name).sort();
+    return Array.from(editableServiceBodies)
+      .map((s) => s.name)
+      .sort();
   }
 
   // helper function to compute the set of service bodies that the currently logged in user can edit.

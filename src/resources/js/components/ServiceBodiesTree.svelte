@@ -146,6 +146,6 @@
 
 <div>
   {#each trees as tree (tree)}
-    <Node {tree} on:toggle={rebuildTree} />
+    <Node {tree} toggle={rebuildTree} />
   {/each}
 </div>

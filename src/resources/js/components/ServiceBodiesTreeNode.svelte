@@ -2,8 +2,6 @@
   import ServiceBodiesTreeNode from './ServiceBodiesTreeNode.svelte';
   import { Checkbox, Label } from 'flowbite-svelte';
 
-  import { createEventDispatcher } from 'svelte';
-
   interface TreeNode {
     label: string;
     value: string;
@@ -14,21 +12,19 @@
   }
 
   interface Props {
+    toggle: (e: CustomEvent<{ node: TreeNode }>, checkAsParent?: boolean) => void;
     tree: TreeNode;
   }
 
-  let { tree = $bindable() }: Props = $props();
+  let { toggle, tree = $bindable() }: Props = $props();
 
-  const dispatch = createEventDispatcher<{ toggle: { node: TreeNode } }>();
   const toggleExpansion = () => {
     tree.expanded = !tree.expanded;
   };
 
   const toggleCheck = () => {
     tree.checked = !tree.checked;
-    dispatch('toggle', {
-      node: tree
-    });
+    toggle(new CustomEvent('toggle', { detail: { node: tree } }));
   };
 </script>
 
@@ -39,21 +35,21 @@
         {#if tree.children.length > 0}
           <button type="button" onclick={toggleExpansion} class="arrow" class:arrowDown={tree.expanded} aria-expanded={tree.expanded} aria-label="Toggle node"></button>
         {/if}
-        <Checkbox id={tree.value} data-label={tree.label} checked={tree.checked} indeterminate={tree.indeterminate} on:click={toggleCheck} />
+        <Checkbox id={tree.value} data-label={tree.label} checked={tree.checked} indeterminate={tree.indeterminate} onclick={toggleCheck} />
         <Label for={tree.value} class="ml-2">{tree.label}</Label>
       </div>
       {#if tree.expanded}
         <ul>
           {#each tree.children as child (child)}
             <li>
-              <ServiceBodiesTreeNode tree={child} on:toggle />
+              <ServiceBodiesTreeNode tree={child} {toggle} />
             </li>
           {/each}
         </ul>
       {/if}
     {:else}
       <div class="flex items-center space-x-2">
-        <Checkbox data-label={tree.label} checked={tree.checked} indeterminate={tree.indeterminate} on:click={toggleCheck} />
+        <Checkbox data-label={tree.label} checked={tree.checked} indeterminate={tree.indeterminate} onclick={toggleCheck} />
         <Label for={tree.label} class="ml-2">{tree.label}</Label>
       </div>
     {/if}
