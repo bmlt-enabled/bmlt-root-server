@@ -584,18 +584,6 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.1/dist/leaflet.css" />
 </svelte:head>
 
-{#snippet tabContent(n: number)}
-  {#if n == 0}
-    {@render basicTabContent()}
-  {:else if n == 1}
-    {@render locationTabContent()}
-  {:else if n == 2}
-    {@render otherTabContent()}
-  {:else if n == 3}
-    {@render changesTabContent()}
-  {/if}
-{/snippet}
-
 {#snippet basicTabContent()}
   <div class="grid items-center gap-4 md:grid-cols-3">
     <div class="w-full">
@@ -1048,7 +1036,7 @@
 {/snippet}
 
 <form use:form>
-  <BasicTabs changeActiveTab={handleTabChange} {tabs} {errorTabs} {tabContent} />
+  <BasicTabs changeActiveTab={handleTabChange} {tabs} {errorTabs} tabsSnippets={[basicTabContent, locationTabContent, otherTabContent, changesTabContent]} />
   <Hr hrClass="my-8" />
   <div class="grid gap-4 md:grid-cols-2">
     <div class="md:col-span-2">
