@@ -7,13 +7,14 @@
   interface Props {
     showDeleteModal: boolean;
     deleteMeeting: Meeting;
+    onDeleted: (meetingID: number) => void;
   }
 
-  let { showDeleteModal = $bindable(), deleteMeeting }: Props = $props();
+  let { showDeleteModal = $bindable(), deleteMeeting, onDeleted }: Props = $props();
 </script>
 
 <Modal bind:open={showDeleteModal} size="sm" outsideclose>
   <div class="p-2">
-    <MeetingDeleteForm {deleteMeeting} on:deleted />
+    <MeetingDeleteForm {deleteMeeting} {onDeleted} />
   </div>
 </Modal>

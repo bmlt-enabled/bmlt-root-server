@@ -376,8 +376,8 @@
     showDeleteModal = true;
   }
 
-  function onDeleted(event: CustomEvent<{ meetingId: number }>) {
-    dispatch('deleted', { meetingId: event.detail.meetingId });
+  function onDeleted(meetingId: number) {
+    dispatch('deleted', { meetingId: meetingId });
     showDeleteModal = false;
   }
 
@@ -1060,4 +1060,4 @@
     </div>
   </div>
 </form>
-<MeetingDeleteModal bind:showDeleteModal {deleteMeeting} on:deleted={onDeleted} />
+<MeetingDeleteModal bind:showDeleteModal {deleteMeeting} {onDeleted} />

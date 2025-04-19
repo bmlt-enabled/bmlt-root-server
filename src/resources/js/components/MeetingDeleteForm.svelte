@@ -1,7 +1,6 @@
 <script lang="ts">
   import { Button, Checkbox, Helper, P } from 'flowbite-svelte';
   import { createForm } from 'felte';
-  import { createEventDispatcher } from 'svelte';
   import { validator } from '@felte/validator-yup';
   import * as yup from 'yup';
 
@@ -12,13 +11,12 @@
 
   interface Props {
     deleteMeeting: Meeting;
+    onDeleted: (meetingID: number) => void;
   }
 
-  let { deleteMeeting }: Props = $props();
+  let { deleteMeeting, onDeleted }: Props = $props();
   let confirmed = $state(false);
   let errorMessage: string | undefined = $state();
-
-  const dispatch = createEventDispatcher<{ deleted: { meetingId: number } }>();
 
   const { form } = createForm({
     initialValues: { meetingId: deleteMeeting?.id, confirmed: false },
@@ -38,7 +36,7 @@
     },
     onSuccess: () => {
       spinner.hide();
-      dispatch('deleted', { meetingId: deleteMeeting.id });
+      onDeleted(deleteMeeting.id);
     },
     extend: validator({
       schema: yup.object({
