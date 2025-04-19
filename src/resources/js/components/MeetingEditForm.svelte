@@ -662,7 +662,7 @@
     </div>
     <div class="w-full">
       <span class="mb-2 mt-2 block text-sm font-medium text-gray-900 rtl:text-right dark:text-gray-300">{$translations.durationTitle}</span>
-      <DurationSelector bind:duration={initialValues.duration} on:update={(e) => setData('duration', e.detail.duration)} />
+      <DurationSelector bind:duration={initialValues.duration} updateDuration={(d: string) => setData('duration', d)} />
       {#if $errors.duration}
         <Helper class="mt-2" color="red">
           {$errors.duration}
