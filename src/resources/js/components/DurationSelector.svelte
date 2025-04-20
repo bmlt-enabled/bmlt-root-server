@@ -3,14 +3,16 @@
 
   import { translations } from '../stores/localization';
 
+  // Better style with svelte 5 would be to just have one prop 'duration' and make it bindable.
+  // However, felte doesn't know about svelte 5 (yet), so this wouldn't work currently.
   interface Props {
-    duration?: string;
     updateDuration: (d: string) => void;
+    initialDuration?: string;
   }
 
-  let { duration = $bindable('00:00'), updateDuration }: Props = $props();
+  let { updateDuration, initialDuration = '00:00' }: Props = $props();
 
-  let [hours, minutes] = $state(duration.split(':').map((part) => part.padStart(2, '0')));
+  let [hours, minutes] = $state(initialDuration.split(':').map((part) => part.padStart(2, '0')));
   const hourOptions = Array.from({ length: 24 }, (_, i) => ({
     value: i.toString().padStart(2, '0'),
     name: i.toString().padStart(2, '0')

@@ -2,7 +2,6 @@
   import { validator } from '@felte/validator-yup';
   import { createForm } from 'felte';
   import { Button, Checkbox, Hr, Label, Input, Helper, Select, MultiSelect, Badge } from 'flowbite-svelte';
-  import { createEventDispatcher } from 'svelte';
   import * as yup from 'yup';
   import L from 'leaflet';
   import type { DragEndEvent, Map, Marker } from 'leaflet';
@@ -27,14 +26,20 @@
   import MeetingDeleteModal from './MeetingDeleteModal.svelte';
   import { TrashBinOutline } from 'flowbite-svelte-icons';
 
-  export let selectedMeeting: Meeting | null;
-  export let formats: Format[];
-  export let serviceBodies: ServiceBody[];
+  interface Props {
+    selectedMeeting: Meeting | null;
+    serviceBodies: ServiceBody[];
+    formats: Format[];
+    onSaved: (meeting: Meeting) => void;
+    onClosed: () => void;
+    onDeleted: (meeting: Meeting) => void;
+  }
+
+  let { selectedMeeting, serviceBodies, formats, onSaved, onClosed, onDeleted }: Props = $props();
 
   const tabs = selectedMeeting
     ? [$translations.tabsBasic, $translations.tabsLocation, $translations.tabsOther, $translations.tabsChanges]
     : [$translations.tabsBasic, $translations.tabsLocation, $translations.tabsOther];
-  let errorTabs: string[] = [];
   const TAB_CHANGES = 3;
   const globalSettings = settings;
   const seenNames = new Set<string>();
@@ -73,13 +78,13 @@
   const VENUE_TYPE_HYBRID = 3;
   const VALID_VENUE_TYPES = [VENUE_TYPE_IN_PERSON, VENUE_TYPE_VIRTUAL, VENUE_TYPE_HYBRID];
 
-  let map: google.maps.Map | L.Map;
-  let mapElement: HTMLElement;
-  let marker: google.maps.marker.AdvancedMarkerElement | L.Marker | null;
-  let geocodingError: string | null = null;
-  let isPublishedChecked = true;
-  let showDeleteModal = false;
-  let deleteMeeting: Meeting;
+  let map: google.maps.Map | L.Map | undefined = $state();
+  let mapElement: HTMLElement | undefined = $state();
+  let marker: google.maps.marker.AdvancedMarkerElement | L.Marker | null = $state(null);
+  let geocodingError: string | null = $state(null);
+  let isPublishedChecked = $state(true);
+  let showDeleteModal = $state(false);
+  let meetingToDelete: Meeting | undefined = $state();
   const weekdayChoices = $translations.daysOfWeek.map((day: string, index: number) => ({
     value: index,
     name: day
@@ -105,10 +110,6 @@
     value: tz,
     name: tz
   }));
-  const dispatch = createEventDispatcher<{
-    saved: { meeting: Meeting };
-    deleted: { meetingId: number };
-  }>();
 
   const defaultLatLng = { lat: Number(globalSettings.centerLatitude ?? -79.793701171875), lng: Number(globalSettings.centerLongitude ?? 36.065752051707) };
   let defaultDuration = '01:00';
@@ -161,13 +162,13 @@
         }
       : Object.fromEntries(globalSettings.customFields.map((field) => [field.name, '']))
   };
-  let latitude = initialValues.latitude;
-  let longitude = initialValues.longitude;
+  let latitude = $state(initialValues.latitude);
+  let longitude = $state(initialValues.longitude);
   let manualDrag = false;
-  let formatIdsSelected = initialValues.formatIds;
+  let formatIdsSelected = $state(initialValues.formatIds);
   let savedMeeting: Meeting;
-  let changes: MeetingChangeResource[];
-  let changesLoaded = false;
+  let changes: MeetingChangeResource[] = $state([]);
+  let changesLoaded = $state(false);
 
   function shouldGeocode(initialValues: MeetingPartialUpdate, values: MeetingPartialUpdate, isNewMeeting: boolean) {
     if (isNewMeeting && values.venueType != VENUE_TYPE_VIRTUAL) {
@@ -277,7 +278,7 @@
     },
     onSuccess: () => {
       spinner.hide();
-      dispatch('saved', { meeting: savedMeeting });
+      onSaved(savedMeeting);
     },
     extend: validator({
       schema: yup.object({
@@ -372,13 +373,8 @@
 
   function handleDelete(event: MouseEvent, meeting: Meeting) {
     event.stopPropagation();
-    deleteMeeting = meeting;
+    meetingToDelete = meeting;
     showDeleteModal = true;
-  }
-
-  function onDeleted(meetingId: number) {
-    dispatch('deleted', { meetingId: meetingId });
-    showDeleteModal = false;
   }
 
   // This hack is required until https://github.com/themesberg/flowbite-svelte/issues/1395 is fixed.
@@ -544,12 +540,7 @@
     );
   }
 
-  $: {
-    errorTabs = [];
-    if (hasBasicErrors($errors)) errorTabs.push(tabs[0]);
-    if (hasLocationErrors($errors)) errorTabs.push(tabs[1]);
-    if (hasOtherErrors($errors)) errorTabs.push(tabs[2]);
-  }
+  let errorTabs: string[] = $derived((hasBasicErrors($errors) ? [tabs[0]] : []).concat(hasLocationErrors($errors) ? [tabs[1]] : []).concat(hasOtherErrors($errors) ? [tabs[2]] : []));
 
   onMount(() => {
     mapElement = document.getElementById('locationMap') as HTMLElement;
@@ -569,15 +560,21 @@
     }
   });
 
-  $: {
+  // TODO: the following 3 uses of $effect were converted from $: in the svelte 4 version of the code.  They
+  // probably should use $derived or something else instead, since they have side effects.
+  $effect(() => {
     if (selectedMeeting) {
       showMap.set(true);
       manualDrag = false;
     }
-  }
+  });
 
-  $: setData('formatIds', formatIdsSelected);
-  $: isDirty.set(formIsDirty(initialValues, $data));
+  $effect(() => {
+    setData('formatIds', formatIdsSelected);
+  });
+  $effect(() => {
+    isDirty.set(formIsDirty(initialValues, $data));
+  });
 </script>
 
 <svelte:head>
@@ -662,7 +659,7 @@
     </div>
     <div class="w-full">
       <span class="mb-2 mt-2 block text-sm font-medium text-gray-900 rtl:text-right dark:text-gray-300">{$translations.durationTitle}</span>
-      <DurationSelector bind:duration={initialValues.duration} updateDuration={(d: string) => setData('duration', d)} />
+      <DurationSelector initialDuration={initialValues.duration} updateDuration={(d: string) => setData('duration', d)} />
       {#if $errors.duration}
         <Helper class="mt-2" color="red">
           {$errors.duration}
@@ -1060,4 +1057,4 @@
     </div>
   </div>
 </form>
-<MeetingDeleteModal bind:showDeleteModal {deleteMeeting} {onDeleted} />
+<MeetingDeleteModal bind:showDeleteModal {meetingToDelete} {onDeleted} />

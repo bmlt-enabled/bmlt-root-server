@@ -190,8 +190,7 @@
     renderPagination(filteredItems.length);
   };
 
-  function onSaved(event: CustomEvent<{ meeting: Meeting }>) {
-    const meeting = event.detail.meeting;
+  function onSaved(meeting: Meeting) {
     const i = meetings.findIndex((m) => m.id === meeting.id);
     if (i === -1) {
       meetings = [...meetings, meeting];
@@ -211,8 +210,8 @@
     openModal();
   }
 
-  function onDeleted(event: CustomEvent<{ meetingId: number }>) {
-    meetings = meetings.filter((m) => m.id !== event.detail.meetingId);
+  function onDeleted(meeting: Meeting) {
+    meetings = meetings.filter((m) => m.id !== meeting.id);
     closeModal();
   }
 
@@ -405,4 +404,4 @@
   </div>
 </TableSearch>
 
-<MeetingEditModal bind:showModal {selectedMeeting} {serviceBodies} {formats} on:saved={onSaved} on:close={closeModal} on:deleted={onDeleted} />
+<MeetingEditModal bind:showModal {selectedMeeting} {serviceBodies} {formats} {onSaved} onClosed={closeModal} {onDeleted} />
