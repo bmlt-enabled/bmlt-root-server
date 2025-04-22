@@ -96,7 +96,7 @@
             {#if $authenticatedUser?.type === 'admin'}
               <div class="flex">
                 <div class="mt-2.5 grow">Name</div>
-                <div><Button on:click={() => handleAdd()} class="whitespace-nowrap" aria-label={$translations.addUser}>{$translations.addUser}</Button></div>
+                <div><Button onclick={() => handleAdd()} class="whitespace-nowrap" aria-label={$translations.addUser}>{$translations.addUser}</Button></div>
               </div>
             {:else}
               {$translations.nameTitle}
@@ -105,11 +105,11 @@
         </TableHead>
         <TableBody>
           {#each filteredUsers as user (user.id)}
-            <TableBodyRow on:click={() => handleEdit(user)} class="cursor-pointer" aria-label={$translations.editUser}>
+            <TableBodyRow onclick={() => handleEdit(user)} class="cursor-pointer" aria-label={$translations.editUser}>
               <TableBodyCell class="whitespace-normal">{user.displayName}</TableBodyCell>
               {#if $authenticatedUser?.type === 'admin'}
                 <TableBodyCell class="text-right">
-                  <Button color="none" on:click={(e) => handleDelete(e, user)} class="text-blue-700 dark:text-blue-500" aria-label={$translations.deleteUser + ' ' + user.displayName}>
+                  <Button color="none" onclick={(e: MouseEvent) => handleDelete(e, user)} class="text-blue-700 dark:text-blue-500" aria-label={$translations.deleteUser + ' ' + user.displayName}>
                     <TrashBinOutline title={{ id: 'deleteUser', title: $translations.deleteUser }} ariaLabel={$translations.deleteUser} />
                   </Button>
                 </TableBodyCell>
@@ -128,7 +128,7 @@
   {/if}
 </div>
 
-<UserModal bind:showModal {users} {selectedUser} onSaveSuccess={onSaved} on:close={closeModal} />
+<UserModal bind:showModal {users} {selectedUser} onSaveSuccess={onSaved} onClose={closeModal} />
 {#if deleteUser}
   <UserDeleteModal bind:showDeleteModal {deleteUser} onDeleteSuccess={onDeleted} />
 {/if}

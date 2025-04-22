@@ -8,7 +8,7 @@
     updateDuration: (d: string) => void;
   }
 
-  let { duration = '00:00', updateDuration }: Props = $props();
+  let { duration = $bindable('00:00'), updateDuration }: Props = $props();
 
   let [hours, minutes] = $state(duration.split(':').map((part) => part.padStart(2, '0')));
   const hourOptions = Array.from({ length: 24 }, (_, i) => ({

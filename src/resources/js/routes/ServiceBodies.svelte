@@ -23,7 +23,7 @@
   let showDeleteModal = $state(false);
   let searchTerm = $state('');
   let selectedServiceBody: ServiceBody | null = $state(null);
-  let deleteServiceBody: ServiceBody = $state(null);
+  let deleteServiceBody: ServiceBody | null = $state(null);
 
   async function getUsers(): Promise<void> {
     try {
@@ -129,7 +129,7 @@
               <div class="flex">
                 <div class="mt-2.5 grow">Name</div>
                 <div>
-                  <Button on:click={() => handleAdd()} class="whitespace-nowrap" aria-label={$translations.addServiceBody}>{$translations.addServiceBody}</Button>
+                  <Button onclick={() => handleAdd()} class="whitespace-nowrap" aria-label={$translations.addServiceBody}>{$translations.addServiceBody}</Button>
                 </div>
               </div>
             {:else}
@@ -139,11 +139,11 @@
         </TableHead>
         <TableBody>
           {#each filteredServiceBodies as serviceBody (serviceBody.id)}
-            <TableBodyRow on:click={() => handleEdit(serviceBody)} class="cursor-pointer" aria-label={$translations.editUser}>
+            <TableBodyRow onclick={() => handleEdit(serviceBody)} class="cursor-pointer" aria-label={$translations.editUser}>
               <TableBodyCell class="whitespace-normal">{serviceBody.name}</TableBodyCell>
               {#if $authenticatedUser?.type === 'admin'}
                 <TableBodyCell class="text-right">
-                  <Button color="none" on:click={(e) => handleDelete(e, serviceBody)} class="text-blue-700 dark:text-blue-500">
+                  <Button color="none" onclick={(e: MouseEvent) => handleDelete(e, serviceBody)} class="text-blue-700 dark:text-blue-500">
                     <TrashBinOutline title={{ id: 'deleteServiceBody', title: $translations.deleteServiceBody }} ariaLabel={$translations.deleteServiceBody + ' ' + serviceBody.name} />
                   </Button>
                 </TableBodyCell>
@@ -162,7 +162,7 @@
   {/if}
 </div>
 
-<ServiceBodyModal bind:showModal {serviceBodies} {selectedServiceBody} {users} onSaveSuccess={onSaved} on:close={closeModal} />
+<ServiceBodyModal bind:showModal {serviceBodies} {selectedServiceBody} {users} onSaveSuccess={onSaved} onClose={closeModal} />
 {#if deleteServiceBody}
   <ServiceBodyDeleteModal bind:showDeleteModal {deleteServiceBody} onDeleteSuccess={onDeleted} />
 {/if}

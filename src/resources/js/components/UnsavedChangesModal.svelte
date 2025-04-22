@@ -9,7 +9,6 @@
   }
 
   let { open = $bindable(), handleCancelClose, handleConfirmClose }: Props = $props();
-
 </script>
 
 <Modal bind:open size="sm" defaultClass="border-4">

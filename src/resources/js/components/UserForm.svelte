@@ -198,7 +198,7 @@
       </Helper>
     </div>
     <div class="md:col-span-2">
-      <Button type="submit" class="w-full" disabled={!$isDirty} on:click={disableButtonHack}>
+      <Button type="submit" class="w-full" disabled={!$isDirty} onclick={disableButtonHack}>
         {#if selectedUser}
           {$translations.applyChangesTitle}
         {:else}
