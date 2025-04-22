@@ -12,9 +12,10 @@
     serviceBodies: ServiceBody[];
     users: User[];
     onSaveSuccess?: (serviceBody: ServiceBody) => void; // Callback function prop
+    onClose?: () => void; // Callback function prop
   }
 
-  let { showModal = $bindable(), selectedServiceBody, serviceBodies, users, onSaveSuccess }: Props = $props();
+  let { showModal = $bindable(), selectedServiceBody, serviceBodies, users, onSaveSuccess, onClose }: Props = $props();
 
   let showConfirmModal = $state(false);
   let forceClose = false;
@@ -26,6 +27,7 @@
     } else {
       showModal = false;
       forceClose = false;
+      if (onClose) onClose();
     }
   }
 
@@ -33,6 +35,7 @@
     showConfirmModal = false;
     forceClose = true;
     showModal = false;
+    if (onClose) onClose();
   }
 
   function handleCancelClose() {

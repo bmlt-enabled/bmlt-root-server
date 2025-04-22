@@ -127,19 +127,19 @@
           <TableHeadCell colspan={2}>
             <div class="flex">
               <div class="mt-2.5 grow">{$translations.nameTitle}</div>
-              <div><Button on:click={() => handleAdd()} class="whitespace-nowrap" aria-label={$translations.addFormat}>{$translations.addFormat}</Button></div>
+              <div><Button onclick={() => handleAdd()} class="whitespace-nowrap" aria-label={$translations.addFormat}>{$translations.addFormat}</Button></div>
             </div>
           </TableHeadCell>
         </TableHead>
         <TableBody>
           {#each filteredFormats as format (format.id)}
-            <TableBodyRow on:click={() => handleEdit(format)} class="cursor-pointer" aria-label={$translations.editFormat}>
+            <TableBodyRow onclick={() => handleEdit(format)} class="cursor-pointer" aria-label={$translations.editFormat}>
               <TableBodyCell class="whitespace-normal">{getFormatName(format)}</TableBodyCell>
               {#if $authenticatedUser?.type === 'admin'}
                 <TableBodyCell class="text-right">
                   <Button
                     color="none"
-                    on:click={(e) => handleDelete(e, format)}
+                    onclick={(e: MouseEvent) => handleDelete(e, format)}
                     class="text-blue-700 dark:text-blue-500"
                     disabled={isReserved(format)}
                     aria-label={$translations.deleteFormat + ' ' + getFormatName(format)}
@@ -160,7 +160,7 @@
   {/if}
 </div>
 
-<FormatModal bind:showModal {selectedFormat} {reservedFormatKeys} onSaveSuccess={onSaved} on:close={closeModal} />
+<FormatModal bind:showModal {selectedFormat} {reservedFormatKeys} onSaveSuccess={onSaved} onClose={closeModal} />
 {#if deleteFormat}
   <FormatDeleteModal bind:showDeleteModal {deleteFormat} formatName={deleteFormat ? getFormatName(deleteFormat) : ''} onDeleteSuccess={onDeleted} />
 {/if}

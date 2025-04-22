@@ -609,7 +609,7 @@
         </div>
         <Button
           color="none"
-          on:click={(e) => selectedMeeting && handleDelete(e, selectedMeeting)}
+          onclick={(e: MouseEvent) => selectedMeeting && handleDelete(e, selectedMeeting)}
           class="text-red-600 dark:text-red-500"
           aria-label={$translations.deleteMeeting + ' ' + (selectedMeeting?.id ?? '')}
         >
@@ -1050,7 +1050,7 @@
           {$translations.meetingErrorsSomewhere + ' ' + errorTabs.join(', ')}
         </Helper>
       {/if}
-      <Button type="submit" class="w-full" disabled={!$isDirty} on:click={disableButtonHack}>
+      <Button type="submit" class="w-full" disabled={!$isDirty} onclick={disableButtonHack}>
         {#if selectedMeeting}
           {$translations.applyChangesTitle}
         {:else}

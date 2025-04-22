@@ -25,6 +25,9 @@ export default [
       parserOptions: {
         parser: ts.parser
       }
+    },
+    rules: {
+      'svelte/require-each-key': 'off'
     }
   },
   {

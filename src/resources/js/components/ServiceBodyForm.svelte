@@ -13,18 +13,6 @@
   import { translations } from '../stores/localization';
   import { authenticatedUser } from '../stores/apiCredentials';
 
-  import type { SelectOptionType } from 'flowbite-svelte';
-
-  type SelectOptionType<T = any> = {
-    value: T;
-    name: string;
-  };
-
-  type MultiSelectSnippetProps = {
-    item: SelectOptionType<string | number>;
-    clear: () => void;
-  };
-
   interface Props {
     selectedServiceBody: ServiceBody | null;
     serviceBodies: ServiceBody[];
@@ -211,12 +199,10 @@
     </div>
     <div class="md:col-span-2">
       <Label for="assignedUserIds" class="mb-2">{$translations.meetingListEditorsTitle}</Label>
-      <MultiSelect id="assignedUserIds" items={userItems} name="assignedUserIds" class="bg-gray-50 dark:bg-gray-600" bind:value={assignedUserIdsSelected}>
-        {#snippet children({ item, clear }: MultiSelectSnippetProps)}
-          <Badge rounded color={badgeColor(item.value)} dismissable params={{ duration: 100 }} on:close={clear}>
-            {item.name}
-          </Badge>
-        {/snippet}
+      <MultiSelect id="assignedUserIds" items={userItems} name="assignedUserIds" class="bg-gray-50 dark:bg-gray-600" bind:value={assignedUserIdsSelected} let:item let:clear>
+        <Badge rounded color={badgeColor(String(item.value))} dismissable params={{ duration: 100 }} on:close={clear}>
+          {item.name}
+        </Badge>
       </MultiSelect>
       <Helper class="mt-2" color="red">
         <!-- For some reason yup fills the errors store with empty objects for this array. The === 'string' ensures only server side errors will display. -->
@@ -271,7 +257,7 @@
       </Helper>
     </div>
     <div class="md:col-span-2">
-      <Button type="submit" class="w-full" disabled={!$isDirty} on:click={disableButtonHack}>
+      <Button type="submit" class="w-full" disabled={!$isDirty} onclick={disableButtonHack}>
         {#if selectedServiceBody}
           {$translations.applyChangesTitle}
         {:else}

@@ -14,9 +14,10 @@
     selectedFormat: Format | null;
     reservedFormatKeys: string[];
     onSaveSuccess?: (format: Format) => void; // Callback function prop
+    onClose?: () => void; // Callback function prop
   }
 
-  let { showModal = $bindable(), selectedFormat, reservedFormatKeys, onSaveSuccess }: Props = $props();
+  let { showModal = $bindable(), selectedFormat, reservedFormatKeys, onSaveSuccess, onClose }: Props = $props();
 
   let showConfirmModal = $state(false);
   let forceClose = false;
@@ -28,6 +29,7 @@
     } else {
       showModal = false;
       forceClose = false;
+      if (onClose) onClose();
     }
   }
 
@@ -35,6 +37,7 @@
     showConfirmModal = false;
     forceClose = true;
     showModal = false;
+    if (onClose) onClose();
   }
 
   function handleCancelClose() {

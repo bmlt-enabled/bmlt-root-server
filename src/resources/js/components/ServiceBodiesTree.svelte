@@ -139,7 +139,7 @@
 </script>
 
 <div class="mb-4">
-  <Button on:click={toggleAll} size="xs" color="primary" class="w-full">
+  <Button onclick={toggleAll} size="xs" color="primary" class="w-full">
     {isAllSelected ? $translations.unselectAllServiceBodies : $translations.selectAllServiceBodies}
   </Button>
 </div>

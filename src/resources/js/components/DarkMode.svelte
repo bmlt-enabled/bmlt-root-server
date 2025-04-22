@@ -39,7 +39,7 @@
   </script>
 </svelte:head>
 
-<button on:click={toggleTheme} aria-label={ariaLabel} type="button" {...$$restProps} class={twMerge(btnClass, $$props.class)}>
+<button onclick={toggleTheme} aria-label={ariaLabel} type="button" {...$$restProps} class={twMerge(btnClass, $$props.class)}>
   <span class="hidden dark:block">
     <slot name="lightIcon">
       <svg class={sizes[size]} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
