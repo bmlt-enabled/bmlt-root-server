@@ -165,7 +165,7 @@
   let latitude = $state(initialValues.latitude);
   let longitude = $state(initialValues.longitude);
   let manualDrag = false;
-  let formatIdsSelected = $state($state.snapshot(initialValues.formatIds));
+  let formatIdsSelected = $state(initialValues.formatIds);
   let savedMeeting: Meeting;
   let changes: MeetingChangeResource[] = $state([]);
   let changesLoaded = $state(false);
@@ -560,7 +560,7 @@
     }
   });
 
-  // TODO: the following uses of $effect were converted from $: in the svelte 4 version of the code.  They
+  // TODO: the following 3 uses of $effect were converted from $: in the svelte 4 version of the code.  They
   // probably should use $derived or something else instead, since they have side effects.
   $effect(() => {
     if (selectedMeeting) {
@@ -569,6 +569,9 @@
     }
   });
 
+  $effect(() => {
+    setData('formatIds', formatIdsSelected);
+  });
   $effect(() => {
     isDirty.set(formIsDirty(initialValues, $data));
   });
@@ -697,16 +700,7 @@
   </div>
   <div class="md:col-span-2">
     <Label for="formatIds" class="mb-2 mt-2">{$translations.formatsTitle}</Label>
-    <MultiSelect
-      id="formatIds"
-      items={formatItems}
-      name="formatIds"
-      class="bg-gray-50 dark:bg-gray-600"
-      bind:value={formatIdsSelected}
-      on:change={() => setData('formatIds', formatIdsSelected)}
-      let:item
-      let:clear
-    >
+    <MultiSelect id="formatIds" items={formatItems} name="formatIds" class="bg-gray-50 dark:bg-gray-600" bind:value={formatIdsSelected} let:item let:clear>
       <Badge rounded color={badgeColor(item.value)} dismissable params={{ duration: 100 }} on:close={clear}>
         {item.name}
       </Badge>
