@@ -11,9 +11,14 @@ const serviceBodies: ServiceBody[] = allServiceBodies;
 
 const selectedMeeting: Meeting = allMeetings[0];
 
+// dummy functions for props
+function onSaved(_: Meeting) {}
+function onClosed() {}
+function onDeleted(_: Meeting) {}
+
 describe('MeetingEditForm Component', () => {
   test('test Ensure form fields are present', async () => {
-    render(MeetingEditForm, { props: { selectedMeeting, serviceBodies, formats } });
+    render(MeetingEditForm, { props: { selectedMeeting, serviceBodies, formats, onSaved, onClosed, onDeleted } });
 
     const deleteButton = screen.getByRole('button', {
       name: `${translations.getString('deleteMeeting')} ${selectedMeeting.id}`
