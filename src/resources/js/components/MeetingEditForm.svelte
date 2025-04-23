@@ -4,7 +4,6 @@
   import { Button, Checkbox, Hr, Label, Input, Helper, Select, MultiSelect, Badge } from 'flowbite-svelte';
   import * as yup from 'yup';
   import L from 'leaflet';
-  import type { DragEndEvent, Map, Marker } from 'leaflet';
   import { Loader } from '@googlemaps/js-api-loader';
   import { writable } from 'svelte/store';
 
@@ -78,7 +77,7 @@
   const VENUE_TYPE_HYBRID = 3;
   const VALID_VENUE_TYPES = [VENUE_TYPE_IN_PERSON, VENUE_TYPE_VIRTUAL, VENUE_TYPE_HYBRID];
 
-  let map: google.maps.Map | L.Map | undefined = $state();
+  let map: google.maps.Map | L.Map | null = $state(null);
   let mapElement: HTMLElement | undefined = $state();
   let marker: google.maps.marker.AdvancedMarkerElement | L.Marker | null = $state(null);
   let geocodingError: string | null = $state(null);
@@ -385,11 +384,7 @@
   }
 
   // Type guards
-  function isGoogleMarker(marker: google.maps.marker.AdvancedMarkerElement | Marker): marker is google.maps.marker.AdvancedMarkerElement {
-    return (marker as google.maps.marker.AdvancedMarkerElement).position !== undefined;
-  }
-
-  function isGoogleMap(map: google.maps.Map | Map | undefined): map is google.maps.Map {
+  function isGoogleMap(map: any): map is google.maps.Map {
     if (map) {
       return (map as google.maps.Map).setCenter !== undefined;
     } else {
@@ -397,72 +392,184 @@
     }
   }
 
-  function isLeafletMap(map: google.maps.Map | Map): map is Map {
-    return (map as Map).setView !== undefined;
-  }
+  let mapInitialized = $state(false);
 
-  function setMapCenter(map: google.maps.Map | L.Map, lat: number, lng: number) {
-    if (isGoogleMap(map)) {
-      map.setCenter({ lat, lng });
-    } else if (isLeafletMap(map)) {
-      map.setView([lat, lng]);
+  function initializeMap() {
+    if (mapInitialized) {
+      // If already initialized, just resize/recenter
+      if (map) {
+        setTimeout(() => {
+          if (map && 'invalidateSize' in map) {
+            try {
+              map.invalidateSize();
+              if ('setView' in map) {
+                map.setView([latitude, longitude]);
+              } else if (isGoogleMap(map)) {
+                (map as google.maps.Map).setCenter({ lat: latitude, lng: longitude });
+              }
+            } catch (e) {
+              console.error('Error resizing map:', e);
+            }
+          }
+        }, 200);
+      }
+      return;
+    }
+
+    if (!mapElement) {
+      const mapEl = document.getElementById('locationMap');
+      if (!mapEl) {
+        return;
+      }
+      mapElement = mapEl;
+    }
+
+    // Create the map only if not already initialized
+    if (mapElement && !map) {
+      if (globalSettings.googleApiKey) {
+        createGoogleMap();
+      } else {
+        createLeafletMap();
+      }
+      mapInitialized = true;
     }
   }
 
   function createLeafletMap() {
-    map = L.map(mapElement as HTMLElement).setView([latitude, longitude], Number(globalSettings.centerZoom ?? 18));
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 22,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-    const naMarkerImage = L.icon({
-      iconUrl: 'images/NAMarkerR.png',
-      iconSize: [44, 64]
-    });
+    if (!mapElement) {
+      return;
+    }
 
-    marker = L.marker([latitude, longitude], { icon: naMarkerImage, draggable: true }).addTo(map);
+    try {
+      // Clear any existing map
+      if (map && 'remove' in map) {
+        map.remove();
+        map = null;
+      }
 
-    marker.on('dragend', (e: DragEndEvent) => {
-      const { lat, lng } = e.target.getLatLng();
-      latitude = lat;
-      longitude = lng;
-      manualDrag = true;
-    });
-  }
+      const zoomLevel = Math.min(Number(globalSettings.centerZoom ?? 18), 15);
 
-  async function createGoogleMap() {
-    const loader = new Loader({
-      apiKey: globalSettings.googleApiKey,
-      version: 'beta',
-      libraries: ['places', 'marker', 'geocoding']
-    });
-    const { Map } = await loader.importLibrary('maps');
-    mapElement = document.getElementById('locationMap') as HTMLElement;
-    if (mapElement) {
-      map = new Map(mapElement, {
-        center: { lat: latitude, lng: longitude },
-        zoom: Number(globalSettings.centerZoom ?? 18),
-        draggableCursor: 'crosshair',
-        mapId: 'bmlt'
+      const leafletMap = L.map(mapElement, {
+        preferCanvas: true,
+        renderer: L.canvas(),
+        zoom: zoomLevel,
+        center: [latitude, longitude],
+        attributionControl: true,
+        zoomControl: true
       });
-      createGoogleMarker();
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        minZoom: 5,
+        attribution: '&copy; OpenStreetMap',
+        subdomains: ['a', 'b', 'c']
+      }).addTo(leafletMap);
+
+      const naMarkerImage = L.icon({
+        iconUrl: 'images/NAMarkerR.png',
+        iconSize: [44, 64]
+      });
+
+      const leafletMarker = L.marker([latitude, longitude], { icon: naMarkerImage, draggable: true }).addTo(leafletMap);
+
+      leafletMarker.on('dragend', (e) => {
+        const pos = e.target.getLatLng();
+        latitude = pos.lat;
+        longitude = pos.lng;
+        setData('longitude', longitude);
+        setData('latitude', latitude);
+        manualDrag = true;
+      });
+
+      map = leafletMap;
+      marker = leafletMarker;
+
+      const delays = [100, 300, 600, 1000];
+      delays.forEach((delay) => {
+        setTimeout(() => {
+          if (leafletMap && mapElement && mapElement.offsetParent !== null) {
+            try {
+              leafletMap.invalidateSize();
+            } catch (e) {
+              console.error('Error invalidating map size:', e);
+            }
+          }
+        }, delay);
+      });
+    } catch (e) {
+      console.error('Error creating Leaflet map:', e);
     }
   }
 
-  function createGoogleMarker() {
-    const position = { lat: latitude, lng: longitude };
-    const naMarkerImage = document.createElement('img');
-    naMarkerImage.src = 'images/NAMarkerR.png';
-    if (isGoogleMap(map)) {
-      marker = new google.maps.marker.AdvancedMarkerElement({
+  async function createGoogleMap() {
+    if (!mapElement) return;
+
+    try {
+      const loader = new Loader({
+        apiKey: globalSettings.googleApiKey,
+        version: 'beta',
+        libraries: ['places', 'marker']
+      });
+
+      const { Map } = await loader.importLibrary('maps');
+
+      map = new Map(mapElement, {
+        center: { lat: latitude, lng: longitude },
+        zoom: Math.min(Number(globalSettings.centerZoom ?? 18), 15),
+        disableDefaultUI: false,
+        mapTypeId: 'roadmap',
+        gestureHandling: 'auto',
+        zoomControl: true,
+        mapId: 'bmlt'
+      });
+
+      await createAdvancedGoogleMarker();
+    } catch (e) {
+      console.error('Error creating Google Map:', e);
+    }
+  }
+
+  onMount(() => {
+    // Only initialize map if accordion is open
+    if ($showMap) {
+      setTimeout(initializeMap, 300);
+    }
+
+    return () => {
+      // Clean up the map when component is destroyed
+      if (map) {
+        if ('remove' in map) {
+          map.remove();
+        } else if (marker && isGoogleMap(marker) && 'setMap' in marker) {
+          (marker as google.maps.marker.AdvancedMarkerElement).map = null;
+        }
+        map = null;
+        marker = null;
+      }
+    };
+  });
+
+  async function createAdvancedGoogleMarker() {
+    if (!map || !isGoogleMap(map)) return;
+
+    try {
+      const position = { lat: latitude, lng: longitude };
+      const naMarkerImage = document.createElement('img');
+      naMarkerImage.src = 'images/NAMarkerR.png';
+      naMarkerImage.style.width = '44px';
+      naMarkerImage.style.height = '64px';
+
+      const advancedMarker = new google.maps.marker.AdvancedMarkerElement({
         position: position,
         map: map,
         gmpDraggable: true,
-        content: naMarkerImage
+        content: naMarkerImage,
+        title: 'Meeting location'
       });
-      marker.addListener('dragend', () => {
-        if (marker && isGoogleMarker(marker) && marker.position) {
-          const newPosition = marker.position;
+
+      advancedMarker.addListener('dragend', () => {
+        if (advancedMarker && 'position' in advancedMarker && advancedMarker.position) {
+          const newPosition = advancedMarker.position;
           if (newPosition) {
             longitude = typeof newPosition.lng === 'function' ? newPosition.lng() : newPosition.lng;
             latitude = typeof newPosition.lat === 'function' ? newPosition.lat() : newPosition.lat;
@@ -472,6 +579,8 @@
           }
         }
       });
+    } catch (e) {
+      console.error('Error creating advanced Google Marker:', e);
     }
   }
 
@@ -546,32 +655,9 @@
 
   let errorTabs: string[] = $derived((hasBasicErrors($errors) ? [tabs[0]] : []).concat(hasLocationErrors($errors) ? [tabs[1]] : []).concat(hasOtherErrors($errors) ? [tabs[2]] : []));
 
-  onMount(() => {
-    mapElement = document.getElementById('locationMap') as HTMLElement;
-    if (mapElement) {
-      if (globalSettings.googleApiKey) {
-        createGoogleMap();
-      } else {
-        createLeafletMap();
-      }
-
-      showMap.subscribe((value) => {
-        if (mapElement) {
-          mapElement.style.display = value ? 'block' : 'none';
-        }
-        if (value && map) {
-          setMapCenter(map, latitude, longitude);
-        }
-      });
-    }
-  });
-
-  // TODO: the following uses of $effect were converted from $: in the svelte 4 version of the code.  They
-  // probably should use $derived or something else instead, since they have side effects.
   $effect(() => {
     if (selectedMeeting) {
-      showMap.set(true);
-      manualDrag = false;
+      initializeMap();
     }
   });
 
@@ -582,6 +668,30 @@
 
 <svelte:head>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.1/dist/leaflet.css" />
+  <style>
+    #locationMap {
+      width: 100% !important;
+      height: 300px !important;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      display: block !important;
+      overflow: hidden;
+    }
+    .leaflet-container {
+      width: 100% !important;
+      height: 100% !important;
+    }
+    .leaflet-control-zoom {
+      margin-top: 10px !important;
+      margin-left: 10px !important;
+    }
+    .leaflet-control-zoom a {
+      width: 30px !important;
+      height: 30px !important;
+      line-height: 30px !important;
+      font-size: 18px !important;
+    }
+  </style>
 </svelte:head>
 
 {#snippet basicTabContent()}
@@ -741,8 +851,32 @@
   {#if selectedMeeting}
     <div class="grid gap-4 md:grid-cols-2">
       <div class="md:col-span-2">
-        <MapAccordion title={$translations.locationMapTitle} {map}>
-          <div id="locationMap" bind:this={mapElement}></div>
+        <MapAccordion
+          title={$translations.locationMapTitle}
+          onToggle={(isOpen) => {
+            showMap.set(isOpen);
+
+            if (isOpen) {
+              // ensure map is initialized or refreshed
+              setTimeout(() => {
+                if (mapInitialized && map) {
+                  // If map already exists, just resize and recenter it
+                  if ('invalidateSize' in map) {
+                    map.invalidateSize();
+                    if ('setView' in map) {
+                      map.setView([latitude, longitude]);
+                    } else if (isGoogleMap(map)) {
+                      (map as google.maps.Map).setCenter({ lat: latitude, lng: longitude });
+                    }
+                  }
+                } else {
+                  initializeMap();
+                }
+              }, 200);
+            }
+          }}
+        >
+          <div id="locationMap" bind:this={mapElement} class="h-[300px]"></div>
         </MapAccordion>
       </div>
     </div>
