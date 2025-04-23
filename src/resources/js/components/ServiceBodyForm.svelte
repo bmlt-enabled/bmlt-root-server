@@ -61,7 +61,14 @@
     helpline: selectedServiceBody?.helpline ?? '',
     worldId: selectedServiceBody?.worldId ?? ''
   };
-  let assignedUserIdsSelected = $state(selectedServiceBody?.assignedUserIds ?? []);
+
+  // The $state.snapshot call is to avoid this error:
+  // [svelte] ownership_invalid_binding
+  // resources/js/components/ServiceBodyForm.svelte passed a value to node_modules/flowbite-svelte/dist/forms/MultiSelect.svelte
+  // with `bind:`, but the value is owned by resources/js/routes/ServiceBodies.svelte. Consider creating a binding between
+  // resources/js/routes/ServiceBodies.svelte and resources/js/components/ServiceBodyForm.svelte
+  // https://svelte.dev/e/ownership_invalid_binding
+  let assignedUserIdsSelected: number[] = $state($state.snapshot(selectedServiceBody?.assignedUserIds ?? []));
   let savedServiceBody: ServiceBody;
 
   const { data, errors, form, setData } = createForm({
@@ -152,9 +159,6 @@
   }
 
   run(() => {
-    setData('assignedUserIds', assignedUserIdsSelected);
-  });
-  run(() => {
     formIsDirty(initialValues, $data);
   });
 </script>
@@ -199,7 +203,16 @@
     </div>
     <div class="md:col-span-2">
       <Label for="assignedUserIds" class="mb-2">{$translations.meetingListEditorsTitle}</Label>
-      <MultiSelect id="assignedUserIds" items={userItems} name="assignedUserIds" class="bg-gray-50 dark:bg-gray-600" bind:value={assignedUserIdsSelected} let:item let:clear>
+      <MultiSelect
+        id="assignedUserIds"
+        items={userItems}
+        name="assignedUserIds"
+        class="bg-gray-50 dark:bg-gray-600"
+        bind:value={assignedUserIdsSelected}
+        on:change={() => setData('assignedUserIds', assignedUserIdsSelected)}
+        let:item
+        let:clear
+      >
         <Badge rounded color={badgeColor(String(item.value))} dismissable params={{ duration: 100 }} on:close={clear}>
           {item.name}
         </Badge>

@@ -10,19 +10,19 @@
   import { translations } from '../stores/localization';
 
   interface Props {
-    deleteMeeting: Meeting;
-    onDeleted: (meetingID: number) => void;
+    meetingToDelete: Meeting;
+    onDeleted: (meeting: Meeting) => void;
   }
 
-  let { deleteMeeting, onDeleted }: Props = $props();
+  let { meetingToDelete, onDeleted }: Props = $props();
   let confirmed = $state(false);
   let errorMessage: string | undefined = $state();
 
   const { form } = createForm({
-    initialValues: { meetingId: deleteMeeting?.id, confirmed: false },
+    initialValues: { meetingId: meetingToDelete?.id, confirmed: false },
     onSubmit: async () => {
       spinner.show();
-      await RootServerApi.deleteMeeting(deleteMeeting.id);
+      await RootServerApi.deleteMeeting(meetingToDelete.id);
     },
     onError: async (error) => {
       await RootServerApi.handleErrors(error as Error, {
@@ -36,7 +36,7 @@
     },
     onSuccess: () => {
       spinner.hide();
-      onDeleted(deleteMeeting.id);
+      onDeleted(meetingToDelete);
     },
     extend: validator({
       schema: yup.object({
@@ -49,7 +49,7 @@
 <form use:form>
   <div>
     <P class="mb-5">{$translations.confirmDeleteMeeting}</P>
-    <P class="mb-5">{deleteMeeting.name}</P>
+    <P class="mb-5">{meetingToDelete.name}</P>
     <div class="mb-5">
       <Checkbox bind:checked={confirmed} name="confirmed">{$translations.confirmYesImSure}</Checkbox>
       <Helper class="mt-4" color="red">
