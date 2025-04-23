@@ -768,7 +768,6 @@ async function mockCreateServiceBody({ serviceBodyCreate: serviceBody }: { servi
   };
 }
 
-// eslint-disable-next-line
 async function mockUpdateServiceBody({ serviceBodyId: _, serviceBodyUpdate: serviceBody }: { serviceBodyId: number; serviceBodyUpdate: ServiceBodyUpdate }): Promise<void> {
   mockSavedServiceBodyUpdate = serviceBody;
 }
@@ -816,7 +815,6 @@ async function mockCreateFormat({ formatCreate: format }: { formatCreate: Format
   };
 }
 
-// eslint-disable-next-line
 async function mockUpdateFormat({ formatId: _, formatUpdate: format }: { formatId: number; formatUpdate: FormatUpdate }): Promise<void> {
   if (format.translations.length === 0) {
     throw new ResponseError(makeResponse('The translations field is required.', 422, 'Unprocessable Content'), 'Response returned an error code');
@@ -897,7 +895,6 @@ async function mockCreateMeeting({ meetingCreate: meeting }: { meetingCreate: Me
   };
 }
 
-// eslint-disable-next-line
 async function mockUpdateMeeting({ meetingId: _, meetingUpdate: meeting }: { meetingId: number; meetingUpdate: MeetingUpdate }): Promise<void> {
   mockSavedMeetingUpdate = meeting;
 }
