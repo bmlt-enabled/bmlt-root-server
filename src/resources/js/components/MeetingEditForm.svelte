@@ -35,7 +35,7 @@
     onDeleted: (meeting: Meeting) => void;
   }
 
-  let { selectedMeeting, serviceBodies, formats, onSaved, onClosed: _, onDeleted }: Props = $props();
+  let { selectedMeeting, serviceBodies, formats, onSaved, onDeleted }: Props = $props();
 
   const tabs = selectedMeeting
     ? [$translations.tabsBasic, $translations.tabsLocation, $translations.tabsOther, $translations.tabsChanges]
