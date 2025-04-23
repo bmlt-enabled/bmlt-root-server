@@ -389,8 +389,12 @@
     return (marker as google.maps.marker.AdvancedMarkerElement).position !== undefined;
   }
 
-  function isGoogleMap(map: google.maps.Map | Map): map is google.maps.Map {
-    return (map as google.maps.Map).setCenter !== undefined;
+  function isGoogleMap(map: google.maps.Map | Map | undefined): map is google.maps.Map {
+    if (map) {
+      return (map as google.maps.Map).setCenter !== undefined;
+    } else {
+      return false;
+    }
   }
 
   function isLeafletMap(map: google.maps.Map | Map): map is Map {
@@ -406,7 +410,7 @@
   }
 
   function createLeafletMap() {
-    map = L.map(mapElement).setView([latitude, longitude], Number(globalSettings.centerZoom ?? 18));
+    map = L.map(mapElement as HTMLElement).setView([latitude, longitude], Number(globalSettings.centerZoom ?? 18));
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 22,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -552,7 +556,9 @@
       }
 
       showMap.subscribe((value) => {
-        mapElement.style.display = value ? 'block' : 'none';
+        if (mapElement) {
+          mapElement.style.display = value ? 'block' : 'none';
+        }
         if (value && map) {
           setMapCenter(map, latitude, longitude);
         }
@@ -560,7 +566,7 @@
     }
   });
 
-  // TODO: the following 3 uses of $effect were converted from $: in the svelte 4 version of the code.  They
+  // TODO: the following uses of $effect were converted from $: in the svelte 4 version of the code.  They
   // probably should use $derived or something else instead, since they have side effects.
   $effect(() => {
     if (selectedMeeting) {
@@ -569,9 +575,6 @@
     }
   });
 
-  $effect(() => {
-    setData('formatIds', formatIdsSelected);
-  });
   $effect(() => {
     isDirty.set(formIsDirty(initialValues, $data));
   });
@@ -700,7 +703,16 @@
   </div>
   <div class="md:col-span-2">
     <Label for="formatIds" class="mb-2 mt-2">{$translations.formatsTitle}</Label>
-    <MultiSelect id="formatIds" items={formatItems} name="formatIds" class="bg-gray-50 dark:bg-gray-600" bind:value={formatIdsSelected} let:item let:clear>
+    <MultiSelect
+      id="formatIds"
+      items={formatItems}
+      name="formatIds"
+      class="bg-gray-50 dark:bg-gray-600"
+      bind:value={formatIdsSelected}
+      on:change={() => setData('formatIds', formatIdsSelected)}
+      let:item
+      let:clear
+    >
       <Badge rounded color={badgeColor(item.value)} dismissable params={{ duration: 100 }} on:close={clear}>
         {item.name}
       </Badge>
@@ -1057,4 +1069,4 @@
     </div>
   </div>
 </form>
-<MeetingDeleteModal bind:showDeleteModal {meetingToDelete} {onDeleted} />
+<MeetingDeleteModal bind:showDeleteModal meetingToDelete={meetingToDelete as Meeting} {onDeleted} />

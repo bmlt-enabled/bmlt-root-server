@@ -11,9 +11,14 @@ const serviceBodies: ServiceBody[] = allServiceBodies;
 
 const selectedMeeting: Meeting = allMeetings[0];
 
+// dummy functions for props
+function onSaved(_: Meeting) {}
+function onClosed() {}
+function onDeleted(_: Meeting) {}
+
 describe('MeetingEditForm Component', () => {
   test('test Ensure form fields are present', async () => {
-    render(MeetingEditForm, { props: { selectedMeeting, serviceBodies, formats } });
+    render(MeetingEditForm, { props: { selectedMeeting, serviceBodies, formats, onSaved, onClosed, onDeleted } });
 
     const deleteButton = screen.getByRole('button', {
       name: `${translations.getString('deleteMeeting')} ${selectedMeeting.id}`
@@ -63,7 +68,7 @@ describe('MeetingEditForm Component', () => {
   });
 
   test('test Initial values are correctly set', async () => {
-    render(MeetingEditForm, { props: { selectedMeeting, serviceBodies, formats } });
+    render(MeetingEditForm, { props: { selectedMeeting, serviceBodies, formats, onSaved, onClosed, onDeleted } });
     // Basic fields
     expect(screen.getByLabelText(translations.getString('nameTitle'))).toHaveValue(selectedMeeting.name);
     expect(screen.getByLabelText(translations.getString('timeZoneTitle'))).toHaveValue(selectedMeeting.timeZone);
@@ -103,7 +108,7 @@ describe('MeetingEditForm Component', () => {
   });
 
   test('test Ensure tabs are present for existing meetings', async () => {
-    render(MeetingEditForm, { props: { selectedMeeting, serviceBodies, formats } });
+    render(MeetingEditForm, { props: { selectedMeeting, serviceBodies, formats, onSaved, onClosed, onDeleted } });
 
     const tabs = [translations.getString('tabsBasic'), translations.getString('tabsLocation'), translations.getString('tabsOther'), translations.getString('tabsChanges')];
     await waitFor(() => {
@@ -114,7 +119,7 @@ describe('MeetingEditForm Component', () => {
   });
 
   test('test Ensure tabs are present for new meetings', async () => {
-    render(MeetingEditForm, { props: { selectedMeeting: null, serviceBodies, formats } });
+    render(MeetingEditForm, { props: { selectedMeeting: null, serviceBodies, formats, onSaved, onClosed, onDeleted } });
 
     const tabs = [translations.getString('tabsBasic'), translations.getString('tabsLocation'), translations.getString('tabsOther')];
     await waitFor(() => {
@@ -126,7 +131,7 @@ describe('MeetingEditForm Component', () => {
   });
 
   test('test Apply Changes button should be disabled initially and enabled after changes', async () => {
-    render(MeetingEditForm, { props: { selectedMeeting, serviceBodies, formats } });
+    render(MeetingEditForm, { props: { selectedMeeting, serviceBodies, formats, onSaved, onClosed, onDeleted } });
 
     const applyChangesButton = screen.getByText(translations.getString('applyChangesTitle'));
     expect(applyChangesButton).toBeDisabled();
@@ -137,7 +142,7 @@ describe('MeetingEditForm Component', () => {
   });
 
   test('test Add Meeting button should be disabled initially and enabled after changes', async () => {
-    render(MeetingEditForm, { props: { selectedMeeting: null, serviceBodies, formats } });
+    render(MeetingEditForm, { props: { selectedMeeting: null, serviceBodies, formats, onSaved, onClosed, onDeleted } });
 
     const applyChangesButton = screen.getByText(translations.getString('addMeeting'));
     expect(applyChangesButton).toBeDisabled();
@@ -148,7 +153,7 @@ describe('MeetingEditForm Component', () => {
   });
 
   test('test Validation errors are displayed with invalid data', async () => {
-    render(MeetingEditForm, { props: { selectedMeeting: null, serviceBodies, formats } });
+    render(MeetingEditForm, { props: { selectedMeeting: null, serviceBodies, formats, onSaved, onClosed, onDeleted } });
 
     const nameInput = screen.getByLabelText(translations.getString('nameTitle'));
     await fireEvent.input(nameInput, { target: { value: '' } });

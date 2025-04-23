@@ -2,7 +2,7 @@
   import L from 'leaflet';
   interface Props {
     title?: string;
-    map: google.maps.Map | L.Map;
+    map: google.maps.Map | L.Map | undefined;
     children?: import('svelte').Snippet;
   }
 
