@@ -62,13 +62,7 @@
     worldId: selectedServiceBody?.worldId ?? ''
   };
 
-  // The $state.snapshot call is to avoid this error:
-  // [svelte] ownership_invalid_binding
-  // resources/js/components/ServiceBodyForm.svelte passed a value to node_modules/flowbite-svelte/dist/forms/MultiSelect.svelte
-  // with `bind:`, but the value is owned by resources/js/routes/ServiceBodies.svelte. Consider creating a binding between
-  // resources/js/routes/ServiceBodies.svelte and resources/js/components/ServiceBodyForm.svelte
-  // https://svelte.dev/e/ownership_invalid_binding
-  let assignedUserIdsSelected: number[] = $state($state.snapshot(selectedServiceBody?.assignedUserIds ?? []));
+  let assignedUserIdsSelected: number[] = $state(selectedServiceBody?.assignedUserIds ?? []);
   let savedServiceBody: ServiceBody;
 
   const { data, errors, form, setData } = createForm({

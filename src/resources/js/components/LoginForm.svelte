@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { run } from 'svelte/legacy';
-
   import { validator } from '@felte/validator-yup';
   import { createForm } from 'felte';
   import { Button, Helper, Input, Label, P, Select } from 'flowbite-svelte';
@@ -24,7 +22,7 @@
   let selectedLanguage = $state(translations.getLanguage());
   let errorMessage: string | undefined = $state();
 
-  const { form, data, errors } = createForm({
+  const { form, errors } = createForm({
     initialValues: {
       username: '',
       password: ''
@@ -61,18 +59,6 @@
       })
     })
   });
-
-  run(() => {
-    if (selectedLanguage) {
-      translations.setLanguage(selectedLanguage);
-    }
-  });
-
-  run(() => {
-    if ($data) {
-      errorMessage = '';
-    }
-  });
 </script>
 
 <div class="mx-auto flex flex-col items-center justify-center px-6 py-8 md:h-screen lg:py-0">
@@ -89,7 +75,7 @@
       <form use:form>
         <div class="mb-4">
           <Label for="username" class="mb-2">{$translations.usernameTitle}</Label>
-          <Input type="text" name="username" id="username" />
+          <Input type="text" name="username" id="username" oninput={() => (errorMessage = '')} />
           <Helper class="mt-2" color="red">
             {#if $errors.username}
               {$errors.username}
@@ -98,7 +84,7 @@
         </div>
         <div class="mb-4">
           <Label for="password" class="mb-2">{$translations.passwordTitle}</Label>
-          <Input type="password" name="password" id="password" />
+          <Input type="password" name="password" id="password" oninput={() => (errorMessage = '')} />
           <Helper class="mt-2" color="red">
             {#if $errors.password}
               {$errors.password}
@@ -108,7 +94,7 @@
         {#if globalSettings.isLanguageSelectorEnabled}
           <div class="mb-4">
             <Label for="languageSelection" class="mb-2">{$translations.languageSelectTitle}</Label>
-            <Select id="languageSelection" items={languageOptions} bind:value={selectedLanguage} />
+            <Select id="languageSelection" items={languageOptions} bind:value={selectedLanguage} onchange={() => translations.setLanguage(selectedLanguage)} />
           </div>
         {/if}
         {#if errorMessage}
