@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { run } from 'svelte/legacy';
-
   import { Modal } from 'flowbite-svelte';
   import { get } from 'svelte/store';
 
@@ -51,7 +49,7 @@
     }
   }
 
-  run(() => {
+  $effect(() => {
     if (showModal) {
       document.addEventListener('mousedown', handleOutsideClick);
     } else {

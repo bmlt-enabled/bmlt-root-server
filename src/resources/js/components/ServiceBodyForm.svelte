@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { run } from 'svelte/legacy';
-
   import { validator } from '@felte/validator-yup';
   import { createForm } from 'felte';
   import { Badge, Button, Helper, Input, Label, MultiSelect, Select, Textarea } from 'flowbite-svelte';
@@ -152,7 +150,7 @@
     }
   }
 
-  run(() => {
+  $effect(() => {
     formIsDirty(initialValues, $data);
   });
 </script>
