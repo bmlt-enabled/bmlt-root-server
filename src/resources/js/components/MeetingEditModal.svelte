@@ -1,23 +1,24 @@
 <script lang="ts">
   import { Modal } from 'flowbite-svelte';
   import { get } from 'svelte/store';
-  import { createEventDispatcher } from 'svelte';
 
   import type { Format, Meeting, ServiceBody } from 'bmlt-root-server-client';
   import MeetingEditForm from './MeetingEditForm.svelte';
   import { isDirty } from '../lib/utils';
   import UnsavedChangesModal from './UnsavedChangesModal.svelte';
 
-  export let showModal: boolean;
-  export let selectedMeeting: Meeting | null;
-  export let formats: Format[];
-  export let serviceBodies: ServiceBody[];
+  interface Props {
+    showModal: boolean;
+    selectedMeeting: Meeting | null;
+    formats: Format[];
+    serviceBodies: ServiceBody[];
+    onSaved: (meeting: Meeting) => void;
+    onClosed: () => void;
+    onDeleted: (meeting: Meeting) => void;
+  }
 
-  const dispatch = createEventDispatcher<{
-    deleted: { meetingId: number };
-    saved: { meeting: Meeting };
-  }>();
-  let showConfirmModal = false;
+  let { showModal = $bindable(), selectedMeeting, formats, serviceBodies, onSaved, onClosed, onDeleted }: Props = $props();
+  let showConfirmModal = $state(false);
   let forceClose = false;
 
   function handleClose() {
@@ -48,21 +49,13 @@
     }
   }
 
-  $: {
+  $effect(() => {
     if (showModal) {
       document.addEventListener('mousedown', handleOutsideClick);
     } else {
       document.removeEventListener('mousedown', handleOutsideClick);
     }
-  }
-
-  function onSaved(event: CustomEvent<{ meeting: Meeting }>) {
-    dispatch('saved', { meeting: event.detail.meeting });
-  }
-
-  function onDeleted(event: CustomEvent<{ meetingId: number }>) {
-    dispatch('deleted', { meetingId: event.detail.meetingId });
-  }
+  });
 
   const dialogClass = 'fixed top-0 start-0 end-0 h-[85vh] md:h-[95vh] h-modal md:inset-0 md:h-full z-50 w-full p-4 flex';
   const defaultClass = 'modal-content min-h-[85vh] max-h-[85vh] md:min-h-[95vh] md:max-h-[95vh]';
@@ -71,8 +64,8 @@
 
 <Modal bind:open={showModal} size="md" classDialog={dialogClass} class={defaultClass} classBody={bodyClass}>
   <div class="p-2">
-    <MeetingEditForm {selectedMeeting} {serviceBodies} {formats} on:saved={onSaved} on:deleted={onDeleted} />
+    <MeetingEditForm {selectedMeeting} {serviceBodies} {formats} {onSaved} {onClosed} {onDeleted} />
   </div>
 </Modal>
 
-<UnsavedChangesModal bind:open={showConfirmModal} on:cancel={handleCancelClose} on:confirm={handleConfirmClose} />
+<UnsavedChangesModal bind:open={showConfirmModal} {handleCancelClose} {handleConfirmClose} />

@@ -1,7 +1,6 @@
 <script lang="ts">
   import { Button, Checkbox, Helper, P } from 'flowbite-svelte';
   import { createForm } from 'felte';
-  import { createEventDispatcher } from 'svelte';
   import { validator } from '@felte/validator-yup';
   import * as yup from 'yup';
 
@@ -10,11 +9,14 @@
   import { spinner } from '../stores/spinner';
   import { translations } from '../stores/localization';
 
-  export let deleteServiceBody: ServiceBody;
-  let confirmed = false;
-  let errorMessage: string | undefined;
+  interface Props {
+    deleteServiceBody: ServiceBody;
+    onDeleteSuccess?: (serviceBody: ServiceBody) => void; // Callback function prop
+  }
 
-  const dispatch = createEventDispatcher<{ deleted: { serviceBodyId: number } }>();
+  let { deleteServiceBody, onDeleteSuccess }: Props = $props();
+  let confirmed = $state(false);
+  let errorMessage: string | undefined = $state();
 
   const { form } = createForm({
     initialValues: { ServiceBodyId: deleteServiceBody?.id, confirmed: false },
@@ -33,7 +35,7 @@
     },
     onSuccess: () => {
       spinner.hide();
-      dispatch('deleted', { serviceBodyId: deleteServiceBody.id });
+      onDeleteSuccess?.(deleteServiceBody);
     },
     extend: validator({
       schema: yup.object({
@@ -56,7 +58,7 @@
       </Helper>
     </div>
     <div class="mb-5">
-      <Button type="submit" class="w-full" disabled={!confirmed ? true : false}>{$translations.delete}</Button>
+      <Button type="submit" class="w-full" disabled={!confirmed}>{$translations.delete}</Button>
     </div>
   </div>
 </form>

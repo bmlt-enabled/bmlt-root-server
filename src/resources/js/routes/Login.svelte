@@ -11,11 +11,11 @@
   }
 
   onMount(() => {
-    // If someone browses to this page while we are already logged in, just redirect
+    // If someone browses to this page while we are already logged in, redirect
     if ($apiCredentials) {
       redirect();
     }
   });
 </script>
 
-<LoginForm {apiCredentials} on:authenticated={redirect} />
+<LoginForm {apiCredentials} authenticated={redirect} />

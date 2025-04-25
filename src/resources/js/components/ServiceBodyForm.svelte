@@ -2,7 +2,6 @@
   import { validator } from '@felte/validator-yup';
   import { createForm } from 'felte';
   import { Badge, Button, Helper, Input, Label, MultiSelect, Select, Textarea } from 'flowbite-svelte';
-  import { createEventDispatcher } from 'svelte';
   import * as yup from 'yup';
 
   import { spinner } from '../stores/spinner';
@@ -12,11 +11,15 @@
   import { translations } from '../stores/localization';
   import { authenticatedUser } from '../stores/apiCredentials';
 
-  export let selectedServiceBody: ServiceBody | null;
-  export let serviceBodies: ServiceBody[];
-  export let users: User[];
+  interface Props {
+    selectedServiceBody: ServiceBody | null;
+    serviceBodies: ServiceBody[];
+    users: User[];
+    onSaveSuccess?: (serviceBody: ServiceBody) => void; // Callback function prop
+  }
 
-  const dispatch = createEventDispatcher<{ saved: { serviceBody: ServiceBody } }>();
+  let { selectedServiceBody, serviceBodies, users, onSaveSuccess }: Props = $props();
+
   const parentIdItems = [
     ...[{ value: '-1', name: $translations.serviceBodiesNoParent ?? '' }],
     ...serviceBodies
@@ -56,7 +59,8 @@
     helpline: selectedServiceBody?.helpline ?? '',
     worldId: selectedServiceBody?.worldId ?? ''
   };
-  let assignedUserIdsSelected = selectedServiceBody?.assignedUserIds ?? [];
+
+  let assignedUserIdsSelected: number[] = $state(selectedServiceBody?.assignedUserIds ?? []);
   let savedServiceBody: ServiceBody;
 
   const { data, errors, form, setData } = createForm({
@@ -97,7 +101,7 @@
     },
     onSuccess: () => {
       spinner.hide();
-      dispatch('saved', { serviceBody: savedServiceBody });
+      onSaveSuccess?.(savedServiceBody); // Call the callback function instead of dispatch
     },
     extend: validator({
       schema: yup.object({
@@ -146,10 +150,9 @@
     }
   }
 
-  $: setData('assignedUserIds', assignedUserIdsSelected);
-  $: {
+  $effect(() => {
     formIsDirty(initialValues, $data);
-  }
+  });
 </script>
 
 <form use:form>
@@ -192,8 +195,17 @@
     </div>
     <div class="md:col-span-2">
       <Label for="assignedUserIds" class="mb-2">{$translations.meetingListEditorsTitle}</Label>
-      <MultiSelect id="assignedUserIds" items={userItems} name="assignedUserIds" class="bg-gray-50 dark:bg-gray-600" bind:value={assignedUserIdsSelected} let:item let:clear>
-        <Badge rounded color={badgeColor(item.value)} dismissable params={{ duration: 100 }} on:close={clear}>
+      <MultiSelect
+        id="assignedUserIds"
+        items={userItems}
+        name="assignedUserIds"
+        class="bg-gray-50 dark:bg-gray-600"
+        bind:value={assignedUserIdsSelected}
+        on:change={() => setData('assignedUserIds', assignedUserIdsSelected)}
+        let:item
+        let:clear
+      >
+        <Badge rounded color={badgeColor(String(item.value))} dismissable params={{ duration: 100 }} on:close={clear}>
           {item.name}
         </Badge>
       </MultiSelect>
@@ -250,7 +262,7 @@
       </Helper>
     </div>
     <div class="md:col-span-2">
-      <Button type="submit" class="w-full" disabled={!$isDirty} on:click={disableButtonHack}>
+      <Button type="submit" class="w-full" disabled={!$isDirty} onclick={disableButtonHack}>
         {#if selectedServiceBody}
           {$translations.applyChangesTitle}
         {:else}

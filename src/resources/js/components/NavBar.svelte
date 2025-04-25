@@ -33,6 +33,6 @@
       <NavLi href="#/users">{$translations.usersTitle}</NavLi>
     {/if}
     <NavLi href="#/account">{$translations.accountTitle}</NavLi>
-    <NavLi href="#" on:click={logout}>{$translations.logout}</NavLi>
+    <NavLi href="#" onclick={logout}>{$translations.logout}</NavLi>
   </NavUl>
 </Navbar>

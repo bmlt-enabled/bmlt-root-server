@@ -2,10 +2,8 @@
   import { validator } from '@felte/validator-yup';
   import { createForm } from 'felte';
   import { Button, Checkbox, Hr, Label, Input, Helper, Select, MultiSelect, Badge } from 'flowbite-svelte';
-  import { createEventDispatcher } from 'svelte';
   import * as yup from 'yup';
   import L from 'leaflet';
-  import type { DragEndEvent, Map, Marker } from 'leaflet';
   import { Loader } from '@googlemaps/js-api-loader';
   import { writable } from 'svelte/store';
 
@@ -27,14 +25,20 @@
   import MeetingDeleteModal from './MeetingDeleteModal.svelte';
   import { TrashBinOutline } from 'flowbite-svelte-icons';
 
-  export let selectedMeeting: Meeting | null;
-  export let formats: Format[];
-  export let serviceBodies: ServiceBody[];
+  interface Props {
+    selectedMeeting: Meeting | null;
+    serviceBodies: ServiceBody[];
+    formats: Format[];
+    onSaved: (meeting: Meeting) => void;
+    onClosed: () => void;
+    onDeleted: (meeting: Meeting) => void;
+  }
+
+  let { selectedMeeting, serviceBodies, formats, onSaved, onDeleted }: Props = $props();
 
   const tabs = selectedMeeting
     ? [$translations.tabsBasic, $translations.tabsLocation, $translations.tabsOther, $translations.tabsChanges]
     : [$translations.tabsBasic, $translations.tabsLocation, $translations.tabsOther];
-  let errorTabs: string[] = [];
   const TAB_CHANGES = 3;
   const globalSettings = settings;
   const seenNames = new Set<string>();
@@ -73,13 +77,13 @@
   const VENUE_TYPE_HYBRID = 3;
   const VALID_VENUE_TYPES = [VENUE_TYPE_IN_PERSON, VENUE_TYPE_VIRTUAL, VENUE_TYPE_HYBRID];
 
-  let map: google.maps.Map | L.Map;
-  let mapElement: HTMLElement;
-  let marker: google.maps.marker.AdvancedMarkerElement | L.Marker | null;
-  let geocodingError: string | null = null;
-  let isPublishedChecked = true;
-  let showDeleteModal = false;
-  let deleteMeeting: Meeting;
+  let map: google.maps.Map | L.Map | null = $state(null);
+  let mapElement: HTMLElement | undefined = $state();
+  let marker: google.maps.marker.AdvancedMarkerElement | L.Marker | null = $state(null);
+  let geocodingError: string | null = $state(null);
+  let isPublishedChecked = $state(true);
+  let showDeleteModal = $state(false);
+  let meetingToDelete: Meeting | undefined = $state();
   const weekdayChoices = $translations.daysOfWeek.map((day: string, index: number) => ({
     value: index,
     name: day
@@ -105,10 +109,6 @@
     value: tz,
     name: tz
   }));
-  const dispatch = createEventDispatcher<{
-    saved: { meeting: Meeting };
-    deleted: { meetingId: number };
-  }>();
 
   const defaultLatLng = { lat: Number(globalSettings.centerLatitude ?? -79.793701171875), lng: Number(globalSettings.centerLongitude ?? 36.065752051707) };
   let defaultDuration = '01:00';
@@ -161,13 +161,13 @@
         }
       : Object.fromEntries(globalSettings.customFields.map((field) => [field.name, '']))
   };
-  let latitude = initialValues.latitude;
-  let longitude = initialValues.longitude;
+  let latitude = $state(initialValues.latitude);
+  let longitude = $state(initialValues.longitude);
   let manualDrag = false;
-  let formatIdsSelected = initialValues.formatIds;
+  let formatIdsSelected = $state(initialValues.formatIds);
   let savedMeeting: Meeting;
-  let changes: MeetingChangeResource[];
-  let changesLoaded = false;
+  let changes: MeetingChangeResource[] = $state([]);
+  let changesLoaded = $state(false);
 
   function shouldGeocode(initialValues: MeetingPartialUpdate, values: MeetingPartialUpdate, isNewMeeting: boolean) {
     if (isNewMeeting && values.venueType != VENUE_TYPE_VIRTUAL) {
@@ -277,7 +277,7 @@
     },
     onSuccess: () => {
       spinner.hide();
-      dispatch('saved', { meeting: savedMeeting });
+      onSaved(savedMeeting);
     },
     extend: validator({
       schema: yup.object({
@@ -372,13 +372,8 @@
 
   function handleDelete(event: MouseEvent, meeting: Meeting) {
     event.stopPropagation();
-    deleteMeeting = meeting;
+    meetingToDelete = meeting;
     showDeleteModal = true;
-  }
-
-  function onDeleted(event: CustomEvent<{ meetingId: number }>) {
-    dispatch('deleted', { meetingId: event.detail.meetingId });
-    showDeleteModal = false;
   }
 
   // This hack is required until https://github.com/themesberg/flowbite-svelte/issues/1395 is fixed.
@@ -389,80 +384,192 @@
   }
 
   // Type guards
-  function isGoogleMarker(marker: google.maps.marker.AdvancedMarkerElement | Marker): marker is google.maps.marker.AdvancedMarkerElement {
-    return (marker as google.maps.marker.AdvancedMarkerElement).position !== undefined;
+  function isGoogleMap(map: any): map is google.maps.Map {
+    if (map) {
+      return (map as google.maps.Map).setCenter !== undefined;
+    } else {
+      return false;
+    }
   }
 
-  function isGoogleMap(map: google.maps.Map | Map): map is google.maps.Map {
-    return (map as google.maps.Map).setCenter !== undefined;
-  }
+  let mapInitialized = $state(false);
 
-  function isLeafletMap(map: google.maps.Map | Map): map is Map {
-    return (map as Map).setView !== undefined;
-  }
+  function initializeMap() {
+    if (mapInitialized) {
+      // If already initialized, just resize/recenter
+      if (map) {
+        setTimeout(() => {
+          if (map && 'invalidateSize' in map) {
+            try {
+              map.invalidateSize();
+              if ('setView' in map) {
+                map.setView([latitude, longitude]);
+              } else if (isGoogleMap(map)) {
+                (map as google.maps.Map).setCenter({ lat: latitude, lng: longitude });
+              }
+            } catch (e) {
+              console.error('Error resizing map:', e);
+            }
+          }
+        }, 200);
+      }
+      return;
+    }
 
-  function setMapCenter(map: google.maps.Map | L.Map, lat: number, lng: number) {
-    if (isGoogleMap(map)) {
-      map.setCenter({ lat, lng });
-    } else if (isLeafletMap(map)) {
-      map.setView([lat, lng]);
+    if (!mapElement) {
+      const mapEl = document.getElementById('locationMap');
+      if (!mapEl) {
+        return;
+      }
+      mapElement = mapEl;
+    }
+
+    // Create the map only if not already initialized
+    if (mapElement && !map) {
+      if (globalSettings.googleApiKey) {
+        createGoogleMap();
+      } else {
+        createLeafletMap();
+      }
+      mapInitialized = true;
     }
   }
 
   function createLeafletMap() {
-    map = L.map(mapElement).setView([latitude, longitude], Number(globalSettings.centerZoom ?? 18));
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 22,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-    const naMarkerImage = L.icon({
-      iconUrl: 'images/NAMarkerR.png',
-      iconSize: [44, 64]
-    });
+    if (!mapElement) {
+      return;
+    }
 
-    marker = L.marker([latitude, longitude], { icon: naMarkerImage, draggable: true }).addTo(map);
+    try {
+      // Clear any existing map
+      if (map && 'remove' in map) {
+        map.remove();
+        map = null;
+      }
 
-    marker.on('dragend', (e: DragEndEvent) => {
-      const { lat, lng } = e.target.getLatLng();
-      latitude = lat;
-      longitude = lng;
-      manualDrag = true;
-    });
-  }
+      const zoomLevel = Math.min(Number(globalSettings.centerZoom ?? 18), 15);
 
-  async function createGoogleMap() {
-    const loader = new Loader({
-      apiKey: globalSettings.googleApiKey,
-      version: 'beta',
-      libraries: ['places', 'marker', 'geocoding']
-    });
-    const { Map } = await loader.importLibrary('maps');
-    mapElement = document.getElementById('locationMap') as HTMLElement;
-    if (mapElement) {
-      map = new Map(mapElement, {
-        center: { lat: latitude, lng: longitude },
-        zoom: Number(globalSettings.centerZoom ?? 18),
-        draggableCursor: 'crosshair',
-        mapId: 'bmlt'
+      const leafletMap = L.map(mapElement, {
+        preferCanvas: true,
+        renderer: L.canvas(),
+        zoom: zoomLevel,
+        center: [latitude, longitude],
+        attributionControl: true,
+        zoomControl: true
       });
-      createGoogleMarker();
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        minZoom: 5,
+        attribution: '&copy; OpenStreetMap',
+        subdomains: ['a', 'b', 'c']
+      }).addTo(leafletMap);
+
+      const naMarkerImage = L.icon({
+        iconUrl: 'images/NAMarkerR.png',
+        iconSize: [44, 64]
+      });
+
+      const leafletMarker = L.marker([latitude, longitude], { icon: naMarkerImage, draggable: true }).addTo(leafletMap);
+
+      leafletMarker.on('dragend', (e) => {
+        const pos = e.target.getLatLng();
+        latitude = pos.lat;
+        longitude = pos.lng;
+        setData('longitude', longitude);
+        setData('latitude', latitude);
+        manualDrag = true;
+      });
+
+      map = leafletMap;
+      marker = leafletMarker;
+
+      const delays = [100, 300, 600, 1000];
+      delays.forEach((delay) => {
+        setTimeout(() => {
+          if (leafletMap && mapElement && mapElement.offsetParent !== null) {
+            try {
+              leafletMap.invalidateSize();
+            } catch (e) {
+              console.error('Error invalidating map size:', e);
+            }
+          }
+        }, delay);
+      });
+    } catch (e) {
+      console.error('Error creating Leaflet map:', e);
     }
   }
 
-  function createGoogleMarker() {
-    const position = { lat: latitude, lng: longitude };
-    const naMarkerImage = document.createElement('img');
-    naMarkerImage.src = 'images/NAMarkerR.png';
-    if (isGoogleMap(map)) {
-      marker = new google.maps.marker.AdvancedMarkerElement({
+  async function createGoogleMap() {
+    if (!mapElement) return;
+
+    try {
+      const loader = new Loader({
+        apiKey: globalSettings.googleApiKey,
+        version: 'beta',
+        libraries: ['places', 'marker']
+      });
+
+      const { Map } = await loader.importLibrary('maps');
+
+      map = new Map(mapElement, {
+        center: { lat: latitude, lng: longitude },
+        zoom: Math.min(Number(globalSettings.centerZoom ?? 18), 15),
+        disableDefaultUI: false,
+        mapTypeId: 'roadmap',
+        gestureHandling: 'auto',
+        zoomControl: true,
+        mapId: 'bmlt'
+      });
+
+      await createAdvancedGoogleMarker();
+    } catch (e) {
+      console.error('Error creating Google Map:', e);
+    }
+  }
+
+  onMount(() => {
+    // Only initialize map if accordion is open
+    if ($showMap) {
+      setTimeout(initializeMap, 300);
+    }
+
+    return () => {
+      // Clean up the map when component is destroyed
+      if (map) {
+        if ('remove' in map) {
+          map.remove();
+        } else if (marker && isGoogleMap(marker) && 'setMap' in marker) {
+          (marker as google.maps.marker.AdvancedMarkerElement).map = null;
+        }
+        map = null;
+        marker = null;
+      }
+    };
+  });
+
+  async function createAdvancedGoogleMarker() {
+    if (!map || !isGoogleMap(map)) return;
+
+    try {
+      const position = { lat: latitude, lng: longitude };
+      const naMarkerImage = document.createElement('img');
+      naMarkerImage.src = 'images/NAMarkerR.png';
+      naMarkerImage.style.width = '44px';
+      naMarkerImage.style.height = '64px';
+
+      const advancedMarker = new google.maps.marker.AdvancedMarkerElement({
         position: position,
         map: map,
         gmpDraggable: true,
-        content: naMarkerImage
+        content: naMarkerImage,
+        title: 'Meeting location'
       });
-      marker.addListener('dragend', () => {
-        if (marker && isGoogleMarker(marker) && marker.position) {
-          const newPosition = marker.position;
+
+      advancedMarker.addListener('dragend', () => {
+        if (advancedMarker && 'position' in advancedMarker && advancedMarker.position) {
+          const newPosition = advancedMarker.position;
           if (newPosition) {
             longitude = typeof newPosition.lng === 'function' ? newPosition.lng() : newPosition.lng;
             latitude = typeof newPosition.lat === 'function' ? newPosition.lat() : newPosition.lat;
@@ -472,6 +579,8 @@
           }
         }
       });
+    } catch (e) {
+      console.error('Error creating advanced Google Marker:', e);
     }
   }
 
@@ -544,498 +653,533 @@
     );
   }
 
-  $: {
-    errorTabs = [];
-    if (hasBasicErrors($errors)) errorTabs.push(tabs[0]);
-    if (hasLocationErrors($errors)) errorTabs.push(tabs[1]);
-    if (hasOtherErrors($errors)) errorTabs.push(tabs[2]);
-  }
+  let errorTabs: string[] = $derived((hasBasicErrors($errors) ? [tabs[0]] : []).concat(hasLocationErrors($errors) ? [tabs[1]] : []).concat(hasOtherErrors($errors) ? [tabs[2]] : []));
 
-  onMount(() => {
-    mapElement = document.getElementById('locationMap') as HTMLElement;
-    if (mapElement) {
-      if (globalSettings.googleApiKey) {
-        createGoogleMap();
-      } else {
-        createLeafletMap();
-      }
-
-      showMap.subscribe((value) => {
-        mapElement.style.display = value ? 'block' : 'none';
-        if (value && map) {
-          setMapCenter(map, latitude, longitude);
-        }
-      });
+  $effect(() => {
+    if (selectedMeeting) {
+      initializeMap();
     }
   });
 
-  $: {
-    if (selectedMeeting) {
-      showMap.set(true);
-      manualDrag = false;
-    }
-  }
-
-  $: setData('formatIds', formatIdsSelected);
-  $: isDirty.set(formIsDirty(initialValues, $data));
+  $effect(() => {
+    isDirty.set(formIsDirty(initialValues, $data));
+  });
 </script>
 
 <svelte:head>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.1/dist/leaflet.css" />
+  <style>
+    #locationMap {
+      width: 100% !important;
+      height: 300px !important;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      display: block !important;
+      overflow: hidden;
+    }
+    .leaflet-container {
+      width: 100% !important;
+      height: 100% !important;
+    }
+    .leaflet-control-zoom {
+      margin-top: 10px !important;
+      margin-left: 10px !important;
+    }
+    .leaflet-control-zoom a {
+      width: 30px !important;
+      height: 30px !important;
+      line-height: 30px !important;
+      font-size: 18px !important;
+    }
+  </style>
 </svelte:head>
 
-<form use:form>
-  <BasicTabs {tabs} {errorTabs} on:change={(e) => handleTabChange(e.detail.index)}>
-    <div slot="tab-content-0">
-      <div class="grid items-center gap-4 md:grid-cols-3">
-        <div class="w-full">
-          <Checkbox name="published" bind:checked={isPublishedChecked}>
-            {$translations.meetingIsPublishedTitle}
-          </Checkbox>
-          {#if !isPublishedChecked}
-            <Helper class="mt-2" color="red">
-              {$translations.meetingUnpublishedNote}
-            </Helper>
-          {/if}
-          {#if $errors.published}
-            <Helper class="mt-2" color="red">
-              {$errors.published}
-            </Helper>
-          {/if}
+{#snippet basicTabContent()}
+  <div class="grid items-center gap-4 md:grid-cols-3">
+    <div class="w-full">
+      <Checkbox name="published" bind:checked={isPublishedChecked}>
+        {$translations.meetingIsPublishedTitle}
+      </Checkbox>
+      {#if !isPublishedChecked}
+        <Helper class="mt-2" color="red">
+          {$translations.meetingUnpublishedNote}
+        </Helper>
+      {/if}
+      {#if $errors.published}
+        <Helper class="mt-2" color="red">
+          {$errors.published}
+        </Helper>
+      {/if}
+    </div>
+    {#if selectedMeeting}
+      <div class="flex w-full items-center justify-between md:col-span-2">
+        <div class="text-gray-700 dark:text-gray-300">
+          <strong>Meeting ID:</strong>
+          {selectedMeeting.id}
         </div>
-        {#if selectedMeeting}
-          <div class="flex w-full items-center justify-between md:col-span-2">
-            <div class="text-gray-700 dark:text-gray-300">
-              <strong>Meeting ID:</strong>
-              {selectedMeeting.id}
-            </div>
-            <Button
-              color="none"
-              on:click={(e) => selectedMeeting && handleDelete(e, selectedMeeting)}
-              class="text-red-600 dark:text-red-500"
-              aria-label={$translations.deleteMeeting + ' ' + (selectedMeeting?.id ?? '')}
-            >
-              <TrashBinOutline title={{ id: 'deleteMeeting', title: $translations.deleteMeeting }} ariaLabel={$translations.deleteMeeting} />
-              <span class="sr-only">{$translations.deleteMeeting}</span>
-            </Button>
-          </div>
-        {/if}
+        <Button
+          color="none"
+          onclick={(e: MouseEvent) => selectedMeeting && handleDelete(e, selectedMeeting)}
+          class="text-red-600 dark:text-red-500"
+          aria-label={$translations.deleteMeeting + ' ' + (selectedMeeting?.id ?? '')}
+        >
+          <TrashBinOutline title={{ id: 'deleteMeeting', title: $translations.deleteMeeting }} ariaLabel={$translations.deleteMeeting} />
+          <span class="sr-only">{$translations.deleteMeeting}</span>
+        </Button>
       </div>
-      <div class="grid gap-4 md:grid-cols-2">
-        <div class="md:col-span-2">
-          <Label for="name" class="mb-2 mt-2">{$translations.nameTitle}</Label>
-          <Input type="text" id="name" name="name" required />
-          {#if $errors.name}
-            <Helper class="mt-2" color="red">
-              {$errors.name}
-            </Helper>
-          {/if}
-        </div>
-      </div>
-      <div class="grid gap-4 md:grid-cols-2">
-        <div class="md:col-span-2">
-          <Label for="timeZone" class="mb-2 mt-2">{$translations.timeZoneTitle}</Label>
-          <Select id="timeZone" items={timeZoneChoices} name="timeZone" class="dark:bg-gray-600" placeholder={$translations.timeZoneSelectPlaceholder} />
-          {#if $errors.timeZone}
-            <Helper class="mt-2" color="red">
-              {$errors.timeZone}
-            </Helper>
-          {/if}
-        </div>
-      </div>
-      <div class="grid gap-4 md:grid-cols-3">
-        <div class="w-full">
-          <Label for="day" class="mb-2 mt-2">{$translations.dayTitle}</Label>
-          <Select id="day" items={weekdayChoices} name="day" class="dark:bg-gray-600" />
-          {#if $errors.day}
-            <Helper class="mt-2" color="red">
-              {$errors.day}
-            </Helper>
-          {/if}
-        </div>
-        <div class="w-full">
-          <Label for="startTime" class="mb-2 mt-2">{$translations.startTimeTitle}</Label>
-          <Input type="time" id="startTime" name="startTime" />
-          {#if $errors.startTime}
-            <Helper class="mt-2" color="red">
-              {$errors.startTime}
-            </Helper>
-          {/if}
-        </div>
-        <div class="w-full">
-          <span class="mb-2 mt-2 block text-sm font-medium text-gray-900 rtl:text-right dark:text-gray-300">{$translations.durationTitle}</span>
-          <DurationSelector bind:duration={initialValues.duration} on:update={(e) => setData('duration', e.detail.duration)} />
-          {#if $errors.duration}
-            <Helper class="mt-2" color="red">
-              {$errors.duration}
-            </Helper>
-          {/if}
-        </div>
-      </div>
-      <div class="grid gap-4 md:grid-cols-2">
-        <div class="md:col-span-2">
-          <Label for="serviceBodyId" class="mb-2 mt-2">{$translations.serviceBodyTitle}</Label>
-          <Select id="serviceBodyId" items={serviceBodyIdItems} name="serviceBodyId" class="dark:bg-gray-600" />
-          {#if $errors.serviceBodyId}
-            <Helper class="mt-2" color="red">
-              {$errors.serviceBodyId}
-            </Helper>
-          {/if}
-        </div>
-      </div>
-      <div class="grid gap-4 md:grid-cols-2">
-        <div class="w-full">
-          <Label for="email" class="mb-2 mt-2">{$translations.emailTitle}</Label>
-          <Input type="email" id="email" name="email" />
-          {#if $errors.email}
-            <Helper class="mt-2" color="red">
-              {$errors.email}
-            </Helper>
-          {/if}
-        </div>
-        <div class="w-full">
-          <Label for="worldId" class="mb-2 mt-2">{$translations.worldIdTitle}</Label>
-          <Input type="text" id="worldId" name="worldId" />
-          {#if $errors.worldId}
-            <Helper class="mt-2" color="red">
-              {$errors.worldId}
-            </Helper>
-          {/if}
-        </div>
-      </div>
+    {/if}
+  </div>
+  <div class="grid gap-4 md:grid-cols-2">
+    <div class="md:col-span-2">
+      <Label for="name" class="mb-2 mt-2">{$translations.nameTitle}</Label>
+      <Input type="text" id="name" name="name" required />
+      {#if $errors.name}
+        <Helper class="mt-2" color="red">
+          {$errors.name}
+        </Helper>
+      {/if}
+    </div>
+  </div>
+  <div class="grid gap-4 md:grid-cols-2">
+    <div class="md:col-span-2">
+      <Label for="timeZone" class="mb-2 mt-2">{$translations.timeZoneTitle}</Label>
+      <Select id="timeZone" items={timeZoneChoices} name="timeZone" class="dark:bg-gray-600" placeholder={$translations.timeZoneSelectPlaceholder} />
+      {#if $errors.timeZone}
+        <Helper class="mt-2" color="red">
+          {$errors.timeZone}
+        </Helper>
+      {/if}
+    </div>
+  </div>
+  <div class="grid gap-4 md:grid-cols-3">
+    <div class="w-full">
+      <Label for="day" class="mb-2 mt-2">{$translations.dayTitle}</Label>
+      <Select id="day" items={weekdayChoices} name="day" class="dark:bg-gray-600" />
+      {#if $errors.day}
+        <Helper class="mt-2" color="red">
+          {$errors.day}
+        </Helper>
+      {/if}
+    </div>
+    <div class="w-full">
+      <Label for="startTime" class="mb-2 mt-2">{$translations.startTimeTitle}</Label>
+      <Input type="time" id="startTime" name="startTime" />
+      {#if $errors.startTime}
+        <Helper class="mt-2" color="red">
+          {$errors.startTime}
+        </Helper>
+      {/if}
+    </div>
+    <div class="w-full">
+      <span class="mb-2 mt-2 block text-sm font-medium text-gray-900 rtl:text-right dark:text-gray-300">{$translations.durationTitle}</span>
+      <DurationSelector initialDuration={initialValues.duration} updateDuration={(d: string) => setData('duration', d)} />
+      {#if $errors.duration}
+        <Helper class="mt-2" color="red">
+          {$errors.duration}
+        </Helper>
+      {/if}
+    </div>
+  </div>
+  <div class="grid gap-4 md:grid-cols-2">
+    <div class="md:col-span-2">
+      <Label for="serviceBodyId" class="mb-2 mt-2">{$translations.serviceBodyTitle}</Label>
+      <Select id="serviceBodyId" items={serviceBodyIdItems} name="serviceBodyId" class="dark:bg-gray-600" />
+      {#if $errors.serviceBodyId}
+        <Helper class="mt-2" color="red">
+          {$errors.serviceBodyId}
+        </Helper>
+      {/if}
+    </div>
+  </div>
+  <div class="grid gap-4 md:grid-cols-2">
+    <div class="w-full">
+      <Label for="email" class="mb-2 mt-2">{$translations.emailTitle}</Label>
+      <Input type="email" id="email" name="email" />
+      {#if $errors.email}
+        <Helper class="mt-2" color="red">
+          {$errors.email}
+        </Helper>
+      {/if}
+    </div>
+    <div class="w-full">
+      <Label for="worldId" class="mb-2 mt-2">{$translations.worldIdTitle}</Label>
+      <Input type="text" id="worldId" name="worldId" />
+      {#if $errors.worldId}
+        <Helper class="mt-2" color="red">
+          {$errors.worldId}
+        </Helper>
+      {/if}
+    </div>
+  </div>
+  <div class="md:col-span-2">
+    <Label for="formatIds" class="mb-2 mt-2">{$translations.formatsTitle}</Label>
+    <MultiSelect
+      id="formatIds"
+      items={formatItems}
+      name="formatIds"
+      class="bg-gray-50 dark:bg-gray-600"
+      bind:value={formatIdsSelected}
+      on:change={() => setData('formatIds', formatIdsSelected)}
+      let:item
+      let:clear
+    >
+      <Badge rounded color={badgeColor(item.value)} dismissable params={{ duration: 100 }} on:close={clear}>
+        {item.name}
+      </Badge>
+    </MultiSelect>
+    <!-- For some reason yup fills the errors store with empty objects for this array. The === 'string' ensures only server side errors will display. -->
+    {#if $errors.formatIds && typeof $errors.formatIds[0] === 'string'}
+      <Helper class="mt-2" color="red">
+        {$errors.formatIds}
+      </Helper>
+    {/if}
+  </div>
+{/snippet}
+
+{#snippet locationTabContent()}
+  <div class="grid gap-4 md:grid-cols-2">
+    <div class="md:col-span-2">
+      <Label for="venueType" class="mb-2 mt-2">{$translations.venueTypeTitle}</Label>
+      <Select id="venueType" items={venueTypeItems} name="venueType" class="dark:bg-gray-600" />
+      {#if $errors.venueType}
+        <Helper class="mt-2" color="red">
+          {$errors.venueType}
+        </Helper>
+      {/if}
+    </div>
+  </div>
+  {#if selectedMeeting}
+    <div class="grid gap-4 md:grid-cols-2">
       <div class="md:col-span-2">
-        <Label for="formatIds" class="mb-2 mt-2">{$translations.formatsTitle}</Label>
-        <MultiSelect id="formatIds" items={formatItems} name="formatIds" class="bg-gray-50 dark:bg-gray-600" bind:value={formatIdsSelected} let:item let:clear>
-          <Badge rounded color={badgeColor(item.value)} dismissable params={{ duration: 100 }} on:close={clear}>
-            {item.name}
-          </Badge>
-        </MultiSelect>
-        <!-- For some reason yup fills the errors store with empty objects for this array. The === 'string' ensures only server side errors will display. -->
-        {#if $errors.formatIds && typeof $errors.formatIds[0] === 'string'}
+        <MapAccordion
+          title={$translations.locationMapTitle}
+          onToggle={(isOpen) => {
+            showMap.set(isOpen);
+
+            if (isOpen) {
+              // ensure map is initialized or refreshed
+              setTimeout(() => {
+                if (mapInitialized && map) {
+                  // If map already exists, just resize and recenter it
+                  if ('invalidateSize' in map) {
+                    map.invalidateSize();
+                    if ('setView' in map) {
+                      map.setView([latitude, longitude]);
+                    } else if (isGoogleMap(map)) {
+                      (map as google.maps.Map).setCenter({ lat: latitude, lng: longitude });
+                    }
+                  }
+                } else {
+                  initializeMap();
+                }
+              }, 200);
+            }
+          }}
+        >
+          <div id="locationMap" bind:this={mapElement} class="h-[300px]"></div>
+        </MapAccordion>
+      </div>
+    </div>
+  {/if}
+  <div class="grid gap-4 md:grid-cols-2">
+    <div class="w-full">
+      <Label for="longitude" class="mb-2 mt-2">{$translations.longitudeTitle}</Label>
+      <Input type="text" id="longitude" name="longitude" bind:value={longitude} required />
+      {#if $errors.longitude}
+        <Helper class="mt-2" color="red">
+          {$errors.longitude}
+        </Helper>
+      {/if}
+    </div>
+    <div class="w-full">
+      <Label for="latitude" class="mb-2 mt-2">{$translations.latitudeTitle}</Label>
+      <Input type="text" id="latitude" name="latitude" bind:value={latitude} required />
+      {#if $errors.latitude}
+        <Helper class="mt-2" color="red">
+          {$errors.latitude}
+        </Helper>
+      {/if}
+    </div>
+  </div>
+  <div class="grid gap-4 md:grid-cols-2">
+    <div class="md:col-span-2">
+      <Label for="locationText" class="mb-2 mt-2">{$translations.locationTextTitle}</Label>
+      <Input type="text" id="locationText" name="locationText" />
+      {#if $errors.locationText}
+        <Helper class="mt-2" color="red">
+          {$errors.locationText}
+        </Helper>
+      {/if}
+    </div>
+  </div>
+  <div class="grid gap-4 md:grid-cols-2">
+    <div class="md:col-span-2">
+      <Label for="locationInfo" class="mb-2 mt-2">{$translations.extraInfoTitle}</Label>
+      <Input type="text" id="locationInfo" name="locationInfo" />
+      {#if $errors.locationInfo}
+        <Helper class="mt-2" color="red">
+          {$errors.locationInfo}
+        </Helper>
+      {/if}
+    </div>
+  </div>
+  <div class="grid gap-4 md:grid-cols-2">
+    <div class="md:col-span-2">
+      <Label for="locationStreet" class="mb-2 mt-2">{$translations.streetTitle}</Label>
+      <Input type="text" id="locationStreet" name="locationStreet" />
+      {#if $errors.locationStreet}
+        <Helper class="mt-2" color="red">
+          {$errors.locationStreet}
+        </Helper>
+      {/if}
+    </div>
+  </div>
+  <div class="grid gap-4 md:grid-cols-2">
+    <div class="w-full">
+      <Label for="locationNeighborhood" class="mb-2 mt-2">{$translations.neighborhoodTitle}</Label>
+      <Input type="text" id="locationNeighborhood" name="locationNeighborhood" />
+      {#if $errors.locationNeighborhood}
+        <Helper class="mt-2" color="red">
+          {$errors.locationNeighborhood}
+        </Helper>
+      {/if}
+    </div>
+    <div class="w-full">
+      <Label for="locationCitySubsection" class="mb-2 mt-2">{$translations.boroughTitle}</Label>
+      <Input type="text" id="locationCitySubsection" name="locationCitySubsection" />
+      {#if $errors.locationCitySubsection}
+        <Helper class="mt-2" color="red">
+          {$errors.locationCitySubsection}
+        </Helper>
+      {/if}
+    </div>
+  </div>
+  <div class="grid gap-4 md:grid-cols-2">
+    <div class="w-full">
+      <Label for="locationMunicipality" class="mb-2 mt-2">{$translations.cityTownTitle}</Label>
+      <Input type="text" id="locationMunicipality" name="locationMunicipality" />
+      {#if $errors.locationMunicipality}
+        <Helper class="mt-2" color="red">
+          {$errors.locationMunicipality}
+        </Helper>
+      {/if}
+    </div>
+    <div class="w-full">
+      <Label for="locationSubProvince" class="mb-2 mt-2">{$translations.countySubProvinceTitle}</Label>
+      {#if countiesAndSubProvincesChoices.length > 0}
+        <Select id="locationSubProvince" items={countiesAndSubProvincesChoices} name="locationSubProvince" class="dark:bg-gray-600" />
+      {:else}
+        <Input type="text" id="locationSubProvince" name="locationSubProvince" />
+      {/if}
+      {#if $errors.locationSubProvince}
+        <Helper class="mt-2" color="red">
+          {$errors.locationSubProvince}
+        </Helper>
+      {/if}
+    </div>
+  </div>
+  <div class="grid gap-4 md:grid-cols-3">
+    <div class="w-full">
+      <Label for="locationProvince" class="mb-2 mt-2">{$translations.stateTitle}</Label>
+      {#if statesAndProvincesChoices.length > 0}
+        <Select id="locationProvince" items={statesAndProvincesChoices} name="locationProvince" class="dark:bg-gray-600" />
+      {:else}
+        <Input type="text" id="locationProvince" name="locationProvince" />
+      {/if}
+      {#if $errors.locationProvince}
+        <Helper class="mt-2" color="red">
+          {$errors.locationProvince}
+        </Helper>
+      {/if}
+    </div>
+    <div class="w-full">
+      <Label for="locationPostalCode1" class="mb-2 mt-2">{$translations.zipCodeTitle}</Label>
+      <Input type="text" id="locationPostalCode1" name="locationPostalCode1" />
+      {#if $errors.locationPostalCode1}
+        <Helper class="mt-2" color="red">
+          {$errors.locationPostalCode1}
+        </Helper>
+      {/if}
+    </div>
+    <div class="w-full">
+      <Label for="locationNation" class="mb-2 mt-2">{$translations.nationTitle}</Label>
+      <Input type="text" id="locationNation" name="locationNation" />
+      {#if $errors.locationNation}
+        <Helper class="mt-2" color="red">
+          {$errors.locationNation}
+        </Helper>
+      {/if}
+    </div>
+  </div>
+  <div class="grid gap-4 md:grid-cols-2">
+    <div class="md:col-span-2">
+      <Label for="phoneMeetingNumber" class="mb-2 mt-2">{$translations.phoneMeetingTitle}</Label>
+      <Input type="text" id="phoneMeetingNumber" name="phoneMeetingNumber" />
+      {#if $errors.phoneMeetingNumber}
+        <Helper class="mt-2" color="red">
+          {$errors.phoneMeetingNumber}
+        </Helper>
+      {/if}
+    </div>
+  </div>
+  <div class="grid gap-4 md:grid-cols-2">
+    <div class="md:col-span-2">
+      <Label for="virtualMeetingLink" class="mb-2 mt-2">{$translations.virtualMeetingTitle}</Label>
+      <Input type="text" id="virtualMeetingLink" name="virtualMeetingLink" />
+      {#if $errors.virtualMeetingLink}
+        <Helper class="mt-2" color="red">
+          {$errors.virtualMeetingLink}
+        </Helper>
+      {/if}
+    </div>
+  </div>
+  <div class="grid gap-4 md:grid-cols-2">
+    <div class="md:col-span-2">
+      <Label for="virtualMeetingAdditionalInfo" class="mb-2 mt-2">{$translations.virtualMeetingAdditionalInfoTitle}</Label>
+      <Input type="text" id="virtualMeetingAdditionalInfo" name="virtualMeetingAdditionalInfo" />
+      {#if $errors.virtualMeetingAdditionalInfo}
+        <Helper class="mt-2" color="red">
+          {$errors.virtualMeetingAdditionalInfo}
+        </Helper>
+      {/if}
+    </div>
+  </div>
+{/snippet}
+
+{#snippet otherTabContent()}
+  <div class="grid gap-4 md:grid-cols-2">
+    <div class="md:col-span-2">
+      <Label for="comments" class="mb-2 mt-2">{$translations.commentsTitle}</Label>
+      <Input type="text" id="comments" name="comments" />
+      {#if $errors.comments}
+        <Helper class="mt-2" color="red">
+          {$errors.comments}
+        </Helper>
+      {/if}
+    </div>
+  </div>
+  <div class="grid gap-4 md:grid-cols-2">
+    <div class="w-full">
+      <Label for="busLines" class="mb-2 mt-2">{$translations.busLinesTitle}</Label>
+      <Input type="text" id="busLines" name="busLines" />
+      {#if $errors.busLines}
+        <Helper class="mt-2" color="red">
+          {$errors.busLines}
+        </Helper>
+      {/if}
+    </div>
+    <div class="w-full">
+      <Label for="trainLines" class="mb-2 mt-2">{$translations.trainLinesTitle}</Label>
+      <Input type="text" id="trainLines" name="trainLines" />
+      {#if $errors.trainLines}
+        <Helper class="mt-2" color="red">
+          {$errors.trainLines}
+        </Helper>
+      {/if}
+    </div>
+  </div>
+  <div class="grid gap-4 md:grid-cols-3">
+    <div class="w-full">
+      <Label for="contactName1" class="mb-2 mt-2">{$translations.contact1NameTitle}</Label>
+      <Input type="text" id="contactName1" name="contactName1" />
+      {#if $errors.contactName1}
+        <Helper class="mt-2" color="red">
+          {$errors.contactName1}
+        </Helper>
+      {/if}
+    </div>
+    <div class="w-full">
+      <Label for="contactPhone1" class="mb-2 mt-2">{$translations.contact1PhoneTitle}</Label>
+      <Input type="text" id="contactPhone1" name="contactPhone1" />
+      {#if $errors.contactPhone1}
+        <Helper class="mt-2" color="red">
+          {$errors.contactPhone1}
+        </Helper>
+      {/if}
+    </div>
+    <div class="w-full">
+      <Label for="contactEmail1" class="mb-2 mt-2">{$translations.contact1EmailTitle}</Label>
+      <Input type="text" id="contactEmail1" name="contactEmail1" />
+      {#if $errors.contactEmail1}
+        <Helper class="mt-2" color="red">
+          {$errors.contactEmail1}
+        </Helper>
+      {/if}
+    </div>
+  </div>
+  <div class="grid gap-4 md:grid-cols-3">
+    <div class="w-full">
+      <Label for="contactName2" class="mb-2 mt-2">{$translations.contact2NameTitle}</Label>
+      <Input type="text" id="contactName2" name="contactName2" />
+      {#if $errors.contactName2}
+        <Helper class="mt-2" color="red">
+          {$errors.contactName2}
+        </Helper>
+      {/if}
+    </div>
+    <div class="w-full">
+      <Label for="contactPhone2" class="mb-2 mt-2">{$translations.contact2PhoneTitle}</Label>
+      <Input type="text" id="contactPhone2" name="contactPhone2" />
+      {#if $errors.contactPhone2}
+        <Helper class="mt-2" color="red">
+          {$errors.contactPhone2}
+        </Helper>
+      {/if}
+    </div>
+    <div class="w-full">
+      <Label for="contactEmail2" class="mb-2 mt-2">{$translations.contact2EmailTitle}</Label>
+      <Input type="text" id="contactEmail2" name="contactEmail2" />
+      {#if $errors.contactEmail2}
+        <Helper class="mt-2" color="red">
+          {$errors.contactEmail2}
+        </Helper>
+      {/if}
+    </div>
+  </div>
+  {#each globalSettings.customFields as { name, displayName }}
+    <div class="grid gap-4 md:grid-cols-2">
+      <div class="md:col-span-2">
+        <Label for={name} class="mb-2 mt-2">{displayName}</Label>
+        <Input type="text" id={name} name={$data.customFields[name]} bind:value={$data.customFields[name]} />
+        {#if $errors.customFields?.[name]}
           <Helper class="mt-2" color="red">
-            {$errors.formatIds}
+            {$errors.customFields[name]}
           </Helper>
         {/if}
       </div>
     </div>
+  {/each}
+{/snippet}
 
-    <div slot="tab-content-1">
-      <div class="grid gap-4 md:grid-cols-2">
-        <div class="md:col-span-2">
-          <Label for="venueType" class="mb-2 mt-2">{$translations.venueTypeTitle}</Label>
-          <Select id="venueType" items={venueTypeItems} name="venueType" class="dark:bg-gray-600" />
-          {#if $errors.venueType}
-            <Helper class="mt-2" color="red">
-              {$errors.venueType}
-            </Helper>
-          {/if}
-        </div>
-      </div>
-      {#if selectedMeeting}
-        <div class="grid gap-4 md:grid-cols-2">
-          <div class="md:col-span-2">
-            <MapAccordion title={$translations.locationMapTitle} {map}>
-              <div id="locationMap" bind:this={mapElement}></div>
-            </MapAccordion>
+{#snippet changesTabContent()}
+  {#if changesLoaded && changes.length > 0}
+    <div class="space-y-3">
+      {#each changes as { dateString, details, userName }}
+        <div class="rounded-lg bg-gray-100 p-3 shadow-sm dark:bg-gray-800">
+          <div class="mb-0 flex items-center justify-between">
+            <h6 class="text-lg font-semibold text-gray-900 dark:text-white">
+              {dateString}
+              {$translations.by}
+              {userName}
+            </h6>
           </div>
-        </div>
-      {/if}
-      <div class="grid gap-4 md:grid-cols-2">
-        <div class="w-full">
-          <Label for="longitude" class="mb-2 mt-2">{$translations.longitudeTitle}</Label>
-          <Input type="text" id="longitude" name="longitude" bind:value={longitude} required />
-          {#if $errors.longitude}
-            <Helper class="mt-2" color="red">
-              {$errors.longitude}
-            </Helper>
+          {#if details && details.length > 0}
+            <ul class="mt-1 space-y-1">
+              {#each details as detail}
+                <li class="text-sm text-gray-600 dark:text-gray-400">
+                  {detail.trim()}
+                </li>
+              {/each}
+            </ul>
           {/if}
-        </div>
-        <div class="w-full">
-          <Label for="latitude" class="mb-2 mt-2">{$translations.latitudeTitle}</Label>
-          <Input type="text" id="latitude" name="latitude" bind:value={latitude} required />
-          {#if $errors.latitude}
-            <Helper class="mt-2" color="red">
-              {$errors.latitude}
-            </Helper>
-          {/if}
-        </div>
-      </div>
-      <div class="grid gap-4 md:grid-cols-2">
-        <div class="md:col-span-2">
-          <Label for="locationText" class="mb-2 mt-2">{$translations.locationTextTitle}</Label>
-          <Input type="text" id="locationText" name="locationText" />
-          {#if $errors.locationText}
-            <Helper class="mt-2" color="red">
-              {$errors.locationText}
-            </Helper>
-          {/if}
-        </div>
-      </div>
-      <div class="grid gap-4 md:grid-cols-2">
-        <div class="md:col-span-2">
-          <Label for="locationInfo" class="mb-2 mt-2">{$translations.extraInfoTitle}</Label>
-          <Input type="text" id="locationInfo" name="locationInfo" />
-          {#if $errors.locationInfo}
-            <Helper class="mt-2" color="red">
-              {$errors.locationInfo}
-            </Helper>
-          {/if}
-        </div>
-      </div>
-      <div class="grid gap-4 md:grid-cols-2">
-        <div class="md:col-span-2">
-          <Label for="locationStreet" class="mb-2 mt-2">{$translations.streetTitle}</Label>
-          <Input type="text" id="locationStreet" name="locationStreet" />
-          {#if $errors.locationStreet}
-            <Helper class="mt-2" color="red">
-              {$errors.locationStreet}
-            </Helper>
-          {/if}
-        </div>
-      </div>
-      <div class="grid gap-4 md:grid-cols-2">
-        <div class="w-full">
-          <Label for="locationNeighborhood" class="mb-2 mt-2">{$translations.neighborhoodTitle}</Label>
-          <Input type="text" id="locationNeighborhood" name="locationNeighborhood" />
-          {#if $errors.locationNeighborhood}
-            <Helper class="mt-2" color="red">
-              {$errors.locationNeighborhood}
-            </Helper>
-          {/if}
-        </div>
-        <div class="w-full">
-          <Label for="locationCitySubsection" class="mb-2 mt-2">{$translations.boroughTitle}</Label>
-          <Input type="text" id="locationCitySubsection" name="locationCitySubsection" />
-          {#if $errors.locationCitySubsection}
-            <Helper class="mt-2" color="red">
-              {$errors.locationCitySubsection}
-            </Helper>
-          {/if}
-        </div>
-      </div>
-      <div class="grid gap-4 md:grid-cols-2">
-        <div class="w-full">
-          <Label for="locationMunicipality" class="mb-2 mt-2">{$translations.cityTownTitle}</Label>
-          <Input type="text" id="locationMunicipality" name="locationMunicipality" />
-          {#if $errors.locationMunicipality}
-            <Helper class="mt-2" color="red">
-              {$errors.locationMunicipality}
-            </Helper>
-          {/if}
-        </div>
-        <div class="w-full">
-          <Label for="locationSubProvince" class="mb-2 mt-2">{$translations.countySubProvinceTitle}</Label>
-          {#if countiesAndSubProvincesChoices.length > 0}
-            <Select id="locationSubProvince" items={countiesAndSubProvincesChoices} name="locationSubProvince" class="dark:bg-gray-600" />
-          {:else}
-            <Input type="text" id="locationSubProvince" name="locationSubProvince" />
-          {/if}
-          {#if $errors.locationSubProvince}
-            <Helper class="mt-2" color="red">
-              {$errors.locationSubProvince}
-            </Helper>
-          {/if}
-        </div>
-      </div>
-      <div class="grid gap-4 md:grid-cols-3">
-        <div class="w-full">
-          <Label for="locationProvince" class="mb-2 mt-2">{$translations.stateTitle}</Label>
-          {#if statesAndProvincesChoices.length > 0}
-            <Select id="locationProvince" items={statesAndProvincesChoices} name="locationProvince" class="dark:bg-gray-600" />
-          {:else}
-            <Input type="text" id="locationProvince" name="locationProvince" />
-          {/if}
-          {#if $errors.locationProvince}
-            <Helper class="mt-2" color="red">
-              {$errors.locationProvince}
-            </Helper>
-          {/if}
-        </div>
-        <div class="w-full">
-          <Label for="locationPostalCode1" class="mb-2 mt-2">{$translations.zipCodeTitle}</Label>
-          <Input type="text" id="locationPostalCode1" name="locationPostalCode1" />
-          {#if $errors.locationPostalCode1}
-            <Helper class="mt-2" color="red">
-              {$errors.locationPostalCode1}
-            </Helper>
-          {/if}
-        </div>
-        <div class="w-full">
-          <Label for="locationNation" class="mb-2 mt-2">{$translations.nationTitle}</Label>
-          <Input type="text" id="locationNation" name="locationNation" />
-          {#if $errors.locationNation}
-            <Helper class="mt-2" color="red">
-              {$errors.locationNation}
-            </Helper>
-          {/if}
-        </div>
-      </div>
-      <div class="grid gap-4 md:grid-cols-2">
-        <div class="md:col-span-2">
-          <Label for="phoneMeetingNumber" class="mb-2 mt-2">{$translations.phoneMeetingTitle}</Label>
-          <Input type="text" id="phoneMeetingNumber" name="phoneMeetingNumber" />
-          {#if $errors.phoneMeetingNumber}
-            <Helper class="mt-2" color="red">
-              {$errors.phoneMeetingNumber}
-            </Helper>
-          {/if}
-        </div>
-      </div>
-      <div class="grid gap-4 md:grid-cols-2">
-        <div class="md:col-span-2">
-          <Label for="virtualMeetingLink" class="mb-2 mt-2">{$translations.virtualMeetingTitle}</Label>
-          <Input type="text" id="virtualMeetingLink" name="virtualMeetingLink" />
-          {#if $errors.virtualMeetingLink}
-            <Helper class="mt-2" color="red">
-              {$errors.virtualMeetingLink}
-            </Helper>
-          {/if}
-        </div>
-      </div>
-      <div class="grid gap-4 md:grid-cols-2">
-        <div class="md:col-span-2">
-          <Label for="virtualMeetingAdditionalInfo" class="mb-2 mt-2">{$translations.virtualMeetingAdditionalInfoTitle}</Label>
-          <Input type="text" id="virtualMeetingAdditionalInfo" name="virtualMeetingAdditionalInfo" />
-          {#if $errors.virtualMeetingAdditionalInfo}
-            <Helper class="mt-2" color="red">
-              {$errors.virtualMeetingAdditionalInfo}
-            </Helper>
-          {/if}
-        </div>
-      </div>
-    </div>
-
-    <div slot="tab-content-2">
-      <div class="grid gap-4 md:grid-cols-2">
-        <div class="md:col-span-2">
-          <Label for="comments" class="mb-2 mt-2">{$translations.commentsTitle}</Label>
-          <Input type="text" id="comments" name="comments" />
-          {#if $errors.comments}
-            <Helper class="mt-2" color="red">
-              {$errors.comments}
-            </Helper>
-          {/if}
-        </div>
-      </div>
-      <div class="grid gap-4 md:grid-cols-2">
-        <div class="w-full">
-          <Label for="busLines" class="mb-2 mt-2">{$translations.busLinesTitle}</Label>
-          <Input type="text" id="busLines" name="busLines" />
-          {#if $errors.busLines}
-            <Helper class="mt-2" color="red">
-              {$errors.busLines}
-            </Helper>
-          {/if}
-        </div>
-        <div class="w-full">
-          <Label for="trainLines" class="mb-2 mt-2">{$translations.trainLinesTitle}</Label>
-          <Input type="text" id="trainLines" name="trainLines" />
-          {#if $errors.trainLines}
-            <Helper class="mt-2" color="red">
-              {$errors.trainLines}
-            </Helper>
-          {/if}
-        </div>
-      </div>
-      <div class="grid gap-4 md:grid-cols-3">
-        <div class="w-full">
-          <Label for="contactName1" class="mb-2 mt-2">{$translations.contact1NameTitle}</Label>
-          <Input type="text" id="contactName1" name="contactName1" />
-          {#if $errors.contactName1}
-            <Helper class="mt-2" color="red">
-              {$errors.contactName1}
-            </Helper>
-          {/if}
-        </div>
-        <div class="w-full">
-          <Label for="contactPhone1" class="mb-2 mt-2">{$translations.contact1PhoneTitle}</Label>
-          <Input type="text" id="contactPhone1" name="contactPhone1" />
-          {#if $errors.contactPhone1}
-            <Helper class="mt-2" color="red">
-              {$errors.contactPhone1}
-            </Helper>
-          {/if}
-        </div>
-        <div class="w-full">
-          <Label for="contactEmail1" class="mb-2 mt-2">{$translations.contact1EmailTitle}</Label>
-          <Input type="text" id="contactEmail1" name="contactEmail1" />
-          {#if $errors.contactEmail1}
-            <Helper class="mt-2" color="red">
-              {$errors.contactEmail1}
-            </Helper>
-          {/if}
-        </div>
-      </div>
-      <div class="grid gap-4 md:grid-cols-3">
-        <div class="w-full">
-          <Label for="contactName2" class="mb-2 mt-2">{$translations.contact2NameTitle}</Label>
-          <Input type="text" id="contactName2" name="contactName2" />
-          {#if $errors.contactName2}
-            <Helper class="mt-2" color="red">
-              {$errors.contactName2}
-            </Helper>
-          {/if}
-        </div>
-        <div class="w-full">
-          <Label for="contactPhone2" class="mb-2 mt-2">{$translations.contact2PhoneTitle}</Label>
-          <Input type="text" id="contactPhone2" name="contactPhone2" />
-          {#if $errors.contactPhone2}
-            <Helper class="mt-2" color="red">
-              {$errors.contactPhone2}
-            </Helper>
-          {/if}
-        </div>
-        <div class="w-full">
-          <Label for="contactEmail2" class="mb-2 mt-2">{$translations.contact2EmailTitle}</Label>
-          <Input type="text" id="contactEmail2" name="contactEmail2" />
-          {#if $errors.contactEmail2}
-            <Helper class="mt-2" color="red">
-              {$errors.contactEmail2}
-            </Helper>
-          {/if}
-        </div>
-      </div>
-      {#each globalSettings.customFields as { name, displayName }}
-        <div class="grid gap-4 md:grid-cols-2">
-          <div class="md:col-span-2">
-            <Label for={name} class="mb-2 mt-2">{displayName}</Label>
-            <Input type="text" id={name} name={$data.customFields[name]} bind:value={$data.customFields[name]} />
-            {#if $errors.customFields?.[name]}
-              <Helper class="mt-2" color="red">
-                {$errors.customFields[name]}
-              </Helper>
-            {/if}
-          </div>
         </div>
       {/each}
     </div>
-    <div slot="tab-content-3">
-      {#if changesLoaded && changes.length > 0}
-        <div class="space-y-3">
-          {#each changes as { dateString, details, userName }}
-            <div class="rounded-lg bg-gray-100 p-3 shadow-sm dark:bg-gray-800">
-              <div class="mb-0 flex items-center justify-between">
-                <h6 class="text-lg font-semibold text-gray-900 dark:text-white">
-                  {dateString}
-                  {$translations.by}
-                  {userName}
-                </h6>
-              </div>
-              {#if details && details.length > 0}
-                <ul class="mt-1 space-y-1">
-                  {#each details as detail}
-                    <li class="text-sm text-gray-600 dark:text-gray-400">
-                      {detail.trim()}
-                    </li>
-                  {/each}
-                </ul>
-              {/if}
-            </div>
-          {/each}
-        </div>
-      {/if}
-    </div>
-  </BasicTabs>
+  {/if}
+{/snippet}
+
+<form use:form>
+  <BasicTabs changeActiveTab={handleTabChange} {tabs} {errorTabs} tabsSnippets={[basicTabContent, locationTabContent, otherTabContent, changesTabContent]} />
   <Hr hrClass="my-8" />
   <div class="grid gap-4 md:grid-cols-2">
     <div class="md:col-span-2">
@@ -1049,7 +1193,7 @@
           {$translations.meetingErrorsSomewhere + ' ' + errorTabs.join(', ')}
         </Helper>
       {/if}
-      <Button type="submit" class="w-full" disabled={!$isDirty} on:click={disableButtonHack}>
+      <Button type="submit" class="w-full" disabled={!$isDirty} onclick={disableButtonHack}>
         {#if selectedMeeting}
           {$translations.applyChangesTitle}
         {:else}
@@ -1059,4 +1203,4 @@
     </div>
   </div>
 </form>
-<MeetingDeleteModal bind:showDeleteModal {deleteMeeting} on:deleted={onDeleted} />
+<MeetingDeleteModal bind:showDeleteModal meetingToDelete={meetingToDelete as Meeting} {onDeleted} />

@@ -14,16 +14,16 @@
   import { translations } from '../stores/localization';
   import { spinner } from '../stores/spinner';
 
-  let usersLoaded = false;
-  let serviceBodiesLoaded = false;
-  let users: User[] = [];
-  let serviceBodies: ServiceBody[] = [];
-  let filteredServiceBodies: ServiceBody[] = [];
-  let showModal = false;
-  let showDeleteModal = false;
-  let searchTerm = '';
-  let selectedServiceBody: ServiceBody | null;
-  let deleteServiceBody: ServiceBody;
+  let usersLoaded = $state(false);
+  let serviceBodiesLoaded = $state(false);
+  let users: User[] = $state([]);
+  let serviceBodies: ServiceBody[] = $state([]);
+  let filteredServiceBodies: ServiceBody[] = $state([]);
+  let showModal = $state(false);
+  let showDeleteModal = $state(false);
+  let searchTerm = $state('');
+  let selectedServiceBody: ServiceBody | null = $state(null);
+  let deleteServiceBody: ServiceBody | null = $state(null);
 
   async function getUsers(): Promise<void> {
     try {
@@ -65,8 +65,7 @@
     showDeleteModal = true;
   }
 
-  function onSaved(event: CustomEvent<{ serviceBody: ServiceBody }>) {
-    const serviceBody = event.detail.serviceBody;
+  function onSaved(serviceBody: ServiceBody) {
     const i = serviceBodies.findIndex((s) => s.id === serviceBody.id);
     if (i === -1) {
       serviceBodies = [...serviceBodies, serviceBody];
@@ -76,8 +75,8 @@
     closeModal();
   }
 
-  function onDeleted(event: CustomEvent<{ serviceBodyId: number }>) {
-    serviceBodies = serviceBodies.filter((s) => s.id !== event.detail.serviceBodyId);
+  function onDeleted(serviceBody: ServiceBody) {
+    serviceBodies = serviceBodies.filter((s) => s.id !== serviceBody.id);
     showDeleteModal = false;
   }
 
@@ -105,16 +104,16 @@
     getServiceBodies();
   });
 
-  $: {
+  $effect(() => {
     // filteredServiceBodies will be an array of service bodies that the authenticated user can edit
     // prettier-ignore
     if ($authenticatedUser) {
-      filteredServiceBodies = serviceBodies
-        .sort((s1, s2) => s1.name.localeCompare(s2.name))
-        .filter((s) => s.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1 &&
-            ($authenticatedUser.type === 'admin' || isAdminForServiceBody($authenticatedUser.id, s)));
-    }
-  }
+          filteredServiceBodies = serviceBodies
+              .sort((s1, s2) => s1.name.localeCompare(s2.name))
+              .filter((s) => s.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1 &&
+                  ($authenticatedUser?.type === 'admin' || isAdminForServiceBody($authenticatedUser.id, s)));
+      }
+  });
 </script>
 
 <Nav />
@@ -130,7 +129,7 @@
               <div class="flex">
                 <div class="mt-2.5 grow">Name</div>
                 <div>
-                  <Button on:click={() => handleAdd()} class="whitespace-nowrap" aria-label={$translations.addServiceBody}>{$translations.addServiceBody}</Button>
+                  <Button onclick={() => handleAdd()} class="whitespace-nowrap" aria-label={$translations.addServiceBody}>{$translations.addServiceBody}</Button>
                 </div>
               </div>
             {:else}
@@ -139,12 +138,12 @@
           </TableHeadCell>
         </TableHead>
         <TableBody>
-          {#each filteredServiceBodies as serviceBody}
-            <TableBodyRow on:click={() => handleEdit(serviceBody)} class="cursor-pointer" aria-label={$translations.editUser}>
+          {#each filteredServiceBodies as serviceBody (serviceBody.id)}
+            <TableBodyRow onclick={() => handleEdit(serviceBody)} class="cursor-pointer" aria-label={$translations.editUser}>
               <TableBodyCell class="whitespace-normal">{serviceBody.name}</TableBodyCell>
               {#if $authenticatedUser?.type === 'admin'}
                 <TableBodyCell class="text-right">
-                  <Button color="none" on:click={(e) => handleDelete(e, serviceBody)} class="text-blue-700 dark:text-blue-500">
+                  <Button color="none" onclick={(e: MouseEvent) => handleDelete(e, serviceBody)} class="text-blue-700 dark:text-blue-500">
                     <TrashBinOutline title={{ id: 'deleteServiceBody', title: $translations.deleteServiceBody }} ariaLabel={$translations.deleteServiceBody + ' ' + serviceBody.name} />
                   </Button>
                 </TableBodyCell>
@@ -155,7 +154,7 @@
       </TableSearch>
     {:else if $authenticatedUser?.type === 'admin'}
       <div class="p-2">
-        <ServiceBodyForm {serviceBodies} {selectedServiceBody} {users} on:saved={onSaved} />
+        <ServiceBodyForm {serviceBodies} {selectedServiceBody} {users} onSaveSuccess={onSaved} />
       </div>
     {:else}
       <P class="text-center">{$translations.noServiceBodiesTitle}</P>
@@ -163,5 +162,7 @@
   {/if}
 </div>
 
-<ServiceBodyModal bind:showModal {serviceBodies} {selectedServiceBody} {users} on:saved={onSaved} on:close={closeModal} />
-<ServiceBodyDeleteModal bind:showDeleteModal {deleteServiceBody} on:deleted={onDeleted} />
+<ServiceBodyModal bind:showModal {serviceBodies} {selectedServiceBody} {users} onSaveSuccess={onSaved} onClose={closeModal} />
+{#if deleteServiceBody}
+  <ServiceBodyDeleteModal bind:showDeleteModal {deleteServiceBody} onDeleteSuccess={onDeleted} />
+{/if}

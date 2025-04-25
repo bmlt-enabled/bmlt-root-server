@@ -1,9 +1,10 @@
 <script lang="ts">
   import { Modal, Spinner } from 'flowbite-svelte';
   import { spinner } from '../stores/spinner';
-
-  let isActive = !!$spinner;
-  $: isActive = !!$spinner;
+  let isActive = $state(!!$spinner);
+  $effect(() => {
+    isActive = !!$spinner;
+  });
 </script>
 
 <Modal bind:open={isActive} color="none" class="shadow-none" dismissable={false}>

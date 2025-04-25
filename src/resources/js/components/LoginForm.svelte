@@ -2,7 +2,6 @@
   import { validator } from '@felte/validator-yup';
   import { createForm } from 'felte';
   import { Button, Helper, Input, Label, P, Select } from 'flowbite-svelte';
-  import { createEventDispatcher } from 'svelte';
   import * as yup from 'yup';
 
   import DarkMode from './DarkMode.svelte';
@@ -11,15 +10,19 @@
   import { spinner } from '../stores/spinner';
   import type { ApiCredentialsStore } from '../stores/apiCredentials';
 
-  export let apiCredentials: ApiCredentialsStore;
+  interface Props {
+    apiCredentials: ApiCredentialsStore;
+    authenticated: () => void;
+  }
+
+  let { apiCredentials, authenticated }: Props = $props();
 
   const globalSettings = settings;
-  const dispatch = createEventDispatcher();
   const languageOptions = Object.entries(globalSettings.languageMapping).map((lang) => ({ value: lang[0], name: lang[1] }));
-  let selectedLanguage = translations.getLanguage();
-  let errorMessage: string | undefined;
+  let selectedLanguage = $state(translations.getLanguage());
+  let errorMessage: string | undefined = $state();
 
-  const { form, data, errors } = createForm({
+  const { form, errors } = createForm({
     initialValues: {
       username: '',
       password: ''
@@ -30,7 +33,7 @@
     },
     onSuccess: () => {
       spinner.hide();
-      dispatch('authenticated');
+      authenticated();
     },
     onError: async (error) => {
       await RootServerApi.handleErrors(error as Error, {
@@ -56,14 +59,6 @@
       })
     })
   });
-
-  $: if (selectedLanguage) {
-    translations.setLanguage(selectedLanguage);
-  }
-
-  $: if ($data) {
-    errorMessage = '';
-  }
 </script>
 
 <div class="mx-auto flex flex-col items-center justify-center px-6 py-8 md:h-screen lg:py-0">
@@ -80,7 +75,7 @@
       <form use:form>
         <div class="mb-4">
           <Label for="username" class="mb-2">{$translations.usernameTitle}</Label>
-          <Input type="text" name="username" id="username" />
+          <Input type="text" name="username" id="username" oninput={() => (errorMessage = '')} />
           <Helper class="mt-2" color="red">
             {#if $errors.username}
               {$errors.username}
@@ -89,7 +84,7 @@
         </div>
         <div class="mb-4">
           <Label for="password" class="mb-2">{$translations.passwordTitle}</Label>
-          <Input type="password" name="password" id="password" />
+          <Input type="password" name="password" id="password" oninput={() => (errorMessage = '')} />
           <Helper class="mt-2" color="red">
             {#if $errors.password}
               {$errors.password}
@@ -99,7 +94,7 @@
         {#if globalSettings.isLanguageSelectorEnabled}
           <div class="mb-4">
             <Label for="languageSelection" class="mb-2">{$translations.languageSelectTitle}</Label>
-            <Select id="languageSelection" items={languageOptions} bind:value={selectedLanguage} />
+            <Select id="languageSelection" items={languageOptions} bind:value={selectedLanguage} onchange={() => translations.setLanguage(selectedLanguage)} />
           </div>
         {/if}
         {#if errorMessage}

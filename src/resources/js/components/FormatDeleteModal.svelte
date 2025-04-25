@@ -4,13 +4,18 @@
   import type { Format } from 'bmlt-root-server-client';
   import FormatDeleteForm from './FormatDeleteForm.svelte';
 
-  export let showDeleteModal: boolean;
-  export let deleteFormat: Format;
-  export let formatName: string;
+  interface Props {
+    showDeleteModal: boolean;
+    deleteFormat: Format;
+    formatName: string;
+    onDeleteSuccess?: (format: Format) => void; // Callback function prop
+  }
+
+  let { showDeleteModal = $bindable(), deleteFormat, formatName, onDeleteSuccess }: Props = $props();
 </script>
 
 <Modal bind:open={showDeleteModal} size="sm" outsideclose>
   <div class="p-2">
-    <FormatDeleteForm {deleteFormat} {formatName} on:deleted />
+    <FormatDeleteForm {deleteFormat} {formatName} {onDeleteSuccess} />
   </div>
 </Modal>

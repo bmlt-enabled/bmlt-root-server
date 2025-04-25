@@ -6,12 +6,18 @@
   import { isDirty } from '../lib/utils';
   import UnsavedChangesModal from './UnsavedChangesModal.svelte';
 
-  export let showModal: boolean;
-  export let selectedServiceBody: ServiceBody | null;
-  export let serviceBodies: ServiceBody[];
-  export let users: User[];
+  interface Props {
+    showModal: boolean;
+    selectedServiceBody: ServiceBody | null;
+    serviceBodies: ServiceBody[];
+    users: User[];
+    onSaveSuccess?: (serviceBody: ServiceBody) => void; // Callback function prop
+    onClose?: () => void; // Callback function prop
+  }
 
-  let showConfirmModal = false;
+  let { showModal = $bindable(), selectedServiceBody, serviceBodies, users, onSaveSuccess, onClose }: Props = $props();
+
+  let showConfirmModal = $state(false);
   let forceClose = false;
 
   function handleClose() {
@@ -21,6 +27,7 @@
     } else {
       showModal = false;
       forceClose = false;
+      if (onClose) onClose();
     }
   }
 
@@ -28,6 +35,7 @@
     showConfirmModal = false;
     forceClose = true;
     showModal = false;
+    if (onClose) onClose();
   }
 
   function handleCancelClose() {
@@ -42,19 +50,19 @@
     }
   }
 
-  $: {
+  $effect(() => {
     if (showModal) {
       document.addEventListener('mousedown', handleOutsideClick);
     } else {
       document.removeEventListener('mousedown', handleOutsideClick);
     }
-  }
+  });
 </script>
 
 <Modal bind:open={showModal} size="sm" class="modal-content">
   <div class="p-4">
-    <ServiceBodyForm {serviceBodies} {selectedServiceBody} {users} on:saved />
+    <ServiceBodyForm {serviceBodies} {selectedServiceBody} {users} {onSaveSuccess} />
   </div>
 </Modal>
 
-<UnsavedChangesModal bind:open={showConfirmModal} on:cancel={handleCancelClose} on:confirm={handleConfirmClose} />
+<UnsavedChangesModal bind:open={showConfirmModal} {handleCancelClose} {handleConfirmClose} />

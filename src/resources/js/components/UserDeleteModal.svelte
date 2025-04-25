@@ -4,12 +4,17 @@
   import type { User } from 'bmlt-root-server-client';
   import UserDeleteForm from './UserDeleteForm.svelte';
 
-  export let showDeleteModal: boolean;
-  export let deleteUser: User;
+  interface Props {
+    showDeleteModal: boolean;
+    deleteUser: User;
+    onDeleteSuccess?: (user: User) => void; // Callback function prop
+  }
+
+  let { showDeleteModal = $bindable(), deleteUser, onDeleteSuccess }: Props = $props();
 </script>
 
 <Modal bind:open={showDeleteModal} size="sm" outsideclose>
   <div class="p-2">
-    <UserDeleteForm {deleteUser} on:deleted />
+    <UserDeleteForm {deleteUser} {onDeleteSuccess} />
   </div>
 </Modal>

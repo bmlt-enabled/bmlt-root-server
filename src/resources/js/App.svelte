@@ -62,9 +62,11 @@
     }
   }
 
-  $: if (!$apiCredentials) {
-    push('/login');
-  }
+  $effect(() => {
+    if (!$apiCredentials) {
+      push('/login');
+    }
+  });
 </script>
 
 <svelte:head>
@@ -72,5 +74,5 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 </svelte:head>
 
-<Router {routes} on:conditionsFailed={conditionsFailed} />
+<Router {routes} onconditionsFailed={conditionsFailed} />
 <SpinnerModal />

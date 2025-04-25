@@ -13,15 +13,20 @@
     children?: TreeNode[];
   }
 
-  export let serviceBodies: ServiceBody[];
-  export let selectedValues: string[] = [];
+  interface Props {
+    serviceBodies: ServiceBody[];
+    selectedValues?: string[];
+  }
+
+  let { serviceBodies, selectedValues = $bindable([]) }: Props = $props();
 
   const treeMap: Record<string, TreeNode> = {};
-  let trees: TreeNode[] = convertServiceBodiesToTreeNodes(serviceBodies);
+  let trees = $derived.by(() => convertServiceBodiesToTreeNodes(serviceBodies));
 
   function convertServiceBodiesToTreeNodes(serviceBodies: ServiceBody[]): TreeNode[] {
-    const nodeMap: { [key: number]: TreeNode } = {};
+    const nodeMap: Record<number, TreeNode> = {};
     const roots: TreeNode[] = [];
+
     serviceBodies.forEach((sb) => {
       nodeMap[sb.id] = {
         label: sb.name,
@@ -31,6 +36,7 @@
         children: []
       };
     });
+
     serviceBodies.forEach((sb) => {
       const node = nodeMap[sb.id];
       if (sb.parentId && nodeMap[sb.parentId]) {
@@ -42,23 +48,6 @@
 
     return roots;
   }
-
-  function initTreeMap(trees: TreeNode[]) {
-    trees.forEach((tree) => {
-      processTree(tree);
-    });
-  }
-
-  function processTree(node: TreeNode) {
-    if (node.children) {
-      for (const child of node.children) {
-        treeMap[child.label] = node;
-        processTree(child);
-      }
-    }
-  }
-
-  initTreeMap(trees);
 
   function rebuildChildren(node: TreeNode, checkAsParent = true) {
     if (node.children) {
@@ -90,7 +79,7 @@
 
       parent = treeMap[parent.label];
     }
-    trees = [...trees];
+    // trees = [...trees];
     selectedValues = collectSelectedValues(trees);
   }
 
@@ -111,18 +100,20 @@
   }
 
   function selectAll() {
-    trees.forEach((node) => {
-      checkAllNodes(node, true);
+    let updatedTrees = trees.map((tree) => {
+      checkAllNodes(tree, true);
+      return { ...tree };
     });
-    trees = [...trees];
-    selectedValues = collectSelectedValues(trees);
+
+    serviceBodies = [...serviceBodies];
+    selectedValues = collectSelectedValues(updatedTrees);
   }
 
   function unselectAll() {
     trees.forEach((node) => {
       checkAllNodes(node, false);
     });
-    trees = [...trees];
+    serviceBodies = [...serviceBodies];
     selectedValues = [];
   }
 
@@ -141,20 +132,20 @@
     }
   }
 
-  $: isAllSelected = trees.every((node) => isNodeFullySelected(node));
   function isNodeFullySelected(node: TreeNode): boolean {
     return !!node.checked && (!node.children || node.children.every(isNodeFullySelected));
   }
+  let isAllSelected = $derived.by(() => trees.every((node) => isNodeFullySelected(node)));
 </script>
 
 <div class="mb-4">
-  <Button on:click={toggleAll} size="xs" color="primary" class="w-full">
+  <Button onclick={toggleAll} size="xs" color="primary" class="w-full">
     {isAllSelected ? $translations.unselectAllServiceBodies : $translations.selectAllServiceBodies}
   </Button>
 </div>
 
 <div>
-  {#each trees as tree}
-    <Node {tree} on:toggle={rebuildTree} />
+  {#each trees as tree (tree)}
+    <Node {tree} toggle={rebuildTree} />
   {/each}
 </div>

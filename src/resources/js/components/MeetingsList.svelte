@@ -167,7 +167,7 @@
       sortColumn = column;
       sortDirection = 'asc';
     }
-    filteredItems = [...filteredItems].sort((a, b) => {
+    [...filteredItems].sort((a, b) => {
       const valA = a[column];
       const valB = b[column];
 
@@ -181,17 +181,16 @@
     });
     currentPosition = 0;
     renderPagination(filteredItems.length);
-    currentPageItems = filteredItems.slice(currentPosition, currentPosition + itemsPerPage);
+    filteredItems.slice(currentPosition, currentPosition + itemsPerPage);
   }
 
   const goToPage = (pageNumber: number) => {
     currentPosition = (pageNumber - 1) * itemsPerPage;
-    currentPageItems = filteredItems.slice(currentPosition, currentPosition + itemsPerPage);
+    filteredItems.slice(currentPosition, currentPosition + itemsPerPage);
     renderPagination(filteredItems.length);
   };
 
-  function onSaved(event: CustomEvent<{ meeting: Meeting }>) {
-    const meeting = event.detail.meeting;
+  function onSaved(meeting: Meeting) {
     const i = meetings.findIndex((m) => m.id === meeting.id);
     if (i === -1) {
       meetings = [...meetings, meeting];
@@ -211,8 +210,8 @@
     openModal();
   }
 
-  function onDeleted(event: CustomEvent<{ meetingId: number }>) {
-    meetings = meetings.filter((m) => m.id !== event.detail.meetingId);
+  function onDeleted(meeting: Meeting) {
+    meetings = meetings.filter((m) => m.id !== meeting.id);
     closeModal();
   }
 
@@ -281,7 +280,7 @@
     </Button>
     <Dropdown class="top-full z-50 w-48 space-y-2 p-3 text-sm">
       <h6 class="text-sm font-medium text-gray-900 dark:text-white">{$translations.searchByDay}</h6>
-      <Button on:click={toggleAllDays} size="xs" color="primary" class="w-full">
+      <Button onclick={toggleAllDays} size="xs" color="primary" class="w-full">
         {isAllDaysSelected ? $translations.unselectAllDays : $translations.selectAllDays}
       </Button>
       <Checkbox name="weekdays" choices={weekdayChoices} bind:group={selectedDays} groupLabelClass="justify-between" />
@@ -307,14 +306,14 @@
       <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">{$translations.chooseStartTime}</h6>
       <Checkbox name="times" choices={timeChoices} bind:group={selectedTimes} groupInputClass="ms-2" groupLabelClass="" />
     </Dropdown>
-    <Button on:click={searchMeetings}>{$translations.search}</Button>
+    <Button onclick={searchMeetings}>{$translations.search}</Button>
     {#if $authenticatedUser?.type !== 'observer'}
-      <Button on:click={() => handleAdd()} aria-label={$translations.addMeeting}><PlusOutline class="mr-2 h-3.5 w-3.5" />{$translations.addMeeting}</Button>
+      <Button onclick={() => handleAdd()} aria-label={$translations.addMeeting}><PlusOutline class="mr-2 h-3.5 w-3.5" />{$translations.addMeeting}</Button>
     {/if}
   </div>
   <TableHead>
     {#if meetings.length}
-      <TableHeadCell padding="px-4 py-3 whitespace-nowrap" scope="col" on:click={() => handleSort('day')}>
+      <TableHeadCell padding="px-4 py-3 whitespace-nowrap" scope="col" onclick={() => handleSort('day')}>
         Day
         {#if sortColumn === 'day'}
           {#if sortDirection === 'asc'}
@@ -324,7 +323,7 @@
           {/if}
         {/if}
       </TableHeadCell>
-      <TableHeadCell padding="px-4 py-3 whitespace-nowrap" scope="col" on:click={() => handleSort('startTime')}>
+      <TableHeadCell padding="px-4 py-3 whitespace-nowrap" scope="col" onclick={() => handleSort('startTime')}>
         Time
         {#if sortColumn === 'startTime'}
           {#if sortDirection === 'asc'}
@@ -334,7 +333,7 @@
           {/if}
         {/if}
       </TableHeadCell>
-      <TableHeadCell padding="px-4 py-3" scope="col" on:click={() => handleSort('name')}>
+      <TableHeadCell padding="px-4 py-3" scope="col" onclick={() => handleSort('name')}>
         Meeting
         {#if sortColumn === 'name'}
           {#if sortDirection === 'asc'}
@@ -344,7 +343,7 @@
           {/if}
         {/if}
       </TableHeadCell>
-      <TableHeadCell padding="px-4 py-3" scope="col" on:click={() => handleSort('locationStreet')}>
+      <TableHeadCell padding="px-4 py-3" scope="col" onclick={() => handleSort('locationStreet')}>
         Location
         {#if sortColumn === 'location'}
           {#if sortDirection === 'asc'}
@@ -363,7 +362,7 @@
   </TableHead>
   <TableBody>
     {#each currentPageItems as meeting (meeting.id)}
-      <TableBodyRow on:click={() => handleEdit(meeting)}>
+      <TableBodyRow onclick={() => handleEdit(meeting)}>
         <TableBodyCell tdClass={meeting.published ? 'px-4 py-3 whitespace-nowrap' : 'bg-yellow-400 px-4 py-3 whitespace-nowrap min-w-[100px]'}>{$translations.daysOfWeek[meeting.day]}</TableBodyCell>
         <TableBodyCell tdClass={meeting.published ? 'px-4 py-3 whitespace-nowrap' : 'bg-yellow-400 px-4 py-3 whitespace-nowrap min-w-[100px]'}
           >{is24hrTime() ? meeting.startTime : convertTo12Hour(meeting.startTime)}</TableBodyCell
@@ -391,13 +390,13 @@
         </span>
       </span>
       <ButtonGroup>
-        <Button on:click={loadPreviousPage} disabled={currentPosition === 0}>
+        <Button onclick={loadPreviousPage} disabled={currentPosition === 0}>
           <ChevronLeftOutline size="xs" class="m-1.5" />
         </Button>
         {#each pagesToShow as pageNumber}
-          <Button on:click={() => goToPage(pageNumber)}>{pageNumber}</Button>
+          <Button onclick={() => goToPage(pageNumber)}>{pageNumber}</Button>
         {/each}
-        <Button on:click={loadNextPage} disabled={currentPosition + itemsPerPage >= filteredItems.length}>
+        <Button onclick={loadNextPage} disabled={currentPosition + itemsPerPage >= filteredItems.length}>
           <ChevronRightOutline size="xs" class="m-1.5" />
         </Button>
       </ButtonGroup>
@@ -405,4 +404,4 @@
   </div>
 </TableSearch>
 
-<MeetingEditModal bind:showModal {selectedMeeting} {serviceBodies} {formats} on:saved={onSaved} on:close={closeModal} on:deleted={onDeleted} />
+<MeetingEditModal bind:showModal {selectedMeeting} {serviceBodies} {formats} {onSaved} onClosed={closeModal} {onDeleted} />

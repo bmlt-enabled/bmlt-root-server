@@ -2,7 +2,6 @@
   import { validator } from '@felte/validator-yup';
   import { createForm } from 'felte';
   import { Button, Helper, Input, Label, Select } from 'flowbite-svelte';
-  import { createEventDispatcher } from 'svelte';
   import * as yup from 'yup';
 
   import { spinner } from '../stores/spinner';
@@ -12,10 +11,14 @@
   import { translations } from '../stores/localization';
   import { authenticatedUser } from '../stores/apiCredentials';
 
-  export let selectedUser: User | null;
-  export let users: User[];
+  interface Props {
+    selectedUser: User | null;
+    users: User[];
+    onSaveSuccess?: (user: User) => void; // Callback function prop
+  }
 
-  const dispatch = createEventDispatcher<{ saved: { user: User } }>();
+  let { selectedUser, users, onSaveSuccess }: Props = $props();
+
   const userOwnerItems = users
     .filter((u) => selectedUser?.id !== u.id)
     .map((u) => ({ value: u.id.toString(), name: u.displayName }))
@@ -69,7 +72,7 @@
     },
     onSuccess: () => {
       spinner.hide();
-      dispatch('saved', { user: savedUser });
+      onSaveSuccess?.(savedUser); // Call the callback function instead of dispatch
     },
     extend: validator({
       schema: yup.object({
@@ -124,7 +127,9 @@
     }
   }
 
-  $: isDirty.set(formIsDirty(initialValues, $data));
+  $effect(() => {
+    isDirty.set(formIsDirty(initialValues, $data));
+  });
 </script>
 
 <form use:form>
@@ -193,7 +198,7 @@
       </Helper>
     </div>
     <div class="md:col-span-2">
-      <Button type="submit" class="w-full" disabled={!$isDirty} on:click={disableButtonHack}>
+      <Button type="submit" class="w-full" disabled={!$isDirty} onclick={disableButtonHack}>
         {#if selectedUser}
           {$translations.applyChangesTitle}
         {:else}

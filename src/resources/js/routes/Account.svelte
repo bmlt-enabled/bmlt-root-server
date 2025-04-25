@@ -1,9 +1,7 @@
 <script lang="ts">
   import { Button, Helper, Input, Label, Listgroup } from 'flowbite-svelte';
-  import { createEventDispatcher } from 'svelte';
   import { createForm } from 'felte';
 
-  import { onMount } from 'svelte';
   import { validator } from '@felte/validator-yup';
   import * as yup from 'yup';
 
@@ -16,11 +14,6 @@
   import type { ServiceBody, User } from 'bmlt-root-server-client';
   import BasicAccordion from '../components/BasicAccordion.svelte';
 
-  let serviceBodies: ServiceBody[] = [];
-  let serviceBodiesLoaded = false;
-  let editableServiceBodyNames: string[] = [];
-
-  const dispatch = createEventDispatcher<{ saved: { user: User } }>();
   let userType = 'unknown';
   switch ($authenticatedUser?.type) {
     case 'serviceBodyAdmin':
@@ -46,7 +39,7 @@
     // type and ownerId aren't changed and aren't in the form (we're using partialUserUpdate)
   };
   let savedUser: User;
-  let savedData: { displayName: string; userType: string; email: string; username: string; description: string; password: string };
+  let savedData: { displayName: string; userType: string; email: string; username: string; description: string; password: string } | undefined = $state();
 
   const { data, errors, form, isDirty, reset } = createForm({
     initialValues: initialValues,
@@ -84,7 +77,6 @@
     },
     onSuccess: () => {
       spinner.hide();
-      dispatch('saved', { user: savedUser });
     },
     extend: validator({
       schema: yup.object({
@@ -127,23 +119,34 @@
     })
   });
 
-  // This hack is required until https://github.com/themesberg/flowbite-svelte/issues/1395 is fixed.
-  function disableButtonHack(event: MouseEvent) {
-    if (!$isDirty) {
-      event.preventDefault();
+  function findEditableServiceBodyNames(serviceBodies: ServiceBody[]): string[] {
+    const id = $authenticatedUser?.id as number;
+    const editableServiceBodies: Set<ServiceBody> = new Set();
+    if ($authenticatedUser?.type === 'admin') {
+      serviceBodies.forEach((s) => editableServiceBodies.add(s));
+    } else if ($authenticatedUser?.type === 'serviceBodyAdmin') {
+      // children is an array with indices = service body ids, values a set of children of that service body
+      // (not recursively - the recursion is handled elsewhere)
+      const children: Set<ServiceBody>[] = [];
+      for (const s of serviceBodies) {
+        const p = s.parentId;
+        if (p) {
+          if (children[p]) {
+            children[p].add(s);
+          } else {
+            children[p] = new Set([s]);
+          }
+        }
+      }
+      for (const s of serviceBodies) {
+        if (s.adminUserId === id || s.assignedUserIds.includes(id)) {
+          recursivelyAddServiceBodies(s, children, editableServiceBodies);
+        }
+      }
     }
-  }
-
-  async function getServiceBodies(): Promise<void> {
-    try {
-      spinner.show();
-      serviceBodies = await RootServerApi.getServiceBodies();
-      serviceBodiesLoaded = true;
-    } catch (error: any) {
-      await RootServerApi.handleErrors(error);
-    } finally {
-      spinner.hide();
-    }
+    return Array.from(editableServiceBodies)
+      .map((s) => s.name)
+      .sort();
   }
 
   // helper function to compute the set of service bodies that the currently logged in user can edit.
@@ -159,43 +162,13 @@
     }
   }
 
-  onMount(() => {
-    getServiceBodies();
-  });
-
-  $: {
-    const id = $authenticatedUser?.id;
-    if (serviceBodiesLoaded && id) {
-      const editableServiceBodies: Set<ServiceBody> = new Set();
-      if ($authenticatedUser?.type === 'admin') {
-        serviceBodies.forEach((s) => editableServiceBodies.add(s));
-      } else if ($authenticatedUser?.type === 'serviceBodyAdmin') {
-        // children is an array with indices = service body ids, values a set of children of that service body
-        // (not recursively - the recursion is handled elsewhere)
-        const children: Set<ServiceBody>[] = [];
-        for (const s of serviceBodies) {
-          const p = s.parentId;
-          if (p) {
-            if (children[p]) {
-              children[p].add(s);
-            } else {
-              children[p] = new Set([s]);
-            }
-          }
-        }
-        for (const s of serviceBodies) {
-          if (s.adminUserId === id || s.assignedUserIds.includes(id)) {
-            recursivelyAddServiceBodies(s, children, editableServiceBodies);
-          }
-        }
-      }
-      editableServiceBodyNames = Array.from(editableServiceBodies)
-        .map((s) => s.name)
-        .sort();
-    }
+  async function getServiceBodyNames() {
+    return RootServerApi.getServiceBodies().then(findEditableServiceBodyNames);
   }
 
-  $: isDirty.set(savedData ? formIsDirty(savedData, $data) : formIsDirty(initialValues, $data));
+  $effect(() => {
+    isDirty.set(savedData ? formIsDirty(savedData, $data) : formIsDirty(initialValues, $data));
+  });
 </script>
 
 <Nav />
@@ -255,26 +228,30 @@
       </div>
       <div class="grid gap-4 md:grid-cols-2">
         <div class="w-full">
-          <Button type="button" class="w-full" color="red" disabled={!$isDirty} on:click={reset}>
+          <Button type="button" class="w-full" color="red" disabled={!$isDirty} onclick={reset}>
             {$translations.clearFormTitle}
           </Button>
         </div>
         <div class="w-full">
-          <Button type="submit" class="w-full" disabled={!$isDirty} on:click={disableButtonHack}>
+          <Button type="submit" class="w-full" disabled={!$isDirty}>
             {$translations.applyChangesTitle}
           </Button>
         </div>
       </div>
       <BasicAccordion header={$translations.serviceBodiesWithEditableMeetings}>
-        {#if !serviceBodiesLoaded}
+        {#await getServiceBodyNames()}
           {$translations.loading}
-        {:else if editableServiceBodyNames.length === 0}
-          {$translations.none}
-        {:else}
-          <Listgroup items={editableServiceBodyNames} let:item>
-            {item}
-          </Listgroup>
-        {/if}
+        {:then names}
+          {#if names.length === 0}
+            {$translations.none}
+          {:else}
+            <Listgroup items={names} let:item>
+              {item}
+            </Listgroup>
+          {/if}
+        {:catch error}
+          <p style="color: red">{error.message}</p>
+        {/await}
       </BasicAccordion>
     </div>
   </form>

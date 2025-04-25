@@ -2,7 +2,7 @@ import { beforeAll, beforeEach, describe, test } from 'vitest';
 import { screen, waitFor } from '@testing-library/svelte';
 import '@testing-library/jest-dom';
 
-import { login, mockSavedUserPartialUpdate, sharedAfterEach, sharedBeforeAll, sharedBeforeEach } from './sharedDataAndMocks';
+import { badLogin, login, mockSavedUserPartialUpdate, sharedAfterEach, sharedBeforeAll, sharedBeforeEach } from './sharedDataAndMocks';
 
 beforeAll(sharedBeforeAll);
 beforeEach(sharedBeforeEach);
@@ -161,6 +161,13 @@ describe('check lists of service bodies different users can edit', () => {
     await login('SmallObserver', 'Account');
     await waitFor(() => {
       expect(screen.queryByText('- None -')).toBeInTheDocument();
+    });
+  });
+
+  test('check error handling for editable service bodies', async () => {
+    await badLogin('NorthernZone', 'Account');
+    await waitFor(() => {
+      expect(screen.queryByText('bad user -- unable to get service bodies')).toBeInTheDocument();
     });
   });
 });

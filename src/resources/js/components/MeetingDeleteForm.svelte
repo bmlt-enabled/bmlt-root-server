@@ -1,7 +1,6 @@
 <script lang="ts">
   import { Button, Checkbox, Helper, P } from 'flowbite-svelte';
   import { createForm } from 'felte';
-  import { createEventDispatcher } from 'svelte';
   import { validator } from '@felte/validator-yup';
   import * as yup from 'yup';
 
@@ -10,17 +9,20 @@
   import { spinner } from '../stores/spinner';
   import { translations } from '../stores/localization';
 
-  export let deleteMeeting: Meeting;
-  let confirmed = false;
-  let errorMessage: string | undefined;
+  interface Props {
+    meetingToDelete: Meeting;
+    onDeleted: (meeting: Meeting) => void;
+  }
 
-  const dispatch = createEventDispatcher<{ deleted: { meetingId: number } }>();
+  let { meetingToDelete, onDeleted }: Props = $props();
+  let confirmed = $state(false);
+  let errorMessage: string | undefined = $state();
 
   const { form } = createForm({
-    initialValues: { meetingId: deleteMeeting?.id, confirmed: false },
+    initialValues: { meetingId: meetingToDelete?.id, confirmed: false },
     onSubmit: async () => {
       spinner.show();
-      await RootServerApi.deleteMeeting(deleteMeeting.id);
+      await RootServerApi.deleteMeeting(meetingToDelete.id);
     },
     onError: async (error) => {
       await RootServerApi.handleErrors(error as Error, {
@@ -34,7 +36,7 @@
     },
     onSuccess: () => {
       spinner.hide();
-      dispatch('deleted', { meetingId: deleteMeeting.id });
+      onDeleted(meetingToDelete);
     },
     extend: validator({
       schema: yup.object({
@@ -47,7 +49,7 @@
 <form use:form>
   <div>
     <P class="mb-5">{$translations.confirmDeleteMeeting}</P>
-    <P class="mb-5">{deleteMeeting.name}</P>
+    <P class="mb-5">{meetingToDelete.name}</P>
     <div class="mb-5">
       <Checkbox bind:checked={confirmed} name="confirmed">{$translations.confirmYesImSure}</Checkbox>
       <Helper class="mt-4" color="red">
