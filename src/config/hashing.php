@@ -49,4 +49,17 @@ return [
         'time' => 4,
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Password Rehashing
+    |--------------------------------------------------------------------------
+    |
+    | This option controls whether passwords should be automatically rehashed
+    | when a user logs in. This can be useful when your hashing algorithm
+    | or hash cost changes, but may cause issues with custom User models.
+    |
+    */
+
+    'rehash_on_login' => true,
+
 ];

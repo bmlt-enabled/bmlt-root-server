@@ -55,6 +55,11 @@ class User extends Model implements AuthenticatableContract
         return $this->password_string;
     }
 
+    public function getAuthPasswordName()
+    {
+        return 'password_string';
+    }
+
     public function isAdmin(): bool
     {
         return $this->user_level_tinyint == self::USER_LEVEL_ADMIN;
