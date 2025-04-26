@@ -32,8 +32,6 @@
   let itemsPerPage: number = $state(20);
   const itemsPerPageItems = [10, 20, 40, 60, 80, 100].map((value) => ({ value, name: value.toString() }));
   const showPage: number = 5;
-  let totalPages: number = 0;
-  let pagesToShow: number[] = $state([]);
   let selectedTimes: string[] = $state([]);
   let selectedPublished: string[] = $state([]);
   let selectedMeeting: Meeting | null = $state(null);
@@ -119,52 +117,29 @@
       })
   );
 
-  $effect(() => {
-    currentPosition = 0;
-    renderPagination(filteredItems.length);
-  });
+  const totalPages = $derived(Math.ceil(filteredItems.length / itemsPerPage));
+  const currentPage = $derived(Math.ceil((currentPosition + 1) / itemsPerPage));
+  const startPage = $derived(Math.max(1, currentPage - Math.floor(showPage / 2)));
+  const endPage = $derived(Math.min(startPage + showPage - 1, totalPages));
+  const startRange = $derived(currentPosition + 1);
+  const endRange = $derived(Math.min(startRange + itemsPerPage - 1, filteredItems.length));
+  const pagesToShow = $derived(Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i));
 
-  let startPage: number;
-  let endPage: number;
-  let startRange: number = $state(0);
-  let endRange: number = $state(0);
-
-  const renderPagination = (totalItems: number) => {
-    totalPages = Math.ceil(totalItems / itemsPerPage);
-    const currentPage = Math.ceil((currentPosition + 1) / itemsPerPage);
-
-    startPage = currentPage - Math.floor(showPage / 2);
-    startPage = Math.max(1, startPage);
-    endPage = Math.min(startPage + showPage - 1, totalPages);
-
-    pagesToShow = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
-
-    startRange = currentPosition + 1;
-    endRange = Math.min(startRange + itemsPerPage - 1, totalItems);
-  };
-
-  const loadNextPage = () => {
+  function loadNextPage() {
     if (currentPosition + itemsPerPage < filteredItems.length) {
       currentPosition += itemsPerPage;
-      updateDataAndPagination();
     }
-  };
+  }
 
-  const loadPreviousPage = () => {
+  function loadPreviousPage() {
     if (currentPosition - itemsPerPage >= 0) {
       currentPosition -= itemsPerPage;
-      updateDataAndPagination();
     }
-  };
+  }
 
-  const updateDataAndPagination = () => {
-    renderPagination(filteredItems.length);
-  };
-
-  const updateItemsPerPage = () => {
+  function updateItemsPerPage() {
     currentPosition = 0; // Reset to first page when itemsPerPage changes
-    renderPagination(filteredItems.length);
-  };
+  }
 
   function handleSort(column: keyof Meeting) {
     if (sortColumn === column) {
@@ -186,15 +161,13 @@
       return 0;
     });
     currentPosition = 0;
-    renderPagination(filteredItems.length);
     filteredItems.slice(currentPosition, currentPosition + itemsPerPage);
   }
 
-  const goToPage = (pageNumber: number) => {
+  function goToPage(pageNumber: number) {
     currentPosition = (pageNumber - 1) * itemsPerPage;
     filteredItems.slice(currentPosition, currentPosition + itemsPerPage);
-    renderPagination(filteredItems.length);
-  };
+  }
 
   function onSaved(meeting: Meeting) {
     const i = meetings.findIndex((m) => m.id === meeting.id);
@@ -244,7 +217,6 @@
   }
 
   onMount(() => {
-    renderPagination(filteredItems.length);
     const searchInputElement = tableSearchRef?.shadowRoot?.getElementById('table-search') || (document.getElementById('table-search') as HTMLInputElement | null);
     if (searchInputElement) {
       searchInputElement.addEventListener('keydown', handleEnterKey);
