@@ -100,12 +100,12 @@ jobs:
       - name: Checkout 🛒
         uses: actions/checkout@v4
 
-      - name: php 8.1 🐘
+      - name: php 8.2 🐘
         id: setup-php
         uses: shivammathur/setup-php@2.30.4
         with:
-          php-version: '8.1'
-          tools: composer:v2.6.5
+          php-version: '8.2'
+          tools: composer:v2.8.8
 
       - name: make composer 🎼
         run: |
