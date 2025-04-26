@@ -13,36 +13,40 @@
   import RootServerApi from '../lib/RootServerApi';
   import ServiceBodiesTree from './ServiceBodiesTree.svelte';
 
-  export let formats: Format[];
-  export let serviceBodies: ServiceBody[];
+  interface Props {
+    serviceBodies: ServiceBody[];
+    formats: Format[];
+  }
 
-  let meetings: Meeting[] = [];
+  let { serviceBodies, formats }: Props = $props();
+
+  let meetings: Meeting[] = $state([]);
   let meetingIds: string = '';
-  let selectedServiceBodies: string[] = serviceBodies.map((serviceBody) => serviceBody.id.toString());
+  let selectedServiceBodies: string[] = $state(serviceBodies.map((serviceBody) => serviceBody.id.toString()));
   let divClass = 'bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-visible pt-3';
   let innerDivClass = 'flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4';
   let searchClass = 'w-full md:w-1/2 relative';
   let inputClass = 'text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2 pl-10 dark:bg-gray-700 dark:text-white';
-  let searchTerm: string = '';
-  let currentPosition: number = 0;
-  let itemsPerPage: number = 20;
+  let searchTerm: string = $state('');
+  let currentPosition: number = $state(0);
+  let itemsPerPage: number = $state(20);
   const itemsPerPageItems = [10, 20, 40, 60, 80, 100].map((value) => ({ value, name: value.toString() }));
   const showPage: number = 5;
   let totalPages: number = 0;
-  let pagesToShow: number[] = [];
-  let selectedTimes: string[] = [];
-  let selectedPublished: string[] = [];
-  let selectedMeeting: Meeting | null;
-  let showModal = false;
+  let pagesToShow: number[] = $state([]);
+  let selectedTimes: string[] = $state([]);
+  let selectedPublished: string[] = $state([]);
+  let selectedMeeting: Meeting | null = $state(null);
+  let showModal = $state(false);
   let tableSearchRef: SvelteComponent | null = null;
-  let sortColumn: string | null = null;
-  let sortDirection: 'asc' | 'desc' = 'asc';
+  let sortColumn: string | null = $state(null);
+  let sortDirection: 'asc' | 'desc' = $state('asc');
   const weekdayChoices = ($translations.daysOfWeek as string[]).map((day: string, index: number) => ({
     value: index.toString(),
     label: day
   }));
 
-  let selectedDays: string[] = weekdayChoices.map((day) => day.value);
+  let selectedDays: string[] = $state(weekdayChoices.map((day) => day.value));
   const timeChoices = [
     { value: 'morning', label: $translations.timeMorning },
     { value: 'afternoon', label: $translations.timeAfternoon },
@@ -79,49 +83,51 @@
     getMeetings(searchTerm, selectedDays.join(','), selectedServiceBodies.join(','), meetingIds);
   }
 
-  $: filteredItems = meetings
-    .filter((meeting) => {
-      const matchesDay = selectedDays.length > 0 ? selectedDays.includes(meeting.day.toString()) : true;
-      const matchesPublished = selectedPublished.length > 0 ? selectedPublished.includes(String(meeting.published)) : true;
-      const matchesSearch =
-        // search by name, id or location
-        meeting.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        String(meeting.id).includes(searchTerm) ||
-        [meeting.locationStreet, meeting.locationCitySubsection, meeting.locationMunicipality, meeting.locationProvince, meeting.locationSubProvince, meeting.locationPostalCode1]
-          .filter(Boolean)
-          .join(', ')
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
-      const matchesTime =
-        selectedTimes.length === 0 ||
-        selectedTimes.some((time) => {
-          if (time === 'morning') {
-            return meeting.startTime >= '00:00' && meeting.startTime < '12:00';
-          } else if (time === 'afternoon') {
-            return meeting.startTime >= '12:00' && meeting.startTime < '18:00';
-          } else if (time === 'evening') {
-            return meeting.startTime >= '18:00' && meeting.startTime <= '23:59';
-          }
-          return false;
-        });
-      return matchesTime && matchesPublished && matchesDay && matchesSearch;
-    })
-    .sort((a, b) => {
-      // Sort by day then time
-      const dayComparison = a.day - b.day;
-      if (dayComparison !== 0) return dayComparison;
-      return a.startTime.localeCompare(b.startTime);
-    });
+  const filteredItems = $derived(
+    meetings
+      .filter((meeting) => {
+        const matchesDay = selectedDays.length > 0 ? selectedDays.includes(meeting.day.toString()) : true;
+        const matchesPublished = selectedPublished.length > 0 ? selectedPublished.includes(String(meeting.published)) : true;
+        const matchesSearch =
+          // search by name, id or location
+          meeting.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          String(meeting.id).includes(searchTerm) ||
+          [meeting.locationStreet, meeting.locationCitySubsection, meeting.locationMunicipality, meeting.locationProvince, meeting.locationSubProvince, meeting.locationPostalCode1]
+            .filter(Boolean)
+            .join(', ')
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase());
+        const matchesTime =
+          selectedTimes.length === 0 ||
+          selectedTimes.some((time) => {
+            if (time === 'morning') {
+              return meeting.startTime >= '00:00' && meeting.startTime < '12:00';
+            } else if (time === 'afternoon') {
+              return meeting.startTime >= '12:00' && meeting.startTime < '18:00';
+            } else if (time === 'evening') {
+              return meeting.startTime >= '18:00' && meeting.startTime <= '23:59';
+            }
+            return false;
+          });
+        return matchesTime && matchesPublished && matchesDay && matchesSearch;
+      })
+      .sort((a, b) => {
+        // Sort by day then time
+        const dayComparison = a.day - b.day;
+        if (dayComparison !== 0) return dayComparison;
+        return a.startTime.localeCompare(b.startTime);
+      })
+  );
 
-  $: {
+  $effect(() => {
     currentPosition = 0;
     renderPagination(filteredItems.length);
-  }
+  });
 
   let startPage: number;
   let endPage: number;
-  let startRange: number;
-  let endRange: number;
+  let startRange: number = $state(0);
+  let endRange: number = $state(0);
 
   const renderPagination = (totalItems: number) => {
     totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -253,9 +259,9 @@
     };
   });
 
-  $: currentPageItems = filteredItems.slice(currentPosition, currentPosition + itemsPerPage);
+  const currentPageItems = $derived(filteredItems.slice(currentPosition, currentPosition + itemsPerPage));
 
-  let isAllDaysSelected = selectedDays.length === weekdayChoices.length;
+  const isAllDaysSelected = $derived(selectedDays.length === weekdayChoices.length);
 </script>
 
 <TableSearch placeholder={$translations.filter} bind:this={tableSearchRef} hoverable={true} bind:inputValue={searchTerm} {divClass} {innerDivClass} {searchClass} {inputClass}>
