@@ -1,4 +1,4 @@
-FROM bmltenabled/bmlt-root-server-base:latest
+FROM bmltenabled/bmlt-root-server-base:8.2
 
 COPY build/bmlt-root-server.zip /tmp/bmlt-root-server.zip
 RUN \
