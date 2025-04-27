@@ -9,7 +9,7 @@
         "darkaonline/l5-swagger": "^9.0",
         "doctrine/dbal": "^4.2",
         "guzzlehttp/guzzle": "^7.9",
-        "laravel/framework": "^11.00",
+        "laravel/framework": "^12.00",
         "laravel/sanctum": "^4.1",
         "laravel/tinker": "^2.10",
         "phpoffice/phpspreadsheet": "^4.2",
