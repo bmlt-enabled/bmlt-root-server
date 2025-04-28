@@ -34,7 +34,7 @@ jobs:
           context: ./docker
           file: ./docker/Dockerfile-base
           platforms: linux/amd64,linux/arm64/v8
-          tags: bmltenabled/bmlt-root-server-base:latest
+          tags: bmltenabled/bmlt-root-server-base:latest,bmltenabled/bmlt-root-server-base:8.2
           push: true
 
   build-db:
