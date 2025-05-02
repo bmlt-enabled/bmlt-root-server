@@ -33,7 +33,7 @@ REQUIREMENTS
 ------------
 
 The root server requires a MySQL 5.7 database or higher and PHP 8.2 or higher.In addition, the following PHP modules
-are required: `curl gd intl mbstring mysql pdo xml zip`. In particular, make sure you have `intl` -- this one is more
+are required: `curl gd intl mbstring mysql xml zip`. In particular, make sure you have `intl` -- this one is more
 likely to be missing. There are a variety of MySQL modules for PHP, and others will probably work as a substitute
 for `mysql` itself.
 
