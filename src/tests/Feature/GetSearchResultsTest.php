@@ -2239,4 +2239,71 @@ class GetSearchResultsTest extends TestCase
             ->assertStatus(200)
             ->assertJsonCount(1);
     }
+
+    public function testTsmlOutputFormat()
+    {
+        $serviceBody = $this->createArea('Test Area', 'A test area', 0);
+        $this->createMeeting([
+            'service_body_bigint' => $serviceBody->id_bigint,
+            'weekday_tinyint' => 2,
+            'start_time' => '10:00:00',
+            'duration_time' => '01:30:00',
+            'formats' => '999',
+            'longitude' => -118.5635721,
+            'latitude' => 34.2359759,
+        ], [
+            'meeting_name' => 'High Output Meeting',
+            'location_text' => 'Test Church',
+            'location_street' => '19737 Nordhoff Place',
+            'location_municipality' => 'Los Angeles',
+            'location_province' => 'CA',
+            'location_postal_code_1' => '91324',
+            'location_nation' => 'USA',
+            'location_info' => 'Test notes',
+        ]);
+
+        $response = $this->get("/client_interface/tsml/?switcher=GetSearchResults");
+        $response->assertStatus(200);
+        $data = $response->json();
+        $this->assertIsArray($data);
+        $this->assertNotEmpty($data);
+        $meetingData = $data[0];
+        $this->assertArrayHasKey('day', $meetingData);
+        $this->assertEquals(2, $meetingData['day']);
+        $this->assertArrayHasKey('time', $meetingData);
+        $this->assertEquals('10:00', $meetingData['time']);
+        $this->assertArrayHasKey('end_time', $meetingData);
+        $this->assertEquals('11:30', $meetingData['end_time']);
+        $this->assertArrayHasKey('name', $meetingData);
+        $this->assertEquals('High Output Meeting', $meetingData['name']);
+        $this->assertArrayHasKey('location', $meetingData);
+        $this->assertEquals('Test Church', $meetingData['location']);
+        $this->assertArrayHasKey('formatted_address', $meetingData);
+        $this->assertStringContainsString('19737 Nordhoff Place', $meetingData['formatted_address']);
+        $this->assertStringContainsString('Los Angeles', $meetingData['formatted_address']);
+        $this->assertStringContainsString('CA', $meetingData['formatted_address']);
+        $this->assertStringContainsString('91324', $meetingData['formatted_address']);
+        $this->assertStringContainsString('USA', $meetingData['formatted_address']);
+        $this->assertArrayHasKey('address', $meetingData);
+        $this->assertEquals('19737 Nordhoff Place', $meetingData['address']);
+        $this->assertArrayHasKey('city', $meetingData);
+        $this->assertEquals('Los Angeles', $meetingData['city']);
+        $this->assertArrayHasKey('state', $meetingData);
+        $this->assertEquals('CA', $meetingData['state']);
+        $this->assertArrayHasKey('postal_code', $meetingData);
+        $this->assertEquals('91324', $meetingData['postal_code']);
+        $this->assertArrayHasKey('country', $meetingData);
+        $this->assertEquals('USA', $meetingData['country']);
+        $this->assertArrayHasKey('regions', $meetingData);
+        $this->assertContains('Test Area', $meetingData['regions']);
+        $this->assertArrayHasKey('types', $meetingData);
+        $this->assertArrayHasKey('notes', $meetingData);
+        $this->assertEquals('Test notes', $meetingData['notes']);
+        $this->assertArrayHasKey('coordinates', $meetingData);
+        $this->assertEquals('34.2359759,-118.5635721', $meetingData['coordinates']);
+        $this->assertArrayHasKey('slug', $meetingData);
+        $this->assertEquals('high-output-meeting', $meetingData['slug']);
+        $this->assertArrayHasKey('region', $meetingData);
+        $this->assertEquals('Test Area', $meetingData['region']);
+    }
 }
