@@ -101,7 +101,7 @@ zip: $(ZIP_FILE) ## Builds zip file
 
 .PHONY: docker
 docker: zip ## Builds Docker Image
-	docker build --pull -f docker/$(DOCKERFILE) . -t $(IMAGE):$(TAG)
+	docker build --pull --build-arg PHP_VERSION=$(BASE_IMAGE_TAG) -f docker/$(DOCKERFILE) . -t $(IMAGE):$(TAG)
 
 .PHONY: docker-push
 docker-push: ## Pushes docker image to Dockerhub

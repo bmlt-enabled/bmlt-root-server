@@ -7,6 +7,7 @@ use App\Http\Resources\Query\FormatResource;
 use App\Http\Resources\Query\MeetingResource;
 use App\Http\Resources\Query\MeetingChangeResource;
 use App\Http\Resources\Query\ServiceBodyResource;
+use App\Http\Resources\Query\TsmlMeetingResource;
 use App\Http\Responses\JsonResponse;
 use App\Interfaces\ChangeRepositoryInterface;
 use App\Interfaces\FormatRepositoryInterface;
@@ -75,21 +76,22 @@ class SwitcherController extends Controller
                 if ($dataFormat == 'jsonp') {
                     $response = $response->withCallback($request->input('callback', 'callback'));
                 }
+            } elseif ($dataFormat == 'tsml') {
+                $response = $this->getSearchResults($request, $dataFormat);
             }
         }
 
         if (is_null($response)) {
             $validJsonValues = collect($validValues)->reject(fn ($v) => $v == 'GetNAWSDump')->join(', ');
-            abort(422, "Invalid data format or endpoint name. Valid endpoint names for the json and jsonp data formats are: $validJsonValues. Valid endpoint names for the csv format are: GetNAWSDump.");
+            abort(422, "Invalid data format or endpoint name. Valid endpoint names for the json and jsonp data formats are: $validJsonValues. Valid endpoint names for the csv format are: GetNAWSDump. Valid endpoint names for the tsml format are: GetSearchResults.");
         }
 
         return $response;
     }
 
-    private function getSearchResults(Request $request): BaseJsonResponse
+    private function getSearchResults(Request $request, ?string $dataFormat = null): BaseJsonResponse
     {
         $isAggregatorMode = (bool)legacy_config('aggregator_mode_enabled');
-
         $meetingIds = $request->input('meeting_ids');
         $meetingIds = !is_null($meetingIds) ? ensure_integer_array($meetingIds) : null;
 
@@ -367,6 +369,12 @@ class SwitcherController extends Controller
                 'meetings' => MeetingResource::collection($meetings),
                 'formats' => FormatResource::collection($formats)
             ]);
+        }
+
+        if ($dataFormat === 'tsml') {
+            return new JsonResponse(
+                TsmlMeetingResource::collection($meetings, $formatsById)
+            );
         }
 
         return MeetingResource::collection($meetings)->response();
