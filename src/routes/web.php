@@ -5,6 +5,9 @@ use App\Http\Controllers\CatchAllController;
 use App\Http\Controllers\Legacy\LegacyAuthController;
 use App\Http\Controllers\Query\ServerInfoXmlController;
 use App\Http\Controllers\Query\SwitcherController;
+use App\Http\Controllers\SemanticWorkshopController;
+
+Route::get('semantic', [SemanticWorkshopController::class, 'get']);
 
 // legacy crouton
 Route::get('/client_interface/html', [CatchAllController::class, 'all']);
