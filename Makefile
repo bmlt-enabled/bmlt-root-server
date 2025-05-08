@@ -2,7 +2,7 @@ COMMIT := $(shell git rev-parse --short=8 HEAD)
 BASE_IMAGE := bmltenabled/bmlt-root-server-base
 BASE_IMAGE_TAG := 8.2
 BASE_IMAGE_BUILD_TAG := $(COMMIT)-$(shell date +%s)
-CROUTON_JS := src/public/client_interface/html/croutonjs/crouton.js
+SEMANTIC_HTML := src/public/semantic/index.html
 LEGACY_STATIC_FILES := src/public/local_server/styles.css
 VENDOR_AUTOLOAD := src/vendor/autoload.php
 NODE_MODULES := src/node_modules/.package-lock.json
@@ -47,14 +47,11 @@ help:  ## Print the help documentation
 $(VENDOR_AUTOLOAD):
 	$(COMPOSER_PREFIX) composer install --working-dir=src $(COMPOSER_ARGS)
 
-$(CROUTON_JS):
-	curl -sLO https://github.com/bmlt-enabled/crouton/releases/latest/download/croutonjs.zip
-	mkdir -p src/public/client_interface/html/croutonjs
-	unzip croutonjs.zip -d src/public/client_interface/html/croutonjs
-	rm -f croutonjs.zip
-	rm -f src/public/client_interface/html/croutonjs/*.html
-	rm -f src/public/client_interface/html/croutonjs/*.json
-	rm -rf src/public/client_interface/html/croutonjs/examples
+$(SEMANTIC_HTML):
+	curl -sLO https://github.com/bmlt-enabled/semantic-workshop/releases/latest/download/semantic-workshop.zip
+	mkdir -p src/public/semantic
+	unzip semantic-workshop.zip -d src/public/semantic
+	rm -f semantic-workshop.zip
 
 $(NODE_MODULES):
 	cd src && npm $(NPM_FLAG)
@@ -78,7 +75,7 @@ $(LEGACY_STATIC_FILES):
 	    --exclude='*' \
 	    src/legacy/ src/public
 
-$(ZIP_FILE): $(VENDOR_AUTOLOAD) $(FRONTEND) $(CROUTON_JS) $(LEGACY_STATIC_FILES)
+$(ZIP_FILE): $(VENDOR_AUTOLOAD) $(FRONTEND) $(SEMANTIC_HTML) $(LEGACY_STATIC_FILES)
 	mkdir -p build
 	cp -r src build/main_server
 	cd build && zip -r $(shell basename $(ZIP_FILE)) main_server -x main_server/node_modules/\*
@@ -90,8 +87,8 @@ composer: $(VENDOR_AUTOLOAD) ## Runs composer install
 .PHONY: npm
 npm: $(NODE_MODULES) ## Runs npm install
 
-.PHONY: crouton
-crouton: $(CROUTON_JS) ## Installs crouton
+.PHONY: semantic
+semantic: $(SEMANTIC_HTML) ## Installs semantic workshop
 
 .PHONY: frontend
 frontend: $(FRONTEND)  ## Builds the frontend
