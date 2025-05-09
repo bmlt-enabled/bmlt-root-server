@@ -11,7 +11,6 @@ use App\Interfaces\MeetingRepositoryInterface;
 class CatchAllController extends Controller
 {
     private static array $allowedLegacyPathEndings = [
-        '/semantic/index.php',
         '/client_interface/html/index.php',
     ];
 
