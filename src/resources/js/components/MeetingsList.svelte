@@ -237,7 +237,7 @@
 </script>
 
 <TableSearch placeholder={$translations.filter} bind:this={tableSearchRef} hoverable={true} bind:inputValue={searchTerm} {divClass} {innerDivClass} {searchClass} {inputClass}>
-  <div slot="header" class="flex w-full flex-shrink-0 flex-col items-stretch justify-end space-y-2 md:w-auto md:flex-row md:items-center md:space-x-3 md:space-y-0">
+  <div slot="header" class="flex w-full flex-shrink-0 flex-col items-stretch justify-end space-y-2 md:w-auto md:flex-row md:items-center md:space-y-0 md:space-x-3">
     {#if serviceBodies.length > 1}
       <Button color="alternative" class="relative" aria-label={$translations.serviceBodiesTitle}>
         {$translations.serviceBodiesTitle}
@@ -245,7 +245,7 @@
           <Indicator color="red" size="sm" placement="top-right" />
         {/if}
       </Button>
-      <Dropdown class="w-90 top-full z-50 space-y-2 p-3 text-sm" open={true}>
+      <Dropdown class="top-full z-50 w-90 space-y-2 p-3 text-sm" open={true}>
         <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">{$translations.searchByServiceBody}</h6>
         <ServiceBodiesTree {serviceBodies} bind:selectedValues={selectedServiceBodies} />
       </Dropdown>

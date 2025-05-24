@@ -20,7 +20,7 @@
     <DarkMode size="lg" class="inline-block hover:text-gray-900 dark:hover:text-white" />
   </div>
   <NavBrand href="#/">
-    <span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white">BMLT ({globalSettings.version})</span>
+    <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">BMLT ({globalSettings.version})</span>
   </NavBrand>
   <NavUl>
     <NavLi href="#/">{$translations.homeTitle}</NavLi>
