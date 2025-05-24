@@ -16,12 +16,18 @@
 
   let isLoaded = $state(false);
   let users: User[] = $state([]);
-  let filteredUsers: User[] = $state([]);
   let showModal = $state(false);
   let showDeleteModal = $state(false);
   let searchTerm = $state('');
   let selectedUser: User | null = $state(null);
   let deleteUser: User | null = $state(null);
+
+  let filteredUsers = $derived(
+    [...users]
+      .sort((u1, u2) => u1.displayName.localeCompare(u2.displayName))
+      .filter((u) => u.id !== $authenticatedUser?.id)
+      .filter((u) => u.displayName.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1)
+  );
 
   async function getUsers(): Promise<void> {
     try {
@@ -75,13 +81,6 @@
   }
 
   onMount(getUsers);
-
-  $effect(() => {
-    filteredUsers = users
-      .sort((u1, u2) => u1.displayName.localeCompare(u2.displayName))
-      .filter((u) => u.id !== $authenticatedUser?.id)
-      .filter((u) => u.displayName.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
-  });
 </script>
 
 <Nav />

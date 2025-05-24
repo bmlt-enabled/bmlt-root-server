@@ -18,12 +18,15 @@
 
   let isLoaded = $state(false);
   let formats: Format[] = $state([]);
-  let filteredFormats: Format[] = $state([]);
   let showModal = $state(false);
   let showDeleteModal = $state(false);
   let searchTerm = $state('');
   let selectedFormat: Format | null = $state(null);
   let deleteFormat: Format | null = $state(null);
+
+  let filteredFormats = $derived(
+    [...formats].sort((f1, f2) => getFormatName(f1).localeCompare(getFormatName(f2))).filter((f) => getFormatName(f).toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1)
+  );
 
   const language = translations.getLanguage();
 
@@ -103,14 +106,6 @@
   }
 
   onMount(getFormats);
-
-  $effect(() => {
-    // prettier-ignore
-    filteredFormats = formats
-          .sort((f1, f2) => getFormatName(f1).localeCompare(getFormatName(f2)))
-          .filter((f) => getFormatName(f).toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
-  });
-
   // In the HTML below, we can assume that the authenticatedUser is the admin -- if not, just show a blank page.
   // Formats won't appear in the nav bar, but somebody could get to this page directly.  (There isn't any private
   // information on the formats page, and the server wouldn't let them save, so this wouldn't be a big deal however.)
